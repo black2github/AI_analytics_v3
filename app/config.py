@@ -9,7 +9,7 @@ anyio.to_thread.current_default_thread_limiter().total_tokens = 50
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.42.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.43.0")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
