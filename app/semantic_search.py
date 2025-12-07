@@ -2,6 +2,7 @@
 
 import logging
 import re
+import traceback
 from typing import List, Set, Optional
 from langchain_core.documents import Document  # ДОБАВЛЯЕМ ИМПОРТ
 from langchain_core.prompts import PromptTemplate
@@ -99,6 +100,7 @@ def _extract_regular_key_queries_with_llm(requirements_text: str) -> List[str]:
 
     except Exception as e:
         logging.error("[_extract_regular_key_queries_with_llm] Error extracting queries: %s", str(e))
+        logging.error("[_extract_regular_key_queries_with_llm] Full traceback: %s", traceback.format_exc())
         return extract_simple_keywords(requirements_text)
 
 
@@ -408,5 +410,5 @@ def search_by_entity_title_old(entity_names: List[str], service_code: str, exclu
     Поиск в едином хранилище страниц с точным совпадением title с именем сущности.
     TODO Что-то не так. Дублирование метода выше.
     """
-    logger.debug("[search_by_entity_title] <- Searching by exact title match for entities: %s", entity_names)
+    logger.warning("[search_by_entity_title_old] <- Searching by exact title match for entities: %s", entity_names)
     return unified_search_by_entity_title(entity_names, service_code, exclude_page_ids, embeddings_model)
