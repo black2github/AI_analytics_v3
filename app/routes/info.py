@@ -41,5 +41,6 @@ def get_info():
         "app_version": APP_VERSION,
         "git_version": os.getenv("GIT_COMMIT_SHA", "unknown"),
         "uptime": uptime_str,
-        "description": "RAG-based AI сервис для валидации требований аналитики."
+        "description": "RAG-based AI сервис для валидации требований аналитики.",
+        "supported_llm_providers": "openai (gpt) | anthropic | deepseek | ollama | kimi | gemini | grok"
     }
