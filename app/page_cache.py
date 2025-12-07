@@ -3,7 +3,7 @@
 import logging
 import time
 import threading
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from requests.exceptions import ConnectionError, RequestException
 from http.client import RemoteDisconnected
 
@@ -220,4 +220,134 @@ def get_cache_info():
         'current_size': current_size,
         'max_size': PAGE_CACHE_SIZE,
         'ttl': PAGE_CACHE_TTL
+    }
+
+# ============================================================================
+# ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ для /analyze_external
+# ============================================================================
+
+def process_and_cache_external_page(page_id: str, title: str, raw_html: str) -> dict:
+    """
+    Обрабатывает одну внешнюю страницу и помещает её в кеш.
+
+    Выполняет те же операции, что и get_page_data_cached(), но использует
+    уже полученные данные вместо запроса к Confluence API.
+
+    Args:
+        page_id: Идентификатор страницы
+        title: Заголовок страницы
+        raw_html: HTML содержимое страницы
+
+    Returns:
+        dict с результатом: {'success': bool, 'page_id': str, 'error': str}
+    """
+    try:
+        logger.debug("[process_and_cache_external_page] Processing page_id=%s, title='%s'",
+                     page_id, title)
+
+        # Выполняем все виды обработки HTML (как в get_page_data_cached)
+        full_content = filter_all_fragments(raw_html)
+        full_markdown = markdownify.markdownify(raw_html, heading_style="ATX")
+
+        # Импортируем здесь, чтобы избежать циклических зависимостей
+        from app.filter_approved_fragments import filter_approved_fragments
+        approved_content = filter_approved_fragments(raw_html)
+
+        # Определяем тип требования
+        requirement_type = analyze_content_template_type(title, raw_html)
+
+        # Формируем результат в том же формате, что и get_page_data_cached
+        result = {
+            'id': page_id,
+            'title': title,
+            'raw_html': raw_html,
+            'full_content': full_content,
+            'full_markdown': full_markdown,
+            'approved_content': approved_content,
+            'requirement_type': requirement_type
+        }
+
+        # Помещаем в кеш (перезаписываем если существует)
+        cache_key = hashkey(page_id)
+        with cache_lock:
+            page_cache[cache_key] = result
+
+        logger.debug("[process_and_cache_external_page] Successfully cached page_id=%s, type='%s'",
+                     page_id, requirement_type)
+
+        return {
+            'success': True,
+            'page_id': page_id,
+            'error': None
+        }
+
+    except Exception as e:
+        error_msg = f"Error processing page: {str(e)}"
+        logger.error("[process_and_cache_external_page] Failed to process page_id=%s: %s",
+                     page_id, error_msg, exc_info=True)
+
+        return {
+            'success': False,
+            'page_id': page_id,
+            'error': error_msg
+        }
+
+
+def process_and_cache_external_pages(pages: List[Dict[str, str]]) -> dict:
+    """
+    Обрабатывает список внешних страниц и помещает их в кеш.
+
+    Args:
+        pages: Список словарей с ключами 'page_id', 'title', 'content'
+
+    Returns:
+        dict со статистикой: {
+            'total': int,
+            'cached': int,
+            'failed': int,
+            'failed_pages': list
+        }
+    """
+    logger.info("[process_and_cache_external_pages] <- Processing %d pages", len(pages))
+
+    total = len(pages)
+    cached = 0
+    failed = 0
+    failed_pages = []
+
+    for page_data in pages:
+        page_id = page_data.get('page_id')
+        title = page_data.get('title')
+        content = page_data.get('content')
+
+        if not all([page_id, title, content]):
+            error_msg = "Missing required fields (page_id, title, or content)"
+            logger.warning("[process_and_cache_external_pages] %s for page_id=%s",
+                           error_msg, page_id)
+            failed += 1
+            failed_pages.append({
+                'page_id': page_id or 'unknown',
+                'error': error_msg
+            })
+            continue
+
+        result = process_and_cache_external_page(page_id, title, content)
+
+        if result['success']:
+            cached += 1
+        else:
+            failed += 1
+            failed_pages.append({
+                'page_id': result['page_id'],
+                'error': result['error']
+            })
+
+    logger.info("[process_and_cache_external_pages] -> Cached: %d/%d, Failed: %d",
+                cached, total, failed)
+
+    return {
+        'total': total,
+        'cached': cached,
+        'failed': failed,
+        'failed_pages': failed_pages
     }
