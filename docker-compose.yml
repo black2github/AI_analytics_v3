@@ -1,0 +1,22 @@
+services:
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: rag-services:latest
+    container_name: rag-services
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - PYTHONPATH=/
+      # Офлайн режим для HuggingFace (опционально - уже в Dockerfile)
+      - TRANSFORMERS_OFFLINE=1
+      - HF_HUB_OFFLINE=1
+      - HF_HOME=/root/.cache/huggingface
+    env_file:
+      - .env
+    # ОПЦИОНАЛЬНО: Примонтировать кэш как volume для обновлений
+    # volumes:
+    #   - ./docker_cache/huggingface:/root/.cache/huggingface:ro  # read-only
+
+
