@@ -1,0 +1,254 @@
+{
+	"info": {
+		"name": "Confluence to Analyze W6",
+		"description": "Коллекция для получения страниц из Confluence и их анализа",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "confluence_base_url",
+			"value": "https://confluence.gboteam.ru/rest/api/content",
+			"type": "string"
+		},
+		{
+			"key": "confluence_login",
+			"value": "your_confluence_login",
+			"type": "string"
+		},
+		{
+			"key": "confluence_password",
+			"value": "your_confluence_password",
+			"type": "string"
+		},
+		{
+			"key": "analyze_base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "analyze_login",
+			"value": "your_analyze_login",
+			"type": "string"
+		},
+		{
+			"key": "analyze_password",
+			"value": "your_analyze_password",
+			"type": "string"
+		},
+		{
+			"key": "page_ids",
+			"value": "123456,789012,345678",
+			"type": "string",
+			"description": "ID страниц Confluence через запятую"
+		},
+		{
+			"key": "service_code",
+			"value": "confluence",
+			"type": "string",
+			"description": "Код сервиса для идентификации источника данных"
+		},
+		{
+			"key": "collected_pages",
+			"value": "[]",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Get Confluence Pages",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Получаем ID страниц из переменной",
+							"const pageIds = pm.collectionVariables.get('page_ids').split(',').map(id => id.trim());",
+							"",
+							"// Проверяем, первый ли это запуск",
+							"let currentIndex = pm.collectionVariables.get('current_page_index');",
+							"",
+							"if (currentIndex === undefined || currentIndex === null || currentIndex === '') {",
+							"    // Первый запуск - инициализируем",
+							"    currentIndex = 0;",
+							"    pm.collectionVariables.set('current_page_index', currentIndex);",
+							"    pm.collectionVariables.set('collected_pages', JSON.stringify([]));",
+							"    console.log('Начинаем сбор страниц. Всего страниц:', pageIds.length);",
+							"}",
+							"",
+							"// Устанавливаем текущий page_id",
+							"pm.collectionVariables.set('current_page_id', pageIds[currentIndex]);",
+							"console.log(`Запрос страницы ${parseInt(currentIndex) + 1} из ${pageIds.length}, ID: ${pageIds[currentIndex]}`);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Получаем ID страниц из переменной",
+							"const pageIds = pm.collectionVariables.get('page_ids').split(',').map(id => id.trim());",
+							"const currentIndex = pm.collectionVariables.get('current_page_index') || 0;",
+							"",
+							"if (pm.response.code === 200) {",
+							"    const response = pm.response.json();",
+							"    ",
+							"    // Собираем данные страницы без service_code",
+							"    const pageData = {",
+							"        page_id: response.id,",
+							"        title: response.title,",
+							"        content: response.body?.storage?.value || response.body?.view?.value || ''",
+							"    };",
+							"    ",
+							"    // Добавляем в массив собранных страниц",
+							"    let collectedPages = JSON.parse(pm.collectionVariables.get('collected_pages') || '[]');",
+							"    collectedPages.push(pageData);",
+							"    pm.collectionVariables.set('collected_pages', JSON.stringify(collectedPages));",
+							"    ",
+							"    console.log(`Собрана страница ${currentIndex + 1} из ${pageIds.length}: ${pageData.title}`);",
+							"    ",
+							"    // Проверяем, есть ли еще страницы для обработки",
+							"    const nextIndex = parseInt(currentIndex) + 1;",
+							"    ",
+							"    if (nextIndex < pageIds.length) {",
+							"        // Есть еще страницы - запускаем следующий запрос",
+							"        pm.collectionVariables.set('current_page_index', nextIndex);",
+							"        pm.collectionVariables.set('current_page_id', pageIds[nextIndex]);",
+							"        postman.setNextRequest('1. Get Confluence Pages');",
+							"    } else {",
+							"        // Все страницы собраны - переходим к анализу",
+							"        console.log('Все страницы собраны:', collectedPages.length);",
+							"        pm.collectionVariables.unset('current_page_index');",
+							"        postman.setNextRequest('2. Analyze Pages');",
+							"    }",
+							"} else {",
+							"    console.error('Ошибка получения страницы:', pm.response.code);",
+							"    postman.setNextRequest(null);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{confluence_login}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{confluence_password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{confluence_base_url}}/{{current_page_id}}?expand=body.storage,body.view",
+					"host": ["{{confluence_base_url}}"],
+					"path": ["{{current_page_id}}"],
+					"query": [
+						{
+							"key": "expand",
+							"value": "body.storage,body.view",
+							"description": "Получить содержимое страницы"
+						}
+					]
+				},
+				"description": "Получение данных страницы Confluence по ID"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Analyze Pages",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Подготовка данных для отправки на анализ",
+							"const collectedPages = JSON.parse(pm.collectionVariables.get('collected_pages') || '[]');",
+							"const serviceCode = pm.collectionVariables.get('service_code');",
+							"",
+							"// Формируем объект для отправки",
+							"const analyzePayload = {",
+							"    pages: collectedPages",
+							"};",
+							"",
+							"// Добавляем service_code на уровень pages, только если он установлен",
+							"if (serviceCode && serviceCode.trim() !== '') {",
+							"    analyzePayload.service_code = serviceCode;",
+							"}",
+							"",
+							"pm.collectionVariables.set('analyze_payload', JSON.stringify(analyzePayload));",
+							"",
+							"const serviceInfo = serviceCode ? ` (service_code: ${serviceCode})` : '';",
+							"console.log(`Подготовлено страниц для анализа: ${collectedPages.length}${serviceInfo}`);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    console.log('Анализ успешно выполнен');",
+							"    const result = pm.response.json();",
+							"    console.log('Результат анализа:', JSON.stringify(result, null, 2));",
+							"} else {",
+							"    console.error('Ошибка анализа:', pm.response.code, pm.response.text());",
+							"}",
+							"",
+							"// Очистка временных переменных",
+							"pm.collectionVariables.unset('collected_pages');",
+							"pm.collectionVariables.unset('analyze_payload');",
+							"pm.collectionVariables.unset('current_page_id');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "username",
+							"value": "{{analyze_login}}",
+							"type": "string"
+						},
+						{
+							"key": "password",
+							"value": "{{analyze_password}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{analyze_payload}}"
+				},
+				"url": {
+					"raw": "{{analyze_base_url}}/analyze_external_pages",
+					"host": ["{{analyze_base_url}}"],
+					"path": ["analyze"]
+				},
+				"description": "Отправка собранных страниц на анализ"
+			},
+			"response": []
+		}
+	]
+}
