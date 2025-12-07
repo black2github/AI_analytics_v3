@@ -193,53 +193,54 @@ def build_context_optimized(
         logger.info("[build_context_optimized] Step 1: %d exact docs, %d tokens used",
                     len(context_docs), current_tokens)
 
-    # #
-    # # 2. СЕРВИСНЫЕ ДОКУМЕНТЫ (если еще есть место)
-    # #
-    # if get_bool_env("IS_SERVICE_DOCS_CONTEXT"):
-    #     if len(context_docs) < MAX_DOCS_TOTAL and current_tokens < MAX_TOKENS_TOTAL:
-    #         search_queries = _prepare_search_queries(requirements_text)
-    #         entity_queries = extract_entity_attribute_queries(requirements_text)
-    #         regular_queries = [q for q in search_queries if q not in entity_queries]
     #
-    #         service_docs = unified_service_search(
-    #             queries=regular_queries,
-    #             service_code=service_code,
-    #             exclude_page_ids=exclude_page_ids,
-    #             k_per_query=2,
-    #             embeddings_model=embeddings_model
-    #         )
+    # 2. СЕРВИСНЫЕ ДОКУМЕНТЫ (если еще есть место)
     #
-    #         # Дедупликация с уже найденными
-    #         service_docs = _deduplicate_with_existing(service_docs, context_docs)
-    #
-    #         # Ограничиваем количество
-    #         max_service = min(5, MAX_DOCS_TOTAL - len(context_docs))
-    #         service_docs = service_docs[:max_service]
-    #
-    #         for doc in service_docs:
-    #             tokens = count_tokens_with_header(doc)
-    #
-    #             # Обрезаем большие документы
-    #             if tokens > MAX_TOKENS_TOTAL * 0.25:
-    #                 max_doc_tokens = int(MAX_TOKENS_TOTAL * 0.25)
-    #                 doc = _truncate_document(doc, max_doc_tokens)
-    #                 tokens = count_tokens_with_header(doc)
-    #
-    #             if current_tokens + tokens < MAX_TOKENS_TOTAL and len(context_docs) < MAX_DOCS_TOTAL:
-    #                 context_docs.append(doc)
-    #                 current_tokens += tokens
-    #                 logger.debug(
-    #                     "[build_context_optimized] Added service doc: %s (%d tokens, total: %d/%d)",
-    #                     doc.metadata.get('page_id'), tokens, current_tokens, MAX_TOKENS_TOTAL
-    #                 )
-    #             else:
-    #                 logger.info("[build_context_optimized] Limit reached at service docs")
-    #                 break
-    #
-    #     logger.info("[build_context_optimized] Step 2: %d total docs, %d tokens used",
-    #                 len(context_docs), current_tokens)
-    #
+    if get_bool_env("IS_SERVICE_DOCS_CONTEXT"):
+        logger.info("[build_context_optimized] Adding services docs to context.")
+        if len(context_docs) < MAX_DOCS_TOTAL and current_tokens < MAX_TOKENS_TOTAL:
+            search_queries = _prepare_search_queries(requirements_text)
+            entity_queries = extract_entity_attribute_queries(requirements_text)
+            regular_queries = [q for q in search_queries if q not in entity_queries]
+
+            service_docs = unified_service_search(
+                queries=regular_queries,
+                service_code=service_code,
+                exclude_page_ids=exclude_page_ids,
+                k_per_query=2,
+                embeddings_model=embeddings_model
+            )
+
+            # Дедупликация с уже найденными
+            service_docs = _deduplicate_with_existing(service_docs, context_docs)
+
+            # Ограничиваем количество
+            max_service = min(5, MAX_DOCS_TOTAL - len(context_docs))
+            service_docs = service_docs[:max_service]
+
+            for doc in service_docs:
+                tokens = count_tokens_with_header(doc)
+
+                # Обрезаем большие документы
+                if tokens > MAX_TOKENS_TOTAL * 0.25:
+                    max_doc_tokens = int(MAX_TOKENS_TOTAL * 0.25)
+                    doc = _truncate_document(doc, max_doc_tokens)
+                    tokens = count_tokens_with_header(doc)
+
+                if current_tokens + tokens < MAX_TOKENS_TOTAL and len(context_docs) < MAX_DOCS_TOTAL:
+                    context_docs.append(doc)
+                    current_tokens += tokens
+                    logger.debug(
+                        "[build_context_optimized] Added service doc: %s (%d tokens, total: %d/%d)",
+                        doc.metadata.get('page_id'), tokens, current_tokens, MAX_TOKENS_TOTAL
+                    )
+                else:
+                    logger.info("[build_context_optimized] Limit reached at service docs")
+                    break
+
+        logger.info("[build_context_optimized] Step 2: %d total docs, %d tokens used",
+                    len(context_docs), current_tokens)
+
     # #
     # # 3. ПЛАТФОРМЕННЫЕ ДОКУМЕНТЫ (если еще есть место)
     # #
