@@ -9,7 +9,7 @@ anyio.to_thread.current_default_thread_limiter().total_tokens = 50
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.44.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.44.1")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -80,7 +80,7 @@ CHUNK_OVERLAP=200   # символов
 # ТОЧНЫЕ совпадения по именам сущностей по всему хранилищу
 IS_ENTITY_NAMES_CONTEXT = True
 # Сервисные документы
-IS_SERVICE_DOCS_CONTEXT = False
+IS_SERVICE_DOCS_CONTEXT = True
 # Платформенные (за исключение dataModel)
 IS_PLATFORM_DOCS_CONTEXT = False
 # Ссылки из требования
