@@ -78,13 +78,13 @@ CHUNK_OVERLAP=200   # символов
 # Настройки построения контекста
 #
 # ТОЧНЫЕ совпадения по именам сущностей по всему хранилищу
-IS_ENTITY_NAMES_CONTEXT = "True"
+IS_ENTITY_NAMES_CONTEXT = True
 # Сервисные документы
-IS_SERVICE_DOCS_CONTEXT = "False"
+IS_SERVICE_DOCS_CONTEXT = False
 # Платформенные (за исключение dataModel)
-IS_PLATFORM_DOCS_CONTEXT = "False"
+IS_PLATFORM_DOCS_CONTEXT = False
 # Ссылки из требования
-IS_SERVICE_LINKS_CONTEXT = "True"
+IS_SERVICE_LINKS_CONTEXT = True
 
 # TRANSFORMERS_OFFLINE=1 и HF_HUB_OFFLINE=1 - полный OFF-LINE режим
 # влияют НА БИБЛИОТЕКИ, а не код !!!
