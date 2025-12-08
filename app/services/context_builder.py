@@ -156,6 +156,7 @@ def build_context_optimized(
     # 1. ТОЧНЫЕ СОВПАДЕНИЯ (высший приоритет)
     #
     if get_bool_env("IS_ENTITY_NAMES_CONTEXT"):
+        logger.info("[build_context_optimized] Adding entity names to context.")
         entity_names = extract_entity_names_from_requirements(requirements_text)
         if entity_names and len(context_docs) < MAX_DOCS_TOTAL:
             exact_docs = unified_search_by_entity_title(
