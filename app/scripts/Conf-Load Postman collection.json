@@ -48,6 +48,12 @@
 			"description": "Код сервиса для идентификации источника данных"
 		},
 		{
+			"key": "source",
+			"value": "DBOCORPESPLN",
+			"type": "string",
+			"description": "Источник данных (опционально, по умолчанию DBOCORPESPLN)"
+		},
+		{
 			"key": "collected_pages",
 			"value": "[]",
 			"type": "string"
@@ -174,6 +180,7 @@
 							"// Подготовка данных для отправки на загрузку",
 							"const collectedPages = JSON.parse(pm.collectionVariables.get('collected_pages') || '[]');",
 							"const serviceCode = pm.collectionVariables.get('service_code');",
+							"const source = pm.collectionVariables.get('source');",
 							"",
 							"// Формируем объект для отправки",
 							"const loadPayload = {",
@@ -185,10 +192,16 @@
 							"    loadPayload.service_code = serviceCode;",
 							"}",
 							"",
+							"// Добавляем source, если он установлен и не пустой",
+							"if (source && source.trim() !== '') {",
+							"    loadPayload.source = source;",
+							"}",
+							"",
 							"pm.collectionVariables.set('load_payload', JSON.stringify(loadPayload));",
 							"",
 							"const serviceInfo = serviceCode ? ` (service_code: ${serviceCode})` : '';",
-							"console.log(`Подготовлено страниц для загрузки: ${collectedPages.length}${serviceInfo}`);"
+							"const sourceInfo = source ? `, source: ${source}` : '';",
+							"console.log(`Подготовлено страниц для загрузки: ${collectedPages.length}${serviceInfo}${sourceInfo}`);"
 						],
 						"type": "text/javascript"
 					}
@@ -244,7 +257,7 @@
 				"url": {
 					"raw": "{{load_base_url}}/load_external_pages",
 					"host": ["{{load_base_url}}"],
-					"path": ["load"]
+					"path": ["load_external_pages"]
 				},
 				"description": "Отправка собранных страниц на загрузку"
 			},
