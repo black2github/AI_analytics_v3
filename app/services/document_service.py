@@ -18,8 +18,8 @@ class DocumentService:
     def load_approved_pages(self, page_ids: List[str], service_code: Optional[str] = None,
                             source: str = "DBOCORPESPLN") -> Dict:
         """Загружает только подтвержденные требования в единое хранилище"""
-        logger.info("[DocumentService.load_approved_pages] <- page_ids=%s, service_code=%s",
-                    page_ids, service_code)
+        logger.info("[DocumentService.load_approved_pages] <- page_ids=%s, service_code=%s, source=%s",
+                    page_ids, service_code, source)
 
         # Определяем код сервиса
         if not service_code:
