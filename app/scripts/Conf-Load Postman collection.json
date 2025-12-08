@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "Confluence to Load W6",
-		"description": "Коллекция для получения страниц из Confluence и их загрузки",
+		"description": "Коллекция для получения страниц из Confluence и их загрузки в векторное хранилище",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
