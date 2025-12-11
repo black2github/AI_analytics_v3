@@ -1,0 +1,314 @@
+{
+  "info": {
+    "name": "Requirements Agent API",
+    "description": "Коллекция запросов для тестирования LLM-агента аналитика требований",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Agent",
+      "item": [
+        {
+          "name": "1. Get Agent Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/agent/info",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "info"]
+            },
+            "description": "Получить информацию о статусе агента и текущей сессии"
+          }
+        },
+        {
+          "name": "2. Get Available Tools",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/agent/tools",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "tools"]
+            },
+            "description": "Получить список доступных инструментов агента"
+          }
+        },
+        {
+          "name": "3. Chat - Simple Question",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Привет! Расскажи что ты умеешь?\",\n  \"reset_history\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Простой вопрос агенту для проверки работоспособности"
+          }
+        },
+        {
+          "name": "4. Chat - Search Requirements",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Найди требования по авторизации\",\n  \"service_code\": \"SBP\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Поиск требований через агента (использует search_requirements tool)"
+          }
+        },
+        {
+          "name": "5. Chat - Analyze Page",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Проанализируй страницу 274628758 и дай рекомендации\",\n  \"service_code\": \"SBP\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Анализ конкретной страницы (использует analyze_page tool)"
+          }
+        },
+        {
+          "name": "6. Chat - Check Template",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Проверь соответствие страницы 274628758 шаблону функционального требования\",\n  \"service_code\": \"SBP\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Проверка соответствия шаблону (использует check_template_compliance tool)"
+          }
+        },
+        {
+          "name": "7. Chat - Complex Query",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Найди все нефункциональные требования к производительности и проверь есть ли среди них требования к времени отклика\",\n  \"service_code\": \"SBP\",\n  \"reset_history\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Сложный запрос с несколькими шагами рассуждений"
+          }
+        },
+        {
+          "name": "8. Chat - Multi-turn Dialog",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Проанализируй первую найденную страницу детально\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/agent/chat",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "chat"]
+            },
+            "description": "Продолжение диалога (агент помнит контекст предыдущих сообщений)"
+          }
+        },
+        {
+          "name": "9. Reset Conversation",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/agent/reset",
+              "host": ["{{base_url}}"],
+              "path": ["agent", "reset"]
+            },
+            "description": "Сброс истории диалога"
+          }
+        }
+      ],
+      "description": "Endpoints для работы с агентом-аналитиком"
+    },
+    {
+      "name": "Testing Scenarios",
+      "item": [
+        {
+          "name": "Scenario 1: Find and Analyze",
+          "item": [
+            {
+              "name": "Step 1 - Search",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Найди требования по СБП\",\n  \"service_code\": \"SBP\",\n  \"reset_history\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agent/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["agent", "chat"]
+                }
+              }
+            },
+            {
+              "name": "Step 2 - Analyze First Result",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Проанализируй первую страницу из результатов поиска\",\n  \"reset_history\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agent/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["agent", "chat"]
+                }
+              }
+            },
+            {
+              "name": "Step 3 - Check Template",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Проверь соответствие этой страницы шаблону\",\n  \"reset_history\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agent/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["agent", "chat"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Scenario 2: Quality Check",
+          "item": [
+            {
+              "name": "Step 1 - Analyze Specific Page",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Проанализируй страницу 274628758\",\n  \"reset_history\": true\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agent/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["agent", "chat"]
+                }
+              }
+            },
+            {
+              "name": "Step 2 - Ask for Recommendations",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Какие есть проблемы и как их исправить?\",\n  \"reset_history\": false\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/agent/chat",
+                  "host": ["{{base_url}}"],
+                  "path": ["agent", "chat"]
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Типовые сценарии использования агента"
+    }
+  ]
+}
