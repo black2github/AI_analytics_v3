@@ -5,24 +5,81 @@ from typing import Optional, List
 import tiktoken
 from bs4 import BeautifulSoup
 from langchain_core.prompts import PromptTemplate
-from langchain_core.runnables import Runnable # Добавлен для типизации LCEL
-#from langchain.chains.llm import LLMChain
-# from langchain_community.chains import LLMChain # УДАЛЕНО: Заменено на LCEL
-from app.config import TEMPLATE_ANALYSIS_PROMPT_FILE, PAGE_ANALYSIS_PROMPT_FILE
+from langchain_core.runnables import Runnable
+from langchain_core.documents import Document
+
+from app.config import TEMPLATE_ANALYSIS_PROMPT_FILE, PAGE_ANALYSIS_PROMPT_FILE, UNIFIED_STORAGE_NAME
 from app.confluence_loader import get_page_content_by_id, extract_approved_fragments
-from app.llm_interface import get_llm
+from app.llm_interface import get_llm, get_embeddings_model
 from app.utils.style_utils import has_colored_style
 
-# ИСПРАВЛЕНО: Убрали глобальную инициализацию LLM
-# llm = get_llm()  # <-- УДАЛЕНО!
 logger = logging.getLogger(__name__)
 
 
-def build_chain(prompt_template: Optional[str]) -> Runnable: # ИЗМЕНЕНО: тип возврата на Runnable
+# ============================================================================
+# ДОБАВЛЕНА ФУНКЦИЯ search_documents
+# ============================================================================
+
+def search_documents(
+        query: str,
+        service_code: Optional[str] = None,
+        top_k: int = 5
+) -> List[Document]:
+    """
+    Поиск документов в векторном хранилище.
+
+    Args:
+        query: Поисковый запрос
+        service_code: Код сервиса для фильтрации (опционально)
+        top_k: Количество результатов
+
+    Returns:
+        Список найденных документов
+    """
+    logger.info("[search_documents] <- query='%s', service_code=%s, top_k=%d",
+                query, service_code, top_k)
+
+    try:
+        from app.embedding_store import get_vectorstore
+
+        # Получаем векторное хранилище
+        embeddings_model = get_embeddings_model()
+        vectorstore = get_vectorstore(UNIFIED_STORAGE_NAME, embedding_model=embeddings_model)
+
+        # Формируем фильтр если указан service_code
+        search_kwargs = {"k": top_k}
+
+        if service_code:
+            search_kwargs["filter"] = {
+                "$and": [
+                    {"doc_type": {"$eq": "requirement"}},
+                    {"service_code": {"$eq": service_code}}
+                ]
+            }
+        else:
+            search_kwargs["filter"] = {"doc_type": {"$eq": "requirement"}}
+
+        # Выполняем поиск
+        logger.debug("[search_documents] query='%s', search_kwargs=%s , top_k=%d",
+                     query, search_kwargs, top_k)
+        results = vectorstore.similarity_search(query, **search_kwargs)
+
+        logger.info("[search_documents] -> Found %d documents", len(results))
+        return results
+
+    except Exception as e:
+        logger.error("[search_documents] Error: %s", str(e), exc_info=True)
+        return []
+
+
+# ============================================================================
+# ОСТАЛЬНЫЕ ФУНКЦИИ (без изменений)
+# ============================================================================
+
+def build_chain(prompt_template: Optional[str]) -> Runnable:
     """Создает цепочку LangChain с заданным шаблоном промпта (LCEL)."""
     logger.info("[build_chain] <- prompt_template=%s", bool(prompt_template))
 
-    # ИСПРАВЛЕНО: Получаем LLM при каждом вызове
     llm = get_llm()
 
     if prompt_template:
@@ -47,7 +104,7 @@ def build_chain(prompt_template: Optional[str]) -> Runnable: # ИЗМЕНЕНО:
             raise
 
     logger.info("[build_chain] -> prompt template created successfully")
-    return prompt | llm # ИСПРАВЛЕНО: Замена LLMChain на LCEL (prompt | llm)
+    return prompt | llm
 
 
 def _extract_links_from_unconfirmed_fragments(html_content: str, exclude_page_ids: List[str],
@@ -69,7 +126,6 @@ def _extract_links_from_unconfirmed_fragments(html_content: str, exclude_page_id
     exclude_set = set(exclude_page_ids)
 
     for element in soup.find_all(["p", "li", "span", "div", "td", "th"]):
-        # Если include_all=False, пропускаем элементы без цветного стиля (черные)
         if not include_all and not has_colored_style(element):
             continue
 
@@ -86,7 +142,6 @@ def _extract_confluence_links_from_element(element) -> List[str]:
     import re
     page_ids = []
 
-    # 1. Обычные HTML ссылки с pageId в URL
     for link in element.find_all('a', href=True):
         href = link['href']
         patterns = [
@@ -102,7 +157,6 @@ def _extract_confluence_links_from_element(element) -> List[str]:
                 page_ids.append(match.group(1))
                 break
 
-    # 2. Confluence макросы ссылок
     for ac_link in element.find_all('ac:link'):
         ri_page = ac_link.find('ri:page')
         if ri_page:
@@ -110,7 +164,6 @@ def _extract_confluence_links_from_element(element) -> List[str]:
             if page_id:
                 page_ids.append(page_id)
 
-    # 3. Прямые ri:page теги
     for ri_page in element.find_all('ri:page'):
         page_id = ri_page.get('ri:content-id')
         if page_id:
@@ -134,11 +187,10 @@ def _get_approved_content_cached(page_id: str) -> Optional[str]:
 _encoding = tiktoken.get_encoding("cl100k_base")
 
 
-def build_template_analysis_chain(custom_prompt: Optional[str] = None) -> Runnable: # ИЗМЕНЕНО: тип возврата на Runnable
+def build_template_analysis_chain(custom_prompt: Optional[str] = None) -> Runnable:
     """Создает цепочку LangChain для анализа соответствия шаблону (LCEL)."""
     logger.info("[build_template_analysis_chain] <- custom_prompt provided: %s", bool(custom_prompt))
 
-    # ИСПРАВЛЕНО: Получаем LLM при каждом вызове
     llm = get_llm()
 
     if custom_prompt:
@@ -173,4 +225,4 @@ def build_template_analysis_chain(custom_prompt: Optional[str] = None) -> Runnab
     )
 
     logger.info("[build_template_analysis_chain] -> Template analysis chain created")
-    return prompt | llm # ИСПРАВЛЕНО: Замена LLMChain на LCEL (prompt | llm)
+    return prompt | llm
