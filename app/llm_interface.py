@@ -28,7 +28,7 @@ def get_llm():
         return ChatOpenAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=OPENAI_API_KEY
+            api_key=os.getenv("OPENAI_API_KEY")
         )
 
     elif current_provider == "anthropic":
@@ -36,7 +36,7 @@ def get_llm():
         return ChatAnthropic(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=ANTHROPIC_API_KEY
+            api_key=os.getenv("ANTHROPIC_API_KEY")
         )
 
     elif current_provider == "deepseek":
@@ -44,8 +44,8 @@ def get_llm():
         return ChatOpenAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=DEEPSEEK_API_KEY,
-            base_url=DEEPSEEK_API_URL
+            api_key=os.getenv("DEEPSEEK_API_KEY"),
+            base_url=os.getenv("DEEPSEEK_API_URL")
         )
 
     elif current_provider == "ollama":
@@ -53,8 +53,8 @@ def get_llm():
         return ChatOpenAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=OLLAMA_API_KEY,
-            base_url=OLLAMA_API_URL
+            api_key=os.getenv("OLLAMA_API_KEY"),
+            base_url=os.getenv("OLLAMA_API_URL")
         )
 
     elif current_provider == "kimi":
@@ -62,8 +62,8 @@ def get_llm():
         return ChatOpenAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=KIMI_API_KEY,
-            base_url=KIMI_API_URL
+            api_key=os.getenv("KIMI_API_KEY"),
+            base_url=os.getenv("KIMI_API_URL")
         )
 
     elif current_provider == "gemini":
@@ -78,7 +78,7 @@ def get_llm():
         return ChatGoogleGenerativeAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=GEMINI_API_KEY
+            api_key=os.getenv("GEMINI_API_KEY")
             # API-ключ также может быть установлен через переменную окружения GOOGLE_API_KEY
             # или GEMINI_API_KEY, и тогда 'api_key' не обязателен.
         )
@@ -99,8 +99,8 @@ def get_llm():
         return ChatOpenAI(
             model=llm_model,
             temperature=float(llm_temperature),
-            api_key=XAI_API_KEY,
-            base_url=XAI_API_URL
+            api_key=os.getenv("XAI_API_KEY"),
+            base_url=os.getenv("XAI_API_URL")
         )
 
     raise ValueError(f"Unsupported LLM provider: {current_provider}")
