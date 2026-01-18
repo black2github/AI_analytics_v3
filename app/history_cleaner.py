@@ -27,7 +27,7 @@ def remove_history_sections(html_content: str) -> str:
     if not html_content or not html_content.strip():
         return html_content
 
-    logger.debug("[remove_history_sections] <- html length: %d", len(html_content))
+    logger.info("[remove_history_sections] <- html length: %d", len(html_content))
 
     soup = BeautifulSoup(html_content, 'html.parser')
     removed_sections = 0
