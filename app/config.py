@@ -9,7 +9,7 @@ anyio.to_thread.current_default_thread_limiter().total_tokens = 50
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.44.1")
+APP_VERSION = os.getenv("APP_VERSION", "0.45.1")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -23,6 +23,10 @@ GEMINI_API_URL = os.getenv("GEMINI_API_URL")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 XAI_API_KEY = os.getenv("XAI_API_KEY")
 XAI_API_URL = os.getenv("XAI_API_URL")
+QWEN_API_KEY = os.getenv("QWEN_API_KEY")
+QWEN_BASE_URL = os.getenv("QWEN_BASE_URL")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL")
 
 CONFLUENCE_API_TOKEN = os.getenv("CONFLUENCE_API_TOKEN")
 CONFLUENCE_USER = os.getenv("CONFLUENCE_USER")
@@ -38,6 +42,8 @@ JIRA_API_TOKEN = os.getenv("JIRA_API_TOKEN")  # Альтернатива пар�
 LLM_PROVIDER = os.getenv("LLM_PROVIDER")
 LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4") # gpt-3.5-turbo, gpt-3.5-turbo-16k, gpt-4-32k...
 LLM_TEMPERATURE = os.getenv("LLM_TEMPERATURE", "0.2")
+AGENT_MODEL = os.getenv("AGENT_MODEL")
+AGENT_TEMPERATURE = os.getenv("AGENT_TEMPERATURE", "0.2")
 LLM_CONTEXT_SIZE = 128000
 
 # openai | huggingface
@@ -78,13 +84,13 @@ CHUNK_OVERLAP=200   # символов
 # Настройки построения контекста
 #
 # ТОЧНЫЕ совпадения по именам сущностей по всему хранилищу
-IS_ENTITY_NAMES_CONTEXT = True
+IS_ENTITY_NAMES_CONTEXT="True"
 # Сервисные документы
-IS_SERVICE_DOCS_CONTEXT = True
+IS_SERVICE_DOCS_CONTEXT="True"
 # Платформенные (за исключение dataModel)
-IS_PLATFORM_DOCS_CONTEXT = False
+IS_PLATFORM_DOCS_CONTEXT="False"
 # Ссылки из требования
-IS_SERVICE_LINKS_CONTEXT = True
+IS_SERVICE_LINKS_CONTEXT="True"
 
 # TRANSFORMERS_OFFLINE=1 и HF_HUB_OFFLINE=1 - полный OFF-LINE режим
 # влияют НА БИБЛИОТЕКИ, а не код !!!
