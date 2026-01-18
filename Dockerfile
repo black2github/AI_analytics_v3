@@ -19,12 +19,17 @@ COPY requirements.txt .
 ENV PIP_DEFAULT_TIMEOUT=100
 RUN pip install --no-cache-dir --upgrade pip
 
-# Устанавливаем зависимости отдельным слоем для кэширования
-# ВАЖНО: --extra-index-url для CPU-версии PyTorch
+# КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Устанавливаем PyTorch CPU-only ПЕРЕД requirements.txt
 RUN pip install --no-cache-dir \
     --timeout 100 \
     --retries 5 \
-    --extra-index-url https://download.pytorch.org/whl/cpu \
+    --index-url https://download.pytorch.org/whl/cpu \
+    torch==2.7.0
+
+# Теперь устанавливаем остальные зависимости (БЕЗ torch, он уже установлен)
+RUN pip install --no-cache-dir \
+    --timeout 100 \
+    --retries 5 \
     -r requirements.txt
 
 # ============================================================================
