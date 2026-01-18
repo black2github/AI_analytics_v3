@@ -11,7 +11,7 @@ import os
 # ============================================================================
 # БАЗОВЫЕ НАСТРОЙКИ АГЕНТА
 # ============================================================================
-
+AGENT_PROVIDER = os.getenv("AGENT_PROVIDER", os.getenv("LLM_PROVIDER", "gpt-4"))
 AGENT_MODEL = os.getenv("AGENT_MODEL", os.getenv("LLM_MODEL", "gpt-4"))
 AGENT_TEMPERATURE = float(os.getenv("AGENT_TEMPERATURE", "0.3"))
 AGENT_MAX_ITERATIONS = int(os.getenv("AGENT_MAX_ITERATIONS", "5"))
@@ -133,8 +133,8 @@ AGENT_TOOLS_DESCRIPTIONS = {
         - Получить рекомендации по приведению к стандарту
 
         Входные параметры:
-        - page_id (str): идентификатор страницы
-        - requirement_type (str, optional): тип требования (FR, NFR, dataModel, process и т.д.)
+        - page_id (str): идентификатор страницы Confluence
+        - requirement_type (str, optional): тип требования (process, dataModel, function, integration, control, screenListForm и т.д.)
           Если не указан - будет определён автоматически
         - service_code (str, optional): код сервиса
 
