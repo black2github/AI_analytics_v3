@@ -47,8 +47,8 @@ def validate_config_values(config: ConfigUpdateRequest) -> None:
 
     # Валидация LLM_PROVIDER
     if config.LLM_PROVIDER is not None:
-        # openai | anthropic | deepseek | ollama | kimi | gemini | grok
-        valid_providers = ["openai", "anthropic", "deepseek", "ollama", "kimi", "gemini", "grok"]
+        # openai | anthropic | deepseek | ollama | kimi | gemini | grok | qwen | openrouter
+        valid_providers = ["openai", "anthropic", "deepseek", "ollama", "kimi", "gemini", "grok", "qwen", "openrouter"]
         if config.LLM_PROVIDER not in valid_providers:
             raise HTTPException(
                 status_code=400,
