@@ -16,14 +16,17 @@ from app.config import (
 
 logger = logging.getLogger(__name__)
 
-def get_llm():
-    logger.debug("[get_llm] <-.")
+def get_llm(provider=None, model=None, temperature=None):
+    logger.debug("[get_llm] <- provider=%s, model=%s, temperature=%s.", provider, model, temperature)
     import os
-    current_provider = os.getenv("LLM_PROVIDER", LLM_PROVIDER)  # fallback на импортированное
-    llm_model = os.getenv("LLM_MODEL", LLM_MODEL)  # fallback на импортированное
-    llm_temperature = os.getenv("LLM_TEMPERATURE", LLM_TEMPERATURE)  # fallback на импортированное
+    # Используем переданные параметры или значения из окружения или allback на импортированное
+    provider = provider if provider is not None else os.getenv("LLM_PROVIDER", LLM_PROVIDER)
+    llm_model = model if model is not None else os.getenv("LLM_MODEL", LLM_MODEL)
+    llm_temperature = temperature if temperature is not None else os.getenv("LLM_TEMPERATURE", LLM_TEMPERATURE)
 
-    if current_provider == "openai":
+    logger.info("[get_llm] using LLM_MODEL='%s', LLM_TEMPERATURE='%s'", llm_model, llm_temperature)
+
+    if provider == "openai":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
             model=llm_model,
@@ -31,7 +34,7 @@ def get_llm():
             api_key=os.getenv("OPENAI_API_KEY")
         )
 
-    elif current_provider == "anthropic":
+    elif provider == "anthropic":
         from langchain_anthropic import ChatAnthropic
         return ChatAnthropic(
             model=llm_model,
@@ -39,7 +42,7 @@ def get_llm():
             api_key=os.getenv("ANTHROPIC_API_KEY")
         )
 
-    elif current_provider == "deepseek":
+    elif provider == "deepseek":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
             model=llm_model,
@@ -48,7 +51,7 @@ def get_llm():
             base_url=os.getenv("DEEPSEEK_API_URL")
         )
 
-    elif current_provider == "ollama":
+    elif provider == "ollama":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
             model=llm_model,
@@ -57,7 +60,7 @@ def get_llm():
             base_url=os.getenv("OLLAMA_API_URL")
         )
 
-    elif current_provider == "kimi":
+    elif provider == "kimi":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
             model=llm_model,
@@ -66,7 +69,25 @@ def get_llm():
             base_url=os.getenv("KIMI_API_URL")
         )
 
-    elif current_provider == "gemini":
+    elif provider == "fireworks":
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model=llm_model,
+            temperature=float(llm_temperature),
+            api_key=os.getenv("QWEN_API_KEY"),
+            base_url=os.getenv("QWEN_BASE_URL")
+        )
+
+    elif provider == "openrouter":
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model=llm_model,
+            temperature=float(llm_temperature),
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url=os.getenv("OPENROUTER_BASE_URL")
+        )
+
+    elif provider == "gemini":
         # Убедитесь, что установлена библиотека: pip install langchain-google-genai
         from langchain_google_genai import ChatGoogleGenerativeAI
 
@@ -83,7 +104,7 @@ def get_llm():
             # или GEMINI_API_KEY, и тогда 'api_key' не обязателен.
         )
 
-    elif current_provider == "grok":
+    elif provider == "grok":
     #     # Убедитесь, что установлена библиотека: pip install langchain-xai
     #     from langchain_xai import ChatXAI
     #
@@ -103,7 +124,7 @@ def get_llm():
             base_url=os.getenv("XAI_API_URL")
         )
 
-    raise ValueError(f"Unsupported LLM provider: {current_provider}")
+    raise ValueError(f"Unsupported LLM provider: {provider}")
 
 
 @lru_cache(maxsize=10)
