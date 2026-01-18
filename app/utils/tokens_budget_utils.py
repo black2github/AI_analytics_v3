@@ -32,6 +32,10 @@ LLM_CONTEXT_SIZES = {
     'grok-4-1-fast-non-reasoning': 2000000,
     'grok-4-1-fast-reasoning': 2000000,
     'grok-code-fast': 256000,
+    'accounts/fireworks/models/qwen2p5-vl-32b-instruct' : 125000,
+    'qwen/qwen3-30b-a3b-instruct-2507' : 32000,
+    'qwen/qwen3-next-80b-a3b-instruct' : 262000,
+    'qwen/qwen3-32b' : 40000,
     'default': LLM_CONTEXT_SIZE
 }
 
