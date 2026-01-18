@@ -4,7 +4,7 @@
 LLM-агент для анализа требований к системе ДБО.
 Использует современный langchain.agents.create_agent (langchain 1.1.2+)
 
-ФИНАЛЬНАЯ ВЕРСИЯ для langchain 1.1.2 / LangGraph 1.0.4+
+ИСПРАВЛЕНО: использование StructuredTool для многопараметрических инструментов
 """
 
 import logging
@@ -15,7 +15,8 @@ from typing import List, Dict, Any, Optional
 # ============================================================================
 from langchain.agents import create_agent
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain_core.tools import Tool
+from langchain_core.tools import StructuredTool
+from pydantic import BaseModel, Field
 
 from app.agents.agent_config import (
     AGENT_SYSTEM_PROMPT,
@@ -29,6 +30,31 @@ from app.agents.agent_tools import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+# ============================================================================
+# СХЕМЫ АРГУМЕНТОВ ДЛЯ ИНСТРУМЕНТОВ (Pydantic models)
+# ============================================================================
+
+class SearchRequirementsInput(BaseModel):
+    """Схема входных данных для search_requirements"""
+    query: str = Field(..., description="Поисковый запрос для поиска требований")
+    service_code: Optional[str] = Field(None, description="Код сервиса (опционально, например 'SBP', 'PLATFORM')")
+    top_k: int = Field(5, description="Количество результатов (по умолчанию 5)")
+
+
+class AnalyzePageInput(BaseModel):
+    """Схема входных данных для analyze_page"""
+    page_ids: str = Field(..., description="ID страницы или несколько ID через запятую (например: '123456' или '123,456,789')")
+    service_code: Optional[str] = Field(None, description="Код сервиса (опционально)")
+    check_templates: bool = Field(False, description="Проверять ли соответствие шаблонам")
+
+
+class CheckTemplateComplianceInput(BaseModel):
+    """Схема входных данных для check_template_compliance"""
+    page_id: str = Field(..., description="ID страницы для проверки")
+    requirement_type: Optional[str] = Field(None, description="Тип требования (опционально, будет определён автоматически если не указан)")
+    service_code: Optional[str] = Field(None, description="Код сервиса (опционально)")
 
 
 class RequirementsAgent:
@@ -75,34 +101,37 @@ class RequirementsAgent:
 
         logger.info("[RequirementsAgent] Agent initialized with %d tools", len(self.tools))
 
-    def _initialize_tools(self) -> List[Tool]:
+    def _initialize_tools(self) -> List[StructuredTool]:
         """
-        Инициализирует инструменты агента.
+        Инициализирует инструменты агента используя StructuredTool.
 
         Returns:
-            Список инструментов LangChain
+            Список структурированных инструментов LangChain
         """
-        logger.debug("[RequirementsAgent] Initializing tools...")
+        logger.debug("[RequirementsAgent] Initializing structured tools...")
 
         tools = [
-            Tool(
+            StructuredTool(
                 name="search_requirements",
                 func=search_requirements_tool,
-                description=AGENT_TOOLS_DESCRIPTIONS["search_requirements"]["description"]
+                description=AGENT_TOOLS_DESCRIPTIONS["search_requirements"]["description"],
+                args_schema=SearchRequirementsInput
             ),
-            Tool(
+            StructuredTool(
                 name="analyze_page",
                 func=analyze_page_tool,
-                description=AGENT_TOOLS_DESCRIPTIONS["analyze_page"]["description"]
+                description=AGENT_TOOLS_DESCRIPTIONS["analyze_page"]["description"],
+                args_schema=AnalyzePageInput
             ),
-            Tool(
+            StructuredTool(
                 name="check_template_compliance",
                 func=check_template_compliance_tool,
-                description=AGENT_TOOLS_DESCRIPTIONS["check_template_compliance"]["description"]
+                description=AGENT_TOOLS_DESCRIPTIONS["check_template_compliance"]["description"],
+                args_schema=CheckTemplateComplianceInput
             )
         ]
 
-        logger.debug("[RequirementsAgent] Initialized %d tools", len(tools))
+        logger.debug("[RequirementsAgent] Initialized %d structured tools", len(tools))
         return tools
 
     def _create_agent(self):
@@ -257,5 +286,5 @@ class RequirementsAgent:
             "messages_count": len(self.chat_history),
             "service_code": self.service_code,
             "tools_available": [tool.name for tool in self.tools],
-            "agent_type": "LangChain Agent (create_agent)"
+            "agent_type": "LangChain Agent (create_agent with StructuredTools)"
         }
