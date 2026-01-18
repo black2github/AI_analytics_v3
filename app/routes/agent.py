@@ -5,6 +5,8 @@ API endpoints для взаимодействия с LLM-агентом анал
 """
 
 import logging
+import os
+
 import anyio
 from typing import Optional
 from fastapi import APIRouter, HTTPException
@@ -12,7 +14,6 @@ from pydantic import BaseModel, Field
 from anyio import to_thread
 
 from app.agents.requirements_agent import RequirementsAgent
-from app.agents.agent_config import AGENT_MODEL, AGENT_TEMPERATURE
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -65,11 +66,12 @@ def get_agent_instance(service_code: Optional[str] = None) -> RequirementsAgent:
         from app.llm_interface import get_llm
 
         # Создаём LLM для агента
-        # llm = get_llm(
-        #     model_name=AGENT_MODEL,
-        #     temperature=AGENT_TEMPERATURE
-        # )
-        llm = get_llm()
+        llm = get_llm(
+            provider = os.getenv("AGENT_PROVIDER"),
+            model = os.getenv("AGENT_MODEL"),
+            temperature = os.getenv("AGENT_TEMPERATURE")
+        )
+        # llm = get_llm()
 
         # Создаём агента
         _agent_instance = RequirementsAgent(
@@ -212,8 +214,8 @@ async def agent_info():
 
         return {
             "status": "active",
-            "model": AGENT_MODEL,
-            "temperature": AGENT_TEMPERATURE,
+            "model": os.getenv("AGENT_MODEL", os.getenv("LLM_MODEL")),
+            "temperature": os.getenv("AGENT_TEMPERATURE", os.getenv("LLM_TEMPERATURE")),
             "session": summary,
             "capabilities": [
                 "Поиск требований в базе знаний",
