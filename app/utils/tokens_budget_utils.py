@@ -23,6 +23,7 @@ LLM_CONTEXT_SIZES = {
     'claude-3-sonnet': 200000,
     'deepseek-chat': 128000,
     'kimi-k2-thinking': 256000,
+    'kimi-k2.5': 256000,
     'kimi-latest': 256000,
     'kimi-k2-thinking-turbo': 256000,
     'gemini-2.5-flash': 1048576,
