@@ -1,6 +1,7 @@
+# kimi-k2-turbo-preview
+# kimi-k2.5
 # moonshot-v1-128k-vision-preview
 # moonshot-v1-8k-vision-preview
-# kimi-k2-turbo-preview
 # moonshot-v1-auto
 # moonshot-v1-32k
 # kimi-latest
