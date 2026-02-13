@@ -4,8 +4,12 @@ import os
 from dotenv import load_dotenv
 import anyio
 
-# Установите лимиты для anyio
-anyio.to_thread.current_default_thread_limiter().total_tokens = 50
+# Устанавливаем лимиты для anyio только если в async контексте
+try:
+    anyio.to_thread.current_default_thread_limiter().total_tokens = 50
+except Exception:
+    # Скрипты запускаются синхронно - пропускаем
+    pass
 
 load_dotenv()
 
