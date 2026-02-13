@@ -4,6 +4,7 @@ import logging
 import os
 import time
 from pprint import pformat
+from typing import List
 
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -249,10 +250,20 @@ def prepare_unified_documents(
             "original_page_size": content_length
         }
 
-        if requirement_type:
-            base_metadata["requirement_type"] = requirement_type
-        elif page.get("requirement_type"):
-            base_metadata["requirement_type"] = page["requirement_type"]
+        # Всегда добавляем requirement_type в метаданные
+        req_type = requirement_type or page.get("requirement_type") or "unknown"
+        base_metadata["requirement_type"] = req_type
+        # Для интеграций добавляем target_system
+        if req_type == "integration":
+            from app.services.integration_parser import extract_target_system_from_title
+
+            target_system = extract_target_system_from_title(page["title"])
+            if target_system:
+                base_metadata["target_system"] = target_system
+                logger.debug(
+                    "[prepare_unified_documents] Added target_system='%s' for integration page %s",
+                    target_system, page["id"]
+                )
 
         # ===== СТРАТЕГИЯ 1: БЕЗ РАЗБИЕНИЯ =====
         if chunk_strategy == "none":
@@ -308,6 +319,38 @@ def prepare_unified_documents(
     logger.info("[prepare_unified_documents] -> Created %d documents total", len(docs))
     return docs
 
+
+def get_service_page_ids(service_code: str, doc_type: str = "requirement") -> List[str]:
+    """
+    Получает все page_ids для сервиса из ChromaDB.
+
+    Args:
+        service_code: Код сервиса
+        doc_type: Тип документа (по умолчанию "requirement")
+
+    Returns:
+        Список page_ids
+    """
+    logger.info("[get_service_page_ids] <- service_code=%s, doc_type=%s",
+                service_code, doc_type)
+
+    vectorstore = get_vectorstore(UNIFIED_STORAGE_NAME)
+
+    # Используем dummy search для получения всех документов
+    # ChromaDB не имеет метода get_all с фильтром, поэтому делаем широкий поиск
+    docs = vectorstore.similarity_search(
+        query="",  # пустой запрос
+        k=10000,  # большое число для получения всех
+        filter={
+            "service_code": service_code,
+            "doc_type": doc_type
+        }
+    )
+
+    page_ids = [doc.metadata["page_id"] for doc in docs]
+
+    logger.info("[get_service_page_ids] -> Found %d pages", len(page_ids))
+    return page_ids
 
 # ====================================================================
 # LEGACY ФУНКЦИИ ДЛЯ ОБРАТНОЙ СОВМЕСТИМОСТИ

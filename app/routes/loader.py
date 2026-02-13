@@ -239,3 +239,54 @@ async def clear_embedding_cache():
     logger.info("[clear_embedding_cache] <-")
     clear_embeddings_cache()
     return {"message": "Embedding model cache cleared successfully"}
+
+# временная тестовая вставка. Можно смело удалить все, что ниже
+# В любой существующий router (например, в loader.py)
+
+@router.get("/debug/metadata_example", tags=["Отладка"])
+async def get_metadata_example():
+    """Получить пример метаданных документа из ChromaDB"""
+    try:
+        result = await anyio.to_thread.run_sync(_get_metadata_sample)
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+
+def _get_metadata_sample():
+    from app.embedding_store import get_vectorstore
+    from app.config import UNIFIED_STORAGE_NAME
+
+    store = get_vectorstore(UNIFIED_STORAGE_NAME)
+
+    # Поиск по разным типам требований
+    examples = {}
+
+    # Пример интеграции
+    int_docs = store.similarity_search("интеграция АБС", k=1)
+    if int_docs:
+        examples['integration'] = {
+            'metadata': int_docs[0].metadata,
+            'content_preview': int_docs[0].page_content[:200]
+        }
+
+    # Пример модели данных
+    dm_docs = store.similarity_search("модель данных", k=1)
+    if dm_docs:
+        examples['data_model'] = {
+            'metadata': dm_docs[0].metadata,
+            'content_preview': dm_docs[0].page_content[:200]
+        }
+
+    # Пример функции
+    func_docs = store.similarity_search("функция", k=1)
+    if func_docs:
+        examples['function'] = {
+            'metadata': func_docs[0].metadata,
+            'content_preview': func_docs[0].page_content[:200]
+        }
+
+    return {
+        'examples': examples,
+        'collection_name': UNIFIED_STORAGE_NAME
+    }

@@ -60,7 +60,44 @@ class TemplateTypeAnalyzer:
                 logger.info("[analyze_content_type] -> Found match: '%s'", template_type)
                 return template_type
 
+        # Fallback: пытаемся определить тип из заголовка
+        fallback_type = self._guess_type_from_title(page_title)
+        if fallback_type:
+            logger.info("[analyze_content_type] -> Fallback match from title: '%s'", fallback_type)
+            return fallback_type
+
         logger.info("[analyze_content_type] -> No template match found")
+        return None
+
+    def _guess_type_from_title(self, title: str) -> Optional[str]:
+        """
+        Пытается определить тип требования из заголовка страницы (fallback).
+
+        Используется когда структурная проверка не сработала.
+        """
+        title_lower = title.lower()
+
+        # Паттерны для определения типа
+        patterns = {
+            "integration": ["интеграц", "rest", "soap", "api", "адаптер"],
+            "dataModel": ["модель данных", "сущность", "мд"],
+            "function": ["функция", "клиент:", "банк:"],
+            "process": ["процесс", "алгоритм"],
+            "states": ["статус", "состояни"],
+            "control": ["контрол"],
+            "notification": ["нотификац"],
+            "printForm": ["пф", "печатная форма"],
+            "screenListForm": ["эф клиента", "эф банка", "список", "журнал", "фильтр"],
+            "screenItemForm": ["эф клиента", "эф банка", "форма", "страница"]
+        }
+
+        for req_type, keywords in patterns.items():
+            for keyword in keywords:
+                if keyword in title_lower:
+                    logger.debug("[_guess_type_from_title] Matched '%s' by keyword '%s'",
+                                 req_type, keyword)
+                    return req_type
+
         return None
 
     def analyze_page_type(self, page_id: str) -> Optional[str]:

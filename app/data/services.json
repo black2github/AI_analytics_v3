@@ -440,5 +440,70 @@
     "key": "BB",
     "name": "[ББ] Безопасный бизнес",
     "platform": false
+  }, {
+    "code": "OTP",
+    "key": "OT",
+    "name": "[OTP] OTP - Сервис",
+    "platform": false
+  }, {
+    "code": "BRK",
+    "key": "CR",
+    "name": "CRM БРК",
+    "platform": false
+  }, {
+    "code": "ADM",
+    "key": "AD",
+    "name": "АС АДМ",
+    "platform": false
+  }, {
+    "code": "EPR",
+    "key": "EP",
+    "name": "АС ЕПР",
+    "platform": false
+  }, {
+    "code": "EFR",
+    "key": "EF",
+    "name": "АС ЕФР",
+    "platform": false
+  }, {
+    "code": "STP",
+    "key": "ST",
+    "name": "АС СТОПЛИСТ",
+    "platform": false
+  }, {
+    "code": "BSK",
+    "key": "BS",
+    "name": "БСК",
+    "platform": false
+  }, {
+    "code": "ESIA",
+    "key": "ES",
+    "name": "ЕСИА",
+    "platform": false
+  },{
+    "code": "ESK",
+    "key": "EK",
+    "name": "ЕСК (ЦФТ ГО)",
+    "platform": false
+  },{
+    "code": "KNOSIS",
+    "key": "KN",
+    "name": "КНОСИС",
+    "platform": false
+  },{
+    "code": "PC",
+    "key": "PC",
+    "name": "ПЦ SVFE",
+    "platform": false
+  }, {
+    "code": "F1",
+    "key": "F1",
+    "name": "РКО Ф1",
+    "platform": false
+  }, {
+    "code": "TESSA",
+    "key": "TS",
+    "name": "ТЕССА",
+    "platform": false
   }
 ]
