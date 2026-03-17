@@ -63,8 +63,10 @@ def normalize_system_name(system: str) -> str:
     """
     # Маппинг вариантов написания к каноническому
     mappings = {
-        "АБС Ф1": "АБС_Ф1",
-        "АБС_Ф1": "АБС_Ф1",
+        "АБС Ф1": "ABS_F1",
+        "АБС_Ф1": "ABS_F1",
+        "РКО Ф1": "ABS_F1",
+        "РКО_Ф1": "ABS_F1",
         "АС ТЕССА": "TESSA",
         "ТЕССА": "TESSA",
         "АС КНОСИС": "KNOSIS",
@@ -73,6 +75,7 @@ def normalize_system_name(system: str) -> str:
         "ЕСК": "ESK",
         "Процессинговый Центр": "PC",
         "ПЦ": "PC",
+        "SVFE": "PC",
         "МДМ": "MDM"
     }
 
