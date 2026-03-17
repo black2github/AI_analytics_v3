@@ -11,6 +11,7 @@ from app.filter_all_fragments import filter_all_fragments
 logger = logging.getLogger(__name__)
 
 FEATURES_FILE = "features.json"
+MASTER_SYSTEMS_FILE = "master_systems.json"
 
 
 class TemplateTypeAnalyzer:
@@ -18,6 +19,7 @@ class TemplateTypeAnalyzer:
 
     def __init__(self):
         self.features = self._load_features()
+        self.master_systems = self._load_master_systems()
 
     def _load_features(self) -> Dict[str, Any]:
         """Загружает конфигурацию типов шаблонов из features.json"""
@@ -30,6 +32,22 @@ class TemplateTypeAnalyzer:
         except Exception as e:
             logger.error("[TemplateTypeAnalyzer] Failed to load features.json: %s", str(e))
             return {}
+
+    def _load_master_systems(self) -> List[str]:
+        """Загружает список master_system из master_systems.json"""
+        try:
+            master_systems_path = os.path.join(os.path.dirname(__file__), "..", "data", MASTER_SYSTEMS_FILE)
+            with open(master_systems_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # Извлекаем значения master_system из всех доменов
+                systems = [domain.get("master_system", "") for domain in data.get("data_domains", [])]
+                # Фильтруем пустые значения и приводим к lowercase для поиска
+                systems = [s.lower() for s in systems if s]
+                logger.info("[TemplateTypeAnalyzer] Loaded %d master systems: %s", len(systems), systems)
+                return systems
+        except Exception as e:
+            logger.error("[TemplateTypeAnalyzer] Failed to load master_systems.json: %s", str(e))
+            return []
 
     def analyze_content_type(self, page_title: str, page_html: str) -> Optional[str]:
         """
@@ -57,8 +75,11 @@ class TemplateTypeAnalyzer:
             logger.debug("[analyze_content_type] Checking template type: '%s'", template_type)
 
             if self._check_template_match(page_title, page_content, template_config):
-                logger.info("[analyze_content_type] -> Found match: '%s'", template_type)
-                return template_type
+                # ИСПРАВЛЕНИЕ: Обрезаем пробелы из ключа features.json
+                cleaned_type = template_type.strip()
+                logger.info("[analyze_content_type] -> Found match: '%s' (cleaned: '%s')",
+                           template_type, cleaned_type)
+                return cleaned_type
 
         # Fallback: пытаемся определить тип из заголовка
         fallback_type = self._guess_type_from_title(page_title)
@@ -77,17 +98,26 @@ class TemplateTypeAnalyzer:
         """
         title_lower = title.lower()
 
-        # Паттерны для определения типа
+        # Проверка наличия master_system в заголовке (приоритет для интеграций)
+        if self.master_systems:
+            for system in self.master_systems:
+                if system in title_lower:
+                    logger.debug("[_guess_type_from_title] Matched 'integration' by master_system '%s'",
+                                 system)
+                    return "integration"
+
+        # Паттерны для определения типа (эту часть можно решить через features.json)
+        # Похоже стоит эту проверку выполнять именно в конце, когда остальные варианты не помогли определить тип
         patterns = {
-            "integration": ["интеграц", "rest", "soap", "api", "адаптер"],
+            "integration": ["rest", "soap", "api", "адаптер"],
             "dataModel": ["модель данных", "сущность", "мд"],
             "function": ["функция", "клиент:", "банк:"],
-            "process": ["процесс", "алгоритм"],
+            "process": ["сквозной бизнес", "процесс", "алгоритм", "жц заявки"],
             "states": ["статус", "состояни"],
             "control": ["контрол"],
             "notification": ["нотификац"],
             "printForm": ["пф", "печатная форма"],
-            "screenListForm": ["эф клиента", "эф банка", "список", "журнал", "фильтр"],
+            "screenListForm": ["список", "списка", "журнал", "фильтр", "заявок"],
             "screenItemForm": ["эф клиента", "эф банка", "форма", "страница"]
         }
 
@@ -311,14 +341,16 @@ def get_template_name_by_type(template_type: str) -> str:
     global _analyzer
     if not _analyzer.features:
         logger.warning("[get_template_name_by_type] Features not loaded")
-        return template_type
+        return template_type.strip() if template_type else template_type
 
-    template_config = _analyzer.features.get(template_type)
+    # ИСПРАВЛЕНИЕ: Обрезаем пробелы при поиске в словаре
+    cleaned_type = template_type.strip() if template_type else template_type
+    template_config = _analyzer.features.get(cleaned_type)
     if template_config and "name" in template_config:
         return template_config["name"]
 
-    logger.debug("[get_template_name_by_type] No name found for type '%s'", template_type)
-    return template_type
+    logger.debug("[get_template_name_by_type] No name found for type '%s'", cleaned_type)
+    return cleaned_type
 
 
 def perform_legacy_structure_check(template_html: str, content: str) -> List[str]:
