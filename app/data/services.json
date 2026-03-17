@@ -121,7 +121,7 @@
     "platform": false
   },  {
     "code": "CC",
-    "key": "??",
+    "key": "CC",
     "name": "[КК] Корпоративные Карты",
     "platform": false
   }, {
@@ -504,6 +504,11 @@
     "code": "TESSA",
     "key": "TS",
     "name": "ТЕССА",
+    "platform": false
+  }, {
+    "code": "SBPG",
+    "key": "SG",
+    "name": "АС СБП",
     "platform": false
   }
 ]
