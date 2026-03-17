@@ -69,6 +69,15 @@ def get_llm(provider=None, model=None, temperature=None):
             base_url=os.getenv("KIMI_API_URL")
         )
 
+    elif provider == "gonka":
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(
+            model=llm_model,
+            temperature=float(llm_temperature),
+            api_key=os.getenv("GONKA_API_KEY"),
+            base_url=os.getenv("GONKA_API_URL")
+        )
+
     elif provider == "fireworks":
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(
