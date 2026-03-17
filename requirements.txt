@@ -81,3 +81,17 @@ langsmith==0.3.45
 pytest==7.4.3
 pytest-asyncio==0.21.1
 pytest-mock==3.12.0
+
+# Зависимости для Hybrid Search в Context Retrieval Agent
+
+# BM25 для keyword-based поиска
+rank-bm25==0.2.2
+
+# Морфологический анализ для русского языка
+pymorphy2==0.9.1
+pymorphy2-dicts-ru==2.4.417127.4579844
+
+# Опционально: для ускорения pymorphy2
+# pymorphy2-dicts-ru можно заменить на pymorphy3 для Python 3.10+
+# pymorphy3==1.2.0
+# pymorphy3-dicts-ru==2.4.417150.4580142
