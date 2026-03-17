@@ -252,7 +252,7 @@ def prepare_unified_documents(
 
         # Всегда добавляем requirement_type в метаданные
         req_type = requirement_type or page.get("requirement_type") or "unknown"
-        base_metadata["requirement_type"] = req_type
+        base_metadata["requirement_type"] = req_type.strip()
         # Для интеграций добавляем target_system
         if req_type == "integration":
             from app.services.integration_parser import extract_target_system_from_title
