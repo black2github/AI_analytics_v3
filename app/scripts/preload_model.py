@@ -1,7 +1,15 @@
 # scripts/download_model.py
+
+"""
+Загружает модели эмбеддингов в кэш ~/.cache/huggingface/ для дальнейшего копирования в docker_cache/huggingface.
+Ориентир на то, что загрузка эмбеддингов из docker образа будет недоступна (внутренняя сеть).
+"""
+
 import os
 import time
 from sentence_transformers import SentenceTransformer
+
+from app.config import EMBEDDING_MODEL
 
 print("=" * 60)
 print("Downloading embedding model...")
@@ -13,7 +21,8 @@ print(f"Cache directory: {cache_dir}")
 
 try:
     start = time.time()
-    model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    # model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    model = SentenceTransformer(EMBEDDING_MODEL)
     elapsed = time.time() - start
 
     print(f"\n✓ Model downloaded successfully in {elapsed:.2f} seconds!")
