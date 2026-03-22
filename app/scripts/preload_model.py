@@ -1,7 +1,7 @@
 # scripts/download_model.py
 
 """
-Загружает модели эмбеддингов в кэш ~/.cache/huggingface/ для дальнейшего копирования в docker_cache/huggingface.
+Для ручной загрузки модели эмбеддингов в кэш ~/.cache/huggingface/ для дальнейшего копирования в docker_cache/huggingface.
 Ориентир на то, что загрузка эмбеддингов из docker образа будет недоступна (внутренняя сеть).
 """
 
