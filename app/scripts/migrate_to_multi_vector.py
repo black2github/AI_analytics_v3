@@ -33,7 +33,6 @@ from typing import Dict, List, Optional
 # Добавляем корень проекта в PYTHONPATH
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from app.confluence_loader import load_pages_by_ids
 from app.llm_interface import get_embeddings_model
 from app.config import UNIFIED_STORAGE_NAME, CHROMA_PERSIST_DIR
 from app.services.multi_vector_indexer import create_multi_vector_indexer
@@ -184,25 +183,24 @@ class MultiVectorMigrator:
                 return self.stats
 
         # ------------------------------------------------------------------
-        # Шаг 3. Загружаем страницы из Confluence
+        # Шаг 3. Читаем страницы из SOURCE ChromaDB (без обращения к Confluence)
         # ------------------------------------------------------------------
-        logger.info("[Step 3/5] Loading %d pages from Confluence...", len(page_ids))
+        logger.info(
+            "[Step 3/5] Reading %d pages from source store '%s'...",
+            len(page_ids), self.source_dir
+        )
 
-        # TODO похоже лишняя операция, все есть в хранилище, можно брать из него.
-        #  Но возможно проблема: эмебеддинг размер в исходном хранилище 384, а в целевом 768ю
-        pages = load_pages_by_ids(page_ids)
-        pages_with_content = [
-            p for p in pages
-            if p.get('approved_content') and p['approved_content'].strip()
-        ]
+        pages_with_content = self._load_pages_from_vectorstore(
+            source_vs, page_ids, service_code
+        )
 
         logger.info(
-            "[Step 3/5] Loaded %d pages, %d have approved content",
-            len(pages), len(pages_with_content)
+            "[Step 3/5] Read %d pages with approved content from source store",
+            len(pages_with_content)
         )
 
         if not pages_with_content:
-            logger.error("[Step 3/5] No pages with approved content. Aborting.")
+            logger.error("[Step 3/5] No pages with approved content in source. Aborting.")
             return self.stats
 
         # ------------------------------------------------------------------
@@ -351,6 +349,155 @@ class MultiVectorMigrator:
             for m in results["metadatas"]
             if m.get("service_code")
         })
+
+
+
+    def _source_has_multi_vector(self, vectorstore, sample_page_ids: List[str]) -> bool:
+        """
+        Определяет формат source хранилища по наличию vector_type в метаданных.
+        Проверяет несколько страниц для надёжности.
+        """
+        if not sample_page_ids:
+            return False
+        try:
+            results = vectorstore.get(
+                where={
+                    "$and": [
+                        {"page_id": {"$in": sample_page_ids}},
+                        {"doc_type": {"$eq": "requirement"}}
+                    ]
+                },
+                include=["metadatas"],
+                limit=5
+            )
+            for meta in (results.get("metadatas") or []):
+                if meta.get("vector_type"):
+                    return True
+            return False
+        except Exception as e:
+            logger.warning("[_source_has_multi_vector] Error: %s. Assuming legacy.", e)
+            return False
+
+    def _load_pages_from_vectorstore(
+        self,
+        vectorstore,
+        page_ids: List[str],
+        service_code: str
+    ) -> List[Dict]:
+        """
+        Читает approved_content страниц из ChromaDB (content/chunk векторы).
+
+        Заменяет загрузку из Confluence — всё необходимое уже есть в source хранилище.
+        Для страниц с chunking объединяет чанки в порядке chunk_index.
+
+        Args:
+            vectorstore: Source ChromaDB vectorstore
+            page_ids: Список page_id для чтения
+            service_code: Код сервиса
+
+        Returns:
+            Список словарей [{id, title, approved_content, requirement_type}, ...]
+            совместимый с форматом ожидаемым MultiVectorIndexer
+        """
+        # Читаем документы из source хранилища.
+        # Фильтр по vector_type не применяется: source может быть
+        # как в старом формате (без vector_type) так и в Multi-Vector.
+        # Для Multi-Vector берём только content/chunk — title и summary
+        # не содержат полного текста страницы.
+        source_has_mv = self._source_has_multi_vector(vectorstore, page_ids[:3])
+
+        if source_has_mv:
+            where_filter = {
+                "$and": [
+                    {"page_id": {"$in": page_ids}},
+                    {"doc_type": {"$eq": "requirement"}},
+                    {"vector_type": {"$in": ["content", "chunk"]}}
+                ]
+            }
+            logger.info("[_load_pages_from_vectorstore] Source is Multi-Vector format")
+        else:
+            where_filter = {
+                "$and": [
+                    {"page_id": {"$in": page_ids}},
+                    {"doc_type": {"$eq": "requirement"}}
+                ]
+            }
+            logger.info("[_load_pages_from_vectorstore] Source is legacy format")
+
+        results = vectorstore.get(
+            where=where_filter,
+            include=["documents", "metadatas"]
+        )
+
+        if not results or not results.get("ids"):
+            logger.warning(
+                "[_load_pages_from_vectorstore] No content vectors found for %d page_ids",
+                len(page_ids)
+            )
+            return []
+
+        # Группируем по page_id
+        from collections import defaultdict
+        page_data: Dict[str, Dict] = {}
+        page_chunks: Dict[str, List] = defaultdict(list)
+
+        for doc_content, meta in zip(results["documents"], results["metadatas"]):
+            pid = meta.get("page_id")
+            if not pid or not doc_content or not doc_content.strip():
+                continue
+
+            vector_type = meta.get("vector_type", "content")
+
+            if vector_type == "content":
+                # Полный контент — используем напрямую
+                page_data[pid] = {
+                    "id": pid,
+                    "title": meta.get("title", ""),
+                    "approved_content": doc_content.strip(),
+                    "requirement_type": meta.get("requirement_type", "unknown"),
+                    "source": meta.get("source", "DBOCORPESPLN"),
+                }
+            elif vector_type == "chunk":
+                # Чанки — собираем для последующей сборки
+                page_chunks[pid].append({
+                    "content": doc_content,
+                    "chunk_index": meta.get("chunk_index", 0),
+                    "title": meta.get("title", ""),
+                    "requirement_type": meta.get("requirement_type", "unknown"),
+                    "source": meta.get("source", "DBOCORPESPLN"),
+                })
+
+        # Для chunked страниц — берём только первый чанк (наиболее релевантный).
+        # Склейка чанков намеренно не используется: при chunk_overlap > 0
+        # простое объединение даст дублирование текста на стыках.
+        # На практике в текущем хранилище чанков нет (все страницы целиком),
+        # эта ветка — страховка на будущее.
+        for pid, chunks in page_chunks.items():
+            if pid in page_data:
+                # Уже есть content вектор — пропускаем
+                continue
+            # Берём чанк с наименьшим chunk_index (начало документа)
+            first = min(chunks, key=lambda c: c["chunk_index"])
+            if first["content"].strip():
+                page_data[pid] = {
+                    "id": pid,
+                    "title": first["title"],
+                    "approved_content": first["content"].strip(),
+                    "requirement_type": first["requirement_type"],
+                    "source": first["source"],
+                }
+
+        pages = list(page_data.values())
+
+        logger.info(
+            "[_load_pages_from_vectorstore] -> %d pages with content "
+            "(%d content, %d chunked)",
+            len(pages),
+            sum(1 for pid in page_data if pid not in page_chunks),
+            sum(1 for pid in page_chunks if pid in page_data)
+        )
+
+        return pages
 
     def _get_service_page_ids(self, vectorstore, service_code: str) -> List[str]:
         """
