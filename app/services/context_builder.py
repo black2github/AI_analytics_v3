@@ -18,86 +18,86 @@ from app.services.template_type_analysis import get_template_name_by_type
 import os
 
 
-def build_context(service_code: str, requirements_text: str = "", exclude_page_ids: Optional[List[str]] = None):
-    """
-    Формирование контекста с использованием единого хранилища.
-    ИЗМЕНЕНО: Теперь добавляет заголовки к документам в контексте.
-
-    Args:
-        service_code: Код сервиса
-        requirements_text: Текст анализируемых требований для семантического поиска
-        exclude_page_ids: Список ID страниц, исключаемых из контекста
-
-    Returns:
-        Строковый контекст с заголовками документов
-    """
-    logger.info("[build_context] <- service_code=%s, requirements_length=%d, exclude_pages=%d",
-                service_code, len(requirements_text), len(exclude_page_ids or []))
-
-    embeddings_model = get_embeddings_model()
-
-    # 1. Извлекаем названия сущностей для точного поиска по title
-    entity_names = extract_entity_names_from_requirements(requirements_text)
-    logger.debug("[build_context] step1 passed: entity names for title search = '%s'", entity_names)
-
-    # 2. Точный поиск документов по названиям сущностей (приоритет #1)
-    exact_match_docs = unified_search_by_entity_title(entity_names, service_code, exclude_page_ids, embeddings_model)
-    logger.debug("[build_context] step2 passed: exact matched docs = %d", len(exact_match_docs))
-
-    # 3. Извлекаем ключевые запросы из текста требований
-    search_queries = _prepare_search_queries(requirements_text)
-    entity_queries = extract_entity_attribute_queries(requirements_text)
-    regular_queries = [q for q in search_queries if q not in entity_queries]
-    logger.debug("[build_context] step3 passed: regular queries = '%s'", regular_queries)
-
-    # 4. Поиск по требованиям текущего сервиса
-    service_docs = unified_service_search(
-        queries=regular_queries,
-        service_code=service_code,
-        exclude_page_ids=exclude_page_ids,
-        k_per_query=3,
-        embeddings_model=embeddings_model
-    )
-    logger.debug("[build_context] step4 passed: found %d service docs.", len(service_docs))
-
-    # 5. Поиск по платформенным требованиям (кроме dataModel)
-    platform_docs = unified_platform_search(
-        queries=regular_queries,
-        exclude_page_ids=exclude_page_ids,
-        k_per_query=2,
-        embeddings_model=embeddings_model,
-        exclude_services=["dataModel"]
-    )
-    logger.debug("[build_context] step5 passed: found %d platform docs.", len(platform_docs))
-
-    # 6. Контекст из ссылок неподтвержденных требований
-    linked_docs = _extract_linked_context_optimized(exclude_page_ids) if exclude_page_ids else []
-    logger.debug("[build_context] step6 passed: found %d linked docs.", len(linked_docs))
-
-    # 7. Объединяем все документы (приоритет у точных совпадений)
-    all_docs = exact_match_docs + service_docs + platform_docs + linked_docs
-    unique_docs = _fast_deduplicate_documents(all_docs)
-    logger.debug("[build_context] step7 passed: total %d unique docs.", len(unique_docs))
-
-    # 8. Формируем контекст с названиями шаблонов вместо кодов
-    context_parts = []
-    for doc in unique_docs:
-        title = doc.metadata.get('title', 'Без названия')
-        requirement_type_code = doc.metadata.get('requirement_type', 'unknown')
-        requirement_type_name = get_template_name_by_type(requirement_type_code)
-
-        header = f"---\ntitle: {title}\ntype: {requirement_type_name}\n---\n"
-        context_parts.append(header + doc.page_content)
-
-        logger.debug("[build_context] Added doc: title='%s', type_code='%s', type_name='%s'",
-                     title, requirement_type_code, requirement_type_name)
-
-    context = "\n\n".join(context_parts)
-    context = _smart_truncate_context(context, max_length=16000)
-
-    logger.debug("[build_context] step8 passed: context length = %d chars", len(context))
-    logger.info("[build_context] -> Context with template names, length = %d", len(context))
-    return context
+# def build_context(service_code: str, requirements_text: str = "", exclude_page_ids: Optional[List[str]] = None):
+#     """
+#     Формирование контекста с использованием единого хранилища.
+#     ИЗМЕНЕНО: Теперь добавляет заголовки к документам в контексте.
+#
+#     Args:
+#         service_code: Код сервиса
+#         requirements_text: Текст анализируемых требований для семантического поиска
+#         exclude_page_ids: Список ID страниц, исключаемых из контекста
+#
+#     Returns:
+#         Строковый контекст с заголовками документов
+#     """
+#     logger.info("[build_context] <- service_code=%s, requirements_length=%d, exclude_pages=%d",
+#                 service_code, len(requirements_text), len(exclude_page_ids or []))
+#
+#     embeddings_model = get_embeddings_model()
+#
+#     # 1. Извлекаем названия сущностей для точного поиска по title
+#     entity_names = extract_entity_names_from_requirements(requirements_text)
+#     logger.debug("[build_context] step1 passed: entity names for title search = '%s'", entity_names)
+#
+#     # 2. Точный поиск документов по названиям сущностей (приоритет #1)
+#     exact_match_docs = unified_search_by_entity_title(entity_names, service_code, exclude_page_ids, embeddings_model)
+#     logger.debug("[build_context] step2 passed: exact matched docs = %d", len(exact_match_docs))
+#
+#     # 3. Извлекаем ключевые запросы из текста требований
+#     search_queries = _prepare_search_queries(requirements_text)
+#     entity_queries = extract_entity_attribute_queries(requirements_text)
+#     regular_queries = [q for q in search_queries if q not in entity_queries]
+#     logger.debug("[build_context] step3 passed: regular queries = '%s'", regular_queries)
+#
+#     # 4. Поиск по требованиям текущего сервиса
+#     service_docs = unified_service_search(
+#         queries=regular_queries,
+#         service_code=service_code,
+#         exclude_page_ids=exclude_page_ids,
+#         k_per_query=3,
+#         embeddings_model=embeddings_model
+#     )
+#     logger.debug("[build_context] step4 passed: found %d service docs.", len(service_docs))
+#
+#     # 5. Поиск по платформенным требованиям (кроме dataModel)
+#     platform_docs = unified_platform_search(
+#         queries=regular_queries,
+#         exclude_page_ids=exclude_page_ids,
+#         k_per_query=2,
+#         embeddings_model=embeddings_model,
+#         exclude_services=["dataModel"]
+#     )
+#     logger.debug("[build_context] step5 passed: found %d platform docs.", len(platform_docs))
+#
+#     # 6. Контекст из ссылок неподтвержденных требований
+#     linked_docs = _extract_linked_context_optimized(exclude_page_ids) if exclude_page_ids else []
+#     logger.debug("[build_context] step6 passed: found %d linked docs.", len(linked_docs))
+#
+#     # 7. Объединяем все документы (приоритет у точных совпадений)
+#     all_docs = exact_match_docs + service_docs + platform_docs + linked_docs
+#     unique_docs = _fast_deduplicate_documents(all_docs)
+#     logger.debug("[build_context] step7 passed: total %d unique docs.", len(unique_docs))
+#
+#     # 8. Формируем контекст с названиями шаблонов вместо кодов
+#     context_parts = []
+#     for doc in unique_docs:
+#         title = doc.metadata.get('title', 'Без названия')
+#         requirement_type_code = doc.metadata.get('requirement_type', 'unknown')
+#         requirement_type_name = get_template_name_by_type(requirement_type_code)
+#
+#         header = f"---\ntitle: {title}\ntype: {requirement_type_name}\n---\n"
+#         context_parts.append(header + doc.page_content)
+#
+#         logger.debug("[build_context] Added doc: title='%s', type_code='%s', type_name='%s'",
+#                      title, requirement_type_code, requirement_type_name)
+#
+#     context = "\n\n".join(context_parts)
+#     context = _smart_truncate_context(context, max_length=16000)
+#
+#     logger.debug("[build_context] step8 passed: context length = %d chars", len(context))
+#     logger.info("[build_context] -> Context with template names, length = %d", len(context))
+#     return context
 
 
 def build_context_optimized(
@@ -527,7 +527,12 @@ def _check_page_has_approved_requirements(store, page_id: str) -> bool:
         results = store.similarity_search(
             query="test",  # Любой запрос, нас интересует только фильтр
             k=1,
-            filter={"page_id": {"$eq": page_id}}
+            filter={
+                "$and": [
+                    {"page_id": {"$eq": page_id}},
+                    {"vector_type": {"$in": ["content", "chunk"]}}
+                ]
+            }
         )
 
         has_requirements = len(results) > 0
@@ -559,7 +564,8 @@ def unified_service_search(queries: List[str], service_code: str, exclude_page_i
     base_filter = {
         "$and": [
             {"doc_type": {"$eq": "requirement"}},
-            {"service_code": {"$eq": service_code}}
+            {"service_code": {"$eq": service_code}},
+            {"vector_type": {"$in": ["content", "chunk"]}}
         ]
     }
 
@@ -611,7 +617,8 @@ def unified_platform_search(queries: List[str], exclude_page_ids: Optional[List[
         "$and": [
             {"doc_type": {"$eq": "requirement"}},
             {"is_platform": {"$eq": True}},
-            {"service_code": {"$in": platform_codes}}
+            {"service_code": {"$in": platform_codes}},
+            {"vector_type": {"$in": ["content", "chunk"]}}
         ]
     }
 
@@ -634,7 +641,8 @@ def unified_platform_search(queries: List[str], exclude_page_ids: Optional[List[
                 fallback_filter = {
                     "$and": [
                         {"doc_type": {"$eq": "requirement"}},
-                        {"is_platform": {"$eq": True}}
+                        {"is_platform": {"$eq": True}},
+                        {"vector_type": {"$in": ["content", "chunk"]}}
                     ]
                 }
                 if exclude_page_ids:
@@ -655,16 +663,17 @@ def _fast_deduplicate_documents(docs: List[Document]) -> List[Document]:
     Принимает и возвращает Document объекты.
     Быстрая дедупликация документов
     """
-    seen_composite_keys = set()
+    # Дедупликация по page_id — в Multi-Vector хранилище одна страница
+    # имеет несколько документов (title, summary, content/chunk).
+    # Поиск уже фильтрует только content/chunk, но на случай смешанных
+    # результатов дедуплицируем строго по page_id.
+    seen_page_ids = set()
     unique_docs = []
 
     for doc in docs:
         page_id = doc.metadata.get('page_id')
-        content_hash = hash(doc.page_content[:100])
-
-        composite_key = (page_id, content_hash)
-        if composite_key not in seen_composite_keys:
-            seen_composite_keys.add(composite_key)
+        if page_id not in seen_page_ids:
+            seen_page_ids.add(page_id)
             unique_docs.append(doc)
 
     logger.debug("[_fast_deduplicate_documents] Deduplicated %d -> %d documents", len(docs), len(unique_docs))

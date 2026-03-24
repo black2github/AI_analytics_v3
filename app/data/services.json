@@ -45,6 +45,11 @@
     "name": "Модель данных",
     "platform": true
   }, {
+    "code": "integrations",
+    "key": "INT",
+    "name": "Интеграция",
+    "platform": true
+  }, {
     "code": "UAA",
     "key": "UA",
     "name": "[UAA] Сервис аутентификации и авторизации",

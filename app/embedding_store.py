@@ -4,13 +4,13 @@ import logging
 import os
 import time
 from pprint import pformat
-from typing import List
+from typing import List, Dict
 
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.embeddings import Embeddings
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter  # FIXED IMPORT
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.config import (
     CHROMA_PERSIST_DIR,
     EMBEDDING_MODEL,
@@ -20,9 +20,16 @@ from app.config import (
     CHUNK_MAX_PAGE_SIZE,
     CHUNK_SIZE,
     CHUNK_OVERLAP,
-    CHUNK_MODE
+    CHUNK_MODE,
+    INDEXING_MODE,
+    LEGACY_EMBEDDING_MODEL,
 )
 from app.service_registry import get_platform_status
+
+# get_embeddings_model импортируется здесь для использования в get_vectorstore.
+# Импорт отложен до уровня модуля чтобы избежать циклических зависимостей
+# (llm_interface -> config, embedding_store -> config, нет взаимного импорта).
+from app.llm_interface import get_embeddings_model as _get_embeddings_model
 
 logger = logging.getLogger(__name__)
 
@@ -33,115 +40,120 @@ _embedding_model_cache = None
 
 
 def get_embedding_model(name: str = EMBEDDING_MODEL, use_offline: bool = False) -> Embeddings:
-    """
-    Получает embedding модель с кэширование и детальным логированием.
+    """Deprecated. Используй llm_interface.get_embeddings_model()."""
+    from app.llm_interface import get_embeddings_model
+    return get_embeddings_model()
 
-    Args:
-        name: Имя модели (по умолчанию из config)
-        use_offline: Если True, использует только локальный кэш без обращения к сети.
-            Устанавливает переменные окружения, которые затем читают библиотеки загрузки.
-
-    Returns:
-        Embeddings: Модель для создания эмбеддингов
-    """
-    global _embedding_model_cache
-
-    # ===== ШАГ 1: ПРОВЕРКА КЭША В ПАМЯТИ =====
-    if _embedding_model_cache is not None:
-        logger.debug("[get_embedding_model] Returning cached model from memory")
-        return _embedding_model_cache
-
-    logger.info("[get_embedding_model] Starting model initialization: provider=%s, model=%s",
-                EMBEDDING_PROVIDER, name)
-
-    # ===== ШАГ 2: ПРОВЕРКА ЛОКАЛЬНОГО КЭША HUGGINGFACE =====
-    cache_dir = os.path.expanduser("~/.cache/huggingface/")
-    logger.info("[get_embedding_model] HuggingFace cache directory: %s", cache_dir)
-    logger.info("[get_embedding_model] Cache exists: %s", os.path.exists(cache_dir))
-
-    # ===== ШАГ 3: НАСТРОЙКА ОФЛАЙН-РЕЖИМА =====
-    # Если use_offline=True или переменная окружения установлена - работаем только с кэшем
-    original_transformers_offline = os.environ.get('TRANSFORMERS_OFFLINE')
-    original_hf_hub_offline = os.environ.get('HF_HUB_OFFLINE')
-
-    # НАСТРОЙКА ПЕРЕМЕННЫХ ДЛЯ БИБЛИОТЕК
-    if use_offline:
-        logger.info("[get_embedding_model] Using OFFLINE mode - will only use local cache")
-        os.environ['TRANSFORMERS_OFFLINE'] = '1'
-        os.environ['HF_HUB_OFFLINE'] = '1'
-
-    # ===== ШАГ 4: ЗАГРУЗКА МОДЕЛИ =====
-    try:
-        if EMBEDDING_PROVIDER == "openai":
-            logger.info("[get_embedding_model] Loading OpenAI embeddings...")
-            from langchain_community.embeddings import OpenAIEmbeddings
-            model = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
-            dim = 1536  # Фиксированная размерность для OpenAI
-            logger.info("[get_embedding_model] OpenAI model loaded successfully")
-
-        elif EMBEDDING_PROVIDER == "huggingface":
-            logger.info("[get_embedding_model] Loading HuggingFace model: %s", EMBEDDING_MODEL)
-
-            if use_offline:
-                logger.info("[get_embedding_model] Offline mode: loading from cache only")
-            else:
-                logger.info("[get_embedding_model] Online mode: will download if not cached (1-5 min)")
-
-            from langchain_huggingface import HuggingFaceEmbeddings
-
-            start_time = time.time()
-
-            # Создаем модель с оптимальными параметрами
-            # (библиотека читает переменные окружения и для кэширования)
-            model = HuggingFaceEmbeddings(
-                model_name=EMBEDDING_MODEL,
-                model_kwargs={
-                    'device': 'cpu',  # Используем CPU (для GPU поставьте 'cuda')
-                },
-                encode_kwargs={
-                    'normalize_embeddings': True,  # Нормализация для косинусного сходства
-                    'batch_size': 32  # Размер батча для обработки
-                }
-            )
-
-            elapsed = time.time() - start_time
-            logger.info("[get_embedding_model] Model loaded in %.2f seconds", elapsed)
-
-            # Тестовое вычисление для определения размерности
-            logger.info("[get_embedding_model] Testing embedding dimensions...")
-            test_start = time.time()
-            test_embedding = model.embed_query("test")
-            test_elapsed = time.time() - test_start
-            dim = len(test_embedding)
-            logger.info("[get_embedding_model] Test embedding completed in %.2f seconds, dimension: %d",
-                        test_elapsed, dim)
-
-        else:
-            raise ValueError(f"Unknown embedding provider: {EMBEDDING_PROVIDER}")
-
-        # ===== ШАГ 5: СОХРАНЕНИЕ В КЭШ ПАМЯТИ =====
-        logger.info("[get_embedding_model] Model ready: %s, dimension: %d", name, dim)
-        _embedding_model_cache = model
-
-        return model
-
-    except Exception as e:
-        logger.error("[get_embedding_model] Failed to load model: %s", str(e), exc_info=True)
-        raise
-
-    finally:
-        # ===== ШАГ 6: ВОССТАНОВЛЕНИЕ ИСХОДНЫХ НАСТРОЕК =====
-        # Восстанавливаем оригинальные значения переменных окружения
-        if use_offline:
-            if original_transformers_offline is None:
-                os.environ.pop('TRANSFORMERS_OFFLINE', None)
-            else:
-                os.environ['TRANSFORMERS_OFFLINE'] = original_transformers_offline
-
-            if original_hf_hub_offline is None:
-                os.environ.pop('HF_HUB_OFFLINE', None)
-            else:
-                os.environ['HF_HUB_OFFLINE'] = original_hf_hub_offline
+# def get_embedding_model(name: str = EMBEDDING_MODEL, use_offline: bool = False) -> Embeddings:
+#     """
+#     Получает embedding модель с кэширование и детальным логированием.
+#
+#     Args:
+#         name: Имя модели (по умолчанию из config)
+#         use_offline: Если True, использует только локальный кэш без обращения к сети.
+#             Устанавливает переменные окружения, которые затем читают библиотеки загрузки.
+#
+#     Returns:
+#         Embeddings: Модель для создания эмбеддингов
+#     """
+#     global _embedding_model_cache
+#
+#     # ===== ШАГ 1: ПРОВЕРКА КЭША В ПАМЯТИ =====
+#     if _embedding_model_cache is not None:
+#         logger.debug("[get_embedding_model] Returning cached model from memory")
+#         return _embedding_model_cache
+#
+#     logger.info("[get_embedding_model] Starting model initialization: provider=%s, model=%s",
+#                 EMBEDDING_PROVIDER, name)
+#
+#     # ===== ШАГ 2: ПРОВЕРКА ЛОКАЛЬНОГО КЭША HUGGINGFACE =====
+#     cache_dir = os.path.expanduser("~/.cache/huggingface/")
+#     logger.info("[get_embedding_model] HuggingFace cache directory: %s", cache_dir)
+#     logger.info("[get_embedding_model] Cache exists: %s", os.path.exists(cache_dir))
+#
+#     # ===== ШАГ 3: НАСТРОЙКА ОФЛАЙН-РЕЖИМА =====
+#     # Если use_offline=True или переменная окружения установлена - работаем только с кэшем
+#     original_transformers_offline = os.environ.get('TRANSFORMERS_OFFLINE')
+#     original_hf_hub_offline = os.environ.get('HF_HUB_OFFLINE')
+#
+#     # НАСТРОЙКА ПЕРЕМЕННЫХ ДЛЯ БИБЛИОТЕК
+#     if use_offline:
+#         logger.info("[get_embedding_model] Using OFFLINE mode - will only use local cache")
+#         os.environ['TRANSFORMERS_OFFLINE'] = '1'
+#         os.environ['HF_HUB_OFFLINE'] = '1'
+#
+#     # ===== ШАГ 4: ЗАГРУЗКА МОДЕЛИ =====
+#     try:
+#         if EMBEDDING_PROVIDER == "openai":
+#             logger.info("[get_embedding_model] Loading OpenAI embeddings...")
+#             from langchain_community.embeddings import OpenAIEmbeddings
+#             model = OpenAIEmbeddings(api_key=OPENAI_API_KEY)
+#             dim = 1536  # Фиксированная размерность для OpenAI
+#             logger.info("[get_embedding_model] OpenAI model loaded successfully")
+#
+#         elif EMBEDDING_PROVIDER == "huggingface":
+#             logger.info("[get_embedding_model] Loading HuggingFace model: %s", EMBEDDING_MODEL)
+#
+#             if use_offline:
+#                 logger.info("[get_embedding_model] Offline mode: loading from cache only")
+#             else:
+#                 logger.info("[get_embedding_model] Online mode: will download if not cached (1-5 min)")
+#
+#             from langchain_huggingface import HuggingFaceEmbeddings
+#
+#             start_time = time.time()
+#
+#             # Создаем модель с оптимальными параметрами
+#             # (библиотека читает переменные окружения и для кэширования)
+#             model = HuggingFaceEmbeddings(
+#                 model_name=EMBEDDING_MODEL,
+#                 model_kwargs={
+#                     'device': 'cpu',  # Используем CPU (для GPU поставьте 'cuda')
+#                 },
+#                 encode_kwargs={
+#                     'normalize_embeddings': True,  # Нормализация для косинусного сходства
+#                     'batch_size': 32  # Размер батча для обработки
+#                 }
+#             )
+#
+#             elapsed = time.time() - start_time
+#             logger.info("[get_embedding_model] Model loaded in %.2f seconds", elapsed)
+#
+#             # Тестовое вычисление для определения размерности
+#             logger.info("[get_embedding_model] Testing embedding dimensions...")
+#             test_start = time.time()
+#             test_embedding = model.embed_query("test")
+#             test_elapsed = time.time() - test_start
+#             dim = len(test_embedding)
+#             logger.info("[get_embedding_model] Test embedding completed in %.2f seconds, dimension: %d",
+#                         test_elapsed, dim)
+#
+#         else:
+#             raise ValueError(f"Unknown embedding provider: {EMBEDDING_PROVIDER}")
+#
+#         # ===== ШАГ 5: СОХРАНЕНИЕ В КЭШ ПАМЯТИ =====
+#         logger.info("[get_embedding_model] Model ready: %s, dimension: %d", name, dim)
+#         _embedding_model_cache = model
+#
+#         return model
+#
+#     except Exception as e:
+#         logger.error("[get_embedding_model] Failed to load model: %s", str(e), exc_info=True)
+#         raise
+#
+#     finally:
+#         # ===== ШАГ 6: ВОССТАНОВЛЕНИЕ ИСХОДНЫХ НАСТРОЕК =====
+#         # Восстанавливаем оригинальные значения переменных окружения
+#         if use_offline:
+#             if original_transformers_offline is None:
+#                 os.environ.pop('TRANSFORMERS_OFFLINE', None)
+#             else:
+#                 os.environ['TRANSFORMERS_OFFLINE'] = original_transformers_offline
+#
+#             if original_hf_hub_offline is None:
+#                 os.environ.pop('HF_HUB_OFFLINE', None)
+#             else:
+#                 os.environ['HF_HUB_OFFLINE'] = original_hf_hub_offline
 
 
 def get_vectorstore(collection_name: str, embedding_model: Embeddings = None) -> Chroma:
@@ -159,9 +171,24 @@ def get_vectorstore(collection_name: str, embedding_model: Embeddings = None) ->
                  collection_name, embedding_model)
 
     if embedding_model is None:
-        logger.info("[get_vectorstore] No embedding model provided, initializing default...")
-        # Используем offline режим по умолчанию для быстрой загрузки из кэша
-        embedding_model = get_embedding_model(use_offline=True)
+        if INDEXING_MODE == "legacy":
+            # Legacy-режим: быстрая модель без префиксов, для импорта из Confluence.
+            # all-MiniLM-L6-v2 не требует task-specific префиксов и работает на CPU
+            # без проблем с памятью. Размерность 384, формат без vector_type.
+            logger.info(
+                "[get_vectorstore] INDEXING_MODE=legacy — using legacy model: %s",
+                LEGACY_EMBEDDING_MODEL
+            )
+            from langchain_huggingface import HuggingFaceEmbeddings
+            embedding_model = HuggingFaceEmbeddings(
+                model_name=LEGACY_EMBEDDING_MODEL,
+                model_kwargs={"device": "cpu"},
+                encode_kwargs={"normalize_embeddings": True},
+            )
+        else:
+            # Multi-vector режим: USER2-base с асимметричными префиксами.
+            logger.info("[get_vectorstore] INDEXING_MODE=multi_vector — using get_embeddings_model()")
+            embedding_model = _get_embeddings_model()
 
     # Проверка версии ChromaDB для совместимости
     try:
@@ -342,8 +369,10 @@ def get_service_page_ids(service_code: str, doc_type: str = "requirement") -> Li
         query="",  # пустой запрос
         k=10000,  # большое число для получения всех
         filter={
-            "service_code": service_code,
-            "doc_type": doc_type
+            "$and": [
+                {"service_code": {"$eq": service_code}},
+                {"doc_type": {"$eq": doc_type}}
+            ]
         }
     )
 
@@ -351,6 +380,105 @@ def get_service_page_ids(service_code: str, doc_type: str = "requirement") -> Li
 
     logger.info("[get_service_page_ids] -> Found %d pages", len(page_ids))
     return page_ids
+
+
+# def prepare_multi_vector_documents(
+#         pages: List[Dict],
+#         service_code: str,
+#         doc_type: str = "requirement",
+#         source: str = "DBOCORPESPLN"
+# ) -> List[Document]:
+#     """
+#     Создаёт Multi-Vector документы (title + summary + content/chunks).
+#
+#     Returns:
+#         Список Document объектов для ChromaDB
+#     """
+#     from app.services.summary_generator import extract_summary_simple, estimate_tokens
+#
+#     documents = []
+#
+#     for page in pages:
+#         page_id = page["id"]
+#         title = page.get("title", "")
+#         content = page.get("approved_content", "")
+#         req_type = page.get("requirement_type")
+#
+#         token_count = estimate_tokens(content)
+#
+#         # Базовые метаданные
+#         base_metadata = {
+#             "page_id": page_id,
+#             "title": title,
+#             "service_code": service_code,
+#             "doc_type": doc_type,
+#             "requirement_type": req_type,
+#             "source": source,
+#             "is_platform": get_platform_status(service_code),
+#             "original_page_size": len(content)
+#         }
+#
+#         # TITLE document
+#         documents.append(
+#             Document(
+#                 page_content=title,
+#                 metadata={
+#                     **base_metadata,
+#                     "vector_type": "title",
+#                     "index_tier": "multi_vector_chunked" if token_count >= 5000 else "multi_vector"
+#                 }
+#             )
+#         )
+#
+#         # SUMMARY document
+#         summary = extract_summary_simple(content, max_length=500)
+#         documents.append(
+#             Document(
+#                 page_content=summary,
+#                 metadata={
+#                     **base_metadata,
+#                     "vector_type": "summary",
+#                     "index_tier": "multi_vector_chunked" if token_count >= 5000 else "multi_vector"
+#                 }
+#             )
+#         )
+#
+#         # CONTENT/CHUNKS documents
+#         if token_count >= 5000:
+#             # Chunking для больших документов
+#             chunks = create_chunks_adaptive(
+#                 content,
+#                 chunk_size=CHUNK_SIZE,
+#                 chunk_overlap=CHUNK_OVERLAP
+#             )
+#             for i, chunk in enumerate(chunks):
+#                 documents.append(
+#                     Document(
+#                         page_content=chunk,
+#                         metadata={
+#                             **base_metadata,
+#                             "vector_type": "chunk",
+#                             "chunk_id": f"{page_id}_chunk_{i}",
+#                             "chunk_index": i,
+#                             "index_tier": "multi_vector_chunked"
+#                         }
+#                     )
+#                 )
+#         else:
+#             # Целый документ
+#             documents.append(
+#                 Document(
+#                     page_content=content,
+#                     metadata={
+#                         **base_metadata,
+#                         "vector_type": "content",
+#                         "index_tier": "multi_vector",
+#                         "is_full_page": True
+#                     }
+#                 )
+#             )
+#
+#     return documents
 
 # ====================================================================
 # LEGACY ФУНКЦИИ ДЛЯ ОБРАТНОЙ СОВМЕСТИМОСТИ

@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.embedding_store import get_embedding_model
+from app.llm_interface import get_embeddings_model
 from app.logging_config import setup_logging
 from app.routes import (analyze, loader, info, services, health, test_context, analyze_external, load_external,
                         logging_control, jira, template_analysis, extractor, summary, storage, config_endpoint)
@@ -222,9 +222,9 @@ async def debug_agent_test():
         }
 
 
-# Для отладки
+# Прогрев модели эмбеддингов при старте приложения
 try:
-    get_embedding_model()
+    get_embeddings_model()
     logger.info("Embedding model initialized successfully")
 except Exception as e:
     logger.error("Failed to initialize embedding model: %s", str(e))

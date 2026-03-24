@@ -271,17 +271,17 @@ def deduplicate_documents(docs: List) -> List:
     """
     Удаляет дублирующиеся документы на основе page_id и содержимого
     """
+    # Дедупликация по page_id — в Multi-Vector хранилище одна страница
+    # представлена несколькими векторами. Фильтр vector_type уже исключает
+    # title/summary, но при chunking может быть несколько chunk-векторов.
+    # Берём первый (наиболее релевантный из similarity_search).
     seen_pages = set()
-    seen_content = set()
     unique_docs = []
 
     for doc in docs:
         page_id = doc.metadata.get('page_id')
-        content_hash = hash(doc.page_content[:200])  # Хеш первых 200 символов
-
-        if page_id not in seen_pages and content_hash not in seen_content:
+        if page_id not in seen_pages:
             seen_pages.add(page_id)
-            seen_content.add(content_hash)
             unique_docs.append(doc)
 
     logger.debug("[deduplicate_documents] Filtered %d -> %d documents", len(docs), len(unique_docs))
@@ -362,7 +362,8 @@ def unified_search_by_entity_title(entity_names: List[str], service_code: str, e
         "$and": [
             {"doc_type": {"$eq": "requirement"}},
             {"service_code": {"$in": service_codes}},
-            {"title": {"$in": cleaned_entity_names}}
+            {"title": {"$in": cleaned_entity_names}},
+            {"vector_type": {"$in": ["content", "chunk"]}}
         ]
     }
 

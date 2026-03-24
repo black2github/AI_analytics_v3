@@ -29,6 +29,8 @@ import os
 import sys
 from datetime import datetime
 from typing import Dict, List, Optional
+import torch
+torch.set_float32_matmul_precision('high')
 
 # Добавляем корень проекта в PYTHONPATH
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -258,12 +260,50 @@ class MultiVectorMigrator:
             ]
         })
 
-        # Записываем новые документы.
-        # ВАЖНО: add_documents работает быстро только в пустое хранилище.
-        # При вставке в непустую коллекцию скорость деградирует — использовать
-        # отдельное хранилище для каждой полной миграции (--target-dir новый путь).
-        logger.info("[Step 5/5] Adding %d new documents to target...", len(docs))
-        target_vs.add_documents(docs)
+        # Записываем новые документы, разбивая по типу вектора.
+        # Для каждого типа устанавливается оптимальный max_seq_length:
+        #   title   — 128 токенов  (заголовки редко > 80 токенов, батч можно крупнее)
+        #   summary — 512 токенов  (extractive summary ~500 символов)
+        #   content/chunk — из EMBEDDING_MAX_SEQ_LENGTH_CONTENT (по умолчанию 2048)
+        # Переключение max_seq_length безопасно: скрипт однопоточный.
+        from app.config import (
+            EMBEDDING_MAX_SEQ_LENGTH_TITLE,
+            EMBEDDING_MAX_SEQ_LENGTH_SUMMARY,
+            EMBEDDING_MAX_SEQ_LENGTH_CONTENT,
+            EMBEDDING_BATCH_SIZE_TITLE,
+            EMBEDDING_BATCH_SIZE_SUMMARY,
+            EMBEDDING_BATCH_SIZE_CONTENT,
+        )
+
+        def _add_docs_by_vector_type(
+            vector_types: list, seq_len: int, batch_size: int, label: str
+        ):
+            subset = [d for d in docs if d.metadata.get("vector_type") in vector_types]
+            if not subset:
+                return
+            logger.info(
+                "[Step 5/5] Adding %d %s documents (seq_len=%d, batch_size=%d)...",
+                len(subset), label, seq_len, batch_size
+            )
+            embeddings_model._model.max_seq_length = seq_len
+            embeddings_model.batch_size = batch_size
+            target_vs.add_documents(subset)
+
+        _add_docs_by_vector_type(
+            ["title"],
+            EMBEDDING_MAX_SEQ_LENGTH_TITLE, EMBEDDING_BATCH_SIZE_TITLE,
+            "title"
+        )
+        _add_docs_by_vector_type(
+            ["summary"],
+            EMBEDDING_MAX_SEQ_LENGTH_SUMMARY, EMBEDDING_BATCH_SIZE_SUMMARY,
+            "summary"
+        )
+        _add_docs_by_vector_type(
+            ["content", "chunk"],
+            EMBEDDING_MAX_SEQ_LENGTH_CONTENT, EMBEDDING_BATCH_SIZE_CONTENT,
+            "content/chunk"
+        )
         logger.info("[Step 5/5] Target updated successfully.")
 
         self._finalize_stats()
@@ -332,6 +372,14 @@ class MultiVectorMigrator:
             except Exception as e:
                 logger.error("Error migrating service %s: %s", service_code, e, exc_info=True)
                 self.stats['errors'] += 1
+            finally:
+                # Освобождаем кеш CUDA после каждого сервиса
+                try:
+                    import torch
+                    if torch.cuda.is_available():
+                        torch.cuda.empty_cache()
+                except Exception:
+                    pass
 
         self._finalize_stats()
         return self.stats

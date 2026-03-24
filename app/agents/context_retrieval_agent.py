@@ -18,6 +18,10 @@ QUERY EXPANSION: Использует LLM для декомпозиции биз
 MULTI-VECTOR SEARCH: Поиск ведётся по трём векторным слоям (title, summary, content/chunks)
 с объединением через Reciprocal Rank Fusion. Каждая страница представлена несколькими
 документами в ChromaDB, результаты дедуплицируются по page_id до передачи в ContextMap.
+
+INTEGRATION SUB-QUERY: После основного поиска всегда выполняется дополнительный запрос
+по integration-страницам (если тип "integration" не исключён явным фильтром caller-а).
+Это гарантирует присутствие смежных систем в карте контекста независимо от топ-N.
 """
 
 import json
@@ -27,8 +31,13 @@ from typing import List, Optional, Dict, Set, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-from app.config import UNIFIED_STORAGE_NAME, MV_TITLE_WEIGHT, MV_SUMMARY_WEIGHT, MV_CONTENT_WEIGHT
-from app.logging_config import setup_logging
+from app.config import (
+    UNIFIED_STORAGE_NAME,
+    MV_TITLE_WEIGHT,
+    MV_SUMMARY_WEIGHT,
+    MV_CONTENT_WEIGHT,
+    CONTEXT_INTEGRATION_TOP_K,
+)
 from app.page_cache import get_page_data_cached
 from app.service_registry import get_platform_status
 from app.llm_interface import get_llm
@@ -348,6 +357,33 @@ class ContextRetrievalAgent:
 
         logger.info("[retrieve_context] Found %d confirmed pages", len(confirmed))
 
+        # 1a. Обязательный sub-запрос по integration-страницам.
+        # Integration-страницы часто вытесняются из топ-N основным поиском, потому что
+        # dataModel и function страниц численно больше и они семантически ближе к большинству
+        # бизнес-требований. Отдельный sub-запрос гарантирует их присутствие в карте контекста
+        # независимо от топа.
+        # Sub-запрос пропускается только если caller явно задал фильтр по типам и
+        # "integration" в этот фильтр не входит.
+        types_exclude_integration = (
+            requirement_types is not None
+            and "integration" not in requirement_types
+        )
+        if CONTEXT_INTEGRATION_TOP_K > 0 and not types_exclude_integration:
+            integration_pages = self._fetch_integration_pages(
+                business_requirements=business_requirements,
+                target_system=target_system,
+                top_k=CONTEXT_INTEGRATION_TOP_K
+            )
+            if integration_pages:
+                existing_ids = {p.page_id for p in confirmed}
+                new_integration = [p for p in integration_pages if p.page_id not in existing_ids]
+                confirmed = confirmed + new_integration
+                logger.info(
+                    "[retrieve_context] Integration sub-query added %d new pages "
+                    "(total confirmed: %d)",
+                    len(new_integration), len(confirmed)
+                )
+
         # 2. Проверка Confluence на незавершённые изменения
         pending = self._check_confluence_for_pending(confirmed)
         logger.info("[retrieve_context] Found %d pages with pending changes", len(pending))
@@ -501,7 +537,7 @@ class ContextRetrievalAgent:
 3. screenItemForm — экранные формы создания/редактирования/просмотра
 4. screenListForm — экранные формы просмотра списков
 5. integration — интеграции с другими системами (ЕСК, АБС Ф1, ТЕССА, ПЦ и т.д.)
-6. process — бизнес-процессы (сквозные бизнес-процессы обработки заявок)
+6. process — бизнес-процессы (жизненные циклы) обработки заявок и их подпроцессы
 7. states — статусы и состояния
 8. control — контроли и проверки
 9. printForm - печатные формы
@@ -638,6 +674,50 @@ class ContextRetrievalAgent:
         )
 
         return contexts
+
+    def _fetch_integration_pages(
+        self,
+        business_requirements: str,
+        target_system: Optional[str] = None,
+        top_k: int = 10
+    ) -> List[PageContext]:
+        """
+        Обязательный sub-запрос по integration-страницам сервиса.
+
+        Integration-страницы описывают взаимодействие с внешними системами (АБС Ф1, ЕСК,
+        ТЕССА и т.д.). При широком поиске они вытесняются из топ-N страницами с моделями
+        данных и функциями, которых численно больше. Этот метод гарантирует их присутствие
+        в карте контекста.
+
+        Семантический запрос строится из бизнес-требования так же, как и основной поиск.
+        Если передан target_system — фильтруем дополнительно по нему.
+
+        Args:
+            business_requirements: Текст бизнес-требований для семантического поиска.
+            target_system: Опциональный фильтр по смежной системе (например, "ABS_F1").
+            top_k: Максимальное число integration-страниц для извлечения.
+
+        Returns:
+            Список PageContext для integration-страниц сервиса.
+        """
+        logger.debug(
+            "[_fetch_integration_pages] <- top_k=%d, target_system=%s",
+            top_k, target_system
+        )
+
+        pages = self._search_confirmed_reqs(
+            query=business_requirements,
+            requirement_types=["integration"],
+            target_system=target_system,
+            top_k=top_k
+        )
+
+        logger.info(
+            "[_fetch_integration_pages] -> Found %d integration pages",
+            len(pages)
+        )
+
+        return pages
 
     def _convert_search_results_to_contexts(
         self,

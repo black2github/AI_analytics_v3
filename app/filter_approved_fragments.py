@@ -10,12 +10,12 @@ def filter_approved_fragments(html: str) -> str:
     """
     Извлекает подтвержденные фрагменты с гибридной разметкой (Markdown + HTML)
     """
-    logger.info("[filter_approved_fragments] <- {%s}", html[:200] + "...")
+    logger.debug("[filter_approved_fragments] <- {%s}", html[:200] + "...")
 
     extractor = create_approved_fragments_extractor()
     result = extractor.extract(html)
 
-    logger.info("[filter_approved_fragments] -> {%s}", result)
+    logger.debug("[filter_approved_fragments] -> {%s}", result)
     return result
 
 def test_filter_approved_fragments():
