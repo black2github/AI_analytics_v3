@@ -46,7 +46,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from app.config import UNIFIED_STORAGE_NAME, CHROMA_PERSIST_DIR
 from app.llm_interface import get_embeddings_model
 from langchain_chroma import Chroma
-from langchain_core.documents import Document
 
 logging.basicConfig(
     level=logging.INFO,
@@ -190,16 +189,17 @@ def resolve_service_codes_by_titles(
 def get_integration_page_vectors(
     vectorstore: Chroma,
     page_id: str
-) -> List[Tuple[str, str, Dict]]:
+) -> List[Tuple[str, str, Dict, List[float]]]:
     """
-    Возвращает все векторные документы для интеграционной страницы.
+    Возвращает все векторные документы для интеграционной страницы,
+    включая готовые эмбеддинги — чтобы копии создавались без переиндексации.
 
     Args:
         vectorstore: ChromaDB хранилище
         page_id: Идентификатор страницы
 
     Returns:
-        Список (doc_id, page_content, metadata)
+        Список (doc_id, page_content, metadata, embedding)
     """
     results = vectorstore.get(
         where={
@@ -208,7 +208,7 @@ def get_integration_page_vectors(
                 {"doc_type": {"$eq": "requirement"}}
             ]
         },
-        include=["documents", "metadatas"]
+        include=["documents", "metadatas", "embeddings"]
     )
 
     if not results or not results.get("ids"):
@@ -217,7 +217,8 @@ def get_integration_page_vectors(
     return list(zip(
         results["ids"],
         results["documents"],
-        results["metadatas"]
+        results["metadatas"],
+        results["embeddings"]
     ))
 
 
@@ -432,14 +433,17 @@ class IntegrationLinker:
         self,
         page_id: str,
         service_code: str,
-        source_vectors: List[Tuple[str, str, Dict]]
+        source_vectors: List[Tuple[str, str, Dict, List[float]]]
     ):
         """
         Создаёт копии всех векторов страницы с новым service_code.
 
-        Каждая копия получает суффикс _svc_{service_code} к page_id в метаданных
-        чтобы отличаться от оригинала при поиске, но при этом при переходе
-        к оригинальной странице используется исходный page_id.
+        Использует ChromaDB _collection.add() напрямую с готовыми эмбеддингами —
+        без повторной векторизации через модель. Это на порядок быстрее чем
+        add_documents(), который всегда пересчитывает эмбеддинги.
+
+        Каждая копия получает новый уникальный doc_id с суффиксом _svc_{service_code},
+        чтобы не конфликтовать с оригинальными документами в коллекции.
         """
         # Проверяем существование копии (если не force)
         if not self.force:
@@ -479,20 +483,29 @@ class IntegrationLinker:
             except Exception as e:
                 logger.warning("[_create_copy] Could not delete existing: %s", e)
 
-        # Создаём новые документы с обновлённым service_code
-        new_docs = []
-        for _doc_id, page_content, metadata in source_vectors:
-            new_metadata = {**metadata, "service_code": service_code}
-            new_docs.append(Document(
-                page_content=page_content,
-                metadata=new_metadata
-            ))
+        # Собираем данные для прямой вставки в ChromaDB без переиндексации
+        new_ids = []
+        new_embeddings = []
+        new_documents = []
+        new_metadatas = []
 
-        self.vs.add_documents(new_docs)
+        for orig_id, page_content, metadata, embedding in source_vectors:
+            new_ids.append(f"{orig_id}_svc_{service_code}")
+            new_embeddings.append(embedding)
+            new_documents.append(page_content)
+            new_metadatas.append({**metadata, "service_code": service_code})
+
+        # Вставляем напрямую через ChromaDB collection — без вызова модели эмбеддингов
+        self.vs._collection.add(
+            ids=new_ids,
+            embeddings=new_embeddings,
+            documents=new_documents,
+            metadatas=new_metadatas,
+        )
 
         logger.info(
-            "[_create_copy] Created %d vectors for page_id=%s service_code=%s",
-            len(new_docs), page_id, service_code
+            "[_create_copy] Copied %d vectors for page_id=%s service_code=%s (no reembedding)",
+            len(new_ids), page_id, service_code
         )
         self.stats["copies_created"] += 1
 
