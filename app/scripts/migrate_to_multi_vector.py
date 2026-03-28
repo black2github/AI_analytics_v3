@@ -89,21 +89,31 @@ class MultiVectorMigrator:
             target_dir: str,
             dry_run: bool = False,
             use_llm_summary: bool = False,
-            batch_size: int = 10
+            batch_size: int = 10,
+            summaries_file: Optional[str] = None,
     ):
         """
         Args:
             source_dir: Путь к исходному ChromaDB (откуда читаем page_ids)
             target_dir: Путь к целевому ChromaDB (куда пишем новые документы)
             dry_run: Режим без изменений (только анализ)
-            use_llm_summary: Использовать LLM для summary
+            use_llm_summary: Использовать LLM для summary (игнорируется если задан summaries_file)
             batch_size: Максимальное число параллельных LLM-запросов
+            summaries_file: Путь к JSON файлу с pregenerated summary {page_id: summary_text}.
+                Если задан — LLM не вызывается, используются готовые summary из файла.
+                Страницы без записи в файле получают extractive summary как fallback.
         """
         self.source_dir = source_dir
         self.target_dir = target_dir
         self.dry_run = dry_run
         self.use_llm_summary = use_llm_summary
         self.batch_size = batch_size
+        self.summaries_file = summaries_file
+        self.preloaded_summaries: Dict[str, str] = {}
+
+        # Загружаем pregenerated summaries из файла
+        if summaries_file:
+            self.preloaded_summaries = self._load_summaries_file(summaries_file)
 
         self.stats = {
             'total_pages': 0,
@@ -116,8 +126,9 @@ class MultiVectorMigrator:
 
         logger.info(
             "[MultiVectorMigrator] <- source='%s', target='%s', "
-            "dry_run=%s, llm_summary=%s, batch_size=%d",
-            source_dir, target_dir, dry_run, use_llm_summary, batch_size
+            "dry_run=%s, llm_summary=%s, batch_size=%d, summaries_file=%s",
+            source_dir, target_dir, dry_run, use_llm_summary, batch_size,
+            summaries_file or "none"
         )
 
         if source_dir == target_dir:
@@ -227,12 +238,16 @@ class MultiVectorMigrator:
 
         indexer = create_multi_vector_indexer(use_llm_summary=self.use_llm_summary)
 
+        # Объединяем preloaded_summaries (из файла) с новыми LLM-запросами.
+        # Если summaries_file задан — indexer получит готовые summary и не будет
+        # вызывать LLM для страниц у которых summary уже есть в файле.
         docs = await indexer.prepare_multi_vector_documents(
             pages=pages_with_content,
             service_code=service_code,
             doc_type="requirement",
             source="DBOCORPESPLN",
-            batch_size=self.batch_size
+            batch_size=self.batch_size,
+            preloaded_summaries=self.preloaded_summaries,
         )
 
         logger.info("[Step 4/5] Created %d documents", len(docs))
@@ -610,6 +625,35 @@ class MultiVectorMigrator:
         response = input("Continue with reindexing? [y/N]: ")
         return response.strip().lower() in ("y", "yes")
 
+    def _load_summaries_file(self, path: str) -> Dict[str, str]:
+        """
+        Загружает pregenerated summaries из JSON файла.
+
+        Формат файла: {page_id: summary_text, ...}
+        Генерируется скриптом generate_summaries.py.
+
+        Args:
+            path: Путь к JSON файлу
+
+        Returns:
+            Словарь {page_id: summary_text}
+        """
+        import json
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            logger.info(
+                "[_load_summaries_file] Loaded %d pregenerated summaries from '%s'",
+                len(data), path
+            )
+            return data
+        except FileNotFoundError:
+            logger.error("[_load_summaries_file] File not found: %s", path)
+            raise
+        except Exception as e:
+            logger.error("[_load_summaries_file] Failed to load '%s': %s", path, e)
+            raise
+
     def _finalize_stats(self):
         """Логирует итоговую статистику."""
         self.stats['end_time'] = datetime.now()
@@ -638,14 +682,16 @@ async def migrate_service_async(
         use_llm_summary: bool = False,
         force: bool = False,
         batch_size: int = 10,
-        all_services: bool = False
+        all_services: bool = False,
+        summaries_file: Optional[str] = None,
 ) -> Dict:
     migrator = MultiVectorMigrator(
         source_dir=source_dir,
         target_dir=target_dir,
         dry_run=dry_run,
         use_llm_summary=use_llm_summary,
-        batch_size=batch_size
+        batch_size=batch_size,
+        summaries_file=summaries_file,
     )
     if all_services:
         return await migrator.migrate_all_services(force=force)
@@ -705,9 +751,19 @@ Examples:
         )
     )
     parser.add_argument(
+        '--summaries-file', type=str, default=None,
+        help=(
+            'Path to JSON file with pregenerated summaries {page_id: summary_text}. '
+            'Generated by generate_summaries.py. '
+            'When provided: LLM is not called, GPU time is used only for vectorization. '
+            'Pages not present in the file receive extractive summary as fallback.'
+        )
+    )
+    parser.add_argument(
         '--use-llm-summary', action='store_true',
         help='Use LLM for summary generation (slower, more accurate). '
-             'All LLM calls run in a single parallel batch before indexing.'
+             'All LLM calls run in a single parallel batch before indexing. '
+             'Ignored if --summaries-file is provided.'
     )
     parser.add_argument(
         '--dry-run', action='store_true',
@@ -729,13 +785,14 @@ Examples:
     target_dir = os.path.abspath(args.target_dir) if args.target_dir else source_dir
 
     logger.info("Starting Multi-Vector migration...")
-    logger.info("  service   : %s", args.service)
-    logger.info("  source    : %s", source_dir)
-    logger.info("  target    : %s", target_dir)
-    logger.info("  llm       : %s", args.use_llm_summary)
-    logger.info("  batch_size: %d", args.batch_size)
-    logger.info("  force     : %s", args.force)
-    logger.info("  dry_run   : %s", args.dry_run)
+    logger.info("  service        : %s", args.service)
+    logger.info("  source         : %s", source_dir)
+    logger.info("  target         : %s", target_dir)
+    logger.info("  llm            : %s", args.use_llm_summary)
+    logger.info("  summaries_file : %s", args.summaries_file or "none")
+    logger.info("  batch_size     : %d", args.batch_size)
+    logger.info("  force          : %s", args.force)
+    logger.info("  dry_run        : %s", args.dry_run)
 
     if args.dry_run:
         logger.info("DRY RUN MODE: no changes will be made")
@@ -756,7 +813,8 @@ Examples:
             use_llm_summary=args.use_llm_summary,
             force=args.force,
             batch_size=args.batch_size,
-            all_services=args.all_services
+            all_services=args.all_services,
+            summaries_file=args.summaries_file,
         )
     )
 
