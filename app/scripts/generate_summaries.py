@@ -146,6 +146,7 @@ def load_pages_from_store(
                 "id": page_id,
                 "title": meta.get("title", ""),
                 "approved_content": doc,
+                "requirement_type": meta.get("requirement_type", ""),
             }
 
     pages = list(pages_map.values())
@@ -217,12 +218,17 @@ async def generate_summaries(
     async def summarize_one(page: Dict) -> tuple:
         page_id = page["id"]
         content = page["approved_content"]
+        req_type = page.get("requirement_type") or None
         async with semaphore:
             try:
-                summary = await generator.generate_llm(content, max_tokens=500)
+                summary = await generator.generate_llm(
+                    content,
+                    max_tokens=250,
+                    requirement_type=req_type,
+                )
                 logger.debug(
-                    "[summarize_one] OK: page_id=%s (%d chars -> %d chars summary)",
-                    page_id, len(content), len(summary)
+                    "[summarize_one] OK: page_id=%s req_type=%s (%d chars -> %d chars summary)",
+                    page_id, req_type, len(content), len(summary)
                 )
                 return page_id, summary, None
             except Exception as e:
