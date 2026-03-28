@@ -8,7 +8,10 @@
 - Batch processing для больших объёмов
 """
 
+import json
 import logging
+import os
+import re
 import asyncio
 from typing import List, Dict, Optional
 from langchain_core.messages import HumanMessage
@@ -21,6 +24,88 @@ from app.utils.text_processing import (
 )
 
 logger = logging.getLogger(__name__)
+
+# ============================================================================
+# ЗАГРУЗКА ГЛОССАРИЯ
+# ============================================================================
+
+def _load_glossary() -> Dict[str, str]:
+    """
+    Загружает глоссарий аббревиатур из glossary.json.
+
+    Объединяет все секции файла в единый плоский словарь {аббревиатура: расшифровка}.
+    Загружается один раз при импорте модуля.
+
+    Returns:
+        Словарь {аббревиатура: расшифровка}
+    """
+    glossary: Dict[str, str] = {}
+    try:
+        path = os.path.join(os.path.dirname(__file__), "..", "data", "glossary.json")
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        for key, value in data.items():
+            if key.startswith("_"):
+                continue
+            if isinstance(value, dict):
+                glossary.update(value)
+
+        logger.debug("[_load_glossary] Loaded %d terms", len(glossary))
+    except FileNotFoundError:
+        logger.warning("[_load_glossary] glossary.json not found, proceeding without glossary")
+    except Exception as e:
+        logger.warning("[_load_glossary] Failed to load glossary: %s", e)
+
+    return glossary
+
+
+# Загружаем один раз при импорте
+_GLOSSARY: Dict[str, str] = _load_glossary()
+
+
+def expand_abbreviations(text: str, glossary: Optional[Dict[str, str]] = None) -> str:
+    """
+    Раскрывает аббревиатуры в тексте при первом вхождении.
+
+    Например: "ЕСК" → "ЕСК (Единый Справочник Клиентов)"
+
+    Обрабатывает только первое вхождение каждой аббревиатуры в тексте
+    чтобы не перегружать текст расшифровками.
+
+    Args:
+        text: Исходный текст
+        glossary: Словарь аббревиатур (None = использовать _GLOSSARY)
+
+    Returns:
+        Текст с раскрытыми аббревиатурами при первом вхождении
+    """
+    if not text:
+        return text
+
+    glos = glossary if glossary is not None else _GLOSSARY
+    if not glos:
+        return text
+
+    # Сортируем по убыванию длины чтобы "АС СБП" заменялось раньше "СБП"
+    sorted_abbrs = sorted(glos.keys(), key=len, reverse=True)
+
+    replaced: set = set()
+    result = text
+
+    for abbr in sorted_abbrs:
+        if abbr in replaced:
+            continue
+        # Ищем только целое слово/фразу (не часть другого слова)
+        pattern = r'(?<![А-ЯA-Z\w])' + re.escape(abbr) + r'(?![А-ЯA-Z\w])'
+        expansion = f"{abbr} ({glos[abbr]})"
+
+        new_result = re.sub(pattern, expansion, result, count=1)
+        if new_result != result:
+            result = new_result
+            replaced.add(abbr)
+
+    return result
 
 
 class SummaryGenerator:
@@ -83,7 +168,8 @@ class SummaryGenerator:
             self,
             text: str,
             max_tokens: int = 200,
-            context: Optional[str] = None
+            context: Optional[str] = None,
+            requirement_type: Optional[str] = None,
     ) -> str:
         """
         LLM-based summarization (async).
@@ -92,24 +178,21 @@ class SummaryGenerator:
             text: Исходный текст для саммаризации
             max_tokens: Максимальная длина summary в токенах
             context: Дополнительный контекст (опционально)
+            requirement_type: Тип требования для выбора промпта
+                (function/dataModel/integration/screenItemForm/states/process/...)
 
         Returns:
             Summary текст
         """
-        logger.debug("[generate_llm] Processing %d chars", len(text))
+        logger.debug("[generate_llm] Processing %d chars, req_type=%s", len(text), requirement_type)
 
-        # Обрезаем текст если слишком длинный (берём начало)
-        # Для большинства LLM context limit ~8K токенов
-        max_input_chars = 10000  # ~3300 токенов для русского
-        if len(text) > max_input_chars:
-            logger.warning(
-                "[generate_llm] Text too long (%d chars), truncating to %d",
-                len(text), max_input_chars
-            )
-            text = truncate_text(text, max_input_chars, add_ellipsis=True)
+        # Вариант Б: предобработка — раскрываем аббревиатуры при первом вхождении
+        # Это помогает LLM правильно интерпретировать domain-specific термины
+        # прямо в контексте документа
+        text = expand_abbreviations(text)
 
-        # Формируем промпт
-        prompt = self._build_summary_prompt(text, context)
+        # Формируем промпт с учётом типа требования и глоссарием (Вариант А)
+        prompt = self._build_summary_prompt(text, context, requirement_type)
 
         # Вызываем LLM асинхронно
         try:
@@ -261,34 +344,154 @@ class SummaryGenerator:
 
         return results
 
-    def _build_summary_prompt(self, text: str, context: Optional[str] = None) -> str:
+    def _build_summary_prompt(
+            self,
+            text: str,
+            context: Optional[str] = None,
+            requirement_type: Optional[str] = None,
+    ) -> str:
         """
-        Создаёт промпт для LLM summarization.
+        Создаёт промпт для LLM summarization с учётом типа требования.
+
+        Промпт оптимизирован для семантического поиска по бизнес-требованиям:
+        summary должен отвечать на вопрос "какое бизнес-изменение затронет эту страницу",
+        а не просто пересказывать структуру документа.
 
         Args:
             text: Текст документа
             context: Дополнительный контекст
+            requirement_type: Тип требования (function/dataModel/integration/...)
 
         Returns:
             Промпт для LLM
         """
-        prompt = f"""Создай краткое саммари (2-3 предложения, максимум 200 слов) для следующего технического требования.
+        # Инструкции по формату — общие для всех типов
+        format_instruction = (
+            "Напиши summary на русском языке длиной не более 500-700 символов. "
+            "Используй профессиональную банковскую терминологию из оригинала. "
+            "Не используй маркированные списки — только связный текст. "
+            "Не начинай с фраз 'Документ описывает', 'Документ определяет', "
+            "'Данная страница' — сразу указывай суть. "
+        )
 
-Саммари должно:
-- Отражать суть документа и ключевые сущности
-- Быть понятным и информативным
-- Использовать профессиональную терминологию из оригинала
+        # Типо-зависимые инструкции по содержанию
+        type_instructions = {
+            "function": (
+                "Опиши: какое бизнес-действие выполняет функция, "
+                "кто является актором (клиент/банк/система), "
+                "с какими объектами (заявка/карта/счёт) она работает, "
+                "какие ключевые шаги или проверки включает, "
+                "какие смежные системы задействованы."
+            ),
+            "dataModel": (
+                "Опиши: какая сущность модели данных моделируется, "
+                "перечисли ключевые атрибуты с их бизнес-смыслом "
+                "(не более 8-10 самых важных), "
+                "укажи связи с другими сущностями если есть."
+            ),
+            "integration": (
+                "Опиши: с какой внешней системой выполняется интеграция, "
+                "какой метод/операция вызывается, "
+                "какова бизнес-цель вызова, "
+                "какие ключевые параметры передаются и возвращаются, "
+                "в каких бизнес-процессах используется."
+            ),
+            "screenItemForm": (
+                "Опиши: какая экранная форма или элемент интерфейса, "
+                "в каком бизнес-сценарии используется, "
+                "какие ключевые поля содержит и их назначение, "
+                "какие действия доступны пользователю."
+            ),
+            "screenListForm": (
+                "Опиши: какой список или журнал отображается, "
+                "какие объекты показывает, "
+                "в каком бизнес-сценарии используется, "
+                "какие действия доступны пользователю."
+            ),
+            "states": (
+                "Опиши: жизненный цикл какого объекта (заявка/запрос/заявление) описан, "
+                "перечисли ключевые статусы и их бизнес-смысл, "
+                "опиши основные переходы между статусами и условия переходов."
+            ),
+            "process": (
+                "Опиши: какой бизнес-процесс описан, "
+                "кто является участниками процесса, "
+                "перечисли ключевые шаги и точки принятия решений, "
+                "укажи результат процесса."
+            ),
+            "control": (
+                "Опиши: какие бизнес-правила или контроли проверяются, "
+                "к какому объекту (заявка/карта/платёж) применяются, "
+                "какие условия проверяются и каковы последствия при нарушении."
+            ),
+        }
 
-ДОКУМЕНТ:
-{text}
-"""
+        # Берём инструкцию по типу или универсальную если тип неизвестен
+        content_instruction = type_instructions.get(
+            requirement_type or "",
+            # Универсальная инструкция для неизвестных типов
+            "Опиши суть документа: какой бизнес-объект или процесс описан, "
+            "какие ключевые бизнес-правила или атрибуты определены, "
+            "какие смежные системы или сервисы задействованы."
+        )
+
+        # Формируем компактный глоссарий для промпта — только термины
+        # которые реально встречаются в тексте (Вариант А)
+        glossary_section = self._build_glossary_section(text)
+
+        prompt = (
+            f"Ты — аналитик банковских систем ДБО для юридических лиц. "
+            f"Создай summary страницы технических требований для семантического поиска.\n\n"
+            f"ТИП ТРЕБОВАНИЯ: {requirement_type or 'не указан'}\n\n"
+            + (f"ГЛОССАРИЙ ТЕРМИНОВ:\n{glossary_section}\n\n" if glossary_section else "")
+            + f"ЧТО ВКЛЮЧИТЬ В SUMMARY:\n{content_instruction}\n\n"
+            f"ФОРМАТ:\n{format_instruction}\n\n"
+            f"ДОКУМЕНТ:\n{text}\n\n"
+            f"SUMMARY:"
+        )
 
         if context:
-            prompt += f"\n\nКОНТЕКСТ:\n{context}\n"
-
-        prompt += "\nСАММАРИ:"
+            prompt = (
+                f"Ты — аналитик банковских систем ДБО для юридических лиц. "
+                f"Создай summary страницы технических требований для семантического поиска.\n\n"
+                f"ТИП ТРЕБОВАНИЯ: {requirement_type or 'не указан'}\n\n"
+                f"КОНТЕКСТ:\n{context}\n\n"
+                + (f"ГЛОССАРИЙ ТЕРМИНОВ:\n{glossary_section}\n\n" if glossary_section else "")
+                + f"ЧТО ВКЛЮЧИТЬ В SUMMARY:\n{content_instruction}\n\n"
+                f"ФОРМАТ:\n{format_instruction}\n\n"
+                f"ДОКУМЕНТ:\n{text}\n\n"
+                f"SUMMARY:"
+            )
 
         return prompt
+
+    def _build_glossary_section(self, text: str) -> str:
+        """
+        Строит компактную секцию глоссария для промпта.
+
+        Включает только термины которые реально встречаются в тексте —
+        чтобы не раздувать промпт лишними записями.
+
+        Args:
+            text: Текст документа
+
+        Returns:
+            Строка с глоссарием или пустая строка если терминов не найдено
+        """
+        if not _GLOSSARY:
+            return ""
+
+        found = []
+        for abbr, definition in _GLOSSARY.items():
+            # Проверяем наличие аббревиатуры в тексте как целого слова
+            pattern = r'(?<![А-ЯA-Z\w])' + re.escape(abbr) + r'(?![А-ЯA-Z\w])'
+            if re.search(pattern, text):
+                found.append(f"- {abbr}: {definition}")
+
+        if not found:
+            return ""
+
+        return "\n".join(sorted(found))
 
 
 # ============================================================================
@@ -312,7 +515,7 @@ def create_summary_generator(
     return SummaryGenerator(
         llm_provider=llm_provider,
         llm_model=llm_model,
-        llm_temperature=0.3  # Низкая температура для summary
+        llm_temperature=0.2  # Низкая температура для summary
     )
 
 
