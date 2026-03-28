@@ -30,3 +30,5 @@ REM pytest tests/ -m "not slow"
 
 REM # Запуск в verbose режиме
 REM pytest tests/ -v -s
+
+REM python tests/test_context_retrieval_agent.py > "%LOGFILE%" 2>&1

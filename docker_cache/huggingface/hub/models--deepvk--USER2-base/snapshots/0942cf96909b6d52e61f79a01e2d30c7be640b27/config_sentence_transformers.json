@@ -1,0 +1,15 @@
+{
+  "__version__": {
+    "sentence_transformers": "4.0.2",
+    "transformers": "4.49.0",
+    "pytorch": "2.6.0"
+  },
+  "prompts": {
+    "classification": "classification: ",
+    "clustering": "clustering: ",
+    "search_query": "search_query: ",
+    "search_document": "search_document: "
+  },
+  "default_prompt_name": null,
+  "similarity_fn_name": "cosine"
+}

@@ -1,0 +1,884 @@
+{
+	"info": {
+		"_postman_id": "5a279e47-ed1e-48eb-a90e-7206407ae6fd",
+		"name": "AI Requirements Analyzer API",
+		"description": "Postman collection for the AI Requirements Analyzer API, providing endpoints for analyzing requirements, loading Confluence pages, and managing services.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2166134"
+	},
+	"item": [
+		{
+			"name": "Analyze",
+			"item": [
+				{
+					"name": "Analyze Text",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"text\": \"Sample requirement text for analysis\",\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/analyze",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analyze"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Analyze Text Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"text\": \"Sample requirement text for analysis\",\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/analyze",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analyze"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"result\": \"Analyzed requirement data\"}"
+						}
+					]
+				},
+				{
+					"name": "Analyze Pages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/analyze_pages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analyze_pages"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Analyze Pages Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/analyze_pages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analyze_pages"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"results\": [\"Analyzed page1 data\", \"Analyzed page2 data\"]}"
+						}
+					]
+				},
+				{
+					"name": "Analyze Service Pages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"prompt_template\": \"default_template\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/analyze_service_pages/SERVICE001",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analyze_service_pages",
+								"SERVICE001"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Analyze Service Pages Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"prompt_template\": \"default_template\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/analyze_service_pages/SERVICE001",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analyze_service_pages",
+										"SERVICE001"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"results\": [\"Analyzed page1 data\", \"Analyzed page2 data\"]}"
+						},
+						{
+							"name": "Analyze Service Pages Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"prompt_template\": \"default_template\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/analyze_service_pages/INVALID_CODE",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analyze_service_pages",
+										"INVALID_CODE"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"error\": \"Сервис с кодом INVALID_CODE не найден\"}"
+						}
+					]
+				},
+				{
+					"name": "Analyze With Templates",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\"requirement_type\": \"functional\", \"page_id\": \"page1\"},\n    {\"requirement_type\": \"non-functional\", \"page_id\": \"page2\"}\n  ],\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/analyze_with_templates",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"analyze_with_templates"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Analyze With Templates Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\"requirement_type\": \"functional\", \"page_id\": \"page1\"},\n    {\"requirement_type\": \"non-functional\", \"page_id\": \"page2\"}\n  ],\n  \"prompt_template\": \"default_template\",\n  \"service_code\": \"SERVICE001\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/analyze_with_templates",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"analyze_with_templates"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"results\": [\"Analyzed functional requirement\", \"Analyzed non-functional requirement\"]}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Loader",
+			"item": [
+				{
+					"name": "Load Pages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"service_code\": \"SERVICE001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/load_pages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"load_pages"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Load Pages Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"service_code\": \"SERVICE001\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/load_pages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"load_pages"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"message\": \"2 documents indexed for service 'SERVICE001'.\"}"
+						}
+					]
+				},
+				{
+					"name": "Remove Pages",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"service_code\": \"SERVICE001\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/load_pages",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"load_pages"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Load Pages Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"page_ids\": [\"page1\", \"page2\"],\n  \"service_code\": \"SERVICE001\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/load_pages",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"load_pages"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"message\": \"2 documents indexed for service 'SERVICE001'.\"}"
+						}
+					]
+				},
+				{
+					"name": "Load Templates",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"templates\": {\n    \"functional\": \"template_page1\",\n    \"non-functional\": \"template_page2\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/load_templates",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"load_templates"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Load Templates Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"templates\": {\n    \"functional\": \"template_page1\",\n    \"non-functional\": \"template_page2\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/load_templates",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"load_templates"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"message\": \"Templates loaded: 2\"}"
+						}
+					]
+				},
+				{
+					"name": "List and Load Child Pages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/services",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"services"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List All Services Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/services",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"services"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"services\": [\"SERVICE001\", \"SERVICE002\"]}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Services",
+			"item": [
+				{
+					"name": "List All Services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/services",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"services"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List All Services Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/services",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"services"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"services\": [\"SERVICE001\", \"SERVICE002\"]}"
+						}
+					]
+				},
+				{
+					"name": "List Platform Services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/services?platform=true",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"services"
+							],
+							"query": [
+								{
+									"key": "platform",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List Platform Services Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/services?platform=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"services"
+									],
+									"query": [
+										{
+											"key": "platform",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "Text",
+							"header": [],
+							"cookie": [],
+							"body": "{\"services\": [\"PLATFORM_SERVICE001\"]}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Debug Collection",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Logging Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Logging Control",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Logging Test",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Test context size",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Health Check Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"status\": \"ok\"}"
+				}
+			]
+		},
+		{
+			"name": "Get Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/info",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"info"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Info Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"info"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\"app\": \"requirements-analyzer\", \"app_version\": \"1.0.0\", \"git_version\": \"unknown\", \"uptime\": \"00:01:23\", \"description\": \"RAG-based AI сервис для валидации требований аналитики.\"}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8000"
+		}
+	]
+}

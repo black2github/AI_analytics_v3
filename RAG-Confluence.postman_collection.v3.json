@@ -1,0 +1,612 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "RAG Requirements Analyzer - Template Compliance",
+		"description": "Коллекция для тестирования анализа требований с проверкой соответствия шаблонам в RAG-сервисе",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "🔧 Setup & Configuration",
+			"item": [
+				{
+					"name": "Health Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Service is healthy\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.status).to.eql(\"ok\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Info",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Service info returned\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json).to.have.property('app');",
+									"    pm.expect(json).to.have.property('app_version');",
+									"    pm.expect(json.app).to.eql('requirements-analyzer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/info",
+							"host": ["{{base_url}}"],
+							"path": ["info"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Services List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Services list returned\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json).to.have.property('services');",
+									"    pm.expect(json.services).to.be.an('array');",
+									"    ",
+									"    // Store first non-platform service for later use",
+									"    var nonPlatformService = json.services.find(s => !s.platform);",
+									"    if (nonPlatformService) {",
+									"        pm.environment.set('test_service_code', nonPlatformService.code);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/services",
+							"host": ["{{base_url}}"],
+							"path": ["services"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Настройка и проверка доступности сервиса"
+		},
+		{
+			"name": "📄 Template Management",
+			"item": [
+				{
+					"name": "Load Data Model Template",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Template loaded successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.message).to.include('Templates loaded');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"templates\": {\n    \"data_model\": \"{{template_page_data_model}}\",\n    \"process\": \"{{template_page_process}}\",\n    \"integration_method\": \"{{template_page_integration}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/load_templates",
+							"host": ["{{base_url}}"],
+							"path": ["load_templates"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Управление шаблонами требований"
+		},
+		{
+			"name": "📋 Requirements Analysis with Templates",
+			"item": [
+				{
+					"name": "Analyze Data Model Requirements - Complete Example",
+					"event": [
+						{
+							"listen": "pre-request",
+							"script": {
+								"exec": [
+									"// Set test data for data model analysis",
+									"pm.environment.set('current_timestamp', new Date().toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Analysis completed successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json).to.have.property('results');",
+									"    pm.expect(json.results).to.be.an('array');",
+									"    pm.expect(json.results.length).to.be.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Template analysis structure is correct\", function () {",
+									"    var json = pm.response.json();",
+									"    var result = json.results[0];",
+									"    ",
+									"    pm.expect(result).to.have.property('page_id');",
+									"    pm.expect(result).to.have.property('requirement_type');",
+									"    pm.expect(result).to.have.property('template_analysis');",
+									"    ",
+									"    if (!result.template_analysis.error) {",
+									"        pm.expect(result.template_analysis).to.have.property('template_compliance');",
+									"        pm.expect(result.template_analysis).to.have.property('content_quality');",
+									"        pm.expect(result.template_analysis).to.have.property('system_integration');",
+									"        pm.expect(result.template_analysis).to.have.property('recommendations');",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Response time is acceptable\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(30000);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"data_model\",\n      \"page_id\": \"{{test_data_model_page_id}}\"\n    }\n  ],\n  \"prompt_template\": null,\n  \"service_code\": \"{{test_service_code}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Process Requirements - Custom Prompt",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Custom prompt analysis completed\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.results).to.be.an('array');",
+									"    pm.expect(json.results[0]).to.have.property('template_analysis');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"process\",\n      \"page_id\": \"{{test_process_page_id}}\"\n    }\n  ],\n  \"prompt_template\": \"Проанализируй бизнес-процесс на соответствие шаблону.\\n\\nШАБЛОН: {template}\\nТРЕБОВАНИЯ: {requirement}\\nКОНТЕКСТ: {context}\\n\\nОцени:\\n1. Полноту описания процесса\\n2. Соответствие BPMN стандартам\\n3. Корректность ролей и ответственности\\n\\nВерни результат в JSON формате с оценками и рекомендациями.\",\n  \"service_code\": \"CC\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Multiple Requirements - Batch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Batch analysis completed\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.results).to.be.an('array');",
+									"    pm.expect(json.results).to.have.lengthOf(3);",
+									"    ",
+									"    // Check each result has required properties",
+									"    json.results.forEach(function(result, index) {",
+									"        pm.expect(result, `Result ${index}`).to.have.property('page_id');",
+									"        pm.expect(result, `Result ${index}`).to.have.property('requirement_type');",
+									"        pm.expect(result, `Result ${index}`).to.have.property('template_analysis');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"data_model\",\n      \"page_id\": \"{{test_data_model_page_id}}\"\n    },\n    {\n      \"requirement_type\": \"process\",\n      \"page_id\": \"{{test_process_page_id}}\"\n    },\n    {\n      \"requirement_type\": \"integration_method\",\n      \"page_id\": \"{{test_integration_page_id}}\"\n    }\n  ],\n  \"service_code\": \"CC\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze Without Service Code - Auto Resolution",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Service code auto-resolved\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.results).to.be.an('array');",
+									"    // Should work even without explicit service_code",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"data_model\",\n      \"page_id\": \"{{test_data_model_page_id}}\"\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Анализ требований с проверкой соответствия шаблонам"
+		},
+		{
+			"name": "🔍 Supporting Operations",
+			"item": [
+				{
+					"name": "Load Test Pages for Analysis",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Pages loaded successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json.message).to.include('documents indexed');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"page_ids\": [\n    \"{{test_data_model_page_id}}\",\n    \"{{test_process_page_id}}\",\n    \"{{test_integration_page_id}}\"\n  ],\n  \"service_code\": \"{{test_service_code}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/load_pages",
+							"host": ["{{base_url}}"],
+							"path": ["load_pages"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Child Pages for Bulk Analysis",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Child pages retrieved\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    pm.expect(json).to.have.property('page_ids');",
+									"    pm.expect(json.page_ids).to.be.an('array');",
+									"    ",
+									"    // Store first few page IDs for testing",
+									"    if (json.page_ids.length > 0) {",
+									"        pm.environment.set('bulk_test_page_1', json.page_ids[0]);",
+									"    }",
+									"    if (json.page_ids.length > 1) {",
+									"        pm.environment.set('bulk_test_page_2', json.page_ids[1]);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/child_pages/{{root_page_id}}?service_code={{test_service_code}}",
+							"host": ["{{base_url}}"],
+							"path": ["child_pages", "{{root_page_id}}"],
+							"query": [
+								{
+									"key": "service_code",
+									"value": "{{test_service_code}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Debug Collections Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/debug_collections",
+							"host": ["{{base_url}}"],
+							"path": ["debug_collections"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Вспомогательные операции для подготовки тестовых данных"
+		},
+		{
+			"name": "🧪 Error Scenarios",
+			"item": [
+				{
+					"name": "Analyze Non-existent Page",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Handles non-existent page gracefully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    var result = json.results[0];",
+									"    pm.expect(result.template_analysis).to.have.property('error');",
+									"    pm.expect(result.template_analysis.error).to.include('содержимое страницы');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"data_model\",\n      \"page_id\": \"999999999\"\n    }\n  ],\n  \"service_code\": \"CC\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Analyze With Invalid Template Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Handles invalid template type\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var json = pm.response.json();",
+									"    var result = json.results[0];",
+									"    pm.expect(result.template_analysis).to.have.property('error');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"non_existent_type\",\n      \"page_id\": \"{{test_data_model_page_id}}\"\n    }\n  ],\n  \"service_code\": \"CC\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/analyze_with_templates",
+							"host": ["{{base_url}}"],
+							"path": ["analyze_with_templates"]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Тестирование обработки ошибочных сценариев"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script",
+					"console.log('🚀 Starting request to:', pm.request.url.toString());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script",
+					"console.log('✅ Response received:', pm.response.status, pm.response.code);",
+					"",
+					"// Log response time",
+					"if (pm.response.responseTime > 5000) {",
+					"    console.warn('⚠️ Slow response:', pm.response.responseTime + 'ms');",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "test_service_code",
+			"value": "CC",
+			"type": "string"
+		},
+		{
+			"key": "test_data_model_page_id",
+			"value": "42672659",
+			"type": "string",
+			"description": "ID страницы с моделью данных для тестирования"
+		},
+		{
+			"key": "test_process_page_id",
+			"value": "42673176",
+			"type": "string",
+			"description": "ID страницы с описанием процесса"
+		},
+		{
+			"key": "test_integration_page_id",
+			"value": "51813319",
+			"type": "string",
+			"description": "ID страницы с интеграционным методом"
+		},
+		{
+			"key": "template_page_data_model",
+			"value": "32246088",
+			"type": "string",
+			"description": "ID страницы с шаблоном модели данных"
+		},
+		{
+			"key": "template_page_process",
+			"value": "20808714",
+			"type": "string",
+			"description": "ID страницы с шаблоном процесса"
+		},
+		{
+			"key": "template_page_integration",
+			"value": "136386636",
+			"type": "string",
+			"description": "ID страницы с шаблоном интеграционного метода"
+		},
+		{
+			"key": "root_page_id",
+			"value": "6363380",
+			"type": "string",
+			"description": "ID корневой страницы для получения дочерних страниц"
+		}
+	]
+}

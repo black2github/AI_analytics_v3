@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "RAG-Confluence",
+    "_postman_id": "b7c9135f-e7ff-4c21-b071-b53f8790d5b6",
+    "description": "Collection for testing RAG-based requirement analyzer with Confluence context",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Analyze Requirement (text)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Требуется реализовать двухфакторную авторизацию при входе в веб-интерфейс системы.\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/analyze",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["analyze"]
+        }
+      }
+    },
+    {
+      "name": "Load Platform Context",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"page_ids\": [\"42674834\", \"42674840\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/load_platform_context",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["load_platform_context"]
+        }
+      }
+    },
+    {
+      "name": "Load Service Pages",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"page_ids\": [\"42674900\", \"42674901\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/load_service_pages",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["load_service_pages"]
+        }
+      }
+    },
+    {
+      "name": "Analyze Requirement Pages",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"page_ids\": [\"42675000\", \"42675001\"]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/analyze_service_pages",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["analyze_service_pages"]
+        }
+      }
+    }
+  ]
+}

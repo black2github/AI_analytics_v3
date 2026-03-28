@@ -1,0 +1,2 @@
+REM curl http://localhost:11434/v1/chat/completions -H "Content-Type: application/json" -d '{ "model": "llama3.2", "messages": [{"role": "user", "content": "Привет!"}]  }'
+curl http://185.68.22.10:11434/api/generate -H "Content-Type: application/json" -d '{ "model": "llama3.2:3b", "prompt": "Hello, world!", "stream": false }'
