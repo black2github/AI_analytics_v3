@@ -13,7 +13,7 @@ except Exception:
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.45.1")
+APP_VERSION = os.getenv("APP_VERSION", "0.51.0")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -90,7 +90,7 @@ EMBEDDING_BATCH_SIZE = int(os.getenv("EMBEDDING_BATCH_SIZE", "64"))
 #   seq_len=128,  batch=32: ~24 MB   (title — заголовки редко > 80 токенов)
 #   seq_len=512,  batch=16: ~185 MB  (summary — первые 500 символов контента)
 #   seq_len=2048, batch=8:  ~1.5 GB  (content/chunk — полный текст требования)
-# Значения по умолчанию рассчитаны под T4 GPU (14.5 GB) в Google Colab.
+# Значения по умолчанию рассчитаны под L4 GPU (24 GB) в Google Colab.
 # Для CPU-режима все три значения автоматически ограничены до EMBEDDING_MAX_SEQ_LENGTH.
 EMBEDDING_MAX_SEQ_LENGTH = int(os.getenv("EMBEDDING_MAX_SEQ_LENGTH", "512"))
 EMBEDDING_MAX_SEQ_LENGTH_TITLE = int(os.getenv("EMBEDDING_MAX_SEQ_LENGTH_TITLE", "128"))
