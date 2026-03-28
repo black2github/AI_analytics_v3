@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 import logging
 from app.services.summary_service import ServiceSummaryService
 
