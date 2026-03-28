@@ -1,4 +1,4 @@
-# Путь: app/services/multi_vector_indexer.py
+# app/services/multi_vector_indexer.py
 """
 Multi-Vector Indexer — адаптивная индексация документов.
 
@@ -92,15 +92,18 @@ class MultiVectorIndexer:
             service_code: str,
             doc_type: str = "requirement",
             source: str = "DBOCORPESPLN",
-            batch_size: int = 10
+            batch_size: int = 10,
+            preloaded_summaries: Optional[Dict[str, str]] = None,
     ) -> List[Document]:
         """
         Подготавливает документы с Multi-Vector индексацией.
 
         Порядок работы:
-        1. Если use_llm_summary=True — генерирует LLM summary для ВСЕХ страниц
+        1. Если передан preloaded_summaries — использует готовые summary из файла.
+           LLM не вызывается даже при use_llm_summary=True для страниц из файла.
+        2. Если use_llm_summary=True — генерирует LLM summary для ВСЕХ страниц
            единым параллельным батчем (max_concurrent=batch_size).
-        2. Основной цикл: синхронная сборка Document объектов для каждой страницы.
+        3. Основной цикл: синхронная сборка Document объектов для каждой страницы.
 
         Args:
             pages: Список страниц [{id, title, approved_content, requirement_type}, ...]
@@ -108,22 +111,48 @@ class MultiVectorIndexer:
             doc_type: Тип документа
             source: Источник данных
             batch_size: Максимальное число параллельных LLM-запросов при use_llm_summary=True
+            preloaded_summaries: Готовые summary из файла {page_id: summary_text}.
+                Страницы из этого словаря не требуют LLM-вызова.
+                Генерируются скриптом generate_summaries.py.
 
         Returns:
             Список Document объектов для ChromaDB
         """
         logger.info(
             "[prepare_multi_vector_documents] <- %d pages, service='%s', "
-            "llm_summary=%s, batch_size=%d",
-            len(pages), service_code, self.use_llm_summary, batch_size
+            "llm_summary=%s, batch_size=%d, preloaded=%d",
+            len(pages), service_code, self.use_llm_summary, batch_size,
+            len(preloaded_summaries) if preloaded_summaries else 0,
         )
 
         is_platform = get_platform_status(service_code) if doc_type == "requirement" else False
 
-        # Шаг 1. Генерируем LLM summary единым параллельным батчем.
-        # При use_llm_summary=False возвращается {} — extractive применяется
-        # внутри _create_multi_vector / _create_multi_vector_chunked.
-        summaries = await self._generate_summaries_batch(pages, batch_size)
+        # Шаг 1. Определяем итоговый словарь summaries.
+        # Приоритет: preloaded_summaries > LLM > extractive (в _create_multi_vector).
+        summaries: Dict[str, str] = {}
+
+        if preloaded_summaries:
+            # Берём preloaded для страниц у которых есть запись в файле
+            for page in pages:
+                pid = page.get("id", "")
+                if pid in preloaded_summaries:
+                    summaries[pid] = preloaded_summaries[pid]
+
+            preloaded_count = len(summaries)
+            remaining = [p for p in pages if p.get("id") not in summaries]
+            logger.info(
+                "[prepare_multi_vector_documents] Preloaded summaries: %d/%d pages. "
+                "Remaining without summary: %d",
+                preloaded_count, len(pages), len(remaining)
+            )
+
+            # Для оставшихся страниц — LLM если включён, иначе extractive в _create_mv
+            if remaining and self.use_llm_summary:
+                llm_summaries = await self._generate_summaries_batch(remaining, batch_size)
+                summaries.update(llm_summaries)
+        else:
+            # Стандартный путь: LLM для всех или extractive
+            summaries = await self._generate_summaries_batch(pages, batch_size)
 
         # Шаг 2. Синхронная сборка Document объектов.
         all_docs: List[Document] = []
@@ -208,7 +237,8 @@ class MultiVectorIndexer:
             {
                 'page_id': p['id'],
                 'title': p['title'],
-                'content': p.get('approved_content', '').strip()
+                'content': p.get('approved_content', '').strip(),
+                'requirement_type': p.get('requirement_type', ''),
             }
             for p in pages
             if p.get('approved_content', '').strip()
@@ -229,10 +259,13 @@ class MultiVectorIndexer:
         async def summarize_one(page_dict: Dict) -> tuple:
             page_id = page_dict['page_id']
             content = page_dict['content']
+            req_type = page_dict.get('requirement_type') or None
             async with semaphore:
                 try:
                     summary = await self.summary_generator.generate_llm(
-                        content, max_tokens=200
+                        content,
+                        max_tokens=250,
+                        requirement_type=req_type,
                     )
                     logger.debug(
                         "[_generate_summaries_batch] LLM OK: page_id=%s (%d chars)",
