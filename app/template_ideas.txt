@@ -1,0 +1,163 @@
+def analyze_with_templates_improved(items: List[dict], ...):
+    # ...
+
+    # Создаем специализированный промпт
+    template_check_prompt = """
+Проанализируй требования на соответствие шаблону.
+
+ШАБЛОН ТРЕБОВАНИЙ:
+{template}
+
+АНАЛИЗИРУЕМЫЕ ТРЕБОВАНИЯ:
+{requirement}
+
+КОНТЕКСТ СИСТЕМЫ:
+{context}
+
+Проверь:
+1. Соответствует ли структура документа шаблону
+2. Присутствуют ли все обязательные разделы
+3. Правильно ли заполнены таблицы
+4. Есть ли семантические несоответствия
+5. Полнота описания требований
+
+Верни результат в формате JSON:
+{
+    "structure_compliance": true/false,
+    "missing_sections": [...],
+    "table_issues": [...],
+    "semantic_issues": [...],
+    "completeness_score": 0-100,
+    "recommendations": [...]
+}
+"""
+
+    # Передаем и шаблон, и требования
+    result = chain.run({
+        "template": template_content,
+        "requirement": page_content,
+        "context": system_context
+    })
+
+
+def check_template_compliance(template_html: str, content_html: str) -> dict:
+    """Детальная проверка соответствия шаблону"""
+
+    issues = {
+        "structure": [],
+        "tables": [],
+        "required_fields": [],
+        "formatting": []
+    }
+
+    # 1. Проверка иерархии заголовков (с учетом порядка)
+    template_structure = extract_document_structure(template_html)
+    content_structure = extract_document_structure(content_html)
+
+    # 2. Проверка обязательных секций
+    required_sections = extract_required_sections(template_html)
+    missing_sections = check_missing_sections(content_html, required_sections)
+
+    # 3. Проверка структуры таблиц
+    for t_table, c_table in zip(template_tables, content_tables):
+        table_issues = compare_table_structure(t_table, c_table)
+        issues["tables"].extend(table_issues)
+
+    # 4. Проверка обязательных полей
+    required_fields = extract_required_fields(template_html)
+    missing_fields = check_missing_fields(content_html, required_fields)
+
+    return issues
+
+
+def analyze_with_templates_two_stage(item: dict):
+    # Этап 1: Структурная проверка (быстрая)
+    structural_issues = check_template_compliance(template, content)
+
+    # Этап 2: Семантическая проверка через LLM (если структура OK)
+    if not critical_structural_issues(structural_issues):
+        semantic_analysis = llm_analyze_with_template(
+            template=template,
+            content=content,
+            context=context,
+            structural_report=structural_issues
+        )
+
+    return {
+        "structural_compliance": structural_issues,
+        "semantic_analysis": semantic_analysis,
+        "overall_score": calculate_compliance_score(...)
+    }
+
+
+class TemplateParser:
+    """Парсер для извлечения структуры шаблона"""
+
+    def parse(self, template_html: str) -> TemplateSchema:
+        schema = TemplateSchema()
+
+        # Извлекаем обязательные элементы
+        schema.required_sections = self._extract_required_sections(template_html)
+        schema.table_schemas = self._extract_table_schemas(template_html)
+        schema.field_validators = self._extract_field_rules(template_html)
+
+        return schema
+
+
+class RequirementValidator:
+    """Валидатор требований по схеме шаблона"""
+
+    def validate(self, content: str, schema: TemplateSchema) -> ValidationResult:
+        # Проверяем каждый аспект
+        results = ValidationResult()
+        results.add_check("sections", self._check_sections(content, schema))
+        results.add_check("tables", self._check_tables(content, schema))
+        results.add_check("fields", self._check_fields(content, schema))
+
+        return results
+
+
+REQUIREMENT_TYPE_RULES = {
+    "data_model": {
+        "required_sections": ["Описание сущности", "Атрибутный состав", "Связи"],
+        "required_table_columns": ["Атрибут", "Тип", "Обязательность", "Описание"],
+        "validation_rules": [...]
+    },
+    "process": {
+        "required_sections": ["Описание процесса", "Участники", "Шаги процесса"],
+        "required_diagrams": ["BPMN диаграмма"],
+        ...
+    }
+}
+
+Пример ответа:
+{
+  "results": [
+    {
+      "page_id": "12345",
+      "requirement_type": "data_model",
+      "template_analysis": {
+        "template_compliance": {
+          "overall_score": 85,
+          "structure_compliance": true,
+          "missing_sections": [],
+          "incorrect_sections": ["Раздел связей: недостаточно детализации"],
+          "table_issues": ["Таблица атрибутов: отсутствует колонка 'Обязательность'"],
+          "completeness_score": 80
+        },
+        "content_quality": {
+          "clarity_score": 90,
+          "consistency_score": 85,
+          "technical_accuracy": 88,
+          "logical_issues": [],
+          "missing_details": ["Описание бизнес-правил для атрибута 'статус'"]
+        },
+        "recommendations": {
+          "critical": [],
+          "important": ["Добавить колонку 'Обязательность' в таблицу атрибутов"],
+          "minor": ["Улучшить описание связей с другими сущностями"]
+        }
+      }
+    }
+  ]
+}
