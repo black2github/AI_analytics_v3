@@ -1,0 +1,1184 @@
+{
+  "info": {
+    "_postman_id": "b1058fc0-98d9-40d8-b214-97634bee4751",
+    "name": "Total - Requirements Analyzer API",
+    "description": "Comprehensive collection for Requirements Analyzer API - RAG-based AI service for validating and analyzing requirements",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2166134"
+  },
+  "item": [
+    {
+      "name": "01 - Info & Health",
+      "item": [
+        {
+          "name": "Get Application Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/info",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "info"
+              ]
+            },
+            "description": "Returns application information including version, uptime, and supported providers"
+          },
+          "response": []
+        },
+        {
+          "name": "Extractor Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/extract_health",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "extract_health"
+              ]
+            },
+            "description": "Health check for content extraction module"
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/health",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Health check endpoint for monitoring system status and agent availability"
+          },
+          "response": []
+        },
+        {
+          "name": "Jira Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/jira/health",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "jira",
+                "health"
+              ]
+            },
+            "description": "Health check for Jira integration module"
+          },
+          "response": []
+        },
+        {
+          "name": "Service Summary Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/service_summary_health",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "service_summary_health"
+              ]
+            },
+            "description": "Health check for service summary generation module"
+          },
+          "response": []
+        },
+        {
+          "name": "Metadata Example",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/service_summary_health",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "service_summary_health"
+              ]
+            },
+            "description": "Health check for service summary generation module"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Configuration",
+      "item": [
+        {
+          "name": "Get Current Configuration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/config",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "config"
+              ]
+            },
+            "description": "Retrieves current configuration values"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"LLM_PROVIDER\": \"deepseek\",\n  \"LLM_MODEL\": \"deepseek-chat\",\n  \"LLM_TEMPERATURE\": \"0.0\",\n  \"IS_ENTITY_NAMES_CONTEXT\": true,\n  \"IS_SERVICE_DOCS_CONTEXT\": true,\n  \"IS_PLATFORM_DOCS_CONTEXT\": true,\n  \"IS_SERVICE_LINKS_CONTEXT\": true\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/config",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "config"
+              ]
+            },
+            "description": "Updates service configuration. Valid providers: openai, anthropic, deepseek, ollama, kimi, gemini, grok, qwen, openrouter"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Logging Control",
+      "item": [
+        {
+          "name": "Get Current Log Level",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/log_level",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "log_level"
+              ]
+            },
+            "description": "Returns current logging level"
+          },
+          "response": []
+        },
+        {
+          "name": "Change Log Level",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"level\": \"DEBUG\"\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/log_level",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "log_level"
+              ]
+            },
+            "description": "Changes log level. Valid levels: DEBUG, INFO, WARNING, ERROR, CRITICAL"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Logging",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/log_test",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "log_test"
+              ]
+            },
+            "description": "Sends test log messages at all levels"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Content Extraction",
+      "item": [
+        {
+          "name": "Extract All Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/extract_all_content",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "extract_all_content"
+              ]
+            },
+            "description": "Extracts all content from Confluence pages using standard credentials and caching"
+          },
+          "response": []
+        },
+        {
+          "name": "Extract Approved Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/extract_approved_content",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "extract_approved_content"
+              ]
+            },
+            "description": "Extracts only approved (black text) content from Confluence pages"
+          },
+          "response": []
+        },
+        {
+          "name": "Extract Markdown with Custom Credentials",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+                "description": "Base64 encoded username:password"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/markdown",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "markdown"
+              ]
+            },
+            "description": "Extracts content using custom credentials from Authorization header. Requires Basic Auth."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Load & Remove Pages",
+      "item": [
+        {
+          "name": "Load Pages to Vector Store",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"],\n  \"service_code\": \"{{service_code}}\",\n  \"source\": \"DBOCORPESPLN\"\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/load_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "load_pages"
+              ]
+            },
+            "description": "Loads approved requirements to unified storage"
+          },
+          "response": []
+        },
+        {
+          "name": "Load External Pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pages\": [\n    {\n      \"page_id\": \"{{page1}}\",\n      \"title\": \"Test Page 1\",\n      \"content\": \"<html><body>Test content</body></html>\"\n    },\n    {\n      \"page_id\": \"{{page2}}\",\n      \"title\": \"Test Page 2\",\n      \"content\": \"<html><body>Test content 2</body></html>\"\n    }\n  ],\n  \"service_code\": \"{{service_code}}\",\n  \"source\": \"DBOCORPESPLN\"\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/load_external_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "load_external_pages"
+              ]
+            },
+            "description": "Loads external pages without accessing Confluence API"
+          },
+          "response": []
+        },
+        {
+          "name": "Load Templates",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"templates\": {\n    \"FR\": \"Functional Requirement template content\",\n    \"NFR\": \"Non-Functional Requirement template content\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/load_templates",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "load_templates"
+              ]
+            },
+            "description": "Loads requirement templates to storage"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Child Pages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/child_pages/{{page1}}?service_code={{service_code}}&source=DBOCORPESPLN",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "child_pages",
+                "{{page1}}"
+              ],
+              "query": [
+                {
+                  "key": "service_code",
+                  "value": "{{service_code}}"
+                },
+                {
+                  "key": "source",
+                  "value": "DBOCORPESPLN"
+                }
+              ]
+            },
+            "description": "Returns list of child page IDs and optionally loads them"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Child Pages and Load",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/child_pages/{{page1}}?service_code={{service_code}}&source=DBOCORPESPLN",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "child_pages",
+                "{{page1}}"
+              ],
+              "query": [
+                {
+                  "key": "service_code",
+                  "value": "{{service_code}}"
+                },
+                {
+                  "key": "source",
+                  "value": "DBOCORPESPLN"
+                }
+              ]
+            },
+            "description": "Returns list of child page IDs and optionally loads them"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Service Pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/remove_service_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "remove_service_pages"
+              ]
+            },
+            "description": "Removes page fragments from unified storage"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Platform Pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"],\n  \"service_code\": \"PLATFORM\"\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/remove_platform_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "remove_platform_pages"
+              ]
+            },
+            "description": "Removes platform page fragments from unified storage"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 - Analysis",
+      "item": [
+        {
+          "name": "Analyze Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Sample requirement text to analyze\",\n  \"service_code\": \"{{service_code}}\",\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze"
+              ]
+            },
+            "description": "Analyzes text requirements for a service"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"],\n  \"service_code\": \"{{service_code}}\",\n  \"check_templates\": false,\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze_pages"
+              ]
+            },
+            "description": "Analyzes existing service requirement pages"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Service Pages by Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"],\n  \"check_templates\": true,\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze_service_pages/{{service_code}}",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze_service_pages",
+                "{{service_code}}"
+              ]
+            },
+            "description": "Analyzes pages for a specific service code"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze with Templates",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"requirement_type\": \"FR\",\n      \"page_id\": \"{{page1}}\"\n    },\n    {\n      \"requirement_type\": \"NFR\",\n      \"page_id\": \"{{page2}}\"\n    }\n  ],\n  \"service_code\": \"{{service_code}}\",\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze_with_templates",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze_with_templates"
+              ]
+            },
+            "description": "Analyzes new requirements against templates"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze External Pages",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pages\": [\n    {\n      \"page_id\": \"{{page1}}\",\n      \"title\": \"Test Requirement Page\",\n      \"content\": \"<html><body><p>Requirement content here</p></body></html>\"\n    }\n  ],\n  \"service_code\": \"{{service_code}}\",\n  \"check_templates\": false,\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze_external_pages",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze_external_pages"
+              ]
+            },
+            "description": "Analyzes requirements from external sources without accessing Confluence"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Template Types",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"page_ids\": [\"{{page1}}\", \"{{page2}}\"]\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze_types",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze_types"
+              ]
+            },
+            "description": "Identifies template types for requirement pages"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 - Jira Integration",
+      "item": [
+        {
+          "name": "Analyze Jira Tasks",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jira_task_ids\": [\"{{jira_id1}}\", \"{{jira_id2}}\"],\n  \"service_code\": \"{{service_code}}\",\n  \"check_templates\": true,\n  \"prompt_template\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/analyze-jira-task",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "analyze-jira-task"
+              ]
+            },
+            "description": "Analyzes Jira tasks with optional template compliance checking"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 - Agent",
+      "item": [
+        {
+          "name": "Chat with Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Найди требования по СБП\",\n  \"service_code\": \"{{service_code}}\",\n  \"reset_history\": false,\n  \"session_id\": null\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/agent/chat",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "Chat with requirements analyst agent. Agent can search requirements, analyze pages, and check template compliance."
+          },
+          "response": []
+        },
+        {
+          "name": "Chat - Analyze Page",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Проанализируй страницу {{page1}}\",\n  \"service_code\": \"{{service_code}}\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/agent/chat",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "Example: Ask agent to analyze a specific page"
+          },
+          "response": []
+        },
+        {
+          "name": "Chat - Check Template Compliance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Проверь соответствие страницы {{page1}} шаблону FR\",\n  \"service_code\": \"{{service_code}}\",\n  \"reset_history\": false\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/agent/chat",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "Example: Ask agent to check template compliance"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Agent History",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/agent/reset",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "reset"
+              ]
+            },
+            "description": "Clears agent conversation history"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Agent Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/agent/info",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "info"
+              ]
+            },
+            "description": "Returns agent information and current session details"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Agent Tools",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/agent/tools",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "agent",
+                "tools"
+              ]
+            },
+            "description": "Returns list of available agent tools with descriptions"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09 - Service Summary",
+      "item": [
+        {
+          "name": "Generate Service Summary (POST)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"parent_page_id\": \"{{page1}}\",\n  \"use_approved_only\": true,\n  \"custom_prompt\": null,\n  \"max_tokens\": 50000,\n  \"max_pages\": 500\n}"
+            },
+            "url": {
+              "raw": "{{BaseUrl}}/generate_service_summary",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "generate_service_summary"
+              ]
+            },
+            "description": "Generates service summary based on child pages requirements"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Service Summary (GET)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/service_summary/{{page1}}?use_approved_only=true&max_tokens=50000&max_pages=50",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "service_summary",
+                "{{page1}}"
+              ],
+              "query": [
+                {
+                  "key": "use_approved_only",
+                  "value": "true"
+                },
+                {
+                  "key": "max_tokens",
+                  "value": "50000"
+                },
+                {
+                  "key": "max_pages",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Quick GET version for service summary generation"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 - Services & Storage",
+      "item": [
+        {
+          "name": "List All Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/services",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "services"
+              ]
+            },
+            "description": "Returns list of all services"
+          },
+          "response": []
+        },
+        {
+          "name": "List Platform Services",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/services?platform=true",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "services"
+              ],
+              "query": [
+                {
+                  "key": "platform",
+                  "value": "true"
+                }
+              ]
+            },
+            "description": "Returns list of platform services only"
+          },
+          "response": []
+        },
+        {
+          "name": "Debug Collections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/debug_collections",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "debug_collections"
+              ]
+            },
+            "description": "Debug information about unified storage"
+          },
+          "response": []
+        },
+        {
+          "name": "List Page Chunks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/debug_collections",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "debug_collections"
+              ]
+            },
+            "description": "Debug information about unified storage"
+          },
+          "response": []
+        },
+        {
+          "name": "Analyze Document Sizes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/storage/analyze-sizes",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "storage",
+                "analyze-sizes"
+              ]
+            },
+            "description": "Analyzes document sizes in storage"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 - Cache Management",
+      "item": [
+        {
+          "name": "Get Cache Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/cache_info",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "cache_info"
+              ]
+            },
+            "description": "Returns page cache status information"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Page Cache",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/clear_cache",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "clear_cache"
+              ]
+            },
+            "description": "Clears page cache"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Embedding Cache Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/embedding_cache_info",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "embedding_cache_info"
+              ]
+            },
+            "description": "Returns embedding model cache statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Embedding Cache",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/clear_embedding_cache",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "clear_embedding_cache"
+              ]
+            },
+            "description": "Clears embedding model cache"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12 - Testing",
+      "item": [
+        {
+          "name": "Test Context Size",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseUrl}}/test_context_size?context_size=1000",
+              "host": [
+                "{{BaseUrl}}"
+              ],
+              "path": [
+                "test_context_size"
+              ],
+              "query": [
+                {
+                  "key": "context_size",
+                  "value": "1000",
+                  "description": "Context size in characters"
+                }
+              ]
+            },
+            "description": "Tests maximum context size for LLM by generating test context"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "BaseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "page1",
+      "value": "274628758",
+      "type": "string"
+    },
+    {
+      "key": "page2",
+      "value": "274628759",
+      "type": "string"
+    },
+    {
+      "key": "service_code",
+      "value": "SBP",
+      "type": "string"
+    },
+    {
+      "key": "jira_id1",
+      "value": "GBO-123",
+      "type": "string"
+    },
+    {
+      "key": "jira_id2",
+      "value": "GBO-456",
+      "type": "string"
+    }
+  ]
+}
