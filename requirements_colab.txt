@@ -1,0 +1,7 @@
+chromadb==0.6.3
+langchain-chroma
+langchain-core
+langchain-huggingface
+sentence-transformers
+langchain-text-splitters
+python-dotenv
