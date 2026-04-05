@@ -7,7 +7,7 @@ import logging
 import anyio  # pip install anyio
 from anyio import to_thread
 
-from app.services.analysis_service import analyze_text, analyze_pages, analyze_with_templates
+from app.services.analysis_service import analyze_text, analyze_pages, analyze_pages_multi_pass, analyze_with_templates
 from app.service_registry import is_valid_service
 
 logger = logging.getLogger(__name__)
@@ -30,6 +30,11 @@ class AnalyzePagesRequest(BaseModel):
 class AnalyzeWithTemplatesRequest(BaseModel):
     items: List[dict]  # Each item: {"requirement_type": str, "page_id": str}
     prompt_template: Optional[str] = None
+    service_code: Optional[str] = None
+
+
+class AnalyzePageMultiPassRequest(BaseModel):
+    page_ids: List[str]
     service_code: Optional[str] = None
 
 
@@ -106,6 +111,51 @@ async def analyze_specific_service_pages(code: str, payload: AnalyzeServicePages
         return {"results": result}
     except Exception as e:
         logger.exception("Ошибка в /analyze_service_pages/%s", code)
+        return {"error": str(e)}
+
+
+@router.post("/analyze_pages_multi_pass", tags=["Анализ существующих (ранее) требований сервиса"])
+async def analyze_pages_multi_pass_route(payload: AnalyzePageMultiPassRequest):
+    """
+    Многопроходное ревью страниц с требованиями.
+
+    Адаптируется к размеру контекста LLM — подходит для моделей с небольшим
+    контекстом (32K токенов и более).
+
+    Стратегия:
+    - Уровень 1 (~98% документов): N проходов по полному тексту страницы,
+      каждый проход проверяет свою группу критериев.
+    - Уровень 2 (~2% документов): предварительное сжатие документа,
+      затем те же проходы по конспекту + предупреждение в ответе.
+
+    Число проходов зависит от типа требований (function — 3 прохода,
+    states — 1 проход и т.д.) и определяется файлами промптов в
+    app/prompts/review/{req_type}/.
+
+    Возвращает список результатов, по одному на страницу:
+    {
+        "page_id": str,
+        "analysis": str,       — финальный текст анализа
+        "pass_count": int,     — число выполненных проходов
+        "level": int,          — 1 (полный текст) или 2 (сжатый)
+        "req_type": str,       — код типа требований
+        "token_usage": dict    — статистика токенов
+    }
+    """
+    logger.info("/analyze_pages_multi_pass <- %d page(s)", len(payload.page_ids))
+    try:
+        result = await anyio.to_thread.run_sync(
+            analyze_pages_multi_pass,
+            payload.page_ids,
+            payload.service_code,
+        )
+        logger.info(
+            "/analyze_pages_multi_pass -> %d results",
+            len(result) if isinstance(result, list) else 1
+        )
+        return {"results": result}
+    except Exception as e:
+        logger.exception("Ошибка в /analyze_pages_multi_pass")
         return {"error": str(e)}
 
 

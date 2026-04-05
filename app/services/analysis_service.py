@@ -321,6 +321,153 @@ def analyze_pages(page_ids: List[str], prompt_template: Optional[str] = None,
         raise
 
 
+def analyze_pages_multi_pass(
+        page_ids: List[str],
+        service_code: Optional[str] = None,
+) -> List[dict]:
+    """
+    Многопроходное ревью страниц с требованиями.
+
+    Адаптируется к размеру контекста LLM:
+    - Уровень 1 (~98% документов): полный текст страницы, N проходов по группам критериев.
+    - Уровень 2 (~2% документов): предварительное сжатие, затем те же проходы.
+
+    Число проходов определяется типом требований и файлами pass{N}_*.txt
+    в соответствующей директории app/prompts/review/{req_type}/.
+
+    Args:
+        page_ids: Список ID страниц для анализа
+        service_code: Код сервиса (определяется автоматически если не указан)
+
+    Returns:
+        Список словарей:
+        [
+            {
+                "page_id": str,
+                "analysis": str,          # финальный текст анализа
+                "pass_count": int,        # число выполненных проходов
+                "level": int,             # 1 (полный) или 2 (сжатый)
+                "req_type": str,          # код типа требований
+                "token_usage": dict,      # статистика токенов
+            },
+            ...
+        ]
+    """
+    logger.info(
+        "[analyze_pages_multi_pass] <- page_ids=%s, service_code=%s",
+        page_ids, service_code
+    )
+
+    from app.page_cache import get_page_data_cached
+    from app.services.template_type_analysis import get_template_name_by_type
+    from app.services.multi_pass_reviewer import create_reviewer
+    from app.services.context_builder import build_context_optimized
+
+    if not service_code:
+        service_code = resolve_service_code_from_pages_or_user(page_ids)
+        logger.info("[analyze_pages_multi_pass] Resolved service_code: %s", service_code)
+
+    reviewer = create_reviewer()
+    results = []
+
+    for page_id in page_ids:
+        logger.info("[analyze_pages_multi_pass] Processing page_id=%s", page_id)
+
+        # Загружаем данные страницы
+        page_data = get_page_data_cached(page_id)
+        if not page_data:
+            logger.warning("[analyze_pages_multi_pass] Could not load page %s", page_id)
+            results.append({
+                "page_id": page_id,
+                "analysis": "Ошибка: не удалось загрузить данные страницы",
+                "pass_count": 0,
+                "level": 0,
+                "req_type": None,
+                "token_usage": {},
+            })
+            continue
+
+        content = page_data.get("full_content", "")
+        title = page_data.get("title", "")
+        req_type = page_data.get("requirement_type") or "unknown"
+        req_type_name = get_template_name_by_type(req_type) if req_type else "Неизвестный тип"
+
+        if not content or not content.strip():
+            logger.warning("[analyze_pages_multi_pass] Empty content for page %s", page_id)
+            results.append({
+                "page_id": page_id,
+                "analysis": "Ошибка: страница не содержит подтверждённого контента",
+                "pass_count": 0,
+                "level": 0,
+                "req_type": req_type,
+                "token_usage": {},
+            })
+            continue
+
+        # Строим контекст для этой страницы
+        # Бюджет контекста — стандартный, без жёсткого лимита (reviewer сам управляет токенами)
+        llm_context_size = reviewer.llm_context_size
+        context_budget = int(llm_context_size * 0.25)  # ~25% на контекст из RAG
+
+        context = build_context_optimized(
+            service_code=service_code,
+            requirements_text=content,
+            exclude_page_ids=[page_id],
+            max_context_tokens=context_budget,
+            response_reserve=int(llm_context_size * 0.15),
+        )
+
+        logger.info(
+            "[analyze_pages_multi_pass] page_id=%s type=%s context=%d chars",
+            page_id, req_type, len(context)
+        )
+
+        # Выполняем многопроходное ревью
+        try:
+            review_result = reviewer.review_page(
+                page_id=page_id,
+                page_content=content,
+                page_title=title,
+                req_type=req_type,
+                req_type_name=req_type_name,
+                context=context,
+            )
+
+            results.append({
+                "page_id": page_id,
+                "analysis": review_result["analysis"],
+                "pass_count": review_result["pass_count"],
+                "level": review_result["level"],
+                "req_type": req_type,
+                "token_usage": review_result["token_usage"],
+            })
+
+            logger.info(
+                "[analyze_pages_multi_pass] page_id=%s done: level=%d passes=%d",
+                page_id, review_result["level"], review_result["pass_count"]
+            )
+
+        except Exception as e:
+            logger.error(
+                "[analyze_pages_multi_pass] Error reviewing page %s: %s",
+                page_id, e, exc_info=True
+            )
+            results.append({
+                "page_id": page_id,
+                "analysis": f"Ошибка при выполнении ревью: {e}",
+                "pass_count": 0,
+                "level": 0,
+                "req_type": req_type,
+                "token_usage": {},
+            })
+
+    logger.info(
+        "[analyze_pages_multi_pass] -> Completed: %d pages processed",
+        len(results)
+    )
+    return results
+
+
 def _analyze_page_template_if_needed(page_id: str, service_code: str) -> Optional[dict]:
     """
     Анализирует соответствие шаблону (для случая, если страница еще не была одобрена и сохранена)
