@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import yaml
 from typing import List, Dict, Optional
 
 from app.confluence_loader import load_pages_by_ids, get_child_page_ids
@@ -11,6 +12,7 @@ from app.template_registry import store_templates
 from app.config import UNIFIED_STORAGE_NAME, CHUNK_SIZE, CHUNK_OVERLAP, INDEXING_MODE
 from app.embedding_store import get_vectorstore, prepare_unified_documents
 from app.services.multi_vector_indexer import MultiVectorIndexer
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -267,6 +269,41 @@ class DocumentService:
             "large_documents": large_docs[:20],
             "largest_size_chars": large_docs[0]["size_chars"] if large_docs else 0,
             "largest_size_tokens_estimate": large_docs[0]["size_tokens_estimate"] if large_docs else 0
+        }
+
+
+    def load_md_page(filepath: str) -> Dict:
+        text = Path(filepath).read_text(encoding="utf-8")
+        if text.startswith("---"):
+            _, fm, content = text.split("---", 2)
+            meta = yaml.safe_load(fm)
+        else:
+            meta, content = {}, text
+
+        return {
+            "id": meta.get("doc_id", filepath),  # → page_id в base_metadata
+            "title": meta.get("title", ""),
+            "approved_content": content.strip(),  # весь markdown после ---
+            "requirement_type": meta.get("requirement_type", "unknown"),
+            # новые поля — просто добавляются в dict:
+            "status": meta.get("status", "approved"),
+            "owner": meta.get("owner", ""),
+            "jira_id": meta.get("jira_id", ""),
+            "jira_ids": meta.get("jira_ids", ""),
+            "related": meta.get("related", ""),
+            "tags": meta.get("tags", ""),
+            "feature": meta.get("feature", ""),
+            "microservice": meta.get("microservice", ""),
+            "document_name": meta.get("document_name", ""),
+            "version": meta.get("version", ""),
+            "updated_date": meta.get("updated_date", ""),
+            "created_date": meta.get("created_date", ""),
+            "confluence_page_id": meta.get("confluence_page_id", ""),
+            "reviewed_by": meta.get("reviewed_by", ""),
+            "author": meta.get("author", ""),
+            "parent": meta.get("parent", ""),
+            # target_system — уже обрабатывается через extract_target_system или явно:
+            **({"target_system": meta["target_system"]} if "target_system" in meta else {})
         }
 
     # -------------------------------------------------------------------------
