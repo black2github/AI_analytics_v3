@@ -1,0 +1,12 @@
+# .pre-commit-config.yaml
+
+repos:
+  - repo: local
+    hooks:
+      - id: frontmatter-lint
+        name: Frontmatter lint (RAG schema)
+        entry: python scripts/lint_frontmatter.py
+        language: python
+        types: [markdown]
+        pass_filenames: true
+        additional_dependencies: [pyyaml]

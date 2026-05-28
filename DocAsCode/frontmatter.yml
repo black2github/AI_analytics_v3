@@ -1,0 +1,56 @@
+---
+# ═══════════════════════════════════════════
+# ГРУППА 1: ИДЕНТИФИКАЦИЯ
+# ═══════════════════════════════════════════
+doc_id: "corporate-cards/limits/daily-limits"     # NEW: заменяет page_id. Строится из пути файла
+title: "Лимиты корпоративных карт — суточный лимит"  # EXIST: = base_metadata["title"] → title vector
+document_name: "Суточный лимит транзакций"                # NEW: краткое имя для поиска по наименованию
+
+# ═══════════════════════════════════════════
+# ГРУППА 2: КЛАССИФИКАЦИЯ
+# ═══════════════════════════════════════════
+doc_type: "requirement"              # EXIST: requirement | template | glossary
+requirement_type: "function"        # EXIST: function|control|screen_form|integration|
+                                          #        data_model|notification|process|status|
+                                          #        agent|print_form
+service_code: "CORP_CARDS"           # EXIST: = base_metadata["service_code"]
+microservice: "card-limits-service"  # NEW: микросервис внутри service_code
+feature: "limits"                  # NEW: фича-группировка для фильтрации
+is_platform: false                 # EXIST: платформенный сервис?
+
+# ═══════════════════════════════════════════
+# ГРУППА 3: ИСТОЧНИК И ТРАССИРОВКА
+# ═══════════════════════════════════════════
+source: "DBOCORPESPLN"             # EXIST: система-источник требований
+jira_id: "DBO-1234"               # NEW: первичная задача Jira (точный поиск)
+jira_ids: "DBO-1234,DBO-5678"    # NEW: все задачи (str, через запятую → $contains)
+confluence_page_id: "123456789"  # NEW: ссылка на Confluence (миграция, deprecated)
+
+# ═══════════════════════════════════════════
+# ГРУППА 4: СТАТУС И ВЛАДЕНИЕ
+# ═══════════════════════════════════════════
+status: "approved"                # NEW: draft | review | approved | deprecated
+owner: "alexey.petrov"          # NEW: владелец (ответственный аналитик)
+author: "alexey.petrov"         # NEW: автор документа
+reviewed_by: "ivan.sidorov,maria.ivanova"  # NEW: str через запятую → $contains
+version: "2.3"                   # NEW: версия требования
+created_date: "2024-01-15"       # NEW: для исторических запросов
+updated_date: "2024-03-20"       # NEW: для сортировки по актуальности
+
+# ═══════════════════════════════════════════
+# ГРУППА 5: СВЯЗИ (заменяет wiki-граф)
+# ═══════════════════════════════════════════
+related: "corporate-cards/limits/monthly-limits,corporate-cards/roles/card-holder"
+                                          # NEW: str через запятую (ChromaDB не держит list!)
+parent: "corporate-cards/limits"    # NEW: родительский раздел в иерархии
+
+# ═══════════════════════════════════════════
+# ГРУППА 6: СПЕЦИФИКА ТИПА (условные)
+# ═══════════════════════════════════════════
+target_system: "ЦБ_ОТЧЕТНОСТЬ"   # EXIST: только для requirement_type=integration
+
+# ═══════════════════════════════════════════
+# ГРУППА 7: ТЕГИ
+# ═══════════════════════════════════════════
+tags: "limits,card,daily,cbr,transaction"  # NEW: str через запятую → $contains
+---
