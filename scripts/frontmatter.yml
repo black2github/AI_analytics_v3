@@ -10,9 +10,9 @@ document_name: "Суточный лимит транзакций"               
 # ГРУППА 2: КЛАССИФИКАЦИЯ
 # ═══════════════════════════════════════════
 doc_type: "requirement"              # EXIST: requirement | template | glossary
-requirement_type: "function"        # EXIST: function|control|screen_form|integration|
-                                          #        data_model|notification|process|status|
-                                          #        agent|print_form
+requirement_type: "function"        # EXIST: function|control|states|screenItemForm|integration|process|
+                                          #        dataModel|notification|process|screenListForm|
+                                          #        agent|printForm
 service_code: "CORP_CARDS"           # EXIST: = base_metadata["service_code"]
 microservice: "card-limits-service"  # NEW: микросервис внутри service_code
 feature: "limits"                  # NEW: фича-группировка для фильтрации
