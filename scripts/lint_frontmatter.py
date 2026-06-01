@@ -22,9 +22,9 @@ REQUIRED_FIELDS = {
 VALID_STATUSES = {"draft", "review", "approved", "deprecated"}
 
 VALID_REQUIREMENT_TYPES = {
-    "function", "control", "screen_form", "integration",
-    "data_model", "notification", "process", "status",
-    "agent", "print_form",
+    "BRD", "function", "control", "screenListForm", "screenItemForm", "integration",
+    "dataModel", "notification", "process", "states",
+    "agent", "printForm",
 }
 
 VALID_DOC_TYPES = {"requirement", "template", "glossary"}
