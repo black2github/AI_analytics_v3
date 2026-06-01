@@ -50,11 +50,89 @@ class ContentExtractor:
 
         return result
 
+    def _table_has_spans(self, element: Tag) -> bool:
+        """
+        Проверяет наличие colspan или rowspan > 1 в любой ячейке таблицы.
+        Markdown pipe-синтаксис не поддерживает объединение ячеек,
+        поэтому такие таблицы рендерятся как HTML.
+        """
+        for cell in element.find_all(["td", "th"]):
+            if int(cell.get("colspan", 1) or 1) > 1:
+                return True
+            if int(cell.get("rowspan", 1) or 1) > 1:
+                return True
+        return False
+
+    def _process_top_level_table_to_html(self, element: Tag) -> str:
+        """
+        Конвертирует таблицу верхнего уровня в HTML.
+        Используется когда таблица содержит colspan/rowspan,
+        которые Markdown pipe-синтаксис не поддерживает.
+        Содержимое ячеек обрабатывается через стандартный пайплайн
+        (цветовая фильтрация, ссылки и т.д.).
+        """
+        html_parts = ["<table>"]
+
+        # Обрабатываем thead если есть
+        thead = element.find("thead")
+        if thead:
+            html_parts.append("<thead>")
+            for row in thead.find_all("tr", recursive=False):
+                html_parts.append("<tr>")
+                for cell in row.find_all(["td", "th"], recursive=False):
+                    tag = "th" if cell.name == "th" else "td"
+                    attrs = self._build_span_attrs(cell)
+                    cell_content = self._process_table_cell(cell, "table_cell")
+                    cell_text = self._normalize_cell_text(cell_content or "")
+                    html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
+                html_parts.append("</tr>")
+            html_parts.append("</thead>")
+
+        # Обрабатываем tbody если есть
+        tbody = element.find("tbody")
+        rows_source = tbody if tbody else element
+        if tbody:
+            html_parts.append("<tbody>")
+        for row in rows_source.find_all("tr", recursive=False):
+            html_parts.append("<tr>")
+            for cell in row.find_all(["td", "th"], recursive=False):
+                tag = "th" if cell.name == "th" else "td"
+                attrs = self._build_span_attrs(cell)
+                if not self._should_include_element(cell):
+                    if not self.config.include_colored:
+                        cell_text = self._normalize_cell_text(
+                            self._extract_black_elements_from_colored_container(cell, "table_cell") or ""
+                        )
+                    else:
+                        cell_text = ""
+                else:
+                    cell_content = self._process_table_cell(cell, "table_cell")
+                    cell_text = self._normalize_cell_text(cell_content or "")
+                html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
+            html_parts.append("</tr>")
+        if tbody:
+            html_parts.append("</tbody>")
+
+        html_parts.append("</table>")
+        return "\n".join(html_parts)
+
+    def _build_span_attrs(self, cell: Tag) -> str:
+        """Возвращает строку HTML-атрибутов colspan/rowspan для ячейки."""
+        attrs = []
+        colspan = int(cell.get("colspan", 1) or 1)
+        rowspan = int(cell.get("rowspan", 1) or 1)
+        if colspan > 1:
+            attrs.append(f'colspan="{colspan}"')
+        if rowspan > 1:
+            attrs.append(f'rowspan="{rowspan}"')
+        return (" " + " ".join(attrs)) if attrs else ""
+
     def _process_table(self, element: Tag, context: str) -> str:
         """
-        ИСПРАВЛЕНО: Обработка таблиц с правильным порядком заголовков
-        Таблицы внутри ячеек других таблиц конвертируются в HTML
-        ИСПРАВЛЕНИЕ: Корректная обработка всех строк из thead независимо от типа ячеек
+        Обработка таблиц.
+        - Вложенные таблицы (context=table_cell) -> HTML всегда.
+        - Таблицы с colspan/rowspan -> HTML (Markdown не поддерживает объединение).
+        - Простые таблицы -> Markdown pipe-синтаксис.
         """
         if not self.config.format_tables:
             return self._process_text_container(element, context)
@@ -63,6 +141,11 @@ class ContentExtractor:
         # конвертируем её в HTML вместо Markdown
         if context in ["table_cell", "nested_table_cell"]:
             return self._process_nested_table_to_html(element)
+
+        # Если в таблице есть объединение ячеек — Markdown не справится,
+        # переключаемся на HTML-рендеринг
+        if self._table_has_spans(element):
+            return self._process_top_level_table_to_html(element)
 
         # Для обычного контекста - создаём Markdown таблицу
         # Собираем строки в правильном порядке
@@ -452,10 +535,20 @@ class ContentExtractor:
                 prev_part = non_empty_parts[i - 1]
                 current_part = part
 
-                if (prev_part.endswith('\n') or current_part.startswith('\n')):
+                needs_blank_line = (
+                    self._is_block_element(prev_part) or
+                    self._is_block_element(current_part)
+                )
+
+                if needs_blank_line:
+                    # Блочный элемент требует пустой строки-разделителя.
+                    # Убираем trailing whitespace у предыдущей части и
+                    # гарантируем ровно две новые строки перед текущей.
+                    joined = "".join(result_parts).rstrip("\n")
+                    result_parts = [joined + "\n\n"]
+                    result_parts.append(current_part.lstrip("\n"))
+                elif prev_part.endswith("\n"):
                     result_parts.append(current_part)
-                elif (self._is_block_element(prev_part) or self._is_block_element(current_part)):
-                    result_parts.append('\n\n' + current_part)
                 else:
                     result_parts.append(current_part)
 
@@ -467,13 +560,15 @@ class ContentExtractor:
             return False
 
         content_start = content.lstrip()
-        return (content_start.startswith('#') or  # Заголовки
-                content_start.startswith('|') or  # Таблицы
-                content_start.startswith('**Таблица:**') or  # Наши таблицы
-                content_start.startswith('-') or  # Списки
-                content_start.startswith('*') or  # Списки
-                content_start.startswith('+') or  # Списки
-                re.match(r'^\d+\.', content_start))  # Нумерованные списки
+        return (content_start.startswith('#') or      # Заголовки Markdown
+                content_start.startswith('|') or      # Таблицы Markdown
+                content_start.startswith('<table') or # Таблицы HTML
+                content_start.startswith('<thead') or # Фрагменты HTML-таблиц
+                content_start.startswith('<tbody') or
+                content_start.startswith('-') or      # Ненумерованные списки
+                content_start.startswith('*') or
+                content_start.startswith('+') or
+                re.match(r'^\d+\.', content_start)) # Нумерованные списки
 
     def _process_container(self, container) -> List[str]:
         """
