@@ -108,49 +108,84 @@ class ContentExtractor:
         if not table_rows:
             return ""
 
-        # Формируем таблицу с правильной обработкой множественных заголовков
+        # Вычисляем максимальное логическое число колонок по всем строкам,
+        # раскрывая colspan: ячейка с colspan=N занимает N логических колонок.
+        max_cols = 0
+        for _row_type, row_data in table_rows:
+            col_count = sum(span for _text, span in row_data)
+            if col_count > max_cols:
+                max_cols = col_count
+
+        # Формируем таблицу
         table_lines = []
-        has_separator = False  # Флаг для добавления разделителя только один раз
+        has_separator = False
 
         for row_type, row_data in table_rows:
+            # Нормализуем содержимое и раскрываем colspan:
+            # ячейка с colspan=N превращается в N pipe-колонок,
+            # где первая содержит текст, остальные пусты.
+            pipe_cells: List[str] = []
+            for raw_text, span in row_data:
+                text = self._normalize_cell_text(raw_text)
+                pipe_cells.append(text)
+                # Дополнительные пустые колонки для colspan > 1
+                for _ in range(span - 1):
+                    pipe_cells.append("")
+
+            # Дополняем строку до max_cols если она короче
+            while len(pipe_cells) < max_cols:
+                pipe_cells.append("")
+
+            # Пропускаем строки, где все ячейки пусты
+            if all(c == "" for c in pipe_cells):
+                continue
+
+            row_line = "| " + " | ".join(pipe_cells) + " |"
+            separator_line = "|" + "|".join([" --- " for _ in range(max_cols)]) + "|"
+
             if row_type == "header":
-                # Добавляем строку заголовка
-                table_lines.append("| " + " | ".join(row_data) + " |")
-                # Добавляем разделитель только после ПЕРВОГО заголовка
+                table_lines.append(row_line)
                 if not has_separator:
-                    table_lines.append("|" + "|".join([" --- " for _ in row_data]) + "|")
+                    table_lines.append(separator_line)
                     has_separator = True
             elif row_type == "body":
-                # Добавляем строки тела таблицы
-                table_lines.append("| " + " | ".join(row_data) + " |")
+                if not has_separator:
+                    # Таблица без thead — первая строка становится заголовком
+                    table_lines.append(row_line)
+                    table_lines.append(separator_line)
+                    has_separator = True
+                else:
+                    table_lines.append(row_line)
 
-        table_content = "\n".join(table_lines) if table_lines else ""
+        if not table_lines:
+            return ""
 
-        if table_content:
-            return f"**Таблица:**\n{table_content}"
-        return ""
+        return "\n".join(table_lines)
 
-    def _process_table_row_cells(self, cells: List[Tag], context: str, is_header: bool = False) -> List[str]:
+    def _process_table_row_cells(self, cells: List[Tag], context: str, is_header: bool = False) -> List[tuple]:
         """
-        НОВЫЙ МЕТОД: Обработка ячеек строки таблицы
+        Обработка ячеек строки таблицы.
+
+        Возвращает список пар (текст_ячейки, colspan), где colspan >= 1.
+        Вызывающий код раскрывает colspan в нужное число pipe-колонок.
         """
         row_data = []
 
         for cell in cells:
+            colspan = max(1, int(cell.get("colspan", 1) or 1))
+
             if not self._should_include_element(cell):
                 if not self.config.include_colored:
                     black_content = self._extract_black_elements_from_colored_container(cell, context)
-                    if black_content:
-                        cell_text = self._format_table_cell_content(black_content, cell)
-                    else:
-                        cell_text = ""
+                    cell_text = black_content if black_content else ""
                 else:
                     continue
             else:
-                cell_content = self._process_table_cell(cell, "table_cell")
-                cell_text = self._format_table_cell_content(cell_content, cell)
+                cell_text = self._process_table_cell(cell, "table_cell")
+                if cell_text is None:
+                    cell_text = ""
 
-            row_data.append(cell_text)
+            row_data.append((cell_text, colspan))
 
         return row_data
 
@@ -175,6 +210,30 @@ class ContentExtractor:
             return content
 
     # Остальные методы остаются без изменений (копируем из предыдущей версии)
+    def _normalize_cell_text(self, text: str) -> str:
+        """
+        Нормализует текст ячейки для корректного Markdown-синтаксиса таблицы.
+
+        Markdown-таблица требует, чтобы одна строка таблицы занимала ровно одну
+        физическую строку. Перевод строки внутри ячейки завершает таблицу.
+
+        Выполняет:
+        - Заменяет переводы строк на пробел
+        - Схлопывает несколько пробелов в один
+        - Убирает ведущие/завершающие пробелы
+        - Экранирует pipe-символ внутри ячейки, чтобы не сломать разметку таблицы
+        """
+        if not text:
+            return ""
+
+        # Схлопываем последовательные переводы строк и пробелы вокруг них
+        result = re.sub(r'\s*\n\s*', " ", text)
+        # Схлопываем множественные пробелы
+        result = re.sub(r" {2,}", " ", result)
+        # Экранируем | внутри ячейки
+        result = result.replace("|", r"\|")
+        return result.strip()
+
     def _process_element(self, element, context: str = "default") -> Optional[str]:
         """Универсальная рекурсивная обработка элемента"""
         if isinstance(element, NavigableString):
