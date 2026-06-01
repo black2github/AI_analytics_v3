@@ -1,0 +1,380 @@
+
+<h2 class="sr-only">Схема frontmatter для RAG на ChromaDB — интерактивный справочник полей</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1rem 0}
+.tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{padding:6px 14px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary)}
+.section{display:none}
+.section.active{display:block}
+.field-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.field{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px}
+.field-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.field-key{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.badge{font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md)}
+.badge-req{background:#E1F5EE;color:#0F6E56}
+.badge-cond{background:#FAEEDA;color:#854F0B}
+.badge-opt{background:#F1EFE8;color:#5F5E5A}
+.badge-new{background:#E6F1FB;color:#185FA5}
+.badge-exist{background:#EEEDFE;color:#534AB7}
+.field-row{display:flex;gap:8px;font-size:12px;color:var(--color-text-secondary);align-items:flex-start;margin-top:4px;flex-wrap:wrap}
+.field-row b{color:var(--color-text-primary);font-weight:500}
+.tag{font-size:11px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:1px 6px;color:var(--color-text-secondary)}
+.yaml-block{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px;font-family:var(--font-mono);font-size:12px;line-height:1.8;color:var(--color-text-primary);overflow-x:auto;white-space:pre}
+.yaml-comment{color:var(--color-text-tertiary)}
+.yaml-key{color:#185FA5}
+.yaml-val{color:#0F6E56}
+.yaml-new{color:#BA7517}
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.diff-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px}
+.diff-title{font-size:12px;font-weight:500;margin-bottom:10px;color:var(--color-text-secondary)}
+.diff-row{font-family:var(--font-mono);font-size:11px;line-height:2;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:6px}
+.diff-row:last-child{border:none}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-keep{background:#1D9E75}
+.dot-new{background:#378ADD}
+.dot-rename{background:#BA7517}
+.dot-drop{background:#E24B4A}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--color-text-secondary)}
+.query-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.query-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px}
+.query-name{font-size:12px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)}
+.query-tags{display:flex;gap:4px;flex-wrap:wrap}
+.constraint-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:8px;background:var(--color-background-primary)}
+.constraint-title{font-size:13px;font-weight:500;margin-bottom:6px}
+</style>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="show('schema')">Полная схема YAML</button>
+    <button class="tab" onclick="show('fields')">Реестр полей</button>
+    <button class="tab" onclick="show('diff')">Что меняется в коде</button>
+    <button class="tab" onclick="show('queries')">Покрытие запросов</button>
+    <button class="tab" onclick="show('constraints')">Ограничения ChromaDB</button>
+  </div>
+
+  <div id="s-schema" class="section active">
+    <div class="yaml-block"><span class="yaml-comment">---
+# ═══════════════════════════════════════════
+# ГРУППА 1: ИДЕНТИФИКАЦИЯ
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">doc_id</span>: <span class="yaml-new">"corporate-cards/limits/daily-limits"</span>     <span class="yaml-comment"># NEW: заменяет page_id. Строится из пути файла</span>
+<span class="yaml-key">title</span>: <span class="yaml-val">"Лимиты корпоративных карт — суточный лимит"</span>  <span class="yaml-comment"># EXIST: = base_metadata["title"] → title vector</span>
+<span class="yaml-key">document_name</span>: <span class="yaml-new">"Суточный лимит транзакций"</span>                <span class="yaml-comment"># NEW: краткое имя для поиска по наименованию</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 2: КЛАССИФИКАЦИЯ
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">doc_type</span>: <span class="yaml-val">"requirement"</span>              <span class="yaml-comment"># EXIST: requirement | template | glossary</span>
+<span class="yaml-key">requirement_type</span>: <span class="yaml-val">"function"</span>        <span class="yaml-comment"># EXIST: function|control|screen_form|integration|</span>
+                                          <span class="yaml-comment">#        data_model|notification|process|status|</span>
+                                          <span class="yaml-comment">#        agent|print_form</span>
+<span class="yaml-key">service_code</span>: <span class="yaml-val">"CORP_CARDS"</span>           <span class="yaml-comment"># EXIST: = base_metadata["service_code"]</span>
+<span class="yaml-key">microservice</span>: <span class="yaml-new">"card-limits-service"</span>  <span class="yaml-comment"># NEW: микросервис внутри service_code</span>
+<span class="yaml-key">feature</span>: <span class="yaml-new">"limits"</span>                  <span class="yaml-comment"># NEW: фича-группировка для фильтрации</span>
+<span class="yaml-key">is_platform</span>: <span class="yaml-val">false</span>                 <span class="yaml-comment"># EXIST: платформенный сервис?</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 3: ИСТОЧНИК И ТРАССИРОВКА
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">source</span>: <span class="yaml-val">"DBOCORPESPLN"</span>             <span class="yaml-comment"># EXIST: система-источник требований</span>
+<span class="yaml-key">jira_id</span>: <span class="yaml-new">"DBO-1234"</span>               <span class="yaml-comment"># NEW: первичная задача Jira (точный поиск)</span>
+<span class="yaml-key">jira_ids</span>: <span class="yaml-new">"DBO-1234,DBO-5678"</span>    <span class="yaml-comment"># NEW: все задачи (str, через запятую → $contains)</span>
+<span class="yaml-key">confluence_page_id</span>: <span class="yaml-new">"123456789"</span>  <span class="yaml-comment"># NEW: ссылка на Confluence (миграция, deprecated)</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 4: СТАТУС И ВЛАДЕНИЕ
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">status</span>: <span class="yaml-new">"approved"</span>                <span class="yaml-comment"># NEW: draft | review | approved | deprecated</span>
+<span class="yaml-key">owner</span>: <span class="yaml-new">"alexey.petrov"</span>          <span class="yaml-comment"># NEW: владелец (ответственный аналитик)</span>
+<span class="yaml-key">author</span>: <span class="yaml-new">"alexey.petrov"</span>         <span class="yaml-comment"># NEW: автор документа</span>
+<span class="yaml-key">reviewed_by</span>: <span class="yaml-new">"ivan.sidorov,maria.ivanova"</span>  <span class="yaml-comment"># NEW: str через запятую → $contains</span>
+<span class="yaml-key">version</span>: <span class="yaml-new">"2.3"</span>                   <span class="yaml-comment"># NEW: версия требования</span>
+<span class="yaml-key">created_date</span>: <span class="yaml-new">"2024-01-15"</span>       <span class="yaml-comment"># NEW: для исторических запросов</span>
+<span class="yaml-key">updated_date</span>: <span class="yaml-new">"2024-03-20"</span>       <span class="yaml-comment"># NEW: для сортировки по актуальности</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 5: СВЯЗИ (заменяет wiki-граф)
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">related</span>: <span class="yaml-new">"corporate-cards/limits/monthly-limits,corporate-cards/roles/card-holder"</span>
+                                          <span class="yaml-comment"># NEW: str через запятую (ChromaDB не держит list!)</span>
+<span class="yaml-key">parent</span>: <span class="yaml-new">"corporate-cards/limits"</span>    <span class="yaml-comment"># NEW: родительский раздел в иерархии</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 6: СПЕЦИФИКА ТИПА (условные)
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">target_system</span>: <span class="yaml-val">"ЦБ_ОТЧЕТНОСТЬ"</span>   <span class="yaml-comment"># EXIST: только для requirement_type=integration</span>
+
+<span class="yaml-comment"># ═══════════════════════════════════════════
+# ГРУППА 7: ТЕГИ
+# ═══════════════════════════════════════════</span>
+<span class="yaml-key">tags</span>: <span class="yaml-new">"limits,card,daily,cbr,transaction"</span>  <span class="yaml-comment"># NEW: str через запятую → $contains</span>
+<span class="yaml-comment">---</span></div>
+  </div>
+
+  <div id="s-fields" class="section">
+    <div class="field-grid">
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">doc_id</span>
+          <span class="badge badge-req">обязательное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;сохраняется как <code style="font-size:11px">page_id</code> (обратная совместимость)</div>
+        <div class="field-row"><b>Строится из:</b>&nbsp;путь файла без префикса и расширения</div>
+        <div class="field-row"><b>Пример:</b>&nbsp;<code style="font-size:11px">requirements/corp-cards/limits/daily.md → corp-cards/limits/daily</code></div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span> <span class="tag">$in</span>&nbsp;— используется в delete(), re-index, chunk_id</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">requirement_type</span>
+          <span class="badge badge-req">обязательное</span>
+          <span class="badge badge-exist">существующее</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">requirement_type</code> — уже в _build_filter</div>
+        <div class="field-row"><b>Значения:</b>&nbsp;function, control, screen_form, integration, data_model, notification, process, status, agent, print_form</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span> <span class="tag">$in</span></div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">status</span>
+          <span class="badge badge-req">обязательное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">status</code> — новое измерение в _build_filter</div>
+        <div class="field-row"><b>Значения:</b>&nbsp;draft, review, approved, deprecated</div>
+        <div class="field-row"><b>Важно:</b>&nbsp;агент ревью должен искать ТОЛЬКО approved; deprecated исключается</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span> <span class="tag">$in</span></div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">jira_id</span>
+          <span class="badge badge-req">обязательное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">jira_id</code> (str) — точный поиск по номеру задачи</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span>&nbsp;— "дай требования по задаче DBO-1234"</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">jira_ids</span>
+          <span class="badge badge-opt">опциональное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">jira_ids</code> (str, через запятую)</div>
+        <div class="field-row"><b>Тип:</b>&nbsp;str — ChromaDB не хранит list. Строка <code style="font-size:11px">"DBO-1234,DBO-5678"</code></div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$contains</span>&nbsp;— для поиска документов, затрагивающих задачу</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">owner</span>
+          <span class="badge badge-req">обязательное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">owner</code> (str)</div>
+        <div class="field-row"><b>Формат:</b>&nbsp;login без домена (alexey.petrov), не email — для простоты фильтра</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span>&nbsp;— "все требования Алексея"</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">related</span>
+          <span class="badge badge-opt">опциональное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">related</code> (str, через запятую)</div>
+        <div class="field-row"><b>Заменяет:</b>&nbsp;wiki-граф Confluence. Ссылки — через doc_id, не URL</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$contains</span>&nbsp;— трассировка: "что ссылается на этот doc_id?"</div>
+        <div class="field-row"><b>Важно:</b>&nbsp;граф двунаправленный только если оба документа заполнили related</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">tags</span>
+          <span class="badge badge-opt">опциональное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">tags</code> (str, через запятую)</div>
+        <div class="field-row"><b>Тип:</b>&nbsp;str — ChromaDB не хранит list. Строка <code style="font-size:11px">"limits,card,daily"</code></div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$contains</span>&nbsp;— keyword-фильтрация поверх векторного поиска</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">target_system</span>
+          <span class="badge badge-cond">условное</span>
+          <span class="badge badge-exist">существующее</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">target_system</code> — уже в _build_filter</div>
+        <div class="field-row"><b>Условие:</b>&nbsp;только если requirement_type = integration</div>
+        <div class="field-row"><b>Было:</b>&nbsp;извлекалось через extract_target_system() из тела. <b>Станет:</b>&nbsp;явным полем</div>
+      </div>
+      <div class="field">
+        <div class="field-header">
+          <span class="field-key">microservice</span>
+          <span class="badge badge-opt">опциональное</span>
+          <span class="badge badge-new">новое</span>
+        </div>
+        <div class="field-row"><b>ChromaDB:</b>&nbsp;<code style="font-size:11px">microservice</code></div>
+        <div class="field-row"><b>Зачем:</b>&nbsp;service_code — уровень продукта. microservice — уровень реализации</div>
+        <div class="field-row"><b>Фильтр:</b>&nbsp;<span class="tag">$eq</span>&nbsp;— поиск по конкретному микросервису ДБО</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="s-diff" class="section">
+    <div class="legend">
+      <div class="legend-item"><div class="dot dot-keep"></div>сохраняется без изменений</div>
+      <div class="legend-item"><div class="dot dot-rename"></div>переименование / источник меняется</div>
+      <div class="legend-item"><div class="dot dot-new"></div>новое поле из frontmatter</div>
+      <div class="legend-item"><div class="dot dot-drop"></div>удаляется / deprecated</div>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-card">
+        <div class="diff-title">_process_single_page → base_metadata</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">doc_type</code>&nbsp;← frontmatter.doc_type</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">is_platform</code>&nbsp;← frontmatter.is_platform</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">service_code</code>&nbsp;← frontmatter.service_code</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">title</code>&nbsp;← frontmatter.title</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">source</code>&nbsp;← frontmatter.source</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">requirement_type</code>&nbsp;← frontmatter.requirement_type</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">original_page_size</code>&nbsp;← вычисляется (без изменений)</div>
+        <div class="diff-row"><div class="dot dot-rename"></div><code style="font-size:11px">page_id</code>&nbsp;← frontmatter.doc_id (путь файла)</div>
+        <div class="diff-row"><div class="dot dot-rename"></div><code style="font-size:11px">target_system</code>&nbsp;← frontmatter (было из extract_target_system())</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">document_name, microservice, feature</code></div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">jira_id, jira_ids, confluence_page_id</code></div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">status, owner, author, reviewed_by</code></div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">version, created_date, updated_date</code></div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">related, parent, tags</code></div>
+      </div>
+      <div class="diff-card">
+        <div class="diff-title">_build_filter — новые измерения</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">doc_type</code>&nbsp;— без изменений</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">service_code</code>&nbsp;— без изменений</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">requirement_type</code>&nbsp;— без изменений</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">target_system</code>&nbsp;— без изменений</div>
+        <div class="diff-row"><div class="dot dot-keep"></div><code style="font-size:11px">vector_type</code>&nbsp;— без изменений</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">status</code>&nbsp;← $eq / $in</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">owner</code>&nbsp;← $eq</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">jira_id</code>&nbsp;← $eq</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">feature</code>&nbsp;← $eq</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">microservice</code>&nbsp;← $eq</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">tags</code>&nbsp;← $contains</div>
+        <div class="diff-row"><div class="dot dot-new"></div><code style="font-size:11px">related</code>&nbsp;← $contains (трассировка)</div>
+      </div>
+    </div>
+    <div class="diff-card" style="margin-top:8px">
+      <div class="diff-title">document_service.py — что НЕ меняется</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.8">
+        Вся механика <code style="font-size:11px">load_approved_pages → _create_multi_vector_documents → MultiVectorIndexer</code> остаётся. 
+        Меняется только <b style="font-weight:500">источник данных</b>: вместо Confluence API → парсер frontmatter из .md файла.
+        Интерфейс <code style="font-size:11px">pages: List[Dict]</code> сохраняется — просто добавляются новые ключи в dict страницы.
+        <code style="font-size:11px">chunk_id = f"{page_id}_chunk_{i}"</code> автоматически использует новый doc_id как page_id.
+      </div>
+    </div>
+  </div>
+
+  <div id="s-queries" class="section">
+    <div class="query-grid">
+      <div class="query-card">
+        <div class="query-name">По фиче / сервису</div>
+        <div class="query-tags"><span class="tag">service_code $eq</span><span class="tag">feature $eq</span><span class="tag">microservice $eq</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По типу требования</div>
+        <div class="query-tags"><span class="tag">requirement_type $eq</span><span class="tag">requirement_type $in</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По статусу</div>
+        <div class="query-tags"><span class="tag">status $eq</span><span class="tag">status $in</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По номеру задачи Jira</div>
+        <div class="query-tags"><span class="tag">jira_id $eq</span><span class="tag">jira_ids $contains</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По автору / владельцу</div>
+        <div class="query-tags"><span class="tag">owner $eq</span><span class="tag">author $eq</span><span class="tag">reviewed_by $contains</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По наименованию документа</div>
+        <div class="query-tags"><span class="tag">title vector</span><span class="tag">document_name $eq</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">По источнику требований</div>
+        <div class="query-tags"><span class="tag">source $eq</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">Трассировка связей</div>
+        <div class="query-tags"><span class="tag">related $contains</span><span class="tag">parent $eq</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">Ревью на конфликты</div>
+        <div class="query-tags"><span class="tag">service_code $eq</span><span class="tag">feature $eq</span><span class="tag">related $contains</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">Исторические изменения</div>
+        <div class="query-tags"><span class="tag">version $eq</span><span class="tag">updated_date</span><span class="tag">git blame</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">Интеграции по системе</div>
+        <div class="query-tags"><span class="tag">requirement_type=integration</span><span class="tag">target_system $eq</span></div>
+      </div>
+      <div class="query-card">
+        <div class="query-name">Keyword / теги</div>
+        <div class="query-tags"><span class="tag">tags $contains</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="s-constraints" class="section">
+    <div class="constraint-card">
+      <div class="constraint-title">Типы значений метаданных ChromaDB</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.9">
+        ChromaDB принимает только <code style="font-size:11px">str</code>, <code style="font-size:11px">int</code>, <code style="font-size:11px">float</code>, <code style="font-size:11px">bool</code>. 
+        Списки <b style="font-weight:500">не поддерживаются</b>. Все поля с множественными значениями хранятся как строки через запятую.
+      </div>
+    </div>
+    <div class="constraint-card">
+      <div class="constraint-title">Поля-списки → строка через запятую</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.9">
+        <code style="font-size:11px">jira_ids</code>, <code style="font-size:11px">reviewed_by</code>, <code style="font-size:11px">related</code>, <code style="font-size:11px">tags</code> — хранятся как str.<br>
+        Поиск через <code style="font-size:11px">{"tags": {"$contains": "limits"}}</code>.<br>
+        В frontmatter YAML пишем строку: <code style="font-size:11px">tags: "limits,card,daily"</code> — не YAML-список!<br>
+        Парсер frontmatter должен читать эти поля как есть, без преобразования в list.
+      </div>
+    </div>
+    <div class="constraint-card">
+      <div class="constraint-title">Поле updated_date — только строка, не datetime</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.9">
+        ChromaDB не поддерживает datetime. Для сортировки по дате используй формат ISO <code style="font-size:11px">YYYY-MM-DD</code> (str).
+        Лексикографическое сравнение строк в этом формате корректно работает с <code style="font-size:11px">$gte</code> / <code style="font-size:11px">$lte</code>.
+      </div>
+    </div>
+    <div class="constraint-card">
+      <div class="constraint-title">chunk_id и doc_id</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.9">
+        В <code style="font-size:11px">_create_multi_vector_chunked</code>: <code style="font-size:11px">chunk_id = f"{page_id}_chunk_{i}"</code>.<br>
+        Поскольку <code style="font-size:11px">page_id</code> теперь содержит doc_id (<code style="font-size:11px">corp-cards/limits/daily</code>),<br>
+        chunk_id станет <code style="font-size:11px">corp-cards/limits/daily_chunk_0</code> — стабильный и читаемый идентификатор.
+      </div>
+    </div>
+    <div class="constraint-card">
+      <div class="constraint-title">Поля, которые НЕ нужно хранить в метаданных</div>
+      <div style="font-size:12px;color:var(--color-text-secondary);line-height:1.9">
+        <code style="font-size:11px">confluence_page_id</code> нужен только в переходный период — через 6–12 месяцев после полной миграции можно убрать.<br>
+        <code style="font-size:11px">version</code> как строка — только для фильтрации. Полная история версий — в git log, не в ChromaDB.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
