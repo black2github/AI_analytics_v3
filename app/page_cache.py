@@ -202,6 +202,126 @@ def get_page_data_cached(page_id: str) -> Optional[Dict]:
     return None  # НЕ кешируем ошибки
 
 
+def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
+    """
+    Загружает данные страницы Confluence через обычный HTTP-запрос (как браузер),
+    без использования Confluence API.
+
+    Используется как альтернатива get_page_data_cached() когда доступ к API закрыт,
+    но страницы доступны через браузер.
+
+    Выполняет те же операции обработки и кеширования, что и get_page_data_cached().
+
+    Args:
+        page_id: Идентификатор страницы Confluence
+
+    Returns:
+        Словарь с полными данными страницы или None при ошибке.
+        Формат аналогичен get_page_data_cached().
+    """
+    from bs4 import BeautifulSoup
+    from app.config import CONFLUENCE_BASE_URL, CONFLUENCE_USER, CONFLUENCE_PASSWORD
+
+    logger.debug("[fetch_page_data_via_http] <- page_id=%s", page_id)
+
+    # Проверяем кеш
+    cache_key = hashkey(page_id)
+    with cache_lock:
+        if cache_key in page_cache:
+            logger.debug("[fetch_page_data_via_http] Cache HIT for page_id=%s", page_id)
+            return page_cache[cache_key]
+
+    page_url = f"{CONFLUENCE_BASE_URL.rstrip('/')}/pages/viewpage.action?pageId={page_id}"
+    headers = {
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/124.0.0.0 Safari/537.36"
+        ),
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+    }
+
+    try:
+        import requests as http_requests
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        response = http_requests.get(
+            page_url,
+            headers=headers,
+            auth=(CONFLUENCE_USER, CONFLUENCE_PASSWORD),
+            timeout=30,
+            verify=False,
+        )
+        response.raise_for_status()
+    except Exception as e:
+        logger.error(
+            "[fetch_page_data_via_http] HTTP request failed for page_id=%s url=%s: %s",
+            page_id, page_url, str(e)
+        )
+        return None
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Извлекаем заголовок страницы
+    title = ""
+    title_tag = soup.find(id="title-text")
+    if title_tag:
+        title = title_tag.get_text(strip=True)
+    else:
+        html_title = soup.find("title")
+        if html_title:
+            # Confluence добавляет суффикс " - Confluence" или " - Space Name"
+            title = html_title.get_text(strip=True).rsplit(" - ", 1)[0].strip()
+
+    if not title:
+        logger.warning("[fetch_page_data_via_http] Could not extract title for page_id=%s", page_id)
+        return None
+
+    # Извлекаем содержимое страницы (основной блок wiki-content)
+    content_tag = soup.find(class_="wiki-content")
+    if not content_tag:
+        content_tag = soup.find(id="main-content")
+    if not content_tag:
+        logger.warning(
+            "[fetch_page_data_via_http] Could not find content area for page_id=%s", page_id
+        )
+        return None
+
+    raw_html = str(content_tag)
+
+    try:
+        full_content = filter_all_fragments(raw_html)
+        full_markdown = markdownify.markdownify(raw_html, heading_style="ATX")
+        approved_content = extract_approved_fragments(raw_html)
+        requirement_type = analyze_content_template_type(title, raw_html)
+    except Exception as e:
+        logger.error(
+            "[fetch_page_data_via_http] Error processing page content for page_id=%s: %s",
+            page_id, str(e)
+        )
+        return None
+
+    result = {
+        'id': page_id,
+        'title': title,
+        'raw_html': raw_html,
+        'full_content': full_content,
+        'full_markdown': full_markdown,
+        'approved_content': approved_content,
+        'requirement_type': requirement_type,
+    }
+
+    with cache_lock:
+        page_cache[cache_key] = result
+
+    logger.info(
+        "[fetch_page_data_via_http] -> Loaded and cached page_id=%s title='%s' type='%s'",
+        page_id, title, requirement_type
+    )
+    return result
+
+
 def clear_page_cache():
     """Очистка кеша страниц"""
     with cache_lock:
