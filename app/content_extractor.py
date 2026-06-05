@@ -713,18 +713,27 @@ class ContentExtractor:
         return result_parts
 
     def _process_paragraph(self, element: Tag, context: str) -> str:
-        """Обработка параграфов с добавлением переводов строк"""
+        """Обработка параграфов с добавлением переводов строк.
+
+        Если содержимое параграфа начинается с '{' и заканчивается на '}'
+        (после trim), оборачивает в тройные обратные кавычки как код.
+        Это покрывает JSON-примеры, набранные в Confluence как обычный текст.
+        """
         content = self._process_children(element, context)
 
         if not content:
             return ""
 
-        # ИСПРАВЛЕНИЕ: Добавляем перевод строки для всех контекстов
+        # Детекция JSON-блоков: параграф начинается с { и заканчивается на }
+        stripped = content.strip()
+        if stripped.startswith('{') and stripped.endswith('}'):
+            return f"\n```\n{stripped}\n```\n"
+
+        # Добавляем перевод строки для всех контекстов
         if context in ["table_cell", "nested_table_cell"]:
             if not content.endswith('\n'):
                 content += '\n'
         else:
-            # Для обычного контекста тоже добавляем перевод строки
             if not content.endswith('\n'):
                 content += '\n'
 
