@@ -1,4 +1,4 @@
-# migrate_confluence_page.py
+# scripts/migrate_confluence_page.py
 
 import sys
 import re
@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from app.confluence_loader import load_pages_by_ids
+from app.page_cache import fetch_page_data_via_http
 from app.service_registry import get_platform_status
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
