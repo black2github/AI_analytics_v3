@@ -310,6 +310,23 @@ class ContentExtractor:
         else:
             return content
 
+    def _process_bold(self, element: Tag, context: str) -> str:
+        """
+        Обработка тегов <strong> и <b> — оборачивает содержимое в **...**
+        Если содержимое пустое или состоит только из пробелов — возвращает пустую строку.
+        Пробелы по краям выносятся за маркеры, чтобы не нарушать синтаксис Markdown:
+        корректно: ' **текст** ', некорректно: '** текст **'
+        """
+        content = self._process_children(element, context)
+        stripped = content.strip()
+        if not stripped:
+            return content  # Только пробелы — возвращаем как есть, без маркеров
+
+        # Сохраняем leading/trailing пробелы снаружи маркеров
+        leading = content[: len(content) - len(content.lstrip())]
+        trailing = content[len(content.rstrip()):]
+        return f"{leading}**{stripped}**{trailing}"
+
     # Остальные методы остаются без изменений (копируем из предыдущей версии)
     def _normalize_cell_text(self, text: str) -> str:
         """
@@ -372,6 +389,10 @@ class ContentExtractor:
         # Ссылки
         if element.name in ["a", "ac:link"]:
             return self._process_link(element, context)
+
+        # Жирный текст
+        if element.name in ["strong", "b"]:
+            return self._process_bold(element, context)
 
         # Время
         if element.name == "time" and element.get("datetime"):
@@ -1176,6 +1197,10 @@ class ContentExtractor:
                         result_parts.append(list_content)
                 elif child.name == "br":
                     result_parts.append("\n")
+                elif child.name in ["strong", "b"]:
+                    bold_content = self._process_nested_table_cell_content(child)
+                    if bold_content:
+                        result_parts.append(f"**{bold_content.strip()}**")
                 elif child.name == "p":
                     # Обрабатываем параграфы внутри ячеек
                     p_content = self._process_nested_table_cell_content(child)
@@ -1251,6 +1276,9 @@ class ContentExtractor:
             return self._process_header_without_color_filter(element, context)
         elif element.name in ["a", "ac:link"]:
             return self._process_link(element, context)
+        elif element.name in ["strong", "b"]:
+            content = self._process_children_without_color_filter(element, context)
+            return f"**{content.strip()}**" if content.strip() else ""
         elif element.name == "p":
             return self._process_paragraph_without_color_filter(element, context)
         else:
