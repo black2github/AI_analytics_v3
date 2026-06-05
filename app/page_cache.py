@@ -14,6 +14,7 @@ from cachetools.keys import hashkey
 from app.config import PAGE_CACHE_SIZE, PAGE_CACHE_TTL
 from app.confluence_loader import confluence, extract_approved_fragments
 from app.filter_all_fragments import filter_all_fragments
+from app.history_cleaner import remove_history_sections
 from app.services.template_type_analysis import analyze_content_template_type
 
 logger = logging.getLogger(__name__)
@@ -130,11 +131,15 @@ def get_page_data_cached(page_id: str) -> Optional[Dict]:
                 logger.warning("[get_page_data_cached] No content found for page_id=%s", page_id)
                 return None  # НЕ кешируем None
 
+            # Один раз очищаем историю изменений; все дальнейшие обработчики
+            # получают уже чистый HTML и не вызывают remove_history_sections повторно.
+            cleaned_html = remove_history_sections(raw_html)
+
             # Все виды обработки HTML выполняем один раз
-            full_content = filter_all_fragments(raw_html)
-            full_markdown = markdownify.markdownify(raw_html, heading_style="ATX")
-            approved_content = extract_approved_fragments(raw_html)
-            requirement_type = analyze_content_template_type(title, raw_html)
+            full_content = filter_all_fragments(cleaned_html)
+            full_markdown = markdownify.markdownify(cleaned_html, heading_style="ATX")
+            approved_content = extract_approved_fragments(cleaned_html)
+            requirement_type = analyze_content_template_type(title, cleaned_html)
 
             result = {
                 'id': page_id,
