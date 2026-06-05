@@ -173,7 +173,13 @@ def main():
     subdir = sys.argv[3]
     source = sys.argv[4] if len(sys.argv) > 4 else "DBOCORPESPLN"
 
-    logger.info("Loading %d page(s) from Confluence...", len(page_ids))
+    logger.info("Loading %d page(s) from Confluence via HTTP...", len(page_ids))
+    # for page_id in page_ids:
+    #     result = fetch_page_data_via_http(page_id.strip())
+    #     if result:
+    #         logger.info("  ✓ Fetched page_id=%s title='%s'", page_id, result["title"])
+    #     else:
+    #         logger.warning("  ⚠ Failed to fetch page_id=%s", page_id)
     pages = load_pages_by_ids(page_ids)
 
     if not pages:
