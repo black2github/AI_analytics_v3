@@ -6,8 +6,9 @@ from typing import List, Dict, Optional
 from atlassian import Confluence
 from requests import ReadTimeout
 
-from app.config import CONFLUENCE_BASE_URL, CONFLUENCE_USER, CONFLUENCE_PASSWORD
+from app.config import CONFLUENCE_BASE_URL, CONFLUENCE_USER, CONFLUENCE_PASSWORD, PAGE_EXCLUSION_RULES_FILE
 from app.filter_approved_fragments import filter_approved_fragments
+from app.page_exclusion_filter import load_exclusion_rules, is_page_excluded
 
 if CONFLUENCE_BASE_URL is None:
     raise ValueError("Переменная окружения CONFLUENCE_BASE_URL не задана")
@@ -80,6 +81,27 @@ def get_page_title_by_id(page_id: str) -> Optional[str]:
     return page_data['title']
 
 
+def get_page_title_only(page_id: str) -> Optional[str]:
+    """
+    Получает только заголовок страницы напрямую из Confluence API,
+    без загрузки тела. Работает для страниц-контейнеров без содержимого.
+
+    Используется для проверки правил исключения до начала обхода дерева.
+    """
+    logger.debug("[get_page_title_only] <- page_id=%s", page_id)
+    try:
+        page = confluence.get_page_by_id(page_id, expand='title')
+        if not page:
+            logger.warning("[get_page_title_only] Page not found: %s", page_id)
+            return None
+        title = page.get('title', '')
+        logger.debug("[get_page_title_only] -> title='%s'", title)
+        return title or None
+    except Exception as e:
+        logger.error("[get_page_title_only] Failed to get title for page_id=%s: %s", page_id, e)
+        return None
+
+
 def load_pages_by_ids(page_ids: List[str]) -> List[Dict[str, str]]:
     """
     Загрузка страниц из Confluence по идентификаторам и разбиение на:
@@ -148,10 +170,15 @@ def load_template_markdown(page_id: str) -> Optional[str]:
 
 
 def get_child_page_ids(page_id: str) -> List[str]:
-    """Возвращает список идентификаторов всех дочерних страниц."""
+    """Возвращает список идентификаторов всех дочерних страниц.
+
+    Страницы, чьи заголовки соответствуют правилам из PAGE_EXCLUSION_RULES_FILE,
+    пропускаются вместе со всем их поддеревом.
+    """
     child_page_ids = []
     visited_pages = set()
     max_retries = 3
+    exclusion_rules = load_exclusion_rules(PAGE_EXCLUSION_RULES_FILE)
 
     def fetch_children(current_page_id: str, retry_count: int = 0):
         """Рекурсивно собирает идентификаторы дочерних страниц."""
@@ -166,6 +193,15 @@ def get_child_page_ids(page_id: str) -> List[str]:
             children = confluence.get_child_pages(current_page_id)
             for child in children:
                 child_id = child["id"]
+                child_title = child.get("title", "")
+
+                if is_page_excluded(child_title, exclusion_rules):
+                    logger.info(
+                        "[get_child_page_ids] Ignoring page and its subtree: id=%s title='%s'",
+                        child_id, child_title
+                    )
+                    continue
+
                 child_page_ids.append(child_id)
                 logger.debug("[get_child_page_ids] Found child page: %s for parent: %s", child_id, current_page_id)
                 fetch_children(child_id)
