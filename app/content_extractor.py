@@ -313,6 +313,55 @@ class ContentExtractor:
         else:
             return content
 
+    def _process_code_block(self, element: Tag, context: str) -> str:
+        """
+        Обработка блоков кода.
+
+        Поддерживаемые источники:
+        - <ac:structured-macro ac:name="code"> — Confluence code macro
+        - <ac:structured-macro ac:name="noformat"> — Confluence noformat macro
+        - <pre> — HTML preformatted block
+        - <code> — HTML inline/block code
+
+        Многострочный текст оборачивается в тройные обратные кавычки.
+        Однострочный <code> оборачивается в одиночные обратные кавычки.
+        """
+        name = element.name
+
+        # Confluence макросы: code и noformat
+        if name == "ac:structured-macro":
+            plain_body = element.find("ac:plain-text-body")
+            if plain_body:
+                # BeautifulSoup преобразует CDATA в текст автоматически
+                code_text = plain_body.get_text()
+            else:
+                # Fallback: извлекаем весь текст макроса
+                code_text = element.get_text()
+
+            code_text = code_text.strip()
+            if not code_text:
+                return ""
+            return f"\n```\n{code_text}\n```\n"
+
+        # <pre> — всегда многострочный блок
+        if name == "pre":
+            code_text = element.get_text()
+            code_text = code_text.strip()
+            if not code_text:
+                return ""
+            return f"\n```\n{code_text}\n```\n"
+
+        # <code> — inline если однострочный, блок если многострочный
+        if name == "code":
+            code_text = element.get_text()
+            # Однострочный inline code
+            if "\n" not in code_text.strip():
+                return f"`{code_text.strip()}`"
+            # Многострочный
+            return f"\n```\n{code_text.strip()}\n```\n"
+
+        return ""
+
     def _process_bold(self, element: Tag, context: str) -> str:
         """
         Обработка тегов <strong> и <b>.
@@ -389,6 +438,13 @@ class ContentExtractor:
             if not self.config.include_colored:
                 return self._extract_black_elements_from_colored_container(element, context)
             return None
+
+        # Блоки кода: <pre>, <code>, Confluence code/noformat макросы
+        if element.name in ["pre", "code"]:
+            return self._process_code_block(element, context)
+        if (element.name == "ac:structured-macro" and
+                element.get("ac:name") in ("code", "noformat")):
+            return self._process_code_block(element, context)
 
         # Заголовки
         if element.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
@@ -1213,6 +1269,11 @@ class ContentExtractor:
                         result_parts.append(list_content)
                 elif child.name == "br":
                     result_parts.append("\n")
+                elif child.name in ["pre", "code"]:
+                    result_parts.append(self._process_code_block(child, "nested_table_cell"))
+                elif (child.name == "ac:structured-macro" and
+                        child.get("ac:name") in ("code", "noformat")):
+                    result_parts.append(self._process_code_block(child, "nested_table_cell"))
                 elif child.name in ["strong", "b"]:
                     bold_content = self._process_nested_table_cell_content(child)
                     if bold_content:
