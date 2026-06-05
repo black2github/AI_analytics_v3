@@ -13,7 +13,7 @@ except Exception:
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.60.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.61.0")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -108,6 +108,7 @@ UNIFIED_STORAGE_NAME = "unified_requirements"
 
 SERVICES_REGISTRY_FILE = os.getenv("SERVICES_REGISTRY_FILE", "services.json")
 TEMPLATES_REGISTRY_FILE = os.getenv("TEMPLATES_REGISTRY_FILE", "templates.json")
+PAGE_EXCLUSION_RULES_FILE = os.getenv("PAGE_EXCLUSION_RULES_FILE", "app/data/page_exclusion_rules.json")
 
 PAGE_CACHE_TTL = int(os.getenv("PAGE_CACHE_TTL", "60"))  # по умолчанию 5 минут
 PAGE_CACHE_SIZE = int(os.getenv("PAGE_CACHE_SIZE", "1000")) # по умолчанию 1000 странниц
