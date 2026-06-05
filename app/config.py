@@ -31,11 +31,6 @@ QWEN_API_KEY = os.getenv("QWEN_API_KEY")
 QWEN_BASE_URL = os.getenv("QWEN_BASE_URL")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENROUTER_BASE_URL = os.getenv("OPENROUTER_BASE_URL")
-GONKA_API_KEY=os.getenv("GONKA_API_KEY")
-GONKA_API_URL=os.getenv("GONKA_API_URL")
-GONKA_ENDPOINTS = os.getenv(
-    "GONKA_ENDPOINTS",
-    "http://node1.gonka.ai:8000;gonka1kx9mca3xm8u8ypzfuhmxey66u0ufxhs7nm6wc5,http://node2.gonka.ai:8000;gonka1kx9mca3xm8u8ypzfuhmxey66u0ufxhs7nm6wc")
 
 CONFLUENCE_API_TOKEN = os.getenv("CONFLUENCE_API_TOKEN")
 CONFLUENCE_USER = os.getenv("CONFLUENCE_USER")
