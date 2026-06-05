@@ -83,10 +83,13 @@ class ContentExtractor:
         структуру списков и вложенных таблиц в HTML-разметке.
         _normalize_cell_text здесь не применяется — в HTML переводы строк
         внутри <td> не ломают таблицу.
+
+        Контекст "nested_table_cell" сигнализирует _process_bold
+        что нужно использовать <strong> вместо **...**
         """
         if not self._should_include_element(cell):
             if not self.config.include_colored:
-                return self._extract_black_elements_from_colored_container(cell, "table_cell") or ""
+                return self._extract_black_elements_from_colored_container(cell, "nested_table_cell") or ""
             return ""
         return self._process_nested_table_cell_content(cell)
 
@@ -312,8 +315,14 @@ class ContentExtractor:
 
     def _process_bold(self, element: Tag, context: str) -> str:
         """
-        Обработка тегов <strong> и <b> — оборачивает содержимое в **...**
-        Если содержимое пустое или состоит только из пробелов — возвращает пустую строку.
+        Обработка тегов <strong> и <b>.
+
+        В HTML-контексте (table_cell, nested_table_cell) использует <strong>...</strong>,
+        потому что Markdown-разметка **...** внутри HTML-тегов не обрабатывается
+        рендерерами согласно спецификации CommonMark.
+
+        В Markdown-контексте (default и прочие) использует **...** — стандартный bold.
+
         Пробелы по краям выносятся за маркеры, чтобы не нарушать синтаксис Markdown:
         корректно: ' **текст** ', некорректно: '** текст **'
         """
@@ -322,7 +331,14 @@ class ContentExtractor:
         if not stripped:
             return content  # Только пробелы — возвращаем как есть, без маркеров
 
-        # Сохраняем leading/trailing пробелы снаружи маркеров
+        if context == "nested_table_cell":
+            # HTML-контекст: используем тег <strong>, так как **...** внутри
+            # HTML-тегов не обрабатывается рендерерами (CommonMark)
+            leading = content[: len(content) - len(content.lstrip())]
+            trailing = content[len(content.rstrip()):]
+            return f"{leading}<strong>{stripped}</strong>{trailing}"
+
+        # Markdown-контекст: используем ** маркеры
         leading = content[: len(content) - len(content.lstrip())]
         trailing = content[len(content.rstrip()):]
         return f"{leading}**{stripped}**{trailing}"
@@ -1200,7 +1216,7 @@ class ContentExtractor:
                 elif child.name in ["strong", "b"]:
                     bold_content = self._process_nested_table_cell_content(child)
                     if bold_content:
-                        result_parts.append(f"**{bold_content.strip()}**")
+                        result_parts.append(f"<strong>{bold_content.strip()}</strong>")
                 elif child.name == "p":
                     # Обрабатываем параграфы внутри ячеек
                     p_content = self._process_nested_table_cell_content(child)
