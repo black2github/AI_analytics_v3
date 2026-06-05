@@ -50,26 +50,54 @@ class ContentExtractor:
 
         return result
 
-    def _table_has_spans(self, element: Tag) -> bool:
+    def _table_needs_html(self, element: Tag) -> bool:
         """
-        Проверяет наличие colspan или rowspan > 1 в любой ячейке таблицы.
-        Markdown pipe-синтаксис не поддерживает объединение ячеек,
-        поэтому такие таблицы рендерятся как HTML.
+        Определяет, нужно ли рендерить таблицу как HTML вместо Markdown pipe-синтаксиса.
+
+        Markdown pipe-таблица не поддерживает:
+        - colspan / rowspan — объединение ячеек
+        - блочные элементы внутри ячеек (списки ul/ol, вложенные таблицы, параграфы p)
+          так как перевод строки внутри ячейки завершает строку таблицы
+
+        В любом из этих случаев переключаемся на HTML.
         """
         for cell in element.find_all(["td", "th"]):
+            # Объединение ячеек
             if int(cell.get("colspan", 1) or 1) > 1:
                 return True
             if int(cell.get("rowspan", 1) or 1) > 1:
                 return True
+            # Блочные элементы внутри ячейки — список или несколько параграфов
+            if cell.find(["ul", "ol"]):
+                return True
+            paragraphs = cell.find_all("p", recursive=False)
+            if len(paragraphs) > 1:
+                return True
         return False
+
+    def _render_cell_for_html_table(self, cell: Tag) -> str:
+        """
+        Рендерит содержимое ячейки для HTML-таблицы.
+
+        Использует _process_nested_table_cell_content, который сохраняет
+        структуру списков и вложенных таблиц в HTML-разметке.
+        _normalize_cell_text здесь не применяется — в HTML переводы строк
+        внутри <td> не ломают таблицу.
+        """
+        if not self._should_include_element(cell):
+            if not self.config.include_colored:
+                return self._extract_black_elements_from_colored_container(cell, "table_cell") or ""
+            return ""
+        return self._process_nested_table_cell_content(cell)
 
     def _process_top_level_table_to_html(self, element: Tag) -> str:
         """
         Конвертирует таблицу верхнего уровня в HTML.
-        Используется когда таблица содержит colspan/rowspan,
-        которые Markdown pipe-синтаксис не поддерживает.
-        Содержимое ячеек обрабатывается через стандартный пайплайн
-        (цветовая фильтрация, ссылки и т.д.).
+        Используется когда таблица не может быть представлена
+        Markdown pipe-синтаксисом: содержит colspan/rowspan,
+        списки или многострочное содержимое ячеек.
+        Содержимое ячеек обрабатывается через _render_cell_for_html_table,
+        который сохраняет структуру списков и вложенных таблиц.
         """
         html_parts = ["<table>"]
 
@@ -82,13 +110,12 @@ class ContentExtractor:
                 for cell in row.find_all(["td", "th"], recursive=False):
                     tag = "th" if cell.name == "th" else "td"
                     attrs = self._build_span_attrs(cell)
-                    cell_content = self._process_table_cell(cell, "table_cell")
-                    cell_text = self._normalize_cell_text(cell_content or "")
+                    cell_text = self._render_cell_for_html_table(cell)
                     html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
                 html_parts.append("</tr>")
             html_parts.append("</thead>")
 
-        # Обрабатываем tbody если есть
+        # Обрабатываем tbody если есть; если нет — берём tr прямо из таблицы
         tbody = element.find("tbody")
         rows_source = tbody if tbody else element
         if tbody:
@@ -98,16 +125,7 @@ class ContentExtractor:
             for cell in row.find_all(["td", "th"], recursive=False):
                 tag = "th" if cell.name == "th" else "td"
                 attrs = self._build_span_attrs(cell)
-                if not self._should_include_element(cell):
-                    if not self.config.include_colored:
-                        cell_text = self._normalize_cell_text(
-                            self._extract_black_elements_from_colored_container(cell, "table_cell") or ""
-                        )
-                    else:
-                        cell_text = ""
-                else:
-                    cell_content = self._process_table_cell(cell, "table_cell")
-                    cell_text = self._normalize_cell_text(cell_content or "")
+                cell_text = self._render_cell_for_html_table(cell)
                 html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
             html_parts.append("</tr>")
         if tbody:
@@ -144,7 +162,7 @@ class ContentExtractor:
 
         # Если в таблице есть объединение ячеек — Markdown не справится,
         # переключаемся на HTML-рендеринг
-        if self._table_has_spans(element):
+        if self._table_needs_html(element):
             return self._process_top_level_table_to_html(element)
 
         # Для обычного контекста - создаём Markdown таблицу
@@ -1057,6 +1075,49 @@ class ContentExtractor:
         html_parts.append("</table>")
         return "".join(html_parts)
 
+    def _list_to_html(self, element: Tag) -> str:
+        """
+        Рекурсивно конвертирует ul/ol список в HTML-разметку.
+        Используется когда список находится внутри HTML-таблицы —
+        там Markdown-синтаксис списков не работает корректно.
+        Цветовая фильтрация и обработка ссылок применяются к каждому пункту.
+        """
+        tag = element.name  # ul или ol
+        parts = [f"<{tag}>"]
+
+        for li in element.find_all("li", recursive=False):
+            if not self._should_include_element(li):
+                if not self.config.include_colored:
+                    black = self._extract_black_elements_from_colored_container(li, "nested_table_cell")
+                    if black:
+                        parts.append(f"<li>{black}</li>")
+                continue
+
+            li_parts = []
+            for child in li.children:
+                if isinstance(child, NavigableString):
+                    text = str(child).replace("\u00a0", " ")
+                    if text.strip():
+                        li_parts.append(text)
+                elif isinstance(child, Tag):
+                    if self._is_ignored_element(child):
+                        continue
+                    if child.name in ["ul", "ol"]:
+                        # Рекурсивно конвертируем вложенный список
+                        li_parts.append(self._list_to_html(child))
+                    elif child.name in ["a", "ac:link"]:
+                        link = self._process_link(child, "nested_table_cell")
+                        if link:
+                            li_parts.append(link)
+                    else:
+                        content = self._process_nested_table_cell_content(child)
+                        if content:
+                            li_parts.append(content)
+            parts.append(f"<li>{''.join(li_parts)}</li>")
+
+        parts.append(f"</{tag}>")
+        return "".join(parts)
+
     def _process_nested_table_cell_content(self, cell: Tag) -> str:
         """
         ИСПРАВЛЕНО: Обработка содержимого ячейки вложенной таблицы.
@@ -1109,8 +1170,8 @@ class ContentExtractor:
                     if link_content:
                         result_parts.append(link_content)
                 elif child.name in ["ul", "ol"]:
-                    # Списки обрабатываем через _process_list
-                    list_content = self._process_list(child, "nested_table_cell")
+                    # В HTML-контексте конвертируем список в HTML-теги
+                    list_content = self._list_to_html(child)
                     if list_content:
                         result_parts.append(list_content)
                 elif child.name == "br":
