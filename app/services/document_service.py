@@ -5,7 +5,10 @@ import logging
 import yaml
 from typing import List, Dict, Optional
 
-from app.confluence_loader import load_pages_by_ids, get_child_page_ids
+from app.confluence_loader import load_pages_by_ids, get_child_page_ids, get_page_title_only
+from app.page_cache import get_page_data_cached
+from app.config import PAGE_EXCLUSION_RULES_FILE
+from app.page_exclusion_filter import load_exclusion_rules, is_page_excluded
 from app.llm_interface import get_embeddings_model
 from app.service_registry import resolve_service_code_from_pages_or_user, get_platform_status
 from app.template_registry import store_templates
@@ -108,12 +111,40 @@ class DocumentService:
         service_code: Optional[str] = None,
         source: str = "DBOCORPESPLN"
     ) -> Dict:
-        """Получает дочерние страницы с опциональной загрузкой."""
-        child_page_ids = get_child_page_ids(page_id)
-        result = {"page_ids": child_page_ids, "load_result": None}
+        """Получает дочерние страницы с опциональной загрузкой.
 
-        if service_code and child_page_ids:
-            load_result = self.load_approved_pages(child_page_ids, service_code, source)
+        Перед обходом дерева проверяет наименование корневой страницы по правилам
+        исключения. Если оно подпадает под правила — загрузка не выполняется
+        ни для корневой страницы, ни для её дочерних.
+        """
+        exclusion_rules = load_exclusion_rules(PAGE_EXCLUSION_RULES_FILE)
+
+        # Получаем заголовок корневой страницы.
+        # Сначала пробуем get_page_data_cached: если страница имеет содержимое,
+        # результат закешируется и повторный вызов при load_approved_pages будет
+        # cache HIT — лишнего вызова API не возникает.
+        # Если страница — пустой контейнер (No content), кеш вернёт None;
+        # тогда запрашиваем только заголовок через get_page_title_only.
+        root_page_data = get_page_data_cached(page_id)
+        if root_page_data:
+            root_title = root_page_data['title']
+        else:
+            root_title = get_page_title_only(page_id)
+
+        if root_title and is_page_excluded(root_title, exclusion_rules):
+            logger.info(
+                "[get_child_pages_with_optional_load] Root page matches exclusion rules, "
+                "skipping entire subtree: id=%s title='%s'",
+                page_id, root_title
+            )
+            return {"page_ids": [], "load_result": None}
+
+        child_page_ids = get_child_page_ids(page_id)
+        all_page_ids = [page_id] + child_page_ids
+        result = {"page_ids": all_page_ids, "load_result": None}
+
+        if service_code:
+            load_result = self.load_approved_pages(all_page_ids, service_code, source)
             result["load_result"] = load_result
 
         return result
