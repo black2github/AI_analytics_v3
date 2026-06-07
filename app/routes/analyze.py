@@ -47,7 +47,23 @@ class AnalyzeServicePagesRequest(BaseModel):
 @router.post("/analyze", tags=["Анализ текстовых требований сервиса"])
 async def analyze_from_text(payload: AnalyzeTextRequest):
     """
-    ОПТИМИЗИРОВАНО: Анализирует текст в отдельном потоке
+    Анализирует произвольный текст требований с использованием RAG-контекста.
+
+    Принимает текст напрямую (без привязки к Confluence), строит RAG-контекст
+    по сервису и передаёт требование в LLM одним вызовом.
+
+    Промпт берётся из `PAGE_ANALYSIS_PROMPT_FILE` (по умолчанию `page_prompt_template.txt`);
+    может быть переопределён через `prompt_template` в теле запроса.
+
+    Параметры запроса:
+    - `text` — текст требования для анализа
+    - `prompt_template` — кастомный промпт (опционально; заменяет файловый)
+    - `service_code` — код сервиса для RAG-контекста (опционально; определяется автоматически)
+
+    Возвращает:
+    ```json
+    { "result": "<текст анализа от LLM>" }
+    ```
     """
     logger.debug("/analyze <- text length: %d", len(payload.text))
     try:
@@ -68,7 +84,38 @@ async def analyze_from_text(payload: AnalyzeTextRequest):
 @router.post("/analyze_pages", tags=["Анализ существующих (ранее) требований сервиса"])
 async def analyze_service_pages(payload: AnalyzePagesRequest):
     """
-     ОПТИМИЗИРОВАНО: Анализирует страницы в отдельном потоке
+    Анализирует одну или несколько страниц Confluence одним вызовом LLM.
+
+    Все страницы упаковываются в один промпт с динамическим распределением
+    токенов: сначала рассчитывается бюджет под требования и RAG-контекст,
+    затем страницы добавляются до исчерпания бюджета.
+    Неиспользованные токены требований перераспределяются в пользу контекста.
+
+    Промпт берётся из `PAGE_ANALYSIS_PROMPT_FILE` (по умолчанию `page_prompt_template.txt`);
+    может быть переопределён через `prompt_template` в теле запроса.
+
+    Параметры запроса:
+    - `page_ids` — список ID страниц Confluence
+    - `prompt_template` — кастомный промпт (опционально; заменяет файловый)
+    - `service_code` — код сервиса (опционально; определяется автоматически по страницам)
+    - `check_templates` — если `true`, дополнительно проверяет соответствие страниц шаблонам
+
+    Возвращает список результатов, по одному на страницу:
+    ```json
+    {
+        "page_id": "12345",
+        "analysis": "<текст анализа от LLM>",
+        "token_usage": {
+            "prompt": 800,
+            "requirements": 3200,
+            "context": 5000,
+            "total_input": 9000,
+            "limit": 128000,
+            "usage_percent": 7.0
+        },
+        "template_analysis": { ... }  // только если check_templates=true
+    }
+    ```
     """
     logger.info("/analyze_pages <- %d page(s)", len(payload.page_ids))
     try:
@@ -90,8 +137,36 @@ async def analyze_service_pages(payload: AnalyzePagesRequest):
 @router.post("/analyze_service_pages/{code}", tags=["Анализ существующих (ранее) требований конкретного сервиса"])
 async def analyze_specific_service_pages(code: str, payload: AnalyzeServicePagesRequest):
     """
-     ОПТИМИЗИРОВАНО: Анализирует страницы конкретного сервиса в отдельном потоке
-     ИСПРАВЛЕНО: Переименована функция (была коллизия имен)
+    Анализирует страницы Confluence для конкретного сервиса (код сервиса — в URL).
+
+    Работает идентично `/analyze_pages`, но код сервиса фиксируется через путь
+    запроса `{code}` и не определяется автоматически. Возвращает ошибку если
+    сервис с таким кодом не зарегистрирован.
+
+    Параметры пути:
+    - `code` — код сервиса (должен существовать в реестре сервисов)
+
+    Параметры запроса:
+    - `page_ids` — список ID страниц Confluence
+    - `prompt_template` — кастомный промпт (опционально; заменяет файловый)
+    - `check_templates` — если `true`, дополнительно проверяет соответствие страниц шаблонам
+
+    Возвращает список результатов, по одному на страницу:
+    ```json
+    {
+        "page_id": "12345",
+        "analysis": "<текст анализа от LLM>",
+        "token_usage": {
+            "prompt": 800,
+            "requirements": 3200,
+            "context": 5000,
+            "total_input": 9000,
+            "limit": 128000,
+            "usage_percent": 7.0
+        },
+        "template_analysis": { ... }  // только если check_templates=true
+    }
+    ```
     """
     logger.info("/analyze_service_pages/%s <- %d page(s)", code, len(payload.page_ids))
 
@@ -162,15 +237,32 @@ async def analyze_pages_multi_pass_route(payload: AnalyzePageMultiPassRequest):
 @router.post("/analyze_with_templates", tags=["Анализ новых требований сервиса и их оформления"])
 async def analyze_with_templates_route(payload: AnalyzeWithTemplatesRequest):
     """
-     ОПТИМИЗИРОВАНО: Анализирует требования с шаблонами в отдельном потоке
+    Анализирует новые требования на соответствие зарегистрированным шаблонам.
 
-    Анализирует новые требования на соответствие шаблонам с передачей шаблона в LLM.
+    Для каждого элемента загружает страницу Confluence и шаблон соответствующего
+    типа из реестра шаблонов, передаёт оба в LLM и дополнительно выполняет
+    структурную проверку (legacy) без участия LLM.
 
-    Возвращает детальный анализ включая:
-    - Соответствие структуре шаблона
-    - Качество содержимого
-    - Совместимость с системой
-    - Конкретные рекомендации по улучшению
+    В отличие от `/analyze_pages`, каждая страница обрабатывается отдельным
+    вызовом LLM и оценивается относительно своего шаблона, а не только в
+    контексте сервиса.
+
+    Параметры запроса:
+    - `items` — список объектов `{"requirement_type": str, "page_id": str}`
+    - `prompt_template` — кастомный промпт (опционально; заменяет файловый)
+    - `service_code` — код сервиса (опционально; определяется автоматически)
+
+    Возвращает список результатов, по одному на элемент:
+    ```json
+    {
+        "page_id": "12345",
+        "requirement_type": "function",
+        "template_analysis": {
+            "<поля анализа от LLM>"
+        },
+        "legacy_formatting_issues": [ "<список структурных замечаний>" ]
+    }
+    ```
     """
     logger.info("[analyze_with_templates] <- %d item(s)", len(payload.items))
     try:
