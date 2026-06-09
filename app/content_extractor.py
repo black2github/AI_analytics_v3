@@ -40,7 +40,8 @@ class ContentExtractor:
 
         soup = BeautifulSoup(html, "html.parser")
 
-        self._process_expand_blocks(soup)
+        self._process_confluence_macros(soup)
+        self._remove_empty_paragraphs(soup)
 
         result_parts = self._process_container(soup)
         result = self._join_parts_preserving_structure(result_parts)
@@ -1306,12 +1307,66 @@ class ContentExtractor:
         """Обработка элемента списка"""
         return self._process_children(element, context)
 
-    def _process_expand_blocks(self, soup: BeautifulSoup):
-        """Обработка expand блоков Confluence"""
-        for expand in soup.find_all("ac:structured-macro", {"ac:name": "expand"}):
-            rich_text_body = expand.find("ac:rich-text-body")
-            if rich_text_body:
-                expand.replace_with(rich_text_body)
+    def _process_confluence_macros(self, soup: BeautifulSoup):
+        """
+        Обработка Confluence-специфичных макросов <ac:structured-macro>.
+
+        Стратегия по типам:
+        • Динамические листинги (Confluence отрисовывает из контекста при показе) —
+          удаляются целиком вместе с параметрами:
+            children, toc, recently-updated, pagetree, blog-posts,
+            content-by-label, labels-list, page-tree-search, spaces-list
+        • Контентные обёртки (несут осмысленный текст внутри) — разворачиваются,
+          тело сохраняется:
+            expand, info, warning, note, tip, panel
+        • code / noformat — пропускаем, обрабатываются отдельно в
+          _process_text_container и _process_nested_table_cell_content
+        • jira — пропускаем, обрабатывается в _is_ignored_element
+        • Незнакомые макросы — удаляются, в лог пишется WARNING с именем
+        """
+        DYNAMIC_LISTING_MACROS = {
+            "children", "toc", "recently-updated", "pagetree",
+            "blog-posts", "content-by-label", "contentbylabel",
+            "labels-list", "page-tree-search", "spaces-list",
+        }
+
+        UNWRAP_MACROS = {
+            "expand", "info", "warning", "note", "tip", "panel",
+        }
+
+        HANDLED_ELSEWHERE = {"code", "noformat", "jira"}
+
+        for macro in soup.find_all("ac:structured-macro"):
+            name = (macro.get("ac:name") or "").lower()
+
+            if name in DYNAMIC_LISTING_MACROS:
+                macro.decompose()
+            elif name in UNWRAP_MACROS:
+                body = macro.find("ac:rich-text-body") or macro.find("ac:plain-text-body")
+                if body:
+                    macro.replace_with(body)
+                else:
+                    macro.decompose()
+            elif name in HANDLED_ELSEWHERE:
+                continue
+            else:
+                logger.warning(
+                    "[_process_confluence_macros] Unknown macro '%s', removing", name
+                )
+                macro.decompose()
+
+    def _remove_empty_paragraphs(self, soup: BeautifulSoup):
+        """
+        Удаляет пустые параграфы вида <p><br/></p> и <p>&nbsp;</p>,
+        которые часто остаются от Confluence-редактора и создают
+        лишние пустые строки в Markdown-выводе.
+
+        Сохраняет параграфы, содержащие блочные элементы (таблицы,
+        изображения, списки), даже если у них нет собственного текста.
+        """
+        for p in soup.find_all("p"):
+            if not p.get_text(strip=True) and not p.find(["table", "img", "ul", "ol"]):
+                p.decompose()
 
     def _process_children_without_color_filter(self, element: Tag, context: str) -> str:
         """
