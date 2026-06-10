@@ -40,6 +40,21 @@ def _escape_html_attr(value: str) -> str:
     return value.replace("&", "&amp;").replace('"', "&quot;")
 
 
+_MARGIN_LEFT_RE = re.compile(r'margin-left\s*:\s*([^;]+)')
+
+
+def _extract_margin_left(style: str) -> Optional[str]:
+    """Возвращает значение margin-left из inline-стиля, либо None.
+
+    Confluence использует margin-left (напр. 40px) для визуального отступа
+    абзацев-описаний под заголовками шагов. При рендеринге ячейки как HTML
+    этот отступ нужно сохранить, иначе структура «заголовок / описание»
+    схлопывается.
+    """
+    m = _MARGIN_LEFT_RE.search(style or "")
+    return m.group(1).strip() if m else None
+
+
 @dataclass
 class ExtractionConfig:
     """Конфигурация/настройки для извлечения контента"""
@@ -1353,19 +1368,14 @@ class ContentExtractor:
                     if nested_html:
                         result_parts.append(nested_html)
                 elif child.name in ["h1", "h2", "h3", "h4", "h5", "h6"]:
-                    # ДОБАВЛЕНО: Обработка заголовков
-                    if self.config.format_headers:
-                        level = int(child.name[1])
-                        prefix = "#" * level
-                        content = self._process_nested_table_cell_content(child)
-                        if content:
-                            result_parts.append(f"{prefix} {content}\n")
-                    else:
-                        content = self._process_nested_table_cell_content(child)
-                        if content:
-                            result_parts.append(content)
-                            if not content.endswith('\n'):
-                                result_parts.append('\n')
+                    # В HTML-контексте заголовок отдаём HTML-тегом <hN>, а не
+                    # markdown '#': внутри сырого HTML-блока '#' не рендерится.
+                    content = self._process_nested_table_cell_content(child)
+                    if content.strip():
+                        if self.config.format_headers:
+                            result_parts.append(f"<{child.name}>{content.strip()}</{child.name}>")
+                        else:
+                            result_parts.append(f"<p>{content.strip()}</p>")
                 elif child.name in ["a", "ac:link"]:
                     link_content = self._process_link(child, "nested_table_cell")
                     if link_content:
@@ -1387,12 +1397,19 @@ class ContentExtractor:
                     if bold_content:
                         result_parts.append(f"<strong>{bold_content.strip()}</strong>")
                 elif child.name == "p":
-                    # Обрабатываем параграфы внутри ячеек
+                    # В HTML-контексте абзац оборачиваем в <p>, иначе разрывы
+                    # между абзацами теряются (перевод строки в HTML-ячейке —
+                    # это просто пробел). Сохраняем margin-left для отступа
+                    # абзацев-описаний под заголовками шагов.
                     p_content = self._process_nested_table_cell_content(child)
-                    if p_content:
-                        result_parts.append(p_content)
-                        if not p_content.endswith('\n'):
-                            result_parts.append('\n')
+                    if p_content.strip():
+                        margin = _extract_margin_left(child.get("style", ""))
+                        if margin:
+                            result_parts.append(
+                                f'<p style="margin-left: {margin}">{p_content.strip()}</p>'
+                            )
+                        else:
+                            result_parts.append(f"<p>{p_content.strip()}</p>")
                 else:
                     # Для остальных элементов рекурсивно обрабатываем содержимое
                     child_content = self._process_nested_table_cell_content(child)
