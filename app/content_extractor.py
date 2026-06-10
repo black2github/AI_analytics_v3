@@ -1576,10 +1576,16 @@ class ContentExtractor:
         ссылок Confluence на страницу по заголовку отображаемый текст хранится
         в атрибуте ri:content-title, а не как текстовый узел, поэтому
         get_text() для них пуст — без этой проверки такие ссылки терялись бы.
+
+        Аналогично сохраняет параграфы с датой (<time>): Confluence хранит
+        дату в атрибуте datetime (<time datetime="2024-07-08" />), тело тега
+        пустое, поэтому get_text() пуст. Без этого исключения параграф
+        с датой (напр. в таблице "История изменений") считался бы пустым
+        и удалялся ДО обработки в _process_time — дата терялась бы.
         """
         for p in soup.find_all("p"):
             if (not p.get_text(strip=True)
-                    and not p.find(["table", "img", "ul", "ol", "a", "ac:link"])):
+                    and not p.find(["table", "img", "ul", "ol", "a", "ac:link", "time"])):
                 p.decompose()
 
     def _process_children_without_color_filter(self, element: Tag, context: str) -> str:
