@@ -48,7 +48,12 @@ from app.page_cache import (
     fetch_child_pages_via_http,
 )
 from app.page_exclusion_filter import load_exclusion_rules, is_page_excluded
-from app.config import PAGE_EXCLUSION_RULES_FILE, CONFLUENCE_BASE_URL, CONFLUENCE_USE_HTTP
+from app.config import (
+    PAGE_EXCLUSION_RULES_FILE,
+    CONFLUENCE_BASE_URL,
+    CONFLUENCE_USE_HTTP,
+    MIGRATE_INCLUDE_UNAPPROVED,
+)
 from app.scripts.migrate_confluence_page import (
     safe_filename,
     page_to_frontmatter,
@@ -115,16 +120,21 @@ def save_page_file(
     stats: Dict,
     page_registry: Dict[str, Path],
     title_registry: Dict[str, Path],
+    include_unapproved: bool = False,
 ) -> bool:
     """Сохраняет страницу Confluence как .md файл с frontmatter.
 
     Регистрирует сохранённый файл в реестрах page_registry и title_registry
     для последующего разрешения ссылок на этапе post-processing.
     Возвращает True при успешном сохранении.
+
+    include_unapproved=True — в файл пишется ПОЛНОЕ содержимое страницы
+    (full_content, все фрагменты), иначе только подтверждённые (approved_content).
     """
-    content_md = page_data.get("approved_content", "")
+    content_field = "full_content" if include_unapproved else "approved_content"
+    content_md = page_data.get(content_field, "")
     if not content_md or not content_md.strip():
-        logger.warning("  Страница '%s' (id=%s) не содержит approved_content, пропущена", title, page_id)
+        logger.warning("  Страница '%s' (id=%s) не содержит %s, пропущена", title, page_id, content_field)
         stats["skipped"] += 1
         return False
 
@@ -169,6 +179,7 @@ def migrate_subtree(
     title_registry: Dict[str, Path],
     depth: int = 0,
     use_http: bool = False,
+    include_unapproved: bool = False,
 ) -> None:
     """Рекурсивно мигрирует страницу Confluence и всё её поддерево.
 
@@ -181,6 +192,8 @@ def migrate_subtree(
 
     use_http=True — и контент, и потомки, и заголовки запрашиваются через
     прямой HTTP-доступ (как браузер), в обход Confluence REST API.
+    include_unapproved=True — в .md пишется всё содержимое (full_content),
+    иначе только подтверждённые фрагменты (approved_content).
     """
     if page_id in visited:
         logger.warning("Обнаружена циклическая ссылка для page_id=%s, пропускаем", page_id)
@@ -224,14 +237,15 @@ def migrate_subtree(
         # 2) Создаём папку <dir_name>/ рядом для детей
         # 3) Рекурсивно обходим детей внутри этой папки
 
+        content_field = "full_content" if include_unapproved else "approved_content"
         has_own_content = bool(
-            page_data and page_data.get("approved_content", "").strip()
+            page_data and page_data.get(content_field, "").strip()
         )
 
         if has_own_content:
             filepath = output_dir / f"{dir_name}.md"
             if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
-                              page_registry, title_registry):
+                              page_registry, title_registry, include_unapproved=include_unapproved):
                 logger.info(
                     "%s[file+dir] %s.md + %s/  (id=%s, дочерних=%d)",
                     indent, dir_name, dir_name, page_id, len(children),
@@ -258,6 +272,7 @@ def migrate_subtree(
                 title_registry,
                 depth + 1,
                 use_http=use_http,
+                include_unapproved=include_unapproved,
             )
 
     else:
@@ -269,7 +284,7 @@ def migrate_subtree(
 
         filepath = output_dir / f"{dir_name}.md"
         if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
-                          page_registry, title_registry):
+                          page_registry, title_registry, include_unapproved=include_unapproved):
             logger.info("%s[ok] %s.md  (id=%s)", indent, dir_name, page_id)
 
 
@@ -354,18 +369,22 @@ def resolve_confluence_links(
 
 
 def main():
-    # Флаг --http можно указать в любом месте аргументов; он переопределяет
-    # значение CONFLUENCE_USE_HTTP из конфигурации.
-    args = [a for a in sys.argv[1:] if a != "--http"]
+    # Флаги --http и --all можно указать в любом месте аргументов; они
+    # переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all"}
+    args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
+    include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
-              "<page_id> <service_code> <subdir> [source] [--http]")
+              "<page_id> <service_code> <subdir> [source] [--http] [--all]")
         print("Example: python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN")
         print("Example (прямой HTTP, в обход API): python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN --http")
+        print("Example (всё содержимое, включая неподтверждённое): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --all")
         sys.exit(1)
 
     root_page_id = args[0].strip()
@@ -381,6 +400,9 @@ def main():
     logger.info("Migrating Confluence tree from page_id=%s ...", root_page_id)
     logger.info("Output: %s", base_output_dir)
     logger.info("Access mode: %s", "direct HTTP (в обход API)" if use_http else "REST API")
+    logger.info("Content mode: %s",
+                "ВСЁ содержимое (включая неподтверждённое)" if include_unapproved
+                else "только подтверждённые фрагменты")
     logger.info("")
 
     stats: Dict = {"migrated": 0, "skipped": 0}
@@ -400,6 +422,7 @@ def main():
         page_registry,
         title_registry,
         use_http=use_http,
+        include_unapproved=include_unapproved,
     )
 
     logger.info("")

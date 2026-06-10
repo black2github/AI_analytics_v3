@@ -102,19 +102,29 @@ def get_page_title_only(page_id: str) -> Optional[str]:
         return None
 
 
-def load_pages_by_ids(page_ids: List[str]) -> List[Dict[str, str]]:
+def load_pages_by_ids(page_ids: List[str], include_unapproved: bool = False) -> List[Dict[str, str]]:
     """
     Загрузка страниц из Confluence по идентификаторам и разбиение на:
     идентификатор, заголовок, содержимое, подтвержденное содержимое и тип требования.
     ОПТИМИЗИРОВАНО: Использует кеширование для быстрой загрузки страниц.
     Args:
         page_ids: список идентификаторов страниц для загрузки.
+        include_unapproved: если True — в поле approved_content помещается ПОЛНОЕ
+            содержимое страницы (full_content, все фрагменты независимо от цвета),
+            а не только подтверждённые ("чёрные") фрагменты. Правила преобразования
+            (таблицы, ссылки confluence://, пробелы) одинаковы для обоих режимов —
+            отличается только фильтрация по цвету. По умолчанию (False) сохраняется
+            прежнее поведение: только подтверждённые фрагменты.
     Returns:
         страницы (словари) с id, title, content, approved_content, requirement_type.
     """
-    logger.info("[load_pages_by_ids] <- page_ids={%s}", page_ids)
+    logger.info("[load_pages_by_ids] <- page_ids={%s}, include_unapproved=%s", page_ids, include_unapproved)
 
     from app.page_cache import get_page_data_cached
+
+    # Какое поле использовать как «контент к записи/индексации»:
+    # full_content — все фрагменты, approved_content — только подтверждённые.
+    content_field = "full_content" if include_unapproved else "approved_content"
 
     pages = []
     for page_id in page_ids:
@@ -129,11 +139,11 @@ def load_pages_by_ids(page_ids: List[str]) -> List[Dict[str, str]]:
         # ИСПРАВЛЕНИЕ: Добавляем детальную проверку каждого поля
         title = page_data.get('title')
         full_markdown = page_data.get('full_markdown')
-        approved_content = page_data.get('approved_content')
+        content = page_data.get(content_field)
         requirement_type = page_data.get('requirement_type')
 
-        logger.debug("[load_pages_by_ids] page_id=%s -> title='%s', has_markdown=%s, has_approved=%s, type='%s'",
-                     page_id, title, bool(full_markdown), bool(approved_content), requirement_type)
+        logger.debug("[load_pages_by_ids] page_id=%s -> title='%s', has_markdown=%s, has_content(%s)=%s, type='%s'",
+                     page_id, title, bool(full_markdown), content_field, bool(content), requirement_type)
 
         # Проверяем наличие обязательных данных
         if not title:
@@ -144,15 +154,15 @@ def load_pages_by_ids(page_ids: List[str]) -> List[Dict[str, str]]:
             logger.warning("[load_pages_by_ids] Пропущена страница {%s}: отсутствует full_markdown.", page_id)
             continue
 
-        if not approved_content:
-            logger.warning("[load_pages_by_ids] Пропущена страница {%s}: отсутствует approved_content.", page_id)
+        if not content:
+            logger.warning("[load_pages_by_ids] Пропущена страница {%s}: отсутствует %s.", page_id, content_field)
             continue
 
         pages.append({
             "id": page_id,
             "title": title,
             "content": full_markdown,
-            "approved_content": approved_content,
+            "approved_content": content,
             "requirement_type": requirement_type
         })
 

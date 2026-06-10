@@ -161,20 +161,24 @@ def migrate_page(
 
 
 def main():
-    from app.config import CONFLUENCE_USE_HTTP
+    from app.config import CONFLUENCE_USE_HTTP, MIGRATE_INCLUDE_UNAPPROVED
 
-    # Флаг --http можно указать в любом месте аргументов; он переопределяет
-    # значение CONFLUENCE_USE_HTTP из конфигурации.
-    raw_args = [a for a in sys.argv[1:] if a != "--http"]
+    # Флаги --http и --all можно указать в любом месте аргументов; они
+    # переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all"}
+    raw_args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
+    include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
 
     if len(raw_args) < 3:
         print("Usage: python migrate_confluence_page.py "
-              "<page_id,...> <service_code> <subdir> [source] [--http]")
+              "<page_id,...> <service_code> <subdir> [source] [--http] [--all]")
         print("Example: python migrate_confluence_page.py "
               "12345,67890 CORP_CARDS лимиты DBOCORPESPLN")
         print("Example (прямой HTTP, в обход API): python migrate_confluence_page.py "
               "12345,67890 CORP_CARDS лимиты DBOCORPESPLN --http")
+        print("Example (всё содержимое, включая неподтверждённое): "
+              "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --all")
         sys.exit(1)
 
     page_ids = raw_args[0].split(",")
@@ -196,7 +200,11 @@ def main():
     else:
         logger.info("Loading %d page(s) from Confluence via REST API...", len(page_ids))
 
-    pages = load_pages_by_ids(page_ids)
+    logger.info("Content mode: %s",
+                "ВСЁ содержимое (включая неподтверждённое)" if include_unapproved
+                else "только подтверждённые фрагменты")
+
+    pages = load_pages_by_ids(page_ids, include_unapproved=include_unapproved)
 
     if not pages:
         logger.error(

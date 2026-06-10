@@ -13,7 +13,7 @@ except Exception:
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.62.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.70.0")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -43,6 +43,12 @@ CONFLUENCE_PASSWORD = os.getenv("CONFLUENCE_PASSWORD")
 # который переопределяет это значение.
 # Можно глобально включить HTTP-режим в закрытом окружении. Флаг --http переопределяет конфиг.
 CONFLUENCE_USE_HTTP = os.getenv("CONFLUENCE_USE_HTTP", "false").lower() in ("1", "true", "yes")
+
+# При миграции в Markdown по умолчанию сохраняются только подтверждённые ("чёрные")
+# фрагменты. Если включить — сохраняется ВСЁ содержимое страниц (все фрагменты
+# независимо от цвета), с теми же правилами преобразования. Скрипты миграции также
+# понимают флаг командной строки --all, который переопределяет это значение.
+MIGRATE_INCLUDE_UNAPPROVED = os.getenv("MIGRATE_INCLUDE_UNAPPROVED", "false").lower() in ("1", "true", "yes")
 
 # ДОБАВЛЯЕМ конфигурацию JIRA
 JIRA_BASE_URL = os.getenv("JIRA_BASE_URL", "https://jira.gboteam.ru")
