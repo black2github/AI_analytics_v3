@@ -1,4 +1,4 @@
-# lint_frontmatter.py
+# app/scripts/lint_frontmatter.py
 # Запуск вручную: python scripts/lint_frontmatter.py — просканирует всю папку requirements/. 
 # При PR — автоматически на изменённые .md файлы.
 

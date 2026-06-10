@@ -325,14 +325,12 @@ class DocumentService:
             "tags": meta.get("tags", ""),
             "feature": meta.get("feature", ""),
             "microservice": meta.get("microservice", ""),
-            "document_name": meta.get("document_name", ""),
             "version": meta.get("version", ""),
             "updated_date": meta.get("updated_date", ""),
             "created_date": meta.get("created_date", ""),
             "confluence_page_id": meta.get("confluence_page_id", ""),
             "reviewed_by": meta.get("reviewed_by", ""),
             "author": meta.get("author", ""),
-            "parent": meta.get("parent", ""),
             # target_system — уже обрабатывается через extract_target_system или явно:
             **({"target_system": meta["target_system"]} if "target_system" in meta else {})
         }

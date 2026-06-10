@@ -66,7 +66,6 @@ def page_to_frontmatter(
         # Идентификация
         "doc_id": doc_id,
         "title": page.get("title", ""),
-        "document_name": "",
 
         # Классификация
         "doc_type": "requirement",
@@ -93,7 +92,6 @@ def page_to_frontmatter(
 
         # Связи
         "related": "",
-        "parent": "",
 
         # Теги
         "tags": "",
