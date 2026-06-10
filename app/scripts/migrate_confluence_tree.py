@@ -33,16 +33,18 @@
 # • write_md_file — запись .md с frontmatter
 # • OUTPUT_ROOT — корневой путь вывода
 
+import os
+import re
 import sys
 import time
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 from app.confluence_loader import confluence, get_page_title_only
 from app.page_cache import get_page_data_cached
 from app.page_exclusion_filter import load_exclusion_rules, is_page_excluded
-from app.config import PAGE_EXCLUSION_RULES_FILE
+from app.config import PAGE_EXCLUSION_RULES_FILE, CONFLUENCE_BASE_URL
 from app.scripts.migrate_confluence_page import (
     safe_filename,
     page_to_frontmatter,
@@ -51,6 +53,19 @@ from app.scripts.migrate_confluence_page import (
 )
 
 from requests import ReadTimeout
+
+# Текст ссылки может содержать экранированные скобки (\[ \]), которые добавляет
+# _escape_link_text в content_extractor. Поэтому в качестве текста ссылки матчим
+# либо экранированный символ (\\.), либо любой символ кроме '\' и неэкранированного ']'.
+# Простой [^\]]* остановился бы на первом же ']' внутри экранированного '\]'.
+_LINK_TEXT = r'((?:\\.|[^\]\\])*)'
+_LINK_BY_ID_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://(\d+)\)')
+_LINK_BY_TITLE_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://title/([^)]*)\)')
+
+# Внутри HTML-таблиц ссылки генерируются как HTML-тег <a href="confluence://...">.
+# Здесь резолвим только атрибут href, не трогая текст и закрывающий </a>.
+_HTML_LINK_BY_ID_RE = re.compile(r'<a href="confluence://(\d+)">')
+_HTML_LINK_BY_TITLE_RE = re.compile(r'<a href="confluence://title/([^"]*)">')
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -86,9 +101,13 @@ def save_page_file(
     source: str,
     filepath: Path,
     stats: Dict,
+    page_registry: Dict[str, Path],
+    title_registry: Dict[str, Path],
 ) -> bool:
     """Сохраняет страницу Confluence как .md файл с frontmatter.
 
+    Регистрирует сохранённый файл в реестрах page_registry и title_registry
+    для последующего разрешения ссылок на этапе post-processing.
     Возвращает True при успешном сохранении.
     """
     content_md = page_data.get("approved_content", "")
@@ -118,6 +137,10 @@ def save_page_file(
 
     frontmatter = page_to_frontmatter(page, service_code, source, doc_id)
     write_md_file(filepath, frontmatter, content_md)
+
+    page_registry[page_id] = filepath
+    title_registry[title.lower()] = filepath
+
     stats["migrated"] += 1
     return True
 
@@ -130,6 +153,8 @@ def migrate_subtree(
     exclusion_rules,
     stats: Dict,
     visited: set,
+    page_registry: Dict[str, Path],
+    title_registry: Dict[str, Path],
     depth: int = 0,
 ) -> None:
     """Рекурсивно мигрирует страницу Confluence и всё её поддерево.
@@ -187,7 +212,8 @@ def migrate_subtree(
 
         if has_own_content:
             filepath = output_dir / f"{dir_name}.md"
-            if save_page_file(page_data, page_id, title, service_code, source, filepath, stats):
+            if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
+                              page_registry, title_registry):
                 logger.info(
                     "%s[file+dir] %s.md + %s/  (id=%s, дочерних=%d)",
                     indent, dir_name, dir_name, page_id, len(children),
@@ -210,6 +236,8 @@ def migrate_subtree(
                 exclusion_rules,
                 stats,
                 visited,
+                page_registry,
+                title_registry,
                 depth + 1,
             )
 
@@ -221,8 +249,89 @@ def migrate_subtree(
             return
 
         filepath = output_dir / f"{dir_name}.md"
-        if save_page_file(page_data, page_id, title, service_code, source, filepath, stats):
+        if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
+                          page_registry, title_registry):
             logger.info("%s[ok] %s.md  (id=%s)", indent, dir_name, page_id)
+
+
+def resolve_confluence_links(
+    page_registry: Dict[str, Path],
+    title_registry: Dict[str, Path],
+) -> Tuple[int, int]:
+    """Pass 2: заменяет плейсхолдеры confluence:// на относительные пути в сохранённых .md файлах.
+
+    Возвращает (resolved, unresolved) — количество разрешённых и неразрешённых ссылок.
+    Неразрешённые ID-ссылки заменяются абсолютным URL Confluence.
+    Неразрешённые title-ссылки оставляются как текст в скобках без URL.
+    """
+    counts = {"resolved": 0, "unresolved": 0}
+
+    all_files = set(page_registry.values()) | set(title_registry.values())
+
+    for filepath in all_files:
+        if not filepath.exists():
+            continue
+
+        text = filepath.read_text(encoding="utf-8")
+
+        def replace_id(m: re.Match) -> str:
+            link_text, page_id = m.group(1), m.group(2)
+            target = page_registry.get(page_id)
+            if target:
+                rel = Path(os.path.relpath(target, filepath.parent))
+                counts["resolved"] += 1
+                return f"[{link_text}]({str(rel).replace(chr(92), '/')})"
+            counts["unresolved"] += 1
+            return f"[{link_text}]({CONFLUENCE_BASE_URL}/pages/viewpage.action?pageId={page_id})"
+
+        def replace_title(m: re.Match) -> str:
+            link_text, title_encoded = m.group(1), m.group(2)
+            # title_encoded может быть "SPACE/Title+Words" или просто "Title+Words"
+            raw_title = title_encoded.split("/")[-1].replace("+", " ")
+            target = title_registry.get(raw_title.lower())
+            if target:
+                rel = Path(os.path.relpath(target, filepath.parent))
+                counts["resolved"] += 1
+                return f"[{link_text}]({str(rel).replace(chr(92), '/')})"
+            counts["unresolved"] += 1
+            return f"[{link_text}]"
+
+        def replace_html_id(m: re.Match) -> str:
+            # HTML-форма внутри таблиц: заменяем только href, текст и </a> остаются.
+            page_id = m.group(1)
+            target = page_registry.get(page_id)
+            if target:
+                rel = Path(os.path.relpath(target, filepath.parent))
+                counts["resolved"] += 1
+                return f'<a href="{str(rel).replace(chr(92), "/")}">'
+            counts["unresolved"] += 1
+            return f'<a href="{CONFLUENCE_BASE_URL}/pages/viewpage.action?pageId={page_id}">'
+
+        def replace_html_title(m: re.Match) -> str:
+            title_encoded = m.group(1)
+            raw_title = title_encoded.split("/")[-1].replace("+", " ")
+            target = title_registry.get(raw_title.lower())
+            if target:
+                rel = Path(os.path.relpath(target, filepath.parent))
+                counts["resolved"] += 1
+                return f'<a href="{str(rel).replace(chr(92), "/")}">'
+            counts["unresolved"] += 1
+            # Неразрешённый title в HTML-теге: <a> нельзя «снять» одной заменой href,
+            # поэтому ведём на канонический Confluence-URL вида /display/SPACE/Title.
+            parts = title_encoded.split("/")
+            if len(parts) > 1 and parts[0]:
+                return f'<a href="{CONFLUENCE_BASE_URL}/display/{parts[0]}/{parts[-1]}">'
+            return f'<a href="{CONFLUENCE_BASE_URL}/dosearchsite.action?queryString={parts[-1]}">'
+
+        new_text = _LINK_BY_ID_RE.sub(replace_id, text)
+        new_text = _LINK_BY_TITLE_RE.sub(replace_title, new_text)
+        new_text = _HTML_LINK_BY_ID_RE.sub(replace_html_id, new_text)
+        new_text = _HTML_LINK_BY_TITLE_RE.sub(replace_html_title, new_text)
+
+        if new_text != text:
+            filepath.write_text(new_text, encoding="utf-8")
+
+    return counts["resolved"], counts["unresolved"]
 
 
 def main():
@@ -249,7 +358,10 @@ def main():
 
     stats: Dict = {"migrated": 0, "skipped": 0}
     visited: set = set()
+    page_registry: Dict[str, Path] = {}
+    title_registry: Dict[str, Path] = {}
 
+    logger.info("Pass 1: traversing Confluence tree ...")
     migrate_subtree(
         root_page_id,
         service_code,
@@ -258,12 +370,20 @@ def main():
         exclusion_rules,
         stats,
         visited,
+        page_registry,
+        title_registry,
     )
 
     logger.info("")
+    logger.info("Pass 2: resolving internal links ...")
+    resolved, unresolved = resolve_confluence_links(page_registry, title_registry)
+
+    logger.info("")
     logger.info("Migration complete:")
-    logger.info("  Migrated: %d", stats["migrated"])
-    logger.info("  Skipped:  %d", stats["skipped"])
+    logger.info("  Migrated:           %d", stats["migrated"])
+    logger.info("  Skipped:            %d", stats["skipped"])
+    logger.info("  Links resolved:     %d", resolved)
+    logger.info("  Links unresolved:   %d  (replaced with absolute Confluence URLs)", unresolved)
     logger.info("")
     logger.info("Next steps:")
     logger.info("  1. Заполните пустые поля frontmatter вручную (owner, jira_id)")

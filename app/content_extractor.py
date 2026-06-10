@@ -9,6 +9,36 @@ from app.utils.style_utils import is_black_color, has_colored_style
 
 logger = logging.getLogger(__name__)
 
+# Паттерны для извлечения page_id из URL Confluence
+_CONFLUENCE_PAGE_ID_RE = re.compile(
+    r'(?:[?&]pageId=|/pages/viewpage\.action\?pageId=|/wiki/spaces/[^/]+/pages/)(\d+)'
+)
+
+
+def _extract_page_id_from_href(href: str) -> Optional[str]:
+    """Извлекает числовой page_id из URL Confluence различных форматов."""
+    m = _CONFLUENCE_PAGE_ID_RE.search(href)
+    return m.group(1) if m else None
+
+
+def _escape_link_text(text: str) -> str:
+    """Экранирует квадратные скобки в тексте Markdown-ссылки.
+
+    Без экранирования '[' и ']' внутри текста ссылки ломают Markdown-парсер,
+    который воспринимает первый ']' как конец текста ссылки.
+    """
+    return text.replace("[", "\\[").replace("]", "\\]")
+
+
+def _escape_html_text(text: str) -> str:
+    """Экранирует спецсимволы для текстового содержимого HTML-тега."""
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def _escape_html_attr(value: str) -> str:
+    """Экранирует значение HTML-атрибута (кавычки и амперсанд)."""
+    return value.replace("&", "&amp;").replace('"', "&quot;")
+
 
 @dataclass
 class ExtractionConfig:
@@ -885,22 +915,90 @@ class ContentExtractor:
 
     def _process_link(self, element: Tag, context: str) -> str:
         """
-        Анализ соседей применяется везде одинаково
+        Анализ соседей применяется везде одинаково.
+
+        Для внутренних ссылок Confluence генерирует плейсхолдер confluence://ID,
+        который при миграции дерева заменяется на относительный путь к файлу.
+        Внешние ссылки сохраняются как есть.
+
+        Внутри HTML-таблиц (context=nested_table_cell) Markdown-синтаксис ссылок
+        [текст](url) не обрабатывается рендерерами, так как находится внутри
+        сырого HTML-блока. Поэтому там генерируется HTML-тег <a href> —
+        аналогично тому, как _process_bold переключается на <strong>.
         """
         # В режиме "только подтвержденные" всегда анализируем соседей
         if not self.config.include_colored:
             if not self._analyze_link_neighbors(element):
                 return ""
 
-        ri_page = element.find("ri:page")
-        if ri_page and ri_page.get("ri:content-title"):
-            link_text = f'[{ri_page["ri:content-title"]}]'
-        elif element.get_text():
-            link_text = f'[{element.get_text()}]'
-        else:
-            link_text = ""
+        html_context = context == "nested_table_cell"
 
-        return link_text
+        if element.name == "ac:link":
+            ri_page = element.find("ri:page")
+            if not ri_page:
+                text = element.get_text(strip=True)
+                return self._format_link(text, None, html_context) if text else ""
+
+            # Определяем отображаемый текст ссылки
+            link_body = element.find("ac:plain-text-link-body")
+            if link_body and link_body.get_text(strip=True):
+                text = link_body.get_text(strip=True)
+            elif ri_page.get("ri:content-title"):
+                text = ri_page["ri:content-title"]
+            else:
+                text = element.get_text(strip=True)
+
+            if not text:
+                return ""
+
+            # Строим URL-плейсхолдер
+            content_id = ri_page.get("ri:content-id")
+            if content_id:
+                return self._format_link(text, f"confluence://{content_id}", html_context)
+
+            content_title = ri_page.get("ri:content-title")
+            if content_title:
+                space_key = ri_page.get("ri:space-key", "")
+                encoded = content_title.replace(" ", "+")
+                url = (f"confluence://title/{space_key}/{encoded}"
+                       if space_key else f"confluence://title/{encoded}")
+                return self._format_link(text, url, html_context)
+
+            return self._format_link(text, None, html_context)
+
+        else:  # element.name == "a"
+            text = element.get_text(strip=True)
+            if not text:
+                return ""
+            href = element.get("href", "")
+            if not href:
+                return self._format_link(text, None, html_context)
+            page_id = _extract_page_id_from_href(href)
+            if page_id:
+                return self._format_link(text, f"confluence://{page_id}", html_context)
+            return self._format_link(text, href, html_context)
+
+    def _format_link(self, text: str, href: Optional[str], html_context: bool) -> str:
+        """Форматирует ссылку под нужный контекст.
+
+        html_context=True  → HTML-тег <a href> (работает внутри HTML-таблиц,
+                             где Markdown-синтаксис ссылок не обрабатывается).
+        html_context=False → Markdown-ссылка [текст](url) с экранированием
+                             квадратных скобок в тексте.
+
+        href=None — ссылка без адреса: в HTML возвращаем только текст,
+        в Markdown — текст в квадратных скобках как плейсхолдер.
+        """
+        if html_context:
+            safe_text = _escape_html_text(text)
+            if not href:
+                return safe_text
+            return f'<a href="{_escape_html_attr(href)}">{safe_text}</a>'
+
+        escaped = _escape_link_text(text)
+        if not href:
+            return f"[{escaped}]"
+        return f"[{escaped}]({href})"
 
     def _analyze_link_neighbors(self, link_element: Tag) -> bool:
         """
@@ -1363,9 +1461,15 @@ class ContentExtractor:
 
         Сохраняет параграфы, содержащие блочные элементы (таблицы,
         изображения, списки), даже если у них нет собственного текста.
+
+        Также сохраняет параграфы со ссылками (<a>, <ac:link>): у внутренних
+        ссылок Confluence на страницу по заголовку отображаемый текст хранится
+        в атрибуте ri:content-title, а не как текстовый узел, поэтому
+        get_text() для них пуст — без этой проверки такие ссылки терялись бы.
         """
         for p in soup.find_all("p"):
-            if not p.get_text(strip=True) and not p.find(["table", "img", "ul", "ol"]):
+            if (not p.get_text(strip=True)
+                    and not p.find(["table", "img", "ul", "ol", "a", "ac:link"])):
                 p.decompose()
 
     def _process_children_without_color_filter(self, element: Tag, context: str) -> str:

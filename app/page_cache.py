@@ -7,7 +7,10 @@ from typing import Dict, Optional, List
 from requests.exceptions import ConnectionError, RequestException
 from http.client import RemoteDisconnected
 
+import re
+
 import markdownify
+from bs4 import BeautifulSoup
 from cachetools import TTLCache
 from cachetools.keys import hashkey
 
@@ -18,6 +21,55 @@ from app.history_cleaner import remove_history_sections
 from app.services.template_type_analysis import analyze_content_template_type
 
 logger = logging.getLogger(__name__)
+
+_PAGE_ID_RE = re.compile(
+    r'(?:[?&]pageId=|/pages/viewpage\.action\?pageId=|/wiki/spaces/[^/]+/pages/)(\d+)'
+)
+
+
+def _preprocess_confluence_links(html: str) -> str:
+    """Заменяет внутренние ссылки Confluence на плейсхолдеры confluence://ID перед markdownify.
+
+    Обрабатывает два вида ссылок из storage-формата Confluence:
+    • <ac:link> — нативные внутренние ссылки на страницы
+    • <a href="...?pageId=..."> — Confluence-URL с числовым идентификатором
+    """
+    soup = BeautifulSoup(html, "html.parser")
+
+    for ac_link in soup.find_all("ac:link"):
+        ri_page = ac_link.find("ri:page")
+        if not ri_page:
+            continue
+
+        link_body = ac_link.find("ac:plain-text-link-body")
+        text = (link_body.get_text(strip=True) if link_body
+                else ri_page.get("ri:content-title") or ac_link.get_text(strip=True) or "")
+
+        content_id = ri_page.get("ri:content-id")
+        content_title = ri_page.get("ri:content-title")
+        space_key = ri_page.get("ri:space-key", "")
+
+        if content_id:
+            href = f"confluence://{content_id}"
+        elif content_title:
+            encoded = content_title.replace(" ", "+")
+            href = (f"confluence://title/{space_key}/{encoded}"
+                    if space_key else f"confluence://title/{encoded}")
+        else:
+            href = ""
+
+        new_tag = soup.new_tag("a")
+        if href:
+            new_tag["href"] = href
+        new_tag.string = text
+        ac_link.replace_with(new_tag)
+
+    for a_tag in soup.find_all("a", href=True):
+        m = _PAGE_ID_RE.search(a_tag["href"])
+        if m:
+            a_tag["href"] = f"confluence://{m.group(1)}"
+
+    return str(soup)
 
 # Создаем TTL кэш: максимум PAGE_CACHE_SIZE элементов, время жизни PAGE_CACHE_TTL секунд
 page_cache = TTLCache(maxsize=PAGE_CACHE_SIZE, ttl=PAGE_CACHE_TTL)
@@ -137,7 +189,9 @@ def get_page_data_cached(page_id: str) -> Optional[Dict]:
 
             # Все виды обработки HTML выполняем один раз
             full_content = filter_all_fragments(cleaned_html)
-            full_markdown = markdownify.markdownify(cleaned_html, heading_style="ATX")
+            full_markdown = markdownify.markdownify(
+                _preprocess_confluence_links(cleaned_html), heading_style="ATX"
+            )
             approved_content = extract_approved_fragments(cleaned_html)
             requirement_type = analyze_content_template_type(title, cleaned_html)
 
@@ -297,7 +351,9 @@ def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
 
     try:
         full_content = filter_all_fragments(raw_html)
-        full_markdown = markdownify.markdownify(raw_html, heading_style="ATX")
+        full_markdown = markdownify.markdownify(
+            _preprocess_confluence_links(raw_html), heading_style="ATX"
+        )
         approved_content = extract_approved_fragments(raw_html)
         requirement_type = analyze_content_template_type(title, raw_html)
     except Exception as e:
