@@ -369,23 +369,32 @@ def resolve_confluence_links(
 
 
 def main():
-    # Флаги --http и --all можно указать в любом месте аргументов; они
-    # переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all"}
+    # Флаги --http, --all и --keep-history можно указать в любом месте аргументов;
+    # они переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history"}
     args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
+    keep_history = "--keep-history" in sys.argv
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
-              "<page_id> <service_code> <subdir> [source] [--http] [--all]")
+              "<page_id> <service_code> <subdir> [source] [--http] [--all] [--keep-history]")
         print("Example: python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN")
         print("Example (прямой HTTP, в обход API): python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN --http")
         print("Example (всё содержимое, включая неподтверждённое): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --all")
+        print("Example (сохранить раздел 'История изменений'): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --keep-history")
         sys.exit(1)
+
+    # Переопределяем политику удаления истории на время процесса (вариант A).
+    # remove_history_sections() читает app.config.REMOVE_HISTORY_SECTIONS динамически.
+    if keep_history:
+        import app.config as _config
+        _config.REMOVE_HISTORY_SECTIONS = False
 
     root_page_id = args[0].strip()
     service_code = args[1]
@@ -403,6 +412,8 @@ def main():
     logger.info("Content mode: %s",
                 "ВСЁ содержимое (включая неподтверждённое)" if include_unapproved
                 else "только подтверждённые фрагменты")
+    logger.info("History mode: %s",
+                "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
     logger.info("")
 
     stats: Dict = {"migrated": 0, "skipped": 0}

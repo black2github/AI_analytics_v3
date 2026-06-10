@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup, Tag, NavigableString
 logger = logging.getLogger(__name__)
 
 
-def remove_history_sections(html_content: str) -> str:
+def remove_history_sections(html_content: str, enabled: Optional[bool] = None) -> str:
     """
     Удаляет все разделы "История изменений" из HTML контента Confluence.
 
@@ -20,10 +20,25 @@ def remove_history_sections(html_content: str) -> str:
 
     Args:
         html_content: HTML контент страницы Confluence
+        enabled: нужно ли вообще удалять историю. Если None (по умолчанию) —
+            значение берётся динамически из app.config.REMOVE_HISTORY_SECTIONS,
+            что позволяет скриптам переопределить его в рантайме (флаг --keep-history).
+            Если False — HTML возвращается без изменений.
 
     Returns:
-        Очищенный HTML контент без разделов истории изменений
+        Очищенный HTML контент без разделов истории изменений (или исходный HTML,
+        если удаление отключено).
     """
+    if enabled is None:
+        # Читаем модуль динамически, чтобы видеть рантайм-переопределение
+        # (CLI-флаг --keep-history выставляет app.config.REMOVE_HISTORY_SECTIONS).
+        import app.config as _config
+        enabled = _config.REMOVE_HISTORY_SECTIONS
+
+    if not enabled:
+        logger.debug("[remove_history_sections] Disabled — история не удаляется")
+        return html_content
+
     if not html_content or not html_content.strip():
         return html_content
 

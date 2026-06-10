@@ -50,6 +50,13 @@ CONFLUENCE_USE_HTTP = os.getenv("CONFLUENCE_USE_HTTP", "false").lower() in ("1",
 # понимают флаг командной строки --all, который переопределяет это значение.
 MIGRATE_INCLUDE_UNAPPROVED = os.getenv("MIGRATE_INCLUDE_UNAPPROVED", "false").lower() in ("1", "true", "yes")
 
+# По умолчанию из начала документов вычищается таблица "История изменений".
+# Если выключить — раздел истории сохраняется в выгрузке. Скрипты миграции также
+# понимают флаг --keep-history, который переопределяет это значение на время запуска.
+# ВНИМАНИЕ: значение читается динамически (через app.config.REMOVE_HISTORY_SECTIONS)
+# в remove_history_sections(), поэтому CLI-флаг может переопределить его в рантайме.
+REMOVE_HISTORY_SECTIONS = os.getenv("REMOVE_HISTORY_SECTIONS", "true").lower() in ("1", "true", "yes")
+
 # ДОБАВЛЯЕМ конфигурацию JIRA
 JIRA_BASE_URL = os.getenv("JIRA_BASE_URL", "https://jira.gboteam.ru")
 JIRA_USER = os.getenv("JIRA_USER")

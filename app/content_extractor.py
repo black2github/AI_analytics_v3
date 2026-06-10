@@ -503,6 +503,23 @@ class ContentExtractor:
         trailing = content[len(content.rstrip()):]
         return f"{leading}**{stripped}**{trailing}"
 
+    def _process_time(self, element: Tag) -> str:
+        """Преобразует элемент <time> в текстовое представление даты/времени.
+
+        Приоритет — атрибут datetime (машинный ISO-формат, напр. '2025-11-06'),
+        так как Confluence хранит дату именно там, а тело тега часто пустое
+        (<time datetime="2025-11-06" />). Если datetime отсутствует — берём
+        видимый текст элемента.
+
+        Обрабатывается во ВСЕХ конвейерах (обычный текст, ячейки HTML-таблиц,
+        режим без цветовой фильтрации), чтобы дата не терялась нигде — в
+        частности в таблицах "История изменений".
+        """
+        dt = element.get("datetime")
+        if dt and dt.strip():
+            return dt.strip()
+        return element.get_text(strip=True)
+
     # Остальные методы остаются без изменений (копируем из предыдущей версии)
     def _normalize_cell_text(self, text: str) -> str:
         """
@@ -578,8 +595,8 @@ class ContentExtractor:
             return self._process_bold(element, context)
 
         # Время
-        if element.name == "time" and element.get("datetime"):
-            return element["datetime"]
+        if element.name == "time":
+            return self._process_time(element)
 
         # Параграфы с добавлением переводов строк
         if element.name == "p":
@@ -1450,6 +1467,8 @@ class ContentExtractor:
                     list_content = self._list_to_html(child)
                     if list_content:
                         result_parts.append(list_content)
+                elif child.name == "time":
+                    result_parts.append(self._process_time(child))
                 elif child.name == "br":
                     result_parts.append("\n")
                 elif child.name in ["pre", "code"]:
@@ -1615,6 +1634,8 @@ class ContentExtractor:
         elif element.name in ["strong", "b"]:
             content = self._process_children_without_color_filter(element, context)
             return f"**{content.strip()}**" if content.strip() else ""
+        elif element.name == "time":
+            return self._process_time(element)
         elif element.name == "p":
             return self._process_paragraph_without_color_filter(element, context)
         else:
