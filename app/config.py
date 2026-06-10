@@ -37,6 +37,13 @@ CONFLUENCE_USER = os.getenv("CONFLUENCE_USER")
 CONFLUENCE_BASE_URL = os.getenv("CONFLUENCE_BASE_URL")
 CONFLUENCE_PASSWORD = os.getenv("CONFLUENCE_PASSWORD")
 
+# Если доступ к Confluence через REST API закрыт (закрытое окружение), но страницы
+# доступны через браузер, переключаемся на прямой HTTP-доступ (как в браузере).
+# Скрипты миграции/дампа также понимают флаг командной строки --http,
+# который переопределяет это значение.
+# Можно глобально включить HTTP-режим в закрытом окружении. Флаг --http переопределяет конфиг.
+CONFLUENCE_USE_HTTP = os.getenv("CONFLUENCE_USE_HTTP", "false").lower() in ("1", "true", "yes")
+
 # ДОБАВЛЯЕМ конфигурацию JIRA
 JIRA_BASE_URL = os.getenv("JIRA_BASE_URL", "https://jira.gboteam.ru")
 JIRA_USER = os.getenv("JIRA_USER")

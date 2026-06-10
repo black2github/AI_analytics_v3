@@ -161,25 +161,41 @@ def migrate_page(
 
 
 def main():
-    if len(sys.argv) < 4:
+    from app.config import CONFLUENCE_USE_HTTP
+
+    # Флаг --http можно указать в любом месте аргументов; он переопределяет
+    # значение CONFLUENCE_USE_HTTP из конфигурации.
+    raw_args = [a for a in sys.argv[1:] if a != "--http"]
+    use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
+
+    if len(raw_args) < 3:
         print("Usage: python migrate_confluence_page.py "
-              "<page_id,...> <service_code> <subdir> [source]")
+              "<page_id,...> <service_code> <subdir> [source] [--http]")
         print("Example: python migrate_confluence_page.py "
               "12345,67890 CORP_CARDS лимиты DBOCORPESPLN")
+        print("Example (прямой HTTP, в обход API): python migrate_confluence_page.py "
+              "12345,67890 CORP_CARDS лимиты DBOCORPESPLN --http")
         sys.exit(1)
 
-    page_ids = sys.argv[1].split(",")
-    service_code = sys.argv[2]
-    subdir = sys.argv[3]
-    source = sys.argv[4] if len(sys.argv) > 4 else "DBOCORPESPLN"
+    page_ids = raw_args[0].split(",")
+    service_code = raw_args[1]
+    subdir = raw_args[2]
+    source = raw_args[3] if len(raw_args) > 3 else "DBOCORPESPLN"
 
-    logger.info("Loading %d page(s) from Confluence via HTTP...", len(page_ids))
-    # for page_id in page_ids:
-    #     result = fetch_page_data_via_http(page_id.strip())
-    #     if result:
-    #         logger.info("  ✓ Fetched page_id=%s title='%s'", page_id, result["title"])
-    #     else:
-    #         logger.warning("  ⚠ Failed to fetch page_id=%s", page_id)
+    if use_http:
+        # Прямой HTTP-доступ: предзаполняем общий page_cache через браузерный
+        # запрос. Дальше load_pages_by_ids (-> get_page_data_cached) берёт данные
+        # из кеша (cache HIT) и не обращается к закрытому REST API.
+        logger.info("Loading %d page(s) from Confluence via direct HTTP...", len(page_ids))
+        for page_id in page_ids:
+            result = fetch_page_data_via_http(page_id.strip())
+            if result:
+                logger.info("  ✓ Fetched page_id=%s title='%s'", page_id, result["title"])
+            else:
+                logger.warning("  ⚠ Failed to fetch page_id=%s", page_id)
+    else:
+        logger.info("Loading %d page(s) from Confluence via REST API...", len(page_ids))
+
     pages = load_pages_by_ids(page_ids)
 
     if not pages:

@@ -42,9 +42,13 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from app.confluence_loader import confluence, get_page_title_only
-from app.page_cache import get_page_data_cached
+from app.page_cache import (
+    get_page_data,
+    fetch_page_title_via_http,
+    fetch_child_pages_via_http,
+)
 from app.page_exclusion_filter import load_exclusion_rules, is_page_excluded
-from app.config import PAGE_EXCLUSION_RULES_FILE, CONFLUENCE_BASE_URL
+from app.config import PAGE_EXCLUSION_RULES_FILE, CONFLUENCE_BASE_URL, CONFLUENCE_USE_HTTP
 from app.scripts.migrate_confluence_page import (
     safe_filename,
     page_to_frontmatter,
@@ -73,8 +77,16 @@ logger = logging.getLogger(__name__)
 MAX_RETRIES = 3
 
 
-def get_direct_children(page_id: str, retry_count: int = 0) -> List[Dict]:
-    """Возвращает прямых потомков страницы Confluence (без рекурсии)."""
+def get_direct_children(page_id: str, use_http: bool = False, retry_count: int = 0) -> List[Dict]:
+    """Возвращает прямых потомков страницы Confluence (без рекурсии).
+
+    use_http=True — потомки запрашиваются через прямой HTTP-доступ
+    (page-tree endpoint), в обход REST API.
+    """
+    if use_http:
+        # HTTP-ветка имеет собственную обработку ошибок и логирование
+        # внутри fetch_child_pages_via_http; retry здесь не применяем.
+        return fetch_child_pages_via_http(page_id)
     try:
         return confluence.get_child_pages(page_id) or []
     except ReadTimeout:
@@ -85,7 +97,7 @@ def get_direct_children(page_id: str, retry_count: int = 0) -> List[Dict]:
                 page_id, retry_count + 1, MAX_RETRIES, wait,
             )
             time.sleep(wait)
-            return get_direct_children(page_id, retry_count + 1)
+            return get_direct_children(page_id, retry_count=retry_count + 1)
         logger.error("Failed to get children of page %s after %d retries", page_id, MAX_RETRIES)
         return []
     except Exception as e:
@@ -156,6 +168,7 @@ def migrate_subtree(
     page_registry: Dict[str, Path],
     title_registry: Dict[str, Path],
     depth: int = 0,
+    use_http: bool = False,
 ) -> None:
     """Рекурсивно мигрирует страницу Confluence и всё её поддерево.
 
@@ -165,6 +178,9 @@ def migrate_subtree(
     • Страница без детей → файл <title>.md в текущей директории.
     • Страница без контента, но с детьми → только папка <title>/ без файла рядом
       (виртуальный контейнер).
+
+    use_http=True — и контент, и потомки, и заголовки запрашиваются через
+    прямой HTTP-доступ (как браузер), в обход Confluence REST API.
     """
     if page_id in visited:
         logger.warning("Обнаружена циклическая ссылка для page_id=%s, пропускаем", page_id)
@@ -174,11 +190,13 @@ def migrate_subtree(
     indent = "  " * depth
 
     # Загружаем данные страницы (контент + метаданные)
-    page_data = get_page_data_cached(page_id)
+    page_data = get_page_data(page_id, use_http=use_http)
 
     # Определяем заголовок
     if page_data:
         title = page_data.get("title", "")
+    elif use_http:
+        title = fetch_page_title_via_http(page_id) or ""
     else:
         title = get_page_title_only(page_id) or ""
 
@@ -194,7 +212,7 @@ def migrate_subtree(
 
     # Получаем прямых потомков и фильтруем исключённые
     children = [
-        c for c in get_direct_children(page_id)
+        c for c in get_direct_children(page_id, use_http=use_http)
         if not is_page_excluded(c.get("title", ""), exclusion_rules)
     ]
 
@@ -239,6 +257,7 @@ def migrate_subtree(
                 page_registry,
                 title_registry,
                 depth + 1,
+                use_http=use_http,
             )
 
     else:
@@ -335,17 +354,24 @@ def resolve_confluence_links(
 
 
 def main():
-    if len(sys.argv) < 4:
+    # Флаг --http можно указать в любом месте аргументов; он переопределяет
+    # значение CONFLUENCE_USE_HTTP из конфигурации.
+    args = [a for a in sys.argv[1:] if a != "--http"]
+    use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
+
+    if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
-              "<page_id> <service_code> <subdir> [source]")
+              "<page_id> <service_code> <subdir> [source] [--http]")
         print("Example: python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN")
+        print("Example (прямой HTTP, в обход API): python migrate_confluence_tree.py "
+              "12345 CORP_CARDS лимиты DBOCORPESPLN --http")
         sys.exit(1)
 
-    root_page_id = sys.argv[1].strip()
-    service_code = sys.argv[2]
-    subdir = sys.argv[3]
-    source = sys.argv[4] if len(sys.argv) > 4 else "DBOCORPESPLN"
+    root_page_id = args[0].strip()
+    service_code = args[1]
+    subdir = args[2]
+    source = args[3] if len(args) > 3 else "DBOCORPESPLN"
 
     exclusion_rules = load_exclusion_rules(PAGE_EXCLUSION_RULES_FILE)
 
@@ -354,6 +380,7 @@ def main():
 
     logger.info("Migrating Confluence tree from page_id=%s ...", root_page_id)
     logger.info("Output: %s", base_output_dir)
+    logger.info("Access mode: %s", "direct HTTP (в обход API)" if use_http else "REST API")
     logger.info("")
 
     stats: Dict = {"migrated": 0, "skipped": 0}
@@ -372,6 +399,7 @@ def main():
         visited,
         page_registry,
         title_registry,
+        use_http=use_http,
     )
 
     logger.info("")

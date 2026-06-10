@@ -40,7 +40,7 @@ def safe_filename(title: str, max_length: int = 100) -> str:
     return name[:max_length]
 
 
-def dump_page(page_id: str, output_dir: Path) -> Path:
+def dump_page(page_id: str, output_dir: Path, use_http: bool = False) -> Path:
     """
     Загружает страницу из Confluence и сохраняет raw HTML в файл.
 
@@ -48,13 +48,22 @@ def dump_page(page_id: str, output_dir: Path) -> Path:
     поэтому результат гарантированно идентичен тому, что обрабатывает
     content_extractor.
 
+    Args:
+        page_id: Идентификатор страницы Confluence.
+        output_dir: Каталог для сохранения HTML.
+        use_http: Если True — получать страницу через прямой HTTP-доступ
+                  (как браузер), в обход Confluence REST API.
+
     Returns:
         Путь к сохранённому файлу.
     """
-    from app.page_cache import get_page_data_cached
+    from app.page_cache import get_page_data
 
-    logger.info("Loading page %s from Confluence...", page_id)
-    page_data = get_page_data_cached(page_id)
+    logger.info(
+        "Loading page %s from Confluence (%s)...",
+        page_id, "direct HTTP" if use_http else "REST API",
+    )
+    page_data = get_page_data(page_id, use_http=use_http)
 
     if not page_data:
         logger.error("Failed to load page %s — check page_id and Confluence connectivity.", page_id)
@@ -80,15 +89,23 @@ def dump_page(page_id: str, output_dir: Path) -> Path:
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python scripts/dump_confluence_page.py <page_id> [output_dir]")
+    from app.config import CONFLUENCE_USE_HTTP
+
+    # Флаг --http можно указать в любом месте аргументов; он переопределяет
+    # значение CONFLUENCE_USE_HTTP из конфигурации.
+    args = [a for a in sys.argv[1:] if a != "--http"]
+    use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
+
+    if len(args) < 1:
+        print("Usage: python scripts/dump_confluence_page.py <page_id> [output_dir] [--http]")
         print("Example: python scripts/dump_confluence_page.py 291472147")
+        print("Example: python scripts/dump_confluence_page.py 291472147 debug/html --http")
         sys.exit(1)
 
-    page_id = sys.argv[1].strip()
-    output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else OUTPUT_ROOT
+    page_id = args[0].strip()
+    output_dir = Path(args[1]) if len(args) > 1 else OUTPUT_ROOT
 
-    dump_page(page_id, output_dir)
+    dump_page(page_id, output_dir, use_http=use_http)
 
 
 if __name__ == "__main__":

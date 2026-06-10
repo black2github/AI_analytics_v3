@@ -14,7 +14,13 @@ from bs4 import BeautifulSoup
 from cachetools import TTLCache
 from cachetools.keys import hashkey
 
-from app.config import PAGE_CACHE_SIZE, PAGE_CACHE_TTL
+from app.config import (
+    PAGE_CACHE_SIZE,
+    PAGE_CACHE_TTL,
+    CONFLUENCE_BASE_URL,
+    CONFLUENCE_USER,
+    CONFLUENCE_PASSWORD,
+)
 from app.confluence_loader import confluence, extract_approved_fragments
 from app.filter_all_fragments import filter_all_fragments
 from app.history_cleaner import remove_history_sections
@@ -261,6 +267,59 @@ def get_page_data_cached(page_id: str) -> Optional[Dict]:
     return None  # НЕ кешируем ошибки
 
 
+# ----------------------------------------------------------------------------
+# Прямой HTTP-доступ к Confluence (как браузер), в обход REST API.
+# Используется, когда в закрытом окружении доступ к Confluence API закрыт,
+# но страницы открываются в браузере.
+# ----------------------------------------------------------------------------
+
+_BROWSER_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+}
+
+
+def _confluence_http_get(url: str):
+    """Выполняет браузероподобный HTTP GET к Confluence с basic-auth.
+
+    Возвращает объект requests.Response (raise_for_status уже вызван)
+    или None при ошибке запроса.
+    """
+    try:
+        import requests as http_requests
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        response = http_requests.get(
+            url,
+            headers=_BROWSER_HEADERS,
+            auth=(CONFLUENCE_USER, CONFLUENCE_PASSWORD),
+            timeout=30,
+            verify=False,
+        )
+        response.raise_for_status()
+        return response
+    except Exception as e:
+        logger.error("[_confluence_http_get] HTTP request failed for url=%s: %s", url, str(e))
+        return None
+
+
+def _extract_title_from_soup(soup) -> str:
+    """Извлекает заголовок страницы Confluence из HTML (viewpage.action)."""
+    title_tag = soup.find(id="title-text")
+    if title_tag:
+        return title_tag.get_text(strip=True)
+    html_title = soup.find("title")
+    if html_title:
+        # Confluence добавляет суффикс " - Confluence" или " - Space Name"
+        return html_title.get_text(strip=True).rsplit(" - ", 1)[0].strip()
+    return ""
+
+
 def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
     """
     Загружает данные страницы Confluence через обычный HTTP-запрос (как браузер),
@@ -278,9 +337,6 @@ def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
         Словарь с полными данными страницы или None при ошибке.
         Формат аналогичен get_page_data_cached().
     """
-    from bs4 import BeautifulSoup
-    from app.config import CONFLUENCE_BASE_URL, CONFLUENCE_USER, CONFLUENCE_PASSWORD
-
     logger.debug("[fetch_page_data_via_http] <- page_id=%s", page_id)
 
     # Проверяем кеш
@@ -291,47 +347,19 @@ def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
             return page_cache[cache_key]
 
     page_url = f"{CONFLUENCE_BASE_URL.rstrip('/')}/pages/viewpage.action?pageId={page_id}"
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/124.0.0.0 Safari/537.36"
-        ),
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-    }
 
-    try:
-        import requests as http_requests
-        import urllib3
-        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-        response = http_requests.get(
-            page_url,
-            headers=headers,
-            auth=(CONFLUENCE_USER, CONFLUENCE_PASSWORD),
-            timeout=30,
-            verify=False,
-        )
-        response.raise_for_status()
-    except Exception as e:
+    response = _confluence_http_get(page_url)
+    if response is None:
         logger.error(
-            "[fetch_page_data_via_http] HTTP request failed for page_id=%s url=%s: %s",
-            page_id, page_url, str(e)
+            "[fetch_page_data_via_http] HTTP request failed for page_id=%s url=%s",
+            page_id, page_url
         )
         return None
 
     soup = BeautifulSoup(response.text, "html.parser")
 
     # Извлекаем заголовок страницы
-    title = ""
-    title_tag = soup.find(id="title-text")
-    if title_tag:
-        title = title_tag.get_text(strip=True)
-    else:
-        html_title = soup.find("title")
-        if html_title:
-            # Confluence добавляет суффикс " - Confluence" или " - Space Name"
-            title = html_title.get_text(strip=True).rsplit(" - ", 1)[0].strip()
+    title = _extract_title_from_soup(soup)
 
     if not title:
         logger.warning("[fetch_page_data_via_http] Could not extract title for page_id=%s", page_id)
@@ -381,6 +409,113 @@ def fetch_page_data_via_http(page_id: str) -> Optional[Dict]:
         page_id, title, requirement_type
     )
     return result
+
+
+def fetch_page_title_via_http(page_id: str) -> Optional[str]:
+    """
+    Получает ТОЛЬКО заголовок страницы через прямой HTTP-доступ (как браузер).
+
+    HTTP-аналог get_page_title_only() из confluence_loader: используется для
+    страниц-контейнеров без собственного тела, когда нужен только заголовок
+    (например, для проверки правил исключения при обходе дерева).
+    """
+    logger.debug("[fetch_page_title_via_http] <- page_id=%s", page_id)
+
+    # Если страница уже в кеше — берём заголовок оттуда, без лишнего запроса.
+    cache_key = hashkey(page_id)
+    with cache_lock:
+        if cache_key in page_cache:
+            return page_cache[cache_key].get("title")
+
+    url = f"{CONFLUENCE_BASE_URL.rstrip('/')}/pages/viewpage.action?pageId={page_id}"
+    response = _confluence_http_get(url)
+    if response is None:
+        return None
+
+    title = _extract_title_from_soup(BeautifulSoup(response.text, "html.parser"))
+    if not title:
+        logger.warning("[fetch_page_title_via_http] Could not extract title for page_id=%s", page_id)
+        return None
+
+    logger.debug("[fetch_page_title_via_http] -> title='%s'", title)
+    return title
+
+
+def fetch_child_pages_via_http(page_id: str) -> List[Dict]:
+    """
+    Возвращает прямых потомков страницы через прямой HTTP-доступ, в обход REST API.
+
+    HTTP-аналог confluence.get_child_pages(): использует браузерный endpoint
+    /pages/children.action — тот же, что дерево страниц вызывает в браузере.
+    Он отдаёт JSON-массив прямых дочерних страниц с явными pageId и заголовком,
+    например:
+        [{"text": "...", "href": "/pages/viewpage.action?pageId=NNN",
+          "pageId": "NNN", "nodeClass": "closed", ...}, ...]
+
+    Возвращает список словарей [{"id": ..., "title": ...}], совместимый по форме
+    с confluence.get_child_pages(). Пустой список — если потомков нет или endpoint
+    недоступен. Рекурсию по дереву обеспечивает вызывающий код (migrate_subtree).
+    """
+    logger.debug("[fetch_child_pages_via_http] <- page_id=%s", page_id)
+
+    base = CONFLUENCE_BASE_URL.rstrip("/")
+    url = f"{base}/pages/children.action?pageId={page_id}"
+
+    response = _confluence_http_get(url)
+    if response is None:
+        logger.warning("[fetch_child_pages_via_http] No response for page_id=%s", page_id)
+        return []
+
+    try:
+        items = response.json()
+    except Exception as e:
+        logger.error(
+            "[fetch_child_pages_via_http] Failed to parse JSON for page_id=%s: %s",
+            page_id, str(e),
+        )
+        return []
+
+    if not isinstance(items, list):
+        logger.warning(
+            "[fetch_child_pages_via_http] Unexpected response shape for page_id=%s: %s",
+            page_id, type(items).__name__,
+        )
+        return []
+
+    children = []
+    skipped_no_id = 0
+    for item in items:
+        child_id = str(item.get("pageId") or "").strip()
+        if not child_id:
+            skipped_no_id += 1
+            continue
+        children.append({"id": child_id, "title": (item.get("text") or "").strip()})
+
+    if skipped_no_id:
+        logger.debug(
+            "[fetch_child_pages_via_http] page_id=%s: пропущено записей без pageId=%d",
+            page_id, skipped_no_id,
+        )
+    logger.info(
+        "[fetch_child_pages_via_http] -> page_id=%s: найдено потомков=%d",
+        page_id, len(children),
+    )
+    return children
+
+
+def get_page_data(page_id: str, use_http: bool = False) -> Optional[Dict]:
+    """
+    Единая точка получения данных страницы Confluence.
+
+    use_http=False — через Confluence REST API (get_page_data_cached);
+    use_http=True  — через прямой HTTP-доступ как браузер (fetch_page_data_via_http).
+
+    Обе ветки используют общий page_cache и возвращают словарь одинакового
+    формата, поэтому дальнейшая работа со страницей не зависит от источника.
+    """
+    if use_http:
+        return fetch_page_data_via_http(page_id)
+    return get_page_data_cached(page_id)
 
 
 def clear_page_cache():
