@@ -302,39 +302,6 @@ class DocumentService:
             "largest_size_tokens_estimate": large_docs[0]["size_tokens_estimate"] if large_docs else 0
         }
 
-
-    def load_md_page(filepath: str) -> Dict:
-        text = Path(filepath).read_text(encoding="utf-8")
-        if text.startswith("---"):
-            _, fm, content = text.split("---", 2)
-            meta = yaml.safe_load(fm)
-        else:
-            meta, content = {}, text
-
-        return {
-            "id": meta.get("doc_id", filepath),  # → page_id в base_metadata
-            "title": meta.get("title", ""),
-            "approved_content": content.strip(),  # весь markdown после ---
-            "requirement_type": meta.get("requirement_type", "unknown"),
-            # новые поля — просто добавляются в dict:
-            "status": meta.get("status", "approved"),
-            "owner": meta.get("owner", ""),
-            "jira_id": meta.get("jira_id", ""),
-            "jira_ids": meta.get("jira_ids", ""),
-            "related": meta.get("related", ""),
-            "tags": meta.get("tags", ""),
-            "feature": meta.get("feature", ""),
-            "microservice": meta.get("microservice", ""),
-            "version": meta.get("version", ""),
-            "updated_date": meta.get("updated_date", ""),
-            "created_date": meta.get("created_date", ""),
-            "confluence_page_id": meta.get("confluence_page_id", ""),
-            "reviewed_by": meta.get("reviewed_by", ""),
-            "author": meta.get("author", ""),
-            # target_system — уже обрабатывается через extract_target_system или явно:
-            **({"target_system": meta["target_system"]} if "target_system" in meta else {})
-        }
-
     # -------------------------------------------------------------------------
     # Внутренние методы
     # -------------------------------------------------------------------------
@@ -411,3 +378,43 @@ class DocumentService:
             )
         except Exception as e:
             logger.warning("[_delete_existing_fragments] Could not delete existing vectors: %s", e)
+
+
+def load_md_page(filepath: str) -> Dict:
+    """Читает .md-файл требования и возвращает dict в формате страницы.
+
+    Парсит YAML-frontmatter (между маркерами ---) и тело Markdown, собирая
+    структуру, совместимую с load_pages_by_ids (id, title, approved_content,
+    requirement_type + метаданные frontmatter). Функция уровня модуля —
+    self не использует; вызывается напрямую (см. scripts/index_changed_files.py).
+    """
+    text = Path(filepath).read_text(encoding="utf-8")
+    if text.startswith("---"):
+        _, fm, content = text.split("---", 2)
+        meta = yaml.safe_load(fm)
+    else:
+        meta, content = {}, text
+
+    return {
+        "id": meta.get("doc_id", filepath),  # → page_id в base_metadata
+        "title": meta.get("title", ""),
+        "approved_content": content.strip(),  # весь markdown после ---
+        "requirement_type": meta.get("requirement_type", "unknown"),
+        # новые поля — просто добавляются в dict:
+        "status": meta.get("status", "approved"),
+        "owner": meta.get("owner", ""),
+        "jira_id": meta.get("jira_id", ""),
+        "jira_ids": meta.get("jira_ids", ""),
+        "related": meta.get("related", ""),
+        "tags": meta.get("tags", ""),
+        "feature": meta.get("feature", ""),
+        "microservice": meta.get("microservice", ""),
+        "version": meta.get("version", ""),
+        "updated_date": meta.get("updated_date", ""),
+        "created_date": meta.get("created_date", ""),
+        "confluence_page_id": meta.get("confluence_page_id", ""),
+        "reviewed_by": meta.get("reviewed_by", ""),
+        "author": meta.get("author", ""),
+        # target_system — уже обрабатывается через extract_target_system или явно:
+        **({"target_system": meta["target_system"]} if "target_system" in meta else {})
+    }

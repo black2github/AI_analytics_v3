@@ -1,11 +1,14 @@
-# index_changed_files.py
+# app/scripts/index_changed_files.py
+
+# скрипт нужен для CI-пайплайна: после мержа в main определить какие .md файлы изменились
+# и проиндексировать их в ChromaDB через существующий DocumentService
 
 # Как CI его вызывает:
 # # CI делает git diff и сохраняет список в файл
 # git diff --name-only HEAD~1 HEAD -- "requirements/**/*.md" > changed.txt
 #
 # # Запускает скрипт
-# python scripts/index_changed_files.py changed.txt
+# python app/scripts/index_changed_files.py changed.txt
 
 import sys
 import logging
