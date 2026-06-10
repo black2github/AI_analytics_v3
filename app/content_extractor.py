@@ -106,6 +106,12 @@ class ContentExtractor:
           так как перевод строки внутри ячейки завершает строку таблицы
 
         В любом из этих случаев переключаемся на HTML.
+
+        ИСКЛЮЧЕНИЕ: ячейка из нескольких ПРОСТЫХ параграфов (только инлайн-контент:
+        текст, ссылки, strong/em) не требует HTML — такие абзацы рендерятся в
+        Markdown-ячейке через разделитель <br> (см. _cell_is_simple_multiline /
+        _render_simple_multiline_cell). HTML нужен лишь когда внутри есть реально
+        блочное содержимое (списки, вложенные таблицы) или объединение ячеек.
         """
         for cell in element.find_all(["td", "th"]):
             # Объединение ячеек
@@ -113,13 +119,69 @@ class ContentExtractor:
                 return True
             if int(cell.get("rowspan", 1) or 1) > 1:
                 return True
-            # Блочные элементы внутри ячейки — список или несколько параграфов
+            # Блочные элементы внутри ячейки — список или вложенная таблица
             if cell.find(["ul", "ol"]):
                 return True
+            # Несколько параграфов уводят в HTML только если ячейка НЕ является
+            # набором простых абзацев (последние представимы в Markdown через <br>).
             paragraphs = cell.find_all("p", recursive=False)
-            if len(paragraphs) > 1:
+            if len(paragraphs) > 1 and not self._cell_is_simple_multiline(cell):
                 return True
         return False
+
+    def _cell_is_simple_multiline(self, cell: Tag) -> bool:
+        """Определяет, можно ли ячейку из нескольких <p> отрендерить в Markdown
+        через разделитель <br>, не прибегая к HTML-таблице.
+
+        Условие «простоты»:
+        - в ячейке более одного прямого <p>;
+        - внутри ячейки нет блочных элементов (вложенных таблиц, списков ul/ol);
+        - на верхнем уровне ячейки нет значимого контента вне <p>
+          (голого текста или непараграфных тегов с текстом) — иначе при рендеринге
+          только по <p> мы бы потеряли часть содержимого, поэтому такую ячейку
+          оставляем на HTML-путь.
+
+        colspan/rowspan здесь не проверяются — они отсекаются раньше в
+        _table_needs_html и переводят ячейку на HTML независимо от параграфов.
+        """
+        paragraphs = cell.find_all("p", recursive=False)
+        if len(paragraphs) <= 1:
+            return False
+
+        # Любое реально блочное содержимое → нельзя в Markdown.
+        if cell.find(["table", "ul", "ol"]):
+            return False
+
+        # Значимый контент вне прямых <p> → не наш случай (во избежание потери).
+        for child in cell.children:
+            if isinstance(child, NavigableString):
+                if str(child).strip():
+                    return False
+            elif isinstance(child, Tag) and child.name != "p":
+                if child.get_text(strip=True):
+                    return False
+
+        return True
+
+    def _render_simple_multiline_cell(self, cell: Tag, context: str = "table_cell") -> str:
+        """Рендерит «простую многоабзацную» ячейку (см. _cell_is_simple_multiline)
+        для Markdown-таблицы: каждый абзац обрабатывается обычным конвейером,
+        внутренние переводы строк схлопываются в пробел, а абзацы соединяются
+        через <br>. Пустые абзацы (визуальные разделители) отбрасываются.
+
+        <br> вставляется здесь, ДО общей нормализации _normalize_cell_text,
+        которая работает только с символами перевода строки и теги <br> не трогает.
+        Поэтому эффект локален: остальные ячейки таблицы не затрагиваются.
+        """
+        parts = []
+        for p in cell.find_all("p", recursive=False):
+            text = self._process_element(p, context) or ""
+            # Переводы строк внутри абзаца (например от <br>) → пробел.
+            text = re.sub(r"\s*\n\s*", " ", text)
+            text = re.sub(r" {2,}", " ", text).strip()
+            if text:
+                parts.append(text)
+        return "<br>".join(parts)
 
     def _render_cell_for_html_table(self, cell: Tag) -> str:
         """
@@ -330,6 +392,9 @@ class ContentExtractor:
                     cell_text = black_content if black_content else ""
                 else:
                     continue
+            elif self._cell_is_simple_multiline(cell):
+                # Несколько простых абзацев → Markdown с разделителем <br>.
+                cell_text = self._render_simple_multiline_cell(cell, "table_cell")
             else:
                 cell_text = self._process_table_cell(cell, "table_cell")
                 if cell_text is None:
@@ -1394,8 +1459,17 @@ class ContentExtractor:
                     result_parts.append(self._process_code_block(child, "nested_table_cell"))
                 elif child.name in ["strong", "b"]:
                     bold_content = self._process_nested_table_cell_content(child)
-                    if bold_content:
-                        result_parts.append(f"<strong>{bold_content.strip()}</strong>")
+                    stripped = bold_content.strip()
+                    if stripped:
+                        # Пробелы по краям выносим за <strong>, чтобы не склеить
+                        # жирный фрагмент с соседним текстом (напр. 'если ' + 'реквизит').
+                        leading = bold_content[: len(bold_content) - len(bold_content.lstrip())]
+                        trailing = bold_content[len(bold_content.rstrip()):]
+                        result_parts.append(f"{leading}<strong>{stripped}</strong>{trailing}")
+                    elif bold_content:
+                        # Только пробелы (например <strong> </strong> как разделитель) —
+                        # сохраняем пробел, а не пустой тег <strong></strong>.
+                        result_parts.append(bold_content)
                 elif child.name == "p":
                     # В HTML-контексте абзац оборачиваем в <p>, иначе разрывы
                     # между абзацами теряются (перевод строки в HTML-ячейке —
