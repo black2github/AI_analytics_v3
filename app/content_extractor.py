@@ -65,6 +65,7 @@ class ExtractionConfig:
     format_tables: bool = True
     format_lists: bool = True
     format_headers: bool = True
+    migrate_images: bool = False  # сохранять <ac:image> как HTML <img> с плейсхолдером вложения
 
 
 class ContentExtractor:
@@ -520,6 +521,59 @@ class ContentExtractor:
             return dt.strip()
         return element.get_text(strip=True)
 
+    def _process_image(self, element: Tag) -> str:
+        """Преобразует картинку (<ac:image> или <img>) в HTML-тег <img>.
+
+        Поведение зависит от флага config.migrate_images:
+        • False (по умолчанию) — картинка выкидывается (пустая строка), как и раньше.
+        • True — формируется HTML-тег <img> с сохранением размеров (ac:width/ac:height
+          → width/height), чтобы соблюсти масштабирование.
+
+        Источник картинки:
+        • <ri:attachment ri:filename="..."> — вложение страницы. Реальный путь на этом
+          этапе неизвестен (нет ни page_id, ни пути .md), поэтому в src пишется
+          плейсхолдер confluence-attachment://<filename>. Его позже разрешает слой
+          миграции (app.image_migrator): скачивает вложение в img/ и подставляет
+          относительную ссылку. Это тот же приём, что и для ссылок (confluence://).
+        • <ri:url ri:value="..."> — внешняя картинка по URL: ссылку оставляем как есть,
+          ничего не скачиваем.
+
+        HTML-тег используется намеренно (а не Markdown ![]()): только он позволяет
+        задать width/height и переживает вставку внутрь сырых HTML-таблиц.
+        """
+        if not self.config.migrate_images:
+            return ""
+
+        # Размеры для масштабирования (атрибуты в storage-формате — с префиксом ac:)
+        width = element.get("ac:width") or element.get("width")
+        height = element.get("ac:height") or element.get("height")
+        alt = element.get("ac:alt") or element.get("alt") or ""
+
+        src = None
+        if element.name == "ac:image":
+            attachment = element.find("ri:attachment")
+            if attachment and attachment.get("ri:filename"):
+                src = f"confluence-attachment://{attachment.get('ri:filename')}"
+                if not alt:
+                    alt = attachment.get("ri:filename")
+            else:
+                url_el = element.find("ri:url")
+                if url_el and url_el.get("ri:value"):
+                    src = url_el.get("ri:value")
+        else:  # обычный <img>
+            src = element.get("src")
+
+        if not src:
+            return ""
+
+        attrs = [f'src="{_escape_html_attr(src)}"']
+        if width:
+            attrs.append(f'width="{_escape_html_attr(str(width))}"')
+        if height:
+            attrs.append(f'height="{_escape_html_attr(str(height))}"')
+        attrs.append(f'alt="{_escape_html_text(alt)}"')
+        return f'<img {" ".join(attrs)}>'
+
     # Остальные методы остаются без изменений (копируем из предыдущей версии)
     def _normalize_cell_text(self, text: str) -> str:
         """
@@ -597,6 +651,10 @@ class ContentExtractor:
         # Время
         if element.name == "time":
             return self._process_time(element)
+
+        # Картинки (вложения и внешние) — под флагом migrate_images
+        if element.name in ["ac:image", "img"]:
+            return self._process_image(element)
 
         # Параграфы с добавлением переводов строк
         if element.name == "p":
@@ -962,8 +1020,21 @@ class ContentExtractor:
         return content
 
     def _clean_triangular_brackets(self, content: str) -> str:
-        """Очистка содержимого треугольных скобок"""
-        content = re.sub(r'<\s*([^<>]*?)\s*>', lambda m: f'<{self._clean_bracket_content(m.group(1))}>', content)
+        """Очистка содержимого треугольных скобок.
+
+        Чистка нормализует пробелы/кавычки внутри <...> для текстовых
+        плейсхолдеров-требований вида <Поле "Имя">. Но она ломает настоящие
+        HTML-теги с атрибутами (например <img src="..." width="...">), схлопывая
+        пробелы между атрибутами. Поэтому теги с синтаксисом атрибутов (name="value")
+        пропускаем без изменений.
+        """
+        def _clean_match(m: re.Match) -> str:
+            inner = m.group(1)
+            if '="' in inner:
+                return m.group(0)  # настоящий HTML-тег — не трогаем
+            return f'<{self._clean_bracket_content(inner)}>'
+
+        content = re.sub(r'<\s*([^<>]*?)\s*>', _clean_match, content)
         content = re.sub(r'<\s*>', '<>', content)
         return content
 
@@ -1469,6 +1540,8 @@ class ContentExtractor:
                         result_parts.append(list_content)
                 elif child.name == "time":
                     result_parts.append(self._process_time(child))
+                elif child.name in ["ac:image", "img"]:
+                    result_parts.append(self._process_image(child))
                 elif child.name == "br":
                     result_parts.append("\n")
                 elif child.name in ["pre", "code"]:
@@ -1585,7 +1658,7 @@ class ContentExtractor:
         """
         for p in soup.find_all("p"):
             if (not p.get_text(strip=True)
-                    and not p.find(["table", "img", "ul", "ol", "a", "ac:link", "time"])):
+                    and not p.find(["table", "img", "ac:image", "ul", "ol", "a", "ac:link", "time"])):
                 p.decompose()
 
     def _process_children_without_color_filter(self, element: Tag, context: str) -> str:
@@ -1642,6 +1715,8 @@ class ContentExtractor:
             return f"**{content.strip()}**" if content.strip() else ""
         elif element.name == "time":
             return self._process_time(element)
+        elif element.name in ["ac:image", "img"]:
+            return self._process_image(element)
         elif element.name == "p":
             return self._process_paragraph_without_color_filter(element, context)
         else:
@@ -1681,12 +1756,20 @@ class ContentExtractor:
 
 
 # Фабричные функции остаются теми же
+def _migrate_images_enabled() -> bool:
+    """Читает app.config.MIGRATE_IMAGES динамически, чтобы CLI-флаг --with-images
+    мог переопределить значение в рантайме (по аналогии с REMOVE_HISTORY_SECTIONS)."""
+    import app.config as _config
+    return _config.MIGRATE_IMAGES
+
+
 def create_all_fragments_extractor() -> ContentExtractor:
     """Создает экстрактор для всех фрагментов с сохранением пробелов"""
     config = ExtractionConfig(
         include_colored=True,
         preserve_whitespace=True,
-        normalize_spacing=False
+        normalize_spacing=False,
+        migrate_images=_migrate_images_enabled()
     )
     return ContentExtractor(config)
 
@@ -1696,6 +1779,7 @@ def create_approved_fragments_extractor() -> ContentExtractor:
     config = ExtractionConfig(
         include_colored=False,
         preserve_whitespace=True,
-        normalize_spacing=False
+        normalize_spacing=False,
+        migrate_images=_migrate_images_enabled()
     )
     return ContentExtractor(config)

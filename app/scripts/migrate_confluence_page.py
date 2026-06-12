@@ -152,6 +152,18 @@ def migrate_page(
         logger.warning("  ⚠ File already exists, skipped: %s", filepath)
         return None
 
+    # Миграция картинок: скачиваем вложения в img/ рядом с .md и заменяем плейсхолдеры
+    # confluence-attachment:// на относительные ссылки. Плейсхолдеры есть в content_md
+    # только если конвертация шла с включённым MIGRATE_IMAGES.
+    import app.config as _config
+    if _config.MIGRATE_IMAGES:
+        from app.image_migrator import migrate_images_in_content
+        content_md, downloaded, failed = migrate_images_in_content(
+            content_md, str(page["id"]), filepath
+        )
+        if downloaded or failed:
+            logger.info("  🖼 Картинки: скачано %d, ошибок %d", downloaded, failed)
+
     frontmatter = page_to_frontmatter(page, service_code, source, doc_id)
     write_md_file(filepath, frontmatter, content_md)
 
@@ -161,13 +173,14 @@ def migrate_page(
 def main():
     from app.config import CONFLUENCE_USE_HTTP, MIGRATE_INCLUDE_UNAPPROVED
 
-    # Флаги --http, --all и --keep-history можно указать в любом месте аргументов;
-    # они переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history"}
+    # Флаги --http, --all, --keep-history и --with-images можно указать в любом месте
+    # аргументов; они переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history", "--with-images"}
     raw_args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
     keep_history = "--keep-history" in sys.argv
+    with_images = "--with-images" in sys.argv
 
     if len(raw_args) < 3:
         print("Usage: python migrate_confluence_page.py "
@@ -180,6 +193,8 @@ def main():
               "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --all")
         print("Example (сохранить раздел 'История изменений'): "
               "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --keep-history")
+        print("Example (мигрировать картинки в img/ рядом с .md): "
+              "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --with-images")
         sys.exit(1)
 
     # Переопределяем политику удаления истории на время процесса (вариант A).
@@ -187,6 +202,13 @@ def main():
     if keep_history:
         import app.config as _config
         _config.REMOVE_HISTORY_SECTIONS = False
+
+    # Включаем миграцию картинок на время процесса. Фабрики экстракторов читают
+    # app.config.MIGRATE_IMAGES динамически — флаг должен быть выставлен ДО конвертации
+    # (load_pages_by_ids ниже), чтобы конвертер выдал плейсхолдеры картинок.
+    if with_images:
+        import app.config as _config
+        _config.MIGRATE_IMAGES = True
 
     page_ids = raw_args[0].split(",")
     service_code = raw_args[1]
@@ -212,6 +234,8 @@ def main():
                 else "только подтверждённые фрагменты")
     logger.info("History mode: %s",
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
+    logger.info("Images mode: %s",
+                "СКАЧИВАТЬ картинки в img/" if with_images else "картинки игнорируются")
 
     pages = load_pages_by_ids(page_ids, include_unapproved=include_unapproved)
 

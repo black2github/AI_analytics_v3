@@ -150,6 +150,17 @@ def save_page_file(
     except ValueError:
         doc_id = str(filepath.with_suffix("")).replace("\\", "/")
 
+    # Миграция картинок: скачиваем вложения в img/ рядом с .md и заменяем плейсхолдеры
+    # confluence-attachment:// на относительные ссылки (если конвертация шла с MIGRATE_IMAGES).
+    import app.config as _config
+    if _config.MIGRATE_IMAGES:
+        from app.image_migrator import migrate_images_in_content
+        content_md, downloaded, failed = migrate_images_in_content(
+            content_md, str(page_id), filepath
+        )
+        if downloaded or failed:
+            logger.info("  🖼 Картинки '%s': скачано %d, ошибок %d", title, downloaded, failed)
+
     page = {
         "id": page_id,
         "title": title,
@@ -369,17 +380,18 @@ def resolve_confluence_links(
 
 
 def main():
-    # Флаги --http, --all и --keep-history можно указать в любом месте аргументов;
-    # они переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history"}
+    # Флаги --http, --all, --keep-history и --with-images можно указать в любом месте
+    # аргументов; они переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history", "--with-images"}
     args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
     keep_history = "--keep-history" in sys.argv
+    with_images = "--with-images" in sys.argv
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
-              "<page_id> <service_code> <subdir> [source] [--http] [--all] [--keep-history]")
+              "<page_id> <service_code> <subdir> [source] [--http] [--all] [--keep-history] [--with-images]")
         print("Example: python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN")
         print("Example (прямой HTTP, в обход API): python migrate_confluence_tree.py "
@@ -388,6 +400,8 @@ def main():
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --all")
         print("Example (сохранить раздел 'История изменений'): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --keep-history")
+        print("Example (мигрировать картинки в img/ рядом с .md): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --with-images")
         sys.exit(1)
 
     # Переопределяем политику удаления истории на время процесса (вариант A).
@@ -395,6 +409,12 @@ def main():
     if keep_history:
         import app.config as _config
         _config.REMOVE_HISTORY_SECTIONS = False
+
+    # Включаем миграцию картинок на время процесса. Фабрики экстракторов читают
+    # app.config.MIGRATE_IMAGES динамически — флаг должен быть выставлен ДО конвертации.
+    if with_images:
+        import app.config as _config
+        _config.MIGRATE_IMAGES = True
 
     root_page_id = args[0].strip()
     service_code = args[1]
@@ -414,6 +434,8 @@ def main():
                 else "только подтверждённые фрагменты")
     logger.info("History mode: %s",
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
+    logger.info("Images mode: %s",
+                "СКАЧИВАТЬ картинки в img/" if with_images else "картинки игнорируются")
     logger.info("")
 
     stats: Dict = {"migrated": 0, "skipped": 0}
