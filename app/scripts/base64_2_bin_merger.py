@@ -1,4 +1,4 @@
-# scripts/base64_2_bin_merger.py
+# app/scripts/base64_2_bin_merger.py
 
 # -*- coding: utf-8 -*-
 """

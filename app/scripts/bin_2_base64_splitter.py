@@ -1,4 +1,4 @@
-# scripts/bin_2_base64_splitter.py
+# app/scripts/bin_2_base64_splitter.py
 # -*- coding: utf-8 -*-
 """
 Binary to Base64 Splitter
