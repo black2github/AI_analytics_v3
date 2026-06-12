@@ -526,17 +526,23 @@ class ContentExtractor:
 
         Поведение зависит от флага config.migrate_images:
         • False (по умолчанию) — картинка выкидывается (пустая строка), как и раньше.
-        • True — формируется HTML-тег <img> с сохранением размеров (ac:width/ac:height
-          → width/height), чтобы соблюсти масштабирование.
+        • True — формируется HTML-тег <img> с сохранением размеров, чтобы соблюсти
+          масштабирование. Размеры берутся из ac:width/ac:height (storage) либо
+          width/height / data-width/data-height (рендеренный HTML).
 
-        Источник картинки:
-        • <ri:attachment ri:filename="..."> — вложение страницы. Реальный путь на этом
-          этапе неизвестен (нет ни page_id, ни пути .md), поэтому в src пишется
-          плейсхолдер confluence-attachment://<filename>. Его позже разрешает слой
-          миграции (app.image_migrator): скачивает вложение в img/ и подставляет
-          относительную ссылку. Это тот же приём, что и для ссылок (confluence://).
-        • <ri:url ri:value="..."> — внешняя картинка по URL: ссылку оставляем как есть,
-          ничего не скачиваем.
+        Источник картинки и режим доступа:
+        • storage-формат (REST API), тег <ac:image>:
+            – <ri:attachment ri:filename="..."> — вложение: в src пишется плейсхолдер
+              confluence-attachment://<filename>, который слой миграции разрешает через
+              REST (скачивает вложение в img/ и подставляет относительную ссылку).
+            – <ri:url ri:value="..."> — внешняя картинка по URL: ссылку оставляем как есть.
+        • рендеренный HTML (прямой HTTP, закрытый контур), тег <img>: см.
+          _classify_rendered_image — встроенные вложения уходят в плейсхолдер
+          confluence-download://<path>, внешние URL остаются, служебная графика
+          выкидывается.
+
+        Реальные пути на этом этапе неизвестны (нет ни page_id, ни пути .md), поэтому
+        используются плейсхолдеры — тот же приём, что и для ссылок (confluence://).
 
         HTML-тег используется намеренно (а не Markdown ![]()): только он позволяет
         задать width/height и переживает вставку внутрь сырых HTML-таблиц.
@@ -544,24 +550,22 @@ class ContentExtractor:
         if not self.config.migrate_images:
             return ""
 
-        # Размеры для масштабирования (атрибуты в storage-формате — с префиксом ac:)
-        width = element.get("ac:width") or element.get("width")
-        height = element.get("ac:height") or element.get("height")
-        alt = element.get("ac:alt") or element.get("alt") or ""
+        # Размеры: storage — ac:width/ac:height; рендеренный HTML — width/height или data-*
+        width = element.get("ac:width") or element.get("width") or element.get("data-width")
+        height = element.get("ac:height") or element.get("height") or element.get("data-height")
+        alt = (element.get("ac:alt") or element.get("alt")
+               or element.get("data-linked-resource-default-alias") or "")
 
-        src = None
         if element.name == "ac:image":
             attachment = element.find("ri:attachment")
             if attachment and attachment.get("ri:filename"):
                 src = f"confluence-attachment://{attachment.get('ri:filename')}"
-                if not alt:
-                    alt = attachment.get("ri:filename")
+                alt = alt or attachment.get("ri:filename")
             else:
                 url_el = element.find("ri:url")
-                if url_el and url_el.get("ri:value"):
-                    src = url_el.get("ri:value")
-        else:  # обычный <img>
-            src = element.get("src")
+                src = url_el.get("ri:value") if (url_el and url_el.get("ri:value")) else None
+        else:  # рендеренный <img>
+            src = self._classify_rendered_image(element)
 
         if not src:
             return ""
@@ -573,6 +577,39 @@ class ContentExtractor:
             attrs.append(f'height="{_escape_html_attr(str(height))}"')
         attrs.append(f'alt="{_escape_html_text(alt)}"')
         return f'<img {" ".join(attrs)}>'
+
+    def _classify_rendered_image(self, element: Tag) -> Optional[str]:
+        """Классифицирует <img> из рендеренного HTML Confluence (HTTP-режим).
+
+        • Встроенная картинка-вложение (class confluence-embedded-image, либо атрибут
+          data-image-src, либо путь /download/attachments/...) → плейсхолдер
+          confluence-download://<path>. Путь сохраняется целиком, включая query
+          (?version=...&modificationDate=...), который часто нужен для скачивания.
+          Слой миграции скачает картинку браузерным запросом и положит в img/.
+        • Внешняя картинка по абсолютному URL → ссылку оставляем как есть.
+        • Прочие <img> (иконки, эмотиконы, аватары, /download/resources/...) → None
+          (выкидываются), чтобы не засорять вывод служебной графикой.
+        """
+        raw = element.get("data-image-src") or element.get("src")
+        if not raw:
+            return None
+
+        classes = element.get("class") or []
+        if isinstance(classes, str):
+            classes = classes.split()
+        is_embedded = (
+            "confluence-embedded-image" in classes
+            or element.has_attr("data-image-src")
+            or "/download/attachments/" in raw
+        )
+        if not is_embedded:
+            return None
+
+        if "/download/attachments/" in raw:
+            return f"confluence-download://{raw}"
+        if raw.startswith("http://") or raw.startswith("https://"):
+            return raw  # внешняя картинка по URL
+        return None
 
     # Остальные методы остаются без изменений (копируем из предыдущей версии)
     def _normalize_cell_text(self, text: str) -> str:
@@ -1073,6 +1110,19 @@ class ContentExtractor:
             inner_headers = element.find_all(["h1", "h2", "h3", "h4", "h5", "h6"], recursive=False)
             if inner_headers:
                 return self._process_confluence_container(element, context)
+
+            # Вне ячеек таблиц <div> может содержать блочные элементы (таблицы, списки,
+            # абзацы), которые в Markdown разделяются пустой строкой. Плоский join в
+            # _process_children её не вставляет — из-за чего, например, чистая Markdown-
+            # таблица сразу за абзацем "История изменений:" не распознаётся (частый
+            # случай в рендеренном HTML, где контент завёрнут в layout-div'ы). Поэтому
+            # в обычном контексте собираем содержимое div с сохранением блочной структуры.
+            if context == "default":
+                parts = self._process_container(element)
+                result = self._join_parts_preserving_structure(parts)
+                if self.config.clean_brackets:
+                    result = self._clean_triangular_brackets(result)
+                return result
 
         return self._process_children(element, context)
 
