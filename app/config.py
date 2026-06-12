@@ -13,7 +13,7 @@ except Exception:
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.72.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.80.0")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
@@ -56,6 +56,14 @@ MIGRATE_INCLUDE_UNAPPROVED = os.getenv("MIGRATE_INCLUDE_UNAPPROVED", "false").lo
 # ВНИМАНИЕ: значение читается динамически (через app.config.REMOVE_HISTORY_SECTIONS)
 # в remove_history_sections(), поэтому CLI-флаг может переопределить его в рантайме.
 REMOVE_HISTORY_SECTIONS = os.getenv("REMOVE_HISTORY_SECTIONS", "true").lower() in ("1", "true", "yes")
+
+# По умолчанию картинки (<ac:image>) из текста страниц НЕ мигрируются — выкидываются.
+# Если включить — вложения-картинки скачиваются в подкаталог img/ рядом с .md, а в
+# тексте остаётся HTML-тег <img> с относительной ссылкой и сохранёнными размерами.
+# Скрипты миграции также понимают флаг --with-images, переопределяющий это значение.
+# ВНИМАНИЕ: значение читается динамически (через app.config.MIGRATE_IMAGES) в фабриках
+# экстракторов content_extractor, поэтому CLI-флаг может переопределить его в рантайме.
+MIGRATE_IMAGES = os.getenv("MIGRATE_IMAGES", "false").lower() in ("1", "true", "yes")
 
 # ДОБАВЛЯЕМ конфигурацию JIRA
 JIRA_BASE_URL = os.getenv("JIRA_BASE_URL", "https://jira.gboteam.ru")
