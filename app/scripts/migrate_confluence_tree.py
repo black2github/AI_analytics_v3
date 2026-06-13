@@ -30,10 +30,13 @@
 import os
 import re
 import sys
+import html
 import time
 import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+
+import yaml
 
 from app.confluence_loader import confluence, get_page_title_only
 from app.page_cache import (
@@ -69,6 +72,24 @@ _LINK_BY_TITLE_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://title/([^
 # Здесь резолвим только атрибут href, не трогая текст и закрывающий </a>.
 _HTML_LINK_BY_ID_RE = re.compile(r'<a href="confluence://(\d+)">')
 _HTML_LINK_BY_TITLE_RE = re.compile(r'<a href="confluence://title/([^"]*)">')
+
+
+def _title_key(title: str) -> str:
+    """Нормализует заголовок страницы в ключ реестра title_registry.
+
+    Заголовок может прийти двумя путями, и оба нужно привести к одному виду:
+    • напрямую из метаданных Confluence (save_page_file, seed_registries_from_disk);
+    • восстановленным из плейсхолдера confluence://title/... на этапе Pass 2.
+
+    Плейсхолдер для ссылок внутри HTML-таблиц проходит через _escape_html_attr,
+    который кодирует кавычки как &quot; (а & как &amp;). Без html.unescape такой
+    заголовок ('… "Список карт"') никогда не совпал бы с реестром, где лежит
+    настоящая строка с кавычками. Дополнительно схлопываем пробелы и приводим
+    к нижнему регистру, чтобы мелкие расхождения в вёрстке не ломали матчинг.
+    """
+    title = html.unescape(title)
+    title = re.sub(r"\s+", " ", title).strip()
+    return title.lower()
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
@@ -166,7 +187,7 @@ def save_page_file(
     write_md_file(filepath, frontmatter, content_md)
 
     page_registry[page_id] = filepath
-    title_registry[title.lower()] = filepath
+    title_registry[_title_key(title)] = filepath
 
     stats["migrated"] += 1
     return True
@@ -293,11 +314,68 @@ def migrate_subtree(
             logger.info("%s[ok] %s.md  (id=%s)", indent, dir_name, page_id)
 
 
+_FRONTMATTER_RE = re.compile(r"^---\n(.*?)\n---", re.DOTALL)
+
+
+def seed_registries_from_disk(
+    page_registry: Dict[str, Path],
+    title_registry: Dict[str, Path],
+) -> int:
+    """Подмешивает в реестры страницы, уже лежащие на диске в OUTPUT_ROOT.
+
+    Реестры из Pass 1 содержат только страницы текущего запуска. Но ссылки
+    часто ведут на страницы из других поддеревьев/сервисов, мигрированных
+    ранее. У каждого .md-файла во frontmatter есть confluence_page_id и title —
+    этого достаточно, чтобы разрешить и ID-ссылки (confluence://ID), и
+    title-ссылки (confluence://title/...) на ранее сохранённые файлы.
+
+    Записи текущего запуска имеют приоритет: уже существующие ключи не
+    перезаписываются. Возвращает число подмешанных файлов.
+    """
+    if not OUTPUT_ROOT.exists():
+        return 0
+
+    known = set(page_registry.values()) | set(title_registry.values())
+    added = 0
+    for filepath in OUTPUT_ROOT.rglob("*.md"):
+        if filepath in known:
+            continue
+        try:
+            text = filepath.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        m = _FRONTMATTER_RE.match(text)
+        if not m:
+            continue
+        try:
+            fm = yaml.safe_load(m.group(1)) or {}
+        except yaml.YAMLError:
+            continue
+        if not isinstance(fm, dict):
+            continue
+
+        page_id = fm.get("confluence_page_id")
+        if page_id:
+            page_registry.setdefault(str(page_id), filepath)
+        title = fm.get("title")
+        if title:
+            title_registry.setdefault(_title_key(str(title)), filepath)
+        if page_id or title:
+            added += 1
+    return added
+
+
 def resolve_confluence_links(
     page_registry: Dict[str, Path],
     title_registry: Dict[str, Path],
+    files: Optional[set] = None,
 ) -> Tuple[int, int]:
     """Pass 2: заменяет плейсхолдеры confluence:// на относительные пути в сохранённых .md файлах.
+
+    files — множество файлов, которые нужно обработать (переписать). Если не
+    задано, берутся все файлы из реестров. При подмешивании ранее сохранённых
+    страниц (seed_registries_from_disk) сюда передаётся только набор текущего
+    запуска, чтобы не трогать чужие файлы — подмешанные служат лишь целями ссылок.
 
     Возвращает (resolved, unresolved) — количество разрешённых и неразрешённых ссылок.
     Неразрешённые ID-ссылки заменяются абсолютным URL Confluence.
@@ -305,9 +383,10 @@ def resolve_confluence_links(
     """
     counts = {"resolved": 0, "unresolved": 0}
 
-    all_files = set(page_registry.values()) | set(title_registry.values())
+    if files is None:
+        files = set(page_registry.values()) | set(title_registry.values())
 
-    for filepath in all_files:
+    for filepath in files:
         if not filepath.exists():
             continue
 
@@ -327,7 +406,7 @@ def resolve_confluence_links(
             link_text, title_encoded = m.group(1), m.group(2)
             # title_encoded может быть "SPACE/Title+Words" или просто "Title+Words"
             raw_title = title_encoded.split("/")[-1].replace("+", " ")
-            target = title_registry.get(raw_title.lower())
+            target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
                 counts["resolved"] += 1
@@ -349,7 +428,7 @@ def resolve_confluence_links(
         def replace_html_title(m: re.Match) -> str:
             title_encoded = m.group(1)
             raw_title = title_encoded.split("/")[-1].replace("+", " ")
-            target = title_registry.get(raw_title.lower())
+            target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
                 counts["resolved"] += 1
@@ -454,7 +533,14 @@ def main():
 
     logger.info("")
     logger.info("Pass 2: resolving internal links ...")
-    resolved, unresolved = resolve_confluence_links(page_registry, title_registry)
+    # Файлы текущего запуска фиксируем ДО подмешивания — только их переписываем.
+    current_files = set(page_registry.values()) | set(title_registry.values())
+    seeded = seed_registries_from_disk(page_registry, title_registry)
+    if seeded:
+        logger.info("  Подмешано из ранее сохранённых .md (frontmatter): %d", seeded)
+    resolved, unresolved = resolve_confluence_links(
+        page_registry, title_registry, files=current_files
+    )
 
     logger.info("")
     logger.info("Migration complete:")

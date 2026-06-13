@@ -13,7 +13,7 @@ except Exception:
 
 load_dotenv()
 
-APP_VERSION = os.getenv("APP_VERSION", "0.90.0")
+APP_VERSION = os.getenv("APP_VERSION", "0.90.1")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
