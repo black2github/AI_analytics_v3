@@ -16,7 +16,7 @@
 #
 # Структура манифеста зафиксирована в "Архитектура-межсервисных-ссылок-DocAsCode-PoC":
 #   шапка: service_code, generated_at
-#   элементы: name, kind (entity|operation), doc_id, url
+#   элементы: name, kind (card|swagger), doc_id, url
 
 import json
 import logging
@@ -35,20 +35,18 @@ from section_parser import parse_document
 logger = logging.getLogger(__name__)
 
 
-# Соответствие resolve_target из card_sections.json → kind в манифесте.
-# card  → entity   (ссылка ведёт на публичную карточку)
-# swagger → operation (ссылка ведёт на OpenAPI-операцию)
-_TARGET_TO_KIND = {
-    "card": "entity",
-    "swagger": "operation",
-}
+# kind в манифесте берётся напрямую из resolve_target в card_sections.json —
+# единый словарь сквозь всю систему (конфиг, манифест, резолвер говорят одинаково):
+#   card    → ссылка ведёт на публичную карточку
+#   swagger → ссылка ведёт на OpenAPI-операцию
+_VALID_KINDS = ("card", "swagger")
 
 
 @dataclass
 class ManifestEntry:
     """Одна запись манифеста — публичный элемент сервиса."""
     name: str
-    kind: str            # entity | operation
+    kind: str            # card | swagger
     doc_id: str
     url: str
 
@@ -69,12 +67,12 @@ def _doc_id_to_url(doc_id: str, kind: str, swagger_base: Optional[str] = None,
                    swagger_url: Optional[str] = None) -> str:
     """Строит url элемента манифеста из doc_id, единообразно с конвенцией doc_id.
 
-    Для entity (карточка): url = doc_id + ".md" — путь карточки в dbo-registry,
+    Для card (карточка): url = doc_id + ".md" — путь карточки в dbo-registry,
         относительно корня реестра, прямые слеши (так же, как doc_id в проекте).
-    Для operation (swagger): url = явный swagger_url, если задан в frontmatter;
+    Для swagger (операция): url = явный swagger_url, если задан в frontmatter;
         иначе собирается из swagger_base + doc_id как fallback (переходный период).
     """
-    if kind == "operation":
+    if kind == "swagger":
         if swagger_url:
             return swagger_url
         if swagger_base:
@@ -82,7 +80,7 @@ def _doc_id_to_url(doc_id: str, kind: str, swagger_base: Optional[str] = None,
             return f"{swagger_base.rstrip('/')}/#/{doc_id}"
         # Нет swagger-адреса — оставляем doc_id как маркер (резолвер предупредит).
         return doc_id
-    # entity → путь карточки относительно корня реестра, прямые слеши.
+    # card → путь карточки относительно корня реестра, прямые слеши.
     return f"{doc_id}.md"
 
 
@@ -108,16 +106,16 @@ def build_entry(
         return None
 
     resolve_target = type_rule.get("resolve_target")
-    kind = _TARGET_TO_KIND.get(resolve_target)
+    kind = resolve_target if resolve_target in _VALID_KINDS else None
     if not kind:
         return None
 
     # На PoC в манифест попадают только элементы, которые реально публичны:
-    #  • entity с generate_card=true (есть карточка), либо
-    #  • operation (есть/будет swagger).
+    #  • card с generate_card=true (есть карточка), либо
+    #  • swagger (есть/будет swagger).
     # Непубличные типы (process/control/... с generate_card=false и target=card)
     # в манифест не включаются — ссылаться на них извне нельзя.
-    if kind == "entity" and not type_rule.get("generate_card", False):
+    if kind == "card" and not type_rule.get("generate_card", False):
         return None
 
     swagger_url = meta.get("swagger_url")  # опциональное явное поле во frontmatter
@@ -139,7 +137,7 @@ def build_manifest(
         config: загруженный card_sections.json.
         service_code: код сервиса для шапки манифеста; если None — берётся из
             frontmatter первого документа.
-        swagger_base: базовый URL swagger-портала (для operation без явного
+        swagger_base: базовый URL swagger-портала (для swagger-элементов без явного
             swagger_url). Опционально, переходный период.
 
     Returns:

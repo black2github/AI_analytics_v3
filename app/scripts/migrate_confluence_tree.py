@@ -180,7 +180,7 @@ def save_page_file(
         "id": page_id,
         "title": title,
         "approved_content": content_md,
-        "requirement_type": page_data.get("requirement_type", "function"),
+        "requirement_type": page_data.get("requirement_type", "unknown"),
     }
 
     frontmatter = page_to_frontmatter(page, service_code, source, doc_id)

@@ -59,7 +59,7 @@ def page_to_frontmatter(
     пустыми. Линтер при первой попытке коммита укажет на пропуски —
     аналитик заполнит их вручную при ревью миграции.
     """
-    req_type = (page.get("requirement_type") or "function").strip()
+    req_type = (page.get("requirement_type") or "unknown").strip()
     is_platform = get_platform_status(service_code)
 
     fm: Dict = {

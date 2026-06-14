@@ -25,6 +25,7 @@ VALID_REQUIREMENT_TYPES = {
     "BRD", "function", "control", "screenListForm", "screenItemForm", "integration",
     "dataModel", "notification", "process", "states",
     "agent", "printForm",
+    "unknown",  # тип не удалось определить при миграции — аналитик проставит при ревью
 }
 
 VALID_DOC_TYPES = {"requirement", "template", "glossary"}
