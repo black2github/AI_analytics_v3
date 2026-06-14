@@ -158,12 +158,19 @@ def load_pages_by_ids(page_ids: List[str], include_unapproved: bool = False) -> 
             logger.warning("[load_pages_by_ids] Пропущена страница {%s}: отсутствует %s.", page_id, content_field)
             continue
 
+        # Точный признак: есть ли на странице неподтверждённые фрагменты.
+        # full_content и approved_content строятся одним экстрактором с единственным
+        # отличием include_colored, поэтому при отсутствии цветных фрагментов они
+        # побайтово равны. Неравенство → на странице есть неподтверждённое.
+        has_unapproved = page_data.get("full_content") != page_data.get("approved_content")
+
         pages.append({
             "id": page_id,
             "title": title,
             "content": full_markdown,
             "approved_content": content,
-            "requirement_type": requirement_type
+            "requirement_type": requirement_type,
+            "has_unapproved": has_unapproved,
         })
 
         logger.debug("[load_pages_by_ids] Успешно добавлена страница: id=%s, title='%s'", page_id, title)

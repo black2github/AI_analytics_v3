@@ -183,7 +183,15 @@ def save_page_file(
         "requirement_type": page_data.get("requirement_type", "unknown"),
     }
 
-    frontmatter = page_to_frontmatter(page, service_code, source, doc_id)
+    # Точный признак неподтверждённого контента: full_content и approved_content
+    # различаются только при наличии цветных (неподтверждённых) фрагментов.
+    has_unapproved = page_data.get("full_content") != page_data.get("approved_content")
+
+    frontmatter = page_to_frontmatter(
+        page, service_code, source, doc_id,
+        include_unapproved=include_unapproved,
+        has_unapproved=has_unapproved,
+    )
     write_md_file(filepath, frontmatter, content_md)
 
     page_registry[page_id] = filepath

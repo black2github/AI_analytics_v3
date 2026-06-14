@@ -51,6 +51,8 @@ def page_to_frontmatter(
     service_code: str,
     source: str,
     doc_id: str,
+    include_unapproved: bool = False,
+    has_unapproved: bool = False,
 ) -> Dict:
     """Строит frontmatter из метаданных Confluence-страницы.
 
@@ -58,9 +60,15 @@ def page_to_frontmatter(
     jira_id, related, author, tags, reviewed_by, parent), оставляются
     пустыми. Линтер при первой попытке коммита укажет на пропуски —
     аналитик заполнит их вручную при ревью миграции.
+
+    status: "draft" только если миграция шла с --all (include_unapproved)
+    И на странице реально есть неподтверждённые фрагменты (has_unapproved).
+    Без --all пишется только подтверждённый контент → "approved"; с --all,
+    но без неподтверждённого на странице, контент фактически подтверждён → "approved".
     """
     req_type = (page.get("requirement_type") or "unknown").strip()
     is_platform = get_platform_status(service_code)
+    status = "draft" if (include_unapproved and has_unapproved) else "approved"
 
     fm: Dict = {
         # Идентификация
@@ -82,7 +90,7 @@ def page_to_frontmatter(
         "confluence_page_id": str(page["id"]),
 
         # Статус и владение
-        "status": "approved",
+        "status": status,
         "owner": "",
         "author": "",
         "reviewed_by": "",
@@ -132,6 +140,7 @@ def migrate_page(
     service_code: str,
     source: str,
     subdir: str,
+    include_unapproved: bool = False,
 ) -> Optional[Path]:
     """Конвертирует одну страницу Confluence в .md файл.
 
@@ -164,7 +173,11 @@ def migrate_page(
         if downloaded or failed:
             logger.info("  🖼 Картинки: скачано %d, ошибок %d", downloaded, failed)
 
-    frontmatter = page_to_frontmatter(page, service_code, source, doc_id)
+    frontmatter = page_to_frontmatter(
+        page, service_code, source, doc_id,
+        include_unapproved=include_unapproved,
+        has_unapproved=page.get("has_unapproved", False),
+    )
     write_md_file(filepath, frontmatter, content_md)
 
     return filepath
@@ -252,7 +265,7 @@ def main():
     skipped = []
 
     for page in pages:
-        result = migrate_page(page, service_code, source, subdir)
+        result = migrate_page(page, service_code, source, subdir, include_unapproved=include_unapproved)
         if result:
             migrated.append(result)
             logger.info("  ✓ %s → %s", page["title"], result)
