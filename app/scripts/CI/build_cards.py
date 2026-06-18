@@ -34,7 +34,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 from card_generator import load_card_config, generate_card, CardResult
-from manifest_builder import build_manifest, render_manifest, ManifestBuildResult
+from manifest_builder import build_manifest, render_manifest, ManifestBuildResult, card_rel_url
 from card_link_resolver import ManifestIndex, resolve_links_in_card
 from section_parser import split_frontmatter
 
@@ -110,14 +110,16 @@ def run_pipeline(
     # --- ПРОХОД 1: манифест (полный) ---
     doc_paths = [str(p) for p in docs]
     manifest_result: ManifestBuildResult = build_manifest(
-        doc_paths, config, service_code=service_code, swagger_base=swagger_base
+        doc_paths, config, service_code=service_code, swagger_base=swagger_base,
+        service_dir=str(service_path),
     )
     report.service_code = manifest_result.service_code
     report.manifest_entries = len(manifest_result.entries)
     report.warnings.extend(manifest_result.warnings)
 
     # --- ПРОХОД 1: карточки (сырые ссылки) ---
-    # Держим карточки в памяти как (doc_id, card_text) до прохода 2.
+    # Держим карточки в памяти как (source_path, doc_id, card_text) до прохода 2.
+    # source_path нужен для зеркального расположения карточки (doc_id больше не путь).
     raw_cards: List[tuple] = []
     for path in doc_paths:
         result: CardResult = generate_card(path, config)
@@ -126,7 +128,7 @@ def run_pipeline(
             # doc_id берём из frontmatter карточки (он перенесён в неё).
             meta, _ = split_frontmatter(result.card_text)
             doc_id = meta.get("doc_id") or meta.get("source_doc_id")
-            raw_cards.append((doc_id, result.card_text))
+            raw_cards.append((path, doc_id, result.card_text))
             report.cards_generated += 1
         else:
             report.cards_skipped += 1
@@ -134,15 +136,16 @@ def run_pipeline(
     # --- ПРОХОД 2: резолв ссылок по полному манифесту ---
     index = ManifestIndex([e.as_dict() for e in manifest_result.entries])
 
-    for doc_id, card_text in raw_cards:
+    for path, doc_id, card_text in raw_cards:
         resolved_text, stats = resolve_links_in_card(card_text, doc_id, index)
         report.links_redirected += stats.redirected
         report.links_flattened += stats.flattened
         report.links_kept_external += stats.kept_external
         report.links_kept_interservice += stats.kept_interservice
 
-        # Запись карточки по её полному doc_id-пути.
-        card_path = out_path / f"{doc_id}.md"
+        # Карточка лежит зеркально пути источника (тот же относительный путь, что и
+        # url в манифесте — общий card_rel_url). doc_id больше не путь.
+        card_path = out_path / card_rel_url(path, service_path)
         card_path.parent.mkdir(parents=True, exist_ok=True)
         card_path.write_text(resolved_text, encoding="utf-8")
 

@@ -63,13 +63,26 @@ class ManifestBuildResult:
     skipped: List[str] = field(default_factory=list)   # doc_id, не попавшие в манифест
 
 
-def _doc_id_to_url(doc_id: str, kind: str, swagger_base: Optional[str] = None,
-                   swagger_url: Optional[str] = None) -> str:
-    """Строит url элемента манифеста из doc_id, единообразно с конвенцией doc_id.
+def card_rel_url(source_path, service_dir) -> str:
+    """Относительный URL/путь карточки = путь исходного .md относительно каталога
+    сервиса (зеркало дерева источника), POSIX-слеши.
 
-    Для card (карточка): url = doc_id + ".md" — путь карточки в dbo-registry,
-        относительно корня реестра, прямые слеши (так же, как doc_id в проекте).
-    Для swagger (операция): url = явный swagger_url, если задан в frontmatter;
+    Единый источник истины для расположения карточки: и запись файла в build_cards,
+    и url в манифесте берут это значение, поэтому гарантированно совпадают. doc_id
+    больше НЕ используется как путь (это location-независимая смарт-ссылка {{...}}).
+    См. app/scripts/CI/design-smart-link-doc-id.md, §7.4.
+    """
+    return str(Path(source_path).relative_to(service_dir)).replace("\\", "/")
+
+
+def _doc_id_to_url(doc_id: str, kind: str, card_rel_path: Optional[str] = None,
+                   swagger_base: Optional[str] = None,
+                   swagger_url: Optional[str] = None) -> str:
+    """Строит url элемента манифеста.
+
+    Для card (карточка): url = card_rel_path — относительный путь карточки (зеркало
+        источника), НЕ f"{doc_id}.md": doc_id теперь смарт-ссылка, а не путь.
+    Для swagger (операция): url = явный swagger_url, если задан во frontmatter;
         иначе собирается из swagger_base + doc_id как fallback (переходный период).
     """
     if kind == "swagger":
@@ -80,13 +93,14 @@ def _doc_id_to_url(doc_id: str, kind: str, swagger_base: Optional[str] = None,
             return f"{swagger_base.rstrip('/')}/#/{doc_id}"
         # Нет swagger-адреса — оставляем doc_id как маркер (резолвер предупредит).
         return doc_id
-    # card → путь карточки относительно корня реестра, прямые слеши.
-    return f"{doc_id}.md"
+    # card → относительный путь карточки (зеркало источника).
+    return card_rel_path
 
 
 def build_entry(
     meta: Dict,
     config: Dict,
+    card_rel_path: Optional[str] = None,
     swagger_base: Optional[str] = None,
 ) -> Optional[ManifestEntry]:
     """Строит запись манифеста из frontmatter одного документа.
@@ -119,7 +133,8 @@ def build_entry(
         return None
 
     swagger_url = meta.get("swagger_url")  # опциональное явное поле во frontmatter
-    url = _doc_id_to_url(doc_id, kind, swagger_base=swagger_base, swagger_url=swagger_url)
+    url = _doc_id_to_url(doc_id, kind, card_rel_path=card_rel_path,
+                         swagger_base=swagger_base, swagger_url=swagger_url)
 
     return ManifestEntry(name=name, kind=kind, doc_id=doc_id, url=url)
 
@@ -129,6 +144,7 @@ def build_manifest(
     config: Dict,
     service_code: Optional[str] = None,
     swagger_base: Optional[str] = None,
+    service_dir: Optional[str] = None,
 ) -> ManifestBuildResult:
     """Строит манифест сервиса из списка путей к .md документам.
 
@@ -158,7 +174,9 @@ def build_manifest(
         if result.service_code is None:
             result.service_code = meta.get("service_code")
 
-        entry = build_entry(meta, config, swagger_base=swagger_base)
+        # url карточки = путь источника относительно каталога сервиса (зеркало).
+        card_rel_path = card_rel_url(path, service_dir) if service_dir else None
+        entry = build_entry(meta, config, card_rel_path=card_rel_path, swagger_base=swagger_base)
         if entry is None:
             result.skipped.append(meta.get("doc_id") or path)
             continue
