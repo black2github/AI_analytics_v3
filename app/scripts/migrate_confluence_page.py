@@ -74,6 +74,7 @@ def page_to_frontmatter(
         # Идентификация
         "doc_id": doc_id,
         "title": page.get("title", ""),
+        "description": "",
 
         # Классификация
         "doc_type": "requirement",
@@ -94,7 +95,7 @@ def page_to_frontmatter(
         "owner": "",
         "author": "",
         "reviewed_by": "",
-        "version": "1.0",
+        "version": "1.0.0",
         "created_date": "",
         "updated_date": "",
 
