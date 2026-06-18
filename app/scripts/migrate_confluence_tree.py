@@ -65,12 +65,15 @@ from requests import ReadTimeout
 # либо экранированный символ (\\.), либо любой символ кроме '\' и неэкранированного ']'.
 # Простой [^\]]* остановился бы на первом же ']' внутри экранированного '\]'.
 _LINK_TEXT = r'((?:\\.|[^\]\\])*)'
-_LINK_BY_ID_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://(\d+)\)')
+# ID-плейсхолдер может нести необязательный суффикс ?title=SPACE/Title+Words —
+# его дописывает content_extractor, когда у ссылки есть и ID, и заголовок. Суффикс
+# используется как fallback-ключ резолва по заголовку, если ID не найден в реестре.
+_LINK_BY_ID_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://(\d+)(?:\?title=([^)]*))?\)')
 _LINK_BY_TITLE_RE = re.compile(r'\[' + _LINK_TEXT + r'\]\(confluence://title/([^)]*)\)')
 
 # Внутри HTML-таблиц ссылки генерируются как HTML-тег <a href="confluence://...">.
 # Здесь резолвим только атрибут href, не трогая текст и закрывающий </a>.
-_HTML_LINK_BY_ID_RE = re.compile(r'<a href="confluence://(\d+)">')
+_HTML_LINK_BY_ID_RE = re.compile(r'<a href="confluence://(\d+)(?:\?title=([^"]*))?">')
 _HTML_LINK_BY_TITLE_RE = re.compile(r'<a href="confluence://title/([^"]*)">')
 
 
@@ -401,8 +404,12 @@ def resolve_confluence_links(
         text = filepath.read_text(encoding="utf-8")
 
         def replace_id(m: re.Match) -> str:
-            link_text, page_id = m.group(1), m.group(2)
+            link_text, page_id, title_encoded = m.group(1), m.group(2), m.group(3)
             target = page_registry.get(page_id)
+            # Fallback: ID нет в реестре, но плейсхолдер несёт заголовок — пробуем по нему.
+            if not target and title_encoded:
+                raw_title = title_encoded.split("/")[-1].replace("+", " ")
+                target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
                 counts["resolved"] += 1
@@ -424,8 +431,13 @@ def resolve_confluence_links(
 
         def replace_html_id(m: re.Match) -> str:
             # HTML-форма внутри таблиц: заменяем только href, текст и </a> остаются.
-            page_id = m.group(1)
+            page_id, title_encoded = m.group(1), m.group(2)
             target = page_registry.get(page_id)
+            # Fallback по заголовку (title_encoded приходит HTML-экранированным,
+            # &quot; и пр. снимает _title_key через html.unescape).
+            if not target and title_encoded:
+                raw_title = title_encoded.split("/")[-1].replace("+", " ")
+                target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
                 counts["resolved"] += 1

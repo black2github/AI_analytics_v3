@@ -1169,18 +1169,28 @@ class ContentExtractor:
             if not text:
                 return ""
 
-            # Строим URL-плейсхолдер
+            # Строим URL-плейсхолдер. Когда у ссылки есть и ID, и заголовок,
+            # заголовок дописываем суффиксом ?title=... к ID-плейсхолдеру: на Pass 2
+            # это даёт fallback-резолв по заголовку, если ID не найдётся в реестре
+            # (например, ссылка ведёт за пределы текущего поддерева, но страница уже
+            # есть на диске и попала в title_registry через seed_registries_from_disk).
             content_id = ri_page.get("ri:content-id")
-            if content_id:
-                return self._format_link(text, f"confluence://{content_id}", html_context)
-
             content_title = ri_page.get("ri:content-title")
+            space_key = ri_page.get("ri:space-key", "")
+
+            title_path = ""
             if content_title:
-                space_key = ri_page.get("ri:space-key", "")
                 encoded = content_title.replace(" ", "+")
-                url = (f"confluence://title/{space_key}/{encoded}"
-                       if space_key else f"confluence://title/{encoded}")
+                title_path = f"{space_key}/{encoded}" if space_key else encoded
+
+            if content_id:
+                url = f"confluence://{content_id}"
+                if title_path:
+                    url += f"?title={title_path}"
                 return self._format_link(text, url, html_context)
+
+            if content_title:
+                return self._format_link(text, f"confluence://title/{title_path}", html_context)
 
             return self._format_link(text, None, html_context)
 

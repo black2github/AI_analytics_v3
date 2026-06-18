@@ -16,6 +16,31 @@ from app.scripts.migrate_confluence_tree import (
     resolve_confluence_links,
     seed_registries_from_disk,
 )
+from app.content_extractor import create_all_fragments_extractor
+
+
+class TestPlaceholderProducer:
+    """Контракт генерации плейсхолдеров в content_extractor — должен совпадать
+    с тем, что парсит resolve_confluence_links (Pass 2)."""
+
+    def _extract(self, html):
+        return create_all_fragments_extractor().extract(html)
+
+    def test_id_with_title_emits_title_suffix(self):
+        # ac:link с ID и заголовком → confluence://ID?title=SPACE/Encoded
+        # (суффикс нужен для fallback-резолва по заголовку при промахе ID).
+        html = ('<p><ac:link><ri:page ri:content-id="123" ri:content-title="Моя страница" '
+                'ri:space-key="SP"/><ac:plain-text-link-body>текст</ac:plain-text-link-body>'
+                '</ac:link></p>')
+        assert "confluence://123?title=SP/Моя+страница" in self._extract(html)
+
+    def test_title_only_emits_title_placeholder(self):
+        # Без ID → confluence://title/SPACE/Encoded (формат не изменился).
+        html = ('<p><ac:link><ri:page ri:content-title="Моя страница" ri:space-key="SP"/>'
+                '<ac:plain-text-link-body>текст</ac:plain-text-link-body></ac:link></p>')
+        out = self._extract(html)
+        assert "confluence://title/SP/Моя+страница" in out
+        assert "?title=" not in out
 
 
 class TestTitleKey:
@@ -72,6 +97,45 @@ class TestResolveConfluenceLinks:
         source, target = self._setup(
             tmp_path,
             '<a href="confluence://title/SPACE/[КК_СК]+ЭФ+Клиента+&quot;Список+карт&quot;">текст</a>',
+        )
+        title_registry = {_title_key('[КК_СК] ЭФ Клиента "Список карт"'): target}
+        resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
+        assert source.read_text(encoding="utf-8") == '<a href="sub/Целевая.md">текст</a>'
+        assert (resolved, unresolved) == (1, 0)
+
+    def test_id_link_with_title_suffix_prefers_id(self, tmp_path):
+        # ID есть в реестре — резолвим по нему, title-суффикс игнорируется.
+        source, target = self._setup(
+            tmp_path, "[Текст](confluence://123?title=SPACE/Неважно)"
+        )
+        resolved, unresolved = resolve_confluence_links({"123": target}, {}, files={source})
+        assert source.read_text(encoding="utf-8") == "[Текст](sub/Целевая.md)"
+        assert (resolved, unresolved) == (1, 0)
+
+    def test_id_link_with_title_suffix_falls_back_to_title(self, tmp_path):
+        # ID нет в page_registry, но плейсхолдер несёт ?title=... и заголовок
+        # есть в title_registry (например, страница из прошлого прогона на диске).
+        source, target = self._setup(
+            tmp_path, "[Текст](confluence://999?title=SPACE/Заголовок+страницы)"
+        )
+        title_registry = {_title_key("Заголовок страницы"): target}
+        resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
+        assert source.read_text(encoding="utf-8") == "[Текст](sub/Целевая.md)"
+        assert (resolved, unresolved) == (1, 0)
+
+    def test_id_link_with_title_suffix_unresolved_uses_bare_pageid_url(self, tmp_path):
+        # Ни ID, ни заголовок не найдены — URL строится по «голому» pageId без суффикса.
+        source, _ = self._setup(tmp_path, "[Текст](confluence://999?title=SPACE/Нет+такой)")
+        resolved, unresolved = resolve_confluence_links({}, {}, files={source})
+        assert source.read_text(encoding="utf-8") == \
+            f"[Текст]({mig.CONFLUENCE_BASE_URL}/pages/viewpage.action?pageId=999)"
+        assert (resolved, unresolved) == (0, 1)
+
+    def test_html_id_link_with_title_suffix_falls_back_to_title(self, tmp_path):
+        # HTML-форма в таблицах: ID-промах, заголовок (с &quot;) находится по title.
+        source, target = self._setup(
+            tmp_path,
+            '<a href="confluence://999?title=SPACE/[КК_СК]+ЭФ+Клиента+&quot;Список+карт&quot;">текст</a>',
         )
         title_registry = {_title_key('[КК_СК] ЭФ Клиента "Список карт"'): target}
         resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
