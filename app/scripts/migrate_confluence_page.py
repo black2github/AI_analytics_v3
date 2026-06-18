@@ -36,14 +36,20 @@ def safe_filename(title: str, max_length: int = 100) -> str:
     return name[:max_length]
 
 
-def build_doc_id(service_code: str, subdir: str, filename: str) -> str:
-    """Строит doc_id из пути файла.
+def build_doc_id(service_code: str, title: str) -> str:
+    """Строит doc_id как location-независимую смарт-ссылку {{SERVICE: label}}.
 
-    Service_code приводим к нижнему регистру с дефисом, чтобы URL и пути
-    были консистентны: CORP_CARDS → corp-cards.
+    SERVICE — код сервиса как есть (тот же вид, что в frontmatter/манифесте).
+    label — полный заголовок Confluence, ВКЛЮЧАЯ префикс ([КК_ВК] ...), без
+    вырезания/нормализации: label == title == manifest name. Парсинг ведётся по
+    первому ':' (код сервиса двоеточий не содержит), поэтому двоеточия и кавычки
+    внутри label допустимы.
+
+    Формат не зависит от пути файла: файл можно двигать по дереву каталогов без
+    смены doc_id (связь doc_id → путь/url держит манифест карточек).
+    См. app/scripts/CI/design-smart-link-doc-id.md.
     """
-    service_part = service_code.lower().replace("_", "-")
-    return f"{service_part}/{subdir}/{filename}"
+    return "{{" + f"{service_code}: {title}" + "}}"
 
 
 def page_to_frontmatter(
@@ -154,9 +160,13 @@ def migrate_page(
         logger.warning("  ⚠ Page %s has no approved content, skipped", page["id"])
         return None
 
+    # Физический путь файла развязан с doc_id: расположение задаёт безопасное имя
+    # файла в дереве сервиса (cc/<subdir>/<filename>.md), а doc_id — это
+    # location-независимая смарт-ссылка {{SERVICE: title}}.
     filename = safe_filename(page["title"])
-    doc_id = build_doc_id(service_code, subdir, filename)
-    filepath = OUTPUT_ROOT / f"{doc_id}.md"
+    service_part = service_code.lower().replace("_", "-")
+    filepath = OUTPUT_ROOT / service_part / subdir / f"{filename}.md"
+    doc_id = build_doc_id(service_code, page["title"])
 
     if filepath.exists():
         logger.warning("  ⚠ File already exists, skipped: %s", filepath)

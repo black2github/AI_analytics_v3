@@ -116,15 +116,18 @@ B и A отличаются только тем, в каком виде живу
 ### Фаза 0 — подготовка (этот документ)
 - [x] Зафиксировать решение A через B-as-A-ready и инварианты §5.
 
-### Фаза 1 — `doc_id` как `{{SERVICE: label}}` (общая для B и A; инварианты И-1)
+### Фаза 1 — `doc_id` как `{{SERVICE: label}}` (общая для B и A; инварианты И-1) — ГОТОВО
 Разблокирована (§7.2, §7.3 решены): `label` = полный заголовок Confluence (с префиксом),
 уникальность — на аналитике.
-- [ ] `build_doc_id` (`migrate_confluence_page.py:39-46`) → `{{SERVICE: label}}`,
+- [x] `build_doc_id` (`migrate_confluence_page.py`) → `{{SERVICE: label}}`,
       где `label` = `title` целиком (с префиксом), без вырезания/нормализации.
-- [ ] `migrate_confluence_tree.py:161-166` — `doc_id` строится из `(service_code, title)`,
+- [x] `migrate_page` — физический путь файла развязан с `doc_id` (имя из `safe_filename`,
+      путь `cc/<subdir>/<file>.md`; `doc_id` строится отдельно из `(service_code, title)`).
+- [x] `migrate_confluence_tree.py` — `doc_id` из `(service_code, title)` через `build_doc_id`,
       не из `filepath`.
-- [ ] Линтер: валидация формата `^\{\{\s*[^:{}]+:\s*.+\}\}$` (`lint_frontmatter.py`).
-- [ ] Тесты: генерация `doc_id`, валидация линтера.
+- [x] Линтер: валидация формата `_DOC_ID_RE` (`lint_frontmatter.py`); пустой/whitespace
+      label и путь-форма отвергаются.
+- [x] Тесты: `tests/test_doc_id_format.py` (генерация `doc_id`, регекс, lint валидный/путь).
 
 ### Фаза 2 — развязка имени карточки + манифест (общая; инварианты И-2, И-3)
 - [ ] `build_cards.py:145` — имя файла карточки из `safe_filename(title)`/стабильной схемы.

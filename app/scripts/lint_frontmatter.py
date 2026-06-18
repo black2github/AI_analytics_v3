@@ -2,10 +2,16 @@
 # Запуск вручную: python scripts/lint_frontmatter.py — просканирует всю папку requirements/. 
 # При PR — автоматически на изменённые .md файлы.
 
+import re
 import sys
 import yaml
 from pathlib import Path
 from typing import Dict, List
+
+# doc_id — смарт-ссылка {{SERVICE: label}}: код сервиса (без ':' и фигурных скобок),
+# двоеточие-разделитель, затем label с ≥1 непробельным символом и без фигурных скобок
+# (':' и кавычки внутри label допустимы). См. app/scripts/CI/design-smart-link-doc-id.md.
+_DOC_ID_RE = re.compile(r"^\{\{\s*[^:{}]+:\s*[^{}]*[^\s{}][^{}]*\}\}$")
 
 REQUIRED_FIELDS = {
     "doc_id",
@@ -73,6 +79,13 @@ def lint_file(filepath: Path) -> List[str]:
         errors.append(
             f"{filepath}: invalid requirement_type '{meta['requirement_type']}'"
             f" — allowed: {sorted(VALID_REQUIREMENT_TYPES)}"
+        )
+
+    # doc_id должен быть смарт-ссылкой {{SERVICE: label}}, а не путём.
+    if meta.get("doc_id") and not _DOC_ID_RE.match(str(meta["doc_id"])):
+        errors.append(
+            f"{filepath}: invalid doc_id '{meta['doc_id']}'"
+            f" — ожидается формат {{{{SERVICE: заголовок}}}}"
         )
 
     if meta.get("doc_type") and meta["doc_type"] not in VALID_DOC_TYPES:

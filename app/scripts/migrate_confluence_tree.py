@@ -56,6 +56,7 @@ from app.scripts.migrate_confluence_page import (
     page_to_frontmatter,
     write_md_file,
     OUTPUT_ROOT,
+    build_doc_id,
 )
 
 from requests import ReadTimeout
@@ -161,12 +162,10 @@ def save_page_file(
         stats["skipped"] += 1
         return False
 
-    # doc_id = путь относительно OUTPUT_ROOT без расширения, с прямыми слешами
-    try:
-        rel = filepath.relative_to(OUTPUT_ROOT)
-        doc_id = str(rel.with_suffix("")).replace("\\", "/")
-    except ValueError:
-        doc_id = str(filepath.with_suffix("")).replace("\\", "/")
+    # doc_id — location-независимая смарт-ссылка {{SERVICE: title}}, не зависит от
+    # пути файла: страницу можно двигать по дереву без смены doc_id.
+    # См. app/scripts/CI/design-smart-link-doc-id.md.
+    doc_id = build_doc_id(service_code, title)
 
     # Миграция картинок: скачиваем вложения в img/ рядом с .md и заменяем плейсхолдеры
     # confluence-attachment:// на относительные ссылки (если конвертация шла с MIGRATE_IMAGES).
