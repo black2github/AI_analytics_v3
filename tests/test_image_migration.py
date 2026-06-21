@@ -185,3 +185,116 @@ class TestImageMigratorHttp:
         assert (downloaded, failed) == (0, 1)
         assert "confluence-download://" not in new            # плейсхолдер снят
         assert "/download/attachments/55/a.jpg" in new        # fallback на абсолютный URL
+
+
+class TestLinkResourceConverter:
+    """Конвертер: ac:link с ri:url (внешний URL) и ri:attachment (вложение)."""
+
+    def test_external_url_link_preserved_regardless_of_flag(self):
+        html = ('<p><ac:link><ri:url ri:value="https://ext.example/doc"/>'
+                '<ac:plain-text-link-body>док</ac:plain-text-link-body></ac:link></p>')
+        # ri:url не зависит от migrate_images — внешний адрес доступен без скачивания
+        assert "[док](https://ext.example/doc)" in _extract(html, migrate_images=False)
+        assert "[док](https://ext.example/doc)" in _extract(html, migrate_images=True)
+
+    def test_external_url_link_text_falls_back_to_url(self):
+        html = '<p><ac:link><ri:url ri:value="https://ext/x"/></ac:link></p>'
+        assert "[https://ext/x](https://ext/x)" in _extract(html, migrate_images=False)
+
+    def test_attachment_link_becomes_placeholder_with_flag(self):
+        html = ('<p><ac:link><ri:attachment ri:filename="spec.pdf"/>'
+                '<ac:plain-text-link-body>Спека</ac:plain-text-link-body></ac:link></p>')
+        assert "[Спека](confluence-attachment://spec.pdf)" in _extract(html, migrate_images=True)
+
+    def test_attachment_link_text_falls_back_to_filename(self):
+        html = '<p><ac:link><ri:attachment ri:filename="spec.pdf"/></ac:link></p>'
+        assert "[spec.pdf](confluence-attachment://spec.pdf)" in _extract(html, migrate_images=True)
+
+    def test_attachment_link_without_flag_keeps_text_only(self):
+        html = ('<p><ac:link><ri:attachment ri:filename="spec.pdf"/>'
+                '<ac:plain-text-link-body>Спека</ac:plain-text-link-body></ac:link></p>')
+        out = _extract(html, migrate_images=False)
+        assert "confluence-attachment://" not in out
+        assert "[Спека]" in out  # текст без адреса — прежнее поведение
+
+    def test_attachment_link_in_simple_table_cell_markdown_form(self):
+        # Простая таблица рендерится как markdown → ссылка в md-форме (тоже плейсхолдер).
+        html = ('<table><tbody><tr><td>c</td>'
+                '<td><ac:link><ri:attachment ri:filename="f.docx"/>'
+                '<ac:plain-text-link-body>Файл</ac:plain-text-link-body></ac:link></td>'
+                '</tr></tbody></table>')
+        out = _extract(html, migrate_images=True)
+        assert "[Файл](confluence-attachment://f.docx)" in out
+
+    def test_attachment_link_in_complex_table_cell_html_form(self):
+        # Сложная ячейка (вложенный список) форсит HTML-таблицу → ссылка в html-форме.
+        html = ('<table><tbody><tr><td>c</td>'
+                '<td><ul><li>пункт</li></ul>'
+                '<ac:link><ri:attachment ri:filename="f.docx"/>'
+                '<ac:plain-text-link-body>Файл</ac:plain-text-link-body></ac:link></td>'
+                '</tr></tbody></table>')
+        out = _extract(html, migrate_images=True)
+        assert '<a href="confluence-attachment://f.docx">Файл</a>' in out
+
+
+class TestAttachmentLinkMigrator:
+    """Слой миграции: ссылки на вложения (md и html формы) -> img/ или fallback-URL."""
+
+    def test_markdown_link_downloaded_and_rewritten(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(image_migrator, "_get_attachment_download_urls",
+                            lambda pid: {"spec.pdf": "http://x/spec.pdf"})
+        monkeypatch.setattr(image_migrator, "_http_get_bytes", lambda url: b"PDF")
+        md = tmp_path / "page.md"
+        content = "см. [Спека](confluence-attachment://spec.pdf) тут"
+
+        new, downloaded, failed = image_migrator.migrate_images_in_content(content, "777", md)
+
+        uid = hashlib.sha1("777/spec.pdf".encode("utf-8")).hexdigest()[:8]
+        assert (downloaded, failed) == (1, 0)
+        assert f"[Спека](img/{uid}.pdf)" in new
+        assert (md.parent / "img" / f"{uid}.pdf").exists()
+
+    def test_html_link_downloaded_and_rewritten(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(image_migrator, "_get_attachment_download_urls",
+                            lambda pid: {"f.docx": "http://x/f.docx"})
+        monkeypatch.setattr(image_migrator, "_http_get_bytes", lambda url: b"DOC")
+        md = tmp_path / "page.md"
+        content = '<a href="confluence-attachment://f.docx">Файл</a>'
+
+        new, downloaded, failed = image_migrator.migrate_images_in_content(content, "777", md)
+
+        uid = hashlib.sha1("777/f.docx".encode("utf-8")).hexdigest()[:8]
+        assert (downloaded, failed) == (1, 0)
+        assert f'<a href="img/{uid}.docx">Файл</a>' in new
+
+    def test_link_falls_back_to_absolute_url(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(image_migrator, "_get_attachment_download_urls", lambda pid: {})
+        md = tmp_path / "page.md"
+        content = "[Спека](confluence-attachment://spec.pdf)"
+
+        new, downloaded, failed = image_migrator.migrate_images_in_content(content, "55", md)
+
+        assert (downloaded, failed) == (0, 1)
+        assert "confluence-attachment://" not in new
+        assert "[Спека](" in new and "/download/attachments/55/spec.pdf" in new
+
+    def test_same_attachment_in_img_and_link_downloaded_once(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(image_migrator, "_get_attachment_download_urls",
+                            lambda pid: {"d.png": "http://x/d.png"})
+        calls = {"n": 0}
+
+        def fake_get(url):
+            calls["n"] += 1
+            return b"BIN"
+
+        monkeypatch.setattr(image_migrator, "_http_get_bytes", fake_get)
+        md = tmp_path / "page.md"
+        content = ('<img src="confluence-attachment://d.png" alt="d.png"> '
+                   "и [тот же файл](confluence-attachment://d.png)")
+
+        new, downloaded, failed = image_migrator.migrate_images_in_content(content, "777", md)
+
+        # одно и то же вложение в <img> и в ссылке — скачано один раз (кэш по странице)
+        assert calls["n"] == 1
+        assert downloaded == 1
+        assert "confluence-attachment://" not in new

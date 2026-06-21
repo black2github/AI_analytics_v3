@@ -78,7 +78,7 @@ class TestFilterFragments:
         assert "Новое поле" not in result
 
     def test_filter_strikethrough_text(self):
-        """Тест игнорирования зачеркнутого текста"""
+        """Тест игнорирования зачеркнутого текста в approved-режиме (только подтверждённое)"""
         html = '''
         <p>Обычный текст</p>
         <p><s>Зачеркнутый текст</s></p>
@@ -89,6 +89,21 @@ class TestFilterFragments:
         assert "Обычный текст" in result
         assert "Еще обычный текст" in result
         assert "Зачеркнутый текст" not in result
+
+    def test_all_fragments_keeps_strikethrough_as_plain_text(self):
+        """Под --all (все фрагменты) зачёркнутый текст сохраняется как обычный текст:
+        вычеркивание без цвета ценности не несёт, а текст требования нужен."""
+        html = '''
+        <p>Обычный текст</p>
+        <p><s>Зачеркнутый текст</s></p>
+        <p style="color: red;">Красный текст</p>
+        '''
+
+        result = filter_all_fragments(html)
+        assert "Обычный текст" in result
+        assert "Красный текст" in result
+        assert "Зачеркнутый текст" in result   # больше не выкидывается
+        assert "~~" not in result              # без markdown-разметки вычеркивания
 
     def test_filter_jira_macros(self):
         """Тест игнорирования JIRA макросов"""

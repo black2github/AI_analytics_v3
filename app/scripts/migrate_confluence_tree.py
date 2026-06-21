@@ -95,6 +95,21 @@ def _title_key(title: str) -> str:
     title = re.sub(r"\s+", " ", title).strip()
     return title.lower()
 
+
+def _decode_title_path(title_encoded: str) -> str:
+    """Восстанавливает заголовок из хвоста плейсхолдера для поиска в title_registry.
+
+    Кодирование (content_extractor/page_cache) симметрично: литеральный '+' в
+    заголовке экранируется как %2B, затем пробелы кодируются как '+'. Раскодируем в
+    обратном порядке — сначала '+'→пробел, потом %2B→'+'. Иначе литеральный плюс
+    (напр. в продукте "O2+") был бы неотличим от закодированного пробела, и заголовок
+    вида '[O2+NEW] …' не совпал бы с ключом реестра ('[O2 NEW] …' вместо '[O2+NEW] …').
+
+    Берём только хвост после '/' — это сам заголовок; space-key (если был) отбрасываем.
+    """
+    return title_encoded.split("/")[-1].replace("+", " ").replace("%2B", "+")
+
+
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
@@ -157,10 +172,12 @@ def save_page_file(
         stats["skipped"] += 1
         return False
 
+    # Коллизия имён: файл с таким же заголовком уже есть. Перезаписываем с
+    # предупреждением (миграция разовая, далее работа по ФС под git — перезапись
+    # безопасна и откатываема). См. app/scripts/CI/analysis-naming-strategies.md.
     if filepath.exists():
-        logger.warning("  Файл уже существует, пропущен: %s", filepath)
-        stats["skipped"] += 1
-        return False
+        logger.warning("  ⚠ Файл уже существует — ПЕРЕЗАПИСЫВАЕМ: %s", filepath)
+        stats["overwritten"] = stats.get("overwritten", 0) + 1
 
     # doc_id — location-независимая смарт-ссылка {{SERVICE: title}}, не зависит от
     # пути файла: страницу можно двигать по дереву без смены doc_id.
@@ -407,7 +424,7 @@ def resolve_confluence_links(
             target = page_registry.get(page_id)
             # Fallback: ID нет в реестре, но плейсхолдер несёт заголовок — пробуем по нему.
             if not target and title_encoded:
-                raw_title = title_encoded.split("/")[-1].replace("+", " ")
+                raw_title = _decode_title_path(title_encoded)
                 target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
@@ -419,7 +436,7 @@ def resolve_confluence_links(
         def replace_title(m: re.Match) -> str:
             link_text, title_encoded = m.group(1), m.group(2)
             # title_encoded может быть "SPACE/Title+Words" или просто "Title+Words"
-            raw_title = title_encoded.split("/")[-1].replace("+", " ")
+            raw_title = _decode_title_path(title_encoded)
             target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
@@ -435,7 +452,7 @@ def resolve_confluence_links(
             # Fallback по заголовку (title_encoded приходит HTML-экранированным,
             # &quot; и пр. снимает _title_key через html.unescape).
             if not target and title_encoded:
-                raw_title = title_encoded.split("/")[-1].replace("+", " ")
+                raw_title = _decode_title_path(title_encoded)
                 target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
@@ -446,7 +463,7 @@ def resolve_confluence_links(
 
         def replace_html_title(m: re.Match) -> str:
             title_encoded = m.group(1)
-            raw_title = title_encoded.split("/")[-1].replace("+", " ")
+            raw_title = _decode_title_path(title_encoded)
             target = title_registry.get(_title_key(raw_title))
             if target:
                 rel = Path(os.path.relpath(target, filepath.parent))
@@ -471,19 +488,107 @@ def resolve_confluence_links(
     return counts["resolved"], counts["unresolved"]
 
 
+# Имя генерируемого навигационного файла секции и служебная папка вложений.
+INDEX_FILENAME = "index.md"
+_IMG_DIRNAME = "img"
+
+
+def _read_md_title(md_path: Path) -> str:
+    """Возвращает title из frontmatter .md-файла, иначе имя файла без расширения."""
+    try:
+        text = md_path.read_text(encoding="utf-8")
+    except OSError:
+        return md_path.stem
+    m = _FRONTMATTER_RE.match(text)
+    if m:
+        try:
+            fm = yaml.safe_load(m.group(1)) or {}
+        except yaml.YAMLError:
+            fm = {}
+        if isinstance(fm, dict) and fm.get("title"):
+            return str(fm["title"])
+    return md_path.stem
+
+
+def _dir_has_listing(d: Path) -> bool:
+    """True, если в папке есть что перечислять: .md (кроме index.md) или не-img подпапка."""
+    for p in d.iterdir():
+        if p.is_file() and p.suffix == ".md" and p.name != INDEX_FILENAME:
+            return True
+        if p.is_dir() and p.name != _IMG_DIRNAME:
+            return True
+    return False
+
+
+def generate_section_indexes(base_dir: Path) -> int:
+    """Pass 3 (опционально, флаг --with-index): кладёт навигационный index.md в каждую
+    папку дерева под base_dir.
+
+    index.md перечисляет относительными ссылками вложенные .md (с заголовками из их
+    frontmatter) и подпапки (ссылка на их index.md). Сам файл намеренно БЕЗ frontmatter:
+    линтер его пропускает по имени, а индексатор — по отсутствию service_code, поэтому в
+    требования/ChromaDB он не попадает. Папки img/ и сам index.md в перечень не входят.
+
+    Цели ссылок оборачиваются в угловые скобки <...>, чтобы скобки/иные спецсимволы в
+    кириллических именах (напр. «(115)») не ломали markdown-ссылку.
+
+    Идемпотентно: при повторном запуске index.md перезаписывается заново. Возвращает
+    число созданных index-файлов.
+    """
+    if not base_dir.exists():
+        return 0
+
+    created = 0
+    dirs = [base_dir] + [d for d in base_dir.rglob("*") if d.is_dir()]
+    for d in dirs:
+        if d.name == _IMG_DIRNAME:
+            continue
+
+        md_children = sorted(
+            (p for p in d.iterdir()
+             if p.is_file() and p.suffix == ".md" and p.name != INDEX_FILENAME),
+            key=lambda p: p.name,
+        )
+        sub_dirs = sorted(
+            (p for p in d.iterdir() if p.is_dir() and p.name != _IMG_DIRNAME),
+            key=lambda p: p.name,
+        )
+        if not md_children and not sub_dirs:
+            continue
+
+        lines = [f"# {d.name}", ""]
+        for p in md_children:
+            lines.append(f"- [{_read_md_title(p)}](<{p.name}>)")
+        for sd in sub_dirs:
+            # Ссылку на index.md подпапки даём только если он там будет (есть что листать),
+            # иначе показываем имя папки без ссылки — чтобы не плодить битые ссылки.
+            if _dir_has_listing(sd):
+                lines.append(f"- [{sd.name}/](<{sd.name}/{INDEX_FILENAME}>)")
+            else:
+                lines.append(f"- {sd.name}/")
+        lines.append("")
+
+        (d / INDEX_FILENAME).write_text("\n".join(lines), encoding="utf-8")
+        created += 1
+
+    return created
+
+
 def main():
-    # Флаги --http, --all, --keep-history и --with-images можно указать в любом месте
-    # аргументов; они переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history", "--with-images"}
+    # Флаги --http, --all, --keep-history, --with-images и --with-index можно указать в
+    # любом месте аргументов; они переопределяют соответствующие значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history", "--with-images", "--with-index"}
     args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
     keep_history = "--keep-history" in sys.argv
     with_images = "--with-images" in sys.argv
+    with_index = "--with-index" in sys.argv
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
-              "<page_id> <service_code> <subdir> [source] [--http] [--all] [--keep-history] [--with-images]")
+              "<page_id> <service_code> <subdir> [source] [--http] [--all] [--keep-history] "
+              "[--with-images] [--with-index]")
         print("Example: python migrate_confluence_tree.py "
               "12345 CORP_CARDS лимиты DBOCORPESPLN")
         print("Example (прямой HTTP, в обход API): python migrate_confluence_tree.py "
@@ -494,6 +599,8 @@ def main():
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --keep-history")
         print("Example (мигрировать картинки в img/ рядом с .md): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --with-images")
+        print("Example (сгенерировать навигационные index.md по папкам, для SSG): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --with-index")
         sys.exit(1)
 
     # Переопределяем политику удаления истории на время процесса (вариант A).
@@ -528,9 +635,11 @@ def main():
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
     logger.info("Images mode: %s",
                 "СКАЧИВАТЬ картинки в img/" if with_images else "картинки игнорируются")
+    logger.info("Index mode: %s",
+                "генерировать index.md по папкам" if with_index else "без index.md")
     logger.info("")
 
-    stats: Dict = {"migrated": 0, "skipped": 0}
+    stats: Dict = {"migrated": 0, "skipped": 0, "overwritten": 0}
     visited: set = set()
     page_registry: Dict[str, Path] = {}
     title_registry: Dict[str, Path] = {}
@@ -561,12 +670,21 @@ def main():
         page_registry, title_registry, files=current_files
     )
 
+    indexes = 0
+    if with_index:
+        logger.info("")
+        logger.info("Pass 3: generating section index.md ...")
+        indexes = generate_section_indexes(base_output_dir)
+
     logger.info("")
     logger.info("Migration complete:")
     logger.info("  Migrated:           %d", stats["migrated"])
+    logger.info("  Overwritten:        %d  (коллизии имён — перезаписаны)", stats["overwritten"])
     logger.info("  Skipped:            %d", stats["skipped"])
     logger.info("  Links resolved:     %d", resolved)
     logger.info("  Links unresolved:   %d  (replaced with absolute Confluence URLs)", unresolved)
+    if with_index:
+        logger.info("  Index files:        %d", indexes)
     logger.info("")
     logger.info("Next steps:")
     logger.info("  1. Заполните пустые поля frontmatter вручную (owner, jira_id)")

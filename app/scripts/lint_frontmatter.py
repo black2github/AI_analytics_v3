@@ -25,7 +25,7 @@ REQUIRED_FIELDS = {
     "source",
 }
 
-VALID_STATUSES = {"draft", "review", "approved", "deprecated"}
+VALID_STATUSES = {"draft", "review", "active", "deprecated"}
 
 VALID_REQUIREMENT_TYPES = {
     "BRD", "function", "control", "screenListForm", "screenItemForm", "integration",
@@ -38,7 +38,14 @@ VALID_DOC_TYPES = {"requirement", "template", "glossary"}
 
 INTEGRATION_REQUIRED = {"target_system"}
 
-COMMA_STR_FIELDS = {"jira_ids", "reviewed_by", "related", "tags"}
+# Эти поля кладутся в метаданные ChromaDB, который не принимает list → строка
+# с разделителем-запятой. (tags/reviewers индексацию не проходят и потому ниже —
+# в LIST_FIELDS как массивы целевой схемы.)
+COMMA_STR_FIELDS = {"jira_ids", "related"}
+
+# Поля целевой схемы, которые должны быть YAML-списками, а не строкой.
+# В ChromaDB не индексируются, поэтому ограничение «только скаляр» на них не давит.
+LIST_FIELDS = {"reviewers", "tags"}
 
 
 def parse_frontmatter(filepath: Path) -> Dict | None:
@@ -56,6 +63,11 @@ def parse_frontmatter(filepath: Path) -> Dict | None:
 
 
 def lint_file(filepath: Path) -> List[str]:
+    # Сгенерированные навигационные файлы (index.md/README.md) намеренно без
+    # frontmatter — это не требования, линтер их пропускает.
+    if filepath.name.lower() in {"index.md", "readme.md"}:
+        return []
+
     errors = []
 
     meta = parse_frontmatter(filepath)
@@ -102,12 +114,20 @@ def lint_file(filepath: Path) -> List[str]:
                     f"{filepath}: requirement_type=integration requires field '{field}'"
                 )
 
-    # Предупреждение: поля-списки должны быть строкой, не YAML-списком
+    # Эти поля идут в метаданные ChromaDB → должны быть строкой, не YAML-списком
     for field in COMMA_STR_FIELDS:
         if field in meta and isinstance(meta[field], list):
             errors.append(
                 f"{filepath}: field '{field}' must be a comma-separated string,"
                 f" not a YAML list — ChromaDB не поддерживает list в метаданных"
+            )
+
+    # Поля целевой схемы должны быть YAML-списком (массивом), а не строкой
+    for field in LIST_FIELDS:
+        if field in meta and not isinstance(meta[field], list):
+            errors.append(
+                f"{filepath}: field '{field}' must be a YAML list (array),"
+                f" not a string — целевая схема ожидает массив"
             )
 
     return errors

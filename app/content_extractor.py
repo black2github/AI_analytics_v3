@@ -834,9 +834,12 @@ class ContentExtractor:
         if not isinstance(element, Tag):
             return False
 
-        # Зачеркнутый текст
+        # Зачёркнутый текст. В approved-режиме (только подтверждённое) выкидываем.
+        # Под --all (include_colored) сохраняем как обычный текст: вычеркивание без
+        # цвета/контекста правки само по себе ценности не несёт, а текст требования
+        # нужен. Если позже будем разбирать цвета — вернёмся к разметке вычеркивания.
         if element.name == "s":
-            return True
+            return not self.config.include_colored
 
         # Jira макросы
         if element.name == "ac:structured-macro" and element.get("ac:name") == "jira":
@@ -1154,6 +1157,29 @@ class ContentExtractor:
         if element.name == "ac:link":
             ri_page = element.find("ri:page")
             if not ri_page:
+                # Внешняя ссылка (ri:url) — сохраняем URL как обычную ссылку. Не зависит
+                # от migrate_images: внешний адрес доступен без скачивания.
+                ri_url = element.find("ri:url")
+                if ri_url and ri_url.get("ri:value"):
+                    url = ri_url.get("ri:value")
+                    return self._format_link(
+                        self._link_body_text(element, fallback=url), url, html_context
+                    )
+
+                # Ссылка на вложение (ri:attachment) — плейсхолдер confluence-attachment://,
+                # который слой миграции (image_migrator) разрешает в скачанный файл (img/)
+                # либо в абсолютный URL вложения. Только при migrate_images, как и картинки:
+                # без него адрес раскрывать нечем (нет page_id), остаётся текст без ссылки.
+                ri_att = element.find("ri:attachment")
+                if ri_att and ri_att.get("ri:filename") and self.config.migrate_images:
+                    filename = ri_att.get("ri:filename")
+                    return self._format_link(
+                        self._link_body_text(element, fallback=filename),
+                        f"confluence-attachment://{filename}",
+                        html_context,
+                    )
+
+                # Прочие ac:link без распознанного ресурса — текст без адреса (как было).
                 text = element.get_text(strip=True)
                 return self._format_link(text, None, html_context) if text else ""
 
@@ -1180,7 +1206,11 @@ class ContentExtractor:
 
             title_path = ""
             if content_title:
-                encoded = content_title.replace(" ", "+")
+                # Пробел кодируем как '+'. Литеральный '+' в заголовке (напр. продукт
+                # "O2+") предварительно экранируем как %2B — иначе он станет неотличим
+                # от закодированного пробела, и Pass 2 не восстановит исходный заголовок
+                # (см. _decode_title_path в migrate_confluence_tree).
+                encoded = content_title.replace("+", "%2B").replace(" ", "+")
                 title_path = f"{space_key}/{encoded}" if space_key else encoded
 
             if content_id:
@@ -1227,6 +1257,13 @@ class ContentExtractor:
         if not href:
             return f"[{escaped}]"
         return f"[{escaped}]({href})"
+
+    def _link_body_text(self, element: Tag, fallback: str = "") -> str:
+        """Отображаемый текст ac:link: тело ссылки (plain-text/rich), иначе текст узла,
+        иначе fallback (например, сам URL или имя файла-вложения)."""
+        body = element.find("ac:plain-text-link-body") or element.find("ac:link-body")
+        text = body.get_text(strip=True) if body else element.get_text(strip=True)
+        return text or fallback
 
     def _analyze_link_neighbors(self, link_element: Tag) -> bool:
         """

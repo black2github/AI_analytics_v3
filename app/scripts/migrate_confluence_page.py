@@ -63,18 +63,22 @@ def page_to_frontmatter(
     """Строит frontmatter из метаданных Confluence-страницы.
 
     Поля, которых нет в Confluence как структурированные данные (owner,
-    jira_id, related, author, tags, reviewed_by, parent), оставляются
+    jira_id, related, author, tags, reviewers, date, parent), оставляются
     пустыми. Линтер при первой попытке коммита укажет на пропуски —
     аналитик заполнит их вручную при ревью миграции.
 
     status: "draft" только если миграция шла с --all (include_unapproved)
     И на странице реально есть неподтверждённые фрагменты (has_unapproved).
-    Без --all пишется только подтверждённый контент → "approved"; с --all,
-    но без неподтверждённого на странице, контент фактически подтверждён → "approved".
+    Без --all пишется только подтверждённый контент → "active"; с --all,
+    но без неподтверждённого на странице, контент фактически подтверждён → "active".
+    ("active" — подтверждённый/живой документ в терминах целевой схемы;
+    допустимые статусы: draft | review | active | deprecated.)
+
+    Поля reviewers и tags — YAML-списки (не строки): целевая схема ожидает массив.
     """
     req_type = (page.get("requirement_type") or "unknown").strip()
     is_platform = get_platform_status(service_code)
-    status = "draft" if (include_unapproved and has_unapproved) else "approved"
+    status = "draft" if (include_unapproved and has_unapproved) else "active"
 
     fm: Dict = {
         # Идентификация
@@ -100,8 +104,9 @@ def page_to_frontmatter(
         "status": status,
         "owner": "",
         "author": "",
-        "reviewed_by": "",
+        "reviewers": [],
         "version": "1.0.0",
+        "date": "",
         "created_date": "",
         "updated_date": "",
 
@@ -109,7 +114,7 @@ def page_to_frontmatter(
         "related": "",
 
         # Теги
-        "tags": "",
+        "tags": [],
     }
 
     # target_system — для интеграционных требований
@@ -168,9 +173,11 @@ def migrate_page(
     filepath = OUTPUT_ROOT / service_part / subdir / f"{filename}.md"
     doc_id = build_doc_id(service_code, page["title"])
 
+    # Коллизия имён: файл с таким же заголовком уже есть. Перезаписываем с
+    # предупреждением (миграция разовая, далее работа по ФС под git).
+    # См. app/scripts/CI/analysis-naming-strategies.md.
     if filepath.exists():
-        logger.warning("  ⚠ File already exists, skipped: %s", filepath)
-        return None
+        logger.warning("  ⚠ Файл уже существует — ПЕРЕЗАПИСЫВАЕМ: %s", filepath)
 
     # Миграция картинок: скачиваем вложения в img/ рядом с .md и заменяем плейсхолдеры
     # confluence-attachment:// на относительные ссылки. Плейсхолдеры есть в content_md

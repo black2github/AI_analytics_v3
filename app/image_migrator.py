@@ -39,13 +39,22 @@ logger = logging.getLogger(__name__)
 _ATTACHMENT_IMG_RE = re.compile(r'<img\s+src="confluence-attachment://([^"]+)"([^>]*)>')
 _DOWNLOAD_IMG_RE = re.compile(r'<img\s+src="confluence-download://([^"]+)"([^>]*)>')
 
+# Ссылки на вложения (ac:link + ri:attachment) из content_extractor._process_link.
+# Тот же плейсхолдер confluence-attachment://, но в форме ссылки, а не <img>:
+#   • HTML-таблица: <a href="confluence-attachment://<file>">
+#   • Markdown:     [текст](confluence-attachment://<file>)
+# Разрешаются той же логикой, что и картинки-вложения (скачать в img/ или fallback-URL).
+_ATTACHMENT_A_LINK_RE = re.compile(r'<a href="confluence-attachment://([^"]+)">')
+_ATTACHMENT_MD_LINK_RE = re.compile(r'\]\(confluence-attachment://([^)]+)\)')
+
 
 def migrate_images_in_content(
     content_md: str,
     page_id: str,
     md_filepath: Path,
 ) -> Tuple[str, int, int]:
-    """Скачивает картинки-вложения и заменяет плейсхолдеры на относительные ссылки.
+    """Скачивает вложения (картинки <img> и ссылки <a>/markdown на файлы) и заменяет
+    плейсхолдеры confluence-attachment://… на относительные ссылки.
 
     Картинки сохраняются в подкаталог img/ рядом с md_filepath под детерминированным
     именем uid+расширение, где uid = sha1(f"{page_id}/{filename}")[:8]. Детерминизм
@@ -73,15 +82,27 @@ def migrate_images_in_content(
     if has_attach:
         attachments = _get_attachment_download_urls(page_id)
 
-        def _replace_attach(m: re.Match) -> str:
-            filename = _html.unescape(m.group(1))  # confluence-attachment://a&amp;b.png -> a&b.png
-            rest = m.group(2)
+        def _attach_ref(raw_filename: str) -> str:
+            # confluence-attachment://a&amp;b.png -> a&b.png; кэш на страницу разводит
+            # повторы (одно вложение в нескольких <img>/<a>) — скачиваем один раз.
+            filename = _html.unescape(raw_filename)
             key = "att::" + filename
             if key not in resolved:
                 resolved[key] = _resolve_attachment(filename, page_id, attachments, img_dir, counts)
-            return f'<img src="{resolved[key]}"{rest}>'
+            return resolved[key]
 
-        new_text = _ATTACHMENT_IMG_RE.sub(_replace_attach, new_text)
+        # Картинки-вложения: <img src="confluence-attachment://...">
+        new_text = _ATTACHMENT_IMG_RE.sub(
+            lambda m: f'<img src="{_attach_ref(m.group(1))}"{m.group(2)}>', new_text
+        )
+        # Ссылки на вложения в HTML-форме (внутри таблиц): <a href="confluence-attachment://...">
+        new_text = _ATTACHMENT_A_LINK_RE.sub(
+            lambda m: f'<a href="{_attach_ref(m.group(1))}">', new_text
+        )
+        # Ссылки на вложения в Markdown-форме: [текст](confluence-attachment://...)
+        new_text = _ATTACHMENT_MD_LINK_RE.sub(
+            lambda m: f']({_attach_ref(m.group(1))})', new_text
+        )
 
     # рендеренный HTML (прямой HTTP): готовый путь скачивания, качаем браузерным запросом.
     if has_download:

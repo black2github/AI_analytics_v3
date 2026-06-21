@@ -51,7 +51,7 @@ class TestLintDocId:
             "doc_type": "requirement",
             "requirement_type": "function",
             "service_code": "CC",
-            "status": "approved",
+            "status": "active",
             "owner": "ivanov",
             "jira_id": "DBO-1",
             "source": "DBOCORPESPLN",

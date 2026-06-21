@@ -401,19 +401,20 @@ def load_md_page(filepath: str) -> Dict:
         "approved_content": content.strip(),  # весь markdown после ---
         "requirement_type": meta.get("requirement_type", "unknown"),
         # новые поля — просто добавляются в dict:
-        "status": meta.get("status", "approved"),
+        "status": meta.get("status", "active"),
         "owner": meta.get("owner", ""),
         "jira_id": meta.get("jira_id", ""),
         "jira_ids": meta.get("jira_ids", ""),
         "related": meta.get("related", ""),
-        "tags": meta.get("tags", ""),
+        "tags": meta.get("tags", []),
         "feature": meta.get("feature", ""),
         "microservice": meta.get("microservice", ""),
         "version": meta.get("version", ""),
+        "date": meta.get("date", ""),
         "updated_date": meta.get("updated_date", ""),
         "created_date": meta.get("created_date", ""),
         "confluence_page_id": meta.get("confluence_page_id", ""),
-        "reviewed_by": meta.get("reviewed_by", ""),
+        "reviewers": meta.get("reviewers", []),
         "author": meta.get("author", ""),
         # target_system — уже обрабатывается через extract_target_system или явно:
         **({"target_system": meta["target_system"]} if "target_system" in meta else {})

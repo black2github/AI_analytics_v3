@@ -58,7 +58,9 @@ def _preprocess_confluence_links(html: str) -> str:
         if content_id:
             href = f"confluence://{content_id}"
         elif content_title:
-            encoded = content_title.replace(" ", "+")
+            # %2B экранирует литеральный '+' до кодирования пробелов как '+'
+            # (симметрично _decode_title_path в migrate_confluence_tree).
+            encoded = content_title.replace("+", "%2B").replace(" ", "+")
             href = (f"confluence://title/{space_key}/{encoded}"
                     if space_key else f"confluence://title/{encoded}")
         else:
