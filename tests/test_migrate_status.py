@@ -4,9 +4,10 @@
 # неподтверждённого контента (has_unapproved).
 #
 # Правило статуса:
-#   status = "draft" if (include_unapproved and has_unapproved) else "approved"
+#   status = "draft" if (include_unapproved and has_unapproved) else "active"
 # То есть "draft" появляется только когда миграция шла с --all
 # (include_unapproved) И на странице реально есть неподтверждённые фрагменты.
+# "active" = подтверждённый/живой документ (целевая схема: draft|review|active|deprecated).
 
 import pytest
 from unittest.mock import patch
@@ -24,10 +25,10 @@ class TestMigrateStatus:
         return fm["status"]
 
     @pytest.mark.parametrize("include_unapproved,has_unapproved,expected", [
-        (False, False, "approved"),  # без --all
-        (False, True,  "approved"),  # без --all: пишется только approved, даже если на странице есть неподтверждённое
-        (True,  False, "approved"),  # --all, но неподтверждённого на странице нет → контент фактически подтверждён
-        (True,  True,  "draft"),     # --all и есть неподтверждённое
+        (False, False, "active"),   # без --all
+        (False, True,  "active"),   # без --all: пишется только подтверждённое, даже если на странице есть неподтверждённое
+        (True,  False, "active"),   # --all, но неподтверждённого на странице нет → контент фактически подтверждён
+        (True,  True,  "draft"),    # --all и есть неподтверждённое
     ])
     def test_status_matrix(self, include_unapproved, has_unapproved, expected):
         """Матрица: статус для всех комбинаций флагов."""
@@ -37,8 +38,8 @@ class TestMigrateStatus:
         ) == expected
 
     def test_status_defaults_backward_compatible(self):
-        """Вызов без новых аргументов сохраняет прежнее поведение → approved."""
-        assert self._status() == "approved"
+        """Вызов без новых аргументов сохраняет прежнее поведение → active."""
+        assert self._status() == "active"
 
 
 class TestHasUnapprovedDetection:

@@ -13,6 +13,7 @@ import pytest
 import app.scripts.migrate_confluence_tree as mig
 from app.scripts.migrate_confluence_tree import (
     _title_key,
+    _decode_title_path,
     resolve_confluence_links,
     seed_registries_from_disk,
 )
@@ -42,6 +43,15 @@ class TestPlaceholderProducer:
         assert "confluence://title/SP/Моя+страница" in out
         assert "?title=" not in out
 
+    def test_literal_plus_in_title_escaped_as_percent2b(self):
+        # Регрессия: литеральный '+' в заголовке (продукт "O2+") должен кодироваться
+        # как %2B, иначе он неотличим от закодированного пробела. Пробелы → '+'.
+        html = ('<p><ac:link><ri:page ri:content-title="[O2+NEW] Описание статусов" '
+                'ri:space-key="SP"/><ac:plain-text-link-body>текст</ac:plain-text-link-body>'
+                '</ac:link></p>')
+        out = self._extract(html)
+        assert "confluence://title/SP/[O2%2BNEW]+Описание+статусов" in out
+
 
 class TestTitleKey:
     def test_unescapes_html_entities(self):
@@ -55,6 +65,25 @@ class TestTitleKey:
 
     def test_collapses_whitespace_and_lowercases(self):
         assert _title_key("  Заявка   на\nзакрытие  ") == "заявка на закрытие"
+
+
+class TestDecodeTitlePath:
+    def test_decodes_spaces(self):
+        assert _decode_title_path("Заголовок+страницы") == "Заголовок страницы"
+
+    def test_strips_space_key_prefix(self):
+        assert _decode_title_path("SPACE/Заголовок+страницы") == "Заголовок страницы"
+
+    def test_literal_plus_restored_from_percent2b(self):
+        # %2B → литеральный '+', а '+' → пробел: '[O2+NEW] Описание', не '[O2 NEW] …'.
+        assert _decode_title_path("SP/[O2%2BNEW]+Описание+статусов") == \
+               "[O2+NEW] Описание статусов"
+
+    def test_roundtrip_with_producer_encoding(self):
+        # Сквозной инвариант: encode (как в content_extractor) → decode == исходник.
+        title = "[O2+NEW] Создать заявку на О2+ или О2+ДБС в ЕСК (115)"
+        encoded = title.replace("+", "%2B").replace(" ", "+")
+        assert _decode_title_path(encoded) == title
 
 
 class TestResolveConfluenceLinks:
@@ -80,6 +109,29 @@ class TestResolveConfluenceLinks:
             tmp_path, "[Текст](confluence://title/SPACE/Заголовок+страницы)"
         )
         title_registry = {_title_key("Заголовок страницы"): target}
+        resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
+        assert source.read_text(encoding="utf-8") == "[Текст](sub/Целевая.md)"
+        assert (resolved, unresolved) == (1, 0)
+
+    def test_html_title_link_with_literal_plus_resolved(self, tmp_path):
+        # Регрессия (кейс [O2+NEW]): заголовок с литеральным '+' кодируется как %2B,
+        # Pass 2 восстанавливает его и совпадает с реестром. До фикса '+' схлопывался
+        # в пробел → '[O2 NEW] …' не находился, ссылка уходила в /display/ fallback.
+        source, target = self._setup(
+            tmp_path,
+            '<a href="confluence://title/DBOCORPES/[O2%2BNEW]+Описание+статусов+заявки">x</a>',
+        )
+        title_registry = {_title_key("[O2+NEW] Описание статусов заявки"): target}
+        resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
+        assert source.read_text(encoding="utf-8") == '<a href="sub/Целевая.md">x</a>'
+        assert (resolved, unresolved) == (1, 0)
+
+    def test_markdown_title_link_with_literal_plus_resolved(self, tmp_path):
+        # Та же регрессия для markdown-формы плейсхолдера.
+        source, target = self._setup(
+            tmp_path, "[Текст](confluence://title/SP/[O2%2BNEW]+Нотификация)"
+        )
+        title_registry = {_title_key("[O2+NEW] Нотификация"): target}
         resolved, unresolved = resolve_confluence_links({}, title_registry, files={source})
         assert source.read_text(encoding="utf-8") == "[Текст](sub/Целевая.md)"
         assert (resolved, unresolved) == (1, 0)
