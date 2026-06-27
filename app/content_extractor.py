@@ -1700,7 +1700,10 @@ class ContentExtractor:
         • code / noformat — пропускаем, обрабатываются отдельно в
           _process_text_container и _process_nested_table_cell_content
         • jira — пропускаем, обрабатывается в _is_ignored_element
-        • Незнакомые макросы — удаляются, в лог пишется WARNING с именем
+        • Незнакомые макросы: если несут тело (rich-text-body / plain-text-body) —
+          разворачиваются с сохранением содержимого (иначе обёрнутый контент,
+          например таблица внутри table-filter, тихо терялся бы); если тела нет
+          (как у динамических листингов) — удаляются. В лог пишется WARNING.
         """
         DYNAMIC_LISTING_MACROS = {
             "children", "toc", "recently-updated", "pagetree",
@@ -1708,8 +1711,12 @@ class ContentExtractor:
             "labels-list", "page-tree-search", "spaces-list",
         }
 
+        # Контентные обёртки: несут осмысленное тело, его надо сохранить.
+        # table-filter / table-plus — макросы плагина «Table Filter and Charts»,
+        # оборачивают обычную таблицу в <ac:rich-text-body>.
         UNWRAP_MACROS = {
             "expand", "info", "warning", "note", "tip", "panel",
+            "table-filter", "table-plus",
         }
 
         HANDLED_ELSEWHERE = {"code", "noformat", "jira"}
@@ -1728,10 +1735,20 @@ class ContentExtractor:
             elif name in HANDLED_ELSEWHERE:
                 continue
             else:
-                logger.warning(
-                    "[_process_confluence_macros] Unknown macro '%s', removing", name
-                )
-                macro.decompose()
+                # Неизвестный макрос: сохраняем тело, если оно есть, — иначе
+                # рискуем тихо потерять обёрнутый контент (таблицы, текст).
+                body = macro.find("ac:rich-text-body") or macro.find("ac:plain-text-body")
+                if body:
+                    logger.warning(
+                        "[_process_confluence_macros] Unknown macro '%s' with body — "
+                        "разворачиваем, сохраняя содержимое", name
+                    )
+                    macro.replace_with(body)
+                else:
+                    logger.warning(
+                        "[_process_confluence_macros] Unknown macro '%s', removing", name
+                    )
+                    macro.decompose()
 
     def _remove_empty_paragraphs(self, soup: BeautifulSoup):
         """
