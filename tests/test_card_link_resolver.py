@@ -9,8 +9,11 @@
 #
 # Модули CI используют sibling-импорты — добавляем каталог в sys.path.
 
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 _CI_DIR = Path(__file__).resolve().parent.parent / "app" / "scripts" / "CI"
 if str(_CI_DIR) not in sys.path:
@@ -83,3 +86,43 @@ class TestManifestIndex:
         ])
         assert idx.lookup_by_path("https://swagger/x") is None
         assert idx.lookup_by_doc_id("{{CC: Op}}") is not None
+
+
+class TestRegexPerformance:
+    """Защита от катастрофического бэктрекинга в _MD_LINK_RE.
+
+    Патологический вход: открывающая '[' и длинный прогон экранированных скобок
+    (\\[КК_ЛК\\] ...) БЕЗ последующего '](...)'. На старом регэкспе (ветка [^\\]],
+    пересекавшаяся с \\. на бэкслеше) движок перебирал экспоненту замощений и зависал
+    на минуты. Запускаем резолв в ОТДЕЛЬНОМ процессе с таймаутом: поток не годится —
+    C-движок re удерживает GIL и не прерывается, signal.alarm на Windows недоступен,
+    так что подвисший регэксп заблокировал бы и сам тест. Дочерний процесс по таймауту
+    убивается, и тест падает (а не зависает), если баг вернётся.
+    """
+
+    def test_pathological_input_does_not_hang(self):
+        # ~50 неоднозначных единиц — на старом регэкспе это уже минуты; на новом мгновенно.
+        # Вход ASCII (\[KK\] ...) — суть бага в бэкслеше, не в кириллице; так избегаем
+        # проблем с кодировкой консоли в дочернем процессе.
+        child = (
+            "import sys\n"
+            "sys.path.insert(0, %r)\n" % str(_CI_DIR)
+            + "from card_link_resolver import resolve_links_in_card, ManifestIndex\n"
+            "bs = chr(92)\n"
+            "unit = bs + '[KK' + bs + '] Zayavka '\n"
+            "text = '[' + unit * 50 + 'tail with no link target'\n"
+            "resolve_links_in_card(text, 'a/b.md', ManifestIndex([]))\n"
+        )
+        try:
+            subprocess.run([sys.executable, "-c", child], timeout=15, check=True,
+                           capture_output=True)
+        except subprocess.TimeoutExpired:
+            pytest.fail("резолв ссылок завис — вернулся катастрофический бэктрекинг _MD_LINK_RE")
+
+    def test_escaped_brackets_in_link_text_preserved(self):
+        # Корректность не должна пострадать от сужения «любого символа»:
+        # экранированные скобки в тексте ссылки сохраняются, ссылка резолвится.
+        idx = ManifestIndex([_card("{{CC: Заявка}}", "sub/zayavka.md")])
+        text, stats = resolve_links_in_card(r"[\[КК_ЛК\] Заявка]({{CC: Заявка}})", "a/b.md", idx)
+        assert text == r"[\[КК_ЛК\] Заявка](sub/zayavka.md)"
+        assert stats.redirected == 1
