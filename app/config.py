@@ -65,6 +65,14 @@ REMOVE_HISTORY_SECTIONS = os.getenv("REMOVE_HISTORY_SECTIONS", "true").lower() i
 # экстракторов content_extractor, поэтому CLI-флаг может переопределить его в рантайме.
 MIGRATE_IMAGES = os.getenv("MIGRATE_IMAGES", "false").lower() in ("1", "true", "yes")
 
+# По умолчанию зачёркнутый (<s>) текст следует общей логике: в approved-режиме
+# выкидывается, под --all — сохраняется как часть неутверждённого содержимого.
+# Если включить — зачёркнутый текст исключается ПРИ ЛЮБОМ раскладе (в т.ч. под --all).
+# Скрипты миграции также понимают флаг --drop-strikethrough, переопределяющий это.
+# ВНИМАНИЕ: значение читается динамически (через app.config.EXCLUDE_STRIKETHROUGH) в
+# фабриках экстракторов content_extractor, поэтому CLI-флаг переопределяет его в рантайме.
+EXCLUDE_STRIKETHROUGH = os.getenv("EXCLUDE_STRIKETHROUGH", "false").lower() in ("1", "true", "yes")
+
 # ДОБАВЛЯЕМ конфигурацию JIRA
 JIRA_BASE_URL = os.getenv("JIRA_BASE_URL", "https://jira.gboteam.ru")
 JIRA_USER = os.getenv("JIRA_USER")

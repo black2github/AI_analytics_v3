@@ -575,15 +575,17 @@ def generate_section_indexes(base_dir: Path) -> int:
 
 
 def main():
-    # Флаги --http, --all, --keep-history, --with-images и --with-index можно указать в
-    # любом месте аргументов; они переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history", "--with-images", "--with-index"}
+    # Флаги --http, --all, --keep-history, --with-images, --with-index и
+    # --drop-strikethrough можно указать в любом месте аргументов; они переопределяют
+    # соответствующие значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history", "--with-images", "--with-index", "--drop-strikethrough"}
     args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
     keep_history = "--keep-history" in sys.argv
     with_images = "--with-images" in sys.argv
     with_index = "--with-index" in sys.argv
+    drop_strikethrough = "--drop-strikethrough" in sys.argv
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
@@ -601,6 +603,8 @@ def main():
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --with-images")
         print("Example (сгенерировать навигационные index.md по папкам, для SSG): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --with-index")
+        print("Example (исключить зачёркнутый текст при любом раскладе, в т.ч. с --all): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --all --drop-strikethrough")
         sys.exit(1)
 
     # Переопределяем политику удаления истории на время процесса (вариант A).
@@ -614,6 +618,12 @@ def main():
     if with_images:
         import app.config as _config
         _config.MIGRATE_IMAGES = True
+
+    # Исключение зачёркнутого текста при любом раскладе. Фабрики экстракторов читают
+    # app.config.EXCLUDE_STRIKETHROUGH динамически — флаг выставляем ДО конвертации.
+    if drop_strikethrough:
+        import app.config as _config
+        _config.EXCLUDE_STRIKETHROUGH = True
 
     root_page_id = args[0].strip()
     service_code = args[1]
@@ -635,6 +645,9 @@ def main():
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
     logger.info("Images mode: %s",
                 "СКАЧИВАТЬ картинки в img/" if with_images else "картинки игнорируются")
+    logger.info("Strikethrough mode: %s",
+                "ИСКЛЮЧАТЬ зачёркнутый текст (при любом раскладе)" if drop_strikethrough
+                else "по умолчанию (зачёркнутое — как обычно)")
     logger.info("Index mode: %s",
                 "генерировать index.md по папкам" if with_index else "без index.md")
     logger.info("")

@@ -204,14 +204,15 @@ def migrate_page(
 def main():
     from app.config import CONFLUENCE_USE_HTTP, MIGRATE_INCLUDE_UNAPPROVED
 
-    # Флаги --http, --all, --keep-history и --with-images можно указать в любом месте
-    # аргументов; они переопределяют соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history", "--with-images"}
+    # Флаги --http, --all, --keep-history, --with-images и --drop-strikethrough можно
+    # указать в любом месте аргументов; они переопределяют значения из конфигурации.
+    flags = {"--http", "--all", "--keep-history", "--with-images", "--drop-strikethrough"}
     raw_args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
     keep_history = "--keep-history" in sys.argv
     with_images = "--with-images" in sys.argv
+    drop_strikethrough = "--drop-strikethrough" in sys.argv
 
     if len(raw_args) < 3:
         print("Usage: python migrate_confluence_page.py "
@@ -226,6 +227,8 @@ def main():
               "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --keep-history")
         print("Example (мигрировать картинки в img/ рядом с .md): "
               "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --with-images")
+        print("Example (исключить зачёркнутый текст при любом раскладе, в т.ч. с --all): "
+              "python migrate_confluence_page.py 12345 CORP_CARDS лимиты --all --drop-strikethrough")
         sys.exit(1)
 
     # Переопределяем политику удаления истории на время процесса (вариант A).
@@ -240,6 +243,12 @@ def main():
     if with_images:
         import app.config as _config
         _config.MIGRATE_IMAGES = True
+
+    # Исключение зачёркнутого текста при любом раскладе. Фабрики экстракторов читают
+    # app.config.EXCLUDE_STRIKETHROUGH динамически — флаг выставляем ДО конвертации.
+    if drop_strikethrough:
+        import app.config as _config
+        _config.EXCLUDE_STRIKETHROUGH = True
 
     page_ids = raw_args[0].split(",")
     service_code = raw_args[1]

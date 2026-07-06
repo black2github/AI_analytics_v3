@@ -66,6 +66,7 @@ class ExtractionConfig:
     format_lists: bool = True
     format_headers: bool = True
     migrate_images: bool = False  # сохранять <ac:image> как HTML <img> с плейсхолдером вложения
+    exclude_strikethrough: bool = False  # True - зачёркнутый <s> выкидывается при любом раскладе (в т.ч. под include_colored)
 
 
 class ContentExtractor:
@@ -834,11 +835,15 @@ class ContentExtractor:
         if not isinstance(element, Tag):
             return False
 
-        # Зачёркнутый текст. В approved-режиме (только подтверждённое) выкидываем.
-        # Под --all (include_colored) сохраняем как обычный текст: вычеркивание без
-        # цвета/контекста правки само по себе ценности не несёт, а текст требования
-        # нужен. Если позже будем разбирать цвета — вернёмся к разметке вычеркивания.
+        # Зачёркнутый текст.
+        # • exclude_strikethrough=True (флаг --drop-strikethrough) — выкидываем ВСЕГДА,
+        #   даже под --all: сам факт вычеркивания = запланированное удаление фрагмента.
+        # • Иначе в approved-режиме выкидываем, под --all (include_colored) сохраняем
+        #   как обычный текст (вычеркивание без цвета/контекста само по себе ценности
+        #   не несёт, а текст требования нужен).
         if element.name == "s":
+            if self.config.exclude_strikethrough:
+                return True
             return not self.config.include_colored
 
         # Jira макросы
@@ -1877,13 +1882,22 @@ def _migrate_images_enabled() -> bool:
     return _config.MIGRATE_IMAGES
 
 
+def _exclude_strikethrough_enabled() -> bool:
+    """Читает app.config.EXCLUDE_STRIKETHROUGH динамически, чтобы CLI-флаг
+    --drop-strikethrough мог переопределить значение в рантайме (по аналогии с
+    MIGRATE_IMAGES). При True зачёркнутый <s> выкидывается при любом include_colored."""
+    import app.config as _config
+    return _config.EXCLUDE_STRIKETHROUGH
+
+
 def create_all_fragments_extractor() -> ContentExtractor:
     """Создает экстрактор для всех фрагментов с сохранением пробелов"""
     config = ExtractionConfig(
         include_colored=True,
         preserve_whitespace=True,
         normalize_spacing=False,
-        migrate_images=_migrate_images_enabled()
+        migrate_images=_migrate_images_enabled(),
+        exclude_strikethrough=_exclude_strikethrough_enabled()
     )
     return ContentExtractor(config)
 
@@ -1894,6 +1908,7 @@ def create_approved_fragments_extractor() -> ContentExtractor:
         include_colored=False,
         preserve_whitespace=True,
         normalize_spacing=False,
-        migrate_images=_migrate_images_enabled()
+        migrate_images=_migrate_images_enabled(),
+        exclude_strikethrough=_exclude_strikethrough_enabled()
     )
     return ContentExtractor(config)
