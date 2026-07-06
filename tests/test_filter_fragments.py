@@ -3,6 +3,14 @@
 import pytest
 from app.filter_approved_fragments import filter_approved_fragments
 from app.filter_all_fragments import filter_all_fragments
+from app.content_extractor import ContentExtractor, ExtractionConfig
+
+
+def _extract_drop_strike(html: str) -> str:
+    """Экстракция в режиме --all (include_colored) + --drop-strikethrough:
+    всё неутверждённое сохраняется, но зачёркнутый <s> исключается."""
+    config = ExtractionConfig(include_colored=True, exclude_strikethrough=True)
+    return ContentExtractor(config).extract(html)
 
 
 class TestFilterFragments:
@@ -104,6 +112,54 @@ class TestFilterFragments:
         assert "Красный текст" in result
         assert "Зачеркнутый текст" in result   # больше не выкидывается
         assert "~~" not in result              # без markdown-разметки вычеркивания
+
+    def test_drop_strikethrough_plain_text(self):
+        """--drop-strikethrough: зачёркнутый текст исключается даже под --all,
+        а прочее неутверждённое (цветное) содержимое остаётся."""
+        html = '''
+        <p>Начало <s>вычеркнутый фрагмент</s> конец</p>
+        <p style="color: red;">Красный текст</p>
+        '''
+        result = _extract_drop_strike(html)
+        assert "Начало" in result
+        assert "конец" in result
+        assert "Красный текст" in result
+        assert "вычеркнутый фрагмент" not in result
+
+    def test_drop_strikethrough_in_table_cell(self):
+        """--drop-strikethrough: зачёркнутый текст исключается внутри ячейки таблицы."""
+        html = '''
+        <table><tbody>
+        <tr><td>Поле</td><td>Описание</td></tr>
+        <tr><td>Обычная ячейка</td><td><s>вычеркнутая ячейка</s></td></tr>
+        </tbody></table>
+        '''
+        result = _extract_drop_strike(html)
+        assert "Обычная ячейка" in result
+        assert "вычеркнутая ячейка" not in result
+
+    def test_drop_strikethrough_in_nested_table(self):
+        """--drop-strikethrough: зачёркнутый текст исключается во вложенной таблице."""
+        html = '''
+        <table><tbody>
+        <tr><td>Внешняя ячейка
+            <table><tbody>
+            <tr><td>Вложенная обычная</td><td><s>вложенная вычеркнутая</s></td></tr>
+            </tbody></table>
+        </td></tr>
+        </tbody></table>
+        '''
+        result = _extract_drop_strike(html)
+        assert "Внешняя ячейка" in result
+        assert "Вложенная обычная" in result
+        assert "вложенная вычеркнутая" not in result
+
+    def test_drop_strikethrough_off_by_default_keeps_it(self):
+        """Без флага (exclude_strikethrough=False) под include_colored=True текст остаётся."""
+        html = '<p>До <s>вычеркнутое</s> после</p>'
+        config = ExtractionConfig(include_colored=True, exclude_strikethrough=False)
+        result = ContentExtractor(config).extract(html)
+        assert "вычеркнутое" in result
 
     def test_filter_jira_macros(self):
         """Тест игнорирования JIRA макросов"""
