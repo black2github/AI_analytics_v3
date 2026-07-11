@@ -1,0 +1,13 @@
+{
+  "_comment": "Маппинг path -> бизнес-домен. Правила сопоставляются по префиксу пути; побеждает самый длинный совпавший префикс. default — если ничего не подошло. Пример для business-cards-client.",
+  "default": "misc",
+  "rules": [
+    { "prefix": "/business-cards/request/card-issue", "domain": "issuance" },
+    { "prefix": "/business-cards/request/set-limits", "domain": "limits" },
+    { "prefix": "/business-cards/request/batch-set-limits", "domain": "limits" },
+    { "prefix": "/business-cards/request/blocking", "domain": "blocking" },
+    { "prefix": "/business-cards/request/batch-blocking", "domain": "blocking" },
+    { "prefix": "/business-cards/request", "domain": "request-misc" },
+    { "prefix": "/business-cards/reports", "domain": "reports" }
+  ]
+}
