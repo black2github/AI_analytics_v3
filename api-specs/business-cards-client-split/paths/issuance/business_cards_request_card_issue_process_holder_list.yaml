@@ -1,0 +1,62 @@
+post:
+  description: 'Привилегии: BC.CLIENT.CARD.ISSUE.REQUEST.IMPORT.REGISTRY'
+  operationId: processExcelAndSaveRequestOnIssueCard
+  parameters:
+  - in: query
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - in: query
+    name: attachmentId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/issuance/GenericResponseSimpleErrorDataIssueCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Обогащение заявки на выпуск карты путем применения данных из excel файла (реестра держателей карт)
+  tags:
+  - API для заявки на выпуск карты

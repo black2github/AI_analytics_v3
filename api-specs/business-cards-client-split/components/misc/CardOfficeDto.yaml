@@ -1,0 +1,57 @@
+type: object
+properties:
+  branchAddress:
+    maxLength: 150
+    type: string
+    description: Адрес офиса выдачи карт
+    nullable: true
+  branchId:
+    type: string
+    description: Идентификатор подразделения из клиентских справочников
+    format: uuid
+  branchLatitude:
+    type: number
+    description: Координата подразделения по широте
+    format: double
+    nullable: true
+  branchLongitude:
+    type: number
+    description: Координата подразделения по долготе
+    format: double
+    nullable: true
+  branchName:
+    maxLength: 170
+    type: string
+    description: Наименование офиса
+  branchSchedule:
+    maxLength: 4000
+    type: string
+    description: График работы подразделения
+    nullable: true
+  cardCount:
+    exclusiveMaximum: true
+    minimum: 0
+    type: integer
+    description: Число карт, готовых к получению в конкретном офисе выдачи
+    format: int32
+  cardGuid:
+    type: string
+    description: Внешний идентификатор карты
+    format: uuid
+    nullable: true
+  cardMaskedNumber:
+    maxLength: 24
+    type: string
+    description: Маскированный номер карты
+    nullable: true
+  clients:
+    type: array
+    description: Список данных о клиентах по офису получения
+    items:
+      $ref: ./ClientCardInfoDto.yaml
+  embossingName:
+    maxLength: 19
+    type: string
+    description: Эмбоссированное имя
+    nullable: true
+description: Офис выдачи

@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: BC.CLIENT.BATCH_SET_LIMIT.EDIT'
+  operationId: setSignRequest_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/common/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataBatchSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Отправить массив заявок на подпись
+  tags:
+  - API операции подписи заявки на пакетную установку лимитов

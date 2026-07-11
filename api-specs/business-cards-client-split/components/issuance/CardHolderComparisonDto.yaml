@@ -1,0 +1,12 @@
+type: object
+properties:
+  cardHolderDtoList:
+    type: array
+    description: Держатели карты
+    items:
+      $ref: ./CardHolderDto.yaml
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+description: Дто сравнения держателей карты

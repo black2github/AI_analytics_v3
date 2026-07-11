@@ -1,0 +1,27 @@
+type: object
+properties:
+  departmentCode:
+    type: string
+    description: Код подразделения ДУЛ
+  departmentPlace:
+    type: string
+    description: Место выдачи ДУЛ
+  number:
+    type: string
+    description: Номер документа, удостоверяющий личность (ДУЛ)
+  releaseDate:
+    type: string
+    description: Дата выдачи ДУЛ
+    format: date
+  series:
+    type: string
+    description: Серия документа, удостоверяющий личность (ДУЛ)
+  type:
+    type: string
+    description: Типы документов, удостоверяющих личность (ДУЛ) для держателя карты
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN_COUNTRY
+    - RESIDENCE_CARD
+    - OTHER
+description: Документ, удостоверяющий личность (ДУЛ)

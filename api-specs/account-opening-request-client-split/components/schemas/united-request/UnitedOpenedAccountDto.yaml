@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор открытого счета.
+    format: uuid
+  number:
+    type: string
+    description: Номер открытого счета.
+  state:
+    type: string
+    description: Статус открытого счета
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  closeDate:
+    type: string
+    description: Дата закрытия счета.
+    format: date
+description: Сведения об открытом счете.

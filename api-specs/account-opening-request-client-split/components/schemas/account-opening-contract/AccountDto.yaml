@@ -1,0 +1,35 @@
+required:
+- letterCurrencyCode
+type: object
+properties:
+  accountTypeCode:
+    type: string
+    description: Код типа счета.
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+  accountTypeShortName:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Краткое наименование типа счета.
+  letterCurrencyCode:
+    pattern: '[a-zA-Z]{3}'
+    type: string
+    description: Буквенный код валюты счета.
+  reservedAccountNumber:
+    type: string
+    description: Номер зарезервированного счета.
+  openNew:
+    type: boolean
+    description: Признак создания нового зарезервированного счета, не из списка резервированных.
+  correspondentAccount:
+    type: string
+    description: Корр счет филиала
+  bic:
+    pattern: '[0-9]{9}'
+    type: string
+    description: БИК зарезервированного счета
+description: Сведения об открываемом счете.

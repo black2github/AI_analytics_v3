@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    $ref: ./AccountOpeningContractRequestUpsertDto.yaml
+  id:
+    type: string
+    format: uuid
+description: ДТО Заявка на открытие доп счета и заключение ДБС.

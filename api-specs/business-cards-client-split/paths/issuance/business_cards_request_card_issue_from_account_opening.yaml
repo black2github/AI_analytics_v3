@@ -1,0 +1,54 @@
+post:
+  operationId: fromOpeningRequest
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/issuance/FromOpeningCreateRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/issuance/GenericResponseSimpleErrorDataIssueCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Создать новую заявку на выпуск КК из заявки О2+
+  tags:
+  - API для заявки на выпуск карты

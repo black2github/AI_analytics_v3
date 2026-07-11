@@ -1,0 +1,4917 @@
+openapi: 3.0.1
+info:
+  title: Сервис заявки на открытие 2+ счета. Клиентская часть
+  version: 3.4.0-SNAPSHOT
+servers:
+  - url: /opening-request
+security:
+  - bearerAuth: []
+paths:
+  /account-opening-contract:
+    put:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Обновление заявки
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_UPDATE'')'
+      operationId: update
+      parameters:
+        - name: organizationId
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountOpeningContractCommand'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Создать заявку
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CREATE'')'
+      operationId: create
+      parameters:
+        - name: organizationId
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountOpeningContractCommand'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CreateResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /united-request/get-page:
+    post:
+      tags:
+        - API скроллера О2+NEW и O2+OLD. Клиентская часть
+      summary: Получить страницу заявок
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_VIEW_LIST'')'
+      operationId: getPage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPageCommandUnitedRequestClientFilter'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PageDataUnitedRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /united-request/category:
+    post:
+      tags:
+        - API скроллера О2+NEW и O2+OLD. Клиентская часть
+      summary: Получить количество заявок по категориям
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_VIEW_LIST'')'
+      operationId: getCategory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetPageCommandUnitedRequestClientFilter'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/validate-sign:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции подписи.
+      summary: Проверить правомочность подписи
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CHECK_SIGN'')'
+      operationId: validateSign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningRequestDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/print-list-request-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Распечатать список Заявок об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: printListRequestOpenAccountsReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListResponseAccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/print-info-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Распечатать Уведомление об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: printOpenedAccountsInfoReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListResponseAccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/print-claim-rules-goz:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Распечатать Заявление о присоединении к правилам ГОЗ
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: printClaimRulesGozReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListResponseAccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/print-claim-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Распечатать Заявление об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: printClaimOpenAccountsReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ListResponseAccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/generate-digest:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции подписи.
+      summary: Сгенерировать дайджест из подписываемых полей документа
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CHECK_SIGN'')'
+      operationId: generateDigest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseDigest'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/generate-digest/version:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции подписи.
+      summary: Сгенерировать дайджест из подписываемых полей документа
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CHECK_SIGN'')'
+      operationId: generateDigest_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigestRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseDigest'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/export-list-request-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Выгрузить в файл список Заявок об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: exportListRequestOpenAccountsReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/export-info-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Экспортировать Уведомление об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: exportOpenedAccountsInfoReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/export-claim-rules-goz:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Экспортировать Заявление о присоединении к правилам ГОЗ
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: exportClaimRulesGozReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/export-claim-open-accounts:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Операции печати.
+      summary: Экспортировать Заявление об открытии счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.PRINT'')'
+      operationId: exportClaimOpenAccountsReport
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandPrintRequestDtoUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/delete:
+    post:
+      tags:
+        - API заявки на открытие 2+ счета. Базовые операции.
+      summary: Удалить заявки
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.DELETE'')'
+      operationId: delete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningRequestDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/pay:
+    post:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Провести оплату по QR-коду
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: doPayment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericCommandQrcPayDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataQrcCommissionPaymentDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/f1-commission:
+    post:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Получить комиссии за услуги банка
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: getF1Commission
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericCommandF1CommissionRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataQrcCommissionPaymentResponse'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /bank-account-contracts:
+    post:
+      tags:
+        - API ДБС для открытия доп счета
+      summary: Получить список ДБС для открытия доп счета
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CREATE'')  or hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_UPDATE'')'
+      operationId: getBankAccountContractList
+      parameters:
+        - name: organizationId
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetBankAccountContractRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseBankAccountContractResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/validate-sign:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Проверить подпись
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CHECK_SIGN'')'
+      operationId: validateSign_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/v2.1/generate-sign-data:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Сформировать данные для функции подписи v2.1
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SIGN'')'
+      operationId: generateSignDataV2x1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataUniSignV2x1Dto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/sign:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Подписать заявку
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SIGN'')'
+      operationId: sign
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignCommand'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/send:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Отправить заявку в банк
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SEND'')'
+      operationId: sendToBank
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/generate-sign-data:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Сформировать данные для функции подписи
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SIGN'')'
+      operationId: generateSignData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseUniSignDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/generate-digest/version:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Сгенерировать дайджест из подписываемых полей документа
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SIGN'') or hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CHECK_SIGN'')'
+      operationId: generateDigest_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DigestRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseDigest'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/export:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Выгрузить ПФ по заявке
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_EXPORT_DOCS'')'
+      operationId: exportToFile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SingleCommandAccountOpeningContractExportToFileDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractAttachmentInfoDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/check-relevance-data:
+    post:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Проверка актуальности данных в карточке клиента
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CREATE'')'
+      operationId: checkRelevanceData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericCommandUUID'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataCheckRelevanceResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /united-request/filter/get-currencies:
+    get:
+      tags:
+        - API скроллера О2+NEW и O2+OLD. Клиентская часть
+      summary: Получить уникальный набор кодов валют по пользователю
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_VIEW_LIST'')'
+      operationId: getCurrencies
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataListString'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /request/{id}:
+    get:
+      tags:
+        - API заявки на открытие 2+ счета. Базовые операции.
+      summary: Получить заявку по идентификатору
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: getById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningRequestDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/qr/{qrId}:
+    get:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Получение изображения QR-кода
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: getQrImage
+      parameters:
+        - name: qrId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataString'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/payment-receipt/download/{requestId}:
+    get:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Получить ПФ квитанции об оплате комиссии
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: downloadPaymentReceipt
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataQrcDocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/last/{requestId}:
+    get:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Получение последней оплаты по идентификатору заявки
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: getLastByRequestId
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataQrcCommissionPaymentDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /qrc-commission-payment/all-by-request-id/{requestId}:
+    get:
+      tags:
+        - Операции по оплате комиссии по QRC
+      summary: Получение выборки всех оплат по идентификатору заявки
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.VIEW'')'
+      operationId: getAllByRequestId
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataListQrcCommissionPaymentDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /i18n/{locale}:
+    get:
+      tags:
+        - API локализации
+      summary: Получить файл локализации
+      operationId: getLocResources
+      parameters:
+        - name: locale
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/{id}:
+    get:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Получить заявку
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_VIEW'')'
+      operationId: get
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+    delete:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Удалить заявку
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_DELETE'')'
+      operationId: delete_1
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseAccountOpeningContractRequestClientDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/{id}/sign-protocol:
+    get:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Операции подписи.
+      summary: Сгенерировать протокол проверки подписи
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_SIGN'') or hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CHECK_SIGN'')'
+      operationId: generateSignCheckProtocol
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/GenericResponseSimpleErrorDataFileDataResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/request-mode-version:
+    get:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Версия для отображения разных версий ЭФ Заявки на открытие доп. счета и заключение ДБС
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_VIEW'')'
+      operationId: getRequestModeVersion
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseInteger'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+  /account-opening-contract/available:
+    get:
+      tags:
+        - API заявки на открытие доп счета и заключение ДБС. Базовые операции.
+      summary: Проверить возможность подключения О2+NEW
+      description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.CLIENT.CONTRACT_CREATE'')'
+      operationId: isAvailable
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SingleResponseBoolean'
+        '400':
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '403':
+          description: Forbidden
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+        '415':
+          description: Unsupported Media Type
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '423':
+          description: Locked
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResultObject'
+        '500':
+          description: Internal Server Error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ActionResult'
+components:
+  schemas:
+    CheckMessage:
+      type: object
+      properties:
+        message:
+          type: string
+        params:
+          type: object
+          additionalProperties:
+            type: object
+    CheckResult:
+      type: object
+      properties:
+        fieldName:
+          type: string
+        result:
+          type: string
+          enum:
+            - VALID
+            - INVALID
+            - SKIPPED
+        message:
+          $ref: '#/components/schemas/CheckMessage'
+    ControlResult:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        result:
+          type: string
+          enum:
+            - VALID
+            - INVALID
+            - SKIPPED
+        level:
+          type: string
+          enum:
+            - WARNING
+            - CRITICAL
+        checkResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckResult'
+    GroupResult:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        result:
+          type: string
+          enum:
+            - VALID
+            - INVALID
+            - SKIPPED
+        controlResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/ControlResult'
+    ValidationResult:
+      type: object
+      properties:
+        result:
+          type: string
+          enum:
+            - VALID
+            - INVALID
+            - SKIPPED
+        groupResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupResult'
+    ActionResult:
+      type: object
+      properties:
+        data:
+          type: object
+        errorInfo:
+          $ref: '#/components/schemas/ErrorInfo'
+    ErrorInfo:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        traceId:
+          type: string
+    ActionResultObject:
+      type: object
+      properties:
+        data:
+          type: object
+        errorInfo:
+          $ref: '#/components/schemas/ErrorInfo'
+    AccountDto:
+      required:
+        - letterCurrencyCode
+      type: object
+      properties:
+        accountTypeCode:
+          type: string
+          description: Код типа счета.
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        accountTypeShortName:
+          maxLength: 50
+          minLength: 0
+          type: string
+          description: Краткое наименование типа счета.
+        letterCurrencyCode:
+          pattern: '[a-zA-Z]{3}'
+          type: string
+          description: Буквенный код валюты счета.
+        reservedAccountNumber:
+          type: string
+          description: Номер зарезервированного счета.
+        openNew:
+          type: boolean
+          description: Признак создания нового зарезервированного счета, не из списка резервированных.
+        correspondentAccount:
+          type: string
+          description: Корр счет филиала
+        bic:
+          pattern: '[0-9]{9}'
+          type: string
+          description: БИК зарезервированного счета
+      description: Сведения об открываемом счете.
+    AccountOpeningContractOpenedAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор открытого счета.
+          format: uuid
+        number:
+          type: string
+          description: Номер открытого счета.
+      description: Сведения об открытом счете.
+    AccountOpeningContractRequestDocumentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        documentTypeId:
+          type: string
+          description: Тип документа (Ссылка на справочник Тип документа).
+          format: uuid
+        documentTypeName:
+          type: string
+          description: Название тип документа.
+        documentTypeCode:
+          type: string
+          description: Код тип документа.
+        fileName:
+          type: string
+          description: Наименование файла.
+        attachment:
+          $ref: '#/components/schemas/AttachmentInfoDto'
+      description: Документы и вложения Заявки на открытие доп счета и ДБС.
+    AccountOpeningContractRequestSignatureDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор
+          format: uuid
+        ownerId:
+          type: string
+          description: Идентификатор владельца
+          format: uuid
+        typeId:
+          type: string
+          description: Идентификатор типа подписи
+          format: uuid
+        value:
+          $ref: '#/components/schemas/SignatureValueDto'
+        certificate:
+          $ref: '#/components/schemas/CertificateInfoDto'
+        signedAt:
+          type: string
+          description: Дата подписания
+          format: date-time
+        userFio:
+          type: string
+          description: Пользователь, подписавший заявку (ФИО).
+        sppVersion:
+          type: integer
+          description: Версия СПП.
+          format: int32
+        userEskId:
+          type: string
+          description: Идентификатор ЕСК пользователя подписавшего заявку.
+        userPhone:
+          type: string
+          description: Номер телефона пользователя подписавшего заявку.
+        userEmail:
+          type: string
+          description: Адрес электронной почты пользователя подписавшего заявку.
+      description: Реквизиты электронной подписи заявки.
+    AccountOpeningContractRequestUpsertDto:
+      required:
+        - account
+        - bankClientId
+        - branchId
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор заявки
+          format: uuid
+        version:
+          type: integer
+          description: Текущая версия для блокировки
+          format: int32
+        number:
+          type: integer
+          description: Номер заявки.
+          format: int32
+        date:
+          type: string
+          description: Дата заявки.
+          format: date-time
+        status:
+          type: string
+          description: Текущий статус обработки заявки.
+          enum:
+            - NONE
+            - DRAFT
+            - NEW
+            - SIGNED
+            - DELETED
+            - DELIVERED
+            - DETAILS_VALID
+            - SIGN_VALID
+            - RECEIVED
+            - EXPORT_TO_KNOSIS
+            - EXECUTED_IN_KNOSIS
+            - EXPORT_TO_KNOSIS_ERROR
+            - EXPORT_TO_ESK
+            - EXPORTED_TO_ESK
+            - ACCEPTED_BY_ESK
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - EXPORT_FILES_TO_F1
+            - FILES_EXPORTED_TO_F1
+            - EXPORT_FILES_TO_F1_ERROR
+            - WAITING_FOR_ESK_ACCOUNT
+            - ACCOUNT_OPENED_IN_F1
+            - EXPORT_TO_TESSA
+            - EXPORT_TO_TESSA_ERROR
+            - EXECUTED_BY_TESSA
+            - EXECUTED
+            - REJECTED
+            - COMMISSION_ACCOUNT_CHECK
+            - QRC_WAITING_FOR_COMMISSION_PAYMENT
+            - QRC_SHOW_COMMISSION
+            - QRC_COMMISSION_PAID
+            - QRC_REGISTER
+            - QRC_REQUEST
+            - QRC_ANALYZE
+            - QRC_EXPORT_TO_TESSA
+            - QRC_EXPORT_TO_TESSA_SUCCESS
+            - QRC_EXPORT_TO_TESSA_ERROR
+            - QRC_COMMISSION_PAYMENT_ERROR
+            - QRC_COMMISSION_PAYMENT_SUCCESS
+        step:
+          type: string
+          description: Шаг заявки.
+          enum:
+            - OPENING_ACCOUNT
+            - GOZ_REQUISITES
+            - CONFIRMATION
+            - CHECK_AUTHORITY
+        commentForBank:
+          type: string
+          description: Комментарий для Банка.
+        commentForClient:
+          type: string
+          description: Комментарий для Клиента.
+        userId:
+          type: string
+          description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь").
+          format: uuid
+        requestType:
+          type: string
+          description: Классификатор типов документов.
+          enum:
+            - ACC_OPEN_SECOND_REQ
+            - ACC_OPEN_SECOND_CONTRACT_REQ
+        filialId:
+          type: string
+          description: Идентификатор Филиала из ответа РКО Ф1.
+          format: uuid
+        bankClientId:
+          type: string
+          description: Идентификатор клиента по заявке.
+          format: uuid
+        signatures:
+          type: array
+          description: Реквизиты электронной подписи заявки.
+          items:
+            $ref: '#/components/schemas/AccountOpeningContractRequestSignatureDto'
+        signerInfo:
+          $ref: '#/components/schemas/SignerInfoDto'
+        multiAccountContract:
+          $ref: '#/components/schemas/MultiAccountContractUpsertDto'
+        bankAccountContract:
+          $ref: '#/components/schemas/BankAccountContractDto'
+        account:
+          $ref: '#/components/schemas/AccountDto'
+        openedAccount:
+          $ref: '#/components/schemas/AccountOpeningContractOpenedAccountDto'
+        branchId:
+          type: string
+          description: Идентификатор подразделения в котором открывается счет и заключается ДБС.
+          format: uuid
+        agreements:
+          $ref: '#/components/schemas/AgreementsDto'
+        commission:
+          $ref: '#/components/schemas/CommissionDto'
+        otherInfo:
+          $ref: '#/components/schemas/OtherInfoDto'
+        gozContract:
+          $ref: '#/components/schemas/GozContractDto'
+        gozContractCustomer:
+          $ref: '#/components/schemas/GozContractCustomerDto'
+        requestExecutionData:
+          $ref: '#/components/schemas/RequestExecutionDataDto'
+        documents:
+          type: array
+          description: Документы и вложения Заявки на открытие доп счета и ДБС.
+          items:
+            $ref: '#/components/schemas/AccountOpeningContractRequestDocumentDto'
+        requestVersion:
+          type: integer
+          description: Версионность документа.
+          format: int32
+        marketingCampaign:
+          type: string
+          description: Маркетинговая кампания
+        executedAt:
+          type: string
+          description: Дата исполнения заявки.
+          format: date-time
+      description: ДТО создания/обновления заявки на открытие доп счета и заключение ДБС.
+    AgreementsDto:
+      type: object
+      properties:
+        agreement1:
+          type: boolean
+          description: Согласие 1 (Признак подтверждения отсутствия изменений в документах).
+        agreement1TextHash:
+          type: string
+          description: Хеш текста согласия №1 заявки на открытие дополнительного счета.
+        agreement2:
+          type: boolean
+          description: Согласие 2 (Признак присоединения к правилам сопровождения государственного контракта в Банке).
+        agreement2TextHash:
+          type: string
+          description: Хеш текста согласия №2.
+        agreement4:
+          type: boolean
+          description: Согласие 4 (Признак ознакомления с условиями открытия счета).
+        agreement4TextHash:
+          type: string
+          description: Хеш текста согласия №4.
+      description: Согласия.
+    AttachmentInfoDto:
+      type: object
+      properties:
+        attachmentId:
+          type: string
+          description: Identifier of attachment
+          format: uuid
+        fileName:
+          type: string
+          description: name of attachment file
+        fileSize:
+          type: integer
+          description: size of attachment
+          format: int64
+        fileHash:
+          type: string
+          description: hash of attachment data
+        accessToken:
+          type: string
+          description: Attachment access token. No need to fill in on create or update operations
+      description: attachment info dto
+    BankAccountContractDto:
+      type: object
+      properties:
+        city:
+          type: string
+          description: Город заключения договора.
+      description: Сведения о новом заключаемом ДБС.
+    CertificateInfoDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор сертификата
+          format: uuid
+        value:
+          type: string
+          description: Base64 представление сертификата
+        subject:
+          type: string
+          description: Кому выдан сертификат
+        serialNumber:
+          type: string
+          description: Серийный номер
+        validFrom:
+          type: string
+          description: Период действия с
+          format: date-time
+        validTo:
+          type: string
+          description: Период действия по
+          format: date-time
+      description: Данные сертификата
+    CommissionDto:
+      type: object
+      properties:
+        commissionAccountRequired:
+          type: boolean
+          description: Необходим счет списания комиссии.
+        commissionAccountNumber:
+          type: string
+          description: Номер счета для списания комиссии.
+        bic:
+          pattern: '[0-9]{9}'
+          type: string
+          description: БИК счета для списания комиссии.
+      description: Комиссия за открытие счета.
+    GozContractCustomerDto:
+      type: object
+      properties:
+        inn:
+          pattern: '[0-9]{10}|[0-9]{12}'
+          type: string
+          description: ИНН Заказчика.
+        name:
+          type: string
+          description: Наименование Заказчика.
+        accountNumber:
+          type: string
+          description: Номер счета заказчика.
+      description: Сведения о Заказчике по государственному контракту.
+    GozContractDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор государственного контракта.
+        number:
+          type: string
+          description: Номер контракта.
+        amount:
+          type: string
+          description: Сумма контракта.
+        date:
+          type: string
+          description: Дата контракта.
+          format: date
+        bskId:
+          type: string
+          description: ID договора банковского сопровождения в БСК.
+        bskNumber:
+          type: string
+          description: Номер договора банковского сопровождения в БСК.
+      description: Сведение о государственном контракте.
+    MultiAccountContractUpsertDto:
+      type: object
+      properties:
+        conclude:
+          type: boolean
+          description: Заключить новый многосчетовой договор (ДБС).
+        contractId:
+          type: string
+          description: Значение идентификатора договора банковского счета в АБС.
+      description: Сведения о многосчетовом договоре, в рамках которого открывается доп счет (создание/изменение).
+    OtherInfoDto:
+      type: object
+      properties:
+        opopAccountNumber:
+          type: string
+          description: Номер счета для карточки ОПОП.
+        internetBankConnected:
+          type: boolean
+          description: Признак подключения к интернет и мобильному банку.
+        notifyAboutResults:
+          type: boolean
+          description: Уведомить о результатах исполнения по СМС и Email.
+        opopBic:
+          maxLength: 9
+          minLength: 9
+          pattern: '[0-9]{9}'
+          type: string
+          description: БИК счета для карточки ОПОП.
+      description: Иные сведения.
+    RequestExecutionDataDto:
+      type: object
+      properties:
+        tessaDossierId:
+          type: string
+          description: Идентификатор досье в ТЕССА.
+        openedBankContractNumber:
+          type: string
+          description: Номер открытого ДБС.
+        openedBankContractDate:
+          type: string
+          description: Дата открытого ДБС.
+          format: date
+      description: Данные при исполнении заявки.
+    SignatureValueDto:
+      type: object
+      properties:
+        signature:
+          type: string
+          description: Подпись
+        digest:
+          type: string
+          description: Дайджест
+      description: Значение подписи
+    SignerInfoDto:
+      type: object
+      properties:
+        userPosition:
+          type: string
+          description: Должность пользователя подписавшего заявку.
+        userDocument:
+          type: string
+          description: Документ на основании которого пользователь подписал заявку.
+      description: Информация о пользователе, подписавшем заявку.
+    UpdateAccountOpeningContractCommand:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractRequestUpsertDto'
+        id:
+          type: string
+          format: uuid
+      description: ДТО Заявка на открытие доп счета и заключение ДБС.
+    AccountOpeningContractBankClientDto:
+      required:
+        - inn
+        - ogrnOgrnip
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: Ссылка на сущность "Клиент Банка".
+          format: uuid
+        fullName:
+          type: string
+          description: Полное наименование клиента.
+        shortName:
+          type: string
+          description: Краткое наименование клиента.
+        inn:
+          pattern: '[0-9]{10}|[0-9]{12}'
+          type: string
+          description: ИНН клиента.
+        kpp:
+          pattern: '[0-9]{9}'
+          type: string
+          description: КПП клиента.
+        ogrnOgrnip:
+          pattern: '[0-9]{0,15}'
+          type: string
+          description: ОГРН/ОГРНИП.
+        rnk:
+          pattern: '[\/\^\.\,\-\_\''\"\@\?\!\:\$a-zA-Z0-9()\[\]]{0,50}'
+          type: string
+          description: РНК клиента. Регистрационный номер клиента, присваивается в РКО Ф1.
+        eskId:
+          type: string
+          description: GUID клиента. GUID клиента, присваивается в ЕСК.
+          format: uuid
+      description: Реквизиты клиента по заявке.
+    AccountOpeningContractBranchDto:
+      required:
+        - absCode
+      type: object
+      properties:
+        branchId:
+          type: string
+          description: Ссылка на сущность Подразделение Банка.
+          format: uuid
+        absCode:
+          pattern: '[\/\^\.\,\-\_\''\"\@\?\!\:\$a-zA-Z0-9()\[\]]{0,50}'
+          type: string
+          description: Код подразделения в АБС.
+        name:
+          type: string
+          description: Наименование подразделения.
+        number:
+          type: string
+          description: Номер подразделения.
+        bic:
+          pattern: '[0-9]{9}'
+          type: string
+          description: БИК филиала.
+      description: Сведения о Подразделении в котором открывается счет и заключается ДБС.
+    AccountOpeningContractRequestClientDto:
+      required:
+        - account
+        - bankClient
+        - branch
+        - date
+        - number
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор заявки
+          format: uuid
+        version:
+          type: integer
+          description: Текущая версия для блокировки
+          format: int32
+        number:
+          type: integer
+          description: Номер заявки.
+          format: int32
+        date:
+          type: string
+          description: Дата заявки.
+          format: date-time
+        status:
+          type: string
+          description: Текущий статус обработки заявки.
+          enum:
+            - NONE
+            - DRAFT
+            - NEW
+            - SIGNED
+            - DELETED
+            - DELIVERED
+            - DETAILS_VALID
+            - SIGN_VALID
+            - RECEIVED
+            - EXPORT_TO_KNOSIS
+            - EXECUTED_IN_KNOSIS
+            - EXPORT_TO_KNOSIS_ERROR
+            - EXPORT_TO_ESK
+            - EXPORTED_TO_ESK
+            - ACCEPTED_BY_ESK
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - EXPORT_FILES_TO_F1
+            - FILES_EXPORTED_TO_F1
+            - EXPORT_FILES_TO_F1_ERROR
+            - WAITING_FOR_ESK_ACCOUNT
+            - ACCOUNT_OPENED_IN_F1
+            - EXPORT_TO_TESSA
+            - EXPORT_TO_TESSA_ERROR
+            - EXECUTED_BY_TESSA
+            - EXECUTED
+            - REJECTED
+            - COMMISSION_ACCOUNT_CHECK
+            - QRC_WAITING_FOR_COMMISSION_PAYMENT
+            - QRC_SHOW_COMMISSION
+            - QRC_COMMISSION_PAID
+            - QRC_REGISTER
+            - QRC_REQUEST
+            - QRC_ANALYZE
+            - QRC_EXPORT_TO_TESSA
+            - QRC_EXPORT_TO_TESSA_SUCCESS
+            - QRC_EXPORT_TO_TESSA_ERROR
+            - QRC_COMMISSION_PAYMENT_ERROR
+            - QRC_COMMISSION_PAYMENT_SUCCESS
+        step:
+          type: string
+          description: Шаг заявки.
+          enum:
+            - OPENING_ACCOUNT
+            - GOZ_REQUISITES
+            - CONFIRMATION
+            - CHECK_AUTHORITY
+        commentForClient:
+          type: string
+          description: Комментарий для Клиента.
+        userId:
+          type: string
+          description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь").
+          format: uuid
+        userFio:
+          type: string
+          description: Пользователь, создавший заявку (ФИО).
+        requestType:
+          type: string
+          description: Классификатор типов документов.
+          enum:
+            - ACC_OPEN_SECOND_REQ
+            - ACC_OPEN_SECOND_CONTRACT_REQ
+        filialId:
+          type: string
+          description: Идентификатор Филиала из ответа РКО Ф1.
+          format: uuid
+        bankClient:
+          $ref: '#/components/schemas/AccountOpeningContractBankClientDto'
+        signatures:
+          type: array
+          description: Реквизиты электронной подписи заявки.
+          items:
+            $ref: '#/components/schemas/AccountOpeningContractRequestSignatureDto'
+        signerInfo:
+          $ref: '#/components/schemas/SignerInfoDto'
+        multiAccountContract:
+          $ref: '#/components/schemas/MultiAccountContractDto'
+        bankAccountContract:
+          $ref: '#/components/schemas/BankAccountContractDto'
+        account:
+          $ref: '#/components/schemas/AccountDto'
+        openedAccount:
+          $ref: '#/components/schemas/AccountOpeningContractOpenedAccountDto'
+        branch:
+          $ref: '#/components/schemas/AccountOpeningContractBranchDto'
+        agreements:
+          $ref: '#/components/schemas/AgreementsDto'
+        commission:
+          $ref: '#/components/schemas/CommissionDto'
+        otherInfo:
+          $ref: '#/components/schemas/OtherInfoDto'
+        gozContract:
+          $ref: '#/components/schemas/GozContractDto'
+        gozContractCustomer:
+          $ref: '#/components/schemas/GozContractCustomerDto'
+        requestExecutionData:
+          $ref: '#/components/schemas/RequestExecutionDataDto'
+        documents:
+          type: array
+          description: Документы и вложения Заявки на открытие доп счета и ДБС.
+          items:
+            $ref: '#/components/schemas/AccountOpeningContractRequestDocumentDto'
+        requestVersion:
+          type: integer
+          description: Версионность документа.
+          format: int32
+        marketingCampaign:
+          type: string
+          description: Маркетинговая кампания
+        executedAt:
+          type: string
+          description: Дата исполнения заявки.
+          format: date-time
+        qrcCommissionPayment:
+          $ref: '#/components/schemas/QrcCommissionPaymentDto'
+      description: ДТО Заявка на открытие доп счета и заключение ДБС.
+    CreateResponseAccountOpeningContractRequestClientDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractRequestClientDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        validationResult:
+          $ref: '#/components/schemas/ValidationResult'
+    MultiAccountContractDto:
+      type: object
+      properties:
+        conclude:
+          type: boolean
+          description: Заключить новый многосчетовой договор (ДБС).
+        number:
+          type: string
+          description: Номер договора.
+        date:
+          type: string
+          description: Дата договора.
+          format: date
+        contractId:
+          type: string
+          description: Значение идентификатора договора банковского счета в АБС. Идентификатор договора в АБС РКО Ф1.
+      description: Сведения о многосчетовом договоре, в рамках которого открывается доп счет.
+    QrcCommissionPaymentDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор записи
+          format: uuid
+        requestId:
+          type: string
+          description: Идентификатор заявки на открытие доп счета и заключение ДБС
+          format: uuid
+        statusUpdatedAt:
+          type: string
+          description: Дата и время изменения статуса
+          format: date-time
+        commentForBank:
+          type: string
+          description: Информация для Банка
+        qrExpirationDate:
+          type: string
+          description: Дата и время истечения срока QR-кода
+          format: date-time
+        status:
+          type: string
+          description: Статус оплаты
+          enum:
+            - CREATED
+            - ACTIVE
+            - EXECUTED
+            - CANCELED
+            - FEE_FREE
+        transactionId:
+          type: string
+          description: Идентификатор транзакции
+        tessaStatus:
+          type: string
+          description: Признак выгрузки в ТЕССА
+          enum:
+            - UPLOADED
+            - ERROR
+        qrId:
+          type: string
+          description: Идентификатор QR-кода
+        payLink:
+          type: string
+          description: Ссылка для оплаты
+        commissionAmount:
+          type: number
+          description: Сумма комиссии за открытие дополнительного счета
+        tessaCardId:
+          type: string
+          description: Идентификатор карточки документа в ТЕССА
+          format: uuid
+        tessaFileId:
+          type: string
+          description: Идентификатор файла в ТЕССА
+          format: uuid
+      description: Информация об оплате комиссии по QR коду
+    AccountTypeCodeFilter:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: string
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        notEq:
+          type: string
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        in:
+          type: array
+          items:
+            type: string
+            enum:
+              - PAYMENT
+              - EXECUTOR_GOZ
+              - HEAD_EXECUTOR_GOZ
+              - SPECIAL_PURCHASE_ACCOUNT
+        notIn:
+          type: array
+          items:
+            type: string
+            enum:
+              - PAYMENT
+              - EXECUTOR_GOZ
+              - HEAD_EXECUTOR_GOZ
+              - SPECIAL_PURCHASE_ACCOUNT
+        isNull:
+          type: boolean
+      description: Фильтр по типу счёта
+    FilterValueDtoInteger:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: integer
+          format: int32
+        notEq:
+          type: integer
+          format: int32
+        in:
+          type: array
+          items:
+            type: integer
+            format: int32
+        notIn:
+          type: array
+          items:
+            type: integer
+            format: int32
+        isNull:
+          type: boolean
+        gt:
+          type: integer
+          format: int32
+        ge:
+          type: integer
+          format: int32
+        lt:
+          type: integer
+          format: int32
+        le:
+          type: integer
+          format: int32
+      description: Номер заявки
+    FilterValueDtoLocalDate:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: string
+          format: date
+        notEq:
+          type: string
+          format: date
+        in:
+          type: array
+          items:
+            type: string
+            format: date
+        notIn:
+          type: array
+          items:
+            type: string
+            format: date
+        isNull:
+          type: boolean
+        gt:
+          type: string
+          format: date
+        ge:
+          type: string
+          format: date
+        lt:
+          type: string
+          format: date
+        le:
+          type: string
+          format: date
+      description: Дата договора
+    FilterValueDtoString:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: string
+        notEq:
+          type: string
+        in:
+          type: array
+          items:
+            type: string
+        notIn:
+          type: array
+          items:
+            type: string
+        isNull:
+          type: boolean
+        gt:
+          type: string
+        ge:
+          type: string
+        lt:
+          type: string
+        le:
+          type: string
+      description: Валюта
+    FilterValueDtoUUID:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: string
+          format: uuid
+        notEq:
+          type: string
+          format: uuid
+        in:
+          type: array
+          items:
+            type: string
+            format: uuid
+        notIn:
+          type: array
+          items:
+            type: string
+            format: uuid
+        isNull:
+          type: boolean
+        gt:
+          type: string
+          format: uuid
+        ge:
+          type: string
+          format: uuid
+        lt:
+          type: string
+          format: uuid
+        le:
+          type: string
+          format: uuid
+      description: Ссылка на сущность "Клиент Банка".
+    GetPageCommandUnitedRequestClientFilter:
+      type: object
+      properties:
+        params:
+          $ref: '#/components/schemas/PageParamsUnitedRequestClientFilter'
+      description: Запрос страницы
+    PageParamsUnitedRequestClientFilter:
+      type: object
+      properties:
+        filter:
+          $ref: '#/components/schemas/UnitedRequestClientFilter'
+        sort:
+          $ref: '#/components/schemas/Sort'
+        multiSort:
+          type: array
+          description: Сортировка по нескольким полям
+          items:
+            $ref: '#/components/schemas/Sort'
+        paging:
+          $ref: '#/components/schemas/Paging'
+      description: Параметры
+    Paging:
+      type: object
+      properties:
+        offset:
+          minimum: 0
+          type: integer
+          description: Смещение
+          format: int32
+        limit:
+          minimum: 1
+          type: integer
+          description: Количество записей
+          format: int32
+      description: Пагинация
+    Sort:
+      required:
+        - field
+      type: object
+      properties:
+        field:
+          type: string
+          description: Поле
+        direction:
+          type: string
+          description: Порядок сортировки
+          enum:
+            - ASC
+            - DESC
+        nullHandling:
+          type: string
+          description: Стратегия сортировки пустых (null) значений
+          enum:
+            - NULLS_FIRST
+            - NULLS_LAST
+      description: Сортировка по нескольким полям
+    UnitedRequestClientFilter:
+      type: object
+      properties:
+        organization:
+          $ref: '#/components/schemas/FilterValueDtoString'
+        requestDate:
+          $ref: '#/components/schemas/FilterValueDtoLocalDate'
+        requestNumber:
+          $ref: '#/components/schemas/FilterValueDtoInteger'
+        branchId:
+          $ref: '#/components/schemas/FilterValueDtoUUID'
+        status:
+          $ref: '#/components/schemas/UnitedRequestStatusFilter'
+        contractNumber:
+          $ref: '#/components/schemas/FilterValueDtoString'
+        contractDate:
+          $ref: '#/components/schemas/FilterValueDtoLocalDate'
+        openedAccountNumber:
+          $ref: '#/components/schemas/FilterValueDtoString'
+        bankClientId:
+          $ref: '#/components/schemas/FilterValueDtoUUID'
+        statusCategory:
+          type: string
+          description: Категория статуса
+          enum:
+            - ALL
+            - IN_PROGRESS
+            - IN_PROCESSING
+            - FINISHED
+        accountTypeCode:
+          $ref: '#/components/schemas/AccountTypeCodeFilter'
+        currencyLetterCode:
+          $ref: '#/components/schemas/FilterValueDtoString'
+      description: Фильтр
+    UnitedRequestStatusFilter:
+      type: object
+      properties:
+        contains:
+          type: string
+        notContains:
+          type: string
+        eq:
+          type: string
+          enum:
+            - NONE
+            - DRAFT
+            - NEW
+            - SIGNED
+            - DELETED
+            - DELIVERED
+            - DETAILS_VALID
+            - SIGN_VALID
+            - RECEIVED
+            - EXPORT_TO_KNOSIS
+            - EXECUTED_IN_KNOSIS
+            - EXPORT_TO_KNOSIS_ERROR
+            - EXPORT_TO_ESK
+            - EXPORTED_TO_ESK
+            - ACCEPTED_BY_ESK
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - EXPORT_FILES_TO_F1
+            - FILES_EXPORTED_TO_F1
+            - EXPORT_FILES_TO_F1_ERROR
+            - WAITING_FOR_ESK_ACCOUNT
+            - ACCOUNT_OPENED_IN_F1
+            - EXPORT_TO_TESSA
+            - EXPORT_TO_TESSA_ERROR
+            - EXECUTED_BY_TESSA
+            - EXECUTED
+            - REJECTED
+            - CREATED
+            - SIGN_INVALID
+            - DETAILS_ERROR
+            - READY_FOR_PROCESSING
+            - DENIED_BY_ESK
+            - EXPORTED_TO_RKO_F1
+            - EXPORT_TO_RKO_F1_ERROR
+            - RKO_F1_ACCOUNT_OPENED
+            - ECO_ACCOUNT_OPENING_ERROR
+            - DENIED
+            - EXPORTED_TO_ELAR
+            - EXPORT_TO_ELAR_ERROR
+            - NOT_EXPORTED_TO_ELAR
+            - COMMISSION_ACCOUNT_CHECK
+            - QRC_WAITING_FOR_COMMISSION_PAYMENT
+            - QRC_SHOW_COMMISSION
+            - QRC_REGISTER
+            - QRC_EXPORT_TO_TESSA
+            - QRC_EXPORT_TO_TESSA_SUCCESS
+            - QRC_EXPORT_TO_TESSA_ERROR
+            - QRC_COMMISSION_PAYMENT_ERROR
+            - QRC_COMMISSION_PAYMENT_SUCCESS
+            - QRC_COMMISSION_PAID
+            - QRC_REQUEST
+            - QRC_ANALYZE
+        notEq:
+          type: string
+          enum:
+            - NONE
+            - DRAFT
+            - NEW
+            - SIGNED
+            - DELETED
+            - DELIVERED
+            - DETAILS_VALID
+            - SIGN_VALID
+            - RECEIVED
+            - EXPORT_TO_KNOSIS
+            - EXECUTED_IN_KNOSIS
+            - EXPORT_TO_KNOSIS_ERROR
+            - EXPORT_TO_ESK
+            - EXPORTED_TO_ESK
+            - ACCEPTED_BY_ESK
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - EXPORT_FILES_TO_F1
+            - FILES_EXPORTED_TO_F1
+            - EXPORT_FILES_TO_F1_ERROR
+            - WAITING_FOR_ESK_ACCOUNT
+            - ACCOUNT_OPENED_IN_F1
+            - EXPORT_TO_TESSA
+            - EXPORT_TO_TESSA_ERROR
+            - EXECUTED_BY_TESSA
+            - EXECUTED
+            - REJECTED
+            - CREATED
+            - SIGN_INVALID
+            - DETAILS_ERROR
+            - READY_FOR_PROCESSING
+            - DENIED_BY_ESK
+            - EXPORTED_TO_RKO_F1
+            - EXPORT_TO_RKO_F1_ERROR
+            - RKO_F1_ACCOUNT_OPENED
+            - ECO_ACCOUNT_OPENING_ERROR
+            - DENIED
+            - EXPORTED_TO_ELAR
+            - EXPORT_TO_ELAR_ERROR
+            - NOT_EXPORTED_TO_ELAR
+            - COMMISSION_ACCOUNT_CHECK
+            - QRC_WAITING_FOR_COMMISSION_PAYMENT
+            - QRC_SHOW_COMMISSION
+            - QRC_REGISTER
+            - QRC_EXPORT_TO_TESSA
+            - QRC_EXPORT_TO_TESSA_SUCCESS
+            - QRC_EXPORT_TO_TESSA_ERROR
+            - QRC_COMMISSION_PAYMENT_ERROR
+            - QRC_COMMISSION_PAYMENT_SUCCESS
+            - QRC_COMMISSION_PAID
+            - QRC_REQUEST
+            - QRC_ANALYZE
+        in:
+          type: array
+          items:
+            type: string
+            enum:
+              - NONE
+              - DRAFT
+              - NEW
+              - SIGNED
+              - DELETED
+              - DELIVERED
+              - DETAILS_VALID
+              - SIGN_VALID
+              - RECEIVED
+              - EXPORT_TO_KNOSIS
+              - EXECUTED_IN_KNOSIS
+              - EXPORT_TO_KNOSIS_ERROR
+              - EXPORT_TO_ESK
+              - EXPORTED_TO_ESK
+              - ACCEPTED_BY_ESK
+              - EXPORT_TO_ESK_ERROR
+              - EXECUTED_BY_ESK
+              - EXPORT_FILES_TO_F1
+              - FILES_EXPORTED_TO_F1
+              - EXPORT_FILES_TO_F1_ERROR
+              - WAITING_FOR_ESK_ACCOUNT
+              - ACCOUNT_OPENED_IN_F1
+              - EXPORT_TO_TESSA
+              - EXPORT_TO_TESSA_ERROR
+              - EXECUTED_BY_TESSA
+              - EXECUTED
+              - REJECTED
+              - CREATED
+              - SIGN_INVALID
+              - DETAILS_ERROR
+              - READY_FOR_PROCESSING
+              - DENIED_BY_ESK
+              - EXPORTED_TO_RKO_F1
+              - EXPORT_TO_RKO_F1_ERROR
+              - RKO_F1_ACCOUNT_OPENED
+              - ECO_ACCOUNT_OPENING_ERROR
+              - DENIED
+              - EXPORTED_TO_ELAR
+              - EXPORT_TO_ELAR_ERROR
+              - NOT_EXPORTED_TO_ELAR
+              - COMMISSION_ACCOUNT_CHECK
+              - QRC_WAITING_FOR_COMMISSION_PAYMENT
+              - QRC_SHOW_COMMISSION
+              - QRC_REGISTER
+              - QRC_EXPORT_TO_TESSA
+              - QRC_EXPORT_TO_TESSA_SUCCESS
+              - QRC_EXPORT_TO_TESSA_ERROR
+              - QRC_COMMISSION_PAYMENT_ERROR
+              - QRC_COMMISSION_PAYMENT_SUCCESS
+              - QRC_COMMISSION_PAID
+              - QRC_REQUEST
+              - QRC_ANALYZE
+        notIn:
+          type: array
+          items:
+            type: string
+            enum:
+              - NONE
+              - DRAFT
+              - NEW
+              - SIGNED
+              - DELETED
+              - DELIVERED
+              - DETAILS_VALID
+              - SIGN_VALID
+              - RECEIVED
+              - EXPORT_TO_KNOSIS
+              - EXECUTED_IN_KNOSIS
+              - EXPORT_TO_KNOSIS_ERROR
+              - EXPORT_TO_ESK
+              - EXPORTED_TO_ESK
+              - ACCEPTED_BY_ESK
+              - EXPORT_TO_ESK_ERROR
+              - EXECUTED_BY_ESK
+              - EXPORT_FILES_TO_F1
+              - FILES_EXPORTED_TO_F1
+              - EXPORT_FILES_TO_F1_ERROR
+              - WAITING_FOR_ESK_ACCOUNT
+              - ACCOUNT_OPENED_IN_F1
+              - EXPORT_TO_TESSA
+              - EXPORT_TO_TESSA_ERROR
+              - EXECUTED_BY_TESSA
+              - EXECUTED
+              - REJECTED
+              - CREATED
+              - SIGN_INVALID
+              - DETAILS_ERROR
+              - READY_FOR_PROCESSING
+              - DENIED_BY_ESK
+              - EXPORTED_TO_RKO_F1
+              - EXPORT_TO_RKO_F1_ERROR
+              - RKO_F1_ACCOUNT_OPENED
+              - ECO_ACCOUNT_OPENING_ERROR
+              - DENIED
+              - EXPORTED_TO_ELAR
+              - EXPORT_TO_ELAR_ERROR
+              - NOT_EXPORTED_TO_ELAR
+              - COMMISSION_ACCOUNT_CHECK
+              - QRC_WAITING_FOR_COMMISSION_PAYMENT
+              - QRC_SHOW_COMMISSION
+              - QRC_REGISTER
+              - QRC_EXPORT_TO_TESSA
+              - QRC_EXPORT_TO_TESSA_SUCCESS
+              - QRC_EXPORT_TO_TESSA_ERROR
+              - QRC_COMMISSION_PAYMENT_ERROR
+              - QRC_COMMISSION_PAYMENT_SUCCESS
+              - QRC_COMMISSION_PAID
+              - QRC_REQUEST
+              - QRC_ANALYZE
+        isNull:
+          type: boolean
+      description: Фильтр по статусу объединенной заявки
+    PageDataUnitedRequestClientDto:
+      required:
+        - page
+        - size
+      type: object
+      properties:
+        page:
+          type: array
+          description: Страница с данными
+          items:
+            $ref: '#/components/schemas/UnitedRequestClientDto'
+        size:
+          type: integer
+          description: Размер страницы
+          format: int64
+      description: Страничные данные
+    UnitedAccountDto:
+      type: object
+      properties:
+        accountTypeCode:
+          type: string
+          description: Код типа счета.
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        letterCurrencyCode:
+          type: string
+          description: Буквенный код валюты счета.
+        reservedAccountNumber:
+          type: string
+          description: Номер зарезервированного счета.
+      description: Сведения об открываемом счете.
+    UnitedBankClientDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: Ссылка на сущность "Клиент Банка".
+          format: uuid
+        fullName:
+          type: string
+          description: Полное наименование клиента.
+        shortName:
+          type: string
+          description: Краткое наименование клиента.
+        inn:
+          type: string
+          description: ИНН клиента.
+      description: Реквизиты клиента по заявке.
+    UnitedBranchDto:
+      type: object
+      properties:
+        branchId:
+          type: string
+          description: Ссылка на сущность Подразделение Банка.
+          format: uuid
+        absCode:
+          type: string
+          description: Код подразделения в АБС.
+        name:
+          type: string
+          description: Наименование подразделения.
+        number:
+          type: string
+          description: Номер подразделения.
+        bic:
+          type: string
+          description: БИК филиала.
+      description: Сведения о Подразделении в котором открывается счет.
+    UnitedMultiAccountContractDto:
+      type: object
+      properties:
+        conclude:
+          type: boolean
+          description: Заключить новый многосчетовой договор (ДБС).
+      description: Сведения о многосчетовом договоре, в рамках которого открывается доп счет.
+    UnitedOpenedAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор открытого счета.
+          format: uuid
+        number:
+          type: string
+          description: Номер открытого счета.
+        state:
+          type: string
+          description: Статус открытого счета
+          enum:
+            - RESERVED
+            - ANNULLED
+            - OPENED
+            - CLOSED
+            - TO_OPEN
+            - TO_CLOSE
+        closeDate:
+          type: string
+          description: Дата закрытия счета.
+          format: date
+      description: Сведения об открытом счете.
+    UnitedRequestClientDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор заявки
+          format: uuid
+        number:
+          type: integer
+          description: Номер заявки.
+          format: int32
+        date:
+          type: string
+          description: Дата создания заявки.
+          format: date-time
+        status:
+          type: string
+          description: Статус заявки.
+          enum:
+            - NONE
+            - DRAFT
+            - NEW
+            - SIGNED
+            - DELETED
+            - DELIVERED
+            - DETAILS_VALID
+            - SIGN_VALID
+            - RECEIVED
+            - EXPORT_TO_KNOSIS
+            - EXECUTED_IN_KNOSIS
+            - EXPORT_TO_KNOSIS_ERROR
+            - EXPORT_TO_ESK
+            - EXPORTED_TO_ESK
+            - ACCEPTED_BY_ESK
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - EXPORT_FILES_TO_F1
+            - FILES_EXPORTED_TO_F1
+            - EXPORT_FILES_TO_F1_ERROR
+            - WAITING_FOR_ESK_ACCOUNT
+            - ACCOUNT_OPENED_IN_F1
+            - EXPORT_TO_TESSA
+            - EXPORT_TO_TESSA_ERROR
+            - EXECUTED_BY_TESSA
+            - EXECUTED
+            - REJECTED
+            - CREATED
+            - SIGN_INVALID
+            - DETAILS_ERROR
+            - READY_FOR_PROCESSING
+            - DENIED_BY_ESK
+            - EXPORTED_TO_RKO_F1
+            - EXPORT_TO_RKO_F1_ERROR
+            - RKO_F1_ACCOUNT_OPENED
+            - ECO_ACCOUNT_OPENING_ERROR
+            - DENIED
+            - EXPORTED_TO_ELAR
+            - EXPORT_TO_ELAR_ERROR
+            - NOT_EXPORTED_TO_ELAR
+            - COMMISSION_ACCOUNT_CHECK
+            - QRC_WAITING_FOR_COMMISSION_PAYMENT
+            - QRC_SHOW_COMMISSION
+            - QRC_REGISTER
+            - QRC_EXPORT_TO_TESSA
+            - QRC_EXPORT_TO_TESSA_SUCCESS
+            - QRC_EXPORT_TO_TESSA_ERROR
+            - QRC_COMMISSION_PAYMENT_ERROR
+            - QRC_COMMISSION_PAYMENT_SUCCESS
+            - QRC_COMMISSION_PAID
+            - QRC_REQUEST
+            - QRC_ANALYZE
+        requestType:
+          type: string
+          description: Классификатор типов документов.
+          enum:
+            - ACC_OPEN_SECOND_REQ
+            - ACC_OPEN_SECOND_CONTRACT_REQ
+        bankClient:
+          $ref: '#/components/schemas/UnitedBankClientDto'
+        multiAccountContract:
+          $ref: '#/components/schemas/UnitedMultiAccountContractDto'
+        account:
+          $ref: '#/components/schemas/UnitedAccountDto'
+        openedAccount:
+          $ref: '#/components/schemas/UnitedOpenedAccountDto'
+        branch:
+          $ref: '#/components/schemas/UnitedBranchDto'
+        updatedAt:
+          type: string
+          description: Дата и время обновления заявки.
+          format: date-time
+        requestVersion:
+          type: integer
+          description: Версионность документа.
+          format: int32
+      description: ДТО Общих полей заявок O2+ для клиентского скроллера.
+    CategoryCount:
+      required:
+        - count
+        - desc
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Наименование категории
+        desc:
+          type: string
+          description: Описание категории
+        count:
+          type: integer
+          description: Количество сущностей в категории
+          format: int64
+      description: Категория с количеством сущностей
+    CategoryResponse:
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          type: array
+          description: Категории
+          items:
+            $ref: '#/components/schemas/CategoryCount'
+      description: Список категорий
+    SingleCommandUUID:
+      type: object
+      properties:
+        data:
+          type: string
+          format: uuid
+    AccountInfoDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id
+          format: uuid
+        accountTypeCode:
+          type: integer
+          description: Account type code. 1 - Payment, 2 - GOZ
+          format: int64
+        accountTypeDescription:
+          type: string
+          description: Account type description
+        needConnectMobileBank:
+          type: boolean
+          description: Is connected to internet or mobile bank
+        statementType:
+          type: string
+          description: Statement type
+          enum:
+            - STANDARD
+            - EXTENDED
+        reservedAccounts:
+          type: array
+          description: Reserved accounts
+          items:
+            $ref: '#/components/schemas/ReservedAccountDto'
+        openingAccountsInfos:
+          type: array
+          description: Opening accounts info
+          items:
+            $ref: '#/components/schemas/OpeningAccountInfoDto'
+        govContractInfo:
+          $ref: '#/components/schemas/GovContractInfoDto'
+        govContractCustomerInfo:
+          $ref: '#/components/schemas/GovContractCustomerInfoDto'
+        document:
+          $ref: '#/components/schemas/DocumentDto'
+      description: Opening account info DTO
+    AccountOpeningRequestDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id
+          format: uuid
+        number:
+          type: integer
+          description: Number
+          format: int32
+        date:
+          type: string
+          description: Date
+          format: date
+        status:
+          type: string
+          description: Status
+          enum:
+            - NONE
+            - CREATED
+            - DRAFT
+            - NEW
+            - DELETED
+            - SIGNED
+            - DELIVERED
+            - SIGN_INVALID
+            - SIGN_VALID
+            - DETAILS_ERROR
+            - EXPORTED_TO_ESK
+            - RECEIVED
+            - READY_FOR_PROCESSING
+            - EXPORT_TO_ESK_ERROR
+            - EXECUTED_BY_ESK
+            - DENIED_BY_ESK
+            - EXPORTED_TO_RKO_F1
+            - EXPORT_TO_RKO_F1_ERROR
+            - RKO_F1_ACCOUNT_OPENED
+            - ECO_ACCOUNT_OPENING_ERROR
+            - EXECUTED
+            - DENIED
+            - EXPORTED_TO_ELAR
+            - EXPORT_TO_ELAR_ERROR
+            - NOT_EXPORTED_TO_ELAR
+        confirmNoChanges:
+          type: boolean
+          description: Confirm no changes mark
+        isRulesJoined:
+          type: boolean
+          description: Sign of joining the rules of support of the state contract in the Bank
+        userId:
+          type: string
+          description: User ID
+          format: uuid
+        requestType:
+          type: string
+          description: Классификатор типов документов.
+          enum:
+            - ACC_OPEN_SECOND_REQ
+            - ACC_OPEN_SECOND_CONTRACT_REQ
+        bankClient:
+          $ref: '#/components/schemas/BankClientDto'
+        commissionAccount:
+          $ref: '#/components/schemas/CommissionAccountDto'
+        opopAccount:
+          $ref: '#/components/schemas/OpopAccountDto'
+        contract:
+          $ref: '#/components/schemas/ContractDto'
+        branch:
+          $ref: '#/components/schemas/BranchDto'
+        openedAccounts:
+          type: array
+          description: Opened account list
+          items:
+            $ref: '#/components/schemas/OpenedAccountDto'
+        accountInfos:
+          type: array
+          description: Opening accounts info
+          items:
+            $ref: '#/components/schemas/AccountInfoDto'
+        signature:
+          $ref: '#/components/schemas/AccountOpeningRequestSignatureDto'
+        errors:
+          type: string
+          description: Processing errors
+        commentForClient:
+          type: string
+          description: Processing errors for client
+        version:
+          type: integer
+          description: Entity version
+          format: int32
+        createdAt:
+          type: string
+          description: Время создания
+          format: date-time
+        updatedAt:
+          type: string
+          description: Время обновления
+          format: date-time
+      description: Account opening request DTO
+    AccountOpeningRequestSignatureDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор
+          format: uuid
+        ownerId:
+          type: string
+          description: Идентификатор владельца
+          format: uuid
+        typeId:
+          type: string
+          description: Идентификатор типа подписи
+          format: uuid
+        value:
+          $ref: '#/components/schemas/SignatureValueDto'
+        certificate:
+          $ref: '#/components/schemas/CertificateInfoDto'
+        signedAt:
+          type: string
+          description: Дата подписания
+          format: date-time
+        sppVersion:
+          type: integer
+          description: Версия СПП
+          format: int32
+      description: Подпись заявки
+    BankClientDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          description: Bank client ID
+          format: uuid
+        innKio:
+          type: string
+          description: INN/KIO
+        kpp:
+          type: string
+          description: KPP
+        ogrn:
+          type: string
+          description: OGRN
+        name:
+          type: string
+          description: Name
+        resident:
+          type: boolean
+          description: Resident mark
+        extId:
+          type: string
+          description: Client external ID (ESK)
+          format: uuid
+        absId:
+          type: string
+          description: Client abs id (RKO F1)
+        loginCertificateId:
+          type: string
+          format: uuid
+      description: Bank client DTO
+    BranchDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Branch ID
+          format: uuid
+        name:
+          type: string
+          description: Name
+        bic:
+          type: string
+          description: BIC
+        correspondentAccount:
+          type: string
+          description: Correspondent account
+      description: Branch DTO.
+    CommissionAccountDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Account number
+      description: Commission account DTO.
+    ContractDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Number
+        date:
+          type: string
+          description: Date
+          format: date
+        absId:
+          type: string
+          description: Abs id
+        isCommissionDebitingRequired:
+          type: boolean
+          description: Commission debiting required or not
+      description: Contract DTO.
+    DocumentDto:
+      type: object
+      properties:
+        applicationNumber:
+          type: string
+          description: Application number
+        attachment:
+          $ref: '#/components/schemas/AttachmentInfoDto'
+      description: Document info.
+    GovContractCustomerInfoDto:
+      type: object
+      properties:
+        inn:
+          type: string
+          description: Customer inn
+        name:
+          type: string
+          description: Customer name
+        accountNumber:
+          type: string
+          description: Customer account number
+      description: Government contract customer information.
+    GovContractInfoDto:
+      type: object
+      properties:
+        contractId:
+          type: string
+          description: Contract id - IGK
+        number:
+          type: string
+          description: Contract number
+        amount:
+          type: string
+          description: Amount
+        date:
+          type: string
+          description: Contract date
+          format: date
+      description: Reserved account.
+    OpenedAccountDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Account ID
+          format: uuid
+      description: Opened account dto.
+    OpeningAccountInfoDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id
+          format: uuid
+        currencyNumericCode:
+          type: string
+          description: Currency numeric code
+        currencyCode:
+          type: string
+          description: Currency code
+        balancePosition:
+          type: string
+          description: Balance position
+        balancePositionDescription:
+          type: string
+          description: Balance position description
+        count:
+          type: integer
+          description: Opening accounts count
+          format: int32
+      description: Info about new opening accounts.
+    OpopAccountDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Number
+      description: OPOP account DTO.
+    ReservedAccountDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Account number
+      description: Reserved account.
+    SingleResponseAccountOpeningRequestDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningRequestDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    PrintRequestDtoUUID:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор
+          format: uuid
+        docIds:
+          type: array
+          description: Список выбранных документов
+          items:
+            type: string
+            description: Список выбранных документов
+            format: uuid
+        format:
+          type: string
+          description: Формат отчета
+          enum:
+            - PDF
+            - XLS
+            - RTF
+            - HTML
+            - DOC
+            - DOCX
+            - DOCX_TO_PDF
+        splitReport:
+          type: boolean
+          description: Если false отчеты будут объединены в один документ
+      description: Запрос печати
+    SingleCommandPrintRequestDtoUUID:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/PrintRequestDtoUUID'
+    AccountOpeningContractAttachmentInfoDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор вложения
+          format: uuid
+        accessToken:
+          type: string
+          description: Токен доступа к вложению
+      description: Сведения о вложении, загруженном в файловое хранилище
+    ListResponseAccountOpeningContractAttachmentInfoDto:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+    Digest:
+      type: object
+      properties:
+        value:
+          type: string
+        version:
+          type: integer
+          format: int32
+        signFields:
+          type: string
+    SingleResponseDigest:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Digest'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    DigestRequest:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Идентификатор документа
+          format: uuid
+        version:
+          type: integer
+          description: Номер версии искомого дайджеста
+          format: int32
+      description: Запрос дайджеста
+    GenericCommandQrcPayDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/QrcPayDto'
+      description: Запрос
+    QrcPayDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Идентификатор заявки на открытие доп счета и заключение ДБС
+          format: uuid
+      description: Данные об оплате
+    GenericResponseSimpleErrorDataQrcCommissionPaymentDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/QrcCommissionPaymentDto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    SimpleErrorData:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Код ошибки
+        message:
+          type: string
+          description: Сообщение об ошибке
+      description: Простая ошибка
+    F1CommissionRequestDto:
+      type: object
+      properties:
+        shortName:
+          type: string
+          description: Краткое наименование клиента
+        fullName:
+          type: string
+          description: Полное наименование клиента
+        inn:
+          type: string
+          description: ИНН клиента
+        ogrn:
+          type: string
+          description: ОГРН/ОГРНИП
+        kpp:
+          type: string
+          description: КПП клиента
+        clientId:
+          type: string
+          description: Идентификатор клиента банка
+          format: uuid
+      description: Запрос получения комиссий за услуги банка
+    GenericCommandF1CommissionRequestDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/F1CommissionRequestDto'
+      description: Запрос
+    GenericResponseSimpleErrorDataQrcCommissionPaymentResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/QrcCommissionPaymentResponse'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    QrcCommissionPaymentResponse:
+      type: object
+      properties:
+        responseCode:
+          type: integer
+          format: int32
+        openCommissionAmount:
+          type: number
+        openCommissionAccount:
+          type: string
+      description: Данные
+    GetBankAccountContractRequest:
+      type: object
+      properties:
+        bankClientId:
+          type: string
+          description: Идентификатор банковского клиента
+          format: uuid
+        requestVersion:
+          type: integer
+          description: Версия заявки
+          format: int32
+      description: Запрос на получение списка ДБС для открытия доп счета.
+    AccountTypeCommissionInfoDto:
+      type: object
+      properties:
+        accountTypeCode:
+          type: string
+          description: Код типа счета
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        commissionAccountRequired:
+          type: boolean
+          description: Необходимо указание счета списания комиссии
+      description: Блок с информацией о необходимости списания комиссии для одного типа счета
+    BankAccountContractResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Признак успешного выполнения запроса
+        error:
+          type: string
+          description: Описание ошибки
+        clientId:
+          type: string
+          description: Ссылка на сущность "Клиент Банка"
+          format: uuid
+        clientEskId:
+          type: string
+          description: GUID клиента в ЕСК
+          format: uuid
+        branches:
+          type: array
+          description: Блок с информацией о ДБС внутри филиала
+          items:
+            $ref: '#/components/schemas/F1BranchDto'
+        accountTypeCommissionInfos:
+          type: array
+          description: Блок с информацией о необходимости списания комиссии в разрезе типа счета
+          items:
+            $ref: '#/components/schemas/AccountTypeCommissionInfoDto'
+        kopops:
+          type: array
+          description: Блок со списком счетов, с которых можно скопировать карточку ОПОП по всем филиалам
+          items:
+            $ref: '#/components/schemas/KopopDto'
+        commissionAccounts:
+          type: array
+          description: Блок со счетами, доступными для списания комиссии за открытие счета по всем филиалам
+          items:
+            $ref: '#/components/schemas/F1CommissionDto'
+      description: Ответ на запрос списка ДБС для открытия доп счета
+    BranchShortDtoV2:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор записи
+          format: uuid
+        name:
+          type: string
+          description: Наименование подразделения
+        docsName:
+          type: string
+          description: Название филиала для платежных документов
+        number:
+          type: string
+          description: Номер подразделения
+        address:
+          type: string
+          description: Адрес подразделения
+        requisites:
+          $ref: '#/components/schemas/RequisitesShortDtoV2'
+        filialName:
+          type: string
+          description: Название филиала
+        parentBranch:
+          type: string
+          description: Идентификатор филиала
+          format: uuid
+        absCode:
+          type: string
+          description: АБС Код подразделения
+        filialEskCode:
+          type: string
+          description: Код филиала
+      description: Подразделение банка
+    F1BranchDto:
+      type: object
+      properties:
+        branchId:
+          type: string
+          description: Ссылка на сущность Подразделение Банка
+          format: uuid
+        branchAbsNumber:
+          type: string
+          description: Код филиала в АБС
+        branchBic:
+          type: string
+          description: БИК филиала
+        branchName:
+          type: string
+          description: Наименование филиала
+        branchLocation:
+          type: string
+          description: Населенный пункт филиала
+        branchCorrespondentAccount:
+          type: string
+          description: Корсчет филиала
+        contracts:
+          type: array
+          description: Список договоров банковского счета клиента в рамках филиала
+          items:
+            $ref: '#/components/schemas/F1ContractDto'
+        commissionAccounts:
+          type: array
+          description: Блок со счетами доступными для списания комиссии за открытие счета в рамках филиала
+          items:
+            $ref: '#/components/schemas/F1CommissionDto'
+        kopops:
+          type: array
+          description: Блок со списком счетов, с которых можно скопировать карточку ОПОП в рамках филиала
+          items:
+            $ref: '#/components/schemas/KopopDto'
+        reservedAccounts:
+          type: array
+          description: Блок со списком зарезервированных счетов в рамках филиала
+          items:
+            $ref: '#/components/schemas/F1ReservedAccountDto'
+      description: Блок с информацией о ДБС внутри филиала
+    F1CommissionDto:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: Номер счета
+        bic:
+          type: string
+          description: Бик счета
+      description: Информация о счете, доступном для списания комиссии за открытие счета в рамках филиала
+    F1ContractDto:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Номер договора ДБС
+        date:
+          type: string
+          description: Дата договора ДБС
+          format: date
+        subdivisionAbsCode:
+          type: string
+          description: Код подразделения в АБС
+        subdivisionInfo:
+          $ref: '#/components/schemas/BranchShortDtoV2'
+        rkoId:
+          type: string
+          description: ID договора РКО в АБС
+        accountTypeCode:
+          type: string
+          description: Код типа счета
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+        allowOpenAdditionalAccounts:
+          type: boolean
+          description: Признак возможности открывать доп счета
+        commissionAccountRequired:
+          type: boolean
+          description: Необходимо указание счета списания комиссии
+      description: Блок с информацией об одном ДБС
+    F1ReservedAccountDto:
+      type: object
+      properties:
+        currencyIsoCode:
+          type: string
+          description: 'Валюта счета. Строковый ISO код валюты. Например: RUR'
+        accountNumber:
+          type: string
+          description: Номер счета
+        bic:
+          type: string
+          description: Бик счета
+        accountTypeCode:
+          type: string
+          description: Код типа счета
+          enum:
+            - PAYMENT
+            - EXECUTOR_GOZ
+            - HEAD_EXECUTOR_GOZ
+            - SPECIAL_PURCHASE_ACCOUNT
+      description: Блок с информацией об одном зарезервированном счете
+    KopopDto:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: Номер счета
+        bic:
+          type: string
+          description: БИК счета
+        approvers:
+          type: array
+          description: ФИО подписантов
+          items:
+            type: string
+            description: ФИО подписантов
+      description: Блок с информацией об одном счете с которого можно скопировать карточку ОПОП
+    RequisitesShortDtoV2:
+      type: object
+      properties:
+        location:
+          type: string
+          description: Населенный пункт
+        bic:
+          type: string
+          description: БИК филиала
+        correspondentAccount:
+          type: string
+          description: Корсчет филиала
+      description: Реквизиты подразделения банка
+    SingleResponseBankAccountContractResponseDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BankAccountContractResponseDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    CreateAccountOpeningContractCommand:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractRequestUpsertDto'
+      description: ДТО на создание Заявки на открытие доп счета и заключение ДБС.
+    SingleResponseAccountOpeningContractRequestClientDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractRequestClientDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    GenericCommandUUID:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Данные
+          format: uuid
+      description: Запрос
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UniSignV2x1Dto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    UniSignDataDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор набора данных
+          format: uuid
+        label:
+          type: string
+          description: Наименование
+        additionalInfo:
+          type: string
+          description: Дополнительная информация
+        dssLabel:
+          type: string
+          description: Наименование подписываемых данных для отображения в облачной подписи
+        digest:
+          type: string
+          description: Base64 представление дайджеста подписи
+        type:
+          type: string
+          description: Тип подписываемых данных
+          enum:
+            - DOCUMENT
+            - ATTACHMENT
+        signDataViewList:
+          type: array
+          description: Блок отображения подписываемых данных
+          items:
+            $ref: '#/components/schemas/UniSignDataViewDto'
+      description: Подписываемые данные
+    UniSignDataViewDto:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Наименование блока подписываемых данных
+        signFieldsViewList:
+          type: array
+          description: Блок отображения подписываемых полей
+          items:
+            $ref: '#/components/schemas/UniSignFieldViewDto'
+      description: Отображение подписываемых данных
+    UniSignDocumentV2x1Dto:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Идентификатор документа
+          format: uuid
+        clientId:
+          type: string
+          description: Идентификатор клиента банка
+          format: uuid
+        signDataList:
+          type: array
+          description: Набор подписываемых данных
+          items:
+            $ref: '#/components/schemas/UniSignDataDto'
+      description: Подписываемый документ v2.1
+    UniSignFieldViewDto:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Наименование поля
+        value:
+          type: string
+          description: Значение поля
+      description: Отображение подписываемого поля
+    UniSignV2x1Dto:
+      type: object
+      properties:
+        signDocuments:
+          type: array
+          description: Набор подписываемых документов
+          items:
+            $ref: '#/components/schemas/UniSignDocumentV2x1Dto'
+      description: Параметры универсальной функции электронной подписи v2.1
+    SignCommand:
+      type: object
+      properties:
+        documentId:
+          type: string
+          format: uuid
+        certificateId:
+          type: string
+          format: uuid
+        signTypeId:
+          type: string
+          format: uuid
+        digest:
+          type: string
+        signature:
+          type: string
+    SingleResponseUniSignDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/UniSignDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    UniCertificateDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Идентификатор сертификата
+          format: uuid
+        bankUserCertificateId:
+          type: string
+          description: Идентификатор сертификата пользователя банка
+          format: uuid
+        data:
+          type: string
+          description: Base64 представление сертификата
+        serialNumber:
+          type: string
+          description: Серийный номер
+        subject:
+          type: string
+          description: Владелец сертификата
+        issuedBy:
+          type: string
+          description: Издатель сертификата
+        validFrom:
+          type: string
+          description: Действует с
+          format: date-time
+        validTo:
+          type: string
+          description: Действует по
+          format: date-time
+        containerNameLocation:
+          type: string
+          description: Имя и расположение ключевого контейнера
+        cloudDstId:
+          type: string
+          description: ID облачного СЭП
+          format: uuid
+      description: Сертификат
+    UniSignDocumentDto:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Идентификатор документа
+          format: uuid
+        signDataList:
+          type: array
+          description: Набор подписываемых данных
+          items:
+            $ref: '#/components/schemas/UniSignDataDto'
+      description: Подписываемый документ
+    UniSignDto:
+      type: object
+      properties:
+        certificates:
+          type: array
+          description: Сертификаты
+          items:
+            $ref: '#/components/schemas/UniCertificateDto'
+        signDocuments:
+          type: array
+          description: Набор подписываемых документов
+          items:
+            $ref: '#/components/schemas/UniSignDocumentDto'
+      description: Параметры универсальной функции электронной подписи
+    AccountOpeningContractExportToFileDto:
+      type: object
+      properties:
+        requestId:
+          type: string
+          description: Идентификатор заявки
+          format: uuid
+        exportDocType:
+          type: string
+          description: Тип экспортируемой ПФ
+          enum:
+            - NEW_DBS_CONTRACT
+            - OPEN_ACCOUNT_NEW_DBS_SPECIAL_PURCHASE_ACCOUNT_CONTRACT
+            - EXISTING_CONTRACT
+            - GOZ_CONTRACT
+            - NOTIFICATION
+            - EGRUL
+      description: Дто для экспорта заявки О2+NEW в ПФ
+    SingleCommandAccountOpeningContractExportToFileDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractExportToFileDto'
+    SingleResponseAccountOpeningContractAttachmentInfoDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/AccountOpeningContractAttachmentInfoDto'
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    CheckRelevanceResponseDto:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Статус выполнения проверки
+        pleaseUpdate:
+          type: boolean
+          description: Флаг, требующий клиента обновить сведения
+      description: Ответ на запрос проверки актуальности данных в карточке клиента.
+    GenericResponseSimpleErrorDataCheckRelevanceResponseDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CheckRelevanceResponseDto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    GenericResponseSimpleErrorDataListString:
+      type: object
+      properties:
+        data:
+          type: array
+          description: Данные
+          items:
+            type: string
+            description: Данные
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    GenericResponseSimpleErrorDataString:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Данные
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    GenericResponseSimpleErrorDataQrcDocumentDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/QrcDocumentDto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    QrcDocumentDto:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Содержимое файла
+          format: byte
+      description: Содержимое файла ПФ, относящейся к оплате по QR коду
+    GenericResponseSimpleErrorDataListQrcCommissionPaymentDto:
+      type: object
+      properties:
+        data:
+          type: array
+          description: Данные
+          items:
+            $ref: '#/components/schemas/QrcCommissionPaymentDto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    FileDataResponseDto:
+      type: object
+      properties:
+        filename:
+          type: string
+          description: Наименование файла
+        content:
+          type: string
+          description: Данные файла
+          format: byte
+        mimeType:
+          type: string
+          description: Тип файла
+      description: Ответ, содержащий файл и информацию о нем
+    GenericResponseSimpleErrorDataFileDataResponseDto:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/FileDataResponseDto'
+        error:
+          $ref: '#/components/schemas/SimpleErrorData'
+        traceId:
+          type: string
+          description: Идентификатор
+      description: Ответ, содержащий результат операции или ошибку
+    SingleResponseInteger:
+      type: object
+      properties:
+        data:
+          type: integer
+          format: int32
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    SingleResponseBoolean:
+      type: object
+      properties:
+        data:
+          type: boolean
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

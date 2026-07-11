@@ -1,0 +1,44 @@
+required:
+- eskClientId
+- signerEmail
+- signerTelNumber
+- sppVersion
+type: object
+properties:
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  eskClientId:
+    type: string
+    description: Локальный идентификатор пользователя, подписавшего заявку, в ЕСК
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signerEmail:
+    type: string
+    description: Адрес электронной почты пользователя, подписавшего заявку
+  signerTelNumber:
+    type: string
+    description: Номер телефона пользователя, подписавшего заявку
+  sppVersion:
+    type: integer
+    description: Версия СПП, использованная при подписи документа
+    format: int32
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, подписавший заявку (ФИО)
+  value:
+    $ref: ./SignatureValueDto.yaml
+description: Подпись

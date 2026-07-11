@@ -1,0 +1,36 @@
+required:
+- inn
+- ogrnOgrnip
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента.
+  shortName:
+    type: string
+    description: Краткое наименование клиента.
+  inn:
+    pattern: '[0-9]{10}|[0-9]{12}'
+    type: string
+    description: ИНН клиента.
+  kpp:
+    pattern: '[0-9]{9}'
+    type: string
+    description: КПП клиента.
+  ogrnOgrnip:
+    pattern: '[0-9]{0,15}'
+    type: string
+    description: ОГРН/ОГРНИП.
+  rnk:
+    pattern: '[\/\^\.\,\-\_\''\"\@\?\!\:\$a-zA-Z0-9()\[\]]{0,50}'
+    type: string
+    description: РНК клиента. Регистрационный номер клиента, присваивается в РКО Ф1.
+  eskId:
+    type: string
+    description: GUID клиента. GUID клиента, присваивается в ЕСК.
+    format: uuid
+description: Реквизиты клиента по заявке.

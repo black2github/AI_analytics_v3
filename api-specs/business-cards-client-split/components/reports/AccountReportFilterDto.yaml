@@ -1,0 +1,17 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountType:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  period:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  reportType:
+    $ref: ./FilterValueDtoReportType.yaml
+description: Отчет по счету

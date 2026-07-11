@@ -1,0 +1,8 @@
+type: object
+properties:
+  cardOffices:
+    type: array
+    description: Список офисов выдачи
+    items:
+      $ref: ./CardOfficeDto.yaml
+description: Сгруппированные карты со статусом "Готова к получению" по офису получения и организации

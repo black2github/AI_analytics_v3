@@ -1,0 +1,39 @@
+type: object
+properties:
+  accountNumber:
+    pattern: ^\d{20}$
+    type: string
+    description: Номер счета блокируемой карты
+    example: '40702810692001126477'
+  cardGuid:
+    type: string
+    description: Внешний идентификатор карты
+    format: uuid
+    nullable: true
+    example: 5d05127d-1aee-4e01-a2b2-a9a2ef9fbe65
+  cardHolder:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,255}$
+    type: string
+    description: ФИО держателя карты
+    example: Демидов Николай Валерьевич
+  cardPaymentSystem:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,50}$
+    type: string
+    description: Платежная системы, в которой выпущена карта
+    example: МИР
+  cardPaymentSystemCode:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,50}$
+    type: string
+    description: Код платежной системы, в которой выпущена карта
+    example: MIR
+  maskedNum:
+    pattern: ^(?:\d{4}\*{8}|\d{6}\*{6})\d{4}$
+    type: string
+    description: Маскированный номер карты
+    example: 4273********6969
+  paySystem:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,50}$
+    type: string
+    description: Платежная системы, в которой выпущена карта
+    example: VISA Business
+description: Карта

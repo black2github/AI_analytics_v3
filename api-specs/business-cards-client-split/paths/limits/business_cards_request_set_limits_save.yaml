@@ -1,0 +1,81 @@
+post:
+  description: |
+    Создание или редактирование заявки на управление лимитами карты.
+
+    Принимает данные заявки, введённые на экранной форме «Заявка на управление
+    лимитами карты»: при отсутствии идентификатора создаёт новую заявку,
+    при наличии — обновляет существующую. В ответе возвращается сохранённая
+    заявка вместе с результатом серверных контролей (валидации).
+
+    Используется логическими элементами:
+    - Функция: [\[КК_ЛК\] Клиент: Функция создания заявки на управление лимитами карты](https://gitlab.gboteam.ru/ED/doc-as-code/-/blob/master/conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Функции/[КК_ЛК]-Функции-Клиента/[КК_ЛК]-Клиент-Функция-создания-заявки-на-управление-лимитами-карты.md)
+    - Экранная форма: [\[КК_ЛК\] ЭФ Клиента: "Заявка на управление лимитами карты" в режиме создания/редактирования](https://gitlab.gboteam.ru/ED/doc-as-code/-/blob/master/conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Экранные-формы/[КК_ЛК]-ЭФ-Клиента/[КК_ЛК]-ЭФ-Клиента-Заявка-на-управление-лимитами-карты-в-режиме-созданияредактирования.md)
+
+    Привилегии: BC.CLIENT.SET_LIMIT_REQUEST.CREATE, BC.CLIENT.SET_LIMIT_REQUEST.EDIT
+  operationId: createOrUpdate
+  externalDocs:
+    description: '[КК_ЛК] Клиент: Функция создания заявки на управление лимитами карты'
+    url: https://gitlab.gboteam.ru/ED/doc-as-code/-/blob/master/conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Функции/[КК_ЛК]-Функции-Клиента/[КК_ЛК]-Клиент-Функция-создания-заявки-на-управление-лимитами-карты.md
+  x-logical-doc:
+    - type: function
+      ref: '{{CC: [КК_ЛК] Клиент: Функция создания заявки на управление лимитами карты}}'
+      title: '[КК_ЛК] Клиент: Функция создания заявки на управление лимитами карты'
+      path: conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Функции/[КК_ЛК]-Функции-Клиента/[КК_ЛК]-Клиент-Функция-создания-заявки-на-управление-лимитами-карты.md
+      url: https://gitlab.gboteam.ru/ED/doc-as-code/-/blob/master/conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Функции/[КК_ЛК]-Функции-Клиента/[КК_ЛК]-Клиент-Функция-создания-заявки-на-управление-лимитами-карты.md
+    - type: screenItemForm
+      ref: '{{CC: [КК_ЛК] ЭФ Клиента: "Заявка на управление лимитами карты" в режиме создания/редактирования}}'
+      title: '[КК_ЛК] ЭФ Клиента: "Заявка на управление лимитами карты" в режиме создания/редактирования'
+      path: conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Экранные-формы/[КК_ЛК]-ЭФ-Клиента/[КК_ЛК]-ЭФ-Клиента-Заявка-на-управление-лимитами-карты-в-режиме-созданияредактирования.md
+      url: https://gitlab.gboteam.ru/ED/doc-as-code/-/blob/master/conf-requirements/cc/[КК]-Корпоративные-Карты/[КК_ЛК]-Управление-лимитами-карты/[КК_ЛК]-Экранные-формы/[КК_ЛК]-ЭФ-Клиента/[КК_ЛК]-ЭФ-Клиента-Заявка-на-управление-лимитами-карты-в-режиме-созданияредактирования.md
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/limits/GenericCommandSetLimitCardRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataResponseWithValidationResultDtoSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Создание/редактирование заявки на управление лимитами карты
+  tags:
+  - API для заявки на управление лимитами карты

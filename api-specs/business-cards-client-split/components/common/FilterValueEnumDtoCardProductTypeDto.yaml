@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CORP
+    - UNIVERSAL
+    - AVTOINKASS
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CORP
+      - UNIVERSAL
+      - AVTOINKASS
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - CORP
+    - UNIVERSAL
+    - AVTOINKASS
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CORP
+      - UNIVERSAL
+      - AVTOINKASS
+description: Наименование карточного продукта (eq)

@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: BC.CLIENT.SET_LIMIT_REQUEST.EXPORT_DOCUMENTS'
+  operationId: exportDocFS
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/common/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseProcessErrorAttachmentDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Выгрузить заявку через ФС
+  tags:
+  - API для заявки на управление лимитами карты

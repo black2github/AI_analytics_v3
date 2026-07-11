@@ -1,0 +1,13 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    description: Идентификатор досье в ТЕССА.
+  openedBankContractNumber:
+    type: string
+    description: Номер открытого ДБС.
+  openedBankContractDate:
+    type: string
+    description: Дата открытого ДБС.
+    format: date
+description: Данные при исполнении заявки.

@@ -1,0 +1,112 @@
+delete:
+  description: 'Привилегии: BC.CLIENT.SET_LIMIT_REQUEST.DELETE'
+  operationId: delete
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Удаление заявки на управление лимитами карты
+  tags:
+  - API для заявки на управление лимитами карты
+get:
+  description: 'Привилегии: BC.CLIENT.SET_LIMIT_REQUEST.VIEW'
+  operationId: get
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Получение заявки на управление лимитами карты
+  tags:
+  - API для заявки на управление лимитами карты

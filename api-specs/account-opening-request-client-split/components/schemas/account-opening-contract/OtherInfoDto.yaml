@@ -1,0 +1,18 @@
+type: object
+properties:
+  opopAccountNumber:
+    type: string
+    description: Номер счета для карточки ОПОП.
+  internetBankConnected:
+    type: boolean
+    description: Признак подключения к интернет и мобильному банку.
+  notifyAboutResults:
+    type: boolean
+    description: Уведомить о результатах исполнения по СМС и Email.
+  opopBic:
+    maxLength: 9
+    minLength: 9
+    pattern: '[0-9]{9}'
+    type: string
+    description: БИК счета для карточки ОПОП.
+description: Иные сведения.

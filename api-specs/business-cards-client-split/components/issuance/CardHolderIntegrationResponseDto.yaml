@@ -1,0 +1,48 @@
+type: object
+properties:
+  additionalEmail:
+    type: string
+    description: Адрес электронной почты держателя карты (иной)
+  additionalPhoneNumber:
+    type: string
+    description: Номер телефона держателя карты (иной)
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  clientEmployeeAddresses:
+    type: array
+    description: Адреса держателя карты
+    items:
+      $ref: ./CardHolderAddressResponseDto.yaml
+  email:
+    type: string
+    description: Адрес электронной почты держателя карты (по конституции)
+  fired:
+    type: boolean
+    description: Сотрудник уволен
+  id:
+    type: string
+    description: Идентификатор держателя карты
+    format: uuid
+  identityCard:
+    $ref: ./IdentityCard.yaml
+  identityScanRequired:
+    type: boolean
+    description: Нужно ли загружать скан ДУЛ держателя карты
+  name:
+    type: string
+    description: Имя держателя карты
+  patronymic:
+    type: string
+    description: Отчество держателя карты
+  phoneNumber:
+    type: string
+    description: Номер телефона держателя карты (по конституции)
+  surname:
+    type: string
+    description: Фамилия держателя карты
+description: Основные данные держателя карты, полученные из клиентских справочников

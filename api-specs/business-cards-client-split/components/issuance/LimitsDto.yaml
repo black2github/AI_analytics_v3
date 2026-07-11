@@ -1,0 +1,9 @@
+type: object
+properties:
+  limitSchemeCode:
+    type: string
+    description: Код вида схемы лимитов
+  limitSchemeName:
+    type: string
+    description: Наименование схемы лимитов
+description: Информация о лимитах в заявке на выпуск карты

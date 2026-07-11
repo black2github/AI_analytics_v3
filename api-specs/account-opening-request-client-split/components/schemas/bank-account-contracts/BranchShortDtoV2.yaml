@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения
+  docsName:
+    type: string
+    description: Название филиала для платежных документов
+  number:
+    type: string
+    description: Номер подразделения
+  address:
+    type: string
+    description: Адрес подразделения
+  requisites:
+    $ref: ./RequisitesShortDtoV2.yaml
+  filialName:
+    type: string
+    description: Название филиала
+  parentBranch:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  absCode:
+    type: string
+    description: АБС Код подразделения
+  filialEskCode:
+    type: string
+    description: Код филиала
+description: Подразделение банка

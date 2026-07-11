@@ -1,0 +1,28 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  size:
+    type: integer
+    description: Количество счетов
+    format: int64
+description: ДТО получения числа карт на счёте

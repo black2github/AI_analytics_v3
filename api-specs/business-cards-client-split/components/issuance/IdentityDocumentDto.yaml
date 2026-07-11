@@ -1,0 +1,26 @@
+type: object
+properties:
+  documentType:
+    type: string
+    description: Код типа документа, удостоверяющего личность
+  dueDate:
+    type: string
+    description: Срок действия документа, удостоверяющего личность
+    format: date
+  issueDate:
+    type: string
+    description: Дата выдачи документа, удостоверяющего личность
+    format: date
+  issued:
+    type: string
+    description: Кем выдан документ, удостоверяющий личность
+  issuerBranch:
+    type: string
+    description: Код подразделения
+  number:
+    type: string
+    description: Номер документа, удостоверяющего личность
+  series:
+    type: string
+    description: Серия документа, удостоверяющего личность
+description: Документ в заявке на выпуск карты

@@ -1,0 +1,20 @@
+type: object
+properties:
+  currency:
+    type: string
+    description: Буквенный код валюты
+    example: RUR
+  duration:
+    type: integer
+    description: Длительность лимитного периода
+    format: int32
+    example: 10
+  id:
+    type: string
+    description: Уникальный идентификатор параметра
+    format: uuid
+  value:
+    type: number
+    description: Значение суммы лимита
+    example: 1000
+description: Параметры лимита (Старая версия)

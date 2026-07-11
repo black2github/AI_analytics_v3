@@ -1,0 +1,112 @@
+delete:
+  description: 'Привилегии: BC.CLIENT.BATCH_SET_LIMIT.DELETE'
+  operationId: deleteBatchRequest
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataBatchSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Удаление пакета заявок на установку лимитов
+  tags:
+  - API для пакетной заявки на установку лимитов
+get:
+  description: 'Привилегии: BC.CLIENT.BATCH_SET_LIMIT.EDIT'
+  operationId: getBatchRequest
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/limits/GenericResponseSimpleErrorDataBatchSetLimitCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Получение пакета заявок на установку лимитов по идентификатору
+  tags:
+  - API для пакетной заявки на установку лимитов

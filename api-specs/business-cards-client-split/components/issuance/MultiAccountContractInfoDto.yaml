@@ -1,0 +1,19 @@
+type: object
+properties:
+  conclusionPlace:
+    type: string
+    description: Место заключения договора
+  contractConclude:
+    type: boolean
+    description: Заключить новый многосчетовой договор (ДБС)
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  contractId:
+    type: string
+    description: Идентификатор договора банковского счета в АБС
+  contractNumber:
+    type: string
+    description: Номер договора
+description: Информация о договоре банковского счёта

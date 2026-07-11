@@ -1,0 +1,12 @@
+type: object
+properties:
+  fiasStateProvCode:
+    type: string
+    description: ФИАС код субъекта РФ
+  stateProv:
+    type: string
+    description: Область/провинция
+  stateProvCode:
+    type: string
+    description: Код области/провинции
+description: Область/провинция

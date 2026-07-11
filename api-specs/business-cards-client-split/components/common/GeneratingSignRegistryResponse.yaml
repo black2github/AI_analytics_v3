@@ -1,0 +1,13 @@
+required:
+- checkResult
+- requestIds
+- statistics
+type: object
+properties:
+  checkResult:
+    $ref: ./CheckGroupResult.yaml
+  requestIds:
+    $ref: ./PageDataUUID.yaml
+  statistics:
+    $ref: ./SignRegistryStatisticsDto.yaml
+description: Ответ на запрос сформирования реестра на подпись заявок на управление лимитами карты

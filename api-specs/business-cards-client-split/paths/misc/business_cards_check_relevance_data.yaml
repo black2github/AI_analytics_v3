@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: BC.CLIENT.CARD.ISSUE.REQUEST.CREATE, BC.CLIENT.CARD.ISSUE.REQUEST.EDIT'
+  operationId: checkRelevanceData
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/misc/GenericCommandCheckRelevanceDataRequest.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/misc/GenericResponseProcessErrorCheckRelevanceDataDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Проверка актуальности данных в карточке клиента
+  tags:
+  - API контролей проверок заявок

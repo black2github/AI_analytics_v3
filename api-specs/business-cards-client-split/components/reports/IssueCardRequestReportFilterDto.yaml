@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  reportType:
+    $ref: ./FilterValueDtoReportType.yaml
+description: Отчет по заявке

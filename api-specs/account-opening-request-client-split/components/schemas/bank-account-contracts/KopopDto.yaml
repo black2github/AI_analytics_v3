@@ -1,0 +1,15 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  bic:
+    type: string
+    description: БИК счета
+  approvers:
+    type: array
+    description: ФИО подписантов
+    items:
+      type: string
+      description: ФИО подписантов
+description: Блок с информацией об одном счете с которого можно скопировать карточку ОПОП

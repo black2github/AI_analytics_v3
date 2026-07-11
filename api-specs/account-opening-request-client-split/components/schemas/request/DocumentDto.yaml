@@ -1,0 +1,8 @@
+type: object
+properties:
+  applicationNumber:
+    type: string
+    description: Application number
+  attachment:
+    $ref: ../common/AttachmentInfoDto.yaml
+description: Document info.

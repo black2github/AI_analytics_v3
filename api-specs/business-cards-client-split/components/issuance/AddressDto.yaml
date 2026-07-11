@@ -1,0 +1,68 @@
+type: object
+properties:
+  apartment:
+    type: string
+    description: Помещение
+  city:
+    type: string
+    description: Город
+  codeFiasCity:
+    type: string
+    description: Код ФИАС города
+  codeFiasDistrict:
+    type: string
+    description: Код ФИАС района
+  codeFiasGuid:
+    type: string
+    description: ФИАС GUID
+  codeFiasHouse:
+    type: string
+    description: Код ФИАС дома
+  codeFiasLocation:
+    type: string
+    description: Код ФИАС населенного пункта
+  codeFiasRegion:
+    type: string
+    description: Код ФИАС региона
+  codeFiasStreet:
+    type: string
+    description: Код ФИАС улицы
+  district:
+    type: string
+    description: Район
+  fullAddress:
+    type: string
+    description: Адрес одной строкой
+  house:
+    type: string
+    description: Дом
+  housing:
+    type: string
+    description: Строение
+  id:
+    type: string
+    description: Уникальный идентификатор адреса
+    format: uuid
+  levelCodeFias:
+    type: string
+    description: Уровень кода ФИАС
+  location:
+    type: string
+    description: Населенный пункт
+  noHouseNumber:
+    type: boolean
+    description: В адресе нет номера дома
+  postalCode:
+    type: string
+    description: Почтовый индекс
+  region:
+    type: string
+    description: Регион
+  residenceCountry:
+    type: string
+    description: Страна регистрации
+  street:
+    type: string
+    description: Улица
+description: Адрес
+nullable: true

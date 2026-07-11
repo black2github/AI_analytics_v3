@@ -1,0 +1,103 @@
+required:
+- accountOpeningInfo
+- clientId
+- status
+type: object
+properties:
+  accountOpeningInfo:
+    $ref: ./AccountOpeningInfoDto.yaml
+  agreementInfo:
+    $ref: ./AgreementsDto.yaml
+  batch:
+    $ref: ../common/BatchRequestBaseDto.yaml
+  branchInfo:
+    $ref: ./BranchDto.yaml
+  card:
+    $ref: ../common/CardDto.yaml
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  commentForBank:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№\r\n]{1,4000}$
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№\r\n]{1,4000}$
+    type: string
+    description: Комментарий для клиента
+  commissionInfo:
+    $ref: ./CommissionInfoDto.yaml
+  documents:
+    type: array
+    description: Документы по заявке
+    items:
+      $ref: ./IssueCardDocumentDto.yaml
+  id:
+    type: string
+    description: Уникальный идентификатор заявки в Экосистеме
+    format: uuid
+  issuedCards:
+    type: array
+    description: Список карт
+    items:
+      $ref: ./IssuedCardV2Dto.yaml
+  legalTessaDossierId:
+    type: string
+    description: Идентификатор досье ТЕССА ЮЛ
+    format: uuid
+  limitsInfo:
+    $ref: ./LimitsDto.yaml
+  multiAccountContractInfo:
+    $ref: ./MultiAccountContractInfoDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+  reqDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Уникальный номер заявки в разрезе Пользователя, создавшего заявку, и года создания заявки
+    format: int32
+  reqType:
+    type: string
+    description: Код типа документа из Классификатора [Типы документов]
+    nullable: true
+    example: BC_SET_LIMIT_REQUEST
+  signature:
+    $ref: ../common/CardSignatureDto.yaml
+  signerInfo:
+    $ref: ../common/CardRequestSignerInfoDto.yaml
+  sourceService:
+    type: string
+    description: Сервис-источник создания КК
+    enum:
+    - SERVICE_KK
+    - SERVICE_O2PLUS
+    - SERVICE_PRO
+  status:
+    type: string
+    description: Статус документа, устанавливаемый в соответствии с ЖЦ заявки
+    example: NONE
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaDossierId:
+    type: string
+    description: Идентификатор досье ТЕССА (по открытию счета)
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+  userFio:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,800}$
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Идентификатор юзера в Экосистеме
+    format: uuid
+description: Заявка на выпуск карты

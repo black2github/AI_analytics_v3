@@ -1,0 +1,23 @@
+required:
+- result
+type: object
+properties:
+  clearGroup:
+    type: array
+    description: Идентификаторы заявок, образующие полные группы или не имеющие ссылки на группу
+    items:
+      type: string
+      description: Идентификаторы заявок, образующие полные группы или не имеющие ссылки на группу
+      format: uuid
+  fullGroup:
+    type: array
+    description: Идентификаторы заявок, переданных для проверки, дополненные недостающими идентификаторами из пакетов
+    items:
+      type: string
+      description: Идентификаторы заявок, переданных для проверки, дополненные недостающими идентификаторами из пакетов
+      format: uuid
+  result:
+    type: string
+    description: Результат выполнения проверки заявок
+    example: success
+description: Результат проверки списка заявок на полноту вхождения в пакеты

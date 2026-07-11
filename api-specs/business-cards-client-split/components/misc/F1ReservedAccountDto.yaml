@@ -1,0 +1,21 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountTypeCode:
+    type: string
+    description: Код типа счета
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+    - CARD_ACCOUNT
+  bic:
+    type: string
+    description: Бик счета
+  currencyIsoCode:
+    type: string
+    description: 'Валюта счета. Строковый ISO код валюты. Например: RUR'
+description: Блок с информацией об одном зарезервированном счете

@@ -1,0 +1,11 @@
+type: object
+properties:
+  account:
+    $ref: ./BusinessCardAccountOperationClientResponseDto.yaml
+  card:
+    $ref: ./BusinessCardOperationClientResponseDto.yaml
+  size:
+    type: integer
+    description: Количество возвращенных из РКО Ф1 операций (общее количество операций)
+    format: int32
+description: Расширение классов BusinessCardOperationResponseDto и BusinessCardAccountOperationResponseDto полем size

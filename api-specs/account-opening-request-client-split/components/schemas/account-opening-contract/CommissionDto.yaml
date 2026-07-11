@@ -1,0 +1,13 @@
+type: object
+properties:
+  commissionAccountRequired:
+    type: boolean
+    description: Необходим счет списания комиссии.
+  commissionAccountNumber:
+    type: string
+    description: Номер счета для списания комиссии.
+  bic:
+    pattern: '[0-9]{9}'
+    type: string
+    description: БИК счета для списания комиссии.
+description: Комиссия за открытие счета.

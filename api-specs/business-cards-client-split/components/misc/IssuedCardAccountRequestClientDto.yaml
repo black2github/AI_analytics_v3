@@ -1,0 +1,27 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  accountType:
+    type: integer
+    description: Код типа счета
+    format: int32
+  cardProduct:
+    $ref: ./IssuedCardProductClientDto.yaml
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  currencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  rkoF1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+description: Запрос для списка счетов

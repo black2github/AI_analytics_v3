@@ -1,0 +1,33 @@
+type: object
+properties:
+  accountTypeCode:
+    type: string
+    description: Код типа счета
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+    - CARD_ACCOUNT
+  allowOpenAdditionalAccounts:
+    type: boolean
+    description: Признак возможности открывать доп счета
+  commissionAccountRequired:
+    type: boolean
+    description: Необходимо указание счета списания комиссии
+  date:
+    type: string
+    description: Дата договора ДБС
+    format: date
+  number:
+    type: string
+    description: Номер договора ДБС
+  rkoId:
+    type: string
+    description: ID договора РКО в АБС РКО Ф1
+  subdivisionAbsCode:
+    type: string
+    description: Код подразделения в АБС
+  subdivisionInfo:
+    $ref: ./BranchDtoV2.yaml
+description: Блок с информацией об одном ДБС

@@ -1,0 +1,24 @@
+type: object
+properties:
+  attachmentInfo:
+    $ref: ../common/AttachmentDto.yaml
+  documentTypeId:
+    type: string
+    description: Тип документа (Ссылка на справочник Тип документа)
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла
+  id:
+    type: string
+    description: Уникальный идентификатор документа
+    format: uuid
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор версии файла в ТЕССА
+    format: uuid
+description: Информация о документе в заявке на выпуск карты

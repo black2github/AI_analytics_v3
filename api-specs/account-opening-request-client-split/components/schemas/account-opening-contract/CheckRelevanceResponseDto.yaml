@@ -1,0 +1,9 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Статус выполнения проверки
+  pleaseUpdate:
+    type: boolean
+    description: Флаг, требующий клиента обновить сведения
+description: Ответ на запрос проверки актуальности данных в карточке клиента.

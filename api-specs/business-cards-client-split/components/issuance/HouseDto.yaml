@@ -1,0 +1,15 @@
+type: object
+properties:
+  fiasHouseCode:
+    type: string
+    description: ФИАС код типа и номера здания, строения
+  houseCode:
+    type: string
+    description: Код дома (КЛАДР)
+  houseExt:
+    type: string
+    description: Расширение номера дома (корпуса, строения)
+  houseNum:
+    type: string
+    description: Номер дома
+description: Дом

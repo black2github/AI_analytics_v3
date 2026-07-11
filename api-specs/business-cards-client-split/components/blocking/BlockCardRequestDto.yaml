@@ -1,0 +1,90 @@
+required:
+- agreement
+- clientId
+- status
+type: object
+properties:
+  action:
+    type: string
+    description: Действие по изменению статуса карты
+    enum:
+    - HARD_BLOCK
+    - CLOSE
+    - SOFT_BLOCK
+    - UNLOCK
+  addInfo:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,255}$
+    type: string
+    description: Дополнительная информация об обстоятельствах, приведших к необходимости блокировки карты
+  agreement:
+    type: boolean
+    description: Согласие на блокировку корпоративной карты
+  agreementTextVersion:
+    type: integer
+    description: Текст согласия на блокировку корпоративной карты
+    format: int32
+  batch:
+    $ref: ../common/BatchRequestBaseDto.yaml
+  card:
+    $ref: ../common/CardDto.yaml
+  cardHandingToBank:
+    type: boolean
+    description: Признак сдачи карты в Банк
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  commentForBank:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№\r\n]{1,4000}$
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№\r\n]{1,4000}$
+    type: string
+    description: Комментарий для клиента
+  id:
+    type: string
+    description: Уникальный идентификатор заявки в Экосистеме
+    format: uuid
+  reason:
+    pattern: ^(LOSS_CARD|LOSS_PIN|COMPROMISE_CARD|FINISH|OTHER)$
+    type: string
+    description: Код причины блокировки
+  reqDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Уникальный номер заявки в разрезе Пользователя, создавшего заявку, и года создания заявки
+    format: int32
+  reqType:
+    type: string
+    description: Код типа документа из Классификатора [Типы документов]
+    nullable: true
+    example: BC_SET_LIMIT_REQUEST
+  signature:
+    $ref: ../common/CardSignatureDto.yaml
+  signerInfo:
+    $ref: ../common/CardRequestSignerInfoDto.yaml
+  status:
+    type: string
+    description: Статус документа, устанавливаемый в соответствии с ЖЦ заявки
+    example: NONE
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+  userFio:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9 !"«»“”#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~№]{1,800}$
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Идентификатор юзера в Экосистеме
+    format: uuid
+description: Заявка на изменение статуса карты

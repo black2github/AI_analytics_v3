@@ -1,0 +1,35 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardCommonInfoFilter:
+    $ref: ../common/FilterValueDtoString.yaml
+  cardGuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardVirtualNums:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  currencyCodes:
+    $ref: ../common/FilterValueDtoString.yaml
+  deliveryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  expiredDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  expiredType:
+    $ref: ../common/FilterValueEnumDtoExpiredType.yaml
+  paySystemCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  paySystemName:
+    $ref: ../common/FilterValueDtoString.yaml
+  productName:
+    $ref: ../common/FilterValueEnumDtoCardProductTypeDto.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoCardStatus.yaml
+description: Фильтр для запроса карт. Клиентская часть

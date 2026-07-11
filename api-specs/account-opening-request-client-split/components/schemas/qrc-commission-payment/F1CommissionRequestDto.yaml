@@ -1,0 +1,22 @@
+type: object
+properties:
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  kpp:
+    type: string
+    description: КПП клиента
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Запрос получения комиссий за услуги банка

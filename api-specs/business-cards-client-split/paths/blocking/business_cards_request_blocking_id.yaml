@@ -1,0 +1,112 @@
+delete:
+  description: 'Привилегии: BC.CLIENT.BLOCKING.DELETE'
+  operationId: deleteBlockRequest
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/blocking/GenericResponseSimpleErrorDataBlockCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Удаление заявки на блокировку
+  tags:
+  - API для заявки на блокировку карты
+get:
+  description: 'Привилегии: BC.CLIENT.BLOCKING.VIEW'
+  operationId: getBlockRequestRecord
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/blocking/GenericResponseSimpleErrorDataBlockCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Получение заявки на блокировку карты
+  tags:
+  - API для заявки на блокировку карты
