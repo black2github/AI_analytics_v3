@@ -5,9 +5,10 @@
 
 Запуск (из любого каталога): python .claude/skills/screen-form-restructure/build_cursor_rule.py
 
-ВНИМАНИЕ: с v3.1 Cursor-ветка (.cursor/rules/screen-form-restructure.mdc и часть refs)
-может опережать Claude-скилл как экспериментальная площадка. Перед запуском скрипта
-убедитесь, что не затрёте ручные правки в Cursor без переноса в .claude/skills."""
+ВНИМАНИЕ: с v3.1 Cursor-ветка и Claude-скилл синхронизированы. build_cursor_rule.py
+копирует references из .claude/skills → .cursor/rules; не перезаписывать .mdc
+вручную без переноса правок в SKILL.md и references/.
+"""
 import os, re, shutil
 from pathlib import Path
 
@@ -69,8 +70,9 @@ parts.append("alwaysApply: false")
 parts.append("---")
 parts.append("")
 parts.append(
-    "<!-- Сгенерировано из .claude/skills/screen-form-restructure (build_cursor_rule.py). "
-    "Источник истины — Claude-скилл; при правках меняйте его и пересобирайте. -->"
+    "<!-- Сгенерировано build_cursor_rule.py из .claude/skills/screen-form-restructure (v3.1). "
+    "Правки — в SKILL.md и references/; затем пересоберите скриптом. "
+    "Не правьте .mdc вручную без переноса в скилл. -->"
 )
 parts.append("")
 parts.append(
