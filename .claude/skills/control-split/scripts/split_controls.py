@@ -44,9 +44,14 @@ def parse_frontmatter(text: str) -> dict[str, str]:
     return fm
 
 
+BR_PLACEHOLDER = "\x00BR\x00"
+
+
 def clean_html_cell(html: str) -> str:
     if not html:
         return ""
+    if "<" not in html:
+        return clean_cell_text(html)
     soup = BeautifulSoup(html, "html.parser")
     for a in soup.find_all("a"):
         href = a.get("href", "")
@@ -56,33 +61,59 @@ def clean_html_cell(html: str) -> str:
         else:
             a.replace_with(label)
     for br in soup.find_all("br"):
-        br.replace_with("<br>")
+        br.replace_with(BR_PLACEHOLDER)
     for tag in soup.find_all(["strong", "p", "ul", "li", "ol"]):
         if tag.name == "li":
             tag.insert_before("• ")
         tag.unwrap()
-    text = soup.get_text("") if False else str(soup)
+    text = str(soup)
     text = re.sub(r"<[^>]+>", "", text)
     text = unescape(text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    text = text.replace(BR_PLACEHOLDER, "<br>")
+    parts = [re.sub(r"[ \t]+", " ", p).strip() for p in text.split("<br>")]
+    return "<br>".join(p for p in parts if p or len(parts) == 1)
+
+
+def clean_cell_text(raw: str) -> str:
+    if not raw:
+        return ""
+    text = unescape(raw.strip())
+    text = text.replace(BR_PLACEHOLDER, "<br>")
+    parts = [re.sub(r"[ \t]+", " ", p).strip() for p in text.split("<br>")]
+    return "<br>".join(p for p in parts if p or len(parts) == 1)
 
 
 def extract_attr_name(raw: str) -> tuple[str, str, bool]:
+    if "<" in raw:
+        note = ""
+        obsolete = "неактуал" in raw.lower()
+        m = re.search(r"Примечание:\s*([^<]+)", raw, re.I)
+        if m:
+            note = m.group(1).strip()
+        soup = BeautifulSoup(raw, "html.parser")
+        plain = soup.get_text(" ", strip=True)
+        plain = re.sub(r"\s*Примечание:.*", "", plain, flags=re.I).strip()
+        if "Обязательные поля вкладки" in plain:
+            return plain, note, obsolete
+        plain = re.sub(r"\[O2\+NEW\].*$", "", plain).strip()
+        plain = plain.split("  ")[0].strip()
+        return plain, note, obsolete
+    return extract_attr_name_plain(raw)
+
+
+def extract_attr_name_plain(raw: str) -> tuple[str, str, bool]:
     note = ""
     obsolete = "неактуал" in raw.lower()
-    m = re.search(r"Примечание:\s*([^<]+)", raw, re.I)
+    text = clean_cell_text(raw)
+    m = re.search(r"Примечание:\s*(.+)$", text, re.I | re.M)
     if m:
         note = m.group(1).strip()
-    # strip links/markup for display name
-    soup = BeautifulSoup(raw, "html.parser")
-    plain = soup.get_text(" ", strip=True)
-    plain = re.sub(r"\s*Примечание:.*", "", plain, flags=re.I).strip()
+    plain = re.sub(r"\s*Примечание:.*", "", text, flags=re.I | re.S).strip()
+    plain = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", plain)
+    plain = plain.replace("<br>", " ").strip()
+    plain = re.sub(r"\s+", " ", plain).strip()
     if "Обязательные поля вкладки" in plain:
         return plain, note, obsolete
-    # first line / before link noise
-    plain = re.sub(r"\[O2\+NEW\].*$", "", plain).strip()
-    plain = plain.split("  ")[0].strip()
     return plain, note, obsolete
 
 
@@ -163,6 +194,75 @@ def parse_controls_table(html: str) -> list[ControlRow]:
             )
         )
     return result
+
+
+def parse_markdown_controls_table(text: str) -> list[ControlRow]:
+    m = re.search(r"\*\*Контроли заявки:\*\*\s*\n+((?:\|.*\n)+)", text)
+    if not m:
+        return []
+
+    lines = [line for line in m.group(1).splitlines() if line.strip().startswith("|")]
+    if len(lines) < 3:
+        return []
+
+    group_cols: list[int] = []
+    data_start = 3
+    for i, line in enumerate(lines):
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        nums: list[int] = []
+        for cell in cells[5:]:
+            cell_num = re.sub(r"\*+", "", cell).strip()
+            if cell_num.isdigit():
+                nums.append(int(cell_num))
+        if len(nums) >= 2:
+            group_cols = nums
+            data_start = i + 1
+            break
+
+    if not group_cols:
+        return []
+
+    result: list[ControlRow] = []
+    for line in lines[data_start:]:
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) < 5:
+            continue
+        orig = clean_cell_text(cells[0])
+        if not orig or orig.lower() == "№":
+            continue
+        attr, note, obsolete = extract_attr_name_plain(cells[1])
+        name = clean_cell_text(cells[2])
+        logic = clean_cell_text(cells[3])
+        message = clean_cell_text(cells[4])
+        groups: dict[int, bool] = {}
+        for i, g in enumerate(group_cols):
+            if 5 + i < len(cells):
+                txt = clean_cell_text(cells[5 + i])
+                groups[g] = txt.upper() == "V"
+        if not name and not logic and not message and not any(groups.values()):
+            continue
+        result.append(
+            ControlRow(
+                orig=orig,
+                attr=attr,
+                name=name,
+                logic=logic,
+                message=message,
+                groups=groups,
+                obsolete=obsolete,
+                attr_note=note,
+            )
+        )
+    return result
+
+
+def extract_controls_table(text: str) -> list[ControlRow]:
+    m = re.search(r"\*\*Контроли заявки:\*\*\s*\n\s*(<table>.*?</table>)", text, re.S)
+    if m:
+        rows = parse_controls_table(m.group(1))
+        if rows:
+            return rows
+    return parse_markdown_controls_table(text)
 
 
 def is_fe_aggregate(attr: str) -> bool:
@@ -293,68 +393,108 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", required=True)
     ap.add_argument("--out-dir", required=True)
-    ap.add_argument("--service", default="o2plus")
-    ap.add_argument("--be-title", default="[O2+NEW] BE Контроли заявки")
-    ap.add_argument("--fe-title", default='[O2+NEW] FE Контроли ЭФ Клиента: Открытие доп счета и заключение ДБС в режиме редактирования')
-    ap.add_argument("--be-file", default="[O2+NEW]-BE-Контроли-заявки.md")
-    ap.add_argument("--fe-file", default="[O2+NEW]-FE-Контроли-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС-в-режиме-редактирования.md")
-    ap.add_argument("--confluence-id", default="6365377")
+    ap.add_argument("--service", default="")
+    ap.add_argument("--be-title", default="")
+    ap.add_argument("--fe-title", default="")
+    ap.add_argument("--be-file", default="")
+    ap.add_argument("--fe-file", default="")
+    ap.add_argument("--confluence-id", default="")
     args = ap.parse_args()
 
     src = Path(args.src)
     text = src.read_text(encoding="utf-8")
     fm = parse_frontmatter(text)
 
-    # extract controls table
-    m = re.search(r"\*\*Контроли заявки:\*\*\s*\n\s*(<table>.*?</table>)", text, re.S)
-    if not m:
+    service = args.service or fm.get("service_code") or fm.get("service_id") or "open-add-account"
+    confluence_id = args.confluence_id or fm.get("confluence_page_id") or fm.get("page_id") or "6365377"
+    src_stem = src.stem
+
+    if service == "open-add-account" or "open-add-account" in str(src):
+        be_title = args.be_title or "BE Контроли заявки"
+        fe_title = (
+            args.fe_title
+            or 'FE Контроли ЭФ Клиента: "Открытие доп счета и заключение ДБС" в режиме редактирования'
+        )
+        be_file = args.be_file or f"{src_stem.replace('-контроли-', '-be-контроли-')}.md"
+        fe_file = (
+            args.fe_file
+            or "6365126-fe-контроли-эф-клиента-открытие-доп-счета-и-заключение-дбс-в-режиме-редактирования.md"
+        )
+        entity_link = "../04-data-model/related-entities/6364746-заявка-на-открытие-доп-счета-и-заключение-дбс.md"
+        ef_link = "../06-screens/01-client/03-6365126-эф-клиента-открытие-доп-счета-и-заключение-дбс-в-режиме-редактирования.md"
+        create_fn = "../05-system-functions/01-client/04-6364636-клиент-функция-создания-заявки.md"
+        edit_fn = "../05-system-functions/01-client/05-6364637-клиент-функция-редактирования-заявки.md"
+        process_create = "../03-process/02-6363396-создать-заявку-подписать-эп-и-отправить-в-банк.md"
+        process_accept = "../03-process/03-6363397-принять-и-проверить-заявку.md"
+        statuses = "../03-process/90-6364671-описание-статусов-заявки.md"
+        openapi_note = "open-add-account"
+    else:
+        be_title = args.be_title or "[O2+NEW] BE Контроли заявки"
+        fe_title = (
+            args.fe_title
+            or '[O2+NEW] FE Контроли ЭФ Клиента: Открытие доп счета и заключение ДБС в режиме редактирования'
+        )
+        be_file = args.be_file or "[O2+NEW]-BE-Контроли-заявки.md"
+        fe_file = (
+            args.fe_file
+            or "[O2+NEW]-FE-Контроли-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС-в-режиме-редактирования.md"
+        )
+        entity_link = "../../datamodel/Модель-данных/Заявки/Заявка-на-открытие-доп-счета-и-заключение-ДБС.md"
+        ef_link = "[O2+NEW]-Экранные-формы/[O2+NEW]-ЭФ-Клиента/[O2+NEW]-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС/[O2+NEW]-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС-в-режиме-редактирования.md"
+        create_fn = "[O2+NEW]-Функции-системы/[O2+NEW]-Функции-Клиента/[O2+NEW]-Клиент-Функция-создания-заявки.md"
+        edit_fn = "[O2+NEW]-Функции-системы/[O2+NEW]-Функции-Клиента/[O2+NEW]-Клиент-Функция-редактирования-заявки.md"
+        process_create = "[O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-ЖЦ-заявки-на-заключение-ДБС-и-открытие-доп-счета/[O2+NEW]-Создать-заявку,-подписать-ЭП-и-отправить-в-Банк.md"
+        process_accept = "[O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-ЖЦ-заявки-на-заключение-ДБС-и-открытие-доп-счета/[O2+NEW]-Принять-и-проверить-заявку.md"
+        statuses = "[O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-Описание-статусов-заявки.md"
+        openapi_note = "o2plus-split"
+
+    rows = extract_controls_table(text)
+    if not rows:
         raise SystemExit("controls table not found")
-    rows = parse_controls_table(m.group(1))
     print(f"parsed {len(rows)} control rows")
 
     group_keys = sorted({g for r in rows for g in r.groups})
     fe_group_keys = [g for g in group_keys if g != 4]  # group 4 = ESK/BE lifecycle
 
-    be_doc_id = f"{{{{{args.service}: {args.be_title}}}}}"
-    fe_doc_id = f"{{{{{args.service}: {args.fe_title}}}}}"
+    be_doc_id = f"{{{{{service}: {be_title}}}}}"
+    fe_doc_id = f"{{{{{service}: {fe_title}}}}}"
+    be_related = "{{" + service + ": " + fe_title + "}}"
+    fe_related = "{{" + service + ": " + be_title + "}}"
     be_table, _ = gen_be_table(rows, group_keys)
     fe_table, fe_count = gen_fe_table(rows, fe_group_keys)
 
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
-    ef_link = "[O2+NEW]-Экранные-формы/[O2+NEW]-ЭФ-Клиента/[O2+NEW]-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС/[O2+NEW]-ЭФ-Клиента-Открытие-доп-счета-и-заключение-ДБС-в-режиме-редактирования.md"
-    entity_link = "../../datamodel/Модель-данных/Заявки/Заявка-на-открытие-доп-счета-и-заключение-ДБС.md"
-
     be = f"""---
 doc_id: '{be_doc_id}'
-title: '{args.be_title}'
+title: '{be_title}'
 description: 'Контроли, оперирующие атрибутами сущности [Заявка на открытие доп счета и заключение ДБС]({entity_link}): обязательность, формат, справочники, межатрибутные и межсистемные правила. Зона 1 — публичный контракт, проецируется в OpenAPI через x-controls.'
 doc_type: requirement
 requirement_type: control
 control_kind: data-model
-service_code: {args.service}
+service_code: {service}
 source: CONFLUENCE
-confluence_page_id: '{args.confluence_id}'
+confluence_page_id: '{confluence_id}'
 status: draft
 version: 1.0.0
-related: '{{{args.service}:{args.fe_title}}}'
+related: '{be_related}'
 tags: [control, data-model, backend]
 ---
 
-> **Зона 1 (публичный контракт).** Эти проверки оперируют **атрибутами сущности** [Заявка на открытие доп счета и заключение ДБС]({entity_link}). Выполняются сервисом при создании/сохранении, подписании и проверке полномочий. Парный FE-документ ({args.fe_title}) описывает проверки полей формы; осознанное дублирование.
+> **Зона 1 (публичный контракт).** Эти проверки оперируют **атрибутами сущности** [Заявка на открытие доп счета и заключение ДБС]({entity_link}). Выполняются сервисом при создании/сохранении, подписании и проверке полномочий. Парный FE-документ ({fe_title}) описывает проверки полей формы; осознанное дублирование.
 
 ## Назначение
 
-Контроли заявки на открытие дополнительного счёта и заключение ДБС, оперирующие атрибутами модели данных. Применяются при создании/редактировании ([[O2+NEW] Клиент: Функция создания заявки]([O2+NEW]-Функции-системы/[O2+NEW]-Функции-Клиента/[O2+NEW]-Клиент-Функция-создания-заявки.md), [[O2+NEW] Клиент: Функция редактирования заявки]([O2+NEW]-Функции-системы/[O2+NEW]-Функции-Клиента/[O2+NEW]-Клиент-Функция-редактирования-заявки.md)), подписании и приёме в банк (шаг №2 [[O2+NEW] Принять и проверить заявку]([O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-ЖЦ-заявки-на-заключение-ДБС-и-открытие-доп-счета/[O2+NEW]-Принять-и-проверить-заявку.md)).
+Контроли заявки на открытие дополнительного счёта и заключение ДБС, оперирующие атрибутами модели данных. Применяются при создании/редактировании ([Клиент: Функция создания заявки]({create_fn}), [Клиент: Функция редактирования заявки]({edit_fn})), подписании и приёме в банк (шаг №2 [Принять и проверить заявку]({process_accept})).
 
 ## Группы триггеров
 
 Группа — событие жизненного цикла / сохранения, при котором запускается подмножество проверок. Группы **сквозные** по документу. Группы 1–2 — также события переходов вкладок формы (см. парный FE-документ).
 
-- **Группа №1** — контроли при переходе с вкладки «Открываемый счёт» по кнопке «Продолжить»; при сохранении заявки в статусе **DRAFT** ([[O2+NEW] Описание статусов заявки]([O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-Описание-статусов-заявки.md)).
+- **Группа №1** — контроли при переходе с вкладки «Открываемый счёт» по кнопке «Продолжить»; при сохранении заявки в статусе **DRAFT** ([Описание статусов заявки]({statuses})).
 - **Группа №2** — контроли при переходе с вкладки «Реквизиты ГК» по кнопке «Продолжить»/«Назад»; при сохранении в статусе **NEW** (Ожидает подписи).
-- **Группа №3** — контроли, обязательные для подписи документа («Подписать и отправить») — [[O2+NEW] Создать заявку, подписать ЭП и отправить в Банк]([O2+NEW]-Процесс-обработки-заявки/[O2+NEW]-ЖЦ-заявки-на-заключение-ДБС-и-открытие-доп-счета/[O2+NEW]-Создать-заявку,-подписать-ЭП-и-отправить-в-Банк.md).
+- **Группа №3** — контроли, обязательные для подписи документа («Подписать и отправить») — [Создать заявку, подписать ЭП и отправить в Банк]({process_create}).
 - **Группа №4** — контроли по реквизитам, заполняемым после проверки полномочий данными из ЕСК.
 
 ## Контроли заявки
@@ -365,7 +505,7 @@ tags: [control, data-model, backend]
 
 ## Связь с OpenAPI
 
-Операции из `o2plus-split` ссылаются на этот документ через `x-controls` (один `source`, разные `group`).
+Операции из `{openapi_note}` ссылаются на этот документ через `x-controls` (один `source`, разные `group`).
 
 ```yaml
 # POST /account-opening-contract — создать заявку
@@ -408,25 +548,25 @@ post:
 
     fe = f"""---
 doc_id: '{fe_doc_id}'
-title: '{args.fe_title}'
+title: '{fe_title}'
 description: 'Контроли, оперирующие полями экранной формы: обязательность вкладок, формат и подтверждение полей. В OpenAPI не проецируются.'
 doc_type: requirement
 requirement_type: control
 control_kind: screen-form
-service_code: {args.service}
+service_code: {service}
 source: CONFLUENCE
-confluence_page_id: '{args.confluence_id}'
+confluence_page_id: '{confluence_id}'
 status: draft
 version: 1.0.0
-related: '{{{args.service}:{args.be_title}}}'
+related: '{fe_related}'
 tags: [control, screen-form, frontend, ux]
 ---
 
-> **Зона 3.** Проверки **полей** [[O2+NEW] ЭФ Клиента "Открытие доп счета и заключение ДБС" в режиме редактирования]({ef_link}). Гарантия — в BE ({args.be_title}).
+> **Зона 3.** Проверки **полей** [ЭФ Клиента "Открытие доп счета и заключение ДБС" в режиме редактирования]({ef_link}). Гарантия — в BE ({be_title}).
 
 ## Назначение
 
-Контроли полей формы заявки, выполняемые на клиенте при работе с [[O2+NEW] ЭФ Клиента "Открытие доп счета и заключение ДБС" в режиме редактирования]({ef_link}).
+Контроли полей формы заявки, выполняемые на клиенте при работе с [ЭФ Клиента "Открытие доп счета и заключение ДБС" в режиме редактирования]({ef_link}).
 
 ## Группы триггеров
 
@@ -443,8 +583,8 @@ tags: [control, screen-form, frontend, ux]
 > Сгенерировано split_controls.py; FE-записей: {fe_count}. Межсистемные проверки без полевой реакции оставлены только в BE.
 """
 
-    be_path = out / args.be_file
-    fe_path = out / args.fe_file
+    be_path = out / be_file
+    fe_path = out / fe_file
     be_path.write_text(be, encoding="utf-8")
     fe_path.write_text(fe, encoding="utf-8")
     print("BE:", be_path, len(be))
