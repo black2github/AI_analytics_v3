@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[3]
 os.chdir(ROOT)
 
 SKILL_DIR = ".claude/skills/event-driven-screen-form-design"
-REFS = ["templates", "checklist"]
+REFS = ["templates", "checklist", "usage-examples"]
 RULES_DIR = ".cursor/rules"
 REF_OUT = ".cursor/rules/event-driven-screen-form-design"
 REF_REL = ".cursor/rules/event-driven-screen-form-design"
@@ -33,9 +33,12 @@ DESCRIPTION = (
     "структуру; forward — проектирование новой ЭФ или нового клиентского пути с нуля "
     "по процессу, модели данных и функциям, с ревью человеком. Применять, когда нужно "
     "описать ЭФ в событийном формате / событийной модели, спроектировать новую "
-    "экранную форму или клиентский путь, перевести описание ЭФ на события. Для "
-    "легаси-формата «единая таблица полей» — screen-form-restructure; для разделения "
-    "контролей — control-split (этот скилл контроли НЕ создаёт, только ссылается)."
+    "экранную форму или клиентский путь, перевести описание ЭФ на события, привязать "
+    "событийную ЭФ к реестру контролей (CTL). Привязка по умолчанию — к готовому "
+    "реестру CTL сервиса; конвейер с control-split — только по явному запросу "
+    "разделения контролей. Для легаси-формата «единая таблица полей» — "
+    "screen-form-restructure; для разделения контролей — control-split (этот скилл "
+    "контроли НЕ создаёт, только ссылается)."
 )
 
 
