@@ -22,7 +22,8 @@ REFS = ["templates", "checklist", "usage-examples"]
 RULES_DIR = ".cursor/rules"
 REF_OUT = ".cursor/rules/event-driven-screen-form-design"
 REF_REL = ".cursor/rules/event-driven-screen-form-design"
-SFR_REL = ".cursor/rules/screen-form-restructure"
+SHARED_SRC = ".claude/skills/_shared"
+SHARED_OUT = ".cursor/rules/_shared"
 MAIN = os.path.join(RULES_DIR, "event-driven-screen-form-design.mdc")
 
 DESCRIPTION = (
@@ -51,12 +52,10 @@ def strip_frontmatter(text: str) -> str:
 
 
 def rewrite_refs(text: str) -> str:
-    """Ссылки на локальные references/ и на screen-form-restructure → @-пути Cursor."""
-    # Сначала длинный относительный путь (../../), затем короткий (../),
-    # иначе фрагмент ../../.. совпал бы с шаблоном ../.
+    """Ссылки на локальные references/ и на общее ядро _shared → @-пути Cursor."""
     text = re.sub(
-        r"(?:\.\./)+screen-form-restructure/references/([a-z-]+)\.md",
-        rf"@{SFR_REL}/\1.md",
+        r"(?:\.\./)+_shared/([a-z-]+)\.md",
+        rf"@{SHARED_OUT}/\1.md",
         text,
     )
     text = re.sub(r"references/([a-z-]+)\.md", rf"@{REF_REL}/\1.md", text)
@@ -82,8 +81,8 @@ parts = [
     "",
     "> Справочные материалы вынесены в отдельные файлы и подключены через `@`-ссылки "
     "(см. раздел «Справочные файлы» и пометки «см. @…» по тексту). Cursor подтянет их "
-    "как контекст при активации правила. Ссылки на screen-form-restructure ведут в "
-    f"`@{SFR_REL}/`.",
+    "как контекст при активации правила. Общие авторитетные правила (нотация, разбор "
+    f"HTML, UI-типы, вызовы функций, чистота условий) — ядро `@{SHARED_OUT}/`.",
     "",
     skill_body,
 ]
@@ -99,6 +98,13 @@ for name in REFS:
     ref_text = rewrite_refs(open(src, encoding="utf-8").read())
     open(dst, "w", encoding="utf-8").write(ref_text)
 
+# общее ядро _shared — копируем в зеркало (идемпотентно; генераторы других
+# скиллов делают то же самое)
+os.makedirs(SHARED_OUT, exist_ok=True)
+for f in sorted(os.listdir(SHARED_SRC)):
+    if f.endswith(".md"):
+        shutil.copyfile(os.path.join(SHARED_SRC, f), os.path.join(SHARED_OUT, f))
+
 print(
     "main rule:",
     MAIN,
@@ -112,4 +118,4 @@ print("refs ->", REF_OUT)
 for name in REFS:
     print("   ", name + ".md")
 print("@-ссылок на этот скилл:", skill_body.count("@" + REF_REL))
-print("@-ссылок на screen-form-restructure:", skill_body.count("@" + SFR_REL))
+print("@-ссылок на ядро:", skill_body.count("@" + SHARED_OUT))

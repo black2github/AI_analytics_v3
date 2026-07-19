@@ -21,13 +21,12 @@ REFS = [
     "controls",
     "categories",
     "field-table",
-    "formatting",
-    "type-dictionary",
     "templates",
-    "parsing",
     "naming",
     "checklist",
 ]
+SHARED_SRC = ".claude/skills/_shared"
+SHARED_OUT = ".cursor/rules/_shared"
 RULES_DIR = ".cursor/rules"
 REF_OUT = ".cursor/rules/screen-form-restructure"
 REF_REL = ".cursor/rules/screen-form-restructure"
@@ -63,6 +62,14 @@ def to_at(m):
 
 skill_body = re.sub(r"references/([a-z-]+)\.md", to_at, skill_body)
 
+
+def rewrite_shared(text):
+    """Ссылки на общее ядро ../_shared/ (любая глубина) -> @-пути Cursor."""
+    return re.sub(r"(?:\.\./)+_shared/([a-z-]+)\.md", rf"@{SHARED_OUT}/\1.md", text)
+
+
+skill_body = rewrite_shared(skill_body)
+
 parts = []
 parts.append("---")
 parts.append(f"description: {DESCRIPTION}")
@@ -88,14 +95,25 @@ content = "\n".join(parts).rstrip() + "\n"
 os.makedirs(RULES_DIR, exist_ok=True)
 open(MAIN, "w", encoding="utf-8").write(content)
 
-# справочники — копируем как есть (.md, не .mdc: Cursor не примет их за правила)
+# справочники — копируем с переписыванием ссылок на общее ядро
 for name in REFS:
     src = os.path.join(SKILL_DIR, "references", f"{name}.md")
     dst = os.path.join(REF_OUT, f"{name}.md")
-    shutil.copyfile(src, dst)
+    open(dst, "w", encoding="utf-8").write(
+        rewrite_shared(open(src, encoding="utf-8").read())
+    )
+
+# общее ядро _shared — копируем в зеркало (идемпотентно; генераторы других
+# скиллов делают то же самое)
+os.makedirs(SHARED_OUT, exist_ok=True)
+for f in sorted(os.listdir(SHARED_SRC)):
+    if f.endswith(".md"):
+        shutil.copyfile(os.path.join(SHARED_SRC, f), os.path.join(SHARED_OUT, f))
 
 print("main rule:", MAIN, "|", len(content.encode("utf-8")), "bytes |", content.count(chr(10)) + 1, "lines")
 print("refs ->", REF_OUT)
 for name in REFS:
     print("   ", name + ".md")
+print("shared ->", SHARED_OUT)
 print("@-ссылок в главном правиле:", skill_body.count("@" + REF_REL))
+print("@-ссылок на ядро:", skill_body.count("@" + SHARED_OUT))
