@@ -1,0 +1,107 @@
+---
+description: Разбивает большой OpenAPI-файл (JSON/YAML) на доменные папки для анализа и правки и собирает обратно через redocly bundle без изменения спецификации (round-trip структурно идентичен исходнику). Применять, когда спека слишком большая для LLM/командной работы, нужен доменный сплит paths/schemas, либо bundle + проверка эквивалентности (verify_roundtrip).
+alwaysApply: false
+---
+
+<!-- Сгенерировано из .claude/skills/split-openapi-spec (build_cursor_rule.py). Источник истины — Claude-скилл; при правках меняйте его и пересобирайте. -->
+
+> Справочные материалы подключены через `@`-ссылки. Исполняемые скрипты живут в `.claude/skills/split-openapi-spec/scripts/` (не дублируются в `.cursor/rules`).
+
+# Split / bundle большой OpenAPI-спеки
+
+Большую спеку (тысячи строк в одном файле) неудобно анализировать и редактировать.
+Этот скилл раскладывает её на мелкие файлы по бизнес-доменам, а затем собирает
+обратно в единый файл. **Сборка обратима**: `redocly bundle` восстанавливает
+канонические `#/components/...` ссылки по именам, поэтому итоговый файл структурно
+эквивалентен исходному и результат генерации кода не меняется.
+
+Идея и структура подробно описаны в @.cursor/rules/split-openapi-spec/approach.md.
+
+## Требования
+
+- Python 3 с `pyyaml` (`pip install pyyaml`).
+- Node + `npx @redocly/cli` (тянется автоматически при первом запуске).
+
+## Рабочий цикл
+
+### 1. Подготовить маппинг доменов
+
+Домены спеки специфичны, поэтому сначала пойми её структуру и составь маппинг
+`path -> домен`. Шаги:
+
+1. Перечисли пути: `python -c "import json;print(*json.load(open('SPEC')).get('paths',{}),sep=chr(10))"`
+   (для YAML — через `yaml.safe_load`).
+2. Сгруппируй по бизнес-смыслу (выпуск, лимиты, блокировки, отчёты, ...).
+3. Скопируй `.claude/skills/split-openapi-spec/scripts/domains.example.json` и впиши свои правила. Формат — список
+   `{ "prefix": "/...", "domain": "..." }`; побеждает **самый длинный** совпавший
+   префикс, иначе `default`.
+
+Если домены тривиально совпадают с N-м сегментом пути, можно без конфига:
+`--group-by N` (0-based индекс сегмента).
+
+### 2. Разложить
+
+```bash
+python .claude/skills/split-openapi-spec/scripts/split_spec.py \
+  --src api-specs/SPEC.json \
+  --out api-specs/SPEC-split \
+  --domains my-domains.json
+```
+
+Получится:
+```
+SPEC-split/openapi.yaml                         точка входа ($ref на всё)
+SPEC-split/paths/<domain>/*.yaml                по файлу на path item
+SPEC-split/components/<section>/<folder>/*.yaml folder=домен (если схема одного домена) либо common
+```
+Схемы, используемые более чем одним доменом, уходят в `common/` — это исключает
+дублирование общих структур. Прочие секции components (`parameters`, `responses`, ...)
+кладутся в `common/`.
+
+### 3. Анализировать / редактировать мелкие файлы
+
+Для LLM-анализа домена достаточно загрузить `paths/<domain>/` + `components/schemas/<domain>/`
++ `components/schemas/common/`.
+
+### 4. Собрать обратно
+
+```bash
+# в исходный формат (JSON для генератора кода)
+npx @redocly/cli bundle api-specs/SPEC-split/openapi.yaml -o api-specs/SPEC.json
+
+# либо единый YAML (для просмотра целиком)
+npx @redocly/cli bundle api-specs/SPEC-split/openapi.yaml -o api-specs/SPEC.bundled.yaml --ext yaml
+```
+
+### 5. Проверить эквивалентность (обязательно)
+
+```bash
+python .claude/skills/split-openapi-spec/scripts/verify_roundtrip.py \
+  --src api-specs/SPEC.json \
+  --bundled api-specs/SPEC.bundled.yaml
+```
+Должно вывести `OK`. Если есть `DIFF` — печатает первые расхождения.
+
+## Ограничения и заметки
+
+- Скрипт выносит в файлы секции `schemas, parameters, responses, requestBodies,
+  headers, examples, callbacks`; `securitySchemes`/`links` остаются в точке входа.
+  Поддерживаются ссылки вида `#/components/<section>/<Name>`. Внешние URL-ссылки
+  и `$ref` на под-поля схем (например `#/components/schemas/X/properties/y`)
+  скрипт оставляет как есть.
+- Доменное распределение по папкам применяется только к `schemas`; остальные
+  секции идут в `common` (их обычно немного).
+- `redocly lint` может показать замечания — сверь их с линтом **исходного** файла:
+  всё, что было и там, — предсуществующее, сплит проблем не добавляет.
+- Имена компонентов сохраняются один-в-один, поэтому bundle даёт тот же набор
+  `#/components/...`, что и оригинал.
+
+## Справочные файлы
+
+- `@.cursor/rules/split-openapi-spec/approach.md` — обоснование доменного сплита, common vs domain schemas, $ref и композиция через allOf.
+
+## Скрипты
+
+- `.claude/skills/split-openapi-spec/scripts/split_spec.py` — доменный сплиттер OpenAPI.
+- `.claude/skills/split-openapi-spec/scripts/verify_roundtrip.py` — проверка структурной эквивалентности.
+- `.claude/skills/split-openapi-spec/scripts/domains.example.json` — пример маппинга path → домен.
