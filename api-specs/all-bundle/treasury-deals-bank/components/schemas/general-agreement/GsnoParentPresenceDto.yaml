@@ -1,0 +1,18 @@
+type: object
+properties:
+  gsnoParentNumber:
+    type: string
+    description: Номер ГСНО ГО
+  gsnoParentStartDate:
+    type: string
+    description: Дата начала действия ГСНО ГО
+    format: date
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+description: Данные

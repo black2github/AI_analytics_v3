@@ -1,0 +1,13 @@
+type: object
+properties:
+  createdClientOfficialSignatureTools:
+    type: array
+    description: Созданные СЭП представителя клиента
+    items:
+      $ref: ./ClientOfficialSignatureToolDto.yaml
+  updatedClientOfficialSignatureTools:
+    type: array
+    description: Обновленные СЭП представителя клиента
+    items:
+      $ref: ./ClientOfficialSignatureToolDto.yaml
+description: DTO результата создания/обновления СЭП представителя клиента

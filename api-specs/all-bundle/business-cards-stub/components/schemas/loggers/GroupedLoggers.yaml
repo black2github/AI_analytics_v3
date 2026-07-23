@@ -1,0 +1,6 @@
+type: object
+properties:
+  members:
+    type: array
+    items:
+      type: string

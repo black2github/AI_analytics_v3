@@ -1,0 +1,10 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер соглашения ЛК МП
+  date:
+    type: string
+    description: Дата соглашения ЛК МП
+    format: date
+description: Реквизиты соглашения ЛК МП, на основе которого выдаются/изменяются права

@@ -1,0 +1,15 @@
+type: string
+description: Формат файла
+enum:
+- UFEBS
+- ONE_C
+- SWIFT
+- PAYDOCCUR
+- PAYDOCRU
+- ONE_C_PAYREQRUOUT
+- DBF_PAYREQRUOUT
+- ONE_C_PAY_COLLECTION_OUT
+- GPB_TRANSIT_2023
+- UNC_DOC_INF
+- TDIF
+- CP866

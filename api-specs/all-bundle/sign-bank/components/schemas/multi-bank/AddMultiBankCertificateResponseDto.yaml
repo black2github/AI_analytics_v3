@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID добавленного межбанковского сертификата
+    format: uuid
+description: Ответ на запрос добавления сертификата для межбанка

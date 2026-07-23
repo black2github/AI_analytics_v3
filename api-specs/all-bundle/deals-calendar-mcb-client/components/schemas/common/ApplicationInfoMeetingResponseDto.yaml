@@ -1,0 +1,9 @@
+type: object
+properties:
+  externalId:
+    type: string
+    description: Идентификатор заявки из ОНБ
+  deliveryId:
+    type: string
+    description: Идентификатор доставки из ЛБП
+description: Дополнительная заявка к основной доставке

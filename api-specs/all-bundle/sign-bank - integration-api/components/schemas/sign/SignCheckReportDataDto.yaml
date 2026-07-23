@@ -1,0 +1,14 @@
+required:
+- mainInfo
+type: object
+properties:
+  mainInfo:
+    minLength: 1
+    type: string
+    description: Основная информация
+  attributes:
+    type: array
+    description: Дополнительные параметры
+    items:
+      $ref: ./SignCheckReportAttributeDto.yaml
+description: Набор данных для ПФ

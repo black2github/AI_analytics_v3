@@ -1,0 +1,66 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientRnkId:
+    type: string
+    description: РНК Клиента
+  clientWebDealingId:
+    type: string
+    description: ID Клиента ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientShortName:
+    type: string
+    description: Краткое наименование Клиента
+  clientInnKio:
+    type: string
+    description: ИНН/КИО Клиента
+  rateDeviation:
+    type: string
+    description: Допустимое отклонение ручной котировки
+  dealExecutionTypes:
+    type: array
+    description: Тип исполнения заявки
+    items:
+      type: string
+      description: Тип исполнения заявки
+      enum:
+      - FOK
+      - IOC
+      - ORDER
+      - ORDER_PF
+  instruments:
+    type: array
+    description: Список инструментов
+    items:
+      $ref: ./InstrumentDto.yaml
+  limits:
+    $ref: ./LimitsDto.yaml
+  enabled:
+    type: boolean
+    description: Признак доступности автокотирования
+  active:
+    type: boolean
+    description: Признак активности профиля клиента
+  status:
+    type: string
+    description: Статус
+    enum:
+    - CURRENT
+    - ARCHIVED
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения
+    format: date-time
+  actual:
+    type: boolean
+    description: Признак актуальности профиля
+description: Страница с данными

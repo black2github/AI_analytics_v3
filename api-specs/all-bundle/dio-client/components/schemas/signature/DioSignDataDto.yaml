@@ -1,0 +1,19 @@
+required:
+- bankClientSigners
+- documentsAmountSignInfo
+- paymentAmount
+- signResultInfo
+type: object
+properties:
+  bankClientSigners:
+    type: array
+    description: Организации
+    items:
+      $ref: ./DioBankClientSignerDto.yaml
+  documentsAmountSignInfo:
+    $ref: ./DioDocumentsAmountSignInfoDto.yaml
+  paymentAmount:
+    $ref: ./DioRequestPaymentAmountDto.yaml
+  signResultInfo:
+    $ref: ./DioSignResultInfoDto.yaml
+description: Транспортное представление данных для подписи

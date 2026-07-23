@@ -1,0 +1,24 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор отзыва в Клиент-банк
+  createdDate:
+    type: string
+    description: Дата документа
+    format: date
+  docNumber:
+    type: string
+    description: Номер документа
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+  firstSignFio:
+    type: string
+    description: ФИО подписанта первого уровня
+  secondSignFio:
+    type: string
+    description: ФИО подписанта второго уровня
+description: Данные заявки на отзыв

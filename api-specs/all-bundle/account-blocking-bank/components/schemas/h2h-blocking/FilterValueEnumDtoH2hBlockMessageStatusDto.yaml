@@ -1,0 +1,65 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Текущий статус обработки сообщения о блокировке H2H
+    enum:
+    - RECEIVED
+    - READ_SUCCEEDED
+    - PROCESSING
+    - PROCESSED
+    - PRINT_PROCESSING
+    - PRINT_SUCCEEDED
+    - PROCESS_ERROR
+    - EXECUTED
+    - NOT_EXECUTED
+  notEq:
+    type: string
+    description: Текущий статус обработки сообщения о блокировке H2H
+    enum:
+    - RECEIVED
+    - READ_SUCCEEDED
+    - PROCESSING
+    - PROCESSED
+    - PRINT_PROCESSING
+    - PRINT_SUCCEEDED
+    - PROCESS_ERROR
+    - EXECUTED
+    - NOT_EXECUTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Текущий статус обработки сообщения о блокировке H2H
+      enum:
+      - RECEIVED
+      - READ_SUCCEEDED
+      - PROCESSING
+      - PROCESSED
+      - PRINT_PROCESSING
+      - PRINT_SUCCEEDED
+      - PROCESS_ERROR
+      - EXECUTED
+      - NOT_EXECUTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Текущий статус обработки сообщения о блокировке H2H
+      enum:
+      - RECEIVED
+      - READ_SUCCEEDED
+      - PROCESSING
+      - PROCESSED
+      - PRINT_PROCESSING
+      - PRINT_SUCCEEDED
+      - PROCESS_ERROR
+      - EXECUTED
+      - NOT_EXECUTED
+  isNull:
+    type: boolean
+description: Статус сообщения. Поиск по <Текущий статус обработки сообщения о блокировке>. Полное совпадение

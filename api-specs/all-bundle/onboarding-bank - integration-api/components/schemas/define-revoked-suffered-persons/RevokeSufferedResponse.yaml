@@ -1,0 +1,15 @@
+type: object
+properties:
+  authorizedPersonsIds:
+    type: array
+    description: Идентификаторы уполномоченных лиц
+    items:
+      type: string
+      description: Идентификаторы уполномоченных лиц
+      format: uuid
+  sufferedPersons:
+    type: array
+    description: Данные по физическим лицам
+    items:
+      $ref: ./RevokeSufferedPersonDto.yaml
+description: Данные по физ. лицам, у кого были неверно отозваны права.

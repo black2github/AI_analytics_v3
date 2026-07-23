@@ -1,0 +1,23 @@
+required:
+- id
+- innKio
+type: object
+properties:
+  id:
+    type: string
+    description: ID клиента банка
+    format: uuid
+  shortName:
+    maxLength: 1200
+    minLength: 0
+    type: string
+    description: Краткое наименование
+  fullName:
+    maxLength: 2000
+    minLength: 0
+    type: string
+    description: Полное наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+description: Клиент банка. Банковская часть.

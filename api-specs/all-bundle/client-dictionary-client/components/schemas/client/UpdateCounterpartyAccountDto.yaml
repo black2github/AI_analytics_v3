@@ -1,0 +1,22 @@
+required:
+- account
+- bankBik
+- correspondentBankAccount
+type: object
+properties:
+  account:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Счёт контрагента
+  bankBik:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: БИК Банка контрагента
+  correspondentBankAccount:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Корр. счёт банка контрагента
+description: Счет контрагента

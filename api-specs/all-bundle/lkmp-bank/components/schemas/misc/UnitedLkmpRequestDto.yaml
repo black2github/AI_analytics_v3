@@ -1,0 +1,65 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус объединенной заявки ЛК МП
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - GRANT_AUTHORITY
+    - AUTHORITY_GRANTED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXECUTED_BY_F1
+    - EXPORT_TO_F1_ERROR
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  documentType:
+    type: string
+    description: Классификатор типов документов
+    enum:
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+  newRole:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  bankClient:
+    $ref: ./UnitedLkmpBankClientDto.yaml
+  employeeInfo:
+    $ref: ./UnitedLkmpEmployeeInfoDto.yaml
+description: Объединенная заявка ЛК МП

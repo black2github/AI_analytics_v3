@@ -1,0 +1,16 @@
+required:
+- clientGUID
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  accounts:
+    type: array
+    description: Блок с информацией о счете и тарифе
+    items:
+      $ref: ./CorpCardAccountDto.yaml
+  error:
+    $ref: ./CorpCardErrorDto.yaml
+description: Ответ к запросу на получение числа действующих карт

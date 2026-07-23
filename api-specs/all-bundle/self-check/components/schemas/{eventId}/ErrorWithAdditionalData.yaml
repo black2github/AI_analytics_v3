@@ -1,0 +1,14 @@
+type: object
+description: ДТО для ошибки с дополнительной информацией
+properties:
+  code:
+    type: string
+    description: Код ошибки
+  message:
+    type: string
+    description: Описание ошибки
+  additionalData:
+    type: object
+    additionalProperties:
+      type: string
+    description: Дополнительная информация об ошибке

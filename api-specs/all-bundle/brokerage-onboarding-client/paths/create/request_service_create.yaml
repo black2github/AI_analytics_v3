@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Создать заявку
+  description: 'Привилегии: BRK_ONBOARDING.CLIENT.REQUEST.CREATE'
+  operationId: create
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/create/GenericCommandBrkOnbRequestReqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/create/GenericResponseSimpleErrorDataBrkOnbRequestRespDto.yaml

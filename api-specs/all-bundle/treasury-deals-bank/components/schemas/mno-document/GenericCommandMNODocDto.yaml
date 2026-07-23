@@ -1,0 +1,7 @@
+required:
+- data
+type: object
+properties:
+  data:
+    $ref: ../common/MNODocDto.yaml
+description: Запрос

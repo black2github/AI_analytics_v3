@@ -1,0 +1,14 @@
+type: object
+properties:
+  documentDate:
+    type: string
+    description: Дата документа в СКВО
+    format: date
+  documentNumber:
+    type: string
+    description: Номер документа в СКВО
+  linkedDocumentId:
+    type: string
+    description: ID связанного документа в СКВО
+    format: uuid
+description: Информация СКВО

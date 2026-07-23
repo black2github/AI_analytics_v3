@@ -1,0 +1,23 @@
+type: object
+properties:
+  account:
+    $ref: ./AccountAccessAccountDto.yaml
+  tariff:
+    $ref: ./TariffInfoDto.yaml
+  actionsByDocTypes:
+    type: object
+    additionalProperties:
+      uniqueItems: true
+      type: array
+      description: Массив доступов к счету для платежных документов
+      items:
+        $ref: ./AccessRspInfo.yaml
+    description: Массив доступов к счету для платежных документов
+  signatoryInfo:
+    $ref: ./AccountAccessSignatoryInfoDto.yaml
+  clientOfficialAccountInfo:
+    $ref: ./AccountAccessClientOfficialAccountInfoDto.yaml
+  regBranchCode:
+    type: string
+    description: Код филиала обслуживания
+description: Функция получения доступных счетов и настроек доступа к ним. Исходящие параметры функции

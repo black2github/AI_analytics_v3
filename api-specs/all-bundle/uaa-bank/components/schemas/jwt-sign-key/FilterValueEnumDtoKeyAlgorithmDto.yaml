@@ -1,0 +1,32 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - RS256
+    - GOST341012
+  notEq:
+    type: string
+    enum:
+    - RS256
+    - GOST341012
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - RS256
+      - GOST341012
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - RS256
+      - GOST341012
+  isNull:
+    type: boolean

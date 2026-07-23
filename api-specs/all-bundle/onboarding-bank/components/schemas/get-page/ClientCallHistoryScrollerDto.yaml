@@ -1,0 +1,26 @@
+type: object
+properties:
+  callDateTime:
+    type: string
+    description: Дата и время звонка
+    format: date-time
+  callResult:
+    type: string
+    description: Результат звонка
+    enum:
+    - POSTPONED
+    - CALL_MISSED
+    - CALL_UNAVAILABLE
+    - REFUSED
+    - PROMISED_TO_DO
+    - ACCOUNT_OPENED
+    - PARTNER_REQUEST
+    - ACCOUNT_REJECTED
+    - CLIENT_HAS_NOT_DECIDED
+    - TRANSFERRED_TO_CM
+    - PETITION_SENT_TO_LD
+    - OTHER
+  operationistComment:
+    type: string
+    description: Комментарий операциониста
+description: История звонков клиенту по заявке на открытие первого счета на скроллере

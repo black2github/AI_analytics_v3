@@ -1,0 +1,21 @@
+required:
+- importAction
+type: object
+properties:
+  importAction:
+    type: string
+    description: Действие пользователя
+    enum:
+    - NOT_DEFINED
+    - IMPORT_SELECTED
+    - REJECT_IMPORT
+  importValid:
+    type: boolean
+    description: 'Выбранные документы: Корректные'
+  importError:
+    type: boolean
+    description: 'Выбранные документы: С ошибками'
+  importWarning:
+    type: boolean
+    description: 'Выбранные документы: С предупреждениями'
+description: Параметры импорта

@@ -1,0 +1,140 @@
+openapi: 3.1.0
+info:
+  title: Стаб сервис для Business Cards
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /business-cards-stub
+tags:
+- name: API для работы с корпоративными картами
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /f1-corp-card/updating/block:
+    $ref: ./paths/updating/f1_corp_card_updating_block.yaml
+  /f1-corp-card/updating/create:
+    $ref: ./paths/updating/f1_corp_card_updating_create.yaml
+  /f1-corp-card/updating/list:
+    $ref: ./paths/updating/f1_corp_card_updating_list.yaml
+  /omni-oks-pin/api/v1/gpbbol/pin/init:
+    $ref: ./paths/api/omni_oks_pin_api_v1_gpbbol_pin_init.yaml
+  /omni-oks-requisites/api/v1/gpbbol/card/cvv:
+    $ref: ./paths/api/omni_oks_requisites_api_v1_gpbbol_card_cvv.yaml
+  /omni-oks-requisites/api/v1/gpbbol/card/part-num:
+    $ref: ./paths/api/omni_oks_requisites_api_v1_gpbbol_card_part_num.yaml
+  /sip/svfe/card-block-oper:
+    $ref: ./paths/svfe/sip_svfe_card_block_oper.yaml
+  /sip/svfe/card-info-get:
+    $ref: ./paths/svfe/sip_svfe_card_info_get.yaml
+  /sip/svfe/card-limit-list-get:
+    $ref: ./paths/svfe/sip_svfe_card_limit_list_get.yaml
+  /sip/svfe/card-limit-set:
+    $ref: ./paths/svfe/sip_svfe_card_limit_set.yaml
+  /sip/svfe/change-sip-svfe-response-mode:
+    $ref: ./paths/svfe/sip_svfe_change_sip_svfe_response_mode.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    CardStatus:
+      $ref: ./components/schemas/updating/CardStatus.yaml
+    CorpCardBlockRequestDto:
+      $ref: ./components/schemas/updating/CorpCardBlockRequestDto.yaml
+    CorpCardCreateRequestDto:
+      $ref: ./components/schemas/updating/CorpCardCreateRequestDto.yaml
+    CorpCardDto:
+      $ref: ./components/schemas/updating/CorpCardDto.yaml
+    CorpCardFilter:
+      $ref: ./components/schemas/updating/CorpCardFilter.yaml
+    DataRequestDto:
+      $ref: ./components/schemas/svfe/DataRequestDto.yaml
+    Direction:
+      $ref: ./components/schemas/updating/Direction.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/updating/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/updating/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/updating/FilterValueDtoString.yaml
+    GetPageCommandCorpCardFilter:
+      $ref: ./components/schemas/updating/GetPageCommandCorpCardFilter.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    LocalDate:
+      $ref: ./components/schemas/updating/LocalDate.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    MetaRequestDto:
+      $ref: ./components/schemas/svfe/MetaRequestDto.yaml
+    NullHandling:
+      $ref: ./components/schemas/updating/NullHandling.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    OmniOksRequestDataDto:
+      $ref: ./components/schemas/api/OmniOksRequestDataDto.yaml
+    OmniOksRequestDto:
+      $ref: ./components/schemas/api/OmniOksRequestDto.yaml
+    OmniOksRequestMetaDto:
+      $ref: ./components/schemas/api/OmniOksRequestMetaDto.yaml
+    PageDataCorpCardDto:
+      $ref: ./components/schemas/updating/PageDataCorpCardDto.yaml
+    PageParamsCorpCardFilter:
+      $ref: ./components/schemas/updating/PageParamsCorpCardFilter.yaml
+    Paging:
+      $ref: ./components/schemas/updating/Paging.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    ScenarioRequestDto:
+      $ref: ./components/schemas/svfe/ScenarioRequestDto.yaml
+    SipSvfeBlockingOperationStateDto:
+      $ref: ./components/schemas/svfe/SipSvfeBlockingOperationStateDto.yaml
+    SipSvfeCardBlockingMetaInfoDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardBlockingMetaInfoDto.yaml
+    SipSvfeCardBlockingRequestDataDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardBlockingRequestDataDto.yaml
+    SipSvfeCardBlockingRequestDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardBlockingRequestDto.yaml
+    SipSvfeCardInfoGetRequestDataDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardInfoGetRequestDataDto.yaml
+    SipSvfeCardInfoGetRequestDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardInfoGetRequestDto.yaml
+    SipSvfeCardLimitListGetRequestDataDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardLimitListGetRequestDataDto.yaml
+    SipSvfeCardLimitListGetRequestDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardLimitListGetRequestDto.yaml
+    SipSvfeCardLimitSetRequestDto:
+      $ref: ./components/schemas/svfe/SipSvfeCardLimitSetRequestDto.yaml
+    SipSvfeResponseMode:
+      $ref: ./components/schemas/svfe/SipSvfeResponseMode.yaml
+    SipSvfeUserChosenBlockingScenarioDto:
+      $ref: ./components/schemas/svfe/SipSvfeUserChosenBlockingScenarioDto.yaml
+    Sort:
+      $ref: ./components/schemas/updating/Sort.yaml
+    SvfeRequestDto:
+      $ref: ./components/schemas/svfe/SvfeRequestDto.yaml

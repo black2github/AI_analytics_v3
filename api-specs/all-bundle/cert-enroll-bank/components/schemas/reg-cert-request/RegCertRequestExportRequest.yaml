@@ -1,0 +1,12 @@
+type: object
+properties:
+  command:
+    $ref: ../common/GetPageCommandRegCertRequestFilter.yaml
+  visibleColumns:
+    uniqueItems: true
+    type: array
+    description: Отображаемые колонки для каждой заявки
+    items:
+      type: string
+      description: Отображаемые колонки для каждой заявки
+description: Запрос на выгрузку реестра заявок РЭП

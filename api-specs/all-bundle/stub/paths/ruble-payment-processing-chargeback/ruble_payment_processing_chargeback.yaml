@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Контроллер ручной отправки ответа из АБС Ф1 для отзыва платежных документов
+  summary: sendResponse
+  operationId: sendResponseUsingPOST_7
+  consumes:
+  - application/xml
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: stub
+    description: stub
+    required: true
+    schema:
+      $ref: '#/definitions/Document'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

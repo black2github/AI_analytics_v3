@@ -1,0 +1,12 @@
+type: object
+properties:
+  fiasRegionCode:
+    type: string
+    description: ФИАС код региона
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+description: Регион

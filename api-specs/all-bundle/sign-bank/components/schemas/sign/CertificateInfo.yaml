@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  userName:
+    type: string
+    description: ФИО владельца сертификата
+  organizationName:
+    type: string
+    description: Наименование организации
+  serialNumber:
+    type: string
+    description: Серийный номер
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  legalInn:
+    type: string
+    description: ИНН юридического лица
+  individualInn:
+    type: string
+    description: ИНН физ лица или ИП
+  ogrn:
+    type: string
+    description: ОГРН
+  ogrnIp:
+    type: string
+    description: ОГРНИП
+  snils:
+    type: string
+    description: СНИЛС
+  data:
+    type: string
+    description: Base64 тело сертификата
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Сертификат

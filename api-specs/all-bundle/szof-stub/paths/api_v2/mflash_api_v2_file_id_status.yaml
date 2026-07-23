@@ -1,0 +1,14 @@
+get:
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/api_v2/MflashFileStatusResponse.yaml

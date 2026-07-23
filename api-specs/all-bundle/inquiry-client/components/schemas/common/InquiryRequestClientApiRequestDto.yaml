@@ -1,0 +1,43 @@
+required:
+- inquiries
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+    example: null
+  version:
+    type: integer
+    description: Версия
+    format: int32
+    example: null
+  userId:
+    type: string
+    description: Пользователь, создавший запрос (Ссылка на сущность "Пользователь")
+    format: uuid
+    example: null
+  userFio:
+    type: string
+    description: Пользователь, создавший запрос (ФИО)
+    example: null
+  bankClient:
+    $ref: ./InquiryBankClientRequestDto.yaml
+  inquiries:
+    type: array
+    description: Справки, запрашиваемой по запросу для ЮЛ
+    example: null
+    items:
+      $ref: ./InquiryDto.yaml
+  commissionInfo:
+    $ref: ./CommissionInfoRequestDto.yaml
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи запроса
+    example: null
+    items:
+      $ref: ./InquirySignatureDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+description: Запрос справок для ЮЛ
+example: null

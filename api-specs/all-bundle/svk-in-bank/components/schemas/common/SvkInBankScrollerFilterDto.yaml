@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  messageTopic:
+    $ref: ./FilterValueDtoString.yaml
+  organization:
+    $ref: ./FilterValueDtoString.yaml
+  organizationRnk:
+    $ref: ./FilterValueDtoString.yaml
+  skvoDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./FilterValueDtoSvkInDocumentStatusDto.yaml
+  skvoDocumentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  bankBranch:
+    $ref: ./FilterValueDtoString.yaml
+  existenceAttachment:
+    $ref: ./FilterValueDtoBoolean.yaml
+  dioNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  dioDocDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  tessaExportStatus:
+    $ref: ./FilterValueDtoBoolean.yaml
+  statusCategory:
+    type: string
+    description: Категории статусов СВК2. Банковская часть.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  skvoDocId:
+    $ref: ./FilterValueDtoUUID.yaml
+  skvoMsgId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр скроллера для Сообщения валютного контроля [ДИО_СВК2]

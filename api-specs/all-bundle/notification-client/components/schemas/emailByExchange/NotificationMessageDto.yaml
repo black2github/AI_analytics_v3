@@ -1,0 +1,16 @@
+type: object
+properties:
+  subject:
+    type: string
+    description: Тема сообщения
+  body:
+    type: string
+    description: Тело сообщения
+  attachments:
+    type: array
+    description: Файлы для отправки с сообщением
+    items:
+      $ref: ./AttachmentDto.yaml
+  bodyAsHtml:
+    type: boolean
+description: Сообщение

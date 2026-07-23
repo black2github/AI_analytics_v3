@@ -1,0 +1,9 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      $ref: ./CurrencyDtoV2.yaml
+  total:
+    type: integer
+    format: int64

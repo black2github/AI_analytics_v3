@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  title: Стаб сервис для Адаптера BRK CRM
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /crm-brk-adapter-stub
+tags:
+- name: Обновление заглушек brk_crm_response_stub
+paths:
+  /brk/crm/create:
+    $ref: ./paths/crm/brk_crm_create.yaml
+  /brk/crm/delete/{id}:
+    $ref: ./paths/crm/brk_crm_delete_id.yaml
+  /brk/crm/page:
+    $ref: ./paths/crm/brk_crm_page.yaml
+  /pp-sip:
+    $ref: ./paths/pp-sip/pp_sip.yaml
+components:
+  schemas:
+    BrkCrmResponseDto:
+      $ref: ./components/schemas/crm/BrkCrmResponseDto.yaml
+    BrkCrmResponseLiteDto:
+      $ref: ./components/schemas/crm/BrkCrmResponseLiteDto.yaml
+    PageData:
+      $ref: ./components/schemas/common/PageData.yaml
+    PageDataBrkCrmResponseLiteDto:
+      $ref: ./components/schemas/crm/PageDataBrkCrmResponseLiteDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    UUID:
+      $ref: ./components/schemas/crm/UUID.yaml

@@ -1,0 +1,12 @@
+type: object
+properties:
+  location:
+    type: string
+  metro:
+    type: array
+    items:
+      type: string
+  region:
+    type: string
+  settlement:
+    type: string

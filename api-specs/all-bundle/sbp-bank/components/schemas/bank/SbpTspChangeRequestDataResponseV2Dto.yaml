@@ -1,0 +1,30 @@
+type: object
+description: Параметры по заявке на изменение параметров ТСП
+properties:
+  isReturnPermitted:
+    type: boolean
+    description: Признак "Разрешение на возвраты"
+  salesMode:
+    type: string
+    description: Способ приема оплаты ТСП
+    enum:
+    - REMOTE
+    - FACE_TO_FACE
+  url:
+    type: string
+    description: Веб-сайт ТСП
+    maxLength: 1200
+  returnPermittedResult:
+    type: boolean
+    description: Результат изменения доступности возвратов
+  passwordUpdateResult:
+    type: boolean
+    description: Результат изменения пароля возврата
+  salesModeUpdateResult:
+    type: boolean
+    description: Результат изменения способа приема оплаты
+  urlUpdateResult:
+    type: boolean
+    description: Результат изменения поля веб-сайт
+required:
+- isReturnPermitted

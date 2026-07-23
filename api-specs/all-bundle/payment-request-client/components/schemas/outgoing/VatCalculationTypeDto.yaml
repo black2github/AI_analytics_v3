@@ -1,0 +1,8 @@
+type: string
+description: Способ расчета НДС
+nullable: true
+enum:
+- VAT_INCLUDED
+- VAT_ADDED_AMOUNT
+- NO_VAT
+- VAT_MANUAL_INPUT

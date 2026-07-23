@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус сертификата.
+    enum:
+    - INITIAL
+    - VERIFIED
+    - COMPLETED
+    - REJECTED
+    - REVOKE_IN_PROGRESS
+    - REVOKED
+    - REVOKE_ERROR
+    - EXPIRED
+  notEq:
+    type: string
+    description: Статус сертификата.
+    enum:
+    - INITIAL
+    - VERIFIED
+    - COMPLETED
+    - REJECTED
+    - REVOKE_IN_PROGRESS
+    - REVOKED
+    - REVOKE_ERROR
+    - EXPIRED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус сертификата.
+      enum:
+      - INITIAL
+      - VERIFIED
+      - COMPLETED
+      - REJECTED
+      - REVOKE_IN_PROGRESS
+      - REVOKED
+      - REVOKE_ERROR
+      - EXPIRED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус сертификата.
+      enum:
+      - INITIAL
+      - VERIFIED
+      - COMPLETED
+      - REJECTED
+      - REVOKE_IN_PROGRESS
+      - REVOKED
+      - REVOKE_ERROR
+      - EXPIRED
+  isNull:
+    type: boolean
+description: Статус сертификата (in).

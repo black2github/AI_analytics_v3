@@ -1,0 +1,613 @@
+openapi: 3.0.1
+info:
+  title: Онлайн адаптер РКО Ф1.
+  version: 3.6.0
+servers:
+- url: /f1-integration
+security:
+- bearerAuth: []
+paths:
+  /integration/f1/v4/business-cards/operations:
+    $ref: ./paths/f1/integration_f1_v4_business_cards_operations.yaml
+  /integration/f1/v4/business-cards/accounts/operations:
+    $ref: ./paths/f1/integration_f1_v4_business_cards_accounts_operations.yaml
+  /integration/f1/v3/business-cards:
+    $ref: ./paths/f1/integration_f1_v3_business_cards.yaml
+  /integration/f1/v3/business-cards/statistics:
+    $ref: ./paths/f1/integration_f1_v3_business_cards_statistics.yaml
+  /integration/f1/v3/business-cards/operations:
+    $ref: ./paths/f1/integration_f1_v3_business_cards_operations.yaml
+  /integration/f1/v3/business-cards/list:
+    $ref: ./paths/f1/integration_f1_v3_business_cards_list.yaml
+  /integration/f1/v3/business-cards/count:
+    $ref: ./paths/f1/integration_f1_v3_business_cards_count.yaml
+  /integration/f1/v2/balance-and-overdraft/get-by-client:
+    $ref: ./paths/f1/integration_f1_v2_balance_and_overdraft_get_by_client.yaml
+  /integration/f1/v2/balance-and-overdraft/get-by-account:
+    $ref: ./paths/f1/integration_f1_v2_balance_and_overdraft_get_by_account.yaml
+  /integration/f1/v2/agreement/create:
+    $ref: ./paths/f1/integration_f1_v2_agreement_create.yaml
+  /integration/f1/v2/accounts:
+    $ref: ./paths/f1/integration_f1_v2_accounts.yaml
+  /integration/f1/v2/accounts/to-close/possibilityToClose:
+    $ref: ./paths/f1/integration_f1_v2_accounts_to_close_possibilityToClose.yaml
+  /integration/f1/v2/accounts/to-close/list:
+    $ref: ./paths/f1/integration_f1_v2_accounts_to_close_list.yaml
+  /integration/f1/v1/tariffs:
+    $ref: ./paths/f1/integration_f1_v1_tariffs.yaml
+  /integration/f1/v1/tariffs/registration-info:
+    $ref: ./paths/f1/integration_f1_v1_tariffs_registration_info.yaml
+  /integration/f1/v1/tariffs/limits:
+    $ref: ./paths/f1/integration_f1_v1_tariffs_limits.yaml
+  /integration/f1/sms-info-tariff/accounts:
+    $ref: ./paths/f1/integration_f1_sms_info_tariff_accounts.yaml
+  /integration/f1/services/upload-document:
+    $ref: ./paths/f1/integration_f1_services_upload_document.yaml
+  /integration/f1/rko-reference/v2/check-availability:
+    $ref: ./paths/f1/integration_f1_rko_reference_v2_check_availability.yaml
+  /integration/f1/rko-reference/check-availability:
+    $ref: ./paths/f1/integration_f1_rko_reference_check_availability.yaml
+  /integration/f1/rko-management/service-accounts:
+    $ref: ./paths/f1/integration_f1_rko_management_service_accounts.yaml
+  /integration/f1/rko-management/create-additional-agreement:
+    $ref: ./paths/f1/integration_f1_rko_management_create_additional_agreement.yaml
+  /integration/f1/physical-person/get-user-abs-id:
+    $ref: ./paths/f1/integration_f1_physical_person_get_user_abs_id.yaml
+  /integration/f1/physical-person/get-esk-id:
+    $ref: ./paths/f1/integration_f1_physical_person_get_esk_id.yaml
+  /integration/f1/payment-order/export:
+    $ref: ./paths/f1/integration_f1_payment_order_export.yaml
+  /integration/f1/offer-file/v2/get:
+    $ref: ./paths/f1/integration_f1_offer_file_v2_get.yaml
+  /integration/f1/offer-file/get:
+    $ref: ./paths/f1/integration_f1_offer_file_get.yaml
+  /integration/f1/local-cards:
+    $ref: ./paths/f1/integration_f1_local_cards.yaml
+  /integration/f1/issued-cards/accounts:
+    $ref: ./paths/f1/integration_f1_issued_cards_accounts.yaml
+  /integration/f1/corp-card/count:
+    $ref: ./paths/f1/integration_f1_corp_card_count.yaml
+  /integration/f1/contract/list:
+    $ref: ./paths/f1/integration_f1_contract_list.yaml
+  /integration/f1/commission/post:
+    $ref: ./paths/f1/integration_f1_commission_post.yaml
+  /integration/f1/commission/cash:
+    $ref: ./paths/f1/integration_f1_commission_cash.yaml
+  /integration/f1/client-trusted-person/list:
+    $ref: ./paths/f1/integration_f1_client_trusted_person_list.yaml
+  /integration/f1/client-accounts-info:
+    $ref: ./paths/f1/integration_f1_client_accounts_info.yaml
+  /integration/f1/chargeback/export:
+    $ref: ./paths/f1/integration_f1_chargeback_export.yaml
+  /integration/f1/cards:
+    $ref: ./paths/f1/integration_f1_cards.yaml
+  /integration/f1/card-charge-operations:
+    $ref: ./paths/f1/integration_f1_card_charge_operations.yaml
+  /integration/f1/business-cards/payment-systems:
+    $ref: ./paths/f1/integration_f1_business_cards_payment_systems.yaml
+  /integration/f1/business-cards/accounts:
+    $ref: ./paths/f1/integration_f1_business_cards_accounts.yaml
+  /integration/f1/business-cards/accounts/operations:
+    $ref: ./paths/f1/integration_f1_business_cards_accounts_operations.yaml
+  /integration/f1/bankruptcy-dfm-check/check-by-reg-num-list:
+    $ref: ./paths/f1/integration_f1_bankruptcy_dfm_check_check_by_reg_num_list.yaml
+  /integration/f1/bank-client/search:
+    $ref: ./paths/f1/integration_f1_bank_client_search.yaml
+  /integration/f1/bank-account-contract/v2/list:
+    $ref: ./paths/f1/integration_f1_bank_account_contract_v2_list.yaml
+  /integration/f1/bank-account-contract/list:
+    $ref: ./paths/f1/integration_f1_bank_account_contract_list.yaml
+  /integration/f1/balance-and-overdraft/get-by-client:
+    $ref: ./paths/f1/integration_f1_balance_and_overdraft_get_by_client.yaml
+  /integration/f1/balance-and-overdraft/get-by-account:
+    $ref: ./paths/f1/integration_f1_balance_and_overdraft_get_by_account.yaml
+  /integration/f1/agreement/create:
+    $ref: ./paths/f1/integration_f1_agreement_create.yaml
+  /integration/f1/accounts/to-close/possibilityToClose:
+    $ref: ./paths/f1/integration_f1_accounts_to_close_possibilityToClose.yaml
+  /integration/f1/accounts/to-close/list:
+    $ref: ./paths/f1/integration_f1_accounts_to_close_list.yaml
+  /integration/f1/accounts/list:
+    $ref: ./paths/f1/integration_f1_accounts_list.yaml
+  /integration/f1/accounts/for-deposit-statement/list:
+    $ref: ./paths/f1/integration_f1_accounts_for_deposit_statement_list.yaml
+  /integration/f1/accounts/deposit/list:
+    $ref: ./paths/f1/integration_f1_accounts_deposit_list.yaml
+  /integration/f1/accounts/check-balance:
+    $ref: ./paths/f1/integration_f1_accounts_check_balance.yaml
+  /integration/f1/account-for-reference/list:
+    $ref: ./paths/f1/integration_f1_account_for_reference_list.yaml
+  /integration/f1/v1/tariffs/plan:
+    $ref: ./paths/f1/integration_f1_v1_tariffs_plan.yaml
+  /integration/f1/v2/adm-tariffs:
+    $ref: ./paths/f1/integration_f1_v2_adm_tariffs.yaml
+  /integration/f1/adm-tariffs:
+    $ref: ./paths/f1/integration_f1_adm_tariffs.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/f1/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/f1/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/f1/ActionResultObject.yaml
+    BusinessCardOperationPagingRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardOperationPagingRequestDto.yaml
+    BusinessCardOperationRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardOperationRequestDto.yaml
+    GenericCommandBusinessCardOperationPagingRequestDto:
+      $ref: ./components/schemas/f1/GenericCommandBusinessCardOperationPagingRequestDto.yaml
+    Paging:
+      $ref: ./components/schemas/f1/Paging.yaml
+    BusinessCardOperationResponseDto:
+      $ref: ./components/schemas/f1/BusinessCardOperationResponseDto.yaml
+    CardOperationDto:
+      $ref: ./components/schemas/f1/CardOperationDto.yaml
+    GenericResponseSimpleErrorDataBusinessCardOperationResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataBusinessCardOperationResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/f1/SimpleErrorData.yaml
+    BusinessCardAccountOperationPagingRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardAccountOperationPagingRequestDto.yaml
+    BusinessCardAccountOperationRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardAccountOperationRequestDto.yaml
+    GenericCommandBusinessCardAccountOperationPagingRequestDto:
+      $ref: ./components/schemas/f1/GenericCommandBusinessCardAccountOperationPagingRequestDto.yaml
+    BusinessCardAccountOperationResponseDto:
+      $ref: ./components/schemas/f1/BusinessCardAccountOperationResponseDto.yaml
+    CardAccountOperationDto:
+      $ref: ./components/schemas/f1/CardAccountOperationDto.yaml
+    GenericResponseSimpleErrorDataBusinessCardAccountOperationResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataBusinessCardAccountOperationResponseDto.yaml
+    BusinessCardRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardRequestDto.yaml
+    GetPageCommandBusinessCardRequestDto:
+      $ref: ./components/schemas/f1/GetPageCommandBusinessCardRequestDto.yaml
+    PageParamsBusinessCardRequestDto:
+      $ref: ./components/schemas/f1/PageParamsBusinessCardRequestDto.yaml
+    Sort:
+      $ref: ./components/schemas/f1/Sort.yaml
+    BusinessCardResponseDto:
+      $ref: ./components/schemas/f1/BusinessCardResponseDto.yaml
+    GenericResponseSimpleErrorDataPageDataBusinessCardResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataPageDataBusinessCardResponseDto.yaml
+    PageDataBusinessCardResponseDto:
+      $ref: ./components/schemas/f1/PageDataBusinessCardResponseDto.yaml
+    BusinessCardStatisticsDto:
+      $ref: ./components/schemas/f1/BusinessCardStatisticsDto.yaml
+    GenericResponseSimpleErrorDataListBusinessCardStatisticsDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataListBusinessCardStatisticsDto.yaml
+    GenericCommandBusinessCardOperationRequestDto:
+      $ref: ./components/schemas/f1/GenericCommandBusinessCardOperationRequestDto.yaml
+    GenericResponseSimpleErrorDataListBusinessCardResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataListBusinessCardResponseDto.yaml
+    GenericResponseSimpleErrorDataLong:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataLong.yaml
+    ClientBalanceRequestDto:
+      $ref: ./components/schemas/f1/ClientBalanceRequestDto.yaml
+    BalanceDto:
+      $ref: ./components/schemas/f1/BalanceDto.yaml
+    BalanceResponseDto:
+      $ref: ./components/schemas/f1/BalanceResponseDto.yaml
+    GenericResponseSimpleErrorDataBalanceResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataBalanceResponseDto.yaml
+    AccountBalanceRequestDto:
+      $ref: ./components/schemas/f1/AccountBalanceRequestDto.yaml
+    AgreementRequestV2Dto:
+      $ref: ./components/schemas/f1/AgreementRequestV2Dto.yaml
+    AgreementResponseDto:
+      $ref: ./components/schemas/f1/AgreementResponseDto.yaml
+    GenericResponseSimpleErrorDataAgreementResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataAgreementResponseDto.yaml
+    AccountsDtoV2Request:
+      $ref: ./components/schemas/f1/AccountsDtoV2Request.yaml
+    AccountDtoV2:
+      $ref: ./components/schemas/f1/AccountDtoV2.yaml
+    AccountDtoV2Response:
+      $ref: ./components/schemas/f1/AccountDtoV2Response.yaml
+    GenericResponseSimpleErrorDataAccountDtoV2Response:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataAccountDtoV2Response.yaml
+    F1AccountToClosePossibilityRequestDto:
+      $ref: ./components/schemas/f1/F1AccountToClosePossibilityRequestDto.yaml
+    ClientAccountToClosePossibilityResponseDto:
+      $ref: ./components/schemas/f1/ClientAccountToClosePossibilityResponseDto.yaml
+    F1AccountToClosePossibilityResponseDto:
+      $ref: ./components/schemas/f1/F1AccountToClosePossibilityResponseDto.yaml
+    SingleResponseClientAccountToClosePossibilityResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientAccountToClosePossibilityResponseDto.yaml
+    ClientAccountToCloseRequestDto:
+      $ref: ./components/schemas/f1/ClientAccountToCloseRequestDto.yaml
+    AccountToCloseDto:
+      $ref: ./components/schemas/f1/AccountToCloseDto.yaml
+    ClientAccountToCloseResponseDto:
+      $ref: ./components/schemas/f1/ClientAccountToCloseResponseDto.yaml
+    SingleResponseClientAccountToCloseResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientAccountToCloseResponseDto.yaml
+    TariffsRequestDto:
+      $ref: ./components/schemas/f1/TariffsRequestDto.yaml
+    AccountError:
+      $ref: ./components/schemas/f1/AccountError.yaml
+    AccountTariff:
+      $ref: ./components/schemas/f1/AccountTariff.yaml
+    GenericResponseSimpleErrorDataTariffsResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataTariffsResponseDto.yaml
+    ReferenceRate:
+      $ref: ./components/schemas/f1/ReferenceRate.yaml
+    SummaryReferenceRates:
+      $ref: ./components/schemas/f1/SummaryReferenceRates.yaml
+    TariffInfo:
+      $ref: ./components/schemas/f1/TariffInfo.yaml
+    TariffsResponseDto:
+      $ref: ./components/schemas/f1/TariffsResponseDto.yaml
+    TariffRegistrationInfoRequestDto:
+      $ref: ./components/schemas/f1/TariffRegistrationInfoRequestDto.yaml
+    GenericResponseSimpleErrorDataTariffRegistrationInfoResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataTariffRegistrationInfoResponseDto.yaml
+    TariffRegistrationInfoResponseDto:
+      $ref: ./components/schemas/f1/TariffRegistrationInfoResponseDto.yaml
+    TariffLimitsRequestDto:
+      $ref: ./components/schemas/f1/TariffLimitsRequestDto.yaml
+    GenericResponseSimpleErrorDataTariffLimitsResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataTariffLimitsResponseDto.yaml
+    TariffLimitsResponseDto:
+      $ref: ./components/schemas/f1/TariffLimitsResponseDto.yaml
+    TariffPlanDto:
+      $ref: ./components/schemas/f1/TariffPlanDto.yaml
+    TariffServiceDto:
+      $ref: ./components/schemas/f1/TariffServiceDto.yaml
+    SmsInfoTariffRequestDto:
+      $ref: ./components/schemas/f1/SmsInfoTariffRequestDto.yaml
+    GenericResponseSimpleErrorDataSmsInfoTariffResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataSmsInfoTariffResponseDto.yaml
+    SmsInfoTariffAccountCommissionDto:
+      $ref: ./components/schemas/f1/SmsInfoTariffAccountCommissionDto.yaml
+    SmsInfoTariffAccountDto:
+      $ref: ./components/schemas/f1/SmsInfoTariffAccountDto.yaml
+    SmsInfoTariffResponseDto:
+      $ref: ./components/schemas/f1/SmsInfoTariffResponseDto.yaml
+    AttachmentDto:
+      $ref: ./components/schemas/f1/AttachmentDto.yaml
+    UploadDocumentRequestDto:
+      $ref: ./components/schemas/f1/UploadDocumentRequestDto.yaml
+    SingleResponseUploadDocumentResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseUploadDocumentResponseDto.yaml
+    UploadDocumentResponseDto:
+      $ref: ./components/schemas/f1/UploadDocumentResponseDto.yaml
+    Account:
+      $ref: ./components/schemas/f1/Account.yaml
+    CommissionAccount:
+      $ref: ./components/schemas/f1/CommissionAccount.yaml
+    ReferenceForDateWithAccounts:
+      $ref: ./components/schemas/f1/ReferenceForDateWithAccounts.yaml
+    ReferenceForPeriod:
+      $ref: ./components/schemas/f1/ReferenceForPeriod.yaml
+    ReferenceForPeriodOrOnDate:
+      $ref: ./components/schemas/f1/ReferenceForPeriodOrOnDate.yaml
+    ReferenceForPeriodWithAccounts:
+      $ref: ./components/schemas/f1/ReferenceForPeriodWithAccounts.yaml
+    ReferenceForPeriodWithRko:
+      $ref: ./components/schemas/f1/ReferenceForPeriodWithRko.yaml
+    ReferenceList:
+      $ref: ./components/schemas/f1/ReferenceList.yaml
+    ReferenceNoInputParam:
+      $ref: ./components/schemas/f1/ReferenceNoInputParam.yaml
+    ReferenceOnDate:
+      $ref: ./components/schemas/f1/ReferenceOnDate.yaml
+    RkoReferenceAvailabilityRequestV2Dto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityRequestV2Dto.yaml
+    CommissionAccountInfo:
+      $ref: ./components/schemas/f1/CommissionAccountInfo.yaml
+    GenericResponseSimpleErrorDataRkoReferenceAvailabilityResponseV2Dto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataRkoReferenceAvailabilityResponseV2Dto.yaml
+    RkoReferenceAvailabilityErrorDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityErrorDto.yaml
+    RkoReferenceAvailabilityResponseV2Dto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityResponseV2Dto.yaml
+    RkoReferenceAvailabilityAccountDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityAccountDto.yaml
+    RkoReferenceAvailabilityCommissionAccountDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityCommissionAccountDto.yaml
+    RkoReferenceAvailabilityKindDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityKindDto.yaml
+    RkoReferenceAvailabilityRequestDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityRequestDto.yaml
+    RkoReferenceAvailabilityCommissionAccountInfoDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityCommissionAccountInfoDto.yaml
+    RkoReferenceAvailabilityResponseDto:
+      $ref: ./components/schemas/f1/RkoReferenceAvailabilityResponseDto.yaml
+    SingleResponseRkoReferenceAvailabilityResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseRkoReferenceAvailabilityResponseDto.yaml
+    BankClientRequestDto:
+      $ref: ./components/schemas/f1/BankClientRequestDto.yaml
+    RkoProductAccountsResponseDto:
+      $ref: ./components/schemas/f1/RkoProductAccountsResponseDto.yaml
+    SingleResponseRkoProductAccountsResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseRkoProductAccountsResponseDto.yaml
+    RkoPayerInfo:
+      $ref: ./components/schemas/f1/RkoPayerInfo.yaml
+    RkoPeriodicMoneyTransferRequest:
+      $ref: ./components/schemas/f1/RkoPeriodicMoneyTransferRequest.yaml
+    RkoReceiverInfo:
+      $ref: ./components/schemas/f1/RkoReceiverInfo.yaml
+    RkoAgreementResult:
+      $ref: ./components/schemas/f1/RkoAgreementResult.yaml
+    RkoPeriodicMoneyTransferResponse:
+      $ref: ./components/schemas/f1/RkoPeriodicMoneyTransferResponse.yaml
+    SingleResponseRkoPeriodicMoneyTransferResponse:
+      $ref: ./components/schemas/f1/SingleResponseRkoPeriodicMoneyTransferResponse.yaml
+    EskIdRequestDto:
+      $ref: ./components/schemas/f1/EskIdRequestDto.yaml
+    GenericResponseSimpleErrorDataPhysicalPersonResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataPhysicalPersonResponseDto.yaml
+    PhysicalPersonResponseDto:
+      $ref: ./components/schemas/f1/PhysicalPersonResponseDto.yaml
+    PersonIdRequestDto:
+      $ref: ./components/schemas/f1/PersonIdRequestDto.yaml
+    EskIdentityResponseDto:
+      $ref: ./components/schemas/f1/EskIdentityResponseDto.yaml
+    GenericResponseSimpleErrorDataEskIdentityResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataEskIdentityResponseDto.yaml
+    ExportPaymentOrderRequestDto:
+      $ref: ./components/schemas/f1/ExportPaymentOrderRequestDto.yaml
+    PaymentDetailsDto:
+      $ref: ./components/schemas/f1/PaymentDetailsDto.yaml
+    ExportPaymentOrderResponseDto:
+      $ref: ./components/schemas/f1/ExportPaymentOrderResponseDto.yaml
+    SingleResponseExportPaymentOrderResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseExportPaymentOrderResponseDto.yaml
+    OfferFileRequestV2Dto:
+      $ref: ./components/schemas/f1/OfferFileRequestV2Dto.yaml
+    ContragentDto:
+      $ref: ./components/schemas/f1/ContragentDto.yaml
+    GenericResponseSimpleErrorDataOfferFileResponseV2Dto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataOfferFileResponseV2Dto.yaml
+    OfferFileAttachmentDto:
+      $ref: ./components/schemas/f1/OfferFileAttachmentDto.yaml
+    OfferFileResponseV2Dto:
+      $ref: ./components/schemas/f1/OfferFileResponseV2Dto.yaml
+    OfferFileRequestDto:
+      $ref: ./components/schemas/f1/OfferFileRequestDto.yaml
+    OfferFileResponseDto:
+      $ref: ./components/schemas/f1/OfferFileResponseDto.yaml
+    SingleResponseOfferFileResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseOfferFileResponseDto.yaml
+    LocalCardRequestDto:
+      $ref: ./components/schemas/f1/LocalCardRequestDto.yaml
+    ListResponseLocalCardDto:
+      $ref: ./components/schemas/f1/ListResponseLocalCardDto.yaml
+    LocalCardDto:
+      $ref: ./components/schemas/f1/LocalCardDto.yaml
+    IssuedCardAccountRequestDto:
+      $ref: ./components/schemas/f1/IssuedCardAccountRequestDto.yaml
+    IssuedCardProductDto:
+      $ref: ./components/schemas/f1/IssuedCardProductDto.yaml
+    IssuedCardAccountDto:
+      $ref: ./components/schemas/f1/IssuedCardAccountDto.yaml
+    IssuedCardAccountResponseDto:
+      $ref: ./components/schemas/f1/IssuedCardAccountResponseDto.yaml
+    RkoContractDto:
+      $ref: ./components/schemas/f1/RkoContractDto.yaml
+    SingleResponseIssuedCardAccountResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseIssuedCardAccountResponseDto.yaml
+    CorpCardCountRequestDto:
+      $ref: ./components/schemas/f1/CorpCardCountRequestDto.yaml
+    CorpCardCountStatusFilterDto:
+      $ref: ./components/schemas/f1/CorpCardCountStatusFilterDto.yaml
+    CorpCardAccountDto:
+      $ref: ./components/schemas/f1/CorpCardAccountDto.yaml
+    CorpCardCountResponseDto:
+      $ref: ./components/schemas/f1/CorpCardCountResponseDto.yaml
+    CorpCardErrorDto:
+      $ref: ./components/schemas/f1/CorpCardErrorDto.yaml
+    GenericResponseSimpleErrorDataCorpCardCountResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataCorpCardCountResponseDto.yaml
+    ClientContractsRequestDto:
+      $ref: ./components/schemas/f1/ClientContractsRequestDto.yaml
+    ClientContractsResponseDto:
+      $ref: ./components/schemas/f1/ClientContractsResponseDto.yaml
+    ContractDto:
+      $ref: ./components/schemas/f1/ContractDto.yaml
+    KopopDto:
+      $ref: ./components/schemas/f1/KopopDto.yaml
+    ReservedAccountDto:
+      $ref: ./components/schemas/f1/ReservedAccountDto.yaml
+    SingleResponseClientContractsResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientContractsResponseDto.yaml
+    ClntDto:
+      $ref: ./components/schemas/f1/ClntDto.yaml
+    MsgHdrDto:
+      $ref: ./components/schemas/f1/MsgHdrDto.yaml
+    QrcCommissionPaymentRequestDto:
+      $ref: ./components/schemas/f1/QrcCommissionPaymentRequestDto.yaml
+    ComssnAmtDto:
+      $ref: ./components/schemas/f1/ComssnAmtDto.yaml
+    QrcCommissionPaymentResponseDto:
+      $ref: ./components/schemas/f1/QrcCommissionPaymentResponseDto.yaml
+    SbcptFeeDto:
+      $ref: ./components/schemas/f1/SbcptFeeDto.yaml
+    SingleResponseQrcCommissionPaymentResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseQrcCommissionPaymentResponseDto.yaml
+    StsAndRsnInfDto:
+      $ref: ./components/schemas/f1/StsAndRsnInfDto.yaml
+    CashOrderCommissionRequestDto:
+      $ref: ./components/schemas/f1/CashOrderCommissionRequestDto.yaml
+    CashSymbolCommissionDto:
+      $ref: ./components/schemas/f1/CashSymbolCommissionDto.yaml
+    CashOrderCommissionResponseDto:
+      $ref: ./components/schemas/f1/CashOrderCommissionResponseDto.yaml
+    GenericResponseSimpleErrorDataCashOrderCommissionResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataCashOrderCommissionResponseDto.yaml
+    ClientTrustedPersonRequestDto:
+      $ref: ./components/schemas/f1/ClientTrustedPersonRequestDto.yaml
+    ClientDto:
+      $ref: ./components/schemas/f1/ClientDto.yaml
+    ClientTrustedPersonResponseDto:
+      $ref: ./components/schemas/f1/ClientTrustedPersonResponseDto.yaml
+    IdentityDocumentDto:
+      $ref: ./components/schemas/f1/IdentityDocumentDto.yaml
+    SingleResponseClientTrustedPersonResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientTrustedPersonResponseDto.yaml
+    TrustedPersonDto:
+      $ref: ./components/schemas/f1/TrustedPersonDto.yaml
+    ClientAccountsInfoRequest:
+      $ref: ./components/schemas/f1/ClientAccountsInfoRequest.yaml
+    AccountCommissionDto:
+      $ref: ./components/schemas/f1/AccountCommissionDto.yaml
+    ClientAccountsInfoError:
+      $ref: ./components/schemas/f1/ClientAccountsInfoError.yaml
+    ClientAccountsInfoResponse:
+      $ref: ./components/schemas/f1/ClientAccountsInfoResponse.yaml
+    GenericResponseClientAccountsInfoErrorClientAccountsInfoResponse:
+      $ref: ./components/schemas/f1/GenericResponseClientAccountsInfoErrorClientAccountsInfoResponse.yaml
+    ChargebackData:
+      $ref: ./components/schemas/f1/ChargebackData.yaml
+    ExportChargebackRequestDto:
+      $ref: ./components/schemas/f1/ExportChargebackRequestDto.yaml
+    PaymentData:
+      $ref: ./components/schemas/f1/PaymentData.yaml
+    ExportChargebackResponseDto:
+      $ref: ./components/schemas/f1/ExportChargebackResponseDto.yaml
+    SingleResponseExportChargebackResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseExportChargebackResponseDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/f1/ErrorData.yaml
+    GenericResponseErrorDataListLocalCardDto:
+      $ref: ./components/schemas/f1/GenericResponseErrorDataListLocalCardDto.yaml
+    LocalTransactionRequestDto:
+      $ref: ./components/schemas/f1/LocalTransactionRequestDto.yaml
+    GenericResponseErrorDataListLocalTransactionDto:
+      $ref: ./components/schemas/f1/GenericResponseErrorDataListLocalTransactionDto.yaml
+    LocalTransactionDto:
+      $ref: ./components/schemas/f1/LocalTransactionDto.yaml
+    BusinessCardPaymentSystemDto:
+      $ref: ./components/schemas/f1/BusinessCardPaymentSystemDto.yaml
+    ListResponseBusinessCardPaymentSystemDto:
+      $ref: ./components/schemas/f1/ListResponseBusinessCardPaymentSystemDto.yaml
+    BusinessCardAccountRequestDto:
+      $ref: ./components/schemas/f1/BusinessCardAccountRequestDto.yaml
+    BusinessCardAccountResponseDto:
+      $ref: ./components/schemas/f1/BusinessCardAccountResponseDto.yaml
+    ListResponseBusinessCardAccountResponseDto:
+      $ref: ./components/schemas/f1/ListResponseBusinessCardAccountResponseDto.yaml
+    SingleResponseBusinessCardAccountOperationResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseBusinessCardAccountOperationResponseDto.yaml
+    BankruptcyDfmCheckRequestDto:
+      $ref: ./components/schemas/f1/BankruptcyDfmCheckRequestDto.yaml
+    BankruptcyDfmCheckResponseDto:
+      $ref: ./components/schemas/f1/BankruptcyDfmCheckResponseDto.yaml
+    BankruptcyDfmCheckedClientDto:
+      $ref: ./components/schemas/f1/BankruptcyDfmCheckedClientDto.yaml
+    SingleResponseBankruptcyDfmCheckResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseBankruptcyDfmCheckResponseDto.yaml
+    ClientInformationRequestDto:
+      $ref: ./components/schemas/f1/ClientInformationRequestDto.yaml
+    ClientDboDto:
+      $ref: ./components/schemas/f1/ClientDboDto.yaml
+    ClientEmailDto:
+      $ref: ./components/schemas/f1/ClientEmailDto.yaml
+    ClientPhoneDto:
+      $ref: ./components/schemas/f1/ClientPhoneDto.yaml
+    CustomerAddressInfoDto:
+      $ref: ./components/schemas/f1/CustomerAddressInfoDto.yaml
+    CustomerDto:
+      $ref: ./components/schemas/f1/CustomerDto.yaml
+    CustomerResponseDto:
+      $ref: ./components/schemas/f1/CustomerResponseDto.yaml
+    SingleResponseCustomerResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseCustomerResponseDto.yaml
+    BankAccountContractRequestDtoV2:
+      $ref: ./components/schemas/f1/BankAccountContractRequestDtoV2.yaml
+    AccountTypeCommissionInfoDto:
+      $ref: ./components/schemas/f1/AccountTypeCommissionInfoDto.yaml
+    BankAccountContractResponseDtoV2:
+      $ref: ./components/schemas/f1/BankAccountContractResponseDtoV2.yaml
+    BranchDtoV2:
+      $ref: ./components/schemas/f1/BranchDtoV2.yaml
+    CommissionAccountDto:
+      $ref: ./components/schemas/f1/CommissionAccountDto.yaml
+    KopopDtoV2:
+      $ref: ./components/schemas/f1/KopopDtoV2.yaml
+    ReservedAccountDtoV2:
+      $ref: ./components/schemas/f1/ReservedAccountDtoV2.yaml
+    SingleResponseBankAccountContractResponseDtoV2:
+      $ref: ./components/schemas/f1/SingleResponseBankAccountContractResponseDtoV2.yaml
+    BankAccountContractRequestDto:
+      $ref: ./components/schemas/f1/BankAccountContractRequestDto.yaml
+    BankAccountContractResponseDto:
+      $ref: ./components/schemas/f1/BankAccountContractResponseDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/f1/BranchDto.yaml
+    SingleResponseBankAccountContractResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseBankAccountContractResponseDto.yaml
+    SingleResponseBalanceResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseBalanceResponseDto.yaml
+    AgreementRequestDto:
+      $ref: ./components/schemas/f1/AgreementRequestDto.yaml
+    SingleResponseAgreementResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseAgreementResponseDto.yaml
+    ClientAccountsRequestDto:
+      $ref: ./components/schemas/f1/ClientAccountsRequestDto.yaml
+    AccountDto:
+      $ref: ./components/schemas/f1/AccountDto.yaml
+    ClientAccountsResponseDto:
+      $ref: ./components/schemas/f1/ClientAccountsResponseDto.yaml
+    SingleResponseClientAccountsResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientAccountsResponseDto.yaml
+    ClientAccountsForDepositStmtRequestDto:
+      $ref: ./components/schemas/f1/ClientAccountsForDepositStmtRequestDto.yaml
+    ClientAccountsForDepositStmtResponseDto:
+      $ref: ./components/schemas/f1/ClientAccountsForDepositStmtResponseDto.yaml
+    SingleResponseClientAccountsForDepositStmtResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientAccountsForDepositStmtResponseDto.yaml
+    ClientAccountsDepositRequestDto:
+      $ref: ./components/schemas/f1/ClientAccountsDepositRequestDto.yaml
+    ClientAccountsDepositResponseDto:
+      $ref: ./components/schemas/f1/ClientAccountsDepositResponseDto.yaml
+    SingleResponseClientAccountsDepositResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseClientAccountsDepositResponseDto.yaml
+    OpenAccountTaxRequestDto:
+      $ref: ./components/schemas/f1/OpenAccountTaxRequestDto.yaml
+    CommissionDto:
+      $ref: ./components/schemas/f1/CommissionDto.yaml
+    OpenAccountTaxResponseDto:
+      $ref: ./components/schemas/f1/OpenAccountTaxResponseDto.yaml
+    SingleResponseOpenAccountTaxResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseOpenAccountTaxResponseDto.yaml
+    AccountForReferenceRequestDto:
+      $ref: ./components/schemas/f1/AccountForReferenceRequestDto.yaml
+    AccountForReferenceAccountDto:
+      $ref: ./components/schemas/f1/AccountForReferenceAccountDto.yaml
+    AccountForReferenceCommissionDto:
+      $ref: ./components/schemas/f1/AccountForReferenceCommissionDto.yaml
+    AccountForReferenceRateDto:
+      $ref: ./components/schemas/f1/AccountForReferenceRateDto.yaml
+    AccountForReferenceResponseDto:
+      $ref: ./components/schemas/f1/AccountForReferenceResponseDto.yaml
+    AccountForReferenceSummaryRateDto:
+      $ref: ./components/schemas/f1/AccountForReferenceSummaryRateDto.yaml
+    SingleResponseAccountForReferenceResponseDto:
+      $ref: ./components/schemas/f1/SingleResponseAccountForReferenceResponseDto.yaml
+    TariffPlanChangeRqDto:
+      $ref: ./components/schemas/f1/TariffPlanChangeRqDto.yaml
+    GenericResponseSimpleErrorDataTariffPlanChangeRspDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataTariffPlanChangeRspDto.yaml
+    TariffPlanChangeRspDto:
+      $ref: ./components/schemas/f1/TariffPlanChangeRspDto.yaml
+    AdmTariffV2Dto:
+      $ref: ./components/schemas/f1/AdmTariffV2Dto.yaml
+    AdmTariffV2ResponseDto:
+      $ref: ./components/schemas/f1/AdmTariffV2ResponseDto.yaml
+    GenericResponseSimpleErrorDataAdmTariffV2ResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataAdmTariffV2ResponseDto.yaml
+    AdmTariffDto:
+      $ref: ./components/schemas/f1/AdmTariffDto.yaml
+    AdmTariffResponseDto:
+      $ref: ./components/schemas/f1/AdmTariffResponseDto.yaml
+    GenericResponseSimpleErrorDataAdmTariffResponseDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataAdmTariffResponseDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

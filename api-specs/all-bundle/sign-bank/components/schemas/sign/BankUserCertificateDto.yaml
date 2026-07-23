@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сущности "Сертификат электронной подписи"
+    format: uuid
+  certificate:
+    $ref: ../common/CertificateDto.yaml
+  signKind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  certificateName:
+    type: string
+    description: Наименование сертификата
+  ownerName:
+    type: string
+    description: ФИО владельца сертификата
+  validFrom:
+    type: string
+    description: Действует с
+    format: date-time
+  validTo:
+    type: string
+    description: Действует по
+    format: date-time
+  issuerName:
+    type: string
+    description: Издатель сертификата
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NEW
+    - PROCESSING
+    - ACTIVE
+    - REJECTED
+  comment:
+    type: string
+    description: Комментарий для пользователя Банка
+description: Сертификат пользователя банка

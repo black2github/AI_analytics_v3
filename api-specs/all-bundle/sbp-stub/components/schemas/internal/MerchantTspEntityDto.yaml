@@ -1,0 +1,12 @@
+type: object
+description: Запрос на получение списка ТСП
+properties:
+  legalId:
+    type: string
+    description: Идентификатор клиента банка в СБП
+  ogrn:
+    type: string
+    description: Основной государственный регистрационный номер
+  inn:
+    type: string
+    description: ИНН

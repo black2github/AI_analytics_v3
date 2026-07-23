@@ -1,0 +1,9 @@
+type: object
+properties:
+  approvers:
+    type: array
+    items:
+      type: string
+  account:
+    type: string
+description: Карточка образцов подписи клиента

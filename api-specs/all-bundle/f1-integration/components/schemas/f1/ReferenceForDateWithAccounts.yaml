@@ -1,0 +1,14 @@
+required:
+- accountList
+- referenceCode
+type: object
+properties:
+  referenceCode:
+    type: string
+    description: Код вида справки
+  accountList:
+    type: array
+    description: Сведения о счетах по которым запрашивается справка
+    items:
+      $ref: ./Account.yaml
+description: Информация о справки

@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  notEq:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  in:
+    type: array
+    items:
+      type: string
+      description: Подтип сообщения СУВ.
+      enum:
+      - CORPORATE
+      - INDIVIDUAL
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Подтип сообщения СУВ.
+      enum:
+      - CORPORATE
+      - INDIVIDUAL
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  ge:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  lt:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  le:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+description: Фильтр по подтипу сообщения

@@ -1,0 +1,30 @@
+required:
+- clientId
+- endDate
+- sources
+- startDate
+type: object
+properties:
+  sources:
+    type: array
+    description: Источники
+    items:
+      type: string
+      description: Источник данных ЛК_ПВ
+      enum:
+      - ADM
+      - TRADE_ACQUIRING
+      - INTERNET_ACQUIRING
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  startDate:
+    type: string
+    description: Дата с
+    format: date
+  endDate:
+    type: string
+    description: Дата по
+    format: date
+description: Данные

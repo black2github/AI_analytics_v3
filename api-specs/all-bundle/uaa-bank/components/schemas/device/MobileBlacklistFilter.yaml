@@ -1,0 +1,7 @@
+type: object
+properties:
+  deviceId:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр для банковского скроллера Справочника 'Чёрный список идентификаторов мобильных устройств'

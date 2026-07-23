@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование получателя
+  accountNumber:
+    type: string
+    description: Номер счета получателя
+  inn:
+    type: string
+    description: ИНН/КИО получателя
+  bankName:
+    type: string
+    description: Наименование Банка получателя
+description: ДТО Реквизиты получателя для банка

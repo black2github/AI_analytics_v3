@@ -1,0 +1,17 @@
+type: object
+properties:
+  kid:
+    type: string
+    description: ID устройства в ДСС
+  deviceName:
+    type: string
+    description: Название
+  notBefore:
+    type: string
+    description: Срок начала действия
+    format: date-time
+  notAfter:
+    type: string
+    description: Срок окончания действия
+    format: date-time
+description: Авторизированное устройство пользователя в КриптоПРО ДСС

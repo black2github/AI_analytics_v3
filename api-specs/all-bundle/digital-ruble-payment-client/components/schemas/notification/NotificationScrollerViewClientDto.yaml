@@ -1,0 +1,72 @@
+required:
+- cbrOperationId
+- executionDatetime
+- operationId
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции
+    format: uuid
+  msgId:
+    type: string
+    description: Идентификатор сообщения
+    format: uuid
+  cbrOperationId:
+    type: string
+    description: Идентификатор операции в ПлЦР
+    format: uuid
+  operationType:
+    type: string
+    description: Тип операции
+  executionDatetime:
+    type: string
+    description: Дата и время операции
+    format: date-time
+  amount:
+    type: string
+    description: Сумма операции
+  pointOfSaleName:
+    type: string
+    description: Название точки продаж
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  contractorCbrParticipantWalletId:
+    type: string
+    description: Счет цифрового рубля контрагента
+  contractorName:
+    type: string
+    description: Наименование Контрагента (ЮЛ)
+  contractorFio:
+    type: string
+    description: ФИО Контрагента (ФЛ)
+  clientCbrParticipantWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента на ПлЦР
+  clientCbrAccountNumber:
+    type: string
+    description: Номер СЦР Клиента на ПлЦР
+  uip:
+    type: string
+    description: УИП (Референс)
+  fiName:
+    type: string
+    description: Наименование посредника, через которого происходила операция
+  fiBic:
+    type: string
+    description: БИК посредника, через которого происходила операция
+  contractorCbrAccountNumber:
+    type: string
+    description: Номер СЦР Контрагента на ПлЦР
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+    format: uuid
+  currencySpendType:
+    type: string
+    description: Тип проводки
+  treasuryPersonalAccount:
+    type: string
+    description: Лицевой счет в ФК
+description: DTO для операции для скроллера Уведомления об операциях

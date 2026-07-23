@@ -1,0 +1,9 @@
+type: object
+properties:
+  currentMonth:
+    $ref: ./MonthlySummary.yaml
+  secondMonth:
+    $ref: ./MonthlySummary.yaml
+  firstMonth:
+    $ref: ./MonthlySummary.yaml
+description: Информация о движении средств за месяц

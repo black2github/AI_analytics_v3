@@ -1,0 +1,16 @@
+required:
+- notificationOfExecution
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  updatedData:
+    type: array
+    description: Обновляемые сведения Заявки на обновление сведений о клиенте
+    items:
+      $ref: ../common/ClientInfoUpdRequestUpdateDataDto.yaml
+  notificationOfExecution:
+    $ref: ../common/NotificationOfExecutionDto.yaml
+description: Заявка на обновление сведений о клиенте

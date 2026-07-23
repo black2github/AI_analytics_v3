@@ -1,0 +1,15 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Составной идентификатор счета
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountBranch:
+    type: string
+    description: Код подразделения обслуживания счета
+  name:
+    type: string
+    description: Название счета
+description: Данные

@@ -1,0 +1,92 @@
+info:
+  version: 1.50.0-SNAPSHOT
+  title: Сервис ЛК УВЭД. Банковская часть.
+tags:
+- name: API акцепта заявок на принятие ЛК УВЭД.
+  description: Lkuved Acceptance Bank Controller
+- name: API заявки на предоставление доступа пользователям к ЛК УВЭД
+  description: Lkuved Access Bank Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API обработки заявок на принятие ЛК УВЭД. Банковская часть.
+  description: Lkuved Acceptance Bank Processing Controller
+- name: API операций подписи заявки на предоставление доступа к ЛК УВЭД. Банковская часть.
+  description: Lkuved Access Bank Sign Controller
+- name: API операций подписи заявок на принятие ЛК УВЭД. Банковская часть.
+  description: Lkuved Acceptance Bank Sign Controller
+- name: API печати объединенной заявки ЛК УВЭД. Банковская часть
+  description: United Lkuved Request Bank Print Controller
+- name: API скроллера заявки на присоединение к ЛК УВЭД, заявки на предоставление доступа к ЛК УВЭД. Банковская часть.
+  description: United Lkuved Request Bank Scroller Controller
+- name: API скроллера заявок на принятие ЛК УВЭД. Банковская часть.
+  description: Lkuved Acceptance Bank Scroller Controller
+- name: lkuved-bank-settings-controller
+  description: Lkuved Bank Settings Controller
+- name: open-api-web-mvc-resource
+  description: Open Api Web Mvc Resource
+- name: swagger-config-resource
+  description: Swagger Config Resource
+- name: swagger-welcome-web-mvc
+  description: Swagger Welcome Web Mvc
+paths:
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /lkuved/category:
+    $ref: ./paths/category/lkuved_category.yaml
+  /lkuved/export-sign:
+    $ref: ./paths/export-sign/lkuved_export_sign.yaml
+  /lkuved/export-sign-v2:
+    $ref: ./paths/export-sign-v2/lkuved_export_sign_v2.yaml
+  /lkuved/get-page:
+    $ref: ./paths/get-page/lkuved_get_page.yaml
+  /lkuved/grant-access/export-sign:
+    $ref: ./paths/grant-access/lkuved_grant_access_export_sign.yaml
+  /lkuved/grant-access/export-sign-v2:
+    $ref: ./paths/grant-access/lkuved_grant_access_export_sign_v2.yaml
+  /lkuved/grant-access/history/{id}:
+    $ref: ./paths/grant-access/lkuved_grant_access_history_id.yaml
+  /lkuved/grant-access/print:
+    $ref: ./paths/grant-access/lkuved_grant_access_print.yaml
+  /lkuved/grant-access/print-v2:
+    $ref: ./paths/grant-access/lkuved_grant_access_print_v2.yaml
+  /lkuved/grant-access/send-to-tessa:
+    $ref: ./paths/grant-access/lkuved_grant_access_send_to_tessa.yaml
+  /lkuved/grant-access/to-executed-by-tessa/{id}:
+    $ref: ./paths/grant-access/lkuved_grant_access_to_executed_by_tessa_id.yaml
+  /lkuved/grant-access/{id}:
+    $ref: ./paths/grant-access/lkuved_grant_access_id.yaml
+  /lkuved/history/{id}:
+    $ref: ./paths/history/lkuved_history_id.yaml
+  /lkuved/print:
+    $ref: ./paths/print/lkuved_print.yaml
+  /lkuved/print-v2:
+    $ref: ./paths/print-v2/lkuved_print_v2.yaml
+  /lkuved/send-to-skvo:
+    $ref: ./paths/send-to-skvo/lkuved_send_to_skvo.yaml
+  /lkuved/send-to-tessa:
+    $ref: ./paths/send-to-tessa/lkuved_send_to_tessa.yaml
+  /lkuved/settings:
+    $ref: ./paths/settings/lkuved_settings.yaml
+  /lkuved/to-executed-by-skvo/{id}:
+    $ref: ./paths/to-executed-by-skvo/lkuved_to_executed_by_skvo_id.yaml
+  /lkuved/to-executed-by-tessa/{id}:
+    $ref: ./paths/to-executed-by-tessa/lkuved_to_executed_by_tessa_id.yaml
+  /lkuved/{id}:
+    $ref: ./paths/{id}/lkuved_id.yaml
+  /swagger-ui.html:
+    $ref: ./paths/swagger-ui.html/swagger_ui_html.yaml
+  /united-lkuved-request/category:
+    $ref: ./paths/category/united_lkuved_request_category.yaml
+  /united-lkuved-request/export-list:
+    $ref: ./paths/export-list/united_lkuved_request_export_list.yaml
+  /united-lkuved-request/export-list-v2:
+    $ref: ./paths/export-list-v2/united_lkuved_request_export_list_v2.yaml
+  /united-lkuved-request/get-page:
+    $ref: ./paths/get-page/united_lkuved_request_get_page.yaml
+  /v3/api-docs:
+    $ref: ./paths/api-docs/v3_api_docs.yaml
+  /v3/api-docs.yaml:
+    $ref: ./paths/api-docs.yaml/v3_api_docs_yaml.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components: {}

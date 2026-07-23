@@ -1,0 +1,12 @@
+type: object
+properties:
+  result:
+    type: string
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  groupResults:
+    type: array
+    items:
+      $ref: ./GroupResult.yaml

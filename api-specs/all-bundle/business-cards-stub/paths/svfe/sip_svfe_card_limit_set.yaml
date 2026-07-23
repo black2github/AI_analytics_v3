@@ -1,0 +1,15 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/svfe/SipSvfeCardLimitSetRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Set Card Limit
+  tags:
+  - Sip Svfe Controller

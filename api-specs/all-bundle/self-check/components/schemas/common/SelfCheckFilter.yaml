@@ -1,0 +1,15 @@
+type: object
+description: Фильтр для скроллера журнала сообщений
+properties:
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: Инн
+  login:
+    $ref: ./FilterValueDtoString.yaml
+    description: Логин
+  selfCheckId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор само диагностики
+  checkDate:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата проверки

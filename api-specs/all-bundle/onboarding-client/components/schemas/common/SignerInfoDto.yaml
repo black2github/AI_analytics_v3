@@ -1,0 +1,22 @@
+type: object
+properties:
+  basisDocument:
+    type: string
+    description: Документ основание
+  bsContractNumber:
+    type: string
+    description: Номер договора БС
+  fioGenitive:
+    type: string
+    description: ФИО подписанта от банка (родительный падеж)
+  fioNominative:
+    type: string
+    description: ФИО подписанта от банка (именительный падеж)
+  position:
+    type: string
+    description: Должность
+  signingDate:
+    type: string
+    description: Дата подписания
+    format: date
+description: Сведения о подписантах со стороны банка (заполняется операционистом банка)

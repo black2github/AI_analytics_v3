@@ -1,0 +1,5 @@
+type: string
+description: Тип системы, источника счета.
+enum:
+- ECO
+- DBO_BSS

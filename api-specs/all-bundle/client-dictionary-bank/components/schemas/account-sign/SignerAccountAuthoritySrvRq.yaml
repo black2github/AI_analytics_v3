@@ -1,0 +1,17 @@
+required:
+- accountIds
+type: object
+properties:
+  userId:
+    type: string
+    description: ID Пользователя
+    format: uuid
+  accountIds:
+    uniqueItems: true
+    type: array
+    description: ID Счета клиента
+    items:
+      type: string
+      description: ID Счета клиента
+      format: uuid
+description: Запрос на получение полномочий подписанта по счету. Интеграционное ДТО

@@ -1,0 +1,187 @@
+get:
+  tags:
+  - API для работы с темами СВК1
+  summary: Получение темы по идентификатору связанного документа
+  description: 'Привилегии: MCCO.CLIENT.RQ_CREATE, MCCO.CLIENT.RQ_UPDATE'
+  operationId: getSubjectByLinkedDocument
+  parameters:
+  - name: linkedDocType
+    in: path
+    description: "* UNKNOWN: \n* ACC_CLOSE_REQ: \n* ACC_OPEN_FIRST_REQ: \n* ACC_OPEN_SECOND_REQ: \n* ACC_RESERV_REQ: \n* ACC_RESERV_REQ_2: \n* OFFER_RKO_ACCEPTANCE_REQ: \n* OFFER_JOIN_GPB_BO1_REQ: \n* OFFER_JOIN_GPB_BO2_REQ: \n* OFFER_JOIN_CCERT: \n* FREE_FORMAT_DOC: \n* OFFER_JOIN_PO_UVED: \n* OFFER_BREAK_PO_UVED: \n* ADD_BLOCK_USER_UVED: \n* ACC_RKO_SERVICE_PMT_ADD: \n* OFFER_GEN_CERT: \n* ACC_OPEN_SECOND_CONTRACT_REQ: \n* OFFER_JOIN_PO_MP: \n* ADD_BLOCK_USER_MP: \n* CAR_LEASING: \n* CORP_LEASING: \n* ADD_BLOCK_USER_GPBBO: \n* UPDATE_INFORM: \n* UPDATE_INFORM_RQMNT: \n* REQUEST_FOR_ACCOUNT_INFO: \n* PAY_DOC_RU: \n* PAY_REQ_RU_IN: \n* CHARGEBACK: \n* CURR_BUY: \n* CURR_SALE: \n* CURR_CONV: \n* CURR_SALE_MAND: \n* CURR_TRANS: \n* CURR_CONTR_MESS_IN: \n* CURR_CONTR_MESS_OUT: \n* REQUEST_BROKER_REPORTS: \n* REQUEST_STATEMENT: \n* CANCEL_REQUEST_STATEMENT: \n* MEETINGS_REQUEST: \n* BRK_OPEN_ACC: \n* BUY_SELL_CURR: \n* BUY_SELL_CURR_PURCHASE: \n* BUY_SELL_CURR_SALE: \n* PAY_DOC_CUR: \n* UNC_DOC_INF: \n* TRADE_ORDER: \n* LANDING_ORDER: \n* OFFER_USE_DIGITAL_SIGNATURE: \n* ADD_EDIT_USER: \n* BC_BLOCK_REQUEST: \n* BC_BLOCK_BATCH: \n* BC_CARD_ISSUE_REQUEST: \n* BC_SET_LIMIT_REQUEST: \n* REG_COWORKER_DATA: \n* ACC_OPEN_FIRST_REQ_2021: \n* OFFER_TMG: \n* STATEMENT_USER_ROLE_TMG: \n* OPEN_ADM_ACCOUNT: \n* ADD_ADM_POC: \n* REMOVE_ADM_POC: \n* REMOVE_ADM_ACCOUNT: \n* ADD_ADM_ACCOUNT: \n* CHANGE_ADM_ACCOUNT: \n* ADM_TERMINAL_BREAKDOWN: \n* ADM_CALLBACK_REQUEST: \n* CHANGE_COMM_PERIOD: \n* ENCASHMENT: \n* TREASURY_AGREEMENT_REQUEST_MNO: \n* TREASURY_AGREEMENT_REQUEST_DU_MNO: \n* TREASURY_AGREEMENT_REQUEST_DEPOSIT: \n* TREASURY_AGREEMENT_REQUEST_DU_DEPOSIT: \n* TREASURY_AGREEMENT_REQUEST_CONVERSION: \n* TREASURY_AGREEMENT_REQUEST_DU_CONVERSION: \n* TREASURY_DEALS_MNO: \n* TREASURY_DEALS_DEPOSIT: \n* TREASURY_DEALS_FX: \n* TREASURY_AGREEMENT_REQUEST_GSNO_PARENT: \n* TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_HEAD: \n* TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_FRIEND: \n* TREASURY_AGREEMENT_REQUEST_CHANGE_ACCOUNTS: \n* TREASURY_DEALS_GSNO: \n* TREASURY_ONBOARDING_ANKETA: \n* LOGIN: \n* REGISTRATION: \n* OTP: \n* PASSWORD: \n* CONFIRMATION: \n* STOP_RESTRICTION_ACC: \n* SBP_B2B_QRC_REQUEST: \n* SBP_REQUEST_TSP: \n* SBP_QRC_REQUEST: \n* SBP_QRC_BLOCK_REQUEST: \n* SBP_QRC_PAYMENT_REQUEST: \n* SBP_TSP_CHANGE_REQUEST: \n* SBP_QRC_SCHEDULE_REQUEST: \n* SBP_B2B_PAYMENT: \n* SBP_B2C_PAYMENT: \n* CONF_DOC_CERT: \n* REG_CONTRACT: \n* RENEW_CONTRACT: \n* REG_CRED_AGREEMENT: \n* RENEW_CRED_AGREEMENT: \n* CONTR_CLOSE: \n* ES_CERT: \n* ACC_COPY_DOC: \n* CARD_CHARGE_SET_LIMIT_REQUEST: \n* ECO_SBP_CONTRACT_REQUEST: \n* PAY_COLLECTION_IN: \n* PAY_COLLECTION_OUT: \n* PAY_REQ_RU_OUT: \n* PAY_REQ_RU_ACCEPT: \n* ACC_OPEN_FIRST_REQ_FNS: \n* DVK: \n* CASH_BACK: \n* CASH_IN: \n* CASH_OUT: \n* ACC_OPEN_FIRST_REQ_KZ: \n* CONS_AUTHORIZE_REQ: \n* SBP_DISCONNECT_AGENTS_REQUEST: \n* SFZU_SMS_CONNECTION: \n* SFZU_SMS_CHANGE: \n* SFZU_SMS_CANCEL: \n* ACC_RKO_SERVICE_PAI: \n* ACC_RKO_SERVICE_PAC: "
+    required: true
+    schema:
+      type: string
+      enum:
+      - UNKNOWN
+      - ACC_CLOSE_REQ
+      - ACC_OPEN_FIRST_REQ
+      - ACC_OPEN_SECOND_REQ
+      - ACC_RESERV_REQ
+      - ACC_RESERV_REQ_2
+      - OFFER_RKO_ACCEPTANCE_REQ
+      - OFFER_JOIN_GPB_BO1_REQ
+      - OFFER_JOIN_GPB_BO2_REQ
+      - OFFER_JOIN_CCERT
+      - FREE_FORMAT_DOC
+      - OFFER_JOIN_PO_UVED
+      - OFFER_BREAK_PO_UVED
+      - ADD_BLOCK_USER_UVED
+      - ACC_RKO_SERVICE_PMT_ADD
+      - OFFER_GEN_CERT
+      - ACC_OPEN_SECOND_CONTRACT_REQ
+      - OFFER_JOIN_PO_MP
+      - ADD_BLOCK_USER_MP
+      - CAR_LEASING
+      - CORP_LEASING
+      - ADD_BLOCK_USER_GPBBO
+      - UPDATE_INFORM
+      - UPDATE_INFORM_RQMNT
+      - REQUEST_FOR_ACCOUNT_INFO
+      - PAY_DOC_RU
+      - PAY_REQ_RU_IN
+      - CHARGEBACK
+      - CURR_BUY
+      - CURR_SALE
+      - CURR_CONV
+      - CURR_SALE_MAND
+      - CURR_TRANS
+      - CURR_CONTR_MESS_IN
+      - CURR_CONTR_MESS_OUT
+      - REQUEST_BROKER_REPORTS
+      - REQUEST_STATEMENT
+      - CANCEL_REQUEST_STATEMENT
+      - MEETINGS_REQUEST
+      - BRK_OPEN_ACC
+      - BUY_SELL_CURR
+      - BUY_SELL_CURR_PURCHASE
+      - BUY_SELL_CURR_SALE
+      - PAY_DOC_CUR
+      - UNC_DOC_INF
+      - TRADE_ORDER
+      - LANDING_ORDER
+      - OFFER_USE_DIGITAL_SIGNATURE
+      - ADD_EDIT_USER
+      - BC_BLOCK_REQUEST
+      - BC_BLOCK_BATCH
+      - BC_CARD_ISSUE_REQUEST
+      - BC_SET_LIMIT_REQUEST
+      - REG_COWORKER_DATA
+      - ACC_OPEN_FIRST_REQ_2021
+      - OFFER_TMG
+      - STATEMENT_USER_ROLE_TMG
+      - OPEN_ADM_ACCOUNT
+      - ADD_ADM_POC
+      - REMOVE_ADM_POC
+      - REMOVE_ADM_ACCOUNT
+      - ADD_ADM_ACCOUNT
+      - CHANGE_ADM_ACCOUNT
+      - ADM_TERMINAL_BREAKDOWN
+      - ADM_CALLBACK_REQUEST
+      - CHANGE_COMM_PERIOD
+      - ENCASHMENT
+      - TREASURY_AGREEMENT_REQUEST_MNO
+      - TREASURY_AGREEMENT_REQUEST_DU_MNO
+      - TREASURY_AGREEMENT_REQUEST_DEPOSIT
+      - TREASURY_AGREEMENT_REQUEST_DU_DEPOSIT
+      - TREASURY_AGREEMENT_REQUEST_CONVERSION
+      - TREASURY_AGREEMENT_REQUEST_DU_CONVERSION
+      - TREASURY_DEALS_MNO
+      - TREASURY_DEALS_DEPOSIT
+      - TREASURY_DEALS_FX
+      - TREASURY_AGREEMENT_REQUEST_GSNO_PARENT
+      - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_HEAD
+      - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_FRIEND
+      - TREASURY_AGREEMENT_REQUEST_CHANGE_ACCOUNTS
+      - TREASURY_DEALS_GSNO
+      - TREASURY_ONBOARDING_ANKETA
+      - LOGIN
+      - REGISTRATION
+      - OTP
+      - PASSWORD
+      - CONFIRMATION
+      - STOP_RESTRICTION_ACC
+      - SBP_B2B_QRC_REQUEST
+      - SBP_REQUEST_TSP
+      - SBP_QRC_REQUEST
+      - SBP_QRC_BLOCK_REQUEST
+      - SBP_QRC_PAYMENT_REQUEST
+      - SBP_TSP_CHANGE_REQUEST
+      - SBP_QRC_SCHEDULE_REQUEST
+      - SBP_B2B_PAYMENT
+      - SBP_B2C_PAYMENT
+      - CONF_DOC_CERT
+      - REG_CONTRACT
+      - RENEW_CONTRACT
+      - REG_CRED_AGREEMENT
+      - RENEW_CRED_AGREEMENT
+      - CONTR_CLOSE
+      - ES_CERT
+      - ACC_COPY_DOC
+      - CARD_CHARGE_SET_LIMIT_REQUEST
+      - ECO_SBP_CONTRACT_REQUEST
+      - PAY_COLLECTION_IN
+      - PAY_COLLECTION_OUT
+      - PAY_REQ_RU_OUT
+      - PAY_REQ_RU_ACCEPT
+      - ACC_OPEN_FIRST_REQ_FNS
+      - DVK
+      - CASH_BACK
+      - CASH_IN
+      - CASH_OUT
+      - ACC_OPEN_FIRST_REQ_KZ
+      - CONS_AUTHORIZE_REQ
+      - SBP_DISCONNECT_AGENTS_REQUEST
+      - SFZU_SMS_CONNECTION
+      - SFZU_SMS_CHANGE
+      - SFZU_SMS_CANCEL
+      - ACC_RKO_SERVICE_PAI
+      - ACC_RKO_SERVICE_PAC
+  - name: linkedDocumentId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/subject/GenericResponseSimpleErrorDataSvkOutSubjectDataRspDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml

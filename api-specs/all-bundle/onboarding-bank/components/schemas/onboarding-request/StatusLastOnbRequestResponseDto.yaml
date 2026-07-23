@@ -1,0 +1,8 @@
+type: object
+properties:
+  found:
+    type: boolean
+    description: Признак что заявка найдена
+  lastRequestInfo:
+    $ref: ./OnbRequestStatusInfoDto.yaml
+description: Ответ на запрос поиска информации о статусе последней заявки ОНБ

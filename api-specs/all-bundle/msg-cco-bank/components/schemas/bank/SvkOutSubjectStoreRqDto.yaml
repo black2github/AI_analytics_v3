@@ -1,0 +1,21 @@
+required:
+- attachmentsAllowed
+- code
+- topic
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор темы
+    format: uuid
+  code:
+    type: string
+    description: Код темы
+  topic:
+    pattern: ^[А-Яа-яЁё\x20-\x7E№«»–—\s]*$
+    type: string
+    description: Тема
+  attachmentsAllowed:
+    type: boolean
+    description: Возможность вложения
+description: ДТО создания/изменения темы

@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор оценки
+    format: uuid
+  pollParameterId:
+    type: string
+    description: Идентификатор сценария
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  result:
+    type: integer
+    description: Результат опроса
+    format: int32
+  comment:
+    type: string
+    description: Комментарий
+  refusePollTime:
+    type: string
+    description: Время отказа от оценки
+    format: date-time
+  createdAt:
+    type: string
+    description: Время создания результата опроса
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время изменения результата
+    format: date-time
+  validationResult:
+    $ref: ./ValidationResult.yaml
+  bankClientId:
+    type: string
+    description: Идентификатор клиента Банка
+    format: uuid
+description: Ответ на запрос сохранения Результата опроса

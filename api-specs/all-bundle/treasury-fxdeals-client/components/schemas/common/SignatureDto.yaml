@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  ownerId:
+    type: string
+    format: uuid
+  typeId:
+    type: string
+    format: uuid
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    format: date-time
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  signerEmployeeInfo:
+    type: string
+    description: Информация о сотруднике клиента со списком доверенностей
+  kind:
+    type: string
+    description: Информация о типе подписи
+    enum:
+    - UNDEFINED
+    - UNKNOWN_SIGN
+    - LOCAL
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+  certificateInfoDto:
+    $ref: ./CertificateInfoDto.yaml

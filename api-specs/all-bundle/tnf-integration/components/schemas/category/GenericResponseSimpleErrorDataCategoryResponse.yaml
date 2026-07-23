@@ -1,0 +1,12 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    $ref: ./CategoryResponse.yaml
+    description: Данные
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

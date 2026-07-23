@@ -1,0 +1,14 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Список адресов
+  subject:
+    type: string
+    description: Тема сообщения
+  text:
+    type: string
+    description: Текст сообщения
+  attachment:
+    $ref: ./AttachmentDto.yaml
+description: Данные

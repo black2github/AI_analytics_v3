@@ -1,0 +1,9 @@
+required:
+- contractId
+type: object
+properties:
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+description: Данные для запроса СБП продуктов по договору

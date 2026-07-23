@@ -1,0 +1,16 @@
+type: object
+properties:
+  ClientId:
+    type: string
+  Version:
+    type: integer
+    format: int32
+  State:
+    $ref: ./PkpClientProfileStateRspDto.yaml
+  OrdersLimit:
+    type: integer
+    format: int32
+  Instruments:
+    type: array
+    items:
+      $ref: ./PkpCurrencyQuoteRspDto.yaml

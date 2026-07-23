@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./TariffDto.yaml
+description: Запрос

@@ -1,0 +1,43 @@
+type: object
+description: Данные обратного вызова при ошибках КО ФП.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПлЦР (значение из тега ЭС <MsgHdr/OprId>).
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  operationType:
+    type: string
+    description: Тип операции.
+    enum:
+    - OrganisationBuyingDC
+    - OrganisationSellingDC
+    - FIOrganisationBuyingDC
+    - FIOrganisationSellingDC
+  callbackType:
+    type: string
+    description: Тип обратного вызова.
+    enum:
+    - FIOrganisationBuyingDC
+    - FIOrganisationSellingDC
+  code:
+    type: string
+    description: Код ошибки ПЦР-Коннект(РЛ), которая позволит идентифицировать конкретную проблему
+  pcrCode:
+    type: string
+    description: Код ошибки ПлЦР, которая позволит идентифицировать конкретную проблему на ПлЦР, может быть null, если ошибка была выявлена не на ПлЦР
+  message:
+    type: string
+    description: Описание ошибки
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- callbackType
+- code
+- correlationId
+- message
+- operationType
+- pcrCode

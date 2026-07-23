@@ -1,0 +1,42 @@
+type: object
+description: Данные регистрируемого ТСП
+properties:
+  legalId:
+    type: string
+    description: Идентификатор юридического лица
+  brandName:
+    type: string
+    description: Название ТСП (имя по вывеске)
+  mcc:
+    type: string
+    description: MCC код
+  countryCode:
+    type: string
+    description: Код страны-регистрации юридического лица, в формате "ISO 3166, Alpha-2"
+  countrySubDivisionCode:
+    type: string
+    description: Код региона-регистрации юридического лица, первые две цифры кода ОКТМО
+  city:
+    type: string
+    description: Город
+  zip:
+    type: string
+    description: Индекс
+  address:
+    type: string
+    description: Юридический адрес
+  contactPhoneNumber:
+    type: string
+    description: Контактный номер телефона ТСП
+  capabilities:
+    type: string
+    description: Возможности ТСП по взаимодействию с покупателем
+  salesMode:
+    type: string
+    description: Способ приема оплаты ТСП
+  url:
+    type: string
+    description: Веб-сайт ТСП
+  inn:
+    type: string
+    description: Государственный идентификатор налогоплательщика ТСП. Для РФ - ИНН

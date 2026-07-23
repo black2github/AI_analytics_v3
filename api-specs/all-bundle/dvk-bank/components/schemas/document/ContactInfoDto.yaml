@@ -1,0 +1,6 @@
+type: object
+properties:
+  phone:
+    type: string
+    description: Телефон исполнителя в ЛК УВЭД
+description: Контактная информация

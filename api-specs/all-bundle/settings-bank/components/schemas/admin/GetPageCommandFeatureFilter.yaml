@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsFeatureFilter.yaml
+description: Запрос страницы

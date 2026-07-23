@@ -1,0 +1,153 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - TO_SEND
+    - TO_SEND_START_PROCESSING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - DENIED
+    - EXECUTED
+    - READ
+    - READ_START_PROCESSING
+    - SIGN_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_NEED_CHECK
+    - SIGN_VALID_OR_DENIED
+    - DRAFT_OR_NEW
+    - WAIT_CLIENT_SIGN
+    - WAIT_BANK_SIGN
+    - CLIENT_SIGNED
+    - REVOKED
+    - REJECTED
+    - REPLY_LETTER_CREATED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - EXPORT_H2H_XML_DONE
+    - EXPORT_H2H_XML_REQUIRED_OR_NOT
+    - DETACH_REQUIRED_OR_NOT
+    - AUTOSIGN_ERROR
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - SIGNED
+      - TO_SEND
+      - TO_SEND_START_PROCESSING
+      - SIGN_VALID
+      - DETAILS_VALID
+      - RECEIVED
+      - DENIED
+      - EXECUTED
+      - READ
+      - READ_START_PROCESSING
+      - SIGN_REQUIRED_OR_NOT
+      - DETAILS_VALID_OR_DENIED
+      - SIGN_NEED_CHECK
+      - SIGN_VALID_OR_DENIED
+      - DRAFT_OR_NEW
+      - WAIT_CLIENT_SIGN
+      - WAIT_BANK_SIGN
+      - CLIENT_SIGNED
+      - REVOKED
+      - REJECTED
+      - REPLY_LETTER_CREATED
+      - WAIT_DETACH_FROM_BANK
+      - DETACH_FROM_BANK_ERROR
+      - DETACH_FROM_BANK_EXECUTED
+      - EXPORT_H2H_XML_DONE
+      - EXPORT_H2H_XML_REQUIRED_OR_NOT
+      - DETACH_REQUIRED_OR_NOT
+      - AUTOSIGN_ERROR
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - TO_SEND
+    - TO_SEND_START_PROCESSING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - DENIED
+    - EXECUTED
+    - READ
+    - READ_START_PROCESSING
+    - SIGN_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_NEED_CHECK
+    - SIGN_VALID_OR_DENIED
+    - DRAFT_OR_NEW
+    - WAIT_CLIENT_SIGN
+    - WAIT_BANK_SIGN
+    - CLIENT_SIGNED
+    - REVOKED
+    - REJECTED
+    - REPLY_LETTER_CREATED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - EXPORT_H2H_XML_DONE
+    - EXPORT_H2H_XML_REQUIRED_OR_NOT
+    - DETACH_REQUIRED_OR_NOT
+    - AUTOSIGN_ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - SIGNED
+      - TO_SEND
+      - TO_SEND_START_PROCESSING
+      - SIGN_VALID
+      - DETAILS_VALID
+      - RECEIVED
+      - DENIED
+      - EXECUTED
+      - READ
+      - READ_START_PROCESSING
+      - SIGN_REQUIRED_OR_NOT
+      - DETAILS_VALID_OR_DENIED
+      - SIGN_NEED_CHECK
+      - SIGN_VALID_OR_DENIED
+      - DRAFT_OR_NEW
+      - WAIT_CLIENT_SIGN
+      - WAIT_BANK_SIGN
+      - CLIENT_SIGNED
+      - REVOKED
+      - REJECTED
+      - REPLY_LETTER_CREATED
+      - WAIT_DETACH_FROM_BANK
+      - DETACH_FROM_BANK_ERROR
+      - DETACH_FROM_BANK_EXECUTED
+      - EXPORT_H2H_XML_DONE
+      - EXPORT_H2H_XML_REQUIRED_OR_NOT
+      - DETACH_REQUIRED_OR_NOT
+      - AUTOSIGN_ERROR
+description: Фильтрация по статусу письма. Мультивыбор.

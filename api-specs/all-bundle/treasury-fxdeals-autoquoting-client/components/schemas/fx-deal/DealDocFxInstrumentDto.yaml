@@ -1,0 +1,29 @@
+type: object
+properties:
+  pkpId:
+    type: integer
+    description: ID инструмента в ПКП
+    format: int64
+  code:
+    type: string
+    description: Код инструмента
+  currency:
+    type: string
+    description: Котируемая валюта
+  settleCurrency:
+    type: string
+    description: Котирующая валюта
+  currencyPair:
+    type: string
+    description: Валютная пара
+  ratePrecision:
+    type: integer
+    description: Точность отображения курса для данного инструмента, количество значащих цифр после запятой
+    format: int32
+  valueDateType:
+    type: string
+    description: Тип даты валютирования
+    enum:
+    - TOD
+    - TOM
+description: Инструмент

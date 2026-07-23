@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  askId:
+    $ref: ./FilterValueDtoLong.yaml
+  clientOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  endDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./GeneralAgreementStatusFilter.yaml
+  usage:
+    $ref: ./GeneralAgreementUsageFilter.yaml
+  subUsage:
+    $ref: ./GeneralAgreementSubUsageFilter.yaml
+  contractType:
+    $ref: ./GeneralAgreementContractTypeFilter.yaml
+  fundName:
+    $ref: ./FilterValueDtoString.yaml
+  genAgrAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр

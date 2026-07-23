@@ -1,0 +1,26 @@
+post:
+  tags:
+  - API загрузки файла
+  summary: Загрузка файла с публичным доступом
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'') or #eco.userTypeIs(''BANK'')'
+  operationId: uploadPublicAttachmentUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«InternalAttachmentDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,10 @@
+type: object
+properties:
+  value:
+    type: string
+  version:
+    type: integer
+    format: int32
+  signFields:
+    type: string
+description: Данные

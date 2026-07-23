@@ -1,0 +1,16 @@
+type: object
+properties:
+  isCallRequired:
+    type: boolean
+    description: 'Признак необходимости совершения звонка: да/нет'
+  isOverdue:
+    type: boolean
+    description: 'Заявка длительное время в определенном статусе: да/нет'
+  nextCall:
+    type: string
+    description: Дата и время переноса звонка
+    format: date-time
+  reason:
+    type: string
+    description: Причина звонка
+description: Результат функции определения необходимости совершения звонка

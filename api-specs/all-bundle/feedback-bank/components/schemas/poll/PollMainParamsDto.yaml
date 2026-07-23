@@ -1,0 +1,17 @@
+type: object
+properties:
+  screenFormName:
+    type: string
+    description: Наименование экранной формы
+  daysSinceFeedbackCancel:
+    type: integer
+    description: Кол-во дней при отказе от оценки
+    format: int32
+  daysSinceLastFeedback:
+    type: integer
+    description: Кол-во дней от последней оценки
+    format: int32
+  pollParameterSource:
+    type: string
+    description: Источник оценки
+description: Основные параметры

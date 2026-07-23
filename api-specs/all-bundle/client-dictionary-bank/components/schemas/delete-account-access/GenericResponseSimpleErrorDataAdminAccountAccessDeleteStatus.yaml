@@ -1,0 +1,14 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Статус удаления "Доступ УЛ к счёту (удаление)". Банковская часть.
+    enum:
+    - NOTIFICATION_REQUIRED
+    - DELETED
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

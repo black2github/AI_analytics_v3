@@ -1,0 +1,18 @@
+type: object
+description: Фильтр скроллера категорий ДСФ.
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Код категории письма. Группа фильтров.
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Идентификатор категории письма. Группа фильтров
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование категории письма. Группа фильтров.
+  nameEn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование категории письма по английски. Группа фильтров.
+  searchText:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Поиск по вхождению в поля Код, Наименование и Наименование по английски. Группа фильтров.

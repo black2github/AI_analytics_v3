@@ -1,0 +1,20 @@
+type: object
+properties:
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  templateData:
+    $ref: ../common/TemplateDataDto.yaml
+description: Запрос на печать сформированных документов

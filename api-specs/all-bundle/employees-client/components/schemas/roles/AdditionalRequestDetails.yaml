@@ -1,0 +1,11 @@
+required:
+- dsfTypesAccessMode
+type: object
+properties:
+  dsfTypesAccessMode:
+    type: string
+    description: Режим доступа к ДСФ
+    enum:
+    - NOT_RESTRICTED
+    - SPECIFIED
+description: Дополнительные реквизиты заявки

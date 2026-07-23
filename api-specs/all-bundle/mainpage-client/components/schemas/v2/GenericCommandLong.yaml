@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    type: integer
+    description: Данные
+    format: int64
+description: Запрос

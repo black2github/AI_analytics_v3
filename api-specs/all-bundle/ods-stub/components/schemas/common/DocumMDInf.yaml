@@ -1,0 +1,91 @@
+type: object
+properties:
+  ID:
+    type: integer
+    format: int64
+  SDOCREF:
+    type: integer
+    format: int64
+  NRECORDSIDBASE:
+    type: integer
+    format: int64
+  SDOCUMENTNUMBERBASE:
+    type: integer
+    format: int64
+  DTDOCUMENTDATEBASE:
+    $ref: ./LocalDate.yaml
+  SOPERTYPEBASE:
+    type: string
+  SPAYERBASE:
+    type: string
+  SPAYERINNBASE:
+    type: string
+  SPAYERKPPBASE:
+    type: string
+  SPAYERACCOUNTBASE:
+    type: string
+  SPAYERBICBASE:
+    type: string
+  SPAYERBANKNAMEBASE:
+    type: string
+  SPAYERBANKCITYBASE:
+    type: string
+  SRECEIVERBASE:
+    type: string
+  SRECEIVERINNBASE:
+    type: string
+  SRECEIVERKPPBASE:
+    type: string
+  SRECEIVERACCOUNTBASE:
+    type: string
+  SRECEIVERBICBASE:
+    type: string
+  SRECEIVERBANKNAMEBASE:
+    type: string
+  SRECEIVERBANKCITYBASE:
+    type: string
+  SSENDTYPEBASE:
+    type: string
+  SGROUNDBASE:
+    type: string
+  SURGENTBASE:
+    type: string
+  SCURRCODEBASE:
+    type: string
+  NAMOUNTDTBASE:
+    type: number
+  NAMOUNTKTBASE:
+    type: number
+  SPAYERCORRACCOUNTBASE:
+    type: string
+  SRECEIVERCORRACCOUNTBASE:
+    type: string
+  SINCOMETYPECODEBASE:
+    type: string
+  SPAIDDOCNUMBERBASE:
+    type: string
+  DTPAIDDOCDATEBASE:
+    $ref: ./LocalDate.yaml
+  NNUMPARTPAYMENTBASE:
+    type: integer
+    format: int64
+  SPAIDDOCCODEBASE:
+    type: string
+  NRESTAMOUNTBASE:
+    type: number
+  SKONTRAGENTBASE:
+    type: string
+  SSYMBKASSABASE:
+    type: string
+  SSYMBSUMMABASE:
+    type: string
+  SPREDDOCUMBASE:
+    type: string
+  SSIGNATURE1BASE:
+    type: string
+  SSIGNATURE2BASE:
+    type: string
+  SSIGNATURE3BASE:
+    type: string
+  SPAYERBANKDETAILBASE:
+    type: string

@@ -1,0 +1,16 @@
+required:
+- canUpdate
+- hasAuthorizedPerson
+- hasEmployeeRequest
+type: object
+properties:
+  canUpdate:
+    type: boolean
+    description: Можно изменять
+  hasAuthorizedPerson:
+    type: boolean
+    description: Есть УЛ с указанным шаблоном роли
+  hasEmployeeRequest:
+    type: boolean
+    description: Есть заявка в указанным шаблоном роли
+description: Результат проверки возможности изменения шаблона роли

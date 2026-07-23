@@ -1,0 +1,91 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: string
+    description: Номер заявки
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки фронт офиса на открытие первого счета.
+    enum:
+    - NONE
+    - NEW
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - REFUSED
+    - EXPORT_TO_ESK_OR_EXPORT_TO_ESK_ERROR
+    - EXPORT_TO_TESSA_OR_EXPORT_TO_TESSA_ERROR
+    - EXPORT_TO_ESK_ERROR_OR_REJECTED
+  comment:
+    type: string
+    description: Комментарий
+  creatorId:
+    type: string
+    description: UAA id пользователя-операциониста, создавшего заявку
+    format: uuid
+  creatorName:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  documentType:
+    type: string
+    description: Тип документа
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки в сервисе заявок на открытие первого счета
+    format: uuid
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+  externalSystemsRequisites:
+    $ref: ./ExternalSystemsRequisitesDto.yaml
+  commonAccountsInfo:
+    $ref: ./CommonAccountsInfoDto.yaml
+  externalStatus:
+    type: string
+    description: Статус заявки фронт офиса на открытие первого счета.
+    enum:
+    - NONE
+    - NEW
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - REFUSED
+    - EXPORT_TO_ESK_OR_EXPORT_TO_ESK_ERROR
+    - EXPORT_TO_TESSA_OR_EXPORT_TO_TESSA_ERROR
+    - EXPORT_TO_ESK_ERROR_OR_REJECTED
+  openingAccountType:
+    type: string
+    description: Краткое наименование типа счета
+  openingAccountCurrencyCode:
+    type: string
+    description: Буквенный код валюты счета
+description: Заявка на открытие первого счета

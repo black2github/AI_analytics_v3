@@ -1,0 +1,19 @@
+required:
+- endDate
+- name
+- startDate
+type: object
+properties:
+  name:
+    type: integer
+    description: Наименование
+    format: int32
+  startDate:
+    type: string
+    description: Дата начала периода (включительно)
+    format: date-time
+  endDate:
+    type: string
+    description: Дата окончания периода
+    format: date-time
+description: Интервал партиций архива

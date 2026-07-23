@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: Сервис работы с журналом ТНФ
+  version: 3.3.0
+servers:
+- url: /tnf-integration
+security:
+- bearerAuth: []
+tags:
+- name: API скроллера "Журнал сообщений"
+  description: Методы для работы с журналом сообщений ТНФ
+paths:
+  /journal-messages/resend:
+    $ref: ./paths/resend/journal_messages_resend.yaml
+  /journal-messages/get-page:
+    $ref: ./paths/get-page/journal_messages_get_page.yaml
+  /journal-messages/export:
+    $ref: ./paths/export/journal_messages_export.yaml
+  /journal-messages/category/status:
+    $ref: ./paths/category/journal_messages_category_status.yaml
+  /journal-messages/{id}:
+    $ref: ./paths/{id}/journal_messages_id.yaml
+  /journal-messages/get-data/{id}:
+    $ref: ./paths/get-data/journal_messages_get_data_id.yaml
+  /journal-messages/download/{id}:
+    $ref: ./paths/download/journal_messages_download_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ResendRequestDto:
+      $ref: ./components/schemas/resend/ResendRequestDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/resend/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandJournalMessageFilter:
+      $ref: ./components/schemas/common/GetPageCommandJournalMessageFilter.yaml
+    JournalFlowFilter:
+      $ref: ./components/schemas/common/JournalFlowFilter.yaml
+    JournalMessageFilter:
+      $ref: ./components/schemas/common/JournalMessageFilter.yaml
+    MessageStatusFilter:
+      $ref: ./components/schemas/common/MessageStatusFilter.yaml
+    PageParamsJournalMessageFilter:
+      $ref: ./components/schemas/common/PageParamsJournalMessageFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    TnfStatusFilter:
+      $ref: ./components/schemas/common/TnfStatusFilter.yaml
+    TypeMessageFilter:
+      $ref: ./components/schemas/common/TypeMessageFilter.yaml
+    JournalMessageDto:
+      $ref: ./components/schemas/common/JournalMessageDto.yaml
+    PageDataJournalMessageDto:
+      $ref: ./components/schemas/get-page/PageDataJournalMessageDto.yaml
+    ExportRequestDto:
+      $ref: ./components/schemas/export/ExportRequestDto.yaml
+    GenericResponseSimpleErrorDataJournalMessageExportDto:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataJournalMessageExportDto.yaml
+    JournalMessageExportDto:
+      $ref: ./components/schemas/export/JournalMessageExportDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataCategoryResponse:
+      $ref: ./components/schemas/category/GenericResponseSimpleErrorDataCategoryResponse.yaml
+    GenericResponseSimpleErrorDataJournalMessageDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataJournalMessageDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,79 @@
+type: object
+description: Документ из банка. ДТО на создание
+properties:
+  accountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета.
+  accountNumber:
+    type: string
+    description: Расчетный счет.
+  aml:
+    $ref: ./AmlDocumentFromBankDto.yaml
+    description: Дополнительные AML-поля
+  attachmentIds:
+    type: array
+    description: Список идентификаторов вложений.
+    items:
+      type: string
+      format: uuid
+  bankClientId:
+    type: string
+    format: uuid
+    description: Идентификатор информации о клиенте банка.
+  branchId:
+    type: string
+    format: uuid
+    description: Идентификатор подразделения.
+  contactId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя контактного лица.
+  copyOf:
+    type: string
+    format: uuid
+    description: Идентификатор копируемого документа.
+  dialogId:
+    type: string
+    description: ID группы связанных писем.
+  email:
+    type: string
+    description: Адрес электронной почты.
+  externalId:
+    type: string
+    description: ID письма в АС инициатор.
+  externalSystem:
+    type: string
+    description: АС инициатор/получатель письма.
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  fio:
+    type: string
+    description: ФИО контактного лица клиента.
+  isNotifyByPhone:
+    type: boolean
+    description: Уведомить меня об исполнении по номеру телефона.
+  mchdAttachmentIds:
+    type: array
+    description: Список идентификаторов МЧД вложений.
+    items:
+      type: string
+      format: uuid
+  message:
+    type: string
+    description: Текст письма.
+  messageTime:
+    type: string
+    format: date-time
+    description: Время отправки письма со стороны АС AML
+  phone:
+    type: string
+    description: Номер мобильного телефона.
+  subject:
+    type: string
+    description: Тема письма.
+  typeCode:
+    type: string
+    description: Код типа документа.

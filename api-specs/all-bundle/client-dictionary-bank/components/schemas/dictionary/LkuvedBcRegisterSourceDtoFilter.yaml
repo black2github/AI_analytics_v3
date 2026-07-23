@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Способ создания
+    enum:
+    - MANUAL
+    - IMPORT
+  notEq:
+    type: string
+    description: Способ создания
+    enum:
+    - MANUAL
+    - IMPORT
+  in:
+    type: array
+    items:
+      type: string
+      description: Способ создания
+      enum:
+      - MANUAL
+      - IMPORT
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Способ создания
+      enum:
+      - MANUAL
+      - IMPORT
+  isNull:
+    type: boolean
+description: Способ создания

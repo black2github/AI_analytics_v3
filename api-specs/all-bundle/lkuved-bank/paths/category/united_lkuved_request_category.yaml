@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API скроллера заявки на присоединение к ЛК УВЭД, заявки на предоставление доступа к ЛК УВЭД. Банковская часть.
+  summary: Получить количество заявок по категориям
+  description: 'Привилегии: LKUVED.ACCESS.BANK.VIEW_LIST'
+  operationId: getCategoryCountUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«UnitedLkuvedRequestBankFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CategoryResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

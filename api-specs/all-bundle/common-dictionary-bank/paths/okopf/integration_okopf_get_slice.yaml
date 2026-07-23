@@ -1,0 +1,33 @@
+post:
+  tags:
+  - Интеграционное API справочника ОКОПФ
+  summary: Получить страницу кодов ОКОПФ
+  description: 'Привилегии: INTEGRATION.OKOPF_GET_PAGE'
+  operationId: getOkopfSliceUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: paging
+    description: paging
+    required: true
+    schema:
+      $ref: '#/definitions/Paging'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,SliceData«OkopfDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

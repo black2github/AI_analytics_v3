@@ -1,0 +1,18 @@
+required:
+- accessRuleIds
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  accessRuleIds:
+    minItems: 1
+    type: array
+    description: Список идентификаторов правил доступа
+    items:
+      type: string
+      description: Список идентификаторов правил доступа
+      format: uuid
+description: Данные для поставки правил на повторное исполнение

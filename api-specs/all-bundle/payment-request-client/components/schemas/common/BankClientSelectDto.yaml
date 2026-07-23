@@ -1,0 +1,46 @@
+required:
+- innKio
+- kpp
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  fullName:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Полное наименование организации
+  shortName:
+    maxLength: 160
+    minLength: 0
+    type: string
+    description: Сокращенное наименование организации-Клиента Банка на русском языке для использования в сертификате НЭП
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+  externalClientGuid:
+    type: string
+    description: Уникальный GUID клиента во внешней системе (Поле clientGUID в ответе F1)
+    format: uuid
+  innKio:
+    maxLength: 12
+    minLength: 0
+    type: string
+    description: ИНН организации
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true и clientType = UL.
+  legalAddress:
+    type: string
+    description: Юридический адрес Клиента
+  postAddress:
+    type: string
+    description: Почтовый адрес Клиента
+  useCcf:
+    type: boolean
+    description: Признак "Использование ЦЦФ"
+description: Информация об организации

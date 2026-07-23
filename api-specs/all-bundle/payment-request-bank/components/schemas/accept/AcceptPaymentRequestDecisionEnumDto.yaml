@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./AcceptPaymentRequestDecisionDto.yaml
+  notEq:
+    $ref: ./AcceptPaymentRequestDecisionDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./AcceptPaymentRequestDecisionDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./AcceptPaymentRequestDecisionDto.yaml
+  isNull:
+    type: boolean
+description: Решение (равенство)
+nullable: true

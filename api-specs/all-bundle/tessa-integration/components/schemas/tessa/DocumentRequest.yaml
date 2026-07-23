@@ -1,0 +1,34 @@
+type: object
+properties:
+  batchNumber:
+    type: string
+    description: Номер договора
+  barCode:
+    type: string
+    description: Штрих-код
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  operationName:
+    type: string
+    description: Операция
+  number:
+    type: string
+    description: Номер документа
+  kindName:
+    type: string
+    description: Вид пакета
+  submissionFormName:
+    type: string
+    description: Форма предоставления
+  files:
+    type: array
+    description: Массив новых файлов
+    items:
+      $ref: ./NewFileInfo.yaml
+  deletedFiles:
+    type: array
+    description: Массив удаляемых файлов
+    items:
+      $ref: ./DeleteFileInfo.yaml

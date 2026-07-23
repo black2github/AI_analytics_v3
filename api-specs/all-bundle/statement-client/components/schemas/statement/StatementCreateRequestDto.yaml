@@ -1,0 +1,126 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - ONETIME
+    - HIDDEN_VIEW
+    - HIDDEN_PRINT_EXPORT_OSV
+    - TNF
+    - OPEN_API_CB
+    - ECO_OPEN_API_CB
+    - TA_FOR_MC
+  creationType:
+    type: string
+    enum:
+    - NEW
+    - COPY
+  sourcePage:
+    type: string
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  action:
+    type: string
+    enum:
+    - DOWNLOAD
+    - PRINT
+    - VIEW
+    - SEND_TO_EMAIL
+  emails:
+    type: array
+    items:
+      type: string
+  sign:
+    type: boolean
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  periodType:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  hideEmptyTurnovers:
+    type: boolean
+  separateAccountsFiles:
+    type: boolean
+  creationParams:
+    $ref: ./DocumentOptionsDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  mobileSdkData:
+    type: string
+  userFileSettingsDtos:
+    type: array
+    items:
+      $ref: ../common/UserFileSettingsDto.yaml
+  counterpartyFilterType:
+    type: string
+    enum:
+    - INN
+    - NAME
+    - ACCOUNT
+  counterpartyFilters:
+    type: array
+    items:
+      $ref: ../common/CounterpartyFilterDataDto.yaml
+  withDataMT:
+    type: boolean
+  makeFileStatement:
+    type: boolean
+  reportType:
+    type: string
+    enum:
+    - STATEMENT_AND_DOCUMENTS
+    - DOCUMENTS
+  templateDocumentType:
+    type: string
+    enum:
+    - ONE_FILE
+    - SEPARATE_ACCOUNT_FILE
+    - SEPARATE_FILES

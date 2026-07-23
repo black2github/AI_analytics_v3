@@ -1,0 +1,14 @@
+type: object
+properties:
+  filter:
+    $ref: ../common/SvkOutScrollerClientFilter.yaml
+  sort:
+    $ref: ../common/Sort.yaml
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ../common/Sort.yaml
+  paging:
+    $ref: ./Paging.yaml
+description: Параметры

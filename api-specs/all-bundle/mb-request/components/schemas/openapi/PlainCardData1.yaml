@@ -1,0 +1,19 @@
+type: object
+properties:
+  PAN:
+    type: string
+  cardSequenceNumber:
+    type: string
+  effectiveDate:
+    type: string
+  expiryDate:
+    type: string
+  serviceCode:
+    type: string
+  TrackData:
+    type: array
+    items:
+      $ref: ./TrackData1.yaml
+  CardSecurityCode:
+    $ref: ./CardSecurityInformation1.yaml
+description: Конфиденциальные данные, связанные с выполнением операции по карте

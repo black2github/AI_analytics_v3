@@ -1,0 +1,18 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  clientVisible:
+    type: boolean
+    description: Признак сокрытия организации
+  rollUp:
+    type: boolean
+    description: Признак свернут
+  accounts:
+    type: array
+    description: Обновление настроек списка счетов
+    items:
+      $ref: ./UserSettingAccountUpdateDto.yaml
+description: Обновление пользовательских настроек организации клиента

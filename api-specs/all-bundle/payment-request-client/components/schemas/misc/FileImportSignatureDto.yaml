@@ -1,0 +1,17 @@
+type: object
+properties:
+  level:
+    type: string
+    description: Уровень подписи
+    enum:
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+description: Подпись файла импорта

@@ -1,0 +1,13 @@
+delete:
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/updating/UUID.yaml
+  responses:
+    '204':
+      description: No Content
+  summary: Delete
+  tags:
+  - Egrul Info Update Controller

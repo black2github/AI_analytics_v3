@@ -1,0 +1,76 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID дисклеймера
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  createdById:
+    type: string
+    description: Идентификатор пользователя, создавшего запись
+    format: uuid
+  createdByFio:
+    type: string
+    description: ФИО пользователя, создавшего запись
+  updatedAt:
+    type: string
+    description: Дата и время изменения
+    format: date-time
+  modifiedById:
+    type: string
+    description: Идентификатор пользователя, изменившего запись
+    format: uuid
+  modifiedByFio:
+    type: string
+    description: ФИО пользователя, изменившего запрись
+  enabled:
+    title: Включен
+    type: boolean
+    description: Признак необходимости отображать дисклеймер пользователю Клиента
+  serviceCode:
+    type: string
+    description: Код сервиса
+  iconRelativePath:
+    type: string
+    description: Иконка дисклеймера
+  serviceUsePaths:
+    title: URL использования сервиса
+    uniqueItems: true
+    type: array
+    description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+    items:
+      title: URL использования сервиса
+      type: string
+      description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+  template:
+    $ref: ./DisclaimerTemplateDto.yaml
+  disclaimerType:
+    type: string
+    description: Вид дисклеймеров
+    enum:
+    - ERROR
+    - WARNING
+    - INFO
+    - MESSAGE
+  title:
+    type: string
+    description: Заголовок дисклеймера (RU)
+  text:
+    type: string
+    description: Текст дисклеймера (RU)
+  titleEn:
+    type: string
+    description: Заголовок дисклеймера (EN)
+  textEn:
+    type: string
+    description: Текст дисклеймера (EN)
+  displayedInUnauthorizedArea:
+    type: boolean
+    description: Отображается в неавторизованной зоне
+  hash:
+    type: string
+    description: Хэш для отслеживания изменений в дисклеймере
+description: Дисклеймер

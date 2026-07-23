@@ -1,0 +1,25 @@
+type: object
+properties:
+  docDateFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  docDateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  documentType:
+    $ref: ./FilterValueDtoBrkEngageDocumentType.yaml
+  requestStatus:
+    $ref: ./FilterValueDtoBrkContractEngageBankStatus.yaml
+  clientInnOrName:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  statusCategory:
+    type: string
+    description: Категории заявок на подключение валют/услуг к брокерскому договору
+    enum:
+    - ALL
+    - ERROR
+    - EXECUTED
+    - INPROCESSING
+description: Фильтр для скроллера заявок на подключение услуг к брокерскому договору

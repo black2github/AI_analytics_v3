@@ -1,0 +1,7 @@
+type: object
+properties:
+  confirmationId:
+    type: string
+    description: ID запроса подтверждения
+    format: uuid
+description: Команда для повторной отправки кода подтверждения

@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа в Экосистеме (Идентификатор)
+    format: uuid
+  acceptForExecutionAt:
+    type: string
+    description: Дата и время приёма документа в Экосистеме
+    format: date-time
+  bankClientId:
+    type: string
+    description: ID (Идентификатор клиента банка)
+    format: uuid
+  clientRnk:
+    type: string
+    description: РНК (РНК клиента (Идентификатор клиента в АС Ф1))
+  clientEskId:
+    type: string
+    description: GUID (GUID клиента (Идентификатор клиента в ЕСК))
+    format: uuid
+  clientAccountId:
+    type: string
+    description: ID счета в Экосистеме (Идентификатор счёта клиента (ссылка на сущность "Счет клиента"))
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время (Дата создания записи)
+    format: date-time
+  sourceSystem:
+    $ref: ./DocumentSourceSystemDto.yaml
+  creationType:
+    $ref: ./DocumentCreationTypeDto.yaml
+  originDocumentId:
+    type: string
+    description: ID документа основания
+    format: uuid
+  docCreationPage:
+    type: string
+    description: Страница с которой вызвано создание документа
+description: Вкладка служебная информация для платежного требования исходящее

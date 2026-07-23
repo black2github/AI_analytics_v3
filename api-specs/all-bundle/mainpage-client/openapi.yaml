@@ -1,0 +1,259 @@
+openapi: 3.0.1
+info:
+  title: Главная страница. Клиентская часть.
+  version: 3.2.0
+servers:
+- url: /mainpage-client
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /user-settings/visible:
+    $ref: ./paths/visible/user_settings_visible.yaml
+  /user-settings/tariffNames:
+    $ref: ./paths/tariffNames/user_settings_tariffNames.yaml
+  /user-settings/roll:
+    $ref: ./paths/roll/user_settings_roll.yaml
+  /user-settings/logo:
+    $ref: ./paths/logo/user_settings_logo.yaml
+  /user-settings/layout:
+    $ref: ./paths/layout/user_settings_layout.yaml
+  /user-settings/compactView:
+    $ref: ./paths/compactView/user_settings_compactView.yaml
+  /user-settings/balance:
+    $ref: ./paths/balance/user_settings_balance.yaml
+  /user-settings/accounts:
+    $ref: ./paths/accounts/user_settings_accounts.yaml
+  /user-settings/account-name:
+    $ref: ./paths/account-name/user_settings_account_name.yaml
+  /turnovers-summary/get-dashboard-data:
+    $ref: ./paths/get-dashboard-data/turnovers_summary_get_dashboard_data.yaml
+  /payment-doc:
+    $ref: ./paths/payment-doc/payment_doc.yaml
+  /payment-doc/counter-list:
+    $ref: ./paths/counter-list/payment_doc_counter_list.yaml
+  /mobile-request/send:
+    $ref: ./paths/send/mobile_request_send.yaml
+  /currency-rate/get-list:
+    $ref: ./paths/get-list/currency_rate_get_list.yaml
+  /client-dictionary-accounts/v2/get-rko-contract-number:
+    $ref: ./paths/v2/client_dictionary_accounts_v2_get_rko_contract_number.yaml
+  /client-dictionary-accounts/v2/get-plane-balance:
+    $ref: ./paths/v2/client_dictionary_accounts_v2_get_plane_balance.yaml
+  /client-dictionary-accounts/v2/get-accounts-info:
+    $ref: ./paths/v2/client_dictionary_accounts_v2_get_accounts_info.yaml
+  /client-dictionary-accounts/get-page:
+    $ref: ./paths/get-page/client_dictionary_accounts_get_page.yaml
+  /approval-sign-doc/approval-sign-doc-after-list:
+    $ref: ./paths/approval-sign-doc-after-list/approval_sign_doc_approval_sign_doc_after_list.yaml
+  /widgets/availability:
+    $ref: ./paths/availability/widgets_availability.yaml
+  /user-settings:
+    $ref: ./paths/user-settings/user_settings.yaml
+  /recent-docs:
+    $ref: ./paths/recent-docs/recent_docs.yaml
+  /recent-docs/{clientId}:
+    $ref: ./paths/{clientId}/recent_docs_clientId.yaml
+  /onboarding-fns/get-identification-requests:
+    $ref: ./paths/get-identification-requests/onboarding_fns_get_identification_requests.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /client-dictionary-accounts/v2/get-payment-document-types:
+    $ref: ./paths/v2/client_dictionary_accounts_v2_get_payment_document_types.yaml
+  /approval-sign-doc/approval-sign-doc-before-list:
+    $ref: ./paths/approval-sign-doc-before-list/approval_sign_doc_approval_sign_doc_before_list.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericCommandUserSettingVisibleUpdateDto:
+      $ref: ./components/schemas/visible/GenericCommandUserSettingVisibleUpdateDto.yaml
+    UserSettingVisibleUpdateDto:
+      $ref: ./components/schemas/visible/UserSettingVisibleUpdateDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandBoolean:
+      $ref: ./components/schemas/common/GenericCommandBoolean.yaml
+    GenericCommandUserSettingRollUpdateDto:
+      $ref: ./components/schemas/roll/GenericCommandUserSettingRollUpdateDto.yaml
+    UserSettingRollUpdateDto:
+      $ref: ./components/schemas/roll/UserSettingRollUpdateDto.yaml
+    GenericCommandUserSettingUpdateLogoDto:
+      $ref: ./components/schemas/logo/GenericCommandUserSettingUpdateLogoDto.yaml
+    UserSettingUpdateLogoDto:
+      $ref: ./components/schemas/logo/UserSettingUpdateLogoDto.yaml
+    GenericCommandTypeLayoutDto:
+      $ref: ./components/schemas/layout/GenericCommandTypeLayoutDto.yaml
+    TypeLayoutDto:
+      $ref: ./components/schemas/layout/TypeLayoutDto.yaml
+    GenericCommandTypeBalanceDto:
+      $ref: ./components/schemas/balance/GenericCommandTypeBalanceDto.yaml
+    TypeBalanceDto:
+      $ref: ./components/schemas/balance/TypeBalanceDto.yaml
+    GenericCommandListUserSettingBankClientUpdateDto:
+      $ref: ./components/schemas/accounts/GenericCommandListUserSettingBankClientUpdateDto.yaml
+    UserSettingAccountUpdateDto:
+      $ref: ./components/schemas/accounts/UserSettingAccountUpdateDto.yaml
+    UserSettingBankClientUpdateDto:
+      $ref: ./components/schemas/accounts/UserSettingBankClientUpdateDto.yaml
+    GenericCommandUserSettingsAccountNameUpdateDto:
+      $ref: ./components/schemas/account-name/GenericCommandUserSettingsAccountNameUpdateDto.yaml
+    UserSettingsAccountNameUpdateDto:
+      $ref: ./components/schemas/account-name/UserSettingsAccountNameUpdateDto.yaml
+    GenericCommandTurnoverSummaryRequestDto:
+      $ref: ./components/schemas/get-dashboard-data/GenericCommandTurnoverSummaryRequestDto.yaml
+    TurnoverSummaryRequestDto:
+      $ref: ./components/schemas/get-dashboard-data/TurnoverSummaryRequestDto.yaml
+    DailySummary:
+      $ref: ./components/schemas/get-dashboard-data/DailySummary.yaml
+    GenericResponseSimpleErrorDataTurnoversDashboardInfo:
+      $ref: ./components/schemas/get-dashboard-data/GenericResponseSimpleErrorDataTurnoversDashboardInfo.yaml
+    MonthlySummary:
+      $ref: ./components/schemas/get-dashboard-data/MonthlySummary.yaml
+    TurnoversDashboardInfo:
+      $ref: ./components/schemas/get-dashboard-data/TurnoversDashboardInfo.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    GenericCommandPaymentDocTotalFilterDto:
+      $ref: ./components/schemas/payment-doc/GenericCommandPaymentDocTotalFilterDto.yaml
+    PaymentDocTotalFilterDto:
+      $ref: ./components/schemas/payment-doc/PaymentDocTotalFilterDto.yaml
+    CounterPaymentDocDto:
+      $ref: ./components/schemas/payment-doc/CounterPaymentDocDto.yaml
+    CounterPaymentDocType:
+      $ref: ./components/schemas/payment-doc/CounterPaymentDocType.yaml
+    GenericResponseSimpleErrorDataListCounterPaymentDocDto:
+      $ref: ./components/schemas/payment-doc/GenericResponseSimpleErrorDataListCounterPaymentDocDto.yaml
+    CounterByCategoryAndDateFilterDto:
+      $ref: ./components/schemas/counter-list/CounterByCategoryAndDateFilterDto.yaml
+    GenericCommandCounterByCategoryAndDateFilterDto:
+      $ref: ./components/schemas/counter-list/GenericCommandCounterByCategoryAndDateFilterDto.yaml
+    CounterWithDocTypeDto:
+      $ref: ./components/schemas/counter-list/CounterWithDocTypeDto.yaml
+    GenericResponseSimpleErrorDataListCounterWithDocTypeDto:
+      $ref: ./components/schemas/counter-list/GenericResponseSimpleErrorDataListCounterWithDocTypeDto.yaml
+    GenericCommandSendMobileRequestDto:
+      $ref: ./components/schemas/send/GenericCommandSendMobileRequestDto.yaml
+    SendMobileRequestDto:
+      $ref: ./components/schemas/send/SendMobileRequestDto.yaml
+    GenericResponseSimpleErrorDataSendMobileRequestDto:
+      $ref: ./components/schemas/send/GenericResponseSimpleErrorDataSendMobileRequestDto.yaml
+    GenericCommandListString:
+      $ref: ./components/schemas/get-list/GenericCommandListString.yaml
+    CurrencyRateDto:
+      $ref: ./components/schemas/get-list/CurrencyRateDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyRateDto:
+      $ref: ./components/schemas/get-list/GenericResponseSimpleErrorDataListCurrencyRateDto.yaml
+    GenericCommandLong:
+      $ref: ./components/schemas/v2/GenericCommandLong.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataString.yaml
+    GenericCommandListLong:
+      $ref: ./components/schemas/v2/GenericCommandListLong.yaml
+    AccountPlaneBalanceV2Dto:
+      $ref: ./components/schemas/v2/AccountPlaneBalanceV2Dto.yaml
+    GenericResponseSimpleErrorDataListAccountPlaneBalanceV2Dto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataListAccountPlaneBalanceV2Dto.yaml
+    AccountInfoFilterDto:
+      $ref: ./components/schemas/v2/AccountInfoFilterDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/v2/FilterValueDtoString.yaml
+    GenericCommandAccountInfoFilterDto:
+      $ref: ./components/schemas/v2/GenericCommandAccountInfoFilterDto.yaml
+    AccountBlockAggregateDto:
+      $ref: ./components/schemas/v2/AccountBlockAggregateDto.yaml
+    AccountBlockInfoDto:
+      $ref: ./components/schemas/v2/AccountBlockInfoDto.yaml
+    AccountInfoResponseV2Dto:
+      $ref: ./components/schemas/v2/AccountInfoResponseV2Dto.yaml
+    AccountInfoV2Dto:
+      $ref: ./components/schemas/v2/AccountInfoV2Dto.yaml
+    AccountKindDto:
+      $ref: ./components/schemas/v2/AccountKindDto.yaml
+    AccountOrgInfoGroup:
+      $ref: ./components/schemas/v2/AccountOrgInfoGroup.yaml
+    AccountOrgTotalInfo:
+      $ref: ./components/schemas/v2/AccountOrgTotalInfo.yaml
+    BankClientShortDto:
+      $ref: ./components/schemas/v2/BankClientShortDto.yaml
+    BranchInfoV2Dto:
+      $ref: ./components/schemas/v2/BranchInfoV2Dto.yaml
+    BranchShortDto:
+      $ref: ./components/schemas/v2/BranchShortDto.yaml
+    ClientAccountTotalDto:
+      $ref: ./components/schemas/v2/ClientAccountTotalDto.yaml
+    ContractTypeDtoV2:
+      $ref: ./components/schemas/v2/ContractTypeDtoV2.yaml
+    CurrencyDto:
+      $ref: ./components/schemas/v2/CurrencyDto.yaml
+    CurrencyServicesDto:
+      $ref: ./components/schemas/v2/CurrencyServicesDto.yaml
+    GenericResponseSimpleErrorDataAccountInfoResponseV2Dto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataAccountInfoResponseV2Dto.yaml
+    OrganInfoDto:
+      $ref: ./components/schemas/v2/OrganInfoDto.yaml
+    TariffInfoV2Dto:
+      $ref: ./components/schemas/v2/TariffInfoV2Dto.yaml
+    AccountsInfoFilter:
+      $ref: ./components/schemas/get-page/AccountsInfoFilter.yaml
+    AccountsInfoRequestDto:
+      $ref: ./components/schemas/get-page/AccountsInfoRequestDto.yaml
+    AccountGroupDto:
+      $ref: ./components/schemas/get-page/AccountGroupDto.yaml
+    AccountGroupTotalDto:
+      $ref: ./components/schemas/get-page/AccountGroupTotalDto.yaml
+    AccountInfoResponseDto:
+      $ref: ./components/schemas/get-page/AccountInfoResponseDto.yaml
+    AccountTotalDto:
+      $ref: ./components/schemas/get-page/AccountTotalDto.yaml
+    BalanceInfoDto:
+      $ref: ./components/schemas/get-page/BalanceInfoDto.yaml
+    CurrencyTotalDto:
+      $ref: ./components/schemas/get-page/CurrencyTotalDto.yaml
+    GenericResponseSimpleErrorDataAccountInfoResponseDto:
+      $ref: ./components/schemas/get-page/GenericResponseSimpleErrorDataAccountInfoResponseDto.yaml
+    DocForApprovalDateFilterDto:
+      $ref: ./components/schemas/approval-sign-doc-after-list/DocForApprovalDateFilterDto.yaml
+    GenericCommandDocForApprovalDateFilterDto:
+      $ref: ./components/schemas/approval-sign-doc-after-list/GenericCommandDocForApprovalDateFilterDto.yaml
+    ApprovalSignDocumentAfterDto:
+      $ref: ./components/schemas/approval-sign-doc-after-list/ApprovalSignDocumentAfterDto.yaml
+    GenericResponseSimpleErrorDataApprovalSignDocumentAfterDto:
+      $ref: ./components/schemas/approval-sign-doc-after-list/GenericResponseSimpleErrorDataApprovalSignDocumentAfterDto.yaml
+    GenericResponseSimpleErrorDataWidgetsAvailabilityResponseDto:
+      $ref: ./components/schemas/availability/GenericResponseSimpleErrorDataWidgetsAvailabilityResponseDto.yaml
+    RecentDocDto:
+      $ref: ./components/schemas/common/RecentDocDto.yaml
+    WidgetDataDto:
+      $ref: ./components/schemas/availability/WidgetDataDto.yaml
+    WidgetsAvailabilityResponseDto:
+      $ref: ./components/schemas/availability/WidgetsAvailabilityResponseDto.yaml
+    GenericResponseSimpleErrorDataUserSettingsAccountBlockDto:
+      $ref: ./components/schemas/user-settings/GenericResponseSimpleErrorDataUserSettingsAccountBlockDto.yaml
+    UserSettingsAccountBlockDto:
+      $ref: ./components/schemas/user-settings/UserSettingsAccountBlockDto.yaml
+    UserSettingsAccountDto:
+      $ref: ./components/schemas/user-settings/UserSettingsAccountDto.yaml
+    UserSettingsBankClientDto:
+      $ref: ./components/schemas/user-settings/UserSettingsBankClientDto.yaml
+    ListResponseRecentDocDto:
+      $ref: ./components/schemas/common/ListResponseRecentDocDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingFnsRequestMainPageDto:
+      $ref: ./components/schemas/get-identification-requests/GenericResponseSimpleErrorDataListOnboardingFnsRequestMainPageDto.yaml
+    OnboardingFnsRequestMainPageDto:
+      $ref: ./components/schemas/get-identification-requests/OnboardingFnsRequestMainPageDto.yaml
+    GenericResponseSimpleErrorDataMapAccountAccessPaymentDocumentTypeDtoSetAccountAccessPaymentDocumentActionTypeDto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataMapAccountAccessPaymentDocumentTypeDtoSetAccountAccessPaymentDocumentActionTypeDto.yaml
+    ApprovalSignDocumentAllBeforeDto:
+      $ref: ./components/schemas/approval-sign-doc-before-list/ApprovalSignDocumentAllBeforeDto.yaml
+    ApprovalSignDocumentBeforeDto:
+      $ref: ./components/schemas/approval-sign-doc-before-list/ApprovalSignDocumentBeforeDto.yaml
+    GenericResponseSimpleErrorDataApprovalSignDocumentAllBeforeDto:
+      $ref: ./components/schemas/approval-sign-doc-before-list/GenericResponseSimpleErrorDataApprovalSignDocumentAllBeforeDto.yaml

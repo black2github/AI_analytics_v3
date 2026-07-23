@@ -1,0 +1,7 @@
+type: object
+properties:
+  code:
+    type: integer
+    description: Код типа счета
+    format: int64
+description: ДТО типа счета

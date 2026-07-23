@@ -1,0 +1,109 @@
+type: object
+description: Заявка на регистрацию ЮЛ в системе АС СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  number:
+    type: integer
+    format: int32
+    description: Номер заявки
+  date:
+    type: string
+    format: date-time
+    description: Дата заявки
+  contractNumber:
+    type: string
+    description: Номер договора
+  redirectUrl:
+    type: string
+    description: Страница платформы Агента ТСП
+    maxLength: 1024
+  contractDate:
+    type: string
+    format: date
+    description: Дата договора
+  signDate:
+    type: string
+    format: date
+    description: Дата подписи
+  legalId:
+    type: string
+    description: Идентификатор Клиента в АС СБП
+  mccCode:
+    type: string
+    description: Вид деятельности код MCC
+  mccName:
+    type: string
+    description: Вид деятельности
+  okved:
+    type: string
+    description: ОКВЭД
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - CLIENT_REGISTRATION_DELIVERED
+    - CLIENT_REGISTRATION_RECEIVED
+    - CLIENT_REGISTRATION_ERROR
+    - CLIENT_REGISTERED
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+    - EXPORT_AGENTS_PRE_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_PRE_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_PRE_CONNECTION
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - EXPORT_AGENTS_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_CONNECTION
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  bankClient:
+    $ref: ./SbpContractBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  accounts:
+    type: array
+    description: Счета клиента по заявке
+    items:
+      $ref: ./SbpAccountRequestCreateDto.yaml
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  agreements:
+    $ref: ./AgreementsDto.yaml
+    description: Согласия
+  dppData:
+    $ref: ./DppDataDto.yaml
+    description: Данные баннера (заявка создана в результате перехода с рекламного баннера)
+  agentsIds:
+    type: array
+    description: Идентификаторы агентов клиента для подключения
+    items:
+      type: string

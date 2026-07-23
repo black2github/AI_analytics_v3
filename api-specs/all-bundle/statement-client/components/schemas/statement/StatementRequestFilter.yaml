@@ -1,0 +1,15 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  accountIds:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./StatementRequestStatusFilter.yaml
+  signed:
+    $ref: ./FilterValueDtoBoolean.yaml
+  periodType:
+    $ref: ../common/StatementRequestPeriodTypeFilter.yaml
+  format:
+    $ref: ./StatementRequestFormatFilter.yaml
+description: Фильтр

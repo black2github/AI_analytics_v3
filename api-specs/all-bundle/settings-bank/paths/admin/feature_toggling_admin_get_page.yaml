@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Получить страницу записей
+  description: 'Привилегии: FEATURE_VIEW'
+  operationId: getPage_4
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/GetPageCommandFeatureFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/PageDataFeatureScrollerDto.yaml

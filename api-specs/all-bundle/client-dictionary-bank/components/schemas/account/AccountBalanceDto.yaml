@@ -1,0 +1,17 @@
+required:
+- accountNumber
+- currentBalance
+- f1AccountId
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  accountNumber:
+    type: string
+    description: Номер счета
+  currentBalance:
+    type: number
+    description: Текущий остаток
+description: Информация о текущем остатке счета

@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи о связи физического лица
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CL_PRIV_ESK_ECO (Данные о связи АБС ИД и ЕСК ИД физ.лица)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+  responses:
+    '204':
+      description: No Content

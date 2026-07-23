@@ -1,0 +1,17 @@
+type: object
+description: Заявка на регистрацию ЮЛ в системе АС СБП
+properties:
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  sbpAccountId:
+    type: integer
+    format: int32
+    description: ID счета в СБП
+  isReturn:
+    type: boolean
+    description: Признак счета для возврата
+  isCommission:
+    type: boolean
+    description: Признак счета для списания комиссии

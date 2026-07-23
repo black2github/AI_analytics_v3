@@ -1,0 +1,55 @@
+type: object
+properties:
+  accountTypeCode:
+    type: integer
+    description: Тип открываемого счёта
+    format: int64
+  availableTariffPromo:
+    type: string
+    description: Доступная акция
+  branchLocation:
+    type: string
+    description: Город обслуживания
+  externalSystemInfoId:
+    type: string
+    description: ID записи сведений по заявке во внешней системе
+  inn:
+    pattern: ^(\d{5}|\d{10}|\d{12})$
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  marketingCampaignCode:
+    type: string
+    description: Классификатор маркетинговых кампаний
+    enum:
+    - STANDARD
+    - GPN_CRED
+  marketingCampaignOrganizationId:
+    type: string
+    description: GUID участника маркетинговой кампании
+    format: uuid
+  name:
+    type: string
+    description: Полное наименование клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  partnerSite:
+    type: string
+    description: Сайт партнёра
+  referencePage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  source:
+    type: string
+    description: Источник создания короткой заявки
+    enum:
+    - LANDING_PAGE
+    - CRM_INFOR
+    - ONBOARDING
+description: Данные

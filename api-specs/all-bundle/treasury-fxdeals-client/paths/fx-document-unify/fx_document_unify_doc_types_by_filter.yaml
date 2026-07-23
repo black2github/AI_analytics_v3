@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для Конверсионных сделок (автокотирования и подтверждения).
+  summary: Получение типов документов с учетом фильтра
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND (hasAuthority(''TREASURY_FX_DEALS_CONFIRMATION_COMMON'') OR hasAuthority(''TREASURY_FX_DEALS_AUTOQUOTING_COMMON''))'
+  operationId: getDocTypesByFilter
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/fx-document-unify/GenericCommandFxDealDocClientFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/fx-document-unify/GenericResponseErrorDataListEnumObjectDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

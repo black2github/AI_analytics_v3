@@ -1,0 +1,11 @@
+type: object
+properties:
+  kpp:
+    type: string
+    description: КПП клиента
+  isMain:
+    type: boolean
+    writeOnly: true
+  main:
+    type: boolean
+description: КПП клиента

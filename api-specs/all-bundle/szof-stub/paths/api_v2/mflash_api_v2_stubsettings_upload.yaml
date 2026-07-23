@@ -1,0 +1,10 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/api_v2/StubSettingsUpload.yaml
+    required: true
+  responses:
+    '201':
+      description: Created

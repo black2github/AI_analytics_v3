@@ -1,0 +1,13 @@
+get:
+  tags:
+  - АПИ Банка для управления пользовательскими настройками
+  summary: Получить список всех настроек пользователя
+  description: 'Привилегии: SETTINGS.BANK.USER_SETTINGS_GET_ALL'
+  operationId: getList_1
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataListUserSettingsDto.yaml

@@ -1,0 +1,21 @@
+type: object
+description: Запрос на подключение/отключение агентов ТСП
+properties:
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ в СБП
+  guid:
+    type: string
+    description: Идентификатор BSS
+  docType:
+    type: string
+    description: Тип документа
+  state:
+    $ref: ./AgentSetTransferPermissionStateDto.yaml
+    type: string
+    description: Статус подключения
+  agents:
+    type: array
+    items:
+      type: string
+    description: Список идентификаторов агентов для подключения

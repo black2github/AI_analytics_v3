@@ -1,0 +1,32 @@
+required:
+- attachmentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: ID вложения
+    format: uuid
+  clientOfficialDstId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+  clientId:
+    type: string
+    description: ID Клиента
+    format: uuid
+  absId:
+    type: string
+    description: РКО Ф1 перс пользователя ДБО
+  inn:
+    type: string
+    description: В случае если клиент не задан используется в контроле ИНН
+  ogrn:
+    type: string
+    description: В случае если клиент не задан используется в контроле ОГРН
+  backUrl:
+    type: string
+    description: URL перехода при завершении процесса регистрации
+  checkIssuer:
+    type: boolean
+    description: Проверять издателя
+description: Запрос создания заявки на регистрацию сертификата

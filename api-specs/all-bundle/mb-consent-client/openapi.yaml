@@ -1,0 +1,267 @@
+openapi: 3.0.1
+info:
+  title: Сервис Мульти-банкинг Согласие. Клиентская часть.
+  version: 1.0.0
+servers:
+- url: /mb-consent-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+paths:
+  /v1/openapi/account-consents:
+    $ref: ./paths/misc/v1_openapi_account_consents.yaml
+  /v1/grant-consent/validate:
+    $ref: ./paths/grant-consent/v1_grant_consent_validate.yaml
+  /v1/grant-consent/sign:
+    $ref: ./paths/grant-consent/v1_grant_consent_sign.yaml
+  /v1/grant-consent/reject-not-approved:
+    $ref: ./paths/grant-consent/v1_grant_consent_reject_not_approved.yaml
+  /v1/grant-consent/generate-sign-data:
+    $ref: ./paths/grant-consent/v1_grant_consent_generate_sign_data.yaml
+  /v1/grant-consent/generate-digest/version:
+    $ref: ./paths/grant-consent/v1_grant_consent_generate_digest_version.yaml
+  /v1/grant-consent/create:
+    $ref: ./paths/grant-consent/v1_grant_consent_create.yaml
+  /v1/consent/scroller/get-page:
+    $ref: ./paths/consent/v1_consent_scroller_get_page.yaml
+  /v1/consent/revoke/{id}:
+    $ref: ./paths/consent/v1_consent_revoke_id.yaml
+  /v1/consent/attach-user:
+    $ref: ./paths/consent/v1_consent_attach_user.yaml
+  /v1/consent/actualize:
+    $ref: ./paths/consent/v1_consent_actualize.yaml
+  /v1/consent/actualize-all:
+    $ref: ./paths/consent/v1_consent_actualize_all.yaml
+  /v1/consent/actualize-accounts:
+    $ref: ./paths/consent/v1_consent_actualize_accounts.yaml
+  /v1/consent/accounts:
+    $ref: ./paths/consent/v1_consent_accounts.yaml
+  /v1/consent/accounts/list:
+    $ref: ./paths/consent/v1_consent_accounts_list.yaml
+  /v1/consent/accounts/available/{id}:
+    $ref: ./paths/consent/v1_consent_accounts_available_id.yaml
+  /v1/acquire-consent/retry:
+    $ref: ./paths/acquire-consent/v1_acquire_consent_retry.yaml
+  /v1/acquire-consent/finish-auth:
+    $ref: ./paths/acquire-consent/v1_acquire_consent_finish_auth.yaml
+  /v1/acquire-consent/controls:
+    $ref: ./paths/acquire-consent/v1_acquire_consent_controls.yaml
+  /v1/acquire-consent/consent-request:
+    $ref: ./paths/acquire-consent/v1_acquire_consent_consent_request.yaml
+  /v1/openapi/account-consents/{consentId}:
+    $ref: ./paths/misc/v1_openapi_account_consents_consentId.yaml
+  /v1/grant-consent/approve/{approveId}:
+    $ref: ./paths/grant-consent/v1_grant_consent_approve_approveId.yaml
+  /v1/consent/{id}:
+    $ref: ./paths/consent/v1_consent_id.yaml
+  /v1/consent/scroller/partner/{bankCode}:
+    $ref: ./paths/consent/v1_consent_scroller_partner_bankCode.yaml
+  /v1/consent/scroller/owner-partners:
+    $ref: ./paths/consent/v1_consent_scroller_owner_partners.yaml
+  /v1/consent/scroller/init-partners:
+    $ref: ./paths/consent/v1_consent_scroller_init_partners.yaml
+  /v1/bank-partners:
+    $ref: ./paths/misc/v1_bank_partners.yaml
+  /v1/acquire-consent/sign-auth-reuest:
+    $ref: ./paths/acquire-consent/v1_acquire_consent_sign_auth_reuest.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    Consent:
+      $ref: ./components/schemas/misc/Consent.yaml
+    ConsentCreateOApiRqDto:
+      $ref: ./components/schemas/misc/ConsentCreateOApiRqDto.yaml
+    ConsentOApiDto:
+      $ref: ./components/schemas/misc/ConsentOApiDto.yaml
+    DataConsentResponse:
+      $ref: ./components/schemas/misc/DataConsentResponse.yaml
+    OApiErrorItemDto:
+      $ref: ./components/schemas/misc/OApiErrorItemDto.yaml
+    OApiLinksDto:
+      $ref: ./components/schemas/misc/OApiLinksDto.yaml
+    OApiMetaDto:
+      $ref: ./components/schemas/misc/OApiMetaDto.yaml
+    GenericCommandGrantConsentValidateDto:
+      $ref: ./components/schemas/grant-consent/GenericCommandGrantConsentValidateDto.yaml
+    GrantConsentValidateDto:
+      $ref: ./components/schemas/grant-consent/GrantConsentValidateDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SignCommand:
+      $ref: ./components/schemas/grant-consent/SignCommand.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    FailedControl:
+      $ref: ./components/schemas/common/FailedControl.yaml
+    GenericResponseSimpleErrorDataGrantConsentDto:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataGrantConsentDto.yaml
+    GrantAccountDto:
+      $ref: ./components/schemas/grant-consent/GrantAccountDto.yaml
+    GrantConsentDto:
+      $ref: ./components/schemas/grant-consent/GrantConsentDto.yaml
+    ValidationResultDto:
+      $ref: ./components/schemas/common/ValidationResultDto.yaml
+    GenericCommandGrantConsentNotApprovedDto:
+      $ref: ./components/schemas/grant-consent/GenericCommandGrantConsentNotApprovedDto.yaml
+    GrantConsentNotApprovedDto:
+      $ref: ./components/schemas/grant-consent/GrantConsentNotApprovedDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/grant-consent/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/grant-consent/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/grant-consent/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/grant-consent/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/grant-consent/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/grant-consent/UniSignV2x1Dto.yaml
+    DigestRequest:
+      $ref: ./components/schemas/grant-consent/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/grant-consent/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataDigest.yaml
+    GenericCommandGrantConsentCreateDto:
+      $ref: ./components/schemas/grant-consent/GenericCommandGrantConsentCreateDto.yaml
+    GrantConsentCreateDto:
+      $ref: ./components/schemas/grant-consent/GrantConsentCreateDto.yaml
+    ConsentAvailableActionFilterDto:
+      $ref: ./components/schemas/consent/ConsentAvailableActionFilterDto.yaml
+    ConsentClientFilterDto:
+      $ref: ./components/schemas/consent/ConsentClientFilterDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/consent/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/consent/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/consent/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBankCodeDto:
+      $ref: ./components/schemas/consent/FilterValueEnumDtoBankCodeDto.yaml
+    FilterValueEnumDtoConsentStatusDto:
+      $ref: ./components/schemas/consent/FilterValueEnumDtoConsentStatusDto.yaml
+    GetPageCommandConsentClientFilterDto:
+      $ref: ./components/schemas/consent/GetPageCommandConsentClientFilterDto.yaml
+    PageParamsConsentClientFilterDto:
+      $ref: ./components/schemas/consent/PageParamsConsentClientFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/consent/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/consent/Sort.yaml
+    ConsentAccountScrollerDto:
+      $ref: ./components/schemas/consent/ConsentAccountScrollerDto.yaml
+    ConsentScrollerRsDto:
+      $ref: ./components/schemas/consent/ConsentScrollerRsDto.yaml
+    PageDataConsentScrollerRsDto:
+      $ref: ./components/schemas/consent/PageDataConsentScrollerRsDto.yaml
+    ConsentDto:
+      $ref: ./components/schemas/consent/ConsentDto.yaml
+    GenericResponseSimpleErrorDataConsentDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataConsentDto.yaml
+    ConsentAttachRqDto:
+      $ref: ./components/schemas/consent/ConsentAttachRqDto.yaml
+    ActualizeAuthorizedConsentRqDto:
+      $ref: ./components/schemas/consent/ActualizeAuthorizedConsentRqDto.yaml
+    GenericResponseSimpleErrorDataListConsentDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataListConsentDto.yaml
+    AccountsActualizationRequestDto:
+      $ref: ./components/schemas/consent/AccountsActualizationRequestDto.yaml
+    AccountsRenewalDto:
+      $ref: ./components/schemas/consent/AccountsRenewalDto.yaml
+    GenericResponseSimpleErrorDataAccountsRenewalDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataAccountsRenewalDto.yaml
+    SingleAccountRenewalDto:
+      $ref: ./components/schemas/consent/SingleAccountRenewalDto.yaml
+    AccountConsentScrollerFilter:
+      $ref: ./components/schemas/consent/AccountConsentScrollerFilter.yaml
+    BankCodeFilterDto:
+      $ref: ./components/schemas/consent/BankCodeFilterDto.yaml
+    FilterValueDtoAccountStatusDto:
+      $ref: ./components/schemas/consent/FilterValueDtoAccountStatusDto.yaml
+    GetPageCommandAccountConsentScrollerFilter:
+      $ref: ./components/schemas/consent/GetPageCommandAccountConsentScrollerFilter.yaml
+    PageParamsAccountConsentScrollerFilter:
+      $ref: ./components/schemas/consent/PageParamsAccountConsentScrollerFilter.yaml
+    AccountConsentScrollerRsDto:
+      $ref: ./components/schemas/consent/AccountConsentScrollerRsDto.yaml
+    AccountDto:
+      $ref: ./components/schemas/consent/AccountDto.yaml
+    BankClientInfoScrollerDto:
+      $ref: ./components/schemas/consent/BankClientInfoScrollerDto.yaml
+    PageDataAccountConsentScrollerRsDto:
+      $ref: ./components/schemas/consent/PageDataAccountConsentScrollerRsDto.yaml
+    GetPageCommandSimpleAccountsFilterDto:
+      $ref: ./components/schemas/consent/GetPageCommandSimpleAccountsFilterDto.yaml
+    PageParamsSimpleAccountsFilterDto:
+      $ref: ./components/schemas/consent/PageParamsSimpleAccountsFilterDto.yaml
+    SimpleAccountsFilterDto:
+      $ref: ./components/schemas/consent/SimpleAccountsFilterDto.yaml
+    GenericResponseSimpleErrorDataPageDataSimpleAccountDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataPageDataSimpleAccountDto.yaml
+    PageDataSimpleAccountDto:
+      $ref: ./components/schemas/consent/PageDataSimpleAccountDto.yaml
+    SimpleAccountDto:
+      $ref: ./components/schemas/consent/SimpleAccountDto.yaml
+    AvailableAccountDto:
+      $ref: ./components/schemas/consent/AvailableAccountDto.yaml
+    GenericResponseSimpleErrorDataListAvailableAccountDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataListAvailableAccountDto.yaml
+    AcquireRetryDto:
+      $ref: ./components/schemas/acquire-consent/AcquireRetryDto.yaml
+    GenericCommandAcquireRetryDto:
+      $ref: ./components/schemas/acquire-consent/GenericCommandAcquireRetryDto.yaml
+    ConsentAuthParams:
+      $ref: ./components/schemas/acquire-consent/ConsentAuthParams.yaml
+    AcquireVerifyControlsDto:
+      $ref: ./components/schemas/acquire-consent/AcquireVerifyControlsDto.yaml
+    GenericCommandAcquireVerifyControlsDto:
+      $ref: ./components/schemas/acquire-consent/GenericCommandAcquireVerifyControlsDto.yaml
+    AcquireConsentCreateDto:
+      $ref: ./components/schemas/acquire-consent/AcquireConsentCreateDto.yaml
+    GenericCommandAcquireConsentCreateDto:
+      $ref: ./components/schemas/acquire-consent/GenericCommandAcquireConsentCreateDto.yaml
+    AcquireConsentDto:
+      $ref: ./components/schemas/acquire-consent/AcquireConsentDto.yaml
+    BankInfoDto:
+      $ref: ./components/schemas/acquire-consent/BankInfoDto.yaml
+    GenericResponseSimpleErrorDataAcquireConsentDto:
+      $ref: ./components/schemas/acquire-consent/GenericResponseSimpleErrorDataAcquireConsentDto.yaml
+    ApproveInfoDto:
+      $ref: ./components/schemas/grant-consent/ApproveInfoDto.yaml
+    GenericResponseSimpleErrorDataApproveInfoDto:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataApproveInfoDto.yaml
+    GenericResponseSimpleErrorDataPartnerBankDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataPartnerBankDto.yaml
+    PartnerBankDto:
+      $ref: ./components/schemas/consent/PartnerBankDto.yaml
+    BankFeedDto:
+      $ref: ./components/schemas/consent/BankFeedDto.yaml
+    GenericResponseSimpleErrorDataBankFeedDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataBankFeedDto.yaml
+    BankPartnerInfoDto:
+      $ref: ./components/schemas/misc/BankPartnerInfoDto.yaml
+    GenericResponseSimpleErrorDataListBankPartnerInfoDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataListBankPartnerInfoDto.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/acquire-consent/GenericResponseSimpleErrorDataString.yaml
+    OApiDtoVoidVoid:
+      $ref: ./components/schemas/misc/OApiDtoVoidVoid.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

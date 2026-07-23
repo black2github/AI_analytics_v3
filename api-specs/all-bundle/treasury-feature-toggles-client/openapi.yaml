@@ -1,0 +1,27 @@
+openapi: 3.0.1
+info:
+  title: Сервис переключения фич. Клиентская часть.
+  version: 3.68.1
+servers:
+- url: /treasury-feature-toggles
+security:
+- bearerAuth: []
+paths:
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /feature-toggles/client/features:
+    $ref: ./paths/client/feature_toggles_client_features.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

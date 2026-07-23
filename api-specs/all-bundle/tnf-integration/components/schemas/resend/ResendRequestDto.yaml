@@ -1,0 +1,11 @@
+type: object
+description: Запрос на повторную отправку сообщений ТНФ
+properties:
+  ids:
+    type: array
+    description: Идентификаторы записей в Журнале
+    items:
+      type: string
+      format: uuid
+required:
+- ids

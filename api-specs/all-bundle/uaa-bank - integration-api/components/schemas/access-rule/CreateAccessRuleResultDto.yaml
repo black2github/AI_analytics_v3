@@ -1,0 +1,19 @@
+type: object
+properties:
+  createdRules:
+    uniqueItems: true
+    type: array
+    description: Список ID созданных ПД
+    items:
+      type: string
+      description: Список ID созданных ПД
+      format: uuid
+  createdAbacGrantAccessRules:
+    uniqueItems: true
+    type: array
+    description: Список ID созданных ПД по реквизитам
+    items:
+      type: string
+      description: Список ID созданных ПД по реквизитам
+      format: uuid
+description: Результат создания ПД

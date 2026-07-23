@@ -1,0 +1,67 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+  filialEskCode:
+    type: string
+  location:
+    type: string
+  utcOffset:
+    type: integer
+    format: int32
+  transferredBalanceHeadUnit:
+    type: boolean
+  name:
+    type: string
+  number:
+    type: string
+  knosisId:
+    type: integer
+    format: int64
+  absCode:
+    type: string
+  address:
+    type: string
+  schedule:
+    type: string
+  latitude:
+    type: number
+  longitude:
+    type: number
+  branchServices:
+    type: array
+    items:
+      type: string
+  metroStation:
+    type: string
+  metroLine:
+    type: string
+  metroColor:
+    type: string
+  metroDistance:
+    type: integer
+    format: int32
+  vspNumber:
+    type: string
+  needAgreement:
+    type: boolean
+  koulSchedule:
+    type: array
+    items:
+      $ref: ./CashOfficeScheduleDto.yaml
+  koulezSchedule:
+    type: array
+    items:
+      $ref: ./CashOfficeScheduleDto.yaml
+  oneDayLimit:
+    type: number
+  accessibility:
+    type: boolean
+description: Страница с данными

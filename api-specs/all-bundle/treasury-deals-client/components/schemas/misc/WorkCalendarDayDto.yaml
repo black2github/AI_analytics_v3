@@ -1,0 +1,18 @@
+type: object
+properties:
+  dayDate:
+    type: string
+    description: Дата
+    format: date
+  dayType:
+    type: string
+    description: Тип дня
+    enum:
+    - WORK_DAY
+    - DAY_OFF
+    - NOT_USED
+  dayOfWeekNumber:
+    type: integer
+    description: Номер дня недели (с 0)
+    format: int32
+description: Дни периода календаря

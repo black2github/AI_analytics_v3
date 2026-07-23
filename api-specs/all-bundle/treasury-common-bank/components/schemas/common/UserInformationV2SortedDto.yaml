@@ -1,0 +1,77 @@
+type: object
+properties:
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  authTwoFactorType:
+    type: string
+    description: Тип двухфакторной авторизации пользователя
+    enum:
+    - OTP
+    - SIGN
+  enabledOvernightNotification:
+    type: boolean
+    description: Показывать уведомление о овернайт
+  blockedForAllClients:
+    type: boolean
+    description: Пользователь заблокирован во всех доступных ему организациях
+  userInfoSummary:
+    $ref: ./UserInfoSummaryDto.yaml
+  userInformationByClient:
+    type: array
+    description: Информация о пользователе по клиенту
+    items:
+      $ref: ./UserInformationByClientDto.yaml
+  clientsByFxDocSortOrder:
+    type: array
+    description: Сортировка для отображения в списке сделок конверсии
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  clientsByInvestmentDocSortOrder:
+    type: array
+    description: Сортировка для отображения в списке сделок размещения
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  clientsByGeneralAgreementSortOrder:
+    type: array
+    description: Сортировка для отображения в списке соглашений
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  clientsByAccountSortOrder:
+    type: array
+    description: Сортировка для отображения в списке счетов
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

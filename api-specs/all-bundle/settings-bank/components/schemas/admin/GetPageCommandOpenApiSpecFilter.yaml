@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOpenApiSpecFilter.yaml
+description: Запрос страницы

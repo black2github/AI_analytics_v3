@@ -1,0 +1,44 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса на отчет
+  contractNumber:
+    type: string
+    description: Номер договора
+  requestNumber:
+    type: integer
+    description: Номер запроса
+    format: int32
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  clientContractName:
+    type: string
+    description: Наименование клиента по договору
+  clientName:
+    type: string
+    description: Наименование организации клиента
+  type:
+    type: string
+    description: Тип отчета
+  createdAt:
+    type: string
+    description: Дата создания запроса
+    format: date-time
+  clientComment:
+    type: string
+    description: Коментарий для клиента
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - TXT
+    - PDF
+    - XML
+    - EXCEL
+  brief:
+    type: string
+    description: Краткое наименование договора
+description: Страница с данными

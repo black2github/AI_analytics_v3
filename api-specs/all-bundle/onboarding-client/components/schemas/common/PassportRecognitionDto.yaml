@@ -1,0 +1,155 @@
+type: object
+properties:
+  birthDate:
+    type: string
+    description: Дата рождения
+  birthDateRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Дата рождения'
+    format: float
+  birthPlace:
+    type: string
+    description: Место рождения
+  birthPlaceRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Место рождения'
+    format: float
+  divisionCode:
+    type: string
+    description: Код подразделения выдавшего паспорт
+  divisionCodeRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Код подразделения выдавшего паспорт'
+    format: float
+  fileContentType:
+    type: string
+    description: Тип содержимого файла
+  fileFormat:
+    type: string
+    description: Формат файла
+  fileHash:
+    type: string
+    description: Хэш сумма файла
+  fileId:
+    type: string
+    description: Ссылка на файл
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  fileUploadDate:
+    type: string
+    description: Дата и время загрузки файла
+    format: date-time
+  gender:
+    type: string
+    description: Пол
+  genderRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Пол'
+    format: float
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  name:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Имя
+  nameRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Имя'
+    format: float
+  originalDocId:
+    type: string
+    description: Ссылка на оригинал документа
+    format: uuid
+  passportIssueDate:
+    type: string
+    description: Дата выдачи паспорта
+  passportIssueDateRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Дата выдачи паспорта'
+    format: float
+  passportIssuer:
+    type: string
+    description: Кем выдан паспорт
+  passportIssuerRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Кем выдан паспорт'
+    format: float
+  passportNumber:
+    type: string
+    description: Номер паспорта
+  passportNumberRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Номер паспорта'
+    format: float
+  passportSeries:
+    type: string
+    description: Серия паспорта
+  passportSeriesRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Серия паспорта'
+    format: float
+  patronymic:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Отчество
+  patronymicRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Отчество'
+    format: float
+  personId:
+    type: string
+    description: Ссылка на физ. лицо
+    format: uuid
+  regAddress:
+    type: string
+    description: Адрес регистрации
+  regAddressRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Адрес регистрации'
+    format: float
+  regDate:
+    type: string
+    description: Дата регистрации.
+  regDateRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Дата регистрации'.
+    format: float
+  regMarkDivision:
+    type: string
+    description: Подразделение, которое поставило пометку о регистрации
+  regMarkDivisionCode:
+    type: string
+    description: Код подразделения, которое поставило пометку о регистрации
+  regMarkDivisionCodeRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Код подразделения, которое поставило пометку о регистрации'
+    format: float
+  regMarkDivisionRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Подразделение, которое поставило пометку о регистрации'
+    format: float
+  status:
+    type: string
+    description: Результат выполнения запроса на распознавание данных документа
+    enum:
+    - SUCCESS
+    - FAILURE
+    - TIMEOUT
+    - NO_FIELDS_RECOGNIZED
+  surname:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Фамилия
+  surnameRC:
+    type: number
+    description: Коэффициент уверенности распознавания поля 'Фамилия'
+    format: float
+description: Распознанный паспорт

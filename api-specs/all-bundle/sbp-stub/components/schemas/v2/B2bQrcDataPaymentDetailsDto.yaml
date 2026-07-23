@@ -1,0 +1,38 @@
+type: object
+description: Расширенные данные платежа
+properties:
+  dateTime:
+    type: string
+    description: 'Дата и время операции. По формату: (ISO 8601) YYY-MM-DDThh:mm:ss.sss '
+  code:
+    type: integer
+    format: int32
+    description: Код документа
+  kktRegId:
+    type: string
+    description: Регистрационный номер контрольно-кассовой техники
+  shiftNumber:
+    type: integer
+    format: int32
+    description: Номер смены
+  requestNumber:
+    type: integer
+    format: int32
+    description: Номер чека за смену
+  merchantAddress:
+    type: string
+    description: Адрес
+  operator:
+    type: string
+    description: Кассир
+  retailAddress:
+    type: string
+    description: Адрес точки продаж
+  user:
+    type: string
+    description: Наименование пользователя
+  items:
+    type: array
+    items:
+      $ref: ./ItemDto.yaml
+    description: Предметы расчета

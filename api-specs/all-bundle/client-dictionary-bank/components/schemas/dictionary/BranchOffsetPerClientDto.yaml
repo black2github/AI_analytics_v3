@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента подразделения
+    format: uuid
+  utcOffset:
+    type: integer
+    description: Разница во времени с UTC
+    format: int32
+description: Города подразделений с идентификатором ФИАС

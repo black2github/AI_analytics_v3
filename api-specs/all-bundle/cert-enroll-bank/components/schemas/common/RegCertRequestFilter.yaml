@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoRegCertRequestStatusDto.yaml
+  requestDate:
+    $ref: ./FilterValueDtoZonedDateTime.yaml
+  requestNumberSystem:
+    $ref: ./FilterValueDtoLong.yaml
+  requestNumberUser:
+    $ref: ./FilterValueDtoLong.yaml
+  orgName:
+    $ref: ./FilterValueDtoString.yaml
+  innKio:
+    $ref: ./FilterValueDtoString.yaml
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+  ogrn:
+    $ref: ./FilterValueDtoString.yaml
+  fio:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория. (eq)
+    enum:
+    - ALL
+    - PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientOfficialDstId:
+    $ref: ./FilterValueDtoUUID.yaml
+  search:
+    $ref: ./FilterValueDtoString.yaml
+  serialNumber:
+    $ref: ./FilterValueDtoString.yaml
+  clientRnk:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  certificateId:
+    $ref: ./FilterValueDtoUUID.yaml
+  certType:
+    $ref: ./FilterValueEnumDtoRegCertTypeDto.yaml
+description: Фильтр заявки на регистрацию сертификата.

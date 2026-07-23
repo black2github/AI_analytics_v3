@@ -1,0 +1,13 @@
+type: object
+description: Счет клиента и плановый остаток в системе АБС Ф1
+properties:
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  currentBalance:
+    type: number
+    description: Сумма собственных доступных средств (без учета овердрафта)
+  isRegistered:
+    type: boolean
+    description: Признак регистрации в Ф1

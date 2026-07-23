@@ -1,0 +1,10 @@
+type: object
+description: История изменений филиалов для сертификатов автоматической подписи.
+properties:
+  branchId:
+    type: string
+    format: uuid
+    description: Идентификатор филиала.
+  branchName:
+    type: string
+    description: Наименование филиала.

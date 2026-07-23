@@ -1,0 +1,23 @@
+type: object
+properties:
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    type: string
+    description: Поле Subject CN
+  signDateTime:
+    type: string
+    description: Дата подписи
+    format: date-time
+  certificateValidFrom:
+    type: string
+    description: Срок действия сертификата, с
+    format: date-time
+  certificateValidTo:
+    type: string
+    description: Срок действия сертификата, по
+    format: date-time
+  errorInfo:
+    $ref: ../common/ErrorInfo.yaml
+description: Информация о подписи третьих лиц

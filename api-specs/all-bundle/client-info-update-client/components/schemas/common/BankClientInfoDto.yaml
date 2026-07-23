@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  orgName:
+    type: string
+    description: Полное наименование клиента
+  orgShortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+description: Реквизиты клиента по заявке

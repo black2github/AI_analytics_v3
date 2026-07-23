@@ -1,0 +1,13 @@
+type: object
+properties:
+  recipients:
+    type: array
+    description: Список получателей
+    items:
+      type: string
+      description: Список получателей
+  groupMessage:
+    type: boolean
+    description: Отправка одного сообщения группе получателей
+  message:
+    $ref: ./NotificationMessageDto.yaml

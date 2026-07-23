@@ -1,0 +1,6 @@
+type: object
+properties:
+  useHashtags:
+    type: boolean
+    description: Использовать хештеги
+description: Дополнительные параметры

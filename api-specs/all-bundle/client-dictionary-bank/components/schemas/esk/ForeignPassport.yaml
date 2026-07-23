@@ -1,0 +1,23 @@
+type: object
+properties:
+  series:
+    type: string
+    description: Серия паспорта иностранного гражданина
+  number:
+    type: string
+    description: Номер паспорта иностранного гражданина
+  issuedBy:
+    type: string
+    description: Наименование органа, выдавшего иностранный паспорт
+  authorityCode:
+    type: string
+    description: Код подразделения, выдавшего иностранный паспорт
+  issueDate:
+    type: string
+    description: Дата выдачи иностранного паспорта
+    format: date
+  expirationDate:
+    type: string
+    description: Дата окончания срока действия иностранного паспорта
+    format: date
+description: Паспортные данные иностранного гражданина

@@ -1,0 +1,76 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  documentType:
+    type: string
+    description: Тип документа
+    enum:
+    - CONF_DOC_CERT
+    - REG_CONTRACT
+    - RENEW_CONTRACT
+    - REG_CRED_AGREEMENT
+    - RENEW_CRED_AGREEMENT
+    - CONTR_CLOSE
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - WAITING
+    - COMPLETED
+    - REJECTED
+    - PARTIALLY_COMPLETED
+    - ACCEPTED
+    - CANCELED_LKUVED
+    - DECLINED
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+  documentNumber:
+    type: string
+    description: Номер клиентского документа в ДБО
+  documentDate:
+    type: string
+    description: Дата заведения клиентского документа в ДБО
+    format: date
+  bankInformation:
+    $ref: ./BankInformationDto.yaml
+  signatures:
+    type: array
+    description: Подписи
+    items:
+      $ref: ./DocumentSignatureRspDto.yaml
+  attachmentCount:
+    type: integer
+    description: Количество файловых вложений
+    format: int32
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ./AttachmentDto.yaml
+  userInfo:
+    $ref: ./DocumentBankUserInfo.yaml
+  extendedInfo:
+    $ref: ./ExtendedInfoDto.yaml
+description: Карточка документа валютного контроля
+discriminator:
+  propertyName: documentType

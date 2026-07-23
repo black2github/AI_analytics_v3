@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./AdmRequestStatusFilter.yaml
+  type:
+    $ref: ./AdmRequestTypeFilter.yaml
+description: Фильтр заявок АДМ. Клиентская часть

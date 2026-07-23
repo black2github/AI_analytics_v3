@@ -1,0 +1,7 @@
+type: object
+properties:
+  clients:
+    type: array
+    items:
+      $ref: ./RefClientDto.yaml
+description: Данные

@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API списка счетов для запроса справок
+  summary: Получить список счетов для запроса справок
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'')'
+  operationId: getAccountForReference
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/f1/AccountForReferenceRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/SingleResponseAccountForReferenceResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml

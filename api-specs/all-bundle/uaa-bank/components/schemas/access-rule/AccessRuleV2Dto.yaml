@@ -1,0 +1,77 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор правила
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания правила
+    format: date-time
+  organization:
+    $ref: ./BankClientRuleDto.yaml
+  authorizedPerson:
+    $ref: ./AuthorizedPersonRuleDto.yaml
+  origin:
+    type: string
+    description: Система-источник записи
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  comments:
+    type: string
+    description: Комментарий
+  originService:
+    type: string
+    description: Сервис-инициатор создания правила
+  createdManually:
+    type: boolean
+    description: Ручное создание
+  canceledDate:
+    type: string
+    description: Дата аннулирования
+    format: date-time
+  processMarker:
+    type: string
+    description: Метка процесса, создающего правило
+  removeClientOfficial:
+    type: boolean
+    description: Удалить связь с клиентом при отсутствии других доступов
+  canBeRemoved:
+    type: boolean
+    description: Можно изменять при исполнении заявки на доступ
+  phoneNumber:
+    type: string
+    description: Номер телефона представителя клиента
+  email:
+    type: string
+    description: Адрес электронной почты представителя клиента
+  segmentCode:
+    type: string
+    description: Код сегмента
+  segmentName:
+    type: string
+    description: Наименование сегмента
+  roleCode:
+    type: string
+    description: Код роли
+  roleName:
+    type: string
+    description: Наименование роли
+  status:
+    type: string
+    description: Статус
+    enum:
+    - EXECUTED
+    - PENDING_EXECUTION
+    - CANCELED
+  ruleType:
+    type: string
+    description: Тип правила на предоставление/удаление доступа
+    enum:
+    - USER_ADD
+    - USER_CERT_ADD
+    - USER_BLOCK
+    - USER_BLOCK_IN_CLIENT
+    - USER_UNLOCK_IN_CLIENT
+description: Правило предоставления доступа к продукту. DTO. V2

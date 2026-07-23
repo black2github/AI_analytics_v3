@@ -1,0 +1,28 @@
+type: object
+properties:
+  account:
+    $ref: ./FilterValueDtoString.yaml
+  accountAssignment:
+    $ref: ./FilterValueEnumDtoAccountAssignmentDto.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  dbsDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dbsNumber:
+    $ref: ./FilterValueDtoString.yaml
+  divisionName:
+    $ref: ./FilterValueDtoString.yaml
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoClosingRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - SENT
+    - DONE
+description: Фильтр для поиска заявок на закрытие счета для клиентского скроллера

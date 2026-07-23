@@ -1,0 +1,24 @@
+type: object
+description: Информация о доступных пользователю действиях с QR кодом
+properties:
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  download:
+    type: boolean
+    description: Признак возможности скачать
+  sendImage:
+    type: boolean
+    description: Признак возможности отправки
+  repeat:
+    type: boolean
+    description: Признак возможности повтора
+  block:
+    type: boolean
+    description: Признак возможности блокировки
+  viewSubscription:
+    type: boolean
+    description: Признак возможности просмотра подписки
+  paymentLink:
+    type: boolean
+    description: Признак возможности скопировать ссылку на оплату

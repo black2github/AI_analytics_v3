@@ -1,0 +1,10 @@
+type: object
+properties:
+  type:
+    $ref: ./ContractTypeDto.yaml
+  contractType:
+    $ref: ./ContractTypeDtoV2.yaml
+  payerName:
+    type: string
+    description: Наименование плательщика по договору
+description: Блок информации о договоре

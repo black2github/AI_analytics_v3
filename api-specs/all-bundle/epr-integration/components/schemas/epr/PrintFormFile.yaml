@@ -1,0 +1,7 @@
+type: object
+properties:
+  content:
+    type: string
+    description: Содержимое файла
+    format: byte
+description: Файл печатной формы

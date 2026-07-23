@@ -1,0 +1,6 @@
+type: object
+properties:
+  id:
+    type: string
+  data:
+    $ref: ./OAuth2ApplicationModifyRequestBankDto.yaml

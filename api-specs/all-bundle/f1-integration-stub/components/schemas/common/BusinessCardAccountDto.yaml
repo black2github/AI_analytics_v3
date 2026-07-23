@@ -1,0 +1,46 @@
+type: object
+required:
+- accountId
+- clientId
+- number
+description: Данные о счете корпоративной карты
+properties:
+  id:
+    type: integer
+    description: Первичный ключ
+  accountId:
+    type: integer
+    description: Идентификатор счёта
+  clientId:
+    type: integer
+    format: int64
+    description: Код РНК клиента
+    minimum: 1
+  number:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счёта
+  type:
+    type: string
+    minLength: 50
+    description: Тип счёта
+  typeContrAccount:
+    type: string
+    maxLength: 3
+    description: Код вида счета
+  serviceBranchCode:
+    type: string
+    maxLength: 3
+    description: Код филиала обслуживания
+  serviceOfficeCode:
+    type: string
+    maxLength: 3
+    description: Код подразделения обслуживания
+  currencyCode:
+    type: string
+    maxLength: 3
+    description: Буквенный код валюты
+  balance:
+    type: number
+    description: Остаток по счету

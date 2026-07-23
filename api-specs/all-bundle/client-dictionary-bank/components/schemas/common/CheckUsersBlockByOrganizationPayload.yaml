@@ -1,0 +1,10 @@
+required:
+- checkableUsers
+type: object
+properties:
+  checkableUsers:
+    type: array
+    description: Список проверяемых пользователей
+    items:
+      $ref: ./CheckableUser.yaml
+description: Данные для проверки блокировки пользователей по организации

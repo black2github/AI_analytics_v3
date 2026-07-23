@@ -1,0 +1,56 @@
+type: object
+properties:
+  availableOperations:
+    $ref: ./AvailableOperationsDto.yaml
+  availableCashbackOperations:
+    $ref: ./AvailableOperationsDto.yaml
+  orderOperation:
+    $ref: ./OrderOperationDtoForView.yaml
+  orderType:
+    type: string
+    description: 'Тип ордера: CASH_IN / CASH_OUT'
+    example: CASH_IN
+  type:
+    $ref: ./DictionaryExtDto.yaml
+  orderCreator:
+    $ref: ./AdditionalContactsDto.yaml
+  organization:
+    $ref: ./JournalOrganizationDto.yaml
+  selectedUser:
+    $ref: ./UserDto.yaml
+  documentPackage:
+    $ref: ./DocumentPackageDto.yaml
+  executions:
+    type: array
+    description: Все исполнения ордера
+    items:
+      $ref: ./ExecutionInfo.yaml
+  serviceInfo:
+    $ref: ./ServiceInfoDto.yaml
+  bankInfo:
+    $ref: ./BankInfoDto.yaml
+  cashbackRequest:
+    $ref: ./ViewerCashbackRsDto.yaml
+  userEcoId:
+    type: string
+    description: Идентификатор пользователя в экосистеме
+    format: uuid
+  ecoAccountId:
+    type: string
+    description: Идентификатор счёта в экосистеме
+    format: uuid
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commissionAmount:
+    type: number
+    description: Предварительная комиссия
+  tariffType:
+    type: string
+    description: Тип тарифа
+  commissionResultSuccess:
+    type: boolean
+    description: Успешность расчета предварительной комиссии
+description: Базовое ДТО просмотра заявки на выдачу или внесение
+discriminator:
+  propertyName: orderType

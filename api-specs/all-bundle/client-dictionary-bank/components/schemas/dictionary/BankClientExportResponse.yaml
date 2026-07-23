@@ -1,0 +1,7 @@
+type: object
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции
+    format: uuid
+description: Ответ экспорта клиентов банка

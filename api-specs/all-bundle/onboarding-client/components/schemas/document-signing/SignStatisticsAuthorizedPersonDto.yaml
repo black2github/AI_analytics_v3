@@ -1,0 +1,15 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Email
+  fio:
+    type: string
+    description: ФИО
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  position:
+    type: string
+    description: Должность
+description: Информация об УЛ

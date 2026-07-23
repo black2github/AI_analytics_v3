@@ -1,0 +1,192 @@
+openapi: 3.0.1
+info:
+  title: Сервис коротких ссылок. Банковская часть.
+  description: Сервис коротких ссылок.
+  version: 1.32.0
+servers:
+- url: /invite-bank
+security:
+- bearerAuth: []
+tags:
+- name: Интеграционное API инвайтов
+- name: Банковское API инвайтов
+- name: Интеграционное API коротких ссылок
+- name: API коротких ссылок
+paths:
+  /short-links/page:
+    $ref: ./paths/page/short_links_page.yaml
+  /short-links/disable:
+    $ref: ./paths/disable/short_links_disable.yaml
+  /short-links/category:
+    $ref: ./paths/category/short_links_category.yaml
+  /invite/v2/export:
+    $ref: ./paths/v2/invite_v2_export.yaml
+  /invite/page:
+    $ref: ./paths/page/invite_page.yaml
+  /invite/export:
+    $ref: ./paths/export/invite_export.yaml
+  /invite/category:
+    $ref: ./paths/category/invite_category.yaml
+  /integration/short-links/v2/create:
+    $ref: ./paths/short-links/integration_short_links_v2_create.yaml
+  /integration/short-links/disable:
+    $ref: ./paths/short-links/integration_short_links_disable.yaml
+  /integration/short-links/create:
+    $ref: ./paths/short-links/integration_short_links_create.yaml
+  /integration/invites/update-target-person:
+    $ref: ./paths/invites/integration_invites_update_target_person.yaml
+  /integration/invites/update-delivery-status:
+    $ref: ./paths/invites/integration_invites_update_delivery_status.yaml
+  /integration/invites/deactivate:
+    $ref: ./paths/invites/integration_invites_deactivate.yaml
+  /integration/invites/create:
+    $ref: ./paths/invites/integration_invites_create.yaml
+  /integration/invites/cancel:
+    $ref: ./paths/invites/integration_invites_cancel.yaml
+  /integration/invites/batch/process:
+    $ref: ./paths/invites/integration_invites_batch_process.yaml
+  /short-links/{id}:
+    $ref: ./paths/{id}/short_links_id.yaml
+  /short-links/services:
+    $ref: ./paths/services/short_links_services.yaml
+  /integration/short-links/{id}:
+    $ref: ./paths/short-links/integration_short_links_id.yaml
+  /integration/short-links/params/{code}:
+    $ref: ./paths/short-links/integration_short_links_params_code.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoShortLinkUsageStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoShortLinkUsageStatusDto.yaml
+    GetPageCommandShortLinksFilter:
+      $ref: ./components/schemas/page/GetPageCommandShortLinksFilter.yaml
+    PageParamsShortLinksFilter:
+      $ref: ./components/schemas/page/PageParamsShortLinksFilter.yaml
+    Paging:
+      $ref: ./components/schemas/page/Paging.yaml
+    ShortLinksFilter:
+      $ref: ./components/schemas/common/ShortLinksFilter.yaml
+    Sort:
+      $ref: ./components/schemas/page/Sort.yaml
+    GenericResponseSimpleErrorDataPageDataShortLinkDto:
+      $ref: ./components/schemas/page/GenericResponseSimpleErrorDataPageDataShortLinkDto.yaml
+    PageDataShortLinkDto:
+      $ref: ./components/schemas/page/PageDataShortLinkDto.yaml
+    ShortLinkDto:
+      $ref: ./components/schemas/common/ShortLinkDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    DisableLinkInfoDto:
+      $ref: ./components/schemas/common/DisableLinkInfoDto.yaml
+    DisableShortLinkRequest:
+      $ref: ./components/schemas/common/DisableShortLinkRequest.yaml
+    GenericCommandDisableShortLinkRequest:
+      $ref: ./components/schemas/common/GenericCommandDisableShortLinkRequest.yaml
+    DisableShortLinkResponse:
+      $ref: ./components/schemas/common/DisableShortLinkResponse.yaml
+    GenericResponseSimpleErrorDataListDisableShortLinkResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListDisableShortLinkResponse.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    GenericResponseSimpleErrorDataListCategoryCount:
+      $ref: ./components/schemas/category/GenericResponseSimpleErrorDataListCategoryCount.yaml
+    ExportInviteScrollerRequest:
+      $ref: ./components/schemas/common/ExportInviteScrollerRequest.yaml
+    GenericCommandExportInviteScrollerRequest:
+      $ref: ./components/schemas/common/GenericCommandExportInviteScrollerRequest.yaml
+    ExportResponseDto:
+      $ref: ./components/schemas/v2/ExportResponseDto.yaml
+    GenericResponseSimpleErrorDataExportResponseDto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataExportResponseDto.yaml
+    GetPageCommandInviteFilter:
+      $ref: ./components/schemas/page/GetPageCommandInviteFilter.yaml
+    InviteFilter:
+      $ref: ./components/schemas/common/InviteFilter.yaml
+    PageParamsInviteFilter:
+      $ref: ./components/schemas/page/PageParamsInviteFilter.yaml
+    GenericResponseSimpleErrorDataPageDataInviteScrollerDto:
+      $ref: ./components/schemas/page/GenericResponseSimpleErrorDataPageDataInviteScrollerDto.yaml
+    InviteScrollerDto:
+      $ref: ./components/schemas/page/InviteScrollerDto.yaml
+    PageDataInviteScrollerDto:
+      $ref: ./components/schemas/page/PageDataInviteScrollerDto.yaml
+    GenericResponseSimpleErrorDataByte[]:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataByte[].yaml
+    CreateShortLinkIntegrationRequest:
+      $ref: ./components/schemas/short-links/CreateShortLinkIntegrationRequest.yaml
+    GenericCommandCreateShortLinkIntegrationRequest:
+      $ref: ./components/schemas/short-links/GenericCommandCreateShortLinkIntegrationRequest.yaml
+    CreateShortLinkResponse:
+      $ref: ./components/schemas/short-links/CreateShortLinkResponse.yaml
+    GenericResponseSimpleErrorDataCreateShortLinkResponse:
+      $ref: ./components/schemas/short-links/GenericResponseSimpleErrorDataCreateShortLinkResponse.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/short-links/GenericResponseSimpleErrorDataString.yaml
+    GenericCommandUpdateInviteTargetRequest:
+      $ref: ./components/schemas/invites/GenericCommandUpdateInviteTargetRequest.yaml
+    InviteTargetPersonDto:
+      $ref: ./components/schemas/invites/InviteTargetPersonDto.yaml
+    UpdateInviteTargetRequest:
+      $ref: ./components/schemas/invites/UpdateInviteTargetRequest.yaml
+    GenericResponseSimpleErrorDataInviteIntegrationDto:
+      $ref: ./components/schemas/invites/GenericResponseSimpleErrorDataInviteIntegrationDto.yaml
+    InviteIntegrationDto:
+      $ref: ./components/schemas/invites/InviteIntegrationDto.yaml
+    GenericCommandUpdateInviteDeliveryStatusRequest:
+      $ref: ./components/schemas/invites/GenericCommandUpdateInviteDeliveryStatusRequest.yaml
+    UpdateInviteDeliveryStatusRequest:
+      $ref: ./components/schemas/invites/UpdateInviteDeliveryStatusRequest.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/invites/GenericResponseSimpleErrorDataBoolean.yaml
+    DeactivateInviteRequest:
+      $ref: ./components/schemas/invites/DeactivateInviteRequest.yaml
+    GenericCommandDeactivateInviteRequest:
+      $ref: ./components/schemas/invites/GenericCommandDeactivateInviteRequest.yaml
+    CreateInviteRequest:
+      $ref: ./components/schemas/invites/CreateInviteRequest.yaml
+    GenericCommandCreateInviteRequest:
+      $ref: ./components/schemas/invites/GenericCommandCreateInviteRequest.yaml
+    CancelInviteRequest:
+      $ref: ./components/schemas/invites/CancelInviteRequest.yaml
+    GenericCommandCancelInviteRequest:
+      $ref: ./components/schemas/invites/GenericCommandCancelInviteRequest.yaml
+    GenericCommandProcessInviteBatchRequest:
+      $ref: ./components/schemas/invites/GenericCommandProcessInviteBatchRequest.yaml
+    ProcessInviteBatchRequest:
+      $ref: ./components/schemas/invites/ProcessInviteBatchRequest.yaml
+    ProcessInviteRequest:
+      $ref: ./components/schemas/invites/ProcessInviteRequest.yaml
+    GenericResponseSimpleErrorDataProcessInviteBatchResponse:
+      $ref: ./components/schemas/invites/GenericResponseSimpleErrorDataProcessInviteBatchResponse.yaml
+    ProcessInviteBatchError:
+      $ref: ./components/schemas/invites/ProcessInviteBatchError.yaml
+    ProcessInviteBatchResponse:
+      $ref: ./components/schemas/invites/ProcessInviteBatchResponse.yaml
+    GenericResponseSimpleErrorDataShortLinkDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataShortLinkDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/services/GenericResponseSimpleErrorDataListString.yaml
+    GenericResponseSimpleErrorDataShortLinkIntegrationDto:
+      $ref: ./components/schemas/short-links/GenericResponseSimpleErrorDataShortLinkIntegrationDto.yaml
+    ShortLinkIntegrationDto:
+      $ref: ./components/schemas/short-links/ShortLinkIntegrationDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,26 @@
+type: object
+properties:
+  contentType:
+    type: string
+    description: Тип файла шаблона для HTTP заголовков.
+  extension:
+    type: string
+    description: Расширение файла шаблона.
+  id:
+    type: string
+    description: Уникальный идентификатор шаблона
+    format: uuid
+  isVisible:
+    type: boolean
+    description: Отображать в тексте.
+  name:
+    type: string
+    description: Наименование файла шаблона.
+  templateDataId:
+    type: string
+    description: Ссылка на загруженный файл шаблона.
+    format: uuid
+  templateType:
+    type: string
+    description: Вид вложения.
+description: Шаблон типа ДСФ. Возвращаемая ДТО.

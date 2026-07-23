@@ -1,0 +1,25 @@
+type: object
+properties:
+  ownerId:
+    type: string
+    description: Идентификатор объекта-владельца документа в Ф1
+    example: '1231231231'
+  ownerClass:
+    type: string
+    description: Тип объекта-владельца документа в Ф1
+    example: GPS_AGR_RKO
+  docName:
+    type: string
+    description: Наименование содержимого в Ф1
+    example: Бланк акцепта оферты_пример
+  docType:
+    type: string
+    description: Вид документа в Ф1
+    example: DOP_SOGL
+  attachments:
+    type: array
+    description: Файлы с данными образа документа
+    example: Array of AttachmentDto
+    items:
+      $ref: ./AttachmentDto.yaml
+description: Запрос на загрузку документов

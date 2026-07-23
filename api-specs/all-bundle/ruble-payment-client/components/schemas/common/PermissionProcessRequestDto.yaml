@@ -1,0 +1,14 @@
+required:
+- documentId
+- documentVersion
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  documentVersion:
+    type: integer
+    description: Версия документа
+    format: int32
+description: Входящие параметры функции "Определение доступности операции"

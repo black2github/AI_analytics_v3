@@ -1,0 +1,16 @@
+type: object
+description: Ответ с информацией о подключаемом тарифе в Ф1
+properties:
+  error:
+    $ref: ./F1ErrorV2Dto.yaml
+    type: object
+    description: Информация об ошибке
+  dateRegistration:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата регистрации
+  individualTerms:
+    type: boolean
+    description: Признак

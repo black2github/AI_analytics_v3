@@ -1,0 +1,9 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      type: string
+  total:
+    type: integer
+    format: int64

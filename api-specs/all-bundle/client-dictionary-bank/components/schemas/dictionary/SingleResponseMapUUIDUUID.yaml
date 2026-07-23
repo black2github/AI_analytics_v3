@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    type: object
+    additionalProperties:
+      type: string
+      format: uuid
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

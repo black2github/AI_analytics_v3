@@ -1,0 +1,7 @@
+type: string
+description: Тип сущности
+enum:
+- NONE
+- BANK_CLIENT
+- CLIENT_USER
+- ACCOUNT

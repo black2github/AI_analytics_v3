@@ -1,0 +1,59 @@
+required:
+- pollParameterId
+type: object
+properties:
+  pollParameterId:
+    type: string
+    description: Идентификатор сценария опроса
+    format: uuid
+  oneStar:
+    type: array
+    description: Список хештегов для оценки 1 звезда
+    example:
+    - Плохое обслуживание
+    - Долго
+    items:
+      type: string
+      description: Список хештегов для оценки 1 звезда
+      example: '["Плохое обслуживание","Долго"]'
+  twoStars:
+    type: array
+    description: Список хештегов для оценки 2 звезды
+    example:
+    - Нормально
+    - Могло быть лучше
+    items:
+      type: string
+      description: Список хештегов для оценки 2 звезды
+      example: '["Нормально","Могло быть лучше"]'
+  threeStars:
+    type: array
+    description: Список хештегов для оценки 3 звезды
+    example:
+    - Хорошо
+    - Удовлетворительно
+    items:
+      type: string
+      description: Список хештегов для оценки 3 звезды
+      example: '["Хорошо","Удовлетворительно"]'
+  fourStars:
+    type: array
+    description: Список хештегов для оценки 4 звезды
+    example:
+    - Отлично
+    - Превосходно
+    items:
+      type: string
+      description: Список хештегов для оценки 4 звезды
+      example: '["Отлично","Превосходно"]'
+  fiveStars:
+    type: array
+    description: Список хештегов для оценки 5 звезд
+    example:
+    - Супер
+    - Восхитительно
+    items:
+      type: string
+      description: Список хештегов для оценки 5 звезд
+      example: '["Супер","Восхитительно"]'
+description: DTO для сохранения хештегов опроса

@@ -1,0 +1,13 @@
+type: object
+description: Ответ на запрос на сохранение результата звонка
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор коммуникации в сервисе НСК
+  resultCode:
+    type: string
+    description: Бизнес-код результата сохранения
+required:
+- id
+- resultCode

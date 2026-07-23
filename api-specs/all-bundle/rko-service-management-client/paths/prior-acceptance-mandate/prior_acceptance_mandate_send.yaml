@@ -1,0 +1,33 @@
+post:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: send
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.SIGN'
+  operationId: sendUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/SendToBankDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,PriorAcceptanceMandateClientDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

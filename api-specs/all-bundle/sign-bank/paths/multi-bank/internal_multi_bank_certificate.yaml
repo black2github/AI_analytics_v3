@@ -1,0 +1,55 @@
+post:
+  tags:
+  - 'Банк API: Межбанковский обмен (Openapi)'
+  summary: Добавить сертификат для межбанковского обмена
+  description: 'Привилегии: SIGN.BANK_MULTI_BANK_ADD_CERTIFICATE'
+  operationId: addMultiBankCertificate
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/multi-bank/AddMultiBankCertificateRequestDto.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/multi-bank/GenericResponseSimpleErrorDataAddMultiBankCertificateResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,13 @@
+type: string
+description: '[Классификатор] Способы создания документов'
+nullable: true
+enum:
+- NEW
+- COPY
+- IMPORT_FILE
+- TEMPLATE
+- STATEMENT
+- TAX_NOTICE
+- F1_INSERT
+- CSV_INSERT
+- DIRECT_1C

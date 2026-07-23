@@ -1,0 +1,20 @@
+type: object
+description: Категория письма
+properties:
+  code:
+    type: string
+    description: Код категории
+  dsfTypes:
+    type: array
+    description: Типы писем
+    items:
+      $ref: ./DsfTypeWithProductsDto.yaml
+  isAuthPersonRestricted:
+    type: boolean
+    description: Флаг наличия ограничений по категориям для УЛ
+  name:
+    type: string
+    description: Наименование категории
+  nameEn:
+    type: string
+    description: Наименование категории на английском

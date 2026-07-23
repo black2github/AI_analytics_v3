@@ -1,0 +1,17 @@
+type: object
+description: Запрос на получение объемов котировок
+properties:
+  bankClientId:
+    type: string
+    format: uuid
+    description: Идентификатор организации
+  baseCurrency:
+    type: string
+    description: Базовая валюта профиля
+  quoteCurrency:
+    type: string
+    description: Валюта котировки профиля
+required:
+- bankClientId
+- baseCurrency
+- quoteCurrency

@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  notEq:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - JOIN_MARKET
+      - JOIN_CURRENCY
+      - BRK_SERVICE_ADD
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - JOIN_MARKET
+      - JOIN_CURRENCY
+      - BRK_SERVICE_ADD
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  ge:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  lt:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  le:
+    type: string
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+description: Тип поручения

@@ -1,0 +1,9 @@
+type: object
+properties:
+  position:
+    type: string
+    description: Наименование должности пользователя подписавшего заявку
+  userDocument:
+    type: string
+    description: Документ на основании, которого пользователь может подписать поручение
+description: Информация о подписанте

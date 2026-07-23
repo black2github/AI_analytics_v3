@@ -1,0 +1,9 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Отрисовываемый параметр
+  value:
+    type: string
+    description: Значение отрисовываемого элемента (ключ сущности)
+description: Базовый справочник

@@ -1,0 +1,16 @@
+type: object
+properties:
+  filter:
+    $ref: ./SbpTransactionFilterV3ClientDto.yaml
+    description: Фильтр
+  sort:
+    $ref: ../common/Sort.yaml
+    description: Сортировка по одному полю
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ../common/Sort.yaml
+  paging:
+    $ref: ../common/Paging.yaml
+    description: Пагинация

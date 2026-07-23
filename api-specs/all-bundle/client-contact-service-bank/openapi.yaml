@@ -1,0 +1,218 @@
+openapi: 3.1.0
+info:
+  title: Сервис НСК. Банковская часть.
+  version: 1.4.0
+servers:
+- url: /client-contact-service-bank
+security:
+- bearerAuth: []
+tags:
+- name: Апи для работы с Коммуникациями типа Звонок Клиента Банка третьей версии
+  description: Коммуникации для коротких и классических Заявок онбординга
+- name: Notify
+  description: API сотрудника банка для работы с уведомлениями КЦ
+- name: Апи сотрудника банка для работы с «Журнал запросов на коммуникации»
+  description: Апи сотрудника банка для работы с «Журнал запросов на коммуникации»
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /v3/notify-call:
+    $ref: ./paths/notify-call/v3_notify_call.yaml
+  /onboarding-request/statistic-by-category:
+    $ref: ./paths/statistic-by-category/onboarding_request_statistic_by_category.yaml
+  /onboarding-request/send-to-mte:
+    $ref: ./paths/send-to-mte/onboarding_request_send_to_mte.yaml
+  /onboarding-request/get-page:
+    $ref: ./paths/get-page/onboarding_request_get_page.yaml
+  /onboarding-request/client/get-page:
+    $ref: ./paths/client/onboarding_request_client_get_page.yaml
+  /notify/get-page:
+    $ref: ./paths/get-page/notify_get_page.yaml
+  /notify-request/change-responsible:
+    $ref: ./paths/change-responsible/notify_request_change_responsible.yaml
+  /integration/test/pk/short/send:
+    $ref: ./paths/test/integration_test_pk_short_send.yaml
+  /integration/test/pk/classic/send:
+    $ref: ./paths/test/integration_test_pk_classic_send.yaml
+  /integration/test/onboarding-request/refuse:
+    $ref: ./paths/test/integration_test_onboarding_request_refuse.yaml
+  /export-list-as-file:
+    $ref: ./paths/export-list-as-file/export_list_as_file.yaml
+  /notify-request/get:
+    $ref: ./paths/get/notify_request_get.yaml
+  /notify-request/get-by-application-id:
+    $ref: ./paths/get-by-application-id/notify_request_get_by_application_id.yaml
+  /integration/test/agent/update-short-nsk/run:
+    $ref: ./paths/test/integration_test_agent_update_short_nsk_run.yaml
+  /integration/test/agent/update-classic-nsk/run:
+    $ref: ./paths/test/integration_test_agent_update_classic_nsk_run.yaml
+  /integration/test/agent/pk-request/status/check:
+    $ref: ./paths/test/integration_test_agent_pk_request_status_check.yaml
+  /integration/test/agent/notify-client/run/short:
+    $ref: ./paths/test/integration_test_agent_notify_client_run_short.yaml
+  /integration/test/agent/notify-client/run/classic:
+    $ref: ./paths/test/integration_test_agent_notify_client_run_classic.yaml
+  /integration/test/agent/notify-bank-users/short/run:
+    $ref: ./paths/test/integration_test_agent_notify_bank_users_short_run.yaml
+  /integration/test/agent/notify-bank-users/classic/run:
+    $ref: ./paths/test/integration_test_agent_notify_bank_users_classic_run.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    CallResult:
+      $ref: ./components/schemas/common/CallResult.yaml
+    ClientProblemReason:
+      $ref: ./components/schemas/common/ClientProblemReason.yaml
+    CommonMergedStatus:
+      $ref: ./components/schemas/common/CommonMergedStatus.yaml
+    GenericCommandNotifyCallRequest:
+      $ref: ./components/schemas/notify-call/GenericCommandNotifyCallRequest.yaml
+    NotifyCallRequest:
+      $ref: ./components/schemas/notify-call/NotifyCallRequest.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataNotifyCallCreateRestResponseV3Dto:
+      $ref: ./components/schemas/notify-call/GenericResponseErrorDataNotifyCallCreateRestResponseV3Dto.yaml
+    NotifyCallCreateRestResponseV3Dto:
+      $ref: ./components/schemas/notify-call/NotifyCallCreateRestResponseV3Dto.yaml
+    CallRequestStatus:
+      $ref: ./components/schemas/common/CallRequestStatus.yaml
+    DocType:
+      $ref: ./components/schemas/common/DocType.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoCallRequestStatus:
+      $ref: ./components/schemas/common/FilterValueEnumDtoCallRequestStatus.yaml
+    FilterValueEnumDtoCallResult:
+      $ref: ./components/schemas/common/FilterValueEnumDtoCallResult.yaml
+    FilterValueEnumDtoClientProblemReason:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClientProblemReason.yaml
+    FilterValueEnumDtoCommonMergedStatus:
+      $ref: ./components/schemas/common/FilterValueEnumDtoCommonMergedStatus.yaml
+    FilterValueEnumDtoDocType:
+      $ref: ./components/schemas/common/FilterValueEnumDtoDocType.yaml
+    GetPageCommandOnboardingRequestReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandOnboardingRequestReadRestRequestScrollerFilterDto.yaml
+    OnboardingRequestReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/common/OnboardingRequestReadRestRequestScrollerFilterDto.yaml
+    PageParamsOnboardingRequestReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/common/PageParamsOnboardingRequestReadRestRequestScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    StatusCategory:
+      $ref: ./components/schemas/common/StatusCategory.yaml
+    CategoryCount:
+      $ref: ./components/schemas/statistic-by-category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/statistic-by-category/CategoryResponse.yaml
+    MteResendRequestDto:
+      $ref: ./components/schemas/send-to-mte/MteResendRequestDto.yaml
+    GenericResponseErrorDataMteResendResponseDto:
+      $ref: ./components/schemas/send-to-mte/GenericResponseErrorDataMteResendResponseDto.yaml
+    MteResendResponseDto:
+      $ref: ./components/schemas/send-to-mte/MteResendResponseDto.yaml
+    OnboardingRequestReadRestScrollerResponseDto:
+      $ref: ./components/schemas/get-page/OnboardingRequestReadRestScrollerResponseDto.yaml
+    PageDataOnboardingRequestReadRestScrollerResponseDto:
+      $ref: ./components/schemas/get-page/PageDataOnboardingRequestReadRestScrollerResponseDto.yaml
+    GetPageCommandOnboardingRequestClientReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/client/GetPageCommandOnboardingRequestClientReadRestRequestScrollerFilterDto.yaml
+    OnboardingRequestClientReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/client/OnboardingRequestClientReadRestRequestScrollerFilterDto.yaml
+    PageParamsOnboardingRequestClientReadRestRequestScrollerFilterDto:
+      $ref: ./components/schemas/client/PageParamsOnboardingRequestClientReadRestRequestScrollerFilterDto.yaml
+    GenericResponseErrorDataPageDataOnboardingRequestClientResponseDto:
+      $ref: ./components/schemas/client/GenericResponseErrorDataPageDataOnboardingRequestClientResponseDto.yaml
+    OnboardingRequestClientResponseDto:
+      $ref: ./components/schemas/client/OnboardingRequestClientResponseDto.yaml
+    PageDataOnboardingRequestClientResponseDto:
+      $ref: ./components/schemas/client/PageDataOnboardingRequestClientResponseDto.yaml
+    GetPageCommandNotifyFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandNotifyFilterDto.yaml
+    NotifyFilterDto:
+      $ref: ./components/schemas/get-page/NotifyFilterDto.yaml
+    PageParamsNotifyFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsNotifyFilterDto.yaml
+    CommunicationType:
+      $ref: ./components/schemas/get-page/CommunicationType.yaml
+    GenericResponseErrorDataPageDataNotifyReadRestResponseDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataNotifyReadRestResponseDto.yaml
+    NotifyReadRestResponseDto:
+      $ref: ./components/schemas/get-page/NotifyReadRestResponseDto.yaml
+    PageDataNotifyReadRestResponseDto:
+      $ref: ./components/schemas/get-page/PageDataNotifyReadRestResponseDto.yaml
+    GenericCommandNotifyRequestChangeResponsibleRestRequestDto:
+      $ref: ./components/schemas/change-responsible/GenericCommandNotifyRequestChangeResponsibleRestRequestDto.yaml
+    NotifyRequestChangeResponsibleRestRequestDto:
+      $ref: ./components/schemas/change-responsible/NotifyRequestChangeResponsibleRestRequestDto.yaml
+    GenericResponseErrorDataNotifyRequestChangeResponsibleRestResponseDto:
+      $ref: ./components/schemas/change-responsible/GenericResponseErrorDataNotifyRequestChangeResponsibleRestResponseDto.yaml
+    NotifyRequestChangeResponsibleRestResponseDto:
+      $ref: ./components/schemas/change-responsible/NotifyRequestChangeResponsibleRestResponseDto.yaml
+    AccountInfoDto:
+      $ref: ./components/schemas/test/AccountInfoDto.yaml
+    ApplicationShortDto:
+      $ref: ./components/schemas/test/ApplicationShortDto.yaml
+    BankClientDto:
+      $ref: ./components/schemas/test/BankClientDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/test/BranchDto.yaml
+    OnboardingShortRequestProcessPkKafkaRequestDto:
+      $ref: ./components/schemas/test/OnboardingShortRequestProcessPkKafkaRequestDto.yaml
+    PersonDto:
+      $ref: ./components/schemas/test/PersonDto.yaml
+    ApplicationClassicDto:
+      $ref: ./components/schemas/test/ApplicationClassicDto.yaml
+    OnboardingClassicRequestProcessPkKafkaRequestDto:
+      $ref: ./components/schemas/test/OnboardingClassicRequestProcessPkKafkaRequestDto.yaml
+    ApplicationRefuseDto:
+      $ref: ./components/schemas/test/ApplicationRefuseDto.yaml
+    OnboardingRequestRefuseKafkaRequestDto:
+      $ref: ./components/schemas/test/OnboardingRequestRefuseKafkaRequestDto.yaml
+    GenericCommandOnboardingRequestExportRequestDto:
+      $ref: ./components/schemas/export-list-as-file/GenericCommandOnboardingRequestExportRequestDto.yaml
+    OnboardingRequestExportRequestDto:
+      $ref: ./components/schemas/export-list-as-file/OnboardingRequestExportRequestDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/export-list-as-file/AttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/export-list-as-file/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/export-list-as-file/SimpleErrorData.yaml
+    CallReasonType:
+      $ref: ./components/schemas/common/CallReasonType.yaml
+    EcoProfileType:
+      $ref: ./components/schemas/common/EcoProfileType.yaml
+    GenericResponseErrorDataNotifyRequestReadRestResponseDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataNotifyRequestReadRestResponseDto.yaml
+    NotifyCallInfoReadRestResponseDto:
+      $ref: ./components/schemas/common/NotifyCallInfoReadRestResponseDto.yaml
+    NotifyRequestReadRestResponseDto:
+      $ref: ./components/schemas/common/NotifyRequestReadRestResponseDto.yaml
+    SourceSystem:
+      $ref: ./components/schemas/common/SourceSystem.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

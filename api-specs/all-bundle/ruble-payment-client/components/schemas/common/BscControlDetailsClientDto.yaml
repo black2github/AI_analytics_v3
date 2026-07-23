@@ -1,0 +1,8 @@
+type: object
+properties:
+  checkDetails:
+    type: array
+    description: Результаты проверки
+    items:
+      $ref: ./BscCheckDetailsDto.yaml
+description: Транспортное представление деталей контролей БСК для Клиента

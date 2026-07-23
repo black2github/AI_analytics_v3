@@ -1,0 +1,84 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  notEq:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BEGIN_DATE
+      - END_DATE
+      - EXECUTED
+      - BUY
+      - SELL
+      - WITHDRAWN
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BEGIN_DATE
+      - END_DATE
+      - EXECUTED
+      - BUY
+      - SELL
+      - WITHDRAWN
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  ge:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  lt:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  le:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN

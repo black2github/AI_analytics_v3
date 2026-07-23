@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBankClientAgreementFilter.yaml
+description: Запрос страницы

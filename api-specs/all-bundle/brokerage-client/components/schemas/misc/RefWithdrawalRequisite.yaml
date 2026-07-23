@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientAccount:
+    type: string
+  bankBeneficiaryTitle:
+    type: string
+  bankBeneficiaryBic:
+    type: string
+  bankCorrespondentAccount:
+    type: string
+  bankCorrespondentTitle:
+    type: string
+  swift:
+    type: string

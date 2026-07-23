@@ -1,0 +1,14 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус
+  operations:
+    type: array
+    description: Операции статуса
+    items:
+      $ref: ./SvkInClientOperationHistoryDto.yaml
+  localizationForClient:
+    type: string
+    description: Локализация для клиента
+description: Транспортное представление истории СВК2

@@ -1,0 +1,25 @@
+get:
+  tags:
+  - API ДБО БСС для внешних систем
+  summary: Получить счета пользователя
+  description: Версия 2. В рамках Единого Баланса
+  operationId: userAccountsInfoV2UsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: remoteId
+    in: header
+    description: remoteId
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BssAccountsResponseV2'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

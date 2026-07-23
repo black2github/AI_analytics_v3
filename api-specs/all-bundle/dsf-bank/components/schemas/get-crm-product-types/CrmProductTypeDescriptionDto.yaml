@@ -1,0 +1,21 @@
+type: object
+description: Классификатор - типы продуктов с описанием в соответствии с ЦРМ
+properties:
+  code:
+    type: string
+    description: Код типа продукта
+    enum:
+    - RRKO
+    - VRKO
+    - DVK
+    - TREASURY_DEPOSITS
+    - TREASURY_MNO
+    - TREASURY_GSNO
+    - TREASURY_CONVERSION
+    - BANK_GUARANTEES
+    - CREDITING
+    - SBP
+    - CROSS_BORDER
+  description:
+    type: string
+    description: Описание типа продукта

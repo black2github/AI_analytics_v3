@@ -1,0 +1,74 @@
+openapi: 3.0.1
+info:
+  title: Сервис для обработки заявок с посадочных страниц. Банковская часть.
+  version: 1.1.0
+servers:
+- url: /landing-request-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API [Встраивания] [ЦАБ] Получение данных для фильтрации
+- name: API [Встраивания] [ЦАБ] Заявки посадочных страниц
+paths:
+  /archival-docs/get-page:
+    $ref: ./paths/get-page/archival_docs_get_page.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /archival-docs/history-info/{id}:
+    $ref: ./paths/history-info/archival_docs_history_info_id.yaml
+  /archival-docs/data-filter/data:
+    $ref: ./paths/data-filter/archival_docs_data_filter_data.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/get-page/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/get-page/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/get-page/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/get-page/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoLandingRequestStatusDto:
+      $ref: ./components/schemas/get-page/FilterValueEnumDtoLandingRequestStatusDto.yaml
+    FilterValueEnumDtoLandingRequestTypeDto:
+      $ref: ./components/schemas/get-page/FilterValueEnumDtoLandingRequestTypeDto.yaml
+    GetPageCommandLandingRequestScrollerFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandLandingRequestScrollerFilterDto.yaml
+    LandingRequestScrollerFilterDto:
+      $ref: ./components/schemas/get-page/LandingRequestScrollerFilterDto.yaml
+    PageParamsLandingRequestScrollerFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsLandingRequestScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    LandingRequestDto:
+      $ref: ./components/schemas/get-page/LandingRequestDto.yaml
+    PageDataLandingRequestDto:
+      $ref: ./components/schemas/get-page/PageDataLandingRequestDto.yaml
+    DocumentOperationHistoryDto:
+      $ref: ./components/schemas/history-info/DocumentOperationHistoryDto.yaml
+    GenericResponseSimpleErrorDataListLandingRequestHistoryDto:
+      $ref: ./components/schemas/history-info/GenericResponseSimpleErrorDataListLandingRequestHistoryDto.yaml
+    LandingRequestHistoryDto:
+      $ref: ./components/schemas/history-info/LandingRequestHistoryDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericResponseSimpleErrorDataLandingRequestFilterDataDto:
+      $ref: ./components/schemas/data-filter/GenericResponseSimpleErrorDataLandingRequestFilterDataDto.yaml
+    LandingRequestFilterDataDto:
+      $ref: ./components/schemas/data-filter/LandingRequestFilterDataDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

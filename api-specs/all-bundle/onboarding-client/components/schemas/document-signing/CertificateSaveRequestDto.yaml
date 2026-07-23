@@ -1,0 +1,10 @@
+type: object
+properties:
+  body:
+    type: string
+    description: Тело сертификата
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+description: Запрос на сохранение тела сертификата ЭП

@@ -1,0 +1,43 @@
+required:
+- id
+- requestStatus
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  requestStatus:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - GENERATE_TESSA_DOCUMENTS_ERROR
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - EXECUTED_IN_ESK
+    - WAITING_FOR_IO_CUSTOMER_RESULT
+    - CREATE_ACCESS_RULES
+    - CREATE_ACCESS_RULES_ERROR
+    - ACCESS_RULES_CREATED
+    - ACCOUNT_ACCESS_UPDATE
+    - ACCOUNT_ACCESS_UPDATE_ERROR
+    - ACCOUNT_ACCESS_UPDATED
+    - EXECUTED
+    - REJECTED
+description: Краткая информация о заявке

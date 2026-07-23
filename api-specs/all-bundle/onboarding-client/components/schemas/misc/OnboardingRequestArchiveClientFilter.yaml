@@ -1,0 +1,17 @@
+type: object
+properties:
+  branches:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOnboardingRequestArchiveStatusDto.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для поиска заявок "Архивная заявка на открытие первого счета" для Клиентского скроллера

@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  name:
+    type: string
+    description: Наименование клиента
+  absId:
+    type: string
+    description: РНК клиента в РКО Ф1
+  eskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  inn:
+    type: string
+    description: ИНН клиента
+  admEnabled:
+    type: boolean
+    description: АДМ подключен
+  tradeAcquiringEnabled:
+    type: boolean
+    description: Торговый эквайринг подключен
+  internetAcquiringEnabled:
+    type: boolean
+    description: Интернет эквайринг подключен
+description: Действующая организация пользователя.

@@ -1,0 +1,11 @@
+type: object
+description: Базовая структура ответа на REST HTTP запрос
+properties:
+  data:
+    description: Данные
+  error:
+    type: object
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

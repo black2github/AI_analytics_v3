@@ -1,0 +1,46 @@
+required:
+- id
+- payerAccountNumber
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор отзываемого документа в Клиент-банк
+  sendAt:
+    type: string
+    description: Дата и время отправки отзываемого документа
+    format: date-time
+  f1DocumentId:
+    type: integer
+    description: Идентификатор отзываемого документа в РКО Ф1
+    format: int32
+  docDate:
+    type: string
+    description: Дата отзываемого документа
+    format: date
+  currencyCode:
+    type: string
+    description: Код валюты отзываемого документа
+  payerName:
+    type: string
+    description: Наименование организации
+  docName:
+    type: string
+    description: Наименование отзываемого документа
+  docNumber:
+    type: string
+    description: Номер отзываемого документа
+  paymentAmount:
+    type: number
+    description: Сумма отзываемого документа
+  payerAccountNumber:
+    type: string
+    description: Счет плательщика
+  responsiblePersonFio:
+    type: string
+    description: Ф.И.О. ответственного лица
+  receivedAt:
+    type: string
+    description: Дата и время приема документа от клиента
+    format: date-time
+description: Данные платежного поручения

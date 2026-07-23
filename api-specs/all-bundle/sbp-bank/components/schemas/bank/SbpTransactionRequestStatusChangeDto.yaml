@@ -1,0 +1,49 @@
+type: object
+description: Запрос смены статуса заявления на платеж СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявления
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявления
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - INIT_REQUEST_1
+    - INIT_ERROR_1
+    - INIT_COMPLETED_1
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - INIT_REQUEST_2
+    - INIT_ERROR_2
+    - INIT_COMPLETED_2
+    - RECEIVED
+    - CONFIRM_REQUEST
+    - CONFIRM_ERROR
+    - CONFIRM_DELIVERED
+    - ACCEPTED
+    - INFO_REQUEST
+    - INFO_ERROR
+    - FINAL_STATUS_RECEIVED
+    - CALLBACK_RECEIVED
+    - COMPLETED
+    - REJECTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- commentForBank
+- id
+- nextStatus

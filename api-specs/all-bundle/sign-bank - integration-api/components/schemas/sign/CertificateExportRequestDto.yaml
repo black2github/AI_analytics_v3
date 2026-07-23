@@ -1,0 +1,36 @@
+required:
+- bankClientId
+- certificateId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  clientAbsId:
+    type: string
+    description: ID клиента в РКО Ф1
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  userAbsId:
+    type: string
+    description: ID физлица в РКО Ф1
+  certificateId:
+    type: string
+    description: ID сертификата для выгрузки
+    format: uuid
+  destinations:
+    maxItems: 2147483647
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Системы в которые необходима выгрузка
+    items:
+      type: string
+      description: Системы в которые необходима выгрузка
+      enum:
+      - DBO17
+      - H2H
+description: Данные для создания записи в журнале экспорта данных о сертификате

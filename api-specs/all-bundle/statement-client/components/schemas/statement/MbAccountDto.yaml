@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  accountNumber:
+    type: string
+  clientId:
+    type: string
+    format: uuid
+  organizationName:
+    type: string
+  bankName:
+    type: string
+  currency:
+    $ref: ./CurrencyLightDto.yaml
+  external:
+    type: boolean
+description: Данные

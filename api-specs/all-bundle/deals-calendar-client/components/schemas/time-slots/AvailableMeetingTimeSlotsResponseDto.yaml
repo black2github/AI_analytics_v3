@@ -1,0 +1,8 @@
+type: object
+properties:
+  timeSlots:
+    type: array
+    description: Список доступных временных слотов
+    items:
+      $ref: ./MeetingTimeSlotDto.yaml
+description: Ответ на запрос получения доступных временных слотов по заявке на встречу

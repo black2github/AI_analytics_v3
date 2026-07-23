@@ -1,0 +1,58 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  reportType:
+    type: string
+    description: Тип отчета
+    enum:
+    - DENIED
+    - VIOLATED
+  userFullName:
+    type: string
+    description: ФИО пользователя
+  userEmail:
+    type: string
+    description: Email пользователя
+  sendByEmailConsent:
+    type: boolean
+    description: Согласие на получение данных по email
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - PDF
+    - XLS
+    - TXT_1C_102
+    - TXT_1C_103
+  clientEcoIds:
+    type: array
+    description: Идентификаторы клиентов в ЭКО
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  dealIds:
+    type: array
+    description: Идентификаторы сделок в Веб-Дилинге
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор сделки
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

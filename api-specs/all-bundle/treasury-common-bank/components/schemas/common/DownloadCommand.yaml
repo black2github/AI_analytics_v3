@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  accessToken:
+    type: string
+description: Данные

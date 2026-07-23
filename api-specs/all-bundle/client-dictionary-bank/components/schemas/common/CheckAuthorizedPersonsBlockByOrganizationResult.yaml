@@ -1,0 +1,8 @@
+type: object
+properties:
+  checkedPersons:
+    type: array
+    description: Список проверенных УЛ
+    items:
+      $ref: ./CheckedAuthorizedPerson.yaml
+description: Результат проверки блокировки уполномоченных лиц по организации

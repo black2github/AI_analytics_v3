@@ -1,0 +1,15 @@
+required:
+- page
+- size
+type: object
+properties:
+  page:
+    type: array
+    description: Массив непрочитанных уведомлений
+    items:
+      $ref: ./NotificationMsgDto.yaml
+  size:
+    type: integer
+    description: Количество уведомлений в массиве
+    format: int32
+description: Уведомления об операциях для Клиента Банка

@@ -1,0 +1,12 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  signatures:
+    type: array
+    description: Подписи документа
+    items:
+      $ref: ./DocumentSignatureDto.yaml
+description: Информация о подписях документа

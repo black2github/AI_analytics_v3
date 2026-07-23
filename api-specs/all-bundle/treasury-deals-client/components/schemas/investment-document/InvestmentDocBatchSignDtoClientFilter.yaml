@@ -1,0 +1,14 @@
+type: object
+properties:
+  docIds:
+    type: array
+    description: Идентификаторы документов для подписи
+    items:
+      type: string
+      description: Идентификаторы документов для подписи
+      format: uuid
+  sort:
+    $ref: ../common/Sort.yaml
+  filter:
+    $ref: ./InvestmentDocClientFilter.yaml
+description: Запрос на пакетную подпись

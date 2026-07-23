@@ -1,0 +1,15 @@
+required:
+- bankClients
+type: object
+properties:
+  bankClients:
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Параметры поиска заявок для клиентов
+    items:
+      $ref: ./BankClientSearchParamDto.yaml
+  userAbsId:
+    type: string
+    description: ИД РКО Ф1 пользователя
+description: Параметры поиска заявок

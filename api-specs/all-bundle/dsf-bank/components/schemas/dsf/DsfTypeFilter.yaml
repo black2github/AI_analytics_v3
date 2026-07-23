@@ -1,0 +1,22 @@
+type: object
+description: Фильтр типов ДСФ
+properties:
+  archived:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Архивный тип документа. Полное совпадение.
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Код типа письма
+  letterType:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по типам. Группа фильтров.
+  products:
+    $ref: ../common/DsfTypeProductTypeFilter.yaml
+    description: Коды продукта (ЦРМ)
+  publicLetterType:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Общедоступный тип письма.
+  selectedBankClientId:
+    type: string
+    format: uuid
+    description: Для выбранной организации. Накладываются дополнительные ограничения на "Классификатор типов писем"

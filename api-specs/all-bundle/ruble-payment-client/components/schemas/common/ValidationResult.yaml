@@ -1,0 +1,8 @@
+type: object
+properties:
+  result:
+    $ref: ./CheckResultType.yaml
+  groupResults:
+    type: array
+    items:
+      $ref: ./GroupResult.yaml

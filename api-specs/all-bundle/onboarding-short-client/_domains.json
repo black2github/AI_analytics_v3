@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for onboarding-short-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/onboarding-short-request",
+      "domain": "onboarding-short-request"
+    },
+    {
+      "prefix": "/qrc-commission-payment",
+      "domain": "qrc-commission-payment"
+    }
+  ]
+}

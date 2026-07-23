@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  askId:
+    type: integer
+    description: ИД АСК
+    format: int64
+  businessId:
+    type: string
+    description: Идентификатор объекта для сопоставления
+  name:
+    type: string
+    description: Наименование
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  status:
+    type: string
+    description: Статус фонда генерального соглашения
+    enum:
+    - POTENTIAL
+    - ACTIVE
+    - REMOVED
+description: Фонды ДУ

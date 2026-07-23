@@ -1,0 +1,59 @@
+get:
+  tags:
+  - Клиентский АPI работы с вложениями
+  - Заявка на заключение генерального соглашения
+  - API печатных форм заявок на соглашения
+  - Заявка на заключение генерального соглашения - Депозиты (клиент)
+  summary: Получить вложение
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_AGREEMENT_REQUEST_DEPOSIT_VIEW'')'
+  operationId: getAttachment_7
+  parameters:
+  - name: attachmentId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataAgreementRequestAttachmentDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,21 @@
+required:
+- accountNumber
+- accountServicingBranch
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование клиента
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  inn:
+    type: string
+    description: ИНН/КИО клиента
+  absId:
+    type: string
+    description: РНК клиента отправителя
+  accountServicingBranch:
+    type: string
+    description: Филиал обслуживания счета
+description: ДТО Реквизиты отправителя для банка

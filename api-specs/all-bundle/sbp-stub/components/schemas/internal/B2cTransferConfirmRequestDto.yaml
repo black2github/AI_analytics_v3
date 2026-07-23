@@ -1,0 +1,23 @@
+type: object
+required:
+- transactionId
+- docType
+- type
+- guid
+description: Запрос подтверждения выплаты.
+properties:
+  transactionId:
+    type: string
+    description: ID операции возврата в СБП
+  docType:
+    type: string
+    description: Тип документа
+  type:
+    type: string
+    description: Тип запроса
+  guid:
+    type: string
+    description: GUID из исходного запроса на перевод, идентификатор BSS
+  sign:
+    type: string
+    description: Подпись сообщения

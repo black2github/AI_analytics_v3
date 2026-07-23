@@ -1,0 +1,17 @@
+type: object
+properties:
+  number:
+    type: integer
+    description: Номер банковской операции
+    format: int64
+  date:
+    type: string
+    description: Дата проведения
+    format: date-time
+  amount:
+    type: number
+    description: Денежная сумма исполнения ордера
+  cashierFullName:
+    type: string
+    description: Имя сотрудника банка
+description: Информация по исполнению ордера

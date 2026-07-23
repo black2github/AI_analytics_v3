@@ -1,0 +1,34 @@
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ Клиента Банка
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  phoneNumber:
+    type: string
+    description: Номер телефона представителя
+  email:
+    type: string
+    description: Адрес электронной почты
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  legalizationId:
+    type: string
+    description: Идентификатор заявки на легализацию
+    format: uuid
+  entities:
+    type: array
+    description: Список настроек для правил доступа по реквизиту
+    items:
+      $ref: ./AbacGrantAccessRuleEntityBankDto.yaml
+  comment:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Комментарий
+description: Сведения о модели запроса для создания "Правила предоставления доступа по реквизиту"

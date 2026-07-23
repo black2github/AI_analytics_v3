@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для работы с заявкой на подключение СМС-информирования. Клиент.
+  summary: Отправить заявку клиента на подключение СМС-информирования в РКО Ф1
+  description: 'Привилегии: SFZU_REQUEST_SAVE, SFZU_REQUEST_EDIT'
+  operationId: sendRequest
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/request/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataSmsInfoRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

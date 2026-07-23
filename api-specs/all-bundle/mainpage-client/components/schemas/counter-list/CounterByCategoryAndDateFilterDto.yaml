@@ -1,0 +1,24 @@
+type: object
+properties:
+  startDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  endDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  category:
+    type: string
+    description: Категории счетчиков
+    enum:
+    - UNKNOWN
+    - FOR_SIGN
+    - FOR_ACCEPT
+    - FOR_VISA
+    - IN_PROCESS
+    - IN_WAITING_LIST
+    - POSITIVE_END
+    - NEGATIVE_END
+    - DRAFT
+    - FOR_SIGN_TO_USER
+    - FOR_ACCEPT_TO_USER
+    - NEGATIVE_END_TO_USER
+    - DRAFT_TO_USER
+description: Фильтр для списка счетчиков для чипсов на скроллерах ПЭД

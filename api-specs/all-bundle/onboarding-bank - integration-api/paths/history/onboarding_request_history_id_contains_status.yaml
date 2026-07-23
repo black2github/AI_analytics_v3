@@ -1,0 +1,123 @@
+get:
+  operationId: checkStatusInHistory
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - description: "* NONE: \n* PREDRAFT: \n* CREATED: \n* DRAFT: \n* COMPLETED: \n* DOCS_LOAD: \n* FORMED: \n* DELETED: \n* DATA_ERROR: \n* EXPORT_TO_ESK: \n* EXPORTED_TO_ESK: \n* EXPORT_TO_ESK_ERROR: \n* EXECUTED_BY_ESK: \n* WAITING_FOR_ESK_DECISION: \n* WAITING_FOR_ESK_ACCOUNTS: \n* EXPORT_TO_TESSA: \n* EXPORT_TO_TESSA_ERROR: \n* EXECUTED_BY_TESSA: \n* REPLACING_DOCS: \n* APPROVED: \n* REFUSED: \n* REJECTED: \n* EXECUTED: \n* EDITING: \n* EDITING_DRAFT: \n* EDITING_REPLACING_DOCS: \n* EDITING_COMPLETED: \n* EDITING_DOCS_LOAD: \n* DELIVERED: \n* RECEIVED: \n* PROCESSING_TESSA_COMMENTS: \n* DETAILS_ERROR: \n* WAITING_RESTRICTION: \n* TECH_REQ: \n* ARCHIVING: \n* ARCHIVED: \n* RECALL_IN_ESK: \n* RECALLED_IN_ESK: \n* RECALL_IN_ESK_ERROR: \n* RECALL_IN_TESSA: \n* RECALLED_IN_TESSA: \n* RECALL_IN_TESSA_REQUEST_SUBMITTED: \n* RECALL_IN_TESSA_ERROR: \n* SIGN_VALID: \n* SIGN_NOT_VALID: \n* NEED_RESIGN: \n* SIGN_CANCELLED: \n* EXPORT_TO_ESK_115: \n* EXPORTED_TO_ESK_115: \n* EXPORT_TO_ESK_ERROR_115: \n* ACCEPTED_BY_ESK_115: \n* EXECUTED_BY_ESK_115: \n* EXPORT_TO_TESSA_115: \n* EXPORT_TO_TESSA_ERROR_115: \n* EXECUTED_BY_TESSA_115: \n* REMOTE_ACCOUNT_OPENING_UNAVAILABLE: \n* RECALL_IN_TESSA_REFUSING: \n* RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING: \n* RECALLED_IN_TESSA_REFUSING: \n* RECALL_IN_TESSA_ERROR_REFUSING: "
+    in: query
+    name: status
+    required: true
+    schema:
+      type: string
+      description: Статус заявки на открытие первого счета
+      enum:
+      - NONE
+      - PREDRAFT
+      - CREATED
+      - DRAFT
+      - COMPLETED
+      - DOCS_LOAD
+      - FORMED
+      - DELETED
+      - DATA_ERROR
+      - EXPORT_TO_ESK
+      - EXPORTED_TO_ESK
+      - EXPORT_TO_ESK_ERROR
+      - EXECUTED_BY_ESK
+      - WAITING_FOR_ESK_DECISION
+      - WAITING_FOR_ESK_ACCOUNTS
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - REPLACING_DOCS
+      - APPROVED
+      - REFUSED
+      - REJECTED
+      - EXECUTED
+      - EDITING
+      - EDITING_DRAFT
+      - EDITING_REPLACING_DOCS
+      - EDITING_COMPLETED
+      - EDITING_DOCS_LOAD
+      - DELIVERED
+      - RECEIVED
+      - PROCESSING_TESSA_COMMENTS
+      - DETAILS_ERROR
+      - WAITING_RESTRICTION
+      - TECH_REQ
+      - ARCHIVING
+      - ARCHIVED
+      - RECALL_IN_ESK
+      - RECALLED_IN_ESK
+      - RECALL_IN_ESK_ERROR
+      - RECALL_IN_TESSA
+      - RECALLED_IN_TESSA
+      - RECALL_IN_TESSA_REQUEST_SUBMITTED
+      - RECALL_IN_TESSA_ERROR
+      - SIGN_VALID
+      - SIGN_NOT_VALID
+      - NEED_RESIGN
+      - SIGN_CANCELLED
+      - EXPORT_TO_ESK_115
+      - EXPORTED_TO_ESK_115
+      - EXPORT_TO_ESK_ERROR_115
+      - ACCEPTED_BY_ESK_115
+      - EXECUTED_BY_ESK_115
+      - EXPORT_TO_TESSA_115
+      - EXPORT_TO_TESSA_ERROR_115
+      - EXECUTED_BY_TESSA_115
+      - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+      - RECALL_IN_TESSA_REFUSING
+      - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+      - RECALLED_IN_TESSA_REFUSING
+      - RECALL_IN_TESSA_ERROR_REFUSING
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseBoolean.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Проверить, переходила ли заявка по статусу
+  tags:
+  - Заявка на открытие первого счета. История изменений.

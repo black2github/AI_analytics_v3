@@ -1,0 +1,30 @@
+get:
+  summary: Получение записи из таблицы gps_eco_accs_smsinfo_err по идентификатору
+  tags:
+  - Обновление заглушек ошибок GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountSmsInfoTariffErrorDto.yaml
+delete:
+  summary: Удаление записи в таблице gps_eco_accs_smsinfo_err
+  tags:
+  - Обновление заглушек ошибок GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

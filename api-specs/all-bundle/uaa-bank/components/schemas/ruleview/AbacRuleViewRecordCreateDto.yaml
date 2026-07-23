@@ -1,0 +1,31 @@
+required:
+- entity
+- serviceConsumer
+- userType
+- viewIfNotFoundRule
+type: object
+properties:
+  serviceConsumer:
+    type: string
+    description: Микросервис потребитель
+  entity:
+    type: string
+    description: Бизнес-сущность
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  viewIfNotFoundRule:
+    type: boolean
+    description: Отображение записей при отсутствии правил
+  operator:
+    type: string
+    enum:
+    - AND
+    - OR
+  comment:
+    type: string
+    description: Пользовательский комментарий при создании бизнес сущности
+description: Модель для создания бизнес сущности "Правила отображения записей"

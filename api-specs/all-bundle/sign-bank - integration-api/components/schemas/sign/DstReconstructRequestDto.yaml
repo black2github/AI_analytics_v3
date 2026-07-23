@@ -1,0 +1,11 @@
+required:
+- clientOfficialsData
+type: object
+properties:
+  clientOfficialsData:
+    uniqueItems: true
+    type: array
+    description: Данные о представителях
+    items:
+      $ref: ./DstClientOfficialReconstructDataDto.yaml
+description: Запрос на реконструкцию связей СЭП из модели связи для ДБО БСС пользователей в модель ЭКО

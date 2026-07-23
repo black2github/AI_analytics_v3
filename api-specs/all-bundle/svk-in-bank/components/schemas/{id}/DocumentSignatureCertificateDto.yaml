@@ -1,0 +1,23 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Base64 представление сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    type: string
+    description: Владелец сертификата
+  issuedBy:
+    type: string
+    description: Издатель сертификата
+  validFrom:
+    type: string
+    description: Действует с
+    format: date-time
+  validTo:
+    type: string
+    description: Действует по
+    format: date-time
+description: Сертификат ЭП

@@ -1,0 +1,22 @@
+required:
+- certificates
+- documents
+type: object
+properties:
+  bcOfficialCertId:
+    type: string
+    description: Идентификатор СПО
+    format: uuid
+  certificates:
+    type: array
+    description: СПО
+    items:
+      $ref: ./DioBankClientOfficialCertificateDto.yaml
+  certificate:
+    $ref: ./DioBankClientOfficialCertificateDto.yaml
+  documents:
+    type: array
+    description: Документы
+    items:
+      $ref: ./DioSignatureInfoDto.yaml
+description: Организация

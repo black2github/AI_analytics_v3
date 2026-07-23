@@ -1,0 +1,37 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории статусов ДВК. Банковская часть.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  organization:
+    $ref: ./FilterValueDtoString.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  documentType:
+    $ref: ./DocumentTypeFilter.yaml
+  status:
+    $ref: ./DocumentStatusFilter.yaml
+  documentNumber:
+    $ref: ./FilterValueDtoString.yaml
+  documentDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientNumber:
+    $ref: ./FilterValueDtoString.yaml
+  absId:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  srcMessageId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  srcDocumentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  srcSkvoDocId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр скроллера банка документов валютного контроля

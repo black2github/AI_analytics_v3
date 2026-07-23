@@ -1,0 +1,28 @@
+required:
+- roleTemplateCode
+type: object
+properties:
+  roleTemplateCode:
+    type: string
+    description: Код выдаваемого шаблона роли
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиента банка для выдачи
+    items:
+      type: string
+      description: Идентификаторы клиента банка для выдачи
+      format: uuid
+  bankClientsNotSpecified:
+    type: boolean
+    description: Игнорировать список клиентов (выдавать всем действующим)
+  isEio:
+    type: boolean
+    description: Выдавать только тем, кто является ЕИО
+  hasMegaWarranty:
+    type: boolean
+    description: Выдавать только тем, у кого есть мега-доверенность
+  comment:
+    type: string
+    description: Комментарий
+description: Команда для выдачи УЛ и ЕИО клиента банка шаблона ролей.

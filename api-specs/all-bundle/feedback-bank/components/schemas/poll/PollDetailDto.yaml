@@ -1,0 +1,13 @@
+type: object
+properties:
+  mainParams:
+    $ref: ./PollMainParamsDto.yaml
+  extraParams:
+    $ref: ./PollExtraParamsDto.yaml
+  commentHints:
+    $ref: ./CommentHintsDto.yaml
+  status:
+    $ref: ./PollStatusDto.yaml
+  changeInfo:
+    $ref: ./PollChangeInfoDto.yaml
+description: Детальная информация об опросе

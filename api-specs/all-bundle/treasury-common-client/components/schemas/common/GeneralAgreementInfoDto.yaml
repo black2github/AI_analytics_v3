@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД генсоглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  number:
+    type: string
+    description: Номер генсоглашения
+  date:
+    type: string
+    description: Дата генсоглашения
+    format: date
+description: Генсоглашение ГСНО

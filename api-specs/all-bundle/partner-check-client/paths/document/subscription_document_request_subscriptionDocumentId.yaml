@@ -1,0 +1,34 @@
+get:
+  tags:
+  - API для управления подпиской
+  summary: Отправить запрос на скачивание документа из АС ТЕССА
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.VIEW_MANAGE_SERVICE_PAGE'
+  operationId: requestDocumentUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: Client id
+    required: true
+    type: string
+  - name: subscriptionDocumentId
+    in: path
+    description: Идентификатор документа по подписке в Сервисе проверки контрагентов
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SubscriptionError,RequestDocumentResultDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,74 @@
+required:
+- accountAmount
+- accountNumber
+- cardId
+- cardholderName
+- clientAbsId
+- id
+- isReversal
+- maskNum
+- operAmount
+- operCurrency
+- operDate
+- paySystemCode
+type: object
+properties:
+  id:
+    type: integer
+    description: Внутренний ID карты в АБС Ф1
+  clientAbsId:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  clientName:
+    type: string
+    description: Наименование организации
+    nullable: true
+  accountNumber:
+    type: string
+    description: Номер счета
+  cardId:
+    type: string
+    description: Виртуальный номер карты
+  maskNum:
+    type: string
+    description: Маскированный номер карты
+  operDate:
+    type: string
+    description: Местные дата и время совершения транзакции
+    format: date-time
+  accountDate:
+    type: string
+    description: Дата списания
+    format: date
+  authCode:
+    type: string
+    description: Код авторизации
+  operAmount:
+    type: number
+    description: Сумма транзакции в валюте операции
+  operCurrency:
+    type: string
+    description: Валюта транзакции
+  accountAmount:
+    type: number
+    description: Сумма транзакции в валюте счета
+  operPurpose:
+    type: string
+    description: Описание транзакции
+  merchantName:
+    type: string
+    description: Наименование торговой точки
+  mcc:
+    type: string
+    description: MCC код
+  isReversal:
+    type: string
+    description: Признак возврата
+  cardholderName:
+    type: string
+    description: Наименование держателя карты
+  paySystemCode:
+    type: string
+    description: Код технологического продукта
+description: Транзакция по локальной карте

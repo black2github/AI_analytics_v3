@@ -1,0 +1,42 @@
+required:
+- id
+- signPhaseDto
+- status
+- userFio
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  status:
+    $ref: ./OutgoingPaymentChargebackRequestStatusDto.yaml
+  commentForClient:
+    maxLength: 255
+    type: string
+    description: Комментарий для клиента
+    nullable: true
+  baseDetails:
+    $ref: ./ChargebackBaseDetailsClientDto.yaml
+  documentDetails:
+    $ref: ./ChargebackDocumentDetailsClientDto.yaml
+  userFio:
+    type: string
+    description: Пользователь, создавший документ (ФИО)
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signPhaseDto:
+    $ref: ./OutgoingPaymentChargebackRequestSignPhaseDto.yaml
+  signatures:
+    type: array
+    description: Подписи исходящего платежного требования
+    items:
+      $ref: ./outgoingChargebackSignatureClientDto.yaml
+description: Платежное требование исходящее (данные для клиента)

@@ -1,0 +1,17 @@
+type: object
+properties:
+  monthWithYear:
+    type: string
+    description: Наименование месяца с годом
+  totalIncome:
+    type: number
+    description: Суммарный месячный приход
+  totalConsumption:
+    type: number
+    description: Суммарный месячный расход
+  dailySummaries:
+    type: array
+    description: Аналитика по движению средств в разрезе дней месяца
+    items:
+      $ref: ./DailySummary.yaml
+description: Информация о движении средств за месяц

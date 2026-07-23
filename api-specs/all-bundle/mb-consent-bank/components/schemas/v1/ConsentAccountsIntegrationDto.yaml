@@ -1,0 +1,7 @@
+required:
+- accounts
+type: object
+properties:
+  accounts:
+    $ref: ./SliceDataConsentAccountIntegrationDto.yaml
+description: Информация по счетам в Согласии. Интеграционное API

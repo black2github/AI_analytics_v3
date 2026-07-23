@@ -1,0 +1,162 @@
+type: object
+properties:
+  MXDTDOCUMENTDATE:
+    $ref: ./LocalDate.yaml
+  MXSDOCUMENTNUMBER:
+    type: integer
+    format: int64
+  MXSCURRCODEBASE:
+    type: string
+  MXNAMOUNT:
+    type: number
+  MXSPAYERNAME:
+    type: string
+  MXSPAYERIBAN:
+    type: integer
+    format: int8
+  MXSPAYERACCOUNT:
+    type: string
+  MXSPAYERCTRY:
+    type: string
+  MXSPAYERSTATE:
+    type: string
+  MXSPAYERZIP:
+    type: string
+  MXSPAYERDSTRCTNM:
+    type: string
+  MXSPAYERCITY:
+    type: string
+  MXSPAYERSTRTNM:
+    type: string
+  MXSPAYERBLDGNB:
+    type: string
+  MXSPAYERBLDGNM:
+    type: string
+  MXSPAYERROOM:
+    type: string
+  MXSPAYERFLR:
+    type: string
+  MXSPAYERPSTBOX:
+    type: string
+  MXSPAYEROTHERID:
+    type: string
+  MXSPAYERCTRYOFRES:
+    type: string
+  MXSRECEIVER:
+    type: string
+  MXSRECEIVERIBAN:
+    type: integer
+    format: int8
+  MXSRECEIVERACCOUNT:
+    type: string
+  MXSRECEIVERCTRY:
+    type: string
+  MXSRECEIVERSTATE:
+    type: string
+  MXSRECEIVERZIP:
+    type: string
+  MXSRECEIVERDSTRCTNM:
+    type: string
+  MXSRECEIVERTWNNM:
+    type: string
+  MXSRECEIVERSTRTNM:
+    type: string
+  MXSRECEIVERBLDGNB:
+    type: string
+  MXSRECEIVERBLDGNM:
+    type: string
+  MXSRECEIVERROOM:
+    type: string
+  MXSRECEIVERFLR:
+    type: string
+  MXSRECEIVERPSTBOX:
+    type: string
+  MXSRECEIVEROTHERID:
+    type: string
+  MXSRECEIVERCTRYOFRES:
+    type: string
+  MXSRECEIVERDTLSNM:
+    type: string
+  MXSRECEIVERDTLSPHNENB:
+    type: string
+  MXSRECEIVERDTLSEMAIL:
+    type: string
+  MXSIMEDIABANKBIC:
+    type: string
+  MXSIMEDIABANKNAME:
+    type: string
+  MXSIMEDIABANKIBAN:
+    type: integer
+    format: int8
+  MXSIMEDIABANKACC:
+    type: string
+  MXBANKCORRSPAYERBANKBIC:
+    type: string
+  MXBANKCORRSPAYERBANKNAME:
+    type: string
+  MXBANKCORRSPAYERBANKIBAN:
+    type: integer
+    format: int8
+  MXBANKCORRSPAYERBANKACC:
+    type: string
+  MXSRECEIVERBIC:
+    type: string
+  MXSRECEIVERBANKNAME:
+    type: string
+  MXSRECEIVERBANKIBAN:
+    type: integer
+    format: int8
+  MXSRECEIVERCORRACC:
+    type: string
+  MXSRECEIVERBANKCLRMMBID:
+    type: string
+  MXSRECEIVERBANKCLRCD:
+    type: string
+  MXSRECEIVERBANKCTRY:
+    type: string
+  MXSRECEIVERBANKZIP:
+    type: string
+  MXSRECEIVERBANKTWNNM:
+    type: string
+  MXSRECEIVERBANKSTRTNM:
+    type: string
+  MXSRECEIVERBANKBLDGNB:
+    type: string
+  MXSDETOPBASE:
+    type: string
+  MXSCHARGESTYPE:
+    type: string
+  MXREGULATORYINF:
+    type: string
+  MXADDITIONALINSTR:
+    type: string
+  MXADDITIONALINSTRGPB:
+    type: string
+  MXDTVALDATE:
+    $ref: ./LocalDate.yaml
+  MXULTIMATECREDITORNAME:
+    type: string
+  MXULTIMATECREDITORCTRY:
+    type: string
+  MXULTIMATECREDITORTWNNM:
+    type: string
+  MXULTIMATECREDITOROTHERID:
+    type: string
+  MXADDITINFONDS:
+    type: string
+  MXSOTVFIO:
+    type: string
+  MXSOTVPHONE:
+    type: string
+  MXCURCNTRLNMNUMBER:
+    $ref: ./LocalDate.yaml
+  MXCURCNTRLNMDATE:
+    type: string
+  MXSUNIQUECONTRACTNUMBER:
+    type: string
+  MXSOPERATIONTYPECODE:
+    type: string
+  MXSEXPECTEDDATE:
+    type: string
+  MXSADVANCEREFUNDDATE:
+    type: string

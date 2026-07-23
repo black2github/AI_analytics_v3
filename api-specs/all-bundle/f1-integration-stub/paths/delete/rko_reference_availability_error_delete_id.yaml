@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице gps_eco_doc_issue_check_err
+  tags:
+  - Обновление заглушек gps_eco_doc_issue_check_err (Ошибки проверки возможности получения справки)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

@@ -1,0 +1,79 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ./FilterValueDtoLong.yaml
+  shortName:
+    $ref: ./FilterValueDtoString.yaml
+  fullName:
+    $ref: ./FilterValueDtoString.yaml
+  shortOrIsNullFullName:
+    $ref: ./FilterValueDtoString.yaml
+  shortOrFullName:
+    $ref: ./FilterValueDtoString.yaml
+  innKio:
+    $ref: ./FilterValueDtoString.yaml
+  regNumber:
+    $ref: ./FilterValueDtoString.yaml
+  ogrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  blockState:
+    $ref: ./BankClientBlockStateFilter.yaml
+  statusCategory:
+    type: string
+    description: Категория клиента
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+  absId:
+    $ref: ./FilterValueDtoString.yaml
+  externalClientGuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  isConnectedToDbo:
+    $ref: ./BankClientDboCategoryFilter.yaml
+  isResident:
+    $ref: ./BankClientResidentSignFilter.yaml
+  status:
+    $ref: ./BankClientStatusFilter.yaml
+  clientType:
+    $ref: ./BankClientTypeFilter.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  bankClientAgreementsCategoryDto:
+    $ref: ./ProductTypeDtoFilter.yaml
+  textQuery:
+    type: string
+    description: Общая строка поиска.
+  textCompoundFilter:
+    $ref: ./TextCompoundFilterForBankClientFilter.yaml
+  customerId:
+    $ref: ./FilterValueDtoString.yaml
+  approvalSign:
+    $ref: ./FilterValueDtoBoolean.yaml
+  clientOfficialIds:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  hasAccountTnf:
+    $ref: ./FilterValueDtoBoolean.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  hasConstitution:
+    $ref: ./FilterValueDtoBoolean.yaml
+  clientSegment:
+    $ref: ./FilterValueEnumDtoClientSegmentDto.yaml
+  simpleClient:
+    $ref: ./FilterValueDtoBoolean.yaml
+  simpleUpdateRequired:
+    $ref: ./FilterValueDtoBoolean.yaml
+  innKioOrShortOrFullName:
+    $ref: ./FilterValueDtoString.yaml
+  liquidationDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  customersCupCode:
+    $ref: ./FilterValueDtoString.yaml
+  clientSegmentManualOnly:
+    $ref: ./FilterValueDtoBoolean.yaml
+  tin:
+    $ref: ./FilterValueDtoString.yaml
+description: Клиент Банка справочник

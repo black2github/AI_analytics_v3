@@ -1,0 +1,50 @@
+type: object
+description: Реквизиты клиента по заявке на создание QR-кода для B2B
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  account:
+    type: string
+    description: Cчет зачисления
+  merchantId:
+    type: string
+    description: Идентификатор Торговой точки
+  merchantName:
+    type: string
+    description: Наименование Точка продаж
+  merchantAddress:
+    type: string
+    description: Адрес Точки продаж
+  merchantStatus:
+    type: string
+    description: Текущий статус ТСП
+    enum:
+    - ACTIVE
+    - BLOCKED
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ/ИП – клиента Банка в СБП
+  f1Rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП

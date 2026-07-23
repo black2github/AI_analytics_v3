@@ -1,0 +1,48 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор файла.
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла.
+  fileSize:
+    type: integer
+    description: Размер файла.
+    format: int64
+  accessToken:
+    type: string
+    description: Access token для файла.
+  tessaFileId:
+    type: string
+    description: Идентификатор вложения в ТЕССА
+    format: uuid
+  expiration:
+    type: string
+    description: Максимальная дата хранения
+    format: date-time
+  uploadedById:
+    type: string
+    description: Идентификатор технического пользователя
+    format: uuid
+  signature:
+    type: string
+    description: Служебное поле
+  ocrQualityConfidence:
+    type: number
+    description: Качество оптического распознавания символов.
+    format: float
+  dpi:
+    type: integer
+    description: Разрешение изображения.
+    format: int32
+  width:
+    type: integer
+    description: Ширина изображения.
+    format: int32
+  height:
+    type: integer
+    description: Высота изображения.
+    format: int32
+description: Информация об отсканированном вложении.

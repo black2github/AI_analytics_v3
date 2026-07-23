@@ -1,0 +1,80 @@
+required:
+- accountNumber
+- bankBic
+- inn
+- name
+- tid
+- tidAmountSurplus
+- tidAmountWriteOff
+- tidStatus
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета получателя
+  bankBic:
+    type: string
+    description: БИК получателя
+  bankCorrAccountNumber:
+    type: string
+    description: Корр. счет получателя
+  bankName:
+    type: string
+    description: БАНК получателя
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  commissionAccountNumber:
+    type: string
+    description: Счёт списания комиссии
+  id:
+    type: integer
+    description: Идентификатор субдоговора
+    format: int64
+  inn:
+    type: string
+    description: ИНН получателя
+  isBudget:
+    type: boolean
+    description: Признак Бюджетные реквизиты
+  kbk:
+    type: string
+    description: КБК
+  kpp:
+    type: string
+    description: КПП получателя
+  mainTid:
+    type: string
+    description: Мастер TID
+  name:
+    type: string
+    description: Наименование получателя
+  ogrn:
+    type: string
+    description: ОГРН получателя
+  oktmo:
+    type: string
+    description: ОКТМО
+  payerStatus:
+    type: string
+    description: Статус составителя расчётного документа
+  paymentBasis:
+    type: string
+    description: Основание платежа
+  status:
+    type: string
+    description: Статус субдоговора
+  tid:
+    type: string
+    description: TID
+  tidAmountSurplus:
+    type: number
+    description: Зачисленные излишки
+  tidAmountWriteOff:
+    type: number
+    description: Списанные недостачи
+  tidStatus:
+    type: string
+    description: TID статус
+description: Реквизиты АДМ

@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  code:
+    type: string
+    description: Код операции.
+    enum:
+    - BASE
+    - TRANSACTIONS
+description: Операции в Согласии

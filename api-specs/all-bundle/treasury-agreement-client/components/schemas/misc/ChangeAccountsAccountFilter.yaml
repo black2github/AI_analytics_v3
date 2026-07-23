@@ -1,0 +1,7 @@
+type: object
+properties:
+  generalAgreementId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр

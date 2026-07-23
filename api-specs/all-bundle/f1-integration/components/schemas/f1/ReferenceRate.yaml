@@ -1,0 +1,16 @@
+type: object
+properties:
+  referenceCode:
+    type: integer
+    format: int32
+  referenceElectronicPrice:
+    type: number
+  referenceOnPaperPrice:
+    type: number
+  comment:
+    type: string
+  valueDigitalNds:
+    type: number
+  valueOnPaperNds:
+    type: number
+description: Комиссия по конкретной справке

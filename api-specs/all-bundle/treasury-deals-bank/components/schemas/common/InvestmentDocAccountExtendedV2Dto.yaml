@@ -1,0 +1,110 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Бизнес id
+  absId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  accountType:
+    type: string
+    description: Тип счёта
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  accountName:
+    type: string
+    description: Название счёта
+  accountNameExtended:
+    type: string
+    description: Наименование счёта в АБС банка
+  currency:
+    type: string
+    description: Валюта
+  accountNumber:
+    type: string
+    description: Номер счета
+  kbk:
+    type: string
+    description: КБК владельца счёта
+  bankName:
+    type: string
+    description: Название банка
+  bankCode:
+    type: string
+    description: Код банка
+  bankKS:
+    type: string
+    description: К/C банка
+  corrBankName:
+    type: string
+    description: Название банка корреспондента
+  corrBankCode:
+    type: string
+    description: Код банка корреспондента
+  absPropertyMNO:
+    type: string
+    description: Признак возможности размещения на счете МНО
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyDepositValue:
+    type: string
+    description: Признак возможности списания денежных средств со счета в дату валютирования
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyDepositMaturity:
+    type: string
+    description: Признак возможности зачисления денежных средств на счет в дату погашения
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyInterest:
+    type: string
+    description: Признак возможности зачисления на счет начисленных процентов по сделке
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  defaultUsage:
+    uniqueItems: true
+    type: array
+    description: Назначение счёта по умолчанию
+    items:
+      type: string
+      description: Назначение счёта по умолчанию
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+  accountUsage:
+    uniqueItems: true
+    type: array
+    description: Возможное использования счета
+    items:
+      type: string
+      description: Возможное использования счета
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+  status:
+    type: string
+    description: Статус счета
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - DELETED
+description: Данные

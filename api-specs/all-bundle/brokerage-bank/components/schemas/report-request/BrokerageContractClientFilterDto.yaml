@@ -1,0 +1,5 @@
+type: object
+properties:
+  client:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для виртуального справочника клиентов договоров

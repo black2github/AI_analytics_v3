@@ -1,0 +1,82 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Оферта"
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата и время создания документа
+    format: date-time
+  bankNotice:
+    type: string
+    description: Комментарий банка
+  errText:
+    type: string
+    description: Описание ошибки
+  absDeniedText:
+    type: string
+    description: Причина отказа АБС
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ERROR
+    - EXECUTED_BY_ABS
+    - DENIED
+    - EXECUTED
+    - ACCEPTED
+  step:
+    type: string
+    description: Шаг заявки
+    enum:
+    - DATA
+    - ADDITIONAL_DATA
+    - CONFIRMATION
+  clientInfo:
+    $ref: ./ClientInfoDto.yaml
+  requestData:
+    $ref: ./RequestDataDto.yaml
+  requisiteBankAccountAgreement:
+    $ref: ./RequisiteBankAccountAgreementDto.yaml
+  interactionF1:
+    $ref: ./InteractionF1Dto.yaml
+  signatures:
+    type: array
+    description: Подпись оферты
+    items:
+      $ref: ./OfferSignatureDto.yaml
+  attachments:
+    $ref: ./OfferAttachmentsDto.yaml
+  projectParameters:
+    $ref: ./OfferProjectParametersDto.yaml
+  version:
+    type: integer
+    description: Версия оферты
+    format: int32
+  contractorsRegistry:
+    uniqueItems: true
+    type: array
+    description: Реестр контрагентов
+    items:
+      $ref: ./ContractorsRegistryRecordDto.yaml
+description: Оферта

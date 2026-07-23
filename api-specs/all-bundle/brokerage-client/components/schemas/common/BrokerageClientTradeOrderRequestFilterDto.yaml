@@ -1,0 +1,39 @@
+type: object
+properties:
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestSubtype:
+    $ref: ./FilterValueDtoBrokerageTradeOrderRequestSubtypeDto.yaml
+  requestKind:
+    $ref: ./FilterValueDtoBrokerageTradeOrderRequestKindDto.yaml
+  contractNumber:
+    $ref: ./FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  requestFrom:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestTo:
+    $ref: ./FilterValueDtoInstant.yaml
+  tradingFloorName:
+    $ref: ./FilterValueDtoString.yaml
+  currency:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория экранной формы
+    enum:
+    - ALL
+    - NEW
+    - REJECTED
+    - EXECUTED
+  linkedOnly:
+    $ref: ./FilterValueDtoBoolean.yaml
+  status:
+    $ref: ./FilterValueDtoBrokerageClientTradeOrderRequestStatusDto.yaml
+  amount:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для скроллера торговых поручений (клиенская сторона)

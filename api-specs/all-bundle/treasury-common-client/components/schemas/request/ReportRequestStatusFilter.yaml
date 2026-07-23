@@ -1,0 +1,32 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - REJECTED
+    - ACTIVE
+  notEq:
+    type: string
+    enum:
+    - REJECTED
+    - ACTIVE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - REJECTED
+      - ACTIVE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - REJECTED
+      - ACTIVE
+  isNull:
+    type: boolean

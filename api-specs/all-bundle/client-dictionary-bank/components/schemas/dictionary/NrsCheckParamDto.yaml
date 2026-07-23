@@ -1,0 +1,28 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Параметры проверки организации клиента
+    enum:
+    - USER_NOT_BLOCKED_IN_ORGANIZATION
+    - AGREEMENT_JOINING_GPB_BUSINESS_ONLINE
+    - SETTING_ACCOUNTS_ORGANIZATIONS
+    - AUTHORIZED_PERSON_GPB_BUSINESS_ONLINE
+    - ACCESS_PAYMENT_SERVICE
+    - RIGHT_SIGN_PAYMENT_DOCUMENTS
+  result:
+    type: string
+    description: Статус проверки параметра организации
+    enum:
+    - PASSED
+    - NOT_PASSED
+    - NOT_PASSED_NEED_CHANGE_CONTACT
+    - NOT_PASSED_SIGNER_APPLY
+    - NOT_PASSED_NEED_REG_UL
+    - NOT_PASSED_NEED_CHANGE_ACCESS_SERVICE
+    - NOT_PASSED_NEED_REG_APPLY
+  accessAccounts:
+    type: array
+    items:
+      $ref: ./NrsAccountAccessDto.yaml
+description: Проверка параметра HPC

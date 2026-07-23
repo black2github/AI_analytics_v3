@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./DocumentOcrRequestDto.yaml
+description: Запрос

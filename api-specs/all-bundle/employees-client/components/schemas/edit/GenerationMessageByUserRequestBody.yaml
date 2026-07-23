@@ -1,0 +1,16 @@
+required:
+- type
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  changeableUserPhoneNumber:
+    type: string
+  type:
+    type: string
+    enum:
+    - BY_EMPLOYEE
+    - BY_EMPLOYEE_V2
+    - BY_USER

@@ -1,0 +1,20 @@
+type: object
+description: Ответ на запрос создания заявки на регистрацию QR-кода от сервиса Банка
+properties:
+  traceId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор запроса
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  data:
+    $ref: ./SbpQrcRequestSideServiceResponseDataDto.yaml
+    description: Параметры зарегистрированного QR. Обязательное поле, если code = 000
+required:
+- code
+- message
+- traceId

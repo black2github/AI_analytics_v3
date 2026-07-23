@@ -1,0 +1,17 @@
+required:
+- accessToken
+- fileImportId
+- fileName
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен доступа
+description: Экспорт реестра документов в Ф1

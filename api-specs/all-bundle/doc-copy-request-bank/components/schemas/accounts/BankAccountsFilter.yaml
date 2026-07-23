@@ -1,0 +1,5 @@
+type: object
+properties:
+  bankClientIds:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр

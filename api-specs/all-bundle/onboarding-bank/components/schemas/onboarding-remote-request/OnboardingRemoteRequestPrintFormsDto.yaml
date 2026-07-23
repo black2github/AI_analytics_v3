@@ -1,0 +1,8 @@
+type: object
+properties:
+  printForms:
+    type: array
+    description: Сведения о ПФ для сервиса процессинга заявки на удалённое открытие счёта
+    items:
+      $ref: ./OnboardingRemoteRequestPrintFormDto.yaml
+description: Сведения о ПФ для сервиса процессинга заявки на удалённое открытие счёта

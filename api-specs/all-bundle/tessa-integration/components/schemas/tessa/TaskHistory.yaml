@@ -1,0 +1,9 @@
+type: object
+properties:
+  typeCaption:
+    type: string
+  optionCaption:
+    type: string
+  optionId:
+    type: string
+    format: uuid

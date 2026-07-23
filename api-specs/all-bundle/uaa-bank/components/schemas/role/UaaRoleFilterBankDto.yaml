@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  roleCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  segmentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  segmentCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  authorityId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  authorityCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Фильтр ролей

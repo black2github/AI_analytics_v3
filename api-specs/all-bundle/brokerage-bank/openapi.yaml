@@ -1,0 +1,379 @@
+openapi: 3.0.1
+info:
+  title: Брокерские договора. Банковская часть.
+  version: 1.54.0
+servers:
+- url: /brokerage-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API для работы с подписью торгового поручения, банковская сторона
+- name: Работа с заявками на подключение услуг/площадок/валют к брокерскому договору (Банк)
+- name: Работа с торговыми поручениями (Банковская сторона)
+- name: Работа с представлениями договоров
+- name: Работа с запросами отчета брокера (банковская сторона)
+- name: Работа с файловым хранилищем (Банк)
+- name: API для работы с запросами на открытие брокерского счета (банковская сторона)
+- name: Работа с загрузкой ценных бумаг на покупку (банковская сторона)
+- name: Работа с неторговыми поручениями (банковская сторона)
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /trade-order/{requestId}/change-status:
+    $ref: ./paths/trade-order/trade_order_requestId_change_status.yaml
+  /trade-order/status-to-wait-detach:
+    $ref: ./paths/trade-order/trade_order_status_to_wait_detach.yaml
+  /trade-order/get-page:
+    $ref: ./paths/trade-order/trade_order_get_page.yaml
+  /trade-order/export/{id}:
+    $ref: ./paths/trade-order/trade_order_export_id.yaml
+  /trade-order/export-sign:
+    $ref: ./paths/trade-order/trade_order_export_sign.yaml
+  /trade-order/client:
+    $ref: ./paths/trade-order/trade_order_client.yaml
+  /trade-order/category:
+    $ref: ./paths/trade-order/trade_order_category.yaml
+  /report-request/number/get-page:
+    $ref: ./paths/report-request/report_request_number_get_page.yaml
+  /report-request/get-page:
+    $ref: ./paths/report-request/report_request_get_page.yaml
+  /report-request/client/get-page:
+    $ref: ./paths/report-request/report_request_client_get_page.yaml
+  /open-account/get-page:
+    $ref: ./paths/misc/open_account_get_page.yaml
+  /non-trade-order/validate-sign/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_validate_sign_id.yaml
+  /non-trade-order/resend/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_resend_id.yaml
+  /non-trade-order/reject/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_reject_id.yaml
+  /non-trade-order/get-page:
+    $ref: ./paths/non-trade-order/non_trade_order_get_page.yaml
+  /non-trade-order/export/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_export_id.yaml
+  /non-trade-order/export-sign/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_export_sign_id.yaml
+  /non-trade-order/execute/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_execute_id.yaml
+  /non-trade-order/category:
+    $ref: ./paths/non-trade-order/non_trade_order_category.yaml
+  /contract-service/{requestId}/resend-to-bank:
+    $ref: ./paths/contract-service/contract_service_requestId_resend_to_bank.yaml
+  /contract-service/{requestId}/change-status:
+    $ref: ./paths/contract-service/contract_service_requestId_change_status.yaml
+  /contract-service/get-page:
+    $ref: ./paths/contract-service/contract_service_get_page.yaml
+  /contract-service/export/{id}:
+    $ref: ./paths/contract-service/contract_service_export_id.yaml
+  /contract-service/category:
+    $ref: ./paths/contract-service/contract_service_category.yaml
+  /withdrawal-money-order/{requestId}:
+    $ref: ./paths/misc/withdrawal_money_order_requestId.yaml
+  /transfer-security-order/{requestId}:
+    $ref: ./paths/misc/transfer_security_order_requestId.yaml
+  /trade-order/{requestId}:
+    $ref: ./paths/trade-order/trade_order_requestId.yaml
+  /trade-order/{requestId}/history:
+    $ref: ./paths/trade-order/trade_order_requestId_history.yaml
+  /trade-order/trading-floor:
+    $ref: ./paths/trade-order/trade_order_trading_floor.yaml
+  /trade-order/subtype:
+    $ref: ./paths/trade-order/trade_order_subtype.yaml
+  /trade-order/status:
+    $ref: ./paths/trade-order/trade_order_status.yaml
+  /trade-order/load-isin:
+    $ref: ./paths/trade-order/trade_order_load_isin.yaml
+  /trade-order/kind:
+    $ref: ./paths/trade-order/trade_order_kind.yaml
+  /trade-order/currency-list:
+    $ref: ./paths/trade-order/trade_order_currency_list.yaml
+  /reserve-money-order/{requestId}:
+    $ref: ./paths/misc/reserve_money_order_requestId.yaml
+  /report-request/{requestId}:
+    $ref: ./paths/report-request/report_request_requestId.yaml
+  /report-request/{requestId}/history:
+    $ref: ./paths/report-request/report_request_requestId_history.yaml
+  /report-request/type:
+    $ref: ./paths/report-request/report_request_type.yaml
+  /report-request/status:
+    $ref: ./paths/report-request/report_request_status.yaml
+  /open-account/{requestId}:
+    $ref: ./paths/misc/open_account_requestId.yaml
+  /open-account/{requestId}/history:
+    $ref: ./paths/misc/open_account_requestId_history.yaml
+  /open-account/status:
+    $ref: ./paths/misc/open_account_status.yaml
+  /non-trade-order/history/{id}:
+    $ref: ./paths/non-trade-order/non_trade_order_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /file-storage/{attachmentId}/access-token:
+    $ref: ./paths/misc/file_storage_attachmentId_access_token.yaml
+  /contract/{contractId}/tradingfloor:
+    $ref: ./paths/misc/contract_contractId_tradingfloor.yaml
+  /contract-service/{requestId}:
+    $ref: ./paths/contract-service/contract_service_requestId.yaml
+  /contract-service/{requestId}/history:
+    $ref: ./paths/contract-service/contract_service_requestId_history.yaml
+  /contract-service/{requestId}/export-sign:
+    $ref: ./paths/contract-service/contract_service_requestId_export_sign.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    BrkTradeOrderChangeStatusCommand:
+      $ref: ./components/schemas/trade-order/BrkTradeOrderChangeStatusCommand.yaml
+    GenericCommandBrkTradeOrderChangeStatusCommand:
+      $ref: ./components/schemas/trade-order/GenericCommandBrkTradeOrderChangeStatusCommand.yaml
+    BrokerageRequestHistoryItemDto:
+      $ref: ./components/schemas/common/BrokerageRequestHistoryItemDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataBrokerageRequestHistoryItemDto:
+      $ref: ./components/schemas/trade-order/GenericResponseErrorDataBrokerageRequestHistoryItemDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/trade-order/GenericCommandUUID.yaml
+    BrokerageBankTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/trade-order/BrokerageBankTradeOrderRequestFilterDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/trade-order/FilterValueDtoBoolean.yaml
+    FilterValueDtoBrokerageBankTradeOrderRequestStatusDto:
+      $ref: ./components/schemas/trade-order/FilterValueDtoBrokerageBankTradeOrderRequestStatusDto.yaml
+    FilterValueDtoBrokerageTradeOrderRequestKindDto:
+      $ref: ./components/schemas/trade-order/FilterValueDtoBrokerageTradeOrderRequestKindDto.yaml
+    FilterValueDtoBrokerageTradeOrderRequestSubtypeDto:
+      $ref: ./components/schemas/trade-order/FilterValueDtoBrokerageTradeOrderRequestSubtypeDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandBrokerageBankTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/trade-order/GetPageCommandBrokerageBankTradeOrderRequestFilterDto.yaml
+    PageParamsBrokerageBankTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/trade-order/PageParamsBrokerageBankTradeOrderRequestFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BrokerageTradeOrderItemDto:
+      $ref: ./components/schemas/trade-order/BrokerageTradeOrderItemDto.yaml
+    BrokerageTradeOrderSignatureDto:
+      $ref: ./components/schemas/trade-order/BrokerageTradeOrderSignatureDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    PageDataBrokerageTradeOrderItemDto:
+      $ref: ./components/schemas/trade-order/PageDataBrokerageTradeOrderItemDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/trade-order/SignerInfoDto.yaml
+    BrkPrintReportRequestDto:
+      $ref: ./components/schemas/common/BrkPrintReportRequestDto.yaml
+    GenericCommandBrkPrintReportRequestDto:
+      $ref: ./components/schemas/common/GenericCommandBrkPrintReportRequestDto.yaml
+    BrkFileInfo:
+      $ref: ./components/schemas/common/BrkFileInfo.yaml
+    GenericResponseErrorDataBrkFileInfo:
+      $ref: ./components/schemas/common/GenericResponseErrorDataBrkFileInfo.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/trade-order/SingleCommandUUID.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/trade-order/SingleResponsePrintResponse.yaml
+    GetPageCommandVoid:
+      $ref: ./components/schemas/trade-order/GetPageCommandVoid.yaml
+    PageParamsVoid:
+      $ref: ./components/schemas/trade-order/PageParamsVoid.yaml
+    PageDataString:
+      $ref: ./components/schemas/trade-order/PageDataString.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    BrokerageContractNumberFilterDto:
+      $ref: ./components/schemas/report-request/BrokerageContractNumberFilterDto.yaml
+    GetPageCommandBrokerageContractNumberFilterDto:
+      $ref: ./components/schemas/report-request/GetPageCommandBrokerageContractNumberFilterDto.yaml
+    PageParamsBrokerageContractNumberFilterDto:
+      $ref: ./components/schemas/report-request/PageParamsBrokerageContractNumberFilterDto.yaml
+    BrokerageContractDataDto:
+      $ref: ./components/schemas/report-request/BrokerageContractDataDto.yaml
+    PageDataBrokerageContractDataDto:
+      $ref: ./components/schemas/report-request/PageDataBrokerageContractDataDto.yaml
+    BrokerageReportRequestFilterDto:
+      $ref: ./components/schemas/report-request/BrokerageReportRequestFilterDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    GetPageCommandBrokerageReportRequestFilterDto:
+      $ref: ./components/schemas/report-request/GetPageCommandBrokerageReportRequestFilterDto.yaml
+    PageParamsBrokerageReportRequestFilterDto:
+      $ref: ./components/schemas/report-request/PageParamsBrokerageReportRequestFilterDto.yaml
+    BrokerageReportRequestItemDto:
+      $ref: ./components/schemas/report-request/BrokerageReportRequestItemDto.yaml
+    PageDataBrokerageReportRequestItemDto:
+      $ref: ./components/schemas/report-request/PageDataBrokerageReportRequestItemDto.yaml
+    BrokerageContractClientFilterDto:
+      $ref: ./components/schemas/report-request/BrokerageContractClientFilterDto.yaml
+    GetPageCommandBrokerageContractClientFilterDto:
+      $ref: ./components/schemas/report-request/GetPageCommandBrokerageContractClientFilterDto.yaml
+    PageParamsBrokerageContractClientFilterDto:
+      $ref: ./components/schemas/report-request/PageParamsBrokerageContractClientFilterDto.yaml
+    BrokerageContractClientDto:
+      $ref: ./components/schemas/report-request/BrokerageContractClientDto.yaml
+    PageDataBrokerageContractClientDto:
+      $ref: ./components/schemas/report-request/PageDataBrokerageContractClientDto.yaml
+    BrokerageBankRequestOpenAccountFilterDto:
+      $ref: ./components/schemas/misc/BrokerageBankRequestOpenAccountFilterDto.yaml
+    FilterValueDtoBrokerageBankOpenAccountRequestStatusDto:
+      $ref: ./components/schemas/misc/FilterValueDtoBrokerageBankOpenAccountRequestStatusDto.yaml
+    GetPageCommandBrokerageBankRequestOpenAccountFilterDto:
+      $ref: ./components/schemas/misc/GetPageCommandBrokerageBankRequestOpenAccountFilterDto.yaml
+    PageParamsBrokerageBankRequestOpenAccountFilterDto:
+      $ref: ./components/schemas/misc/PageParamsBrokerageBankRequestOpenAccountFilterDto.yaml
+    BrokerageBankRequestOpenAccountItemDto:
+      $ref: ./components/schemas/misc/BrokerageBankRequestOpenAccountItemDto.yaml
+    PageDataBrokerageBankRequestOpenAccountItemDto:
+      $ref: ./components/schemas/misc/PageDataBrokerageBankRequestOpenAccountItemDto.yaml
+    GenericResponseErrorDataBoolean:
+      $ref: ./components/schemas/non-trade-order/GenericResponseErrorDataBoolean.yaml
+    BrokerageBankNonTradeOrderItemDto:
+      $ref: ./components/schemas/common/BrokerageBankNonTradeOrderItemDto.yaml
+    GenericResponseErrorDataBrokerageBankNonTradeOrderItemDto:
+      $ref: ./components/schemas/non-trade-order/GenericResponseErrorDataBrokerageBankNonTradeOrderItemDto.yaml
+    BrokerageBankNonTradeOrderCommentsDto:
+      $ref: ./components/schemas/non-trade-order/BrokerageBankNonTradeOrderCommentsDto.yaml
+    GenericCommandBrokerageBankNonTradeOrderCommentsDto:
+      $ref: ./components/schemas/non-trade-order/GenericCommandBrokerageBankNonTradeOrderCommentsDto.yaml
+    BrokerageBankNonTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/non-trade-order/BrokerageBankNonTradeOrderRequestFilterDto.yaml
+    FilterValueDtoBrokerageBankNonTradeOrderStatusDto:
+      $ref: ./components/schemas/non-trade-order/FilterValueDtoBrokerageBankNonTradeOrderStatusDto.yaml
+    FilterValueDtoBrokerageNonTradeOrderFrontalType:
+      $ref: ./components/schemas/non-trade-order/FilterValueDtoBrokerageNonTradeOrderFrontalType.yaml
+    GetPageCommandBrokerageBankNonTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/non-trade-order/GetPageCommandBrokerageBankNonTradeOrderRequestFilterDto.yaml
+    PageParamsBrokerageBankNonTradeOrderRequestFilterDto:
+      $ref: ./components/schemas/non-trade-order/PageParamsBrokerageBankNonTradeOrderRequestFilterDto.yaml
+    PageDataBrokerageBankNonTradeOrderItemDto:
+      $ref: ./components/schemas/non-trade-order/PageDataBrokerageBankNonTradeOrderItemDto.yaml
+    GenericResponseErrorDataPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPrintResponse.yaml
+    BrkCodeNameDto:
+      $ref: ./components/schemas/contract-service/BrkCodeNameDto.yaml
+    BrkContractServiceEngageBankViewDto:
+      $ref: ./components/schemas/contract-service/BrkContractServiceEngageBankViewDto.yaml
+    GenericResponseErrorDataBrkContractServiceEngageBankViewDto:
+      $ref: ./components/schemas/contract-service/GenericResponseErrorDataBrkContractServiceEngageBankViewDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/contract-service/SignatureDto.yaml
+    BrkContractEngageChangeStatusCommand:
+      $ref: ./components/schemas/contract-service/BrkContractEngageChangeStatusCommand.yaml
+    GenericCommandBrkContractEngageChangeStatusCommand:
+      $ref: ./components/schemas/contract-service/GenericCommandBrkContractEngageChangeStatusCommand.yaml
+    BrkContractServiceEngageBankFilterDto:
+      $ref: ./components/schemas/contract-service/BrkContractServiceEngageBankFilterDto.yaml
+    FilterValueDtoBrkContractEngageBankStatus:
+      $ref: ./components/schemas/contract-service/FilterValueDtoBrkContractEngageBankStatus.yaml
+    FilterValueDtoBrkEngageDocumentType:
+      $ref: ./components/schemas/contract-service/FilterValueDtoBrkEngageDocumentType.yaml
+    GetPageCommandBrkContractServiceEngageBankFilterDto:
+      $ref: ./components/schemas/contract-service/GetPageCommandBrkContractServiceEngageBankFilterDto.yaml
+    PageParamsBrkContractServiceEngageBankFilterDto:
+      $ref: ./components/schemas/contract-service/PageParamsBrkContractServiceEngageBankFilterDto.yaml
+    BrkContractServiceEngageBankItemDto:
+      $ref: ./components/schemas/contract-service/BrkContractServiceEngageBankItemDto.yaml
+    PageDataBrkContractServiceEngageBankItemDto:
+      $ref: ./components/schemas/contract-service/PageDataBrkContractServiceEngageBankItemDto.yaml
+    BrokerageBankWithdrawalMoneyOrderViewDto:
+      $ref: ./components/schemas/misc/BrokerageBankWithdrawalMoneyOrderViewDto.yaml
+    BrokerageNonTradeOrderSignatureDto:
+      $ref: ./components/schemas/misc/BrokerageNonTradeOrderSignatureDto.yaml
+    GenericResponseErrorDataBrokerageBankWithdrawalMoneyOrderViewDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataBrokerageBankWithdrawalMoneyOrderViewDto.yaml
+    BrokerageBankSecurityTransferOrderViewDto:
+      $ref: ./components/schemas/misc/BrokerageBankSecurityTransferOrderViewDto.yaml
+    GenericResponseErrorDataBrokerageBankSecurityTransferOrderViewDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataBrokerageBankSecurityTransferOrderViewDto.yaml
+    BrokerageRequestStatusDto:
+      $ref: ./components/schemas/common/BrokerageRequestStatusDto.yaml
+    BrokerageTradeOrderViewDto:
+      $ref: ./components/schemas/trade-order/BrokerageTradeOrderViewDto.yaml
+    GenericResponseErrorDataBrokerageTradeOrderViewDto:
+      $ref: ./components/schemas/trade-order/GenericResponseErrorDataBrokerageTradeOrderViewDto.yaml
+    ListResponseBrokerageRequestHistoryItemDto:
+      $ref: ./components/schemas/common/ListResponseBrokerageRequestHistoryItemDto.yaml
+    BrokerageTradingFloorDto:
+      $ref: ./components/schemas/trade-order/BrokerageTradingFloorDto.yaml
+    GenericResponseSimpleErrorDataListBrokerageTradingFloorDto:
+      $ref: ./components/schemas/trade-order/GenericResponseSimpleErrorDataListBrokerageTradingFloorDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/trade-order/SimpleErrorData.yaml
+    ListResponseBrokerageTradeOrderRequestSubtypeDto:
+      $ref: ./components/schemas/trade-order/ListResponseBrokerageTradeOrderRequestSubtypeDto.yaml
+    ListResponseBrokerageRequestStatusDto:
+      $ref: ./components/schemas/common/ListResponseBrokerageRequestStatusDto.yaml
+    GenericResponseErrorDataVoid:
+      $ref: ./components/schemas/trade-order/GenericResponseErrorDataVoid.yaml
+    ListResponseBrokerageTradeOrderRequestKindDto:
+      $ref: ./components/schemas/trade-order/ListResponseBrokerageTradeOrderRequestKindDto.yaml
+    BrokerageDictCurrencyDto:
+      $ref: ./components/schemas/common/BrokerageDictCurrencyDto.yaml
+    GenericResponseSimpleErrorDataListBrokerageDictCurrencyDto:
+      $ref: ./components/schemas/trade-order/GenericResponseSimpleErrorDataListBrokerageDictCurrencyDto.yaml
+    BrokerageBankReserveMoneyOrderViewDto:
+      $ref: ./components/schemas/misc/BrokerageBankReserveMoneyOrderViewDto.yaml
+    GenericResponseErrorDataBrokerageBankReserveMoneyOrderViewDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataBrokerageBankReserveMoneyOrderViewDto.yaml
+    BrokerageReportPeriodDto:
+      $ref: ./components/schemas/report-request/BrokerageReportPeriodDto.yaml
+    BrokerageReportRequestBankViewDto:
+      $ref: ./components/schemas/report-request/BrokerageReportRequestBankViewDto.yaml
+    BrokerageReportRequestCurrencyDto:
+      $ref: ./components/schemas/report-request/BrokerageReportRequestCurrencyDto.yaml
+    BrokerageReportRequestDto:
+      $ref: ./components/schemas/report-request/BrokerageReportRequestDto.yaml
+    GenericResponseErrorDataBrokerageReportRequestBankViewDto:
+      $ref: ./components/schemas/report-request/GenericResponseErrorDataBrokerageReportRequestBankViewDto.yaml
+    BrokerageReportTypeDto:
+      $ref: ./components/schemas/report-request/BrokerageReportTypeDto.yaml
+    ListResponseBrokerageReportTypeDto:
+      $ref: ./components/schemas/report-request/ListResponseBrokerageReportTypeDto.yaml
+    BrokerageBankRequestOpenAccountViewDto:
+      $ref: ./components/schemas/misc/BrokerageBankRequestOpenAccountViewDto.yaml
+    GenericResponseErrorDataBrokerageBankRequestOpenAccountViewDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataBrokerageBankRequestOpenAccountViewDto.yaml
+    BrokerageNonTradeOrderHistoryDto:
+      $ref: ./components/schemas/non-trade-order/BrokerageNonTradeOrderHistoryDto.yaml
+    GenericResponseErrorDataListBrokerageNonTradeOrderHistoryDto:
+      $ref: ./components/schemas/non-trade-order/GenericResponseErrorDataListBrokerageNonTradeOrderHistoryDto.yaml
+    FileAccessTokenDto:
+      $ref: ./components/schemas/misc/FileAccessTokenDto.yaml
+    GenericResponseErrorDataFileAccessTokenDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataFileAccessTokenDto.yaml
+    BrokerageContractTradingFloorDto:
+      $ref: ./components/schemas/misc/BrokerageContractTradingFloorDto.yaml
+    GenericResponseErrorDataListBrokerageContractTradingFloorDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListBrokerageContractTradingFloorDto.yaml
+    BrkContractServiceEngageHistoryDto:
+      $ref: ./components/schemas/contract-service/BrkContractServiceEngageHistoryDto.yaml
+    GenericResponseErrorDataListBrkContractServiceEngageHistoryDto:
+      $ref: ./components/schemas/contract-service/GenericResponseErrorDataListBrkContractServiceEngageHistoryDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

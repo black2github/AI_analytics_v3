@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountType:
+    $ref: ./AccountTypeFilter.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountName:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNameExtended:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountUsage:
+    $ref: ./AccountUsageFilter.yaml
+  bankCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankName:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./AccountStatusFilter.yaml
+  absId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  isDU:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  duOrganizationName:
+    $ref: ../common/FilterValueDtoString.yaml
+  duOrgNameOrAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

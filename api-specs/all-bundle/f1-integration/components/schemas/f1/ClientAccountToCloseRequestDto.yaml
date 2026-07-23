@@ -1,0 +1,19 @@
+required:
+- clGuid
+- clInn
+- clRegnum
+type: object
+properties:
+  clInn:
+    type: string
+    description: ИНН клиента
+    example: '7736207543'
+  clGuid:
+    type: string
+    description: GUID клиента
+    example: 4b193874-94e5-4787-8ce1-aa2c8e909ef8
+  clRegnum:
+    type: string
+    description: Регистрационный номер клиента (РНК)
+    example: '12345'
+description: Запрос счетов, доступных для закрытия

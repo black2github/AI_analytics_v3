@@ -1,0 +1,10 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  externalId:
+    type: string
+    description: Идентификатор пользователя во внешней системе
+description: Информация о пользователя TOTP

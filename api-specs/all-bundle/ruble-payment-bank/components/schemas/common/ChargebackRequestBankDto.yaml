@@ -1,0 +1,68 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  receiptAt:
+    type: string
+    description: Дата приема документа в Экосистеме
+    format: date-time
+  createdAt:
+    type: string
+    description: Дата и время создания документа
+    format: date-time
+  baseDocumentId:
+    type: string
+    description: Идентификатор базового документа
+    format: uuid
+  docCreationPage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+  docSourceSystem:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  docCreationType:
+    $ref: ./DocumentCreationMethodClassifierDto.yaml
+  baseDetails:
+    $ref: ./ChargebackBaseDetailsBankDto.yaml
+  bankDocumentDetails:
+    $ref: ./ChargebackBankDocumentDetailsDto.yaml
+  baseDocumentDetails:
+    $ref: ./ChargebackBaseDocumentDetailsDto.yaml
+  signatures:
+    type: array
+    description: Подписи отзыва платежного поручения
+    items:
+      $ref: ./SignatureBankDto.yaml
+  historyFailedLastStatus:
+    type: string
+    description: Дата последнего ошибочного статуса
+    format: date-time
+  statusDate:
+    type: string
+    description: Дата текущего статуса
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор сущности "Заявка на отзыв"
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  status:
+    $ref: ./ChargebackRequestStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+description: Заявка на отзыв, данные для сотрудника банка

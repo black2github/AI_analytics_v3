@@ -1,0 +1,20 @@
+type: string
+description: Способ создания документа
+enum:
+- UNKNOWN
+- NEW
+- COPY
+- IMPORT_FILE
+- IMPORT
+- DIRECT_1C
+- TEMPLATE
+- SALARY
+- STATEMENT
+- TAX_NOTICE
+- F1_INSERT
+- SKVO_INSERT
+- LK_UVED_INSERT
+- IMPORT_TNF
+- OPEN_API_CB
+- CSV_INSERT
+- EBG_COMISSION

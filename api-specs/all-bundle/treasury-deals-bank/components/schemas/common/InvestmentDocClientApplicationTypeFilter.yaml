@@ -1,0 +1,44 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - WEB_APP_ECO
+    - WEB_APP_MSB
+    - WEB_APP_MSB_WDL
+    - MOBILE_APP_MSB
+    - UNDEFINED
+  notEq:
+    type: string
+    enum:
+    - WEB_APP_ECO
+    - WEB_APP_MSB
+    - WEB_APP_MSB_WDL
+    - MOBILE_APP_MSB
+    - UNDEFINED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - WEB_APP_ECO
+      - WEB_APP_MSB
+      - WEB_APP_MSB_WDL
+      - MOBILE_APP_MSB
+      - UNDEFINED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - WEB_APP_ECO
+      - WEB_APP_MSB
+      - WEB_APP_MSB_WDL
+      - MOBILE_APP_MSB
+      - UNDEFINED
+  isNull:
+    type: boolean

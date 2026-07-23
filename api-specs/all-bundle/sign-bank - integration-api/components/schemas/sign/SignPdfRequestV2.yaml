@@ -1,0 +1,47 @@
+required:
+- attachmentId
+- reportType
+- x509data
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: ID вложения
+    format: uuid
+  x509data:
+    minLength: 1
+    type: string
+    description: Сертификат в формате X509, в кодировке base64
+  reportType:
+    type: string
+    description: Классификатор типов отчетов
+    enum:
+    - INFO
+    - STATEMENT
+    - LETTER
+    - PAYDOC
+    - CURRCONTROLDOC
+    - DIRECT_1C
+    - COPY_DOC
+    - PAYDOC_OUTGOING_REGISTRY
+    - SIGN_BRK_BO
+    - SIGN_BRK_DO
+  filialCode:
+    type: string
+    description: Филиал (список кодов АБС Ф1)
+  letterCode:
+    type: string
+    description: Типы писем (список кодов из Справочника типов ДСФ)
+  location:
+    type: string
+    description: Местоположение, где накладывалась подпись
+  reason:
+    type: string
+    description: Причина наложения подписи
+  contact:
+    type: string
+    description: Контактное лицо, наложившее подпись
+  addStamp:
+    type: boolean
+    description: Признак наложения штампа
+description: Запрос на подпись PDF файла

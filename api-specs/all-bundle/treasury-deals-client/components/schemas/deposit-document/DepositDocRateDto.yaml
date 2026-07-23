@@ -1,0 +1,100 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип ставки
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  baseRateCode:
+    type: string
+    description: Код базовой ставки для плавающей ставки
+  baseRateTitle:
+    type: string
+    description: Заголовок для базовой ставки для плавающей ставки
+  variant:
+    type: string
+    description: Вариант ставок
+    enum:
+    - COEFFICIENT
+    - MARGIN
+  margin:
+    type: string
+    description: Маржа для плавающей ставки
+  coefficient:
+    type: string
+    description: Коэффициент для плавающей ставки
+  clientWebDealingId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientGroup:
+    type: string
+    description: Группа клиента
+  clientGroupId:
+    type: integer
+    description: Идентификатор группы клиента
+    format: int64
+  obtained:
+    type: string
+    description: Время получения ставки
+    format: date-time
+  dateBegin:
+    type: string
+    description: Дата начала
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания
+    format: date
+  period:
+    type: integer
+    description: Период сделки
+    format: int32
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта сделки
+  value:
+    type: string
+    description: Ставка
+  percentAmount:
+    type: string
+    description: Сумма процентов
+  expiration:
+    type: string
+    description: Время окончания действия сделки
+    format: date-time
+  rateMatricesAskId:
+    type: integer
+    description: Идентификатор матрицы в АСК
+    format: int64
+  rateAskId:
+    type: integer
+    description: Идентификатор ставки в АСК
+    format: int64
+  earlyRefund:
+    type: boolean
+    description: Досрочное истребование
+  earlyRefundRate:
+    type: string
+    description: Ставка ДИ
+  interestPaymentMethod:
+    type: string
+    description: Метод выплаты процентов
+    enum:
+    - END
+    - MONTHLY
+    - QUARTERLY
+    - ANNUALLY
+  interestPaymentMethodLocalisedCode:
+    type: string
+    description: Метод выплаты процентов, локализованное значение
+  lifeTime:
+    type: integer
+    description: Время жизни ставки в мс
+    format: int64
+description: Информация о ставке использующейся для проверки сделки с визированием

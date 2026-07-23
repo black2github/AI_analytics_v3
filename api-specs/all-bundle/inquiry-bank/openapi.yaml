@@ -1,0 +1,136 @@
+openapi: 3.0.1
+info:
+  title: Сервис справок. Банковская часть.
+  version: 1.69.0-SNAPSHOT
+servers:
+- url: /inquiry-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API операций заявок на справку. Банковская часть.
+- name: API скроллера заявок на справку. Банковская часть
+paths:
+  /inquiry/to-executed-by-tessa/{id}:
+    $ref: ./paths/to-executed-by-tessa/inquiry_to_executed_by_tessa_id.yaml
+  /inquiry/send-to-tessa:
+    $ref: ./paths/send-to-tessa/inquiry_send_to_tessa.yaml
+  /inquiry/send-to-prepare-doc:
+    $ref: ./paths/send-to-prepare-doc/inquiry_send_to_prepare_doc.yaml
+  /inquiry/send-to-f1:
+    $ref: ./paths/send-to-f1/inquiry_send_to_f1.yaml
+  /inquiry/reject/{id}:
+    $ref: ./paths/reject/inquiry_reject_id.yaml
+  /inquiry/get-page:
+    $ref: ./paths/get-page/inquiry_get_page.yaml
+  /inquiry/export-sign:
+    $ref: ./paths/export-sign/inquiry_export_sign.yaml
+  /inquiry/export-doc:
+    $ref: ./paths/export-doc/inquiry_export_doc.yaml
+  /inquiry/category:
+    $ref: ./paths/category/inquiry_category.yaml
+  /inquiry/{id}:
+    $ref: ./paths/{id}/inquiry_id.yaml
+  /inquiry/history/{id}:
+    $ref: ./paths/history/inquiry_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CommentDto:
+      $ref: ./components/schemas/common/CommentDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/common/SingleCommandCommentDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CommissionInfoResponseDto:
+      $ref: ./components/schemas/common/CommissionInfoResponseDto.yaml
+    CommissionPaymentResultDto:
+      $ref: ./components/schemas/common/CommissionPaymentResultDto.yaml
+    GenericResponseSimpleErrorDataInquiryRequestBankApiResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataInquiryRequestBankApiResponseDto.yaml
+    InquiryAccountDto:
+      $ref: ./components/schemas/common/InquiryAccountDto.yaml
+    InquiryBankClientResponseDto:
+      $ref: ./components/schemas/common/InquiryBankClientResponseDto.yaml
+    InquiryDto:
+      $ref: ./components/schemas/common/InquiryDto.yaml
+    InquiryMethodDto:
+      $ref: ./components/schemas/common/InquiryMethodDto.yaml
+    InquiryRequestBankApiResponseDto:
+      $ref: ./components/schemas/common/InquiryRequestBankApiResponseDto.yaml
+    InquirySignatureDto:
+      $ref: ./components/schemas/common/InquirySignatureDto.yaml
+    InquiryTypeCodeDto:
+      $ref: ./components/schemas/common/InquiryTypeCodeDto.yaml
+    InquiryTypeDto:
+      $ref: ./components/schemas/common/InquiryTypeDto.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    CommissionPaymentResultFilter:
+      $ref: ./components/schemas/common/CommissionPaymentResultFilter.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandInquiryRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandInquiryRequestBankFilter.yaml
+    InquiryRequestBankCategoryDto:
+      $ref: ./components/schemas/common/InquiryRequestBankCategoryDto.yaml
+    InquiryRequestBankFilter:
+      $ref: ./components/schemas/common/InquiryRequestBankFilter.yaml
+    InquiryRequestStatusFilter:
+      $ref: ./components/schemas/common/InquiryRequestStatusFilter.yaml
+    InquiryTypeCodeFilter:
+      $ref: ./components/schemas/common/InquiryTypeCodeFilter.yaml
+    InquiryTypeFilter:
+      $ref: ./components/schemas/common/InquiryTypeFilter.yaml
+    PageParamsInquiryRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsInquiryRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    InquiryBankClientScrollerResponseDto:
+      $ref: ./components/schemas/get-page/InquiryBankClientScrollerResponseDto.yaml
+    InquiryBankScrollerApiResponseDto:
+      $ref: ./components/schemas/get-page/InquiryBankScrollerApiResponseDto.yaml
+    InquiryRequestBankScrollerApiResponseDto:
+      $ref: ./components/schemas/get-page/InquiryRequestBankScrollerApiResponseDto.yaml
+    OtherInfoBankScrollerApiResponseDto:
+      $ref: ./components/schemas/get-page/OtherInfoBankScrollerApiResponseDto.yaml
+    PageDataInquiryRequestBankScrollerApiResponseDto:
+      $ref: ./components/schemas/get-page/PageDataInquiryRequestBankScrollerApiResponseDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    InquiryRequestHistoryDto:
+      $ref: ./components/schemas/history/InquiryRequestHistoryDto.yaml
+    ListResponseInquiryRequestHistoryDto:
+      $ref: ./components/schemas/history/ListResponseInquiryRequestHistoryDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

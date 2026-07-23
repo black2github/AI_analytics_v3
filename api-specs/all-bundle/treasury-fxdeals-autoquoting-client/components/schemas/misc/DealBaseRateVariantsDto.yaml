@@ -1,0 +1,15 @@
+type: object
+properties:
+  baseRateCode:
+    type: string
+    description: Код базовой ставки
+  rateVariants:
+    type: array
+    description: Варианты ставок
+    items:
+      type: string
+      description: Варианты ставок
+      enum:
+      - COEFFICIENT
+      - MARGIN
+description: Базовые ставки варианты

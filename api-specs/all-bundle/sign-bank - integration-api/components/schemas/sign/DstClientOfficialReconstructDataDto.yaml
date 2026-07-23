@@ -1,0 +1,23 @@
+required:
+- clientId
+- clientOfficialId
+- login
+- userId
+type: object
+properties:
+  login:
+    type: string
+    description: Логин пользователя
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя
+    format: uuid
+description: Данные для реконструкции связей СЭП для мигрированных пользователей

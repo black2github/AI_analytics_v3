@@ -1,0 +1,39 @@
+openapi: 3.1.0
+info:
+  title: Сервис эмуляции взаимодействия через ОТСГДС расчетных сервисов ВРКО с АБС Ф1
+  version: 1.2.0-SNAPSHOT
+  description: Сервис
+servers:
+- url: /vrko-payment-f1-stub
+tags:
+- name: Отправка ответа от Ф1 в сервис ВП
+- name: Отправка ответа от Ф1 в сервис Конверсия
+- name: Отправка ответа от Ф1 в сервис СТС
+- name: Отправление сообщения с GPI-треками от Ф1 в очередь
+paths:
+  /currency-conversion:
+    $ref: ./paths/currency-conversion/currency_conversion.yaml
+  /currency-transfer:
+    $ref: ./paths/currency-transfer/currency_transfer.yaml
+  /currency-transfer/chargeback:
+    $ref: ./paths/chargeback/currency_transfer_chargeback.yaml
+  /gpi:
+    $ref: ./paths/gpi/gpi.yaml
+  /transit-account-debit:
+    $ref: ./paths/transit-account-debit/transit_account_debit.yaml
+  /transit-account-debit/chargeback:
+    $ref: ./paths/chargeback/transit_account_debit_chargeback.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponse:
+      $ref: ./components/schemas/common/GenericResponse.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataString.yaml
+    GpiTrackerF1Dto:
+      $ref: ./components/schemas/gpi/GpiTrackerF1Dto.yaml
+    GpiTrackerMessageRowF1Dto:
+      $ref: ./components/schemas/gpi/GpiTrackerMessageRowF1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml

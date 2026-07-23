@@ -1,0 +1,147 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docType:
+    type: string
+    description: Тип документа
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  docErrorText:
+    type: string
+    description: Текст ошибки
+  docProcessCode:
+    type: string
+    description: Код результата обработки
+    enum:
+    - SUCCESS
+    - ERROR_COMMON
+    - ERROR_TIMEOUT
+    - ERROR_NOT_FOUND
+  docCreatorId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docCreatorFullName:
+    type: string
+    description: Ф.И.О пользователя
+  canceledDocId:
+    type: string
+    description: Идентификатор отменяемого документа
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  docStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_NEW
+    - DRAFT
+    - DELETED
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - DETAILS_INVALID
+    - RECEIVED
+    - DENIED_OR_EXECUTED
+    - DENIED
+    - EXECUTED
+  uuid:
+    type: integer
+    description: Уникальный идентификатор заявки в Системе
+    format: int64
+  version:
+    type: integer
+    description: Версия
+    format: int64
+  signature:
+    $ref: ../common/SignatureDto.yaml
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента из справочника Клиентов Веб-Дилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientOriginalInfo:
+    $ref: ../common/ClientDto.yaml
+  clientFullNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Полное наименование
+  clientShortNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Краткое наименование
+  branch:
+    $ref: ../common/BranchDto.yaml
+  investmentDocNumber:
+    type: integer
+    description: Номер номер отказываемого документа
+    format: int32
+  investmentDocDate:
+    type: string
+    description: Дата отказываемого документа
+    format: date
+  dealDate:
+    type: string
+    description: Дата сделки
+    format: date
+  generalAgreement:
+    $ref: ../common/InvestmentDocGeneralAgreementDto.yaml
+  managementFund:
+    $ref: ../common/InvestmentDocManagementFundDto.yaml
+  dateBegin:
+    type: string
+    description: Дата начала
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания
+    format: date
+  period:
+    type: integer
+    description: Период сделки
+    format: int32
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта сделки
+  dealRateInfo:
+    $ref: ../common/InvestmentDocRateInfoDto.yaml
+  cancelDateTime:
+    type: string
+    description: Дата и время до которого возможна отмена сделки
+    format: date-time
+  dealRateTitle:
+    type: string
+    description: Значение ставки из печатной формы
+  cancelLifeTime:
+    type: integer
+    description: Период времени возможности отмены сделки в мс
+    format: int64

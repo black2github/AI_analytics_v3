@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор государственного контракта.
+  number:
+    type: string
+    description: Номер контракта.
+  amount:
+    type: string
+    description: Сумма контракта.
+  date:
+    type: string
+    description: Дата контракта.
+    format: date
+  bskId:
+    type: string
+    description: ID договора банковского сопровождения в БСК.
+  bskNumber:
+    type: string
+    description: Номер договора банковского сопровождения в БСК.
+description: Сведение о государственном контракте.

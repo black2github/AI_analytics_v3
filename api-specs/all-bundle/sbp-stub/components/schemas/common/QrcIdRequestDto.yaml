@@ -1,0 +1,8 @@
+type: object
+required:
+- qrcId
+description: Запрос по идентификатору зарегистрированной Функциональной ссылки СБП
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированной Функциональной ссылки СБП

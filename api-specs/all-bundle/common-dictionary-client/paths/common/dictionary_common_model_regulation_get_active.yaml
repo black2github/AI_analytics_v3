@@ -1,0 +1,22 @@
+get:
+  tags:
+  - API справочника типовых уставов
+  summary: Получить список активных типовых уставов, отсортированный в порядке возрастания по номеру документа
+  description: 'Привилегии: MODEL_REGULATION_FIND_ACTIVE'
+  operationId: getActiveUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«ModelRegulationDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

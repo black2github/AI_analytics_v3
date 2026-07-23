@@ -1,0 +1,16 @@
+type: object
+required:
+- qrcId
+- payload
+- status
+description: Данные полученные от СБП в результате операции с данными регистрации QR кода
+properties:
+  qrcId:
+    type: string
+    description: Номер QRC используемый в СБП для финансовых операций
+  payload:
+    type: string
+    description: Платежная ссылка на QRC для мобильных приложений Банков
+  status:
+    type: string
+    description: Статус регистрации QRC в СБП

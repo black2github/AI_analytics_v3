@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Банка для управления настройками
+  summary: Получить страницу записей
+  description: 'Привилегии: SETTINGS_VIEW'
+  operationId: getPage_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/GetPageCommandSettingFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/PageDataSettingAdminDto.yaml

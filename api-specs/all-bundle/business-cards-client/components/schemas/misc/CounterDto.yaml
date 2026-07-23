@@ -1,0 +1,18 @@
+required:
+- counter
+- tariffs
+- usedValue
+type: object
+properties:
+  counter:
+    $ref: ./CounterMetricDto.yaml
+  currency:
+    $ref: ./CurrencyDto.yaml
+  tariffs:
+    type: array
+    description: Список порогов и тарифов по ним (1..5 элементов)
+    items:
+      $ref: ./TariffDto.yaml
+  usedValue:
+    $ref: ./UsedValueDto.yaml
+description: Элемент массива метрик

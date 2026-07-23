@@ -1,0 +1,18 @@
+required:
+- docCreationPage
+- docCreationType
+- payerDetails
+type: object
+properties:
+  payerDetails:
+    $ref: ./PayerDetailsSimplifiedTaxDto.yaml
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9@:%_\+.-~#?&//=-]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+  paymentAmount:
+    $ref: ./PaymentAmountSimplifiedDto.yaml
+description: Входящие параметры для создания документа ЕНП.

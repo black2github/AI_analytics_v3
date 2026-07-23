@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    type: boolean
+    description: Основной ответ
+  response:
+    $ref: ./SignAuthorityResponse.yaml
+description: Ответ для сохранения обратной совместимости при изменении API

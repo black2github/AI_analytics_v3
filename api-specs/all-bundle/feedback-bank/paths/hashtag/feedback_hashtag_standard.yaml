@@ -1,0 +1,19 @@
+post:
+  tags:
+  - '[Оценка 5*]. Банк — работа с хештегами'
+  summary: Сохранить стандартные хештеги (создание или обновление)
+  description: 'Привилегии: FEEDBACK.BANK.DEFAULT_HASHTAG_EDIT'
+  operationId: saveStandardHashtags
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/hashtag/SaveStandardHashtagsRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml

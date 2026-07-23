@@ -1,0 +1,12 @@
+type: object
+properties:
+  status:
+    type: string
+  bankStatus:
+    type: string
+  clientStatus:
+    type: string
+  operations:
+    type: array
+    items:
+      $ref: ./ScheduleOperationHistoryDto.yaml

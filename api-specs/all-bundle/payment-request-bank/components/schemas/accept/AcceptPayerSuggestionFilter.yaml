@@ -1,0 +1,5 @@
+type: object
+properties:
+  payerInnOrRnkOrName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр подсказок плательщика акцепта.

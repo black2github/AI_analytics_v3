@@ -1,0 +1,12 @@
+type: object
+properties:
+  facsimileAttachment:
+    $ref: ./AttachmentInfoDto.yaml
+  stampAttachment:
+    $ref: ./AttachmentInfoDto.yaml
+  signerPosition:
+    type: string
+    description: Должность подписанта
+  certificate:
+    $ref: ./CertificateDto.yaml
+description: Информация о сертификате для подписи отчетов

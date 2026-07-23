@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - PREREGISTERED
+    - EMAIL_CONFIRMATION
+    - EMAIL_FAST_CONFIRMATION
+    - REGISTERED
+  notEq:
+    type: string
+    enum:
+    - PREREGISTERED
+    - EMAIL_CONFIRMATION
+    - EMAIL_FAST_CONFIRMATION
+    - REGISTERED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - PREREGISTERED
+      - EMAIL_CONFIRMATION
+      - EMAIL_FAST_CONFIRMATION
+      - REGISTERED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - PREREGISTERED
+      - EMAIL_CONFIRMATION
+      - EMAIL_FAST_CONFIRMATION
+      - REGISTERED
+  isNull:
+    type: boolean

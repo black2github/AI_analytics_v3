@@ -1,0 +1,20 @@
+required:
+- columns
+type: object
+properties:
+  columns:
+    type: array
+    description: Отображаемый набор колонок
+    items:
+      type: string
+      description: Отображаемый набор колонок
+  sort:
+    $ref: ../common/Sort.yaml
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/ApprovalSignScrollerFilterDto.yaml
+description: Запрос экспорта всех документов

@@ -1,0 +1,12 @@
+type: object
+properties:
+  mainDocument:
+    $ref: ./PassportDto.yaml
+  foreignDocumentTypeCommand:
+    type: string
+    description: Идентификатор типа документа (виза или миграционная карта) из справочника
+  foreignDocument:
+    $ref: ./ForeignDocumentDto.yaml
+  additionalContacts:
+    $ref: ./AdditionalContactsDto.yaml
+description: Пакет документов по заявке

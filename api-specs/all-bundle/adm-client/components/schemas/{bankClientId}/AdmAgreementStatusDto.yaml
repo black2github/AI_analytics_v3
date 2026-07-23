@@ -1,0 +1,6 @@
+type: string
+description: Статус Договора АДМ
+enum:
+- NOT_EXISTS
+- ACTIVE
+- NOT_ACTIVE

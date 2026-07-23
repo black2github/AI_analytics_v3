@@ -1,0 +1,75 @@
+post:
+  tags:
+  - СИП. Сервис SVFE
+  summary: Сервис получения информации о лимитах по карте из ПЦ SVFE
+  operationId: getCardLimitListUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.data.channel
+    in: query
+    description: Код канала, из которого пришел запрос
+    required: false
+    type: string
+  - name: body.data.requestID
+    in: query
+    description: Глобальный уникальный идентификатор запроса из внешней системы-первоисточника взаимодействия
+    required: false
+    type: string
+  - name: body.data.systemID
+    in: query
+    description: Код системы, из которой пришел запрос
+    required: false
+    type: string
+  - name: body.data.traceID
+    in: query
+    description: Локальный уникальный идентификатор запроса системы, вызывающей сервис
+    required: false
+    type: string
+  - name: body.data.type
+    in: query
+    description: Тип операции
+    required: false
+    type: string
+  - name: body.data.virtualNum
+    in: query
+    description: Виртуальный номер карты
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SipSvfeCardLimitListGetResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

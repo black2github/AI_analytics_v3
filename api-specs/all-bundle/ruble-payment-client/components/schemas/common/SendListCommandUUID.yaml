@@ -1,0 +1,12 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  list:
+    type: array
+    items:
+      type: string
+      format: uuid
+  userDeviceInfo:
+    $ref: ./UserDeviceInfoDto.yaml
+description: Команда отправки списка заявок в банк

@@ -1,0 +1,9 @@
+type: object
+properties:
+  existDss:
+    type: boolean
+    description: На текущий телефон Пользователя зарегистрирован профиль DSS
+  existSimpleSign:
+    type: boolean
+    description: У текущего пользователя включен ПЭП
+description: Ответ на запрос проверки наличия СЭП

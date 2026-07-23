@@ -1,0 +1,50 @@
+required:
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  status:
+    $ref: ../common/AcceptPaymentRequestStatusDto.yaml
+  commentForClient:
+    maxLength: 255
+    type: string
+    description: Комментарий для клиента
+    nullable: true
+  currentEditorId:
+    type: string
+    description: Текущий редактор ID пользователя
+    format: uuid
+    nullable: true
+  bankClientInfo:
+    $ref: ./acceptBankClientInfoDto.yaml
+  documentBusinessInfo:
+    $ref: ./acceptDocumentBusinessInfoDto.yaml
+  payerInfo:
+    $ref: ./acceptPayerInfoDto.yaml
+  paymentRequestInfo:
+    $ref: ./acceptPaymentRequestInfoDto.yaml
+  acceptInfo:
+    $ref: ./acceptInfoDto.yaml
+  incomingRequestInfo:
+    $ref: ./acceptIncomingPaymentRequestInfoDto.yaml
+  signPhaseDto:
+    $ref: ../common/AcceptPaymentRequestSignPhaseDto.yaml
+  documentSignatures:
+    type: array
+    description: Информация о подписях
+    items:
+      $ref: ../common/DocumentSignatureDto.yaml
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signatures:
+    type: array
+    description: Подписи акцепта платежного требования
+    items:
+      $ref: ../common/acceptSignatureClientDto.yaml
+description: Акцепт платежного требования данные для клиента

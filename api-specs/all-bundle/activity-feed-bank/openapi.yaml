@@ -1,0 +1,41 @@
+openapi: 3.0.1
+info:
+  title: Сервис ленты операции. Банковская часть.
+  version: 3.4.0
+servers:
+- url: /activity-feed-bank
+security:
+- bearerAuth: []
+paths:
+  /activity-feed/request/send:
+    $ref: ./paths/request/activity_feed_request_send.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AccountDto:
+      $ref: ./components/schemas/request/AccountDto.yaml
+    ActivityPeriodReqDto:
+      $ref: ./components/schemas/request/ActivityPeriodReqDto.yaml
+    GenericCommandActivityPeriodReqDto:
+      $ref: ./components/schemas/request/GenericCommandActivityPeriodReqDto.yaml
+    GenericResponseSimpleErrorDataActivityPeriodReqDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataActivityPeriodReqDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/request/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

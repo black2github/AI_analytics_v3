@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Обновление заглушек VW_RPT_GPB_CARD_ACCOUNTS_ECO онлайн-адаптера Ф1
+  summary: Создание заглушки
+  operationId: createStubUsingPOST_3
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/F1CorpCardAccountDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/F1CorpCardAccountDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

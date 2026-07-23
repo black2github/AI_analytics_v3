@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientAccountId:
+    type: string
+    description: Id счёта клиента
+    format: uuid
+  clientAccountNumber:
+    type: string
+    description: Номер счёта клиента
+description: 'Подсказки: Счет клиента'

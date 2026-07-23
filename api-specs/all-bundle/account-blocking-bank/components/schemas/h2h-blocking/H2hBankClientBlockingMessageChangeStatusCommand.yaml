@@ -1,0 +1,17 @@
+required:
+- bankComment
+- status
+type: object
+properties:
+  status:
+    type: string
+    description: Новый статус сообщения о блокировке H2H при изменении статуса
+    enum:
+    - EXECUTED
+    - NOT_EXECUTED
+  bankComment:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Комментарий для Банка
+description: Команда изменить статус сообщения о блокировках Н2Н

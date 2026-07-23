@@ -1,0 +1,182 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Регистрация. Банковская часть.
+  description: Сервис Цифровой рубль.
+  version: 3.4.0
+servers:
+- url: /digital-ruble-payment-bank
+security:
+- bearerAuth: []
+paths:
+  /request/wallet-withdraw/reject-status:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_reject_status.yaml
+  /request/wallet-deposit/reject-status:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_reject_status.yaml
+  /request/wallet-balance/reject-status:
+    $ref: ./paths/wallet-balance/request_wallet_balance_reject_status.yaml
+  /request/operation-refund/reject-status:
+    $ref: ./paths/operation-refund/request_operation_refund_reject_status.yaml
+  /request/operation-history/reject-status:
+    $ref: ./paths/operation-history/request_operation_history_reject_status.yaml
+  /request/business-transfer/reject-status:
+    $ref: ./paths/business-transfer/request_business_transfer_reject_status.yaml
+  /request/summary:
+    $ref: ./paths/summary/request_summary.yaml
+  /request/page:
+    $ref: ./paths/page/request_page.yaml
+  /integration/operation/notification/payout/process:
+    $ref: ./paths/operation/integration_operation_notification_payout_process.yaml
+  /integration/operation/notification/payout-refund/process:
+    $ref: ./paths/operation/integration_operation_notification_payout_refund_process.yaml
+  /integration/operation/notification/out-transfer/process:
+    $ref: ./paths/operation/integration_operation_notification_out_transfer_process.yaml
+  /integration/operation/notification/in-transfer/process:
+    $ref: ./paths/operation/integration_operation_notification_in_transfer_process.yaml
+  /integration/operation/notification/g2b/process:
+    $ref: ./paths/operation/integration_operation_notification_g2b_process.yaml
+  /integration/operation/notification/c2b/process:
+    $ref: ./paths/operation/integration_operation_notification_c2b_process.yaml
+  /integration/operation/notification/b2c-refund-auth/process:
+    $ref: ./paths/operation/integration_operation_notification_b2c_refund_auth_process.yaml
+  /integration/operation/notification/b2b-in/process:
+    $ref: ./paths/operation/integration_operation_notification_b2b_in_process.yaml
+  /walletbalance/pcrParticipantWallet/{pcrParticipantWalletId}:
+    $ref: ./paths/pcrParticipantWallet/walletbalance_pcrParticipantWallet_pcrParticipantWalletId.yaml
+  /request/wallet-withdraw/{id}:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_id.yaml
+  /request/wallet-withdraw/history/{id}:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_history_id.yaml
+  /request/wallet-deposit/{id}:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_id.yaml
+  /request/wallet-deposit/history/{id}:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_history_id.yaml
+  /request/wallet-balance/{id}:
+    $ref: ./paths/wallet-balance/request_wallet_balance_id.yaml
+  /request/wallet-balance/history/{id}:
+    $ref: ./paths/wallet-balance/request_wallet_balance_history_id.yaml
+  /request/operation-refund/{id}:
+    $ref: ./paths/operation-refund/request_operation_refund_id.yaml
+  /request/operation-refund/history/{id}:
+    $ref: ./paths/operation-refund/request_operation_refund_history_id.yaml
+  /request/operation-history/{id}:
+    $ref: ./paths/operation-history/request_operation_history_id.yaml
+  /request/operation-history/history/{id}:
+    $ref: ./paths/operation-history/request_operation_history_history_id.yaml
+  /request/business-transfer/{id}:
+    $ref: ./paths/business-transfer/request_business_transfer_id.yaml
+  /request/business-transfer/history/{id}:
+    $ref: ./paths/business-transfer/request_business_transfer_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    RequestStatusCommentDto:
+      $ref: ./components/schemas/common/RequestStatusCommentDto.yaml
+    DigitalRubleError:
+      $ref: ./components/schemas/common/DigitalRubleError.yaml
+    GenericResponseDigitalRubleErrorVoid:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorVoid.yaml
+    DigitalRubleRequestStatusFilter:
+      $ref: ./components/schemas/common/DigitalRubleRequestStatusFilter.yaml
+    DigitalRubleRequestTypeClassifierFilter:
+      $ref: ./components/schemas/common/DigitalRubleRequestTypeClassifierFilter.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandRequestFilterBankDto:
+      $ref: ./components/schemas/common/GetPageCommandRequestFilterBankDto.yaml
+    PageParamsRequestFilterBankDto:
+      $ref: ./components/schemas/common/PageParamsRequestFilterBankDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestFilterBankDto:
+      $ref: ./components/schemas/common/RequestFilterBankDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    StatusCategoryDto:
+      $ref: ./components/schemas/common/StatusCategoryDto.yaml
+    StatusCategoryFilter:
+      $ref: ./components/schemas/common/StatusCategoryFilter.yaml
+    GenericResponseSimpleErrorDataSummaryDto:
+      $ref: ./components/schemas/summary/GenericResponseSimpleErrorDataSummaryDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SummaryDto:
+      $ref: ./components/schemas/summary/SummaryDto.yaml
+    GenericResponseSimpleErrorDataPageDataRequestScrollerBankDto:
+      $ref: ./components/schemas/page/GenericResponseSimpleErrorDataPageDataRequestScrollerBankDto.yaml
+    PageDataRequestScrollerBankDto:
+      $ref: ./components/schemas/page/PageDataRequestScrollerBankDto.yaml
+    RequestScrollerBankDto:
+      $ref: ./components/schemas/page/RequestScrollerBankDto.yaml
+    OperationNotificationDto:
+      $ref: ./components/schemas/operation/OperationNotificationDto.yaml
+    OperationNotificationsDto:
+      $ref: ./components/schemas/operation/OperationNotificationsDto.yaml
+    PcrParticipantWalletIdentifiersDto:
+      $ref: ./components/schemas/operation/PcrParticipantWalletIdentifiersDto.yaml
+    GenericResponseDigitalRubleErrorPcrParticipantWalletBalanceDto:
+      $ref: ./components/schemas/pcrParticipantWallet/GenericResponseDigitalRubleErrorPcrParticipantWalletBalanceDto.yaml
+    PcrParticipantWalletBalanceDto:
+      $ref: ./components/schemas/pcrParticipantWallet/PcrParticipantWalletBalanceDto.yaml
+    WalletBalanceDetailsDto:
+      $ref: ./components/schemas/common/WalletBalanceDetailsDto.yaml
+    ClientAccountDto:
+      $ref: ./components/schemas/common/ClientAccountDto.yaml
+    GenericResponseDigitalRubleErrorWalletWithdrawRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-withdraw/GenericResponseDigitalRubleErrorWalletWithdrawRequestGetResponseBankDto.yaml
+    OperationBalanceDto:
+      $ref: ./components/schemas/common/OperationBalanceDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    PaymentDetailsDto:
+      $ref: ./components/schemas/common/PaymentDetailsDto.yaml
+    WalletWithdrawRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-withdraw/WalletWithdrawRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorListRequestHistoryBankDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorListRequestHistoryBankDto.yaml
+    RequestHistoryBankDto:
+      $ref: ./components/schemas/common/RequestHistoryBankDto.yaml
+    GenericResponseDigitalRubleErrorWalletDepositRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-deposit/GenericResponseDigitalRubleErrorWalletDepositRequestGetResponseBankDto.yaml
+    WalletDepositRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-deposit/WalletDepositRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorWalletBalanceRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-balance/GenericResponseDigitalRubleErrorWalletBalanceRequestGetResponseBankDto.yaml
+    WalletBalanceRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-balance/WalletBalanceRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorOperationRefundRequestGetResponseBankDto:
+      $ref: ./components/schemas/operation-refund/GenericResponseDigitalRubleErrorOperationRefundRequestGetResponseBankDto.yaml
+    OperationAmountDto:
+      $ref: ./components/schemas/operation-refund/OperationAmountDto.yaml
+    OperationRefundRequestGetResponseBankDto:
+      $ref: ./components/schemas/operation-refund/OperationRefundRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorOperationHistoryRequestGetResponseBankDto:
+      $ref: ./components/schemas/operation-history/GenericResponseDigitalRubleErrorOperationHistoryRequestGetResponseBankDto.yaml
+    OperationHistoryRequestGetResponseBankDto:
+      $ref: ./components/schemas/operation-history/OperationHistoryRequestGetResponseBankDto.yaml
+    PeriodBalanceDetailsDto:
+      $ref: ./components/schemas/operation-history/PeriodBalanceDetailsDto.yaml
+    BusinessTransferReceiverDto:
+      $ref: ./components/schemas/business-transfer/BusinessTransferReceiverDto.yaml
+    BusinessTransferRequestGetResponseBankDto:
+      $ref: ./components/schemas/business-transfer/BusinessTransferRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorBusinessTransferRequestGetResponseBankDto:
+      $ref: ./components/schemas/business-transfer/GenericResponseDigitalRubleErrorBusinessTransferRequestGetResponseBankDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

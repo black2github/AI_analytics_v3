@@ -1,0 +1,8 @@
+required:
+- referenceCode
+type: object
+properties:
+  referenceCode:
+    type: string
+    description: Код вида справки
+description: Информация о справки

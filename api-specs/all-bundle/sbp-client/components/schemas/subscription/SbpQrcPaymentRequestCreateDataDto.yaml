@@ -1,0 +1,9 @@
+type: object
+description: Реквизиты QR-кода
+properties:
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа
+required:
+- amount

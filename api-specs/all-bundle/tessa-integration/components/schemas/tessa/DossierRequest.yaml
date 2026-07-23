@@ -1,0 +1,56 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    format: uuid
+  clientRnk:
+    type: string
+  dossierCardTypeId:
+    type: string
+    format: uuid
+  accessLevelId:
+    type: string
+    format: uuid
+  accessLevelName:
+    type: string
+  clientId:
+    type: string
+    format: uuid
+  statusId:
+    type: string
+    format: uuid
+  statusName:
+    type: string
+  operationId:
+    type: string
+    format: uuid
+  operationFullName:
+    type: string
+  needsDossierLookup:
+    type: boolean
+  changeDocsProcessId:
+    type: string
+    format: uuid
+  changeDocsTaskId:
+    type: string
+    format: uuid
+  changeDocsTaskFinishCode:
+    type: string
+    format: uuid
+  unusedDossier:
+    type: boolean
+  documentsRef:
+    type: array
+    items:
+      $ref: ./Document.yaml
+  applicationNumber:
+    type: string
+  collectionObjects:
+    type: string
+  additionalAgreement:
+    type: boolean
+  initiatingExternalSystemName:
+    type: string
+  initiatingExternalSystemRowId:
+    type: string
+    format: uuid

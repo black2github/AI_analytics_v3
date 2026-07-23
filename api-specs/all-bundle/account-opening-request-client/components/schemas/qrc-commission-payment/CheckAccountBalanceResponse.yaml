@@ -1,0 +1,6 @@
+type: object
+properties:
+  balanceMark:
+    type: boolean
+    description: Достаточность средств на счете списания
+description: Данные

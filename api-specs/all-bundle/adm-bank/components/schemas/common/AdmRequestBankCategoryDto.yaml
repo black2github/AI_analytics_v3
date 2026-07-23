@@ -1,0 +1,11 @@
+type: string
+description: Категории заявки АДМ. Банковская часть
+enum:
+- ALL
+- WAIT_PROCESSING
+- AWAIT_CHECK
+- WAIT_REQUISITES
+- WAIT_VERIFICATION
+- IN_PROCESSING
+- PROCESSING_ERROR
+- FINISHED

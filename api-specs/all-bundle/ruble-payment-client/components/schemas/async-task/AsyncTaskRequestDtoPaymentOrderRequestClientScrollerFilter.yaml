@@ -1,0 +1,9 @@
+required:
+- taskType
+type: object
+properties:
+  filter:
+    $ref: ../common/PaymentOrderRequestClientScrollerFilter.yaml
+  taskType:
+    $ref: ./AsyncTaskTypeDto.yaml
+description: Запрос количества документов по данному фильтру

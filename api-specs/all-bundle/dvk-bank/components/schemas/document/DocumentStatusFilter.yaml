@@ -1,0 +1,97 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - WAITING
+    - COMPLETED
+    - REJECTED
+    - PARTIALLY_COMPLETED
+    - ACCEPTED
+    - CANCELED_LKUVED
+    - DECLINED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - WAITING
+    - COMPLETED
+    - REJECTED
+    - PARTIALLY_COMPLETED
+    - ACCEPTED
+    - CANCELED_LKUVED
+    - DECLINED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - WAIT_FOR_SIGN
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - SIGN_VALID
+      - DETAILS_VALID
+      - EXPORT_TO_ABS
+      - EXPORTED_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - WAITING
+      - COMPLETED
+      - REJECTED
+      - PARTIALLY_COMPLETED
+      - ACCEPTED
+      - CANCELED_LKUVED
+      - DECLINED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - WAIT_FOR_SIGN
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - SIGN_VALID
+      - DETAILS_VALID
+      - EXPORT_TO_ABS
+      - EXPORTED_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - WAITING
+      - COMPLETED
+      - REJECTED
+      - PARTIALLY_COMPLETED
+      - ACCEPTED
+      - CANCELED_LKUVED
+      - DECLINED
+  isNull:
+    type: boolean
+description: Статус документа (in)

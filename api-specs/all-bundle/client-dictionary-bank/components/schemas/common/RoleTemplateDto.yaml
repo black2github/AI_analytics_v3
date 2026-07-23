@@ -1,0 +1,53 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  archival:
+    type: boolean
+    description: Признак архивной записи
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  code:
+    type: string
+    description: Код
+  name:
+    type: string
+    description: Наименование
+  description:
+    type: string
+    description: Описание
+  type:
+    type: string
+    description: Тип шаблона роли
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка (организации)
+    format: uuid
+  displayPriority:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+  userCreator:
+    $ref: ./UserCreatorDto.yaml
+  roleIds:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов ролей
+    items:
+      type: string
+      description: Список идентификаторов ролей
+      format: uuid
+  rolesListVersion:
+    type: integer
+    description: Версия шаблона (по составу ролей)
+    format: int32
+description: ДТО шаблона роли из справочника шаблонов ролей

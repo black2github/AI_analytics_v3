@@ -1,0 +1,12 @@
+required:
+- roleTemplateIds
+type: object
+properties:
+  roleTemplateIds:
+    type: array
+    description: Список идентификаторов шаблонов ролей
+    items:
+      type: string
+      description: Список идентификаторов шаблонов ролей
+      format: uuid
+description: Данные для формирование списка полномочий и действий с ними

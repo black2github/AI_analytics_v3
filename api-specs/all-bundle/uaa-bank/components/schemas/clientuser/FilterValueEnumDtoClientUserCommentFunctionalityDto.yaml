@@ -1,0 +1,60 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UNSTICK_USER
+    - USER_EDIT
+    - DELETE_CIRCULATION_AGENT
+    - CLIENT_OFFICIAL_EDIT
+    - ABAC_ACCESS_RULE
+    - USER_ROLES
+    - TOGGLE_BLOCK_USER
+    - MASS_TOGGLE_BLOCK_USER
+    - CHANGING_INTERFACE
+  notEq:
+    type: string
+    enum:
+    - UNSTICK_USER
+    - USER_EDIT
+    - DELETE_CIRCULATION_AGENT
+    - CLIENT_OFFICIAL_EDIT
+    - ABAC_ACCESS_RULE
+    - USER_ROLES
+    - TOGGLE_BLOCK_USER
+    - MASS_TOGGLE_BLOCK_USER
+    - CHANGING_INTERFACE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNSTICK_USER
+      - USER_EDIT
+      - DELETE_CIRCULATION_AGENT
+      - CLIENT_OFFICIAL_EDIT
+      - ABAC_ACCESS_RULE
+      - USER_ROLES
+      - TOGGLE_BLOCK_USER
+      - MASS_TOGGLE_BLOCK_USER
+      - CHANGING_INTERFACE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNSTICK_USER
+      - USER_EDIT
+      - DELETE_CIRCULATION_AGENT
+      - CLIENT_OFFICIAL_EDIT
+      - ABAC_ACCESS_RULE
+      - USER_ROLES
+      - TOGGLE_BLOCK_USER
+      - MASS_TOGGLE_BLOCK_USER
+      - CHANGING_INTERFACE
+  isNull:
+    type: boolean

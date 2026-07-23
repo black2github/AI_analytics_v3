@@ -1,0 +1,85 @@
+type: object
+properties:
+  address:
+    $ref: ./OfficeAddressDto.yaml
+  atmTids:
+    type: array
+    items:
+      type: string
+  atmsTid:
+    type: string
+  bank:
+    $ref: ./OfficeBankDto.yaml
+  closeDate:
+    type: string
+  directorate:
+    $ref: ./OfficeDirectorateDto.yaml
+  distance:
+    type: integer
+    format: int32
+  forDisabled:
+    type: boolean
+  geolocation:
+    $ref: ./OfficeGeolocationDto.yaml
+  isAccessibility:
+    type: boolean
+  isAtmPresence:
+    type: boolean
+  isBiometric:
+    type: boolean
+  isEsiaCenter:
+    type: boolean
+  isFunctioning:
+    type: boolean
+  isJuric:
+    type: boolean
+  isParking:
+    type: boolean
+  isPersonalManager:
+    type: boolean
+  isPhys:
+    type: boolean
+  isPremium:
+    type: boolean
+  isSelfService:
+    type: boolean
+  isUto:
+    type: boolean
+  limitedMobilityCondition:
+    type: string
+  limitedMobilityConditions:
+    type: array
+    items:
+      $ref: ./OfficeLimitedMobilityConditionDto.yaml
+  mail:
+    type: array
+    items:
+      $ref: ./OfficeTypeObjectDto.yaml
+  metro:
+    type: array
+    items:
+      $ref: ./OfficeAddressMetroDto.yaml
+  moscowTimeDifference:
+    type: string
+  notice:
+    type: string
+  openDate:
+    type: string
+  phone:
+    type: array
+    items:
+      $ref: ./OfficeTypeObjectDto.yaml
+  schedule:
+    $ref: ./OfficeScheduleDto.yaml
+  schedules:
+    type: array
+    items:
+      $ref: ./OfficeSchedulesDto.yaml
+  services:
+    type: array
+    items:
+      $ref: ./OfficeServiceDto.yaml
+  vspCode:
+    type: string
+  workloadInfo:
+    $ref: ./WorkloadDto.yaml

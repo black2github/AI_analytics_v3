@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: string
+  currency:
+    $ref: ./CurrencyCard.yaml
+  bankClient:
+    $ref: ./BankClientCard.yaml
+  branch:
+    $ref: ./BranchCard.yaml
+  accountType:
+    $ref: ./AccountTypeDto.yaml
+  balance:
+    $ref: ./BalanceCard.yaml

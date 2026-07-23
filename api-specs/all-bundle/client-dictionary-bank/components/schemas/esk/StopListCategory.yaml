@@ -1,0 +1,9 @@
+type: object
+properties:
+  categoryCode:
+    type: string
+    description: Код категории
+  decisionNumber:
+    type: string
+    description: Номер решения
+description: Категория стоп листов

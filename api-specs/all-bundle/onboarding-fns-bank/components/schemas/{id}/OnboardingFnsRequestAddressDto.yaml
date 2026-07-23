@@ -1,0 +1,79 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время последнего обновления записи
+    format: date-time
+  fullAddress:
+    type: string
+    description: Адрес одной строкой.
+  postalCode:
+    type: string
+    description: Индекс.
+  regionFiasCode:
+    type: string
+    description: Регион ФИАС код.
+  regionFiasName:
+    type: string
+    description: Регион ФИАС наименование.
+  districtFiasCode:
+    type: string
+    description: Район ФИАС код.
+  districtFiasName:
+    type: string
+    description: Район ФИАС наименование.
+  cityFiasCode:
+    type: string
+    description: Город ФИАС код.
+  cityFiasName:
+    type: string
+    description: Город ФИАС наименование.
+  settlementFiasCode:
+    type: string
+    description: Населенный пункт ФИАС код.
+  settlementFiasName:
+    type: string
+    description: Населенный пункт ФИАС наименование.
+  streetFiasCode:
+    type: string
+    description: Улица ФИАС код.
+  streetFiasName:
+    type: string
+    description: Улица ФИАС наименование.
+  houseFiasCode:
+    type: string
+    description: Дом ФИАС код.
+  houseFiasNumber:
+    type: string
+    description: Дом ФИАС номер.
+  buildingFiasCode:
+    type: string
+    description: Строение ФИАС код.
+  buildingFiasNumber:
+    type: string
+    description: Строение ФИАС номер.
+  blockFiasCode:
+    type: string
+    description: Корпус ФИАС код.
+  blockFiasNumber:
+    type: string
+    description: Корпус ФИАС номер.
+  flatFiasCode:
+    type: string
+    description: Квартира ФИАС код.
+  flatFiasNumber:
+    type: string
+    description: Квартира ФИАС номер.
+  fiasGuid:
+    type: string
+    description: ФИАС GUID.
+    format: uuid
+description: Место рождения ИП / Представителя клиента

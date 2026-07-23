@@ -1,0 +1,9 @@
+type: object
+description: Изменённые адресные данные - места жительства (регистрации) и/или места пребывания Клиента-ЮЛ.
+properties:
+  addressType:
+    type: string
+    description: 'Тип передаваемого адреса Клиента-ЮЛ: OrganisationAddress - Aдрес юридического лица.'
+  address:
+    type: string
+    description: Информация, которая определяет и идентифицирует определенный адрес.

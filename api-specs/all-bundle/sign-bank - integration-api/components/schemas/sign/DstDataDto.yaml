@@ -1,0 +1,55 @@
+type: object
+properties:
+  kind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  userAbsId:
+    type: string
+    description: ID пользователя в РКО F1
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  dboRemoteId:
+    type: integer
+    description: ID УЗ ДБО
+    format: int32
+  dboRemoteProfileId:
+    type: integer
+    description: ID криптопрофиля
+    format: int32
+  clientOfficialSignatureToolId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+  dstId:
+    type: string
+    description: ID СЭП
+    format: uuid
+  dssCertificateId:
+    type: integer
+    description: ID сертификата в DSS
+    format: int64
+  dssProfileId:
+    type: string
+    description: ID профиля DSS
+    format: uuid
+  msProfileId:
+    type: string
+    description: ID профиля Моя подпись ФНС
+    format: uuid
+description: Данные для создания/обновления СЭП

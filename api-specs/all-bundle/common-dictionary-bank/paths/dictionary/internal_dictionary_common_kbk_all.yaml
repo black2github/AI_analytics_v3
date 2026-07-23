@@ -1,0 +1,22 @@
+delete:
+  tags:
+  - API справочника КБК
+  summary: Удалить все записи из справочника КБК
+  description: 'Привилегии: KBK_DELETE_ALL'
+  operationId: deleteAllUsingDELETE
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«boolean»'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,6 @@
+type: object
+properties:
+  connected:
+    type: boolean
+    description: Признак подключения ГПБ БО
+description: Сведения о подключении к системе ГПБ Бизнес-Онлайн

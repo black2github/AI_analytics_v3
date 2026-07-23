@@ -1,0 +1,8 @@
+type: object
+description: Параметры по заявке на изменение параметров ТСП
+properties:
+  isReturnPermitted:
+    type: boolean
+    description: Признак "Разрешение на возвраты"
+required:
+- isReturnPermitted

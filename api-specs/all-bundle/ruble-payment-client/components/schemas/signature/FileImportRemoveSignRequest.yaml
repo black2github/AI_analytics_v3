@@ -1,0 +1,9 @@
+required:
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+description: Запрос для снятия подписи

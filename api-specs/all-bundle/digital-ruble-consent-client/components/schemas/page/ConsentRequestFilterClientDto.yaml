@@ -1,0 +1,9 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./FilterValueEnumDtoConsentRequestTypeDto.yaml
+  status:
+    $ref: ./FilterValueEnumDtoConsentRequestStatusDto.yaml
+description: Фильтр для заявок.

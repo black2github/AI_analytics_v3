@@ -1,0 +1,34 @@
+type: object
+properties:
+  okopf:
+    type: string
+    description: ОКОПФ
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  okved:
+    type: string
+    description: ОКВЕД
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  address:
+    type: string
+    description: Адрес
+  email:
+    type: string
+    description: Адрес электронной почты
+  registerDate:
+    type: string
+    description: Дата регистрации
+    format: date
+description: Ответ краткой выписки по организации

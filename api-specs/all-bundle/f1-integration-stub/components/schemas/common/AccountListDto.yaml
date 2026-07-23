@@ -1,0 +1,72 @@
+type: object
+required:
+- f1AccountId
+description: Счет в Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  clientGuid:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  source:
+    type: string
+    description: Тип заявки
+  clientRegNum:
+    type: string
+    description: РНК клиента
+  accountNumber:
+    type: string
+    description: Номер счета
+  department:
+    type: string
+    description: Код подразделения обслуживания счета
+  accountBranch:
+    type: string
+    description: Филиал баланса счета
+  currency:
+    type: string
+    examples:
+    - RUB
+    description: Валюта счета
+  status:
+    type: string
+    examples:
+    - open
+    - close
+    description: Статус счета
+  dateOpen:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата открытия счета
+  dateClose:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата закрытия счета
+  rkoNumber:
+    type: string
+    description: Номер договора РКО для счета
+  dateOpenDbs:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата открытия договора банковского счета
+  officeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+  accountCommission:
+    type: boolean
+    description: Признак возможности списания комиссии
+  f1AccountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета в Ф1

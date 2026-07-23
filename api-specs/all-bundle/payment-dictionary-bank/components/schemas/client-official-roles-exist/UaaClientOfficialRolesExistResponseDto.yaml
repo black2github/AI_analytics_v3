@@ -1,0 +1,8 @@
+type: object
+properties:
+  roles:
+    type: array
+    description: Упорядоченный набор соответствий роль + сегмент
+    items:
+      $ref: ./UaaClientOfficialRoleExistDto.yaml
+description: Данные

@@ -1,0 +1,52 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DELETED
+    - RECEIVED
+    - REJECTED
+    - EXECUTED
+    - DISABLED
+  notEq:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DELETED
+    - RECEIVED
+    - REJECTED
+    - EXECUTED
+    - DISABLED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - DELIVERED
+      - DELETED
+      - RECEIVED
+      - REJECTED
+      - EXECUTED
+      - DISABLED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - DELIVERED
+      - DELETED
+      - RECEIVED
+      - REJECTED
+      - EXECUTED
+      - DISABLED
+  isNull:
+    type: boolean

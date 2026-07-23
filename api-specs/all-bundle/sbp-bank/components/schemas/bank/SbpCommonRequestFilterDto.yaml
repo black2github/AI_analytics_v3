@@ -1,0 +1,74 @@
+type: object
+description: Фильтр скроллера обобщенной заявки
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка"
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН Клиента
+  clientKpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП Клиента
+  clientShortName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Краткое наименование клиента
+  status:
+    $ref: ./SbpCommonRequestStatusFilterDto.yaml
+    description: Текущий статус заявки
+  type:
+    $ref: ./SbpRequestTypeFilterDto.yaml
+    description: Тип заявки
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер заявки
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название ТСП
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП
+  account:
+    $ref: ./FilterValueDtoString.yaml
+    description: Счет зачисления
+  subscriptionPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Цель подписки
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR кода
+  paymentPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Назначение платежа
+  payer:
+    $ref: ./FilterValueDtoString.yaml
+    description: Плательщик
+  ecoServiceCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код ЭКО сервиса, eq
+  ecoDocTypeId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор типа заявки, eq
+  docId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор заявки, contains
+  clientRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак создания клиентом, eq
+  b2bRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак B2B, eq

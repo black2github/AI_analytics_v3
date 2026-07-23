@@ -1,0 +1,56 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки "Платежное поручение"
+    format: uuid
+  status:
+    $ref: ../common/PaymentOrderRequestStatusDto.yaml
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  paymentInfo:
+    $ref: ./PaymentInfoClientScrollerDto.yaml
+  paymentAmount:
+    $ref: ./PaymentAmountClientScrollerDto.yaml
+  payerDetails:
+    $ref: ./PayerDetailsClientScrollerDto.yaml
+  recipientDetails:
+    $ref: ./RecipientDetailsClientScrollerDto.yaml
+  chargebackRequest:
+    $ref: ./ChargebackRequestClientScrollerDto.yaml
+  importDetails:
+    $ref: ../common/ImportDetailsDto.yaml
+  backgroundImportProcess:
+    $ref: ./BackgroundImportProcessClientScrollerDto.yaml
+  signPhaseDto:
+    $ref: ../common/SignPhaseShortDto.yaml
+  controlAndAcceptance:
+    $ref: ../common/ControlAndAcceptanceDto.yaml
+  docSourceSystem:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  canCreateDio:
+    type: boolean
+    description: Возможность создания ДИО
+  archive:
+    type: boolean
+    description: Архивный документ
+  technicalDetails:
+    $ref: ./TechnicalDetailsClientScrollerDto.yaml
+  documentDetails:
+    $ref: ./DocumentDetailsClientScrollerDto.yaml
+  screenFormType:
+    $ref: ../common/ScreenFormTypeDto.yaml
+description: Список элементов для выбранной страницы

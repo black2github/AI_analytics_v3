@@ -1,0 +1,18 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  onlyActiveAccounts:
+    type: boolean
+  accountFilter:
+    $ref: ./AccountFilterDto.yaml
+description: Данные

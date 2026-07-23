@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRelatedStatementRequestDto.yaml
+description: Запрос страницы

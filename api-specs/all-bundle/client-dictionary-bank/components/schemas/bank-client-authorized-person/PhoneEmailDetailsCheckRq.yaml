@@ -1,0 +1,15 @@
+required:
+- eskId
+- phoneNumber
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  phoneNumber:
+    type: string
+    description: Телефон УЛ
+  email:
+    type: string
+    description: E-mail УЛ
+description: Запрос на проверку использования телефона/email другими УЛ

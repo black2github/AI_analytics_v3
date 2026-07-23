@@ -1,0 +1,6 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор ESK
+description: Данные идентификатора ESK

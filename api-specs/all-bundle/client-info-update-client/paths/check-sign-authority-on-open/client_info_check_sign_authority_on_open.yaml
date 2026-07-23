@@ -1,0 +1,19 @@
+post:
+  tags:
+  - check-authority-controller
+  summary: Получить список требований по идентификатору клиента
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_CREATE,CLIENT_INFO_UPD.CLIENT.REQUEST_EDIT'
+  operationId: checkSignAuthorityOnOpen
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/check-sign-authority-on-open/CheckSignAuthorityRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/check-sign-authority-on-open/GenericResponseSimpleErrorDataCheckSignAuthorityResponseDto.yaml

@@ -1,0 +1,9 @@
+required:
+- filter
+type: object
+properties:
+  filter:
+    $ref: ../common/PaymentOrderRequestBankScrollerFilter.yaml
+  comment:
+    $ref: ../common/CommentDto.yaml
+description: Команда асинхронного отклонения заявок с фильтрами

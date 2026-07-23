@@ -1,0 +1,17 @@
+type: object
+properties:
+  expiryDate:
+    type: string
+    description: Дата окончания срока действия документа
+    format: date
+  number:
+    type: string
+    description: Номер документа
+  releaseDate:
+    type: string
+    description: Дата выдачи документа
+    format: date
+  termless:
+    type: boolean
+    description: Признак бессрочной лицензии
+description: Данные документа передачи полномочий УК

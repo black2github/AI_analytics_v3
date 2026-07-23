@@ -1,0 +1,12 @@
+type: object
+properties:
+  ids:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      format: uuid
+  commentForBank:
+    type: string
+  commentForClient:
+    type: string

@@ -1,0 +1,71 @@
+type: object
+description: Фильтр скроллера списка обобщенных заявок на платеж СБП для банка.
+properties:
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка" (eq)
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - FINISHED
+  status:
+    $ref: ./SbpTransactionCommonRequestStatusFilter.yaml
+    description: Статус (eq, in)
+  docType:
+    $ref: ./SbpTransactionCommonRequestTypeFilter.yaml
+    description: Тип операции (eq)
+  docNumber:
+    $ref: ./FilterValueDtoString.yaml
+    description: Номер операции (eq)
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата (ge, le)
+  docDateWithTime:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время (ge, le) в формате UTC
+  amount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма операции в копейках (ge, le)
+  recipient:
+    $ref: ./FilterValueDtoString.yaml
+    description: Контрагент (contains)
+  recipientId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Телефон контрагента (eq)
+  recipientBankName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование или БИК банка получателя (contains)
+  recipientMemberId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор Банка Получателя (eq)
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор Точки продаж (eq)
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Точка продаж (contains)
+  recipientInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН получателя (eq)
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента (eq)
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП (eq)
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR код для оплаты (contains)
+  shortNameOrInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование или ИНН клиента (contains)
+  b2bOnboarding:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак онбординга B2B (eq)
+  resident:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак резидента B2B, (eq)

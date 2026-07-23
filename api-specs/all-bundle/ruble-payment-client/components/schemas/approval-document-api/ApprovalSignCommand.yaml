@@ -1,0 +1,28 @@
+required:
+- approvalSignType
+type: object
+properties:
+  documentId:
+    type: string
+    format: uuid
+  certificateId:
+    type: string
+    format: uuid
+  signTypeId:
+    type: string
+    format: uuid
+  digest:
+    type: string
+  signature:
+    type: string
+  approvalSignType:
+    $ref: ./ApprovalSignType.yaml
+  approvalSignComment:
+    pattern: ^[A-Za-zА-Яа-яЁё0-9!?.,:;'\-(){}" ]+$
+    type: string
+    description: Комментарий к визе
+  docSignPage:
+    pattern: ^/[/A-Za-z0-9-]+$
+    type: string
+    description: Страница, с которой вызвана подпись документа
+description: Обертка для визирование документа

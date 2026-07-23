@@ -1,0 +1,58 @@
+required:
+- bic
+- correspondentAccount
+- inn
+- kpp
+- location
+- locationType
+- locationWithoutType
+- name
+- ogrn
+- okpo
+- oktmo
+type: object
+properties:
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+  location:
+    maxLength: 512
+    minLength: 0
+    type: string
+  locationType:
+    maxLength: 5
+    minLength: 0
+    type: string
+  locationWithoutType:
+    maxLength: 255
+    minLength: 0
+    type: string
+  bic:
+    maxLength: 9
+    minLength: 0
+    type: string
+  correspondentAccount:
+    maxLength: 20
+    minLength: 20
+    type: string
+  inn:
+    maxLength: 10
+    minLength: 0
+    type: string
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+  ogrn:
+    maxLength: 15
+    minLength: 0
+    type: string
+  okpo:
+    maxLength: 10
+    minLength: 0
+    type: string
+  oktmo:
+    maxLength: 11
+    minLength: 0
+    type: string

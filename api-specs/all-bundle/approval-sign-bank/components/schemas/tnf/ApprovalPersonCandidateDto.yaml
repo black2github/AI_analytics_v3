@@ -1,0 +1,20 @@
+type: object
+properties:
+  clientUserId:
+    type: string
+    description: Ид. визирующего лица в UAA
+    format: uuid
+  eskId:
+    type: string
+    description: Ид. визирующего лица в ЕСК
+  f1Id:
+    type: string
+    description: Идентификатор визирующего лица в РКО Ф1
+  fullName:
+    type: string
+    description: ФИО визирующего лица
+  userId:
+    type: string
+    description: Идентификатор UAA пользователя клиента
+    format: uuid
+description: DTO визирующего лица

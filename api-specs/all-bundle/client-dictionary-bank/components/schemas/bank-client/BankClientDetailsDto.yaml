@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+  kpp:
+    type: string
+    description: КПП
+description: Реквизиты Клиента Банка

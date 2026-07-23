@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  type:
+    type: string
+  size:
+    type: integer
+    format: int64
+  createTime:
+    type: string
+description: Файлы

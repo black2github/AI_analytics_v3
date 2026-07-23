@@ -1,0 +1,78 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  reportGroup:
+    type: string
+    description: Группа отчетов
+  reportType:
+    type: string
+    description: Тип отчета
+    enum:
+    - PARTS_GSNO_NH131
+    - PARTS_GSNO_NH132
+    - DEPOSIT
+    - VIOLATED
+    - DENIED
+  startDate:
+    type: string
+    description: Дата начала отчетного преиода
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания отчетного преиода
+    format: date
+  clientWebDealing:
+    $ref: ../common/ClientWebDealingDto.yaml
+  userId:
+    type: string
+    description: Идентификатор пользователя, создавшего отчет
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userFullName:
+    type: string
+    description: ФИО пользователя, создавшего отчет
+  status:
+    type: string
+    description: Статус отчета
+    enum:
+    - CREATED
+    - SENT_TO_F1
+    - SENT_TO_F1_SUCCESS
+    - SENT_TO_F1_ERROR
+    - ERROR
+    - READY
+  readByUser:
+    type: string
+    description: Статус прочтения пользователем
+  details:
+    type: string
+    description: Детали запроса
+  creationDate:
+    type: string
+    description: Дата создания отчета
+    format: date-time
+  attachmentId:
+    type: string
+    description: ИД напечатанного отчета
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  attachment1CId:
+    type: string
+    description: ИД напечатанного отчета для 1С
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - PDF
+    - XLS
+    - TXT_1C_102
+    - TXT_1C_103
+  account:
+    $ref: ./DepositAccountInfoDto.yaml
+description: Данные

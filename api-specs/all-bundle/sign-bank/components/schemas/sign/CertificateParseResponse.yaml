@@ -1,0 +1,15 @@
+type: object
+properties:
+  read:
+    type: integer
+    description: Всего записей на странице
+    format: int32
+  processed:
+    type: integer
+    description: Успешно обработано
+    format: int32
+  errors:
+    type: integer
+    description: Ошибок парсинга
+    format: int32
+description: Ответ парсинга сертификатов

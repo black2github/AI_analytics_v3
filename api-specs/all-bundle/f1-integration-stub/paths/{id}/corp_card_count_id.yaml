@@ -1,0 +1,17 @@
+get:
+  summary: Получение записи из таблицы gps_eco_accs_card_count по идентификатору
+  tags:
+  - Обновление заглушек GPS_ECO_CNT_CCARD_ACCL (Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС))
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/CorpCardCountDto.yaml

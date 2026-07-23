@@ -1,0 +1,16 @@
+type: object
+properties:
+  connectIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  disconnectIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  commentForClient:
+    type: string
+  commentForBank:
+    type: string

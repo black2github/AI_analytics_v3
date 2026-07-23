@@ -1,0 +1,11 @@
+type: object
+properties:
+  entityValue:
+    type: string
+    description: Значение для применения в правилах доступа по реквизиту
+  entityType:
+    type: string
+    enum:
+    - DSF_TYPE_CODE
+    - DSF_TYPE_CATEGORY
+description: Значения для модели "Правила предоставления доступа по реквизиту"

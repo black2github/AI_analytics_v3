@@ -1,0 +1,4 @@
+type: string
+description: Статусы для акцепта платежного требования
+enum:
+- REJECTED

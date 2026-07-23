@@ -1,0 +1,41 @@
+type: object
+properties:
+  activeClient:
+    type: boolean
+    description: Действующий клиент
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  okopf:
+    type: string
+    description: ОКОПФ
+  fullName:
+    type: string
+    description: Полное наименование организации
+  shortName:
+    type: string
+    description: Краткое наименование организации
+  eioFirstName:
+    type: string
+    description: Имя
+  eioMiddleName:
+    type: string
+    description: Отчество
+  eioLastName:
+    type: string
+    description: Фамилия
+  email:
+    type: string
+    description: Электронная почта
+  filials:
+    type: array
+    description: Филиалы
+    items:
+      $ref: ./KnosisEgrFilial.yaml
+description: Выписка КНОСиС по организации

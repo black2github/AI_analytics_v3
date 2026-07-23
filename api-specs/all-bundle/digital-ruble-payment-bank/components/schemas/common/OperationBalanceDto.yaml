@@ -1,0 +1,16 @@
+type: object
+properties:
+  balanceCurrency:
+    type: string
+    description: Валюта баланса цифрового кошелька
+    default: RUB
+  currentBalance:
+    type: string
+    description: Текущий баланс цифрового кошелька
+  amountOfBlockedFunds:
+    type: string
+    description: Сумма заблокированных средств
+  amountOfAvailableFunds:
+    type: string
+    description: Доступный остаток = Текущий баланс - Сумма заблокированных средств
+description: Информация о балансе СЦР по операции

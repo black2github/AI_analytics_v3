@@ -1,0 +1,17 @@
+type: object
+properties:
+  document:
+    $ref: ../common/OriginalDocumentDto.yaml
+  documentSource:
+    type: string
+    description: Источник добавления документа
+    enum:
+    - TECHNICAL_USER
+    - CLIENT_USER
+    - BANK_USER
+    - TESSA_BN
+  version:
+    type: integer
+    description: Версия заявки на открытие первого счёта
+    format: int32
+description: Оригинал документа для добавления

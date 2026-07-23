@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Банковский API документов валютного контроля. Операции экспорта реестра через задания
+  summary: Получить информацию о задании на экспорт реестра документов валютного контроля
+  description: 'Привилегии: DVK_BANK.EXPORT'
+  operationId: getExportRegistryTaskStatus
+  parameters:
+  - name: taskId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorExportRegistryTaskStubRspDto.yaml

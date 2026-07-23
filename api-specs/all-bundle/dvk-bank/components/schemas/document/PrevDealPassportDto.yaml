@@ -1,0 +1,12 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер ранее оформленного Паспорте сделки
+  commissionNumber:
+    type: string
+    description: Номер счета для списания комиссии
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Сведения о ранее оформленном Паспорте сделки по контракту

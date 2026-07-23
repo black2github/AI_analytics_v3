@@ -1,0 +1,33 @@
+type: object
+description: Данные регистрируемого юридического лица
+properties:
+  name:
+    type: string
+    description: Полное наименование юридического лица
+  type:
+    type: string
+    description: Организационно-правовая форма юридического лица
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  countryCode:
+    type: string
+    description: Код страны-регистрации юридического лица, в формате "ISO 3166, Alpha-2"
+  countrySubDivisionCode:
+    type: string
+    description: Код региона-регистрации юридического лица, первые две цифры кода ОКТМО
+  city:
+    type: string
+    description: Город
+  zip:
+    type: string
+    description: Индекс
+  address:
+    type: string
+    description: Юридический адрес

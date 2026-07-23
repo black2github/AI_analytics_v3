@@ -1,0 +1,15 @@
+type: object
+required:
+- state
+- condition
+description: Параметры фильтрации карт в АБС Ф1 по статусам и состояниям
+properties:
+  state:
+    $ref: ./CorpCardState.yaml
+    type: string
+    description: Состояние карты в АБС Ф1
+  condition:
+    type: array
+    items:
+      $ref: ./CorpCardStatus.yaml
+    description: Список статусов карт в АБС Ф1

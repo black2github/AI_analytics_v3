@@ -1,0 +1,27 @@
+type: object
+properties:
+  accountType:
+    type: integer
+    description: Тип открываемого счёта
+    format: int64
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  requestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счёта
+    format: uuid
+  result:
+    type: string
+    description: Результат поиска заявки, созданной из CRM Infor
+    enum:
+    - NOT_FOUND
+    - FOUND
+    - UNAVAILABLE
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+description: Ответ на запрос поиска заявки, созданной из CRM Infor

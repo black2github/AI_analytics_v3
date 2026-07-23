@@ -1,0 +1,8 @@
+type: object
+properties:
+  ProcessedDocuments:
+    type: array
+    description: Обработанные документы
+    items:
+      $ref: ./DssCallbackDocumentDto.yaml
+description: Результат callback операции

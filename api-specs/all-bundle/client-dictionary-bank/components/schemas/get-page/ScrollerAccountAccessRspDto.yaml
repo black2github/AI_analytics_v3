@@ -1,0 +1,40 @@
+required:
+- account
+- bankClient
+- clientAuthorizedPerson
+- createdAt
+- id
+- user
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  account:
+    $ref: ./AdminAccountDto.yaml
+  clientAuthorizedPerson:
+    $ref: ./AdminClientAuthorizedPersonDto.yaml
+  bankClient:
+    $ref: ./AdminBankClientDto.yaml
+  basePermission:
+    type: string
+    description: Доступ к счёту
+  user:
+    $ref: ./AdminUserDto.yaml
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения записи
+    format: date-time
+  applicationId:
+    type: string
+    description: ID заявки на доступ
+    format: uuid
+  absId:
+    type: string
+    description: РНК клиента
+description: 'Журнал: Доступ УЛ к счёту. Банковская часть.'

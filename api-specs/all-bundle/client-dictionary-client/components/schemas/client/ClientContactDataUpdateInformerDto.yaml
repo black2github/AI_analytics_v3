@@ -1,0 +1,21 @@
+type: object
+properties:
+  isSingleOrganization:
+    type: boolean
+    description: Признак "Пользователь является УЛ только в одной организации"
+  isContactDataMatch:
+    type: boolean
+    description: Признак "КД совпадают во всех организациях"
+  organizationName:
+    type: string
+    description: Название организации
+  authPersonClientIds:
+    type: array
+    description: Список ссылок организаций, в которых пользователь является УЛ
+    items:
+      type: string
+      description: Список ссылок организаций, в которых пользователь является УЛ
+      format: uuid
+  authorizedPerson:
+    type: boolean
+description: Информер в профиле клиента для смены контактных данных

@@ -1,0 +1,24 @@
+type: object
+properties:
+  statusName:
+    $ref: ./FilterValueDtoString.yaml
+  cardExpDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  deliveryDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  podr:
+    $ref: ./FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  clientCode:
+    $ref: ./FilterValueDtoLong.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  vpan:
+    $ref: ./FilterValueDtoString.yaml
+  cardGuid:
+    $ref: ./FilterValueDtoString.yaml
+  hpanMasked:
+    $ref: ./FilterValueDtoString.yaml
+  cardHolderName:
+    $ref: ./FilterValueDtoString.yaml

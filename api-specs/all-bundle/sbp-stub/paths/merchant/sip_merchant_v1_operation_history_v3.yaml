@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос истории операций СБП версии 3'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/MerchantTransactionsRequestDtoV3Request.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/ClientTransactionsV2Dto.yaml
+    '400':
+      description: Bad Request

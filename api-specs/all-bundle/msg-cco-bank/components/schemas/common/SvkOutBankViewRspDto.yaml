@@ -1,0 +1,123 @@
+required:
+- attachments
+- id
+- requestStatus
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  requestStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPTED
+    - COMPLETED
+    - REJECTED
+    - DECLINED
+    - CANCELED_LKUVED
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentDate:
+    type: string
+    description: Дата комментария для клиента
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  createdAt:
+    type: string
+    description: Дата документа
+    format: date-time
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docAcceptedAt:
+    type: string
+    format: date-time
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signature:
+    $ref: ./SvkOutSignatureRspDto.yaml
+  canSign:
+    type: boolean
+    description: Признак возможности подписания документа
+  bankClientInfo:
+    $ref: ./SvkOutBankClientInfoRspDto.yaml
+  branchInfo:
+    $ref: ./SvkOutBankBranchInfoRspDto.yaml
+  message:
+    $ref: ./SvkOutBankMessageInfoRspDto.yaml
+  attachmentDetails:
+    $ref: ./SvkOutBankAttachmentDetailsRspDto.yaml
+  linkedDocumentInfo:
+    $ref: ./SvkOutBankLinkedDocumentInfoRspDto.yaml
+  attachments:
+    type: array
+    description: Файловые вложения документа
+    items:
+      $ref: ./SvkOutBankAttachmentInfoRspDto.yaml
+  docSourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docCreationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  sourceSystemInfo:
+    $ref: ./SvkOutBankSourceSystemInfoRspDto.yaml
+description: Карточка документа на просмотр

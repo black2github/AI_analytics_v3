@@ -1,0 +1,9 @@
+type: string
+description: Итоговый статус фонового процесса импорта
+enum:
+- NOT_DEFINED
+- COMPLETED
+- ANTIVIRUS_CHECK_ERROR
+- FORMAT_CHECK_ERROR
+- IMPORT_FROM_FILE_ERROR
+- TIMEOUT_ERROR

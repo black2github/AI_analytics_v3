@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице VW_RPT_GPB_KXD_RST_PLN_ECO
+  tags:
+  - Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO (баланс счета в Ф1)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/BalanceDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/BalanceDto.yaml
+    '400':
+      description: Bad Request

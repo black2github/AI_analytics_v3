@@ -1,0 +1,5 @@
+type: string
+description: Тип ЭС
+enum:
+- MSG1_IN
+- MSG2_IN

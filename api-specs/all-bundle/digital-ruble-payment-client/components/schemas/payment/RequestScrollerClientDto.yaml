@@ -1,0 +1,84 @@
+required:
+- createdAt
+- number
+- requestId
+type: object
+properties:
+  number:
+    type: string
+    description: Номер заявки
+  requestType:
+    type: string
+    description: Тип заявки
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для клиента или комментарий если отсутствует код ошибки
+  organizationName:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН организации
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счёта
+  paymentAmount:
+    type: number
+    description: Сумма платежа
+  contractorCbrWalletId:
+    type: string
+    description: ID счета цифрового рубля контрагента в ЦБ
+  operationId:
+    type: string
+    description: Идентификатор операции
+    format: uuid
+  cbrC2bOperationId:
+    type: string
+    description: ID операции C2B для возврата
+    format: uuid
+  c2bOperationId:
+    type: string
+    description: ID операции C2B.
+    format: uuid
+  pointOfSaleName:
+    type: string
+    description: Наименование точки продаж
+  contractorCbrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька контрагента на ПлЦР (из операции)
+  contractorName:
+    type: string
+    description: Имя Отчество Ф
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  contractorCbrParticipantId:
+    type: string
+    description: Идентификатор контрагента
+  contractorPam:
+    type: string
+    description: Имя Отчество Ф
+  contractorAccountNumber:
+    type: string
+    description: Счёт ЦР контрагента
+  printFormName:
+    type: string
+    description: Имя печатной формы
+description: DTO заявки для скроллера Журнал платежей

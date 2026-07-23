@@ -1,0 +1,59 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  version:
+    type: integer
+    description: Версия записи
+    format: int32
+  requestDate:
+    type: string
+    description: Дата заявки
+    format: date-time
+  bankClient:
+    $ref: ../common/BankClientDto.yaml
+  reservationType:
+    type: string
+    description: Способ резервирования
+    enum:
+    - AUTO
+    - MANUAL
+  status:
+    type: string
+    description: Статус заявки на резервирование счетов
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXPORT_TO_F1_ERROR
+    - PARTLY_EXECUTED
+    - EXECUTED
+    - REJECTED
+    - EXPORTED_TO_F1_OR_EXPORT_TO_F1_ERROR
+    - EXECUTED_OR_PARTLY_EXECUTED
+  commentForBank:
+    type: string
+    description: Информация для Банка
+  accountsInfo:
+    type: array
+    description: Информация о счетах
+    items:
+      $ref: ./AccountsInfoScrollerDto.yaml
+  onboardingRequestId:
+    type: string
+    description: Заявка на открытие первого счета
+    format: uuid
+  userInfo:
+    $ref: ../common/UserInfoDto.yaml
+description: Ответ для банковского скроллера заявок на резервирование счёта.

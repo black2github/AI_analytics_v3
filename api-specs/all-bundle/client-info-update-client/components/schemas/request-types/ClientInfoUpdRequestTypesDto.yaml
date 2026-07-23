@@ -1,0 +1,51 @@
+type: object
+properties:
+  typeCode:
+    type: string
+    description: Код типа заявки
+    enum:
+    - IDENTITY_DOCUMENT_UPD
+    - HEAD_APPOINTMENT_UPD
+    - MC_RIGHTS_UPD
+    - SIGNER_RIGHTS_UPD
+    - ARTICLES_OF_ASSOCIATION_CHANGES_UPD
+    - ARTICLES_OF_ASSOCIATION_UPD
+    - KPP_LARGEST_TAXPAYER_UPD
+    - ACTUAL_ADDRESS_ORGANIZATION_UPD
+    - ADD_FREE_FORMAT_DOCUMENT
+  typeName:
+    type: string
+    description: Наименование типа
+  registrationRequirements:
+    type: array
+    description: Требования к оформлению
+    items:
+      $ref: ./FormattedTextDto.yaml
+  docTypeCodes:
+    type: array
+    description: Коды типов документов
+    items:
+      type: string
+      description: Уникальные коды типов документов
+      enum:
+      - IDENTITY_DOCUMENT
+      - HEAD_APPOINTMENT
+      - PROTOCOL
+      - ADD_AGREEMENT
+      - CONTRACT
+      - ORDER
+      - POWER_ATTORNEY
+      - OTHER_DOCUMENTS
+      - CERTIFICATE_LARGEST_TAXPAYER
+      - CONSTITUENT_DOCUMENT_CHANGES
+      - CONSTITUENT_DOCUMENT
+  documentsInfo:
+    type: array
+    description: Данные типов документов
+    items:
+      $ref: ./DocumentTypeForClientDto.yaml
+  priority:
+    type: integer
+    description: Приоритет типа обновления сведений.
+    format: int32
+description: Типы заявок для обновления сведений

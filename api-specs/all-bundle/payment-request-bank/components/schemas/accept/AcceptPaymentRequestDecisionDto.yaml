@@ -1,0 +1,7 @@
+type: string
+description: Решение принятое по платежному требованию
+nullable: true
+enum:
+- FULL_ACCEPT
+- PARTIAL_ACCEPT
+- REJECT

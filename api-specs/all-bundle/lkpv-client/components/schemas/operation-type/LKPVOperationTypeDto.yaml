@@ -1,0 +1,15 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код типа операции
+  name:
+    type: string
+    description: Наименование типа операции
+  localization:
+    type: string
+    description: Индекс локализации
+  source:
+    type: string
+    description: Код сервиса-источника данных
+description: Тип операций ЛК_ПВ.

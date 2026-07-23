@@ -1,0 +1,51 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: string
+    format: date
+    example: null
+  notEq:
+    type: string
+    format: date
+    example: null
+  in:
+    type: array
+    example: null
+    items:
+      type: string
+      format: date
+      example: null
+  notIn:
+    type: array
+    example: null
+    items:
+      type: string
+      format: date
+      example: null
+  isNull:
+    type: boolean
+    example: null
+  gt:
+    type: string
+    format: date
+    example: null
+  ge:
+    type: string
+    format: date
+    example: null
+  lt:
+    type: string
+    format: date
+    example: null
+  le:
+    type: string
+    format: date
+    example: null
+description: Фильтр по дате заявки. Диапазон.
+example: null

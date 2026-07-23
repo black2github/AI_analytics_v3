@@ -1,0 +1,10 @@
+required:
+- commission
+- trashhold
+type: object
+properties:
+  commission:
+    $ref: ./CommissionDto.yaml
+  trashhold:
+    $ref: ./ThresholdDto.yaml
+description: Порог и параметры комиссии по нему

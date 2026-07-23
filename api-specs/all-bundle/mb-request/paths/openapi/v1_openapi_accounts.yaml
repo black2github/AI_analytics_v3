@@ -1,0 +1,40 @@
+get:
+  tags:
+  - API для Openapi запросов Мультибанкинга. Операции с счетами
+  summary: Получить счета, привязанные к Согласию
+  operationId: getAccounts
+  parameters:
+  - name: Authorization
+    in: header
+    required: true
+    schema:
+      type: string
+  - name: x-fapi-auth-date
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: x-fapi-customer-ip-address
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: x-customer-user-agent
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: page
+    in: query
+    required: false
+    schema:
+      type: integer
+      format: int32
+      default: 1
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/openapi/AccountsOApiDto.yaml

@@ -1,0 +1,7 @@
+type: object
+properties:
+  results:
+    type: array
+    items:
+      $ref: ./SingleAccountRenewalDto.yaml
+description: Ответ по актуализации статусов счетов в БП

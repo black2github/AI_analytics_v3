@@ -1,0 +1,15 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  docCreationPage:
+    maxLength: 20
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+    nullable: true
+description: Копирование заявки платежное требование исходящее

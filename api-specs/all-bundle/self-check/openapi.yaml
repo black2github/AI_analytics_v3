@@ -1,0 +1,75 @@
+openapi: 3.1.0
+info:
+  title: Сервис самодиагностики. Банковская часть.
+  description: Сервис самодиагностики.
+  version: 3.3.0
+servers:
+- url: /self-check
+tags:
+- name: Апи привилегий
+  description: Методы для работы c привилегиями
+- name: Апи журнала
+  description: Методы для работы c журналом
+- name: Апи логов КМ
+  description: Методы для работы c логами КМ
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /privileges/{checkId}/export:
+    $ref: ./paths/{checkId}/privileges_checkId_export.yaml
+  /journal/get-page:
+    $ref: ./paths/get-page/journal_get_page.yaml
+  /journal/export:
+    $ref: ./paths/export/journal_export.yaml
+  /privileges/{checkId}:
+    $ref: ./paths/{checkId}/privileges_checkId.yaml
+  /crypto-module-log/{eventId}:
+    $ref: ./paths/{eventId}/crypto_module_log_eventId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericResponseSimpleErrorDataJournalExportDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataJournalExportDto.yaml
+    JournalExportDto:
+      $ref: ./components/schemas/common/JournalExportDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandSelfCheckFilter:
+      $ref: ./components/schemas/common/GetPageCommandSelfCheckFilter.yaml
+    PageParamsSelfCheckFilter:
+      $ref: ./components/schemas/common/PageParamsSelfCheckFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    SelfCheckFilter:
+      $ref: ./components/schemas/common/SelfCheckFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    CMCheckResultDto:
+      $ref: ./components/schemas/get-page/CMCheckResultDto.yaml
+    CheckResultDto:
+      $ref: ./components/schemas/get-page/CheckResultDto.yaml
+    InnDto:
+      $ref: ./components/schemas/get-page/InnDto.yaml
+    PageDataSelfCheckJournalDto:
+      $ref: ./components/schemas/get-page/PageDataSelfCheckJournalDto.yaml
+    SelfCheckJournalDto:
+      $ref: ./components/schemas/get-page/SelfCheckJournalDto.yaml
+    PrivilegesDto:
+      $ref: ./components/schemas/{checkId}/PrivilegesDto.yaml
+    CryptoModuleLogDto:
+      $ref: ./components/schemas/{eventId}/CryptoModuleLogDto.yaml
+    ErrorWithAdditionalData:
+      $ref: ./components/schemas/{eventId}/ErrorWithAdditionalData.yaml
+    GenericResponseErrorWithAdditionalDataListCryptoModuleLogDto:
+      $ref: ./components/schemas/{eventId}/GenericResponseErrorWithAdditionalDataListCryptoModuleLogDto.yaml

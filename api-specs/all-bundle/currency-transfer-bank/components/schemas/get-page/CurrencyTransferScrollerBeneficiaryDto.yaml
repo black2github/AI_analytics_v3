@@ -1,0 +1,18 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета получателя (20-знач.)
+  currencyCode:
+    type: string
+    description: Код валюты счета получателя
+  clientName:
+    type: string
+    description: Наименование получателя
+  country:
+    $ref: ../common/CurrencyTransferCountryDto.yaml
+  bank:
+    $ref: ./CurrencyTransferScrollerBankDto.yaml
+  intermediaryBank:
+    $ref: ./CurrencyTransferScrollerBankDto.yaml
+description: Транспортное представление реквизитов получателя

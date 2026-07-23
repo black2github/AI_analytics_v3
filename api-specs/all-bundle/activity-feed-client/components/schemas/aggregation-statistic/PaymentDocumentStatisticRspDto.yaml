@@ -1,0 +1,5 @@
+type: object
+properties:
+  paymentDocumentStatistic:
+    $ref: ./PaymentDocumentStatisticCategoryRspDto.yaml
+description: Агрегированная статистика платежных документов

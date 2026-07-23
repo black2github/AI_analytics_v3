@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  clientInn:
+    type: string
+    description: ИНН клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента
+description: Идентификация клиента и пользователя. Банковский скроллер.

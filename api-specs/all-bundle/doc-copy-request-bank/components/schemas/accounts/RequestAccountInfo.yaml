@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountId:
+    type: string
+  accountNumber:
+    type: string
+  accountBranch:
+    type: string
+description: Страница с данными

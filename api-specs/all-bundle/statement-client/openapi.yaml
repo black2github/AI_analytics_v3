@@ -1,0 +1,519 @@
+openapi: 3.0.1
+info:
+  title: Сервис Выписки
+  version: 3.3.0
+servers:
+- url: /statement-client
+security:
+- bearerAuth: []
+paths:
+  /schedule/schedule-connect:
+    $ref: ./paths/schedule/schedule_schedule_connect.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /statement/turnovers-by-period:
+    $ref: ./paths/statement/statement_turnovers_by_period.yaml
+  /statement/support/is-reconciled:
+    $ref: ./paths/statement/statement_support_is_reconciled.yaml
+  /statement/support/calculate-period:
+    $ref: ./paths/statement/statement_support_calculate_period.yaml
+  /statement/summary:
+    $ref: ./paths/statement/statement_summary.yaml
+  /statement/request:
+    $ref: ./paths/statement/statement_request.yaml
+  /statement/request/has-not-empty-turnovers:
+    $ref: ./paths/statement/statement_request_has_not_empty_turnovers.yaml
+  /statement/request/get-status:
+    $ref: ./paths/statement/statement_request_get_status.yaml
+  /statement/request/get-page:
+    $ref: ./paths/statement/statement_request_get_page.yaml
+  /statement/request/cancel:
+    $ref: ./paths/statement/statement_request_cancel.yaml
+  /statement/request/as-background:
+    $ref: ./paths/statement/statement_request_as_background.yaml
+  /statement/receive-counterparties:
+    $ref: ./paths/statement/statement_receive_counterparties.yaml
+  /statement/mb/request:
+    $ref: ./paths/statement/statement_mb_request.yaml
+  /statement/get-day-totals-with-accounting-entries:
+    $ref: ./paths/statement/statement_get_day_totals_with_accounting_entries.yaml
+  /statement/get-day-totals-with-accounting-entries-v2:
+    $ref: ./paths/statement/statement_get_day_totals_with_accounting_entries_v2.yaml
+  /statement/get-accounting-entry:
+    $ref: ./paths/statement/statement_get_accounting_entry.yaml
+  /statement/attachment/move-to-background:
+    $ref: ./paths/statement/statement_attachment_move_to_background.yaml
+  /statement/attachment/create:
+    $ref: ./paths/statement/statement_attachment_create.yaml
+  /settings/user-file-naming:
+    $ref: ./paths/misc/settings_user_file_naming.yaml
+  /schedule/schedule-disconnect:
+    $ref: ./paths/schedule/schedule_schedule_disconnect.yaml
+  /schedule/schedule-disconnect/verify-sign:
+    $ref: ./paths/schedule/schedule_schedule_disconnect_verify_sign.yaml
+  /schedule/schedule-disconnect/v2.1/generate-sign-data:
+    $ref: ./paths/schedule/schedule_schedule_disconnect_v2_1_generate_sign_data.yaml
+  /schedule/schedule-disconnect/sign:
+    $ref: ./paths/schedule/schedule_schedule_disconnect_sign.yaml
+  /schedule/schedule-disconnect/generate-digest/version:
+    $ref: ./paths/schedule/schedule_schedule_disconnect_generate_digest_version.yaml
+  /schedule/schedule-connect/verify-sign:
+    $ref: ./paths/schedule/schedule_schedule_connect_verify_sign.yaml
+  /schedule/schedule-connect/v2.1/generate-sign-data:
+    $ref: ./paths/schedule/schedule_schedule_connect_v2_1_generate_sign_data.yaml
+  /schedule/schedule-connect/sign:
+    $ref: ./paths/schedule/schedule_schedule_connect_sign.yaml
+  /schedule/schedule-connect/generate-digest/version:
+    $ref: ./paths/schedule/schedule_schedule_connect_generate_digest_version.yaml
+  /schedule/schedule-connect/delete/{id}:
+    $ref: ./paths/schedule/schedule_schedule_connect_delete_id.yaml
+  /schedule/schedule-connect/conditions-confirm/{id}:
+    $ref: ./paths/schedule/schedule_schedule_connect_conditions_confirm_id.yaml
+  /schedule/history/get-page:
+    $ref: ./paths/schedule/schedule_history_get_page.yaml
+  /schedule/get-page:
+    $ref: ./paths/schedule/schedule_get_page.yaml
+  /schedule/generate-report:
+    $ref: ./paths/schedule/schedule_generate_report.yaml
+  /metric:
+    $ref: ./paths/misc/metric.yaml
+  /mb/statement/summary:
+    $ref: ./paths/misc/mb_statement_summary.yaml
+  /mb/statement/receive-counterparties:
+    $ref: ./paths/misc/mb_statement_receive_counterparties.yaml
+  /mb/statement/get-accounting-entry:
+    $ref: ./paths/misc/mb_statement_get_accounting_entry.yaml
+  /history/accounts:
+    $ref: ./paths/misc/history_accounts.yaml
+  /statement/support/search-user-account-for-statement:
+    $ref: ./paths/statement/statement_support_search_user_account_for_statement.yaml
+  /statement/support/search-trust-account-for-statement:
+    $ref: ./paths/statement/statement_support_search_trust_account_for_statement.yaml
+  /statement/support/get-related-authorized-people:
+    $ref: ./paths/statement/statement_support_get_related_authorized_people.yaml
+  /statement/request/{id}:
+    $ref: ./paths/statement/statement_request_id.yaml
+  /statement/request/find-latest:
+    $ref: ./paths/statement/statement_request_find_latest.yaml
+  /statement/print/{id}:
+    $ref: ./paths/statement/statement_print_id.yaml
+  /statement/mb/request/{id}/repeat:
+    $ref: ./paths/statement/statement_mb_request_id_repeat.yaml
+  /statement/mb/request/find-latest:
+    $ref: ./paths/statement/statement_mb_request_find_latest.yaml
+  /statement/mb/request/accounts:
+    $ref: ./paths/statement/statement_mb_request_accounts.yaml
+  /statement/get-status/{statementRequestId}:
+    $ref: ./paths/statement/statement_get_status_statementRequestId.yaml
+  /statement/get-counterparties/{statementId}:
+    $ref: ./paths/statement/statement_get_counterparties_statementId.yaml
+  /statement/generate-download-token/{id}:
+    $ref: ./paths/statement/statement_generate_download_token_id.yaml
+  /statement/by-statement-request-id/{statementRequestId}:
+    $ref: ./paths/statement/statement_by_statement_request_id_statementRequestId.yaml
+  /statement/attachment/{id}:
+    $ref: ./paths/statement/statement_attachment_id.yaml
+  /statement/attachment/get-status/{statementAttachmentId}:
+    $ref: ./paths/statement/statement_attachment_get_status_statementAttachmentId.yaml
+  /statement/attachment/generate-download-token/{statementAttachmentId}:
+    $ref: ./paths/statement/statement_attachment_generate_download_token_statementAttachmentId.yaml
+  /settings/user-file-naming-reset:
+    $ref: ./paths/misc/settings_user_file_naming_reset.yaml
+  /settings/file-naming-tags:
+    $ref: ./paths/misc/settings_file_naming_tags.yaml
+  /schedule/schedule-disconnect/{id}:
+    $ref: ./paths/schedule/schedule_schedule_disconnect_id.yaml
+  /schedule/schedule-connect/{id}:
+    $ref: ./paths/schedule/schedule_schedule_connect_id.yaml
+  /schedule/schedule-connect/exists-with-totals-of-day:
+    $ref: ./paths/schedule/schedule_schedule_connect_exists_with_totals_of_day.yaml
+  /mb/entry/{accountingEntryId}:
+    $ref: ./paths/misc/mb_entry_accountingEntryId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /entry/{accountingEntryId}:
+    $ref: ./paths/misc/entry_accountingEntryId.yaml
+  /entry/reverse-payment/{accountingEntryId}:
+    $ref: ./paths/misc/entry_reverse_payment_accountingEntryId.yaml
+  /entry/repeat-payment/{accountingEntryId}:
+    $ref: ./paths/misc/entry_repeat_payment_accountingEntryId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CounterpartyFilterDataDto:
+      $ref: ./components/schemas/common/CounterpartyFilterDataDto.yaml
+    GenericCommandScheduleRequestDto:
+      $ref: ./components/schemas/schedule/GenericCommandScheduleRequestDto.yaml
+    ScheduleRequestDto:
+      $ref: ./components/schemas/schedule/ScheduleRequestDto.yaml
+    UserDeviceInfoDto:
+      $ref: ./components/schemas/common/UserDeviceInfoDto.yaml
+    GenericResponseStatementErrorUUID:
+      $ref: ./components/schemas/common/GenericResponseStatementErrorUUID.yaml
+    StatementError:
+      $ref: ./components/schemas/common/StatementError.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    AccountFilterDto:
+      $ref: ./components/schemas/statement/AccountFilterDto.yaml
+    GenericCommandTurnoversByPeriodRequestDto:
+      $ref: ./components/schemas/statement/GenericCommandTurnoversByPeriodRequestDto.yaml
+    TurnoversByPeriodRequestDto:
+      $ref: ./components/schemas/statement/TurnoversByPeriodRequestDto.yaml
+    GenericResponseStatementErrorListTurnoversByPeriodResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorListTurnoversByPeriodResponseDto.yaml
+    TurnoversByPeriodResponseDto:
+      $ref: ./components/schemas/statement/TurnoversByPeriodResponseDto.yaml
+    ReconcilePresentAccountDto:
+      $ref: ./components/schemas/statement/ReconcilePresentAccountDto.yaml
+    ReconcilePresentCheckDto:
+      $ref: ./components/schemas/statement/ReconcilePresentCheckDto.yaml
+    GenericResponseStatementErrorBoolean:
+      $ref: ./components/schemas/common/GenericResponseStatementErrorBoolean.yaml
+    GenericCommandTurnoverPeriodRequestDto:
+      $ref: ./components/schemas/statement/GenericCommandTurnoverPeriodRequestDto.yaml
+    TurnoverPeriodRequestDto:
+      $ref: ./components/schemas/statement/TurnoverPeriodRequestDto.yaml
+    GenericResponseStatementErrorTurnoverPeriodResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorTurnoverPeriodResponseDto.yaml
+    TurnoverPeriodResponseDto:
+      $ref: ./components/schemas/statement/TurnoverPeriodResponseDto.yaml
+    StatementSummaryRequestDto:
+      $ref: ./components/schemas/common/StatementSummaryRequestDto.yaml
+    GenericResponseStatementErrorStatementSummaryResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementSummaryResponseDto.yaml
+    StatementSummaryResponseDto:
+      $ref: ./components/schemas/statement/StatementSummaryResponseDto.yaml
+    CreateCommandStatementCreateRequestDto:
+      $ref: ./components/schemas/statement/CreateCommandStatementCreateRequestDto.yaml
+    DocumentOptionsDto:
+      $ref: ./components/schemas/statement/DocumentOptionsDto.yaml
+    StatementCreateRequestDto:
+      $ref: ./components/schemas/statement/StatementCreateRequestDto.yaml
+    UserFileNamingTagDto:
+      $ref: ./components/schemas/common/UserFileNamingTagDto.yaml
+    UserFileSettingsDto:
+      $ref: ./components/schemas/common/UserFileSettingsDto.yaml
+    NotEmptyTurnoversRequestDto:
+      $ref: ./components/schemas/statement/NotEmptyTurnoversRequestDto.yaml
+    GenericResponseStatementErrorNotEmptyTurnoversResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorNotEmptyTurnoversResponseDto.yaml
+    NotEmptyTurnoversResponseDto:
+      $ref: ./components/schemas/statement/NotEmptyTurnoversResponseDto.yaml
+    SingleCommandStatementStatusRequestDto:
+      $ref: ./components/schemas/statement/SingleCommandStatementStatusRequestDto.yaml
+    StatementStatusRequestDto:
+      $ref: ./components/schemas/statement/StatementStatusRequestDto.yaml
+    GenericResponseStatementErrorStatementStatusResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementStatusResponseDto.yaml
+    StatementStatusResponseDto:
+      $ref: ./components/schemas/statement/StatementStatusResponseDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/statement/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandStatementRequestFilter:
+      $ref: ./components/schemas/statement/GetPageCommandStatementRequestFilter.yaml
+    PageParamsStatementRequestFilter:
+      $ref: ./components/schemas/statement/PageParamsStatementRequestFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    StatementRequestFilter:
+      $ref: ./components/schemas/statement/StatementRequestFilter.yaml
+    StatementRequestFormatFilter:
+      $ref: ./components/schemas/statement/StatementRequestFormatFilter.yaml
+    StatementRequestPeriodTypeFilter:
+      $ref: ./components/schemas/common/StatementRequestPeriodTypeFilter.yaml
+    StatementRequestStatusFilter:
+      $ref: ./components/schemas/statement/StatementRequestStatusFilter.yaml
+    GenericResponseStatementErrorPageDataStatementRequestScrollerDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorPageDataStatementRequestScrollerDto.yaml
+    PageDataStatementRequestScrollerDto:
+      $ref: ./components/schemas/statement/PageDataStatementRequestScrollerDto.yaml
+    StatementRequestScrollerDto:
+      $ref: ./components/schemas/statement/StatementRequestScrollerDto.yaml
+    CancelStatementRequestDto:
+      $ref: ./components/schemas/statement/CancelStatementRequestDto.yaml
+    GenericResponseStatementErrorStatementRequestCanceledResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementRequestCanceledResponseDto.yaml
+    StatementRequestCanceledResponseDto:
+      $ref: ./components/schemas/statement/StatementRequestCanceledResponseDto.yaml
+    BackgroundStatementRequestDto:
+      $ref: ./components/schemas/statement/BackgroundStatementRequestDto.yaml
+    GenericResponseStatementErrorStatementRequestAsBackgroundResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementRequestAsBackgroundResponseDto.yaml
+    StatementRequestAsBackgroundResponseDto:
+      $ref: ./components/schemas/statement/StatementRequestAsBackgroundResponseDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    PageParamsStatementAccountingEntryCounterpartiesFilter:
+      $ref: ./components/schemas/common/PageParamsStatementAccountingEntryCounterpartiesFilter.yaml
+    StatementAccountingEntryCounterpartiesFilter:
+      $ref: ./components/schemas/common/StatementAccountingEntryCounterpartiesFilter.yaml
+    StatementAccountingEntryCounterpartiesRequestDto:
+      $ref: ./components/schemas/common/StatementAccountingEntryCounterpartiesRequestDto.yaml
+    CounterpartyResponseDto:
+      $ref: ./components/schemas/common/CounterpartyResponseDto.yaml
+    GenericResponseStatementErrorListCounterpartyResponseDto:
+      $ref: ./components/schemas/common/GenericResponseStatementErrorListCounterpartyResponseDto.yaml
+    GenericCommandMbStatementCreateRequestDto:
+      $ref: ./components/schemas/statement/GenericCommandMbStatementCreateRequestDto.yaml
+    MbAccountCreateDto:
+      $ref: ./components/schemas/statement/MbAccountCreateDto.yaml
+    MbStatementCreateRequestDto:
+      $ref: ./components/schemas/statement/MbStatementCreateRequestDto.yaml
+    AccountingEntrySourceFilter:
+      $ref: ./components/schemas/statement/AccountingEntrySourceFilter.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoCounterpartyResponseDto:
+      $ref: ./components/schemas/common/FilterValueDtoCounterpartyResponseDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/statement/FilterValueDtoLong.yaml
+    PageParamsStatementAccountingEntryFilter:
+      $ref: ./components/schemas/statement/PageParamsStatementAccountingEntryFilter.yaml
+    StatementAccountingEntryFilter:
+      $ref: ./components/schemas/statement/StatementAccountingEntryFilter.yaml
+    StatementAccountingEntryRequestDto:
+      $ref: ./components/schemas/statement/StatementAccountingEntryRequestDto.yaml
+    StatementOperationFilter:
+      $ref: ./components/schemas/common/StatementOperationFilter.yaml
+    DayTotalsScrollerResponse:
+      $ref: ./components/schemas/statement/DayTotalsScrollerResponse.yaml
+    GenericResponseStatementErrorDayTotalsScrollerResponse:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorDayTotalsScrollerResponse.yaml
+    PageDataStatementDayTotalsScrollerDto:
+      $ref: ./components/schemas/statement/PageDataStatementDayTotalsScrollerDto.yaml
+    StatementAccountingEntryAccountData:
+      $ref: ./components/schemas/common/StatementAccountingEntryAccountData.yaml
+    StatementAccountingEntryScrollerDto:
+      $ref: ./components/schemas/statement/StatementAccountingEntryScrollerDto.yaml
+    StatementDayTotalsScrollerDto:
+      $ref: ./components/schemas/statement/StatementDayTotalsScrollerDto.yaml
+    DayTotalsScrollerRequestDto:
+      $ref: ./components/schemas/statement/DayTotalsScrollerRequestDto.yaml
+    GenericResponseStatementErrorSliceDataStatementDayTotalsScrollerDtoV2:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorSliceDataStatementDayTotalsScrollerDtoV2.yaml
+    SliceDataStatementDayTotalsScrollerDtoV2:
+      $ref: ./components/schemas/statement/SliceDataStatementDayTotalsScrollerDtoV2.yaml
+    StatementDayTotalsScrollerDtoV2:
+      $ref: ./components/schemas/statement/StatementDayTotalsScrollerDtoV2.yaml
+    AccountingEntryScrollerResponse:
+      $ref: ./components/schemas/statement/AccountingEntryScrollerResponse.yaml
+    GenericResponseStatementErrorAccountingEntryScrollerResponse:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorAccountingEntryScrollerResponse.yaml
+    PageDataStatementAccountingEntryScrollerDto:
+      $ref: ./components/schemas/statement/PageDataStatementAccountingEntryScrollerDto.yaml
+    BackgroundStatementAttachmentDto:
+      $ref: ./components/schemas/statement/BackgroundStatementAttachmentDto.yaml
+    BackgroundStatementAttachmentResponseDto:
+      $ref: ./components/schemas/statement/BackgroundStatementAttachmentResponseDto.yaml
+    GenericResponseStatementErrorBackgroundStatementAttachmentResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorBackgroundStatementAttachmentResponseDto.yaml
+    CreateAttachmentRequestDto:
+      $ref: ./components/schemas/statement/CreateAttachmentRequestDto.yaml
+    GenericCommandUserFileSettingsDto:
+      $ref: ./components/schemas/misc/GenericCommandUserFileSettingsDto.yaml
+    GenericCommandScheduleDisconnectCreateDto:
+      $ref: ./components/schemas/schedule/GenericCommandScheduleDisconnectCreateDto.yaml
+    ScheduleDisconnectCreateDto:
+      $ref: ./components/schemas/schedule/ScheduleDisconnectCreateDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/schedule/GenericCommandUUID.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/schedule/CertificateInfoDto.yaml
+    GenericResponseStatementErrorScheduleDisconnectDto:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorScheduleDisconnectDto.yaml
+    ScheduleAccountDto:
+      $ref: ./components/schemas/schedule/ScheduleAccountDto.yaml
+    ScheduleDisconnectDto:
+      $ref: ./components/schemas/schedule/ScheduleDisconnectDto.yaml
+    ScheduleDisconnectSignatureDto:
+      $ref: ./components/schemas/schedule/ScheduleDisconnectSignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/schedule/SignatureValueDto.yaml
+    GenericResponseStatementErrorUniSignV2x1Dto:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/schedule/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/schedule/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/schedule/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/schedule/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/schedule/UniSignV2x1Dto.yaml
+    SignCommand:
+      $ref: ./components/schemas/schedule/SignCommand.yaml
+    DigestRequest:
+      $ref: ./components/schemas/schedule/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/schedule/Digest.yaml
+    GenericResponseStatementErrorDigest:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorDigest.yaml
+    GenericResponseStatementErrorScheduleResponseDto:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorScheduleResponseDto.yaml
+    ScheduleConnectSignatureDto:
+      $ref: ./components/schemas/schedule/ScheduleConnectSignatureDto.yaml
+    ScheduleResponseDto:
+      $ref: ./components/schemas/schedule/ScheduleResponseDto.yaml
+    GetPageCommandStatementRequestByScheduleFilter:
+      $ref: ./components/schemas/schedule/GetPageCommandStatementRequestByScheduleFilter.yaml
+    PageParamsStatementRequestByScheduleFilter:
+      $ref: ./components/schemas/schedule/PageParamsStatementRequestByScheduleFilter.yaml
+    StatementRequestByScheduleFilter:
+      $ref: ./components/schemas/schedule/StatementRequestByScheduleFilter.yaml
+    GenericResponseStatementErrorPageDataStatementRequestHistoryScrollerDto:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorPageDataStatementRequestHistoryScrollerDto.yaml
+    PageDataStatementRequestHistoryScrollerDto:
+      $ref: ./components/schemas/schedule/PageDataStatementRequestHistoryScrollerDto.yaml
+    StatementRequestHistoryScrollerDto:
+      $ref: ./components/schemas/schedule/StatementRequestHistoryScrollerDto.yaml
+    GetPageCommandScheduleScrollerFilter:
+      $ref: ./components/schemas/schedule/GetPageCommandScheduleScrollerFilter.yaml
+    PageParamsScheduleScrollerFilter:
+      $ref: ./components/schemas/schedule/PageParamsScheduleScrollerFilter.yaml
+    ScheduleScrollerFilter:
+      $ref: ./components/schemas/schedule/ScheduleScrollerFilter.yaml
+    ScheduleScrollerFormatFilter:
+      $ref: ./components/schemas/schedule/ScheduleScrollerFormatFilter.yaml
+    ScheduleScrollerPeriodFilter:
+      $ref: ./components/schemas/schedule/ScheduleScrollerPeriodFilter.yaml
+    ScheduleScrollerStatusFilter:
+      $ref: ./components/schemas/schedule/ScheduleScrollerStatusFilter.yaml
+    GenericResponseStatementErrorPageDataScheduleScrollerDto:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorPageDataScheduleScrollerDto.yaml
+    PageDataScheduleScrollerDto:
+      $ref: ./components/schemas/schedule/PageDataScheduleScrollerDto.yaml
+    ScheduleRequestScrollerDto:
+      $ref: ./components/schemas/schedule/ScheduleRequestScrollerDto.yaml
+    ScheduleScrollerDto:
+      $ref: ./components/schemas/schedule/ScheduleScrollerDto.yaml
+    GenericCommandScheduleReportRequest:
+      $ref: ./components/schemas/schedule/GenericCommandScheduleReportRequest.yaml
+    ScheduleReportRequest:
+      $ref: ./components/schemas/schedule/ScheduleReportRequest.yaml
+    GenericResponseStatementErrorString:
+      $ref: ./components/schemas/schedule/GenericResponseStatementErrorString.yaml
+    MetricRequest:
+      $ref: ./components/schemas/misc/MetricRequest.yaml
+    ExternalStatementSummaryResponseDto:
+      $ref: ./components/schemas/misc/ExternalStatementSummaryResponseDto.yaml
+    GenericResponseStatementErrorExternalStatementSummaryResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorExternalStatementSummaryResponseDto.yaml
+    PageParamsStatementExternalAccountingEntryFilter:
+      $ref: ./components/schemas/misc/PageParamsStatementExternalAccountingEntryFilter.yaml
+    StatementExternalAccountingEntryFilter:
+      $ref: ./components/schemas/misc/StatementExternalAccountingEntryFilter.yaml
+    StatementExternalAccountingEntryRequestDto:
+      $ref: ./components/schemas/misc/StatementExternalAccountingEntryRequestDto.yaml
+    ExternalAccountingEntryScrollerResponse:
+      $ref: ./components/schemas/misc/ExternalAccountingEntryScrollerResponse.yaml
+    GenericResponseStatementErrorExternalAccountingEntryScrollerResponse:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorExternalAccountingEntryScrollerResponse.yaml
+    PageDataStatementExternalAccountingEntryScrollerDto:
+      $ref: ./components/schemas/misc/PageDataStatementExternalAccountingEntryScrollerDto.yaml
+    StatementExternalAccountingEntryScrollerDto:
+      $ref: ./components/schemas/misc/StatementExternalAccountingEntryScrollerDto.yaml
+    Params:
+      $ref: ./components/schemas/misc/Params.yaml
+    SearchStatementAccountsRequestDto:
+      $ref: ./components/schemas/misc/SearchStatementAccountsRequestDto.yaml
+    AccountExtraLightDto:
+      $ref: ./components/schemas/misc/AccountExtraLightDto.yaml
+    GenericResponseStatementErrorPageDataAccountExtraLightDto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorPageDataAccountExtraLightDto.yaml
+    PageDataAccountExtraLightDto:
+      $ref: ./components/schemas/misc/PageDataAccountExtraLightDto.yaml
+    AccountLightDto:
+      $ref: ./components/schemas/statement/AccountLightDto.yaml
+    BankClientLightDto:
+      $ref: ./components/schemas/statement/BankClientLightDto.yaml
+    CurrencyLightDto:
+      $ref: ./components/schemas/statement/CurrencyLightDto.yaml
+    GenericResponseStatementErrorListAccountLightDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorListAccountLightDto.yaml
+    AuthorizedPersonDto:
+      $ref: ./components/schemas/statement/AuthorizedPersonDto.yaml
+    GenericResponseStatementErrorListAuthorizedPersonDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorListAuthorizedPersonDto.yaml
+    GenericResponseStatementErrorStatementRequestFormDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementRequestFormDto.yaml
+    StatementRequestFormDto:
+      $ref: ./components/schemas/statement/StatementRequestFormDto.yaml
+    FileDataResponseDto:
+      $ref: ./components/schemas/statement/FileDataResponseDto.yaml
+    GenericResponseStatementErrorFileDataResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorFileDataResponseDto.yaml
+    GenericResponseStatementErrorMbStatementRequestFormDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorMbStatementRequestFormDto.yaml
+    MbStatementRequestFormDto:
+      $ref: ./components/schemas/statement/MbStatementRequestFormDto.yaml
+    GenericResponseStatementErrorListMbAccountDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorListMbAccountDto.yaml
+    MbAccountDto:
+      $ref: ./components/schemas/statement/MbAccountDto.yaml
+    GenericResponseStatementErrorStatementActualityStatusResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementActualityStatusResponseDto.yaml
+    StatementActualityStatusResponseDto:
+      $ref: ./components/schemas/statement/StatementActualityStatusResponseDto.yaml
+    GenericResponseStatementErrorStatementFileResponse:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementFileResponse.yaml
+    StatementFileResponse:
+      $ref: ./components/schemas/statement/StatementFileResponse.yaml
+    GenericResponseStatementErrorStatementResponseDto:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementResponseDto.yaml
+    StatementResponseDto:
+      $ref: ./components/schemas/statement/StatementResponseDto.yaml
+    GenericResponseStatementErrorStatementAttachmentStatus:
+      $ref: ./components/schemas/statement/GenericResponseStatementErrorStatementAttachmentStatus.yaml
+    StatementAttachmentStatus:
+      $ref: ./components/schemas/statement/StatementAttachmentStatus.yaml
+    FileNamingTagDto:
+      $ref: ./components/schemas/misc/FileNamingTagDto.yaml
+    FileSettingsDto:
+      $ref: ./components/schemas/misc/FileSettingsDto.yaml
+    GenericResponseStatementErrorListFileSettingsDto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorListFileSettingsDto.yaml
+    ExternalAccountingEntryCardDto:
+      $ref: ./components/schemas/misc/ExternalAccountingEntryCardDto.yaml
+    ExternalPayeeDto:
+      $ref: ./components/schemas/misc/ExternalPayeeDto.yaml
+    ExternalPayerDto:
+      $ref: ./components/schemas/misc/ExternalPayerDto.yaml
+    GenericResponseStatementErrorExternalAccountingEntryCardDto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorExternalAccountingEntryCardDto.yaml
+    AccountingEntryCardDto:
+      $ref: ./components/schemas/misc/AccountingEntryCardDto.yaml
+    AppendixDto:
+      $ref: ./components/schemas/misc/AppendixDto.yaml
+    DocumentDto:
+      $ref: ./components/schemas/misc/DocumentDto.yaml
+    GenericResponseStatementErrorAccountingEntryCardDto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorAccountingEntryCardDto.yaml
+    PayeeDto:
+      $ref: ./components/schemas/misc/PayeeDto.yaml
+    PayerDto:
+      $ref: ./components/schemas/misc/PayerDto.yaml
+    AccountingEntryPODto:
+      $ref: ./components/schemas/misc/AccountingEntryPODto.yaml
+    GenericResponseStatementErrorAccountingEntryPODto:
+      $ref: ./components/schemas/misc/GenericResponseStatementErrorAccountingEntryPODto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

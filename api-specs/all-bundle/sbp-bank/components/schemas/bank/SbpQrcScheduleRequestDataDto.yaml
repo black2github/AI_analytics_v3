@@ -1,0 +1,44 @@
+type: object
+description: ДТО с реквизитами QR-кода
+properties:
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  accountId:
+    type: integer
+    format: int64
+    description: ID счета зачисления в Ф1.
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  account:
+    type: string
+    description: Счет зачисления
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  merchantName:
+    type: string
+    description: Торговое название
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+required:
+- account
+- accountId
+- merchantAddress
+- merchantId
+- merchantName
+- qrcType

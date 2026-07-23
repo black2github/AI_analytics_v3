@@ -1,0 +1,24 @@
+required:
+- code
+- id
+- isActive
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    maxLength: 3
+    minLength: 3
+    type: string
+  tooltipText:
+    maxLength: 200000
+    minLength: 0
+    type: string
+  comment:
+    maxLength: 100
+    minLength: 0
+    type: string
+  isActive:
+    type: boolean
+description: Транспортное представление для изменения подсказки

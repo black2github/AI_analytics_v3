@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.BBAN
+    - RU.CBR.EPID
+    - RU.CBR.PAN
+    - RU.CBR.MTEL
+    - RU.CBR.ORID
+  identification:
+    type: string
+description: Идентификация счета

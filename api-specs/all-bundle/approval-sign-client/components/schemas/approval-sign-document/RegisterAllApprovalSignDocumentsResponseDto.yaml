@@ -1,0 +1,20 @@
+required:
+- exportId
+- exportStatus
+type: object
+properties:
+  exportId:
+    type: string
+    description: Идентификатор асинхронного экспорта
+    format: uuid
+  exportStatus:
+    type: string
+    description: Статус выполнения экспорта всех документов
+    enum:
+    - CREATED
+    - IN_PROGRESS
+    - COMPLETED
+    - ERROR
+  result:
+    $ref: ../common/AttachmentAccessData.yaml
+description: Результат выполнения экспорта всех документов

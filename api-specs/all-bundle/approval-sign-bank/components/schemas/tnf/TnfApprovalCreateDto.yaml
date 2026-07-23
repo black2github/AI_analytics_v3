@@ -1,0 +1,15 @@
+type: object
+properties:
+  organization:
+    $ref: ./TnfApprovalOrgData.yaml
+  approvalAccounts:
+    type: array
+    description: Список визируемых счетов
+    items:
+      $ref: ./TnfApprovalAccountCreateDto.yaml
+  approvalPersons:
+    type: array
+    description: Список визирующих лиц
+    items:
+      $ref: ./TnfApprovalPersonCreateData.yaml
+description: Модель данных создания новой записи визирования

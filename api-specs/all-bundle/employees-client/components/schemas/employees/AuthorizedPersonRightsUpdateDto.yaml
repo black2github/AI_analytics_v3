@@ -1,0 +1,21 @@
+required:
+- grantAuthorities
+- hasAuthorities
+type: object
+properties:
+  hasAuthorities:
+    type: boolean
+    description: Есть действующие полномочия УЛ
+  grantAuthorities:
+    type: boolean
+    description: Предоставить полномочия УЛ
+  restrictAuthorities:
+    type: boolean
+    description: Заблокировать полномочия УЛ
+  blocked:
+    type: boolean
+    description: Является заблокированным УЛ
+  agreesToCancelPreviousAccessRequests:
+    type: boolean
+    description: Согласие с отменой предыдущих заявок по доступам
+description: Права уполномоченного лица сотрудника

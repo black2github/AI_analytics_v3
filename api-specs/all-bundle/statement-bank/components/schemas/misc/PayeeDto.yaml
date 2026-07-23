@@ -1,0 +1,20 @@
+type: object
+properties:
+  name:
+    type: string
+  inn:
+    type: string
+  account:
+    type: string
+  accountId:
+    type: string
+    format: uuid
+  organizationId:
+    type: string
+    format: uuid
+  bankName:
+    type: string
+  bankBic:
+    type: string
+  corrAccount:
+    type: string

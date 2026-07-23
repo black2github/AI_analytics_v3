@@ -1,0 +1,61 @@
+type: object
+properties:
+  fullAddress:
+    type: string
+    description: Адрес одной строкой
+  zip:
+    type: string
+    description: Индекс
+  country:
+    $ref: ./CountryDto.yaml
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  district:
+    type: string
+    description: Район
+  districtFias:
+    type: string
+    description: Район ФИАС
+  city:
+    type: string
+    description: Город/ Нас. Пункт
+  cityFias:
+    type: string
+    description: Город/ Нас. Пункт ФИАС
+  street:
+    type: string
+    description: Улица
+  streetFias:
+    type: string
+    description: Улица ФИАС
+  building:
+    type: string
+    description: Дом
+  buildingFias:
+    type: string
+    description: Дом ФИАС
+  block:
+    type: string
+    description: Корпус/строение
+  flat:
+    type: string
+    description: Квартира
+  fiasGuid:
+    type: string
+    description: ФИАС GUID код
+    format: uuid
+  fiasLevel:
+    type: integer
+    description: Уровень кода
+    format: int32
+  foreignAddress:
+    type: boolean
+  buildingExists:
+    type: boolean
+  flatExists:
+    type: boolean
+description: Адрес

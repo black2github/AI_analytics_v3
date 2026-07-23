@@ -1,0 +1,44 @@
+type: object
+properties:
+  budgetPayment:
+    type: boolean
+    description: Признак платеж в бюджет
+  docAuthorStatus:
+    type: string
+    description: Статус составителя документа
+  kbk:
+    type: string
+    description: Код бюджетной классификации (КБК)
+  oktmo:
+    type: string
+    description: Код ОКТМО
+  paymentBasis:
+    type: string
+    description: Значение основания платежа
+  paymentBasisDocNumber:
+    type: string
+    description: Номер документа основания платежа
+  paymentBasisDocDate:
+    type: string
+    description: Дата документа основания платежа
+  taxPeriodValueType:
+    type: string
+    description: Показатель налогового периода. Тип значения
+  taxPeriodType:
+    type: string
+    description: Показатель налогового периода. Тип периода
+  taxPeriodDate:
+    type: string
+    description: Показатель налогового периода. Дата
+    format: date
+  taxPeriodCustomsCode:
+    type: string
+    description: Показатель налогового периода. Код таможенного органа
+  taxPeriod:
+    type: string
+    description: Показатель налогового периода. Период
+  taxPeriodYear:
+    type: integer
+    description: Показатель налогового периода. Год
+    format: int32
+description: Бюджетные поля, заполняемые клиентом

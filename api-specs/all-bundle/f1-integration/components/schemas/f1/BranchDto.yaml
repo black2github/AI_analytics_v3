@@ -1,0 +1,27 @@
+type: object
+properties:
+  branchAbsNumber:
+    type: string
+    description: Код филиала в АБС
+  contracts:
+    type: array
+    description: Список договоров банковского счета клиента в рамках филиала
+    items:
+      $ref: ./ContractDto.yaml
+  commissionAccounts:
+    type: array
+    description: Блок со счетами доступными для списания комиссии за открытие счета в рамках филиала
+    items:
+      type: string
+      description: Блок со счетами доступными для списания комиссии за открытие счета в рамках филиала
+  kopops:
+    type: array
+    description: Блок со списком счетов, с которых можно скопировать карточку ОПОП  в рамках филиала
+    items:
+      $ref: ./KopopDto.yaml
+  reservedAccounts:
+    type: array
+    description: Блок со списком  зарезервированных счетов в рамках филиала
+    items:
+      $ref: ./ReservedAccountDto.yaml
+description: Блок с информацией о ДБС внутри филиала

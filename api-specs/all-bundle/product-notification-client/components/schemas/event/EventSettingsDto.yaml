@@ -1,0 +1,36 @@
+required:
+- configureAmount
+- groupId
+- minAmount
+type: object
+properties:
+  groupId:
+    type: string
+    description: Идентификатор группы событий
+    format: uuid
+  label:
+    type: string
+    description: Лейбл события
+  groupOrder:
+    type: integer
+    description: Порядок вывода на ЭФ
+    format: int32
+  smsEnabled:
+    type: boolean
+    description: SMS
+    nullable: true
+  emailEnabled:
+    type: boolean
+    description: Email
+    nullable: true
+  bellEnabled:
+    type: boolean
+    description: Уведомление Бизнес-Онлайн (Колокольчик)
+    nullable: true
+  configureAmount:
+    type: boolean
+    description: Настраивать сумму
+  minAmount:
+    type: number
+    description: Сумма от
+description: Настройки события СФЗУ

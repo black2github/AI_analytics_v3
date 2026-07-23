@@ -1,0 +1,46 @@
+required:
+- accountId
+- accountNumber
+- assignment
+- consentId
+- currency
+- id
+- openApiAccountId
+- openApiStatus
+- statusUpdatedAt
+type: object
+properties:
+  id:
+    type: string
+    description: Суррогатный идентификатор счета
+    format: uuid
+  openApiAccountId:
+    type: string
+    description: Идентификатор счета в OpenAPI Мультибанкинга
+  accountId:
+    type: string
+    description: Идентификатор счета в ГПБ
+    format: uuid
+  consentId:
+    type: string
+    description: Внутренний идентификатор Согласия, присвоенный в сервисе Согласия
+    format: uuid
+  openApiStatus:
+    type: string
+    description: Статус в OpenAPI Мультибанкинга
+  statusUpdatedAt:
+    type: string
+    description: Дата и время последнего изменения статуса счета
+    format: date-time
+  currency:
+    type: string
+    description: Валюта счета
+  assignment:
+    type: string
+    description: Назначение счета
+  accountNumber:
+    type: string
+    description: Номер счета
+  bankServicer:
+    $ref: ./BankServicerDto.yaml
+description: Счет, на который выдано Согласие в OpenAPI Мультибанкинга. Интеграционное API

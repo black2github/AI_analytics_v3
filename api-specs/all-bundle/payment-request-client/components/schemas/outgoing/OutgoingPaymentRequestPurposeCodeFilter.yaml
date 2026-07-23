@@ -1,0 +1,5 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для поиска по "[РРКО_ПТ Исх] Справочник кодовых назначений платежа"

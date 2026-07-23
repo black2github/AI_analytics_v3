@@ -1,0 +1,44 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Способ добавления получателя массовой рассылки.
+    enum:
+    - ALL
+    - DICTIONARY
+    - FILE
+    - BRANCH
+  in:
+    type: array
+    items:
+      type: string
+      description: Способ добавления получателя массовой рассылки.
+      enum:
+      - ALL
+      - DICTIONARY
+      - FILE
+      - BRANCH
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Способ добавления получателя массовой рассылки.
+    enum:
+    - ALL
+    - DICTIONARY
+    - FILE
+    - BRANCH
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Способ добавления получателя массовой рассылки.
+      enum:
+      - ALL
+      - DICTIONARY
+      - FILE
+      - BRANCH

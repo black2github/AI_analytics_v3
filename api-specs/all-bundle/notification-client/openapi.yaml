@@ -1,0 +1,229 @@
+openapi: 3.0.1
+info:
+  title: Сервис нотификации. Клиентская часть.
+  version: 3.11.0
+servers:
+- url: /notification
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /v2/user-notification/v2.1/generate-sign-data:
+    $ref: ./paths/user-notification/v2_user_notification_v2_1_generate_sign_data.yaml
+  /v2/user-notification/sign:
+    $ref: ./paths/user-notification/v2_user_notification_sign.yaml
+  /v2/user-notification/sidebar:
+    $ref: ./paths/user-notification/v2_user_notification_sidebar.yaml
+  /v2/user-notification/required-read:
+    $ref: ./paths/user-notification/v2_user_notification_required_read.yaml
+  /v2/user-notification/postpone:
+    $ref: ./paths/user-notification/v2_user_notification_postpone.yaml
+  /v2/user-notification/mark-as-unread:
+    $ref: ./paths/user-notification/v2_user_notification_mark_as_unread.yaml
+  /v2/user-notification/mark-as-un-favorite:
+    $ref: ./paths/user-notification/v2_user_notification_mark_as_un_favorite.yaml
+  /v2/user-notification/mark-as-read:
+    $ref: ./paths/user-notification/v2_user_notification_mark_as_read.yaml
+  /v2/user-notification/mark-as-favorite:
+    $ref: ./paths/user-notification/v2_user_notification_mark_as_favorite.yaml
+  /v2/user-notification/mark-all-read:
+    $ref: ./paths/user-notification/v2_user_notification_mark_all_read.yaml
+  /v2/user-notification/important:
+    $ref: ./paths/user-notification/v2_user_notification_important.yaml
+  /v2/user-notification/get-page:
+    $ref: ./paths/user-notification/v2_user_notification_get_page.yaml
+  /v2/user-notification/execute/{id}:
+    $ref: ./paths/user-notification/v2_user_notification_execute_id.yaml
+  /v2/user-notification/execute-banner:
+    $ref: ./paths/user-notification/v2_user_notification_execute_banner.yaml
+  /v2/user-notification/execute-and-get-next-banner:
+    $ref: ./paths/user-notification/v2_user_notification_execute_and_get_next_banner.yaml
+  /v2/user-notification/create-zip:
+    $ref: ./paths/user-notification/v2_user_notification_create_zip.yaml
+  /v2/user-notification/category-count:
+    $ref: ./paths/user-notification/v2_user_notification_category_count.yaml
+  /v2/user-notification/banners:
+    $ref: ./paths/user-notification/v2_user_notification_banners.yaml
+  /user-notification/postpone:
+    $ref: ./paths/postpone/user_notification_postpone.yaml
+  /user-notification/mark-as-unread:
+    $ref: ./paths/mark-as-unread/user_notification_mark_as_unread.yaml
+  /user-notification/mark-as-read:
+    $ref: ./paths/mark-as-read/user_notification_mark_as_read.yaml
+  /user-notification/important:
+    $ref: ./paths/important/user_notification_important.yaml
+  /user-notification/get-page:
+    $ref: ./paths/get-page/user_notification_get_page.yaml
+  /user-notification/execute/{id}:
+    $ref: ./paths/execute/user_notification_execute_id.yaml
+  /user-notification/category-count:
+    $ref: ./paths/category-count/user_notification_category_count.yaml
+  /user-notification-system/get-page:
+    $ref: ./paths/get-page/user_notification_system_get_page.yaml
+  /notification/emailByExchange:
+    $ref: ./paths/emailByExchange/notification_emailByExchange.yaml
+  /v2/user-notification/{id}:
+    $ref: ./paths/user-notification/v2_user_notification_id.yaml
+  /v2/user-notification/print/{id}:
+    $ref: ./paths/user-notification/v2_user_notification_print_id.yaml
+  /v2/user-notification/first-banners:
+    $ref: ./paths/user-notification/v2_user_notification_first_banners.yaml
+  /v2/user-notification/count-not-read:
+    $ref: ./paths/user-notification/v2_user_notification_count_not_read.yaml
+  /v2/user-notification/close-panel:
+    $ref: ./paths/user-notification/v2_user_notification_close_panel.yaml
+  /user-notification/{id}:
+    $ref: ./paths/{id}/user_notification_id.yaml
+  /user-notification/count-not-read:
+    $ref: ./paths/count-not-read/user_notification_count_not_read.yaml
+  /user-notification-type/get-service-eco:
+    $ref: ./paths/get-service-eco/user_notification_type_get_service_eco.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/user-notification/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/user-notification/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/user-notification/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/user-notification/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/user-notification/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/user-notification/UniSignV2x1Dto.yaml
+    SignCommand:
+      $ref: ./components/schemas/user-notification/SignCommand.yaml
+    ActionDto:
+      $ref: ./components/schemas/common/ActionDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    GenericResponseSimpleErrorDataUserNotificationV2Dto:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataUserNotificationV2Dto.yaml
+    NotificationBankClientDto:
+      $ref: ./components/schemas/common/NotificationBankClientDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    UserNotificationAttachmentDto:
+      $ref: ./components/schemas/common/UserNotificationAttachmentDto.yaml
+    UserNotificationSignatureDto:
+      $ref: ./components/schemas/common/UserNotificationSignatureDto.yaml
+    UserNotificationSystemDto:
+      $ref: ./components/schemas/common/UserNotificationSystemDto.yaml
+    UserNotificationTypeV2Dto:
+      $ref: ./components/schemas/common/UserNotificationTypeV2Dto.yaml
+    UserNotificationV2Dto:
+      $ref: ./components/schemas/common/UserNotificationV2Dto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBlockServiceDto:
+      $ref: ./components/schemas/user-notification/FilterValueEnumDtoBlockServiceDto.yaml
+    GetPageCommandUserNotificationFilterV2:
+      $ref: ./components/schemas/user-notification/GetPageCommandUserNotificationFilterV2.yaml
+    PageParamsUserNotificationFilterV2:
+      $ref: ./components/schemas/user-notification/PageParamsUserNotificationFilterV2.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UserNotificationCodeFilter:
+      $ref: ./components/schemas/common/UserNotificationCodeFilter.yaml
+    UserNotificationExecutionStatusFilter:
+      $ref: ./components/schemas/common/UserNotificationExecutionStatusFilter.yaml
+    UserNotificationFilterV2:
+      $ref: ./components/schemas/user-notification/UserNotificationFilterV2.yaml
+    UserNotificationImportanceFilter:
+      $ref: ./components/schemas/common/UserNotificationImportanceFilter.yaml
+    UserNotificationStatusFilter:
+      $ref: ./components/schemas/common/UserNotificationStatusFilter.yaml
+    PageDataUserNotificationV2Dto:
+      $ref: ./components/schemas/common/PageDataUserNotificationV2Dto.yaml
+    PostponeCommand:
+      $ref: ./components/schemas/common/PostponeCommand.yaml
+    ActionBanner:
+      $ref: ./components/schemas/user-notification/ActionBanner.yaml
+    ZipAttachmentCreateDto:
+      $ref: ./components/schemas/user-notification/ZipAttachmentCreateDto.yaml
+    GenericResponseSimpleErrorDataUserNotificationAttachmentDto:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataUserNotificationAttachmentDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataCategoryResponse:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataCategoryResponse.yaml
+    SingleResponseUserNotificationV2Dto:
+      $ref: ./components/schemas/common/SingleResponseUserNotificationV2Dto.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/common/ListCommandUUID.yaml
+    GetPageCommandUserNotificationFilter:
+      $ref: ./components/schemas/common/GetPageCommandUserNotificationFilter.yaml
+    PageParamsUserNotificationFilter:
+      $ref: ./components/schemas/common/PageParamsUserNotificationFilter.yaml
+    UserNotificationFilter:
+      $ref: ./components/schemas/common/UserNotificationFilter.yaml
+    PageDataUserNotificationInfoDto:
+      $ref: ./components/schemas/important/PageDataUserNotificationInfoDto.yaml
+    UserNotificationInfoDto:
+      $ref: ./components/schemas/important/UserNotificationInfoDto.yaml
+    SingleResponseCategoryResponse:
+      $ref: ./components/schemas/category-count/SingleResponseCategoryResponse.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/get-page/FilterValueDtoInstant.yaml
+    GetPageCommandUserNotificationSystemFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandUserNotificationSystemFilter.yaml
+    PageParamsUserNotificationSystemFilter:
+      $ref: ./components/schemas/get-page/PageParamsUserNotificationSystemFilter.yaml
+    UserNotificationSystemFilter:
+      $ref: ./components/schemas/get-page/UserNotificationSystemFilter.yaml
+    PageDataUserNotificationSystemDto:
+      $ref: ./components/schemas/get-page/PageDataUserNotificationSystemDto.yaml
+    AttachmentDto:
+      $ref: ./components/schemas/emailByExchange/AttachmentDto.yaml
+    NotificationMessageDto:
+      $ref: ./components/schemas/emailByExchange/NotificationMessageDto.yaml
+    NotificationRequestDto:
+      $ref: ./components/schemas/emailByExchange/NotificationRequestDto.yaml
+    ListResponseNotificationResponseDto:
+      $ref: ./components/schemas/emailByExchange/ListResponseNotificationResponseDto.yaml
+    NotificationResponseDto:
+      $ref: ./components/schemas/emailByExchange/NotificationResponseDto.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/user-notification/PrintResponse.yaml
+    GenericResponseSimpleErrorDataMapStringUserNotificationV2Dto:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataMapStringUserNotificationV2Dto.yaml
+    GenericResponseSimpleErrorDataUserNotificationsCount:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataUserNotificationsCount.yaml
+    UserNotificationsCount:
+      $ref: ./components/schemas/common/UserNotificationsCount.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataVoid.yaml
+    SingleResponseUserNotificationsCount:
+      $ref: ./components/schemas/count-not-read/SingleResponseUserNotificationsCount.yaml
+    GenericResponseSimpleErrorDataListServiceEcoDto:
+      $ref: ./components/schemas/get-service-eco/GenericResponseSimpleErrorDataListServiceEcoDto.yaml
+    HeaderDto:
+      $ref: ./components/schemas/get-service-eco/HeaderDto.yaml
+    ServiceEcoDto:
+      $ref: ./components/schemas/get-service-eco/ServiceEcoDto.yaml

@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: BC.CLIENT.BATCHBLOCKING.CREATE, BC.CLIENT.BATCHBLOCKING.EDIT'
+  operationId: createRequestOnBatchBlockCard
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/blocking/GenericCommandBatchBlockCardRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/blocking/GenericResponseSimpleErrorDataResponseWithValidationResultDtoBatchBlockCardRequestDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Создание/редактирование пакета заявок на блокировку карт
+  tags:
+  - API для пакета заявок на блокировку карт

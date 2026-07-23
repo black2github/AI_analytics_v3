@@ -1,0 +1,19 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес АДМ
+  branchName:
+    type: string
+    description: Наименование подразделения
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  isProvidedByBank:
+    type: boolean
+    description: Устройство предоставлено банком/клиентом
+  mainTID:
+    type: string
+    description: Мастер TID
+description: Информация об АДМ

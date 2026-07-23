@@ -1,0 +1,17 @@
+type: object
+description: Ответ на запрос подписки организации на профиль
+properties:
+  status:
+    type: string
+    description: Статус инициализации подписки организации на профиль
+    enum:
+    - SUCCESS
+    - ERROR
+  clientProfiles:
+    type: array
+    description: Список профилей клиента автокотирования
+    items:
+      $ref: ./AutoquotingClientProfileRspDto.yaml
+required:
+- clientProfiles
+- status

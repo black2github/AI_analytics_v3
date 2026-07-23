@@ -1,0 +1,14 @@
+required:
+- docIds
+type: object
+properties:
+  docIds:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+  params:
+    $ref: ./PageParamsEmployeeRequestBankScrollerFilter.yaml
+description: Запрос на создание ПФ для выбранной заявки

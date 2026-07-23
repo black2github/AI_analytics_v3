@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml

@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  result:
+    maximum: 5
+    minimum: 1
+    type: integer
+    description: Оценка пользователя
+    format: int32
+  hashtagName:
+    maxLength: 50
+    type: string
+    description: Значение хештега
+description: DTO с данными хештега

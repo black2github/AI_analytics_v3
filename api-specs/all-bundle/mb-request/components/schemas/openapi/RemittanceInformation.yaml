@@ -1,0 +1,13 @@
+type: object
+properties:
+  unstructured:
+    type: string
+  ReferredDocumentInformation:
+    type: array
+    items:
+      $ref: ./ReferredDocumentInformation.yaml
+  CreditorReferenceInformation:
+    $ref: ./CreditorReferenceInformation.yaml
+  TaxRemittance:
+    $ref: ./TaxInformation.yaml
+description: Назначение платежа. Предоставляемая информация, позволяющая сопоставить запись с позициями, для которых предназначен перевод

@@ -1,0 +1,13 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  codes:
+    type: array
+    description: Коды настроек
+    items:
+      type: string
+      description: Коды настроек
+description: Запрос получения пользовательских настроек

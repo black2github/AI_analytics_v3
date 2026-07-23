@@ -1,0 +1,63 @@
+required:
+- createdAt
+- id
+- importDocumentType
+- signedFileImport
+- userFio
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: ID Файл импорта/фонового процесса импорта
+    format: uuid
+  historyOperationDate:
+    type: string
+    description: Дата истории операции
+    format: date-time
+  infoForClient:
+    type: string
+    description: Информация для клиента
+  infoForBank:
+    type: string
+    description: Информация для банка
+  userId:
+    type: string
+    description: ID "Пользователь"
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО Пользователя
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  docCount:
+    type: integer
+    description: Количество документов в исходном файле
+    format: int64
+  docCreatedCount:
+    type: integer
+    description: Создано документов
+    format: int64
+  importDocumentType:
+    $ref: ./AccessDocumentPaymentTypeClassifierDto.yaml
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Множество ID "Клиент Банка"
+    items:
+      type: string
+      description: Множество ID "Клиент Банка"
+      format: uuid
+  bankClient:
+    $ref: ./UnitedFileImportBankClientInfoDto.yaml
+  signatureInfos:
+    type: array
+    description: Данные о подписантах
+    items:
+      $ref: ./UnitedSignerDataDto.yaml
+  signedFileImport:
+    type: boolean
+    description: Признак импорт подписанного/неподписанного файла
+description: Файл импорта/фоновый процесс импорта

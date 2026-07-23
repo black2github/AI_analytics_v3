@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Автоматическое создание OpenApi спецификации для сервиса
+  description: 'Привилегии: OPEN_API_SPEC_UPDATE'
+  operationId: discoverOne
+  parameters:
+  - name: serviceId
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataString.yaml

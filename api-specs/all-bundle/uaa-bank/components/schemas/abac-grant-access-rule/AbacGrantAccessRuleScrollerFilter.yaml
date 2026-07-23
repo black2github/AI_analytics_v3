@@ -1,0 +1,48 @@
+type: object
+properties:
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstName:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  entityType:
+    $ref: ./FilterValueEnumDtoAbacGranAccessRuleEntityTypeDto.yaml
+  entityValue:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - EXECUTED
+    - TO_EXECUTE
+    - CANCELED
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  fullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  shortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  absId:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера для "Правила предоставления доступа по реквизиту"

@@ -1,0 +1,10 @@
+type: object
+properties:
+  accountIds:
+    type: array
+    description: Идентификаторы счетов
+    items:
+      type: integer
+      description: Идентификаторы счетов
+      format: int64
+description: Функция получения ограничений по счетам. Входящие параметры функции

@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  additionalBankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientKpp:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientFullName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  lastName:
+    $ref: ./FilterValueDtoString.yaml
+  firstName:
+    $ref: ./FilterValueDtoString.yaml
+  patronymic:
+    $ref: ./FilterValueDtoString.yaml
+  fullName:
+    $ref: ./FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ./FilterValueDtoString.yaml
+  email:
+    $ref: ./FilterValueDtoString.yaml
+  remoteSource:
+    $ref: ./RemoteSourceDtoFilter.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  agreementProduct:
+    $ref: ./FilterValueEnumDtoProductTypeDto.yaml
+  agreementId:
+    $ref: ./FilterValueDtoUUID.yaml
+  manuallyCreated:
+    $ref: ./FilterValueDtoBoolean.yaml
+  textQuery:
+    type: string
+    description: Общая строка поиска по ФИО, email, телефону.
+  actual:
+    $ref: ./FilterValueDtoBoolean.yaml
+  actualV2:
+    $ref: ./FilterValueEnumDtoBankClientAuthorizedPersonActual.yaml
+  eskId:
+    $ref: ./FilterValueDtoString.yaml
+  authorityExpiredAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  accountAccessRestriction:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр УЛ

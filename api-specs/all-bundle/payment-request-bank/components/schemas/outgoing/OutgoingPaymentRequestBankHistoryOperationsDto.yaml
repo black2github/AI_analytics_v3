@@ -1,0 +1,8 @@
+type: object
+properties:
+  bankStatus:
+    type: string
+    description: Статус документа
+  operation:
+    $ref: ./OutgoingPaymentRequestStatusOperationDto.yaml
+description: Вкладка история операций для платежного требования исходящее (эф Банка)

@@ -1,0 +1,35 @@
+required:
+- deviceDigitalPrint
+- documentStatuses
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID файла импорта
+    format: uuid
+  documentStatuses:
+    type: array
+    description: Документы файла импорта
+    items:
+      type: string
+      description: Документы файла импорта
+      enum:
+      - IMPORTED_ERROR
+      - IMPORTED_CORRECT
+      - IMPORTED_WARNING
+      - IMPORTED_SIGNED
+      - IMPORTED_SIGNED1
+      - IMPORTED_SIGNED2
+      - IMPORTED_FLK_ERROR
+      - IMPORTED_ACCESS_ERROR
+  macAddress:
+    type: array
+    description: MAC адрес устройства пользователя
+    items:
+      type: string
+      description: MAC адрес устройства пользователя
+  deviceDigitalPrint:
+    type: string
+    description: Цифровой отпечаток компьютера, с которого был осуществлен вход АС Экосистема (ДБО ЮЛ)
+description: '[Импорт ПЭД] Система: Функция завершения импорта (метод). Входящие параметры.'

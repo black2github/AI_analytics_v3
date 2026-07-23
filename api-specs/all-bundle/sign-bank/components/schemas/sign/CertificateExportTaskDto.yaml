@@ -1,0 +1,77 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  destination:
+    type: string
+    description: Система в которую осуществляется выгрузка
+    enum:
+    - DBO17
+    - H2H
+  status:
+    type: string
+    description: Статус выгрузки
+    enum:
+    - WAIT_EXPORT
+    - ERROR
+    - AUTO_ATTEMPTS_STOPPED
+    - SUCCESS
+  errorDescription:
+    type: string
+    description: Описание последней ошибки выгрузки
+  exportAttempts:
+    type: integer
+    description: Количество попыток выгрузки
+    format: int32
+  bankClientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  clientAbsId:
+    type: string
+    description: ID клиента в РКО Ф1
+  userAbsId:
+    type: string
+    description: ID физлица в РКО Ф1
+  cn:
+    type: string
+    description: ФИО владельца сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  country:
+    type: string
+    description: Страна
+  region:
+    type: string
+    description: Регион
+  locality:
+    type: string
+    description: Населенный пункт
+  orgName:
+    type: string
+    description: Название организации
+  ogrn:
+    type: string
+    description: ОГРН
+  ogrnip:
+    type: string
+    description: ОГРНИП
+  inn:
+    type: string
+    description: ИНН
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+description: Журнал выгрузки сертификата

@@ -1,0 +1,33 @@
+type: object
+description: Ответа на запрос статуса операций B2C.
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБП Gate Master System
+  type:
+    type: string
+    description: Тип операции
+  status:
+    type: string
+    description: Статус операции
+  docType:
+    type: string
+    description: Тип документа
+  guid:
+    type: string
+    description: GUID из исходного запроса
+  fpMessageId:
+    type: string
+    description: ID запроса из НСПК
+  sign:
+    type: string
+    description: Подпись сообщения
+  requestSign:
+    type: string
+    description: Подпись входящего запроса

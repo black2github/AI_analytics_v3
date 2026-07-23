@@ -1,0 +1,10 @@
+type: object
+properties:
+  dateRegistration:
+    type: string
+    description: Дата подключения
+    format: date
+  individualTerms:
+    type: boolean
+    description: Наличие индивидуальных условий
+description: Ответ с информацией о подключаемом тарифе в F1

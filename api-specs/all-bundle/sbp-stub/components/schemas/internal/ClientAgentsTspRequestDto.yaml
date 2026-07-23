@@ -1,0 +1,15 @@
+type: object
+description: Запрос списка агентов, подключенных к клиенту
+properties:
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ/ИП – клиента Банка в СБП
+  ogrn:
+    type: string
+    description: ОГРН Клиента Банка
+  guid:
+    type: string
+    description: GUID, идентификатор BSS
+  docType:
+    type: string
+    description: Тип документа

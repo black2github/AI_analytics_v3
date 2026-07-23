@@ -1,0 +1,64 @@
+post:
+  description: 'Привилегии: CLOSING_ACCOUNT.REQUEST_CREATE,ACCOUNT_CLOSING.CLIENT.REQUEST_CREATE'
+  operationId: isValidSignerForAccounts
+  parameters:
+  - in: query
+    name: accountNumbers
+    required: true
+    schema:
+      uniqueItems: true
+      type: array
+      items:
+        type: string
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/signers/GenericResponseSimpleErrorDataSignersResponse.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Проверка того, что текущий опльзователь является подписантом по переданным счетам
+  tags:
+  - API для первого контроля группы 0.

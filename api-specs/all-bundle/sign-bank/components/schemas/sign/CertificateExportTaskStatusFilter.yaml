@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - WAIT_EXPORT
+    - ERROR
+    - AUTO_ATTEMPTS_STOPPED
+    - SUCCESS
+  notEq:
+    type: string
+    enum:
+    - WAIT_EXPORT
+    - ERROR
+    - AUTO_ATTEMPTS_STOPPED
+    - SUCCESS
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - WAIT_EXPORT
+      - ERROR
+      - AUTO_ATTEMPTS_STOPPED
+      - SUCCESS
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - WAIT_EXPORT
+      - ERROR
+      - AUTO_ATTEMPTS_STOPPED
+      - SUCCESS
+  isNull:
+    type: boolean
+description: Фильтр по статусу заданий на экспорт сертификатов во внешние системы

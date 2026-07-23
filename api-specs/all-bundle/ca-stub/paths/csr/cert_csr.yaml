@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API выпуска сертификатов
+  summary: Выпустить сертификат по CSR
+  operationId: issueCertByCsr
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/csr/GenericCommandCsrCertRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataCertDto.yaml

@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  notEq:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  in:
+    type: array
+    items:
+      type: string
+      description: ДТО Классификатор видов электронной подписи
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+      - MOBILE_QUALIFIED_SIGN
+  notIn:
+    type: array
+    items:
+      type: string
+      description: ДТО Классификатор видов электронной подписи
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+      - MOBILE_QUALIFIED_SIGN
+  isNull:
+    type: boolean
+description: Вид СЭП (eq/in)

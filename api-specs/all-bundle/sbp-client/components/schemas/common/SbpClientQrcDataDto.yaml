@@ -1,0 +1,51 @@
+type: object
+description: Реквизиты QR-кода для клиента
+properties:
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках. Обязателен при значении параметра «qrcType» = «02»
+  currency:
+    type: string
+    description: Валюта платежа
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  account:
+    type: string
+    description: Счет зачисления. Обязательно для заполнения, если qrcType = "01" или qrcType = "02"
+  accountId:
+    type: integer
+    format: int64
+    description: ID счета зачисления в Ф1.
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  merchantName:
+    type: string
+    description: Торговое название
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни Функциональной ссылки СБП в минутах
+required:
+- account
+- currency
+- merchantAddress
+- merchantId
+- merchantName
+- qrcType

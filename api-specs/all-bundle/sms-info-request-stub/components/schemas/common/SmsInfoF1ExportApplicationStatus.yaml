@@ -1,0 +1,6 @@
+type: string
+enum:
+- COMPLETED
+- REJECTED
+- ERROR
+- CANCELED

@@ -1,0 +1,31 @@
+required:
+- clientId
+- deviceId
+- publicKey
+- registrationType
+type: object
+properties:
+  deviceId:
+    type: string
+    description: Идентификатор мобильного устройства
+  clientId:
+    type: string
+    description: Идентификатор мобильного приложения
+  registrationType:
+    type: string
+    enum:
+    - PIN
+    - BIOMETRIC
+  publicKey:
+    type: string
+    description: Открытый ключ для расшифровки PIN-кода или кода успеха аутентификации по биометрическим данным
+  pin:
+    type: string
+    description: PIN-код
+  mobileSdkData:
+    type: string
+    description: Данные, полученные с мобильного устройства
+  userEnvironment:
+    type: string
+    description: Информация об окружении пользователя
+description: ДТО регистрации биометрии и PIN-кода в профиле пользователя

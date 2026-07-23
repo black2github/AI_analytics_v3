@@ -1,0 +1,12 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: Customer inn
+  name:
+    type: string
+    description: Customer name
+  accountNumber:
+    type: string
+    description: Customer account number
+description: Government contract customer information.

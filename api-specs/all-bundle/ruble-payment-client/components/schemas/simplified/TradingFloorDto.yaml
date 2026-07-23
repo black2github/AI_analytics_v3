@@ -1,0 +1,7 @@
+type: string
+description: Тип контроля
+enum:
+- MB
+- VNB
+- SPB
+- FORTS

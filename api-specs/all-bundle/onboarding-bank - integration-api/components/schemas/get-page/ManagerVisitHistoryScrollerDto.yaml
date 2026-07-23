@@ -1,0 +1,6 @@
+type: object
+properties:
+  comment:
+    type: string
+    description: Комментарий
+description: История выездов менеджеров к клиенту по заявке на открытие первого счета на скроллере

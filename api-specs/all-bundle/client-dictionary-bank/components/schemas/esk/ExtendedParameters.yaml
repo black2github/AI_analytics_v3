@@ -1,0 +1,6 @@
+type: object
+properties:
+  hasDepositoryService:
+    type: boolean
+    description: Признак наличия у клиента депозитарного обслуживания.
+description: Дополнительные параметры.

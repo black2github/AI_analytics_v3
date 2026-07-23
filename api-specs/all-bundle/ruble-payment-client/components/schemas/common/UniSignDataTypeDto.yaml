@@ -1,0 +1,5 @@
+type: string
+description: Тип подписываемых данных
+enum:
+- DOCUMENT
+- ATTACHMENT

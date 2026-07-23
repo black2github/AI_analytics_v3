@@ -1,0 +1,23 @@
+required:
+- inn
+- legalName
+- ogrn
+- recalledProcessGUID
+type: object
+properties:
+  recalledProcessGUID:
+    type: string
+    description: ProcessGUID отзываемого запроса
+    format: uuid
+  ogrn:
+    type: string
+    description: ОГРН/ОРГНИП
+  inn:
+    type: string
+    description: ИНН организации/ИП
+  kpp:
+    type: string
+    description: КПП организации
+  legalName:
+    type: string
+    description: Наименование организации/ИП

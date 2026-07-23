@@ -1,0 +1,19 @@
+required:
+- code
+- name
+type: object
+properties:
+  code:
+    type: string
+    description: Код категории
+  id:
+    type: string
+    description: Идентификатор категории.
+    format: uuid
+  name:
+    type: string
+    description: Наименование категории
+  nameEn:
+    type: string
+    description: Наименование категории на английском
+description: Категория ДСФ. Возвращаемая скроллером ДТО

@@ -1,0 +1,9 @@
+type: object
+description: Информация о доступных пользователю действиях с заявкой на блокировку Qr-кода
+properties:
+  viewQr:
+    type: boolean
+    description: Признак возможности просмотра QR
+  view:
+    type: boolean
+    description: Признак возможности просмотра

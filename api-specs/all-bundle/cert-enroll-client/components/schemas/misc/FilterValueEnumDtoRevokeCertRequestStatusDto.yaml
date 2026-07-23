@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NEW
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NEW
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+description: Статус (=, !=)

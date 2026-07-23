@@ -1,0 +1,58 @@
+type: object
+description: Фильтр скроллера типов ДСФ.
+properties:
+  archived:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Архивный тип документа. Полное совпадение.
+  category:
+    type: string
+    description: Фильтрация по категориям. Обязательный параметр. Полное совпадение.
+    enum:
+    - ALL
+    - TO_BANK
+    - FROM_BANK
+  code:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код типа письма. Группа фильтров.
+  crmProductType:
+    $ref: ./DsfTypeProductTypeFilter.yaml
+    description: Фильтрация по типам продуктов ЦРМ. Мультивыбор.
+  detachFromBank:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак наличия aвтооткрепления вложений для писем из Банка. Полное совпадение.
+  isReply:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак ответного письма. Полное совпадение.
+  letterType:
+    $ref: ./FilterValueDtoString.yaml
+    description: Фильтрация по типам. Группа фильтров.
+  massMailing:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак использования для массовой рассылки. Полное совпадение.
+  needMailing:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак необходимости рассылки из каталога. Полное совпадение.
+  redirectOnly:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак использования параметра "Создание только из других сервисов". Полное совпадение.
+  replyTypeClass:
+    $ref: ./DsfTypeClassFilter.yaml
+    description: Класс ответного документа. Полное совпадение.
+  selectedBankClientId:
+    type: string
+    format: uuid
+    description: Для выбранной организации. Накладываются дополнительные ограничения на "Классификатор типов писем"
+  signatoryGroupName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Название группы подписантов. Полное совпадение.
+  textQuery:
+    type: string
+    description: Общая строка поиска. Поиск по "Наименование типа" ИЛИ "Код типа письма" частичное совпадение
+    maxLength: 255
+    minLength: 0
+  typeClass:
+    $ref: ./DsfTypeClassFilter.yaml
+    description: Класс документа. Группа фильтров.
+  useCheckingAccount:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак использования параметра "Расчетный счет". Полное совпадение.

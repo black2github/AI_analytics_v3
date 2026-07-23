@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+description: Представление результата создания заявки на открытие брокерского счета

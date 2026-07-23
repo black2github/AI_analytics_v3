@@ -1,0 +1,223 @@
+openapi: 3.0.1
+info:
+  title: Сервис заявки на открытие 2+ счета. Банковская часть
+  version: 3.4.0
+servers:
+- url: /opening-request-bank
+security:
+- bearerAuth: []
+paths:
+  /united-request/get-page:
+    $ref: ./paths/get-page/united_request_get_page.yaml
+  /united-request/export-list:
+    $ref: ./paths/export-list/united_request_export_list.yaml
+  /united-request/category:
+    $ref: ./paths/category/united_request_category.yaml
+  /request/validate-sign:
+    $ref: ./paths/validate-sign/request_validate_sign.yaml
+  /request/print-list-request-open-accounts:
+    $ref: ./paths/print-list-request-open-accounts/request_print_list_request_open_accounts.yaml
+  /request/print-info-open-accounts:
+    $ref: ./paths/print-info-open-accounts/request_print_info_open_accounts.yaml
+  /request/print-claim-rules-goz:
+    $ref: ./paths/print-claim-rules-goz/request_print_claim_rules_goz.yaml
+  /request/print-claim-open-accounts:
+    $ref: ./paths/print-claim-open-accounts/request_print_claim_open_accounts.yaml
+  /request/export-sign:
+    $ref: ./paths/export-sign/request_export_sign.yaml
+  /request/export-list-request-open-accounts:
+    $ref: ./paths/export-list-request-open-accounts/request_export_list_request_open_accounts.yaml
+  /request/export-info-open-accounts:
+    $ref: ./paths/export-info-open-accounts/request_export_info_open_accounts.yaml
+  /request/export-claim-rules-goz:
+    $ref: ./paths/export-claim-rules-goz/request_export_claim_rules_goz.yaml
+  /request/export-claim-open-accounts:
+    $ref: ./paths/export-claim-open-accounts/request_export_claim_open_accounts.yaml
+  /account-opening-contract/to-executed-by-tessa/{id}:
+    $ref: ./paths/to-executed-by-tessa/account_opening_contract_to_executed_by_tessa_id.yaml
+  /account-opening-contract/send-to-tessa:
+    $ref: ./paths/send-to-tessa/account_opening_contract_send_to_tessa.yaml
+  /account-opening-contract/send-to-knosis:
+    $ref: ./paths/send-to-knosis/account_opening_contract_send_to_knosis.yaml
+  /account-opening-contract/send-to-f1:
+    $ref: ./paths/send-to-f1/account_opening_contract_send_to_f1.yaml
+  /account-opening-contract/send-to-esk:
+    $ref: ./paths/send-to-esk/account_opening_contract_send_to_esk.yaml
+  /account-opening-contract/reject/{id}:
+    $ref: ./paths/reject/account_opening_contract_reject_id.yaml
+  /account-opening-contract/export:
+    $ref: ./paths/export/account_opening_contract_export.yaml
+  /account-opening-contract/export-sign:
+    $ref: ./paths/export-sign/account_opening_contract_export_sign.yaml
+  /request/{id}:
+    $ref: ./paths/{id}/request_id.yaml
+  /request/history/{id}:
+    $ref: ./paths/history/request_history_id.yaml
+  /integration/account-opening-contract/{id}:
+    $ref: ./paths/account-opening-contract/integration_account_opening_contract_id.yaml
+  /account-opening-contract/{id}:
+    $ref: ./paths/{id}/account_opening_contract_id.yaml
+  /account-opening-contract/history/{id}:
+    $ref: ./paths/history/account_opening_contract_history_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandUnitedRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandUnitedRequestBankFilter.yaml
+    PageParamsUnitedRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsUnitedRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UnitedRequestAccountTypeCodeFilter:
+      $ref: ./components/schemas/common/UnitedRequestAccountTypeCodeFilter.yaml
+    UnitedRequestBankFilter:
+      $ref: ./components/schemas/common/UnitedRequestBankFilter.yaml
+    UnitedRequestStatusFilter:
+      $ref: ./components/schemas/common/UnitedRequestStatusFilter.yaml
+    PageDataUnitedRequestBankDto:
+      $ref: ./components/schemas/get-page/PageDataUnitedRequestBankDto.yaml
+    UnitedAccountDto:
+      $ref: ./components/schemas/get-page/UnitedAccountDto.yaml
+    UnitedBankClientDto:
+      $ref: ./components/schemas/get-page/UnitedBankClientDto.yaml
+    UnitedBranchDto:
+      $ref: ./components/schemas/get-page/UnitedBranchDto.yaml
+    UnitedMultiAccountContractDto:
+      $ref: ./components/schemas/get-page/UnitedMultiAccountContractDto.yaml
+    UnitedOpenedAccountDto:
+      $ref: ./components/schemas/get-page/UnitedOpenedAccountDto.yaml
+    UnitedRequestBankDto:
+      $ref: ./components/schemas/get-page/UnitedRequestBankDto.yaml
+    PrintCommandUUID:
+      $ref: ./components/schemas/export-list/PrintCommandUUID.yaml
+    PrintRequestDtoUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoUUID.yaml
+    AccountOpeningContractAttachmentInfoDto:
+      $ref: ./components/schemas/common/AccountOpeningContractAttachmentInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    AccountInfoDto:
+      $ref: ./components/schemas/common/AccountInfoDto.yaml
+    AccountOpeningRequestDto:
+      $ref: ./components/schemas/common/AccountOpeningRequestDto.yaml
+    AccountOpeningRequestSignatureDto:
+      $ref: ./components/schemas/common/AccountOpeningRequestSignatureDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    BankClientDto:
+      $ref: ./components/schemas/common/BankClientDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CommissionAccountDto:
+      $ref: ./components/schemas/common/CommissionAccountDto.yaml
+    ContractDto:
+      $ref: ./components/schemas/common/ContractDto.yaml
+    DocumentDto:
+      $ref: ./components/schemas/common/DocumentDto.yaml
+    GovContractCustomerInfoDto:
+      $ref: ./components/schemas/common/GovContractCustomerInfoDto.yaml
+    GovContractInfoDto:
+      $ref: ./components/schemas/common/GovContractInfoDto.yaml
+    OpenedAccountDto:
+      $ref: ./components/schemas/common/OpenedAccountDto.yaml
+    OpeningAccountInfoDto:
+      $ref: ./components/schemas/common/OpeningAccountInfoDto.yaml
+    OpopAccountDto:
+      $ref: ./components/schemas/common/OpopAccountDto.yaml
+    ReservedAccountDto:
+      $ref: ./components/schemas/common/ReservedAccountDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SingleResponseAccountOpeningRequestDto:
+      $ref: ./components/schemas/common/SingleResponseAccountOpeningRequestDto.yaml
+    SingleCommandPrintRequestDtoUUID:
+      $ref: ./components/schemas/common/SingleCommandPrintRequestDtoUUID.yaml
+    ListResponseAccountOpeningContractAttachmentInfoDto:
+      $ref: ./components/schemas/common/ListResponseAccountOpeningContractAttachmentInfoDto.yaml
+    CommentDto:
+      $ref: ./components/schemas/common/CommentDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/common/SingleCommandCommentDto.yaml
+    AccountDto:
+      $ref: ./components/schemas/common/AccountDto.yaml
+    AccountOpeningContractBankClientDto:
+      $ref: ./components/schemas/common/AccountOpeningContractBankClientDto.yaml
+    AccountOpeningContractBranchDto:
+      $ref: ./components/schemas/common/AccountOpeningContractBranchDto.yaml
+    AccountOpeningContractOpenedAccountDto:
+      $ref: ./components/schemas/common/AccountOpeningContractOpenedAccountDto.yaml
+    AccountOpeningContractRequestDocumentDto:
+      $ref: ./components/schemas/common/AccountOpeningContractRequestDocumentDto.yaml
+    AccountOpeningContractRequestDto:
+      $ref: ./components/schemas/common/AccountOpeningContractRequestDto.yaml
+    AccountOpeningContractRequestSignatureDto:
+      $ref: ./components/schemas/common/AccountOpeningContractRequestSignatureDto.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/common/AgreementsDto.yaml
+    BankAccountContractDto:
+      $ref: ./components/schemas/common/BankAccountContractDto.yaml
+    CommissionDto:
+      $ref: ./components/schemas/common/CommissionDto.yaml
+    GozContractCustomerDto:
+      $ref: ./components/schemas/common/GozContractCustomerDto.yaml
+    GozContractDto:
+      $ref: ./components/schemas/common/GozContractDto.yaml
+    MultiAccountContractDto:
+      $ref: ./components/schemas/common/MultiAccountContractDto.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    QrcCommissionPaymentDto:
+      $ref: ./components/schemas/common/QrcCommissionPaymentDto.yaml
+    RequestExecutionDataDto:
+      $ref: ./components/schemas/common/RequestExecutionDataDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    SingleResponseAccountOpeningContractRequestDto:
+      $ref: ./components/schemas/common/SingleResponseAccountOpeningContractRequestDto.yaml
+    AccountOpeningContractExportToFileDto:
+      $ref: ./components/schemas/export/AccountOpeningContractExportToFileDto.yaml
+    SingleCommandAccountOpeningContractExportToFileDto:
+      $ref: ./components/schemas/export/SingleCommandAccountOpeningContractExportToFileDto.yaml
+    SingleResponseAccountOpeningContractAttachmentInfoDto:
+      $ref: ./components/schemas/export/SingleResponseAccountOpeningContractAttachmentInfoDto.yaml
+    AccountOpeningRequestHistoryDto:
+      $ref: ./components/schemas/history/AccountOpeningRequestHistoryDto.yaml
+    ListResponseAccountOpeningRequestHistoryDto:
+      $ref: ./components/schemas/history/ListResponseAccountOpeningRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataAccountOpeningContractRequestDto:
+      $ref: ./components/schemas/account-opening-contract/GenericResponseSimpleErrorDataAccountOpeningContractRequestDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/account-opening-contract/SimpleErrorData.yaml
+    AccountOpeningContractRequestHistoryDto:
+      $ref: ./components/schemas/history/AccountOpeningContractRequestHistoryDto.yaml
+    ListResponseAccountOpeningContractRequestHistoryDto:
+      $ref: ./components/schemas/history/ListResponseAccountOpeningContractRequestHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

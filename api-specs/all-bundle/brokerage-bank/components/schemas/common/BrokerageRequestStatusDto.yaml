@@ -1,0 +1,9 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Значение статуса запроса
+  description:
+    type: string
+    description: Описание статуса запроса
+description: Статус запроса

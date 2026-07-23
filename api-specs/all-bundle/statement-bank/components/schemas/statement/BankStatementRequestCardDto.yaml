@@ -1,0 +1,136 @@
+type: object
+properties:
+  periodType:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  periodStart:
+    type: string
+    format: date
+  periodEnd:
+    type: string
+    format: date
+  accounts:
+    type: array
+    items:
+      $ref: ../common/AccountCard.yaml
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  documentOptionsDto:
+    $ref: ./DocumentOptionsDto.yaml
+  hideEmptyTurnovers:
+    type: boolean
+  separateAccountsFiles:
+    type: boolean
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  signNeeded:
+    type: boolean
+  packageOfDocuments:
+    type: boolean
+  onlyStatementDocuments:
+    type: boolean
+  commentForBank:
+    type: string
+  action:
+    type: string
+    enum:
+    - DOWNLOAD
+    - PRINT
+    - VIEW
+    - REQUEST_HISTORY
+    - EXPORT
+    - SEND_TO_EMAIL
+  userId:
+    type: string
+    format: uuid
+  user:
+    $ref: ./UserCard.yaml
+  statementRequestStatus:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - FILE
+    - VIEW
+    - WAIT_RESPONSE
+    - SNAPSHOT_REQUESTED
+    - FILE_REQUESTED
+    - EXECUTED
+    - DENIED
+    - CANCELED
+  statementRequestId:
+    type: string
+    format: uuid
+  statementStatus:
+    type: string
+    enum:
+    - NOT_EXECUTED
+    - EXECUTED
+    - ERROR
+    - NOT_RELEVANT
+  statementId:
+    type: string
+    format: uuid
+  statementRequestCreatedAt:
+    type: string
+    format: date-time
+  makeFileStatement:
+    type: boolean
+  reportType:
+    type: string
+    enum:
+    - STATEMENT_AND_DOCUMENTS
+    - DOCUMENTS
+  templateDocumentType:
+    type: string
+    enum:
+    - ONE_FILE
+    - SEPARATE_ACCOUNT_FILE
+    - SEPARATE_FILES
+  withDataMT:
+    type: boolean
+description: Данные

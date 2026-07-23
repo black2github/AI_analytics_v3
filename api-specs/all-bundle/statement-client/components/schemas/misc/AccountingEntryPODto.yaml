@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  payerAccountNumber:
+    type: string
+  payeeAccountNumber:
+    type: string
+  payeeName:
+    type: string
+  payeeInn:
+    type: string
+  payeeKpp:
+    type: string
+  payeeBankName:
+    type: string
+  payeeBankBic:
+    type: string
+  payeeCorrAccountNumber:
+    type: string
+  payerBankCity:
+    type: string
+  amount:
+    type: number
+  paymentPurpose:
+    type: string
+  paymentCode:
+    type: string
+  orderPurposeCode:
+    type: string
+  taxPaymentType:
+    type: string
+  orderPriority:
+    type: string
+  orderSendType:
+    type: string
+  documentTypeCode:
+    type: string
+  paySheetDrawerStatus:
+    type: string
+  taxPaymentPurpose:
+    type: string
+  taxPeriod:
+    type: string
+  bcCode:
+    type: string
+  oktmoCode:
+    type: string
+  taxDocumentNumber:
+    type: string
+  taxDocumentDate:
+    type: string
+description: Данные

@@ -1,0 +1,16 @@
+type: object
+properties:
+  filter:
+    $ref: ./SbpTransactionFilterV3BankDto.yaml
+    description: Фильтр
+  sort:
+    $ref: ./Sort.yaml
+    description: Сортировка по одному полю
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ./Sort.yaml
+  paging:
+    $ref: ./Paging.yaml
+    description: Пагинация

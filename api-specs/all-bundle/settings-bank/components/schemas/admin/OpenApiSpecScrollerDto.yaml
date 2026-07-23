@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID спецификации
+    format: uuid
+  code:
+    type: string
+    description: Код спецификации
+  name:
+    type: string
+    description: Наименование спецификации
+  category:
+    type: string
+    description: Категория спецификации
+    enum:
+    - INPUT
+    - OUTPUT
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время изменения
+    format: date-time
+  externalUrl:
+    type: string
+    description: Url спецификации
+  updatedBy:
+    type: string
+    description: ID пользователя который изменил запись
+    format: uuid
+  updatedName:
+    type: string
+    description: Имя пользователя, который изменил запись
+  deleted:
+    type: boolean
+    description: Признак удаленной спецификации
+description: Спецификация OpenApi. Представление для скроллера

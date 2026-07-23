@@ -1,0 +1,133 @@
+required:
+- clientId
+- clientName
+- contractNumber
+- createdAt
+- currency
+- id
+- requestKind
+- requestNumber
+- requestSubtype
+- tradingFloorName
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+    format: uuid
+  contractNumber:
+    type: string
+    description: Номер договора клиента
+  contractBrief:
+    type: string
+    description: Краткое наименование договора
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  clientFullName:
+    type: string
+    description: Полное наименование организации
+  tradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка
+  tradingFloorName:
+    type: string
+    description: Локализованная торговая площадка
+  requestSubtype:
+    type: string
+    description: Подтип заявки
+    enum:
+    - OPERATION_SECURITIES
+    - OPERATION_QUICK
+    - OPERATION_REPO
+    - OPERATION_CANCEL_SECURITIES
+    - OPERATION_CANCEL_QUICK
+    - OPERATION_CANCEL_REPO
+  currency:
+    type: string
+    description: Код валюты
+  requestKind:
+    type: string
+    description: Вид сделки
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  amount:
+    type: string
+    description: Сумма
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  requestNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  isin:
+    type: string
+    description: Международный идентификационный код ценной бумаги
+  number:
+    type: string
+    description: Регистрационный номер ценной бумаги
+  ticker:
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    type: string
+    description: Эмитент ценной бумаги
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  secGuid:
+    type: string
+    description: GUID ЦБ
+  unitPrice:
+    type: string
+    description: Цена за штуку
+  quantity:
+    type: string
+    description: Количество ЦБ
+  signature:
+    $ref: ./BrokerageTradeOrderSignatureDto.yaml
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  hasLinked:
+    type: boolean
+    description: Наличие связанных поручений
+  attachmentId:
+    type: string
+    description: Идентификатор файла на ФС
+  source:
+    type: string
+    description: Источник торгового поручения
+    enum:
+    - BROKERAGE
+    - BRK_CRM
+  signingDeadline:
+    type: string
+    description: Крайний срок подписания документа
+    format: date-time
+  mode:
+    type: string
+    enum:
+    - SET_PRICE
+    - MARKET
+description: Транспортная сущность для просмотра записи о торговом поручении в скроллере

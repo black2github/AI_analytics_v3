@@ -1,0 +1,15 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  disclaimerType:
+    $ref: ./DisclaimerTypeFilter.yaml
+  serviceName:
+    $ref: ../common/FilterValueDtoString.yaml
+  searchInput:
+    $ref: ../common/FilterValueDtoString.yaml
+  displayedInUnauthorizedArea:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  statusCategory:
+    $ref: ./FilterValueDtoDisclaimerCategoryDto.yaml
+description: Фильтр дисклеймеров

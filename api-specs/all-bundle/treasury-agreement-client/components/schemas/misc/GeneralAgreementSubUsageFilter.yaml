@@ -1,0 +1,36 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - PARENT
+    - CHILD
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - PARENT
+    - CHILD
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - PARENT
+      - CHILD
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - PARENT
+      - CHILD
+  isNull:
+    type: boolean

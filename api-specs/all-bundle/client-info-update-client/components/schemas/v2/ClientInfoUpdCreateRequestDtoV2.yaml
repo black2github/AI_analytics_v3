@@ -1,0 +1,34 @@
+required:
+- notificationOfExecution
+type: object
+properties:
+  type:
+    type: string
+    description: Код типа субъекта обновления сведений
+    enum:
+    - CLIENT_AND_USERS
+    - CLIENT
+    - USER
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника, по которому обновляются сведения
+    format: uuid
+  userUaaId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  employeeEskId:
+    type: string
+    description: ЕСК ID сотрудника, по которому обновляются сведения
+  updatedData:
+    type: array
+    description: Обновляемые сведения Заявки на обновление сведений о клиенте
+    items:
+      $ref: ../common/ClientInfoUpdRequestUpdateDataDto.yaml
+  notificationOfExecution:
+    $ref: ../common/NotificationOfExecutionDto.yaml
+description: ДТО создания заявки на обновление сведений пользователя

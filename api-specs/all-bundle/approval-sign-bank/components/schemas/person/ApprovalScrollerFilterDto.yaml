@@ -1,0 +1,44 @@
+type: object
+properties:
+  kind:
+    type: string
+    description: Категория
+    deprecated: true
+    enum:
+    - F1
+    - TNF
+  category:
+    type: string
+    description: Категория
+    enum:
+    - F1
+    - TNF
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  companyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  approvePersonName:
+    $ref: ../common/FilterValueDtoString.yaml
+  f1Id:
+    $ref: ../common/FilterValueDtoLong.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAbsId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  approval:
+    $ref: ./FilterValueDtoBoolean.yaml
+  authorName:
+    $ref: ../common/FilterValueDtoString.yaml
+  authorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  editorName:
+    $ref: ../common/FilterValueDtoString.yaml
+  editorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр скроллеров журнала информации о визирующих лицах.

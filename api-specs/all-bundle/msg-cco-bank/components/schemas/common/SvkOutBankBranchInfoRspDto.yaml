@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID подразделения банка
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения банка
+description: Информация о подразделении

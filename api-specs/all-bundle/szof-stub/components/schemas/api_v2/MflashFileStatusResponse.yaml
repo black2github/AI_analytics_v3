@@ -1,0 +1,17 @@
+type: object
+properties:
+  subject:
+    type: string
+  code:
+    type: string
+  size:
+    type: integer
+    format: int64
+  flash_uuid:
+    type: string
+  flash_name:
+    type: string
+  status:
+    type: boolean
+  deleted:
+    type: string

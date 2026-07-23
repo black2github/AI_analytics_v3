@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUpdateDocCommonFilter.yaml
+description: Запрос страницы

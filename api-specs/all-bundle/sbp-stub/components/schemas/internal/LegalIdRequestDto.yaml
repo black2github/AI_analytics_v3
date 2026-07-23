@@ -1,0 +1,9 @@
+type: object
+description: Запрос данных клиента в АС СБП
+properties:
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН

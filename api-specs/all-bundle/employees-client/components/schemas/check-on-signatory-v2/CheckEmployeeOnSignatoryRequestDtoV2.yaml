@@ -1,0 +1,14 @@
+required:
+- bankClientId
+- emplId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  emplId:
+    type: string
+    description: Идентификатор сотрудника клиента
+    format: uuid
+description: Данные для проверки v2

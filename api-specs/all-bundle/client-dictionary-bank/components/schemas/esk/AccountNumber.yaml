@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ЭСП
+  number:
+    type: string
+    description: Номер счёта
+description: Номер счёта

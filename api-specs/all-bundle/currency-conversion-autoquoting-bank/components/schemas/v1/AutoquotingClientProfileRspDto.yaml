@@ -1,0 +1,49 @@
+type: object
+description: Транспортная сущность профиля клиента автокотирования
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор профиля
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания профиля
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления профиля
+  version:
+    type: integer
+    format: int64
+    description: Версия профиля
+  status:
+    type: string
+    description: Статус профиля
+    enum:
+    - NONE
+    - REQUESTED
+    - OK
+    - CREATING
+    - NOT_AVAILABLE
+    - ORDER_LIMIT
+    - QUOTING_DISABLED
+    - EOD
+  clientId:
+    type: string
+    format: uuid
+    description: Идентификатор Клиент Банка
+  maxRequests:
+    type: integer
+    format: int32
+    description: Максимальное количество заявок в день
+  quotes:
+    type: array
+    description: Валютные котировки
+    items:
+      $ref: ./AutoquotingCurrencyQuoteRspDto.yaml
+required:
+- createdAt
+- id
+- quotes
+- version

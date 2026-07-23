@@ -1,0 +1,20 @@
+type: object
+description: Реквизиты заявки на регистрацию платежа в системе АС СБП
+properties:
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  incomeCode:
+    type: string
+    description: Код вида дохода
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+required:
+- docDate
+- docNumber

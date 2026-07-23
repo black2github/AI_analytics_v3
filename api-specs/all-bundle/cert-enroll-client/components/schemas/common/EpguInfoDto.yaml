@@ -1,0 +1,13 @@
+type: object
+properties:
+  snils:
+    type: string
+    description: СНИЛС
+  birthday:
+    type: string
+    description: Дата рождения
+    format: date
+  confirmationRequired:
+    type: boolean
+    description: Требуется подтверждение в ЕПГУ
+description: Информация о пользователе для ЕПГУ

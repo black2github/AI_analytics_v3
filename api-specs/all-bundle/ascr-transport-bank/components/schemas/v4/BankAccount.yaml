@@ -1,0 +1,17 @@
+type: object
+properties:
+  bic:
+    type: string
+    description: БИК
+  bankName:
+    type: string
+    description: Наименование банка
+  account:
+    type: string
+    description: Банковский/внутрибанковский счет
+  eip:
+    type: string
+    description: Идентификатор ЭСП
+required:
+- bankName
+- bic

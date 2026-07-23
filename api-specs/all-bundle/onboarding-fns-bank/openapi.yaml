@@ -1,0 +1,128 @@
+openapi: 3.0.1
+info:
+  title: Сервис создания заявки на удаленное открытие первого счета по данным ФНС. Банковская часть.
+  description: Сервис создания заявки на удаленное открытие первого счета по данным ФНС.
+  version: 3.3.0
+servers:
+- url: /onboarding-fns-bank
+security:
+- bearerAuth: []
+paths:
+  /onboarding-fns-request/{id}/additional-products-status-change:
+    $ref: ./paths/{id}/onboarding_fns_request_id_additional_products_status_change.yaml
+  /onboarding-fns-request/reject:
+    $ref: ./paths/reject/onboarding_fns_request_reject.yaml
+  /onboarding-fns-request/re-export:
+    $ref: ./paths/re-export/onboarding_fns_request_re_export.yaml
+  /onboarding-fns-request/get-page:
+    $ref: ./paths/get-page/onboarding_fns_request_get_page.yaml
+  /onboarding-fns-request/export/registry:
+    $ref: ./paths/export/onboarding_fns_request_export_registry.yaml
+  /onboarding-fns-request/export/list:
+    $ref: ./paths/export/onboarding_fns_request_export_list.yaml
+  /onboarding-fns-request/category:
+    $ref: ./paths/category/onboarding_fns_request_category.yaml
+  /integration/onboarding-fns-request/get-page:
+    $ref: ./paths/onboarding-fns-request/integration_onboarding_fns_request_get_page.yaml
+  /onboarding-fns-request/{id}:
+    $ref: ./paths/{id}/onboarding_fns_request_id.yaml
+  /onboarding-fns-request/history/{id}:
+    $ref: ./paths/history/onboarding_fns_request_history_id.yaml
+  /onboarding-fns-request/export/registry/{taskId}:
+    $ref: ./paths/export/onboarding_fns_request_export_registry_taskId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AdditionalProductChangeStatusDto:
+      $ref: ./components/schemas/{id}/AdditionalProductChangeStatusDto.yaml
+    GenericCommandAdditionalProductChangeStatusDto:
+      $ref: ./components/schemas/{id}/GenericCommandAdditionalProductChangeStatusDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandOnboardingFnsRequestRejectionRequestDto:
+      $ref: ./components/schemas/reject/GenericCommandOnboardingFnsRequestRejectionRequestDto.yaml
+    OnboardingFnsRequestRejectionRequestDto:
+      $ref: ./components/schemas/reject/OnboardingFnsRequestRejectionRequestDto.yaml
+    GenericResponseSimpleErrorDataOnboardingFnsRequestRejectionResponseDto:
+      $ref: ./components/schemas/reject/GenericResponseSimpleErrorDataOnboardingFnsRequestRejectionResponseDto.yaml
+    OnboardingFnsRequestRejectionResponseDto:
+      $ref: ./components/schemas/reject/OnboardingFnsRequestRejectionResponseDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoClientTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClientTypeDto.yaml
+    FilterValueEnumDtoOnboardingFnsRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOnboardingFnsRequestStatusDto.yaml
+    GetPageCommandOnboardingFnsRequestBankFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandOnboardingFnsRequestBankFilterDto.yaml
+    OnboardingFnsRequestBankFilterDto:
+      $ref: ./components/schemas/common/OnboardingFnsRequestBankFilterDto.yaml
+    PageParamsOnboardingFnsRequestBankFilterDto:
+      $ref: ./components/schemas/common/PageParamsOnboardingFnsRequestBankFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    AdditionalProductsDto:
+      $ref: ./components/schemas/common/AdditionalProductsDto.yaml
+    OnboardingFnsRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/OnboardingFnsRequestBankScrollerDto.yaml
+    PageDataOnboardingFnsRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataOnboardingFnsRequestBankScrollerDto.yaml
+    GenericCommandOnboardingFnsRequestBankFilterDto:
+      $ref: ./components/schemas/export/GenericCommandOnboardingFnsRequestBankFilterDto.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataUUID.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/export/AttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    GetPageCommandOnboardingFnsRequestMainPageFilterDto:
+      $ref: ./components/schemas/onboarding-fns-request/GetPageCommandOnboardingFnsRequestMainPageFilterDto.yaml
+    OnboardingFnsRequestMainPageFilterDto:
+      $ref: ./components/schemas/onboarding-fns-request/OnboardingFnsRequestMainPageFilterDto.yaml
+    PageParamsOnboardingFnsRequestMainPageFilterDto:
+      $ref: ./components/schemas/onboarding-fns-request/PageParamsOnboardingFnsRequestMainPageFilterDto.yaml
+    OnboardingFnsRequestMainPageDto:
+      $ref: ./components/schemas/onboarding-fns-request/OnboardingFnsRequestMainPageDto.yaml
+    PageDataOnboardingFnsRequestMainPageDto:
+      $ref: ./components/schemas/onboarding-fns-request/PageDataOnboardingFnsRequestMainPageDto.yaml
+    GenericResponseSimpleErrorDataOnboardingFnsRequestDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataOnboardingFnsRequestDto.yaml
+    OnboardingFnsRequestAddressDto:
+      $ref: ./components/schemas/{id}/OnboardingFnsRequestAddressDto.yaml
+    OnboardingFnsRequestDto:
+      $ref: ./components/schemas/{id}/OnboardingFnsRequestDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingFnsRequestHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListOnboardingFnsRequestHistoryDto.yaml
+    OnboardingFnsRequestHistoryDto:
+      $ref: ./components/schemas/history/OnboardingFnsRequestHistoryDto.yaml
+    ExportRegistryTaskDto:
+      $ref: ./components/schemas/export/ExportRegistryTaskDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryTaskDto:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataExportRegistryTaskDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

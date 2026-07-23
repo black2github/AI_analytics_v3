@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: Сервис фоновых процессов. Банковская часть.
+  description: Сервис фоновых процессов.
+  version: 1.23.0
+servers:
+- url: /background-tasks-bank
+security:
+- bearerAuth: []
+tags:
+- name: API фоновых процессов
+paths:
+  /background-tasks/get-page:
+    $ref: ./paths/get-page/background_tasks_get_page.yaml
+  /background-tasks/category:
+    $ref: ./paths/category/background_tasks_category.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /background-tasks/{id}:
+    $ref: ./paths/{id}/background_tasks_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    BackgroundTaskBankScrollerFilter:
+      $ref: ./components/schemas/common/BackgroundTaskBankScrollerFilter.yaml
+    BackgroundTaskStatusFilter:
+      $ref: ./components/schemas/common/BackgroundTaskStatusFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandBackgroundTaskBankScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandBackgroundTaskBankScrollerFilter.yaml
+    PageParamsBackgroundTaskBankScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsBackgroundTaskBankScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BackgroundTaskBankScrollerDto:
+      $ref: ./components/schemas/common/BackgroundTaskBankScrollerDto.yaml
+    BackgroundTaskExtraDto:
+      $ref: ./components/schemas/common/BackgroundTaskExtraDto.yaml
+    BackgroundTaskStateDto:
+      $ref: ./components/schemas/common/BackgroundTaskStateDto.yaml
+    PageDataBackgroundTaskBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataBackgroundTaskBankScrollerDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    FetchErrorData:
+      $ref: ./components/schemas/{id}/FetchErrorData.yaml
+    GenericResponseFetchErrorDataBackgroundTaskBankScrollerDto:
+      $ref: ./components/schemas/{id}/GenericResponseFetchErrorDataBackgroundTaskBankScrollerDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

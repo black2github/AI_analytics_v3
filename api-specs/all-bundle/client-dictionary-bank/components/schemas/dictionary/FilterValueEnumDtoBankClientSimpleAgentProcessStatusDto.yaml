@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - COMPLETED
+    - IN_PROGRESS
+    - CREATED
+    - ERROR
+  notEq:
+    type: string
+    enum:
+    - COMPLETED
+    - IN_PROGRESS
+    - CREATED
+    - ERROR
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - COMPLETED
+      - IN_PROGRESS
+      - CREATED
+      - ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - COMPLETED
+      - IN_PROGRESS
+      - CREATED
+      - ERROR
+  isNull:
+    type: boolean
+description: Статус процесса

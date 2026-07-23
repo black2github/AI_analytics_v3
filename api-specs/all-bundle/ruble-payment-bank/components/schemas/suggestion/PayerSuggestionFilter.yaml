@@ -1,0 +1,7 @@
+type: object
+properties:
+  payerInnOrRnkOrName:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAtRange:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр подсказок плательщика.

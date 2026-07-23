@@ -1,0 +1,27 @@
+type: object
+properties:
+  RefId:
+    type: string
+    description: ID документа
+    format: uuid
+  OriginalRefId:
+    type: string
+    description: ID документа в системе источнике
+    format: uuid
+  Content:
+    type: string
+    description: Данные
+  Status:
+    type: string
+    description: Статус документа
+    enum:
+    - Postponed
+    - Completed
+    - Error
+  Error:
+    type: string
+    description: Ошибка
+  ErrorDescription:
+    type: string
+    description: Описание ошибки
+description: Callback документ

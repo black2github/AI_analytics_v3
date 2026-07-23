@@ -1,0 +1,50 @@
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+tags:
+- name: Работа с аттачами
+  description: File Storage Controller
+- name: Скачивание бэкапа фича флагов
+  description: Feature Toggling Backup Controller
+- name: Скачивание вложений без аутентификации
+  description: Public Download Controller
+- name: Скачивание вложений с авторизацией
+  description: Secure Download Controller
+paths:
+  /filestorage/external/download:
+    $ref: ./paths/external/filestorage_external_download.yaml
+  /filestorage/external/download/base64:
+    $ref: ./paths/external/filestorage_external_download_base64.yaml
+  /filestorage/external/download/one-time-data:
+    $ref: ./paths/external/filestorage_external_download_one_time_data.yaml
+  /filestorage/external/ft/backup:
+    $ref: ./paths/external/filestorage_external_ft_backup.yaml
+  /filestorage/external/get-digest:
+    $ref: ./paths/external/filestorage_external_get_digest.yaml
+  /filestorage/external/getStatus:
+    $ref: ./paths/external/filestorage_external_getStatus.yaml
+  /filestorage/external/internal-info:
+    $ref: ./paths/external/filestorage_external_internal_info.yaml
+  /filestorage/external/internal-info-batch:
+    $ref: ./paths/external/filestorage_external_internal_info_batch.yaml
+  /filestorage/external/public/download:
+    $ref: ./paths/external/filestorage_external_public_download.yaml
+  /filestorage/external/secure/form-download:
+    $ref: ./paths/external/filestorage_external_secure_form_download.yaml
+  /filestorage/external/upload:
+    $ref: ./paths/external/filestorage_external_upload.yaml
+  /filestorage/external/upload-encrypted:
+    $ref: ./paths/external/filestorage_external_upload_encrypted.yaml
+  /filestorage/external/{id}:
+    $ref: ./paths/external/filestorage_external_id.yaml
+  /filestorage/external/{id}/data:
+    $ref: ./paths/external/filestorage_external_id_data.yaml
+  /filestorage/external/{id}/one-time-data:
+    $ref: ./paths/external/filestorage_external_id_one_time_data.yaml
+components: {}

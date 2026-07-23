@@ -1,0 +1,76 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  surname:
+    type: string
+    description: Фамилия сотрудника
+  name:
+    type: string
+    description: Имя сотрудника
+  patronymic:
+    type: string
+    description: Отчество сотрудника
+  email:
+    type: string
+    description: Адрес электронной почты сотрудника (по конституции)
+  phoneNumber:
+    type: string
+    description: Номер телефона сотрудника (по конституции)
+  additionalEmail:
+    type: string
+    description: Адрес электронной почты сотрудника (иной)
+  additionalPhoneNumber:
+    type: string
+    description: Номер телефона сотрудника (иной)
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  position:
+    type: string
+    description: Должность
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  identityCard:
+    $ref: ../common/IdentityCardDto.yaml
+  authorizedPerson:
+    type: boolean
+    description: Признак "УЛ по ГПБ БОЛ"
+  blockedAt:
+    type: string
+    description: Дата блокировки УЛ
+    format: date-time
+  eio:
+    type: boolean
+    description: Является ЕИО (Единый исполнительный орган)
+  fired:
+    type: boolean
+    description: Сотрудник уволен
+  clientEmployeeAddresses:
+    type: array
+    description: Адреса сотрудника клиента
+    items:
+      $ref: ./ClientEmployeeAddressServiceDto.yaml
+  clientEmployeeWarranties:
+    type: array
+    description: Доверенности сотрудника клиента
+    items:
+      $ref: ./ClientEmployeeWarrantyServiceDto.yaml
+  clientRepresentative:
+    type: boolean
+    description: Является представителем клиента
+  deleted:
+    type: boolean
+    description: Сотрудник удалён
+description: Сотрудник клиента. Интеграционное ДТО

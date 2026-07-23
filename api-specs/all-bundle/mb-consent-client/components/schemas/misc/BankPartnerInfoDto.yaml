@@ -1,0 +1,22 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код банка-партнера
+  name:
+    type: string
+    description: Наименование банка-партнера
+  bic:
+    type: string
+    description: БИК банка-партнера
+  clientId:
+    type: string
+    description: Идентификатор клиента банка-партнера
+    format: uuid
+  url:
+    type: string
+    description: URL сервера авторизации банка партнёра
+  aud:
+    type: string
+    description: Значение audience (aud) для client_assertion банка-партнёра
+description: Данные

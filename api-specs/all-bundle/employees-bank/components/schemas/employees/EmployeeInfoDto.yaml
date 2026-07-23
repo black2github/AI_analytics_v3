@@ -1,0 +1,52 @@
+required:
+- employee
+type: object
+properties:
+  employee:
+    $ref: ./EmployeeDto.yaml
+  registrationAddress:
+    $ref: ./EmployeeAddressDto.yaml
+  actualAddress:
+    $ref: ./EmployeeAddressDto.yaml
+  clientEmployeeUserId:
+    type: string
+    description: Пользователь из заявки
+    format: uuid
+  clientEmployeeId:
+    type: string
+    description: Сотрудник из заявки
+    format: uuid
+  createNewEmployee:
+    type: boolean
+    description: Признак "Создать нового сотрудника"
+  phoneChanged:
+    type: boolean
+    description: Признак "Изменен номер телефона ГПБ БО"
+  phoneObsolete:
+    type: string
+    description: Старый номер телефона ГПБ БО
+  emailChanged:
+    type: boolean
+    description: Признак "Изменен адрес электронной почты ГПБ БО"
+  emailObsolete:
+    type: string
+    description: Старый адрес электронной почты ГПБ БО
+  personalDataConsent:
+    type: boolean
+    description: Признак "Получено согласие на обработку персональных данных"
+  employeeDataConfirm:
+    type: boolean
+    description: Признак "Подтверждение личных данных сотрудника"
+  addressesMatches:
+    type: boolean
+    description: Признак "Адрес регистрации совпадает с фактическим адресом"
+  inn:
+    type: string
+    description: ИНН
+  publicOfficialStatus:
+    type: boolean
+    description: Статус ПДЛ
+  publicOfficialInfo:
+    type: string
+    description: Информация ПДЛ
+description: Реквизиты сотрудника из заявки (нового или изменяемого)

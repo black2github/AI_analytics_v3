@@ -1,0 +1,17 @@
+required:
+- bankClientId
+- certificateIssuerName
+- certificateSerialNumber
+type: object
+properties:
+  certificateSerialNumber:
+    type: string
+    description: Серийный номер сертификата
+  certificateIssuerName:
+    type: string
+    description: Имя издателя сертификата
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Запрос поиска пользователя по сертификату

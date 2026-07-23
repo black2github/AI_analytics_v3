@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Системное имя
+  description:
+    type: string
+    description: Локализованное описание
+description: Описание переменной окружения

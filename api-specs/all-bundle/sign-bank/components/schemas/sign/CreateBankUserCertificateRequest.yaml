@@ -1,0 +1,16 @@
+type: object
+properties:
+  certificate:
+    type: string
+    description: base64 представление сертификата
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  certificateName:
+    type: string
+    description: Наименование сертификата
+  ownerName:
+    type: string
+    description: ФИО владельца сертификата
+description: Запрос на создание СПБ

@@ -1,0 +1,73 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип запроса
+    enum:
+    - NAUMEN_MEETING_MANAGE
+    - CALENDAR_MEETING_CREATE
+    - GET_TIME_SLOTS
+    - MEETING_EDIT
+    - LBP_MEETING_CANCEL
+    - LBP_MEETING_MANAGE
+    - LBP_MEETING_CREATE
+    - LBP_MEETING_EDIT
+    - LBP_GET_DATES
+    - LBP_GET_TIME_SLOTS
+    - LBP_GET_POLYGONS
+  notEq:
+    type: string
+    description: Тип запроса
+    enum:
+    - NAUMEN_MEETING_MANAGE
+    - CALENDAR_MEETING_CREATE
+    - GET_TIME_SLOTS
+    - MEETING_EDIT
+    - LBP_MEETING_CANCEL
+    - LBP_MEETING_MANAGE
+    - LBP_MEETING_CREATE
+    - LBP_MEETING_EDIT
+    - LBP_GET_DATES
+    - LBP_GET_TIME_SLOTS
+    - LBP_GET_POLYGONS
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип запроса
+      enum:
+      - NAUMEN_MEETING_MANAGE
+      - CALENDAR_MEETING_CREATE
+      - GET_TIME_SLOTS
+      - MEETING_EDIT
+      - LBP_MEETING_CANCEL
+      - LBP_MEETING_MANAGE
+      - LBP_MEETING_CREATE
+      - LBP_MEETING_EDIT
+      - LBP_GET_DATES
+      - LBP_GET_TIME_SLOTS
+      - LBP_GET_POLYGONS
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип запроса
+      enum:
+      - NAUMEN_MEETING_MANAGE
+      - CALENDAR_MEETING_CREATE
+      - GET_TIME_SLOTS
+      - MEETING_EDIT
+      - LBP_MEETING_CANCEL
+      - LBP_MEETING_MANAGE
+      - LBP_MEETING_CREATE
+      - LBP_MEETING_EDIT
+      - LBP_GET_DATES
+      - LBP_GET_TIME_SLOTS
+      - LBP_GET_POLYGONS
+  isNull:
+    type: boolean
+description: Тип запроса, множественный выбор (in)

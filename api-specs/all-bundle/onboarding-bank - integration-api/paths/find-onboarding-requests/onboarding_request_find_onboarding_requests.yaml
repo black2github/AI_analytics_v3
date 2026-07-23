@@ -1,0 +1,54 @@
+post:
+  operationId: findByClientParams
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/find-onboarding-requests/GenericCommandOnboardingRequestSearchParams.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/find-onboarding-requests/GenericResponseSimpleErrorDataSetUUID.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Получить список идентификаторов заявок на онбординг для ролей "Подписант по счету", "Руководитель ЮЛ", "Руководитель УК ЮЛ", "Физическое лицо ИП", "Физическое лицо УК ИП"
+  tags:
+  - Банковское API заявки на онбординг

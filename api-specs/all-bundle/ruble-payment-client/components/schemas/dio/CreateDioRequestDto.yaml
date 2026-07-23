@@ -1,0 +1,12 @@
+required:
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Список идентификаторов рублевых платежных поручений
+    items:
+      type: string
+      description: Список идентификаторов рублевых платежных поручений
+      format: uuid
+description: Данные для создания ДИО

@@ -1,0 +1,29 @@
+required:
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  status:
+    $ref: ./AcceptPaymentRequestStatusDto.yaml
+  currentEditorId:
+    type: string
+    description: Текущий редактор ID пользователя
+    format: uuid
+    nullable: true
+  bankClientInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.BankClientInfoBankScrollerDto.yaml
+  documentBusinessInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.DocumentBusinessInfoBankScrollerDto.yaml
+  payerInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.PayerInfoBankScrollerDto.yaml
+  paymentRequestInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.PaymentRequestInfoBankScrollerDto.yaml
+  acceptInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.AcceptInfoBankScrollerDto.yaml
+  incomingRequestInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.accept.dto.bank.scroller.IncomingPaymentRequestInfoBankScollerDto.yaml
+description: Акцепт платежного требования данные для банка, скроллер банка

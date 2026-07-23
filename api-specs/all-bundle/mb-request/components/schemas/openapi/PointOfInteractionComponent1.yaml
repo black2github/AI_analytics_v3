@@ -1,0 +1,23 @@
+type: object
+properties:
+  POIComponentType:
+    type: string
+    enum:
+    - SOFT
+    - EMVK
+    - EMVO
+    - MRIT
+    - CHIT
+    - SECM
+    - PEDV
+  manufacturerIdentification:
+    type: string
+  model:
+    type: string
+  versionNumber:
+    type: string
+  serialNumber:
+    type: string
+  approvalNumber:
+    type: string
+description: Данные, относящиеся к компоненту POI, выполняющему операцию

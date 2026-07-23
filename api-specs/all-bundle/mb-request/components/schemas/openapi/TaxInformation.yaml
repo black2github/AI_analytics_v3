@@ -1,0 +1,16 @@
+type: object
+properties:
+  administrationZone:
+    type: string
+  referenceNumber:
+    type: string
+  date:
+    type: string
+    format: date-time
+  creditor:
+    $ref: ./TaxParty.yaml
+  debtor:
+    $ref: ./TaxParty.yaml
+  Record:
+    $ref: ./TaxRecord.yaml
+description: Налоговая информация

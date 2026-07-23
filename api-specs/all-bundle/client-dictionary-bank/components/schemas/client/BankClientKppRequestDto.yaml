@@ -1,0 +1,15 @@
+required:
+- kppRequestType
+type: object
+properties:
+  kppRequestType:
+    type: string
+    description: Режим фильтрации
+    enum:
+    - ALL
+    - ADDITIONAL
+    - MAIN
+  bankClientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid

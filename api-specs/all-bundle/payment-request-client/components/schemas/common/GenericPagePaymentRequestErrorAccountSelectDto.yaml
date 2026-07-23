@@ -1,0 +1,17 @@
+required:
+- data
+- total
+type: object
+properties:
+  data:
+    type: array
+    description: Список элементов для выбранной страницы
+    items:
+      $ref: ./AccountSelectDto.yaml
+  total:
+    type: integer
+    description: Общее количество элементов
+    format: int64
+  error:
+    $ref: ./PaymentRequestError.yaml
+description: Страница документов, содержащая данные или ошибку

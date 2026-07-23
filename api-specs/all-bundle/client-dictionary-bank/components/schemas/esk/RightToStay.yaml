@@ -1,0 +1,23 @@
+type: object
+properties:
+  typeCode:
+    type: string
+    description: Код типа документа
+  series:
+    type: string
+    description: Серия документа
+  number:
+    type: string
+    description: Номер документа
+  startStayDate:
+    type: string
+    description: Дата начала срока действия права пребывания (проживания)
+    format: date
+  expirationStayDate:
+    type: string
+    description: Дата окончания срока действия права пребывания (проживания)
+    format: date
+  documentName:
+    type: string
+    description: Наименование документа, подтверждающего право пребывания
+description: Данные документа, подтверждающего право на пребывание (проживание)

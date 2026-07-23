@@ -1,0 +1,5 @@
+type: string
+enum:
+- WAS_IN_AUSN
+- IS_IN_AUSN
+- WILL_BE_IN_AUSN

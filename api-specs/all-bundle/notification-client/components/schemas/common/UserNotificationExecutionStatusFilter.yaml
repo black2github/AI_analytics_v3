@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус выполнения
+    enum:
+    - NOT_EXECUTED
+    - POSTPONED
+    - EXECUTED
+    - CANCELED
+    - INFORMATIONAL
+  notEq:
+    type: string
+    description: Статус выполнения
+    enum:
+    - NOT_EXECUTED
+    - POSTPONED
+    - EXECUTED
+    - CANCELED
+    - INFORMATIONAL
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус выполнения
+      enum:
+      - NOT_EXECUTED
+      - POSTPONED
+      - EXECUTED
+      - CANCELED
+      - INFORMATIONAL
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус выполнения
+      enum:
+      - NOT_EXECUTED
+      - POSTPONED
+      - EXECUTED
+      - CANCELED
+      - INFORMATIONAL
+  isNull:
+    type: boolean
+description: Фильтр по статусу выполнения. Полное совпадение

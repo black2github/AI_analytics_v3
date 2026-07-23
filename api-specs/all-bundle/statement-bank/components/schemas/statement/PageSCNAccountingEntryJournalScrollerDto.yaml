@@ -1,0 +1,10 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      $ref: ./SCNAccountingEntryJournalScrollerDto.yaml
+  total:
+    type: integer
+    format: int64
+description: Данные

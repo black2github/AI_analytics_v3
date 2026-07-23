@@ -1,0 +1,5 @@
+type: object
+properties:
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Поиск организаций из документов по реквизитам

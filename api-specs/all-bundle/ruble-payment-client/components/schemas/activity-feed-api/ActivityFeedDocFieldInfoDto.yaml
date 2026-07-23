@@ -1,0 +1,52 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование поля
+  nameLocalizationKey:
+    type: string
+    description: Ключ локализации наименования поля
+  value:
+    $ref: ../common/FieldValueDto.yaml
+  nameDescription:
+    type: string
+    description: Подсказка к названию поля
+  nameDescriptionLocalizationKey:
+    type: string
+    description: Ключ локализации подсказки к названию поля
+  valueDescription:
+    type: string
+    description: Подсказка к значению поля
+  valueDescriptionLocalizationKey:
+    type: string
+    description: Ключ локализации подсказки к значению поля
+  isHeaderBold:
+    type: boolean
+    writeOnly: true
+  isBold:
+    type: boolean
+    writeOnly: true
+  isEndBlock:
+    type: boolean
+    writeOnly: true
+  isHeader:
+    type: boolean
+    writeOnly: true
+  color:
+    $ref: ../common/TextColor.yaml
+  isStrikeThrough:
+    type: boolean
+    writeOnly: true
+  headerPosition:
+    $ref: ./HeaderPosition.yaml
+  bold:
+    type: boolean
+  header:
+    type: boolean
+  endBlock:
+    type: boolean
+  headerBold:
+    type: boolean
+  strikeThrough:
+    type: boolean
+description: Информация о поле документа ленты операций

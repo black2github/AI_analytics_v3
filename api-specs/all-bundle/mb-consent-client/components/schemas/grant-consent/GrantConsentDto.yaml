@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  bankClient:
+    $ref: ../common/BankClientInfoDto.yaml
+  accounts:
+    type: array
+    description: Список счетов
+    items:
+      $ref: ./GrantAccountDto.yaml
+  status:
+    type: string
+    description: Статус заявки на выдачу Согласия.
+    enum:
+    - NONE
+    - SIGNED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - AWAITING_CONS_AUTH
+    - EXECUTED
+    - REJECTED
+  validationResult:
+    $ref: ../common/ValidationResultDto.yaml
+description: Заявка на выдачу Согласия

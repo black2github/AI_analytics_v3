@@ -1,0 +1,32 @@
+type: object
+properties:
+  cb:
+    type: string
+  fiasCode:
+    type: string
+  fiasId:
+    type: string
+  fullAddress:
+    type: string
+  kladrCode:
+    type: string
+  location:
+    type: string
+  metro:
+    type: array
+    items:
+      $ref: ./OfficeAddressMetroDto.yaml
+  nearestCity:
+    type: string
+  nearestSubway:
+    type: string
+  region:
+    type: string
+  regionType:
+    type: string
+  settlement:
+    type: string
+  settlementType:
+    type: string
+  shortAddress:
+    type: string

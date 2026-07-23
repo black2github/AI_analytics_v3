@@ -1,0 +1,62 @@
+get:
+  tags:
+  - API для выполнения Self-Check (банк)
+  summary: Проверить подключение организаций представителя клиента к НРС
+  description: 'Привилегии: CLIENT_DICTIONARY.BANK.SELF_CHECK_SHOW_PAYMENT_SERVICE_RESULTS'
+  operationId: checkOrganizationNrs
+  parameters:
+  - name: userClientId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/dictionary/GenericResponseSimpleErrorDataListNrsCheckResultDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

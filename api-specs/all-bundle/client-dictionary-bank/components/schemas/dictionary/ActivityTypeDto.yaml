@@ -1,0 +1,13 @@
+required:
+- code
+- name
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    type: integer
+    format: int32
+  name:
+    type: string

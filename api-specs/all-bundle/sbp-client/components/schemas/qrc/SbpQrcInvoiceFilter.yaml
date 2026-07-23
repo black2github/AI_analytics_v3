@@ -1,0 +1,48 @@
+type: object
+description: Фильтр для запроса по получению списка входящих QR-кодов B2B СБП
+properties:
+  legalName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование получателя, contains
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН получателя, eq
+  merchantName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование точки продаж, contains
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор точки продаж в АС СБП, contains, eq
+  status:
+    $ref: ./FilterValueEnumDtoSbpQrcInvoiceStatusDto.yaml
+    description: Статус QR-кода, in, eq
+  recipientNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Получатель, поиск по Наименованию или ИНН получателя, contains
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка", eq
+  shortName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование клиента (contains)
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН клиента (contains)
+  bankName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование банка получателя, contains
+  bankBic:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: БИК банка получателя, contains
+  qrcId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор QR-кода, contains, eq
+  amount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма платежа, ge, le
+  dateCreated:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата создания, ge, le
+  bankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование ИЛИ БИК банка получателя, contains

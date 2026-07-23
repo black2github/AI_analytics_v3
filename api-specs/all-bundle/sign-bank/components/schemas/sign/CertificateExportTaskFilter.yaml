@@ -1,0 +1,29 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категория статусов
+    enum:
+    - NOT_PROCESSED
+    - PROCESSED
+    - ERROR_PROCESSING
+    - ALL
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  certificateSerialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  system:
+    $ref: ./ExportDestinationSystemFilterDto.yaml
+  status:
+    $ref: ./CertificateExportTaskStatusFilter.yaml
+  ownerFullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  clientAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  userAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр заданий на экспорт сертификатов

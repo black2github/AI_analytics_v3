@@ -1,0 +1,11 @@
+type: object
+properties:
+  accountIds:
+    uniqueItems: true
+    type: array
+    description: Список ID счетов для актуализации в БП
+    items:
+      type: string
+      description: Список ID счетов для актуализации в БП
+      format: uuid
+description: Запрос на актуализацию статусов счетов в БП

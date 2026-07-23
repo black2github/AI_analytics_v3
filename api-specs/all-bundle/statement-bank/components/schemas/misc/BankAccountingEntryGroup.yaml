@@ -1,0 +1,12 @@
+type: object
+properties:
+  aggregate:
+    $ref: ./BankAccountingEntryGroupAggregate.yaml
+  userId:
+    type: string
+    format: uuid
+  entries:
+    type: array
+    items:
+      $ref: ./AccountingEntryCardWithAccount.yaml
+description: Страница с данными

@@ -1,0 +1,102 @@
+type: object
+properties:
+  clientIds:
+    type: array
+    description: Список кодов РНК клиента
+    items:
+      type: string
+      description: Список кодов РНК клиента
+  accountId:
+    type: string
+    description: Идентификатор счета
+  cardCommonInfoFilter:
+    type: string
+    description: ФИО держателя, либо последние 4 цифры карты
+  productName:
+    type: string
+    description: Наименование карточного продукта
+  paySystemName:
+    type: string
+    description: Имя платежной системы
+  paySystemCode:
+    type: string
+    description: Код платежной системы
+  expiredFrom:
+    type: string
+    description: Дата начала действия карты
+    format: date
+  expiredTo:
+    type: string
+    description: Дата окончания действия карты
+    format: date
+  createdFrom:
+    type: string
+    description: Дата начала периода выпуска карты
+    format: date
+  createdTo:
+    type: string
+    description: Дата окончания периода выпуска карты
+    format: date
+  deliveryFrom:
+    type: string
+    description: Дата начала периода выдачи карты
+    format: date
+  deliveryTo:
+    type: string
+    description: Дата окончания периода выдачи карты
+    format: date
+  currencyCodes:
+    type: array
+    description: Буквенный код валюты
+    items:
+      type: string
+      description: Буквенный код валюты
+  expirationType:
+    type: string
+    description: Тип периода до окончания срока действия
+    enum:
+    - С длительным сроком
+    - С истекающим сроком
+  virtualPans:
+    type: array
+    description: Список виртуальных номеров карт
+    items:
+      type: string
+      description: Список виртуальных номеров карт
+  cardGuids:
+    type: array
+    description: Список внешних идентификаторов карт
+    items:
+      type: string
+      description: Список внешних идентификаторов карт
+  isNotIds:
+    type: boolean
+    writeOnly: true
+  notInStateAndStatus:
+    type: boolean
+    description: Флаг исключения карт по статусу
+    nullable: true
+  accountIdList:
+    type: array
+    description: Идентификаторы счета
+    items:
+      type: string
+      description: Идентификаторы счета
+  stateAndStatus:
+    type: object
+    additionalProperties:
+      type: array
+      description: Состояние и статус карты
+      nullable: true
+      items:
+        type: string
+        description: Состояние и статус карты
+        nullable: true
+    description: Состояние и статус карты
+    nullable: true
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания
+  notIds:
+    type: boolean
+description: Данные запроса для получения списка корпоративных карт

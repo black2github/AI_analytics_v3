@@ -1,0 +1,12 @@
+type: object
+properties:
+  bankClientEskId:
+    type: string
+  clientRegNum:
+    type: string
+  source:
+    type: string
+    enum:
+    - REFERENCE
+    - COPY
+description: Запрос получения списка счетов

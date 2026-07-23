@@ -1,0 +1,6 @@
+type: object
+properties:
+  userAbsId:
+    type: string
+    description: Ф1 ИД физ лица
+description: Данные о физ лице из РКО Ф1

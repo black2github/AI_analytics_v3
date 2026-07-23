@@ -1,0 +1,7 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для классификатора области применения валют

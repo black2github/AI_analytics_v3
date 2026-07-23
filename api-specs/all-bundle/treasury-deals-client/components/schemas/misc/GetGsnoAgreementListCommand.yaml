@@ -1,0 +1,18 @@
+type: object
+properties:
+  ecoClientId:
+    type: string
+    description: Идентификатор клиента Веб-Дилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  subUsages:
+    uniqueItems: true
+    type: array
+    description: Набор вторичных назначений
+    items:
+      type: string
+      description: Набор вторичных назначений
+      enum:
+      - NONE
+      - PARENT
+      - CHILD

@@ -1,0 +1,11 @@
+type: object
+properties:
+  number:
+    type: integer
+    description: Номер связанного документа
+    format: int64
+  date:
+    type: string
+    description: Дата связанного документа
+    format: date
+description: Информация о связанном документе

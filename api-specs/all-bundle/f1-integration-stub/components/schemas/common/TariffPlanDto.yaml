@@ -1,0 +1,33 @@
+type: object
+description: Тарифный план
+properties:
+  clientGroupCode:
+    type: string
+  clientGroupName:
+    type: string
+  absCode:
+    type: string
+  absName:
+    type: string
+  clientAbsId:
+    type: string
+    description: Клд клиента банка
+  branchCode:
+    type: string
+    description: Код филиала
+  period:
+    type: string
+  nextPaymentDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+  limitsRefreshDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+  services:
+    type: array
+    items:
+      $ref: ./TariffServiceDto.yaml

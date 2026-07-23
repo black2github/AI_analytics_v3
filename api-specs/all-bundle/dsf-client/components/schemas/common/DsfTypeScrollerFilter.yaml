@@ -1,0 +1,45 @@
+type: object
+properties:
+  archived:
+    $ref: ./FilterValueDtoBoolean.yaml
+  category:
+    type: string
+    description: Категории для скроллера типов ДСФ
+    enum:
+    - ALL
+    - TO_BANK
+    - FROM_BANK
+  code:
+    $ref: ./FilterValueDtoString.yaml
+  crmProductType:
+    $ref: ./DsfTypeProductTypeFilter.yaml
+  detachFromBank:
+    $ref: ./FilterValueDtoBoolean.yaml
+  isReply:
+    $ref: ./FilterValueDtoBoolean.yaml
+  letterType:
+    $ref: ./FilterValueDtoString.yaml
+  massMailing:
+    $ref: ./FilterValueDtoBoolean.yaml
+  needMailing:
+    $ref: ./FilterValueDtoBoolean.yaml
+  redirectOnly:
+    $ref: ./FilterValueDtoBoolean.yaml
+  replyTypeClass:
+    $ref: ./DsfTypeClassFilter.yaml
+  selectedBankClientId:
+    type: string
+    description: Для выбранной организации. Накладываются дополнительные ограничения на "Классификатор типов писем"
+    format: uuid
+  signatoryGroupName:
+    $ref: ./FilterValueDtoString.yaml
+  textQuery:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Общая строка поиска. Поиск по "Наименование типа" ИЛИ "Код типа письма" частичное совпадение
+  typeClass:
+    $ref: ./DsfTypeClassFilter.yaml
+  useCheckingAccount:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр скроллера типов ДСФ.

@@ -1,0 +1,7 @@
+required:
+- showSetup
+type: object
+properties:
+  showSetup:
+    type: boolean
+    description: Предлагать настройку Passkey при входе

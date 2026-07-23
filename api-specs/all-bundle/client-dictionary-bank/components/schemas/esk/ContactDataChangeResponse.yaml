@@ -1,0 +1,14 @@
+type: object
+properties:
+  processId:
+    type: string
+    description: Идентификатор процесса по обновлению контактных данных
+    format: uuid
+  successful:
+    type: boolean
+    description: Индикатор успешности выполнения запроса
+  contactsUpdatingResults:
+    type: array
+    description: Результаты обновления
+    items:
+      $ref: ./ContactsUpdatingResult.yaml

@@ -1,0 +1,14 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  requestIds:
+    type: array
+    description: Список идентификаторов платежных поручений
+    items:
+      type: string
+      description: Список идентификаторов платежных поручений
+      format: uuid
+  userDeviceInfo:
+    $ref: ./UserDeviceInfoDto.yaml
+description: Содержит список данных для пакетного удаления подписей

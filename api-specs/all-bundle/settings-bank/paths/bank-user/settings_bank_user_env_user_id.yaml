@@ -1,0 +1,19 @@
+get:
+  tags:
+  - АПИ получения переменных окружения для пользователя банка
+  summary: Получить переменные окружения для пользователя банка
+  operationId: getEnvironmentByUserId_1
+  parameters:
+  - name: user-id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/bank-user/SingleResponseBankUserEnvironmentDto.yaml

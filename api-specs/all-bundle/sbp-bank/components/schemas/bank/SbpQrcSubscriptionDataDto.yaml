@@ -1,0 +1,16 @@
+type: object
+description: Реквизиты подписки по QR-коду
+properties:
+  subscriptionPurpose:
+    type: string
+    description: Цель подписки. Обязателен при значении параметра «qrcType» = «03»
+  subscriptionToken:
+    type: string
+    description: Токен подписки
+  dateStart:
+    type: string
+    format: date-time
+    description: Дата и время получения колбэка о привязке счета
+  payer:
+    type: string
+    description: Плательщик

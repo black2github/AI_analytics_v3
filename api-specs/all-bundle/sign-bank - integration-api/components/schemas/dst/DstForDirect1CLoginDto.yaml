@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор СЭПа
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clientOfficialUserIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы пользователей представителей клиентов Банка
+    items:
+      type: string
+      description: Идентификаторы пользователей представителей клиентов Банка
+      format: uuid
+  certData:
+    type: string
+    description: Данные сертификата
+description: СЭП для аутентификации через 1C DirectBank

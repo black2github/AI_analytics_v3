@@ -1,0 +1,5 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для ЭФ "История изменений счёта ТНФ".

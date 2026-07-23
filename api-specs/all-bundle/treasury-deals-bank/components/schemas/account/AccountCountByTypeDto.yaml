@@ -1,0 +1,23 @@
+type: object
+properties:
+  accountType:
+    type: string
+    description: Тип счёта
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  status:
+    type: string
+    description: Статус счёта
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - DELETED
+  isDU:
+    type: boolean
+    description: ДУ
+  count:
+    type: integer
+    description: Количество счетов
+    format: int64
+description: Данные

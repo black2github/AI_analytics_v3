@@ -1,0 +1,10 @@
+type: object
+description: Уровень подписи счёта
+properties:
+  accountSignatoryLevel:
+    type: string
+    description: Номер уровня подписи
+  countOfSignatories:
+    type: integer
+    format: int32
+    description: Общее количество подписантов по счету

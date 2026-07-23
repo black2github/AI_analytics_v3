@@ -1,0 +1,37 @@
+required:
+- accountId
+- destClient
+- destCustId
+- f1AccountId
+- id
+- kbOpIdSupp
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1
+    format: int64
+  destClient:
+    type: string
+    description: Системный номер адресата
+  destCustId:
+    type: string
+    description: Юр.лицо - получатель документа
+  kbOpIdSupp:
+    type: string
+    description: Код подразделения, обслуживающего счет
+  operatingMode:
+    type: string
+    description: Режим работы счета
+    enum:
+    - ACCEPT
+    - MONITORING
+description: Счет ТНФ.

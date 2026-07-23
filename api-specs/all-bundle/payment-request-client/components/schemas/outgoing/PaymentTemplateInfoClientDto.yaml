@@ -1,0 +1,84 @@
+type: object
+properties:
+  operationType:
+    maxLength: 2
+    type: string
+    description: Вид операции
+    nullable: true
+    enum:
+    - '02'
+  incomeType:
+    maxLength: 210
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\n\r\\]*$
+    type: string
+    description: Назначение платежа
+    nullable: true
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  paymentConditionCode:
+    maximum: 2
+    minimum: 1
+    type: integer
+    description: Код условия оплаты
+    format: int32
+    nullable: true
+  paymentConditionDescription:
+    maxLength: 140
+    type: string
+    description: Расшифровка условия оплаты
+    nullable: true
+  paymentType:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Код вида платежа
+    nullable: true
+  sentDate:
+    type: string
+    description: Дата отсылки (вручения) контрагенту предусмотренных договором документов
+    format: date
+    nullable: true
+  paymentTypeName:
+    maxLength: 20
+    type: string
+    description: Наименование вида платежа
+    nullable: true
+  paymentPriorityCode:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Код очередности платежа
+    nullable: true
+  paymentPriorityDescription:
+    maxLength: 255
+    type: string
+    description: Расшифровка очередности платежа
+    nullable: true
+  paymentPurposeCode:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Кодовое назначение платежа
+    nullable: true
+  paymentPurposeDescription:
+    maxLength: 256
+    type: string
+    description: Расшифровка назначения платежа
+    nullable: true
+  uipCode:
+    maxLength: 25
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Код (УИП)
+    nullable: true
+  backupField:
+    maxLength: 35
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Резервное поле
+    nullable: true
+description: Шаблон Реквизиты исходящего платежного требования (данные для клиента)
+nullable: true

@@ -1,0 +1,21 @@
+type: object
+description: Фильтр по журналу нотификаций
+properties:
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата и время получения сообщения
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR
+  transactionId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор операции оплаты
+  messageCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код сообщения
+  answerCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код ответа
+  notificationType:
+    $ref: ./SbpCallbackMessageTypeFilter.yaml
+    description: Тип сообщения

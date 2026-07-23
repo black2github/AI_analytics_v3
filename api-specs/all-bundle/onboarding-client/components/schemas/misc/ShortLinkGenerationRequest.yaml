@@ -1,0 +1,13 @@
+type: object
+properties:
+  fullUrl:
+    type: string
+    description: Полный URL
+  redirectPath:
+    type: string
+    description: Путь для редиректа
+  roid:
+    type: string
+    description: ID данных о ФЛ
+    format: uuid
+description: Данные для генерации короткой ссылки

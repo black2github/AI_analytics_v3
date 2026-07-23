@@ -1,0 +1,7 @@
+type: object
+properties:
+  receivedAt:
+    type: string
+    description: Дата и время получения (дата и время отправки в Банк) заявки.
+    format: date-time
+description: Информация об исходном письме из банка, на которое клиент создал ответное письмо

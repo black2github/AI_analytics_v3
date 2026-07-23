@@ -1,0 +1,61 @@
+type: object
+properties:
+  clientRegNum:
+    type: string
+    description: РНК
+  clientExternalID:
+    type: string
+    description: Идентификатор  клиента в ДБО БСС
+  systemID:
+    type: string
+    description: Идентификатор  клиента в ДБО БСС
+  clientGUID:
+    type: string
+    description: GUID клиента
+    format: uuid
+  clientResidence:
+    type: boolean
+    description: Признак резидента
+  clientType:
+    type: integer
+    description: Тип клиента. 1-ЮЛ 2-ИП 3-ЮЛЗЧП
+    format: int32
+  clientName:
+    type: string
+    description: Полное наименование
+  clientShortName:
+    type: string
+    description: Краткое наименование
+  clientIntName:
+    type: string
+    description: Международное наименование
+  clientINN:
+    type: string
+    description: ИНН
+  clientCountry:
+    type: string
+    description: Код страны
+  clientStatus:
+    type: string
+    description: Статус клиента 1-Потенциальный 2-Действующий
+  clientPhone:
+    $ref: ./ClientPhoneDto.yaml
+  clientOrgAddress:
+    type: string
+    description: Юридический адрес клиента одной строкой в соответствии с ЕГРЮЛ/ЕГРИП
+  clientOrgAddressInfo:
+    $ref: ./CustomerAddressInfoDto.yaml
+  clientPostAddress:
+    type: string
+    description: Почтовый адрес клиента
+  clientEmail:
+    $ref: ./ClientEmailDto.yaml
+  clientDBO:
+    $ref: ./ClientDboDto.yaml
+  clientOGRN:
+    type: string
+    description: ОГРН клиента
+  clientAddNumber:
+    type: string
+    description: КПП клиента
+description: Организация в F1

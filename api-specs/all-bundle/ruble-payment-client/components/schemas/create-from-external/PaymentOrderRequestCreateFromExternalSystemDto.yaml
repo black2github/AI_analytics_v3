@@ -1,0 +1,125 @@
+required:
+- payerAccount
+type: object
+properties:
+  documentNumber:
+    type: string
+    description: Номер документа
+  documentDate:
+    type: string
+    description: Дата документа
+    format: date
+  payer:
+    type: string
+    description: Наименование плательщика
+  payerAlt:
+    type: string
+    description: Наименование плательщика
+  payerInn:
+    type: string
+    description: ИНН/КИО плательщика
+  payerAccount:
+    type: string
+    description: Счет плательщика
+  payerBic:
+    type: string
+    description: БИК банка плательщика
+  payerCorrAccount:
+    type: string
+    description: Корсчет банка плательщика
+  receiver:
+    type: string
+    description: Наименование получателя
+  receiverAlt:
+    type: string
+    description: Наименование получателя
+  receiverInn:
+    type: string
+    description: ИНН/КИО получателя
+  receiverAccount:
+    type: string
+    description: Счет получателя
+  receiverBic:
+    type: string
+    description: БИК банка получателя
+  receiverCorrAccount:
+    type: string
+    description: Корсчет банка получателя
+  amount:
+    type: string
+    description: Сумма
+  vatAmountInc:
+    type: string
+    description: Сумма платежа с учетом НДС
+  vatMethod:
+    $ref: ../common/VatCalculationTypeDto.yaml
+  vatAmount:
+    type: string
+    description: Сумма НДС
+  vatRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+  ground:
+    type: string
+    description: Назначение платежа
+  paymentUrgent:
+    type: string
+    description: Очередность платежа
+  dtPayUntil:
+    type: string
+    description: Срок платежа
+    format: date
+  operType:
+    type: string
+    description: Вид операции
+  sendType:
+    type: string
+    description: Вид платежа
+  stat1256:
+    type: string
+    description: Статус составителя документа
+  payerKpp:
+    type: string
+    description: КПП плательщика
+  receiverKpp:
+    type: string
+    description: КПП получателя
+  cbcCode:
+    type: string
+    description: Код бюджетной классификации (КБК)
+  oktmoCode:
+    type: string
+    description: Код ОКТМО
+  paymentId:
+    type: string
+    description: Код платежа
+  payGrmdParam:
+    type: string
+    description: Значение основания платежа
+  taxPeriod:
+    type: string
+    description: Показатель налогового периода. Значение
+  docNumParam:
+    type: string
+    description: Номер документа основания платежа
+  docDate:
+    type: string
+    description: Дата документа основания платежа
+  payType:
+    type: string
+    description: Код выплат
+  naznCode:
+    type: string
+    description: Код вида дохода (назн. пл)
+  docSourceSystem:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    type: string
+    description: Страница с которой вызвано создание документа
+  sampleDocId:
+    type: string
+    description: Идентификатор документа на основе которого создан документ
+description: Платежное поручение, данные для создания из сторонней системы

@@ -1,0 +1,27 @@
+type: object
+properties:
+  client:
+    $ref: ./ClientInfo.yaml
+  closingDate:
+    type: string
+    description: Дата закрытия договора
+    format: date
+  code:
+    type: string
+    description: Код договора
+  date:
+    type: string
+    description: Дата договора
+    format: date
+  number:
+    type: string
+    description: Номер договора
+  kindName:
+    type: string
+    description: Вид пакета
+  documents:
+    type: array
+    description: Документы в пакете
+    items:
+      $ref: ./DocumentResponse.yaml
+description: Информация о создании "пакета", к которому будут привязываться документы

@@ -1,0 +1,15 @@
+type: object
+properties:
+  pollParameterId:
+    type: string
+    description: ID сценария опроса
+    format: uuid
+  bankClientId:
+    type: string
+    description: ID клиента банка
+    format: uuid
+  pollObjectId:
+    type: string
+    description: ID объекта оценки
+    format: uuid
+description: Входящие параметры опроса

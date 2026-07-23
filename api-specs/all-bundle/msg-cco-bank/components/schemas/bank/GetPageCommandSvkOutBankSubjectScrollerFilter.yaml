@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsSvkOutBankSubjectScrollerFilter.yaml
+description: Запрос страницы

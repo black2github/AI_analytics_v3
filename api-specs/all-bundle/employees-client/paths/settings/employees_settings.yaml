@@ -1,0 +1,49 @@
+get:
+  tags:
+  - API заявки сотрудника Клиента. Настраиваемые параметры
+  summary: Получить настраиваемые параметры
+  description: 'Привилегии: EMPLOYEES.EMPL_BC_VIEW, EMPLOYEES.RQ_CREATE, EMPLOYEES.RQ_EDIT, EMPLOYEES.RQ_DEL, EMPLOYEES.RQ_VIEW_SC, EMPLOYEES.RQ_VIEW, EMPLOYEES.RQ_SIGN, EMPLOYEES.RQ_SIGN_CHECK, EMPLOYEES.RQ_SIGN_EXP, EMPLOYEES.RQ_USER_BLOCK, EMPLOYEES.CLIENT_EDIT_RQ_CREATE, EMPLOYEES.CREATE_ROLE_TEMPLATE, EMPLOYEES.CLIENT.ROLE_TEMPLATE_UPDATE, EMPLOYEES.CLIENT.ROLE_TEMPLATE_DELETE, EMPLOYEES.SEARCH_ROLE_TEMPLATES, EMPLOYEES.VIEW_ROLE_TEMPLATES, EMPLOYEES.CLIENT.EMP_DELETE'
+  operationId: settings
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/settings/GenericResponseErrorDataEmployeesConfigurableSettingsDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

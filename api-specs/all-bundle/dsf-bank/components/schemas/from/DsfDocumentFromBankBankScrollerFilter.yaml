@@ -1,0 +1,84 @@
+type: object
+description: Фильтр скроллера ДСФ из Банка. Банковская часть.
+properties:
+  absCode:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по Коду подразделения. Полное совпадение.
+  absId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по РНК организации. Полное совпадение.
+  bankClientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по краткому названию организации. Мультивыбор.
+  bic:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по БИК Банка. Полное совпадение.
+  category:
+    type: string
+    description: Фильтрация по категориям. Обязательный параметр. Полное совпадение.
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_PROCESSING
+    - FINISHED
+    - PROCESSING_ERRORS
+  clientUuid:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по идентификатору организации. Полное совпадение. Необходимо для интеграции с фронтом. Используется в топ лайне, не в фильтре.
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Фильтрация по дате письма. Через задание периода с ... по ...
+  dialogId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ID группы связанных писем (идентификатор диалога во внешней системе). Мультивыбор.
+  externalSystem:
+    $ref: ../common/DsfExternalSystemFilter.yaml
+    description: Фильтрация по АС инициатор/получатель письма (внешняя система). Мультивыбор.
+  filialName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по наименованию филиала. Мультивыбор.
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по идентификатору документа. Полное совпадение или мультивыбор.
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ИНН/КИО организации. Полное совпадение.
+  letterType:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по категориям письма. Полное совпадение. Возможен выбор нескольких значений
+  massDocId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по Идентификатору массовой рассылки. Полное совпадение.
+  massMailing:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Фильтрация по документам с принадлежностью к массовой рассылке.
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Фильтрация по номеру письма. Через задание периода с ... по ....
+  ogrnOgrip:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ОГРН/ОГРНИП организации. Полное совпадение.
+  receivedAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Фильтрация по Дата и время присвоения статуса документа "RECEIVED". Через задание периода с ... по ...
+  responsibleBankUserFio:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ФИО ответственного пользователя банка. Допускается частичное совпадение.
+  responsibleBankUserId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по id ответственного пользователя банка. Полное совпадение.
+  status:
+    $ref: ./DsfDocumentFromBankStatusFilter.yaml
+    description: Фильтрация по статусу письма. Мультивыбор.
+  subject:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по Теме документа. Допускается частичное совпадение.
+  typeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по типу письма. Мультивыбор.
+  userId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по Идентификатору пользователя. Полное совпадение.
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по Логину пользователя. Допускается частичное совпадение.

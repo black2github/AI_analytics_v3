@@ -1,0 +1,21 @@
+type: object
+properties:
+  question_20:
+    type: boolean
+    description: Имеет ли Клиент признаки Подотчетного лица по CRS?
+  question_21:
+    type: boolean
+    description: Присваивается CRS-статус «Не является Подотчетным лицом» (Non-reportable person).
+  question_22:
+    type: boolean
+    description: Организации - существующему клиенту банка было направлено письмо с «Формой самосертификации для клиентов – юридических лиц, не являющихся кредитными организациями», ответ в установленный срок не поступил.
+  question_23:
+    type: boolean
+    description: Организация при обращении в банк не предоставила необходимые сведения о себе.
+  question_24:
+    type: boolean
+    description: Признаки иностранного налогового резидентства.
+  question_25:
+    type: boolean
+    description: Организация ответила «Нет, не подтверждаю» на вопрос формы самосертификации.
+description: CRS-статус

@@ -1,0 +1,32 @@
+type: object
+description: Данные обратного вызова на нотификации от РОРДа в рамках операций покупки/продажи ЦР ФП.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  settlementDateTime:
+    type: string
+    description: Дата и время исполнения распоряжения.
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  albumVersion:
+    type: string
+    description: Версия альбома ЭС.
+  balanceInfo:
+    $ref: ./FiBalanceInfo.yaml
+    description: Информация о балансе СЦР ФП.
+  amount:
+    type: number
+    description: Сумма операции.
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- albumVersion
+- amount
+- balanceInfo
+- correlationId
+- operationId
+- settlementDateTime

@@ -1,0 +1,10 @@
+type: object
+properties:
+  type:
+    type: string
+  number:
+    type: string
+  relatedDate:
+    type: string
+    format: date-time
+description: Информация о связанном документе. В первом повторении секции ReferredDocumentInformation указывается Дата составления распоряжения. По договоренности участников обмена могут быть указаны иные коды связанных документов в последующих повторениях секции ReferredDocumentInformation.

@@ -1,0 +1,41 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signature:
+    type: string
+    description: Подпись
+  code:
+    type: integer
+    description: 'Код результата проверки: 0 - проверка прошла успешно'
+    format: int32
+  error:
+    type: string
+    description: Сообщение об ошибке проверки
+  signTime:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  signType:
+    type: string
+    description: Тип подписи
+  signTypeCode:
+    type: string
+    description: Код типа подписи
+    enum:
+    - PLAIN
+    - SFT
+    - CMS
+    - CAdES_BES
+    - CAdES_T
+    - CAdES_X_Long_Type_1
+    - CAdES_A
+    - PDF_PKCS7_CMS
+    - PDF_PKCS7_CADES
+    - XMLDSIG
+    - XADES_BES
+    - XADES_T
+    - XADES_X_L
+description: Результат проверки подписи крипто-модулем

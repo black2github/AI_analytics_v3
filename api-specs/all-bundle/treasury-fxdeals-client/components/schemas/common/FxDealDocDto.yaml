@@ -1,0 +1,320 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  docSource:
+    type: string
+    enum:
+    - ASK
+    - WEB_DEALING
+    - GPB_DEALING
+  docNumber:
+    type: integer
+    format: int64
+  docPrintTemplateVersion:
+    type: integer
+    format: int32
+  docDate:
+    type: string
+    format: date
+  dealCanceledDate:
+    type: string
+    format: date
+  client:
+    $ref: ./ClientInfoDto.yaml
+  clientWebDealingId:
+    type: string
+    format: uuid
+  creator:
+    $ref: ./UserInfoDto.yaml
+  editor:
+    $ref: ./UserInfoDto.yaml
+  dealer:
+    type: string
+  docType:
+    type: string
+    enum:
+    - REQUEST
+    - CONFIRMATION
+  dealAskId:
+    type: integer
+    format: int64
+  dealNumber:
+    type: string
+  dealType:
+    type: string
+    enum:
+    - FX
+  dealSubType:
+    type: string
+    enum:
+    - INDIVIDUAL
+    - COMMON
+  generalAgreement:
+    $ref: ./DealDocGeneralAgreementDto.yaml
+  generalAgreementIsFixed:
+    type: boolean
+  currencyPair:
+    type: string
+  direction:
+    type: string
+    enum:
+    - BUY
+    - SELL
+  rate:
+    type: string
+    description: Ставка
+  ratePrecision:
+    type: string
+    format: byte
+  currencySell:
+    type: string
+  amountSell:
+    type: string
+    description: Сумма продажи
+  amountSellFact:
+    type: string
+    description: Фактическая сумма продажи
+  dealTerminateDate:
+    type: string
+    format: date
+  accountSell:
+    $ref: ./DealDocAccountDto.yaml
+  currencyBuy:
+    type: string
+  amountBuy:
+    type: string
+    description: Сумма покупки
+  amountBuyFact:
+    type: string
+    description: Фактическая сумма покупки
+  accountBuy:
+    $ref: ./DealDocAccountBuyDto.yaml
+  accountSupply:
+    $ref: ./DealDocAccountSupplyDto.yaml
+  docBankPreConfirmation:
+    type: boolean
+  docClientFromBankConfirmation:
+    type: boolean
+  docUpdatedFromBank:
+    type: boolean
+  docUpdatedFromBankAt:
+    type: string
+    format: date-time
+  clientPay:
+    type: boolean
+  bankPay:
+    type: boolean
+  receivedAt:
+    type: string
+    format: date-time
+  signCheckAt:
+    type: string
+    format: date-time
+  docStatus:
+    type: string
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_NEW_OR_BLOCK
+    - DRAFT_OR_QUOTED
+    - DRAFT_OR_NEW
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - SIGNED
+    - BLOCKED_FROM_BANK
+    - DELIVERED
+    - CANCELED_FROM_BANK
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - RECEIVED
+    - DETAILS_INVALID
+    - SENT_TO_ASK_OR_ERROR
+    - SENT_TO_ASK
+    - SENT_TO_ASK_FAIL
+    - SENT_TO_ASK_SUCCESS_OR_CONFIRMED
+    - SENT_TO_ASK_SUCCESS
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - EXECUTED_RECEIVED
+    - EXECUTED_SENT_TO_ASK_OR_ERROR
+    - EXECUTED_SENT_TO_ASK
+    - EXECUTED_SENT_TO_ASK_FAIL
+    - EXECUTED_SENT_TO_ASK_SUCCESS
+    - SENT_TO_PKP_OR_ERROR
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - PKP_PROCESSED
+    - PKP_PROCESSED_CLIENT_CANCEL
+    - SENT_TO_ASK_OR_ERROR_OR_DENIED
+    - WAITING_FOR_VISA
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+  dealStatus:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - DELIVERED
+    - CANCELED
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_REJECTED
+  dealStatusPrev:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - DELIVERED
+    - CANCELED
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_REJECTED
+  dealStatusDetails:
+    type: string
+  valueDateBuy:
+    type: string
+    format: date
+  valueDateSell:
+    type: string
+    format: date
+  valueDateFactBuy:
+    type: string
+    format: date
+  valueDateFactSell:
+    type: string
+    format: date
+  dealDate:
+    type: string
+    format: date
+  dealDateTime:
+    type: string
+    format: date-time
+  beginDate:
+    type: string
+    format: date
+  clientSignature:
+    $ref: ./SignatureDto.yaml
+  clientSignerFio:
+    type: string
+  bankSignature:
+    $ref: ./SignatureDto.yaml
+  docBankComment:
+    type: string
+  docErrorText:
+    type: string
+  branch:
+    $ref: ./BranchDto.yaml
+  clientFullNameExt:
+    type: string
+  clientShortNameExt:
+    type: string
+  managementFund:
+    $ref: ./DealDocManagementFundDto.yaml
+  managementFundIsFixed:
+    type: boolean
+  tradingStatus:
+    type: string
+    enum:
+    - NONE
+    - PROCESSED
+    - REJECTED
+    - CANCELED
+    - PARTIALLY_EXECUTED
+    - EXECUTED
+  hidden:
+    type: boolean
+  baseTemplateId:
+    type: string
+    format: uuid
+  parentTemplateId:
+    type: string
+    format: uuid
+  editVersion:
+    type: integer
+    format: int64
+  baseEditVersion:
+    type: integer
+    format: int64
+  userActions:
+    type: array
+    items:
+      $ref: ./FxDealDocUserActionInfoDto.yaml
+  createdAt:
+    type: string
+    format: date-time
+  updatedAt:
+    type: string
+    format: date-time
+  visaNeeded:
+    type: boolean
+  clientVisaInfo:
+    $ref: ./FxDealDocClientVisaInfoDto.yaml
+  visaCanceled:
+    type: boolean
+  visaSignature:
+    $ref: ./FxDealDocVisaSignatureDto.yaml
+  visaComment:
+    type: string
+  visaType:
+    type: string
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  visaServiceDocId:
+    type: string
+    format: uuid
+  sendToVisaAt:
+    type: string
+    format: date-time
+  visaCanceledAt:
+    type: string
+    format: date-time
+  visaReceiveAt:
+    type: string
+    format: date-time
+  clientApplicationType:
+    type: string
+    enum:
+    - WEB_APP_ECO
+    - WEB_APP_MSB
+    - WEB_APP_MSB_WDL
+    - MOBILE_APP_MSB
+    - UNDEFINED
+  fxDealDocEditType:
+    type: string
+    enum:
+    - ORIGINAL
+    - DRAFT
+    - COPY
+    - UPDATED_ORIGINAL
+  sortOrder:
+    type: integer
+    format: int64
+  docStatusDescription:
+    type: string
+    description: Статус, название
+  dealStatusDescription:
+    type: string
+    description: Статус сделки, название
+description: Данные

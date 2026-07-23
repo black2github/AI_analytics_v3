@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./DioTemplateCreateRequestDto.yaml
+description: Запрос

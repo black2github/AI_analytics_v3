@@ -1,0 +1,145 @@
+required:
+- amount
+- clientId
+- clientName
+- contractClientName
+- contractId
+- contractNumber
+- createdAt
+- creditTradingFloor
+- debitTradingFloor
+- docDate
+- docNumber
+- guid
+- id
+- orderType
+- securityId
+- status
+- updatedAt
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  docDate:
+    type: string
+    description: Дата заявки (поручения)
+    format: date
+  commentForClient:
+    type: string
+    description: Комментарий для пользователя
+  commentForBank:
+    type: string
+    description: Комментарий для сотрудника банка
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  orderType:
+    type: string
+    description: Тип поручения
+  cancelDescription:
+    type: string
+    description: Причина отмены поручения
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  contractClientName:
+    type: string
+    description: Наименование клиента по договору
+  debitTradingFloor:
+    type: string
+    description: Торговая площадка зачисления
+  creditTradingFloor:
+    type: string
+    description: Торговая площадка списания
+  amount:
+    type: string
+    description: Переводимое количество
+  isin:
+    type: string
+    description: Международный идентификационный код ценной бумаги
+  number:
+    maxLength: 30
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Регистрационный номер ценной бумаги
+  ticker:
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Эмитент ценной бумаги
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  guid:
+    type: string
+    description: Guid ценной бумаги
+  securityId:
+    type: string
+    description: ID ценной бумаги
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя, создавшего запись
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки.
+    items:
+      $ref: ./BrokerageNonTradeOrderSignatureDto.yaml
+  linkedOrders:
+    type: array
+    description: Связанные поручения
+    items:
+      $ref: ../common/BrokerageBankNonTradeOrderItemDto.yaml
+description: Транспортная сущность для просмотра неторгового поручения на перевод ценных бумаг

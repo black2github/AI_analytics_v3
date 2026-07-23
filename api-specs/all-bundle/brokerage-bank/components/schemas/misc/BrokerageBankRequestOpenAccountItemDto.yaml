@@ -1,0 +1,55 @@
+required:
+- clientName
+- createdAt
+- id
+- representativeName
+- requestNumber
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер запроса
+    format: int32
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+  isNonResident:
+    type: boolean
+    description: Признак нерезидента
+  representativeName:
+    type: string
+    description: Представитель (ФИО)
+  clientName:
+    type: string
+    description: Организация
+  representativePhone:
+    type: string
+    description: Представитель (номер телефона)
+  representativeEmail:
+    type: string
+    description: Представитель (электронная почта)
+  bankComment:
+    type: string
+    description: Коментарий для банка
+  status:
+    type: string
+    description: Тип состояние отчета
+    enum:
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_NEW
+    - BANK_PROCESSED
+    - BANK_REJECTED
+description: Сведения о модели заявки на открытие брокерского счета в постраничном списке

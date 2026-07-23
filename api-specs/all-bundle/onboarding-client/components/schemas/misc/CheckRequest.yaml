@@ -1,0 +1,9 @@
+type: object
+properties:
+  addConsentRq:
+    $ref: ./CheckAddConsentRequest.yaml
+  roid:
+    type: string
+    description: ID данных о ФЛ
+    format: uuid
+description: Запрос на проверку возможности удалённого открытия счёта

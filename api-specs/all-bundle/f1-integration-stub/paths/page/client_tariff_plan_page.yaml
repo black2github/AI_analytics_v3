@@ -1,0 +1,28 @@
+get:
+  summary: Получить страницу записей таблицы f1_client_tariff_plan
+  tags:
+  - Обновление данных заглушек в таблице f1_client_tariff_plan (Тарифный план Клиента Банка в Ф1)
+  parameters:
+  - name: limit
+    in: query
+    schema:
+      type: integer
+      format: int32
+      description: Количество записей
+      default: 100
+      minimum: 1
+  - name: offset
+    in: query
+    schema:
+      type: integer
+      format: int32
+      description: Смещение
+      default: 0
+      minimum: 0
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/page/PageDataClientTariffPlanDto.yaml

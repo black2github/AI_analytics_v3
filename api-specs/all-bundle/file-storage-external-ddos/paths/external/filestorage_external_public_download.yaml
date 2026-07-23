@@ -1,0 +1,35 @@
+get:
+  tags:
+  - Скачивание вложений без аутентификации
+  summary: Скачивание файла по прямой ссылке
+  operationId: downloadByDirectLinkUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: firstPos
+    in: query
+    required: false
+    type: integer
+    format: int64
+  - name: lastPos
+    in: query
+    required: false
+    type: integer
+    format: int64
+  - name: token
+    in: query
+    description: token
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

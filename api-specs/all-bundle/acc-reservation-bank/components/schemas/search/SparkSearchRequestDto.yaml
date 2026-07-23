@@ -1,0 +1,10 @@
+required:
+- inn
+type: object
+properties:
+  inn:
+    maxLength: 12
+    minLength: 0
+    type: string
+    description: ИНН
+description: Поисковой запрос в СПАРК

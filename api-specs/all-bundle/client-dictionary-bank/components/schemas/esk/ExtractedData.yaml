@@ -1,0 +1,9 @@
+type: object
+properties:
+  postAddr:
+    $ref: ./PostAddr.yaml
+  extendedParameters:
+    $ref: ./ExtendedParameters.yaml
+  orgInfo:
+    $ref: ./OrgInfo.yaml
+description: Данные клиента.

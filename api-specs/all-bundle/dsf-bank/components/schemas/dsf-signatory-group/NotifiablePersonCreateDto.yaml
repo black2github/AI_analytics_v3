@@ -1,0 +1,7 @@
+type: object
+description: Оповещаемый пользователь
+properties:
+  userId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор оповещаемого.

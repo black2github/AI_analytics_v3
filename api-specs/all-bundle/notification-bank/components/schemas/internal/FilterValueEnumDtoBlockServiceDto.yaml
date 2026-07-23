@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Блокируемые сервисы/страницы
+    enum:
+    - BLOCK_ALL
+    - BLOCK_RKO
+  notEq:
+    type: string
+    description: Блокируемые сервисы/страницы
+    enum:
+    - BLOCK_ALL
+    - BLOCK_RKO
+  in:
+    type: array
+    items:
+      type: string
+      description: Блокируемые сервисы/страницы
+      enum:
+      - BLOCK_ALL
+      - BLOCK_RKO
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Блокируемые сервисы/страницы
+      enum:
+      - BLOCK_ALL
+      - BLOCK_RKO
+  isNull:
+    type: boolean
+description: Фильтр по блокированным сервисам

@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    description: UID сертификата
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  userName:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedReport:
+    type: string
+    description: Подписанный отчет
+  certificate:
+    type: string
+    description: Сертификат
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  issuer:
+    type: string
+    description: Имя издателя сертификата
+  signDate:
+    type: string
+    description: Дата подписи
+    format: date-time
+description: Дто подписанного отчета

@@ -1,0 +1,15 @@
+type: object
+properties:
+  incomingPaymentRequestId:
+    type: string
+    description: Идентификатор платежного требования (входящего)
+    format: uuid
+    nullable: true
+  acceptInfo:
+    $ref: ./AcceptInfoCreateDto.yaml
+  docCreatePage:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+    nullable: true
+description: Данные для создания Акцепта платежного требования

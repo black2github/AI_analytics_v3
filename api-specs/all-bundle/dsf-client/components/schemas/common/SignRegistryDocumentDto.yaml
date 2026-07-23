@@ -1,0 +1,27 @@
+type: object
+properties:
+  allowedDstKinds:
+    uniqueItems: true
+    type: array
+    description: Перечень видов СЭП которыми можно подписать документ, если пуст то любым
+    items:
+      type: string
+      description: Перечень видов СЭП которыми можно подписать документ, если пуст то любым
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  signDataViewList:
+    type: array
+    description: Блок отображения подписываемых данных
+    items:
+      $ref: ./UniSignDataViewDto.yaml
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+description: Подписываемый документ в реестре

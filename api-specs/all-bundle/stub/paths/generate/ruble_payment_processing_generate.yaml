@@ -1,0 +1,53 @@
+get:
+  tags:
+  - Контроллер ручной отправки ответа из АБС Ф1 для платежных документов
+  summary: Генерация и отправка ответа из АБС Ф1
+  operationId: autoModeUsingGET
+  produces:
+  - application/xml
+  parameters:
+  - name: acceptForExecutionAdditionalStatus
+    in: query
+    description: Дополнительный статус отправки документа в банк получателя
+    required: false
+    type: string
+  - name: acspForExecDate
+    in: query
+    description: Дата и время перехода документа на исполнение в АБС Ф1
+    required: false
+    type: string
+    format: date-time
+    x-example: '2000-01-01T00:00:00'
+  - name: creDtTm
+    in: query
+    description: Дата и время отправки сообщения
+    required: false
+    type: string
+    format: date-time
+    x-example: '2000-01-01T00:00:00'
+  - name: originalMsgId
+    in: query
+    description: Идентификатор исходного сообщения (GUID)
+    required: true
+    type: string
+  - name: reasonCode
+    in: query
+    description: Код причины
+    required: true
+    type: string
+  - name: vizOrg
+    in: query
+    description: РНК визирующей организации
+    required: false
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,Document»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

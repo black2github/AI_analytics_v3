@@ -1,0 +1,9 @@
+type: object
+properties:
+  ErrorCode:
+    type: string
+  ErrorText:
+    type: string
+  errorMessage:
+    type: string
+description: Ошибки авторизации

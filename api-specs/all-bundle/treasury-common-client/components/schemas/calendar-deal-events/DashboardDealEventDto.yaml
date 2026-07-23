@@ -1,0 +1,70 @@
+type: object
+properties:
+  source:
+    type: string
+    description: Источник события
+    enum:
+    - DEALS
+    - FX_DEALS
+  dealType:
+    type: string
+    description: Тип сделки
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  eventType:
+    type: string
+    description: Тип события
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  description:
+    type: string
+    description: Описание события
+  eventMarker:
+    $ref: ../common/DealEventMarkerDto.yaml
+  eventDateTime:
+    type: string
+    description: Дата и время события
+    format: date-time
+  objectId:
+    type: string
+    description: Идентификатор объекта, связанного с событием
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientId:
+    type: string
+    description: Идентификатор Клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientName:
+    type: string
+    description: Наименование Клиента
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта
+  period:
+    type: integer
+    description: Срок сделки
+    format: int32
+  dateBegin:
+    type: string
+    description: Дата начала сделки
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания сделки
+    format: date
+  currencyPair:
+    type: string
+    description: Валютная пара
+description: Страница с данными

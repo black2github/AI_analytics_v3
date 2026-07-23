@@ -1,0 +1,22 @@
+type: object
+properties:
+  number:
+    type: integer
+    description: Порядковый номер вложения
+    format: int32
+    example: 1
+  fileName:
+    type: string
+    description: Имя файла
+    example: file.txt
+  fileSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int32
+    example: 2048
+  data:
+    type: string
+    description: 'Содержимое файла '
+    format: byte
+description: Аттачмент
+example: Array of AttachmentDto

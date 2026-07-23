@@ -1,0 +1,14 @@
+type: object
+properties:
+  changedIn:
+    type: string
+    format: date-time
+  status:
+    type: string
+  bankStatus:
+    type: string
+  event:
+    type: string
+  comment:
+    type: string
+description: Данные

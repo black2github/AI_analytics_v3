@@ -1,0 +1,7 @@
+type: object
+properties:
+  openingRequestId:
+    type: string
+    description: Идентификатор заявки О2+
+    format: uuid
+description: Заявка на выпуск карты из О2+

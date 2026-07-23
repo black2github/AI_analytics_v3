@@ -1,0 +1,46 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientWebDealingId:
+    type: string
+    description: Идентификатор клиента в ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userInformationByDealType:
+    type: array
+    description: Информация о доступе по типу сделки
+    items:
+      $ref: ./UserInformationByDealTypeDto.yaml
+  accountsExist:
+    type: boolean
+    description: Наличие счетов
+  accountsInternalExist:
+    type: boolean
+    description: Наличие внутренних счетов
+  accountsInternalForGenAgrMNOExist:
+    type: boolean
+    description: Наличие внутренних счетов для заключения генсоглашений МНО
+  accountsExternalExist:
+    type: boolean
+    description: Наличие внешних счетов
+  accountsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по счетов
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  generalAgreementsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по генеральным соглашениям
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+description: Информация о пользователе по клиенту

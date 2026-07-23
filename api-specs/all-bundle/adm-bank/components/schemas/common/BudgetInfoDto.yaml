@@ -1,0 +1,15 @@
+type: object
+properties:
+  kbk:
+    type: string
+    description: КБК
+  oktmo:
+    type: string
+    description: ОКТМО
+  paymentBasis:
+    type: string
+    description: Основание платежа
+  status:
+    type: string
+    description: Статус плательщика
+description: Бюджетные реквизиты

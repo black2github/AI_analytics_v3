@@ -1,0 +1,28 @@
+post:
+  parameters:
+  - name: inn
+    in: query
+    schema:
+      type: string
+  - name: ogrn
+    in: query
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          $ref: ../../components/schemas/updating/GetEgrulInfoResponse.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/updating/EgrulInfoEntity.yaml
+    '400':
+      description: Bad Request
+  summary: Create
+  tags:
+  - Egrul Info Update Controller

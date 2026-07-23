@@ -1,0 +1,16 @@
+type: object
+properties:
+  sessionId:
+    type: string
+    description: Идентификатор сессии
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+  clientIds:
+    type: array
+    description: Идентификаторы клиентов
+    items:
+      type: string
+      description: Идентификаторы клиентов
+description: Профиль пользователя для Secure Bank

@@ -1,0 +1,25 @@
+type: object
+properties:
+  dossier:
+    $ref: ./DossierRequest.yaml
+  documents:
+    type: array
+    items:
+      $ref: ./Document.yaml
+  tasks:
+    type: array
+    items:
+      $ref: ./TaskToFinish.yaml
+  taskHistory:
+    type: array
+    items:
+      $ref: ./TaskHistory.yaml
+  linkedDocuments:
+    type: array
+    items:
+      type: string
+      format: uuid
+  preLoadedDocumentsUpdates:
+    type: array
+    items:
+      $ref: ./PreLoadedDocumentUpdate.yaml

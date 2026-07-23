@@ -1,0 +1,8 @@
+type: string
+enum:
+- RESERVED
+- ANNULLED
+- OPENED
+- CLOSED
+- TO_OPEN
+- TO_CLOSE

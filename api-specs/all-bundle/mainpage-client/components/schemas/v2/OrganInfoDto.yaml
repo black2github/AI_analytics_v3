@@ -1,0 +1,17 @@
+type: object
+properties:
+  organType:
+    type: string
+    description: Тип органа
+    enum:
+    - FSSP
+    - FTS
+    - FNS
+    - OEP
+  totalOrganAmount:
+    type: string
+    description: Сумма по типу органа
+  organFullBlock:
+    type: boolean
+    description: Признак полной блокировки по типу органа
+description: Данные по типу органа, наложившего блокировку

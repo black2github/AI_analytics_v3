@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи валюты
+  code4217:
+    type: string
+    description: 3х символьный код валюты ISO 4217
+  codeOKB2000:
+    type: string
+    description: Цифровой код общероссийского классификатора валют
+  ruName:
+    type: string
+    description: Наименование валюты
+  ruTitle:
+    type: string
+    description: Сокращенное наименование валюты
+description: Унифицированная валюта для брокерского обслуживания

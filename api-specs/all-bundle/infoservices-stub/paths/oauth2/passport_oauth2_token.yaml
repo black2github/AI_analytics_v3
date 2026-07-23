@@ -1,0 +1,20 @@
+post:
+  parameters:
+  - name: client_id
+    in: query
+    schema:
+      type: string
+  - name: client_secret
+    in: query
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/oauth2/AuthResponse.yaml
+  summary: Auth
+  tags:
+  - Authentication Controller

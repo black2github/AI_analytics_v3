@@ -1,0 +1,60 @@
+get:
+  description: 'Привилегии: BC.BANK.SET_LIMIT_REQUEST.VIEW, BC.BANK.CARD.ISSUE.REQUEST.LIST.VIEW, BC.BANK.BLOCKING.LIST.VIEW'
+  operationId: getCategoriesWithStatuses
+  parameters:
+  - description: "* BC_BLOCK_REQUEST: \n* BC_CARD_ISSUE_REQUEST: \n* BC_SET_LIMIT_REQUEST: "
+    in: path
+    name: reqType
+    required: true
+    schema:
+      type: string
+      enum:
+      - BC_BLOCK_REQUEST
+      - BC_CARD_ISSUE_REQUEST
+      - BC_SET_LIMIT_REQUEST
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/misc/GenericResponseSimpleErrorDataCategoriesWithStatusesDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+      description: Internal Server Error
+  summary: Получить группированные статусы
+  tags:
+  - API для заявок

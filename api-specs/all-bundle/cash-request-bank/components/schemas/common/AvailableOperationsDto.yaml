@@ -1,0 +1,21 @@
+type: object
+properties:
+  sign:
+    type: boolean
+    description: 'Флаг активации подписи по заявке: true->можно подписать, false->нельзя подписать'
+  removeSign:
+    type: boolean
+    description: 'Флаг активации снятия подписи с заявки: true->можно снять подпись, false->нельзя'
+  checkSign:
+    type: boolean
+    description: 'Флаг активации проверки подписи у заявки: true->можно проверить, false->нельзя проверить'
+  send:
+    type: boolean
+    description: 'Флаг возможности отправки заявки сразу после подписания: true->заявка будет отправлена после подписи, false->отправка невозможна'
+  edit:
+    type: boolean
+    description: 'Флаг возможности редактирования заявки: true-> редактирование возможно, false->редактирование невозможно'
+  signClick:
+    type: boolean
+    description: 'Флаг возможности нажатия на кнопку "подписать" для подписанта с истекшими полномочиями: true->можно нажать, false->нельзя'
+description: Модель описания возможных действий с заявкой

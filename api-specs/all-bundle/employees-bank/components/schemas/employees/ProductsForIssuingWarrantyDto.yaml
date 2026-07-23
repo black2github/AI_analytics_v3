@@ -1,0 +1,15 @@
+required:
+- header
+- productNames
+type: object
+properties:
+  header:
+    type: string
+    description: Заголовок
+  productNames:
+    type: array
+    description: Наименования продуктов
+    items:
+      type: string
+      description: Наименования продуктов
+description: Список доступных продуктов для выдачи доверенности

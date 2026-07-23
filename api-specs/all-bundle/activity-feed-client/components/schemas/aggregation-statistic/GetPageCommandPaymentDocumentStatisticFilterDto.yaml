@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsPaymentDocumentStatisticFilterDto.yaml
+description: Запрос страницы

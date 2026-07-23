@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+  notEq:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип заявки
+      enum:
+      - NEW_USER_ADD
+      - USER_BLOCK
+      - USER_ESK_EDIT
+      - USER_NOT_ESK_EDIT
+      - USER_ESK_CONTACT_EDIT
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип заявки
+      enum:
+      - NEW_USER_ADD
+      - USER_BLOCK
+      - USER_ESK_EDIT
+      - USER_NOT_ESK_EDIT
+      - USER_ESK_CONTACT_EDIT
+  isNull:
+    type: boolean
+description: Фильтрация по типу заявки. Полное совпадение

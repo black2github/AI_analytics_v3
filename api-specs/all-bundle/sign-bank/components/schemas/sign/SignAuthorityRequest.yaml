@@ -1,0 +1,72 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  ownerId:
+    type: string
+    description: ID пользователя, подписавшего документ
+    format: uuid
+  clientInnKio:
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента
+  clientName:
+    type: string
+    description: Имя клиента
+  clientEskId:
+    type: string
+    description: ID клиента в ЕСК
+  clientAbsId:
+    type: string
+    description: ID клиента в РКО Ф1
+  productCodes:
+    type: array
+    description: Коды продуктов банка
+    items:
+      type: string
+      description: Коды продуктов банка
+  relPersons:
+    type: array
+    description: Персоны, взаимосвязанные в рамках проверки
+    items:
+      $ref: ./RelPersonEskDto.yaml
+  presetCredentials:
+    $ref: ./PresetCredentialsEskDto.yaml
+  validators:
+    uniqueItems: true
+    type: array
+    description: Опции проверки полномочий
+    items:
+      type: string
+      description: Опции проверки полномочий
+      enum:
+      - EIO
+      - CERTIFICATE
+      - CONSTITUTION
+  documentType:
+    type: string
+    description: Тип документа, заполняется опционально для проверки прав ЕИО
+    enum:
+    - GPB_BO_AGR_SIGN_AUTH_CHECK
+    - GPB_DOG_ACC_OPEN_AUTH_CHECK
+    - GPB_ACC_OPEN_AUTH_CHECK
+    - GPB_EXTRA_SERVICES_RKO_AUTH_CHECK
+    - OFFER_JOIN_GPB_BO1_REQ
+    - REPR_REG_CERT
+    - GPB_BO_GLOB_EMPW_BLOCK_AUTH_CHECK
+    - GPB_BO_REPR_REG_BLOCK_AUTH_CHECK
+    - GPB_CORP_CARD_ISSUE_AUTH_CHECK
+    - GPB_PRESETCREDENTIALS_AUTH_CHECK
+    - GPB_PROD_CREDENTIALS_COMB_AUTH_CHECK
+    - DEFAULT_DOCUMENT_TYPE
+  clientEmployeeEskId:
+    type: string
+    description: ID сотрудника Клиента в ЕСК
+description: Запрос проверки полномочий

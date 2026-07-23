@@ -1,0 +1,18 @@
+required:
+- count
+- description
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор массовой операции
+    format: uuid
+  count:
+    type: integer
+    description: Количество пользователей для расклейки переведенных в массовую обработку
+    format: int32
+  description:
+    type: string
+    description: Описание результата
+description: Результат проверки склейки пользователей

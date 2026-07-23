@@ -1,0 +1,15 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  blocked:
+    type: boolean
+    description: Признак блокировки пользователя
+  checkedPersons:
+    type: array
+    description: Список проверенных УЛ
+    items:
+      $ref: ./CheckedAuthorizedPerson.yaml
+description: Проверенный пользователь

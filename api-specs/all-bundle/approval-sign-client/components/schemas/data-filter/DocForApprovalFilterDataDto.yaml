@@ -1,0 +1,25 @@
+type: object
+properties:
+  documentStatus:
+    type: array
+    description: Статусы документа
+    items:
+      type: string
+      description: Статус документа
+      enum:
+      - WAIT_APPROVE
+      - APPROVE_SIGNED
+      - COMPLETED
+      - REJECTED
+      - CANCELED
+  currencyCodes:
+    type: array
+    description: Коды валют
+    items:
+      $ref: ./CurrencyInfoFilterDto.yaml
+  documentType:
+    type: array
+    description: Тип документа
+    items:
+      $ref: ../common/RequestClassifierFilterDto.yaml
+description: Фильтр клиентского скроллера документов

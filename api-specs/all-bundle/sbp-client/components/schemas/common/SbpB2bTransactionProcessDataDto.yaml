@@ -1,0 +1,16 @@
+type: object
+description: Реквизиты, получаемые в процессе обработки заявки на регистрацию платежа B2B СПБ
+properties:
+  transactionId:
+    type: string
+    description: Идентификатор транзакции
+  fpMessageId:
+    type: string
+    description: ID запроса из НСПК
+  qrGottenAt:
+    type: string
+    format: date-time
+    description: Дата и время запроса данных QR в СБП
+required:
+- qrGottenAt
+- transactionId

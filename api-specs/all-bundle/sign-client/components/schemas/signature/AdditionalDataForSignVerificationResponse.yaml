@@ -1,0 +1,9 @@
+type: object
+properties:
+  additionalData:
+    uniqueItems: true
+    type: array
+    description: Доп. информация о подписях
+    items:
+      $ref: ./AdditionalSignData.yaml
+description: Ответ на запрос получения доп. данных о подписях.

@@ -1,0 +1,61 @@
+required:
+- bankClientId
+- cbrParticipantId
+- cbrParticipantWalletId
+- certificateRegistered
+- clientStatus
+- eskBankClientId
+- pcrParticipantWalletId
+- walletRegistrationDate
+- walletStatus
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  cbrAccountNumber:
+    type: string
+    description: Счет цифрового рубля
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации в ЦБ
+  eskBankClientId:
+    type: string
+    description: Идентификатор организации в ЕСК
+    format: uuid
+  clientStatus:
+    type: string
+    description: Статус клиента в ЦБ
+  walletStatus:
+    type: string
+    description: Статус кошелька в ЦБ
+  walletRegistrationDate:
+    type: string
+    description: Дата регистрации цифрового кошелька
+    format: date-time
+  branchId:
+    type: string
+    description: Идентификатор филиала обслуживания организации
+    format: uuid
+  certificateRegistered:
+    type: boolean
+    description: Завершена регистрация сертификата
+  cbrAgreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента
+  cbrAgreementOpenDate:
+    type: string
+    description: Дата открытия договора СЦР
+    format: date
+  cbrParticipantWalletStatusChangeReason:
+    type: string
+    description: Причина изменения статуса СЦР
+description: Кошелек ЦР на ПлЦР

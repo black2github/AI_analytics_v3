@@ -1,0 +1,19 @@
+post:
+  summary: Запрос данных QR для B2B
+  tags:
+  - СИП. Сервис b2b API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/QrcIdRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/v2/InvoiceQrcDto.yaml
+    '400':
+      description: Bad Request

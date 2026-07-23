@@ -1,0 +1,19 @@
+type: object
+properties:
+  uaaId:
+    type: string
+    description: ИД подписанта
+    format: uuid
+  type:
+    type: string
+    description: Тип пользователя
+  firstName:
+    type: string
+    description: Имя
+  familyName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+description: Данные о подписанте

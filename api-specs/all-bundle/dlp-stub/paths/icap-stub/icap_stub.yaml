@@ -1,0 +1,10 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/icap-stub/IcapCreateStubRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK

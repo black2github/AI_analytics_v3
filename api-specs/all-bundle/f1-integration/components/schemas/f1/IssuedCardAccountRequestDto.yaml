@@ -1,0 +1,17 @@
+required:
+- clientRegNum
+type: object
+properties:
+  clientRegNum:
+    type: string
+    description: Регистрационный номер клиента, присвоенный в РКО Ф1
+  cardProduct:
+    $ref: ./IssuedCardProductDto.yaml
+  accountType:
+    type: integer
+    description: Код типа счета
+    format: int32
+  currencyCode:
+    type: string
+    description: Буквенный код валюты счета
+description: Данные запроса для получения списка счетов клиента в сервисе корпоративных карт, к которым могут быть выпущены карты.

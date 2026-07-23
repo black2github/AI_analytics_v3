@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API по работе с журналом выгрузки сертификатов во внешние системы для сотрудника банка
+  summary: Получить количество заданий на выгрузку сертификатов во внешние системы в каждой категории
+  description: 'Привилегии: CERTIFICATE_EXPORT_TASK_GET_PAGE'
+  operationId: getCategoryCount_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/sign/GetPageCommandCertificateExportTaskFilter.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign/GenericResponseSimpleErrorDataCategoryResponse.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

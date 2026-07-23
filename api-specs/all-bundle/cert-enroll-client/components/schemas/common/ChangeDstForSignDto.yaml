@@ -1,0 +1,9 @@
+required:
+- clientOfficialDstId
+type: object
+properties:
+  clientOfficialDstId:
+    type: string
+    description: ID СЭП представителя для подписи заявления ГЭП
+    format: uuid
+description: Запрос на изменение СЭПа представителя для подписи заявлений ГЭП

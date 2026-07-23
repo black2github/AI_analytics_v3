@@ -1,0 +1,10 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат проверки.
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+description: Результат проверки наличия действующих счетов.

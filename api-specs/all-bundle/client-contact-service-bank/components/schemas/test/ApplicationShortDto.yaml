@@ -1,0 +1,70 @@
+type: object
+properties:
+  sourceCreatedAt:
+    type: string
+    format: date-time
+  sourceUpdatedAt:
+    type: string
+    format: date-time
+  sourceStatusUpdatedAt:
+    type: string
+    format: date-time
+  applicationStatus:
+    type: string
+  applicationStatusCode:
+    type: string
+    enum:
+    - DRAFT
+    - DELETED
+    - REFUSED
+    - COMPLETED
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_ESK_1070
+    - EXPORTED_TO_ESK_1070
+    - REJECTED
+    - TECH_EXPORT_TO_ESK_ERROR_1070
+    - EXECUTED_BY_ESK_1070
+    - MIDDLE_OFFICE_CONTROL
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - CLIENT_DOCS_UPLOAD
+    - REPLACING_DOCS
+    - EXPORT_TO_ESK_1099
+    - TECH_EXPORT_TO_ESK_ERROR_1099
+    - EXPORTED_TO_ESK_1099
+    - EXECUTED_BY_ESK_1099
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - EXPORTED_TO_ESK_115
+    - ACCEPTED_BY_ESK_115
+    - DOSSIER_CREATED_BY_ESK_115
+    - DOSSIER_REPEATED_EXAMINATION_115
+    - DOSSIER_APPROVED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - EXECUTED
+  sourceApplicationId:
+    type: string
+    format: uuid
+  nskApplicationId:
+    type: string
+    format: uuid
+  applicationLink:
+    type: string
+  applicationLinkClient:
+    type: string
+  visitingServiceType:
+    type: boolean
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  person:
+    $ref: ./PersonDto.yaml
+  branch:
+    $ref: ./BranchDto.yaml
+  accountInfo:
+    $ref: ./AccountInfoDto.yaml

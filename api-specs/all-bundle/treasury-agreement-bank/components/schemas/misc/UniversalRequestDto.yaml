@@ -1,0 +1,151 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docType:
+    type: string
+    description: Тип заявления
+  userId:
+    type: string
+    description: Идентификатор пользователя, редактирующего заявку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userFullName:
+    type: string
+    description: Ф.И.О. пользователя, редактирующего заявку
+  clientInfo:
+    $ref: ../common/ClientInfoDto.yaml
+  clientInfoHead:
+    $ref: ../common/ClientInfoDto.yaml
+  clientInfoFriend:
+    $ref: ../common/ClientInfoDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+  docNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  docDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED_OR_CHECKLIST_REJECTED
+    - RECEIVED_OR_WAITING_FOR_VISA
+    - WAITING_FOR_VISA
+    - VISA_CANCELED
+    - VISA_APPLIED
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - SENT_TO_CLIENT
+    - SENT_TO_CLIENT_FRIEND
+    - RECEIVED
+    - ASSIGNED
+    - VERIFIED_BY_BANK
+    - READY_TO_SIGN
+    - SIGNED_BY_BANK
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+    - SENT_TO_PKP_OR_FAIL
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL_OR_EXECUTED
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP
+    - SIGNED_BY_BANK_SENT_TO_PKP_SUCCESS
+    - SIGNED_BY_BANK_SENT_TO_PKP_FAIL
+  viewStatus:
+    type: string
+    description: Статус документа - для визуализации
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED_OR_CHECKLIST_REJECTED
+    - RECEIVED_OR_WAITING_FOR_VISA
+    - WAITING_FOR_VISA
+    - VISA_CANCELED
+    - VISA_APPLIED
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - SENT_TO_CLIENT
+    - SENT_TO_CLIENT_FRIEND
+    - RECEIVED
+    - ASSIGNED
+    - VERIFIED_BY_BANK
+    - READY_TO_SIGN
+    - SIGNED_BY_BANK
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+    - SENT_TO_PKP_OR_FAIL
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL_OR_EXECUTED
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP
+    - SIGNED_BY_BANK_SENT_TO_PKP_SUCCESS
+    - SIGNED_BY_BANK_SENT_TO_PKP_FAIL
+  executorId:
+    type: string
+    description: Исполнитель по заявке
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  executorFullName:
+    type: string
+    description: Ф.И.О. исполнителя по заявке
+  additionalDataIsFulledUp:
+    type: boolean
+    description: Дополнительные данные полностью заполнены
+  additionalDataIsValid:
+    type: boolean
+    description: Дополнительные данные корректны
+  agreementNumber:
+    type: string
+    description: Номер соглашения
+  agreementDate:
+    type: string
+    description: Дата соглашения
+    format: date
+  processedInPkp:
+    type: boolean
+    description: Обработан в ПКП
+description: Страница с данными

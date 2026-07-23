@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsSettingHistoryFilter.yaml
+description: Запрос страницы

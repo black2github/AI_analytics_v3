@@ -1,0 +1,8 @@
+type: object
+properties:
+  codes:
+    type: array
+    description: Список кодов для обновления
+    items:
+      $ref: ./BranchAbsCodesUpdateDto.yaml
+description: Список кодов для обновления информации о филиалах

@@ -1,0 +1,15 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя для которого создаются сертификаты
+    format: uuid
+  certificateIds:
+    uniqueItems: true
+    type: array
+    description: ID сертификатов - источников
+    items:
+      type: string
+      description: ID сертификатов - источников
+      format: uuid
+description: Запрос на копирование сертификатов.

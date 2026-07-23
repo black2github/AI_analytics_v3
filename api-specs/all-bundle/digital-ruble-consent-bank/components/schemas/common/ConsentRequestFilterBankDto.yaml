@@ -1,0 +1,26 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./FilterValueEnumDtoConsentRequestTypeDto.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoConsentRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    enum:
+    - TOTAL
+    - COMPLETED
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+  number:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  pcrParticipantWalletId:
+    $ref: ./FilterValueDtoUUID.yaml
+  cbrParticipantWalletId:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для заявок.

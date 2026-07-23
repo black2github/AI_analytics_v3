@@ -1,0 +1,88 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  surname:
+    type: string
+    description: Фамилия сотрудника
+  name:
+    type: string
+    description: Имя сотрудника
+  patronymic:
+    type: string
+    description: Отчество сотрудника
+  email:
+    type: string
+    description: Адрес электронной почты сотрудника (по конституции)
+  phoneNumber:
+    type: string
+    description: Номер телефона сотрудника (по конституции)
+  additionalEmail:
+    type: string
+    description: Адрес электронной почты сотрудника (иной)
+  additionalPhoneNumber:
+    type: string
+    description: Номер телефона сотрудника (иной)
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  position:
+    type: string
+    description: Должность
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  identityCardType:
+    type: string
+    description: Типы документов удостоверяющих личность
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN_COUNTRY
+    - RESIDENCE_CARD
+    - OTHER
+  identityCardSeries:
+    type: string
+    description: Серия ДУЛ
+  identityCardNumber:
+    type: string
+    description: Номер ДУЛ
+  identityCardDepartmentCode:
+    type: string
+    description: Код подразделения ДУЛ
+  identityCardDepartmentPlace:
+    type: string
+    description: Место выдачи ДУЛ
+  identityCardReleaseDate:
+    type: string
+    description: Дата выдачи ДУЛ
+    format: date
+  identityCardExpirationDate:
+    type: string
+    description: Срок действия ДУЛ
+    format: date
+  authorizedPerson:
+    type: boolean
+    description: Признак "УЛ по ГПБ БОЛ"
+  blockedAt:
+    type: string
+    description: Дата блокировки УЛ
+    format: date-time
+  fired:
+    type: boolean
+    description: Сотрудник уволен
+  clientEmployeeAddresses:
+    type: array
+    description: Адреса
+    items:
+      $ref: ./ClientEmployeeAddressDto.yaml
+description: Сотрудник клиента

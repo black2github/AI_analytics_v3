@@ -1,0 +1,10 @@
+type: object
+properties:
+  inn:
+    pattern: ^(\d{5}|\d{10}|\d{12})$
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+description: Параметры проверки наличия активных заявок

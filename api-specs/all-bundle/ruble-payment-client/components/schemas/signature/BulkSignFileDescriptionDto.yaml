@@ -1,0 +1,15 @@
+required:
+- asyncTaskId
+- bulkSignFiles
+type: object
+properties:
+  asyncTaskId:
+    type: string
+    description: Идентификатор связанной асинхронной задачи
+    format: uuid
+  bulkSignFiles:
+    type: array
+    description: Список файлов для подписи
+    items:
+      $ref: ./BulkSignFileDto.yaml
+description: Данные файлов для подписи документов

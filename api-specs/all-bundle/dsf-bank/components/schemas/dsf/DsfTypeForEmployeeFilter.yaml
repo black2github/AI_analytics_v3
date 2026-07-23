@@ -1,0 +1,20 @@
+type: object
+description: Фильтр типов ДСФ для сервиса Сотрудники
+properties:
+  authorizedPersonId:
+    type: string
+    format: uuid
+    description: Для выбранного УЛ возвращаются  текущие ограничения типов писем.
+  bankClientId:
+    type: string
+    format: uuid
+    description: Для выбранной организации возвращаются типы документов связанные через классификатор.
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Код типа письма.
+  letterType:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Категория типа письма.
+  products:
+    $ref: ../common/DsfTypeProductTypeFilter.yaml
+    description: Коды продуктов (ЦРМ)

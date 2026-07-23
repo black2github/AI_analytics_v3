@@ -1,0 +1,80 @@
+type: object
+properties:
+  ecoServiceCode:
+    type: string
+    description: Код сервиса-источника ЭКО
+    enum:
+    - UNKNOWN
+    - GPB_BO
+    - RESERVATION
+    - RESERVATION2
+    - ONB
+    - O2PLUS
+    - RKO
+    - AO_RKO
+    - REF
+    - LK_UVED
+    - LK_MP
+    - LETTERS
+    - LEASING_BS
+    - FNS
+    - NEWS
+    - LOCKS
+    - RRKO
+    - VRKO
+    - CARD_CHARGE
+    - BROKERAGE_BS
+    - ACQUIRING_BS
+    - BSK
+    - EBG
+    - WEBDEALING
+    - FACTORING_BS
+    - UPD_INFO
+    - CORP_CARDS
+    - CLIENT_DICTIONARY_BS
+    - KEP_DBO
+    - KEP_ECO
+    - NEP
+    - TRAFFIC_LIGHT_BS
+    - STATEMENT
+    - EMPLOYEES
+    - COMMON_DICTIONARY_BS
+    - ADM
+    - ONB2
+    - ALERT
+    - SBP
+    - CC
+    - STOP_RESTRICTION_ACC
+    - UAA
+    - LANDING_REQUEST
+    - ONB_FNS
+    - SINGLE_WINDOW
+    - ONB_KZ
+    - SIGN
+    - CCS
+    - ONB_RO
+    - LO
+    - SFZU
+    - LIMITS
+    - CA
+    - CLIENT_BANK
+    - MB
+    - LOFC
+  requestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  branchId:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  currencyLetterCode:
+    type: string
+    description: Буквенный код валюты
+  client:
+    $ref: ../common/BankClientDto.yaml
+description: Данные для автоматического резервирования счета

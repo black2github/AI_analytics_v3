@@ -1,0 +1,163 @@
+openapi: 3.0.1
+info:
+  title: Сервис календаря сделок. Банковская часть.
+  version: 1.47.0
+servers:
+- url: /deals-calendar-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API заявки на встречу, создаваемую через АС ЛБП. Базовые операции.
+- name: API экспорта реестра
+- name: API заявки на встречу. Базовые операции.
+- name: API заявки в ЛБП на встречу. Базовые операции.
+- name: API скроллера лога запросов по встречам. Банковская часть
+- name: API заявки на встречу. Операции над датами и временными слотами.
+- name: Вспомогательное API для скроллера пользователей
+paths:
+  /meeting/lbp:
+    $ref: ./paths/lbp/meeting_lbp.yaml
+  /v1/naumen-integration-log/users:
+    $ref: ./paths/naumen-integration-log/v1_naumen_integration_log_users.yaml
+  /v1/naumen-integration-log/get-page:
+    $ref: ./paths/naumen-integration-log/v1_naumen_integration_log_get_page.yaml
+  /v1/naumen-integration-log/category:
+    $ref: ./paths/naumen-integration-log/v1_naumen_integration_log_category.yaml
+  /meeting/lbp/time-slots/available/intervals:
+    $ref: ./paths/lbp/meeting_lbp_time_slots_available_intervals.yaml
+  /meeting/lbp/time-slots/available/dates:
+    $ref: ./paths/lbp/meeting_lbp_time_slots_available_dates.yaml
+  /meeting/lbp/cancel-by-delivery-id/{id}:
+    $ref: ./paths/lbp/meeting_lbp_cancel_by_delivery_id_id.yaml
+  /meeting/export/requests:
+    $ref: ./paths/export/meeting_export_requests.yaml
+  /integration/meeting/reject/{id}:
+    $ref: ./paths/meeting/integration_meeting_reject_id.yaml
+  /integration/meeting/lbp/reject/{id}:
+    $ref: ./paths/meeting/integration_meeting_lbp_reject_id.yaml
+  /meeting/lbp/{id}:
+    $ref: ./paths/lbp/meeting_lbp_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/lbp/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/lbp/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/lbp/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/lbp/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/lbp/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    MeetingContactDto:
+      $ref: ./components/schemas/common/MeetingContactDto.yaml
+    MeetingRequestBranchUpdateDto:
+      $ref: ./components/schemas/lbp/MeetingRequestBranchUpdateDto.yaml
+    MeetingRequestUpdateDto:
+      $ref: ./components/schemas/lbp/MeetingRequestUpdateDto.yaml
+    OtherInfoUpdateDto:
+      $ref: ./components/schemas/lbp/OtherInfoUpdateDto.yaml
+    UpdateCommandMeetingRequestUpdateDtoUUID:
+      $ref: ./components/schemas/lbp/UpdateCommandMeetingRequestUpdateDtoUUID.yaml
+    CreateResponseMeetingRequestDto:
+      $ref: ./components/schemas/lbp/CreateResponseMeetingRequestDto.yaml
+    MeetingRequestBankClientDto:
+      $ref: ./components/schemas/common/MeetingRequestBankClientDto.yaml
+    MeetingRequestBranchDto:
+      $ref: ./components/schemas/common/MeetingRequestBranchDto.yaml
+    MeetingRequestDto:
+      $ref: ./components/schemas/common/MeetingRequestDto.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueDtoString.yaml
+    GetPageCommandUsersFilter:
+      $ref: ./components/schemas/naumen-integration-log/GetPageCommandUsersFilter.yaml
+    PageParamsUsersFilter:
+      $ref: ./components/schemas/naumen-integration-log/PageParamsUsersFilter.yaml
+    Paging:
+      $ref: ./components/schemas/naumen-integration-log/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/naumen-integration-log/Sort.yaml
+    UsersFilter:
+      $ref: ./components/schemas/naumen-integration-log/UsersFilter.yaml
+    PageDataUsersScrollerDto:
+      $ref: ./components/schemas/naumen-integration-log/PageDataUsersScrollerDto.yaml
+    UsersScrollerDto:
+      $ref: ./components/schemas/naumen-integration-log/UsersScrollerDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoIntegrationLogErrorCodeDto:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueEnumDtoIntegrationLogErrorCodeDto.yaml
+    FilterValueEnumDtoProcessingStatusDto:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueEnumDtoProcessingStatusDto.yaml
+    FilterValueEnumDtoRequestTypeDto:
+      $ref: ./components/schemas/naumen-integration-log/FilterValueEnumDtoRequestTypeDto.yaml
+    GetPageCommandIntegrationLogBankFilter:
+      $ref: ./components/schemas/naumen-integration-log/GetPageCommandIntegrationLogBankFilter.yaml
+    IntegrationLogBankFilter:
+      $ref: ./components/schemas/naumen-integration-log/IntegrationLogBankFilter.yaml
+    PageParamsIntegrationLogBankFilter:
+      $ref: ./components/schemas/naumen-integration-log/PageParamsIntegrationLogBankFilter.yaml
+    IntegrationLogBankScrollerDto:
+      $ref: ./components/schemas/naumen-integration-log/IntegrationLogBankScrollerDto.yaml
+    PageDataIntegrationLogBankScrollerDto:
+      $ref: ./components/schemas/naumen-integration-log/PageDataIntegrationLogBankScrollerDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/naumen-integration-log/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/naumen-integration-log/CategoryResponse.yaml
+    CreateCommandMeetingRequestCreateDto:
+      $ref: ./components/schemas/lbp/CreateCommandMeetingRequestCreateDto.yaml
+    MeetingRequestCreateDto:
+      $ref: ./components/schemas/lbp/MeetingRequestCreateDto.yaml
+    OtherInfoCreateDto:
+      $ref: ./components/schemas/lbp/OtherInfoCreateDto.yaml
+    MeetingLbpTimeSlotsRequestDto:
+      $ref: ./components/schemas/lbp/MeetingLbpTimeSlotsRequestDto.yaml
+    GenericResponseSimpleErrorDataMeetingLbpTimeSlotsResponseDto:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataMeetingLbpTimeSlotsResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    TimeSlotDto:
+      $ref: ./components/schemas/lbp/TimeSlotDto.yaml
+    MeetingLbpDatesRequestDto:
+      $ref: ./components/schemas/lbp/MeetingLbpDatesRequestDto.yaml
+    DeliveryDatesDto:
+      $ref: ./components/schemas/lbp/DeliveryDatesDto.yaml
+    GenericResponseSimpleErrorDataMeetingLbpDatesResponseDto:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataMeetingLbpDatesResponseDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataVoid.yaml
+    RegistryRequestDto:
+      $ref: ./components/schemas/export/RegistryRequestDto.yaml
+    GenericResponseSimpleErrorDataRegistryResponseDto:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataRegistryResponseDto.yaml
+    RegistryResponseDto:
+      $ref: ./components/schemas/export/RegistryResponseDto.yaml
+    GenericResponseSimpleErrorDataMeetingRequestDto:
+      $ref: ./components/schemas/meeting/GenericResponseSimpleErrorDataMeetingRequestDto.yaml
+    MeetingRequestBranchInfoDto:
+      $ref: ./components/schemas/lbp/MeetingRequestBranchInfoDto.yaml
+    MeetingRequestTaskDto:
+      $ref: ./components/schemas/lbp/MeetingRequestTaskDto.yaml
+    SingleResponseMeetingRequestTaskDto:
+      $ref: ./components/schemas/lbp/SingleResponseMeetingRequestTaskDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

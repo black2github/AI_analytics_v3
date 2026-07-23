@@ -1,0 +1,36 @@
+type: object
+description: Запрос смены статуса заявки на отключение Агентов ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP_ERROR
+    - EXECUTED_BY_AS_SBP_DISCONNECT_AGENTS
+    - EXPORT_DISCONNECT_AGENTS_TO_F1
+    - EXPORT_DISCONNECT_AGENTS_TO_F1_ERROR
+    - EXECUTED_BY_F1_DISCONNECT_AGENTS
+    - EXECUTED
+    - REJECTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id

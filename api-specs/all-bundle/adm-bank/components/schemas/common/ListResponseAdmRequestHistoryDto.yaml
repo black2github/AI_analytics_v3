@@ -1,0 +1,7 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      $ref: ./AdmRequestHistoryDto.yaml
+description: Данные

@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип визы
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  notEq:
+    type: string
+    description: Тип визы
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип визы
+      enum:
+      - POSITIVE
+      - NEGATIVE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип визы
+      enum:
+      - POSITIVE
+      - NEGATIVE
+  isNull:
+    type: boolean
+description: Фильтр по типу визы

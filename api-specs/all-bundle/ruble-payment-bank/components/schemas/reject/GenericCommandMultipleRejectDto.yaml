@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./MultipleRejectDto.yaml
+description: Запрос

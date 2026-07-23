@@ -1,0 +1,46 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории клиентского скроллера документов
+    enum:
+    - ALL
+    - WAIT_APPROVE
+    - IN_PROCESS
+    - CANCELED
+    - COMPLETED
+  documentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  visaClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  senderClientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  senderClientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  senderClientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  visaDateTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  receiverName:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentType:
+    $ref: ../common/RequestClassifierFilterDto.yaml
+  visaUserName:
+    $ref: ../common/FilterValueDtoString.yaml
+  lastSignerFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentDocumentSignDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  documentNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  documentSummary:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/ApprovalSignDocumentStatusFilterDto.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  visaDecision:
+    $ref: ./FilterValueEnumDtoVisaDecisionFilterDto.yaml
+description: Фильтр клиентского скроллера документов

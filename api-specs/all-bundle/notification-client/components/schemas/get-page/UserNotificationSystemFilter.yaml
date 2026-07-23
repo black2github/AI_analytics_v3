@@ -1,0 +1,11 @@
+type: object
+properties:
+  systemId:
+    $ref: ../common/FilterValueDtoString.yaml
+  systemName:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр систем-источников уведомлений

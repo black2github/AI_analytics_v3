@@ -1,0 +1,69 @@
+type: object
+properties:
+  subscriptionPurpose:
+    type: string
+    description: Цель подписки.
+  subscriptionToken:
+    type: string
+    description: Токен подписки
+  dateStart:
+    type: string
+    format: date-time
+    description: Дата и время получения колбэка о привязке счета
+  paymentAmount:
+    type: integer
+    format: int64
+    description: Сумма периодического платежа в копейках
+  paymentFrequency:
+    type: string
+    description: Периодичность платежа
+    enum:
+    - DAILY
+    - WEEKLY
+    - MONTHLY
+    - QUARTERLY
+  paymentStart:
+    type: string
+    format: date
+    description: Дата старта подписки
+  nextPaymentDate:
+    type: string
+    format: date
+    description: Дата следующего платежа
+  paymentsQuantity:
+    type: integer
+    format: int32
+    description: Количество платежей
+  paymentDay:
+    type: integer
+    format: int32
+    description: День списания
+  payer:
+    type: string
+    description: Плательщик
+  paid:
+    type: integer
+    format: int64
+    description: Сумма проведенных платежей в копейках
+  paidCount:
+    type: integer
+    format: int64
+    description: Количество проведенных платежей
+  paidCountSchedule:
+    type: integer
+    format: int64
+    description: Количество платежей проведенных в текущем графике
+  hidden:
+    type: boolean
+    description: Признак подписки, скрытой для отображения
+  paymentFailed:
+    type: boolean
+    description: Признак "Последний платеж отклонен"
+required:
+- hidden
+- paid
+- paidCount
+- paidCountSchedule
+- paymentFailed
+- subscriptionPurpose
+- subscriptionToken

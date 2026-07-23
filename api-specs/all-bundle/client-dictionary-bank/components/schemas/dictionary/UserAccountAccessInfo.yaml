@@ -1,0 +1,34 @@
+required:
+- document
+- documentName
+type: object
+properties:
+  document:
+    type: string
+    description: Тип документа
+    enum:
+    - UNKNOWN
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_TRANSIT
+    - VRKO_CONVERSION
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+    - SBP
+    - DW_WALLET_IDENTIFY
+    - DW_WALLET_DEPOSIT
+    - DW_WALLET_WITHDRAW
+  documentName:
+    type: string
+    description: Название типа документа
+  actions:
+    type: array
+    description: Доступные типы действий
+    items:
+      $ref: ./AccountAccessActionTypeDto.yaml
+description: Доступы к счету

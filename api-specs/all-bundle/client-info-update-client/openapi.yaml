@@ -1,0 +1,251 @@
+openapi: 3.0.1
+info:
+  title: Сервис изменений пользовательской информации. Клиентская часть.
+  version: 1.66.0-hf-2
+servers:
+- url: /client-info-update-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API ручной синхронизации данных в рамках сотрудников
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /client-info:
+    $ref: ./paths/client-info/client_info.yaml
+  /employees/data/sync:
+    $ref: ./paths/data/employees_data_sync.yaml
+  /client-info/v2:
+    $ref: ./paths/v2/client_info_v2.yaml
+  /client-info/sign/v2.2:
+    $ref: ./paths/sign/client_info_sign_v2_2.yaml
+  /client-info/send:
+    $ref: ./paths/send/client_info_send.yaml
+  /client-info/passport:
+    $ref: ./paths/passport/client_info_passport.yaml
+  /client-info/get-page:
+    $ref: ./paths/get-page/client_info_get_page.yaml
+  /client-info/generate-sign-data/v2.2:
+    $ref: ./paths/generate-sign-data/client_info_generate_sign_data_v2_2.yaml
+  /client-info/fns-archive/parsing/start:
+    $ref: ./paths/fns-archive/client_info_fns_archive_parsing_start.yaml
+  /client-info/fns-archive/parsing/cancel/{id}:
+    $ref: ./paths/fns-archive/client_info_fns_archive_parsing_cancel_id.yaml
+  /client-info/delete:
+    $ref: ./paths/delete/client_info_delete.yaml
+  /client-info/check-sign-authority-on-open:
+    $ref: ./paths/check-sign-authority-on-open/client_info_check_sign_authority_on_open.yaml
+  /client-info/category:
+    $ref: ./paths/category/client_info_category.yaml
+  /change-requirement/client/actual/by-bank-client-ids:
+    $ref: ./paths/client/change_requirement_client_actual_by_bank_client_ids.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /client-info/{id}:
+    $ref: ./paths/{id}/client_info_id.yaml
+  /client-info/settings:
+    $ref: ./paths/settings/client_info_settings.yaml
+  /client-info/request-types:
+    $ref: ./paths/request-types/client_info_request_types.yaml
+  /client-info/history/{id}:
+    $ref: ./paths/history/client_info_history_id.yaml
+  /client-info/fns-archive/parsing/status/{id}:
+    $ref: ./paths/fns-archive/client_info_fns_archive_parsing_status_id.yaml
+  /change-requirement/{documentId}:
+    $ref: ./paths/{documentId}/change_requirement_documentId.yaml
+  /change-requirement/client/{clientId}:
+    $ref: ./paths/client/change_requirement_client_clientId.yaml
+  /change-requirement/client/actual/{clientId}:
+    $ref: ./paths/client/change_requirement_client_actual_clientId.yaml
+components:
+  schemas:
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    ClientInfoUpdChangeRequestDto:
+      $ref: ./components/schemas/client-info/ClientInfoUpdChangeRequestDto.yaml
+    ClientInfoUpdRequestAttachmentDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestAttachmentDto.yaml
+    ClientInfoUpdRequestIdentityDocumentDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestIdentityDocumentDto.yaml
+    ClientInfoUpdRequestUpdateDataDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestUpdateDataDto.yaml
+    ClientInfoUpdateRequestAddressDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateRequestAddressDto.yaml
+    NotificationOfExecutionDto:
+      $ref: ./components/schemas/common/NotificationOfExecutionDto.yaml
+    SignFileInfoDto:
+      $ref: ./components/schemas/common/SignFileInfoDto.yaml
+    UpdateCommandClientInfoUpdChangeRequestDtoUUID:
+      $ref: ./components/schemas/client-info/UpdateCommandClientInfoUpdChangeRequestDtoUUID.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateRequestDto.yaml
+    ClientInfoUpdateSignatureDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateSignatureDto.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SingleResponseClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/common/SingleResponseClientInfoUpdateRequestDto.yaml
+    SubjectDto:
+      $ref: ./components/schemas/common/SubjectDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    EdsDataSyncRequestBody:
+      $ref: ./components/schemas/data/EdsDataSyncRequestBody.yaml
+    EdsObjectFilter:
+      $ref: ./components/schemas/data/EdsObjectFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    ErrorData:
+      $ref: ./components/schemas/data/ErrorData.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/data/GenericResponseErrorDataLong.yaml
+    ClientInfoUpdCreateRequestDto:
+      $ref: ./components/schemas/client-info/ClientInfoUpdCreateRequestDto.yaml
+    CreateCommandClientInfoUpdCreateRequestDto:
+      $ref: ./components/schemas/client-info/CreateCommandClientInfoUpdCreateRequestDto.yaml
+    CreateResponseClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/common/CreateResponseClientInfoUpdateRequestDto.yaml
+    ClientInfoUpdCreateRequestDtoV2:
+      $ref: ./components/schemas/v2/ClientInfoUpdCreateRequestDtoV2.yaml
+    CreateCommandClientInfoUpdCreateRequestDtoV2:
+      $ref: ./components/schemas/v2/CreateCommandClientInfoUpdCreateRequestDtoV2.yaml
+    SignCommandV2x2:
+      $ref: ./components/schemas/sign/SignCommandV2x2.yaml
+    GenericResponseSimpleErrorDataListClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/sign/GenericResponseSimpleErrorDataListClientInfoUpdateRequestDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    ClientInfoUpdRequestTextDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestTextDto.yaml
+    ClientInfoUpdateRequestViewResponseDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateRequestViewResponseDto.yaml
+    SingleResponseClientInfoUpdateRequestViewResponseDto:
+      $ref: ./components/schemas/common/SingleResponseClientInfoUpdateRequestViewResponseDto.yaml
+    GenericCommandOcrDocumentRequestDto:
+      $ref: ./components/schemas/passport/GenericCommandOcrDocumentRequestDto.yaml
+    OcrDocumentRequestDto:
+      $ref: ./components/schemas/passport/OcrDocumentRequestDto.yaml
+    GenericResponseSimpleErrorDataOcrDocumentResponseDto:
+      $ref: ./components/schemas/passport/GenericResponseSimpleErrorDataOcrDocumentResponseDto.yaml
+    OcrDocumentResponseDto:
+      $ref: ./components/schemas/passport/OcrDocumentResponseDto.yaml
+    ClientInfoUpdRequestClientFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestClientFilter.yaml
+    ClientInfoUpdRequestStatusFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestStatusFilter.yaml
+    ClientInfoUpdRequestTypeFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestTypeFilter.yaml
+    ClientInfoUpdSubjectTypeFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdSubjectTypeFilter.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandClientInfoUpdRequestClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandClientInfoUpdRequestClientFilter.yaml
+    PageParamsClientInfoUpdRequestClientFilter:
+      $ref: ./components/schemas/common/PageParamsClientInfoUpdRequestClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    ClientInfoUpdRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/ClientInfoUpdRequestClientScrollerDto.yaml
+    ClientInfoUpdRequestClientScrollerUpdateDataDto:
+      $ref: ./components/schemas/get-page/ClientInfoUpdRequestClientScrollerUpdateDataDto.yaml
+    PageDataClientInfoUpdRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataClientInfoUpdRequestClientScrollerDto.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignV2x1Dto.yaml
+    FNSArchiveProcessingRqDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveProcessingRqDto.yaml
+    GenericCommandFNSArchiveProcessingRqDto:
+      $ref: ./components/schemas/fns-archive/GenericCommandFNSArchiveProcessingRqDto.yaml
+    FNSArchiveProcessingRspDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveProcessingRspDto.yaml
+    GenericResponseSimpleErrorDataFNSArchiveProcessingRspDto:
+      $ref: ./components/schemas/fns-archive/GenericResponseSimpleErrorDataFNSArchiveProcessingRspDto.yaml
+    FNSArchiveProcessingCancelRspDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveProcessingCancelRspDto.yaml
+    GenericResponseSimpleErrorDataFNSArchiveProcessingCancelRspDto:
+      $ref: ./components/schemas/fns-archive/GenericResponseSimpleErrorDataFNSArchiveProcessingCancelRspDto.yaml
+    CheckSignAuthorityRequestDto:
+      $ref: ./components/schemas/check-sign-authority-on-open/CheckSignAuthorityRequestDto.yaml
+    CheckSignAuthorityResponseDto:
+      $ref: ./components/schemas/check-sign-authority-on-open/CheckSignAuthorityResponseDto.yaml
+    GenericResponseSimpleErrorDataCheckSignAuthorityResponseDto:
+      $ref: ./components/schemas/check-sign-authority-on-open/GenericResponseSimpleErrorDataCheckSignAuthorityResponseDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    ClientInfoActualChangeRequirementDto:
+      $ref: ./components/schemas/client/ClientInfoActualChangeRequirementDto.yaml
+    GenericResponseSimpleErrorDataMapUUIDListClientInfoActualChangeRequirementDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataMapUUIDListClientInfoActualChangeRequirementDto.yaml
+    ClientInfoUpdateConfigurableSettingsDto:
+      $ref: ./components/schemas/settings/ClientInfoUpdateConfigurableSettingsDto.yaml
+    GenericResponseSimpleErrorDataClientInfoUpdateConfigurableSettingsDto:
+      $ref: ./components/schemas/settings/GenericResponseSimpleErrorDataClientInfoUpdateConfigurableSettingsDto.yaml
+    ClientInfoUpdRequestTypesDto:
+      $ref: ./components/schemas/request-types/ClientInfoUpdRequestTypesDto.yaml
+    DocumentTypeForClientDto:
+      $ref: ./components/schemas/request-types/DocumentTypeForClientDto.yaml
+    FormattedTextDto:
+      $ref: ./components/schemas/request-types/FormattedTextDto.yaml
+    GenericResponseSimpleErrorDataListClientInfoUpdRequestTypesDto:
+      $ref: ./components/schemas/request-types/GenericResponseSimpleErrorDataListClientInfoUpdRequestTypesDto.yaml
+    ClientInfoUpdRequestHistoryClientDto:
+      $ref: ./components/schemas/history/ClientInfoUpdRequestHistoryClientDto.yaml
+    ClientInfoUpdRequestOperationHistoryDto:
+      $ref: ./components/schemas/history/ClientInfoUpdRequestOperationHistoryDto.yaml
+    GenericResponseSimpleErrorDataListClientInfoUpdRequestHistoryClientDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListClientInfoUpdRequestHistoryClientDto.yaml
+    FNSArchiveDocumentDataRspDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveDocumentDataRspDto.yaml
+    FNSArchiveFileDataRspDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveFileDataRspDto.yaml
+    FNSArchiveProcessingResultRspDto:
+      $ref: ./components/schemas/fns-archive/FNSArchiveProcessingResultRspDto.yaml
+    GenericResponseSimpleErrorDataFNSArchiveProcessingResultRspDto:
+      $ref: ./components/schemas/fns-archive/GenericResponseSimpleErrorDataFNSArchiveProcessingResultRspDto.yaml
+    ClientInfoChangeRequirementDto:
+      $ref: ./components/schemas/common/ClientInfoChangeRequirementDto.yaml
+    GenericResponseSimpleErrorDataClientInfoChangeRequirementDto:
+      $ref: ./components/schemas/{documentId}/GenericResponseSimpleErrorDataClientInfoChangeRequirementDto.yaml
+    ListResponseClientInfoChangeRequirementDto:
+      $ref: ./components/schemas/client/ListResponseClientInfoChangeRequirementDto.yaml
+    GenericResponseSimpleErrorDataListClientInfoActualChangeRequirementDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListClientInfoActualChangeRequirementDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

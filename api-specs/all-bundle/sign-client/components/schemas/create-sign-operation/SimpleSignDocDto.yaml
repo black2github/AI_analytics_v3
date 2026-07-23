@@ -1,0 +1,13 @@
+required:
+- data
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  data:
+    type: string
+    description: Подписываемые данные
+description: Документ подписываемый простой подписью

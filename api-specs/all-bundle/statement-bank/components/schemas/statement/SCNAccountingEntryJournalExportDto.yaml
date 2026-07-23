@@ -1,0 +1,17 @@
+required:
+- accountingEntryIds
+- entryDate
+- turnoverEventId
+type: object
+properties:
+  accountingEntryIds:
+    $ref: ../common/FilterValueDtoLong.yaml
+  turnoverEventId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  entryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  textSearch:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Данные

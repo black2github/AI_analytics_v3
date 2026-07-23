@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./FileImportSignStatusDto.yaml
+  notEq:
+    $ref: ./FileImportSignStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./FileImportSignStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./FileImportSignStatusDto.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./FileImportSignStatusDto.yaml
+  ge:
+    $ref: ./FileImportSignStatusDto.yaml
+  lt:
+    $ref: ./FileImportSignStatusDto.yaml
+  le:
+    $ref: ./FileImportSignStatusDto.yaml
+description: Подпись файла. Равенство

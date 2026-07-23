@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  date:
+    $ref: ./FilterValueDtoInstant.yaml
+  status:
+    $ref: ./RequestStatusFilter.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  branches:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям. Полное совпадение.
+    enum:
+    - CREATED
+    - IN_PROGRESS
+    - FINISHED
+    - ALL
+  systemDocNum:
+    $ref: ./FilterValueDtoLong.yaml
+  clientUuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientType:
+    $ref: ./BankClientTypeFilter.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  executorId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  commentForBank:
+    $ref: ./FilterValueDtoString.yaml
+  visitingServiceType:
+    $ref: ./FilterValueEnumDtoVisitingServiceTypeDto.yaml
+  onboardingRequestId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр заявок на выезд менеджера для банковской части.

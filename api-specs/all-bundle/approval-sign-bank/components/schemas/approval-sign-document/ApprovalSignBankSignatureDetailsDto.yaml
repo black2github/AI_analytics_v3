@@ -1,0 +1,84 @@
+required:
+- firstSignTime
+- firstSignatoryName
+- sendingForApprovalTime
+type: object
+properties:
+  visaType:
+    type: string
+    description: Тип визы
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  visaMode:
+    type: string
+    description: Тип подписания документа
+    enum:
+    - STANDARD_KEP_OEP
+    - SIGNED_1C_DIRECT_PACKAGE
+    - SIGNED_1C_FILE_ATTACHED_SIGNATURE
+    - SIGNED_1C_FILE_DETACHED_SIGNATURE
+    - SIGNED_TNF
+    - BULK_SIGNATURE_FILE
+  visaUserId:
+    type: string
+    description: Визирующий (ID Пользователь)
+    format: uuid
+  visaUserName:
+    type: string
+    description: ФИО Визирующего
+  visaDateTime:
+    type: string
+    description: Дата и время визирования
+    format: date-time
+  visaComment:
+    type: string
+    description: Комментарий к визе
+  approvingOrganizationName:
+    type: string
+    description: Наименование визирующей организации
+  approverClientAbsId:
+    type: string
+    description: РНК визирующей организации
+  approverClientInn:
+    type: string
+    description: ИНН/КИО визирующей организации
+  sendingForApprovalTime:
+    type: string
+    description: Дата и время направления на визирование
+    format: date-time
+  firstSignatoryName:
+    type: string
+    description: ФИО подписанта 1
+  firstSignTime:
+    type: string
+    description: Дата и время подписания 1
+    format: date-time
+  firstSignMode:
+    type: string
+    description: Тип подписания документа
+    enum:
+    - STANDARD_KEP_OEP
+    - SIGNED_1C_DIRECT_PACKAGE
+    - SIGNED_1C_FILE_ATTACHED_SIGNATURE
+    - SIGNED_1C_FILE_DETACHED_SIGNATURE
+    - SIGNED_TNF
+    - BULK_SIGNATURE_FILE
+  secondSignatoryName:
+    type: string
+    description: ФИО подписанта 2
+  secondSignTime:
+    type: string
+    description: Дата и время подписания 2
+    format: date-time
+  secondSignMode:
+    type: string
+    description: Тип подписания документа
+    enum:
+    - STANDARD_KEP_OEP
+    - SIGNED_1C_DIRECT_PACKAGE
+    - SIGNED_1C_FILE_ATTACHED_SIGNATURE
+    - SIGNED_1C_FILE_DETACHED_SIGNATURE
+    - SIGNED_TNF
+    - BULK_SIGNATURE_FILE
+description: ДТО Реквизиты подписи и визирования для банка

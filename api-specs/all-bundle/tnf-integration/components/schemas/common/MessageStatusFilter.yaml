@@ -1,0 +1,48 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус ТНФ сообщения
+    enum:
+    - RECEIVED
+    - SENT
+    - SENDING
+    - SEND_ERROR
+    - SEND_ERROR_RETRY_LIMIT
+  notEq:
+    type: string
+    description: Статус ТНФ сообщения
+    enum:
+    - RECEIVED
+    - SENT
+    - SENDING
+    - SEND_ERROR
+    - SEND_ERROR_RETRY_LIMIT
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус ТНФ сообщения
+      enum:
+      - RECEIVED
+      - SENT
+      - SENDING
+      - SEND_ERROR
+      - SEND_ERROR_RETRY_LIMIT
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус ТНФ сообщения
+      enum:
+      - RECEIVED
+      - SENT
+      - SENDING
+      - SEND_ERROR
+      - SEND_ERROR_RETRY_LIMIT
+  isNull:
+    type: boolean

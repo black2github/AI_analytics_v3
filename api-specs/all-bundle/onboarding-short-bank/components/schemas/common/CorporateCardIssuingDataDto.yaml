@@ -1,0 +1,48 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Офис выдачи карты (Ссылка на сущность Подразделение Банка)
+    format: uuid
+  cardType:
+    type: string
+    description: Тип карты
+    enum:
+    - CORPORATE
+    - INSTANT_BUSINESS
+    - SELF_ENCASHMENT
+  clientNameEn:
+    type: string
+    description: Наименование латинскими буквами
+  corpCardAccountNumber:
+    type: string
+    description: Номер счёта корпоративной карты
+  corpCardAccountType:
+    type: string
+    description: Вид счёта, к которому будут выпущены карты
+    enum:
+    - CARD_ACCOUNT_RUB
+    - OPERATING_ACCOUNT_RUB
+    - CARD_ACCOUNT_CNY
+  hasSecretWord:
+    type: boolean
+    description: Признак наличия кодового слова
+  instantCard:
+    type: boolean
+    description: Признак моментальной корпоративной карты
+  needIssue:
+    type: boolean
+    description: Признак необходимости выпуска корп. карты
+  paymentSystemCode:
+    type: string
+    description: Код платежной системы и категории карты
+  paymentSystemNameAndCardCategory:
+    type: string
+    description: Наименование платежной системы и категории карты
+  secretWord:
+    type: string
+    description: Кодовое слово
+  userNameEn:
+    type: string
+    description: Имя и фамилия латинскими буквами
+description: Данные для выпуска корпоративной карты

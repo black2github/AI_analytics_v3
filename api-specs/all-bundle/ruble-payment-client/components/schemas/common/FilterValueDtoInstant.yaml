@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    format: date-time
+  notEq:
+    type: string
+    format: date-time
+  in:
+    type: array
+    items:
+      type: string
+      format: date-time
+  notIn:
+    type: array
+    items:
+      type: string
+      format: date-time
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    format: date-time
+  ge:
+    type: string
+    format: date-time
+  lt:
+    type: string
+    format: date-time
+  le:
+    type: string
+    format: date-time
+description: Дата и время подписания ПЭД

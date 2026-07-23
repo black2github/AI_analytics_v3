@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  requestNumberUser:
+    $ref: ../common/FilterValueDtoLong.yaml
+  certOwnerFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestType:
+    $ref: ./RequestTypeFilter.yaml
+  statusCategory:
+    $ref: ./UnitedCertRequestBankCategoryFilter.yaml
+description: Фильтр банковского скроллера объединенной заявки на выпуск/регистрацию ЭП

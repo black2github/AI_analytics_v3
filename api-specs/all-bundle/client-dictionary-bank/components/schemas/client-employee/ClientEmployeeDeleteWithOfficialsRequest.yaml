@@ -1,0 +1,10 @@
+type: object
+properties:
+  employeeIds:
+    type: array
+    description: Список идентификаторов сотрудников
+    items:
+      type: string
+      description: Список идентификаторов сотрудников
+      format: uuid
+description: Запрос на удаление сотрудников клиента со связанными представителями

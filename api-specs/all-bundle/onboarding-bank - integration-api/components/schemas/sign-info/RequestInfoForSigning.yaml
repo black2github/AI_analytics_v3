@@ -1,0 +1,21 @@
+type: object
+properties:
+  availableForSigning:
+    type: boolean
+    description: Признак доступности подписания документов по заявке
+  availableForSigningByCurrentUser:
+    type: boolean
+    description: Признак доступности подписания документов текущим пользователем
+  hasNonFinalRequest115:
+    type: boolean
+    description: Признак наличия заявки 115 в не финальном статусе
+  signingStatus:
+    type: string
+    description: Статус подписания с помощью УКЭП
+    enum:
+    - UNSIGNED
+    - SIGNED
+    - ERROR
+    - REQUIRED
+    - CANCELLED
+description: Ответ для метода поиска заявки ОНБ для подписания ЭП

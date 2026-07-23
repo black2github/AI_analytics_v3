@@ -1,0 +1,32 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Bank client ID
+    format: uuid
+  innKio:
+    type: string
+    description: INN/KIO
+  kpp:
+    type: string
+    description: KPP
+  ogrn:
+    type: string
+    description: OGRN
+  name:
+    type: string
+    description: Name
+  resident:
+    type: boolean
+    description: Resident mark
+  extId:
+    type: string
+    description: Client external ID (ESK)
+    format: uuid
+  absId:
+    type: string
+    description: Client abs id (RKO F1)
+  loginCertificateId:
+    type: string
+    format: uuid
+description: Bank client DTO

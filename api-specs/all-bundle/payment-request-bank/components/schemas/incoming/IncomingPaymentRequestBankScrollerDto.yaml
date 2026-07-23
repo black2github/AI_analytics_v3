@@ -1,0 +1,26 @@
+required:
+- additionalInfo
+- documentBusinessInfo
+- id
+- payerInfo
+- receiverInfo
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  status:
+    $ref: ./IncomingPaymentRequestStatusDto.yaml
+  bankClientInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.incoming.dto.bank.scroller.BankClientInfoBankScrollerDto.yaml
+  documentBusinessInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.incoming.dto.bank.scroller.DocumentBusinessInfoBankScrollerDto.yaml
+  payerInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.incoming.dto.bank.scroller.PayerInfoBankScrollerDto.yaml
+  receiverInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.incoming.dto.bank.scroller.ReceiverInfoBankScrollerDto.yaml
+  additionalInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.incoming.dto.bank.scroller.AdditionalInfoBankScrollerDto.yaml
+description: Платежное требование (входящее) данные для банка, скроллер

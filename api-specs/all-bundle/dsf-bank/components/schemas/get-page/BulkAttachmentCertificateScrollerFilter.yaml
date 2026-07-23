@@ -1,0 +1,6 @@
+type: object
+description: Фильтр скроллера сертификатов автоматического письма.
+properties:
+  catalogId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Идентификатор настройки для массовой рассылки ДСФ из банка для определенного каталога

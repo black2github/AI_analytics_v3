@@ -1,0 +1,13 @@
+required:
+- documents
+- product
+type: object
+properties:
+  product:
+    $ref: ./Product.yaml
+  documents:
+    type: array
+    description: Список документов
+    items:
+      $ref: ./Document.yaml
+description: Документы сгруппированные по продукту

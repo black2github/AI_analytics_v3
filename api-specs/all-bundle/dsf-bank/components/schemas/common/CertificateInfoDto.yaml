@@ -1,0 +1,28 @@
+type: object
+description: Информация о сертификате
+properties:
+  bankUserCertificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата банковского пользователя
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    type: string
+    description: Кому выдан сертификат
+  validFrom:
+    type: string
+    format: date-time
+    description: Период действия с
+  validTo:
+    type: string
+    format: date-time
+    description: Период действия по
+  value:
+    type: string
+    description: Base64 представление сертификата

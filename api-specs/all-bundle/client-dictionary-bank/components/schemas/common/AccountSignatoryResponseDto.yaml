@@ -1,0 +1,60 @@
+required:
+- accountId
+- accountNumber
+- archived
+- authorityStatus
+- bankClientId
+- id
+- signLevel
+- userF1Id
+- userFio
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  userFio:
+    type: string
+    description: ФИО пользователя
+  userF1Id:
+    type: string
+    description: Идентификатор физического лица в РКО Ф1
+  userEskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  signLevel:
+    type: string
+    description: Номер уровня подписи
+    enum:
+    - LEVEL_1
+    - LEVEL_2
+  archived:
+    type: boolean
+    description: Архивный
+  authorityStatus:
+    type: string
+    description: Статус полномочия
+    enum:
+    - ACTIVE
+    - INACTIVE
+  authorityStartDate:
+    type: string
+    description: Дата начала действия полномочий
+    format: date
+  authorityEndDate:
+    type: string
+    description: Дата окончания действия полномочий
+    format: date
+description: Подписанты по счету.

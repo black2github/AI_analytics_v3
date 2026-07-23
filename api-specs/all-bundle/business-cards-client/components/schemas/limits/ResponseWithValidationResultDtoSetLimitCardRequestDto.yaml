@@ -1,0 +1,7 @@
+type: object
+properties:
+  requestDto:
+    $ref: ./SetLimitCardRequestDto.yaml
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+description: Ответ с результатом проверки документа

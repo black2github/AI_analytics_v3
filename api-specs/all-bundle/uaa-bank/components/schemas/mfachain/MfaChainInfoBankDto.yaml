@@ -1,0 +1,28 @@
+required:
+- catalogs
+- name
+- stages
+- title
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  title:
+    type: string
+  stages:
+    type: array
+    items:
+      type: string
+      enum:
+      - PASSWORD
+      - OTP
+      - CERTIFICATE
+      - TOTP
+      - EMPTY
+  catalogs:
+    type: array
+    items:
+      $ref: ./MfaChainCatalogDto.yaml

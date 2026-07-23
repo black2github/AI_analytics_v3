@@ -1,0 +1,10 @@
+type: object
+properties:
+  docsRegister:
+    type: string
+    description: Byte массив реестра документов
+    format: byte
+  docsRegisterName:
+    type: string
+    description: Имя реестра документов
+description: Информация о списке документов и имя файла

@@ -1,0 +1,9 @@
+type: object
+properties:
+  groups:
+    type: array
+    items:
+      $ref: ./TotalTurnoverGroupedByCurrency.yaml
+  statement:
+    $ref: ./StatementCard.yaml
+description: Данные

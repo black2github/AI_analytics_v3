@@ -1,0 +1,185 @@
+openapi: 3.0.1
+info:
+  title: Сервис изменений пользовательской информации. Банковская часть.
+  version: 1.66.0-hf-2
+servers:
+- url: /client-info-update-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API ручной синхронизации данных в рамках сотрудников
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /ods-data-sync/entities-updated:
+    $ref: ./paths/entities-updated/ods_data_sync_entities_updated.yaml
+  /ods-data-sync/entities-updated-async:
+    $ref: ./paths/entities-updated-async/ods_data_sync_entities_updated_async.yaml
+  /ods-data-sync/entities-deleted:
+    $ref: ./paths/entities-deleted/ods_data_sync_entities_deleted.yaml
+  /ods-data-sync/entities-deleted-async:
+    $ref: ./paths/entities-deleted-async/ods_data_sync_entities_deleted_async.yaml
+  /employees/data/sync:
+    $ref: ./paths/data/employees_data_sync.yaml
+  /client-info/tessa-docs-uploaded/{id}:
+    $ref: ./paths/tessa-docs-uploaded/client_info_tessa_docs_uploaded_id.yaml
+  /client-info/retry-processing:
+    $ref: ./paths/retry-processing/client_info_retry_processing.yaml
+  /client-info/reject/{id}:
+    $ref: ./paths/reject/client_info_reject_id.yaml
+  /client-info/get-page:
+    $ref: ./paths/get-page/client_info_get_page.yaml
+  /client-info/export-sign:
+    $ref: ./paths/export-sign/client_info_export_sign.yaml
+  /client-info/execute/{id}:
+    $ref: ./paths/execute/client_info_execute_id.yaml
+  /client-info/category:
+    $ref: ./paths/category/client_info_category.yaml
+  /change-requirement/get-page:
+    $ref: ./paths/get-page/change_requirement_get_page.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /client-info/{id}:
+    $ref: ./paths/{id}/client_info_id.yaml
+  /client-info/history/{id}:
+    $ref: ./paths/history/client_info_history_id.yaml
+components:
+  schemas:
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    OdsSyncRequestDto:
+      $ref: ./components/schemas/common/OdsSyncRequestDto.yaml
+    OdsSyncRequestFilter:
+      $ref: ./components/schemas/common/OdsSyncRequestFilter.yaml
+    SingleCommandOdsSyncRequestDto:
+      $ref: ./components/schemas/common/SingleCommandOdsSyncRequestDto.yaml
+    SingleResponseInteger:
+      $ref: ./components/schemas/common/SingleResponseInteger.yaml
+    SingleResponseString:
+      $ref: ./components/schemas/common/SingleResponseString.yaml
+    EdsDataSyncRequestBody:
+      $ref: ./components/schemas/data/EdsDataSyncRequestBody.yaml
+    EdsObjectFilter:
+      $ref: ./components/schemas/data/EdsObjectFilter.yaml
+    ErrorData:
+      $ref: ./components/schemas/data/ErrorData.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/data/GenericResponseErrorDataLong.yaml
+    CommentDto:
+      $ref: ./components/schemas/common/CommentDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/common/SingleCommandCommentDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ClientInfoUpdRequestAttachmentDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestAttachmentDto.yaml
+    ClientInfoUpdRequestIdentityDocumentDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestIdentityDocumentDto.yaml
+    ClientInfoUpdRequestUpdateDataDto:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestUpdateDataDto.yaml
+    ClientInfoUpdateRequestAddressDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateRequestAddressDto.yaml
+    ClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateRequestDto.yaml
+    ClientInfoUpdateSignatureDto:
+      $ref: ./components/schemas/common/ClientInfoUpdateSignatureDto.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    NotificationOfExecutionDto:
+      $ref: ./components/schemas/common/NotificationOfExecutionDto.yaml
+    SignFileInfoDto:
+      $ref: ./components/schemas/common/SignFileInfoDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SingleResponseClientInfoUpdateRequestDto:
+      $ref: ./components/schemas/common/SingleResponseClientInfoUpdateRequestDto.yaml
+    SubjectDto:
+      $ref: ./components/schemas/common/SubjectDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    ClientInfoUpdRequestBankFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestBankFilter.yaml
+    ClientInfoUpdRequestStatusFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestStatusFilter.yaml
+    ClientInfoUpdRequestTypeFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdRequestTypeFilter.yaml
+    ClientInfoUpdSubjectTypeFilter:
+      $ref: ./components/schemas/common/ClientInfoUpdSubjectTypeFilter.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandClientInfoUpdRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandClientInfoUpdRequestBankFilter.yaml
+    PageParamsClientInfoUpdRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsClientInfoUpdRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    ClientInfoUpdRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/ClientInfoUpdRequestBankScrollerDto.yaml
+    ClientInfoUpdRequestBankScrollerUpdateDataDto:
+      $ref: ./components/schemas/get-page/ClientInfoUpdRequestBankScrollerUpdateDataDto.yaml
+    PageDataClientInfoUpdRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataClientInfoUpdRequestBankScrollerDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/export-sign/PrintResponse.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/export-sign/SingleResponsePrintResponse.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    BankSystemFilter:
+      $ref: ./components/schemas/get-page/BankSystemFilter.yaml
+    ChangeRequirementFilter:
+      $ref: ./components/schemas/get-page/ChangeRequirementFilter.yaml
+    ChangeRequirementPriorityTypeFilter:
+      $ref: ./components/schemas/get-page/ChangeRequirementPriorityTypeFilter.yaml
+    ClientInfoChangeRequirementBankFilter:
+      $ref: ./components/schemas/get-page/ClientInfoChangeRequirementBankFilter.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/get-page/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/get-page/FilterValueDtoLocalDate.yaml
+    GetPageCommandClientInfoChangeRequirementBankFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandClientInfoChangeRequirementBankFilter.yaml
+    PageParamsClientInfoChangeRequirementBankFilter:
+      $ref: ./components/schemas/get-page/PageParamsClientInfoChangeRequirementBankFilter.yaml
+    ClientInfoChangeRequirementDto:
+      $ref: ./components/schemas/get-page/ClientInfoChangeRequirementDto.yaml
+    PageDataClientInfoChangeRequirementDto:
+      $ref: ./components/schemas/get-page/PageDataClientInfoChangeRequirementDto.yaml
+    ClientInfoUpdRequestTextDto:
+      $ref: ./components/schemas/{id}/ClientInfoUpdRequestTextDto.yaml
+    ClientInfoUpdateRequestViewResponseDto:
+      $ref: ./components/schemas/{id}/ClientInfoUpdateRequestViewResponseDto.yaml
+    SingleResponseClientInfoUpdateRequestViewResponseDto:
+      $ref: ./components/schemas/{id}/SingleResponseClientInfoUpdateRequestViewResponseDto.yaml
+    ClientInfoUpdRequestHistoryDto:
+      $ref: ./components/schemas/history/ClientInfoUpdRequestHistoryDto.yaml
+    ListResponseClientInfoUpdRequestHistoryDto:
+      $ref: ./components/schemas/history/ListResponseClientInfoUpdRequestHistoryDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

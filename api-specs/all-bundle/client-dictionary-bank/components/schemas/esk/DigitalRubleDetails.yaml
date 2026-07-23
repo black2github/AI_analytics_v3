@@ -1,0 +1,9 @@
+type: object
+properties:
+  value:
+    type: string
+    description: ИНН ФЛ
+  type:
+    type: string
+    description: Тип ИНН ФЛ
+description: Реквизиты по которым СЛ - ФЛ идентифицируется на ПлЦР

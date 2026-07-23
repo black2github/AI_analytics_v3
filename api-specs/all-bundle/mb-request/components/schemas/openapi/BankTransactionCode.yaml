@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+  subCode:
+    type: string
+  issuer:
+    type: string
+description: Код банковской операции

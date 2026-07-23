@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API для справочника SWIFT-кодов (банковская сторона)
+  summary: Получить страницу определенных атрибутов записи
+  description: 'Привилегии: BANK_SWIFT_GET_PAGE'
+  operationId: getAttributePageUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: cmd
+    description: cmd
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«SwiftCodeAttributeFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«string»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

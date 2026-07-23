@@ -1,0 +1,6 @@
+type: string
+description: Статус обработки документа фонового процесса импорта
+enum:
+- NEW
+- ERROR
+- REJECTED

@@ -1,0 +1,41 @@
+type: object
+properties:
+  address:
+    $ref: ./FilterValueDtoString.yaml
+  admRequestType:
+    $ref: ./AdmRequestTypeFilter.yaml
+  branchName:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  f1ContractDateRange:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  f1ContractNumber:
+    $ref: ./FilterValueDtoString.yaml
+  initiator:
+    $ref: ./AdmRequestInitiatorFilter.yaml
+  isProvidedByBank:
+    $ref: ./FilterValueDtoBoolean.yaml
+  kbk:
+    $ref: ./FilterValueDtoString.yaml
+  mainTID:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  recipientAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  recipientBankNameOrBic:
+    $ref: ./FilterValueDtoString.yaml
+  recipientNameOrInn:
+    $ref: ./FilterValueDtoString.yaml
+  requestId:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./AdmRequestStatusFilter.yaml
+  statusCategory:
+    $ref: ./AdmRequestBankCategoryDto.yaml
+  tid:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр заявок АДМ. Банковская часть

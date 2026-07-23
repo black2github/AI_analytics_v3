@@ -1,0 +1,94 @@
+required:
+- operationId
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции
+    format: uuid
+  executionDatetime:
+    type: string
+    description: Дата и время операции
+    format: date-time
+  operationType:
+    type: string
+    description: Тип операции
+  msgId:
+    type: string
+    description: Идентификатор сообщения
+    format: uuid
+  contractorName:
+    type: string
+    description: Наименование Контрагента (ЮЛ)
+  contractorFio:
+    type: string
+    description: ФИО Контрагента (ФЛ)
+  clientCbrParticipantWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента на ПлЦР
+  clientCbrAccountNumber:
+    type: string
+    description: Номер СЦР Клиента на ПлЦР
+  contractorAccountNumber:
+    type: string
+    description: Номер счета Контрагента
+  currencySpendType:
+    type: string
+    description: Тип проводки
+  amount:
+    type: string
+    description: Сумма операции
+  fiName:
+    type: string
+    description: Наименование посредника, через которого происходила операция
+  fiBic:
+    type: string
+    description: БИК посредника, через которого происходила операция
+  cbrOperationId:
+    type: string
+    description: Идентификатор операции в ПлЦР
+    format: uuid
+  contractorInn:
+    type: string
+    description: ИНН Контрагента
+  contractorBankName:
+    type: string
+    description: Банк Контрагента
+  contractorBankBic:
+    type: string
+    description: БИК Банка Контрагента
+  pointOfSaleName:
+    type: string
+    description: Точка продаж
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  mccCode:
+    type: string
+    description: MCC-код категории продавца
+  reference:
+    type: string
+    description: Платежная ссылка
+  paymentLinkType:
+    type: string
+    description: Тип платежной ссылки
+  paymentLinkId:
+    type: string
+    description: Идентификатор платежной ссылки
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  contractorCbrParticipantWalletId:
+    type: string
+    description: Идентификатор СЦР Контрагента на ПлЦР
+  contractorCbrAccountNumber:
+    type: string
+    description: Номер СЦР Контрагента на ПлЦР
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+    format: uuid
+  treasuryPersonalAccount:
+    type: string
+    description: Лицевой счет в ФК
+description: DTO для операции для скроллера История операций

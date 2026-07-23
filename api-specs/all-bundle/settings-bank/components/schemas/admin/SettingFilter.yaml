@@ -1,0 +1,9 @@
+type: object
+properties:
+  settingType:
+    $ref: ./FilterValueEnumDtoSettingTypeDto.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  valueOrName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр настроек

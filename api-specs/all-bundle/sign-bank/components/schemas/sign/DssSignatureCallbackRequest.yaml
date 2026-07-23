@@ -1,0 +1,5 @@
+type: object
+properties:
+  Operation:
+    $ref: ./DssCallbackOperationDto.yaml
+description: Запрос DSS на callback url операции подписи

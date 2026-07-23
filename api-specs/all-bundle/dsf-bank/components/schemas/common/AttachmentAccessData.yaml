@@ -1,0 +1,10 @@
+type: object
+description: Данные для доступа к вложению
+properties:
+  accessToken:
+    type: string
+    description: Токен доступа
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор вложения

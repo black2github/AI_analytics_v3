@@ -1,0 +1,23 @@
+required:
+- clientId
+- requestId
+- userIds
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  userIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы пользователей
+    items:
+      type: string
+      description: Идентификаторы пользователей
+      format: uuid
+description: Запрос получения настроек событий СФЗУ в разрезе заявки клиента

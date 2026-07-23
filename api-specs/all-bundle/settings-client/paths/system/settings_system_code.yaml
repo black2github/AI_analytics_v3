@@ -1,0 +1,19 @@
+get:
+  tags:
+  - АПИ Клиента для работы с системными настройками
+  summary: Получение настройки по коду
+  description: 'Привилегии: SETTINGS.CLIENT.SYSTEM_SETTINGS_VIEW'
+  operationId: getOne_1
+  parameters:
+  - name: code
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseSettingDto.yaml

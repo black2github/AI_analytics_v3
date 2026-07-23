@@ -1,0 +1,12 @@
+type: object
+properties:
+  contractorGozAccount:
+    type: string
+    description: Номер счета заказчика по ГК
+  contractorInn:
+    type: string
+    description: ИНН Заказчика
+  contractorName:
+    type: string
+    description: Наименование Заказчика
+description: Сведения о Заказчике по государственному контракту

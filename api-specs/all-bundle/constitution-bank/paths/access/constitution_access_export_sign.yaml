@@ -1,0 +1,34 @@
+post:
+  tags:
+  - API заявки на добавление/изменение данных и полномочий сотрудника клиента. Банковские операции.
+  summary: Выгрузить электронную подпись заявки
+  description: 'Привилегии: CONSTITUTION_ACCESS.EXPORT_SIGN'
+  operationId: exportSignUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/SingleCommand«uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

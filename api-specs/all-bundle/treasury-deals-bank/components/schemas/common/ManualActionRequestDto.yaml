@@ -1,0 +1,15 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  comment:
+    type: string
+    description: Комментарий (причина)
+  dealTerminateDate:
+    type: string
+    description: Дата завершения сделки (для перевода из статуса 'Заключена' в статус 'Завершена')
+    format: date
+description: Данные

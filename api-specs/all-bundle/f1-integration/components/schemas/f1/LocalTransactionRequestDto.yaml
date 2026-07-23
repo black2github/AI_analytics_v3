@@ -1,0 +1,29 @@
+required:
+- clientAbsId
+- periodGE
+- periodLE
+type: object
+properties:
+  clientAbsId:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  periodGE:
+    type: string
+    description: Начало периода запроса
+    format: date
+  periodLE:
+    type: string
+    description: Окончание периода запроса
+    format: date
+  paySystemCodes:
+    type: array
+    description: Список кодов технологического продукта
+    items:
+      type: string
+      description: Список кодов технологического продукта
+  pageNumber:
+    type: integer
+    description: Номер страницы
+    format: int32
+description: Запрос на получение списка транзакций по локальным картам

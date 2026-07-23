@@ -1,0 +1,29 @@
+required:
+- columns
+- filter
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов для экспорта
+    items:
+      type: string
+      description: Идентификаторы документов для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/PaymentOrderRequestBankScrollerFilter.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Отображаемые колонки
+  timeZone:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра

@@ -1,0 +1,90 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки на выезд менеджера.
+    format: uuid
+  documentTypeCode:
+    type: string
+    description: Типы документов, используемые в заявке.
+    enum:
+    - IDENTITY_DOCUMENT
+    - MIGRATION_CARD
+    - HEAD_APPOINTMENT
+    - RIGHT_SIGN_DOCUMENT
+    - WARRANT_SIGNERS
+    - WARRANT_SIGNER_PERSON
+    - CONSTITUENT_DOCUMENT
+    - CONSTITUENT_DOCUMENT_CHANGES
+    - CONSTITUENT_DOCUMENT_EIO
+    - CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - GOZ
+    - OTHER_DOCUMENTS
+    - ANOTHER_DOCUMENT
+    - MAKE_MC_HEAD
+    - CONTRACT_MC
+    - MC_CONSTITUENT_DOCUMENT
+    - MC_CONSTITUENT_DOCUMENT_CHANGES
+    - MC_CONSTITUENT_DOCUMENT_EIO
+    - MC_CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - MC_HEAD_APPOINTMENT
+    - MAKE_OUTSRS_ACCOUNTING
+    - CONTRACT_OUTSRS_ACCOUNTING
+    - FATCA_UL
+    - FATCA_IP
+    - VM_DOCUMENT_COMMISION
+    - CM_311
+    - CM_312
+    - CM_313
+    - CM_314
+    - SNILS
+    - CM_111
+    - CM_112
+    - CM_114
+    - CM_115
+    - CM_1113
+    - CM_IP111
+    - CM_UL113
+    - CM_IP112
+    - CM_1111
+    - CM_1118
+    - CM_UL111
+    - CM_IP113
+    - CM_UL112
+    - CM_IP114
+    - CM_122
+    - CM_123
+    - CM_113
+    - CM_119
+    - CM_1114
+    - CM_1115
+    - CM_121
+    - CM_1110
+    - CM_1112
+    - CM_1116
+    - CM_1117
+    - CM_1119
+    - CM_1126
+    - CM_1125
+  documentTypeName:
+    type: string
+    description: Наименование документа.
+  documentProvided:
+    type: boolean
+    description: 'Признак предоставления документа: да/нет.'
+  transferredInPaperForm:
+    type: boolean
+    description: 'Признак передачи документа в банк на бумажном носителе: да/нет.'
+  documentNumber:
+    type: string
+    description: Номер документа.
+  documentDate:
+    type: string
+    description: Дата документа.
+    format: date
+  attachments:
+    type: array
+    description: Список отсканированных вложений.
+    items:
+      $ref: ./ScannedAttachmentUpdateDto.yaml
+description: Документ заявки на выезд менеджера. ДТО на создание.

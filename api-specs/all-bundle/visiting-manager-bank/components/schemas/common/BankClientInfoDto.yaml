@@ -1,0 +1,28 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент".
+    format: uuid
+  inn:
+    type: string
+    description: ИНН.
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП.
+  name:
+    type: string
+    description: Наименование.
+  shortName:
+    type: string
+    description: Краткое наименование.
+  clientType:
+    type: string
+    description: "Тип Клиента. \nIP - Индивидуальный предприниматель (ИП))\nUL - Юридическое лицо (ЮЛ)."
+    enum:
+    - IP
+    - UL
+  addingPreviousModelRegulationDoc:
+    type: boolean
+    description: Добавление предыдущей редакции устава, принятой на момент избрания руководителя.
+description: Общая информация о клиенте банка.

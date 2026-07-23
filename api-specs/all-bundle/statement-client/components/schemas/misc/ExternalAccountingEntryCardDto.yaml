@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  documentName:
+    type: string
+  documentNumber:
+    type: string
+  documentDate:
+    type: string
+    format: date
+  documentTypeCode:
+    type: string
+  isDebit:
+    type: boolean
+    writeOnly: true
+  amount:
+    type: number
+  currencyCode:
+    type: string
+  payerDto:
+    $ref: ./ExternalPayerDto.yaml
+  payeeDto:
+    $ref: ./ExternalPayeeDto.yaml
+  paymentPurpose:
+    type: string
+  entryDate:
+    type: string
+    format: date
+  debit:
+    type: boolean
+description: Данные

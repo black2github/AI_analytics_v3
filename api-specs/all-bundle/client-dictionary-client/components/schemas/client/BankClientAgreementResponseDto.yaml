@@ -1,0 +1,67 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания соглашения
+    format: date-time
+  remoteSource:
+    type: string
+    description: Система источник записи.
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  offerNumber:
+    type: string
+    description: Регистрационный номер оферты, акцептованной клиентом.
+  offerDate:
+    type: string
+    description: Дата регистрации оферты, акцептованной клиентом.
+    format: date
+  hasAuthorizedPerson:
+    type: boolean
+    description: Признак наличия УЛ
+  bankClient:
+    $ref: ./BankClientInfoDto.yaml
+  comment:
+    type: string
+    description: Коментарий
+  manuallyCreated:
+    type: boolean
+    description: Признак создания УЛ в ручную
+  status:
+    type: string
+    description: Статус соглашения
+    enum:
+    - ACTIVE
+    - CANCELED
+  breakDate:
+    type: string
+    description: Дата расторжения соглашения
+    format: date
+  supplyMode:
+    type: string
+    description: Способ оформления документа
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+description: Соглашения Клиента Банка

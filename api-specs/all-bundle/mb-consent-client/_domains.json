@@ -1,0 +1,22 @@
+{
+  "_comment": "Auto domain map for mb-consent-client (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/v1/grant-consent",
+      "domain": "grant-consent"
+    },
+    {
+      "prefix": "/v1/consent",
+      "domain": "consent"
+    },
+    {
+      "prefix": "/v1/acquire-consent",
+      "domain": "acquire-consent"
+    },
+    {
+      "prefix": "/v1",
+      "domain": "misc"
+    }
+  ]
+}

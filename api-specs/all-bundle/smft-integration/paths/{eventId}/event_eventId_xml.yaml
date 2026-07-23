@@ -1,0 +1,64 @@
+get:
+  tags:
+  - СМФТ события
+  summary: Просмотр события в XML формате
+  description: 'Привилегии: UAA.SMFT_EVENT_VIEW'
+  operationId: getXmlEvent
+  parameters:
+  - name: eventId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: Сообщение в XML формате
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/{eventId}/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '404':
+      description: Сообщение не найдено по ИД
+      content:
+        '*/*':
+          schema:
+            type: string

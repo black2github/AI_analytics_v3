@@ -1,0 +1,12 @@
+required:
+- contractId
+type: object
+properties:
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+  contractTypeCode:
+    type: string
+    description: Вид договора(Код)
+description: Данные для запроса РКО продуктов по договору

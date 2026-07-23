@@ -1,0 +1,38 @@
+required:
+- updatedField
+type: object
+properties:
+  updatedField:
+    $ref: ./UpdatedFieldDto.yaml
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+    nullable: true
+  currencyTransactionCode:
+    type: string
+    description: Код валютной операции
+    nullable: true
+  paymentAmount:
+    type: string
+    description: Сумма
+    nullable: true
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма с учетом НДС
+    nullable: true
+  vatCalculationMethod:
+    $ref: ./VatCalculationTypeDto.yaml
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+    nullable: true
+  vatAmount:
+    type: string
+    description: Сумма НДС
+    nullable: true
+  budgetPayment:
+    type: boolean
+    description: Признак платежа в бюджет РФ
+    nullable: true
+description: Запрос расчета назначения платежа

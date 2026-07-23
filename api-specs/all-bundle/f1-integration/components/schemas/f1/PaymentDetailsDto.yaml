@@ -1,0 +1,27 @@
+required:
+- account
+- bic
+- corrAccount
+- inn
+- name
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  account:
+    type: string
+    description: Счет
+  bic:
+    type: string
+    description: БИК
+  corrAccount:
+    type: string
+    description: Корреспондентский счет
+description: Реквизиты платежа

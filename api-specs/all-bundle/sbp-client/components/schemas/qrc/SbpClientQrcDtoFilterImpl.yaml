@@ -1,0 +1,82 @@
+type: object
+description: Фильтр по Qr-кодам для клиента
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата создания, between
+  expiresAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата окончания действия, between
+  docNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Номер документа, between
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка", eq
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор ТСП, eq
+  merchantName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Торговое название, contains
+  merchantAddress:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Адрес ТСП, contains
+  account:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Счет зачисления, contains
+  amount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма платежа в копейках, between
+  ecoAccountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: ID счета зачисления в ЭКО, eq, in
+  paymentPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Назначение платежа, contains
+  status:
+    $ref: ./SbpQrcStatusFilter.yaml
+    description: Текущий статус QR-кода, eq
+  qrcType:
+    $ref: ./SbpQrcTypeFilter.yaml
+    description: Тип QR, eq
+  subscriptionStatus:
+    $ref: ../common/SbpQrcSubscriptionStatusFilter.yaml
+    description: Статус подписки, eq, in
+  subscriptionPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Цель подписки, contains
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН клиента, eq
+  b2bPayer:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Плательщик ЮЛ, eq
+  qrcId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор QR кода, contains, eq.
+  paymentService:
+    $ref: ./SbpPaymentServiceNameFilter.yaml
+    description: Платежный сервис, in.
+  ecoDocTypeId:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  ecoClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  ecoServiceCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentChannel:
+    $ref: ./SbpBankServiceCommonRequestPaymentChannelFilterDto.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  ecoClientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  ecoClientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  drAccountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  ecoDocId:
+    $ref: ../common/FilterValueDtoString.yaml
+  tariffName:
+    $ref: ../common/FilterValueDtoString.yaml

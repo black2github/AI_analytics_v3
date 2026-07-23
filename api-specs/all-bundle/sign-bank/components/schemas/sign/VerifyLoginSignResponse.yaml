@@ -1,0 +1,10 @@
+type: object
+properties:
+  result:
+    type: boolean
+    description: Результат проверки подписи
+  certificateInfo:
+    $ref: ./CertificateInfoDto.yaml
+  dstInfo:
+    $ref: ./DigitalSignatureToolPlainDto.yaml
+description: ДТО результата проверки подписи

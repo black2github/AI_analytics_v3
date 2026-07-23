@@ -1,0 +1,42 @@
+type: object
+properties:
+  fullName:
+    type: string
+    xml:
+      name: FullName
+  shortName:
+    type: string
+    xml:
+      name: ShortName
+  address:
+    type: string
+    xml:
+      name: Address
+  ogrn:
+    type: string
+    xml:
+      name: OGRN
+  okopf:
+    type: string
+    xml:
+      name: OKOPF
+  okved:
+    type: string
+    xml:
+      name: OKVED
+  email:
+    type: string
+    xml:
+      name: Email
+  inn:
+    type: string
+    xml:
+      name: INN
+  kpp:
+    type: string
+    xml:
+      name: KPP
+  registerDate:
+    type: string
+    xml:
+      name: RegisterDate

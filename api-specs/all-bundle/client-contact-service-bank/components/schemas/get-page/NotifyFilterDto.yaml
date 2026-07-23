@@ -1,0 +1,8 @@
+type: object
+description: Запрос-фильтр на получение данных по истории уведомлений КЦ
+properties:
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Идентификатор запроса
+required:
+- requestId

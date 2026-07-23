@@ -1,0 +1,34 @@
+required:
+- accountBlocked
+- accountId
+- actions
+- bankClientId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  accountBlocked:
+    type: boolean
+    description: Признак блокировки счета ДФМ
+  actions:
+    type: array
+    description: Список доступных действий над документом с данным счетом
+    items:
+      type: string
+      description: Список доступных действий над документом с данным счетом
+      enum:
+      - UNKNOWN
+      - ACTION_CLIENT_USER_SIGN
+      - ACTION_CLIENT_USER_VIEW
+      - ACTION_CLIENT_USER_PRINT
+      - ACTION_CLIENT_USER_LISTVIEW
+      - ACTION_CLIENT_USER_EDIT
+      - ACTION_CLIENT_USER_CREATE
+      - ACTION_CLIENT_USER_SIGN_CLICK
+description: Доступные счета

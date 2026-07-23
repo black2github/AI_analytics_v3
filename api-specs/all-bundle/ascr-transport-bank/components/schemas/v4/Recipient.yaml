@@ -1,0 +1,26 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+  name:
+    type: string
+    description: ФИО (полное)/Наименование получателя
+  countryCode:
+    type: string
+    description: Цифровой код страны
+  participantId:
+    type: string
+    description: Идентификатор получателя на ПлЦР
+  dcAccountNumber:
+    type: string
+    description: Номер Счета ЦР получателя
+  bankAccount:
+    $ref: ./BankAccount.yaml
+    description: Банковские реквизиты
+  recOperationId:
+    type: string
+    description: Идентификатор операции в составе реестра
+required:
+- inn
+- name

@@ -1,0 +1,93 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - GRANT_AUTHORITY
+    - AUTHORITY_GRANTED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность"Пользователь")
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  documentType:
+    type: string
+    description: Классификатор типов документов
+    enum:
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+  currentRole:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  newRole:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  bankClient:
+    $ref: ./LkmpAccessBankClientDto.yaml
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки
+    items:
+      $ref: ./LkmpAccessSignatureDto.yaml
+  employeeInfo:
+    $ref: ./LkmpAccessEmployeeInfoDto.yaml
+  lkmpAgreementsInfo:
+    $ref: ./LkmpAccessAgreementsInfoDto.yaml
+description: Заявка на предоставление доступа пользователям к ЛК МП

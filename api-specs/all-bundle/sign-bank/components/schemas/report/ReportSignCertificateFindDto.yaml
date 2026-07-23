@@ -1,0 +1,16 @@
+required:
+- isActiveCertificate
+- isAdditionalCertificate
+- isMainCertificate
+type: object
+properties:
+  isMainCertificate:
+    type: boolean
+    description: Признак наличия основного сертификата
+  isActiveCertificate:
+    type: boolean
+    description: Признак наличия действующего сертификата
+  isAdditionalCertificate:
+    type: boolean
+    description: Признак наличия дополнительного сертификата
+description: DTO с информацией о наличии основного, дополнительного и действующего сертификатов для подписи отчетов

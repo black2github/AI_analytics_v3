@@ -1,0 +1,19 @@
+type: object
+properties:
+  branchBankId:
+    type: string
+    description: Ссылка на сущность "Подразделение банка"
+    format: uuid
+  branchCode:
+    type: string
+    description: Код филиала
+  branchName:
+    type: string
+    description: Наименование филиала Банка
+  branchBic:
+    type: string
+    description: БИК филиала
+  contractId:
+    type: string
+    description: Идентификатор сопровождаемого договора (ИСД)
+description: Данные заявки. Банковский скроллер.

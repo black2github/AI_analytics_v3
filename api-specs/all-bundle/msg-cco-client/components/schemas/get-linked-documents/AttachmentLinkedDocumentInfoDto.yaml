@@ -1,0 +1,36 @@
+required:
+- attachmentId
+- fileName
+- fileStorageId
+- format
+- hash
+- size
+- uploadDateTime
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Id вложения
+    format: uuid
+  fileStorageId:
+    type: string
+    description: ID файла в файловом хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  format:
+    type: string
+    description: Формат файла
+  size:
+    type: integer
+    description: Размер файла
+    format: int64
+  hash:
+    type: string
+    description: Контрольное число
+  uploadDateTime:
+    type: string
+    description: Дата и время загрузки
+    format: date-time
+description: Информация о вложении

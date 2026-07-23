@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - PAYMENT
+    - CONTRACT
+  notEq:
+    type: string
+    enum:
+    - PAYMENT
+    - CONTRACT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - PAYMENT
+      - CONTRACT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - PAYMENT
+      - CONTRACT
+  isNull:
+    type: boolean
+description: Тип документов заявки. Полное совпадение()

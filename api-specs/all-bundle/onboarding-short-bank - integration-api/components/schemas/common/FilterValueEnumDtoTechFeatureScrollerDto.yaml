@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - TECHNICAL_REQUEST
+    - ON_REWORK
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - TECHNICAL_REQUEST
+      - ON_REWORK
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - TECHNICAL_REQUEST
+    - ON_REWORK
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - TECHNICAL_REQUEST
+      - ON_REWORK
+description: Технические признаки. Множественный выбор (in)

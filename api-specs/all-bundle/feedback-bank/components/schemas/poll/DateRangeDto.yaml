@@ -1,0 +1,11 @@
+type: object
+properties:
+  from:
+    type: string
+    description: Дата начала (включительно)
+    format: date
+  to:
+    type: string
+    description: Дата окончания (включительно)
+    format: date
+description: Диапазон дат

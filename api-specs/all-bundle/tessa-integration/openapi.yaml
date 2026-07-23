@@ -1,0 +1,221 @@
+openapi: 3.0.1
+info:
+  title: Онлайн адаптер для АС ТЕССА.
+  version: 3.5.0
+servers:
+- url: /tessa-integration
+security:
+- bearerAuth: []
+paths:
+  /integration/tessa/upload-file:
+    $ref: ./paths/tessa/integration_tessa_upload_file.yaml
+  /integration/tessa/upload-file-and-update-card:
+    $ref: ./paths/tessa/integration_tessa_upload_file_and_update_card.yaml
+  /integration/tessa/update-model-regulations:
+    $ref: ./paths/tessa/integration_tessa_update_model_regulations.yaml
+  /integration/tessa/update-document-card:
+    $ref: ./paths/tessa/integration_tessa_update_document_card.yaml
+  /integration/tessa/subdossier-refs-uploading:
+    $ref: ./paths/tessa/integration_tessa_subdossier_refs_uploading.yaml
+  /integration/tessa/rework-eco/{dossierId}:
+    $ref: ./paths/tessa/integration_tessa_rework_eco_dossierId.yaml
+  /integration/tessa/reject-onb-short-dossier/{dossierId}:
+    $ref: ./paths/tessa/integration_tessa_reject_onb_short_dossier_dossierId.yaml
+  /integration/tessa/reject-dossier/{dossierId}:
+    $ref: ./paths/tessa/integration_tessa_reject_dossier_dossierId.yaml
+  /integration/tessa/get-object-card:
+    $ref: ./paths/tessa/integration_tessa_get_object_card.yaml
+  /integration/tessa/get-object-card-template:
+    $ref: ./paths/tessa/integration_tessa_get_object_card_template.yaml
+  /integration/tessa/find-document:
+    $ref: ./paths/tessa/integration_tessa_find_document.yaml
+  /integration/tessa/find-client:
+    $ref: ./paths/tessa/integration_tessa_find_client.yaml
+  /integration/tessa/download-file:
+    $ref: ./paths/tessa/integration_tessa_download_file.yaml
+  /integration/tessa/dossier-signal:
+    $ref: ./paths/tessa/integration_tessa_dossier_signal.yaml
+  /integration/tessa/dossier-links-uploading:
+    $ref: ./paths/tessa/integration_tessa_dossier_links_uploading.yaml
+  /integration/tessa/dossier-docs-uploading:
+    $ref: ./paths/tessa/integration_tessa_dossier_docs_uploading.yaml
+  /integration/tessa/dossier-docs-uploading-with-local-session:
+    $ref: ./paths/tessa/integration_tessa_dossier_docs_uploading_with_local_session.yaml
+  /integration/tessa/dossier-docs-uploading-otb:
+    $ref: ./paths/tessa/integration_tessa_dossier_docs_uploading_otb.yaml
+  /integration/tessa/create-dossier-card:
+    $ref: ./paths/tessa/integration_tessa_create_dossier_card.yaml
+  /integration/tessa/create-document-card:
+    $ref: ./paths/tessa/integration_tessa_create_document_card.yaml
+  /integration/tessa/complete-task:
+    $ref: ./paths/tessa/integration_tessa_complete_task.yaml
+  /integration/tessa/complete-task-uploading-with-local-session:
+    $ref: ./paths/tessa/integration_tessa_complete_task_uploading_with_local_session.yaml
+  /integration/tessa/bo/files:
+    $ref: ./paths/tessa/integration_tessa_bo_files.yaml
+  /integration/tessa/bo/document:
+    $ref: ./paths/tessa/integration_tessa_bo_document.yaml
+  /integration/tessa/bo/batches:
+    $ref: ./paths/tessa/integration_tessa_bo_batches.yaml
+  /integration/tessa/get-model-regulations:
+    $ref: ./paths/tessa/integration_tessa_get_model_regulations.yaml
+components:
+  schemas:
+    SingleResponseObject:
+      $ref: ./components/schemas/tessa/SingleResponseObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/tessa/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/tessa/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/tessa/ActionResultObject.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/tessa/SingleCommandUUID.yaml
+    FileCard:
+      $ref: ./components/schemas/tessa/FileCard.yaml
+    FileSignature:
+      $ref: ./components/schemas/tessa/FileSignature.yaml
+    FileVersion:
+      $ref: ./components/schemas/tessa/FileVersion.yaml
+    SingleResponseTessaFile:
+      $ref: ./components/schemas/tessa/SingleResponseTessaFile.yaml
+    TessaFile:
+      $ref: ./components/schemas/tessa/TessaFile.yaml
+    GenericCommandUploadFileRequest:
+      $ref: ./components/schemas/tessa/GenericCommandUploadFileRequest.yaml
+    UploadFileRequest:
+      $ref: ./components/schemas/tessa/UploadFileRequest.yaml
+    GenericResponseSimpleErrorDataTessaFile:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataTessaFile.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/tessa/SimpleErrorData.yaml
+    GenericCommandModelRegulationInput:
+      $ref: ./components/schemas/tessa/GenericCommandModelRegulationInput.yaml
+    ModelRegulationDocument:
+      $ref: ./components/schemas/tessa/ModelRegulationDocument.yaml
+    ModelRegulationInput:
+      $ref: ./components/schemas/tessa/ModelRegulationInput.yaml
+    GenericResponseSimpleErrorDataMapStringObject:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataMapStringObject.yaml
+    AdditionalDocInfo:
+      $ref: ./components/schemas/tessa/AdditionalDocInfo.yaml
+    AdditionalDocTypeInfo:
+      $ref: ./components/schemas/tessa/AdditionalDocTypeInfo.yaml
+    Attachment:
+      $ref: ./components/schemas/tessa/Attachment.yaml
+    ClosingAccountAdditionalDocInfo:
+      $ref: ./components/schemas/tessa/ClosingAccountAdditionalDocInfo.yaml
+    CurrencyControlSection:
+      $ref: ./components/schemas/tessa/CurrencyControlSection.yaml
+    DocCopySection:
+      $ref: ./components/schemas/tessa/DocCopySection.yaml
+    Document:
+      $ref: ./components/schemas/tessa/Document.yaml
+    JSONObject:
+      $ref: ./components/schemas/tessa/JSONObject.yaml
+    SingleCommandUpdateDocument:
+      $ref: ./components/schemas/tessa/SingleCommandUpdateDocument.yaml
+    UpdateDocument:
+      $ref: ./components/schemas/tessa/UpdateDocument.yaml
+    SingleResponseUUID:
+      $ref: ./components/schemas/tessa/SingleResponseUUID.yaml
+    DossierRequest:
+      $ref: ./components/schemas/tessa/DossierRequest.yaml
+    PreLoadedDocumentUpdate:
+      $ref: ./components/schemas/tessa/PreLoadedDocumentUpdate.yaml
+    SingleCommandListTessaInput:
+      $ref: ./components/schemas/tessa/SingleCommandListTessaInput.yaml
+    TaskHistory:
+      $ref: ./components/schemas/tessa/TaskHistory.yaml
+    TaskToFinish:
+      $ref: ./components/schemas/tessa/TaskToFinish.yaml
+    TessaInput:
+      $ref: ./components/schemas/tessa/TessaInput.yaml
+    AttachmentUploadResult:
+      $ref: ./components/schemas/tessa/AttachmentUploadResult.yaml
+    DocumentUploadResult:
+      $ref: ./components/schemas/tessa/DocumentUploadResult.yaml
+    DossierResponse:
+      $ref: ./components/schemas/tessa/DossierResponse.yaml
+    FinishResult:
+      $ref: ./components/schemas/tessa/FinishResult.yaml
+    SingleResponseListTessaOutput:
+      $ref: ./components/schemas/tessa/SingleResponseListTessaOutput.yaml
+    TessaOutput:
+      $ref: ./components/schemas/tessa/TessaOutput.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataUUID.yaml
+    SingleResponseMapStringObject:
+      $ref: ./components/schemas/tessa/SingleResponseMapStringObject.yaml
+    FindDocument:
+      $ref: ./components/schemas/tessa/FindDocument.yaml
+    GenericCommandFindDocument:
+      $ref: ./components/schemas/tessa/GenericCommandFindDocument.yaml
+    FindDocumentResponse:
+      $ref: ./components/schemas/tessa/FindDocumentResponse.yaml
+    GenericResponseSimpleErrorDataFindDocumentResponse:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataFindDocumentResponse.yaml
+    DownloadFile:
+      $ref: ./components/schemas/tessa/DownloadFile.yaml
+    SingleCommandDownloadFile:
+      $ref: ./components/schemas/tessa/SingleCommandDownloadFile.yaml
+    SingleResponseByte[]:
+      $ref: ./components/schemas/tessa/SingleResponseByte[].yaml
+    ProcessTemplateDossierSignal:
+      $ref: ./components/schemas/tessa/ProcessTemplateDossierSignal.yaml
+    SingleCommandProcessTemplateDossierSignal:
+      $ref: ./components/schemas/tessa/SingleCommandProcessTemplateDossierSignal.yaml
+    SingleCommandTessaInput:
+      $ref: ./components/schemas/tessa/SingleCommandTessaInput.yaml
+    SingleResponseTessaOutput:
+      $ref: ./components/schemas/tessa/SingleResponseTessaOutput.yaml
+    CreateDossier:
+      $ref: ./components/schemas/tessa/CreateDossier.yaml
+    SingleCommandCreateDossier:
+      $ref: ./components/schemas/tessa/SingleCommandCreateDossier.yaml
+    CreateDocument:
+      $ref: ./components/schemas/tessa/CreateDocument.yaml
+    SingleCommandCreateDocument:
+      $ref: ./components/schemas/tessa/SingleCommandCreateDocument.yaml
+    CompleteTask:
+      $ref: ./components/schemas/tessa/CompleteTask.yaml
+    SingleCommandCompleteTask:
+      $ref: ./components/schemas/tessa/SingleCommandCompleteTask.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/tessa/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataUploadFileResponse:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataUploadFileResponse.yaml
+    UploadFileResponse:
+      $ref: ./components/schemas/tessa/UploadFileResponse.yaml
+    DeleteFileInfo:
+      $ref: ./components/schemas/tessa/DeleteFileInfo.yaml
+    DocumentRequest:
+      $ref: ./components/schemas/tessa/DocumentRequest.yaml
+    NewFileInfo:
+      $ref: ./components/schemas/tessa/NewFileInfo.yaml
+    DocumentResponse:
+      $ref: ./components/schemas/tessa/DocumentResponse.yaml
+    FileInfo:
+      $ref: ./components/schemas/tessa/FileInfo.yaml
+    GenericResponseSimpleErrorDataDocumentResponse:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataDocumentResponse.yaml
+    CreateBatchesRequest:
+      $ref: ./components/schemas/tessa/CreateBatchesRequest.yaml
+    ClientInfo:
+      $ref: ./components/schemas/tessa/ClientInfo.yaml
+    CreateBatchesResponse:
+      $ref: ./components/schemas/tessa/CreateBatchesResponse.yaml
+    GenericResponseSimpleErrorDataCreateBatchesResponse:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataCreateBatchesResponse.yaml
+    GenericResponseSimpleErrorDataRkoStandardCharterResponse:
+      $ref: ./components/schemas/tessa/GenericResponseSimpleErrorDataRkoStandardCharterResponse.yaml
+    RkoStandardCharterResponse:
+      $ref: ./components/schemas/tessa/RkoStandardCharterResponse.yaml
+    RkoStandardCharterRow:
+      $ref: ./components/schemas/tessa/RkoStandardCharterRow.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

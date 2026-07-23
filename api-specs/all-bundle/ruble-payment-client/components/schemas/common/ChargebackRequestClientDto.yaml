@@ -1,0 +1,38 @@
+type: object
+properties:
+  baseDetails:
+    $ref: ./ChargebackBaseDetailsClientDto.yaml
+  documentDetails:
+    $ref: ./ChargebackDocumentDetailsDto.yaml
+  signatures:
+    type: array
+    description: Подписи отзыва платежного поручения
+    items:
+      $ref: ./SignatureClientDto.yaml
+  signPhaseDto:
+    $ref: ./SignPhaseDto.yaml
+  id:
+    type: string
+    description: Идентификатор сущности "Заявка на отзыв"
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  status:
+    $ref: ./ChargebackRequestStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+description: Заявка на отзыв, данные для клиента

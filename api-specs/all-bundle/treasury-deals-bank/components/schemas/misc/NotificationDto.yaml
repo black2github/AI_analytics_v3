@@ -1,0 +1,37 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор оповещения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  notificationType:
+    type: string
+    description: Тип оповещения
+    enum:
+    - MESSAGE
+    - NOTICE
+    - EVENT_NEW_CONFIRMATION
+  title:
+    type: string
+    description: Заголовок
+  text:
+    type: string
+    description: Текст
+  clientId:
+    type: string
+    description: Идентификатор Клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  unread:
+    type: boolean
+    description: Признак не прочитанного оповещения
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата последнего обновления
+    format: date-time
+description: Данные

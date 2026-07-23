@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientOfficialId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  dstId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  kind:
+    $ref: ./DigitalSignatureToolHistoryKindFilter.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  action:
+    $ref: ./DigitalSignatureToolHistoryActionFilter.yaml
+  dstRequestNumber:
+    $ref: ./FilterValueDtoLong.yaml
+description: Фильтр для истории СЭП

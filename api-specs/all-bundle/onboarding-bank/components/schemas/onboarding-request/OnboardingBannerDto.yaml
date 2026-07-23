@@ -1,0 +1,95 @@
+type: object
+properties:
+  accountTypeCode:
+    type: integer
+    description: Код типа счета
+    format: int64
+  branchLocationWithoutType:
+    type: string
+    description: Населенный пункт без типа подразделения банка
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  primaryCheckResult:
+    type: string
+    description: ' Результат первичных проверок'
+    enum:
+    - POSITIVE
+    - NEGATIVE
+    - ERROR
+    - CONDITIONALLY_POSITIVE
+    - CONDITIONALLY_POSITIVE_BY_FNS
+    - CONDITIONALLY_POSITIVE_BY_FTS
+    - EMPTY
+  status:
+    type: string
+    description: Статус заявки на открытие первого счета
+    enum:
+    - NONE
+    - PREDRAFT
+    - CREATED
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - FORMED
+    - DELETED
+    - DATA_ERROR
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - WAITING_FOR_ESK_DECISION
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - EDITING
+    - EDITING_DRAFT
+    - EDITING_REPLACING_DOCS
+    - EDITING_COMPLETED
+    - EDITING_DOCS_LOAD
+    - DELIVERED
+    - RECEIVED
+    - PROCESSING_TESSA_COMMENTS
+    - DETAILS_ERROR
+    - WAITING_RESTRICTION
+    - TECH_REQ
+    - ARCHIVING
+    - ARCHIVED
+    - RECALL_IN_ESK
+    - RECALLED_IN_ESK
+    - RECALL_IN_ESK_ERROR
+    - RECALL_IN_TESSA
+    - RECALLED_IN_TESSA
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED
+    - RECALL_IN_TESSA_ERROR
+    - SIGN_VALID
+    - SIGN_NOT_VALID
+    - NEED_RESIGN
+    - SIGN_CANCELLED
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+    - RECALL_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+    - RECALLED_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_ERROR_REFUSING
+description: Баннер по заявке на открытие первого счета

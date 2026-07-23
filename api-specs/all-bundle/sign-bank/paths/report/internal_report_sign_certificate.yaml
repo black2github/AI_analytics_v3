@@ -1,0 +1,110 @@
+put:
+  tags:
+  - API сертификатов для подписания отчетов. Банковская часть.
+  summary: Обновить сертификат для подписания отчетов
+  description: 'Привилегии: REPORT_SIGN_CERT_UPDATE'
+  operationId: update_6
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/report/UpdateCommandReportSignCertificateDtoUUID.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/report/GenericResponseServiceErrorReportSignCertificateDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+post:
+  tags:
+  - API сертификатов для подписания отчетов. Банковская часть.
+  summary: Добавить сертификат для подписания отчетов
+  description: 'Привилегии: REPORT_SIGN_CERT_CREATE'
+  operationId: create_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/report/CreateCommandReportSignCertificateDto.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/report/GenericResponseServiceErrorReportSignCertificateDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

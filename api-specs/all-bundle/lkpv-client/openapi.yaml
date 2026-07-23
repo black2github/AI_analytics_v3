@@ -1,0 +1,79 @@
+openapi: 3.0.1
+info:
+  title: '[ЛК_ПВ] Личный кабинет "Прием выручки". Клиентская часть.'
+  version: 1.0.0
+servers:
+- url: /lkpv-client
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /lkpv/scroller/get-page:
+    $ref: ./paths/scroller/lkpv_scroller_get_page.yaml
+  /lkpv/aggregate/collect:
+    $ref: ./paths/aggregate/lkpv_aggregate_collect.yaml
+  /lkpv/operation-type/list:
+    $ref: ./paths/operation-type/lkpv_operation_type_list.yaml
+  /lkpv/bank-client/get-active-clients:
+    $ref: ./paths/bank-client/lkpv_bank_client_get_active_clients.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GetPageCommandLKPVClientScrollerFilter:
+      $ref: ./components/schemas/scroller/GetPageCommandLKPVClientScrollerFilter.yaml
+    LKPVClientScrollerFilter:
+      $ref: ./components/schemas/scroller/LKPVClientScrollerFilter.yaml
+    PageParamsLKPVClientScrollerFilter:
+      $ref: ./components/schemas/scroller/PageParamsLKPVClientScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/scroller/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/scroller/Sort.yaml
+    GenericResponseSimpleErrorDataPageDataLKPVClientScrollerDto:
+      $ref: ./components/schemas/scroller/GenericResponseSimpleErrorDataPageDataLKPVClientScrollerDto.yaml
+    LKPVClientScrollerAcquiringDto:
+      $ref: ./components/schemas/scroller/LKPVClientScrollerAcquiringDto.yaml
+    LKPVClientScrollerAdmDto:
+      $ref: ./components/schemas/scroller/LKPVClientScrollerAdmDto.yaml
+    LKPVClientScrollerDto:
+      $ref: ./components/schemas/scroller/LKPVClientScrollerDto.yaml
+    PageDataLKPVClientScrollerDto:
+      $ref: ./components/schemas/scroller/PageDataLKPVClientScrollerDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandLKPVClientAggregateFilter:
+      $ref: ./components/schemas/aggregate/GenericCommandLKPVClientAggregateFilter.yaml
+    LKPVClientAggregateFilter:
+      $ref: ./components/schemas/aggregate/LKPVClientAggregateFilter.yaml
+    GenericResponseSimpleErrorDataListLKPVAggregateDto:
+      $ref: ./components/schemas/aggregate/GenericResponseSimpleErrorDataListLKPVAggregateDto.yaml
+    LKPVAggregateDto:
+      $ref: ./components/schemas/aggregate/LKPVAggregateDto.yaml
+    GenericResponseSimpleErrorDataListLKPVOperationTypeDto:
+      $ref: ./components/schemas/operation-type/GenericResponseSimpleErrorDataListLKPVOperationTypeDto.yaml
+    LKPVOperationTypeDto:
+      $ref: ./components/schemas/operation-type/LKPVOperationTypeDto.yaml
+    GenericResponseSimpleErrorDataListLKPVBankClientDto:
+      $ref: ./components/schemas/bank-client/GenericResponseSimpleErrorDataListLKPVBankClientDto.yaml
+    LKPVBankClientDto:
+      $ref: ./components/schemas/bank-client/LKPVBankClientDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,92 @@
+type: object
+description: Фильтр скроллера Qr-кода.
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата создания, between
+  expiresAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата окончания действия, between
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер документа, between
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка", eq
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП, eq
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название, contains
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП, contains
+  account:
+    $ref: ./FilterValueDtoString.yaml
+    description: Счет зачисления, contains
+  amount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма платежа в копейках, between
+  ecoAccountId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID счета зачисления в ЭКО, eq, in
+  paymentPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Назначение платежа, contains
+  status:
+    $ref: ./SbpQrcStatusFilter.yaml
+    description: Текущий статус QR-кода, eq, in
+  qrcType:
+    $ref: ./SbpQrcTypeFilter.yaml
+    description: Тип QR, eq
+  subscriptionStatus:
+    $ref: ./SbpQrcSubscriptionStatusFilter.yaml
+    description: Статус подписки, eq, in
+  subscriptionPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Цель подписки, contains
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента, eq
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП клиента, eq
+  b2bPayer:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Плательщик ЮЛ, eq
+  accountId:
+    $ref: ./FilterValueDtoLong.yaml
+    description: ID счета зачисления в Ф1.
+  ecoServiceCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код сервиса ЭКО, eq.
+  ecoDocTypeId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор типа заявки сервиса ЭКО, eq.
+  ecoDocId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор заявки сервиса ЭКО, contains.
+  paymentChannel:
+    $ref: ./SbpBankServiceCommonRequestPaymentChannelFilterDto.yaml
+    description: Канал оплаты, eq, in.
+  ecoClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор клиента ЭКО.
+  ecoClientName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование клиента ЭКО, полученное из заявки.
+  ecoClientInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента ЭКО, полученный из заявки.
+  tariffName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Название тарифа, полученное из заявки.
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR кода, contains, eq.
+  paymentService:
+    $ref: ./SbpPaymentServiceNameFilter.yaml
+    description: Платежный сервис, in.
+  drAccountId:
+    $ref: ./FilterValueDtoString.yaml

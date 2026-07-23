@@ -1,0 +1,21 @@
+required:
+- ids
+- status
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  status:
+    $ref: ./OutgoingPaymentRequestChangeStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Смена статуса платежного требования исходящего

@@ -1,0 +1,43 @@
+required:
+- columns
+- ids
+- multiSort
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы СВК для экспорта
+    items:
+      type: string
+      description: Идентификаторы СВК для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/SvkInClientScrollerFilterDto.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Отображаемые колонки
+      enum:
+      - DATE_NUMBER
+      - NUMBER
+      - DATE
+      - ORG_INN_BRANCH
+      - ORG
+      - INN
+      - BRANCH
+      - SUBJECT
+      - ATTACHMENT
+      - STATUS
+      - DIO_NUMBER
+      - DIO_DATE
+  timeZone:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра

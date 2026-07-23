@@ -1,0 +1,17 @@
+post:
+  tags:
+  - ods-sync-data-controller
+  operationId: deleted
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandOdsSyncRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseInteger.yaml

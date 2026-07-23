@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  userId:
+    type: string
+    description: Ссылка на сущность Пользователь, внесшего изменения в сущность Клиент Банка
+    format: uuid
+  userFullname:
+    type: string
+    description: ФИО Пользователя, внесшего изменения в сущность Клиент Банка
+  userLogin:
+    type: string
+    description: Логин Пользователя Банка, внесшего изменения в сущность Клиент Банка
+  bankClientId:
+    type: string
+    description: Ссылка на сущность Клиент Банка
+    format: uuid
+  changes:
+    type: array
+    description: Лог изменений
+    items:
+      $ref: ./ChangeDto.yaml
+  opType:
+    type: string
+    description: Тип операции, выполненной над сущностью Клиент Банка
+    enum:
+    - CREATE
+    - UPDATE
+    - LIQUIDATION
+  details:
+    type: string
+    description: Комментарий с информацией об источнике события
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Страница с данными

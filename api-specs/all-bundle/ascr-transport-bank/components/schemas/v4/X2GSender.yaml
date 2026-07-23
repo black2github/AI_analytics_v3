@@ -1,0 +1,19 @@
+type: object
+description: Данные отправителя перевода X2G
+properties:
+  dcAccountNumber:
+    type: string
+    description: СЦР Плательщика
+  name:
+    type: string
+    description: Наименование Плательщика
+  inn:
+    type: string
+    description: ИНН плательщика
+  kpp:
+    type: string
+    description: КПП Плательщика
+required:
+- dcAccountNumber
+- inn
+- name

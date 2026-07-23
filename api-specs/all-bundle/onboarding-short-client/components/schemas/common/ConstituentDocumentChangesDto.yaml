@@ -1,0 +1,18 @@
+type: object
+properties:
+  addingPreviousRegulationEdition:
+    type: boolean
+    description: Добавление предыдущей редакции устава на дату назначения ЕИО
+  changesToCurrentRegulationEdition:
+    type: boolean
+    description: Признак Изменения к действующей редакции устава
+  changesToRegulationAtEioElectionTime:
+    type: boolean
+    description: Признак изменения к уставу на момент избрания ЕИО
+  differencesWithRegulationAtEioElectionTime:
+    type: boolean
+    description: Признак отличия текущего устава от устава на момент избрания ЕИО
+  egrulDateComplianceSign:
+    type: boolean
+    description: Признак соответствия даты внесения записи в ЕГРЮЛ условиям для упрощенного пакета документов
+description: Изменения в учредительных документах

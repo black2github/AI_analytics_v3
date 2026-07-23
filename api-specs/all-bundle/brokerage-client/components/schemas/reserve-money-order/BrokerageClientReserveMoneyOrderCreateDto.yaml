@@ -1,0 +1,44 @@
+required:
+- amount
+- clientId
+- contractId
+- creditCurrency
+- creditTradingFloor
+- debitCurrency
+- debitTradingFloor
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  creditTradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка списания
+  creditCurrency:
+    maxLength: 3
+    pattern: ^[A-Z]{3}$
+    type: string
+    description: Код валюты списания
+  amount:
+    type: string
+    description: Сумма резервирования
+  debitTradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка зачисления
+  debitCurrency:
+    maxLength: 3
+    pattern: ^[A-Z]{3}$
+    type: string
+    description: Код валюты зачисления
+  transferRate:
+    type: string
+    description: Курс перевода
+description: Транспортная сущность для создания неторгового поручения на резервирование денежных средств

@@ -1,0 +1,120 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  requestNumberUser:
+    type: integer
+    description: Номер заявки пользователя
+    format: int64
+  orgName:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  certOwnerFio:
+    type: string
+    description: ФИО владельца сертификата
+  applicationKind:
+    type: string
+    description: Форма отправки
+    enum:
+    - ONLINE
+    - PAPER
+    - ONLINE_EPGU_CONFIRMATION
+  requestType:
+    type: string
+    description: Тип заявки
+    enum:
+    - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+    - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+    - REG_QUALIFIED_SIGN
+  status:
+    type: string
+    description: Статус объединенной заявки на выпуск/регистрацию ЭП
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - EXPORT_TO_UC
+    - EXPORT_TO_UC_ERROR
+    - EXPORTED_TO_UC
+    - EXECUTED_BY_UC
+    - REGISTER_CERT
+    - REGISTERED_CERT
+    - REGISTER_CERT_ERROR
+    - CONFIRMATION_REQUEST
+    - CONFIRMATION_REQUESTED
+    - ACCEPTED_BY_EPGU
+    - CONFIRMED_BY_EPGU
+    - CONFIRMATION_ERROR
+    - NOTIFICATION_REQUEST
+    - NOTIFICATION_REQUESTED
+    - NOTIFICATION_ACCEPTED_BY_EPGU
+    - NOTIFICATION_CONFIRMED_BY_EPGU
+    - NOTIFICATION_ERROR
+    - REJECTING_REQUEST
+    - REJECTED
+    - EXECUTED
+    - FORMED
+    - ESK_CHECK
+    - ESK_CHECKED
+    - ESK_CHECK_ERROR
+    - DETAILS_INVALID
+    - DETAILS_CHECK
+    - SIGN_CHECK
+    - SIGN_INVALID
+    - EXPORT_TO_DSS
+    - EXECUTED_BY_DSS
+    - EXPORT_TO_DSS_ERROR
+    - WAIT_QR_CODE_APPLIED
+    - WAIT_CSR_REQUEST_CREATION
+    - CERTIFICATE_ISSUE_MANUAL_ACTION_OR_AUTO_REJECT
+    - CERTIFICATE_ISSUE_ERROR_AUTO_REJECT
+    - CSR_OR_CERTIFICATE_IS_SET
+    - RETRY_PROCESSING
+    - EXPORT_UC_ERROR
+    - EXECUTING_REQUEST
+    - TO_KPP_ATTACH
+    - KPP_ATTACHED
+    - GET_DBO_CONTRACTS
+    - GET_DBO_CONTRACTS_EXECUTED
+    - GET_DBO_CONTRACTS_ERROR
+    - DENIED
+    - NEED_ATTACH_KPP_OR_NOT
+    - SIGN_VALID_OR_NOT
+    - RECEIVED_OR_NOT
+    - COMPLETED
+    - INIT_DSS_DEVICE_IS_REQUIRED
+    - REFUSED_BY_UC
+    - NEW_POTENTIAL_AUTHORIZED_PERSON
+    - WAITING_ES_TO_ACTIVATE
+    - WAITING_DEVICE_TO_AUTHORIZE
+    - WAITING_CONTINUE_PROCESSING
+    - AUTO_REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+description: Банковский скроллер объединенной заявки на выпуск/регистрацию ЭП

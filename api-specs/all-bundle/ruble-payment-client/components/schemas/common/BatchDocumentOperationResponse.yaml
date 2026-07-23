@@ -1,0 +1,17 @@
+required:
+- affectedCount
+- failedCount
+- resultStatus
+type: object
+properties:
+  resultStatus:
+    $ref: ./BatchDocumentOperationResultStatusDto.yaml
+  affectedCount:
+    type: integer
+    description: Количество затронутых документов
+    format: int32
+  failedCount:
+    type: integer
+    description: Количество незатронутых документов по причине ошибок
+    format: int32
+description: Ответ о результате выполнения массовой операции по документам

@@ -1,0 +1,12 @@
+type: object
+description: Объект разрешений финансовых операций
+properties:
+  isPaymentPermitted:
+    type: boolean
+    description: Разрешение на выплаты
+  isReturnPermitted:
+    type: boolean
+    description: Разрешение на возвраты
+  isBlockQrPermitted:
+    type: boolean
+    description: Разрешение на блокировку QR

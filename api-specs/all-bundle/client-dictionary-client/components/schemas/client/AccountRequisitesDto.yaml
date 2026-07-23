@@ -1,0 +1,58 @@
+type: object
+properties:
+  organization:
+    type: string
+    description: Организация
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  account:
+    type: string
+    description: Счёт
+  bik:
+    type: string
+    description: БИК Банка
+  bankName:
+    type: string
+    description: Наименование Банка
+  correspondentAccount:
+    type: string
+    description: Корреспондентский счёт
+  beneficiary:
+    type: string
+    description: Бенефициар
+  beneficiaryAccount:
+    type: string
+    description: Счёт бенефициара
+  beneficiaryTransitAccount:
+    type: string
+    description: Транзитный счёт бенефициара
+  swiftCode:
+    type: string
+    description: SWIFT-код банка
+  beneficiaryBank:
+    type: string
+    description: Банк бенефициара
+  beneficiaryBankAddress:
+    type: string
+    description: Адрес банка бенефициара
+  informer:
+    type: string
+    description: Информер
+  duplicate:
+    type: boolean
+    description: Признак дубликата счета
+  originalId:
+    type: string
+    description: ID оригинального счета, в случае, если счет - дубликат
+    format: uuid
+  rubAccount:
+    type: boolean
+    description: Признак рублевого счета
+description: Реквизиты счета для расчета в рублях/валюте

@@ -1,0 +1,26 @@
+type: object
+properties:
+  degree:
+    $ref: ./OfficeServiceDegreeDto.yaml
+  file_url:
+    type: string
+  isJuric:
+    type: boolean
+  isOpen:
+    type: boolean
+  isPhys:
+    type: boolean
+  json:
+    type: boolean
+  kinds:
+    type: array
+    items:
+      type: string
+  schedule:
+    type: string
+  schedules:
+    type: array
+    items:
+      $ref: ./OfficeSchedulesDto.yaml
+  type:
+    $ref: ./OfficeServiceTypeDto.yaml

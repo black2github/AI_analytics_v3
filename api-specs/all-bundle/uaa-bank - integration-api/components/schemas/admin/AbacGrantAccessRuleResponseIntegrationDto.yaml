@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор правила
+    format: uuid
+  status:
+    type: string
+    enum:
+    - TO_EXECUTE
+    - EXECUTED
+    - CANCELED
+  phoneNumber:
+    type: string
+    description: Номер телефона представителя
+  email:
+    type: string
+    description: Адрес электронной почты представителя
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ Клиента Банка
+    format: uuid
+  legalizationId:
+    type: string
+    description: Идентификатор заявки на легализацию
+    format: uuid
+  entities:
+    type: array
+    description: Список настроек для правил доступа по реквизиту
+    items:
+      $ref: ./AbacGrantAccessRuleEntityIntegrationDto.yaml
+  source:
+    type: string
+    enum:
+    - EMPLOYEES
+    - MANUAL
+  comment:
+    type: string
+    description: Комментарий
+description: Сведения о модели ответа "Правила предоставления доступа по реквизиту"

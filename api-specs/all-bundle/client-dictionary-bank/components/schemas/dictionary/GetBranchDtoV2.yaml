@@ -1,0 +1,8 @@
+required:
+- absCode
+type: object
+properties:
+  absCode:
+    type: string
+    description: АБС Код подразделения
+description: Параметры запроса подразделения

@@ -1,0 +1,15 @@
+required:
+- recommendations
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  recommendations:
+    type: array
+    description: Список рекомендаций
+    items:
+      $ref: ./RecommendationDto.yaml
+description: Ответ на получение актуальных рекомендаций пользователя АС Экосистема.

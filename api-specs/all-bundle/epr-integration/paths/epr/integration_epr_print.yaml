@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Интеграция с ЕПР
+  summary: Формирование печатной формы
+  description: 'Привилегии: EPR_INTEGRATION'
+  operationId: print
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/epr/GenericCommandPrintInput.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/epr/GenericResponseSimpleErrorDataPrintOutput.yaml

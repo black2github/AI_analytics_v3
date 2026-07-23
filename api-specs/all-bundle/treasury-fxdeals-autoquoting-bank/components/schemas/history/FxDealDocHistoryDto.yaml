@@ -1,0 +1,19 @@
+type: object
+properties:
+  changedIn:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  status:
+    type: string
+    description: Статус
+  bankStatus:
+    type: string
+    description: Детализация
+  event:
+    type: string
+    description: Событие
+  comment:
+    type: string
+    description: Комментарий
+description: Данные

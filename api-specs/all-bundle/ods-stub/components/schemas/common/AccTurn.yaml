@@ -1,0 +1,41 @@
+type: object
+properties:
+  NACCOUNTID:
+    type: integer
+    format: int64
+  SACCOUNT:
+    type: string
+  SACCCURRENCY:
+    type: string
+  SACCOUNTNAME:
+    type: string
+  SACCOUNTBALFILCODE:
+    type: string
+  SACCOUNTREGFILCODE:
+    type: string
+  SACCOUNTAP:
+    type: string
+  DTDATE:
+    $ref: ./LocalDate.yaml
+  NRESTIN:
+    type: number
+  NRESTINNAT:
+    type: number
+  NTURNOVERDT:
+    type: number
+  NTURNOVERDTNAT:
+    type: number
+  NTURNOVERKT:
+    type: number
+  NTURNOVERKTNAT:
+    type: number
+  NRESTOUT:
+    type: number
+  NRESTOUTNAT:
+    type: number
+  SACCSTATE:
+    type: string
+  SACCDATECL:
+    $ref: ./LocalDate.yaml
+  ERROR_ACCOUNT:
+    type: string

@@ -1,0 +1,5 @@
+type: object
+properties:
+  assignedToAuthorizedPerson:
+    type: boolean
+description: Данные

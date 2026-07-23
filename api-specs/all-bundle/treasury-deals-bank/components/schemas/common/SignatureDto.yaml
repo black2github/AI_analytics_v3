@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  ownerId:
+    type: string
+    description: Владелец подписи
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  typeId:
+    type: string
+    description: Тип подписи
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  signerEmployeeInfo:
+    type: string
+    description: Информация о сотруднике клиента со списком доверенностей
+  kind:
+    type: string
+    description: Тип подписи
+    enum:
+    - UNDEFINED
+    - UNKNOWN_SIGN
+    - LOCAL
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+description: Подпись Банка под документом

@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.BICFI
+    - RU.CBR.BIC
+  identification:
+    type: string
+description: Краткая информация о кредитной организации

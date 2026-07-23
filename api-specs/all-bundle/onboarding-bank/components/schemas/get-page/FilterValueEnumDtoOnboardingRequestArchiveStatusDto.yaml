@@ -1,0 +1,137 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Статус архивной заявки
+    enum:
+    - NONE
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - DELETED
+    - FORMED
+    - DATA_ERROR
+    - REPLACING_DOCS
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - PROCESSING_TESSA_COMMENTS
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - EDITING
+    - DETAILS_ERROR
+    - REFUSED
+    - PREDRAFT
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус архивной заявки
+      enum:
+      - NONE
+      - DRAFT
+      - COMPLETED
+      - DOCS_LOAD
+      - DELETED
+      - FORMED
+      - DATA_ERROR
+      - REPLACING_DOCS
+      - DELIVERED
+      - RECEIVED
+      - EXPORT_TO_ESK
+      - EXPORTED_TO_ESK
+      - EXPORT_TO_ESK_ERROR
+      - EXECUTED_BY_ESK
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - WAITING_FOR_ESK_DECISION
+      - PROCESSING_TESSA_COMMENTS
+      - APPROVED
+      - WAITING_FOR_ESK_ACCOUNTS
+      - EXECUTED
+      - REJECTED
+      - EDITING
+      - DETAILS_ERROR
+      - REFUSED
+      - PREDRAFT
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Статус архивной заявки
+    enum:
+    - NONE
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - DELETED
+    - FORMED
+    - DATA_ERROR
+    - REPLACING_DOCS
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - PROCESSING_TESSA_COMMENTS
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - EDITING
+    - DETAILS_ERROR
+    - REFUSED
+    - PREDRAFT
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус архивной заявки
+      enum:
+      - NONE
+      - DRAFT
+      - COMPLETED
+      - DOCS_LOAD
+      - DELETED
+      - FORMED
+      - DATA_ERROR
+      - REPLACING_DOCS
+      - DELIVERED
+      - RECEIVED
+      - EXPORT_TO_ESK
+      - EXPORTED_TO_ESK
+      - EXPORT_TO_ESK_ERROR
+      - EXECUTED_BY_ESK
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - WAITING_FOR_ESK_DECISION
+      - PROCESSING_TESSA_COMMENTS
+      - APPROVED
+      - WAITING_FOR_ESK_ACCOUNTS
+      - EXECUTED
+      - REJECTED
+      - EDITING
+      - DETAILS_ERROR
+      - REFUSED
+      - PREDRAFT
+description: Статус заявки. Полное совпадение или множественный выбор (eq, in)

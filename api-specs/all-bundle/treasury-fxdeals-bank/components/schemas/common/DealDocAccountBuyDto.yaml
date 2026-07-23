@@ -1,0 +1,37 @@
+type: object
+properties:
+  businessId:
+    type: string
+  accountType:
+    type: string
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  accountSubType:
+    type: string
+    enum:
+    - BASE
+    - DEPOSIT
+  accountName:
+    type: string
+  accountNameExtended:
+    type: string
+  currency:
+    type: string
+  accountNumber:
+    type: string
+  kbk:
+    type: string
+  bankName:
+    type: string
+  bankCode:
+    type: string
+  bankKS:
+    type: string
+  corrBankName:
+    type: string
+  corrBankCode:
+    type: string
+  absId:
+    type: string
+    format: uuid

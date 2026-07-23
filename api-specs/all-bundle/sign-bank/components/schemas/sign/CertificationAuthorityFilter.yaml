@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  registryNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  trusted:
+    $ref: ./FilterValueDtoBoolean.yaml
+  accredited:
+    $ref: ./FilterValueDtoBoolean.yaml
+  actionStatus:
+    $ref: ./FilterValueEnumDtoActionStatusDto.yaml
+description: Фильтр

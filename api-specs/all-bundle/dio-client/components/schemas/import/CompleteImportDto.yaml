@@ -1,0 +1,18 @@
+required:
+- importProcessId
+type: object
+properties:
+  importProcessId:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  importValid:
+    type: boolean
+    description: Импортировать корректные
+  importError:
+    type: boolean
+    description: Импортировать с ошибками
+  importWarning:
+    type: boolean
+    description: Импортировать с предупреждениями
+description: Параметры импорта, выбранные пользователем

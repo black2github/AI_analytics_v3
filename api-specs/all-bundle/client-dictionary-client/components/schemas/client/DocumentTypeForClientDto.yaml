@@ -1,0 +1,145 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  usedInOnboarding:
+    type: boolean
+    description: Используется в онбординге
+  documentClass:
+    type: string
+    description: 'Класс документа, возможные значения:
+
+      ORIGINAL_DOCUMENT - оригинал документа
+
+      PRINTING_FROM_BANK - печатная форма банк'
+    enum:
+    - ORIGINAL_DOCUMENT
+    - PRINTING_FORM_BANK
+  name:
+    type: string
+    description: Наименование типа документа
+  shortName:
+    type: string
+    description: Краткое наименование типа документа
+  mask:
+    type: string
+    description: Маска типа документа
+  uploadChoice:
+    type: string
+    description: Вариант загрузки
+    enum:
+    - SCAN
+    - SCAN_OR_EDOC
+  paperworkRequirements:
+    type: string
+    description: Требования к оформлению документа
+  paperworkRequirementsReference:
+    $ref: ./ReferenceDto.yaml
+  paperworkRequirementsEdoc:
+    type: string
+    description: Требования к оформлению (Электронный документ)
+  paperworkRequirementsSign:
+    type: string
+    description: Требования к оформлению (ЭП)
+  maxAttachmentFileSize:
+    type: integer
+    description: Максимальный размер вложения в мегабайтах
+    format: int32
+  priority:
+    type: integer
+    description: Приоритет
+    format: int32
+  code:
+    type: string
+    description: Уникальный код записи
+    enum:
+    - IDENTITY_DOCUMENT
+    - MIGRATION_CARD
+    - GOZ
+    - CONSTITUENT_DOCUMENT
+    - CONSTITUENT_DOCUMENT_CHANGES
+    - CONSTITUENT_DOCUMENT_EIO
+    - CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - LICENSE
+    - HEAD_APPOINTMENT
+    - RIGHT_SIGN_DOCUMENT
+    - WARRANT_SIGNERS
+    - WARRANT_SIGNER_PERSON
+    - OTHER_DOCUMENTS
+    - ANOTHER_DOCUMENT
+    - MAKE_MC_HEAD
+    - CONTRACT_MC
+    - MC_CONSTITUENT_DOCUMENT
+    - MC_CONSTITUENT_DOCUMENT_CHANGES
+    - MC_CONSTITUENT_DOCUMENT_EIO
+    - MC_CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - MC_HEAD_APPOINTMENT
+    - MAKE_OUTSRS_ACCOUNTING
+    - CONTRACT_OUTSRS_ACCOUNTING
+    - FATCA_UL
+    - FATCA_IP
+    - SNILS
+    - CM_111
+    - CM_112
+    - CM_114
+    - CM_115
+    - CM_1113
+    - CM_IP111
+    - CM_UL113
+    - CM_UL1123
+    - CM_1123
+    - CM_IP1124
+    - CM_IP112
+    - CM_1111
+    - CM_UL111
+    - CM_IP113
+    - CM_UL112
+    - CM_IP114
+    - CM_122
+    - CM_123
+    - CM_113
+    - CM_119
+    - CM_1114
+    - CM_1115
+    - CM_121
+    - CM_1110
+    - CM_1112
+    - CM_1116
+    - CM_1117
+    - CM_1118
+    - CM_1119
+    - CM_1120
+    - CM_1125
+    - CM_1126
+    - CM_1127
+    - CM_IP1122
+    - CM_UL1121
+    - EGRUL
+    - ADD_ACC_OPEN
+    - NEW_RKO_ACC_OPEN
+    - NEW_RKO_ACC_ZAK_OPEN
+    - PROTOCOL
+    - ADD_AGREEMENT
+    - CONTRACT
+    - ORDER
+    - POWER_ATTORNEY
+    - NEW_RKO_ACC_CARD_OPEN
+    - HOLDER_LIST
+    - CORP_CARD_QUESTIONNAIRE
+    - CORP_CARD_ISSUE_APP
+    - EAES
+    - PURCHASE_PROCEDURE
+    - APPLICATION_SUPPORT_GK
+    - EGRUL_UK
+    - WARRANT_ACCOUNTING_OR_TAX
+    - CM_1124
+    - CM_117
+    - PERMISSION_TO_STAY_IN_RUSSIA
+    - CERTIFICATE_LARGEST_TAXPAYER
+    - CONFIRMATION_LATTER
+    - BENEFICIARY_QUESTIONNAIRE
+    - CLIENT_UL_QUESTIONNAIRE
+    - CLIENT_IP_QUESTIONNAIRE
+description: Страница с данными

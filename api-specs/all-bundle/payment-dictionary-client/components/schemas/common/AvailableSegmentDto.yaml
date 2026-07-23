@@ -1,0 +1,48 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор доступных продуктов
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь UAA
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: Представитель клиента
+    format: uuid
+  segment:
+    type: string
+    description: Код сегмента, доступного пользователю в разрезе клиента
+    enum:
+    - CAS_ACC_OPEN_SECOND_REQ
+    - CAS_OFFER_RKO_ACCEPTANCE_REQ
+    - CAS_OFFER_JOIN_GPB_BO1_REQ
+    - CAS_OFFER_JOIN_GPB_BO2_REQ
+    - CAS_OFFER_JOIN_PO_UVED
+    - CAS_FREE_FORMAT_DOC
+    - CAS_DBO_BSS_FRAME
+    - CAS_SWITCHING_TO_DBO_BSS
+    - CAS_SWITCHING_TO_UVED_PROCESS
+    - CAS_SWITCHING_TO_UVED_LIMITED_ACCESS
+    - CAS_SWITCHING_TO_UVED_VIEW
+    - CAS_SWITCHING_TO_MP_PROCESS
+    - CAS_SWITCHING_TO_MP_VIEW
+    - CAS_FNS
+  segmentDescription:
+    type: string
+    description: Описание сегмента, доступного пользователю в разрезе клиента
+  accessRuleId:
+    type: string
+    description: Ссылка на сущность "Правила предоставления доступа к сегментам системы"
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  createdById:
+    type: string
+    description: Идентификатор пользователя создавшего доступный сегмент для пользователя
+    format: uuid
+description: Сегменты, доступные пользователю

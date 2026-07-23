@@ -1,0 +1,23 @@
+required:
+- bankClientId
+- certificates
+- documents
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  certificates:
+    type: array
+    description: СПО
+    items:
+      $ref: ./BankClientOfficialCertificate.yaml
+  certificate:
+    $ref: ./BankClientOfficialCertificate.yaml
+  documents:
+    type: array
+    description: Документы
+    items:
+      $ref: ./SignatureInfo.yaml
+description: Организация

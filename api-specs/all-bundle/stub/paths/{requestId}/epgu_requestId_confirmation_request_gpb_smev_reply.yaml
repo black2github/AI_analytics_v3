@@ -1,0 +1,35 @@
+post:
+  tags:
+  - API заглушки ЕПГУ
+  summary: Эмуляция ответа ГПБ-СМЭВ о получении запроса на подтверждение выпуска сертификата
+  operationId: sendGpbSmevReplyForConfirmationRequestUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: requestId
+    in: path
+    description: requestId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: responseData
+    description: responseData
+    required: true
+    schema:
+      $ref: '#/definitions/SmevResultData'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,EpguConfirmationRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

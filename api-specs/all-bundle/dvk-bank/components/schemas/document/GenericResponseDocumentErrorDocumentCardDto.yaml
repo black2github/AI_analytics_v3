@@ -1,0 +1,17 @@
+type: object
+properties:
+  data:
+    oneOf:
+    - $ref: ./DocumentCardDto.yaml
+    - $ref: ./CloseContractDto.yaml
+    - $ref: ./CreditContractCardDto.yaml
+    - $ref: ./RegContractDto.yaml
+    - $ref: ./RenewContractDto.yaml
+    - $ref: ./RenewCreditContractCardDto.yaml
+    - $ref: ./SustainingDocumentsCertificateDto.yaml
+  error:
+    $ref: ../common/DocumentError.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

@@ -1,0 +1,15 @@
+type: object
+description: Список счетов с их ограничениями для сервиса закрытия счета
+properties:
+  rc:
+    type: integer
+    format: int32
+    description: Код ответа
+  error:
+    type: string
+    description: Описание ошибки
+  accounts:
+    type: array
+    items:
+      $ref: ./AccountItem.yaml
+    description: Блок со списком счетов

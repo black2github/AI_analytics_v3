@@ -1,0 +1,9 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Наименование поля
+  value:
+    type: string
+    description: Значение поля
+description: Отображение подписываемого поля

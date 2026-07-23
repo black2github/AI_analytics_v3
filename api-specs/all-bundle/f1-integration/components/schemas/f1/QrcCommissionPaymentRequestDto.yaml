@@ -1,0 +1,10 @@
+type: object
+properties:
+  msgHdr:
+    $ref: ./MsgHdrDto.yaml
+  prcTp:
+    type: string
+    description: Тип процесса
+  clnt:
+    $ref: ./ClntDto.yaml
+description: Запрос РКО Ф1

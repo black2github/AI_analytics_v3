@@ -1,0 +1,53 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус сущности журнала нотификаций
+    enum:
+    - NEW
+    - SENT
+    - SEND_ERROR
+    - DELIVERED
+    - DELIVERY_ERROR
+    - UPDATE_STATUS_ERROR
+  notEq:
+    type: string
+    description: Статус сущности журнала нотификаций
+    enum:
+    - NEW
+    - SENT
+    - SEND_ERROR
+    - DELIVERED
+    - DELIVERY_ERROR
+    - UPDATE_STATUS_ERROR
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус сущности журнала нотификаций
+      enum:
+      - NEW
+      - SENT
+      - SEND_ERROR
+      - DELIVERED
+      - DELIVERY_ERROR
+      - UPDATE_STATUS_ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус сущности журнала нотификаций
+      enum:
+      - NEW
+      - SENT
+      - SEND_ERROR
+      - DELIVERED
+      - DELIVERY_ERROR
+      - UPDATE_STATUS_ERROR
+  isNull:
+    type: boolean
+description: Фильтр по статусу нотификации. Полное совпадение. Мультивыбор.

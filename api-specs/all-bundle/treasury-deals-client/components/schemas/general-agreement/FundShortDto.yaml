@@ -1,0 +1,18 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Бизнес ИД фонда для Депозитов и Конверсии, или бизнес ИД 'Счета МНО' для МНО, заполняется только для ДУ генок
+  name:
+    type: string
+    description: Наименование фонда. Заполняется только для ДУ генок
+  accountNumber:
+    type: string
+    description: Номер счета. Заполняется только для МНО ДУ генок
+  accountCurrency:
+    type: string
+    description: Валюта счета. Заполняется только для МНО ДУ генок
+  usable:
+    type: boolean
+    description: Возможность использования счета. Заполняется только для МНО ДУ генок
+description: Фонд

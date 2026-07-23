@@ -1,0 +1,23 @@
+type: object
+description: Данные о полномочиях подписанта
+properties:
+  accountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета клиента
+  signLevelNumber:
+    type: integer
+    format: int32
+    description: Номер уровня подписи
+  authorityForReturn:
+    type: boolean
+    description: Полномочия на возврат
+  authorityType:
+    type: string
+    description: Вид полномочия
+  expiredSignAuthority:
+    type: boolean
+    description: Истекшие полномочия подписанта
+required:
+- accountId
+- authorityForReturn

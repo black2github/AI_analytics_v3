@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сценария
+    format: uuid
+  screenFormName:
+    type: string
+    description: Наименование экранной формы
+  daysSinceFeedbackCancel:
+    type: integer
+    description: Настройка количества календарных дней с момента отказа от оценки
+    format: int32
+  daysSinceLastFeedback:
+    type: integer
+    description: Настройка количества календарных дней с момента последней оценки
+    format: int32
+  pollParameterSource:
+    type: string
+    description: Источник оценки
+  useHashtags:
+    type: boolean
+    description: Использовать хештеги при опросе
+  active:
+    type: boolean
+    description: Статус
+  createdAt:
+    type: string
+    description: Дата создания опроса
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата последнего изменения опроса
+    format: date-time
+description: Параметры опроса

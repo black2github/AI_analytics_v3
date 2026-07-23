@@ -1,0 +1,7 @@
+type: object
+properties:
+  searchInCacheResult:
+    $ref: ./SearchInCacheResult.yaml
+    type: object
+    xml:
+      name: SearchInCacheResult

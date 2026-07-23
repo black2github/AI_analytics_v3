@@ -1,0 +1,42 @@
+type: object
+description: Детали обобщенного платежа
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  account:
+    type: string
+    description: Счет
+  merchantName:
+    type: string
+    description: ИНаименование точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес Точки продаж
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  operationTransactionTime:
+    type: string
+    format: date-time
+    description: Дата и время входящей операции
+  operationTransactionId:
+    type: string
+    description: Идентификатор входящей транзакции
+  operationAmount:
+    type: integer
+    format: int64
+    description: Сумма входящей операции в копейках
+  incomeCode:
+    type: string
+    description: Код вида дохода
+  commissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия Банка в копейках
+  qrcId:
+    type: string
+    description: Идентификатор QR кода для оплаты
+  fpMessageId:
+    type: string
+    description: ID запроса из НСПК

@@ -1,0 +1,20 @@
+type: object
+properties:
+  step:
+    type: string
+    description: Шаг заявки
+    enum:
+    - DATA
+    - ADDITIONAL_DATA
+    - CONFIRMATION
+  clientInfo:
+    $ref: ./UpsertClientInfoDto.yaml
+  requestData:
+    $ref: ./UpsertRequestDataDto.yaml
+  projectParameters:
+    $ref: ../common/OfferProjectParametersDto.yaml
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+description: Обновление оферты

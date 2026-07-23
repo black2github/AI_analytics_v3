@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  active:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  structureId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр справочника Центры ответственности

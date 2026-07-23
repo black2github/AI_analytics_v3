@@ -1,0 +1,11 @@
+type: object
+properties:
+  connectHistories:
+    type: array
+    items:
+      $ref: ./ScheduleConnectHistoryDto.yaml
+  disconnectHistories:
+    type: array
+    items:
+      $ref: ./ScheduleDisconnectHistoryDto.yaml
+description: Данные

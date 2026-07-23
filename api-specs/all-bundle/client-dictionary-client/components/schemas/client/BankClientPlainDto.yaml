@@ -1,0 +1,158 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID Клиента Банка
+    format: uuid
+  clientId:
+    type: integer
+    description: Числовой ID Клиента Банка
+    format: int64
+  isResident:
+    type: boolean
+    description: Признак резидента
+  clientType:
+    type: string
+    description: Тип
+    enum:
+    - UL
+    - IP
+    - FL
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  abbreviationName:
+    type: string
+    description: Аббревиатура
+  innKio:
+    type: string
+    description: ИНН
+  status:
+    type: string
+    description: Статус
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  additionalInfo:
+    type: string
+    description: Дополнительная информация
+  blockState:
+    type: string
+    description: Признак блокировки
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  okopf:
+    type: string
+    description: ОКОПФ
+  okfs:
+    type: string
+    description: ОКФС
+  activityType:
+    type: integer
+    description: '1 - Организация, находящаяся в федеральной собственности;
+
+      2 - Организация, находящаяся в государственной (кроме федеральной) собственности;
+
+      3 - Негосударственная организация;
+
+      4 - Индивидуальный предприниматель−исполнитель по государственному оборонному заказу.'
+    format: int32
+    enum:
+    - null
+  ogrnOgrip:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  regNumber:
+    type: string
+    description: Регистрационный номер
+  internationalName:
+    type: string
+    description: Междунаровдное наименование
+  tin:
+    type: string
+    description: ТИН
+  phone:
+    type: string
+    description: Контактный телефон
+  legalAddress:
+    type: string
+    description: Юридический адрес Клиента
+  postAddress:
+    type: string
+    description: Почтовый адрес Клиента
+  isConnectedToDbo:
+    type: boolean
+    description: Признак подключения организации к ДБО
+  isDebitOperationsForbidden:
+    type: boolean
+    description: Информация о запрете дебетовых операций
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+  externalClientGuid:
+    type: string
+    description: Уникальный GUID клиента во внешней системе (Поле clientGUID в ответе F1)
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  createdBySource:
+    type: string
+    description: Система создавшая запись
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  marketingCampaign:
+    type: string
+    description: Маркетинговая кампания, в рамках которой был привлечен клиент
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  lawCountry:
+    type: string
+    description: Страна (Код страны)
+  lawState:
+    type: string
+    description: Субъект РФ (юридический адрес)
+  lawLocality:
+    type: string
+    description: Населенный пункт (юридический адрес)
+  okpo:
+    type: string
+    description: Общероссийский классификатор предприятий и организаций (ОКПО) (только цифры 0-9)
+  okved:
+    type: string
+    description: Основной код ОКВЭД (Общероссийский классификатор видов экономической деятельности)
+  createNewAccountOpeningContract:
+    type: boolean
+    description: Признак "Создание новых договоров в сервисе "Открытие доп.счета"
+  accountsAreBlocked:
+    type: boolean
+    description: Статус блокировки всех счетов
+  simplifiedIdentification:
+    type: boolean
+    description: Признак упрощенной идентификации
+  simpleClient:
+    type: boolean
+    description: ' Признак простого клиента'
+  memberOfPriority:
+    type: boolean
+    description: Входит в группу обслуживания ГБП Приоритет
+  additionalSignFlag:
+    type: boolean
+    description: Признак необходимости дополнительной подписи
+description: Плоская ДТО Клиента Банка

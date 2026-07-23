@@ -1,0 +1,50 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  commentForBank:
+    type: string
+    description: Информация для Банка
+  commentForClient:
+    type: string
+    description: Информация для Клиента
+  documents:
+    uniqueItems: true
+    type: array
+    description: Документы к заявке на выпуск карты
+    items:
+      $ref: ./IssueCardDocumentShortDto.yaml
+  history:
+    $ref: ./IssueCardRequestHistoryDto.yaml
+  name:
+    type: string
+    description: Наименование ЭФ
+  params:
+    $ref: ./IssueCardRequestParamsDto.yaml
+  questionnaires:
+    type: array
+    description: Анкеты
+    items:
+      $ref: ./IssueCardRequestQuestionnaireDto.yaml
+  reqDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Уникальный номер заявки в разрезе Пользователя, создавшего заявку, и года создания заявки
+    format: int32
+  signerId:
+    type: string
+    description: Подписант
+    format: uuid
+  status:
+    type: string
+    description: Текущий статус заявки
+  updatedAt:
+    type: string
+    description: Дата и время последнего изменения
+    format: date-time
+description: Заявка на выпуск карты

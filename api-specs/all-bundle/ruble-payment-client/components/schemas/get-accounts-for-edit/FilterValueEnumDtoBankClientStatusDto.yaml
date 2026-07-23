@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./BankClientStatusDto.yaml
+  notEq:
+    $ref: ./BankClientStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./BankClientStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./BankClientStatusDto.yaml
+  isNull:
+    type: boolean
+description: Статус клиента банка. in.

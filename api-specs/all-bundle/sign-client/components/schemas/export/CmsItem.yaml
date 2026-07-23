@@ -1,0 +1,13 @@
+type: object
+properties:
+  signature:
+    type: string
+    description: Подпись
+  certificateData:
+    type: string
+    description: Тело сертификата
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+description: Элемент запроса, содержащий сертификат ЭП (id или тело сертификата) и электронную подпись

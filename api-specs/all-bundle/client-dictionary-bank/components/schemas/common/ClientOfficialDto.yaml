@@ -1,0 +1,54 @@
+required:
+- position
+type: object
+properties:
+  id:
+    type: string
+    description: ID представителя клиента.
+    format: uuid
+  position:
+    maxLength: 100
+    minLength: 0
+    type: string
+    description: Позиция представителя клиента.
+  blockState:
+    type: string
+    description: Представитель клиента заблокирован или нет.
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  client:
+    $ref: ./BankClientDto.yaml
+  userId:
+    type: string
+    description: Ссылка на пользователя.
+    format: uuid
+  bankClientAuthorizedPersonId:
+    type: string
+    description: Ссылка на УЛ клиента.
+    format: uuid
+  createdByAccessRuleId:
+    type: string
+    description: Правило, которое установило связь.
+    format: uuid
+  remoteSource:
+    type: string
+    description: Система - источник записи
+    enum:
+    - UNKNOWN
+    - ECO
+    - RKO_F1
+    - ESK
+    - TESSA
+    - BSS_DBO_320
+    - SKVO
+    - NAUMEN
+    - UVED
+    - SBP
+  markers:
+    type: string
+    description: Метки представителя Клиента
+  dstSynchronizationEnabled:
+    type: boolean
+    description: Управление синхронизацией СЭП для представителя
+description: Представитель Клиента. ДТО

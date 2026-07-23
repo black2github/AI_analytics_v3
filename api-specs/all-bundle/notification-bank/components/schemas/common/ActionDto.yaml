@@ -1,0 +1,18 @@
+type: object
+properties:
+  action:
+    type: string
+    description: Тип действия над уведомлением
+    enum:
+    - CLOSING
+    - CLOSING_NOT_INTERESTING
+    - CLOSING_INTERFERES_WITH_VIEWING
+    - TRANSITION
+  time:
+    type: string
+    description: Время, выполнения действия
+    format: date-time
+  page:
+    type: string
+    description: Страница, где совершилось действие
+description: Действием над уведомлением

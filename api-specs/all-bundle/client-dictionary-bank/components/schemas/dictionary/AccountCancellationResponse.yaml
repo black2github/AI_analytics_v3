@@ -1,0 +1,11 @@
+required:
+- status
+type: object
+properties:
+  status:
+    type: boolean
+    description: Статус процесса аннулирования. true - успех, false - ошибка.
+  errorMessage:
+    type: string
+    description: Текст ошибки
+description: Ответ от метода аннулирование счетов.

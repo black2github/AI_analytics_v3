@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for statement-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/statement",
+      "domain": "statement"
+    },
+    {
+      "prefix": "/schedule",
+      "domain": "schedule"
+    }
+  ]
+}

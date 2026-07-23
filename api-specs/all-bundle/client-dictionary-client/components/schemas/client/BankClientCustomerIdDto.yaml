@@ -1,0 +1,17 @@
+type: object
+properties:
+  customerId:
+    type: string
+  source:
+    type: string
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  branchId:
+    type: string
+    format: uuid
+description: Идентификаторы клиента в системах банка.

@@ -1,0 +1,19 @@
+put:
+  tags:
+  - АПИ Банка для управления настройками
+  summary: Обновить запись
+  description: 'Привилегии: SETTINGS_EDIT'
+  operationId: update_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/UpdateCommandSettingAdminDtoUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseListOfSimpleErrorsSettingAdminDto.yaml

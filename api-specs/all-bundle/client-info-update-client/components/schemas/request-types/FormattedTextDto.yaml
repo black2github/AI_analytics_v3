@@ -1,0 +1,12 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Текст
+  format:
+    type: string
+    description: Формат
+    enum:
+    - NONE
+    - BOLD
+description: Форматированный текст

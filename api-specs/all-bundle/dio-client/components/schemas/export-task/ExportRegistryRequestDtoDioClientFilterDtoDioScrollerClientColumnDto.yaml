@@ -1,0 +1,43 @@
+required:
+- columns
+- filter
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов для экспорта
+    items:
+      type: string
+      description: Идентификаторы документов для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/DioClientFilterDto.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Отображаемые колонки
+      enum:
+      - NUMBER
+      - DATE
+      - ORG_INN_BANK
+      - ORG_NAME
+      - INN
+      - BRANCH
+      - CONTRACT
+      - OPER_COUNT
+      - ATTACHMENT
+      - BANK_ANSWER
+      - STATUS
+      - COMMENT
+      - BANK_COMMENT
+  timeZone:
+    type: string
+    description: Временная зона
+description: Транспортное представление запроса на экспорт реестра

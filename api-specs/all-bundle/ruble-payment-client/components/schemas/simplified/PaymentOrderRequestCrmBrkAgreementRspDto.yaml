@@ -1,0 +1,22 @@
+type: object
+properties:
+  contractNumber:
+    type: string
+    description: Код брокерского договора
+  brief:
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  accountNumber:
+    type: string
+    description: Номер счёта
+  tradingFloors:
+    type: array
+    description: Наименования ТП
+    items:
+      type: string
+      description: Наименования ТП
+description: Исходящие параметры функции запроса профиля клиента по брокерскому обслуживанию

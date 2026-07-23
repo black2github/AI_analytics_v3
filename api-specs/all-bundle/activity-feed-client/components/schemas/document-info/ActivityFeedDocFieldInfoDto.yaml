@@ -1,0 +1,63 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование поля
+  nameLocalizationKey:
+    type: string
+    description: Ключ локализации наименования поля
+  value:
+    $ref: ./FieldValueDto.yaml
+  nameDescription:
+    type: string
+    description: Подсказка к названию поля
+  nameDescriptionLocalizationKey:
+    type: string
+    description: Ключ локализации подсказки к названию поля
+  valueDescription:
+    type: string
+    description: Подсказка к значению поля
+  valueDescriptionLocalizationKey:
+    type: string
+    description: Ключ локализации подсказки к значению поля
+  isHeaderBold:
+    type: boolean
+    writeOnly: true
+  isBold:
+    type: boolean
+    writeOnly: true
+  isEndBlock:
+    type: boolean
+    writeOnly: true
+  isHeader:
+    type: boolean
+    writeOnly: true
+  color:
+    type: string
+    description: Цвет текста
+    enum:
+    - GREY
+    - YELLOW
+    - RED
+    - GREEN
+    - BLACK
+  isStrikeThrough:
+    type: boolean
+    writeOnly: true
+  headerPosition:
+    type: string
+    description: Положение заголовка
+    enum:
+    - LEFT
+    - TOP
+  bold:
+    type: boolean
+  endBlock:
+    type: boolean
+  header:
+    type: boolean
+  headerBold:
+    type: boolean
+  strikeThrough:
+    type: boolean
+description: Информация о поле документа ленты операций

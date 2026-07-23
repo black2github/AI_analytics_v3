@@ -1,0 +1,7 @@
+type: object
+properties:
+  clientAbsId:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+description: Запрос баланса счетов клиента по реквизитам клиента

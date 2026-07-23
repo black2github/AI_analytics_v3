@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    format: date
+  notEq:
+    type: string
+    format: date
+  in:
+    type: array
+    items:
+      type: string
+      format: date
+  notIn:
+    type: array
+    items:
+      type: string
+      format: date
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    format: date
+  ge:
+    type: string
+    format: date
+  lt:
+    type: string
+    format: date
+  le:
+    type: string
+    format: date
+description: Дата начала

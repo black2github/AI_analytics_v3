@@ -1,0 +1,42 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  authorizedPersonId:
+    type: string
+    description: ID Уполномоченного лица
+    format: uuid
+  accountEcoIds:
+    uniqueItems: true
+    type: array
+    description: Массив id счетов в экосистеме
+    items:
+      type: string
+      description: Массив id счетов в экосистеме
+      format: uuid
+  accountF1Ids:
+    uniqueItems: true
+    type: array
+    description: Массив id счетов в Ф1
+    items:
+      type: integer
+      description: Массив id счетов в Ф1
+      format: int64
+  sourceAccesses:
+    type: object
+    additionalProperties:
+      uniqueItems: true
+      type: array
+      description: Массив доступов к счету для платежных документов
+      items:
+        $ref: ./AccessRqInfo.yaml
+    description: Массив доступов к счету для платежных документов
+  additionParams:
+    uniqueItems: true
+    type: array
+    description: Массив дополнительных параметров счета
+    items:
+      $ref: ./AdditionParamRqInfo.yaml
+description: Функция получения доступных счетов и настроек доступа к ним. Входящие параметры функции

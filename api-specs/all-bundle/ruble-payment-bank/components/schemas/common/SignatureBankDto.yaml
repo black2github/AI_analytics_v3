@@ -1,0 +1,26 @@
+type: object
+properties:
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signerId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  level:
+    $ref: ./SignatureLevelClassifierDto.yaml
+  certificateId:
+    type: string
+    description: UID сертификата
+  docSourceSystem:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  docSignPage:
+    type: string
+    description: Страница, с которой вызвана подпись документа
+  updatedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  approvalSignatureInfo:
+    $ref: ./ApprovalSignatureInfoDto.yaml
+description: Подпись платежного поручения, данные для сотрудника банка

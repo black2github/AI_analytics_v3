@@ -1,0 +1,72 @@
+get:
+  tags:
+  - API для управления подпиской
+  summary: Условия подписки для клиента со списком его счетов
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.VIEW_LANDING_PAGE'
+  operationId: getSubscriptionTermsUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: Client id
+    required: true
+    type: string
+  - name: clientId
+    in: query
+    description: clientId
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SubscriptionTermsError,SubscriptionTermsDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+post:
+  tags:
+  - API для управления подпиской
+  summary: Условия подписки для клиента со списком его счетов, с возможностью проверки полномочий массива сертификатов
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.VIEW_LANDING_PAGE'
+  operationId: getSubscriptionTermsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: Client id
+    required: true
+    type: string
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/SubscriptionTermsRequestDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SubscriptionTermsError,SubscriptionTermsDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

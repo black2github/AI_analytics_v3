@@ -1,0 +1,28 @@
+type: object
+properties:
+  alg:
+    type: string
+  kty:
+    type: string
+  use:
+    type: string
+  x5c:
+    type: array
+    items:
+      type: string
+  kid:
+    type: string
+  x5t:
+    type: string
+  value:
+    type: string
+  n:
+    type: string
+  e:
+    type: string
+  crv:
+    type: string
+  x:
+    type: string
+  y:
+    type: string

@@ -1,0 +1,41 @@
+type: object
+properties:
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+    example: null
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+    example: null
+  id:
+    type: string
+    format: uuid
+    example: null
+  documentId:
+    type: string
+    format: uuid
+    example: null
+  changedIn:
+    type: string
+    format: date-time
+    example: null
+  status:
+    type: string
+    example: null
+  userType:
+    type: string
+    example: null
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userId:
+    type: string
+    format: uuid
+    example: null
+  userName:
+    type: string
+    example: null
+description: История изменения запроса справок для ЮЛ.
+example: null

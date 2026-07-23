@@ -1,0 +1,31 @@
+required:
+- reason
+- revocationDate
+- serialNumber
+- status
+type: object
+properties:
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  revocationDate:
+    type: string
+    description: Дата отзыва
+    format: date-time
+  reason:
+    type: string
+    description: Причина отзыва сертификата
+    enum:
+    - UNSPECIFIED
+    - KEY_COMPROMISE
+    - CA_COMPROMISE
+    - AFFILIATION_CHANGED
+    - SUPERSEDED
+    - CESSATION_OF_OPERATION
+  status:
+    type: string
+    description: Статус отзыва сертификата
+    enum:
+    - DRAFT
+    - REVOKED
+description: Отозванный сертификат

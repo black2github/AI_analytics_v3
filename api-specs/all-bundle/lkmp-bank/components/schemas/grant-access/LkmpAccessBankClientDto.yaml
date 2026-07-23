@@ -1,0 +1,29 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП.
+  f1Rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  eskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+description: Реквизиты клиента по заявке

@@ -1,0 +1,32 @@
+type: object
+properties:
+  type:
+    type: string
+  pan:
+    type: string
+  virtualNum:
+    type: string
+  source:
+    type: string
+  typeCode:
+    type: string
+  typeName:
+    type: string
+  periodCode:
+    type: string
+  periodName:
+    type: string
+  amount:
+    type: string
+  currencyNumCode:
+    type: string
+  currencyCharCode:
+    type: string
+  reason:
+    type: string
+  stateReason:
+    type: string
+  userFullName:
+    type: string
+  userLogin:
+    type: string

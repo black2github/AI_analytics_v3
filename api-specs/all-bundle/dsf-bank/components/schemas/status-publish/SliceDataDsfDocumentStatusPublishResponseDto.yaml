@@ -1,0 +1,12 @@
+type: object
+description: Страничные данные
+properties:
+  content:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./DsfDocumentStatusPublishResponseDto.yaml
+  next:
+    type: boolean
+  previous:
+    type: boolean

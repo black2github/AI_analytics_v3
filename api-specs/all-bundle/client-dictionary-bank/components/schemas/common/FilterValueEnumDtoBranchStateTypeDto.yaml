@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED
+  notEq:
+    type: string
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - PLANNING_OPEN
+      - OPENED
+      - TEMP_CLOSED
+      - PLANNING_CLOSE
+      - CLOSED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - PLANNING_OPEN
+      - OPENED
+      - TEMP_CLOSED
+      - PLANNING_CLOSE
+      - CLOSED
+  isNull:
+    type: boolean
+description: Идентификатор статуса подразделения. In, notIn.

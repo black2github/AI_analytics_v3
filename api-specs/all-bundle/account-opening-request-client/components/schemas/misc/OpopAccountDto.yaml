@@ -1,0 +1,6 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Number
+description: OPOP account DTO.

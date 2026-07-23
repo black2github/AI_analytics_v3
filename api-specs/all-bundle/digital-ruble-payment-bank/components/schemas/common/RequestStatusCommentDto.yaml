@@ -1,0 +1,24 @@
+required:
+- bankStatusComment
+- clientStatusComment
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+  bankStatusComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Комментарий по заявке (Банк)
+  clientStatusComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Комментарий по заявке (Клиент)
+description: Изменение статуса заявок.

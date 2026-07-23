@@ -1,0 +1,44 @@
+type: object
+description: '"Данные из эталона ЭС cbdc.060.001.01.X2G_2026.07 "Распоряжение Клиента на перевод ЦР (X2G)"'
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма операции
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции
+  operationType:
+    type: string
+    description: Тип операции
+  sender:
+    $ref: ./X2GSender.yaml
+    description: Данные отправителя перевода X2G
+  recipient:
+    $ref: ./X2GRecipient.yaml
+    description: Данные получателя перевода X2G
+  payer:
+    $ref: ./X2GPayer.yaml
+    description: Данные фактического плательщика
+  payee:
+    $ref: ./X2GPayee.yaml
+    description: Данные фактического получателя
+  paymentId:
+    type: string
+    description: Уникальный идентификатор начисления
+  purpose:
+    type: string
+    description: Назначения платежа
+  departmentalInfo:
+    $ref: ./DepartmentalInfo.yaml
+    description: Ведомственная информация
+  record:
+    type: string
+    description: Транзакционное сообщение (дайджест РР)
+required:
+- departmentalInfo
+- operationType
+- payee
+- recipient
+- sender
+- totalAmount
+- totalAmountCcy

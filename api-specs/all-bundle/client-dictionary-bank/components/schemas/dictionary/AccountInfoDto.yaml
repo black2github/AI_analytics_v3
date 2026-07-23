@@ -1,0 +1,37 @@
+required:
+- accountId
+- accountNumber
+- client
+- state
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    $ref: ./UserAccountTypeDto.yaml
+  state:
+    type: string
+    description: Состояние счета
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  openDate:
+    type: string
+    description: Дата открытия
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  client:
+    $ref: ../common/BankClientInfoDto.yaml
+description: Информация о счете

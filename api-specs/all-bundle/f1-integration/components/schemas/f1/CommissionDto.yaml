@@ -1,0 +1,11 @@
+type: object
+properties:
+  accountCommission:
+    type: string
+  balanceMark:
+    type: string
+    description: Тип достаточности комиссии
+    enum:
+    - ENOUGH
+    - NOT_ENOUGH
+description: Комиссия по счету

@@ -1,0 +1,35 @@
+required:
+- availableActions
+- bankClientId
+- name
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка (организации)
+    format: uuid
+  name:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Наименование
+  description:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Описание
+  availableActions:
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Доступные действия
+    items:
+      $ref: ./RoleTemplateAvailableActionDto.yaml
+  dsfTypes:
+    uniqueItems: true
+    type: array
+    description: Типы ДСФ
+    items:
+      type: string
+      description: Типы ДСФ
+description: Данные для создания шаблона роли (клиентский модуль)

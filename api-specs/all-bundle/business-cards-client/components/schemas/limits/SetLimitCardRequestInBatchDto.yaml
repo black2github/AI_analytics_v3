@@ -1,0 +1,162 @@
+required:
+- card
+type: object
+properties:
+  card:
+    $ref: ../common/CardDto.yaml
+  dailyLimit:
+    $ref: ./LimitParameterOdlDto.yaml
+  dailyLimitChange:
+    type: string
+    description: Признак изменения дневного лимита
+    example: DELETE
+    enum:
+    - NO_CHANGE
+    - CHANGE
+    - DELETE
+  firstName:
+    type: string
+    description: Имя держателя карты
+    example: Николай
+  id:
+    type: string
+    description: Идентификатор связанной заявки
+    format: uuid
+  lastName:
+    type: string
+    description: Фамилия держателя карты
+    example: Демидов
+  monthlyLimit:
+    $ref: ./LimitParameterOdlDto.yaml
+  monthlyLimitChange:
+    type: string
+    description: Признак изменения месячного лимита
+    example: NO_CHANGE
+    enum:
+    - NO_CHANGE
+    - CHANGE
+    - DELETE
+  reqDate:
+    type: string
+    description: Дата создания связанной заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Номер связанной заявки
+    format: int32
+  secondName:
+    type: string
+    description: Отчество держателя карты
+    example: Валерьевич
+  status:
+    type: string
+    description: Статус заявок
+    nullable: true
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - DELETED
+    - SIGN_REQUEST
+    - SIGNED
+    - DELIVERED
+    - DRAFT_OR_NEW
+    - DRAFT_OR_SIGN_REQUEST
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - REQUEST_TO_SVFE_RECEIVED_OR_FAILED
+    - EXPORT_REQUEST_TO_SVFE
+    - REQUEST_EXECUTED_BY_SVFE
+    - EXPORT_REQUEST_TO_SVFE_ERROR
+    - EXPORTED_TO_TESSA_OR_FAILED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - NEEDS_ACCOUNT_OPENING
+    - EXPORT_TO_KNOSIS
+    - ACCOUNT_OPENING
+    - ACCOUNT_OPENED
+    - CARDS_OPENING
+    - IS_KNOSIS_REQUEST_SENT
+    - EXPORT_TO_KNOSIS_ERROR
+    - EXECUTED_IN_KNOSIS
+    - ACCOUNT_EXECUTED_BY_ESK
+    - IS_F1_REQUEST_NEED
+    - IS_F1_REQUEST_SENT
+    - EXPORT_FILES_TO_F1
+    - FILES_EXPORTED_TO_F1
+    - EXPORT_FILES_TO_F1_ERROR
+    - WAITING_FOR_ESK_ACCOUNT
+    - ACCOUNT_OPENED_IN_F1
+    - EXPORT_ACCOUNT_DOCS_TO_TESSA
+    - IS_TESSA_REQUEST_SENT
+    - EXPORT_ACCOUNT_DOCS_TO_TESSA_ERROR
+    - ACCOUNT_DOCS_EXECUTED_BY_TESSA
+    - EXPORT_CARD_DOCS_TO_FILE
+    - IS_CARD_DOCS_REQUEST_SENT
+    - EXPORT_CARD_DOCS_TO_FILE_ERROR
+    - CARD_DOCS_EXPORTED_TO_FILE
+    - CARDS_OPENED_OR_REJECTED
+    - CARDS_OPENED
+    - EXECUTED_OR_PARTLY_EXECUTED
+    - PARTLY_EXECUTED
+    - EXPORT_ACCOUNT_TO_ESK
+    - IS_ESK_REQUEST_SENT
+    - ACCOUNT_EXPORTED_TO_ESK
+    - EXPORT_ACCOUNT_TO_ESK_ERROR
+    - ACCOUNT_ACCEPTED_BY_ESK
+    - EXPORT_REQUEST_DAILY_TO_SVFE
+    - REQUEST_EXECUTED_DAILY_BY_SVFE
+    - EXPORT_REQUEST_DAILY_TO_SVFE_ERROR
+    - EXPORT_REQUEST_MONTHLY_TO_SVFE
+    - REQUEST_EXECUTED_MONTHLY_BY_SVFE
+    - EXPORT_REQUEST_MONTHLY_TO_SVFE_ERROR
+    - REQUEST_DAILY_TO_SVFE_NEED
+    - REQUEST_MONTHLY_TO_SVFE_NEED
+    - REQUEST_DAILY_TO_SVFE_NEEDED_OR_NOT
+    - REQUEST_MONTHLY_TO_SVFE_NEEDED_OR_NOT
+    - REQUEST_EXECUTED_BY_SVFE_OR_NOT
+    - REQUEST_DAILY_REJECTED_BY_SVFE
+    - REQUEST_MONTHLY_REJECTED_BY_SVFE
+    - EXPORT_CARDS_TO_ESK
+    - CARDS_EXPORTED_TO_ESK
+    - CARDS_ACCEPTED_BY_ESK
+    - EXPORT_CARDS_TO_ESK_ERROR
+    - CARDS_EXECUTED_BY_ESK
+    - EXPORT_CARD_DOCS_TO_TESSA
+    - EXPORT_CARD_DOCS_TO_TESSA_ERROR
+    - CARD_DOCS_EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_CARDS
+    - CARDS_TO_ESK_OR_STORAGE
+    - CARDS_EXECUTED_BY_ESK_OR_NOT
+    - EXPORT_CARD_DOCS_TO_TESSA_OR_NOT
+    - IS_PAYMENT_ACCOUNT
+    - EXPORT_OPEN_AA_TO_F1
+    - IS_EXPORT_OPEN_AA_TO_F1_SUCCESS
+    - OPEN_AA_EXPORTED_TO_F1
+    - OPEN_AA_EXECUTED_BY_F1
+    - EXPORT_OPEN_AA_TO_F1_ERROR
+    - IS_OPEN_AA_F1_ERROR_OR_REJECT
+    - IS_AA_OPENED_BY_REQUEST
+    - IS_CLIENT_PASSED_CHECKS
+    - IS_ACCOUNT_WAS_OPENED
+    - EXPORT_CLOSE_AA_TO_F1
+    - IS_EXPORT_CLOSE_AA_TO_F1_SUCCESS
+    - CLOSE_AA_EXPORTED_TO_F1
+    - CLOSE_AA_EXECUTED_BY_F1
+    - EXPORT_CLOSE_AA_TO_F1_ERROR
+    - EXPORT_AA_TO_TESSA
+    - EXPORT_AA_TO_TESSA_ERROR
+    - AA_EXECUTED_BY_TESSA
+    - IS_DOCS_EXECUTED_BY_TESSA
+    - EXPORTING_TO_SVFE
+    - EXPORT_TO_SVFE
+    - EXECUTED_BY_SVFE
+    - EXPORT_TO_SVFE_ERROR
+description: Заявка на установку лимитов по корпоративной карте
+nullable: true

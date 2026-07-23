@@ -1,0 +1,9 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор созданной записи
+    format: uuid
+description: Транспортная сущность по факту создания записи о неторговом поручении

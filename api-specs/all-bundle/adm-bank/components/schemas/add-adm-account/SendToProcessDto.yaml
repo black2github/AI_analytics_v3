@@ -1,0 +1,12 @@
+type: object
+properties:
+  commentForService:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Комментарий для Сервиса АДМ
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+description: Данные

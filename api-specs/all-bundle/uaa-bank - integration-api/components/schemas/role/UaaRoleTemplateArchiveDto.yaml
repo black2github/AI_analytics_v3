@@ -1,0 +1,14 @@
+required:
+- initiatorId
+type: object
+properties:
+  commentary:
+    maxLength: 500
+    minLength: 0
+    type: string
+    description: Комментарий
+  initiatorId:
+    type: string
+    description: Id инициатора операции
+    format: uuid
+description: DTO архивирования шаблона роли

@@ -1,0 +1,13 @@
+get:
+  tags:
+  - client-info-update-client-settings-controller
+  summary: Получить настраиваемые параметры
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_VIEW,CLIENT_INFO_UPD.CLIENT.REQUEST_LIST_VIEW,CLIENT_INFO_UPD.CLIENT.REQUEST_CREATE,CLIENT_INFO_UPD.CLIENT.REQUEST_EDIT,CLIENT_INFO_UPD.CLIENT.REQUEST_DELETE'
+  operationId: settings
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/settings/GenericResponseSimpleErrorDataClientInfoUpdateConfigurableSettingsDto.yaml

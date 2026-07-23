@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Заголовок уведомлений
+  code:
+    type: string
+    description: Код типа уведомлений
+description: Заголовки уведомлений

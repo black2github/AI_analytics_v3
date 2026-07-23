@@ -1,0 +1,17 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - EXAMPLE
+  userId:
+    type: string
+    format: uuid
+  branchId:
+    type: string
+    format: uuid
+  clientId:
+    type: string
+    format: uuid
+  region:
+    type: string

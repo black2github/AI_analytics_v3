@@ -1,0 +1,33 @@
+required:
+- content
+- name
+type: object
+properties:
+  area:
+    type: string
+    enum:
+    - AUTHORIZED
+    - UNAUTHORIZED
+  attachmentIds:
+    maxItems: 2000
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Множество идентификаторов вложений
+    items:
+      type: string
+      description: Множество идентификаторов вложений
+      format: uuid
+  content:
+    type: string
+    description: Контент CMS страницы
+  name:
+    maxLength: 140
+    minLength: 1
+    type: string
+    description: Наименование CMS страницы
+  parentPageId:
+    type: string
+    description: Ссылка на родительскую страницу
+    format: uuid
+description: Запрос создания CMS страницы

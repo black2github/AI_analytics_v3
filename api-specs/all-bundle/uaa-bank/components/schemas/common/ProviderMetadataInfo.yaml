@@ -1,0 +1,40 @@
+type: object
+properties:
+  issuer:
+    type: string
+  authorization_endpoint:
+    type: string
+  external_authorization_endpoint:
+    type: string
+  token_endpoint:
+    type: string
+  userinfo_endpoint:
+    type: string
+  default_page_uri:
+    type: string
+  introspection_endpoint:
+    type: string
+  login_uri:
+    type: string
+  logout_uri:
+    type: string
+  jwks_uri:
+    type: string
+  response_types_supported:
+    type: array
+    items:
+      type: string
+  response_modes_supported:
+    type: array
+    items:
+      type: string
+  request_parameter_supported:
+    type: boolean
+  claims_parameter_supported:
+    type: boolean
+  user_registration_uri:
+    type: string
+  uaa_base_uri:
+    type: string
+  msb_page_uri:
+    type: string

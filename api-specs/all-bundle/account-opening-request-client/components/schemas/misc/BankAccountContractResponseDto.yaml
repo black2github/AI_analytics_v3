@@ -1,0 +1,37 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Признак успешного выполнения запроса
+  error:
+    type: string
+    description: Описание ошибки
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientEskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  branches:
+    type: array
+    description: Блок с информацией о ДБС внутри филиала
+    items:
+      $ref: ./F1BranchDto.yaml
+  accountTypeCommissionInfos:
+    type: array
+    description: Блок с информацией о необходимости списания комиссии в разрезе типа счета
+    items:
+      $ref: ./AccountTypeCommissionInfoDto.yaml
+  kopops:
+    type: array
+    description: Блок со списком счетов, с которых можно скопировать карточку ОПОП по всем филиалам
+    items:
+      $ref: ./KopopDto.yaml
+  commissionAccounts:
+    type: array
+    description: Блок со счетами, доступными для списания комиссии за открытие счета по всем филиалам
+    items:
+      $ref: ./F1CommissionDto.yaml
+description: Ответ на запрос списка ДБС для открытия доп счета

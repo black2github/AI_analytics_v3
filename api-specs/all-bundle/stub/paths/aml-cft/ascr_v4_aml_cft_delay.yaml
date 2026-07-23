@@ -1,0 +1,35 @@
+post:
+  tags:
+  - ascr-aml-cft-v-4-controller
+  summary: delay
+  operationId: delayUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: referenceId
+    in: header
+    description: referenceId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/OrganisationAmlDelayRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/AscrResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

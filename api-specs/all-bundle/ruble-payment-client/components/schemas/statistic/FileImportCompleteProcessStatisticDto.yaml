@@ -1,0 +1,17 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  total:
+    type: integer
+    description: Общее количество выбранных для завершения импорта документов
+    format: int64
+  completed:
+    type: integer
+    description: Количество документов, для которых завершен процесс импорта
+    format: int64
+  status:
+    $ref: ../common/FileImportStatusDto.yaml
+description: Статистика по количеству обработанных документов в документарном сервисе

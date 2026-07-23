@@ -1,0 +1,12 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    $ref: ./DsfDocumentStatusPublishResponseDto.yaml
+    description: Данные
+  error:
+    $ref: ../common/ErrorData.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

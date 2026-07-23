@@ -1,0 +1,7 @@
+type: object
+properties:
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoAccReservationRequestStatusDto.yaml
+description: Фильтр

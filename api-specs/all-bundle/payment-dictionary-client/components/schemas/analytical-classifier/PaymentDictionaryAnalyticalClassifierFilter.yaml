@@ -1,0 +1,10 @@
+type: object
+properties:
+  paymentDictionaryStructureId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  active:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  textQuery:
+    type: string
+    description: Общая строка поиска
+description: Фильтр справочника Аналитические классификаторы

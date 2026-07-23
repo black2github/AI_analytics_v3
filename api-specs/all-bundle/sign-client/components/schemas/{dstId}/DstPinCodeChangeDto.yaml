@@ -1,0 +1,9 @@
+type: object
+properties:
+  pinCode:
+    type: string
+    description: Текущий пароль
+  newPinCode:
+    type: string
+    description: Новый пароль
+description: Запрос изменения пин-кода ОЭП

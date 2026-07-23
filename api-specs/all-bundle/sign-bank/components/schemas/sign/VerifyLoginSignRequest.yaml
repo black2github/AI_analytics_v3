@@ -1,0 +1,24 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат
+  data:
+    type: string
+    description: Подписываемые данные
+  sign:
+    type: string
+    description: Подпись
+  dboBssPersonalizedUsersUaaIds:
+    uniqueItems: true
+    type: array
+    description: ID персонализированных пользователей БСС входивших в ЭКО
+    items:
+      type: string
+      description: ID персонализированных пользователей БСС входивших в ЭКО
+      format: uuid
+description: ДТО для проверки подписи при логине

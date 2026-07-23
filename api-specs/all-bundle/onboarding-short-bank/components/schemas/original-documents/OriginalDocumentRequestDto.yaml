@@ -1,0 +1,13 @@
+type: object
+properties:
+  needUpload:
+    type: array
+    description: Список оригиналов документов для загрузки
+    items:
+      $ref: ../common/OriginalDocumentDto.yaml
+  requiredReplace:
+    type: array
+    description: Список оригиналов документов для замены
+    items:
+      $ref: ../common/OriginalDocumentDto.yaml
+description: Запрос списка оригиналов документов

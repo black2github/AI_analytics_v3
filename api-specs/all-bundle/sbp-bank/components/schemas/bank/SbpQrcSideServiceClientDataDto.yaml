@@ -1,0 +1,22 @@
+type: object
+description: Реквизиты клиента, получаемые в процессе создания заявки из других сервисов ЭКО
+properties:
+  paymentChannel:
+    type: string
+    description: Канал оплаты
+  ecoClientId:
+    type: string
+    format: uuid
+    description: Идентификатор клиент сервиса ЭКО
+  ecoClientName:
+    type: string
+    description: Клиент сервиса ЭКО, для которого будет зарегистрирован QR код
+  ecoClientInn:
+    type: string
+    description: ИНН клиента сервиса ЭКО
+  tariffName:
+    type: string
+    description: Название тарифа
+  ecoClientKpp:
+    type: string
+    description: КПП клиента сервиса ЭКО

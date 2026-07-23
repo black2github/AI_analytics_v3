@@ -1,0 +1,59 @@
+type: object
+properties:
+  documentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docDateRange:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  archiveYear:
+    $ref: ./FilterValueDtoInteger.yaml
+  recipientNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterPaymentOrderRequestClientStatus.yaml
+  recipientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentAmountIncludeVat:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  recipientAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+  recipientBankBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  kbk:
+    $ref: ../common/FilterValueDtoString.yaml
+  oktmo:
+    $ref: ../common/FilterValueDtoString.yaml
+  taxPeriodCustomsCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  budgetInfoBasisDocNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  budgetInfoBasisDocDate:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    $ref: ./PaymentOrderClientRequestCategoryDto.yaml
+  isChargebackRequest:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  importId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestSourceSystem:
+    $ref: ../common/FilterPaymentOrderRequestSourceSystem.yaml
+  numberCcf:
+    $ref: ../common/FilterValueDtoString.yaml
+  upnoOperationId:
+    $ref: ../common/FilterValueDtoString.yaml
+  chargebackStatuses:
+    $ref: ../common/ChargebackRequestStatusFilter.yaml
+  bctId:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankSupportingStatuses:
+    $ref: ./BscStatusFilter.yaml
+description: Фильтр скроллера Платежного Поручения. Клиентская часть.

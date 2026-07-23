@@ -1,0 +1,9 @@
+type: object
+properties:
+  sightDetails:
+    $ref: ../common/SightDetailsBankDto.yaml
+  signature:
+    $ref: ../common/SignatureBankDto.yaml
+  approvalPersonInfo:
+    $ref: ./ApprovalPersonInfoBankDto.yaml
+description: Информация о визируемом платежном поручении

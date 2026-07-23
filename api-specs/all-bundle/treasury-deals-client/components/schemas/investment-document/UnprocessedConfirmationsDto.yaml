@@ -1,0 +1,15 @@
+type: object
+properties:
+  count:
+    type: integer
+    description: Количество
+    format: int32
+  id:
+    type: string
+    description: Идентификатор первого необработанного подтверждения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docType:
+    type: string
+    description: Тип первого необработанного подтверждения
+description: Данные

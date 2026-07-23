@@ -1,0 +1,26 @@
+type: object
+properties:
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  userSignatoryFio:
+    type: string
+    description: Пользователь, подписавший заявку (ФИО)
+  value:
+    $ref: ./SignatureValueDto.yaml
+description: Реквизиты электронной подписи документа

@@ -1,0 +1,24 @@
+type: object
+properties:
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int64
+  error:
+    type: string
+    description: Описание ошибки
+  clientEskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  branches:
+    type: array
+    description: Блок с информацией о ДБС внутри филиала
+    items:
+      $ref: ./BranchDtoV2.yaml
+  accountTypeCommissionInfos:
+    type: array
+    description: Блок с информацией о необходимости списания комиссии в разрезе типа счета
+    items:
+      $ref: ./AccountTypeCommissionInfoDto.yaml
+description: Ответ на запрос списка ДБС для открытия доп счета. Версия 2

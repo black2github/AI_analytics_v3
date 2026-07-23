@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUserSuggestionRequest.yaml
+description: Запрос страницы

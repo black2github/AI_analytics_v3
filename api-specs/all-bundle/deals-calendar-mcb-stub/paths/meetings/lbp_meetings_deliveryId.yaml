@@ -1,0 +1,231 @@
+get:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+head:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingHEAD
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+post:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+put:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+delete:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingDELETE
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+options:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingOPTIONS
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+patch:
+  tags:
+  - ЛБП. API заглушек о встрече
+  summary: Обновить данные о встрече
+  operationId: updateUsingPATCH
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: deliveryId
+    in: path
+    description: deliveryId
+    required: true
+    type: string
+    format: uuid
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/MeetingUpdateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор баннера
+    format: uuid
+  companyName:
+    type: string
+    description: Название организации
+  companyInn:
+    type: string
+    description: ИНН организации
+  partnerCode:
+    type: string
+    description: Код партнера
+  productCode:
+    type: string
+    description: Наименование продукта партнера
+  productLink:
+    type: string
+    description: Ссылка для перехода на страницу партнера с предложением
+description: Баннер партнера

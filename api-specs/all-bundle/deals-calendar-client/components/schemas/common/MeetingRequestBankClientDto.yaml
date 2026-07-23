@@ -1,0 +1,9 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+description: Реквизиты клиента по заявке на встречу

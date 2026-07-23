@@ -1,0 +1,109 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - SENT
+      - IN_PROCESS
+      - EXECUTED
+      - CANCELLED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - SENT
+      - IN_PROCESS
+      - EXECUTED
+      - CANCELLED
+      - REJECTED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  ge:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  lt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  le:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+description: Статус поручения

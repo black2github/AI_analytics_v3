@@ -1,0 +1,94 @@
+post:
+  tags:
+  - СИП. Сервис Merchant API
+  summary: 'Сервис: Инициализация возврата'
+  operationId: returnInitUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.amount
+    in: query
+    required: false
+    type: string
+  - name: body.callbackMerchantNotifications
+    in: query
+    description: URL системы для получения сообщения о статусе возврата
+    required: false
+    type: string
+  - name: body.comment
+    in: query
+    required: false
+    type: string
+  - name: body.currency
+    in: query
+    required: false
+    type: string
+  - name: body.guid
+    in: query
+    required: false
+    type: string
+  - name: body.qrdocType
+    in: query
+    required: false
+    type: string
+  - name: body.recipient.bankId
+    in: query
+    required: false
+    type: string
+  - name: body.recipient.incomeCode
+    in: query
+    required: false
+    type: string
+  - name: body.sender.inn
+    in: query
+    required: false
+    type: string
+  - name: body.sender.legalId
+    in: query
+    required: false
+    type: string
+  - name: body.sender.merchantId
+    in: query
+    required: false
+    type: string
+  - name: body.transactionId
+    in: query
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/B2cReturnInitResultDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

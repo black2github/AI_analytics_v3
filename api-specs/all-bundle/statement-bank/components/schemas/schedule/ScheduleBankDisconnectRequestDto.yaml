@@ -1,0 +1,9 @@
+type: object
+properties:
+  scheduleIds:
+    type: array
+    items:
+      type: integer
+      format: int64
+  comment:
+    type: string

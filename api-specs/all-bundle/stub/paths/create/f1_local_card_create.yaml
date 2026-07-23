@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Работа с заглушками локальных карт в Ф1 (VW_RPT_GPS_CARDS_IRAO_ECO)
+  summary: Создание заглушки карты
+  operationId: createUsingPOST_5
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/LocalCardDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/LocalCardDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

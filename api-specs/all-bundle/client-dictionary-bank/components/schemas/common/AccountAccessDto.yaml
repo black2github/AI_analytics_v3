@@ -1,0 +1,20 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  permissionType:
+    type: string
+    description: Режим доступа к счету
+    enum:
+    - BLOCK
+    - INFORM_ONLY
+    - OPEN
+    - RECEPTION_ONLY
+    - EXTENDED
+description: Данные доступа по счету

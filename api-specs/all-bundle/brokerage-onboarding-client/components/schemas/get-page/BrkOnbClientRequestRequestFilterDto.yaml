@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientUuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueDtoBrkOnbClientRequestRequestStatusDto.yaml
+  dateFrom:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dateTo:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Фильтр для скроллера заявок (клиенская сторона)

@@ -1,0 +1,9 @@
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  certificates:
+    type: array
+    items:
+      $ref: ./CertificateDto.yaml

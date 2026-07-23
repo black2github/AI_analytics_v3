@@ -1,0 +1,28 @@
+required:
+- address
+- fiasCode
+- latitude
+- longitude
+- meetingCity
+type: object
+properties:
+  address:
+    maxLength: 255
+    pattern: ^[- a-zA-Zа-яёА-ЯЁ0-9.,()«»'"/\\]+$
+    type: string
+    description: Адрес доставки
+  fiasCode:
+    type: string
+    description: Код ФИАС города
+  latitude:
+    type: number
+    description: Широта
+  longitude:
+    type: number
+    description: Долгота
+  meetingCity:
+    maxLength: 50
+    pattern: ^[a-zA-Zа-яёА-ЯЁ0-9 .,()\-/\\]+$
+    type: string
+    description: Город доставки
+description: Точка доставки

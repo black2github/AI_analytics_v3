@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./BrokerageRequestOpenAccountCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfo.yaml
+description: Запрос

@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+  topic:
+    type: string
+  message:
+    type: string
+  service:
+    type: string
+  status:
+    type: string
+    enum:
+    - ACTIVE
+    - USED
+    - CANCELED
+  type:
+    type: string
+    enum:
+    - REGISTRATION
+    - AUTHENTICATION
+  expiredAt:
+    type: string
+    format: date-time
+  shortLinkCode:
+    type: string
+description: ДТО инвайта

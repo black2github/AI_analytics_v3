@@ -1,0 +1,9 @@
+type: object
+description: Согласия
+properties:
+  agreement:
+    type: boolean
+    description: Согласие. Клиент заявляет о присоединении к соглашению
+  agreementTextHash:
+    type: string
+    description: Хеш текста согласия.

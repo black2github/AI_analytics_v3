@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Получить историю статусов по заявке
+  description: 'Привилегии: BRK_ONBOARDING.BANK.REQUEST.HISTORY'
+  operationId: getRequestStatusHistory
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/{requestId}/GenericResponseSimpleErrorDataListBrkBankRequestHistoryViewDto.yaml

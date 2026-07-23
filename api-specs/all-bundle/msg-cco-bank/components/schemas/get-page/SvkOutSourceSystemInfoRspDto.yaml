@@ -1,0 +1,23 @@
+type: object
+properties:
+  docId:
+    type: string
+    description: Идентификатор документа, на основе которого создан документ
+    format: uuid
+  authorId:
+    type: string
+    description: ID Текущего редактора
+    format: uuid
+  lkuvedDocId:
+    type: string
+    description: Идентификатор документа ЛК_УВЕД, на основе которого создан документ
+    format: uuid
+  lkuvedMsgId:
+    type: string
+    description: Идентификатор сообщения, на основе которого создан документ
+    format: uuid
+  chargebackLkuvedMsgId:
+    type: string
+    description: Идентификатор сообщения отзыва из ЛК УВЭД
+    format: uuid
+description: Информация о создании документа

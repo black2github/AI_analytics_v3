@@ -1,0 +1,25 @@
+required:
+- availableActions
+- name
+type: object
+properties:
+  name:
+    maxLength: 255
+    minLength: 0
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Наименование
+  description:
+    maxLength: 255
+    minLength: 0
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Описание
+  availableActions:
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Доступные действия
+    items:
+      $ref: ./RoleTemplateAvailableActionDto.yaml
+description: Данные для обновления шаблона роли (клиентский модуль)

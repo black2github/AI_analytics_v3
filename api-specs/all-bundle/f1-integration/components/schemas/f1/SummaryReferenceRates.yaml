@@ -1,0 +1,15 @@
+type: object
+properties:
+  ndsDigital:
+    type: number
+  ndsOnPaper:
+    type: number
+  noNdsDigital:
+    type: number
+  noNdsOnPaper:
+    type: number
+  valueDigitalNds:
+    type: number
+  valueOnPaperNds:
+    type: number
+description: Саммари по тарифам

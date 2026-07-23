@@ -1,0 +1,18 @@
+type: object
+description: ДТО с дополнительными AML-полями вложений писем в банк
+properties:
+  amlAttachmentType:
+    type: string
+    description: Тип вложения AML
+    enum:
+    - DOC_FIN_POSITION
+    - DOC_TRANSACTIONS_INFO
+    - DOC_MATERIAL_RES_INFO
+    - DOC_STAFF_INFO
+    - DOC_ACTIVITY_INFO
+    - DOC_ACTIVITY_DETAILS
+    - DOC_TRANS_ELECTRONIC_SERV
+    - DOC_METAL_COLLECT
+    - DOC_OTHERS
+required:
+- amlAttachmentType

@@ -1,0 +1,41 @@
+type: object
+properties:
+  fieldName:
+    type: string
+    description: Имя поля
+  fieldValue:
+    $ref: ../common/FieldValueDto.yaml
+  fieldColor:
+    $ref: ../common/TextColor.yaml
+  fieldApiDescription:
+    type: string
+    description: Подсказка к названию поля
+  fieldValueDescription:
+    type: string
+    description: Подсказка к значению поля
+  isBold:
+    type: boolean
+    writeOnly: true
+  isEndBlock:
+    type: boolean
+    writeOnly: true
+  isHeader:
+    type: boolean
+    writeOnly: true
+  isHeaderBold:
+    type: boolean
+    writeOnly: true
+  isStrikeThrough:
+    type: boolean
+    writeOnly: true
+  bold:
+    type: boolean
+  header:
+    type: boolean
+  endBlock:
+    type: boolean
+  headerBold:
+    type: boolean
+  strikeThrough:
+    type: boolean
+description: Расширенная информация о документе

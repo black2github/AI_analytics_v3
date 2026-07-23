@@ -1,0 +1,28 @@
+openapi: 3.1.0
+info:
+  title: Сервис эмуляции взаимодействия с ЛК УВЭД
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /lkuved-stub
+tags:
+- name: API заглушек документов, полученных из ЛК УВЭД
+paths:
+  /processedio:
+    $ref: ./paths/processedio/processedio.yaml
+  /processedio/{locId}:
+    $ref: ./paths/{locId}/processedio_locId.yaml
+components:
+  schemas:
+    AttachedFileDto:
+      $ref: ./components/schemas/processedio/AttachedFileDto.yaml
+    GenericResponse:
+      $ref: ./components/schemas/common/GenericResponse.yaml
+    GenericResponseSimpleErrorDataLkUvedProcessedioRspDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataLkUvedProcessedioRspDto.yaml
+    LkUvedProcessedioRqDto:
+      $ref: ./components/schemas/processedio/LkUvedProcessedioRqDto.yaml
+    LkUvedProcessedioRspDto:
+      $ref: ./components/schemas/common/LkUvedProcessedioRspDto.yaml
+    UUID:
+      $ref: ./components/schemas/{locId}/UUID.yaml

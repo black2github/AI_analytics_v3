@@ -1,0 +1,15 @@
+type: object
+properties:
+  identification:
+    type: string
+  type:
+    type: string
+    enum:
+    - OPOI
+    - MERC
+    - ACCP
+    - ITAG
+    - ACQR
+    - CISS
+    - DLIS
+description: Информация, связанная с идентификацией

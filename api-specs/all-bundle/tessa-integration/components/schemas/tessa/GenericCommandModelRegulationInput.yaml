@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./ModelRegulationInput.yaml
+description: Запрос

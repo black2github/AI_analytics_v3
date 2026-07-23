@@ -1,0 +1,21 @@
+type: object
+properties:
+  agreement1:
+    type: boolean
+    description: Согласие 1 (Признак подтверждения отсутствия изменений в документах).
+  agreement1TextHash:
+    type: string
+    description: Хеш текста согласия №1 заявки на открытие дополнительного счета.
+  agreement2:
+    type: boolean
+    description: Согласие 2 (Признак присоединения к правилам сопровождения государственного контракта в Банке).
+  agreement2TextHash:
+    type: string
+    description: Хеш текста согласия №2.
+  agreement4:
+    type: boolean
+    description: Согласие 4 (Признак ознакомления с условиями открытия счета).
+  agreement4TextHash:
+    type: string
+    description: Хеш текста согласия №4.
+description: Согласия.

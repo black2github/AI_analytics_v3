@@ -1,0 +1,37 @@
+type: object
+description: Изменение сведений о контракте
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    dealPassportNumbers:
+      type: array
+      description: Номера паспортов сделки
+      items:
+        type: string
+        description: Номера паспортов сделки
+    branchName:
+      type: string
+      description: Наименование филиала
+    authorizedPerson:
+      $ref: ./AuthorizedPersonDto.yaml
+    commissionNumber:
+      type: string
+      description: Номер счета для списания комиссии
+    owner:
+      $ref: ./ClientDto.yaml
+    nonresidents:
+      type: array
+      description: Список нерезидентов
+      items:
+        $ref: ./NonresidentDto.yaml
+    contract:
+      $ref: ./ContractDto.yaml
+    reissueDocuments:
+      type: array
+      description: Основание для переоформления
+      items:
+        $ref: ./ReissueDocumentDto.yaml
+    additionalInfo:
+      type: string
+      description: Прочая информация

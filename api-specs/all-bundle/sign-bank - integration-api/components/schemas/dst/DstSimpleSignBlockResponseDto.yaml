@@ -1,0 +1,7 @@
+type: object
+properties:
+  blockedDstCount:
+    type: integer
+    description: Количество заблокированных СЭП
+    format: int32
+description: Ответ на запрос блокировки СЭП ПЭП

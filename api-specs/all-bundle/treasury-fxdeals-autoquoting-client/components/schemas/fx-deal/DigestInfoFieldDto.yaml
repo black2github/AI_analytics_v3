@@ -1,0 +1,12 @@
+type: object
+properties:
+  field:
+    type: string
+    description: Поле
+  fieldName:
+    type: string
+    description: Наименование поля
+  values:
+    type: object
+    description: Значения поля
+description: Список полей

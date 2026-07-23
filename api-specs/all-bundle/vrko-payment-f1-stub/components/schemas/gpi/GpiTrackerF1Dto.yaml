@@ -1,0 +1,16 @@
+type: object
+description: Транспортное представление сообщения GPI-трекеров Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор сообщения
+  registryType:
+    type: string
+    description: Тип сообщения
+  data:
+    type: array
+    items:
+      $ref: ./GpiTrackerMessageRowF1Dto.yaml
+    description: Сообщения gpi-трекера

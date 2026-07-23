@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    $ref: ./SingleResponseUserDto.yaml
+  errorInfo:
+    $ref: ./ErrorInfo.yaml

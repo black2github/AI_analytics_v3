@@ -1,0 +1,7 @@
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: Id пользователя экосистемы
+    format: uuid
+description: Запрос счетов пользователя из банка партнера

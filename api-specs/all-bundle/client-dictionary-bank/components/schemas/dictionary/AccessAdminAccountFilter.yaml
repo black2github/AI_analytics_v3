@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  authorizedPersonIdWithoutAccess:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр получения счетов для админки доступов

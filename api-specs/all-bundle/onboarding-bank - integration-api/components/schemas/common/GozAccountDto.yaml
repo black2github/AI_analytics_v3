@@ -1,0 +1,17 @@
+type: object
+properties:
+  contractAmount:
+    pattern: ^[0-9]{1,18}(?:\.[0-9]{1,2})?$
+    type: string
+    description: Сумма договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  contractId:
+    type: string
+    description: Идентификатор государственного контракта
+  contractNumber:
+    type: string
+    description: Номер договора с заказчиком
+description: Сведение о государственном контракте и заказчике по контракту

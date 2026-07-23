@@ -1,0 +1,20 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: Локальный(в рамках бизнес систем) ИД подписи
+    format: uuid
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signerInfo:
+    $ref: ./SignerShortInfo.yaml
+  signValid:
+    type: boolean
+    description: Результат проверки подписи
+  signType:
+    $ref: ./CryptoSignType.yaml
+  signatureData:
+    $ref: ./ParsedSignatureShortDataDto.yaml
+description: Результат проверки подписи

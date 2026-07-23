@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код параметра
+  type:
+    type: string
+    description: Тип данных
+description: Динамических полей дисклеймера

@@ -1,0 +1,16 @@
+type: object
+properties:
+  docIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  filter:
+    $ref: ./FxDealDocBankFilter.yaml
+  sort:
+    $ref: ./Sort.yaml
+  columns:
+    type: array
+    items:
+      $ref: ./ColumnDefinitionDto.yaml
+description: Данные

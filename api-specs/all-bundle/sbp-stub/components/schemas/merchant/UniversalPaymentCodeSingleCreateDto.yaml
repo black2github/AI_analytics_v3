@@ -1,0 +1,17 @@
+type: object
+properties:
+  merchantId:
+    type: string
+  amount:
+    type: string
+  ttl:
+    type: integer
+    format: int32
+  paymentPurpose:
+    type: string
+  callbackMerchantNotifications:
+    type: string
+  paymentMethodData:
+    type: array
+    items:
+      $ref: ./PaymentMethodData.yaml

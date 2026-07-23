@@ -1,0 +1,34 @@
+get:
+  tags:
+  - API сущности Курсы ЦБ
+  summary: Получить только значение курса валюты на указанный день или в ближайшей меньшей дате.
+  description: 'Привилегии: ODS_CURRENCY_RATE_VIEW'
+  operationId: getSpotRateOnSpecifiedDayOrOnNearestSmallerDateUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: query
+    description: code
+    required: true
+    type: string
+  - name: date
+    in: query
+    description: date
+    required: true
+    type: string
+    format: date
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,bigdecimal»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

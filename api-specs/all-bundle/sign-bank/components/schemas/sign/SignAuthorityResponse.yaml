@@ -1,0 +1,12 @@
+type: object
+properties:
+  result:
+    type: boolean
+    description: Результат проверки
+  validatorResults:
+    uniqueItems: true
+    type: array
+    description: Результаты проверок валидаторов
+    items:
+      $ref: ./AuthorityValidatorResultV2.yaml
+description: Ответ на запрос проверки полномочий

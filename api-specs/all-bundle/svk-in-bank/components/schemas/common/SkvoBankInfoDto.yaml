@@ -1,0 +1,22 @@
+type: object
+properties:
+  messageId:
+    type: string
+    description: ID сообщения, в котором передается документ
+    format: uuid
+  skvoId:
+    type: string
+    description: ID документа в СКВО
+    format: uuid
+  documentDate:
+    type: string
+    description: Дата документа в СКВО
+    format: date
+  documentNumber:
+    type: string
+    description: Номер документа в СКВО
+  linkedDocumentId:
+    type: string
+    description: ID связанного документа в СКВО
+    format: uuid
+description: Информация СКВО для банковского API

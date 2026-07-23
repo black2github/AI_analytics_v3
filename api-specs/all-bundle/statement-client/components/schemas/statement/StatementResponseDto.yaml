@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum:
+    - NOT_EXECUTED
+    - EXECUTED
+    - ERROR
+    - NOT_RELEVANT
+  error:
+    type: string
+  errorNotificationSent:
+    type: boolean
+  errorNotificationSendingDate:
+    type: string
+    format: date-time
+  dateStart:
+    type: string
+    format: date-time
+  dateEnd:
+    type: string
+    format: date-time
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  fileId:
+    type: string
+    format: uuid
+description: Данные

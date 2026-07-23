@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-change-requirement-bank-scroller-controller
+  summary: Получить страницу документов
+  description: 'Привилегии: CLIENT_INFO_UPD.BANK.CHANGE_REQUIREMENT_LIST_VIEW'
+  operationId: getPage_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandClientInfoChangeRequirementBankFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataClientInfoChangeRequirementDto.yaml

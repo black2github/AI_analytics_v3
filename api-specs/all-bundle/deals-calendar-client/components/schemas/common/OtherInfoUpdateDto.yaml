@@ -1,0 +1,46 @@
+required:
+- meetingAddress
+- meetingCity
+- meetingDate
+- meetingPlace
+type: object
+properties:
+  meetingPlace:
+    type: string
+    description: Место встречи
+    enum:
+    - OFFICE
+    - EMPLOYEE_VISIT
+  placeComment:
+    maxLength: 255
+    pattern: ^[- a-zA-Zа-яёА-ЯЁ0-9.,№&$#:;+*^!()<>«»\[\]'"\-/\\]+$
+    type: string
+    description: Комментарий к адресу встречи
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  meetingEndDate:
+    type: string
+    description: Дата и время встречи (окончание)
+    format: date-time
+  fiasCode:
+    type: string
+    description: Код ФИАС города
+  latitude:
+    type: number
+    description: Широта
+  longitude:
+    type: number
+    description: Долгота
+  meetingAddress:
+    maxLength: 255
+    pattern: ^[- a-zA-Zа-яёА-ЯЁ0-9.,()«»'"/\\]+$
+    type: string
+    description: Адрес встречи
+  meetingCity:
+    maxLength: 50
+    pattern: ^[a-zA-Zа-яёА-ЯЁ0-9., ()\-/\\]+$
+    type: string
+    description: Город встречи
+description: ДТО редактирования иных сведений

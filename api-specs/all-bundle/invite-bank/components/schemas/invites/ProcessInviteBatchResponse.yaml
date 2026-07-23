@@ -1,0 +1,10 @@
+required:
+- errors
+type: object
+properties:
+  errors:
+    type: array
+    description: Ошибки по каждому представителю
+    items:
+      $ref: ./ProcessInviteBatchError.yaml
+description: ДТО ответа обработки инвайтов (batch)

@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  notEq:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - DEPOSIT
+      - MNO
+      - GSNO
+      - FX
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - DEPOSIT
+      - MNO
+      - GSNO
+      - FX
+  isNull:
+    type: boolean

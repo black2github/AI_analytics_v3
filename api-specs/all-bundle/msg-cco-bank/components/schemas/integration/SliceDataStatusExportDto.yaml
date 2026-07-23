@@ -1,0 +1,16 @@
+required:
+- content
+- hasNext
+- hasPrevious
+type: object
+properties:
+  content:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./StatusExportDto.yaml
+  hasNext:
+    type: boolean
+  hasPrevious:
+    type: boolean
+description: Данные

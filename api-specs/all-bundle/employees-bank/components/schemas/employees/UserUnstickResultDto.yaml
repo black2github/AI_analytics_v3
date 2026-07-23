@@ -1,0 +1,107 @@
+required:
+- authorizedPersons
+- createdAt
+- deletedDigitalSignatureTools
+- deletedRoles
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор исполнения метода
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор клиента пользователя
+    format: uuid
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: Идентификатор связи
+    format: uuid
+  userLogin:
+    type: string
+    description: Логин
+  userEskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  canChangeContactData:
+    type: boolean
+    description: Пользователь.<Возможность изменения контактных данных>
+  userFullName:
+    type: string
+    description: ФИО пользователя
+  userPhoneNumber:
+    type: string
+    description: Телефон пользователя
+  userEmail:
+    type: string
+    description: Email пользователя
+  bankClientInn:
+    type: string
+    description: ИНН организации
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  bankClientName:
+    type: string
+    description: Наименование организации
+  authorizedPerson:
+    type: boolean
+    description: Является УЛ
+  authorizedPersonLkUvedOnly:
+    type: boolean
+    description: Есть только ЛК УВЭД
+  authorizedPersons:
+    type: array
+    description: Данные по УЛ
+    items:
+      $ref: ./StickingAuthorizedPersonDto.yaml
+  rolesAreCorrect:
+    type: boolean
+    description: Доступы выданы корректно
+  needToDeleteRoles:
+    type: boolean
+    description: Необходимо удалить доступы пользователя по организации
+  rolesAreDeleted:
+    type: boolean
+    description: Удалены доступы
+  deletedRoles:
+    type: array
+    description: Список удаленных доступов
+    items:
+      $ref: ./UserDeletedRoleDto.yaml
+  hasRolesWithoutRule:
+    type: boolean
+    description: Есть роли не из правил
+  clientOfficialIsCorrect:
+    type: boolean
+    description: Связь корректна
+  hasDigitalSignatureTools:
+    type: boolean
+    description: Есть средства ЭП
+  hasClientOfficialAccount:
+    type: boolean
+    description: Есть счета
+  needToDeleteClientOfficial:
+    type: boolean
+    description: Необходимо удалить связь пользователя и организации
+  clientOfficialIsDeleted:
+    type: boolean
+    description: Удалена связь
+  digitalSignatureToolsAreDeleted:
+    type: boolean
+    description: Удалены средства ЭП
+  deletedDigitalSignatureTools:
+    type: array
+    description: Список удаленных средств ЭП
+    items:
+      $ref: ./UserDeletedDigitalSignatureToolDto.yaml
+description: Результат проверки склейки пользователей

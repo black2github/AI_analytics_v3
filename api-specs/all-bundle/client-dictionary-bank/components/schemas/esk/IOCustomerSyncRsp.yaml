@@ -1,0 +1,12 @@
+type: object
+properties:
+  correlationId:
+    type: string
+    description: GUID исходного сообщения
+  state:
+    type: string
+    description: Состояние обработки
+  description:
+    type: string
+    description: Описание ответа
+description: Данные ответа синхронизации ИО Клиент

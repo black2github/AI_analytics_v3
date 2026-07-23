@@ -1,0 +1,13 @@
+type: object
+properties:
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  systemId:
+    $ref: ../common/FilterValueDtoString.yaml
+  manuallyCreated:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  scopes:
+    $ref: ../common/FilterValueDtoString.yaml
+  authEnabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр OAuth2 приложений

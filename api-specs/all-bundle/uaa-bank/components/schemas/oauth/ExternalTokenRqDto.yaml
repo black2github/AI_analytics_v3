@@ -1,0 +1,10 @@
+type: object
+properties:
+  systemType:
+    type: string
+    enum:
+    - ETP_GPB
+  redirectUri:
+    type: string
+    description: URI для перенаправления
+description: Запрос получения токена внешней системы

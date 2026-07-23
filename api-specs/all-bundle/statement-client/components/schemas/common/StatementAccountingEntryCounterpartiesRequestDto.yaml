@@ -1,0 +1,7 @@
+type: object
+properties:
+  statementId:
+    type: string
+    format: uuid
+  params:
+    $ref: ./PageParamsStatementAccountingEntryCounterpartiesFilter.yaml

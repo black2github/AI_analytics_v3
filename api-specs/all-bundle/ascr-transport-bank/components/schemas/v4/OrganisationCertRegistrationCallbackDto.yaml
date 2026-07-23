@@ -1,0 +1,50 @@
+type: object
+description: Данные обратного вызова для регистрации сертификата организации.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+    minLength: 1
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК.
+  albumVersion:
+    type: string
+    description: Номер версии альбома ЭС ПлЦР
+  organisationStatus:
+    type: string
+    description: Код запроса управления статусом Клиента-ФЛ.
+    enum:
+    - Active
+    - Processed
+    - Registered
+  walletStatus:
+    type: string
+    description: Код запроса управления статусом кошелька.
+    enum:
+    - Active
+    - Blocked
+    - Closed
+    - Processed
+  agreementData:
+    $ref: ./AgreementData.yaml
+    description: Данные договора СЦР.
+  additionalInfo:
+    type: string
+    description: Дополнительная информация по СЦР Клиента-ЮЛ
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры
+required:
+- albumVersion
+- correlationId

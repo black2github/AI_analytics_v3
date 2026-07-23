@@ -1,0 +1,7 @@
+required:
+- updatedAtRange
+type: object
+properties:
+  updatedAtRange:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Запрос получения реестра документов

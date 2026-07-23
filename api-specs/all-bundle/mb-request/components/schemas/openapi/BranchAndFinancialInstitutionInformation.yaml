@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+  BankIdentification:
+    type: array
+    items:
+      $ref: ./BranchAndFinancialInstitutionIdentification.yaml
+  OrganizationIdentification:
+    type: array
+    items:
+      $ref: ./OrganizationIdentificationType.yaml
+  CorrespondentAccount:
+    $ref: ./BranchAndFinancialInstitutionInformationPilot_CorrespondentAccount.yaml
+  PostalAddress:
+    $ref: ./PostalAddress.yaml
+description: Информация о кредитной организации

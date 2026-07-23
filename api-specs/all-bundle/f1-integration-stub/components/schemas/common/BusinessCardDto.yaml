@@ -1,0 +1,123 @@
+type: object
+required:
+- virtualPan
+- statusCode
+- stateCode
+- stateCodeNt5
+description: Данные о корпоративной карте
+properties:
+  id:
+    type: integer
+    description: Первичный ключ
+  virtualPan:
+    type: string
+    maxLength: 50
+    description: Виртуальный номер карты
+  maskedNum:
+    type: string
+    maxLength: 16
+    description: Маскированный номер карты
+  expirationDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Срок действия карты
+  createdDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата выпуска карты
+  deliveryDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата выдачи карты
+  productName:
+    type: string
+    maxLength: 30
+    description: Имя карточного продукта
+  cardholderLastName:
+    type: string
+    maxLength: 255
+    description: Фамилия держателя карты
+  cardholderFirstName:
+    type: string
+    maxLength: 255
+    description: Имя держателя карты
+  cardholderMiddleName:
+    type: string
+    maxLength: 255
+    description: Отчество держателя карты
+  paySystemName:
+    type: string
+    maxLength: 25
+    description: Имя платежной системы
+  paySystemCode:
+    type: string
+    maxLength: 65
+    description: Код платежной системы
+  currencyCode:
+    type: string
+    maxLength: 3
+    description: Буквенный код валюты
+  embossingName:
+    type: string
+    maxLength: 19
+    description: Эмбоссированое имя
+  embossLastName:
+    type: string
+    maxLength: 19
+    description: Эмбоссированная фамилия
+  serviceBranchCode:
+    type: string
+    maxLength: 10
+    description: Код филиала обслуживания карты
+  serviceOfficeCode:
+    type: string
+    maxLength: 11
+    description: Код подразделения обслуживания карты
+  serviceOfficeAddress:
+    type: string
+    maxLength: 160
+    description: Адрес подразделения обслуживания
+  accountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+  clientId:
+    type: integer
+    format: int64
+    description: Код РНК клиента в РКО Ф1
+  accountNum:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счета карты
+  warnCardExpDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Информация об окончании срока действия карты
+  statusCode:
+    type: string
+    maxLength: 10
+    description: Код статуса карты в АБС Ф1
+  stateCode:
+    type: string
+    maxLength: 10
+    description: Код состояния карты в АБС Ф1
+  stateCodeNt5:
+    type: string
+    maxLength: 10
+    description: Код состояния карты в АБС Ф1
+  cardGuid:
+    type: string
+    maxLength: 50
+    description: Внешний ID карты
+  eskId:
+    type: string
+    maxLength: 255
+    description: Идентификатор физического лица в ЕСК

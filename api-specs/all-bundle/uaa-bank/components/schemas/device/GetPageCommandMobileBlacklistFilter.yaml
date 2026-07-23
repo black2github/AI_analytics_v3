@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsMobileBlacklistFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор локальной записи о представителе клиента
+  userId:
+    type: string
+    description: Идентификатор пользователя
+  fio:
+    type: string
+    description: Фамилия Имя Отчество представителя Клиента
+  uid:
+    type: string
+    description: Идентификатор представителя Клиента (физического лица) в ТС GPB-i-Trade
+  credentialsEndDate:
+    type: string
+    description: Дата окончания полномочий представителя Клиента в ТС GPB-i-Trade
+    format: date
+  fired:
+    type: boolean
+    description: Сотрудник уволен
+description: Представители Клиента имеющие доступ к ТС GPB-i-Trade

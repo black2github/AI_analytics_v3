@@ -1,0 +1,14 @@
+type: object
+properties:
+  name:
+    type: string
+  inn:
+    type: string
+  account:
+    type: string
+  bankName:
+    type: string
+  bankBic:
+    type: string
+  corrAccount:
+    type: string

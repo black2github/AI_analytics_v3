@@ -1,0 +1,20 @@
+title: Информация о населенном пункте
+type: object
+properties:
+  settlementName:
+    title: Наименование населенного пункта
+    type: string
+  settlementFullName:
+    title: Наименование населенного пункта (полное)
+    type: string
+  settlementId:
+    title: GUID населенного пункта
+    type: string
+    format: uuid
+  settlementType:
+    title: Тип населенного пункта
+    type: string
+  settlementTypeCode:
+    title: Код типа населенного пункта
+    type: string
+description: Данные о населенном пункте клиента в ФИАС

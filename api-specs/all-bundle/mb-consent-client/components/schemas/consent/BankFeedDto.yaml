@@ -1,0 +1,12 @@
+type: object
+properties:
+  codes:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      enum:
+      - GPB
+      - VTB
+      - SBR
+description: ДТО кодов банков партнёров

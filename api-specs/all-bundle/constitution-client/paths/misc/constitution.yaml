@@ -1,0 +1,66 @@
+post:
+  tags:
+  - API принятия конституции клиентом банка.
+  summary: Создание конституции
+  description: 'Привилегии: CONSTITUTION_ACCEPTANCE.CREATE'
+  operationId: createUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: cmd
+    description: cmd
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«CreateConstitutionDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CreateResponse«ConstitutionRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - API принятия конституции клиентом банка.
+  summary: Обновление конституции
+  description: 'Привилегии: CONSTITUTION_ACCEPTANCE.UPDATE'
+  operationId: updateUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: cmd
+    description: cmd
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«UpdateConstitutionDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CompositeResponse«ConstitutionRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

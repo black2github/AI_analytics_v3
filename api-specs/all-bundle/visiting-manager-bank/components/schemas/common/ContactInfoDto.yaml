@@ -1,0 +1,19 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО контактного лица.
+  address:
+    type: string
+    description: Адрес одной строкой.
+  phone:
+    type: string
+    description: Телефон для связи.
+  email:
+    type: string
+    description: Адрес электронной почты.
+  visitDate:
+    type: string
+    description: Дата и время встречи.
+    format: date-time
+description: Контактная информация.

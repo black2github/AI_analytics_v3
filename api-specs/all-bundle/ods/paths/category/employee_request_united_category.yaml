@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API объединенных заявок на сотрудников
+  summary: Получить количество заявок для каждой категории
+  description: 'Привилегии: ODS_EMPLOYEE_REQUEST_UNITED_VIEW'
+  operationId: getCategoryCountUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«EmployeeRequestUnitedFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CategoryResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

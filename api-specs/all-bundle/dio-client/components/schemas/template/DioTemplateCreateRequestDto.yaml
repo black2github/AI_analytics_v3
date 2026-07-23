@@ -1,0 +1,16 @@
+type: object
+properties:
+  templateName:
+    maxLength: 255
+    type: string
+    description: Наименование шаблона
+  client:
+    $ref: ./DioTemplateClientRequestDto.yaml
+  dioTemplateBusinessInfo:
+    $ref: ./DioTemplateBusinessInfoDto.yaml
+  dioTemplateCurrencyOperations:
+    type: array
+    description: Валютные операции
+    items:
+      $ref: ./DioTemplateCurrencyOperationDto.yaml
+description: Создание шаблона валютных переводов

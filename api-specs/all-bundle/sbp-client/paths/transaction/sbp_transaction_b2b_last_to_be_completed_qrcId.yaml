@@ -1,0 +1,62 @@
+get:
+  tags:
+  - API заявления на платеж B2B СБП. Deprecated - необходимо использовать API заявления на платеж B2B СБП с блоком данных о доступных пользователю действиях. Версия 2
+  summary: Получить заявку на заполнение
+  operationId: getLastToBeCompleted_1
+  parameters:
+  - name: qrcId
+    in: path
+    required: true
+    schema:
+      type: string
+  - name: OrganizationId
+    in: header
+    description: Идентификатор клиента
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/transaction/GenericResponseErrorDataSbpClientB2bTransactionRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  deprecated: true

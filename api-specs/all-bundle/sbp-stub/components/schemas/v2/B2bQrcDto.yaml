@@ -1,0 +1,60 @@
+type: object
+required:
+- account
+- amount
+- merchantId
+- takeTax
+description: Данные регистрации QR-кода для B2B
+properties:
+  account:
+    type: string
+    description: Счет ЮЛ или ИП в Банке Получателя
+  amount:
+    type: string
+    description: Сумма Операции СБП в копейках. Валюта Операции СБП - рубли РФ
+  callbackMerchantNotifications:
+    type: string
+    description: Url для получения сообщения о совершении перевода
+  height:
+    type: integer
+    format: int32
+    description: Высота
+  width:
+    type: integer
+    format: int32
+    description: Ширина
+  mediaType:
+    type: string
+    description: Тип медиа
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  paymentDetails:
+    $ref: ./B2bQrcDataPaymentDetailsDto.yaml
+    type: object
+    description: Расширенные данные платежа
+  qrTtl:
+    type: string
+    description: Срок жизни Функциональной ссылки СБП B2B в минутах
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  takeTax:
+    type: boolean
+    description: Информация о взимании НДС
+  totalTaxAmount:
+    type: string
+    description: 'Сумма НДС в копейках. Валюта НДС - рубли РФ. Всегда присутствует при takeTax=TRUE '
+  traceId:
+    $ref: ./UUID.yaml
+    type: string
+    description: Идентификатор документа
+  uip:
+    type: string
+    description: Уникальный Идентификатор Платежа, назначаемый Получателем
+  sign:
+    type: string
+    description: Подпись сообщения

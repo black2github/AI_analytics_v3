@@ -1,0 +1,16 @@
+required:
+- accountWorkMode
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID счета ТНФ
+    format: uuid
+  accountWorkMode:
+    type: string
+    description: Режим работы счёта
+    enum:
+    - ACCEPT
+    - MONITORING
+description: Данные по счету ТНФ в запросе на редактирование счета ТНФ

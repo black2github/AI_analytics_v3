@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Подпись запроса на справку.
+  summary: Сгенерировать дайджест из подписываемых полей документа
+  description: 'Привилегии: hasAuthority(''DOC_COPY.CLIENT.SIGN_CREATE'') OR hasAuthority(''DOC_COPY.CLIENT.SIGN_VALIDATION'')'
+  operationId: generateDigest
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/generate-digest/DigestRequest.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/generate-digest/GenericResponseSimpleErrorDataDigest.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

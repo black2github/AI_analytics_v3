@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+    example: a1c360f3-1956-45b2-bad4-d291f5a4aea3
+  status:
+    type: string
+    enum:
+    - NEW
+    - SENT
+    - EXECUTED
+    - REJECTED
+  licenseNumber:
+    type: string
+    description: Номер лицензии
+    example: 6a576a10-091f-4bd4-b5a5-792698495fe7
+description: Запрос лицензии КриптоПро пользователем Клиента

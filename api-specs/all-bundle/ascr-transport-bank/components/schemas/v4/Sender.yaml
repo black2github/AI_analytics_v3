@@ -1,0 +1,23 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+  name:
+    type: string
+    description: ФИО (полное)/Наименование отправителя
+  countryCode:
+    type: string
+    description: Цифровой код страны плательщика
+  participantId:
+    type: string
+    description: Идентификатор плательщика на ПлЦР
+  dcAccountNumber:
+    type: string
+    description: Номер Счета ЦР плательщика
+required:
+- countryCode
+- dcAccountNumber
+- inn
+- name
+- participantId

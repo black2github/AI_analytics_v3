@@ -1,0 +1,29 @@
+post:
+  tags:
+  - API для эмуляции файлового обмена
+  summary: downloadFile
+  operationId: downloadFileUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: fileName
+    in: query
+    description: fileName
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

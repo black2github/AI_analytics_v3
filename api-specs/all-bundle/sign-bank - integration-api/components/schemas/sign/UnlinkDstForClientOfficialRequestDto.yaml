@@ -1,0 +1,23 @@
+required:
+- clientId
+- clientOfficialId
+- userId
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя для которого происходит поиск СЭПов
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  bankUserId:
+    type: string
+    description: UAA ID сотрудника банка
+    format: uuid
+description: Удалить связь с СЭПами для представителя.

@@ -1,0 +1,42 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+  branchAbsNumber:
+    type: string
+    description: Код филиала в АБС
+  branchBic:
+    type: string
+    description: БИК филиала
+  branchName:
+    type: string
+    description: Наименование филиала
+  branchLocation:
+    type: string
+    description: Населенный пункт филиала
+  branchCorrespondentAccount:
+    type: string
+    description: Корсчет филиала
+  contracts:
+    type: array
+    description: Список договоров банковского счета клиента в рамках филиала
+    items:
+      $ref: ./F1ContractDto.yaml
+  commissionAccounts:
+    type: array
+    description: Блок со счетами доступными для списания комиссии за открытие счета в рамках филиала
+    items:
+      $ref: ./F1CommissionDto.yaml
+  kopops:
+    type: array
+    description: Блок со списком счетов, с которых можно скопировать карточку ОПОП в рамках филиала
+    items:
+      $ref: ./KopopDto.yaml
+  reservedAccounts:
+    type: array
+    description: Блок со списком зарезервированных счетов в рамках филиала
+    items:
+      $ref: ./F1ReservedAccountDto.yaml
+description: Блок с информацией о ДБС внутри филиала

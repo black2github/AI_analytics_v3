@@ -1,0 +1,9 @@
+type: object
+properties:
+  serviceConsumer:
+    $ref: ../common/FilterValueDtoString.yaml
+  entity:
+    $ref: ../common/FilterValueDtoString.yaml
+  userType:
+    $ref: ../common/FilterValueEnumDtoUserTypeDto.yaml
+description: Фильтр

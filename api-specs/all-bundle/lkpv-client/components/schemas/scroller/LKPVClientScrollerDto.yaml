@@ -1,0 +1,101 @@
+required:
+- clientId
+- creditDebit
+- entryId
+- operationAmount
+- operationCurrencyCode
+- operationDate
+- operationDateTime
+- operationStatus
+- operationType
+- service
+type: object
+properties:
+  service:
+    maxLength: 255
+    type: string
+    description: Источник данных ЛК_ПВ
+    enum:
+    - ADM
+    - TRADE_ACQUIRING
+    - INTERNET_ACQUIRING
+  operationType:
+    maxLength: 255
+    type: string
+    description: Тип операции
+  entryId:
+    pattern: ^\d{0,20}$
+    type: string
+    description: ID проводки
+  operationDate:
+    type: string
+    description: Дата операции (UTC+3)
+    format: date
+  operationDateTime:
+    type: string
+    description: Дата и время операции (UTC+3)
+    format: date-time
+  operationStatus:
+    maxLength: 20
+    type: string
+    description: Статус операции ЛК_ПВ
+    enum:
+    - ACTIVE
+    - DELETED
+    - APPROVED
+    - REJECTED
+  creditDebit:
+    maxLength: 20
+    type: string
+    description: Поступление/списание ЛК_ПВ
+    enum:
+    - CREDIT
+    - DEBIT
+  operationAmount:
+    type: number
+    description: Сумма операции
+  operationCurrencyCode:
+    maxLength: 3
+    type: string
+    description: Валюта операции
+  operationPurpose:
+    maxLength: 2000
+    type: string
+    description: Назначение платежа
+  clientId:
+    type: string
+    description: ID Клиента Банка
+    format: uuid
+  clientName:
+    maxLength: 2000
+    type: string
+    description: Наименование клиента
+  clientInn:
+    pattern: ^\d{0,12}$
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    maxLength: 9
+    type: string
+    description: КПП клиента
+  clientEskId:
+    type: string
+    description: Идентификатор клиента в ЕСК
+    format: uuid
+  clientAbsId:
+    maxLength: 20
+    type: string
+    description: РНК клиента
+  accountId:
+    type: string
+    description: ID Счета клиента
+    format: uuid
+  accountNumber:
+    maxLength: 64
+    type: string
+    description: Номер счета
+  admInfo:
+    $ref: ./LKPVClientScrollerAdmDto.yaml
+  acquiringInfo:
+    $ref: ./LKPVClientScrollerAcquiringDto.yaml
+description: Общие данные ЛК_ПВ для клиентского скроллера.

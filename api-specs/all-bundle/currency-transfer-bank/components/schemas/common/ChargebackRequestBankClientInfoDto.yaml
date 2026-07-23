@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID Клиент Банка
+    format: uuid
+  clientAccountId:
+    type: string
+    description: ID Счет клиента
+    format: uuid
+description: Информация об организации

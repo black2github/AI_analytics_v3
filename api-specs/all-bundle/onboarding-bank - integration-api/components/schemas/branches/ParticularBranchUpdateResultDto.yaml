@@ -1,0 +1,13 @@
+type: object
+properties:
+  errorData:
+    $ref: ../common/SimpleErrorData.yaml
+  newBranchAbsCode:
+    type: string
+    description: Текущий код АБС филиала
+  statistics:
+    type: array
+    description: Статистика обновленных сущностей
+    items:
+      $ref: ./BranchUpdateStatisticsDto.yaml
+description: Результат обновления информации о филиале

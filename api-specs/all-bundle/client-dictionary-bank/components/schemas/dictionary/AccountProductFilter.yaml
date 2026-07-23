@@ -1,0 +1,15 @@
+type: object
+properties:
+  f1AccountId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  accountRole:
+    $ref: ../common/FilterValueDtoString.yaml
+  productCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  contractStatusCode:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для скроллера продукты по счету

@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Обновление заглушек VW_RPT_GPB_ECO_CLOSE_ACC (счета для закрытия в Ф1)
+  summary: Список всех заглушек сервиса
+  operationId: listUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/F1AccountToCloseDto'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,13 @@
+required:
+- code
+- name
+type: object
+properties:
+  code:
+    type: integer
+    description: Числовой идентификатор кода вида суммы
+    format: int32
+  name:
+    type: string
+    description: Текстовое наименование кода вида суммы
+description: Метрика счётчика

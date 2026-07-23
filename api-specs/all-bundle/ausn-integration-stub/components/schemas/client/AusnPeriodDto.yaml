@@ -1,0 +1,8 @@
+type: object
+required:
+- actualStartDate
+properties:
+  actualStartDate:
+    $ref: ../common/LocalDate.yaml
+  actualEndDate:
+    $ref: ../common/LocalDate.yaml

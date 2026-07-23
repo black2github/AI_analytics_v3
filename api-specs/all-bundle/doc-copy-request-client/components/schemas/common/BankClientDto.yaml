@@ -1,0 +1,29 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Id клиента Банка
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП клиента
+  eskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+description: Информации о компании

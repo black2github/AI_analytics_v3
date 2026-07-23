@@ -1,0 +1,74 @@
+type: object
+description: Изменение сведений о кредитном договоре
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    filialName:
+      type: string
+      description: Наименование подразделения
+    executorName:
+      type: string
+      description: Исполнитель
+    contact:
+      type: string
+      description: Телефон
+    commissionAccount:
+      type: string
+      description: Счет списания комиссии
+    tariffDescription:
+      type: string
+      description: Текст для ознакомления с тарифом
+    client:
+      $ref: ./ClientDto.yaml
+    nonResidents:
+      type: array
+      description: Реквизиты нерезидента
+      items:
+        $ref: ./NonresidentDto.yaml
+    creditContract:
+      $ref: ./CreditContractDto.yaml
+    tranches:
+      type: array
+      description: Сведения о сумме и сроках привлечения (предоставления) траншей
+      items:
+        $ref: ./TrancheDto.yaml
+    interestPayments:
+      $ref: ./InterestPaymentsDto.yaml
+    otherPayments:
+      type: string
+      description: Иные платежи
+    debt:
+      $ref: ./DebtDto.yaml
+    paymentScheduleGrounds:
+      $ref: ./PaymentScheduleGroundsDto.yaml
+    paymentsScheduleList:
+      type: array
+      description: Описание графика платежей
+      items:
+        $ref: ./PaymentScheduleDto.yaml
+    investmentFlag:
+      type: boolean
+      description: Отметка о наличии прямого инвестирования
+    securityAmount:
+      type: string
+      description: Сумма залогового или иного обеспечения
+    contractors:
+      type: array
+      description: Информация о привлечении резидентом кредита, предоставленного нерезидентами на синдицированной основе
+      items:
+        $ref: ./ContractorDto.yaml
+    dealPassportNumbers:
+      type: array
+      description: Уникальные номера кредитного договора
+      items:
+        type: string
+        description: Уникальные номера кредитного договора
+    reissueDocuments:
+      type: array
+      description: Основание для переоформления
+      items:
+        $ref: ./ReissueDocumentDto.yaml
+    additionalInfo:
+      type: string
+      description: Прочая информация

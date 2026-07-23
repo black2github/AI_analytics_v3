@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID приложения OAuth2
+  name:
+    type: string
+    description: Наименование
+  priorityView:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+description: ДТО отображения приложения OAuth2

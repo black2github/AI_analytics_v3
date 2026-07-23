@@ -1,0 +1,23 @@
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    description: ID счета в РКО Ф1
+    format: int64
+  f1ClientRnk:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  dfmStatus:
+    type: integer
+    description: Статус блокировки
+    format: int32
+  dfmCreatedAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  dfmUpdatedAt:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+description: Данные

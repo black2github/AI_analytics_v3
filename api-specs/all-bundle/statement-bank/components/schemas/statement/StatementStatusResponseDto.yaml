@@ -1,0 +1,20 @@
+type: object
+properties:
+  status:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - FILE
+    - VIEW
+    - WAIT_RESPONSE
+    - SNAPSHOT_REQUESTED
+    - FILE_REQUESTED
+    - EXECUTED
+    - DENIED
+    - CANCELED
+  statusMessage:
+    type: string
+description: Данные

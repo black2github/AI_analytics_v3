@@ -1,0 +1,60 @@
+get:
+  operationId: defineWrongWrights
+  parameters:
+  - in: query
+    name: start_date
+    required: true
+    schema:
+      type: string
+      format: date-time
+  - in: query
+    name: end_date
+    required: true
+    schema:
+      type: string
+      format: date-time
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/define-revoked-suffered-persons/RevokeSufferedResponse.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  tags:
+  - content-update-controller

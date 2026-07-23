@@ -1,0 +1,18 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Ссылка на сущность "Реквизиты счёта для зачисления"
+    format: uuid
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  pocId:
+    type: string
+    description: Ссылка на сущность "АДМ"
+    format: uuid
+  tid:
+    type: string
+    description: TID
+description: ДТО Терминал в запросе АДМ

@@ -1,0 +1,18 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Текст
+  shortName:
+    type: boolean
+    description: Признак включения с поиск короткого наименования
+  inn:
+    type: boolean
+    description: Признак включения с поиск ИНН
+  kpp:
+    type: boolean
+    description: Признак включения с поиск КПП
+  bankClientId:
+    type: boolean
+    description: Признак включения с поиск идентификатор клиента
+description: Текстовый составной фильтр

@@ -1,0 +1,55 @@
+required:
+- accountNumber
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  innKio:
+    type: string
+    description: ИНН/КИО плательщика
+  kpp:
+    type: string
+    description: КПП плательщика
+  accountNumber:
+    type: string
+    description: Счет плательщика
+  accountType:
+    type: string
+    description: Тип счета плательщика
+  clientAccountId:
+    type: string
+    description: Ссылка на сущность "Счет клиента"
+    format: uuid
+  clientF1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1
+    format: int64
+  bankName:
+    type: string
+    description: Наименование Банка плательщика
+  bankBic:
+    type: string
+    description: БИК банка плательщика
+  bankCorrespondentAccountNumber:
+    type: string
+    description: Корсчет банка плательщика
+  bankLocalityName:
+    type: string
+    description: Название населенного пункта Банка плательщика
+  bankLocalityType:
+    type: string
+    description: Краткое название типа населенного пункта Банка плательщика
+  thirdPartyPayment:
+    type: boolean
+    description: Признак "Платеж за третье лицо"
+  branchName:
+    type: string
+    description: Наименование филиала обслуживания
+  balanceBranchName:
+    type: string
+    description: Наименование филиала баланса
+  numberCcf:
+    type: string
+    description: Номер ЦЦФ
+description: Реквизиты плательщика

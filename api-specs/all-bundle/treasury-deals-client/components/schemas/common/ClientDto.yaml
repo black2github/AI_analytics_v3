@@ -1,0 +1,18 @@
+type: object
+properties:
+  innKio:
+    type: string
+    description: ИНН или КИО
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+description: Информация о организации Клиента

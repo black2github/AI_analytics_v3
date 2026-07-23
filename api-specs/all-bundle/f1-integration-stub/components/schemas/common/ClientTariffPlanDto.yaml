@@ -1,0 +1,25 @@
+type: object
+required:
+- clientAbsId
+- branchAbsCode
+- tariffAbsCode
+- period
+description: Тарифный план Клиента в Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  clientAbsId:
+    type: string
+    description: Идентификатор Клиента Банка в Ф1
+  branchAbsCode:
+    type: string
+    description: Код филиала в Ф1
+  tariffAbsCode:
+    type: string
+    description: Код тарифного плана в Ф1
+  period:
+    type: string
+    description: Период действия тарифного плана

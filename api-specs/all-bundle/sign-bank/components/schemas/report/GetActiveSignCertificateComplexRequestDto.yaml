@@ -1,0 +1,34 @@
+required:
+- reportTypes
+type: object
+properties:
+  reportTypes:
+    type: array
+    description: Список назначений
+    items:
+      type: string
+      description: Классификатор типов отчетов
+      enum:
+      - INFO
+      - STATEMENT
+      - LETTER
+      - PAYDOC
+      - CURRCONTROLDOC
+      - DIRECT_1C
+      - COPY_DOC
+      - PAYDOC_OUTGOING_REGISTRY
+      - SIGN_BRK_BO
+      - SIGN_BRK_DO
+  filialCodes:
+    type: array
+    description: Список филиалов (список кодов АБС Ф1)
+    items:
+      type: string
+      description: Список филиалов (список кодов АБС Ф1)
+  letterCodes:
+    type: array
+    description: Список типов писем (список кодов из Справочника типов ДСФ)
+    items:
+      type: string
+      description: Список типов писем (список кодов из Справочника типов ДСФ)
+description: DTO комплексного запроса активого сертификата

@@ -1,0 +1,39 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    format: uuid
+  clientRnk:
+    type: string
+  dossierCardTypeId:
+    type: string
+    format: uuid
+  AccessLevelID::uid:
+    type: string
+    format: uuid
+  AccessLevelName:
+    type: string
+  ClientID::uid:
+    type: string
+    format: uuid
+  StatusID::uid:
+    type: string
+    format: uuid
+  StatusName:
+    type: string
+  OperationID::uid:
+    type: string
+    format: uuid
+  OperationFullName:
+    type: string
+  ExternalSystemApplicationNumber:
+    type: string
+  CollectionObjects:
+    type: string
+  AdditionalAgreement:
+    type: boolean
+  InitiatingExternalSystemName:
+    type: string
+  InitiatingExternalSystemRowID::uid:
+    type: string
+    format: uuid

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBackgroundTaskClientFilter.yaml
+description: Запрос страницы

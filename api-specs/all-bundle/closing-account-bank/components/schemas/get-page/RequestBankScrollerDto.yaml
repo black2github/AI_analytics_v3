@@ -1,0 +1,124 @@
+type: object
+properties:
+  accountAssignment:
+    type: string
+    description: Назначение
+    enum:
+    - BASE
+    - GPS_GOZ
+  accountCurrency:
+    type: string
+    description: Валюта счета (Цифровой код)
+  accountEcoType:
+    type: integer
+    description: Тип счета в ЭКО
+    format: int32
+  accountF1Type:
+    type: string
+    description: Тип счета в Ф1
+    enum:
+    - PAYMENT
+    - GOZ
+  accountId:
+    type: string
+    description: Идентификатор счета в Ф1
+  accountNumber:
+    type: string
+    description: Номер счета
+  branchName:
+    type: string
+    description: Филиал обслуживания
+  cacheBalance:
+    type: number
+    description: Остаток денежных средств на счете
+  checkBooks:
+    type: string
+    description: Аннулирование ЧК
+  clientId:
+    type: string
+    description: ID Организации
+    format: uuid
+  clientInn:
+    type: string
+    description: ИНН организации
+  clientName:
+    type: string
+    description: Наименование организации
+  closingAccountDBSNumber:
+    type: string
+    description: Расторжение договора. Если ДБС не закрыт, то null, в противном случае номер ДБС
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commissionDebt:
+    type: number
+    description: Задолженность по комиссии
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  dbsClosed:
+    type: boolean
+    description: Признак закрытия договора банковского счета
+  dbsDate:
+    type: string
+    description: Дата договора
+  dbsNumber:
+    type: string
+    description: Номер договора
+  divisionAddress:
+    type: string
+    description: Адрес подразделения
+  divisionName:
+    type: string
+    description: Наименование подразделения
+  id:
+    type: string
+    description: Идентификатор заявки в Экосистеме
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  serviceOffice:
+    type: string
+    description: Офис обслуживания
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REQUEST_TO_F1
+    - REQUEST_SENT_TO_F1
+    - REQUEST_TO_F1_ERROR
+    - REQUEST_EXPORTED_TO_F1
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - SIGNED_OR_REJECTED
+  updatedAt:
+    type: string
+    description: Дата последнего изменения заявки
+    format: date-time
+  userFio:
+    type: string
+    description: ФИО автора заявки
+  userId:
+    type: string
+    description: ID автора заявки
+    format: uuid
+  userLogin:
+    type: string
+    description: Login автора заявки
+description: DTO скроллера для поиска заявок на закрытие счета для банковского скроллера

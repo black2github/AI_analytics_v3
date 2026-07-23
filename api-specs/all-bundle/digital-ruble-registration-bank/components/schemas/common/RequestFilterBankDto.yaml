@@ -1,0 +1,25 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./DigitalRubleRequestTypeBankClassifierFilter.yaml
+  organizationName:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./DigitalRubleRequestStatusFilter.yaml
+  statusCategory:
+    $ref: ./StatusCategoryFilter.yaml
+  number:
+    $ref: ./FilterValueDtoString.yaml
+  pcrParticipantWalletId:
+    $ref: ./FilterValueDtoUUID.yaml
+  cbrParticipantWalletId:
+    $ref: ./FilterValueDtoString.yaml
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр для заявок

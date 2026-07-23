@@ -1,0 +1,27 @@
+openapi: 3.0.1
+info:
+  title: Сервис-адаптер мультибанкинг. Интеграционная часть.
+  version: 1.0.0
+servers:
+- url: /mb-adapter
+paths:
+  /adapter/accounts:
+    $ref: ./paths/accounts/adapter_accounts.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    AccountsRequestDto:
+      $ref: ./components/schemas/accounts/AccountsRequestDto.yaml
+    AccountDto:
+      $ref: ./components/schemas/accounts/AccountDto.yaml
+    AccountsResponseDto:
+      $ref: ./components/schemas/accounts/AccountsResponseDto.yaml
+    BankClientDto:
+      $ref: ./components/schemas/accounts/BankClientDto.yaml
+    BankPartnerDto:
+      $ref: ./components/schemas/accounts/BankPartnerDto.yaml
+    GenericResponseSimpleErrorDataAccountsResponseDto:
+      $ref: ./components/schemas/accounts/GenericResponseSimpleErrorDataAccountsResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/accounts/SimpleErrorData.yaml

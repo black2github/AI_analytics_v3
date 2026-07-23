@@ -1,0 +1,6 @@
+type: object
+properties:
+  simUsed:
+    type: boolean
+    description: Признак упрощенной идентификации.
+description: Данные

@@ -1,0 +1,17 @@
+type: object
+properties:
+  templateId:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    type: string
+    description: Наименование шаблона
+  accountExists:
+    type: boolean
+    description: Признак доступности счета
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Часто использьзуемый шаблон платежного поручения

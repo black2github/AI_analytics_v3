@@ -1,0 +1,12 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  errorMessage:
+    type: string
+    description: Текст ошибки
+description: Запрос об ошибке процесса импорта

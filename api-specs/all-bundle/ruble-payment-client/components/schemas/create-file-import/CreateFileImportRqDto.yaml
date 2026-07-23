@@ -1,0 +1,16 @@
+required:
+- duplicate
+- fileStorageId
+- importDocumentType
+type: object
+properties:
+  fileStorageId:
+    type: string
+    description: ID файла (ID файла в файловом сервисе)
+    format: uuid
+  importDocumentType:
+    $ref: ../common/AccessDocumentPaymentTypeClassifierDto.yaml
+  duplicate:
+    type: boolean
+    description: Признак дублирования
+description: '[Импорт ПЭД] Система: Функция создания записи файла импорта. Входящие параметры.'

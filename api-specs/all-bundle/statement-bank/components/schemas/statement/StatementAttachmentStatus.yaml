@@ -1,0 +1,9 @@
+type: object
+properties:
+  status:
+    type: string
+    enum:
+    - IN_PROGRESS
+    - EXECUTE
+    - ERROR
+description: Данные

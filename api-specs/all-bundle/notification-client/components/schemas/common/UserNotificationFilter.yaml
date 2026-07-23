@@ -1,0 +1,39 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории для скроллера уведомлений
+    enum:
+    - ALL
+    - UNREAD
+    - IMPORTANT
+    - REQUIRING_EXECUTION
+    - REQUIRED_READING
+    - FAVORITES
+  isRead:
+    $ref: ./FilterValueDtoBoolean.yaml
+  createdAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  branchId:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./UserNotificationStatusFilter.yaml
+  importance:
+    $ref: ./UserNotificationImportanceFilter.yaml
+  executionStatus:
+    $ref: ./UserNotificationExecutionStatusFilter.yaml
+  postponedUntil:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  typeCode:
+    $ref: ./UserNotificationCodeFilter.yaml
+  relevanceEndDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  search:
+    $ref: ./FilterValueDtoString.yaml
+  serviceEco:
+    $ref: ./FilterValueDtoString.yaml
+  bankClient:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр списка уведомлений.

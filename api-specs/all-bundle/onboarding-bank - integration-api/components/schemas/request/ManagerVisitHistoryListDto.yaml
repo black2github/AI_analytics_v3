@@ -1,0 +1,8 @@
+type: object
+properties:
+  managerVisit:
+    type: array
+    description: Таблица "Результат выезда менеджера"
+    items:
+      $ref: ../common/ManagerVisitHistoryDto.yaml
+description: ДТО для вкладки история результатов выезда менеджера

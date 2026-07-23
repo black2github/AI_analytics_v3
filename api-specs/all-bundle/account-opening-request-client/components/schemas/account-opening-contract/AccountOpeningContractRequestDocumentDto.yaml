@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  documentTypeId:
+    type: string
+    description: Тип документа (Ссылка на справочник Тип документа).
+    format: uuid
+  documentTypeName:
+    type: string
+    description: Название тип документа.
+  documentTypeCode:
+    type: string
+    description: Код тип документа.
+  fileName:
+    type: string
+    description: Наименование файла.
+  attachment:
+    $ref: ../common/AttachmentInfoDto.yaml
+description: Документы и вложения Заявки на открытие доп счета и ДБС.

@@ -1,0 +1,7 @@
+type: object
+description: Ответ от Ф1 га изменение тарифного плана
+properties:
+  error:
+    $ref: ./F1ErrorV2Dto.yaml
+    type: object
+    description: Информация об ошибке

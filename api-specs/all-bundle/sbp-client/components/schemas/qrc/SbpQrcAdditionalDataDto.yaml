@@ -1,0 +1,13 @@
+type: object
+description: Распределение платежа
+properties:
+  additionalDataAcc:
+    type: string
+    description: Номер счета для распределения платежа
+  additionalDataSum:
+    type: integer
+    format: int64
+    description: Распределенная сумма в копейках
+  additionalDataPurp:
+    type: string
+    description: Назначение распределяемого платежа

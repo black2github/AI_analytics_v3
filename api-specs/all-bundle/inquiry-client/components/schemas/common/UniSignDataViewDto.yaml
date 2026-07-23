@@ -1,0 +1,14 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Наименование блока подписываемых данных
+    example: null
+  signFieldsViewList:
+    type: array
+    description: Блок отображения подписываемых полей
+    example: null
+    items:
+      $ref: ./UniSignFieldViewDto.yaml
+description: Отображение подписываемых данных
+example: null

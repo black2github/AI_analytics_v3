@@ -1,0 +1,31 @@
+required:
+- bankClientId
+- fingerprint
+- organization
+- paymentDetails
+- pcrParticipantWalletId
+- purposeOfPayment
+- receiver
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька ЦР
+    format: uuid
+  receiver:
+    $ref: ./BusinessTransferReceiverDto.yaml
+  paymentDetails:
+    $ref: ../common/PaymentDetailsDto.yaml
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+description: DTO для запроса на создание заявки на перевод B2B.

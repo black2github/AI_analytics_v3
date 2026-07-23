@@ -1,0 +1,22 @@
+required:
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+  bankStatusComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Комментарий для банковского статуса
+  clientStatusComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Комментарий для клиентского статуса
+description: DTO с идентификаторами заявок и комментариями при изменении статуса.

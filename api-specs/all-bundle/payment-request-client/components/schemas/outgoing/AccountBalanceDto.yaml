@@ -1,0 +1,12 @@
+type: object
+properties:
+  actualTime:
+    type: string
+    description: Время актуализации
+    format: date-time
+  balance:
+    type: array
+    description: Баланс счетов
+    items:
+      $ref: ./BalanceDto.yaml
+description: Баланс счетов клиента

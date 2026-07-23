@@ -1,0 +1,104 @@
+get:
+  tags:
+  - API для работы с пользовательскими настройками каналов получения уведомлений и нотификаций. Клиент.
+  summary: Получить настройки пользователя
+  description: 'Привилегии: SFZU_SETTINGS_VIEW'
+  operationId: getSettings
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+put:
+  tags:
+  - API для работы с пользовательскими настройками каналов получения уведомлений и нотификаций. Клиент.
+  summary: Сохранить настройки пользователя
+  description: 'Привилегии: SFZU_SETTINGS_EDIT'
+  operationId: saveSettings
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/event/GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,83 @@
+openapi: 3.0.1
+info:
+  description: Определяет банковское API
+  title: Информационный сервис. Банковская часть.
+  version: 1.7.0-release.2
+servers:
+- url: /knowledge-base-bank
+security:
+- Bearer: []
+tags:
+- description: API для работы с историей CMS страниц
+  name: CmsPageHistory
+- description: API для работы с CMS страницами
+  name: CmsPage
+paths:
+  /admin/cms-page:
+    $ref: ./paths/cms-page/admin_cms_page.yaml
+  /admin/cms-page-history/get-page:
+    $ref: ./paths/cms-page-history/admin_cms_page_history_get_page.yaml
+  /admin/cms-page-history/{id}:
+    $ref: ./paths/cms-page-history/admin_cms_page_history_id.yaml
+  /admin/cms-page-history/{id}/restore:
+    $ref: ./paths/cms-page-history/admin_cms_page_history_id_restore.yaml
+  /admin/cms-page/get-page:
+    $ref: ./paths/cms-page/admin_cms_page_get_page.yaml
+  /admin/cms-page/get-page-tree:
+    $ref: ./paths/cms-page/admin_cms_page_get_page_tree.yaml
+  /admin/cms-page/{id}:
+    $ref: ./paths/cms-page/admin_cms_page_id.yaml
+  /admin/cms-page/{id}/archive:
+    $ref: ./paths/cms-page/admin_cms_page_id_archive.yaml
+  /admin/cms-page/{id}/publish:
+    $ref: ./paths/cms-page/admin_cms_page_id_publish.yaml
+  /admin/cms-page/{id}/restore:
+    $ref: ./paths/cms-page/admin_cms_page_id_restore.yaml
+components:
+  schemas:
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CmsPageCreateBankDto:
+      $ref: ./components/schemas/cms-page/CmsPageCreateBankDto.yaml
+    CmsPageFilterBankDto:
+      $ref: ./components/schemas/cms-page/CmsPageFilterBankDto.yaml
+    CmsPageHistoryFilterBankDto:
+      $ref: ./components/schemas/cms-page-history/CmsPageHistoryFilterBankDto.yaml
+    CmsPageHistoryPartialUpdateBankDto:
+      $ref: ./components/schemas/cms-page-history/CmsPageHistoryPartialUpdateBankDto.yaml
+    CmsPageUpdateBankDto:
+      $ref: ./components/schemas/cms-page/CmsPageUpdateBankDto.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/cms-page-history/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/cms-page/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/cms-page-history/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoCmsPageStatusBankDto:
+      $ref: ./components/schemas/cms-page/FilterValueEnumDtoCmsPageStatusBankDto.yaml
+    GenericCommandCmsPageCreateBankDto:
+      $ref: ./components/schemas/cms-page/GenericCommandCmsPageCreateBankDto.yaml
+    GenericCommandCmsPageHistoryPartialUpdateBankDto:
+      $ref: ./components/schemas/cms-page-history/GenericCommandCmsPageHistoryPartialUpdateBankDto.yaml
+    GenericCommandCmsPageUpdateBankDto:
+      $ref: ./components/schemas/cms-page/GenericCommandCmsPageUpdateBankDto.yaml
+    GetPageCommandCmsPageFilterBankDto:
+      $ref: ./components/schemas/cms-page/GetPageCommandCmsPageFilterBankDto.yaml
+    GetPageCommandCmsPageHistoryFilterBankDto:
+      $ref: ./components/schemas/cms-page-history/GetPageCommandCmsPageHistoryFilterBankDto.yaml
+    PageParamsCmsPageFilterBankDto:
+      $ref: ./components/schemas/cms-page/PageParamsCmsPageFilterBankDto.yaml
+    PageParamsCmsPageHistoryFilterBankDto:
+      $ref: ./components/schemas/cms-page-history/PageParamsCmsPageHistoryFilterBankDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+  securitySchemes:
+    Bearer:
+      bearerFormat: JWT
+      name: Bearer
+      scheme: bearer
+      type: http

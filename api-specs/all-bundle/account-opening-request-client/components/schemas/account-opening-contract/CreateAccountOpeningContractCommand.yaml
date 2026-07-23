@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./AccountOpeningContractRequestUpsertDto.yaml
+description: ДТО на создание Заявки на открытие доп счета и заключение ДБС.

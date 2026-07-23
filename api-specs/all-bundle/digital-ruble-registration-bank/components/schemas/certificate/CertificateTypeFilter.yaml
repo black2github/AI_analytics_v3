@@ -1,0 +1,57 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип сертификата.
+    enum:
+    - FI_PROCESSING
+    - FI_CONTROL
+    - CB_DEPO
+    - CB_CONTROL
+    - CB_CA
+    - FI_CA
+    - CLIENT
+  notEq:
+    type: string
+    description: Тип сертификата.
+    enum:
+    - FI_PROCESSING
+    - FI_CONTROL
+    - CB_DEPO
+    - CB_CONTROL
+    - CB_CA
+    - FI_CA
+    - CLIENT
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип сертификата.
+      enum:
+      - FI_PROCESSING
+      - FI_CONTROL
+      - CB_DEPO
+      - CB_CONTROL
+      - CB_CA
+      - FI_CA
+      - CLIENT
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип сертификата.
+      enum:
+      - FI_PROCESSING
+      - FI_CONTROL
+      - CB_DEPO
+      - CB_CONTROL
+      - CB_CA
+      - FI_CA
+      - CLIENT
+  isNull:
+    type: boolean
+description: Тип сертификата (in).

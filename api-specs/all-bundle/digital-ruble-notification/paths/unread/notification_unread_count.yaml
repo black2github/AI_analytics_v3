@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Клиентское API для работы с уведомлениями.
+  summary: Количество непрочитанных уведомлений
+  description: 'Привилегии: DRUB.CLIENT.NOTIFICATIONS_LIST_VIEW'
+  operationId: getUnreadNotificationCount
+  parameters:
+  - name: pcrParticipantWalletId
+    in: query
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/unread/GenericResponseDigitalRubleErrorLong.yaml

@@ -1,0 +1,19 @@
+type: object
+properties:
+  direction:
+    type: string
+    description: Порядок сортировки
+    enum:
+    - ASC
+    - DESC
+  field:
+    type: string
+    description: Поле
+  nullHandling:
+    type: string
+    description: Стратегия сортировки null значений
+    enum:
+    - NULLS_FIRST
+    - NULLS_LAST
+required:
+- field

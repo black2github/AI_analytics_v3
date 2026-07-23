@@ -1,0 +1,60 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID истории изменения УЛ.
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи.
+    format: date-time
+  authorizedPerson:
+    $ref: ../common/BankClientAuthorizedPersonDto.yaml
+  sourceSystem:
+    type: string
+    description: Система источник записи.
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  bankClient:
+    $ref: ../common/BankClientDto.yaml
+  lastName:
+    type: string
+    description: Фамилия УЛ.
+  firstName:
+    type: string
+    description: Имя УЛ.
+  patronymic:
+    type: string
+    description: Отчество УЛ.
+  email:
+    type: string
+    description: Адрес электронной почты УЛ.
+  phoneNumber:
+    type: string
+    description: Номер телефона УЛ.
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК.
+  userAbsId:
+    type: string
+    description: Идентификатор физического лица в РКО Ф1.
+  comment:
+    type: string
+    description: Комментарий.
+  manuallyCreated:
+    type: boolean
+    description: Признак ручного создания.
+  actual:
+    type: boolean
+    description: Актуальная запись.
+  userEditor:
+    $ref: ./User.yaml
+  accountAccessRestriction:
+    type: boolean
+    description: Флаг ограничения доступа к счетам.
+description: История изменений УЛ Клиента Банка. ДТО для скроллера.

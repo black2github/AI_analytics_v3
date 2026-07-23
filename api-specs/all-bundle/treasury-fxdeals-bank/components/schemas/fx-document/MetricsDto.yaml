@@ -1,0 +1,41 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип метрики
+    enum:
+    - GROUP
+    - VALUE
+  code:
+    type: string
+    description: Код метрики
+  localTitleCode:
+    type: string
+    description: Локализованный код наименования метрики
+  localDetailsCode:
+    type: string
+    description: Локализованный код детального описания метрики
+  value:
+    type: integer
+    description: Значение метрики
+    format: int32
+  deals:
+    type: array
+    description: Список сделок по данной метрике
+    items:
+      $ref: ./DealInfoDto.yaml
+  dateTime:
+    type: string
+    description: Дата и время получения метрики
+    format: date-time
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NORMAL
+    - WARNING
+    - ERROR
+  dealsInfoAvailable:
+    type: boolean
+    description: Доступен ли Excel-файл для скачивания
+description: Данные

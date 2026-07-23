@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Суррогатный идентификатор счета
+  accountNumber:
+    type: string
+    description: Номер счета
+description: Счета в согласии

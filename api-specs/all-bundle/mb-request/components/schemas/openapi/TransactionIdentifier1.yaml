@@ -1,0 +1,8 @@
+type: object
+properties:
+  transactionDateTime:
+    type: string
+    format: date-time
+  transactionReference:
+    type: string
+description: Идентификация операции однозначным способом

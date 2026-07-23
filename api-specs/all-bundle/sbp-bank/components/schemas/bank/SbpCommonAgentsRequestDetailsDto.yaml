@@ -1,0 +1,9 @@
+type: object
+description: Детализированная информация по заявкам
+properties:
+  contractRequest:
+    $ref: ./SbpContractRequestDto.yaml
+    description: Детали заявки на регистрацию СБП
+  disconnectAgentsRequest:
+    $ref: ./SbpDisconnectAgentsRequestDto.yaml
+    description: Детали заявки на отключение агентов ТСП

@@ -1,0 +1,50 @@
+type: object
+properties:
+  docTypeUniqueCode:
+    type: string
+    description: Уникальные коды типов документов
+    enum:
+    - IDENTITY_DOCUMENT
+    - HEAD_APPOINTMENT
+    - PROTOCOL
+    - ADD_AGREEMENT
+    - CONTRACT
+    - ORDER
+    - POWER_ATTORNEY
+    - OTHER_DOCUMENTS
+    - CERTIFICATE_LARGEST_TAXPAYER
+    - CONSTITUENT_DOCUMENT_CHANGES
+    - CONSTITUENT_DOCUMENT
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  fileName:
+    type: string
+    description: Наименование файла
+  fileSize:
+    type: integer
+    description: Размер вложения
+    format: int64
+  fileHash:
+    type: string
+    description: Хеш вложения
+  link:
+    type: string
+    description: Ссылка на файл оригинала документа
+  attachmentId:
+    type: string
+    description: Идентификатор файла оригинала документа
+    format: uuid
+  accessToken:
+    type: string
+    description: Access token для файла.
+  signed:
+    type: boolean
+    description: Признак загрузки ЭП
+  signFileInfo:
+    $ref: ./SignFileInfoDto.yaml
+description: Файлы приложенные к Заявке на обновление сведений о клиенте

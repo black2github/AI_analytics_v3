@@ -1,0 +1,12 @@
+type: object
+properties:
+  branchCode:
+    type: string
+  branchFullName:
+    type: string
+  code:
+    type: string
+  department:
+    $ref: ./OfficeBankDepartmentDto.yaml
+  fullName:
+    type: string

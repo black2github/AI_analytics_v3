@@ -1,0 +1,13 @@
+required:
+- clientAccount
+type: object
+properties:
+  clientAccount:
+    $ref: ../common/ClientAccountDto.yaml
+  actions:
+    type: object
+    additionalProperties:
+      type: boolean
+      description: Доступы к счету
+    description: Доступы к счету
+description: Информация о доступном счете

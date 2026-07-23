@@ -1,0 +1,50 @@
+type: object
+description: Заявление на платеж СБП
+properties:
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docType:
+    type: string
+    description: Тип документа
+    enum:
+    - TRANSFER
+    - RETURN
+  incomeCode:
+    type: string
+    description: Код вида дохода
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка
+  accountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета Плательщика
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета Плательщика в ЭКО
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  recipientData:
+    $ref: ./SbpTransactionRecipientDataCreateDto.yaml
+    description: Реквизиты получателя
+  operationData:
+    $ref: ./SbpTransactionOperationDataCreateDto.yaml
+    description: Реквизиты входящей операции, обязателен при типе операции ВОЗВРАТ
+  smftParameters:
+    $ref: ./SmftParametersDto.yaml
+    description: Данные устройства пользователя
+required:
+- clientId
+- docType

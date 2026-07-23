@@ -1,0 +1,44 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  documentId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  status:
+    type: string
+    description: Статус изменения
+  changedIn:
+    type: string
+    description: Изменен в
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userName:
+    type: string
+    description: Имя пользователя изменивший оферту
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  event:
+    type: string
+    description: Событие
+  eventTitle:
+    type: string
+    description: Описание события
+  details:
+    type: string
+    description: Детали
+description: Данные

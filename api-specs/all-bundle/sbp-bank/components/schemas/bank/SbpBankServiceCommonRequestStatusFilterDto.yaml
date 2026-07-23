@@ -1,0 +1,113 @@
+type: object
+description: Фильтр по статусу обобщенной заявки сервисов банка
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - DRAFT
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - DELETED
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - QRC_IMAGE_REQUEST
+    - QRC_IMAGE_NOT_RECEIVED
+    - QRC_IMAGE_RECEIVED
+    - BLOCK_ERROR
+    - BLOCK_REQUEST
+    - REQUEST_EXECUTED
+    - REJECTED
+    - QR_CREATED
+    - SUBS_CREATED
+    - REGISTRATION_WAIT
+    - QR_BLOCKED
+    - SUBS_BLOCKED
+    - EXECUTED
+  notEq:
+    type: string
+    enum:
+    - DRAFT
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - DELETED
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - QRC_IMAGE_REQUEST
+    - QRC_IMAGE_NOT_RECEIVED
+    - QRC_IMAGE_RECEIVED
+    - BLOCK_ERROR
+    - BLOCK_REQUEST
+    - REQUEST_EXECUTED
+    - REJECTED
+    - QR_CREATED
+    - SUBS_CREATED
+    - REGISTRATION_WAIT
+    - QR_BLOCKED
+    - SUBS_BLOCKED
+    - EXECUTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - DRAFT
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - DELETED
+      - REGISTRATION_REQUEST
+      - REGISTRATION_ERROR
+      - REGISTERED
+      - QRC_IMAGE_REQUEST
+      - QRC_IMAGE_NOT_RECEIVED
+      - QRC_IMAGE_RECEIVED
+      - BLOCK_ERROR
+      - BLOCK_REQUEST
+      - REQUEST_EXECUTED
+      - REJECTED
+      - QR_CREATED
+      - SUBS_CREATED
+      - REGISTRATION_WAIT
+      - QR_BLOCKED
+      - SUBS_BLOCKED
+      - EXECUTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - DRAFT
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - DELETED
+      - REGISTRATION_REQUEST
+      - REGISTRATION_ERROR
+      - REGISTERED
+      - QRC_IMAGE_REQUEST
+      - QRC_IMAGE_NOT_RECEIVED
+      - QRC_IMAGE_RECEIVED
+      - BLOCK_ERROR
+      - BLOCK_REQUEST
+      - REQUEST_EXECUTED
+      - REJECTED
+      - QR_CREATED
+      - SUBS_CREATED
+      - REGISTRATION_WAIT
+      - QR_BLOCKED
+      - SUBS_BLOCKED
+      - EXECUTED
+  isNull:
+    type: boolean

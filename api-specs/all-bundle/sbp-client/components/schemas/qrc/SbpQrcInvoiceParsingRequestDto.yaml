@@ -1,0 +1,9 @@
+type: object
+description: ДТО запроса на парсинг входящего QR кода
+properties:
+  attachmentId:
+    type: string
+    format: uuid
+    description: Идентификатор вложения в сервисе ms-file-storage
+required:
+- attachmentId

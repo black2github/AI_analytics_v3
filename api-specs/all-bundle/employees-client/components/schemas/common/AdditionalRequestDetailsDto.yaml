@@ -1,0 +1,47 @@
+required:
+- uploadToEsk
+type: object
+properties:
+  uploadToEsk:
+    type: boolean
+    description: Выгружать заявку в ЕСК
+  eskProcessFinished:
+    type: boolean
+    description: ИО Клиент обработан
+  rolesRequireWarranty:
+    type: boolean
+    description: Для выбранных ролей необходима доверенность
+  ruleTemplatesChanged:
+    type: boolean
+    description: Изменены шаблоны ролей
+  clientEmployeeConfirmedByPODFT:
+    type: boolean
+    description: Сотрудник подтвержден по ПОД/ФТ
+  requireClientEmployeeConfirmedByPODFT:
+    type: boolean
+    description: Требуется подтверждение сотрудника по ПОД/ФТ
+  employeeIsEio:
+    type: boolean
+    description: Сотрудник является ЕИО (Единый исполнительный орган)
+  legalizationRequest:
+    type: boolean
+    description: Заявка на легализацию мигрированных прав
+  changeAccountAccess:
+    type: boolean
+    description: Изменить доступ сотрудника по счетам
+  accountAccessMode:
+    type: string
+    description: Режим доступа к счетам
+    enum:
+    - ALL_ACCOUNTS
+    - SPECIFIED_ACCOUNTS
+  changeDsfTypesAccess:
+    type: boolean
+    description: Изменить доступ к типам ДСФ
+  dsfTypesAccessMode:
+    type: string
+    description: Режим доступа к ДСФ
+    enum:
+    - NOT_RESTRICTED
+    - SPECIFIED
+description: Дополнительные реквизиты заявки

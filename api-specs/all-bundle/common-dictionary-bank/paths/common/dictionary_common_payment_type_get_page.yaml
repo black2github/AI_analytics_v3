@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API справочника "Вид платежа"
+  summary: Получить страницу записей
+  description: 'Привилегии: PAYMENT_TYPE_GET_PAGE'
+  operationId: getPageUsingPOST_15
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: filter
+    description: filter
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«PaymentTypeFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«PaymentTypeDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

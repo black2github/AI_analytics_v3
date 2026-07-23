@@ -1,0 +1,27 @@
+type: object
+properties:
+  cardId:
+    type: string
+    format: uuid
+  fileId:
+    type: string
+    format: uuid
+  fileName:
+    type: string
+  categoryId:
+    type: string
+    format: uuid
+  categoryCaption:
+    type: string
+  taskId:
+    type: string
+    format: uuid
+  finishCode:
+    type: string
+    format: uuid
+  rolesIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+description: Данные

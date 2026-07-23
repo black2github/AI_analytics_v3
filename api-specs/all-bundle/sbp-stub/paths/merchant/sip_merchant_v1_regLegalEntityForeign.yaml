@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Регистрация юридического лица не резидента'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/LegalEntityForeignDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/LegalResultDtoLegalEntityResultDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,18 @@
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  userFio:
+    type: string
+  dateTime:
+    type: string
+    format: date-time
+  clientComment:
+    type: string
+  additionalInfo:
+    type: string
+  operation:
+    $ref: ./OperationCodeClassifierDto.yaml
+  localizationOperation:
+    type: string

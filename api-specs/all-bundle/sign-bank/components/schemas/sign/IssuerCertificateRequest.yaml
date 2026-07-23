@@ -1,0 +1,6 @@
+type: object
+properties:
+  issuedCertBody:
+    type: string
+    description: Тело выданного сертификата
+description: DTO для поиска сертификата издателя

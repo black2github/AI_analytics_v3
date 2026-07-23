@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDsfCategoryScrollerFilter.yaml
+description: Запрос страницы

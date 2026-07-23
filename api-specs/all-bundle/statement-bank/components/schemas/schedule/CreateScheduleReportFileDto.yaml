@@ -1,0 +1,18 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  format:
+    type: string
+    enum:
+    - PDF
+    - EXCEL
+  ids:
+    type: array
+    items:
+      type: integer
+      format: int64

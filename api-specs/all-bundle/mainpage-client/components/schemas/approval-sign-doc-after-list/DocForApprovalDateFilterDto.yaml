@@ -1,0 +1,7 @@
+type: object
+properties:
+  approvalStartDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  approvalFinishDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр дат для подсчета количества завизированных документов для отображения в виджете на ГС

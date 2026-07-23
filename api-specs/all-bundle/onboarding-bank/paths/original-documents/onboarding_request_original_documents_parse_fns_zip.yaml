@@ -1,0 +1,138 @@
+get:
+  operationId: parseFnsZip
+  parameters:
+  - in: query
+    name: requestId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - in: query
+    name: zipFileId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - description: "* IDENTITY_DOCUMENT: \n* MIGRATION_CARD: \n* GOZ: \n* CONSTITUENT_DOCUMENT: \n* CONSTITUENT_DOCUMENT_CHANGES: \n* CONSTITUENT_DOCUMENT_EIO: \n* CONSTITUENT_DOCUMENT_EIO_CHANGES: \n* LICENSE: \n* HEAD_APPOINTMENT: \n* RIGHT_SIGN_DOCUMENT: \n* WARRANT_SIGNERS: \n* WARRANT_SIGNER_PERSON: \n* OTHER_DOCUMENTS: \n* ANOTHER_DOCUMENT: \n* MAKE_MC_HEAD: \n* CONTRACT_MC: \n* MC_CONSTITUENT_DOCUMENT: \n* MC_CONSTITUENT_DOCUMENT_CHANGES: \n* MC_CONSTITUENT_DOCUMENT_EIO: \n* MC_CONSTITUENT_DOCUMENT_EIO_CHANGES: \n* MC_HEAD_APPOINTMENT: \n* MAKE_OUTSRS_ACCOUNTING: \n* CONTRACT_OUTSRS_ACCOUNTING: \n* FATCA_UL: \n* FATCA_IP: \n* CM_111: \n* CM_112: \n* CM_114: \n* CM_115: \n* CM_1113: \n* CM_IP111: \n* CM_UL113: \n* CM_IP112: \n* CM_IP1124: \n* CM_UL1123: \n* CM_IP1122: \n* CM_UL1121: \n* CM_1111: \n* CM_UL111: \n* CM_IP113: \n* CM_UL112: \n* CM_IP114: \n* CM_122: \n* CM_123: \n* CM_113: \n* CM_119: \n* CM_1114: \n* CM_1115: \n* CM_121: \n* CM_1110: \n* CM_1112: \n* CM_1116: \n* CM_1117: \n* CM_1118: \n* CM_1119: \n* CM_1120: \n* CM_1125: \n* CM_1126: \n* EGRUL: \n* SNILS: \n* EAES: \n* PURCHASE_PROCEDURE: \n* APPLICATION_SUPPORT_GK: \n* EGRUL_UK: \n* WARRANT_ACCOUNTING_OR_TAX: \n* CM_1124: \n* CM_117: \n* CM_1123: \n* PERMISSION_TO_STAY_IN_RUSSIA: "
+    in: query
+    name: documentTypeCodeDto
+    required: true
+    schema:
+      type: string
+      description: Код типа документа
+      enum:
+      - IDENTITY_DOCUMENT
+      - MIGRATION_CARD
+      - GOZ
+      - CONSTITUENT_DOCUMENT
+      - CONSTITUENT_DOCUMENT_CHANGES
+      - CONSTITUENT_DOCUMENT_EIO
+      - CONSTITUENT_DOCUMENT_EIO_CHANGES
+      - LICENSE
+      - HEAD_APPOINTMENT
+      - RIGHT_SIGN_DOCUMENT
+      - WARRANT_SIGNERS
+      - WARRANT_SIGNER_PERSON
+      - OTHER_DOCUMENTS
+      - ANOTHER_DOCUMENT
+      - MAKE_MC_HEAD
+      - CONTRACT_MC
+      - MC_CONSTITUENT_DOCUMENT
+      - MC_CONSTITUENT_DOCUMENT_CHANGES
+      - MC_CONSTITUENT_DOCUMENT_EIO
+      - MC_CONSTITUENT_DOCUMENT_EIO_CHANGES
+      - MC_HEAD_APPOINTMENT
+      - MAKE_OUTSRS_ACCOUNTING
+      - CONTRACT_OUTSRS_ACCOUNTING
+      - FATCA_UL
+      - FATCA_IP
+      - CM_111
+      - CM_112
+      - CM_114
+      - CM_115
+      - CM_1113
+      - CM_IP111
+      - CM_UL113
+      - CM_IP112
+      - CM_IP1124
+      - CM_UL1123
+      - CM_IP1122
+      - CM_UL1121
+      - CM_1111
+      - CM_UL111
+      - CM_IP113
+      - CM_UL112
+      - CM_IP114
+      - CM_122
+      - CM_123
+      - CM_113
+      - CM_119
+      - CM_1114
+      - CM_1115
+      - CM_121
+      - CM_1110
+      - CM_1112
+      - CM_1116
+      - CM_1117
+      - CM_1118
+      - CM_1119
+      - CM_1120
+      - CM_1125
+      - CM_1126
+      - EGRUL
+      - SNILS
+      - EAES
+      - PURCHASE_PROCEDURE
+      - APPLICATION_SUPPORT_GK
+      - EGRUL_UK
+      - WARRANT_ACCOUNTING_OR_TAX
+      - CM_1124
+      - CM_117
+      - CM_1123
+      - PERMISSION_TO_STAY_IN_RUSSIA
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/original-documents/GenericResponseSimpleErrorDataFnsZipResponseDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Распарсить архив ФНС
+  tags:
+  - Оригиналы документов. Архив ФНС

@@ -1,0 +1,8 @@
+type: object
+properties:
+  actionType:
+    $ref: ./ActionType.yaml
+  createdAt:
+    $ref: ./Instant.yaml
+  content:
+    $ref: ./AccountingEntryDto.yaml

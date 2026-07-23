@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  documentId:
+    type: string
+    format: uuid
+  status:
+    type: string
+  changedIn:
+    type: string
+    format: date-time
+  userId:
+    type: string
+    format: uuid
+  userName:
+    type: string

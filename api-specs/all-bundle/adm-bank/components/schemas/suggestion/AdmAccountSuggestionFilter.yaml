@@ -1,0 +1,5 @@
+type: object
+properties:
+  recipientNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр подсказок Получателя

@@ -1,0 +1,35 @@
+post:
+  tags:
+  - Интеграционное API справочника "Корреспондентские счета Банков РФ"
+  summary: Получить корреспондентские счета по кодам БИК
+  description: 'Привилегии: COMMON_DICTIONARY.TECH.CORR_ACCOUNT_VIEW'
+  operationId: getAllByBicCodesUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: bicCodes
+    description: bicCodes
+    required: true
+    schema:
+      type: array
+      items:
+        type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«CorrespondentAccountDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

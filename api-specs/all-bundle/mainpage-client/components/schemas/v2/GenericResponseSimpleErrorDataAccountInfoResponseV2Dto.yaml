@@ -1,0 +1,10 @@
+type: object
+properties:
+  data:
+    $ref: ./AccountInfoResponseV2Dto.yaml
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

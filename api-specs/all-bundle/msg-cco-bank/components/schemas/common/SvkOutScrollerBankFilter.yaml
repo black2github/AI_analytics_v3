@@ -1,0 +1,49 @@
+type: object
+properties:
+  topic:
+    $ref: ./FilterValueDtoUUID.yaml
+  organization:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./SvkOutScrollerStatusFilter.yaml
+  bankBranch:
+    $ref: ./FilterValueDtoString.yaml
+  attachmentsExist:
+    $ref: ./FilterValueDtoBoolean.yaml
+  linkedDocumentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  linkedDocumentDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  topicName:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  organizationRnk:
+    $ref: ./FilterValueDtoString.yaml
+  bankBranchIds:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям. Полное совпадение.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - COMPLETED
+  createdAt:
+    $ref: ./FilterValueDtoLocalDateTime.yaml
+  organizationName:
+    $ref: ./FilterValueDtoString.yaml
+  lkuvedDocId:
+    $ref: ./FilterValueDtoUUID.yaml
+  lkuvedMsgId:
+    $ref: ./FilterValueDtoUUID.yaml
+  skvoId:
+    $ref: ./FilterValueDtoUUID.yaml
+  tessaProcessingStatuses:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр журнал документов. Банковская часть

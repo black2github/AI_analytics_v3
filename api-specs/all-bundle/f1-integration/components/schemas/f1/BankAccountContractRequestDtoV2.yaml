@@ -1,0 +1,22 @@
+type: object
+properties:
+  clientName:
+    type: string
+    description: Наименование клиента
+  clientInn:
+    type: string
+    description: ИНН клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  clientEskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  clientF1Rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+description: Запрос списка ДБС для открытия доп счета

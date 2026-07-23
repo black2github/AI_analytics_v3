@@ -1,0 +1,48 @@
+type: object
+description: Данные из эталона ЭС cbdc.002.001.04 OrganisationDCSellingRequest_2024.03 "Распоряжение на вывод средств с СЦР Клиента-ЮЛ"
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма операции
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции
+  buyerId:
+    type: string
+    description: Идентификатор ФП на ПлЦР
+  buyerWalletId:
+    type: string
+    description: Идентификатор СЦР ФП на ПлЦР
+  buyerDcAccountNumber:
+    type: string
+    description: Номер Счета ЦР ФП отправителя
+  sellerOrganisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПлЦР
+  sellerWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента-ЮЛ на ПлЦР
+  sellerDcAccountNumber:
+    type: string
+    description: Номер Счета ЦР Клиента-ЮЛ
+  intermediary:
+    type: string
+    description: Идентификатор посредника, через которого происходит взаимодействие Клиента с ПлЦР по операции
+  sellerInfo:
+    $ref: ./SellerInfo.yaml
+    description: Реквизиты, необходимые для проведения банковского перевода
+  record:
+    type: string
+    description: Транзакционное сообщение (дайджест РР)
+required:
+- buyerDcAccountNumber
+- buyerId
+- buyerWalletId
+- intermediary
+- record
+- sellerDcAccountNumber
+- sellerInfo
+- sellerOrganisationId
+- sellerWalletId
+- totalAmount
+- totalAmountCcy

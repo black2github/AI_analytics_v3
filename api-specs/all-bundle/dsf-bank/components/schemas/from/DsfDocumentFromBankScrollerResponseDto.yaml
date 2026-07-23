@@ -1,0 +1,169 @@
+type: object
+description: Документ из банка. Возвращаемое ДТО для Скроллера.
+properties:
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./DsfAttachmentFromBankDto.yaml
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+    description: Информация о клиенте банка.
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+    description: Информация о подразделении.
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания заявки.
+  date:
+    type: string
+    format: date
+    description: Дата создания заявки.
+  dialogId:
+    type: string
+    description: ID группы связанных писем
+  externalId:
+    type: string
+    description: ID письма в АС инициатор
+  externalSystem:
+    type: string
+    description: АС инициатор/получатель письма
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор документа в банк.
+  isFavorite:
+    type: boolean
+    description: Признак добавления документа в "Избранные"
+  massDocumentCreateDate:
+    type: string
+    format: date-time
+    description: Дата создания массовой рассылки.
+  massDocumentId:
+    type: string
+    format: uuid
+    description: Идентификатор массовой рассылки.
+  massDocumentNumber:
+    type: integer
+    format: int32
+    description: Номер массовой рассылки.
+  massDocumentReceivedDate:
+    type: string
+    format: date-time
+    description: Дата отправки массовой рассылки.
+  messagePreview:
+    type: string
+    description: Первые 200 символов из тела письма
+  number:
+    type: integer
+    format: int32
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+  receivedAt:
+    type: string
+    format: date-time
+    description: Дата и время получения (дата и время отправки в Банк) заявки.
+  responsibleBankUserFio:
+    type: string
+    description: ФИО ответственного операциониста
+  responsibleBankUserId:
+    type: string
+    format: uuid
+    description: Идентификатор ответственного операциониста
+  sentAt:
+    type: string
+    format: date-time
+    description: Единое время отправки письма для хронологической сортировки писем диалога
+  signCheckAt:
+    type: string
+    format: date-time
+    description: Дата проверки подписи
+  signatures:
+    type: array
+    description: Подписи документа.
+    items:
+      $ref: ./DsfSignatureFromBankDto.yaml
+  signerAuthority:
+    $ref: ./SignerAccountAuthoritySrvRsp.yaml
+    description: Полномочия пользователя
+  sppVersion:
+    type: integer
+    format: int32
+    description: Версия СПП
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - TO_SEND
+    - TO_SEND_START_PROCESSING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - DENIED
+    - EXECUTED
+    - READ
+    - READ_START_PROCESSING
+    - SIGN_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_NEED_CHECK
+    - SIGN_VALID_OR_DENIED
+    - DRAFT_OR_NEW
+    - WAIT_CLIENT_SIGN
+    - WAIT_BANK_SIGN
+    - CLIENT_SIGNED
+    - REVOKED
+    - REJECTED
+    - REPLY_LETTER_CREATED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - EXPORT_H2H_XML_DONE
+    - EXPORT_H2H_XML_REQUIRED_OR_NOT
+    - DETACH_REQUIRED_OR_NOT
+    - AUTOSIGN_ERROR
+  subject:
+    type: string
+    description: Тема письма.
+  toBankId:
+    type: string
+    format: uuid
+    description: Идентификатор ответного письма, направленного в ответ на данное письмо
+  typeBankSignRequired:
+    type: boolean
+    description: Двустороннее подписание.
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeLetterClassifier:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления заявки.
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку.
+  version:
+    type: integer
+    format: int32
+    description: Текущая версия документа в банк.

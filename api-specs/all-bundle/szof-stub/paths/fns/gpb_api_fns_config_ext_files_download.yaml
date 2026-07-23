@@ -1,0 +1,22 @@
+get:
+  responses:
+    '200':
+      description: OK
+  summary: Get Ext Files Props
+  tags:
+  - Gpb Api Fns Stub Config Controller
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/fns/GetArchiveFileIdPropsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Ext Files
+  tags:
+  - Gpb Api Fns Stub Config Controller

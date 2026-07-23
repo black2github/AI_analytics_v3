@@ -1,0 +1,13 @@
+type: object
+properties:
+  ids:
+    maxItems: 1000
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Множество ID представителей
+    items:
+      type: string
+      description: Множество ID представителей
+      format: uuid
+description: Запрос поиска представителей по множеству ID

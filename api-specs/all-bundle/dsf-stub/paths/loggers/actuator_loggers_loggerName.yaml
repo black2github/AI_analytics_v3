@@ -1,0 +1,21 @@
+post:
+  parameters:
+  - name: loggerName
+    in: path
+    required: true
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/loggers/LogLevel.yaml
+    required: true
+  responses:
+    '201':
+      description: Created
+    '400':
+      description: Bad Request
+  summary: Set Logger Level
+  tags:
+  - Actuator Controller

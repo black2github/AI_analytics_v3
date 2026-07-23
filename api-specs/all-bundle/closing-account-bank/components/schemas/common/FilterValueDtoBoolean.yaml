@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: boolean
+  ge:
+    type: boolean
+  gt:
+    type: boolean
+  in:
+    type: array
+    items:
+      type: boolean
+  isNull:
+    type: boolean
+  le:
+    type: boolean
+  lt:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: boolean
+  notIn:
+    type: array
+    items:
+      type: boolean
+description: Задолженность по комиссии. True - <Задолженность по комиссии> = 0, False - <Задолженность по комиссии> > 0

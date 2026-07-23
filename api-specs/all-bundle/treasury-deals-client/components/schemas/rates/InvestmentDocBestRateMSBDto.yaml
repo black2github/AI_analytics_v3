@@ -1,0 +1,31 @@
+type: object
+properties:
+  dealType:
+    type: string
+    description: Тип сделки
+  value:
+    type: string
+    description: Значение ставки
+  amountFrom:
+    type: string
+    description: Сумма сделки c
+  amountTo:
+    type: string
+    description: Сумма сделки по
+  periodFrom:
+    type: integer
+    description: Период сделки с
+    format: int32
+  periodTo:
+    type: integer
+    description: Период сделки по
+    format: int32
+  clientId:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  description:
+    type: string
+    description: Описание
+description: Данные

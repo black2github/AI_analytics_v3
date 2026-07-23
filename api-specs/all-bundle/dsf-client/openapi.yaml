@@ -1,0 +1,469 @@
+openapi: 3.0.1
+info:
+  title: Сервис писем. Клиентская часть
+  version: 3.5.0
+servers:
+- url: /letter-client
+security:
+- bearerAuth: []
+paths:
+  /account/get-accounts:
+    $ref: ./paths/get-accounts/account_get_accounts.yaml
+  /dialog/get-slice:
+    $ref: ./paths/get-slice/dialog_get_slice.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /letter:
+    $ref: ./paths/letter/letter.yaml
+  /letter-category/category:
+    $ref: ./paths/category/letter_category_category.yaml
+  /letter-category/get-page:
+    $ref: ./paths/get-page/letter_category_get_page.yaml
+  /letter-type/get-page:
+    $ref: ./paths/get-page/letter_type_get_page.yaml
+  /letter-type/get-page-short:
+    $ref: ./paths/get-page-short/letter_type_get_page_short.yaml
+  /letter-type/template/data/all/{id}:
+    $ref: ./paths/template/letter_type_template_data_all_id.yaml
+  /letter-type/template/data/{id}:
+    $ref: ./paths/template/letter_type_template_data_id.yaml
+  /letter/attach-access-token-v2:
+    $ref: ./paths/attach-access-token-v2/letter_attach_access_token_v2.yaml
+  /letter/attachment-with-stamp:
+    $ref: ./paths/attachment-with-stamp/letter_attachment_with_stamp.yaml
+  /letter/category:
+    $ref: ./paths/category/letter_category.yaml
+  /letter/delete:
+    $ref: ./paths/delete/letter_delete.yaml
+  /letter/from/attachment-with-stamp:
+    $ref: ./paths/from/letter_from_attachment_with_stamp.yaml
+  /letter/from/category:
+    $ref: ./paths/from/letter_from_category.yaml
+  /letter/from/create-reply-to:
+    $ref: ./paths/from/letter_from_create_reply_to.yaml
+  /letter/from/execute:
+    $ref: ./paths/from/letter_from_execute.yaml
+  /letter/from/favorites/add:
+    $ref: ./paths/from/letter_from_favorites_add.yaml
+  /letter/from/favorites/remove:
+    $ref: ./paths/from/letter_from_favorites_remove.yaml
+  /letter/from/generate-attachment-digest-hash:
+    $ref: ./paths/from/letter_from_generate_attachment_digest_hash.yaml
+  /letter/from/generate-digest/version:
+    $ref: ./paths/from/letter_from_generate_digest_version.yaml
+  /letter/from/generate-document-digest-hash:
+    $ref: ./paths/from/letter_from_generate_document_digest_hash.yaml
+  /letter/from/generate-sign-data:
+    $ref: ./paths/from/letter_from_generate_sign_data.yaml
+  /letter/from/generate-sign-data-v2:
+    $ref: ./paths/from/letter_from_generate_sign_data_v2.yaml
+  /letter/from/generate-sign-data-v2-list:
+    $ref: ./paths/from/letter_from_generate_sign_data_v2_list.yaml
+  /letter/from/get-slice:
+    $ref: ./paths/from/letter_from_get_slice.yaml
+  /letter/from/get-slice-context-search:
+    $ref: ./paths/from/letter_from_get_slice_context_search.yaml
+  /letter/from/history/{id}:
+    $ref: ./paths/from/letter_from_history_id.yaml
+  /letter/from/print:
+    $ref: ./paths/from/letter_from_print.yaml
+  /letter/from/print/{id}:
+    $ref: ./paths/from/letter_from_print_id.yaml
+  /letter/from/reject:
+    $ref: ./paths/from/letter_from_reject.yaml
+  /letter/from/sign:
+    $ref: ./paths/from/letter_from_sign.yaml
+  /letter/from/sign-attachments:
+    $ref: ./paths/from/letter_from_sign_attachments.yaml
+  /letter/from/sign-registry:
+    $ref: ./paths/from/letter_from_sign_registry.yaml
+  /letter/from/unread:
+    $ref: ./paths/from/letter_from_unread.yaml
+  /letter/from/update-mchd:
+    $ref: ./paths/from/letter_from_update_mchd.yaml
+  /letter/from/zip-access-token:
+    $ref: ./paths/from/letter_from_zip_access_token.yaml
+  /letter/from/zip-access-token-v2:
+    $ref: ./paths/from/letter_from_zip_access_token_v2.yaml
+  /letter/from/{id}:
+    $ref: ./paths/from/letter_from_id.yaml
+  /letter/from/{id}/certificates:
+    $ref: ./paths/from/letter_from_id_certificates.yaml
+  /letter/from/{id}/export/sign:
+    $ref: ./paths/from/letter_from_id_export_sign.yaml
+  /letter/from/{id}/find-reply-to:
+    $ref: ./paths/from/letter_from_id_find_reply_to.yaml
+  /letter/from/{id}/sign-protocol:
+    $ref: ./paths/from/letter_from_id_sign_protocol.yaml
+  /letter/generate-attachment-digest-hash:
+    $ref: ./paths/generate-attachment-digest-hash/letter_generate_attachment_digest_hash.yaml
+  /letter/generate-digest/version:
+    $ref: ./paths/generate-digest/letter_generate_digest_version.yaml
+  /letter/generate-document-digest-hash:
+    $ref: ./paths/generate-document-digest-hash/letter_generate_document_digest_hash.yaml
+  /letter/generate-sign-data:
+    $ref: ./paths/generate-sign-data/letter_generate_sign_data.yaml
+  /letter/generate-sign-data-v2:
+    $ref: ./paths/generate-sign-data-v2/letter_generate_sign_data_v2.yaml
+  /letter/generate-sign-data-v2-list:
+    $ref: ./paths/generate-sign-data-v2-list/letter_generate_sign_data_v2_list.yaml
+  /letter/get-slice:
+    $ref: ./paths/get-slice/letter_get_slice.yaml
+  /letter/get-slice-context-search:
+    $ref: ./paths/get-slice-context-search/letter_get_slice_context_search.yaml
+  /letter/history/{id}:
+    $ref: ./paths/history/letter_history_id.yaml
+  /letter/print:
+    $ref: ./paths/print/letter_print.yaml
+  /letter/revoke-sign:
+    $ref: ./paths/revoke-sign/letter_revoke_sign.yaml
+  /letter/send:
+    $ref: ./paths/send/letter_send.yaml
+  /letter/settings:
+    $ref: ./paths/settings/letter_settings.yaml
+  /letter/sign:
+    $ref: ./paths/sign/letter_sign.yaml
+  /letter/sign-attachment:
+    $ref: ./paths/sign-attachment/letter_sign_attachment.yaml
+  /letter/sign-attachments:
+    $ref: ./paths/sign-attachments/letter_sign_attachments.yaml
+  /letter/sign-authority:
+    $ref: ./paths/sign-authority/letter_sign_authority.yaml
+  /letter/sign-registry:
+    $ref: ./paths/sign-registry/letter_sign_registry.yaml
+  /letter/update-mchd:
+    $ref: ./paths/update-mchd/letter_update_mchd.yaml
+  /letter/validate-stamp:
+    $ref: ./paths/validate-stamp/letter_validate_stamp.yaml
+  /letter/zip-access-token:
+    $ref: ./paths/zip-access-token/letter_zip_access_token.yaml
+  /letter/zip-access-token-v2:
+    $ref: ./paths/zip-access-token-v2/letter_zip_access_token_v2.yaml
+  /letter/{id}:
+    $ref: ./paths/{id}/letter_id.yaml
+  /letter/{id}/certificates:
+    $ref: ./paths/{id}/letter_id_certificates.yaml
+  /letter/{id}/export/sign:
+    $ref: ./paths/{id}/letter_id_export_sign.yaml
+  /letter/{id}/sign-protocol:
+    $ref: ./paths/{id}/letter_id_sign_protocol.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AmlAttachmentToBankDto:
+      $ref: ./components/schemas/letter/AmlAttachmentToBankDto.yaml
+    AmlAttachmentToBankResponseDto:
+      $ref: ./components/schemas/common/AmlAttachmentToBankResponseDto.yaml
+    AmlClientDocumentToBankResponseDto:
+      $ref: ./components/schemas/common/AmlClientDocumentToBankResponseDto.yaml
+    AmlDialogClientScrollerFilter:
+      $ref: ./components/schemas/get-slice/AmlDialogClientScrollerFilter.yaml
+    AmlDialogClientScrollerResponseDto:
+      $ref: ./components/schemas/get-slice/AmlDialogClientScrollerResponseDto.yaml
+    AmlDocumentFromBankResponseDto:
+      $ref: ./components/schemas/from/AmlDocumentFromBankResponseDto.yaml
+    AmlDocumentToBankDto:
+      $ref: ./components/schemas/letter/AmlDocumentToBankDto.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/common/AttachmentAccessData.yaml
+    AttachmentGenerateDigestHashCommand:
+      $ref: ./components/schemas/common/AttachmentGenerateDigestHashCommand.yaml
+    AttachmentListSignCommand:
+      $ref: ./components/schemas/common/AttachmentListSignCommand.yaml
+    AttachmentSignCommand:
+      $ref: ./components/schemas/sign-attachment/AttachmentSignCommand.yaml
+    AttachmentWithStampGetCommand:
+      $ref: ./components/schemas/common/AttachmentWithStampGetCommand.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    BulkAttachmentCatalogDto:
+      $ref: ./components/schemas/common/BulkAttachmentCatalogDto.yaml
+    CatalogPathBlock:
+      $ref: ./components/schemas/common/CatalogPathBlock.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateAccessTokenRequestDto:
+      $ref: ./components/schemas/attach-access-token-v2/CreateAccessTokenRequestDto.yaml
+    CreateCommandWithDeviceInfoDsfDocumentToBankCreateDto:
+      $ref: ./components/schemas/letter/CreateCommandWithDeviceInfoDsfDocumentToBankCreateDto.yaml
+    CreateResponse:
+      $ref: ./components/schemas/letter/CreateResponse.yaml
+    CreateResponseDsfClientDocumentToBankResponseDto:
+      $ref: ./components/schemas/common/CreateResponseDsfClientDocumentToBankResponseDto.yaml
+    CreateResponseDsfDocumentFromBankResponseDto:
+      $ref: ./components/schemas/from/CreateResponseDsfDocumentFromBankResponseDto.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/common/DigestRequest.yaml
+    DocumentDigestHashCommand:
+      $ref: ./components/schemas/common/DocumentDigestHashCommand.yaml
+    DsfAccountDto:
+      $ref: ./components/schemas/get-accounts/DsfAccountDto.yaml
+    DsfAccountRequestDto:
+      $ref: ./components/schemas/get-accounts/DsfAccountRequestDto.yaml
+    DsfAccountResponseDto:
+      $ref: ./components/schemas/get-accounts/DsfAccountResponseDto.yaml
+    DsfAccountTypeDto:
+      $ref: ./components/schemas/get-accounts/DsfAccountTypeDto.yaml
+    DsfAttachmentDto:
+      $ref: ./components/schemas/common/DsfAttachmentDto.yaml
+    DsfAttachmentFromBankDto:
+      $ref: ./components/schemas/from/DsfAttachmentFromBankDto.yaml
+    DsfAttachmentSignatureDto:
+      $ref: ./components/schemas/common/DsfAttachmentSignatureDto.yaml
+    DsfAttachmentSignatureFromBankDto:
+      $ref: ./components/schemas/from/DsfAttachmentSignatureFromBankDto.yaml
+    DsfBankClientDto:
+      $ref: ./components/schemas/get-accounts/DsfBankClientDto.yaml
+    DsfBranchDto:
+      $ref: ./components/schemas/get-accounts/DsfBranchDto.yaml
+    DsfCategoryResponseDto:
+      $ref: ./components/schemas/get-page/DsfCategoryResponseDto.yaml
+    DsfCategoryScrollerFilter:
+      $ref: ./components/schemas/get-page/DsfCategoryScrollerFilter.yaml
+    DsfCategoryScrollerResponseDto:
+      $ref: ./components/schemas/category/DsfCategoryScrollerResponseDto.yaml
+    DsfClientDocumentToBankResponseDto:
+      $ref: ./components/schemas/common/DsfClientDocumentToBankResponseDto.yaml
+    DsfClientDocumentToBankScrollerResponseDto:
+      $ref: ./components/schemas/common/DsfClientDocumentToBankScrollerResponseDto.yaml
+    DsfClientInReplyToDocumentFromBankResponseDto:
+      $ref: ./components/schemas/common/DsfClientInReplyToDocumentFromBankResponseDto.yaml
+    DsfCurrencyDto:
+      $ref: ./components/schemas/get-accounts/DsfCurrencyDto.yaml
+    DsfDialogClientResponseDto:
+      $ref: ./components/schemas/common/DsfDialogClientResponseDto.yaml
+    DsfDialogClientScrollerFilter:
+      $ref: ./components/schemas/get-slice/DsfDialogClientScrollerFilter.yaml
+    DsfDialogClientScrollerResponseDto:
+      $ref: ./components/schemas/get-slice/DsfDialogClientScrollerResponseDto.yaml
+    DsfDocumentClientContextSearchScrollerFilter:
+      $ref: ./components/schemas/common/DsfDocumentClientContextSearchScrollerFilter.yaml
+    DsfDocumentFromBankClientScrollerFilter:
+      $ref: ./components/schemas/from/DsfDocumentFromBankClientScrollerFilter.yaml
+    DsfDocumentFromBankResponseDto:
+      $ref: ./components/schemas/from/DsfDocumentFromBankResponseDto.yaml
+    DsfDocumentFromBankScrollerResponseDto:
+      $ref: ./components/schemas/from/DsfDocumentFromBankScrollerResponseDto.yaml
+    DsfDocumentFromBankStatusFilter:
+      $ref: ./components/schemas/from/DsfDocumentFromBankStatusFilter.yaml
+    DsfDocumentHistoryDto:
+      $ref: ./components/schemas/common/DsfDocumentHistoryDto.yaml
+    DsfDocumentToBankClientScrollerFilter:
+      $ref: ./components/schemas/common/DsfDocumentToBankClientScrollerFilter.yaml
+    DsfDocumentToBankCreateDto:
+      $ref: ./components/schemas/letter/DsfDocumentToBankCreateDto.yaml
+    DsfDocumentToBankUpdateDto:
+      $ref: ./components/schemas/letter/DsfDocumentToBankUpdateDto.yaml
+    DsfExternalSystemFilter:
+      $ref: ./components/schemas/common/DsfExternalSystemFilter.yaml
+    DsfRequisitesDto:
+      $ref: ./components/schemas/get-accounts/DsfRequisitesDto.yaml
+    DsfSignatureDto:
+      $ref: ./components/schemas/common/DsfSignatureDto.yaml
+    DsfSignatureFromBankDto:
+      $ref: ./components/schemas/from/DsfSignatureFromBankDto.yaml
+    DsfTypeClassFilter:
+      $ref: ./components/schemas/common/DsfTypeClassFilter.yaml
+    DsfTypeProductTypeFilter:
+      $ref: ./components/schemas/common/DsfTypeProductTypeFilter.yaml
+    DsfTypeResponseDto:
+      $ref: ./components/schemas/common/DsfTypeResponseDto.yaml
+    DsfTypeScrollerFilter:
+      $ref: ./components/schemas/common/DsfTypeScrollerFilter.yaml
+    DsfTypeShortResponseDto:
+      $ref: ./components/schemas/get-page-short/DsfTypeShortResponseDto.yaml
+    DsfTypeTemplateResponseDto:
+      $ref: ./components/schemas/common/DsfTypeTemplateResponseDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    FileDataResponseDto:
+      $ref: ./components/schemas/common/FileDataResponseDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GenericCommandDsfAccountRequestDto:
+      $ref: ./components/schemas/get-accounts/GenericCommandDsfAccountRequestDto.yaml
+    GenericCommandListSignRegistryRq:
+      $ref: ./components/schemas/common/GenericCommandListSignRegistryRq.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericCommandWithDeviceInfoUUID:
+      $ref: ./components/schemas/send/GenericCommandWithDeviceInfoUUID.yaml
+    GenericResponseErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAttachmentAccessData.yaml
+    GenericResponseErrorDataDsfAccountResponseDto:
+      $ref: ./components/schemas/get-accounts/GenericResponseErrorDataDsfAccountResponseDto.yaml
+    GenericResponseErrorDataDsfClientDocumentToBankResponseDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataDsfClientDocumentToBankResponseDto.yaml
+    GenericResponseErrorDataDsfDocumentFromBankResponseDto:
+      $ref: ./components/schemas/from/GenericResponseErrorDataDsfDocumentFromBankResponseDto.yaml
+    GenericResponseErrorDataFileDataResponseDto:
+      $ref: ./components/schemas/from/GenericResponseErrorDataFileDataResponseDto.yaml
+    GenericResponseErrorDataLettersConfigurableSettingsDto:
+      $ref: ./components/schemas/settings/GenericResponseErrorDataLettersConfigurableSettingsDto.yaml
+    GenericResponseErrorDataListDsfCategoryScrollerResponseDto:
+      $ref: ./components/schemas/category/GenericResponseErrorDataListDsfCategoryScrollerResponseDto.yaml
+    GenericResponseErrorDataListUniCertificateDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListUniCertificateDto.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    GenericResponseErrorDataSignRegistryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataSignRegistryDto.yaml
+    GenericResponseErrorDataSignerAccountAuthoritySrvRsp:
+      $ref: ./components/schemas/sign-authority/GenericResponseErrorDataSignerAccountAuthoritySrvRsp.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    GenericResponseErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUniSignV2x1Dto.yaml
+    GenericResponseErrorDataVoid:
+      $ref: ./components/schemas/validate-stamp/GenericResponseErrorDataVoid.yaml
+    GetPageCommandDsfCategoryScrollerFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandDsfCategoryScrollerFilter.yaml
+    GetPageCommandDsfDialogClientScrollerFilter:
+      $ref: ./components/schemas/get-slice/GetPageCommandDsfDialogClientScrollerFilter.yaml
+    GetPageCommandDsfDocumentClientContextSearchScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandDsfDocumentClientContextSearchScrollerFilter.yaml
+    GetPageCommandDsfDocumentFromBankClientScrollerFilter:
+      $ref: ./components/schemas/from/GetPageCommandDsfDocumentFromBankClientScrollerFilter.yaml
+    GetPageCommandDsfDocumentToBankClientScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandDsfDocumentToBankClientScrollerFilter.yaml
+    GetPageCommandDsfTypeScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandDsfTypeScrollerFilter.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    LettersConfigurableSettingsDto:
+      $ref: ./components/schemas/settings/LettersConfigurableSettingsDto.yaml
+    ListResponseDsfDocumentHistoryDto:
+      $ref: ./components/schemas/common/ListResponseDsfDocumentHistoryDto.yaml
+    PageDataDsfCategoryResponseDto:
+      $ref: ./components/schemas/get-page/PageDataDsfCategoryResponseDto.yaml
+    PageDataDsfTypeResponseDto:
+      $ref: ./components/schemas/get-page/PageDataDsfTypeResponseDto.yaml
+    PageDataDsfTypeShortResponseDto:
+      $ref: ./components/schemas/get-page-short/PageDataDsfTypeShortResponseDto.yaml
+    PageParamsDsfCategoryScrollerFilter:
+      $ref: ./components/schemas/get-page/PageParamsDsfCategoryScrollerFilter.yaml
+    PageParamsDsfDialogClientScrollerFilter:
+      $ref: ./components/schemas/get-slice/PageParamsDsfDialogClientScrollerFilter.yaml
+    PageParamsDsfDocumentClientContextSearchScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsDsfDocumentClientContextSearchScrollerFilter.yaml
+    PageParamsDsfDocumentFromBankClientScrollerFilter:
+      $ref: ./components/schemas/from/PageParamsDsfDocumentFromBankClientScrollerFilter.yaml
+    PageParamsDsfDocumentToBankClientScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsDsfDocumentToBankClientScrollerFilter.yaml
+    PageParamsDsfTypeScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsDsfTypeScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RejectCommand:
+      $ref: ./components/schemas/from/RejectCommand.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    SignCommandWithDeviceInfo:
+      $ref: ./components/schemas/common/SignCommandWithDeviceInfo.yaml
+    SignRegistryClientDocumentsDto:
+      $ref: ./components/schemas/common/SignRegistryClientDocumentsDto.yaml
+    SignRegistryDocumentDto:
+      $ref: ./components/schemas/common/SignRegistryDocumentDto.yaml
+    SignRegistryDto:
+      $ref: ./components/schemas/common/SignRegistryDto.yaml
+    SignRegistryRq:
+      $ref: ./components/schemas/common/SignRegistryRq.yaml
+    SignRegistryStatisticsDto:
+      $ref: ./components/schemas/common/SignRegistryStatisticsDto.yaml
+    SignatoryGroupShortDto:
+      $ref: ./components/schemas/common/SignatoryGroupShortDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignerAccountAuthoritySrvRsp:
+      $ref: ./components/schemas/common/SignerAccountAuthoritySrvRsp.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    SingleResponseAttachmentAccessData:
+      $ref: ./components/schemas/common/SingleResponseAttachmentAccessData.yaml
+    SingleResponseDigest:
+      $ref: ./components/schemas/common/SingleResponseDigest.yaml
+    SingleResponseDsfAttachmentDto:
+      $ref: ./components/schemas/sign-attachment/SingleResponseDsfAttachmentDto.yaml
+    SingleResponseDsfClientDocumentToBankResponseDto:
+      $ref: ./components/schemas/common/SingleResponseDsfClientDocumentToBankResponseDto.yaml
+    SingleResponseDsfDocumentFromBankResponseDto:
+      $ref: ./components/schemas/from/SingleResponseDsfDocumentFromBankResponseDto.yaml
+    SingleResponseFileDataResponseDto:
+      $ref: ./components/schemas/common/SingleResponseFileDataResponseDto.yaml
+    SingleResponseListDsfAttachmentDto:
+      $ref: ./components/schemas/sign-attachments/SingleResponseListDsfAttachmentDto.yaml
+    SingleResponseListDsfAttachmentFromBankDto:
+      $ref: ./components/schemas/from/SingleResponseListDsfAttachmentFromBankDto.yaml
+    SingleResponseUniSignDto:
+      $ref: ./components/schemas/common/SingleResponseUniSignDto.yaml
+    SliceDataDsfClientDocumentToBankScrollerResponseDto:
+      $ref: ./components/schemas/common/SliceDataDsfClientDocumentToBankScrollerResponseDto.yaml
+    SliceDataDsfDialogClientScrollerResponseDto:
+      $ref: ./components/schemas/get-slice/SliceDataDsfDialogClientScrollerResponseDto.yaml
+    SliceDataDsfDocumentFromBankScrollerResponseDto:
+      $ref: ./components/schemas/from/SliceDataDsfDocumentFromBankScrollerResponseDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UniCertificateDto:
+      $ref: ./components/schemas/common/UniCertificateDto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentDto:
+      $ref: ./components/schemas/common/UniSignDocumentDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignDto:
+      $ref: ./components/schemas/common/UniSignDto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    UpdateAttachmentsCommand:
+      $ref: ./components/schemas/common/UpdateAttachmentsCommand.yaml
+    UpdateCommandWithDeviceInfoDsfDocumentToBankUpdateDtoUUID:
+      $ref: ./components/schemas/letter/UpdateCommandWithDeviceInfoDsfDocumentToBankUpdateDtoUUID.yaml
+    UpdateInfoDto:
+      $ref: ./components/schemas/common/UpdateInfoDto.yaml
+    UserDeviceInfoDto:
+      $ref: ./components/schemas/common/UserDeviceInfoDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ZipAccessTokenV2Command:
+      $ref: ./components/schemas/common/ZipAccessTokenV2Command.yaml
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      name: bearerAuth
+      scheme: bearer
+      type: http

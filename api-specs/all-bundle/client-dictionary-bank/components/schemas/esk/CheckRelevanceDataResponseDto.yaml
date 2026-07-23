@@ -1,0 +1,24 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип результата
+    enum:
+    - ZOK_MINUS
+    - ZOK_PLUS_PLUS
+    - ZOK_PLUS_MINUS
+  state:
+    type: string
+    description: Статус ИО
+    enum:
+    - SUSPENDED
+    - ABORTED
+    - COMPLETED
+    - UNKNOWN
+  errorsCode:
+    type: array
+    description: Список кодов ошибок
+    items:
+      type: string
+      description: Список кодов ошибок
+description: Результат запроса в ЕСК проверки актуальности данных в карточке клиента

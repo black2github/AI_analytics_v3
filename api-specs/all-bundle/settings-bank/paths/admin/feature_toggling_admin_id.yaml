@@ -1,0 +1,66 @@
+get:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Получить запись по идентификатору
+  description: 'Привилегии: FEATURE_VIEW'
+  operationId: getById_4
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataFeatureDto.yaml
+put:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Обновить запись
+  description: 'Привилегии: FEATURE_UPDATE'
+  operationId: update_4
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/FeatureDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataFeatureDto.yaml
+delete:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Удалить запись
+  description: 'Привилегии: FEATURE_DELETE'
+  operationId: delete_3
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataFeatureDto.yaml

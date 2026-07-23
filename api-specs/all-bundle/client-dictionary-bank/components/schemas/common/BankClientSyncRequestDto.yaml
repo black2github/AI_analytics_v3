@@ -1,0 +1,31 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя UAA
+    format: uuid
+  remoteId:
+    type: integer
+    description: ID пользователя в ДБО
+    format: int32
+  familyName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  f1Id:
+    type: string
+    description: Идентификатор клиента в F1
+  usedClientOfficialIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы использующихся представителей клиентов
+    items:
+      type: string
+      description: Идентификаторы использующихся представителей клиентов
+      format: uuid
+description: Запрос синхронизации клиентов Банка с ДБО

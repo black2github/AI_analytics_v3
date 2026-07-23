@@ -1,0 +1,13 @@
+type: object
+properties:
+  accessGroupId:
+    type: string
+    description: Идентификатор группы доступа
+    format: uuid
+  accessGroupCode:
+    type: string
+    description: Код группы доступа
+  comment:
+    type: string
+    description: Комментарий
+description: ДТО назначения группы доступа пользователю

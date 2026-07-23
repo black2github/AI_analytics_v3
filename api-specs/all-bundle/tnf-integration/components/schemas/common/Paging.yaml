@@ -1,0 +1,12 @@
+type: object
+properties:
+  offset:
+    type: integer
+    format: int32
+    description: Смещение
+    minimum: 0
+  limit:
+    type: integer
+    format: int32
+    description: Количество записей
+    minimum: 0

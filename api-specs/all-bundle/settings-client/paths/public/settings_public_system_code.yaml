@@ -1,0 +1,18 @@
+get:
+  tags:
+  - АПИ публичного пользователя для работы с системными настройками
+  summary: Получение настройки по коду
+  operationId: getOne_2
+  parameters:
+  - name: code
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseSettingDto.yaml

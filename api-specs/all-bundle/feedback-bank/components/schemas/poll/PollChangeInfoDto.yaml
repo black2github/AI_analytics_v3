@@ -1,0 +1,7 @@
+type: object
+properties:
+  lastChange:
+    $ref: ./LastChangeDto.yaml
+  created:
+    $ref: ./CreatedInfoDto.yaml
+description: Информация об изменениях

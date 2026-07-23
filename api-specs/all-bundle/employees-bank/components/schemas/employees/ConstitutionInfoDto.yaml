@@ -1,0 +1,11 @@
+type: object
+properties:
+  number:
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Номер зарегистрированного заявления ГПБ БО
+  date:
+    type: string
+    description: Дата регистрации заявления ГПБ БО
+    format: date
+description: Реквизиты соглашения ГПБ БО

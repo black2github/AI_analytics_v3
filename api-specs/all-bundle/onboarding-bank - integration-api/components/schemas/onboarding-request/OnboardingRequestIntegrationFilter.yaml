@@ -1,0 +1,19 @@
+type: object
+properties:
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  personEmail:
+    $ref: ../common/FilterValueDtoString.yaml
+  personForename:
+    $ref: ../common/FilterValueDtoString.yaml
+  personPatronymic:
+    $ref: ../common/FilterValueDtoString.yaml
+  personPhone:
+    $ref: ../common/FilterValueDtoString.yaml
+  personSurname:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoOnboardingRequestStatusDto.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для поиска заявок на открытие первого счёта для клиентского скроллера

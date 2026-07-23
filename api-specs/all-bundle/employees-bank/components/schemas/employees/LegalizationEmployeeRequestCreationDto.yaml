@@ -1,0 +1,37 @@
+required:
+- bankClientId
+- employee
+- roleTemplates
+- userId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID Клиент Банка
+    format: uuid
+  employee:
+    $ref: ./LegalizationEmployeeDto.yaml
+  roleTemplates:
+    minItems: 1
+    type: array
+    description: Выдаваемые шаблоны ролей. Идентификатор шаблона ролей
+    items:
+      type: string
+      description: Выдаваемые шаблоны ролей. Идентификатор шаблона ролей
+      format: uuid
+  accountAccessMode:
+    type: string
+    description: Режим доступа к счетам
+    enum:
+    - ALL_ACCOUNTS
+    - SPECIFIED_ACCOUNTS
+  accountAccesses:
+    type: array
+    description: Выдаваемые доступы по счетам
+    items:
+      $ref: ./LegalizationEmployeeAccountAccessDto.yaml
+  userId:
+    type: string
+    description: ID Пользователь, создавший заявку
+    format: uuid
+description: Запрос создания заявки на легализацию прав сотрудника

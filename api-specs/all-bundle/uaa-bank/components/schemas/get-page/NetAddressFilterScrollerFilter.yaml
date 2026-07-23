@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  macEnabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  ipEnabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр IP/MAC фильтрации

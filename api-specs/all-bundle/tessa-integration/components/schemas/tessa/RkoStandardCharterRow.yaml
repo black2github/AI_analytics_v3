@@ -1,0 +1,56 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: integer
+    format: int32
+  approvalDate:
+    type: string
+    format: date
+  startDate:
+    type: string
+    format: date
+  expirationDate:
+    type: string
+    format: date
+  publicationNumber:
+    type: string
+  isUsedStamp:
+    type: boolean
+  eioId:
+    type: string
+    format: uuid
+  eioName:
+    type: string
+  eioOfficeTermId:
+    type: string
+    format: uuid
+  eioOfficeTermName:
+    type: string
+  hasDealRestriction:
+    type: boolean
+  dealRestriction:
+    type: string
+  decisionValidationId:
+    type: string
+    format: uuid
+  decisionValidationName:
+    type: string
+  isExitParticipantAllowed:
+    type: boolean
+  isRequiredConsent:
+    type: boolean
+  prerogativeRight:
+    type: boolean
+  isAllowedParticipantTransfer:
+    type: boolean
+  isAllowedHeirsTransfer:
+    type: boolean
+  version:
+    type: integer
+    format: int32
+  created:
+    type: string
+    format: date-time

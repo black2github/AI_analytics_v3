@@ -1,0 +1,49 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountId:
+    type: integer
+    description: Идентификатор номера счета
+    format: int64
+  accountCurrency:
+    type: string
+    description: Код валюты счета
+  accountBranch:
+    type: string
+    description: Код подразделения обслуживания счета (формат xxx)
+  name:
+    type: string
+    description: Название счета
+  accountOpenDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  accountCloseDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  departmentCode:
+    type: string
+    description: Код подразделения обслуживания счета (формат xxx/xxxx)
+  commissionAvailable:
+    type: boolean
+    description: Признак возможности списания комиссии
+  currency:
+    type: string
+    description: Валюта счета
+  overdraftLimit:
+    type: number
+    description: Лимит овердрафта
+  commission:
+    $ref: ../common/TariffInfoDto.yaml
+  documents:
+    type: array
+    description: Документы договора
+    items:
+      $ref: ../common/DocumentDto.yaml
+description: Данные

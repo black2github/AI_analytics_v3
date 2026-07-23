@@ -1,0 +1,9 @@
+required:
+- dstId
+type: object
+properties:
+  dstId:
+    type: string
+    description: ID СЭП
+    format: uuid
+description: Запрос информации о заявках для истории СЭП

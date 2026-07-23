@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+description: Сведения о ID заявки

@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./RejectWithFilterDto.yaml
+description: Запрос

@@ -1,0 +1,44 @@
+type: object
+description: Фильтр скроллера истории заявок на платеж.
+properties:
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка" (eq)
+  statusCategory:
+    type: string
+    description: Категория статуса.
+    enum:
+    - ALL
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - FINISHED
+  status:
+    $ref: ./SbpTransactionRequestStatusFilter.yaml
+    description: Статус (eq, in)
+  docType:
+    $ref: ./SbpTransactionRequestTypeFilter.yaml
+    description: Тип документа (eq)
+  docNumber:
+    $ref: ./FilterValueDtoString.yaml
+    description: Номер документа (eq)
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата (ge, le)
+  amount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма операции в копейках (ge, le)
+  recipientPam:
+    $ref: ./FilterValueDtoString.yaml
+    description: PAM получателя (contains)
+  recipientId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Телефон получателя (eq)
+  recipientBankName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование или БИК банка получателя (contains)
+  recipientMemberId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор Банка Получателя (eq)
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор Точки продаж (eq)

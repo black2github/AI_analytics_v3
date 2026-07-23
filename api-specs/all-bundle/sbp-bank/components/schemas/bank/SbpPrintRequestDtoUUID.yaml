@@ -1,0 +1,9 @@
+type: object
+description: Запрос печати
+properties:
+  docIds:
+    type: array
+    description: Список выбранных документов
+    items:
+      type: string
+      format: uuid

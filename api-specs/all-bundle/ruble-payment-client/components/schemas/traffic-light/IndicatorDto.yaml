@@ -1,0 +1,20 @@
+required:
+- inn
+- integralColor
+- integralText
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН организации
+  integralColor:
+    type: integer
+    description: Индикатор цвета
+    format: int32
+  integralText:
+    type: string
+    description: Описание
+  ogrn:
+    type: string
+    description: ОГРН организации
+description: Данные индикатора из Светофора

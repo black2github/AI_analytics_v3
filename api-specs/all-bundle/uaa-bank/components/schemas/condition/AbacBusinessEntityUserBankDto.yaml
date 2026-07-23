@@ -1,0 +1,6 @@
+type: object
+properties:
+  login:
+    type: string
+    description: Логин пользователя
+description: Сведения о пользователе в модели "доступа по реквизитам"

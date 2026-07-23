@@ -1,0 +1,10 @@
+type: object
+properties:
+  ProcessTemplateCardID::uid:
+    type: string
+    format: uuid
+  CardID::uid:
+    type: string
+    format: uuid
+  SignalType:
+    type: string

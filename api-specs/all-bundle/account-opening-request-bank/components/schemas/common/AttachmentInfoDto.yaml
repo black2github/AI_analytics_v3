@@ -1,0 +1,20 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Identifier of attachment
+    format: uuid
+  fileName:
+    type: string
+    description: name of attachment file
+  fileSize:
+    type: integer
+    description: size of attachment
+    format: int64
+  fileHash:
+    type: string
+    description: hash of attachment data
+  accessToken:
+    type: string
+    description: Attachment access token. No need to fill in on create or update operations
+description: attachment info dto

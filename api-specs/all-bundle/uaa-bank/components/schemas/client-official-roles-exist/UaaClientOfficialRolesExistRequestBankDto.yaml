@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: Идентификатор представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  roles:
+    type: array
+    description: Упорядоченный набор соответствий роль + сегмент
+    items:
+      $ref: ./UaaClientOfficialRoleBankDto.yaml

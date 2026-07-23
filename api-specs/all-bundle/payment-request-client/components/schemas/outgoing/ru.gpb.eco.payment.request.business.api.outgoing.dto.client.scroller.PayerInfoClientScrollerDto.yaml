@@ -1,0 +1,30 @@
+required:
+- bankBic
+- bankName
+type: object
+properties:
+  name:
+    maxLength: 160
+    type: string
+    description: Наименование контрагента
+    nullable: true
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет контрагента
+    nullable: true
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование банка контрагента
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка контрагента
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН/КИО контрагента
+    nullable: true
+description: Реквизиты контрагента (плательщика) (скроллер клиента платежное требование исходящее)
+nullable: true

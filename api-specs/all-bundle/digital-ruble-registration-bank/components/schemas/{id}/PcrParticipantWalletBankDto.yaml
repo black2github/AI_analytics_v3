@@ -1,0 +1,78 @@
+required:
+- bankClientId
+- cbrParticipantId
+- cbrParticipantWalletId
+- cbrParticipantWalletStatus
+- id
+- registrationDate
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  cbrAccountNumber:
+    type: string
+    description: Счет цифрового рубля
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  registrationDate:
+    type: string
+    description: Дата регистрации цифрового кошелька
+    format: date-time
+  cbrParticipantWalletStatus:
+    type: string
+    description: Статус кошелька в ЦБ
+  prevCbrParticipantWalletStatus:
+    type: string
+    description: Предыдущий статус СЦР
+  cbrParticipantWalletStatusChangeReason:
+    type: string
+    description: Причина изменения статуса СЦР
+  cbrParticipantWalletStatusChangeFiName:
+    type: string
+    description: Банк, изменивший статус СЦР
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации в ЦБ
+  cbrAgreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента
+  cbrAgreementOpenDate:
+    type: string
+    description: Дата открытия договора СЦР
+    format: date
+  cbrAgreementCloseDate:
+    type: string
+    description: Дата расторжения договора СЦР
+    format: date
+  additionalInfo:
+    type: string
+    description: Дополнительная информация
+  name:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  rnk:
+    type: string
+    description: РНК
+  legalAddress:
+    type: string
+    description: Юридический адрес
+  phone:
+    type: string
+    description: Телефон
+description: ЭФ Банка. Просмотр счета ЦР

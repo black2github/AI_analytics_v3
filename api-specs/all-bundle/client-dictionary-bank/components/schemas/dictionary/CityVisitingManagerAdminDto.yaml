@@ -1,0 +1,46 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата/время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата/время изменения записи
+    format: date-time
+  settlementOrCityFiasId:
+    type: string
+    description: Идентификатор ФИАС города или нас пункта.
+    format: uuid
+  settlementOrCityName:
+    type: string
+    description: Наименование города или нас пункта.
+  zoneDescription:
+    type: string
+    description: Текст описания зоны доступности.
+  isAvailableInDocPack:
+    type: boolean
+    description: Сервис доступен в ОНБ
+  updatedByUser:
+    type: string
+    description: Ссылка на пользователя, создавшего/изменившего запись.
+    format: uuid
+  updatedByUserFio:
+    type: string
+    description: ФИО пользователя, создавшего/изменившего запись.
+  marketingCampaignType:
+    type: string
+    description: Маркетинговая программа (код).
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  retailDelivery:
+    type: boolean
+  standardDelivery:
+    type: boolean
+description: Справочник городов выездных менеджеров для редактирования и скроллера

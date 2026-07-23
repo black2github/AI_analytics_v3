@@ -1,0 +1,8 @@
+type: object
+properties:
+  comment:
+    maxLength: 1000
+    minLength: 0
+    type: string
+    description: Описание изменений версии
+description: Данные для изменения версии CMS страницы

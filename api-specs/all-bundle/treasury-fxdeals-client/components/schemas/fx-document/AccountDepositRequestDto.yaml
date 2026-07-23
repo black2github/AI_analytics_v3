@@ -1,0 +1,20 @@
+type: object
+properties:
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента в ВебДилинге
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  agreementId:
+    type: string
+    description: Идентификатор генерального соглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  valueDate:
+    type: string
+    description: Дата валютирования
+    format: date
+description: Данные

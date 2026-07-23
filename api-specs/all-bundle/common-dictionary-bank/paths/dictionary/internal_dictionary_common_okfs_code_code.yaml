@@ -1,0 +1,28 @@
+get:
+  tags:
+  - Справочник ОКФС
+  summary: Получить по коду
+  description: 'Привилегии: hasAuthority(''OKFS_GET_BY_CODE'')'
+  operationId: getByCodeUsingGET_5
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: path
+    description: code
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«OkfsDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

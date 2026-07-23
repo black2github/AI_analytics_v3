@@ -1,0 +1,41 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID Пользователя
+    format: uuid
+  accountId:
+    type: string
+    description: ID Счета клиента
+    format: uuid
+  requiredSignatureLevels:
+    uniqueItems: true
+    type: array
+    description: Требуемые коды уровней подписи
+    items:
+      type: string
+      description: Требуемые коды уровней подписи
+      enum:
+      - UNKNOWN
+      - SINGLE
+      - LEVEL_1
+      - LEVEL_2
+      - SIGHTING
+      - CONTROL
+  authorityStatus:
+    type: string
+    description: Статус полномочия
+    enum:
+    - ACTIVE
+    - INACTIVE
+  signatureLevel:
+    type: string
+    description: Код уровня подписи
+    enum:
+    - UNKNOWN
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+    - SIGHTING
+    - CONTROL
+description: Полномочия подписанта по счету. Интеграционное ДТО

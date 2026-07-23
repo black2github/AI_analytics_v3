@@ -1,0 +1,76 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF
+  notEq:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF
+  in:
+    type: array
+    items:
+      type: array
+      items:
+        type: string
+        enum:
+        - ALL
+        - INCOME
+        - WRITE_OFF
+  notIn:
+    type: array
+    items:
+      type: array
+      items:
+        type: string
+        enum:
+        - ALL
+        - INCOME
+        - WRITE_OFF
+  isNull:
+    type: boolean
+  gt:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF
+  ge:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF
+  lt:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF
+  le:
+    type: array
+    items:
+      type: string
+      enum:
+      - ALL
+      - INCOME
+      - WRITE_OFF

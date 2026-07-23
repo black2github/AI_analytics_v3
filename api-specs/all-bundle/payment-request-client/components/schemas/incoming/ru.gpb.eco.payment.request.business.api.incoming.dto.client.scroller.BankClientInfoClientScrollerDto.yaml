@@ -1,0 +1,8 @@
+type: object
+properties:
+  clientAccountId:
+    type: string
+    description: Идентификатор счёта клиента
+    format: uuid
+    nullable: true
+description: Идентификация организации, скроллер клиента

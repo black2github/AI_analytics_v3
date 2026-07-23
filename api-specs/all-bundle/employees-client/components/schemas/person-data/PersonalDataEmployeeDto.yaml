@@ -1,0 +1,44 @@
+required:
+- birthDate
+- firstName
+- identityDoc
+type: object
+properties:
+  firstName:
+    maxLength: 100
+    pattern: ^(?!.*(\-\-|\-\s|\s-))(?!(\s|.*\s$))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))(?!(\s|.*\s$))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Имя
+  lastName:
+    maxLength: 100
+    pattern: ^(?!.*(\-\-|\-\s|\s\-))([A-Za-z][A-Za-z'\-\s]*[A-Za-z])$|^(?!.*(\-\-|\-\s|\s\-))([ЁА-яё][ЁА-яё'\-\s]*[ЁА-яё])$|^$
+    type: string
+    description: Фамилия
+  middleName:
+    maxLength: 100
+    pattern: ^(?!.*(\-\-|\-\s|\s-))(?!(\s|.*\s$))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))(?!(\s|.*\s$))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Отчество
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  phone:
+    maxLength: 16
+    pattern: ^\+(79\d{9}|(?!79)\d{7,15})$
+    type: string
+    description: Номер телефона ГПБ БО
+  phoneCountryCode:
+    type: string
+    description: Телефонный код страны
+  email:
+    maxLength: 255
+    pattern: ^(?!"\.|\.)(?!.*(\."|\.)@)(?!.*\.\.)("*[\w!#$%&'*+\-\/=?^`{|}~\.]+"*)@(?!.*\.\.)([\da-z][\da-z\-\.]*\.[\da-z]+?)$|^$
+    type: string
+    description: Адрес электронной почты ГПБ БО
+  identityDoc:
+    $ref: ./PersonalDataIdentityDocumentDto.yaml
+description: Заявка на добавление нового сотрудника. Личные данные. Основная информация.

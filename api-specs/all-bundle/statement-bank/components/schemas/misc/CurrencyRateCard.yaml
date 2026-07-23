@@ -1,0 +1,13 @@
+type: object
+properties:
+  letterCode:
+    type: string
+  rateDate:
+    type: string
+    format: date
+  rateValue:
+    type: number
+  units:
+    type: integer
+    format: int32
+description: Страница с данными

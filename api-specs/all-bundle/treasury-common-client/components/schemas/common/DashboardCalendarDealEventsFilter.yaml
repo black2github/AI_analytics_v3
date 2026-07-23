@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  docType:
+    $ref: ./DealEventDealTypeFilter.yaml
+  eventType:
+    $ref: ./DealEventTypeFilter.yaml
+  eventDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Фильтр

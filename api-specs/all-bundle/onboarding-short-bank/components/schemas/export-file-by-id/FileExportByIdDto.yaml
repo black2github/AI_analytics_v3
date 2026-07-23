@@ -1,0 +1,11 @@
+type: object
+properties:
+  fileId:
+    type: string
+    description: Идентификатор файла оригинального документа
+    format: uuid
+  requestId:
+    type: string
+    description: Идентификатор короткой заявки
+    format: uuid
+description: Запрос на экспорт файла оригинальных документов по идентификатору

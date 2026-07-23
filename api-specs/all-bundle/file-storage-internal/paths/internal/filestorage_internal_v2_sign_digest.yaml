@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API подписи файлов. Вторая версия.
+  summary: Получение digest файла
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'') or #eco.userTypeIs(''BANK'')'
+  operationId: getFileDigestUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GetFileDigestRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,AttachmentDigestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

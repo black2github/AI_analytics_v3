@@ -1,0 +1,11 @@
+type: object
+properties:
+  backgroundProcessId:
+    type: string
+    description: Ссылка на сущность "Фоновый процесс импорта"
+    format: uuid
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+description: Реквизиты импорта

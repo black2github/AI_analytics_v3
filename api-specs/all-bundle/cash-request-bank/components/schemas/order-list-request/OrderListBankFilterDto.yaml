@@ -1,0 +1,46 @@
+type: object
+properties:
+  organization:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestType:
+    $ref: ./FilterValueDtoString.yaml
+  operationDate:
+    $ref: ./FilterValueDtoLocalDateTime.yaml
+  employee:
+    $ref: ./FilterValueDtoString.yaml
+  orderNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  creationDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  totalAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  sessionId:
+    type: string
+    description: Идентификатор сессии пользовательского журнала
+    format: uuid
+  statusCategory:
+    type: string
+    description: Категория
+  office:
+    $ref: ./FilterValueDtoString.yaml
+  revokeRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+  encashment:
+    $ref: ./FilterValueDtoBoolean.yaml
+  needAgreement:
+    $ref: ./FilterValueDtoBoolean.yaml
+  accessibility:
+    $ref: ./FilterValueDtoBoolean.yaml
+  ecoOrderId:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+  orderStatus:
+    $ref: ./OrderStatusFilter.yaml
+  commissionCalculated:
+    $ref: ./FilterValueDtoBoolean.yaml
+  client:
+    type: boolean
+description: Фильтр листа ордеров журнала на стороне банка

@@ -1,0 +1,7 @@
+type: object
+properties:
+  msgSign:
+    $ref: ./MsgSign.yaml
+  userDeviceInfo:
+    $ref: ./UserDeviceInfo.yaml
+description: Сохранение подписи сообщения с информацией об устройстве

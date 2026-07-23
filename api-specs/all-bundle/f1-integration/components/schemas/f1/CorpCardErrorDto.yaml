@@ -1,0 +1,15 @@
+required:
+- code
+- text
+type: object
+properties:
+  code:
+    type: integer
+    description: Код значения
+    format: int32
+  text:
+    type: string
+    description: Текст технической ошибки
+  serverErrorInfo:
+    type: string
+description: Ошибка обработки в Ф1

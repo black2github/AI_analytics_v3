@@ -1,0 +1,17 @@
+type: object
+properties:
+  personID:
+    type: integer
+    description: ID физ лица (получателя или вносителя д/с)
+  surname:
+    type: string
+    description: Фамилия
+  name:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  identityDocument:
+    $ref: ./IdentityDocumentDto.yaml
+description: Получатель / вноситель д/с клиента

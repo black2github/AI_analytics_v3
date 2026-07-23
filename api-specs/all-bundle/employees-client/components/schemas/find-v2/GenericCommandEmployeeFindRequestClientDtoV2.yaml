@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ../common/EmployeeFindRequestClientDtoV2.yaml
+description: Запрос

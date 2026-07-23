@@ -1,0 +1,15 @@
+type: object
+description: Фильтр скроллера получателей письма массовой рассылки.
+properties:
+  documentId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по идентификатору документа из банка. Полное совпадение.
+  massDocumentId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по идентификатору документа массовой рассылки. Полное совпадение.
+  receiverType:
+    $ref: ./MassDocumentReceiverTypeFilter.yaml
+    description: Фильтрация по способу добавления получателей. Полное совпадение.
+  searchText:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по краткому названию организации, ИНН или КПП.

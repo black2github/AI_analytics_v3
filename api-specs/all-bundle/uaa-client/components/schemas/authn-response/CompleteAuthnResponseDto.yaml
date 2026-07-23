@@ -1,0 +1,29 @@
+required:
+- authenticatorData
+- clientDataJSON
+- deviceFootprint
+- rawId
+- signature
+type: object
+properties:
+  rawId:
+    type: string
+    description: Уникальный идентификатор ключа (credential ID).   Закодирован в base64url без padding.
+  authenticatorData:
+    type: string
+    description: Объект данных аутентификатора. Представляет собой байтовую структуру, закодированную в base64url.
+  clientDataJSON:
+    type: string
+    description: JSON с данными от клиента.   Включает challenge, origin и type.   Закодирован в base64url.
+  signature:
+    type: string
+    description: Подпись.Значение формируется из authenticatorData + хэш по алгоритму SHA-256 значения clientDataJSON и шифруется приватным ключом аутентификатора
+  userEnvironment:
+    type: string
+    description: Информация об окружении пользователя
+  clientId:
+    type: string
+    description: Идентификатор приложения-клиента OAuth2
+  deviceFootprint:
+    type: string
+    description: Отпечаток устройства

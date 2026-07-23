@@ -1,0 +1,22 @@
+type: object
+properties:
+  gozContractDate:
+    type: string
+    description: Дата договора ГОЗ
+    format: date
+  gozContractNumber:
+    type: string
+    description: Номер договора ГОЗ
+  isGozContractFulfilled:
+    type: boolean
+    description: Признак выполнения обязательств по договору ГОЗ
+  isPsbTransfer:
+    type: boolean
+    description: Признак обязательного перевода в ПСБ для счетов ГОЗ
+  psbBicList:
+    type: array
+    description: Список БИКов ПСБ для случая обязательного перевода ДС по контракту ГОЗ
+    items:
+      type: string
+      description: Список БИКов ПСБ для случая обязательного перевода ДС по контракту ГОЗ
+description: Блок информации по договору ГОЗ

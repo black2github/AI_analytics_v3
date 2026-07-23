@@ -1,0 +1,22 @@
+type: object
+description: Тип ДСФ. Возвращаемая облегченная ДТО
+properties:
+  code:
+    type: string
+    description: Код типа письма
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор документа в банк.
+  letterType:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа
+  typeNameEn:
+    type: string
+    description: Наименование типа на английском
+required:
+- code
+- typeName

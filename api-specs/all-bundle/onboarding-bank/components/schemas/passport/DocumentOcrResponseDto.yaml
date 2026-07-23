@@ -1,0 +1,20 @@
+type: object
+properties:
+  fields:
+    type: object
+    additionalProperties:
+      type: string
+      description: Распознанные поля документа
+    description: Распознанные поля документа
+  rawOcrData:
+    type: object
+    description: Необработанные данные распознавания
+  status:
+    type: string
+    description: Результат выполнения запроса на распознавание данных документа
+    enum:
+    - SUCCESS
+    - FAILURE
+    - TIMEOUT
+    - NO_FIELDS_RECOGNIZED
+description: Результат распознавания данных документа

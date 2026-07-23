@@ -1,0 +1,116 @@
+post:
+  tags:
+  - Token
+  summary: Запросить токен
+  operationId: requestToken
+  parameters:
+  - name: Authorization
+    in: header
+    required: false
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          required:
+          - grant_type
+          type: object
+          properties:
+            grant_type:
+              type: string
+              description: Grant type
+            client_id:
+              type: string
+              description: Client ID
+            client_secret:
+              type: string
+              description: Client secret
+            client_assertion:
+              type: string
+              description: Client assertion
+            client_assertion_type:
+              type: string
+              description: Client assertion type
+            scope:
+              type: string
+              description: ApplicationScope
+            code:
+              type: string
+              description: Code
+            refresh_token:
+              type: string
+              description: Refresh token
+            username:
+              type: string
+              description: User name
+            password:
+              type: string
+              description: User password
+            redirect_uri:
+              type: string
+              description: Redirect URI
+            subject_token:
+              type: string
+              description: Subject token
+            subject_token_type:
+              type: string
+              description: Subject token type
+            actor_token:
+              type: string
+              description: Actor token
+            actor_token_type:
+              type: string
+              description: Actor token type
+            code_verifier:
+              type: string
+              description: Code verifier PKCE
+  responses:
+    '400':
+      description: Authentication needed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/OAuth2Error.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

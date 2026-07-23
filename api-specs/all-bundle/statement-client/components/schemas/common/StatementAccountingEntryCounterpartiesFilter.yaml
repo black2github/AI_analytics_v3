@@ -1,0 +1,7 @@
+type: object
+properties:
+  counterpartyName:
+    $ref: ./FilterValueDtoString.yaml
+  counterpartyInn:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр

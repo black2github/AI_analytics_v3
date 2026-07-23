@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    $ref: ./SingleResponseCurrencyDtoV2.yaml
+  errorInfo:
+    $ref: ../common/ErrorInfo.yaml

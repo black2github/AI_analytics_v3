@@ -1,0 +1,12 @@
+type: object
+properties:
+  account:
+    type: string
+    description: Номер счета
+  department:
+    type: string
+    description: Код оргструктуры
+  paysOn47423:
+    type: boolean
+    description: Признак "Клиент сам делает перевод на 47423"
+description: Информация по счету

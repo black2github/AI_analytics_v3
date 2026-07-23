@@ -1,0 +1,9 @@
+type: object
+required:
+- meta
+- data
+properties:
+  meta:
+    $ref: ./SipSvfeCardBlockingMetaInfoDto.yaml
+  data:
+    $ref: ./SipSvfeCardBlockingRequestDataDto.yaml

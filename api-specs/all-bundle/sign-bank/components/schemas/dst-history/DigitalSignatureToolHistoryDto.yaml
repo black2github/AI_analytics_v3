@@ -1,0 +1,82 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время события
+    format: date-time
+  digitalSignatureTool:
+    $ref: ../common/DigitalSignatureToolDto.yaml
+  status:
+    type: string
+    description: Статус СЭП
+  dstRequestNumber:
+    type: integer
+    description: Номер заявки на выпуск/регистрацию СЭП
+    format: int64
+  action:
+    type: string
+    description: Действия с СЭП
+    enum:
+    - ADD
+    - DELETE
+    - STATUS
+    - CERT_ADD
+    - CERT_DELETE
+    - BLOCK
+    - UNBLOCK
+    - UNITED_SIGN_FOR_CLIENT_ADD
+    - UNITED_SIGN_FOR_CLIENT_DELETE
+    - CLOUD_DST_BLOCKED_INVALID_PIN_CODE
+    - CLOUD_DST_UNBLOCKED_BY_ADMIN
+    - CLOUD_DST_PIN_CODE_SET
+    - CLOUD_DST_PIN_CODE_UPDATED
+    - CLOUD_DST_PIN_CODE_UNSET
+    - DST_BIND_MIGRATION
+    - DST_BIND
+    - DST_UNBIND
+    - DST_UNBIND_MIGRATION
+    - SIGNING_FORBIDDANCE
+    - SIGNING_ALLOWANCE
+    - USING_TO_LOGIN_FORBIDDANCE
+    - USING_TO_LOGIN_ALLOWANCE
+  actionParams:
+    type: string
+    description: Параметры действия с записью
+  userId:
+    type: string
+    description: Инициатор действия
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО Инициатора действия
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  orgName:
+    type: string
+    description: Название организации
+  orgIntName:
+    type: string
+    description: Международное название организации
+  bindLogin:
+    type: string
+    description: Логин пользователя к которому добавлен СЭП
+  bindUaaUserId:
+    type: string
+    description: UAA ID пользователя к которому добавлен СЭП
+    format: uuid
+description: ДТО истории изменений СЭП

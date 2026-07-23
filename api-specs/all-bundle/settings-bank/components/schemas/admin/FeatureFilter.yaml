@@ -1,0 +1,5 @@
+type: object
+properties:
+  featureType:
+    $ref: ./FilterValueEnumDtoFeatureTypeDto.yaml
+description: Фильтр фич

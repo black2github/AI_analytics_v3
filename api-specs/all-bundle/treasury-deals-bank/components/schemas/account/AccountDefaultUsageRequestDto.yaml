@@ -1,0 +1,24 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  defaultUsage:
+    type: array
+    description: Назначение счёта по умолчанию
+    items:
+      type: string
+      description: Назначение счёта по умолчанию
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+description: Данные

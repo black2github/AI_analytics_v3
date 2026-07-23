@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: Сервис Оценка 5*. Клиентская часть.
+  description: Сервис Оценка 5*.
+  version: 1.25.0
+servers:
+- url: /feedback-client
+security:
+- Bearer: []
+tags:
+- name: '[Оценка  5*]. Клиентские операции.'
+paths:
+  /feedback/endpoll:
+    $ref: ./paths/endpoll/feedback_endpoll.yaml
+  /feedback/beginpoll:
+    $ref: ./paths/beginpoll/feedback_beginpoll.yaml
+  /feedback/hashtags:
+    $ref: ./paths/hashtags/feedback_hashtags.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/endpoll/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/endpoll/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/endpoll/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/endpoll/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/endpoll/ValidationResult.yaml
+    GenericCommandPollResultUpdateDto:
+      $ref: ./components/schemas/endpoll/GenericCommandPollResultUpdateDto.yaml
+    PollResultUpdateDto:
+      $ref: ./components/schemas/endpoll/PollResultUpdateDto.yaml
+    GenericResponseSimpleErrorDataPollResultDto:
+      $ref: ./components/schemas/endpoll/GenericResponseSimpleErrorDataPollResultDto.yaml
+    PollResultDto:
+      $ref: ./components/schemas/endpoll/PollResultDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    BeginPollCommand:
+      $ref: ./components/schemas/beginpoll/BeginPollCommand.yaml
+    GenericCommandBeginPollCommand:
+      $ref: ./components/schemas/beginpoll/GenericCommandBeginPollCommand.yaml
+    BeginPollResultDto:
+      $ref: ./components/schemas/beginpoll/BeginPollResultDto.yaml
+    GenericResponseSimpleErrorDataBeginPollResultDto:
+      $ref: ./components/schemas/beginpoll/GenericResponseSimpleErrorDataBeginPollResultDto.yaml
+    PollParameterDto:
+      $ref: ./components/schemas/beginpoll/PollParameterDto.yaml
+    GenericResponseSimpleErrorDataListHashtagDto:
+      $ref: ./components/schemas/hashtags/GenericResponseSimpleErrorDataListHashtagDto.yaml
+    HashtagDto:
+      $ref: ./components/schemas/hashtags/HashtagDto.yaml
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

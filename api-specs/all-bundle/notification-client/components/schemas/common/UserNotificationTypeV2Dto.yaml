@@ -1,0 +1,63 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  code:
+    type: string
+    description: Идентификатор (код)
+  name:
+    type: string
+    description: Наименование
+  importance:
+    type: string
+    description: Важность уведомления
+    enum:
+    - HIGH
+    - NORMAL
+    - LOW
+  daysActual:
+    type: integer
+    description: Актуально дней
+    format: int32
+  preview:
+    type: string
+    description: Текст в панели уведомлений
+  actionName:
+    type: string
+    description: Текст кнопки исполнения
+  postponementMode:
+    type: string
+    description: Возможность отложить уведомление
+    enum:
+    - FORBIDDEN
+    - TEMPORARY
+    - PERMANENT
+  system:
+    $ref: ./UserNotificationSystemDto.yaml
+  userName:
+    type: string
+    description: ФИО пользователя, создавшего/изменившего запись.
+  comment:
+    type: string
+    description: Комментарий пользователя при создании/изменении записи.
+  createdAt:
+    type: string
+    description: Время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления записи
+    format: date-time
+  userId:
+    type: string
+    description: ID пользователя, создавшего/изменившего запись
+    format: uuid
+  notificationHeader:
+    type: string
+    description: Заголовок уведомления
+  serviceEco:
+    type: string
+    description: Сервис
+description: Тип уведомления

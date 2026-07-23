@@ -1,0 +1,12 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  users:
+    type: array
+    description: Пользователи УЛ Клиента Банка
+    items:
+      $ref: ./BankClientAuthorizedPersonUserDto.yaml
+description: Запрос поиска пользователей УЛ Клиента Банка

@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  type:
+    type: string
+    description: Тип клиента
+    enum:
+    - IP
+    - UL
+description: Реквизиты клиента по заявке

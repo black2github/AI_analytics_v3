@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  uaaUserId:
+    type: string
+    description: ID UAA пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  firstName:
+    type: string
+    description: Имя
+  familyName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+  email:
+    type: string
+    description: Email
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  login:
+    type: string
+    description: Логин
+  catalog:
+    type: string
+    description: Наименование каталога
+  lastLogin:
+    type: string
+    description: Время последнего входа
+    format: date-time
+description: Данные

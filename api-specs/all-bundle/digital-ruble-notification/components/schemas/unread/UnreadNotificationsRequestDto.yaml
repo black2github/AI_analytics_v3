@@ -1,0 +1,12 @@
+required:
+- paging
+- pcrParticipantWalletId
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  paging:
+    $ref: ./Paging.yaml
+description: Запрос на получение непрочитанных уведомлений

@@ -1,0 +1,7 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+description: Запрос печати заявки на НЭП

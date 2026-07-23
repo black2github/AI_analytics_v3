@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Название сравниваемого реквизита
+  certData:
+    type: string
+    description: Данные из сертификата
+  clientData:
+    type: string
+    description: Данные из клиента
+  isMatch:
+    type: boolean
+    writeOnly: true
+  match:
+    type: boolean
+description: Сравнение данных из сертификата с данными клиента

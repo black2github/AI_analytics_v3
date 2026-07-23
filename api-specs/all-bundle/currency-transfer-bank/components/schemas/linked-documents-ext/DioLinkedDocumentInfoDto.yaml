@@ -1,0 +1,24 @@
+type: object
+properties:
+  clientName:
+    type: string
+    description: Организация. Наименование
+  clientInn:
+    type: string
+    description: Организация. ИНН
+  bankBranch:
+    type: string
+    description: Банк. Филиал
+  comment:
+    type: string
+    description: Комментарий
+  attachmentCount:
+    type: integer
+    description: Количество вложений
+    format: int32
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ./CurrencyTransferLinkedDocumentAttachmentInfoDto.yaml
+description: Информация связанного документа, специфичная для типа "ДИО"

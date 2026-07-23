@@ -1,0 +1,23 @@
+type: object
+description: Реквизиты клиента по QR-коду
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка".
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+required:
+- clientId
+- inn
+- shortName

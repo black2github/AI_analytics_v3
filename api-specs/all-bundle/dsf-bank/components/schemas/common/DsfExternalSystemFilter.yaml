@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  in:
+    type: array
+    items:
+      type: string
+      description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+      enum:
+      - AML
+      - TESSA
+      - H2H
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+      enum:
+      - AML
+      - TESSA
+      - H2H

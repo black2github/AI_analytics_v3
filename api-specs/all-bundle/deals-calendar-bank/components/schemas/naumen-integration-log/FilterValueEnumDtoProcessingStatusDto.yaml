@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус запроса
+    enum:
+    - SUCCESS
+    - FAILURE
+  notEq:
+    type: string
+    description: Статус запроса
+    enum:
+    - SUCCESS
+    - FAILURE
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус запроса
+      enum:
+      - SUCCESS
+      - FAILURE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус запроса
+      enum:
+      - SUCCESS
+      - FAILURE
+  isNull:
+    type: boolean
+description: Статус запроса, множественный выбор (in)

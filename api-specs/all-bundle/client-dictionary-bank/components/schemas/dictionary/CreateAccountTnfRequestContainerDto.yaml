@@ -1,0 +1,17 @@
+required:
+- accountWorkMode
+- records
+type: object
+properties:
+  records:
+    type: array
+    description: Массив счетов ТНФ
+    items:
+      $ref: ./CreateAccountTnfRequestDto.yaml
+  accountWorkMode:
+    type: string
+    description: Режим работы счёта
+    enum:
+    - ACCEPT
+    - MONITORING
+description: Контейнер запроса создания счета ТНФ

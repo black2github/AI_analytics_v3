@@ -1,0 +1,67 @@
+required:
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: ID блокировки
+    format: uuid
+  status:
+    type: string
+    description: Статус блокировки документа
+    enum:
+    - IMPORT_ERROR
+    - ACTIVE
+    - INACTIVE
+  companyName:
+    type: string
+    description: Наименование организации
+  accountId:
+    type: string
+    description: ID счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountCurrency:
+    type: string
+    description: Буквенный код валюты счета
+  blockCurrency:
+    type: string
+    description: Валюта документа блокировки
+  blockAccountCurrencyAmount:
+    type: string
+    description: Сумма блокировки в валюте счета
+  docSum:
+    type: string
+    description: Сумма документа блокировки
+  orgName:
+    type: string
+    description: Наименование органа
+  incomingDate:
+    type: string
+    description: Дата поступления блокировки
+    format: date-time
+  blockDate:
+    type: string
+    description: Дата документа
+    format: date
+  blockNumber:
+    type: string
+    description: Номер документа
+  orgType:
+    type: string
+    description: Тип органа
+  blockDocType:
+    type: string
+    description: Вид документа
+  blockReason:
+    type: string
+    description: Причина блокировки
+  blockType:
+    type: string
+    description: Тип блокировки
+    enum:
+    - BLOCK_OF_THE_ELECTRONIC_PLATFORM
+    - SUSPEND_OF_ACCOUNT_TRANSACTIONS
+description: Скроллер полей ЭФ

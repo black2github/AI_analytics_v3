@@ -1,0 +1,25 @@
+required:
+- account
+- bankBik
+- correspondentBankAccount
+- id
+- inn
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме.
+    format: uuid
+  inn:
+    type: string
+    description: ИНН контрагента
+  account:
+    type: string
+    description: Счёт контрагента
+  bankBik:
+    type: string
+    description: БИК Банка контрагента
+  correspondentBankAccount:
+    type: string
+    description: Корр. счёт банка контрагента
+description: Счет контрагента

@@ -1,0 +1,42 @@
+required:
+- clientId
+- expiredAt
+- privateKey
+- startedAt
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента Банка
+    format: uuid
+  startedAt:
+    type: string
+    description: Дата начала действия
+    format: date-time
+  expiredAt:
+    type: string
+    description: Дата окончания действия
+    format: date-time
+  algorithm:
+    type: string
+    description: Алгоритм шифрования
+    enum:
+    - RSA
+  bitLength:
+    type: string
+    description: Разрядность алгоритма шифрования в битах
+    enum:
+    - '1024'
+    - '2048'
+    - '4096'
+    - '8192'
+  format:
+    type: string
+    description: Формат шифрования
+    example: PGP
+    enum:
+    - PGP
+  privateKey:
+    type: string
+    format: binary
+description: Запрос на загрузку клиентской пары

@@ -1,0 +1,51 @@
+type: object
+properties:
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoDstRequestStatusDto.yaml
+  requestType:
+    $ref: ../common/FilterValueEnumDtoUCRTypeDto.yaml
+  requestDate:
+    $ref: ../common/FilterValueDtoZonedDateTime.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  fullOrgName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificateOwnerName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificatePublicKey:
+    $ref: ../common/FilterValueDtoString.yaml
+  applicationKind:
+    $ref: ../common/FilterValueEnumDtoRequestApplicationKindDto.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_ERROR
+    - FINISHED
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientOfficialDstId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  eskClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificateId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для скроллера СЭП заявок

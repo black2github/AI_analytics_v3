@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи о счете корпоративной карты
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARD_ACCOUNTS_ECO (Данные о счетах корпоративных карт)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+  responses:
+    '204':
+      description: No Content

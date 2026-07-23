@@ -1,0 +1,109 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - SIGN_WAITED
+      - SIGNED
+      - DELIVERED
+      - IN_PROCESS_BO
+      - IN_PROCESS_DO
+      - IN_PROCESS
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NEW
+      - SIGN_WAITED
+      - SIGNED
+      - DELIVERED
+      - IN_PROCESS_BO
+      - IN_PROCESS_DO
+      - IN_PROCESS
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+  ge:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+  lt:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+  le:
+    type: string
+    enum:
+    - NEW
+    - SIGN_WAITED
+    - SIGNED
+    - DELIVERED
+    - IN_PROCESS_BO
+    - IN_PROCESS_DO
+    - IN_PROCESS
+    - EXECUTED
+    - REJECTED
+description: Статуса заявки

@@ -1,0 +1,19 @@
+required:
+- bssId
+- chargeback
+- payment
+- statementId
+type: object
+properties:
+  bssId:
+    type: integer
+    description: ID клиента в АБС РКО Ф1
+    format: int32
+  chargeback:
+    $ref: ./ChargebackData.yaml
+  payment:
+    $ref: ./PaymentData.yaml
+  statementId:
+    type: string
+    description: Уникальный идентификатор запроса к базе данных
+description: Данные для экспорта Заявки на отзыв в РКО Ф1

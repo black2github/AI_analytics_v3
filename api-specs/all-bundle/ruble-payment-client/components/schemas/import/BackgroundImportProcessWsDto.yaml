@@ -1,0 +1,23 @@
+required:
+- finalStatus
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  status:
+    $ref: ../common/BackgroundProcessStatusTypeDto.yaml
+  finalStatus:
+    $ref: ../common/BackgroundProcessFinalStatusTypeDto.yaml
+  processedDocCount:
+    type: integer
+    description: 'Количество документов: Обработано'
+    format: int64
+  totalDocCount:
+    type: integer
+    description: 'Количество документов: Общее'
+    format: int64
+description: Фоновый процесс импорта, передаваемый через веб сокет. Адрес назначения /user/queue/ruble-payment/import/{id}

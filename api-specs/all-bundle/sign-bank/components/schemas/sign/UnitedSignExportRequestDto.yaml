@@ -1,0 +1,9 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Запрос на выгрузку настроек ЕП для СЭП

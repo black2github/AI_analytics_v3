@@ -1,0 +1,18 @@
+type: object
+properties:
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  docDate:
+    $ref: ./FilterValueDtoInstant.yaml
+  contractId:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOfferStatusDto.yaml
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_PROCESSING
+    - FINISHED
+description: Фильтр

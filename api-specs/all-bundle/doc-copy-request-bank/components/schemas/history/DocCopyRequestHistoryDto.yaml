@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки на формаирование ПД.
+    format: uuid
+  changedIn:
+    type: string
+    description: Дата и время происхождения события.
+    format: date-time
+  status:
+    type: string
+    description: Статус документа.
+  userId:
+    type: string
+    description: Идентификатор пользователя инциатора события
+    format: uuid
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  userName:
+    type: string
+    description: ФИО пользователя инициатора события
+  userType:
+    type: string
+    description: Тип пользователя инициатора события
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: История изменений заявки на открытие первого счета

@@ -1,0 +1,65 @@
+type: object
+description: Запрос-фильтр на получение данных по заявкам для скроллера "Журнала звонков"
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID заявки, полное совпадение (eq)
+  applicationId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID заявки во внешней системе-источнике, полное совпадение (eq)
+  statusCategory:
+    $ref: ./StatusCategory.yaml
+    description: Категория статуса
+  onboardingRequestDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время заявки (диапазон значений)
+  organizationIds:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Организация, множественный выбор (in)
+  branchIds:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Офис обслуживания, множественный выбор (in)
+  onboardingRequestStatus:
+    $ref: ./FilterValueEnumDtoCommonMergedStatus.yaml
+    description: Статус заявки, множественный выбор (in)
+  applicant:
+    $ref: ./FilterValueDtoString.yaml
+    description: Заявитель, полное совпадение (contains)
+  phoneNumberApplicant:
+    $ref: ./FilterValueDtoString.yaml
+    description: Телефон заявителя, полное совпадение (eq)
+  callDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время последнего звонка (диапазон значений ge, le)
+  nextCallDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время следующего звонка (диапазон значений ge, le)
+  callResult:
+    $ref: ./FilterValueEnumDtoCallResult.yaml
+    description: Результат звонка, множественный выбор (in)
+  clientProblemReason:
+    $ref: ./FilterValueEnumDtoClientProblemReason.yaml
+    description: Причина затруднений, множественный выбор (in)
+  callRequestStatus:
+    $ref: ./FilterValueEnumDtoCallRequestStatus.yaml
+    description: Статус задачи, множественный выбор (in)
+  notifyRequestId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID задачи, полное совпадение (eq)
+  notifyRequestNumber:
+    $ref: ./FilterValueDtoLong.yaml
+    description: № задачи, полное совпадение (eq)
+  notifyRequestDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время задачи (диапазон значений)
+  responsible:
+    $ref: ./FilterValueDtoString.yaml
+    description: Ответственный, (contains)
+  onRework:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак "На доработке", (eq)
+  docType:
+    $ref: ./FilterValueEnumDtoDocType.yaml
+    description: Сервис, множественный выбор (in)
+required:
+- statusCategory

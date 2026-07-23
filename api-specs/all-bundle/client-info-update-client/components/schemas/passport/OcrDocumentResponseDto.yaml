@@ -1,0 +1,64 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Результат выполнения запроса на распознавание данных документа
+    enum:
+    - SUCCESS
+    - FAILURE
+    - TIMEOUT
+    - NO_FIELDS_RECOGNIZED
+  fields:
+    type: object
+    additionalProperties:
+      type: string
+      description: 'Распознанные поля документа. Возможные ключи:
+
+        - surname — фамилия
+
+        - name — имя
+
+        - patronymic — отчество
+
+        - passportIssuer — кем выдан паспорт
+
+        - birthDate — дата рождения
+
+        - birthPlace — место рождения
+
+        - passportIssueDate — дата выдачи паспорта
+
+        - divisionCode — код подразделения
+
+        - passportSeries — серия паспорта
+
+        - passportNumber — номер паспорта
+
+        - regAddress — адрес регистрации'
+    description: 'Распознанные поля документа. Возможные ключи:
+
+      - surname — фамилия
+
+      - name — имя
+
+      - patronymic — отчество
+
+      - passportIssuer — кем выдан паспорт
+
+      - birthDate — дата рождения
+
+      - birthPlace — место рождения
+
+      - passportIssueDate — дата выдачи паспорта
+
+      - divisionCode — код подразделения
+
+      - passportSeries — серия паспорта
+
+      - passportNumber — номер паспорта
+
+      - regAddress — адрес регистрации'
+  rawOcrData:
+    type: object
+    description: Необработанные данные распознавания
+description: Результат распознавания данных документа

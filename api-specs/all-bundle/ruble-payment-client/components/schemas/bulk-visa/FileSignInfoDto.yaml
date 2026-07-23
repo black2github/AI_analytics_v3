@@ -1,0 +1,26 @@
+required:
+- certificateId
+- docSignPage
+- documentId
+- fileHash
+- signature
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  fileHash:
+    type: string
+    description: Подписываемые данные
+  signature:
+    type: string
+    description: Подпись
+  docSignPage:
+    type: string
+    description: Страница, с которой осуществляется подпись
+description: Данные о подписи файла

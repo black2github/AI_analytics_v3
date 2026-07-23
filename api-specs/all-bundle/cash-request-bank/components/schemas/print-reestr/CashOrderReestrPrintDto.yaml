@@ -1,0 +1,64 @@
+type: object
+properties:
+  ids:
+    uniqueItems: true
+    type: array
+    description: Множество идентификаторов заявок
+    items:
+      type: string
+      description: Множество идентификаторов заявок
+      format: uuid
+  reportFormat:
+    type: string
+    description: Формат печати
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  categoryFilter:
+    type: string
+    description: Примененный фильтр категорий статусов
+  startDate:
+    type: string
+    description: Фильтр даты операции с
+  endDate:
+    type: string
+    description: Фильтр даты операции по
+  requestType:
+    type: string
+    description: Фильтр типа заявки
+  organization:
+    type: string
+    description: Фильтр по организации
+  accountNumber:
+    type: string
+    description: Фильтр по счёту операции
+  amountEnd:
+    type: string
+    description: Фильтр суммы заявки с
+  amountStart:
+    type: string
+    description: Фильтр суммы заявки по
+  creationDateEnd:
+    type: string
+    description: Фильтр даты создания с
+  creationDateStart:
+    type: string
+    description: Фильтр даты создания по
+  ecoOrderId:
+    type: string
+    description: Фильтр по id заявки в эко-системе
+  office:
+    type: string
+    description: Фильтр по офису операции
+  orderNumber:
+    type: string
+    description: Фильтр по номеру заявки
+  orderStatus:
+    type: string
+    description: Фильтр статусов заявки
+description: Запрос на печать реестра заявок

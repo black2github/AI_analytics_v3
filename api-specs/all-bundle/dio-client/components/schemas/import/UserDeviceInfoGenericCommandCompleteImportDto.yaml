@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./CompleteImportDto.yaml
+  userDeviceInfo:
+    $ref: ../common/DioUserDeviceInfoDto.yaml
+description: Универсальная обертка запроса с данными устройства пользователя

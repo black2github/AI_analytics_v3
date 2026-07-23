@@ -1,0 +1,21 @@
+type: object
+properties:
+  gpbBoPhone:
+    type: string
+    description: Номер телефона ГПБ БО
+  gpbBoEmail:
+    type: string
+    description: Адрес электронной почты ГПБ БО
+  gpbBoPhones:
+    type: array
+    description: Номера всех телефонов ГПБ БО
+    items:
+      type: string
+      description: Номера всех телефонов ГПБ БО
+  gpbBoEmails:
+    type: array
+    description: Адреса всех электронной почты ГПБ БО
+    items:
+      type: string
+      description: Адреса всех электронной почты ГПБ БО
+description: Информация о контактах представителя

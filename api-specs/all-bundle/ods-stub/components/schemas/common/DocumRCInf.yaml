@@ -1,0 +1,129 @@
+type: object
+properties:
+  ID:
+    type: integer
+    format: int64
+  SDOCREF:
+    type: integer
+    format: int64
+  NRECORDSIDBASE:
+    type: integer
+    format: int64
+  SOPERTYPEBASE:
+    type: string
+  SDOCUMENTNUMBERBASE:
+    type: string
+  DTDOCUMENTDATEBASE:
+    $ref: ./LocalDate.yaml
+  NAMOUNTDTBASE:
+    type: number
+  NAMOUNTKTBASE:
+    type: number
+  SURGENTBASE:
+    type: string
+  SCHARGESACCOUNTBASE:
+    type: string
+  SCHARGESTYPEBASE:
+    type: string
+  V_CHARGESTYPE2BASE:
+    type: string
+  SCURRCODEBASE:
+    type: string
+  SADDITIONALINFOBASE:
+    type: string
+  SADDITINFOBNKBENBASE:
+    type: string
+  SDETOPBASE:
+    type: string
+  SPAYERINNBASE:
+    type: string
+  SPAYERBASE:
+    type: string
+  SPAYERACCOUNTBASE:
+    type: string
+  SPAYERPLACEBASE:
+    type: string
+  SPAYERADDRESSBASE:
+    type: string
+  SPAYERCOUNTRYCODEBASE:
+    type: string
+  SIMEDIABANKBICBASE:
+    type: string
+  SIMEDIABANKNAMEBASE:
+    type: string
+  SIMEDIABANKADDRESSBASE:
+    type: string
+  SIMEDIABANKPLACEBASE:
+    type: string
+  SIMEDIABANKCOUNTRYCODEBASE:
+    type: string
+  SBENEFBANKACCOUNTBASE:
+    type: string
+  SBENEFBANKBICBASE:
+    type: string
+  SBENEFBANKNAMEBASE:
+    type: string
+  SBENEFBANKADDRESSBASE:
+    type: string
+  SBENEFBANKPLACEBASE:
+    type: string
+  SBENEFBANKCOUNTRYCODEBASE:
+    type: string
+  SBENEFICIARACCOUNTBASE:
+    type: string
+  SBENEFICIARBASE:
+    type: string
+  SBENEFICIARADDRESSBASE:
+    type: string
+  SBENEFICIARPLACEBASE:
+    type: string
+  SBENEFICIARCOUNTRYCODEBASE:
+    type: string
+  SVD_FIO_BASE:
+    type: string
+  SVD_PHONE_BASE:
+    type: string
+  SPAYERBANKBICBASE:
+    type: string
+  SPAYERBANKNAMEBASE:
+    type: string
+  SPAYERBANKADDRESSBASE:
+    type: string
+  DTVALDATE:
+    $ref: ./LocalDate.yaml
+  SCHARGESTYPE:
+    type: string
+  SADDITINFOBNKBEN:
+    type: string
+  SOTVFIO:
+    type: string
+  SOTVPHONE:
+    type: string
+  SUNIQUECONTRACTNUMBER:
+    type: string
+  SOPERATIONTYPECODE:
+    type: string
+  SEXPECTEDDATE:
+    type: string
+  SADVANCEREFUNDDATE:
+    type: string
+  S50:
+    type: string
+  S59:
+    type: string
+  S70:
+    type: string
+  S52:
+    type: string
+  S56:
+    type: string
+  S57:
+    type: string
+  S32A:
+    type: string
+  S71A:
+    type: string
+  S72:
+    type: string
+  DocumRcISOInf:
+    $ref: ./DocumRcISOInf.yaml

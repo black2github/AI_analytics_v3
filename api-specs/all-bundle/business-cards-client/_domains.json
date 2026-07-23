@@ -1,0 +1,34 @@
+{
+  "_comment": "Auto domain map for business-cards-client (request-scenarios)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/business-cards/request/batch-blocking",
+      "domain": "blocking"
+    },
+    {
+      "prefix": "/business-cards/request/blocking",
+      "domain": "blocking"
+    },
+    {
+      "prefix": "/business-cards/request/card-issue",
+      "domain": "issuance"
+    },
+    {
+      "prefix": "/business-cards/request/batch-set-limits",
+      "domain": "limits"
+    },
+    {
+      "prefix": "/business-cards/request/set-limits",
+      "domain": "limits"
+    },
+    {
+      "prefix": "/business-cards/request",
+      "domain": "request-common"
+    },
+    {
+      "prefix": "/business-cards/reports",
+      "domain": "reports"
+    }
+  ]
+}

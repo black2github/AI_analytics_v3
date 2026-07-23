@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Версия формата документа валютного перевода
+    enum:
+    - MT
+    - MX
+  notEq:
+    type: string
+    description: Версия формата документа валютного перевода
+    enum:
+    - MT
+    - MX
+  in:
+    type: array
+    items:
+      type: string
+      description: Версия формата документа валютного перевода
+      enum:
+      - MT
+      - MX
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Версия формата документа валютного перевода
+      enum:
+      - MT
+      - MX
+  isNull:
+    type: boolean
+description: Версия формата документа

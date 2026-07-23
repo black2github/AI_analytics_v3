@@ -1,0 +1,10 @@
+type: object
+properties:
+  content:
+    type: string
+    description: Отчет
+    format: byte
+  filename:
+    type: string
+    description: Имя файла
+description: Протокол проверки ЭП

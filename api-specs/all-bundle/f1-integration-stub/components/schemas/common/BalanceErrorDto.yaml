@@ -1,0 +1,22 @@
+type: object
+description: Эмуляция ошибок на запрос об остатках на счетах
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  f1AccountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета в РКО Ф1
+  clientAbsId:
+    type: integer
+    format: int64
+    description: РНК клиента в РКО Ф1
+  errorText:
+    type: string
+    description: Текстовое описание ошибки
+  serverErrorInfo:
+    type: string
+    description: Сырой json в ответе шлюза

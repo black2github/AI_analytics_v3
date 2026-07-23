@@ -1,0 +1,13 @@
+required:
+- outgoingPaymentRequestId
+- templateName
+type: object
+properties:
+  templateName:
+    type: string
+    description: Наименование шаблона
+  outgoingPaymentRequestId:
+    type: string
+    description: Идентификатор Исходящего Платежного требования
+    format: uuid
+description: Обновление шаблона по идентификатору Исходящего Платежного требования

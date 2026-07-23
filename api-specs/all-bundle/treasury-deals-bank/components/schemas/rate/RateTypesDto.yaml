@@ -1,0 +1,14 @@
+type: object
+properties:
+  rateType:
+    type: string
+    description: Тип ставки
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  baseRates:
+    type: array
+    description: Мапа кодов базовых индикаторов на список доступных вариантов ставок
+    items:
+      $ref: ./BaseRateVariantsDto.yaml
+description: Мапа типов сделок и возможных типов ставок.

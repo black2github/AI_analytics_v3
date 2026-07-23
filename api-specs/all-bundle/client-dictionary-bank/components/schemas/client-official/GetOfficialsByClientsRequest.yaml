@@ -1,0 +1,12 @@
+type: object
+properties:
+  clientIds:
+    maxItems: 1000
+    minItems: 1
+    type: array
+    description: Идентификаторы клиентов банка
+    items:
+      type: string
+      description: Идентификаторы клиентов банка
+      format: uuid
+description: Запрос поиска представителей клиента по клиентам банка

@@ -1,0 +1,10 @@
+type: object
+description: Дто ответа для выгрузки файла
+properties:
+  attachmentId:
+    type: string
+    format: uuid
+    description: Id вложения в file storage
+  accessToken:
+    type: string
+    description: Токен доступа

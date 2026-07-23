@@ -1,0 +1,28 @@
+get:
+  tags:
+  - API сущности Закрытый день
+  summary: Получить дату последнего закрытого дня для филиала
+  description: 'Привилегии: ODS_CLOSED_DAY_VIEW'
+  operationId: findLastClosedDayDateUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: branchCode
+    in: path
+    description: branchCode
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,LocalDate»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

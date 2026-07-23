@@ -1,0 +1,25 @@
+required:
+- roleCode
+- segmentCode
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  roleCode:
+    type: string
+    description: Код роли
+  segmentCode:
+    type: string
+    description: Код сегмента
+  clientOfficialIds:
+    uniqueItems: true
+    type: array
+    description: Коллекция ID представителей клиента
+    items:
+      type: string
+      description: Коллекция ID представителей клиента
+      format: uuid
+description: Запрос добавления роли пользователю

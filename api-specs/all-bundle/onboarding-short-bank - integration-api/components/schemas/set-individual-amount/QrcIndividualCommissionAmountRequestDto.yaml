@@ -1,0 +1,10 @@
+type: object
+properties:
+  individualCommission:
+    type: number
+    description: Сумма индивидуальной комиссии
+  qrcPaymentId:
+    type: string
+    description: Ссылка на "Информация об оплате комиссии по QRC"
+    format: uuid
+description: Данные об изменении индивидуальной комиссии

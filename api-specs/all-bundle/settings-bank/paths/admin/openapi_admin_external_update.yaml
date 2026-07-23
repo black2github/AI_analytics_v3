@@ -1,0 +1,13 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Обновить внешние спецификации
+  description: 'Привилегии: OPEN_API_SPEC_UPDATE'
+  operationId: updateExternal
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataDiscoverResponse.yaml

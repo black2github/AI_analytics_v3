@@ -1,0 +1,29 @@
+type: object
+description: Ответ на запрос создания заявки на блокировку QR-кода от сервиса Банка
+properties:
+  traceId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор запроса
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  status:
+    type: string
+    description: Статус QR
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+required:
+- code
+- message
+- traceId

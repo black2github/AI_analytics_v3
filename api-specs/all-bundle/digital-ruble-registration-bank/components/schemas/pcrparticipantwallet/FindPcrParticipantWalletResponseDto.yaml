@@ -1,0 +1,7 @@
+required:
+- wallet
+type: object
+properties:
+  wallet:
+    $ref: ./PcrParticipantWalletIntegrationDto.yaml
+description: Ответ на запрос цифрового счёта ПлЦР для Клиента Банка

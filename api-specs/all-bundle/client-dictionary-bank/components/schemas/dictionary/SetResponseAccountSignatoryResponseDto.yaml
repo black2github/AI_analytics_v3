@@ -1,0 +1,7 @@
+type: object
+properties:
+  set:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ../common/AccountSignatoryResponseDto.yaml

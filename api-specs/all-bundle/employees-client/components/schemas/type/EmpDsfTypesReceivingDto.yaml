@@ -1,0 +1,19 @@
+required:
+- roleTemplateIds
+type: object
+properties:
+  documentCode:
+    type: string
+    description: Код документа типа ДСФ
+    enum:
+    - DSF_IN
+    - DSF_OUT
+  roleTemplateIds:
+    minItems: 1
+    type: array
+    description: Список идентификаторов шаблонов ролей
+    items:
+      type: string
+      description: Список идентификаторов шаблонов ролей
+      format: uuid
+description: Данные для получения

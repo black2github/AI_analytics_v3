@@ -1,0 +1,17 @@
+required:
+- approvingOrganization
+type: object
+properties:
+  clientAccountId:
+    type: string
+    description: ID Счет клиента
+    format: uuid
+  bankClientId:
+    type: string
+    description: ID Клиент Банка
+    format: uuid
+  approvingOrganization:
+    type: string
+    description: Визирующая организация
+    format: uuid
+description: ДТО Идентификация организации

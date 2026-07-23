@@ -1,0 +1,157 @@
+get:
+  tags:
+  - AgentTspConnection Entity
+  summary: agentTspConnectionAgentTsp
+  operationId: agentTspConnectionAgentTspUsingGET
+  produces:
+  - application/hal+json
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/EntityModel«AgentTsp»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+post:
+  tags:
+  - AgentTspConnection Entity
+  summary: agentTspConnectionAgentTsp
+  operationId: agentTspConnectionAgentTspUsingPOST
+  consumes:
+  - text/uri-list
+  - application/x-spring-data-compact+json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: body
+    description: body
+    required: true
+    schema:
+      type: string
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/EntityModel«AgentTsp»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+put:
+  tags:
+  - AgentTspConnection Entity
+  summary: agentTspConnectionAgentTsp
+  operationId: agentTspConnectionAgentTspUsingPUT
+  consumes:
+  - text/uri-list
+  - application/x-spring-data-compact+json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: body
+    description: body
+    required: true
+    schema:
+      type: string
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/EntityModel«AgentTsp»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+delete:
+  tags:
+  - AgentTspConnection Entity
+  summary: agentTspConnectionAgentTsp
+  operationId: agentTspConnectionAgentTspUsingDELETE
+  consumes:
+  - text/uri-list
+  - application/x-spring-data-compact+json
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+patch:
+  tags:
+  - AgentTspConnection Entity
+  summary: agentTspConnectionAgentTsp
+  operationId: agentTspConnectionAgentTspUsingPATCH
+  consumes:
+  - text/uri-list
+  - application/x-spring-data-compact+json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: body
+    description: body
+    required: true
+    schema:
+      type: string
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/EntityModel«AgentTsp»'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

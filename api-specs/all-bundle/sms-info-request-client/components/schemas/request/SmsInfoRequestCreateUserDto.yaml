@@ -1,0 +1,16 @@
+required:
+- uaaUserId
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя в экосистеме
+    format: uuid
+  additionalPhoneNumbers:
+    type: array
+    description: Дополнительные номера телефонов
+    items:
+      pattern: ^\d{11,15}$
+      type: string
+      description: Дополнительные номера телефонов
+description: Новый пользователь заявки на услугу СМС-информирования

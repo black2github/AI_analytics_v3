@@ -1,0 +1,13 @@
+type: object
+properties:
+  tn:
+    $ref: ./TariffPlanDto.yaml
+  razv:
+    $ref: ./TariffPlanDto.yaml
+  max:
+    $ref: ./TariffPlanDto.yaml
+  stab:
+    $ref: ./TariffPlanDto.yaml
+  ved:
+    $ref: ./TariffPlanDto.yaml
+description: Блок с комиссиями по тарифным планам

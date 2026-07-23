@@ -1,0 +1,56 @@
+post:
+  tags:
+  - Интеграционное API для работы с журналом выгрузки сертификатов в ДБО17 или H2H
+  summary: Создать задание на экспорт сертификата в журнале выгрузки сертификатов
+  description: 'Привилегии: INTEGRATION_CREATE_CERTIFICATE_EXPORT'
+  operationId: createTask
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/sign/CertificateExportRequestDto.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign/GenericResponseSimpleErrorDataListCertificateExportTaskDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security: []

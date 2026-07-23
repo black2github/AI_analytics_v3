@@ -1,0 +1,18 @@
+required:
+- bankClientIds
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Список организаций, доступных пользователю
+    items:
+      type: string
+      description: Список организаций, доступных пользователю
+      format: uuid
+description: Запрос получения списка счетов, доступных пользователю

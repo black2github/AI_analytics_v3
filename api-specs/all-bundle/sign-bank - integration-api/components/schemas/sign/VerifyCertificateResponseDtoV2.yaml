@@ -1,0 +1,31 @@
+type: object
+properties:
+  validatorType:
+    type: string
+    description: Тип проверки сертификата
+    enum:
+    - REVOKE_CERTIFICATE
+    - SIGNER_CERTIFICATE
+    - CA_FNS
+    - VALIDITY_PERIOD
+    - CA_CHECK
+  validationResult:
+    type: string
+    description: Результат проверки сертификата
+    enum:
+    - PASSED
+    - FAILED
+  status:
+    type: string
+    description: Статус сертификата
+  revokedDate:
+    type: string
+    description: Дата и время отзыва сертификата
+    format: date-time
+  errorCode:
+    type: string
+    description: Код ошибки верификации
+  errorMessage:
+    type: string
+    description: Сообщение об ошибке верификации
+description: Ответ на запрос проверки сертификата

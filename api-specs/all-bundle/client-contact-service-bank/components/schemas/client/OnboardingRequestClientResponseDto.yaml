@@ -1,0 +1,22 @@
+type: object
+description: Организация, по которым есть заявки
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  ogrnOgrip:
+    type: string
+    description: ОГРН/ОГРНИП
+  innKio:
+    type: string
+    description: ИНН клиента
+required:
+- id
+- innKio

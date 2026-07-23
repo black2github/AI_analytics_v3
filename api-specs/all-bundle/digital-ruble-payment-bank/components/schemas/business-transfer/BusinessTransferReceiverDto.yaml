@@ -1,0 +1,35 @@
+required:
+- usePlatformDetails
+type: object
+properties:
+  participantId:
+    type: string
+    description: Идентификатор организации получателя в ЦБ
+  name:
+    maxLength: 1000
+    type: string
+    description: Наименование
+  inn:
+    pattern: \d{10}
+    type: string
+    description: ИНН
+  kpp:
+    pattern: ^\d{9}$
+    type: string
+    description: КПП
+  ogrn:
+    pattern: ^\d{13}$
+    type: string
+    description: ОГРН
+  accountId:
+    pattern: ^g\.[a-z]{2}\.cbrdc\.wlt\.(clt|fi|iss)\.[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$
+    type: string
+    description: Идентификатор счета цифрового рубля получателя
+  accountNumber:
+    pattern: ^[0-9]{20}$
+    type: string
+    description: Номер счета цифрового рубля получателя
+  usePlatformDetails:
+    type: boolean
+    description: Признак 'Использовать реквизиты платформы'
+description: DTO данных получателя для заявки на перевод B2B

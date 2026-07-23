@@ -1,0 +1,22 @@
+required:
+- bankClientId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  currencyCode:
+    type: string
+    description: Код валюты счета
+  accountState:
+    type: string
+    description: Статус счета
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+description: Данные для запроса счетов клиента банка

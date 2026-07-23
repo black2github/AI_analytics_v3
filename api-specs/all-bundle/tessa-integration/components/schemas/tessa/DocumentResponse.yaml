@@ -1,0 +1,27 @@
+type: object
+properties:
+  barCode:
+    type: string
+    description: Штрих-код
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  operationName:
+    type: string
+    description: Операция
+  number:
+    type: string
+    description: Номер документа
+  kindName:
+    type: string
+    description: Вид пакета
+  submissionFormName:
+    type: string
+    description: Форма представления
+  files:
+    type: array
+    description: Файлы в документе
+    items:
+      $ref: ./FileInfo.yaml
+description: Данные

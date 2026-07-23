@@ -1,0 +1,7 @@
+type: object
+properties:
+  taxType:
+    type: string
+  registrationIdentification:
+    type: string
+description: Налоговая информация об участнике перевода денежных средств

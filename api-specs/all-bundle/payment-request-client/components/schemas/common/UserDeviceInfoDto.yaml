@@ -1,0 +1,17 @@
+required:
+- macAddress
+type: object
+properties:
+  macAddress:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]+$
+    type: array
+    description: MAC адрес устройства пользователя
+    items:
+      pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]+$
+      type: string
+      description: MAC адрес устройства пользователя
+  deviceDigitalPrint:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]+$
+    type: string
+    description: Цифровой отпечаток компьютера, с которого был осуществлен вход АС "Экосистема (ДБО ЮЛ)"
+description: Данные устройства пользователя

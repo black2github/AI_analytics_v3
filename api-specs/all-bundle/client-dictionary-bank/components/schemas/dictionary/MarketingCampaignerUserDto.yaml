@@ -1,0 +1,29 @@
+type: object
+properties:
+  organizationName:
+    type: string
+    description: Наименование организации
+  fullName:
+    type: string
+    description: Полное имя
+  phone:
+    type: string
+    description: Номер телефона
+  email:
+    type: string
+    description: Электронная почта
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  registrationDate:
+    type: string
+    description: Дата/время регистрации
+    format: date-time
+  lastLogin:
+    type: string
+    description: Дата/время последнего входа
+    format: date-time
+description: Пользователь, участвующий в маркетинговой кампании

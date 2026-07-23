@@ -1,0 +1,110 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Заявка на отзыв"
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  status:
+    $ref: ./OutgoingPaymentChargebackRequestStatusBankDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  receiptAt:
+    type: string
+    description: Дата приема документа в Экосистеме
+    format: date-time
+  clientRnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  createdAt:
+    type: string
+    description: Дата и время создания документа
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления документа
+    format: date-time
+  baseDocumentId:
+    type: string
+    description: Идентификатор базового документа
+    format: uuid
+  docCreationPage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+  docSourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docCreationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  baseDetails:
+    $ref: ./ChargebackBaseDetailsBankDto.yaml
+  bankDocumentDetails:
+    $ref: ./ChargebackDocumentDetailsBankDto.yaml
+  documentDetails:
+    $ref: ./ChargebackBaseDocumentDetailsBankDto.yaml
+  signatures:
+    type: array
+    description: Подписи отзыва платежного поручения
+    items:
+      $ref: ./outgoingChargebackSignatureClientDto.yaml
+  historyFailedLastStatus:
+    type: string
+    description: Дата последнего ошибочного статуса
+    format: date-time
+  statusDate:
+    type: string
+    description: Дата текущего статуса
+    format: date-time
+description: Заявка на отзыв, данные для сотрудника банка

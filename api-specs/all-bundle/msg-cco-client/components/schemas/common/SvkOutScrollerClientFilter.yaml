@@ -1,0 +1,34 @@
+type: object
+properties:
+  topic:
+    $ref: ./FilterValueDtoUUID.yaml
+  organization:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./SvkOutScrollerStatusFilter.yaml
+  bankBranch:
+    $ref: ./FilterValueDtoString.yaml
+  attachmentsExist:
+    $ref: ./FilterValueDtoBoolean.yaml
+  linkedDocumentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  linkedDocumentDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  topicName:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям. Полное совпадение
+    enum:
+    - ALL
+    - DRAFT
+    - WAITING_FOR_SIGN
+    - CANCELED
+    - COMPLETED
+  createSystem:
+    $ref: ./SvkOutSourceSystemFilter.yaml
+description: Фильтр журнал документов. Клиентская часть

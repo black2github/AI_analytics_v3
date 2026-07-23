@@ -1,0 +1,56 @@
+post:
+  tags:
+  - СИП. Сервис SVFE
+  summary: Изменение режимов ответа эмулятора ПЦ SVFE через СИП
+  operationId: changeSipSvfeResponseModeUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+        additionalProperties:
+          type: string
+          enum:
+          - CARD_NOT_FOUND_SVFE_ERROR
+          - DEFAULT_RESPONSE
+          - INTERNAL_SIP_ERROR
+          - INTERNAL_SVFE_ERROR
+          - INVALID_HEADERS_SIP_ERROR
+          - LIMIT_CANNOT_BE_CHANGED_SVFE_ERROR
+          - LIMIT_NOT_FOUND_SVFE_ERROR
+          - UNAUTHORIZED_SIP_ERROR
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

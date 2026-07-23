@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  clientOfficial:
+    $ref: ../common/ClientOfficialDto.yaml
+  account:
+    $ref: ../common/AccountDto.yaml
+  accountActionType:
+    type: string
+    description: Тип действия над счетом
+    enum:
+    - BLOCK
+    - INFORM_ONLY
+    - OPEN
+    - RECEPTION_ONLY
+description: Счет представителя Клиента ДБО БСС

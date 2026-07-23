@@ -1,0 +1,10 @@
+type: object
+properties:
+  certRequestId:
+    type: string
+    description: ID запроса на регистрацию сертификата
+    format: uuid
+  kpp:
+    type: string
+    description: КПП
+description: Запрос выбора КПП заявки на регистрацию сертификата

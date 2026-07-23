@@ -1,0 +1,25 @@
+type: object
+properties:
+  view:
+    uniqueItems: true
+    type: array
+    description: Справки которые пользователь может просматривать
+    example: null
+    items:
+      $ref: ./InquiryTypePermissionInfoDto.yaml
+  edit:
+    uniqueItems: true
+    type: array
+    description: Справки которые пользователь может изменять / создавать
+    example: null
+    items:
+      $ref: ./InquiryTypePermissionInfoDto.yaml
+  sign:
+    uniqueItems: true
+    type: array
+    description: Справки которые пользователь может подписывать
+    example: null
+    items:
+      $ref: ./InquiryTypePermissionInfoDto.yaml
+description: Матрица доступов к справкам
+example: null

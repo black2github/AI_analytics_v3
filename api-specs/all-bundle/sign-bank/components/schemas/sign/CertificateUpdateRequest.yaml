@@ -1,0 +1,57 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя в UAA
+    format: uuid
+  userName:
+    type: string
+    description: Инициалы пользователя
+  organizationName:
+    type: string
+    description: Наименование организации
+  data:
+    type: string
+    description: Данные сертификата base64
+  origin:
+    type: string
+    description: Источник сертификата
+    enum:
+    - DBO
+    - CA
+    - ECO
+  absId:
+    type: string
+    description: Идентификатор в АБС
+  signParams:
+    type: string
+    description: Параметры подписи
+  containerNameLocation:
+    type: string
+    description: Имя и расположение контейнера. Вычисляемое поле на основе signParams
+  footprint:
+    type: string
+    description: Отпечаток
+  keyId:
+    type: string
+    description: Идентификатор ключа УЦ
+    format: uuid
+  serialNumber:
+    type: string
+    description: Серийный номер
+  whomIssued:
+    type: string
+    description: Кому выдан
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  authorityCertificateId:
+    type: string
+    description: Издатель
+    format: uuid
+description: DTO для редактирования сертификата

@@ -1,0 +1,25 @@
+type: object
+properties:
+  priority:
+    type: integer
+    description: Приоритет
+    format: int64
+  logo:
+    type: string
+    description: Логотип клиента
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  rollUp:
+    type: boolean
+    description: Признак свернут
+  clientVisible:
+    type: boolean
+    description: Признак сокрытия организации
+  accountSettings:
+    type: array
+    description: Настройки списка счетов
+    items:
+      $ref: ./UserSettingsAccountDto.yaml
+description: Пользовательские настройки организаций клиента

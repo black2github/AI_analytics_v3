@@ -1,0 +1,26 @@
+type: object
+required:
+- paging
+description: Параметры постраничного запроса
+properties:
+  paging:
+    $ref: ./Paging.yaml
+    type: object
+    description: Данные для выборки страницы
+  sources:
+    type: array
+    items:
+      type: string
+    description: Значения для поля Тип заявки
+  clientGuids:
+    type: array
+    items:
+      type: string
+      format: uuid
+      pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Значения для поля GUID клиента в ЕСК
+  accountNumbers:
+    type: array
+    items:
+      type: string
+    description: Значения для поля Номер счета клиента

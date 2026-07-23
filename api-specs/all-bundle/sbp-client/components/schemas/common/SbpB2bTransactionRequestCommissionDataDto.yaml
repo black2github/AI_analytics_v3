@@ -1,0 +1,7 @@
+type: object
+description: Блок комиссии заявки на регистрацию платежа B2B в системе АС СБП
+properties:
+  commissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия банка за перевод в копейках

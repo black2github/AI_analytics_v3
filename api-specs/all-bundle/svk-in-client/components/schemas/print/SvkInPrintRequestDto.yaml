@@ -1,0 +1,18 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы сущности СВК
+    items:
+      type: string
+      description: Идентификаторы сущности СВК
+      format: uuid
+  reportFormat:
+    type: string
+    description: Тип файла СВК
+    enum:
+    - PDF
+  onScreen:
+    type: boolean
+    description: Признак показа на экране
+description: Запрос на создание файла СВК

@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса на отчет
+    format: uuid
+  requestNumber:
+    type: string
+    description: Регистрационный номер запроса на отчет
+  createdAt:
+    type: string
+    description: Дата получения запроса системой
+    format: date-time
+  requestReceiptDate:
+    type: string
+    description: Дата получения запроса работником банка
+    format: date
+  clientComment:
+    type: string
+    description: Коментарий для клиента
+  request:
+    $ref: ./BrokerageReportRequestDto.yaml
+  requestStatus:
+    type: string
+    description: Статус запроса
+    enum:
+    - CLIENT_DELIVERED
+    - CLIENT_NEW
+    - CLIENT_REJECTED
+    - CLIENT_SENT
+description: Зарегистрированный запрос отчета брокера клиентской стороны

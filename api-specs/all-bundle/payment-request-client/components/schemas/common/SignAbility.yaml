@@ -1,0 +1,9 @@
+type: string
+description: Возможность подписать
+enum:
+- SIGN_ALLOWED
+- UNABLE_TO_SIGN_WITH_STATUS
+- LEVEL_SIGNED
+- LEVEL_SIGN_NOT_REQUIRED
+- SIGN_RESTRICTED
+- NO_CERTIFICATE

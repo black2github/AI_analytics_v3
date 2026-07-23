@@ -1,0 +1,24 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование
+  ogrn:
+    type: string
+    description: ОГРН
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  regDate:
+    type: string
+    description: Дата внесения записи в гос. реестр
+    format: date
+  address:
+    $ref: ./AddressDto.yaml
+  addressType:
+    type: string
+    description: Тип адреса
+description: Информация о клиенте, которому переуступается ПС

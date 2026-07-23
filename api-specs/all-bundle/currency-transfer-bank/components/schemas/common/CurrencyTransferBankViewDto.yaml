@@ -1,0 +1,145 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  amount:
+    type: string
+    description: Сумма перевода
+  valueDate:
+    type: string
+    description: Дата валютирования
+    format: date
+  charge:
+    type: string
+    description: Комиссия и расходы
+    enum:
+    - BEN
+    - SHA
+    - OUR
+  chargeIso:
+    type: string
+    description: Комиссия и расходы
+    enum:
+    - CRED
+    - SHAR
+    - DEBT
+  paymentPurpose:
+    type: string
+    description: Детали платежа
+  payeeInfo:
+    type: string
+    description: Информация получателю
+  regulatoryInfo:
+    type: string
+    description: Регуляторная информация
+  addInstForCorrBank:
+    type: string
+    description: Дополнительные инструкции для банка-корреспондента
+  addInstForGPB:
+    type: string
+    description: Дополнительные инструкции для Банка ГПБ (АО)
+  status:
+    type: string
+    description: Транспортное представление констант для передачи статуса
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - ACCEPTED
+    - WAIT_DATE_COMPLETED
+    - CURRENCY_CONTROL
+    - ADDITIONAL_CONTROL
+    - ACCEPT_FOR_EXECUTION
+    - EXPORT_TO_ABS1
+    - EXPORT_TO_ABS2
+    - EXPORTED_TO_ABS1
+    - EXPORTED_TO_ABS2
+    - EXPORT_TO_ABS_ERROR1
+    - EXPORT_TO_ABS_ERROR2
+    - COMPLETED
+    - REJECTED
+    - CANCELED
+    - IMPORTED
+    - IMPORTED_DENY
+    - IMPORTED_CORRECT
+    - IMPORTED_ERROR
+    - IMPORTED_WARNING
+    - EXPORTED_TO_TMG
+    - EXPORT_TO_TMG_ERROR
+    - WAIT_ACCEPT_TMG
+    - WAIT_ACCEPT_TMG_NO_LIMIT
+    - COMPLETED_TMG
+    - DECLINE_TMG
+    - CANCELED_LKUVED
+    - SIGHTING_CHECK
+    - SIGHTING_CHECK_ERROR
+    - WAIT_SIGHTING
+    - SIGNED_SIGHTING
+    - SIGHTING_SIGN_VALID
+    - SIGHTING_DETAILS_VALID
+  bankComment:
+    $ref: ./CurrencyTransferCommentDto.yaml
+  payer:
+    $ref: ./CurrencyTransferPayerDto.yaml
+  beneficiary:
+    $ref: ./CurrencyTransferBeneficiaryDto.yaml
+  currencyControl:
+    $ref: ./CurrencyTransferControlDto.yaml
+  signatures:
+    type: array
+    description: Подписи платежного поручения
+    items:
+      $ref: ./CurrencyTransferSignatureDto.yaml
+  ssdVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  absValueDate:
+    type: string
+    description: Дата валютирования из АБС
+    format: date
+  sourceSystem:
+    type: string
+    description: Система создания документа
+  sourceMethod:
+    type: string
+    description: Способ создания документа
+  chargebackRequest:
+    $ref: ./ChargebackRequestBankDto.yaml
+  acceptance:
+    $ref: ./CurrencyTransferAcceptanceDto.yaml
+  sightDetails:
+    $ref: ./CurrencyTransferSightDetailsDto.yaml
+  authorId:
+    type: string
+    description: Пользовательский идентификатор автора заявки ВП
+    format: uuid
+  docVersion:
+    type: string
+    description: Версия формата документа валютного перевода
+    enum:
+    - MT
+    - MX
+description: Транспортное представление ВП для формы просмотра на банковской стороне

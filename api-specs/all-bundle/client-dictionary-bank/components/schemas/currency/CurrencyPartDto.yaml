@@ -1,0 +1,24 @@
+required:
+- code
+- name
+- numericCode
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи (ЭКО)
+    format: uuid
+  numericCode:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Цифровой код валюты
+  code:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Буквенный код валюты
+  name:
+    type: string
+    description: Наименование валюты
+description: Облегченное представление валюты

@@ -1,0 +1,68 @@
+type: object
+properties:
+  actualAddress:
+    $ref: ./AddressDto.yaml
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  citizenship:
+    type: string
+    description: Гражданство
+  email:
+    type: string
+    description: Электронная почта
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника
+    format: uuid
+  firstName:
+    type: string
+    description: Имя
+  homePhone:
+    type: string
+    description: Домашний телефон
+  id:
+    type: string
+    description: Уникальный идентификатор держателя карты
+    format: uuid
+  identifyingDocument:
+    $ref: ./IdentityDocumentDto.yaml
+  inn:
+    type: string
+    description: ИНН
+  isActualAddressRegistration:
+    type: boolean
+    description: Фактический адрес совпадает с адресом места жительства
+    nullable: true
+  isPublicPerson:
+    type: boolean
+    description: Является ли лицо публичным
+  lastName:
+    type: string
+    description: Фамилия
+  mobilePhone:
+    type: string
+    description: Мобильный телефон
+  noMiddleName:
+    type: boolean
+    description: Признак обязательности отчества в анкете
+  registrationAddress:
+    $ref: ./AddressDto.yaml
+  secondName:
+    type: string
+    description: Отчество
+  serviceData:
+    $ref: ./ServiceDataDto.yaml
+  sex:
+    type: string
+    description: Пол
+  snils:
+    type: string
+    description: СНИЛС
+  temporaryAddress:
+    $ref: ./AddressDto.yaml
+description: Информация о держателе карты

@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoInstant.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientKpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  userFullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  employeeFullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestStatus:
+    $ref: ./EmployeeRequestStatusFilter.yaml
+  statusCategory:
+    type: string
+    description: Категории статусов журнала заявок
+    enum:
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - COMPLETED
+    - ALL
+  type:
+    $ref: ./EmployeeRequestTypeFilter.yaml
+  legalizationRequest:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  commentForClient:
+    $ref: ../common/FilterValueDtoString.yaml
+  commentForBank:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр журнала заявок. Банковская часть

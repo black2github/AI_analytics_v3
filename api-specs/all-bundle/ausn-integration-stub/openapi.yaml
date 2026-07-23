@@ -1,0 +1,86 @@
+openapi: 3.1.0
+info:
+  title: Сервис эмуляции взаимодействия с AUSN-integration
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /ausn-integration-stub
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /client:
+    $ref: ./paths/client/client.yaml
+  /entry:
+    $ref: ./paths/entry/entry.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    AccountingEntryDto:
+      $ref: ./components/schemas/entry/AccountingEntryDto.yaml
+    AccountingEntryTransportEvent:
+      $ref: ./components/schemas/entry/AccountingEntryTransportEvent.yaml
+    ActionType:
+      $ref: ./components/schemas/entry/ActionType.yaml
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    AusnClientStatusDto:
+      $ref: ./components/schemas/client/AusnClientStatusDto.yaml
+    AusnMetaDto:
+      $ref: ./components/schemas/client/AusnMetaDto.yaml
+    AusnPeriodDto:
+      $ref: ./components/schemas/client/AusnPeriodDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    ExtEntryDto:
+      $ref: ./components/schemas/entry/ExtEntryDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    Instant:
+      $ref: ./components/schemas/entry/Instant.yaml
+    LocalDate:
+      $ref: ./components/schemas/common/LocalDate.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    PayerBody:
+      $ref: ./components/schemas/client/PayerBody.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    RegisteredTaxPayersEventDto:
+      $ref: ./components/schemas/client/RegisteredTaxPayersEventDto.yaml
+    RevaluationTypeDto:
+      $ref: ./components/schemas/entry/RevaluationTypeDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    TaxPayerDto:
+      $ref: ./components/schemas/client/TaxPayerDto.yaml
+    TaxPayersBodyDto:
+      $ref: ./components/schemas/client/TaxPayersBodyDto.yaml
+    UUID:
+      $ref: ./components/schemas/common/UUID.yaml

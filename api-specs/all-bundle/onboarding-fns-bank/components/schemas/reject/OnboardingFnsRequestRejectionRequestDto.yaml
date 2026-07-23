@@ -1,0 +1,35 @@
+required:
+- fullName
+- inn
+- ogrn
+- rejectionReason
+type: object
+properties:
+  fullName:
+    type: string
+    description: Полное наименование
+  ogrn:
+    type: string
+    description: ОГРН
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  shortName:
+    type: string
+    description: Краткое наименование
+  surname:
+    type: string
+    description: Фамилия
+  forename:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  rejectionReason:
+    type: string
+    description: Причина отмены заявки
+description: Данные

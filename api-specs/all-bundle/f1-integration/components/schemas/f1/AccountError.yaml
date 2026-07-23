@@ -1,0 +1,10 @@
+type: object
+properties:
+  code:
+    type: integer
+    description: Код ошибки
+    format: int32
+  text:
+    type: string
+    description: Текст ошибки
+description: Ошибка, привязанная к конкретному счету

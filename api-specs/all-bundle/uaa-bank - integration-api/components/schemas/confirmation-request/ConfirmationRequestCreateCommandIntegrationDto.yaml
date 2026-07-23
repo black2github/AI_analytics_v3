@@ -1,0 +1,19 @@
+required:
+- clientUserId
+- confirmationTarget
+- type
+type: object
+properties:
+  clientUserId:
+    type: string
+    description: ID пользователя клиента
+    format: uuid
+  confirmationTarget:
+    pattern: .*\S.*
+    type: string
+    description: Подтверждаемые данные
+  type:
+    type: string
+    enum:
+    - DSS_ACCOUNT_PHONE_CHANGE
+description: Создание запроса на подтверждение

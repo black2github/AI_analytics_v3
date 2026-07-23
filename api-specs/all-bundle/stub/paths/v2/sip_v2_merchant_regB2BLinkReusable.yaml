@@ -1,0 +1,197 @@
+post:
+  tags:
+  - СИП. Сервис b2b API
+  summary: Запрос на регистрацию многоразового QR для B2B
+  operationId: registerB2bStaticQrUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.account
+    in: query
+    description: Счет ЮЛ или ИП в Банке Получателя
+    required: true
+    type: string
+  - name: body.amount
+    in: query
+    description: Сумма Операции СБП в копейках. Валюта Операции СБП - рубли РФ
+    required: true
+    type: string
+  - name: body.callbackMerchantNotifications
+    in: query
+    description: Url для получения сообщения о совершении перевода
+    required: false
+    type: string
+  - name: body.height
+    in: query
+    description: Высота
+    required: false
+    type: integer
+    format: int32
+  - name: body.mediaType
+    in: query
+    description: Тип медиа
+    required: false
+    type: string
+  - name: body.merchantId
+    in: query
+    description: Идентификатор Точки продаж
+    required: true
+    type: string
+  - name: body.paymentDetails.code
+    in: query
+    description: Код документа
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.dateTime
+    in: query
+    description: 'Дата и время операции. По формату: (ISO 8601) YYY-MM-DDThh:mm:ss.sss '
+    required: false
+    type: string
+  - name: body.paymentDetails.items[0].name
+    in: query
+    description: Наименование предмета расчета
+    required: false
+    type: string
+  - name: body.paymentDetails.items[0].price
+    in: query
+    description: Цена в копейках за единицу с учетом скидок и наценок
+    required: false
+    type: string
+  - name: body.paymentDetails.items[0].productCode
+    in: query
+    description: Артикул
+    required: false
+    type: string
+  - name: body.paymentDetails.items[0].quantity
+    in: query
+    description: Количество
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.items[0].sum
+    in: query
+    description: Стоимость товара в копейках с учетом скидок и наценок
+    required: false
+    type: number
+  - name: body.paymentDetails.kktRegId
+    in: query
+    description: Регистрационный номер контрольно-кассовой техники
+    required: false
+    type: string
+  - name: body.paymentDetails.merchantAddress
+    in: query
+    description: Адрес
+    required: false
+    type: string
+  - name: body.paymentDetails.operator
+    in: query
+    description: Кассир
+    required: false
+    type: string
+  - name: body.paymentDetails.requestNumber
+    in: query
+    description: Номер чека за смену
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.retailAddress
+    in: query
+    description: Адрес точки продаж
+    required: false
+    type: string
+  - name: body.paymentDetails.shiftNumber
+    in: query
+    description: Номер смены
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.user
+    in: query
+    description: Наименование пользователя
+    required: false
+    type: string
+  - name: body.paymentPurpose
+    in: query
+    description: Назначение платежа
+    required: false
+    type: string
+  - name: body.qrTtl
+    in: query
+    description: Срок жизни Функциональной ссылки СБП B2B в минутах
+    required: false
+    type: string
+  - name: body.redirectUrl
+    in: query
+    description: Ссылка для автоматического возврата
+    required: false
+    type: string
+  - name: body.sign
+    in: query
+    description: Подпись сообщения
+    required: false
+    type: string
+  - name: body.takeTax
+    in: query
+    description: Информация о взимании НДС
+    required: true
+    type: boolean
+  - name: body.totalTaxAmount
+    in: query
+    description: 'Сумма НДС в копейках. Валюта НДС - рубли РФ. Всегда присутствует при takeTax=TRUE '
+    required: false
+    type: string
+  - name: body.traceId
+    in: query
+    description: Идентификатор документа
+    required: false
+    type: string
+    format: uuid
+  - name: body.uip
+    in: query
+    description: Уникальный Идентификатор Платежа, назначаемый Получателем
+    required: false
+    type: string
+  - name: body.width
+    in: query
+    description: Ширина
+    required: false
+    type: integer
+    format: int32
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/Ответ на операцию регистрации многоразового QR-кода для B2'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

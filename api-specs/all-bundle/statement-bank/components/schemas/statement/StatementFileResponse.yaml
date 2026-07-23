@@ -1,0 +1,8 @@
+type: object
+properties:
+  fileId:
+    type: string
+    format: uuid
+  token:
+    type: string
+description: Данные

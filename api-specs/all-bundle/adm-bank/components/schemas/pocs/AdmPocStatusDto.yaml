@@ -1,0 +1,13 @@
+type: string
+description: Статус АДМ
+enum:
+- NEW
+- DELIVERING
+- PREPARING
+- READY_TO_WORK
+- WORK
+- BLOCKED
+- WAIT_DEMOUNTING
+- REMOVED
+- AWAITING_SHIPMENT
+- IN_TRANSIT

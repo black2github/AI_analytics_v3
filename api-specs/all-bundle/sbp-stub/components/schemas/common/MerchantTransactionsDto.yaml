@@ -1,0 +1,17 @@
+type: object
+description: Данные транзакций ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  merchantName:
+    type: string
+    description: Наименование ТСП
+  inn:
+    type: string
+    description: ИНН ЮЛ
+  transactions:
+    type: array
+    items:
+      $ref: ./MerchantTransactionDto.yaml
+    description: Список транзакций

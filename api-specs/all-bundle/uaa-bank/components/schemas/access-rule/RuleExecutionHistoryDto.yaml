@@ -1,0 +1,32 @@
+type: object
+properties:
+  ruleId:
+    type: string
+    description: Идентификатор правила
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clientUserId:
+    type: string
+    description: Идентификатор пользователя клиента
+    format: uuid
+  userLogin:
+    type: string
+    description: Логин пользователя
+  userCredentials:
+    type: string
+    description: ФИО пользователя
+  executedAt:
+    type: string
+    description: Дата/время исполнения
+    format: date-time
+  ruleCanceledDate:
+    type: string
+    description: Дата отмены (аннулирования) правила
+    format: date-time
+  clientOfficialRemoved:
+    type: boolean
+    description: Признак того что связь пользователя и клиента удалена
+description: Запись в истории исполнения правил

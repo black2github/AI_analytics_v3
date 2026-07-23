@@ -1,0 +1,15 @@
+required:
+- documentId
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  permissionDenyKeyMessages:
+    type: array
+    description: Коды ошибок
+    items:
+      type: string
+      description: Коды ошибок
+description: Ответ для документа и причиной отказа

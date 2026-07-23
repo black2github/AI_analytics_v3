@@ -1,0 +1,88 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  createdAt:
+    type: string
+    format: date-time
+  accounts:
+    type: array
+    items:
+      $ref: ./ScheduleAccountDto.yaml
+  organizationNames:
+    type: array
+    items:
+      type: string
+  statementFormat:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  lastGenerationDate:
+    type: string
+    format: date-time
+  status:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DELETED
+    - RECEIVED
+    - REJECTED
+    - EXECUTED
+    - DISABLED
+  period:
+    type: string
+    enum:
+    - CURRENT_DAY
+    - PREVIOUS_DAY
+    - PREVIOUS_WEEK
+    - PREVIOUS_MONTH
+    - PREVIOUS_QUARTER
+  connectRequestId:
+    type: string
+    format: uuid
+    deprecated: true
+  disconnectRequestId:
+    type: string
+    format: uuid
+    deprecated: true
+  connectRequest:
+    $ref: ./ScheduleRequestScrollerDto.yaml
+  disconnectRequest:
+    $ref: ./ScheduleRequestScrollerDto.yaml
+  times:
+    type: array
+    items:
+      type: string
+  disconnectReason:
+    type: string
+    enum:
+    - USER_REQUEST
+    - ACCOUNT_CLOSED
+    - MANUALLY_DISABLED
+  hasClosedAccount:
+    type: boolean
+description: Страница с данными

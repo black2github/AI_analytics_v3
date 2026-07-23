@@ -1,0 +1,18 @@
+type: object
+properties:
+  templateName:
+    type: string
+    description: Наименование шаблона
+  paymentInfo:
+    $ref: ../common/CreatePaymentInfoDto.yaml
+  paymentAmount:
+    $ref: ../common/CreatePaymentAmountDto.yaml
+  payerDetails:
+    $ref: ./CreatePayerDetailsTemplateDto.yaml
+  recipientDetails:
+    $ref: ../common/CreateRecipientDetailsDto.yaml
+  budgetInfo:
+    $ref: ../common/CreateBudgetInfoDto.yaml
+  controlAndAcceptance:
+    $ref: ../common/CreateControlAndAcceptanceDto.yaml
+description: Создание шаблона платежного поручения

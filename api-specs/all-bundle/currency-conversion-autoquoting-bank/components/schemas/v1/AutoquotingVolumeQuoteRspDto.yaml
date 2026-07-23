@@ -1,0 +1,23 @@
+type: object
+description: Транспортная сущность котировки за объем
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  volume:
+    type: integer
+    format: int32
+    description: Объем
+  purchaseQuote:
+    type: number
+    description: Котировка покупки
+  saleQuote:
+    type: number
+    description: Котировка продажи
+  purchaseVolume:
+    type: number
+    description: Объем (покупка)
+  saleVolume:
+    type: number
+    description: Объем (продажа)

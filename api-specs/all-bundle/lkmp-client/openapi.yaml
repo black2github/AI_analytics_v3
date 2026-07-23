@@ -1,0 +1,165 @@
+openapi: 3.0.1
+info:
+  title: Сервис ЛК МП. Клиентская часть.
+  version: 3.2.0-hf-2
+servers:
+- url: lkmp-client
+paths:
+  /lkmp/offer:
+    $ref: ./paths/offer/lkmp_offer.yaml
+  /lkmp/grant-access:
+    $ref: ./paths/grant-access/lkmp_grant_access.yaml
+  /lkmp/offer/sign:
+    $ref: ./paths/offer/lkmp_offer_sign.yaml
+  /lkmp/offer/send:
+    $ref: ./paths/offer/lkmp_offer_send.yaml
+  /lkmp/offer/print:
+    $ref: ./paths/offer/lkmp_offer_print.yaml
+  /lkmp/offer/print-v2:
+    $ref: ./paths/offer/lkmp_offer_print_v2.yaml
+  /lkmp/offer/generate-sign-data:
+    $ref: ./paths/offer/lkmp_offer_generate_sign_data.yaml
+  /lkmp/offer/generate-digest:
+    $ref: ./paths/offer/lkmp_offer_generate_digest.yaml
+  /lkmp/offer/generate-digest/version:
+    $ref: ./paths/offer/lkmp_offer_generate_digest_version.yaml
+  /lkmp/grant-access/sign:
+    $ref: ./paths/grant-access/lkmp_grant_access_sign.yaml
+  /lkmp/grant-access/send:
+    $ref: ./paths/grant-access/lkmp_grant_access_send.yaml
+  /lkmp/grant-access/print:
+    $ref: ./paths/grant-access/lkmp_grant_access_print.yaml
+  /lkmp/grant-access/print-v2:
+    $ref: ./paths/grant-access/lkmp_grant_access_print_v2.yaml
+  /lkmp/grant-access/has-executed-for-bank-client:
+    $ref: ./paths/grant-access/lkmp_grant_access_has_executed_for_bank_client.yaml
+  /lkmp/grant-access/generate-sign-data:
+    $ref: ./paths/grant-access/lkmp_grant_access_generate_sign_data.yaml
+  /lkmp/grant-access/generate-digest:
+    $ref: ./paths/grant-access/lkmp_grant_access_generate_digest.yaml
+  /lkmp/grant-access/generate-digest/version:
+    $ref: ./paths/grant-access/lkmp_grant_access_generate_digest_version.yaml
+  /lkmp/offer/{id}:
+    $ref: ./paths/offer/lkmp_offer_id.yaml
+  /lkmp/grant-access/{id}:
+    $ref: ./paths/grant-access/lkmp_grant_access_id.yaml
+  /lkmp/grant-access/employees/{bankClientId}:
+    $ref: ./paths/grant-access/lkmp_grant_access_employees_bankClientId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/offer/AgreementsDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    LkmpOfferBankClientInfoDto:
+      $ref: ./components/schemas/offer/LkmpOfferBankClientInfoDto.yaml
+    LkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/LkmpOfferRequestDto.yaml
+    LkmpOfferRequestSignatureDto:
+      $ref: ./components/schemas/offer/LkmpOfferRequestSignatureDto.yaml
+    RegistrationDataDto:
+      $ref: ./components/schemas/offer/RegistrationDataDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    UpdateCommandLkmpOfferRequestDtoUUID:
+      $ref: ./components/schemas/offer/UpdateCommandLkmpOfferRequestDtoUUID.yaml
+    CreateResponseLkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/CreateResponseLkmpOfferRequestDto.yaml
+    LkmpAccessAgreementsInfoDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessAgreementsInfoDto.yaml
+    LkmpAccessBankClientDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessBankClientDto.yaml
+    LkmpAccessEmployeeInfoDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessEmployeeInfoDto.yaml
+    LkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessRequestDto.yaml
+    LkmpAccessSignatureDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessSignatureDto.yaml
+    UpdateCommandLkmpAccessRequestDtoUUID:
+      $ref: ./components/schemas/grant-access/UpdateCommandLkmpAccessRequestDtoUUID.yaml
+    CreateResponseLkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/CreateResponseLkmpAccessRequestDto.yaml
+    CreateCommandLkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/CreateCommandLkmpOfferRequestDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    SingleResponseLkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/SingleResponseLkmpOfferRequestDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    LkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/LkmpOfferPrintFormatDto.yaml
+    SingleCommandLkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/SingleCommandLkmpOfferPrintFormatDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/common/SingleResponsePrintResponse.yaml
+    GenericCommandLkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/GenericCommandLkmpOfferPrintFormatDto.yaml
+    GenericResponseSimpleErrorDataPrintReferenceResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPrintReferenceResponse.yaml
+    PrintReferenceResponse:
+      $ref: ./components/schemas/common/PrintReferenceResponse.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SingleResponseUniSignDto:
+      $ref: ./components/schemas/common/SingleResponseUniSignDto.yaml
+    UniCertificateDto:
+      $ref: ./components/schemas/common/UniCertificateDto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentDto:
+      $ref: ./components/schemas/common/UniSignDocumentDto.yaml
+    UniSignDto:
+      $ref: ./components/schemas/common/UniSignDto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    SingleResponseDigest:
+      $ref: ./components/schemas/common/SingleResponseDigest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/common/DigestRequest.yaml
+    CreateCommandLkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/CreateCommandLkmpAccessRequestDto.yaml
+    SingleResponseLkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/SingleResponseLkmpAccessRequestDto.yaml
+    LkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessPrintFormatDto.yaml
+    SingleCommandLkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/SingleCommandLkmpAccessPrintFormatDto.yaml
+    GenericCommandLkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/GenericCommandLkmpAccessPrintFormatDto.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/grant-access/SingleResponseBoolean.yaml
+    ListResponseLkmpAccessEmployeeInfoItemDto:
+      $ref: ./components/schemas/grant-access/ListResponseLkmpAccessEmployeeInfoItemDto.yaml
+    LkmpAccessEmployeeInfoItemDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessEmployeeInfoItemDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

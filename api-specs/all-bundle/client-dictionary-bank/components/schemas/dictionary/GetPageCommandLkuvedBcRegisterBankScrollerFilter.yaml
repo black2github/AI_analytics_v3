@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsLkuvedBcRegisterBankScrollerFilter.yaml
+description: Запрос страницы

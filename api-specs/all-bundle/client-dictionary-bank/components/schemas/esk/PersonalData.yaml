@@ -1,0 +1,28 @@
+type: object
+properties:
+  digitalRubleDetails:
+    $ref: ./DigitalRubleDetails.yaml
+  phoneNumbers:
+    type: array
+    items:
+      type: string
+  countryCode:
+    type: string
+    description: Код страны гражданства
+  birthDay:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  addresses:
+    type: array
+    description: Адреса
+    items:
+      $ref: ./Address.yaml
+  identityCard:
+    $ref: ./IdentityCard.yaml
+  relatedPartyDetails:
+    $ref: ./RelatedPartyDetails.yaml
+description: Персональные данные ФЛ

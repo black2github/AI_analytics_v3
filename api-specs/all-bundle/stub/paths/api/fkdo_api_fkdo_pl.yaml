@@ -1,0 +1,66 @@
+get:
+  tags:
+  - elar-controller
+  summary: "Функция поиска номера досье клиента по идентификатору заявки на открытие второго счета: getDossierByRegNum - &subaction=getDossierByRegNum&RegNum=000 \nПолучение списка типов документов: getDocumentTypes - &subaction=getDocumentTypesBasic authorization! Login: 'username', password: 'password'"
+  operationId: getDossierInfoUsingGET
+  produces:
+  - application/json
+  parameters:
+  - name: action
+    in: query
+    description: action
+    required: true
+    type: string
+  - name: DossierUid
+    in: query
+    description: DossierUid
+    required: false
+    type: string
+  - name: RegNum
+    in: query
+    description: RegNum
+    required: false
+    type: string
+  - name: Status
+    in: query
+    description: Status
+    required: false
+    type: string
+  - name: subaction
+    in: query
+    description: subaction
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ElarResponseDto'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+post:
+  tags:
+  - elar-controller
+  summary: 'Добавление документа в досье - addDocumentToDossierByUid. PathVariable: ?action=ecosystem&subaction=addDocumentToDossierByUid Basic authorization! Login: ''username'', password: ''password'''
+  operationId: addDocumentToDossierByUidUsingPOST
+  consumes:
+  - application/x-www-form-urlencoded
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ElarResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,16 @@
+required:
+- dfmAccountBlocking
+- h2hAccountBlocking
+- zskAccountBlocking
+type: object
+properties:
+  zskAccountBlocking:
+    type: boolean
+    description: Блокировка ЗСК
+  dfmAccountBlocking:
+    type: boolean
+    description: Блокировка ДФМ
+  h2hAccountBlocking:
+    type: boolean
+    description: Блокировка host-2-host
+description: Блокировки счета

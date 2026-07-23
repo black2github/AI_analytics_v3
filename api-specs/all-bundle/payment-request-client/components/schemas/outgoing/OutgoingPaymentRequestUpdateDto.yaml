@@ -1,0 +1,26 @@
+required:
+- documentCreationInfo
+- id
+- receiverInfo
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  documentCreationInfo:
+    $ref: ./DocumentCreationInfoCreateDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoCreateDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoCreateDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoCreateDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoCreateDto.yaml
+description: Обновление заявки платежное требование исходящее

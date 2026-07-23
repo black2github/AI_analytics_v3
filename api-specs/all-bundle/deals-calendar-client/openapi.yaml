@@ -1,0 +1,162 @@
+openapi: 3.0.1
+info:
+  title: Сервис календаря сделок. Клиентская часть.
+  version: 1.47.0
+servers:
+- url: /deals-calendar-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API получения баннеров заявок
+- name: API заявки на встречу, создаваемую через АС ЛБП. Операции над датами и временными слотами.
+- name: API Получение границ доступности выездного сервиса.
+- name: API заявки на встречу, создаваемую через АС ЛБП. Базовые операции.
+- name: API заявки на встречу. Базовые операции.
+- name: API заявки на встречу. Операции над временными слотами.
+paths:
+  /meeting:
+    $ref: ./paths/meeting/meeting.yaml
+  /meeting/lbp:
+    $ref: ./paths/lbp/meeting_lbp.yaml
+  /meeting/time-slots/available:
+    $ref: ./paths/time-slots/meeting_time_slots_available.yaml
+  /meeting/reject/{id}:
+    $ref: ./paths/reject/meeting_reject_id.yaml
+  /meeting/lbp/time-slots/available/intervals:
+    $ref: ./paths/lbp/meeting_lbp_time_slots_available_intervals.yaml
+  /meeting/lbp/time-slots/available/dates:
+    $ref: ./paths/lbp/meeting_lbp_time_slots_available_dates.yaml
+  /meeting/lbp/reject/{id}:
+    $ref: ./paths/lbp/meeting_lbp_reject_id.yaml
+  /meeting/estimate:
+    $ref: ./paths/estimate/meeting_estimate.yaml
+  /meeting/{id}:
+    $ref: ./paths/{id}/meeting_id.yaml
+  /meeting/list:
+    $ref: ./paths/list/meeting_list.yaml
+  /meeting/lbp/{id}:
+    $ref: ./paths/lbp/meeting_lbp_id.yaml
+  /meeting/lbp/list:
+    $ref: ./paths/lbp/meeting_lbp_list.yaml
+  /meeting/lbp/cities/available:
+    $ref: ./paths/lbp/meeting_lbp_cities_available.yaml
+  /meeting/has-meeting-onb/{id}:
+    $ref: ./paths/has-meeting-onb/meeting_has_meeting_onb_id.yaml
+  /meeting/cities-branches-list/{id}:
+    $ref: ./paths/cities-branches-list/meeting_cities_branches_list_id.yaml
+  /meeting/banners:
+    $ref: ./paths/banners/meeting_banners.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    MeetingContactDto:
+      $ref: ./components/schemas/common/MeetingContactDto.yaml
+    MeetingRequestBranchUpdateDto:
+      $ref: ./components/schemas/common/MeetingRequestBranchUpdateDto.yaml
+    MeetingRequestUpdateDto:
+      $ref: ./components/schemas/common/MeetingRequestUpdateDto.yaml
+    OtherInfoUpdateDto:
+      $ref: ./components/schemas/common/OtherInfoUpdateDto.yaml
+    UpdateCommandMeetingRequestUpdateDtoUUID:
+      $ref: ./components/schemas/common/UpdateCommandMeetingRequestUpdateDtoUUID.yaml
+    CreateResponseMeetingRequestDto:
+      $ref: ./components/schemas/common/CreateResponseMeetingRequestDto.yaml
+    MeetingRequestBankClientDto:
+      $ref: ./components/schemas/common/MeetingRequestBankClientDto.yaml
+    MeetingRequestBranchDto:
+      $ref: ./components/schemas/common/MeetingRequestBranchDto.yaml
+    MeetingRequestDto:
+      $ref: ./components/schemas/common/MeetingRequestDto.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    CreateCommandMeetingRequestCreateDto:
+      $ref: ./components/schemas/common/CreateCommandMeetingRequestCreateDto.yaml
+    MeetingRequestCreateDto:
+      $ref: ./components/schemas/common/MeetingRequestCreateDto.yaml
+    OtherInfoCreateDto:
+      $ref: ./components/schemas/common/OtherInfoCreateDto.yaml
+    AvailableMeetingTimeSlotsRequestDto:
+      $ref: ./components/schemas/time-slots/AvailableMeetingTimeSlotsRequestDto.yaml
+    AvailableMeetingTimeSlotsResponseDto:
+      $ref: ./components/schemas/time-slots/AvailableMeetingTimeSlotsResponseDto.yaml
+    MeetingTimeSlotDto:
+      $ref: ./components/schemas/time-slots/MeetingTimeSlotDto.yaml
+    SingleResponseAvailableMeetingTimeSlotsResponseDto:
+      $ref: ./components/schemas/time-slots/SingleResponseAvailableMeetingTimeSlotsResponseDto.yaml
+    SingleResponseMeetingRequestDto:
+      $ref: ./components/schemas/common/SingleResponseMeetingRequestDto.yaml
+    MeetingLbpTimeSlotsRequestDto:
+      $ref: ./components/schemas/lbp/MeetingLbpTimeSlotsRequestDto.yaml
+    GenericResponseSimpleErrorDataMeetingLbpTimeSlotsResponseDto:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataMeetingLbpTimeSlotsResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    TimeSlotDto:
+      $ref: ./components/schemas/lbp/TimeSlotDto.yaml
+    MeetingLbpDatesRequestDto:
+      $ref: ./components/schemas/lbp/MeetingLbpDatesRequestDto.yaml
+    DeliveryDatesDto:
+      $ref: ./components/schemas/lbp/DeliveryDatesDto.yaml
+    GenericResponseSimpleErrorDataMeetingLbpDatesResponseDto:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataMeetingLbpDatesResponseDto.yaml
+    MeetingEstimateRequestDto:
+      $ref: ./components/schemas/estimate/MeetingEstimateRequestDto.yaml
+    SingleCommandMeetingEstimateRequestDto:
+      $ref: ./components/schemas/estimate/SingleCommandMeetingEstimateRequestDto.yaml
+    MeetingRequestBranchInfoDto:
+      $ref: ./components/schemas/common/MeetingRequestBranchInfoDto.yaml
+    MeetingRequestTaskDto:
+      $ref: ./components/schemas/common/MeetingRequestTaskDto.yaml
+    SingleResponseMeetingRequestTaskDto:
+      $ref: ./components/schemas/common/SingleResponseMeetingRequestTaskDto.yaml
+    MeetingListResponseDto:
+      $ref: ./components/schemas/common/MeetingListResponseDto.yaml
+    MeetingRequestBankClientInfoDto:
+      $ref: ./components/schemas/common/MeetingRequestBankClientInfoDto.yaml
+    MeetingRequestInfoDto:
+      $ref: ./components/schemas/common/MeetingRequestInfoDto.yaml
+    SingleResponseMeetingListResponseDto:
+      $ref: ./components/schemas/common/SingleResponseMeetingListResponseDto.yaml
+    GenericResponseSimpleErrorDataVmBoundariesResponseDto:
+      $ref: ./components/schemas/lbp/GenericResponseSimpleErrorDataVmBoundariesResponseDto.yaml
+    VmBoundariesResponseDto:
+      $ref: ./components/schemas/lbp/VmBoundariesResponseDto.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/has-meeting-onb/SingleResponseBoolean.yaml
+    BranchDtoV2:
+      $ref: ./components/schemas/cities-branches-list/BranchDtoV2.yaml
+    MeetingRequestCitiesBranchesDto:
+      $ref: ./components/schemas/cities-branches-list/MeetingRequestCitiesBranchesDto.yaml
+    RequisitesDtoV2:
+      $ref: ./components/schemas/cities-branches-list/RequisitesDtoV2.yaml
+    SingleResponseListMeetingRequestCitiesBranchesDto:
+      $ref: ./components/schemas/cities-branches-list/SingleResponseListMeetingRequestCitiesBranchesDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingBannerDto:
+      $ref: ./components/schemas/banners/GenericResponseSimpleErrorDataListOnboardingBannerDto.yaml
+    OnboardingBannerDto:
+      $ref: ./components/schemas/banners/OnboardingBannerDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

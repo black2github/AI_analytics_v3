@@ -1,0 +1,121 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - TO_KPP_ATTACH
+    - KPP_ATTACHED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - GET_DBO_CONTRACTS
+    - GET_DBO_CONTRACTS_EXECUTED
+    - GET_DBO_CONTRACTS_ERROR
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - REGISTER_CERT
+    - DENIED
+    - DELETED
+    - EXECUTED
+    - NEED_ATTACH_KPP_OR_NOT
+    - SIGN_VALID_OR_NOT
+    - RECEIVED_OR_NOT
+    - COMPLETED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - TO_KPP_ATTACH
+    - KPP_ATTACHED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - GET_DBO_CONTRACTS
+    - GET_DBO_CONTRACTS_EXECUTED
+    - GET_DBO_CONTRACTS_ERROR
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - REGISTER_CERT
+    - DENIED
+    - DELETED
+    - EXECUTED
+    - NEED_ATTACH_KPP_OR_NOT
+    - SIGN_VALID_OR_NOT
+    - RECEIVED_OR_NOT
+    - COMPLETED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - TO_KPP_ATTACH
+      - KPP_ATTACHED
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - AUTHORIZED_PERSON_CHECK
+      - GET_DBO_CONTRACTS
+      - GET_DBO_CONTRACTS_EXECUTED
+      - GET_DBO_CONTRACTS_ERROR
+      - IDENTIFY_ORG_AUTO
+      - IDENTIFY_ORG_MANUAL
+      - ORG_DEFINED
+      - REGISTER_CERT
+      - DENIED
+      - DELETED
+      - EXECUTED
+      - NEED_ATTACH_KPP_OR_NOT
+      - SIGN_VALID_OR_NOT
+      - RECEIVED_OR_NOT
+      - COMPLETED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - TO_KPP_ATTACH
+      - KPP_ATTACHED
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - AUTHORIZED_PERSON_CHECK
+      - GET_DBO_CONTRACTS
+      - GET_DBO_CONTRACTS_EXECUTED
+      - GET_DBO_CONTRACTS_ERROR
+      - IDENTIFY_ORG_AUTO
+      - IDENTIFY_ORG_MANUAL
+      - ORG_DEFINED
+      - REGISTER_CERT
+      - DENIED
+      - DELETED
+      - EXECUTED
+      - NEED_ATTACH_KPP_OR_NOT
+      - SIGN_VALID_OR_NOT
+      - RECEIVED_OR_NOT
+      - COMPLETED
+  isNull:
+    type: boolean
+description: Статус. (eq, in, notIn, notEq)

@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - IP
+    - UL
+  notEq:
+    type: string
+    enum:
+    - IP
+    - UL
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - IP
+      - UL
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - IP
+      - UL
+  isNull:
+    type: boolean
+description: Фильтрация по типу клиента. Полное совпадение.

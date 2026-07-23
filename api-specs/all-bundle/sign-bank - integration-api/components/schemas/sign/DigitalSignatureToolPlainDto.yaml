@@ -1,0 +1,59 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  kind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  externalSystem:
+    type: string
+    description: Система создавшая запись
+  status:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  remoteId:
+    type: integer
+    description: ID учетной записи в системе источнике
+    format: int32
+  remoteProfileId:
+    type: integer
+    description: ID криптопрофиля в системе источнике
+    format: int32
+  certificateName:
+    type: string
+    description: Наименование владельца сертификата
+  certificateOwnerName:
+    type: string
+    description: ФИО владельца сертификата
+  dssCertificateId:
+    type: integer
+    description: ID сертификата DSS
+    format: int64
+  enabled:
+    type: boolean
+    description: Разрешение на использование
+  loginEnabled:
+    type: boolean
+    description: Разрешение на использование для входа
+  absId:
+    type: string
+    description: ID физического лица в РКО Ф1
+description: Плоское DTO для СЭП

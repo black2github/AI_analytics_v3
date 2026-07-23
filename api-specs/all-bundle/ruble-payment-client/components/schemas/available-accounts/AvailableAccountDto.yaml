@@ -1,0 +1,20 @@
+required:
+- accountsForEdit
+- accountsForView
+type: object
+properties:
+  accountsForEdit:
+    type: array
+    description: Список счетов на редактирование
+    items:
+      type: string
+      description: Список счетов на редактирование
+      format: uuid
+  accountsForView:
+    type: array
+    description: Список счетов на просмотр
+    items:
+      type: string
+      description: Список счетов на просмотр
+      format: uuid
+description: Доступные клиенту счета

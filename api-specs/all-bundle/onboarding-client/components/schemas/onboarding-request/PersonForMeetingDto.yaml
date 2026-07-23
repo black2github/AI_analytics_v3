@@ -1,0 +1,21 @@
+type: object
+properties:
+  contactInfo:
+    $ref: ./PersonContactInfoForMeetingDto.yaml
+  forename:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Имя
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  patronymic:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Отчество
+  surname:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Фамилия
+description: Физические лица в заявке на открытие первого счета для встречи

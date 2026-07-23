@@ -1,0 +1,53 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  customerId:
+    type: string
+    description: Идентификатор клиента в сервисе DirectBank
+  createdAt:
+    type: string
+    description: Дата время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата время редактирования
+    format: date-time
+  bankClientId:
+    type: string
+    description: ID "Клиент Банка"
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН клиента
+  absId:
+    type: string
+    description: Идентификатор организации в АБС. Заполнено из BSS DBO 3.20. РНК клиента в РКО Ф1
+  blocked:
+    type: boolean
+    description: Признак блокировки
+  documentList:
+    type: array
+    description: Разрешенные виды ЭД
+    items:
+      $ref: ./CryptoParametersDocument.yaml
+  createUserId:
+    type: string
+    description: Пользователь, создавший запись (ID "Пользователь")
+    format: uuid
+  createUserFio:
+    type: string
+    description: Пользователь, создавший запись (ФИО)
+  updateUserId:
+    type: string
+    description: Пользователь, изменивший запись (ID "Пользователь")
+    format: uuid
+  updateUserFio:
+    type: string
+    description: Пользователь, изменивший запись (ФИО)
+description: Данные

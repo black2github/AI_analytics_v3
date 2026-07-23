@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Тип периода до окончания срока действия карты
+    enum:
+    - SHORT_TERM
+    - LONG_TERM
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип периода до окончания срока действия карты
+      enum:
+      - SHORT_TERM
+      - LONG_TERM
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Тип периода до окончания срока действия карты
+    enum:
+    - SHORT_TERM
+    - LONG_TERM
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип периода до окончания срока действия карты
+      enum:
+      - SHORT_TERM
+      - LONG_TERM
+description: Тип периода до окончания срока действия (eq)

@@ -1,0 +1,10 @@
+type: object
+properties:
+  documentsRegistry:
+    type: array
+    description: Реестр документов
+    items:
+      $ref: ./SignRegistryClientDocumentsDto.yaml
+  statistics:
+    $ref: ./SignRegistryStatisticsDto.yaml
+description: Реестр документов на подпись

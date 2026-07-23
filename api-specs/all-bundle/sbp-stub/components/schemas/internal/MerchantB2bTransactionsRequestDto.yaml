@@ -1,0 +1,35 @@
+type: object
+description: Запрос истории b2b операций
+properties:
+  startDate:
+    type: string
+    description: Начальная дата выбора операций
+  endDate:
+    type: string
+    description: Конечная дата выбора операций
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ
+  listParam:
+    type: array
+    items:
+      type: string
+    description: Список полей, которые необходимо вернуть по операции
+  merchantId:
+    type: array
+    items:
+      type: string
+    description: Идентификатор ТСП
+  page:
+    type: integer
+    format: int32
+    description: Номер страницы
+  size:
+    type: integer
+    format: int32
+    description: Количество записей
+  status:
+    type: array
+    items:
+      type: string
+    description: Статус операции

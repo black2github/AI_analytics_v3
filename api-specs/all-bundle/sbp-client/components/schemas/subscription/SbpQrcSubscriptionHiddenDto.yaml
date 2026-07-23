@@ -1,0 +1,12 @@
+type: object
+description: Признак "Скрытая подписка"
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  hidden:
+    type: boolean
+    description: Признак "Скрытая подписка"
+required:
+- id

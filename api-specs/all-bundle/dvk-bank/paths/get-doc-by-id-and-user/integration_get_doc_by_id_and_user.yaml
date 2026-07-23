@@ -1,0 +1,18 @@
+post:
+  tags:
+  - dvk-get-by-id-tech-controller
+  summary: Получить документ по идентификатору DVK.id и пользователю
+  operationId: getDocumentByIdByUser
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandDocumentLinkedDocRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataDvkDocumentDto.yaml

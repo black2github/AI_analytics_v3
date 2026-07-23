@@ -1,0 +1,5 @@
+type: object
+properties:
+  hasNotEmptyTurnovers:
+    type: boolean
+description: Данные

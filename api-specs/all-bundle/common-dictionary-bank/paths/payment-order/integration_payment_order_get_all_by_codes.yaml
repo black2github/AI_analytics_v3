@@ -1,0 +1,35 @@
+post:
+  tags:
+  - Интеграционное API справочника "Очередность платежа"
+  summary: Получить очередности платежа по кодам
+  description: 'Привилегии: COMMON_DICTIONARY.TECH.PAYMENT_ORDER_VIEW'
+  operationId: getAllByCodesUsingPOST_9
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: codes
+    description: codes
+    required: true
+    schema:
+      type: array
+      items:
+        type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«PaymentOrderDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

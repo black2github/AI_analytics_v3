@@ -1,0 +1,19 @@
+post:
+  tags:
+  - '[Оценка 5*]. Банк — работа с хештегами'
+  summary: Сохранить хештеги для опроса (создание или обновление)
+  description: 'Привилегии: FEEDBACK.BANK.HASHTAG_EDIT'
+  operationId: savePollHashtags
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/hashtag/SavePollHashtagsRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml

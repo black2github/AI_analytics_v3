@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  role:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр групп доступа

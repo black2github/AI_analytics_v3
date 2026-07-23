@@ -1,0 +1,14 @@
+required:
+- certData
+- digest
+type: object
+properties:
+  digest:
+    minLength: 1
+    type: string
+    description: Digest документа
+  certData:
+    minLength: 1
+    type: string
+    description: Сертификат подписанта в Base64
+description: Запрос вычисления хеша digest

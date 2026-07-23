@@ -1,0 +1,75 @@
+openapi: 3.1.0
+info:
+  title: knosis-stub API
+  version: 1.1.0
+servers:
+- url: /knosis-stub
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /egrul-stub/updating/create:
+    $ref: ./paths/updating/egrul_stub_updating_create.yaml
+  /egrul-stub/updating/delete/{id}:
+    $ref: ./paths/updating/egrul_stub_updating_delete_id.yaml
+  /egrul-stub/updating/list:
+    $ref: ./paths/updating/egrul_stub_updating_list.yaml
+  /knosis-stub/updating/create/{key}:
+    $ref: ./paths/updating/knosis_stub_updating_create_key.yaml
+  /knosis-stub/updating/delete/{id}:
+    $ref: ./paths/updating/knosis_stub_updating_delete_id.yaml
+  /knosis-stub/updating/list:
+    $ref: ./paths/updating/knosis_stub_updating_list.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    Company:
+      $ref: ./components/schemas/updating/Company.yaml
+    EgrulInfoEntity:
+      $ref: ./components/schemas/updating/EgrulInfoEntity.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    GetEgrulInfoResponse:
+      $ref: ./components/schemas/updating/GetEgrulInfoResponse.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    KnosisEntity:
+      $ref: ./components/schemas/updating/KnosisEntity.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    Response:
+      $ref: ./components/schemas/updating/Response.yaml
+    SearchInCacheResponse:
+      $ref: ./components/schemas/updating/SearchInCacheResponse.yaml
+    SearchInCacheResult:
+      $ref: ./components/schemas/updating/SearchInCacheResult.yaml
+    UUID:
+      $ref: ./components/schemas/updating/UUID.yaml

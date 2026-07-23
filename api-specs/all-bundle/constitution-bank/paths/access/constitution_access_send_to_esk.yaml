@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API заявки на добавление/изменение данных и полномочий сотрудника клиента. Банковские операции.
+  summary: Отправить заявку в ЕСК
+  description: 'Привилегии: CONSTITUTION_ACCESS.RESEND_TO_ABS'
+  operationId: sendToEskUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/SingleCommand«uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CompositeResponse«ConstitutionAccessRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

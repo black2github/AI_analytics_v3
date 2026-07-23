@@ -1,0 +1,24 @@
+type: object
+properties:
+  sourceOfFunds:
+    type: string
+    description: Сведения об источниках происхождения ДС и (или) иного имущества клиента
+  riskLevel:
+    type: string
+    description: Сведения о степени (уровне) риска клиента
+  justificationOfRiskLevel:
+    type: string
+    description: Обоснование оценки кредитной организацией степени (уровня) риска клиента
+  relationshipWithBank:
+    type: string
+    description: Сведения о целях установления и предполагаемом характере деловых отношений с кредитной организацией
+  activityPurpose:
+    type: string
+    description: Сведения о целях финансово-хозяйственной деятельности
+  financialPosition:
+    type: string
+    description: Сведения о финансовом положении
+  businessReputation:
+    type: string
+    description: Сведения о деловой репутации
+description: Сведения, обоснования и результаты проверок ПОД/ФТ

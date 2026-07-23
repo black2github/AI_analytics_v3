@@ -1,0 +1,36 @@
+type: object
+description: Данные получателя
+properties:
+  inn:
+    type: string
+    description: ИНН получателя
+  name:
+    type: string
+    description: ФИО (полное)/Наименование получателя
+  countryCode:
+    type: string
+    description: Цифровой код страны
+  participantId:
+    type: string
+    description: Идентификатор получателя на ПлЦР
+  dcAccountNumber:
+    type: string
+    description: Номер Счета ЦР получателя
+  postalAddress:
+    $ref: ./PostalAddress.yaml
+    description: Адрес местонахождения (регистрации) Клиента
+  taxpayerIdentifier:
+    type: string
+    description: Номер/Идентификатор налогоплательщика получателя
+  accountIdentifier:
+    type: string
+    description: Номер/идентификатор счета получателя
+  fiName:
+    type: string
+    description: Наименование ФП получателя
+  biCfi:
+    type: string
+    description: SWIFT BIC ФП получателя
+required:
+- countryCode
+- name

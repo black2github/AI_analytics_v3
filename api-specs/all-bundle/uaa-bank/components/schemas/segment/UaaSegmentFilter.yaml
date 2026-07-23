@@ -1,0 +1,13 @@
+type: object
+properties:
+  segmentCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - CLIENT_SEGMENT
+    - BANK_SEGMENT
+  entityType:
+    $ref: ./FilterValueEnumDtoUaaSegmentEntityTypeDto.yaml
+description: Фильтр сегментов

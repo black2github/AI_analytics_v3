@@ -1,0 +1,7 @@
+type: object
+properties:
+  comment:
+    type: string
+  documentId:
+    type: string
+    format: uuid

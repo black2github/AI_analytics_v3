@@ -1,0 +1,29 @@
+type: object
+description: Фильтр по коду продуктового сервиса в обобщенной заявке с агентами
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - SBP
+  notEq:
+    type: string
+    enum:
+    - SBP
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - SBP
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - SBP
+  isNull:
+    type: boolean

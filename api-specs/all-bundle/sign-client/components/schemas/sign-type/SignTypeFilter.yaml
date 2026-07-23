@@ -1,0 +1,5 @@
+type: object
+properties:
+  code:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр справочника типов ЭП

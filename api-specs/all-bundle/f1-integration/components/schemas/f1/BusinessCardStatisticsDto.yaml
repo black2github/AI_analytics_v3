@@ -1,0 +1,20 @@
+required:
+- count
+- currencyCode
+- status
+type: object
+properties:
+  status:
+    type: string
+    description: Статус карты (ACTIVE, INACTIVE, OTHER)
+  currencyCode:
+    type: string
+    description: Буквенный код валюты
+  count:
+    type: integer
+    description: Количество карт с данным статусом и валютой
+    format: int64
+  cardGuid:
+    type: string
+    description: Идентификатор единственной карты (заполняется только если count = 1)
+description: Статистика по картам, сгруппированная по статусу и валюте

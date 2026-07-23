@@ -1,0 +1,34 @@
+type: object
+properties:
+  approvalDate:
+    type: string
+    description: Дата одобрения
+    format: date-time
+  branchInfo:
+    type: string
+    description: Номер и название офиса обслуживания
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование клиента
+  date:
+    type: string
+    description: Дата документа
+    format: date-time
+  inn:
+    type: string
+    description: ИНН клиента
+  requestId:
+    type: string
+    description: ID заявки
+    format: uuid
+  requestUrl:
+    type: string
+    description: URL заявки
+  status:
+    type: string
+    description: Статус заявки
+description: Строка данных для ежедневного отчета по заявкам на открытие первого счета с выездным сервисом

@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+  name:
+    type: string
+    description: Имя
+  parameters:
+    type: array
+    description: Параметры
+    items:
+      $ref: ./ActivationStrategyParameterDto.yaml
+description: Стратегия активации функции

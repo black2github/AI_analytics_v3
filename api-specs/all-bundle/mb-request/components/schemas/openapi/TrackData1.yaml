@@ -1,0 +1,7 @@
+type: object
+properties:
+  trackNumber:
+    type: string
+  trackValue:
+    type: string
+description: Данные магнитной дорожки платежной карты или их эквивалент

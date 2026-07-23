@@ -1,0 +1,19 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента в ЭКО
+    format: uuid
+  language:
+    type: string
+    description: Локаль в которой требуется сгенерировать отчет проверки ЭП
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  data:
+    type: array
+    description: Список запросов для формирования печати заявок на ОЭП/НЭП с передачей паспортных данных
+    items:
+      $ref: ./PrintRequest.yaml
+description: Список запросов запросов печати заявки на ОЭП

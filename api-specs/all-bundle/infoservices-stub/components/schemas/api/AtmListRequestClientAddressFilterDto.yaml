@@ -1,0 +1,8 @@
+type: object
+properties:
+  fullAddress:
+    type: string
+  geolocation:
+    $ref: ./AtmListRequestClientAddressGeolocationFilterDto.yaml
+  radius:
+    type: string

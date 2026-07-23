@@ -1,0 +1,85 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  notEq:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BONDS
+      - EQUITIES
+      - SHARES
+      - FUTURES
+      - OPTIONS
+      - KSU
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BONDS
+      - EQUITIES
+      - SHARES
+      - FUTURES
+      - OPTIONS
+      - KSU
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  ge:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  lt:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  le:
+    type: string
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+description: Тип ценной бумаги

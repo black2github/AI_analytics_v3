@@ -1,0 +1,17 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  filialName:
+    $ref: ./FilterValueDtoString.yaml
+  message:
+    $ref: ./FilterValueDtoString.yaml
+  shortClientName:
+    $ref: ./FilterValueDtoString.yaml
+  subject:
+    $ref: ./FilterValueDtoString.yaml
+  typeName:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр скроллера для контекстного поиска. Клиентская часть.

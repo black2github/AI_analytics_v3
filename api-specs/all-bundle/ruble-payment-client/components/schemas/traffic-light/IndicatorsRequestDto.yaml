@@ -1,0 +1,15 @@
+required:
+- inns
+- source
+type: object
+properties:
+  inns:
+    type: array
+    description: Список ИНН организаций, для которых необходимо получить индикаторы
+    items:
+      type: string
+      description: Список ИНН организаций, для которых необходимо получить индикаторы
+  source:
+    type: string
+    description: Источник запроса
+description: Запрос на получение индикаторов из Светофора

@@ -1,0 +1,19 @@
+post:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Получить список опросов с фильтрацией и пагинацией
+  description: 'Привилегии: FEEDBACK.BANK.POLL_LIST_VIEW'
+  operationId: getPolls
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/poll/PollListFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/poll/GenericResponseSimpleErrorDataSliceDataPollParameterDto.yaml

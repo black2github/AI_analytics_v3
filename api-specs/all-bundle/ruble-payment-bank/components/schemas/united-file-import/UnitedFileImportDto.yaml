@@ -1,0 +1,64 @@
+required:
+- createdAt
+- fileId
+- id
+- signedFileImport
+- userFio
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: ID Файл импорта/фонового процесса импорта
+    format: uuid
+  userId:
+    type: string
+    description: ID "Пользователь"
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО Пользователя
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Множество ID "Клиент Банка"
+    items:
+      type: string
+      description: Множество ID "Клиент Банка"
+      format: uuid
+  bankClient:
+    $ref: ./UnitedFileImportBankClientInfoDto.yaml
+  fileName:
+    type: string
+    description: Имя файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  fileId:
+    type: string
+    description: Идентификатор файла в файловом хранилище
+    format: uuid
+  encryptedFileId:
+    type: string
+    description: Идентификатор зашифрованного файла в файловом хранилище
+    format: uuid
+  docCount:
+    type: integer
+    description: Всего документов
+    format: int64
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  status:
+    $ref: ./UnitedFileImportStatusDto.yaml
+  fileSignature:
+    $ref: ./UnitedFileImportSignStatusDto.yaml
+  amount:
+    type: string
+    description: Сумма документов
+  signedFileImport:
+    type: boolean
+    description: Признак импорт подписанного/неподписанного файла
+description: Файл импорта/фоновый процесс импорта

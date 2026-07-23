@@ -1,0 +1,5 @@
+type: string
+description: Справочник типов документов ЭКО.
+enum:
+- ACC_OPEN_FIRST_REQ_2021
+- ACC_OPEN_FIRST_REQ_KZ

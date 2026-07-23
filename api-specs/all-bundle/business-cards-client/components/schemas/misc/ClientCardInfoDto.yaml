@@ -1,0 +1,18 @@
+type: object
+properties:
+  cardCount:
+    exclusiveMaximum: true
+    minimum: 0
+    type: integer
+    description: Число карт клиента, готовых к получению в определенном офисе
+    format: int32
+  clientGuid:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  clientName:
+    maxLength: 800
+    type: string
+    description: Краткое или полное наименование клиента
+    nullable: true
+description: Данные о клиенте

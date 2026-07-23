@@ -1,0 +1,28 @@
+required:
+- accountNumber
+- sourceSystems
+- userId
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  sourceSystems:
+    uniqueItems: true
+    type: array
+    description: Источник данных о счете
+    items:
+      type: string
+      description: Источник данных о счете
+      enum:
+      - BSS_DBO_320
+      - ECO
+      - RKO_F1
+      - ESK
+      - SBP
+      - TESSA
+  userId:
+    type: string
+    description: Идентификатор пользователя клиента банка
+    format: uuid
+description: Транспортное представление запроса на проверку существования счета по критерию

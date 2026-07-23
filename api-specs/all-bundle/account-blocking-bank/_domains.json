@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for account-blocking-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/h2h-blocking",
+      "domain": "h2h-blocking"
+    },
+    {
+      "prefix": "/account-blocking",
+      "domain": "account-blocking"
+    }
+  ]
+}

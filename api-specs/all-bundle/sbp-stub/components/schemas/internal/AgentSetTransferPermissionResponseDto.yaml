@@ -1,0 +1,18 @@
+type: object
+description: Ответ на запрос подключения/отключения Агентов ТСП
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  guid:
+    type: string
+    description: Идентификатор BSS
+  docType:
+    type: string
+    description: Тип документа
+  transactionId:
+    type: string
+    description: Идентификатор нефинансовой операции

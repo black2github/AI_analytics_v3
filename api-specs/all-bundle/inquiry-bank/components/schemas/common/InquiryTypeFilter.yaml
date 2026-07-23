@@ -1,0 +1,47 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: string
+    description: Тип справки
+    example: null
+    enum:
+    - SINGLE
+    - COMPOSITE
+  notEq:
+    type: string
+    description: Тип справки
+    example: null
+    enum:
+    - SINGLE
+    - COMPOSITE
+  in:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Тип справки
+      example: null
+      enum:
+      - SINGLE
+      - COMPOSITE
+  notIn:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Тип справки
+      example: null
+      enum:
+      - SINGLE
+      - COMPOSITE
+  isNull:
+    type: boolean
+    example: null
+description: Фильтр по типу справки
+example: null

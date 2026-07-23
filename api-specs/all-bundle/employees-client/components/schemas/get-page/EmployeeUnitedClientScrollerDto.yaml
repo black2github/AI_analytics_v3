@@ -1,0 +1,68 @@
+required:
+- authorizedPerson
+- bankClientId
+- fio
+- relationship
+- requests
+- tags
+type: object
+properties:
+  relationship:
+    type: string
+    description: Отношение записи к источникам ее хранения
+    enum:
+    - G1_ECO_AND_ESK
+    - G2_ONLY_ESK
+    - G3_ONLY_ECO
+  fio:
+    type: string
+    description: ФИО сотрудника
+  phoneNumber:
+    type: string
+    description: Номер телефона. Применяется маскирование
+  email:
+    type: string
+    description: Электронная почта. Применяется маскирование
+  authorizedPerson:
+    type: boolean
+    description: Признак "УЛ по ГПБ БОЛ"
+  position:
+    type: string
+    description: Должность
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  emplId:
+    type: string
+    description: Ссылка на сущность "Сотрудники клиента"
+    format: uuid
+  userUaaId:
+    type: string
+    description: Ссылка на сущность "Клиентский пользователь"
+    format: uuid
+  blockedAt:
+    type: string
+    description: Дата и время блокировки УЛ
+    format: date-time
+  requests:
+    type: array
+    description: Сокращенное описание заявок
+    items:
+      $ref: ../common/ShortRequestInfo.yaml
+  tags:
+    type: array
+    description: Список тегов для сотрудника
+    items:
+      type: string
+      description: Список тегов для сотрудника
+      enum:
+      - UPDATE_INFORMATION
+      - REJECTED
+      - DRAFT
+      - TO_SIGN
+      - CHECKED_BANK
+description: Список сотрудников организации

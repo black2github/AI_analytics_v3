@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  version:
+    type: integer
+    description: Версия записи
+    format: int32
+  status:
+    type: string
+    description: Статус заявки на резервирование счетов
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXPORT_TO_F1_ERROR
+    - PARTLY_EXECUTED
+    - EXECUTED
+    - REJECTED
+    - EXPORTED_TO_F1_OR_EXPORT_TO_F1_ERROR
+    - EXECUTED_OR_PARTLY_EXECUTED
+  userId:
+    type: string
+    description: Идентификатор пользователя, создавшего заявку
+    format: uuid
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  accountsInfo:
+    type: array
+    description: Информация о счетах
+    items:
+      $ref: ./AccountsInfoDto.yaml
+description: Заявка на резервирование счетов

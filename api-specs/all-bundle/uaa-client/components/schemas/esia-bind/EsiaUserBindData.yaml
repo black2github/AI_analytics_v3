@@ -1,0 +1,8 @@
+required:
+- authCode
+type: object
+properties:
+  authCode:
+    type: string
+    description: Код аутентификации ЕСИА
+description: Данные для привязки ЕСИА к пользователю клиента

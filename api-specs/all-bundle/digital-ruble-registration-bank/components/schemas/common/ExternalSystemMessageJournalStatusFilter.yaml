@@ -1,0 +1,81 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус сообщения сервиса ЦР
+    enum:
+    - NEW
+    - CANCELED_WITH_REMARKS
+    - CANCELED_HASH_COINCIDENCE
+    - ESK_ERROR
+    - SENT_ERROR
+    - SENT_TO_ESK
+    - ESK_ACCEPTED
+    - SENT
+    - EXPORTED
+    - ASCR_ERROR
+    - ASCR_RECEIVED
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    description: Статус сообщения сервиса ЦР
+    enum:
+    - NEW
+    - CANCELED_WITH_REMARKS
+    - CANCELED_HASH_COINCIDENCE
+    - ESK_ERROR
+    - SENT_ERROR
+    - SENT_TO_ESK
+    - ESK_ACCEPTED
+    - SENT
+    - EXPORTED
+    - ASCR_ERROR
+    - ASCR_RECEIVED
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус сообщения сервиса ЦР
+      enum:
+      - NEW
+      - CANCELED_WITH_REMARKS
+      - CANCELED_HASH_COINCIDENCE
+      - ESK_ERROR
+      - SENT_ERROR
+      - SENT_TO_ESK
+      - ESK_ACCEPTED
+      - SENT
+      - EXPORTED
+      - ASCR_ERROR
+      - ASCR_RECEIVED
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус сообщения сервиса ЦР
+      enum:
+      - NEW
+      - CANCELED_WITH_REMARKS
+      - CANCELED_HASH_COINCIDENCE
+      - ESK_ERROR
+      - SENT_ERROR
+      - SENT_TO_ESK
+      - ESK_ACCEPTED
+      - SENT
+      - EXPORTED
+      - ASCR_ERROR
+      - ASCR_RECEIVED
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+description: Статус.

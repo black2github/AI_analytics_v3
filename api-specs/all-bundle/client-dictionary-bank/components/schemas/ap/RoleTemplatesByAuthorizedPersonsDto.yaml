@@ -1,0 +1,13 @@
+type: object
+properties:
+  authorizedPersonToRoleTemplatesMap:
+    type: object
+    additionalProperties:
+      type: array
+      description: Карта со списком идентификаторов шаблонов ролей по ключу (идентификатор УЛ)
+      items:
+        type: string
+        description: Карта со списком идентификаторов шаблонов ролей по ключу (идентификатор УЛ)
+        format: uuid
+    description: Карта со списком идентификаторов шаблонов ролей по ключу (идентификатор УЛ)
+description: Данные

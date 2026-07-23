@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  dateFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  dateTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  status:
+    $ref: ./FilterValueDtoBrokerageClientOpenAccountRequestStatusDto.yaml
+description: Фильтр скорллера запросов на открытие брокерского счета клиентской стороны

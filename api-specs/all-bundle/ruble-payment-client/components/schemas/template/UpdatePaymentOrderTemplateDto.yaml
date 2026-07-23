@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  templateName:
+    type: string
+    description: Наименование шаблона
+  paymentInfo:
+    $ref: ../common/CreatePaymentInfoDto.yaml
+  paymentAmount:
+    $ref: ../common/CreatePaymentAmountDto.yaml
+  payerDetails:
+    $ref: ./CreatePayerDetailsTemplateDto.yaml
+  recipientDetails:
+    $ref: ../common/CreateRecipientDetailsDto.yaml
+  budgetInfo:
+    $ref: ../common/CreateBudgetInfoDto.yaml
+  controlAndAcceptance:
+    $ref: ../common/CreateControlAndAcceptanceDto.yaml
+description: Обновление шаблона платежного поручения

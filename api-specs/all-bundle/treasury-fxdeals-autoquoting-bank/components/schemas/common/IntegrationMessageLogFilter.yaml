@@ -1,0 +1,23 @@
+type: object
+properties:
+  objectType:
+    $ref: ./FilterValueDtoString.yaml
+  objectId:
+    $ref: ./FilterValueDtoString.yaml
+  objectAskId:
+    $ref: ./FilterValueDtoLong.yaml
+  direction:
+    $ref: ./IntegrationMessageLogDirectionFilter.yaml
+  externalSystem:
+    $ref: ./IntegrationMessageLogExternalSystemFilter.yaml
+  actionType:
+    $ref: ./FilterValueDtoString.yaml
+  responseStatus:
+    $ref: ./FilterValueDtoString.yaml
+  createDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+  sent:
+    $ref: ./FilterValueDtoBoolean.yaml
+  sentDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр

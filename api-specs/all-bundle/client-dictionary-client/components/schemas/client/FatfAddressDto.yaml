@@ -1,0 +1,60 @@
+required:
+- bankClientId
+- countryCode
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  countryCode:
+    type: string
+    description: Числовой код страны
+  countryName:
+    type: string
+    description: Наименование страны
+  region:
+    type: string
+    description: Наименование региона
+  city:
+    type: string
+    description: Наименование города
+  address:
+    type: string
+    description: Наименование улицы, № дома, индекс
+  zipCode:
+    type: string
+    description: Номер индекса
+  district:
+    type: string
+    description: Район
+  street:
+    type: string
+    description: Улица
+  houseNum:
+    type: string
+    description: Номер дома
+  building:
+    type: string
+    description: Наименование здания
+  floor:
+    type: string
+    description: Этаж
+  apartment:
+    type: string
+    description: Квартира, офис
+  postOfficeBox:
+    type: string
+    description: Абонентский ящик
+  status:
+    type: string
+    description: Статус записи
+    enum:
+    - ACTIVE
+    - DELETED
+description: Международный адрес Клиента Банка

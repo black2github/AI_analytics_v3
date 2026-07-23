@@ -1,0 +1,9 @@
+type: object
+properties:
+  oldBranchAbsCode:
+    type: string
+    description: Код АБС филиала в прошлом
+  newBranchAbsCode:
+    type: string
+    description: Текущий код АБС филиала
+description: Пара кодов АБС филиалов для обновления

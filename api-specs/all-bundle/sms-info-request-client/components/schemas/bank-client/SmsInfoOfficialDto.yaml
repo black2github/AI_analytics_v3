@@ -1,0 +1,30 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя в экосистеме
+    format: uuid
+  name:
+    type: string
+    description: ФИО
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  phoneConfirmed:
+    type: boolean
+    description: Признак подтверждения номера телефона
+  blocked:
+    type: boolean
+    description: Нет доступа
+  lastLogin:
+    type: string
+    description: Дата и время последнего логина
+    format: date-time
+  duplicated:
+    type: boolean
+    description: Имеет дубликат по имени
+description: Сотрудник клиента

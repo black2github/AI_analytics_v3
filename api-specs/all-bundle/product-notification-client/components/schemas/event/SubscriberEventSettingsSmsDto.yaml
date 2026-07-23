@@ -1,0 +1,30 @@
+required:
+- byAccount
+- groupId
+- minAmount
+- requestId
+- smsEnabled
+type: object
+properties:
+  groupId:
+    type: string
+    description: ID группы событий
+    format: uuid
+  requestId:
+    type: string
+    description: ID связанного объекта
+    format: uuid
+  accountId:
+    type: string
+    description: ID Счет клиента
+    format: uuid
+  smsEnabled:
+    type: boolean
+    description: СМС
+  byAccount:
+    type: boolean
+    description: Настройка по счетам отдельно
+  minAmount:
+    type: number
+    description: Сумма от
+description: Настройки получателей событий СФЗУ

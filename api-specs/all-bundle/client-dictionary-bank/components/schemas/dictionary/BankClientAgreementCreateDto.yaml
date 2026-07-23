@@ -1,0 +1,57 @@
+required:
+- bankClientId
+- offerDate
+- offerNumber
+- productType
+- remoteSource
+type: object
+properties:
+  remoteSource:
+    type: string
+    description: Система источник записи.
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  offerNumber:
+    type: string
+    description: Регистрационный номер оферты, акцептованной клиентом.
+  offerDate:
+    type: string
+    description: Дата регистрации оферты, акцептованной клиентом.
+    format: date
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  comment:
+    type: string
+    description: Коментарий
+  breakDate:
+    type: string
+    description: Дата расторжения соглашения
+    format: date
+  supplyMode:
+    type: string
+    description: Способ оформления документа
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+    - PAPER
+    - DBO_SERVICE
+description: Соглашения Клиента Банка. ДТО на создание.

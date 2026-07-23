@@ -1,0 +1,23 @@
+type: object
+properties:
+  firstBlockColumnCount:
+    type: integer
+    description: Количество колонок в первом блоке
+    format: int32
+  secondBlockColumnCount:
+    type: integer
+    description: Количество колонок во втором блоке
+    format: int32
+  comment:
+    type: string
+    description: Комментарий
+  commentDate:
+    type: string
+    description: Дата и время комментария
+    format: date-time
+  fields:
+    type: array
+    description: Поля документа
+    items:
+      $ref: ./ActivityFeedDocFieldInfoDto.yaml
+description: Информация о документе ленты операций

@@ -1,0 +1,13 @@
+type: object
+properties:
+  stars:
+    type: integer
+    description: Количество звезд
+    format: int32
+    example: 5
+  hashtags:
+    type: array
+    description: Список хештегов
+    items:
+      $ref: ./HashtagDto.yaml
+description: DTO с хештегами для конкретной оценки

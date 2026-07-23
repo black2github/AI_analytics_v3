@@ -1,0 +1,19 @@
+post:
+  summary: Сохранить документ из АС СКВО в буферную таблицу на основе существующего входящего документа
+  tags:
+  - API заглушек документов, полученных из АС СКВО
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/create-by-correlation-id/SkvoProcessedioRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataSkvoProcessedioDto.yaml
+    '400':
+      description: Bad Request

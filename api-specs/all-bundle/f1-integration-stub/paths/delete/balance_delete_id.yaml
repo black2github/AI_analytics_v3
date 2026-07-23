@@ -1,0 +1,14 @@
+delete:
+  summary: Удаление записи в таблице VW_RPT_GPB_KXD_RST_PLN_ECO
+  tags:
+  - Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO (баланс счета в Ф1)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int64
+  responses:
+    '204':
+      description: No Content

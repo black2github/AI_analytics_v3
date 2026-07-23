@@ -1,0 +1,15 @@
+required:
+- docNumberType
+- value
+type: object
+properties:
+  docNumberType:
+    type: string
+    description: Тип номера документа организации
+    enum:
+    - OGRN
+    - INN
+  value:
+    type: string
+    description: Значение номера документа организации
+description: Запрос краткой выписки по организации

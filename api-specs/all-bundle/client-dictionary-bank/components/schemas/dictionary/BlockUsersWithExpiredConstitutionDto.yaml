@@ -1,0 +1,9 @@
+required:
+- expiredAfter
+type: object
+properties:
+  expiredAfter:
+    type: string
+    description: Дата после которой нужно выполнить поиск для блокировки
+    format: date-time
+description: Параметры для поиска сотрудников для блокировки по истекшей конституции

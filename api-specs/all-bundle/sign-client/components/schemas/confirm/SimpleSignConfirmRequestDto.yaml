@@ -1,0 +1,14 @@
+required:
+- code
+- operationId
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции подписи
+    format: uuid
+  code:
+    minLength: 1
+    type: string
+    description: Код подтверждения
+description: Запрос подтверждения операции подписи ПЭПом.

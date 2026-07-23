@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      $ref: ./ResourceVersionDeletingRequest.yaml
+description: Запрос

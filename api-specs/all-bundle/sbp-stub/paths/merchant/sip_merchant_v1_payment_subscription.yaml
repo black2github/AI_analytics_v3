@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос на оплату с привязанного счета плательщика'
+  tags:
+  - СИП. Сервис Merchant API - QRC
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/SubscribedPaymentRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/PaymentResultDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,18 @@
+type: object
+description: Данные тарифа СБП
+properties:
+  mccCode:
+    type: string
+    description: Код MCC
+  mccName:
+    type: string
+    description: Наименование MCC
+  percentRate:
+    type: number
+    description: Тариф
+  sumMin:
+    type: number
+    description: Тариф минимум
+  sumMax:
+    type: number
+    description: Тариф максимум

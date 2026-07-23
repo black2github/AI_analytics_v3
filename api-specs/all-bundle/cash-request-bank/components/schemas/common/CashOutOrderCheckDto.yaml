@@ -1,0 +1,18 @@
+type: object
+properties:
+  emailNotification:
+    type: boolean
+    description: Нужно ли уведомление по e-mail
+  withoutCitizenship:
+    type: boolean
+    description: Опция без гражданства
+  publicPerson:
+    type: boolean
+    description: Опция публичного лица
+  holdOrder:
+    type: boolean
+    description: Отмена заявки при нехватке денег по символу -40
+  cashCollector:
+    type: boolean
+    description: Опция инкассационного обслуживания
+description: Набор дополнительных check-опций для заявки на выдачу наличных денег

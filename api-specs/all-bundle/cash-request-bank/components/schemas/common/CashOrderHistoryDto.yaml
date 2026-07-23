@@ -1,0 +1,23 @@
+type: object
+properties:
+  historyEntries:
+    type: array
+    description: Записи историй изменений заявки.
+    items:
+      $ref: ./CashOrderChangesHistoryDto.yaml
+  orderId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  orderNumber:
+    type: integer
+    description: Номер заявки
+    format: int64
+  orderDate:
+    type: string
+    description: Дата заявки
+    format: date
+  bankClientName:
+    type: string
+    description: Краткое или полное наименование клиента Банка
+description: История изменений заявки

@@ -1,0 +1,91 @@
+post:
+  tags:
+  - СИП. Сервис Naumen
+  summary: Сервис получения доступных временных слотов для календарей Юр. Лиц
+  operationId: getAvailableTimeSlotsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.data.commType
+    in: query
+    description: Тип коммуникации
+    required: false
+    type: string
+    enum:
+    - APPOINTMENT
+    - CALL
+    - VISITING
+  - name: body.data.endInterval
+    in: query
+    description: Конец интервала
+    required: false
+    type: string
+    format: date-time
+  - name: body.data.officeCode
+    in: query
+    description: Доп. офис
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  - name: body.data.operationCode
+    in: query
+    description: Код операции
+    required: false
+    type: string
+    enum:
+    - UL_CHANGE_DATA
+    - UL_OPEN_ACCOUNT
+    - UL_OPEN_GOZ_ACCOUNT
+    - UL_OPEN_VS_ACCOUNT
+  - name: body.data.startInterval
+    in: query
+    description: Начало интервала
+    required: false
+    type: string
+    format: date-time
+  - name: body.meta.channel
+    in: query
+    description: Канал
+    required: false
+    type: string
+    enum:
+    - ECO
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/NaumenAvailableTimeSlotsResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

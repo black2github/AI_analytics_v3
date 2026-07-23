@@ -1,0 +1,68 @@
+type: object
+properties:
+  cardCategory:
+    type: string
+    description: Категория карты
+  cardIssueBranch:
+    type: string
+    description: Код офиса выдачи
+  cardIssueBranchId:
+    type: string
+    description: Идентификатор офиса выдачи
+    format: uuid
+  cardPaymentSystem:
+    type: string
+    description: Наименование платежной системы
+  cardPaymentSystemCode:
+    type: string
+    description: Код платежной системы
+  cardProcessingStatus:
+    type: string
+    description: Статус обработки
+  cardSecretWord:
+    type: string
+    description: Кодовое слово
+  cardholder:
+    $ref: ./CardHolderDto.yaml
+  cardholderName:
+    type: string
+    description: Имя и фамилия держателя на карте
+  documents:
+    type: array
+    description: Документы держателя карты
+    items:
+      $ref: ./IssueCardDocumentDto.yaml
+  eskErrorCode:
+    type: string
+    description: Код ошибки от ЕСК
+  eskErrorDesc:
+    type: string
+    description: Текст ошибки от ЕСК
+  id:
+    type: string
+    description: Уникальный идентификатор карты
+    format: uuid
+  issuedOrganization:
+    type: string
+    description: Наименование клиента на карте
+  maskedCardNumber:
+    type: string
+    description: Маскированный номер карты
+  note:
+    type: string
+    description: Примечание
+  tessaDossierId:
+    type: string
+    description: Идентификатор досье ТЕССА ФЛ
+    format: uuid
+  tessaErrorDesc:
+    type: string
+    description: Текст ошибки от ТЕССА
+  validPeriod:
+    type: integer
+    description: Срок действия
+    format: int32
+  virtualCardNumber:
+    type: string
+    description: Виртуальный номер карты
+description: Информация о выпускаемой карте

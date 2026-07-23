@@ -1,0 +1,20 @@
+type: object
+properties:
+  filter:
+    $ref: ../common/AdmPocClientFilter.yaml
+  format:
+    $ref: ../common/AdmReportFormat.yaml
+  limit:
+    type: integer
+    description: Количество записей
+    format: int32
+    default: 30000
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  zoneId:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра ТИ АДМ

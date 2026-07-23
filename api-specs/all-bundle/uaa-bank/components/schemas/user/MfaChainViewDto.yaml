@@ -1,0 +1,16 @@
+required:
+- active
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID цепочки аутентификации
+    format: uuid
+  title:
+    type: string
+    description: Наименование цепочки аутентификации
+  active:
+    type: boolean
+    description: Признак активной цепочки
+description: ДТО отображения цепочки аутентификации

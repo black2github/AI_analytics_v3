@@ -1,0 +1,9 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+description: Запрос на проверку контролей для заявки на получение Согласия

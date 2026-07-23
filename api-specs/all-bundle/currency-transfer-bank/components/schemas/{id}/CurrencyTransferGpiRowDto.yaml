@@ -1,0 +1,52 @@
+required:
+- time
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи (отсутствует, если DTO синтетический)
+    format: uuid
+  time:
+    type: string
+    description: Время записи
+    format: date-time
+  statusCode:
+    type: string
+    description: Код статуса
+  statusCause:
+    type: string
+    description: Код причины статуса
+  statusDesc:
+    type: string
+    description: Описание локализованного описания статуса
+  swift:
+    type: string
+    description: SWIFT-код банка
+  bankName:
+    type: string
+    description: Наименование банка
+  countryName:
+    type: string
+    description: Наименование страны (латинница)
+  cityName:
+    type: string
+    description: Наименование города (латинница)
+  amount:
+    type: string
+    description: Сумма расчета
+  currency:
+    type: string
+    description: Код валюты (буквенный, ISO)
+  commissionAmount:
+    type: string
+    description: Сумма коммиссии
+  commissionCurrency:
+    type: string
+    description: Код валюты коммиссии (буквенный, ISO)
+  intermediate:
+    type: boolean
+    description: Признак конечного статуса
+  terminal:
+    type: boolean
+    description: Признак конечного статуса
+description: Транспортное представление строки GPI-пакета

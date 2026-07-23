@@ -1,0 +1,8 @@
+type: object
+properties:
+  MsgId:
+    $ref: ./UUID.yaml
+  CreDtTm:
+    $ref: ../common/LocalDateTime.yaml
+  ResponseVypTurnInf:
+    $ref: ./ResponseVypTurnInf.yaml

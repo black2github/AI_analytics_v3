@@ -1,0 +1,13 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  nameEn:
+    $ref: ../common/FilterValueDtoString.yaml
+  searchText:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера категорий ДСФ.

@@ -1,0 +1,16 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата, для которой собрана информация о движении средств
+    format: date
+  resultBalance:
+    type: number
+    description: Суммарный дневной остаток
+  totalIncome:
+    type: number
+    description: Суммарный дневной приход
+  totalConsumption:
+    type: number
+    description: Суммарный дневной расход
+description: Информация о движении средств за день

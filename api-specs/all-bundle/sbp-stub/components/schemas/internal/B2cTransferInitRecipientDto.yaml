@@ -1,0 +1,22 @@
+type: object
+required:
+- bankId
+- paymentId
+- paymentType
+- bic
+properties:
+  bankId:
+    type: string
+    description: Идентификатор банка получателя
+  paymentId:
+    type: string
+    description: Идентификатор получателя
+  incomeCode:
+    type: string
+    description: Код вида дохода
+  paymentType:
+    type: string
+    description: Тип идентификатора получателя
+  bic:
+    type: string
+    description: БИК Банка Получателя

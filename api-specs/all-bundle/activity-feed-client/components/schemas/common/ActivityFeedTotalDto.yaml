@@ -1,0 +1,5 @@
+type: object
+properties:
+  dayTotal:
+    $ref: ./ActivityFeedDayTotalDto.yaml
+description: Итоги по ленте операции

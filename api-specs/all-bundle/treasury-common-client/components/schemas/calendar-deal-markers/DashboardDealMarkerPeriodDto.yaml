@@ -1,0 +1,12 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата
+    format: date
+  markers:
+    type: array
+    description: Маркеры событий на дату
+    items:
+      $ref: ../common/DealEventMarkerDto.yaml
+description: Данные

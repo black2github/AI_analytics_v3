@@ -1,0 +1,31 @@
+type: object
+properties:
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int64
+  error:
+    type: string
+    description: Описание ошибки
+  clientEskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  isGazprom:
+    type: boolean
+    description: Признак ПАО Газрпром
+  rkaMode:
+    type: integer
+    description: Режим РКА
+    format: int32
+  attachments:
+    type: array
+    description: Массив "файлы с данными образа документа"
+    items:
+      $ref: ./OfferFileAttachmentDto.yaml
+  contragents:
+    type: array
+    description: Массив "Реестр контрагентов"
+    items:
+      $ref: ./ContragentDto.yaml
+description: Ответ на запрос скана оферты

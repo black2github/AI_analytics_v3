@@ -1,0 +1,27 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип баланса
+    enum:
+    - PLANE
+    - CURRENT
+    - ALL
+  layout:
+    type: string
+    description: Тип представления
+    enum:
+    - COLUMN
+    - TILE
+  tariffNames:
+    type: boolean
+    description: Отображать названия тарифов
+  compactView:
+    type: boolean
+    description: Отображать компактный вид
+  bankClientSettings:
+    type: array
+    description: Настройки организации
+    items:
+      $ref: ./UserSettingsBankClientDto.yaml
+description: Представление Клиент Банк

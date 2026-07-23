@@ -1,0 +1,58 @@
+required:
+- id
+- newOperationHistory
+- status
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  status:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  commentForClient:
+    maxLength: 255
+    type: string
+    description: Комментарий для банка
+    nullable: true
+  commentForBank:
+    maxLength: 255
+    type: string
+    description: Комментарий для банка
+    nullable: true
+  bankClientInfo:
+    $ref: ./BankClientInfoBankDto.yaml
+  documentCreationInfo:
+    $ref: ./DocumentCreationInfoBankDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoBankDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoBankDto.yaml
+  payerBankInfo:
+    $ref: ./PayerBankInfoBankDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoBankDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoBankDto.yaml
+  currentEditorId:
+    type: string
+    description: Текущий редактор
+    format: uuid
+    nullable: true
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  newOperationHistory:
+    type: boolean
+    description: Признак использования новой истории операций
+  chargebackRequest:
+    $ref: ./OutgoingPaymentChargebackRequestBankDto.yaml
+  acceptForExecutionAt:
+    type: string
+    description: Дата и время приема документа в Экосистеме
+    format: date-time
+  operationHistory:
+    $ref: ./OutgoingPaymentRequestHistoryInfoBankDto.yaml
+description: Платежное требование исходящее (форма просмотра сотрудника банка)

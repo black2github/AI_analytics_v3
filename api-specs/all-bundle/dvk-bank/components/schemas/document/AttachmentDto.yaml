@@ -1,0 +1,34 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения в file storage
+    format: uuid
+  orderNumber:
+    type: integer
+    description: Порядковый номер пложения
+    format: int32
+  fileName:
+    type: string
+    description: Название файла вложения
+  format:
+    type: string
+    description: Формат файла вложения
+  hash:
+    type: string
+    description: Хеш-сумма файла
+  size:
+    type: integer
+    description: Размер файла
+    format: int64
+  sizeInKBytes:
+    type: string
+    description: Размер файла в КБ
+  uploadDateTime:
+    type: string
+    description: Дата и время загрузки
+    format: date-time
+  contentType:
+    type: string
+    description: Тип контента.
+description: Вложение

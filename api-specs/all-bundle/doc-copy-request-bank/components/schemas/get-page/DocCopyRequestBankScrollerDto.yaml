@@ -1,0 +1,101 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка.
+  commentForClient:
+    type: string
+    description: Комментарий для клиента.
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  creator:
+    $ref: ../common/BankCreatorDto.yaml
+  type:
+    type: string
+    description: Тип документов в запросе
+    enum:
+    - PAYMENT
+    - CONTRACT
+  method:
+    type: string
+    description: Способ получения документов
+    enum:
+    - DIGITAL
+    - OFFICE
+  status:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    enum:
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - SUBMITTED
+    - RECEIVED
+    - DOCS_REQUEST_TO_F1
+    - DOCS_REQUEST_TO_F1_ERROR
+    - DOCS_REQUEST_SENT_TO_F1
+    - DOCS_REQUEST_EXPORTED_TO_F1
+    - COMMISSION_IS_PAID
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - WAITING_FOR_PAYMENT
+    - IS_ODS_IMPORT_OR_ERROR
+    - ODS_IMPORT_ERROR
+    - ODS_IMPORTED
+    - IS_REQUEST_PRINT_OR_ERROR
+    - PRINT_ERROR
+    - PRINT_DOCS_CREATED
+    - IS_REQUEST_ZIP_OR_ERROR
+    - ZIP_DOCS_ERROR
+    - DOCS_ZIPPED
+    - IS_REQUEST_SIGN_OR_ERROR
+    - SIGN_DOCS_ERROR
+    - DOCS_SIGNED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+  docsCount:
+    type: integer
+    description: Кол-во документов в заявке. Платежные документы в заявке или Договорные документы в заявке или количество документов, полученное от Ф1
+    format: int32
+  commissionAccount:
+    $ref: ../common/CommissionAccountBankApiDto.yaml
+  contracts:
+    type: array
+    description: Сведения о договорных документах по которым запрашивается справка
+    items:
+      $ref: ./DocCopyContractBankScrollerDto.yaml
+  payments:
+    type: array
+    description: Сведения о платежных документах по которым запрашивается справка
+    items:
+      $ref: ./DocCopyPaymentBankScrollerDto.yaml
+  createdAt:
+    type: string
+    description: Время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время последнего обновления заявки
+    format: date-time
+  bankClient:
+    $ref: ../common/BankClientDto.yaml
+  signatures:
+    type: array
+    description: Подпись заявки
+    items:
+      $ref: ../common/DocCopyRequestSignatureDto.yaml
+  duplicateByEmails:
+    type: boolean
+    description: Продублировать на email
+description: Страница с данными

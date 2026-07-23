@@ -1,0 +1,58 @@
+type: object
+description: Фильтр СМФТ событий.
+properties:
+  statusCategory:
+    type: string
+    description: Категории событий (по умолчанию ВСЕ)
+    enum:
+    - ALL
+    - UPLOADED_ERROR
+    - UPLOADED
+  timeOfOccurrence:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Время события (ge le)
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор события (eq)
+  eventType:
+    $ref: ./FilterValueDtoSmftEventType.yaml
+    description: Тип события (eq)
+  eventStatus:
+    $ref: ./FilterValueDtoEventStatusDto.yaml
+    description: Статус выгрузки (eq)
+  statusChangedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата изменения статуса (ge le)
+  fullName:
+    $ref: ./FilterValueDtoString.yaml
+    description: ФИО пользователя (eq)
+  login:
+    $ref: ./FilterValueDtoString.yaml
+    description: Логин пользователя (eq)
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Название организации (eq)
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН/КИО организации (eq)
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП организации (eq)
+  paymentActionType:
+    $ref: ./FilterValueEnumDtoSmftPaymentActionType.yaml
+    description: Вид события (для действий с платежным документом) (eq)
+  loginType:
+    $ref: ./FilterValueEnumDtoSmftLoginType.yaml
+    description: Вид события (для события входа в систему) (eq)
+  clientDefActionType:
+    $ref: ./FilterValueEnumDtoSmftClientDefinedActionType.yaml
+    description: Вид события (для события действия с информационным эл. документом) (eq)
+  subjectActionType:
+    $ref: ./FilterValueEnumDtoClientDefinedEventTypeDto.yaml
+    description: Вид события (для события просмотр выписки) (eq)
+  updateUserActionType:
+    $ref: ./FilterValueEnumDtoSmftUpdateUserTypeDto.yaml
+    description: Вид события (для события просмотр выписки) (eq)
+  documentId:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИД документа (eq)

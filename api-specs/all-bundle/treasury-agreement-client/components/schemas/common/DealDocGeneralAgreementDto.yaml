@@ -1,0 +1,19 @@
+type: object
+properties:
+  agreementId:
+    type: string
+    description: Идентификатор в ВД
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  date:
+    type: string
+    description: Дата генерального соглашения
+    format: date
+  number:
+    type: string
+    description: Номер генерального соглашения
+  contractId:
+    type: integer
+    description: Номер в АСК
+    format: int64
+description: Информация о генеральном соглашении ГО

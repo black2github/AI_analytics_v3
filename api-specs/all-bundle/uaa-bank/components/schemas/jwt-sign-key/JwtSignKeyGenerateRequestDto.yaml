@@ -1,0 +1,16 @@
+required:
+- validityDays
+type: object
+properties:
+  subjectName:
+    type: string
+    description: X.500 Distinguished Name
+  validityDays:
+    type: integer
+    description: Срок действия ключа в днях
+    format: int32
+  keySize:
+    type: string
+    enum:
+    - RSA_4096
+description: Запрос генерации ключа подписи JWT

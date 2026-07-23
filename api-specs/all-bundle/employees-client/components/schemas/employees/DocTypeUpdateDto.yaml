@@ -1,0 +1,10 @@
+required:
+- code
+type: object
+properties:
+  code:
+    type: string
+    description: Уникальный код документа
+    enum:
+    - IDENTITY_DOCUMENT
+description: Код типа документа

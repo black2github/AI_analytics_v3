@@ -1,0 +1,28 @@
+required:
+- requestId
+- status
+- taskIdMap
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+  taskIdMap:
+    type: object
+    additionalProperties:
+      type: string
+      description: Идентификаторы фоновых задач по типам документов
+      format: uuid
+    description: Идентификаторы фоновых задач по типам документов
+  status:
+    type: string
+    description: Статус процесса обработки запроса на массовую подпись визируемых документов
+    enum:
+    - IN_PROGRESS
+    - COMPLETED
+    - ERROR
+  errorMessage:
+    type: string
+    description: Текст ошибки
+description: Состояние процесса обработки запроса на массовую подпись визируемых документов

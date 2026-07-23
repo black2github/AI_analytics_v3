@@ -1,0 +1,7 @@
+type: object
+properties:
+  paymentAmount:
+    pattern: ^\d{0,16}(\.\d{0,2})?$
+    type: string
+    description: Сумма
+description: Упрощенная форма создания ПП. Сумма платежа.

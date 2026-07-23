@@ -1,0 +1,18 @@
+type: object
+properties:
+  tag:
+    type: string
+    enum:
+    - DOWNLOAD_ATTACHMENT
+    - STATEMENT_REQUEST_GET_PAGE
+    - ACCOUNTING_ENTRY_GET_PAGE
+    - STATEMENT_REQUEST
+    - HIDDEN_VIEW_STATEMENT_REQUEST
+  sourcePage:
+    type: string
+  refererPage:
+    type: string
+  requestBody:
+    type: string
+  url:
+    type: string

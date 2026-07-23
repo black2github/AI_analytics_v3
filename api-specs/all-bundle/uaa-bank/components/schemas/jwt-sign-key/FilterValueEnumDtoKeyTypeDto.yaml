@@ -1,0 +1,32 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - RSA
+    - EC
+  notEq:
+    type: string
+    enum:
+    - RSA
+    - EC
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - RSA
+      - EC
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - RSA
+      - EC
+  isNull:
+    type: boolean

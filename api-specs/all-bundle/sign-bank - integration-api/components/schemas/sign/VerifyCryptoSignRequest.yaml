@@ -1,0 +1,19 @@
+type: object
+properties:
+  certificate:
+    type: string
+    description: Сертификат
+  data:
+    type: string
+    description: Подписываемые данные
+  sign:
+    type: string
+    description: Подпись
+  signDate:
+    type: string
+    description: Дата подписи
+    format: date-time
+  calculatedHash:
+    type: boolean
+    description: Признак передачи вычисленных хешей
+description: ДТО для проверки подписи

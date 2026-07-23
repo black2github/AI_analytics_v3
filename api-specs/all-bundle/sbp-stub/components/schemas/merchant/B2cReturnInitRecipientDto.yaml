@@ -1,0 +1,11 @@
+type: object
+required:
+- bankId
+description: Получатель перевода в запросе инициирования возврата
+properties:
+  bankId:
+    type: string
+    description: Идентификатор банка получателя
+  incomeCode:
+    type: string
+    description: Код вида дохода

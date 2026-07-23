@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+  f1ClientId:
+    type: integer
+    description: Идентификатор клиента Ф1
+    format: int64
+  clientRegistrationNumber:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractSignDate:
+    type: string
+    description: Дата подписания договора
+    format: date
+  contractStartDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  contractStatus:
+    type: string
+    description: Статус договора
+  contractClass:
+    type: string
+    description: Класс договора СБП
+  contractType:
+    type: integer
+    description: Тип договора
+    format: int32
+description: Данные продукта СБП

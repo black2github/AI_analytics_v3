@@ -1,0 +1,18 @@
+type: object
+properties:
+  filesIds:
+    type: array
+    description: Идентификаторы файлов для распознавания
+    items:
+      type: string
+      description: Идентификаторы файлов для распознавания
+      format: uuid
+  onboardingShortRequestId:
+    type: string
+    description: Идентификатор короткой заявки на открытие первого счета
+    format: uuid
+  uploadStartedAt:
+    type: string
+    description: Время начала загрузки файлов
+    format: date-time
+description: Запрос распознавания данных документа

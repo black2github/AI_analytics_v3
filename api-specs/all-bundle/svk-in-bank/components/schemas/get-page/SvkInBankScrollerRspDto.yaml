@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа в Экосистеме
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  skvoInfo:
+    $ref: ../common/SkvoBankInfoDto.yaml
+  bankComment:
+    type: string
+    description: Комментарий для банка
+  organizationInfo:
+    $ref: ../common/OrganizationBankInfoDto.yaml
+  dioInfo:
+    $ref: ../common/LinkedDocumentBankInfoDto.yaml
+  messageTopic:
+    type: string
+    description: Тема сообщения
+  messageText:
+    type: string
+    description: Текст сообщения
+  existenceAttachment:
+    type: boolean
+    description: Наличие вложения
+  uploadAttachment:
+    type: string
+    description: Документы выгружены в ТЕССА
+    enum:
+    - TESSA_FILES_UPLOADED
+    - TESSA_FILES_NOT_UPLOADED
+    - TESSA_FILES_FAILED_TO_UPLOAD
+  documentStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  attachmentsInfo:
+    type: array
+    description: Информация вложений
+    items:
+      $ref: ../common/AttachmentBankInfoDto.yaml
+description: DTO сообщения валютного контролера для скроллера

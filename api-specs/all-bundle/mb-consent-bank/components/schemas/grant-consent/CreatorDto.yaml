@@ -1,0 +1,10 @@
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: ' Uaa Id пользователя создавшего заявку.'
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО).
+description: Автор заявки

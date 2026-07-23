@@ -1,0 +1,20 @@
+type: object
+properties:
+  organizationName:
+    type: string
+    description: Наименование организации
+  organizationInn:
+    type: string
+    description: ИНН организации
+  bankBranch:
+    type: string
+    description: Филиал банка
+  attachmentInfoList:
+    type: array
+    description: Имя вложения
+    items:
+      $ref: ./AttachmentLinkedDocumentInfoDto.yaml
+  messageText:
+    type: string
+    description: Текст сообщения
+description: Информация связанного документа СВК1

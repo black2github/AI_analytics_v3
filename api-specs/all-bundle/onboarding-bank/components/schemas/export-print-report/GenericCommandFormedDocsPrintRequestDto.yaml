@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ../common/FormedDocsPrintRequestDto.yaml
+description: Запрос

@@ -1,0 +1,63 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: ID требования
+    format: uuid
+    nullable: true
+  requestNumber:
+    maxLength: 15
+    type: string
+    description: Номер требования
+    nullable: true
+  requestDate:
+    type: string
+    description: Дата требования
+    format: date
+    nullable: true
+  amount:
+    type: number
+    description: Сумма требования
+    nullable: true
+  acceptPeriodEnd:
+    type: string
+    description: Окончание срока акцепта
+    format: date
+    nullable: true
+  receiverAccountNumber:
+    maxLength: 20
+    type: string
+    description: Счет получателя
+    nullable: true
+  receiverName:
+    maxLength: 160
+    type: string
+    description: Наименование получателя
+    nullable: true
+  receiverInnKio:
+    maxLength: 12
+    type: string
+    description: ИНН/КИО получателя
+    nullable: true
+  receiverBankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка получателя
+    nullable: true
+  receiverBankCorrespondentAccountNumber:
+    maxLength: 20
+    type: string
+    description: Корсчет банка получателя
+    nullable: true
+  receiverBankName:
+    maxLength: 160
+    type: string
+    description: Наименование Банка получателя
+    nullable: true
+  paymentPurpose:
+    maxLength: 210
+    type: string
+    description: Назначение платежа
+    nullable: true
+description: Реквизиты платежного требования
+nullable: true

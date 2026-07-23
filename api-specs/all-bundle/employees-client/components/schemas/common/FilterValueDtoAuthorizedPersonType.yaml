@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+  notEq:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - AUTHORIZED_PERSON
+      - NOT_AUTHORIZED_PERSON
+      - BLOCKED_PERSON
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - AUTHORIZED_PERSON
+      - NOT_AUTHORIZED_PERSON
+      - BLOCKED_PERSON
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+  ge:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+  lt:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+  le:
+    type: string
+    enum:
+    - AUTHORIZED_PERSON
+    - NOT_AUTHORIZED_PERSON
+    - BLOCKED_PERSON
+description: Признак УЛ по ГПБ БОЛ (новый)

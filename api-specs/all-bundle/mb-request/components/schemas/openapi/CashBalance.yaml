@@ -1,0 +1,22 @@
+type: object
+properties:
+  creditDebitIndicator:
+    type: string
+    enum:
+    - Credit
+    - Debit
+  type:
+    type: string
+    enum:
+    - ClosingAvailable
+    - ClosingBooked
+    - ClosingCleared
+    - Expected
+    - OpeningAvailable
+    - OpeningBooked
+    - OpeningCleared
+    - PreviouslyClosedBooked
+    - InterimAvailable
+  Amount:
+    $ref: ./ActiveOrHistoricCurrencyAndAmount.yaml
+description: Детальная информация об остатке на счете

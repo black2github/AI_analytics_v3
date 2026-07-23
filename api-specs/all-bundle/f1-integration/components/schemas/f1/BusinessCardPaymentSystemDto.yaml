@@ -1,0 +1,16 @@
+type: object
+properties:
+  paySystemName:
+    type: string
+    description: Наименование платежной системы
+  paySystemCode:
+    type: string
+    description: Код платежной системы
+  currencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  isResident:
+    type: integer
+    description: Признак резидента
+    format: int32
+description: Данные о платежной системе в сервисе корпоративных карт

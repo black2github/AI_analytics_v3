@@ -1,0 +1,25 @@
+required:
+- email
+- lastName
+- phoneNumber
+type: object
+properties:
+  email:
+    type: string
+    description: Адрес электронной почты УЛ
+  phoneNumber:
+    type: string
+    description: Номер телефона УЛ
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Запрос на проверку контактных данных УЛ

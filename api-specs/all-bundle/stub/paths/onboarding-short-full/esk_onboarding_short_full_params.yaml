@@ -1,0 +1,47 @@
+get:
+  tags:
+  - Заглушка ЕСК для короткой заявки на онбординг 1099
+  summary: getParams
+  operationId: getParamsUsingGET_2
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/DTO заглушки ЕСК для полной короткой заявки 1099 на открытие первого счетаRes'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+post:
+  tags:
+  - Заглушка ЕСК для короткой заявки на онбординг 1099
+  summary: setParams
+  operationId: setParamsUsingPOST_2
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: paramsDto
+    description: paramsDto
+    required: true
+    schema:
+      $ref: '#/definitions/DTO заглушки ЕСК для полной короткой заявки 1099 на открытие первого счетаReq'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/DTO заглушки ЕСК для полной короткой заявки 1099 на открытие первого счетаRes'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

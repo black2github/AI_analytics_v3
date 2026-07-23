@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  jurisdictionCode:
+    type: string
+    description: Код страны/юрисдикции.
+  questionnaireOfficialFormsIp:
+    type: string
+    description: Опросник для формирования cлужебных форм ИП
+    format: uuid
+  reason:
+    type: string
+    description: Причина
+  tin:
+    type: string
+    description: Номер ИНН/TIN (аналог)
+  tinProvided:
+    type: boolean
+    description: ИНН/TIN (аналог) предоставлен.
+description: Страна/юрисдикция налогового резидента ИП.

@@ -1,0 +1,11 @@
+type: object
+properties:
+  terminalId:
+    type: integer
+    description: ID терминала
+    format: int64
+  terminalAddress:
+    maxLength: 250
+    type: string
+    description: Адрес терминала
+description: Данные ЛК_ПВ для клиентского скроллера (АДМ).

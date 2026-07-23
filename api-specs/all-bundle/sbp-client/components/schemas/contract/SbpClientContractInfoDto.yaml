@@ -1,0 +1,71 @@
+type: object
+description: Информация о заключенном договоре СБП для клиента
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Идентификатор клиента банка.
+  legalId:
+    type: string
+    description: Идентификатор клиента банка в АС СБП.
+  shortName:
+    type: string
+    description: Краткое наименование клиента.
+  innKio:
+    type: string
+    description: ИНН клиента
+  ogrnOgrip:
+    type: string
+    description: ОГРН/ОГРНИП.
+  kpp:
+    type: string
+    description: КПП
+  mccName:
+    type: string
+    description: Наименование вида деятельности.
+  mccCode:
+    type: string
+    description: Код вида деятельности.
+  okved:
+    type: string
+    description: ОКВЭД
+  signDate:
+    type: string
+    format: date-time
+    description: Дата подписания.
+  date:
+    type: string
+    format: date
+    description: Дата начала действия.
+  contractNumber:
+    type: string
+    description: Номер договора
+  enrollmentAccounts:
+    type: array
+    description: Счета для зачисления по СБП
+    items:
+      type: string
+  returnAccount:
+    type: string
+    description: Счет для возвратов по СБП
+  commissionAccount:
+    type: string
+    description: Счет для списания комиссии по СБП
+  commissionTariff:
+    $ref: ./SbpContractCommissionTariff.yaml
+    description: Тариф
+  b2bCommissionTariff:
+    $ref: ./SbpContractB2bCommissionTariff.yaml
+    description: Тарифы B2B
+  contractType:
+    type: integer
+    format: int32
+    description: Тип договора
+  clientAccounts:
+    type: array
+    description: Список счетов договора в формате счетов клиента
+    items:
+      $ref: ./SbpClientAccountDto.yaml
+  hasCorrectOdsData:
+    type: boolean
+    description: Признак того, что информация основана на корректных данных из ОДС

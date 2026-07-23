@@ -1,0 +1,41 @@
+post:
+  tags:
+  - API заглушки АСЦР (КО ЮЛ) V4
+  summary: Запрос на регистрацию сертификата в ПлЦР
+  operationId: registerCertificateUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: organisationId
+    in: path
+    description: organisationId
+    required: true
+    type: string
+  - name: referenceId
+    in: header
+    description: referenceId
+    required: false
+    type: string
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/OrganisationCertRegistrationRequest'
+  responses:
+    '200':
+      description: ПЦР успешно ответил на запрос на регистрацию сертификата в ПлЦР
+      schema:
+        $ref: '#/definitions/AscrResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Ошибка в процессе обработки запроса
+    '404':
+      description: Неправильный путь запроса
+    '500':
+      description: Ошибка на платформе ФП

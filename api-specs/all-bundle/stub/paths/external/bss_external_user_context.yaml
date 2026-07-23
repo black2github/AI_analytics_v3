@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API ДБО БСС для внешних систем
+  summary: Получить контекст пользователя по логину и паролю
+  operationId: userContextUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: nm
+    in: query
+    description: nm
+    required: true
+    type: string
+  - name: pw
+    in: query
+    description: pw
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BssUserContextResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,16 @@
+type: object
+properties:
+  commonResult:
+    type: boolean
+    description: Общий результат проверки
+  level:
+    $ref: ../common/SignatureLevelClassifier.yaml
+  results:
+    type: object
+    additionalProperties:
+      type: boolean
+      description: Результаты выполненных проверок
+    description: Результаты выполненных проверок
+  checkCertificatesData:
+    $ref: ./DocumentSignatureCheckDataDto.yaml
+description: Проверка подписей для документа ПП

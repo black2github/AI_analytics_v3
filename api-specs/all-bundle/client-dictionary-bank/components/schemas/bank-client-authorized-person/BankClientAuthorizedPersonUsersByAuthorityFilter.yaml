@@ -1,0 +1,16 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  authorities:
+    type: array
+    description: Полномочия
+    items:
+      type: string
+      description: Полномочия
+      enum:
+      - EIO
+      - MEGAWARRANTY
+description: Запрос поиска пользователей УЛ Клиента Банка с фильтрацией по полномочиям

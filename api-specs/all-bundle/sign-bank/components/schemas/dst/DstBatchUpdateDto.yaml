@@ -1,0 +1,31 @@
+type: object
+properties:
+  enabled:
+    type: boolean
+    description: Признак разрешения на использование СЭП
+  loginEnabled:
+    type: boolean
+    description: Признак разрешения на использование СЭП для входа
+  newStatus:
+    type: string
+    description: Новый статус
+    enum:
+    - ACTIVE
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  authMethod:
+    type: string
+    description: Способ подтверждения операций
+    enum:
+    - UNKNOWN
+    - MOBILE
+    - MY_DSS
+    - OTP_VIA_SMS
+description: Запрос группового изменения СЭП

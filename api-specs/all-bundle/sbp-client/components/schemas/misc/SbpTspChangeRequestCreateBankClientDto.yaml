@@ -1,0 +1,9 @@
+type: object
+description: Реквизиты клиента по заявке
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+required:
+- clientId

@@ -1,0 +1,49 @@
+type: object
+properties:
+  name:
+    maxLength: 160
+    type: string
+    description: Наименование организации
+    nullable: true
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН/КИО организации
+    nullable: true
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет организации
+    nullable: true
+  accountType:
+    maxLength: 255
+    type: string
+    description: Тип счета получателя
+    nullable: true
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование банка организации
+    nullable: true
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка организации
+    nullable: true
+  bankCorrespondentAccountNumber:
+    maxLength: 20
+    type: string
+    description: Корсчет банка организации
+    nullable: true
+  bankLocalityName:
+    maxLength: 25
+    type: string
+    description: Название населенного пункта банка организации
+    nullable: true
+  bankLocalityType:
+    maxLength: 5
+    type: string
+    description: Краткое название типа населенного пункта банка организации
+    nullable: true
+description: Реквизиты организации (получателя) документа платежное требование исходящее (данные для клиента)
+nullable: true

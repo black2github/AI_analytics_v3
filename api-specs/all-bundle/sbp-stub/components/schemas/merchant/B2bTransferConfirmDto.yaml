@@ -1,0 +1,49 @@
+type: object
+required:
+- accountId
+- amount
+- bankId
+- comment
+- currency
+- merchantId
+- paymentId
+- takeTax
+- transactionId
+description: Запрос подтверждения платежа B2B
+properties:
+  accountId:
+    type: string
+    description: Счет ЮЛ или ИП в Банке Плательщика
+  amount:
+    type: string
+    description: Сумма Операции СБП в копейках
+  bankId:
+    type: string
+    description: Идентификатор Банка Получателя
+  comment:
+    type: string
+    description: Назначение платежа
+  currency:
+    type: string
+    description: Валюта операции СБП
+  merchantId:
+    type: string
+    description: Идентификатор точки продаж
+  paymentId:
+    type: string
+    description: Идентификатор QR-кода
+  takeTax:
+    type: boolean
+    description: Информация о взимании НДС
+  taxAmount:
+    type: string
+    description: Сумма НДС в копейках
+  transactionId:
+    type: string
+    description: ID операции в СБП
+  traceId:
+    type: string
+    description: GUID из исходного запроса на перевод, идентификатор BSS
+  sign:
+    type: string
+    description: Подпись сообщения

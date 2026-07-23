@@ -1,0 +1,28 @@
+required:
+- f1DocId
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: ID блокировки
+    format: uuid
+  f1DocId:
+    type: string
+    description: ID документа Ф1
+  status:
+    type: string
+    description: Статус блокировки документа
+    enum:
+    - IMPORT_ERROR
+    - ACTIVE
+    - INACTIVE
+  linkedObject:
+    $ref: ./OrgAndAccIdentDto.yaml
+  lockDetails:
+    $ref: ./LockDetailsDto.yaml
+  incomingDate:
+    type: string
+    description: Дата поступления
+    format: date-time
+description: Основные реквизиты документа

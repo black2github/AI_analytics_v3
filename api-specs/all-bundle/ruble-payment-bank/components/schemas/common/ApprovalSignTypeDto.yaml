@@ -1,0 +1,5 @@
+type: string
+description: Тип визы
+enum:
+- POSITIVE
+- NEGATIVE

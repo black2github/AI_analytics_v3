@@ -1,0 +1,6 @@
+type: object
+properties:
+  incoming:
+    type: number
+  outgoing:
+    type: number

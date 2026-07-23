@@ -1,0 +1,20 @@
+type: string
+enum:
+- ACST3
+- CHST8
+- CHST12
+- CHST3
+- CHST9
+- ACST1
+- ACST7
+- CHST1
+- CHST10
+- CHST14
+- CHST2
+- CHST4
+- CHST5
+- CHST6
+- CHST7
+- CHST0
+- AST7
+description: Статус карт в АБС Ф1

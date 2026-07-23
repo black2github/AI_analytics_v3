@@ -1,0 +1,33 @@
+required:
+- absClientId
+- reportDateFrom
+- reportDateTo
+type: object
+properties:
+  absClientId:
+    type: integer
+    description: Идентификатор клиента АБС
+  cardVirtualNumber:
+    type: string
+    description: Виртуальный номер карты
+  cardGuid:
+    type: string
+    description: Внешний идентификатор карты
+  maskNum:
+    type: string
+    description: Маскированный номер карты
+  reportDateFrom:
+    type: string
+    description: Начало периода для формирования отчета
+    format: date
+  reportDateTo:
+    type: string
+    description: Конец периода для формирования отчета
+    format: date
+  operationType:
+    type: string
+    description: Тип операции
+    enum:
+    - C
+    - D
+description: Данные запроса для получения списка операций по карте в сервисе корпоративных карт

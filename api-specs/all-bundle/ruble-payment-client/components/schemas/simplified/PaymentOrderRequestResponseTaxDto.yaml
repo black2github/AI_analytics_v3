@@ -1,0 +1,39 @@
+required:
+- bankClientId
+type: object
+properties:
+  docSourceSystem:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+  archive:
+    type: boolean
+    description: Архивный документ
+  id:
+    type: string
+    description: Идентификатор заявки "Платежное поручение"
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  status:
+    $ref: ../common/PaymentOrderRequestStatusDto.yaml
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    type: string
+    description: Страница с которой вызвано создание документа
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  paymentInfo:
+    $ref: ./PaymentInfoSimplifiedDto.yaml
+  paymentAmount:
+    $ref: ./PaymentAmountSimplifiedDto.yaml
+  payerDetails:
+    $ref: ./PayerDetailsSimplifiedResponseDto.yaml
+description: Исходящие параметры функции создания документа ЕНП.

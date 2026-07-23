@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API методы для работы с документами валютного контроля
+  summary: Сформировать дайджест
+  description: 'Привилегии: DVK_BANK.SIGN_CHECK'
+  operationId: generateDigestBatch
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GenericCommandListDocumentDigestRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorListDocumentDigestResponse.yaml

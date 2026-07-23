@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ../common/DioClientStoreDto.yaml
+description: Запрос

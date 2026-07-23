@@ -1,0 +1,21 @@
+type: object
+properties:
+  importedDocCount:
+    type: string
+    description: 'Количество документов: Импортировано'
+  importedDocAmount:
+    type: string
+    description: 'Сумма документов: Импортировано'
+  newDocCount:
+    type: string
+    description: Количество документов в статусе Новый
+  newDocAmount:
+    type: string
+    description: Сумма документов в статусе Новый
+  draftDocCount:
+    type: string
+    description: Количество документов в статусе Черновик
+  draftDocAmount:
+    type: string
+    description: Сумма документов в статусе Черновик
+description: Данные об импортированных документах

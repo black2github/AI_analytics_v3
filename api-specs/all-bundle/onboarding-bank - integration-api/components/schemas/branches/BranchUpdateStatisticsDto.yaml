@@ -1,0 +1,10 @@
+type: object
+properties:
+  entitiesNumber:
+    type: integer
+    description: Количество обновленных физических лиц
+    format: int32
+  updatedEntity:
+    type: string
+    description: Название обновленной сущности
+description: Статистика по обновлению связанных с филиалами сущностей

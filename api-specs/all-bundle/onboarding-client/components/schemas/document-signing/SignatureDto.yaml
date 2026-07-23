@@ -1,0 +1,25 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  digest:
+    type: string
+    description: Дайджест
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  id:
+    type: string
+    description: Идентификатор подписанного объекта
+    format: uuid
+  signTypeId:
+    type: string
+    description: ID типа подписи
+    format: uuid
+  signature:
+    type: string
+    description: Значение подписи
+description: Данные подписи для сохранения

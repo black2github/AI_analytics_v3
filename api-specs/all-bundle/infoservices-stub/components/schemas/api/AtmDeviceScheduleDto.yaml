@@ -1,0 +1,6 @@
+type: object
+properties:
+  periods:
+    type: array
+    items:
+      $ref: ./AtmSchedulePeriodDto.yaml

@@ -1,0 +1,66 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  sourceSystemInfo:
+    $ref: ./ChargebackRequestSourceSystemInfoDto.yaml
+  id:
+    type: string
+    description: Идентификатор сущности "Заявка на отзыв"
+    format: uuid
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  documentInfo:
+    $ref: ./ChargebackRequestDocumentInfoDto.yaml
+  bankClientInfo:
+    $ref: ./ChargebackRequestBankClientInfoDto.yaml
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший документ (ФИО)
+  status:
+    type: string
+    description: Текущий статус документа
+    enum:
+    - NEW
+    - DELETED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - ACCEPTED
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPT_FOR_EXECUTION
+    - COMPLETED
+    - REJECTED
+    - WAITING_FOR_CANCEL_BASE_DOCUMENT
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signatures:
+    type: array
+    description: Подписи отзыва платежного поручения
+    items:
+      $ref: ./ChargebackRequestSignatureDto.yaml
+  signPhaseDto:
+    $ref: ./CurrencyTransferSignPhaseDto.yaml
+description: Заявка на отзыв, данные для банка

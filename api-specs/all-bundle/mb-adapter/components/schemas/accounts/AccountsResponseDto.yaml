@@ -1,0 +1,8 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Информация по счетам
+    items:
+      $ref: ./AccountDto.yaml
+description: Ответ запроса счетов из банка партнера

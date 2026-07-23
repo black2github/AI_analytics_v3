@@ -1,0 +1,20 @@
+get:
+  tags:
+  - API Банка для работы с ДВК.
+  summary: Получить документ по идентификатору
+  description: 'Привилегии: DVK_BANK.VIEW'
+  operationId: get
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorDocumentCardDto.yaml

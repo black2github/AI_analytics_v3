@@ -1,0 +1,35 @@
+post:
+  parameters:
+  - name: page
+    in: query
+    schema:
+      type: integer
+      format: int32
+  - name: size
+    in: query
+    schema:
+      type: integer
+      format: int32
+  - name: gpb-requestid
+    in: header
+    schema:
+      type: string
+    required: true
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/api/ApiRequestDtoOfficeListRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/api/ApiResponseDtoOfficeListResponseDto.yaml
+    '400':
+      description: Bad Request
+  summary: List
+  tags:
+  - Office Controller

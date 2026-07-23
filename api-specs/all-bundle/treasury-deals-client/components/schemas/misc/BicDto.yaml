@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    type: string
+  participantType:
+    type: string
+  participantTypeName:
+    type: string
+  regNumber:
+    type: string
+  name:
+    type: string
+  nameEng:
+    type: string
+  postalIndex:
+    type: string
+  region:
+    type: string
+  regionName:
+    type: string
+  localityType:
+    type: string
+  localityName:
+    type: string
+  address:
+    type: string
+  ks:
+    type: string
+  rkc:
+    type: string
+  services:
+    type: string
+  dateIn:
+    type: string
+    format: date
+  dateOut:
+    type: string
+    format: date

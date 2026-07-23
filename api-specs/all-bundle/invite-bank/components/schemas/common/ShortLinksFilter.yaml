@@ -1,0 +1,36 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  expiredAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  parameters:
+    $ref: ./FilterValueDtoString.yaml
+  service:
+    $ref: ./FilterValueDtoString.yaml
+  isActive:
+    $ref: ./FilterValueDtoBoolean.yaml
+  user:
+    $ref: ./FilterValueDtoUUID.yaml
+  fullUrl:
+    $ref: ./FilterValueDtoString.yaml
+  code:
+    $ref: ./FilterValueDtoString.yaml
+  email:
+    $ref: ./FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ./FilterValueDtoString.yaml
+  targetPersonFio:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория ссылки
+    enum:
+    - ACTIVE
+    - NOT_ACTIVE
+    - ALL
+  usageStatus:
+    $ref: ./FilterValueEnumDtoShortLinkUsageStatusDto.yaml
+description: Фильтр для коротких ссылок

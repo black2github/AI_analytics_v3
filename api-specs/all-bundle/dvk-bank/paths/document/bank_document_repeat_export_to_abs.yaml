@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API смены статусов документа
+  summary: Перезапустить ошибочный статус
+  description: 'Привилегии: DVK_BANK.RETRY'
+  operationId: repeatDocumentStatus
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GenericCommandSetUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorBoolean.yaml

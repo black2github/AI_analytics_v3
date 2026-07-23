@@ -1,0 +1,13 @@
+type: object
+properties:
+  binaryData:
+    type: string
+    description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+    format: byte
+  format:
+    type: string
+    description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+    enum:
+    - PKCS7
+    - CMS
+description: ДТО запроса на выпуск сертификата для УЦ

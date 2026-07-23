@@ -1,0 +1,15 @@
+put:
+  tags:
+  - АПИ Банка для работы с Consul
+  summary: Дерегистрировать сервис
+  description: 'Привилегии: CONSUL_ACCESS'
+  operationId: deregister
+  parameters:
+  - name: serviceId
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK

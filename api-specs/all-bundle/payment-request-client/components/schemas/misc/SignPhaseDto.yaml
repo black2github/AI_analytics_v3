@@ -1,0 +1,8 @@
+required:
+- canRemoveSign
+type: object
+properties:
+  canRemoveSign:
+    type: boolean
+    description: Доступно ли пользователю снятие подписи
+description: Фаза подписания документа

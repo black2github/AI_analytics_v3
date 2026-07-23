@@ -1,0 +1,18 @@
+required:
+- debt
+- saldo
+type: object
+properties:
+  saldo:
+    type: number
+    description: Остаток денежных средств
+  debt:
+    type: number
+    description: Текущая задолженность по комиссии перед Банком
+  restrictions:
+    type: array
+    description: Список ограничений
+    items:
+      type: string
+      description: Список ограничений
+description: Массив счетов, доступных для закрытия

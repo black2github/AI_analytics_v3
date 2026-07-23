@@ -1,0 +1,13 @@
+type: object
+description: Транспортное представление профилей ПКП, по которым активны подписки
+properties:
+  clientIds:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+    description: Идентификаторы профилей
+  count:
+    type: integer
+    format: int32
+    description: Количество активных профилей

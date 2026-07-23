@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  alias:
+    type: string
+    description: Псевдоним
+  externalKeyId:
+    type: string
+    description: Идентификатор ключа
+  caId:
+    type: string
+    description: Идентификатор УЦ
+    format: uuid
+  caName:
+    type: string
+    description: Наименование УЦ
+  caAccredited:
+    type: boolean
+    description: Аккредитованный УЦ
+description: Идентификатор ключей УЦ

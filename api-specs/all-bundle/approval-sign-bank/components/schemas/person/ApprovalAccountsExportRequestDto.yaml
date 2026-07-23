@@ -1,0 +1,30 @@
+required:
+- accountIds
+- approvalPersonKind
+- clientId
+- personId
+type: object
+properties:
+  approvalPersonKind:
+    type: string
+    description: Тип визирующего лица
+    enum:
+    - F1
+    - TNF
+  personId:
+    type: string
+    description: Идентификатор визирующего лица
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор визирующей организации
+    format: uuid
+  accountIds:
+    minItems: 1
+    type: array
+    description: Идентификаторы визируемых счетов
+    items:
+      type: string
+      description: Идентификаторы визируемых счетов
+      format: uuid
+description: Запрос на экспорт данных о визируемых счетах в xlsx файл

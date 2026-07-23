@@ -1,0 +1,33 @@
+type: object
+properties:
+  totalDocCount:
+    type: string
+    description: 'Количество документов: Общее'
+  processedDocCount:
+    type: string
+    description: 'Количество документов: Обработано'
+  notRecognizedDocCount:
+    type: string
+    description: 'Количество документов: Не распознано'
+  noRightsDocCount:
+    type: string
+    description: 'Количество документов: Нет прав'
+  validDocCount:
+    type: string
+    description: 'Количество документов: Корректные'
+  errorDocCount:
+    type: string
+    description: 'Количество документов: С ошибками'
+  warningDocCount:
+    type: string
+    description: 'Количество документов: С предупреждениями'
+  validDocAmount:
+    type: string
+    description: 'Сумма документов: Корректные'
+  errorDocAmount:
+    type: string
+    description: 'Сумма документов: С ошибками'
+  warningDocAmount:
+    type: string
+    description: 'Сумма документов: С предупреждениями'
+description: Данные о документах в файле

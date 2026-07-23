@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsEmployeeUnitedClientScrollerFilterV3.yaml
+description: Запрос страницы

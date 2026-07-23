@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Универсальное API визирования документов.
+  summary: Сформировать данные для функции подписи v2.1
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_DEALS_FX_VISA_VIEW'')'
+  operationId: generateSignDataV2_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/fx-document/GenericCommandApprovalSignDataRequest.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/fx-document/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,12 @@
+type: object
+properties:
+  message:
+    type: string
+    example: null
+  params:
+    type: object
+    additionalProperties:
+      type: object
+      example: null
+    example: null
+example: null

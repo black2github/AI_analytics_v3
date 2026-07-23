@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  clientStatus:
+    type: string
+  bankStatus:
+    type: string
+  changedIn:
+    type: string
+    format: date-time
+  fio:
+    type: string
+  commentForClient:
+    type: string
+  commentForBank:
+    type: string
+description: Данные

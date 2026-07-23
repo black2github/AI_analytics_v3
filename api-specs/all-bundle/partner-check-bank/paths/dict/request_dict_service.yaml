@@ -1,0 +1,22 @@
+get:
+  tags:
+  - API методы Админки
+  summary: Получить справочник услуг
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.VIEW_REQUEST_JOURNAL'
+  operationId: getServiceDictionaryUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,List«CheckDictResponse»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование банка плательщика
+  swift:
+    type: string
+    description: SWIFT-код банка плательщика
+description: Транспортное представление банка плательщика для быстрого справочника

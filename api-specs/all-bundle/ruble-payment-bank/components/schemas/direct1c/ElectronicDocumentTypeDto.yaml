@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор элемента справочника
+    format: uuid
+  direction:
+    type: integer
+    description: Направление
+    format: int32
+  typeCode:
+    type: string
+    description: Код вида ЭД
+  typeName:
+    type: string
+    description: Название вида ЭД
+  documentTypeCode:
+    type: string
+    description: Код типа документа ЭКО
+description: Справочник кодов видов электронных документов

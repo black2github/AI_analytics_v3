@@ -1,0 +1,22 @@
+required:
+- productCode
+- validationResult
+type: object
+properties:
+  efrOfferId:
+    type: string
+    description: Идентификатор предложения в ЕФР
+    format: uuid
+  productCode:
+    type: string
+    description: Код продукта
+  sourcePage:
+    type: string
+    description: Страница-источник, на которой был расположен баннер при оформлении заявки на консультацию
+  bankClientId:
+    type: string
+    description: Идентификатор организации заявки
+    format: uuid
+  validationResult:
+    $ref: ./ValidationResult.yaml
+description: ДТО консультации

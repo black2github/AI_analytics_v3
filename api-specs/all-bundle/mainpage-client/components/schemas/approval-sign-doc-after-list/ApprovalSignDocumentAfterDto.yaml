@@ -1,0 +1,15 @@
+type: object
+properties:
+  docInApproveSigned:
+    type: integer
+    description: Количество документов в статусе "В обработке"
+    format: int32
+  docInRejected:
+    type: integer
+    description: Количество документов в статусе "Отказано"
+    format: int32
+  docInCompleted:
+    type: integer
+    description: Количество документов в статусе "Исполнено"
+    format: int32
+description: Количество завизированных документов по статусу

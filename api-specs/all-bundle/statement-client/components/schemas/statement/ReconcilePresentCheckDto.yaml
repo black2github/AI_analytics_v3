@@ -1,0 +1,15 @@
+type: object
+properties:
+  accounts:
+    type: array
+    items:
+      $ref: ./ReconcilePresentAccountDto.yaml
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  statementId:
+    type: string
+    format: uuid

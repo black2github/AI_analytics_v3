@@ -1,0 +1,17 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип документа
+    enum:
+    - KOPOP
+    - AKZEPT
+    - DBS
+  date:
+    type: string
+    description: Дата договора банковского счёта
+    format: date
+  documentNumber:
+    type: string
+    description: Номер договора банковского счёта
+description: Документы договора

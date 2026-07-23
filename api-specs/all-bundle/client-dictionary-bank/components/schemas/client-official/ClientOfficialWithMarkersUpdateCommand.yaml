@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientOfficial:
+    $ref: ../common/ClientOfficialDto.yaml
+  addMarkers:
+    type: array
+    description: Метки представителя клиента для добавления
+    items:
+      type: string
+      description: Метки представителя клиента для добавления
+  removeMarkers:
+    type: array
+    description: Метки представителя клиента для удаления
+    items:
+      type: string
+      description: Метки представителя клиента для удаления
+description: Данные для обновления предствителя клиента с метками

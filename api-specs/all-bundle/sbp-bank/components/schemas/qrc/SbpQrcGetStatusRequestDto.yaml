@@ -1,0 +1,14 @@
+type: object
+description: Получение статуса динамического QR-кода
+properties:
+  qrcIds:
+    type: array
+    description: Массив qrcId по которым нужно получить статус операции
+    items:
+      type: string
+  traceID:
+    type: string
+    description: Уникальный идентификатор запроса
+  ecoServiceCode:
+    type: string
+    description: Код сервиса ЭКО

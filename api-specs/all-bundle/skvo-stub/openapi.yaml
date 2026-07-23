@@ -1,0 +1,26 @@
+openapi: 3.1.0
+info:
+  title: Сервис эмуляции взаимодействия с АС СКВО
+  version: 1.1.0
+  description: Сервис
+servers:
+- url: /skvo-stub
+tags:
+- name: API заглушек документов, полученных из АС СКВО
+paths:
+  /processedio/create-by-correlation-id:
+    $ref: ./paths/create-by-correlation-id/processedio_create_by_correlation_id.yaml
+  /processedio/create-by-ioxml:
+    $ref: ./paths/create-by-ioxml/processedio_create_by_ioxml.yaml
+components:
+  schemas:
+    EcoDocumentTypeDto:
+      $ref: ./components/schemas/create-by-ioxml/EcoDocumentTypeDto.yaml
+    GenericResponse:
+      $ref: ./components/schemas/common/GenericResponse.yaml
+    GenericResponseSimpleErrorDataSkvoProcessedioDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataSkvoProcessedioDto.yaml
+    SkvoProcessedioDto:
+      $ref: ./components/schemas/common/SkvoProcessedioDto.yaml
+    SkvoProcessedioRqDto:
+      $ref: ./components/schemas/create-by-correlation-id/SkvoProcessedioRqDto.yaml

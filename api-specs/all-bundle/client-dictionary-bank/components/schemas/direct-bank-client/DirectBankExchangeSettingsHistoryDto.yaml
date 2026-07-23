@@ -1,0 +1,13 @@
+type: object
+properties:
+  directBankClientId:
+    type: string
+    format: uuid
+  settingsId:
+    type: string
+    format: uuid
+  userId:
+    type: string
+    format: uuid
+  warning:
+    $ref: ./Warning.yaml

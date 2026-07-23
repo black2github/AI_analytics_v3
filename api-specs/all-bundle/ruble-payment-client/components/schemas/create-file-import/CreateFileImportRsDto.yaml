@@ -1,0 +1,14 @@
+required:
+- fileImportId
+- operationCode
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  status:
+    $ref: ../common/FileImportStatusDto.yaml
+  operationCode:
+    $ref: ../common/EcoFileImportOperationClassifierDto.yaml
+description: '[Импорт ПЭД] Система: Функция создания записи файла импорта. Исходящие параметры.'

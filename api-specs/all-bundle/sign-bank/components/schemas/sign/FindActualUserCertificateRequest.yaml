@@ -1,0 +1,21 @@
+required:
+- certType
+- date
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  certType:
+    type: string
+    description: Тип сертификата
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+  date:
+    type: string
+    description: Дата проверки действия сертификата
+    format: date-time
+description: Запрос на поиск действующих сертификатов пользователя.

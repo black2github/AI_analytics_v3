@@ -1,0 +1,14 @@
+type: object
+properties:
+  value:
+    type: string
+    example: null
+  version:
+    type: integer
+    format: int32
+    example: null
+  signFields:
+    type: string
+    example: null
+description: Данные
+example: null

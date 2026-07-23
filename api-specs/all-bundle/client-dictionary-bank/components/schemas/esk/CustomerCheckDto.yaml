@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код проверки.
+  passed:
+    type: boolean
+    description: Проверка пройдена.
+description: Элемент проверки данных клиента из АС ЕСК.

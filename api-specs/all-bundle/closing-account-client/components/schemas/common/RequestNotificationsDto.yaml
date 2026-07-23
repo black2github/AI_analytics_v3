@@ -1,0 +1,9 @@
+type: object
+properties:
+  needEmail:
+    type: boolean
+    description: Уведомление по Email
+  needSms:
+    type: boolean
+    description: Уведомление по SMS
+description: Отправление уведомлений об исполнении заявки

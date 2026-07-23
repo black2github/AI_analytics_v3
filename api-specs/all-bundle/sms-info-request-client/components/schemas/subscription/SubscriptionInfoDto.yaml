@@ -1,0 +1,10 @@
+required:
+- clients
+type: object
+properties:
+  clients:
+    type: array
+    description: Параметры подключения клиентов
+    items:
+      $ref: ./ClientSubscriptionInfoDto.yaml
+description: Параметры подключения СМС-информирования

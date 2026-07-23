@@ -1,0 +1,43 @@
+type: object
+properties:
+  dealType:
+    type: string
+    description: Тип сделки
+  signer:
+    type: boolean
+    description: Пользователь является подписантом с ЭП или ПЭП
+  privilegeLevel:
+    type: string
+    description: Уровень привилегий пользователя
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  dealsExist:
+    type: boolean
+    description: Наличие сделок данного типа
+  ratesExist:
+    type: boolean
+    description: Наличие ставок для сделок данного типа
+  rateTypes:
+    type: array
+    description: Типы ставок
+    items:
+      $ref: ./DealRateTypeDto.yaml
+  generalAgreementsExist:
+    type: boolean
+    description: Наличие ген. соглашений на заключение сделок данного типа
+  generalAgreementsDUExist:
+    type: boolean
+    description: Наличие ген. соглашений ДУ на заключение сделок данного типа
+  generalAgreementsBlockedExist:
+    type: boolean
+    description: Наличие неактивных ген. соглашений для сделок данного типа
+  allowedForRequest:
+    type: boolean
+    description: Доступность создания заявок автокотирования данного типа
+  dealsListEnabled:
+    type: boolean
+    description: Определяет показывать или нет список сделок
+description: Информация о доступе по типу сделки

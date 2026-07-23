@@ -1,0 +1,15 @@
+required:
+- fileImportId
+- operation
+- status
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  status:
+    $ref: ../common/FileImportStatusDto.yaml
+  operation:
+    $ref: ../common/EcoFileImportOperationClassifierDto.yaml
+description: Ответ на запрос снятия подписи

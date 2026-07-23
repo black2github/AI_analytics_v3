@@ -1,0 +1,8 @@
+type: object
+properties:
+  persons:
+    type: array
+    description: Массив ФЛ
+    items:
+      $ref: ./ESignRequestPersonStatusesDto.yaml
+description: Результат выполнения функции получения статусов заявок на ЭП

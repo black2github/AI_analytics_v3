@@ -1,0 +1,32 @@
+required:
+- bankClientId
+- endDateHistory
+- fingerprint
+- organization
+- pcrParticipantWalletId
+- startDateHistory
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    minLength: 1
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  startDateHistory:
+    type: string
+    description: Дата начала истории операций
+    format: date
+  endDateHistory:
+    type: string
+    description: Дата окончания истории операций
+    format: date
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+description: DTO для запроса на создание заявки на запрос истории операций.

@@ -1,0 +1,18 @@
+type: object
+properties:
+  columnCount:
+    type: integer
+    description: Количество колонок
+    format: int32
+  additionalText:
+    type: string
+    description: Дополнительная информация
+  additionalTextDate:
+    type: string
+    description: Дата и время комментария
+  additionalInfo:
+    type: array
+    description: Расширенная информация
+    items:
+      $ref: ./DocumentAdditionalInfoDto.yaml
+description: Ответ на запрос расширенной информации о документе

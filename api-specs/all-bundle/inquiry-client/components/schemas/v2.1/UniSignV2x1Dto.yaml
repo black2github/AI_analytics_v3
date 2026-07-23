@@ -1,0 +1,10 @@
+type: object
+properties:
+  signDocuments:
+    type: array
+    description: Набор подписываемых документов
+    example: null
+    items:
+      $ref: ./UniSignDocumentV2x1Dto.yaml
+description: Параметры универсальной функции электронной подписи v2.1
+example: null

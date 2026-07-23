@@ -1,0 +1,32 @@
+type: object
+properties:
+  x509data:
+    type: string
+    description: Сертификат в формате X509, в кодировке base64
+  password:
+    type: string
+    description: Пароль к ключевому контейнеру
+  signData:
+    type: array
+    description: Массив данных для подписи в кодировке base64
+    items:
+      type: string
+      description: Массив данных для подписи в кодировке base64
+  signFormat:
+    type: string
+    description: Формат подписи
+    enum:
+    - UNKNOWN
+    - PLAIN
+    - CMS
+    - XMLDSIG
+  calculatedHash:
+    type: boolean
+    description: Признак передачи вычисленных хешей
+  signParams:
+    type: object
+    additionalProperties:
+      type: string
+      description: Дополнительные параметры подписи
+    description: Дополнительные параметры подписи
+description: Запрос на подпись данных

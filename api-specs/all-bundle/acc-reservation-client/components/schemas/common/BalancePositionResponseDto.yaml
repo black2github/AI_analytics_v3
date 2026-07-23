@@ -1,0 +1,7 @@
+type: object
+properties:
+  balancePositionValue:
+    type: string
+  description:
+    type: string
+description: Данные балансовой позиции

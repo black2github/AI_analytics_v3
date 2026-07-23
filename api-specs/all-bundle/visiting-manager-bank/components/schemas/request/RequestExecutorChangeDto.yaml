@@ -1,0 +1,10 @@
+type: object
+properties:
+  executorId:
+    type: string
+    description: Идентификатор исполнителя.
+    format: uuid
+  executorFio:
+    type: string
+    description: ФИО исполнителя.
+description: Данные для смены исполнителя заявки.

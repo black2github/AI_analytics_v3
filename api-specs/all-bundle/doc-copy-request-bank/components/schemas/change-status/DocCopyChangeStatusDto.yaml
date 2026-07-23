@@ -1,0 +1,51 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    enum:
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - SUBMITTED
+    - RECEIVED
+    - DOCS_REQUEST_TO_F1
+    - DOCS_REQUEST_TO_F1_ERROR
+    - DOCS_REQUEST_SENT_TO_F1
+    - DOCS_REQUEST_EXPORTED_TO_F1
+    - COMMISSION_IS_PAID
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - WAITING_FOR_PAYMENT
+    - IS_ODS_IMPORT_OR_ERROR
+    - ODS_IMPORT_ERROR
+    - ODS_IMPORTED
+    - IS_REQUEST_PRINT_OR_ERROR
+    - PRINT_ERROR
+    - PRINT_DOCS_CREATED
+    - IS_REQUEST_ZIP_OR_ERROR
+    - ZIP_DOCS_ERROR
+    - DOCS_ZIPPED
+    - IS_REQUEST_SIGN_OR_ERROR
+    - SIGN_DOCS_ERROR
+    - DOCS_SIGNED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  requestIds:
+    type: array
+    description: Список идентификаторов заявок для смены статуса
+    items:
+      type: string
+      description: Список идентификаторов заявок для смены статуса
+      format: uuid

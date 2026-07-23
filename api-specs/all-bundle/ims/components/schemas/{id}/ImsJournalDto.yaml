@@ -1,0 +1,123 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи журнала
+    format: uuid
+  messageId:
+    type: string
+    description: Идентификатор сообщения СУВ
+  messageDateTime:
+    type: string
+    description: Дата и время отправки/получения сообщения
+    format: date-time
+  source:
+    type: string
+    description: Код компоненты отправителя
+  destination:
+    type: string
+    description: Код компоненты получателя
+  objectType:
+    type: string
+    description: Вид сообщения
+  receiptType:
+    type: string
+    description: Тип ответной квитанции
+  comment:
+    type: string
+    description: Комментарий
+  processDescription:
+    type: string
+    description: Название процесса
+  xmlBody:
+    type: string
+    description: XML
+  requestId:
+    type: string
+    description: Ссылка на сущность "Заявка"
+    format: uuid
+  requestType:
+    type: string
+    description: Классификатор типов документов.
+    enum:
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_SECOND_REQ
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+    - ACC_RESERV_REQ
+    - OFFER_RKO_ACCEPTANCE_REQ
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+    - REG_COWORKER_DATA
+    - OFFER_JOIN_CCERT
+    - FREE_FORMAT_DOC
+    - OFFER_JOIN_PO_UVED
+    - OFFER_BREAK_PO_UVED
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - REQUEST_FOR_ACCOUNT_INFO
+    - UPDATE_INFORM
+    - UPDATE_INFORM_RQMNT
+    - ACC_OPEN_FIRST_REQ_2021
+    - OFFER_TMG
+    - STATEMENT_USER_ROLE_TMG
+    - VM_REQUEST_DOC
+    - ACC_OPEN_FIRST_REQ_OB
+    - UNCDOCINF
+    - ADD_EDIT_USER
+    - BUSINESS_CARD_ISSUE_REQUEST
+    - ACC_OPEN_FIRST_REQ_FNS
+    - IDENTIFICATION_RESULT_REQUEST_FNS
+    - ACC_OPEN_FIRST_REQ_KZ
+    - ACC_OPEN_FIRST_REQ_REM
+    - BRK_ONBOARD
+    - DW_WALLET_IDENTIFY
+  organizationId:
+    type: string
+    description: GUID Организации
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  requestDate:
+    type: string
+    description: Дата заявки
+    format: date-time
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  bankClientName:
+    type: string
+    description: Наименование Клиента Банка
+  bankClientInn:
+    type: string
+    description: ИНН Клиента Банка
+  bankClientKpp:
+    type: string
+    description: КПП Клиента Банка
+  messageSubtype:
+    type: string
+    description: Подтип сообщения СУВ.
+    enum:
+    - CORPORATE
+    - INDIVIDUAL
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  objectName:
+    type: string
+    description: Наименование объекта
+  attemptCount:
+    type: integer
+    description: Количество попыток отправки
+    format: int32
+  status:
+    type: string
+    description: Статус записи журнала СУВ
+    enum:
+    - PROCESSING
+    - SUCCESS
+    - ERROR
+    - DECLINED
+description: Запись журанала сообщений СУВ.

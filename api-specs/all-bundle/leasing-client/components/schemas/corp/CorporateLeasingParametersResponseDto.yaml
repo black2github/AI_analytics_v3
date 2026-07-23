@@ -1,0 +1,11 @@
+type: object
+properties:
+  plannedLeasingPeriod:
+    type: integer
+    format: int32
+  finCost:
+    type: number
+  advance:
+    type: number
+  comment:
+    type: string

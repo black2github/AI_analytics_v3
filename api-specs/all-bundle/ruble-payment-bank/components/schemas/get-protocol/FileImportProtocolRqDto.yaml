@@ -1,0 +1,13 @@
+required:
+- importProcessId
+- newImport
+type: object
+properties:
+  importProcessId:
+    type: string
+    description: Если протокол старого импорта - BackgroundImportProcess.id, нового - FileImport.id
+    format: uuid
+  newImport:
+    type: boolean
+    description: Признак старого/нового импорта
+description: Данные для получения протокола файлового импорта

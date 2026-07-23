@@ -1,0 +1,51 @@
+type: object
+properties:
+  externalId:
+    type: string
+    description: Идентификатор справочника счетов
+    format: uuid
+  accountType:
+    type: integer
+    description: Тип счета
+    format: int32
+  currencyId:
+    type: string
+    description: Идентификатор валюты
+    format: uuid
+  currencyName:
+    type: string
+    description: Наименование валюты
+  accountNumber:
+    type: string
+    description: Номер счета
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  startDate:
+    type: string
+    description: Дата начала резервирования счета
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания резервирования счета
+    format: date
+  annulledDate:
+    type: string
+    description: Дата аннулирования счета
+    format: date
+  openDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+description: Детальная информация о счетах

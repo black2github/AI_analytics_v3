@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор банка плательщика
+    format: uuid
+  name:
+    type: string
+    description: Наименование банка плательщика
+  bic:
+    type: string
+    description: BIC-код банка плательщика
+  city:
+    type: string
+    description: Город банка плательщика
+  address:
+    type: string
+    description: Адрес банка плательщика
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+description: Транспортное представление атрибутов банка плательщика

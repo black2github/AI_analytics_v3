@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    format: uuid
+  clientIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  sort:
+    $ref: ../common/Sort.yaml
+  excludeId:
+    type: string
+    format: uuid
+description: Данные

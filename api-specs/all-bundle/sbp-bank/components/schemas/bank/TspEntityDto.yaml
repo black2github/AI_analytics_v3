@@ -1,0 +1,34 @@
+type: object
+properties:
+  merchantId:
+    type: string
+  brandName:
+    type: string
+  mcc:
+    type: string
+  countryCode:
+    type: string
+  countrySubDivisionCode:
+    type: string
+  city:
+    type: string
+  zip:
+    type: string
+  address:
+    type: string
+  contactPhoneNumber:
+    type: string
+  capabilities:
+    type: string
+  regDate:
+    type: string
+  isReturnPermitted:
+    type: boolean
+  salesMode:
+    type: string
+  url:
+    type: string
+  merchantStatus:
+    type: string
+  updateStatusDate:
+    type: string

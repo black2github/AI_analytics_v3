@@ -1,0 +1,15 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор сделки
+    format: uuid
+  signStatus:
+    type: string
+    description: Статус подписи документа
+    enum:
+    - SUCCESS
+    - FAIL
+  errorDescription:
+    $ref: ./ErrorDescriptionDto.yaml
+description: Результат пакетной подписи по сделкам

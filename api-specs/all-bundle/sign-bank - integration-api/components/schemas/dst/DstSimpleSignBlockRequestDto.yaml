@@ -1,0 +1,7 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Запрос блокировки СЭП ПЭП

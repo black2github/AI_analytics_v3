@@ -1,0 +1,47 @@
+type: object
+properties:
+  fieldName:
+    type: string
+    description: Имя поля
+  fieldValue:
+    $ref: ./FieldValueDto.yaml
+  fieldColor:
+    type: string
+    description: Цвет текста
+    enum:
+    - GREY
+    - YELLOW
+    - RED
+    - GREEN
+  fieldApiDescription:
+    type: string
+    description: Подсказка к названию поля
+  fieldValueDescription:
+    type: string
+    description: Подсказка к значению поля
+  isBold:
+    type: boolean
+    writeOnly: true
+  isEndBlock:
+    type: boolean
+    writeOnly: true
+  isHeader:
+    type: boolean
+    writeOnly: true
+  isHeaderBold:
+    type: boolean
+    writeOnly: true
+  isStrikeThrough:
+    type: boolean
+    writeOnly: true
+  header:
+    type: boolean
+  endBlock:
+    type: boolean
+  headerBold:
+    type: boolean
+  strikeThrough:
+    type: boolean
+  bold:
+    type: boolean
+description: Расширенная информация о документе

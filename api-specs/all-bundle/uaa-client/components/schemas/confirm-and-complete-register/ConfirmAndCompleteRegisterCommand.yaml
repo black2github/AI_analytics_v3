@@ -1,0 +1,20 @@
+required:
+- clientId
+- code
+- confirmationId
+type: object
+properties:
+  confirmationId:
+    type: string
+    description: Идентификатор запроса на подтверждение
+    format: uuid
+  code:
+    type: string
+    description: Код подтверждения номера телефона
+  clientId:
+    type: string
+    description: Идентификатор OAuth2 приложения
+  user_environment:
+    type: string
+    description: Информация об окружении пользователя
+description: Команда подтверждения и завершения регистрации с предзаполнением данных

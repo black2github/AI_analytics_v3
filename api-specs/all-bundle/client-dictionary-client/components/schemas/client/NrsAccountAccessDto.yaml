@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор счёта
+    format: uuid
+  number:
+    type: string
+    description: Номер счёта
+  name:
+    type: string
+    description: Наименование счёта
+  kindName:
+    type: string
+    description: Вид счёта
+  kindCode:
+    type: string
+    description: Код вид счёта
+  currencyCode:
+    type: string
+    description: Код валюты
+  accessSignature:
+    type: boolean
+    description: Признак доступа к счёту
+description: Доступный счёт клиента банка

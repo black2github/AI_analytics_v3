@@ -1,0 +1,26 @@
+required:
+- fileHash
+- fileId
+- fileName
+- fileSize
+- fileType
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  fileId:
+    type: string
+    description: Ссылка на файл
+    format: uuid
+  fileHash:
+    type: string
+    description: Хэш сумма
+  fileType:
+    type: string
+    description: Формат файла
+description: Распознанные файлы

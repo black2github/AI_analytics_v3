@@ -1,0 +1,24 @@
+type: object
+description: Транспортное представление документа PROCESSEDIO
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Идентификатор записи
+  msgId:
+    type: string
+    description: Идентификатор сообщения
+  objType:
+    type: string
+    description: Тип документа
+  eventType:
+    type: string
+    description: Тип события
+  locId:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Локальный идентификатор ИО в Компоненте
+  ioxml:
+    type: string
+    description: Тело информационного объекта в формате XML

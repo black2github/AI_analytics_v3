@@ -1,0 +1,14 @@
+type: object
+description: Поддерживаемый участником СБП сценарий
+properties:
+  name:
+    type: string
+    description: Название поддерживаемого Сценария Операции СБП
+  roles:
+    type: array
+    description: Роли в поддерживаемом Сценарии Операции СБП
+    items:
+      type: string
+required:
+- name
+- roles

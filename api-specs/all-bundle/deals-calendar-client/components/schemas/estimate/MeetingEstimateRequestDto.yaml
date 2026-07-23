@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  estimate:
+    type: integer
+    description: Оценка
+    format: int32
+  comment:
+    maxLength: 300
+    type: string
+    description: Комментарий
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: ДТО оценки встречи

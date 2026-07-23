@@ -1,0 +1,10 @@
+required:
+- data
+- userDeviceInfo
+type: object
+properties:
+  data:
+    $ref: ./OutgoingPaymentRequestCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда создания

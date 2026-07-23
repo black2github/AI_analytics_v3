@@ -1,0 +1,93 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор визирующего лица
+    format: uuid
+  clientUserId:
+    type: string
+    description: Идентификатор клиентского пользователя визирующего лица
+    format: uuid
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника клиента в Экосистеме
+    format: uuid
+  userFio:
+    type: string
+    description: Фамилия имя и отчество визирующего лица
+  f1PersonId:
+    type: integer
+    description: Идентификатор визирующего лица в РКО Ф1
+    format: int64
+  eskPersonId:
+    type: integer
+    description: Ид. визирующего лица в ЕСК
+    format: int64
+  approval:
+    type: boolean
+    description: Статус полномочия визирующего лица
+  deleted:
+    type: boolean
+    description: Признак удаления
+  notified:
+    type: boolean
+    description: Признак нотификации
+  rulesCreated:
+    type: boolean
+    description: Признак формирования правил
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  clientAbsId:
+    type: integer
+    description: РНК клиента
+    format: int64
+  shortClientName:
+    type: string
+    description: Короткое имя клиента банка
+  clientName:
+    type: string
+    description: Полное имя клиента банка
+  clientInn:
+    type: string
+    description: ИНН клиента банка
+  clientOgrn:
+    type: string
+    description: ОГРН клиента банка
+  authorId:
+    type: string
+    description: Идентификатор автора записи о визирующем лице
+    format: uuid
+  authorFio:
+    type: string
+    description: ФИО автора записи о визирующем лице
+  createdAt:
+    type: string
+    description: Дата и время создания записи о визирующем лице
+    format: date-time
+  editorId:
+    type: string
+    description: Идентификатор автора последних изменений записи о визирующем лице
+    format: uuid
+  editorFio:
+    type: string
+    description: ФИО автора записи о визирующем лице
+  updatedAt:
+    type: string
+    description: Дата и время создания внесения изменений о визирующем лице
+    format: date-time
+  accountsCount:
+    type: integer
+    description: Количество счетов, привязанных к визирующему лицу
+    format: int32
+  kind:
+    type: string
+    description: Тип визирующего лица, исходная система
+    enum:
+    - F1
+    - TNF
+  isAddedManually:
+    type: boolean
+    description: Признак добавления записи вручную
+description: Визирующее лицо

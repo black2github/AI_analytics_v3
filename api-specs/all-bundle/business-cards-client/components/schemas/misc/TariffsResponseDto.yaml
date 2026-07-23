@@ -1,0 +1,14 @@
+required:
+- counters
+- size
+type: object
+properties:
+  counters:
+    type: array
+    description: Список метрик
+    items:
+      $ref: ./CounterDto.yaml
+  size:
+    type: string
+    description: Количество элементов массива counters
+description: Ответ с тарифами по корпоративной карте

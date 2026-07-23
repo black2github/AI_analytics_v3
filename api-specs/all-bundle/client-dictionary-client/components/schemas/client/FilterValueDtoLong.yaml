@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: integer
+    format: int64
+  notEq:
+    type: integer
+    format: int64
+  in:
+    type: array
+    items:
+      type: integer
+      format: int64
+  notIn:
+    type: array
+    items:
+      type: integer
+      format: int64
+  isNull:
+    type: boolean
+  gt:
+    type: integer
+    format: int64
+  ge:
+    type: integer
+    format: int64
+  lt:
+    type: integer
+    format: int64
+  le:
+    type: integer
+    format: int64
+description: Идентификатор организации

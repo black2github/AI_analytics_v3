@@ -1,0 +1,13 @@
+required:
+- operationNotifications
+- pcrParticipantWalletIdentifiers
+type: object
+properties:
+  pcrParticipantWalletIdentifiers:
+    $ref: ./PcrParticipantWalletIdentifiersDto.yaml
+  operationNotifications:
+    type: array
+    description: Список уведомлений об операциях
+    items:
+      $ref: ./OperationNotificationDto.yaml
+description: Запрос на создание операций

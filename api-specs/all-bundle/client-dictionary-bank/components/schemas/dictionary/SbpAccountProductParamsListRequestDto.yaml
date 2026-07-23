@@ -1,0 +1,15 @@
+required:
+- contractId
+type: object
+properties:
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+  accountRole:
+    type: string
+    description: Роль счета. "Зачисление", "Списание", "Комиссия"
+  b2bOnly:
+    type: boolean
+    description: Признак разрешенной операции по счету, true - разрешены только B2B, false - разрешены B2B и B2C
+description: Данные для запроса  списка параметров счетов в продукте СБП

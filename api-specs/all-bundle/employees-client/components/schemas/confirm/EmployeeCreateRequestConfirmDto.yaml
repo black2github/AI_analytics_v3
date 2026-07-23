@@ -1,0 +1,14 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+description: Заявка на добавление нового сотрудника. Подтверждение

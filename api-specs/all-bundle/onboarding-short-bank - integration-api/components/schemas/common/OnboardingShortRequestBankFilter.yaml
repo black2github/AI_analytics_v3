@@ -1,0 +1,83 @@
+type: object
+properties:
+  accessRightGrantingStatus:
+    $ref: ./FilterValueEnumDtoAccessRightGrantingStatusDto.yaml
+  accountTypeCodes:
+    $ref: ./FilterValueDtoLong.yaml
+  branches:
+    $ref: ./FilterValueDtoUUID.yaml
+  businessFeatures:
+    $ref: ./FilterValueEnumDtoBusinessFeatureScrollerDto.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  clientNameInnOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  clientOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  clientType:
+    $ref: ./FilterValueEnumDtoBankClientTypeDto.yaml
+  commentForBank:
+    $ref: ./FilterValueDtoString.yaml
+  commentForClient:
+    $ref: ./FilterValueDtoString.yaml
+  contractDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  contractNumber:
+    $ref: ./FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoInstant.yaml
+  docIdNumber:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  isBsc:
+    $ref: ./FilterValueDtoBoolean.yaml
+  isGazpromContractor:
+    $ref: ./FilterValueDtoBoolean.yaml
+  isTessaStatusError:
+    $ref: ./FilterValueDtoBoolean.yaml
+  marketingCampaign:
+    $ref: ./FilterValueEnumDtoMarketingCampaignTypeDto.yaml
+  meetingPoint:
+    $ref: ./FilterValueEnumDtoMeetingPointScrollerDto.yaml
+  onRework:
+    $ref: ./FilterValueDtoBoolean.yaml
+  partnerSite:
+    $ref: ./FilterValueDtoString.yaml
+  primaryCheckResult:
+    $ref: ./FilterValueEnumDtoPrimaryCheckResultDto.yaml
+  responsibleBankUserFio:
+    $ref: ./FilterValueDtoString.yaml
+  signPlace:
+    $ref: ./FilterValueEnumDtoSignPlaceDto.yaml
+  signingStatus:
+    $ref: ./FilterValueEnumDtoSigningStatusDto.yaml
+  source:
+    $ref: ./FilterValueEnumDtoOnboardingShortRequestSourceDto.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOnboardingShortRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - PROCESSING_ERROR
+    - NEED_CONTACT_CLIENT
+    - IN_PROGRESS
+    - WAITING_CLIENT_ACTION
+    - FINISHED
+  techFeatures:
+    $ref: ./FilterValueEnumDtoTechFeatureScrollerDto.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userIdLogin:
+    $ref: ./FilterValueDtoString.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  userType:
+    $ref: ./FilterValueEnumDtoUserTypeDto.yaml
+description: Фильтр для поиска коротких заявок на открытие первого счёта для банковского скроллера

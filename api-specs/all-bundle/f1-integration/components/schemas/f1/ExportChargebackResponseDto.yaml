@@ -1,0 +1,14 @@
+type: object
+properties:
+  code:
+    type: integer
+    description: Код ответа из АБС
+    format: int32
+  message:
+    type: string
+    description: Комментарий к ответу из АБС
+  absDocId:
+    type: integer
+    description: Идентификатор документа, зарегистрированного в АБС
+    format: int32
+description: Ответ РКО Ф1 на экспорт заявки на отзыв

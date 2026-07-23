@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BASE
+    - TRANSACTIONS
+  notEq:
+    type: string
+    enum:
+    - BASE
+    - TRANSACTIONS
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BASE
+      - TRANSACTIONS
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BASE
+      - TRANSACTIONS
+  isNull:
+    type: boolean
+description: Доступные операции

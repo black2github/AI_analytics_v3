@@ -1,0 +1,41 @@
+type: object
+description: Запрос смены статуса заявки на изменение параметров ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - PERMISSIONS_REQUEST
+    - PERMISSIONS_ERROR
+    - PERMISSION_REGISTERED
+    - AUTH_REQUEST
+    - AUTH_REQUEST_ERROR
+    - AUTH_REGISTERED
+    - EXECUTED
+    - REJECTED
+    - PERMISSIONS_REPEAT
+    - EXPORT_UPDATE_URL_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_UPDATE_URL_ERROR
+    - REJECTED_BY_AS_SBP_UPDATE_URL
+    - EXECUTED_BY_AS_SBP_UPDATE_URL
+    - REJECTED_PERMISSIONS_REQUEST
+    - REJECTED_AUTH_REQUEST
+    - RESULTS_PROCESSING
+    - PARTIALLY_EXECUTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id
+- nextStatus

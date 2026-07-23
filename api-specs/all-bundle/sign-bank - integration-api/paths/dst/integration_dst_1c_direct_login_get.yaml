@@ -1,0 +1,56 @@
+post:
+  tags:
+  - Интеграционное API СЭП для аутентификации через 1C DirectBank
+  summary: Получить СЭП для аутентификации через 1C DirectBank
+  description: 'Привилегии: INTEGRATION_GET_DST_FOR_DIRECT1C_LOGIN'
+  operationId: getDstForDirect1CLogin
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/dst/GenericCommandDstForDirect1CLoginSearchRequestDto.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/dst/GenericResponseSimpleErrorDataDstForDirect1CLoginSearchResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security: []

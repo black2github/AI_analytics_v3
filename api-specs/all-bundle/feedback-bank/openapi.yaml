@@ -1,0 +1,90 @@
+openapi: 3.0.1
+info:
+  title: Сервис Оценка 5*. Банковская часть.
+  description: Сервис Оценка 5*.
+  version: 1.25.0
+servers:
+- url: /feedback-bank
+security:
+- Bearer: []
+tags:
+- name: '[Оценка 5*]. Банк — работа с опросами'
+- name: '[Оценка 5*]. Банк — работа с хештегами'
+paths:
+  /feedback/poll/{pollParameterId}:
+    $ref: ./paths/poll/feedback_poll_pollParameterId.yaml
+  /feedback/poll/:
+    $ref: ./paths/poll/feedback_poll.yaml
+  /feedback/poll/list:
+    $ref: ./paths/poll/feedback_poll_list.yaml
+  /feedback/hashtag/standard:
+    $ref: ./paths/hashtag/feedback_hashtag_standard.yaml
+  /feedback/hashtag/poll:
+    $ref: ./paths/hashtag/feedback_hashtag_poll.yaml
+  /feedback/hashtag/dictionary/list:
+    $ref: ./paths/hashtag/feedback_hashtag_dictionary_list.yaml
+  /feedback/hashtag/by-poll-parameter/{pollParameterId}:
+    $ref: ./paths/hashtag/feedback_hashtag_by_poll_parameter_pollParameterId.yaml
+components:
+  schemas:
+    CommentHintDisplayDto:
+      $ref: ./components/schemas/poll/CommentHintDisplayDto.yaml
+    PollParameterCreateUpdateDto:
+      $ref: ./components/schemas/poll/PollParameterCreateUpdateDto.yaml
+    CommentHintsDto:
+      $ref: ./components/schemas/poll/CommentHintsDto.yaml
+    CreatedInfoDto:
+      $ref: ./components/schemas/poll/CreatedInfoDto.yaml
+    GenericResponseSimpleErrorDataPollDetailDto:
+      $ref: ./components/schemas/poll/GenericResponseSimpleErrorDataPollDetailDto.yaml
+    LastChangeDto:
+      $ref: ./components/schemas/poll/LastChangeDto.yaml
+    PollChangeInfoDto:
+      $ref: ./components/schemas/poll/PollChangeInfoDto.yaml
+    PollDetailDto:
+      $ref: ./components/schemas/poll/PollDetailDto.yaml
+    PollExtraParamsDto:
+      $ref: ./components/schemas/poll/PollExtraParamsDto.yaml
+    PollMainParamsDto:
+      $ref: ./components/schemas/poll/PollMainParamsDto.yaml
+    PollStatusDto:
+      $ref: ./components/schemas/poll/PollStatusDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    DateRangeDto:
+      $ref: ./components/schemas/poll/DateRangeDto.yaml
+    PollListFilterDto:
+      $ref: ./components/schemas/poll/PollListFilterDto.yaml
+    GenericResponseSimpleErrorDataSliceDataPollParameterDto:
+      $ref: ./components/schemas/poll/GenericResponseSimpleErrorDataSliceDataPollParameterDto.yaml
+    PollParameterDto:
+      $ref: ./components/schemas/poll/PollParameterDto.yaml
+    SliceDataPollParameterDto:
+      $ref: ./components/schemas/poll/SliceDataPollParameterDto.yaml
+    SaveStandardHashtagsRequestDto:
+      $ref: ./components/schemas/hashtag/SaveStandardHashtagsRequestDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    SavePollHashtagsRequestDto:
+      $ref: ./components/schemas/hashtag/SavePollHashtagsRequestDto.yaml
+    HashtagDictionaryFilterDto:
+      $ref: ./components/schemas/hashtag/HashtagDictionaryFilterDto.yaml
+    GenericResponseSimpleErrorDataSliceDataHashtagDictionaryDto:
+      $ref: ./components/schemas/hashtag/GenericResponseSimpleErrorDataSliceDataHashtagDictionaryDto.yaml
+    HashtagDictionaryDto:
+      $ref: ./components/schemas/hashtag/HashtagDictionaryDto.yaml
+    SliceDataHashtagDictionaryDto:
+      $ref: ./components/schemas/hashtag/SliceDataHashtagDictionaryDto.yaml
+    GenericResponseSimpleErrorDataHashtagsByResultDto:
+      $ref: ./components/schemas/hashtag/GenericResponseSimpleErrorDataHashtagsByResultDto.yaml
+    HashtagDto:
+      $ref: ./components/schemas/hashtag/HashtagDto.yaml
+    HashtagGroupDto:
+      $ref: ./components/schemas/hashtag/HashtagGroupDto.yaml
+    HashtagsByResultDto:
+      $ref: ./components/schemas/hashtag/HashtagsByResultDto.yaml
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

@@ -1,0 +1,7 @@
+type: object
+properties:
+  ownerBank:
+    $ref: ./FilterValueEnumDtoBankCodeDto.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+description: Запрос на фильрацию счетов

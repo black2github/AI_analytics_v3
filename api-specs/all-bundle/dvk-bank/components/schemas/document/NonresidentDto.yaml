@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование нерезидента
+  countryCode:
+    type: string
+    description: Код страны нерезидента
+  countryName:
+    type: string
+    description: Наименование страны нерезидента
+  affiliate:
+    type: boolean
+    description: Признак аффилированного лица
+description: Реквизиты нерезидента

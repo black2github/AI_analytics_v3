@@ -1,0 +1,22 @@
+type: object
+properties:
+  clientIds:
+    type: array
+    description: Идентификаторы клиентов банка
+    items:
+      type: string
+      description: Идентификаторы клиентов банка
+      format: uuid
+  allowedDstKinds:
+    uniqueItems: true
+    type: array
+    description: Разрешенные для подписи виды СЭП
+    items:
+      type: string
+      description: Разрешенные для подписи виды СЭП
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+description: Запрос поиска СЭП для универсальной функции электронной подписи

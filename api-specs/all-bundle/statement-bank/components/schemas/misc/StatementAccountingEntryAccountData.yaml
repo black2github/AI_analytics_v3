@@ -1,0 +1,6 @@
+type: object
+properties:
+  riskLevel:
+    type: string
+  blockedDfm:
+    type: boolean

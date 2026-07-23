@@ -1,0 +1,15 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Идентификатор генерального соглашения
+  number:
+    type: string
+    description: Номер генерального соглашения
+  date:
+    type: string
+    description: Дата генерального соглашения
+    format: date
+  fund:
+    $ref: ./FundShortDto.yaml
+description: Страница с данными

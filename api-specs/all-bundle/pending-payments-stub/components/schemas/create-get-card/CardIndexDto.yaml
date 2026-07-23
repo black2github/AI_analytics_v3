@@ -1,0 +1,87 @@
+type: object
+properties:
+  msgId:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+  creDtTm:
+    type: string
+    format: date-time
+    examples:
+    - '2022-03-10T12:15:50'
+  frmDtTm:
+    type: string
+    format: date-time
+    examples:
+    - '2022-03-10T12:15:50'
+  typeKartoteka:
+    type: string
+  docCardIndexId:
+    type: string
+  nbDocCardIndex:
+    type: string
+  dateCardinDocCardIndex:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+  dateDocCardIndex:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+  codePayDocCardIndex:
+    $ref: ./DocTypeDto.yaml
+  regnNbClnt:
+    type: string
+  nbAccPyer:
+    type: string
+  nmPyer:
+    type: string
+  nbAccRcpt:
+    type: string
+  nmRcpt:
+    type: string
+  bicBkRcpt:
+    type: string
+  amtValDocCardIndex:
+    type: number
+  cdVal:
+    type: string
+  pmtInfSts:
+    type: string
+  cdStsRsn:
+    type: string
+  purpPmntDocCardIndex:
+    type: string
+  accIdVneb:
+    type: string
+  accVneb:
+    type: string
+  innPyer:
+    type: string
+  kppPyer:
+    type: string
+  innRcpt:
+    type: string
+  kppRcpt:
+    type: string
+  docToOffId:
+    type: string
+  nbDocToOff:
+    type: string
+  dateDocToOff:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+  nbPmntDocToOff:
+    type: string
+  amtDocToOff:
+    type: number
+  amtValDocToOff:
+    type: number
+  neSummDocToOff:
+    type: number
+  amtDocCardIndex:
+    type: number

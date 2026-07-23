@@ -1,0 +1,54 @@
+post:
+  tags:
+  - Получение/обновление списков УЦ/сертификатов
+  summary: Обновить список отозванных сертификатов из полученных файлов
+  description: 'Привилегии: CERTIFICATE_BANK_UPDATE'
+  operationId: updateCertificateRevokedByFiles
+  parameters:
+  - name: files
+    in: query
+    required: true
+    schema:
+      type: array
+      items:
+        type: string
+        format: binary
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

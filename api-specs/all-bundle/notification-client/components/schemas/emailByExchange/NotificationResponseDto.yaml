@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор отправленного сообщения.
+    format: uuid
+  recipient:
+    type: string
+    description: Получатель сообщения.

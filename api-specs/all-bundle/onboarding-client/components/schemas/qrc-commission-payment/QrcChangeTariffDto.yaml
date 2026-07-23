@@ -1,0 +1,21 @@
+type: object
+properties:
+  onboardingRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета"
+    format: uuid
+  tariffCode:
+    type: string
+    description: Коды справочника тарифов на обслуживание счета
+    enum:
+    - STANDART
+    - NEEDFUL
+    - PROGRESS
+    - STABLE
+    - MAX
+    - FEA
+  tariffPeriod:
+    type: integer
+    description: Период обслуживания
+    format: int32
+description: Данные об изменении тарифа

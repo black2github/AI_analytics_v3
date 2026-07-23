@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор открытого счета.
+    format: uuid
+  number:
+    type: string
+    description: Номер открытого счета.
+description: Сведения об открытом счете.

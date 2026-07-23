@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID файла
+    format: uuid
+  attachmentId:
+    type: string
+    description: Идентификатор вложения в хранилище (ЭКО)
+    format: uuid
+description: Файловые вложения документа

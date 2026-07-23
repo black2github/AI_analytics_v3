@@ -1,0 +1,20 @@
+type: object
+description: Запрос для повторной вычитки неуспешно отправленных файлов
+properties:
+  dateFrom:
+    type: string
+    format: date
+    description: Последнее изменение файла. Начало диапазона дат
+  dateTo:
+    type: string
+    format: date
+    description: Последнее изменение файла. Окончание диапазона дат
+  dsfTypeCodes:
+    type: array
+    description: Коды типов писем
+    items:
+      type: string
+required:
+- dateFrom
+- dateTo
+- dsfTypeCodes

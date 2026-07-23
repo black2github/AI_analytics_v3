@@ -1,0 +1,22 @@
+required:
+- documents
+- dstId
+type: object
+properties:
+  dstId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  documents:
+    minItems: 1
+    type: array
+    description: Подписываемые документы
+    items:
+      $ref: ./SimpleSignDocDto.yaml
+  hashed:
+    type: boolean
+    description: Признак подписи хэшированных данных
+  detached:
+    type: boolean
+    description: Признак что подпись открепленная
+description: Запрос на создание операции подписи ПЭП

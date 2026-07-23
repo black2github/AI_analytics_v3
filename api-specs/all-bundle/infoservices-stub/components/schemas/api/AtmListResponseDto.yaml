@@ -1,0 +1,8 @@
+type: object
+properties:
+  devices:
+    type: array
+    items:
+      $ref: ./AtmDeviceDto.yaml
+  approximateCashAmount:
+    type: string

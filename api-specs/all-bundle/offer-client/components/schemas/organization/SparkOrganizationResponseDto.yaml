@@ -1,0 +1,6 @@
+type: object
+properties:
+  fullNameRus:
+    type: string
+    description: Полное наименование компании
+description: Информация по организации из СПАРК

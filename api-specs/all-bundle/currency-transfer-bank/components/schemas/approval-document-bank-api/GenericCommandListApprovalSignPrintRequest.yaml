@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./ApprovalSignPrintRequest.yaml
+description: Запрос

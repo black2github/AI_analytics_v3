@@ -1,0 +1,22 @@
+required:
+- bankBic
+- bankName
+- name
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование получателя
+  innKio:
+    type: string
+    description: ИНН/КИО получателя
+  accountNumber:
+    type: string
+    description: Счет получателя
+  bankName:
+    type: string
+    description: Наименование Банка получателя
+  bankBic:
+    type: string
+    description: БИК банка получателя
+description: Реквизиты получателя

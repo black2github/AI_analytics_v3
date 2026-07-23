@@ -1,0 +1,22 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  requestNumber:
+    type: string
+    description: Дата заявки
+  requestDate:
+    type: string
+    description: Дата заявки
+    format: date
+  eskClientId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  personsContacts:
+    type: array
+    description: Список контактов физ.лиц для изменения
+    items:
+      $ref: ./NewPersonContacts.yaml

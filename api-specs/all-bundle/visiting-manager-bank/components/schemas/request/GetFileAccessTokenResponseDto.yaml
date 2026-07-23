@@ -1,0 +1,14 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки ВМ.
+    format: uuid
+  fileId:
+    type: string
+    description: Идентификатор файла.
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен для доступа к файлу в хранилище.
+description: Результат выдачи токена для доступа к файлу заявки.

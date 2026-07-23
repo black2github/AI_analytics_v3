@@ -1,0 +1,65 @@
+type: object
+description: Фильтр скроллера обобщенной заявки с агентами
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса, eq
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки, between
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка", eq, in
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН Клиента, eq
+  hasAgents:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Наличие Агентов ТСП в заявке, eq
+  legalId:
+    $ref: ./FilterValueDtoString.yaml
+    description: LegalID в СБП, eq
+  ogrn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ОГРН/ОГРНИП, eq
+  clientKpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП Клиента, eq
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор заявки, eq
+  clientShortName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Краткое наименование клиента, eq
+  status:
+    $ref: ./SbpCommonAgentsRequestStatusFilterDto.yaml
+    description: Текущий статус заявки, eq, in
+  type:
+    $ref: ./SbpCommonAgentsRequestTypeFilterDto.yaml
+    description: Тип заявки, eq, in
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер заявки, between
+  dppServiceCode:
+    $ref: ./SbpCommonAgentsRequestDppServiceCodeFilterDto.yaml
+    description: Фильтр по коду продуктового сервиса, eq
+  dppProductCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код идентификации продукта в Сервисе ДПП, eq
+  sourcePage:
+    $ref: ./FilterValueDtoString.yaml
+    description: Страница - источник баннера, eq
+  agentId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор агента ТСП, in
+  systemInitiatedRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак создания сервисом банка, eq
+  resident:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак резидентства, eq

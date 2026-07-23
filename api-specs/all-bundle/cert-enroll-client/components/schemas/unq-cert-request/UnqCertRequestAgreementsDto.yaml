@@ -1,0 +1,13 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  agreement1:
+    type: boolean
+    description: Согласие 1
+  agreement2:
+    type: boolean
+    description: Согласие 2
+description: Информация о согласиях в заявке на генерацию НЭП

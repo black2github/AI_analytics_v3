@@ -1,0 +1,17 @@
+post:
+  summary: Получение контрактов из BRK CRM
+  tags:
+  - Обновление заглушек brk_crm_response_stub
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/xml:
+          schema:
+            type: string

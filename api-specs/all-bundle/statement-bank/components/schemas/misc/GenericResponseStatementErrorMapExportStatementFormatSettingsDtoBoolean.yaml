@@ -1,0 +1,14 @@
+type: object
+properties:
+  data:
+    type: object
+    additionalProperties:
+      type: boolean
+      description: Данные
+    description: Данные
+  error:
+    $ref: ../common/StatementError.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

@@ -1,0 +1,7 @@
+type: object
+properties:
+  dbo1:
+    type: string
+  dbo2:
+    type: string
+description: Информация о договорах ДБО

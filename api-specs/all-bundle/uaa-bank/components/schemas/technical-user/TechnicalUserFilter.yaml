@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  description:
+    $ref: ../common/FilterValueDtoString.yaml
+  roles:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр технических пользователей

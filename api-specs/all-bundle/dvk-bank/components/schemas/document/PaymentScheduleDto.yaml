@@ -1,0 +1,15 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер записи
+  currency:
+    $ref: ./CurrencyDto.yaml
+  baseDebt:
+    $ref: ./PaymentAmountDto.yaml
+  interestDebt:
+    $ref: ./PaymentAmountDto.yaml
+  paymentsSpecialClause:
+    type: string
+    description: Описание особых условий платежа
+description: График платежей

@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Получить страницу заявок
+  description: 'Привилегии: BRK_ONBOARDING.CLIENT.REQUEST.LIST'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandBrkOnbClientRequestRequestFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataBrkOnbRequestItemDto.yaml

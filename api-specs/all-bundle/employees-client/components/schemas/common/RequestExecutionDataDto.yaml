@@ -1,0 +1,13 @@
+type: object
+properties:
+  requestRegistrationNumber:
+    type: string
+    description: Номер зарегистрированного заявления
+  requestRegistrationDate:
+    type: string
+    description: Дата регистрации заявления
+    format: date
+  warrantyRegistrationNumber:
+    type: string
+    description: Номер зарегистрированной доверенности (продуктовой или мега). Заполняется из ЕСК по результатам исполнения заявки.
+description: Данные получаемые при исполнении заявки (Данные из ЕСК)

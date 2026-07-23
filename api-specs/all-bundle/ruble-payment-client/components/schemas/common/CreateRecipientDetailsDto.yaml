@@ -1,0 +1,38 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование получателя
+  innKio:
+    maxLength: 12
+    pattern: ^[0-9]*$
+    type: string
+    description: ИНН/КИО получателя
+  kpp:
+    maxLength: 9
+    pattern: ^[A-Za-z0-9]*$
+    type: string
+    description: КПП получателя
+  accountNumber:
+    type: string
+    description: Счет получателя
+  bankName:
+    type: string
+    description: Наименование Банка получателя
+  bankBic:
+    type: string
+    description: БИК банка получателя
+  bankCorrespondentAccountNumber:
+    type: string
+    description: Корсчет банка получателя
+  bankLocalityName:
+    type: string
+    description: Название населенного пункта Банка получателя
+  bankLocalityType:
+    type: string
+    description: Краткое название типа населенного пункта Банка получателя
+  partyAccountId:
+    type: string
+    description: Ссылка на сущность "Справочник счетов контрагентов"
+    format: uuid
+description: Реквизиты получателя, заполняемые клиентом

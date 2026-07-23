@@ -1,0 +1,34 @@
+post:
+  tags:
+  - direct-1-c-controller
+  summary: Отправка электронных документов из 1С
+  operationId: sendPackUsingPOST
+  consumes:
+  - application/xml;charset=UTF-8
+  produces:
+  - application/xml;charset=UTF-8
+  parameters:
+  - name: customerId
+    in: header
+    description: customerId
+    required: true
+    type: string
+  - in: body
+    name: requestData
+    description: requestData
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

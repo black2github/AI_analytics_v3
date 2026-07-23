@@ -1,0 +1,504 @@
+get:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+put:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_2
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+post:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_1
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+delete:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_3
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+options:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_6
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+head:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_5
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+patch:
+  tags:
+  - API для файлов заявки на выезд менеджера.
+  summary: Получить токен для доступа к файлу в хранилище.
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW'
+  operationId: getFileAccessToken_4
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: fileType
+    in: query
+    description: "* STAMPED_FILE_ONB: \n* SIGNED_FILE_ONB: \n* SCANNED_FILE: "
+    required: false
+    schema:
+      type: string
+      enum:
+      - STAMPED_FILE_ONB
+      - SIGNED_FILE_ONB
+      - SCANNED_FILE
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

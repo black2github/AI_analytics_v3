@@ -1,0 +1,18 @@
+required:
+- filter
+- ids
+- type
+type: object
+properties:
+  filter:
+    $ref: ./ApprovalSignRegistryFilterDto.yaml
+  type:
+    $ref: ./ApprovalSignRegistryTypeDto.yaml
+  ids:
+    type: array
+    description: Список id для фильтрации
+    items:
+      type: string
+      description: Список id для фильтрации
+      format: uuid
+description: Тип реестра визируемых документов

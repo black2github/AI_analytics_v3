@@ -1,0 +1,15 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код подразделения
+  name:
+    type: string
+    description: Наименование подразделения
+  address:
+    type: string
+    description: Адрес подразделения
+  schedule:
+    type: string
+    description: График работы подразделения
+description: Информация о подразделении банка

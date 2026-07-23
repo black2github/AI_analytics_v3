@@ -1,0 +1,24 @@
+type: object
+properties:
+  documentStartLineNumber:
+    type: integer
+    description: Позиция (Порядковый номер строки в файле импорта, с которой начинается документ)
+    format: int64
+  importResult:
+    type: string
+    description: Результат импорта
+  controlsResults:
+    type: array
+    description: Результат контролей
+    items:
+      $ref: ./BackgroundImportProcessDocControlResultDto.yaml
+  importPreparationStatus:
+    type: string
+    description: Результат обработки
+    enum:
+    - IMPORTED_ERROR
+    - IMPORTED_CORRECT
+    - IMPORTED_WARNING
+    - IMPORTED_FLK_ERROR
+    - IMPORTED_ACCESS_ERROR
+description: Результат обработки документа фонового процесса импорта

@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи.
+    format: uuid
+  systemId:
+    type: string
+    description: Идентификатор системы.
+  systemName:
+    type: string
+    description: Наименование системы
+  fio:
+    type: string
+    description: ФИО пользователя.
+  comment:
+    type: string
+    description: Комментарий.
+  createdAt:
+    type: string
+    description: Время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления записи
+    format: date-time
+  userId:
+    type: string
+    description: ID пользователя, создавшего/изменившего запись
+    format: uuid
+description: ДТО системы - источника уведомления.

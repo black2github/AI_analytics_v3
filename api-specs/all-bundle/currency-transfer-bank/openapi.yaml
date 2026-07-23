@@ -1,0 +1,448 @@
+openapi: 3.0.1
+info:
+  title: Валютный перевод. Банковская часть
+  description: 'Сервис '
+  version: 3.6.0
+servers:
+- url: currency-transfer-bank
+security:
+- bearerAuth: []
+paths:
+  /transfer/currency-hint:
+    $ref: ./paths/currency-hint/transfer_currency_hint.yaml
+  /transfer/signature/generate-digest:
+    $ref: ./paths/signature/transfer_signature_generate_digest.yaml
+  /transfer/signature/generate-digest-new:
+    $ref: ./paths/signature/transfer_signature_generate_digest_new.yaml
+  /transfer/signature/export:
+    $ref: ./paths/signature/transfer_signature_export.yaml
+  /transfer/repeat-export-to-abs:
+    $ref: ./paths/repeat-export-to-abs/transfer_repeat_export_to_abs.yaml
+  /transfer/reject:
+    $ref: ./paths/reject/transfer_reject.yaml
+  /transfer/print:
+    $ref: ./paths/print/transfer_print.yaml
+  /transfer/payer/get-page:
+    $ref: ./paths/payer/transfer_payer_get_page.yaml
+  /transfer/payer/bank/get-page:
+    $ref: ./paths/payer/transfer_payer_bank_get_page.yaml
+  /transfer/payer-currency/get-page:
+    $ref: ./paths/payer-currency/transfer_payer_currency_get_page.yaml
+  /transfer/payer-account/get-page:
+    $ref: ./paths/payer-account/transfer_payer_account_get_page.yaml
+  /transfer/get-page:
+    $ref: ./paths/get-page/transfer_get_page.yaml
+  /transfer/export-to-abs-error:
+    $ref: ./paths/export-to-abs-error/transfer_export_to_abs_error.yaml
+  /transfer/export-registry-to-abs:
+    $ref: ./paths/export-registry-to-abs/transfer_export_registry_to_abs.yaml
+  /transfer/document-number/get-page:
+    $ref: ./paths/document-number/transfer_document_number_get_page.yaml
+  /transfer/currency-hint/get-page:
+    $ref: ./paths/currency-hint/transfer_currency_hint_get_page.yaml
+  /transfer/chargeback/repeat-export-to-abs:
+    $ref: ./paths/chargeback/transfer_chargeback_repeat_export_to_abs.yaml
+  /transfer/chargeback/reject:
+    $ref: ./paths/chargeback/transfer_chargeback_reject.yaml
+  /transfer/chargeback/print:
+    $ref: ./paths/chargeback/transfer_chargeback_print.yaml
+  /transfer/chargeback/payer/get-page:
+    $ref: ./paths/chargeback/transfer_chargeback_payer_get_page.yaml
+  /transfer/chargeback/payer-bank/get-page:
+    $ref: ./paths/chargeback/transfer_chargeback_payer_bank_get_page.yaml
+  /transfer/chargeback/payer-account/get-page:
+    $ref: ./paths/chargeback/transfer_chargeback_payer_account_get_page.yaml
+  /transfer/chargeback/get-page:
+    $ref: ./paths/chargeback/transfer_chargeback_get_page.yaml
+  /transfer/chargeback/export:
+    $ref: ./paths/chargeback/transfer_chargeback_export.yaml
+  /transfer/chargeback/export-to-abs-error:
+    $ref: ./paths/chargeback/transfer_chargeback_export_to_abs_error.yaml
+  /transfer/chargeback/export-registry-to-abs:
+    $ref: ./paths/chargeback/transfer_chargeback_export_registry_to_abs.yaml
+  /transfer/chargeback/category:
+    $ref: ./paths/chargeback/transfer_chargeback_category.yaml
+  /transfer/category:
+    $ref: ./paths/category/transfer_category.yaml
+  /transfer/beneficiary/name/get-page:
+    $ref: ./paths/beneficiary/transfer_beneficiary_name_get_page.yaml
+  /transfer/beneficiary/account/get-page:
+    $ref: ./paths/beneficiary/transfer_beneficiary_account_get_page.yaml
+  /transfer/beneficiary-bank/get-page:
+    $ref: ./paths/beneficiary-bank/transfer_beneficiary_bank_get_page.yaml
+  /transfer/approval-document-bank-api/retry-sign-approve:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_retry_sign_approve.yaml
+  /transfer/approval-document-bank-api/print:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_print.yaml
+  /transfer/approval-document-bank-api/print-list:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_print_list.yaml
+  /transfer/{transferId}/history:
+    $ref: ./paths/{transferId}/transfer_transferId_history.yaml
+  /transfer/{id}:
+    $ref: ./paths/{id}/transfer_id.yaml
+  /transfer/{id}/gpi:
+    $ref: ./paths/{id}/transfer_id_gpi.yaml
+  /transfer/transaction-type:
+    $ref: ./paths/transaction-type/transfer_transaction_type.yaml
+  /transfer/status:
+    $ref: ./paths/status/transfer_status.yaml
+  /transfer/sight/{id}:
+    $ref: ./paths/sight/transfer_sight_id.yaml
+  /transfer/payer-number-ccf:
+    $ref: ./paths/payer-number-ccf/transfer_payer_number_ccf.yaml
+  /transfer/linked-documents-ext/{id}:
+    $ref: ./paths/linked-documents-ext/transfer_linked_documents_ext_id.yaml
+  /transfer/gpi/status:
+    $ref: ./paths/gpi/transfer_gpi_status.yaml
+  /transfer/currency-hint/{id}:
+    $ref: ./paths/currency-hint/transfer_currency_hint_id.yaml
+  /transfer/creation-method:
+    $ref: ./paths/creation-method/transfer_creation_method.yaml
+  /transfer/create-system:
+    $ref: ./paths/create-system/transfer_create_system.yaml
+  /transfer/chargeback/{id}:
+    $ref: ./paths/chargeback/transfer_chargeback_id.yaml
+  /transfer/chargeback/history/{id}:
+    $ref: ./paths/chargeback/transfer_chargeback_history_id.yaml
+  /transfer/approval-document-bank-api/signature-info/{id}:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_signature_info_id.yaml
+  /transfer/approval-document-bank-api/signature-export/{id}:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_signature_export_id.yaml
+  /transfer/approval-document-bank-api/signature-check/{id}:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_signature_check_id.yaml
+  /transfer/approval-document-bank-api/history-info/{id}:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_history_info_id.yaml
+  /transfer/approval-document-bank-api/additional-info/{id}:
+    $ref: ./paths/approval-document-bank-api/transfer_approval_document_bank_api_additional_info_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /transfer/currency-hint/delete/{id}:
+    $ref: ./paths/currency-hint/transfer_currency_hint_delete_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CurrencyHintBankEditDto:
+      $ref: ./components/schemas/currency-hint/CurrencyHintBankEditDto.yaml
+    CurrencyHintBankViewDto:
+      $ref: ./components/schemas/currency-hint/CurrencyHintBankViewDto.yaml
+    GenericResponseSimpleErrorDataCurrencyHintBankViewDto:
+      $ref: ./components/schemas/currency-hint/GenericResponseSimpleErrorDataCurrencyHintBankViewDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    DigestRequest:
+      $ref: ./components/schemas/signature/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/signature/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    CurrencyTransferDigestRequest:
+      $ref: ./components/schemas/signature/CurrencyTransferDigestRequest.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    CurrencyTransferDataForDownloadDto:
+      $ref: ./components/schemas/common/CurrencyTransferDataForDownloadDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferDataForDownloadDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListCurrencyTransferDataForDownloadDto.yaml
+    CurrencyTransferBankChangeStatusRequestDto:
+      $ref: ./components/schemas/common/CurrencyTransferBankChangeStatusRequestDto.yaml
+    CurrencyTransferBankChangeStatusResponseDto:
+      $ref: ./components/schemas/common/CurrencyTransferBankChangeStatusResponseDto.yaml
+    GenericResponseSimpleErrorDataCurrencyTransferBankChangeStatusResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCurrencyTransferBankChangeStatusResponseDto.yaml
+    CurrencyTransferPrintRequestDto:
+      $ref: ./components/schemas/print/CurrencyTransferPrintRequestDto.yaml
+    GenericCommandCurrencyTransferPrintRequestDto:
+      $ref: ./components/schemas/print/GenericCommandCurrencyTransferPrintRequestDto.yaml
+    GenericResponseSimpleErrorDataCurrencyTransferDataForDownloadDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCurrencyTransferDataForDownloadDto.yaml
+    CurrencyTransferSearchFilterDto:
+      $ref: ./components/schemas/common/CurrencyTransferSearchFilterDto.yaml
+    GetPageCommandCurrencyTransferSearchFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandCurrencyTransferSearchFilterDto.yaml
+    PageParamsCurrencyTransferSearchFilterDto:
+      $ref: ./components/schemas/common/PageParamsCurrencyTransferSearchFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    CurrencyTransferBankPayerDictionaryDto:
+      $ref: ./components/schemas/common/CurrencyTransferBankPayerDictionaryDto.yaml
+    PageDataCurrencyTransferBankPayerDictionaryDto:
+      $ref: ./components/schemas/common/PageDataCurrencyTransferBankPayerDictionaryDto.yaml
+    CurrencyTransferPayerBankDictionaryDto:
+      $ref: ./components/schemas/common/CurrencyTransferPayerBankDictionaryDto.yaml
+    PageDataCurrencyTransferPayerBankDictionaryDto:
+      $ref: ./components/schemas/common/PageDataCurrencyTransferPayerBankDictionaryDto.yaml
+    CurrencyTransferCurrencyDto:
+      $ref: ./components/schemas/payer-currency/CurrencyTransferCurrencyDto.yaml
+    PageDataCurrencyTransferCurrencyDto:
+      $ref: ./components/schemas/payer-currency/PageDataCurrencyTransferCurrencyDto.yaml
+    CurrencyTransferPayerAccountDto:
+      $ref: ./components/schemas/payer-account/CurrencyTransferPayerAccountDto.yaml
+    PageDataCurrencyTransferPayerAccountDto:
+      $ref: ./components/schemas/payer-account/PageDataCurrencyTransferPayerAccountDto.yaml
+    CurrencyTransferBankFilterDto:
+      $ref: ./components/schemas/common/CurrencyTransferBankFilterDto.yaml
+    CurrencyTransferClientGpiStatusFilterValueEnumDto:
+      $ref: ./components/schemas/common/CurrencyTransferClientGpiStatusFilterValueEnumDto.yaml
+    CurrencyTransferStatusFilterValueEnumDto:
+      $ref: ./components/schemas/common/CurrencyTransferStatusFilterValueEnumDto.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueEnumDtoCurrencyTransferVersionDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoCurrencyTransferVersionDto.yaml
+    FilterValueEnumDtoDocumentCreationMethodClassifierDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoDocumentCreationMethodClassifierDto.yaml
+    FilterValueEnumDtoDocumentSystemClassifierDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoDocumentSystemClassifierDto.yaml
+    GetPageCommandCurrencyTransferBankFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandCurrencyTransferBankFilterDto.yaml
+    PageParamsCurrencyTransferBankFilterDto:
+      $ref: ./components/schemas/common/PageParamsCurrencyTransferBankFilterDto.yaml
+    ApprovalSignatureInfoDto:
+      $ref: ./components/schemas/common/ApprovalSignatureInfoDto.yaml
+    ChargebackRequestBankClientInfoDto:
+      $ref: ./components/schemas/common/ChargebackRequestBankClientInfoDto.yaml
+    ChargebackRequestBankDto:
+      $ref: ./components/schemas/common/ChargebackRequestBankDto.yaml
+    ChargebackRequestDocumentBeneficiaryInfoDto:
+      $ref: ./components/schemas/common/ChargebackRequestDocumentBeneficiaryInfoDto.yaml
+    ChargebackRequestDocumentInfoDto:
+      $ref: ./components/schemas/common/ChargebackRequestDocumentInfoDto.yaml
+    ChargebackRequestDocumentPayerInfoDto:
+      $ref: ./components/schemas/common/ChargebackRequestDocumentPayerInfoDto.yaml
+    ChargebackRequestSignatureDto:
+      $ref: ./components/schemas/common/ChargebackRequestSignatureDto.yaml
+    ChargebackRequestSourceSystemInfoDto:
+      $ref: ./components/schemas/common/ChargebackRequestSourceSystemInfoDto.yaml
+    CurrencyTransferBankScrollerDto:
+      $ref: ./components/schemas/get-page/CurrencyTransferBankScrollerDto.yaml
+    CurrencyTransferCertificateInfoResponseDto:
+      $ref: ./components/schemas/common/CurrencyTransferCertificateInfoResponseDto.yaml
+    CurrencyTransferCommentDto:
+      $ref: ./components/schemas/common/CurrencyTransferCommentDto.yaml
+    CurrencyTransferCountryDto:
+      $ref: ./components/schemas/common/CurrencyTransferCountryDto.yaml
+    CurrencyTransferScrollerBankDto:
+      $ref: ./components/schemas/get-page/CurrencyTransferScrollerBankDto.yaml
+    CurrencyTransferScrollerBeneficiaryDto:
+      $ref: ./components/schemas/get-page/CurrencyTransferScrollerBeneficiaryDto.yaml
+    CurrencyTransferScrollerControlDto:
+      $ref: ./components/schemas/get-page/CurrencyTransferScrollerControlDto.yaml
+    CurrencyTransferScrollerPayerDto:
+      $ref: ./components/schemas/get-page/CurrencyTransferScrollerPayerDto.yaml
+    CurrencyTransferSignPhaseDto:
+      $ref: ./components/schemas/common/CurrencyTransferSignPhaseDto.yaml
+    CurrencyTransferSignatureDataDto:
+      $ref: ./components/schemas/common/CurrencyTransferSignatureDataDto.yaml
+    CurrencyTransferSignatureDto:
+      $ref: ./components/schemas/common/CurrencyTransferSignatureDto.yaml
+    PageDataCurrencyTransferBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataCurrencyTransferBankScrollerDto.yaml
+    ExportRegistryToAbsRqDto:
+      $ref: ./components/schemas/common/ExportRegistryToAbsRqDto.yaml
+    GenericCommandExportRegistryToAbsRqDto:
+      $ref: ./components/schemas/common/GenericCommandExportRegistryToAbsRqDto.yaml
+    ExportRegistryToAbsRspDto:
+      $ref: ./components/schemas/common/ExportRegistryToAbsRspDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryToAbsRspDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataExportRegistryToAbsRspDto.yaml
+    PageDataLong:
+      $ref: ./components/schemas/document-number/PageDataLong.yaml
+    CurrencyHintBankCreateDto:
+      $ref: ./components/schemas/currency-hint/CurrencyHintBankCreateDto.yaml
+    GetPageCommand:
+      $ref: ./components/schemas/currency-hint/GetPageCommand.yaml
+    PageParamsObject:
+      $ref: ./components/schemas/currency-hint/PageParamsObject.yaml
+    CurrencyHintBankScrollerDto:
+      $ref: ./components/schemas/currency-hint/CurrencyHintBankScrollerDto.yaml
+    PageDataCurrencyHintBankScrollerDto:
+      $ref: ./components/schemas/currency-hint/PageDataCurrencyHintBankScrollerDto.yaml
+    UserDto:
+      $ref: ./components/schemas/currency-hint/UserDto.yaml
+    ChargebackBatchRequestChangeStatusDto:
+      $ref: ./components/schemas/chargeback/ChargebackBatchRequestChangeStatusDto.yaml
+    GenericResponseSimpleErrorDataListChargebackRequestBankDto:
+      $ref: ./components/schemas/chargeback/GenericResponseSimpleErrorDataListChargebackRequestBankDto.yaml
+    ChargebackRequestChangeStatusDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestChangeStatusDto.yaml
+    GenericResponseSimpleErrorDataChargebackRequestBankDto:
+      $ref: ./components/schemas/chargeback/GenericResponseSimpleErrorDataChargebackRequestBankDto.yaml
+    ChargebackPrintRequestDto:
+      $ref: ./components/schemas/chargeback/ChargebackPrintRequestDto.yaml
+    GenericCommandChargebackPrintRequestDto:
+      $ref: ./components/schemas/chargeback/GenericCommandChargebackPrintRequestDto.yaml
+    PageDataString:
+      $ref: ./components/schemas/common/PageDataString.yaml
+    ChargebackRequestBankScrollerFilter:
+      $ref: ./components/schemas/chargeback/ChargebackRequestBankScrollerFilter.yaml
+    ChargebackRequestCreationTypeFilter:
+      $ref: ./components/schemas/chargeback/ChargebackRequestCreationTypeFilter.yaml
+    ChargebackRequestPayerBankNameOrBicDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestPayerBankNameOrBicDto.yaml
+    ChargebackRequestPayerNameOrInnOrRnkDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+    ChargebackRequestSourceSystemFilter:
+      $ref: ./components/schemas/chargeback/ChargebackRequestSourceSystemFilter.yaml
+    ChargebackRequestStatusFilter:
+      $ref: ./components/schemas/chargeback/ChargebackRequestStatusFilter.yaml
+    FilterValueDtoChargebackRequestPayerBankNameOrBicDto:
+      $ref: ./components/schemas/chargeback/FilterValueDtoChargebackRequestPayerBankNameOrBicDto.yaml
+    FilterValueDtoChargebackRequestPayerNameOrInnOrRnkDto:
+      $ref: ./components/schemas/chargeback/FilterValueDtoChargebackRequestPayerNameOrInnOrRnkDto.yaml
+    GetPageCommandChargebackRequestBankScrollerFilter:
+      $ref: ./components/schemas/chargeback/GetPageCommandChargebackRequestBankScrollerFilter.yaml
+    PageParamsChargebackRequestBankScrollerFilter:
+      $ref: ./components/schemas/chargeback/PageParamsChargebackRequestBankScrollerFilter.yaml
+    PageDataChargebackRequestBankDto:
+      $ref: ./components/schemas/chargeback/PageDataChargebackRequestBankDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    CurrencyTransferBeneficiaryBankDto:
+      $ref: ./components/schemas/beneficiary-bank/CurrencyTransferBeneficiaryBankDto.yaml
+    PageDataCurrencyTransferBeneficiaryBankDto:
+      $ref: ./components/schemas/beneficiary-bank/PageDataCurrencyTransferBeneficiaryBankDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/approval-document-bank-api/GenericCommandListUUID.yaml
+    CreditorContactDetailsDto:
+      $ref: ./components/schemas/common/CreditorContactDetailsDto.yaml
+    CurrencyTransferAcceptanceDto:
+      $ref: ./components/schemas/common/CurrencyTransferAcceptanceDto.yaml
+    CurrencyTransferAddressDto:
+      $ref: ./components/schemas/common/CurrencyTransferAddressDto.yaml
+    CurrencyTransferBankViewDto:
+      $ref: ./components/schemas/common/CurrencyTransferBankViewDto.yaml
+    CurrencyTransferBeneficiaryDto:
+      $ref: ./components/schemas/common/CurrencyTransferBeneficiaryDto.yaml
+    CurrencyTransferControlDto:
+      $ref: ./components/schemas/common/CurrencyTransferControlDto.yaml
+    CurrencyTransferCorrespondentBankDto:
+      $ref: ./components/schemas/common/CurrencyTransferCorrespondentBankDto.yaml
+    CurrencyTransferCreditorBankDto:
+      $ref: ./components/schemas/common/CurrencyTransferCreditorBankDto.yaml
+    CurrencyTransferIntermediaryBankDto:
+      $ref: ./components/schemas/common/CurrencyTransferIntermediaryBankDto.yaml
+    CurrencyTransferPayerBankDto:
+      $ref: ./components/schemas/common/CurrencyTransferPayerBankDto.yaml
+    CurrencyTransferPayerDto:
+      $ref: ./components/schemas/common/CurrencyTransferPayerDto.yaml
+    CurrencyTransferSightDetailsDto:
+      $ref: ./components/schemas/common/CurrencyTransferSightDetailsDto.yaml
+    CurrencyTransferUltimateCreditorDto:
+      $ref: ./components/schemas/common/CurrencyTransferUltimateCreditorDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferBankViewDto:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataListCurrencyTransferBankViewDto.yaml
+    ApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-bank-api/ApprovalSignPrintRequest.yaml
+    GenericCommandApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-bank-api/GenericCommandApprovalSignPrintRequest.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/approval-document-bank-api/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    GenericCommandListApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-bank-api/GenericCommandListApprovalSignPrintRequest.yaml
+    GenericResponseSimpleErrorDataListAttachmentAccessData:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataListAttachmentAccessData.yaml
+    CurrencyTransferHistoryDto:
+      $ref: ./components/schemas/{transferId}/CurrencyTransferHistoryDto.yaml
+    ListResponseCurrencyTransferHistoryDto:
+      $ref: ./components/schemas/{transferId}/ListResponseCurrencyTransferHistoryDto.yaml
+    GenericResponseSimpleErrorDataCurrencyTransferBankViewDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataCurrencyTransferBankViewDto.yaml
+    CurrencyTransferGpiRowDto:
+      $ref: ./components/schemas/{id}/CurrencyTransferGpiRowDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferGpiRowDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataListCurrencyTransferGpiRowDto.yaml
+    CurrencyTransferTransactionTypeDto:
+      $ref: ./components/schemas/transaction-type/CurrencyTransferTransactionTypeDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferTransactionTypeDto:
+      $ref: ./components/schemas/transaction-type/GenericResponseSimpleErrorDataListCurrencyTransferTransactionTypeDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferStatusDto:
+      $ref: ./components/schemas/status/GenericResponseSimpleErrorDataListCurrencyTransferStatusDto.yaml
+    ApprovalPersonInfoBankDto:
+      $ref: ./components/schemas/sight/ApprovalPersonInfoBankDto.yaml
+    CurrencyTransferSightBankDto:
+      $ref: ./components/schemas/sight/CurrencyTransferSightBankDto.yaml
+    CurrencyTransferSightSignatureBankDto:
+      $ref: ./components/schemas/sight/CurrencyTransferSightSignatureBankDto.yaml
+    GenericResponseSimpleErrorDataCurrencyTransferSightBankDto:
+      $ref: ./components/schemas/sight/GenericResponseSimpleErrorDataCurrencyTransferSightBankDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/payer-number-ccf/GenericResponseSimpleErrorDataListString.yaml
+    ChargebackRequestLinkedDocumentInfoDto:
+      $ref: ./components/schemas/linked-documents-ext/ChargebackRequestLinkedDocumentInfoDto.yaml
+    CurrencyTransferLinkedDocumentAttachmentInfoDto:
+      $ref: ./components/schemas/linked-documents-ext/CurrencyTransferLinkedDocumentAttachmentInfoDto.yaml
+    CurrencyTransferLinkedDocumentExtDto:
+      $ref: ./components/schemas/linked-documents-ext/CurrencyTransferLinkedDocumentExtDto.yaml
+    CurrencyTransferLinkedDocumentInfo:
+      $ref: ./components/schemas/linked-documents-ext/CurrencyTransferLinkedDocumentInfo.yaml
+    DioLinkedDocumentInfoDto:
+      $ref: ./components/schemas/linked-documents-ext/DioLinkedDocumentInfoDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferLinkedDocumentExtDto:
+      $ref: ./components/schemas/linked-documents-ext/GenericResponseSimpleErrorDataListCurrencyTransferLinkedDocumentExtDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyTransferBankGpiStatusDto:
+      $ref: ./components/schemas/gpi/GenericResponseSimpleErrorDataListCurrencyTransferBankGpiStatusDto.yaml
+    GenericResponseSimpleErrorDataListDocumentCreationMethodClassifierDto:
+      $ref: ./components/schemas/creation-method/GenericResponseSimpleErrorDataListDocumentCreationMethodClassifierDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSystemClassifierDto:
+      $ref: ./components/schemas/create-system/GenericResponseSimpleErrorDataListDocumentSystemClassifierDto.yaml
+    ChargebackRequestHistoryDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataListChargebackRequestHistoryDto:
+      $ref: ./components/schemas/chargeback/GenericResponseSimpleErrorDataListChargebackRequestHistoryDto.yaml
+    DocumentSignatureCertificateInfoDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureCertificateInfoDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureDto.yaml
+    DocumentSignatureInfoDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureInfoDto.yaml
+    DocumentSignatureValueDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureValueDto.yaml
+    GenericResponseSimpleErrorDataDocumentSignatureInfoDto:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataDocumentSignatureInfoDto.yaml
+    DocumentSignatureCheckDataDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureCheckDataDto.yaml
+    DocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentSignatureCheckResultDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto.yaml
+    DocumentHistoryBankDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentHistoryBankDto.yaml
+    DocumentOperationHistoryBankDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentOperationHistoryBankDto.yaml
+    GenericResponseSimpleErrorDataListDocumentHistoryBankDto:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataListDocumentHistoryBankDto.yaml
+    DocumentAdditionalInfoDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentAdditionalInfoDto.yaml
+    DocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/approval-document-bank-api/DocumentAdditionalInfoResponseDto.yaml
+    FieldValueDto:
+      $ref: ./components/schemas/approval-document-bank-api/FieldValueDto.yaml
+    GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/approval-document-bank-api/GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,8 @@
+required:
+- data
+type: object
+properties:
+  data:
+    type: string
+    description: Данные
+description: Запрос

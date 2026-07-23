@@ -1,0 +1,17 @@
+required:
+- authorityCode
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя в ЭКО
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор организации в ЭКО
+    format: uuid
+  authorityCode:
+    type: string
+    description: Код привилегии
+description: Запрос на получение признака наличия привилегии пользователя

@@ -1,0 +1,22 @@
+put:
+  tags:
+  - lbp-response-configuration-controller
+  summary: 'Настройка типа ответа заглушки от АС ЛБП: получение списка документов'
+  operationId: setIsReceivedDocInfoResponseUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: boolean
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

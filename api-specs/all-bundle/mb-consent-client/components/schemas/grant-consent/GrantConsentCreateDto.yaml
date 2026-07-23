@@ -1,0 +1,18 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  extConsentId:
+    type: string
+    description: Идентификатор Согласия, привязанного к пользователю и клиенту
+    format: uuid
+  accounts:
+    type: array
+    description: Список идентификаторов счетов в ГПБ
+    items:
+      type: string
+      description: Список идентификаторов счетов в ГПБ
+      format: uuid
+description: Запрос авторизации согласия

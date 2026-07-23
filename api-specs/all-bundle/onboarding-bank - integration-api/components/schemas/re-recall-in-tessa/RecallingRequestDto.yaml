@@ -1,0 +1,10 @@
+type: object
+properties:
+  requestIds:
+    type: array
+    description: Идентификаторы заявок, для которых необходимо повторно отозвать досье
+    items:
+      type: string
+      description: Идентификаторы заявок, для которых необходимо повторно отозвать досье
+      format: uuid
+description: Запрос на повторный отзыв нескольких досье в ТЕССА

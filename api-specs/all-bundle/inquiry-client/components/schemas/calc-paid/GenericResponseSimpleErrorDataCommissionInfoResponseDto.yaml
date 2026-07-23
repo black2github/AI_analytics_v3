@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    $ref: ../common/CommissionInfoResponseDto.yaml
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+    example: null
+description: Ответ, содержащий результат операции или ошибку
+example: null

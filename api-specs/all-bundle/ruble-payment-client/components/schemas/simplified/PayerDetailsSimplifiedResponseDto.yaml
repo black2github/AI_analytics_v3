@@ -1,0 +1,21 @@
+required:
+- accountNumber
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Счет плательщика
+  innKio:
+    type: string
+    description: ИНН/КИО плательщика
+  kpp:
+    type: string
+    description: КПП плательщика
+  name:
+    type: string
+    description: Наименование плательщика
+  clientAccountId:
+    type: string
+    description: Ссылка на сущность "Счет клиента"
+    format: uuid
+description: Упрощенная форма создания ПП, исходящие параметры. Реквизиты плательщика.

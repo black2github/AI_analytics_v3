@@ -1,0 +1,10 @@
+type: object
+properties:
+  sightTimestamp:
+    type: string
+    description: Дата и время визирования
+    format: date-time
+  sightSignerFio:
+    type: string
+    description: ФИО визирующего лица
+description: Реквизиты документа, заполняемые банком

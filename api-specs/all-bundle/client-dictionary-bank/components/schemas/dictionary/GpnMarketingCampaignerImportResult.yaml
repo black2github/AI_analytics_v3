@@ -1,0 +1,31 @@
+type: object
+properties:
+  added:
+    uniqueItems: true
+    type: array
+    description: добавленные ИНН.
+    items:
+      type: string
+      description: добавленные ИНН.
+  existed:
+    uniqueItems: true
+    type: array
+    description: Ранее добавленные ИНН.
+    items:
+      type: string
+      description: Ранее добавленные ИНН.
+  failed:
+    uniqueItems: true
+    type: array
+    description: ИНН, не прошедшие контроли.
+    items:
+      type: string
+      description: ИНН, не прошедшие контроли.
+  errors:
+    uniqueItems: true
+    type: array
+    description: Ошибки.
+    items:
+      type: string
+      description: Ошибки.
+description: Результат выполнения импорта промо-кампаний.

@@ -1,0 +1,13 @@
+type: object
+properties:
+  matrixId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  dealType:
+    $ref: ../common/FilterValueDtoString.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  period:
+    $ref: ../common/FilterValueDtoInteger.yaml
+description: Фильтр

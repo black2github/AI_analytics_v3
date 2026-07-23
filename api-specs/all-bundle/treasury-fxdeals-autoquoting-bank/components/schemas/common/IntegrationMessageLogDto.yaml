@@ -1,0 +1,83 @@
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения из СИП
+  requestID:
+    type: string
+    description: Идентификатор запроса из СИП
+  externalSystem:
+    type: string
+    description: Система источник или получатель сообщения
+    enum:
+    - ASK
+    - PKP
+  direction:
+    type: string
+    description: Тип сообщения
+    enum:
+    - IN
+    - OUT
+  objectType:
+    type: string
+    description: Тип объекта в сообщении
+  objectId:
+    type: string
+    description: Идентификатор объекта
+  objectAskId:
+    type: integer
+    description: Идентификатор объекта в ASK
+    format: int64
+  objectPkpId:
+    type: string
+    description: Идентификатор объекта в PKP
+  traceId:
+    type: string
+    description: Идентификатор трассировки запроса
+  actionType:
+    type: string
+    description: Тип действия для сделки
+  responseStatus:
+    type: string
+    description: Тип статус ответа
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int32
+  responseMessage:
+    type: string
+    description: Текст ответа
+  requestBody:
+    type: string
+    description: Тело запроса
+  responseBody:
+    type: string
+    description: Тело ответа
+  createDateTime:
+    type: string
+    description: Дата создания
+    format: date-time
+  sent:
+    type: boolean
+    description: Признак отправки
+  sentDateTime:
+    type: string
+    description: Дата отправки
+    format: date-time
+  requestProcessStart:
+    type: string
+    description: Дата начала обработки запроса
+    format: date-time
+  requestTime:
+    type: integer
+    description: Длительность формирования запроса, мс
+    format: int64
+  responseProcessStart:
+    type: string
+    description: Дата начала обработки ответа
+    format: date-time
+  responseTime:
+    type: integer
+    description: Длительность формирования ответа, мс
+    format: int64
+description: Страница с данными

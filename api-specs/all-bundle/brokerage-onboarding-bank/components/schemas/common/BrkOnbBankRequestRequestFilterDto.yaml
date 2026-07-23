@@ -1,0 +1,25 @@
+required:
+- statusCategory
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoString.yaml
+  clientUuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - ERROR
+    - DECLINED
+    - NEW
+    - IN_PROCESS
+    - EXECUTED
+  status:
+    $ref: ./FilterValueDtoBrkOnbBankRequestRequestStatusDto.yaml
+  dateFrom:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dateTo:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Фильтр для скроллера заявок (банковская сторона)

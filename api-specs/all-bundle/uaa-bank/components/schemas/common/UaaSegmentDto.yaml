@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID сегмента
+    format: uuid
+  code:
+    type: string
+    description: Код сегмента
+  name:
+    type: string
+    description: Наименование сегмента
+  description:
+    type: string
+    description: Описание сегмента
+  segmentType:
+    type: string
+    enum:
+    - CLIENT_SEGMENT
+    - BANK_SEGMENT
+  segmentEntityType:
+    type: string
+    enum:
+    - USER
+    - CLIENT_OFFICIAL
+    - BRANCH_OFFICIAL
+description: ДТО сегмента доступа

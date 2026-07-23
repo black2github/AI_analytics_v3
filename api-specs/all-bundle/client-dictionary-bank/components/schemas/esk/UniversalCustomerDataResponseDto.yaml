@@ -1,0 +1,53 @@
+type: object
+properties:
+  relatedPartyType:
+    type: string
+    description: Тип связанного лица
+  authorizationDocuments:
+    type: array
+    description: Сведения о документах, подтверждающих наличие у лица полномочий распоряжения СЦР
+    items:
+      $ref: ./AuthorizationDocument.yaml
+  orgInfo:
+    $ref: ./OrgInfo.yaml
+  beneficialOwner:
+    $ref: ./BeneficialOwner.yaml
+  personalData:
+    $ref: ./PersonalData.yaml
+  eioPersonalData:
+    $ref: ./PersonalData.yaml
+  addresses:
+    type: array
+    description: Адреса
+    items:
+      $ref: ./Address.yaml
+  emails:
+    type: array
+    description: Адреса электронной почты
+    items:
+      type: string
+      description: Адреса электронной почты
+  licensedActivityInfo:
+    $ref: ./LicensedActivityInfo.yaml
+  phoneNumbers:
+    type: array
+    description: Номера телефонов
+    items:
+      type: string
+      description: Номера телефонов
+  domainName:
+    type: string
+    description: Доменное имя для указания сайта ЮЛ.
+  accountNumberDetails:
+    $ref: ./AccountNumberDetails.yaml
+  isFlResident:
+    type: boolean
+    description: Признак резидента или нерезидента для ФЛ
+  isUlResident:
+    type: boolean
+    description: Признак резидента или нерезидента для ЮЛ
+  organisationAmlCftInfo:
+    $ref: ./OrganisationAmlCftInfo.yaml
+  serviceInformation:
+    $ref: ./ServiceInformation.yaml
+description: DTO ответа для универсального поиска Клиента/Сотрудника

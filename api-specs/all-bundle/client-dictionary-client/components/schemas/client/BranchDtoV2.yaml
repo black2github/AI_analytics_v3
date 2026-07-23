@@ -1,0 +1,166 @@
+required:
+- absNumber
+- isDeleted
+- latitude
+- longitude
+- name
+- number
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Наименование подразделения
+  docsName:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Название филиала для платежных документов
+  number:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Номер подразделения
+  absNumber:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Код филиала в РКО Ф1
+  address:
+    maxLength: 100
+    minLength: 0
+    type: string
+    description: Адрес подразделения
+  phone:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Телефоны подразделения
+  schedule:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: График работы подразделения
+  latitude:
+    type: number
+    description: Геолокация. Координата по широте
+  longitude:
+    type: number
+    description: Геолокация. Координата по долготе
+  requisites:
+    $ref: ./RequisitesDtoV2.yaml
+  filialName:
+    type: string
+    description: Название филиала
+  branchType:
+    type: string
+    description: Тип записи
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  parentBranch:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  absCode:
+    type: string
+    description: АБС Код подразделения
+  isDeleted:
+    type: boolean
+    description: Признак удаления
+  filialEskCode:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Код филиала
+  okato:
+    maxLength: 11
+    minLength: 0
+    type: string
+    description: ОКАТО филиала
+  invoiceKpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: КПП филиала (для указания в счет-фактурах)
+  swift:
+    maxLength: 11
+    minLength: 0
+    type: string
+    description: SWIFT филиала
+  judicialInstance:
+    type: string
+    description: Наименование судебной инстанции
+  utcOffset:
+    type: integer
+    description: Разница во времени с UTC
+    format: int32
+  knosisBranchId:
+    type: integer
+    description: Идентификатор филиала в Мастер-Системе (КНОСИС)
+    format: int64
+  knosisSubdivisionId:
+    type: integer
+    description: Идентификатор подразделения в Мастер-Системе (КНОСИС)
+    format: int64
+  branchServices:
+    type: string
+    description: Услуги подразделения
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  transferredBalanceHeadUnit:
+    type: boolean
+    description: Переведен на баланс ГО
+  settlementOrCityFiasId:
+    type: string
+    description: Идентификатор ФИАС города или нас пункта (необязательное)
+    format: uuid
+  isHeadUnit:
+    type: boolean
+    description: Признак ГО
+  metroStation:
+    type: string
+    description: Ближайшая станция метро
+  metroLine:
+    type: string
+    description: Ветка ближайшего метро
+  metroColor:
+    type: string
+    description: Цвет ветки для ближайшей станции метро
+  metroDistance:
+    type: integer
+    description: Расстояние от офиса до ближайшей станции метро
+    format: int32
+  branchVSPNumber:
+    type: string
+    description: Учетный номер ВСП филиала
+  officeVSPNumber:
+    type: string
+    description: Учетный номер ВСП подразделения
+  accessibility:
+    type: boolean
+    description: Общедоступность
+  stateType:
+    type: string
+    description: Идентификатор статуса подразделения
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED
+  officeState:
+    type: string
+    description: Наименование статуса подразделения
+description: Подразделение банка

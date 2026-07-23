@@ -1,0 +1,159 @@
+required:
+- bankClientId
+- contractId
+- requestKind
+- requestSubtype
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+    format: uuid
+  tradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка
+  currency:
+    maxLength: 3
+    pattern: ^[A-Z]{3}$
+    type: string
+    description: Код валюты
+  requestKind:
+    type: string
+    description: Вид сделки
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  isin:
+    type: string
+    description: Международный идентификационный код ценной бумаги
+  number:
+    maxLength: 30
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Регистрационный номер ценной бумаги
+  ticker:
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Эмитент ценной бумаги
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  guid:
+    type: string
+    description: Guid ценной бумаги (уникальный)
+  requestSubtype:
+    type: string
+    description: Подтип заявки
+    enum:
+    - OPERATION_SECURITIES
+    - OPERATION_QUICK
+    - OPERATION_REPO
+    - OPERATION_CANCEL_SECURITIES
+    - OPERATION_CANCEL_QUICK
+    - OPERATION_CANCEL_REPO
+  requestMode:
+    type: string
+    description: Режим заявки
+    enum:
+    - SET_PRICE
+    - MARKET
+  unitPrice:
+    type: string
+    description: Цена за штуку
+  quantity:
+    type: string
+    description: Количество
+  amount:
+    type: string
+    description: Сумма
+  additionalCondition:
+    maxLength: 800
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Дополнительные условия (ручной ввод)
+  repoTypeTransactions:
+    type: string
+    description: Вид сделки РЕПО
+    enum:
+    - MARKET
+    - NONMARKET
+    - CK
+  repoClassTransactions:
+    type: string
+    description: Класс
+    enum:
+    - CK_KSU
+    - CK_BONDS
+    - CK_EQUITIES
+  repoTerm:
+    pattern: ^[+0-9]+$
+    type: string
+    description: Срок РЕПО
+  repoRateYear:
+    type: string
+    description: Ставка РЕПО (годовые)
+  tradingMode:
+    type: string
+    description: Режим торгов
+    enum:
+    - REPO_M
+    - ADDRESS_WITH_CK
+  initDiscount:
+    type: string
+    description: Начальный дисконт
+  minDiscountFinal:
+    type: string
+    description: Минимальное предельное значение дисконта
+  contragent:
+    type: string
+    description: Контрагент
+  isinNominal:
+    type: string
+    description: Номинал ценной бумаги (необязательно)
+  interestBase:
+    pattern: ^(?:360|365|366)$
+    type: string
+    description: База начисления процентов
+  currencyDebit:
+    type: string
+    description: Валюта расчетов
+  repoWithoutNkd:
+    type: string
+    description: Сумма РЕПО без НКД
+  repoWithNkd:
+    type: string
+    description: Сумма РЕПО с НКД
+  repoNkd:
+    type: string
+    description: НКД
+  revaluationLevel:
+    type: string
+    description: Уровень переоценки
+  minDiscount:
+    type: string
+    description: Минимальный дисконт
+  repoExecuteDate:
+    type: string
+    description: Дата исполнения первой части РЕПО
+  transferRate:
+    type: string
+    description: Кросс курс
+description: Транспортная сущность для создания записи о торговом поручении

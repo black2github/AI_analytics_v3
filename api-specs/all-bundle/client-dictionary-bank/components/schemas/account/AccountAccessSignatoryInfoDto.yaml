@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountSignatoryLevel:
+    type: string
+    description: Номер уровня подписи
+    enum:
+    - LEVEL_1
+    - LEVEL_2
+  countOfSignatories:
+    type: integer
+    description: Общее количество подписантов по счету
+    format: int32
+description: Подписанты по счету

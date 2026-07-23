@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for statement-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/schedule",
+      "domain": "schedule"
+    },
+    {
+      "prefix": "/statement",
+      "domain": "statement"
+    }
+  ]
+}

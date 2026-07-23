@@ -1,0 +1,11 @@
+type: object
+description: Запрос дайджеста
+properties:
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа
+  version:
+    type: integer
+    format: int32
+    description: Номер версии искомого дайджеста

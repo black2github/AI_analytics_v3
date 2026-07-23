@@ -1,0 +1,12 @@
+type: object
+description: Ответ на запрос по получению списка тарифов из Ф1
+properties:
+  accounts:
+    type: array
+    items:
+      $ref: ./AccountElem1.yaml
+    description: Список счетов
+  error:
+    $ref: ./WebGateErrorDto.yaml
+    type: object
+    description: Блок с телом ошибки

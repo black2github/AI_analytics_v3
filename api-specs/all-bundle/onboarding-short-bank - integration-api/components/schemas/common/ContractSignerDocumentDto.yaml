@@ -1,0 +1,27 @@
+type: object
+properties:
+  documentDate:
+    type: string
+    description: Дата выдачи документа, подтверждающего полномочия подписанта
+    format: date
+  documentExpirationDate:
+    type: string
+    description: Дата окончания срока действия документа
+    format: date
+  documentName:
+    type: string
+    description: Наименование документа
+  documentNumber:
+    type: string
+    description: Номер документа, подтверждающего полномочия подписанта
+  documentType:
+    type: string
+    description: Тип документа полномочий
+    enum:
+    - REGULATION
+    - WARRANT
+    - OTHER
+  termless:
+    type: boolean
+    description: Признак бессрочного действия
+description: Сведения о документе полномочий подписанта по договору

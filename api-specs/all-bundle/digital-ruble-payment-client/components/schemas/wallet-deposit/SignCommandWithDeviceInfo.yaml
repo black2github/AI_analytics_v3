@@ -1,0 +1,18 @@
+type: object
+properties:
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfo.yaml
+  documentId:
+    type: string
+    format: uuid
+  certificateId:
+    type: string
+    format: uuid
+  signTypeId:
+    type: string
+    format: uuid
+  digest:
+    type: string
+  signature:
+    type: string
+description: Обертка над запросом подписи с информацией об устройстве

@@ -1,0 +1,169 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки. Общее поле
+    format: uuid
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь". Общее поле
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка". Общее поле
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки. Общее поле
+    format: int32
+  date:
+    type: string
+    description: Дата заявки. Общее поле
+    format: date-time
+  requestType:
+    type: string
+    description: Тип запроса
+    enum:
+    - OFFER_REQUEST
+    - CONSTITUTION_REQUEST
+    - CONSTITUTION_ACCESS_REQUEST_USER_ADD
+    - CONSTITUTION_ACCESS_REQUEST_ISSUE_ATTORNEY
+    - LKUVED_REQUEST
+    - LKUVED_ACCESS_REQUEST
+    - LKMP_OFFER_REQUEST
+    - LKMP_ACCESS_REQUEST
+    - TREASURY_AGREEMENT_REQUEST_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_MNO
+    - TREASURY_AGREEMENT_REQUEST_CONVERSION
+    - TREASURY_AGREEMENT_REQUEST_GSNO_PARENT
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_HEAD
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_FRIEND
+    - TREASURY_AGREEMENT_REQUEST_CHANGE_ACCOUNTS
+    - TREASURY_AGREEMENT_REQUEST_DU_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_DU_MNO
+    - TREASURY_AGREEMENT_REQUEST_DU_CONVERSION
+    - TMG_OFFER_REQUEST
+    - TMG_ACCESS_REQUEST
+    - SBP_REQUEST
+    - REG_COWORKER_DATA
+    - PARTNER_CHECK_SUBSCRIBE_REQUEST
+    - PARTNER_CHECK_UNSUBSCRIBE_REQUEST
+  clientShortName:
+    type: string
+    description: Заявитель. Общее поле
+  clientFullName:
+    type: string
+    description: Заявитель. Полное наименование клиента.
+  clientInn:
+    type: string
+    description: ИНН. Общее поле
+  contractId:
+    type: string
+    description: Идентификатор сопровождаемого договора (ИСД). Только для Оферты
+  accountNumber:
+    type: string
+    description: Номер счета. Только для Оферты
+  branchName:
+    type: string
+    description: Краткое наименование филиала. Только для Оферты
+  branchBic:
+    type: string
+    description: БИК филиала. Только для Оферты
+  authorizedPersonSurname:
+    type: string
+    description: Фамилия уполномоченного лица. Только для заявки на присоединение к ГПБ Бизнес-Онлайн (Конституция)
+  authorizedPersonForename:
+    type: string
+    description: Имя уполномоченного лица. Только для заявки на присоединение к ГПБ Бизнес-Онлайн (Конституция)
+  authorizedPersonPatronymic:
+    type: string
+    description: Отчество уполномоченного лица. Только для заявки на присоединение к ГПБ Бизнес-Онлайн (Конституция)
+  employeeSurname:
+    type: string
+    description: Фамилия сотрудника. Только для заявки на предоставление доступа пользователям к ЛК УВЭД, ЛК МП и Конст2
+  employeeForename:
+    type: string
+    description: Имя сотрудника. Только для заявки на предоставление доступа пользователям к ЛК УВЭД, ЛК МП и Конст2
+  employeePatronymic:
+    type: string
+    description: Отчество сотрудника. Только для заявки на предоставление доступа пользователям к ЛК УВЭД, ЛК МП и Конст2
+  newRole:
+    type: string
+    description: Классификатор ролей пользователя в сервисах ЛК УВЭД/ЛК МП/TMG
+    enum:
+    - PROCESS
+    - VIEW
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+    - NO_ACCESS
+  grantNewMegaAttorney:
+    type: boolean
+    description: Выдать новую мегадоверенность. Только для Конст2.
+  status:
+    type: string
+    description: Статусы конституции, оферты, ЛК УВЭД, ЛК УВЭД 2, ЛК МП, ЛК МП 2
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - WAITING_FOR_IO_CUSTOMER_RESULT
+    - CREATE_ACCESS_RULES
+    - CREATE_ACCESS_RULES_ERROR
+    - EXECUTED_BY_ESK
+    - EXECUTED_IN_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - EXPORT_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ERROR
+    - EXECUTED_BY_ABS
+    - DENIED
+    - EXPORT_TO_SKVO
+    - EXPORTED_TO_SKVO
+    - EXECUTED_BY_SKVO
+    - EXPORT_TO_SKVO_ERROR
+    - GRANT_AUTHORITY
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXECUTED_BY_F1
+    - EXPORT_TO_F1_ERROR
+    - AUTHORITY_GRANTED
+    - CLIENT_REGISTRATION_DELIVERED
+    - CLIENT_REGISTRATION_RECEIVED
+    - CLIENT_REGISTRATION_ERROR
+    - CLIENT_REGISTERED
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTERED
+    - ACCOUNTS_REGISTRATION_ERROR
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - EXPORT_AGENTS_PRE_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_PRE_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_PRE_CONNECTION
+    - EXPORT_AGENTS_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_CONNECTION
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки
+    items:
+      $ref: ./UnitedSignatureDto.yaml
+description: Объединенное ДТО V2 для скроллера заявок соглашений (оферта, конституция, ЛК УВЭД, ЛК МП).

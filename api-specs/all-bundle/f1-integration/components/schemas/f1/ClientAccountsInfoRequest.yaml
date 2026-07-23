@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  clientRegNum:
+    type: integer
+    description: РНК (Регистрационный номер клиента ЕСК)
+description: Запрос на получение информации о счетах клиента из Ф1

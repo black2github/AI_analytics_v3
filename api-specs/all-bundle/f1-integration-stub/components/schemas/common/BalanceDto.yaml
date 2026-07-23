@@ -1,0 +1,57 @@
+type: object
+description: Баланс счета
+properties:
+  NACCOUNTID:
+    type: integer
+    format: int64
+    description: Идентификатор счета в РКО Ф1
+  SACCOUNTNUM:
+    type: string
+    description: Номер счета
+  SACCCURRENCY:
+    type: string
+    description: Валюта счет
+  SACCOUNTNAME:
+    type: string
+    description: Наименование счета
+  SACCOUNTBALFILCODE:
+    type: string
+    description: Код филиала (баланс)
+  SACCOUNTREGFILCODE:
+    type: string
+    description: Код филиала (регион)
+  SACCOUNTAP:
+    type: string
+    description: Тип счета (А/П)
+  NFSO:
+    type: number
+    description: Фактический свободный остаток
+  NOVER:
+    type: number
+    description: Сумма неиспользованного овердрафта
+  NFACT:
+    type: number
+    description: Фактический остаток по выписке
+  NDEBWORK:
+    type: number
+    description: Сумма дебетовых документов на исполнении
+  NCARD:
+    type: number
+    description: Сумма картотеки
+  NLIMIT:
+    type: number
+    description: Ограничения
+  NCREDIT:
+    type: number
+    description: Нераспределенные кредитные средства
+  NF1CLIENTID:
+    type: integer
+    format: int64
+    description: ID клиента
+  NCLIENTREGNUM:
+    type: integer
+    format: int64
+    description: РНК клиента в РКО Ф1
+  NFSOOWN:
+    type: number
+    description: Сумма собственных доступных средств (без учета овердрафта)

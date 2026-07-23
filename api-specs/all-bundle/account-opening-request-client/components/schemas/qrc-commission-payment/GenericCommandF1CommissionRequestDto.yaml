@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./F1CommissionRequestDto.yaml
+description: Запрос

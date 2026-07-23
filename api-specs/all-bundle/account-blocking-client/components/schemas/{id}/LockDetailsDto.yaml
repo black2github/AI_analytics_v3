@@ -1,0 +1,49 @@
+type: object
+properties:
+  blockNumber:
+    type: string
+    description: Номер блокировки
+  blockDate:
+    type: string
+    description: Дата Блокировки
+    format: date
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  orgType:
+    type: string
+    description: Тип органа
+    enum:
+    - FSSP
+    - FTS
+    - FNS
+    - OEP
+  orgName:
+    type: string
+    description: Наименование организации источника блокировки
+  orgInn:
+    type: string
+    description: ИНН организации источника блокировки
+  blockReason:
+    type: string
+    description: Причина блокировки
+  blockAmount:
+    type: string
+    description: Сумма блокировки
+  blockCurrency:
+    type: string
+    description: Валюта блокировки
+  blockAccountCurrencyAmount:
+    type: string
+    description: Сумма блокировки в валюте счета
+  currencyConversionDate:
+    type: string
+    description: Дата конвертации валюты
+    format: date
+  fullBlock:
+    type: boolean
+    description: Признак полного ареста счета
+  blockDocType:
+    type: string
+    description: Вид документа источника блокировки
+description: Реквизиты блокировки.

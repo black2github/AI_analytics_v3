@@ -1,0 +1,25 @@
+required:
+- productWarranties
+type: object
+properties:
+  grantNewProductWarranty:
+    type: boolean
+    description: Выдать новую продуктовую доверенность
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности
+    format: date
+  productWarranties:
+    type: array
+    description: Продукты, на которые распространяются действия новой продуктовой доверенности
+    items:
+      $ref: ./WarrantyProductWarrantyRecordDto.yaml
+description: Данные для создания/обновления продуктовой доверенности сотрудника

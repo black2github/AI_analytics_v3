@@ -1,0 +1,6 @@
+type: object
+properties:
+  encryptedData:
+    type: string
+    description: Зашифрованные данные в кодировке base64
+description: Ответ на запрос шифрования данных

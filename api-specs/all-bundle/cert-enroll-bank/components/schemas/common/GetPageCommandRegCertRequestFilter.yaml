@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRegCertRequestFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,35 @@
+type: object
+properties:
+  docNumber:
+    maxLength: 15
+    type: string
+    description: Номер документа
+    nullable: true
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  amount:
+    type: number
+    description: Сумма
+    nullable: true
+  vatAmount:
+    type: number
+    description: Сумма НДС
+    nullable: true
+  amountIncludeVat:
+    type: number
+    description: Сумма с учётом НДС
+    nullable: true
+  vatCalculationMethod:
+    type: string
+    description: Способ расчета НДС
+    nullable: true
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+    nullable: true
+description: Основные реквизиты документа платежное требование исходящее (форма просмотра сотрудника банка)
+nullable: true

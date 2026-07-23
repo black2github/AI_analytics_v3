@@ -1,0 +1,42 @@
+type: object
+description: Транспортное представление строки сообщения GPI-трекера Ф1
+properties:
+  guid:
+    type: string
+    description: Идентификатор валютного платежного поручения
+  rcDocId:
+    type: string
+    description: Атрибут исходной модели RCDOCID
+  rkoId:
+    type: string
+    description: Атрибут исходной модели RKOID
+  nodeType:
+    type: string
+    description: Тип банка
+  bic:
+    type: string
+    description: SWIFT BIC банка
+  bankName:
+    type: string
+    description: Наименования банка
+  amountCurr:
+    type: string
+    description: Сумма расчетов
+  statusCode:
+    type: string
+    description: Код статуса
+  statusDateTime:
+    type: string
+    description: Дата установки статуса
+  statusDateTimeParent:
+    type: string
+    description: Дата установки статуса
+  detail:
+    type: string
+    description: Расходы
+  charges:
+    type: string
+    description: 'Комиссия (пример: EUR21,00)'
+  receivedInF1:
+    type: string
+    description: Дата отправки в Ф1

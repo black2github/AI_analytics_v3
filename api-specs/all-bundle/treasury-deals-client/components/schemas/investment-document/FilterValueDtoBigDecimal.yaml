@@ -1,0 +1,35 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: eq
+  notEq:
+    type: string
+    description: notEq
+  in:
+    type: array
+    items:
+      type: number
+  notIn:
+    type: array
+    items:
+      type: number
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    description: gt
+  ge:
+    type: string
+    description: ge
+  lt:
+    type: string
+    description: lt
+  le:
+    type: string
+    description: le
+description: Сумма сделки

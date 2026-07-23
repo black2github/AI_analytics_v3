@@ -1,0 +1,127 @@
+required:
+- contracts
+- payments
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  number:
+    type: integer
+    description: Номер документа
+    format: int32
+  bankClient:
+    $ref: ../common/BankClientDto.yaml
+  type:
+    type: string
+    description: Виды справок для ЮЛ.
+    enum:
+    - PAYMENT
+    - CONTRACT
+  method:
+    type: string
+    description: Способ доставки документов
+    enum:
+    - DIGITAL
+    - OFFICE
+  status:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    enum:
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - SUBMITTED
+    - RECEIVED
+    - DOCS_REQUEST_TO_F1
+    - DOCS_REQUEST_TO_F1_ERROR
+    - DOCS_REQUEST_SENT_TO_F1
+    - DOCS_REQUEST_EXPORTED_TO_F1
+    - COMMISSION_IS_PAID
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - WAITING_FOR_PAYMENT
+    - IS_ODS_IMPORT_OR_ERROR
+    - ODS_IMPORT_ERROR
+    - ODS_IMPORTED
+    - IS_REQUEST_PRINT_OR_ERROR
+    - PRINT_ERROR
+    - PRINT_DOCS_CREATED
+    - IS_REQUEST_ZIP_OR_ERROR
+    - ZIP_DOCS_ERROR
+    - DOCS_ZIPPED
+    - IS_REQUEST_SIGN_OR_ERROR
+    - SIGN_DOCS_ERROR
+    - DOCS_SIGNED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+  docsCount:
+    type: integer
+    description: Количество документов
+    format: int32
+  commissionAccount:
+    $ref: ../common/CommissionAccountBankApiDto.yaml
+  branch:
+    $ref: ./BranchInfoDto.yaml
+  priceInfo:
+    $ref: ./PriceInfoDto.yaml
+  payments:
+    type: array
+    description: Сведения о платежных документах по которым запрашивается справка
+    items:
+      $ref: ./DocCopyPaymentBankApiDto.yaml
+  contracts:
+    type: array
+    description: Сведения о договорных документах по которым запрашивается справка
+    items:
+      $ref: ./DocCopyContractBankApiDto.yaml
+  duplicateByEmails:
+    type: boolean
+    description: Продублировать на email
+  emailReceptionAgreed:
+    type: boolean
+    description: Согласие на получение по email
+  emails:
+    type: array
+    description: Email адреса для дублирования уведомлений
+    items:
+      type: string
+      description: Email адреса для дублирования уведомлений
+  notifyByEmail:
+    type: boolean
+    description: Уведомление по email
+  notifyBySms:
+    type: boolean
+    description: Уведомление по sms
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  signatures:
+    type: array
+    description: Подпись заявки
+    items:
+      $ref: ../common/DocCopyRequestSignatureDto.yaml
+  createdAt:
+    type: string
+    description: Время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время последнего обновления заявки
+    format: date-time
+  creator:
+    $ref: ../common/BankCreatorDto.yaml
+description: Запрос копии документов для ЮЛ

@@ -1,0 +1,17 @@
+type: object
+properties:
+  eskIds:
+    type: array
+    description: Идентификаторы заявок для повторной отправки в системы банка(ЕСК)
+    items:
+      type: string
+      description: Идентификаторы заявок для повторной отправки в системы банка(ЕСК)
+      format: uuid
+  tessaIds:
+    type: array
+    description: Идентификаторы заявок для повторной отправки в TESSA
+    items:
+      type: string
+      description: Идентификаторы заявок для повторной отправки в TESSA
+      format: uuid
+description: Списки идентификаторов заявок, которые необходимо переотправить во внешние системы

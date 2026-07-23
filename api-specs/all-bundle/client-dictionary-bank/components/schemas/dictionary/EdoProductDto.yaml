@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор продукта
+    format: uuid
+  productCode:
+    type: string
+    description: Код продукта
+  remoteSource:
+    type: string
+    description: Система - источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  entityId:
+    type: string
+    description: Идентификатор сущности, к которой привязан продукт
+    format: uuid
+  creatorUserId:
+    type: string
+    description: Идентификатор пользователя, добавившего продукт
+    format: uuid
+  manuallyCreated:
+    type: boolean
+    description: Флаг добавления продукта вручную
+description: Описание продукта ЭДО

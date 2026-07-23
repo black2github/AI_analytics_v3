@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Суррогатный идентификатор токенизированного пользователя
+  userId:
+    type: string
+    description: Идентификатор пользователя
+  fio:
+    type: string
+    description: Фамилия Имя Отчество представителя Клиента
+  number:
+    type: string
+    description: Номер токена
+  endDate:
+    type: string
+    description: Срок действия токена
+    format: date
+  fired:
+    type: boolean
+    description: Сотрудник уволен
+description: Токенизорованный пользователь договора

@@ -1,0 +1,12 @@
+type: object
+description: Фильтр скроллера Подписок
+properties:
+  memberBicOrMemberNameRus:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: БИК банка или Имя участника на русском языке
+  scenariosName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Название поддерживаемого Сценария Операции СБП
+  scenariosRole:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Роль в поддерживаемом Сценарии Операции СБП

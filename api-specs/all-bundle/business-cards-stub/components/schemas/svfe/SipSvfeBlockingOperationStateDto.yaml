@@ -1,0 +1,19 @@
+type: object
+required:
+- type
+- virtualNum
+- stateReason
+- svsStateCode
+properties:
+  type:
+    type: string
+    minLength: 1
+  virtualNum:
+    type: string
+    minLength: 1
+  stateReason:
+    type: string
+    minLength: 1
+  svsStateCode:
+    type: string
+    minLength: 1

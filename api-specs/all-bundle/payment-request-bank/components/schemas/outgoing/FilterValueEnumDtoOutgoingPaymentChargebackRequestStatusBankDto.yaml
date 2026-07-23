@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./OutgoingPaymentChargebackRequestStatusBankDto.yaml
+  notEq:
+    $ref: ./OutgoingPaymentChargebackRequestStatusBankDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./OutgoingPaymentChargebackRequestStatusBankDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./OutgoingPaymentChargebackRequestStatusBankDto.yaml
+  isNull:
+    type: boolean
+description: Статус отзыва (содержится в списке)
+nullable: true

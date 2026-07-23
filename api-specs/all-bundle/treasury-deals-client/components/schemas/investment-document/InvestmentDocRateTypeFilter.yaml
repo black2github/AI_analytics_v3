@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  notEq:
+    type: string
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - RATE_FIXED
+      - RATE_REFERENCE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - RATE_FIXED
+      - RATE_REFERENCE
+  isNull:
+    type: boolean
+description: Тип ставки

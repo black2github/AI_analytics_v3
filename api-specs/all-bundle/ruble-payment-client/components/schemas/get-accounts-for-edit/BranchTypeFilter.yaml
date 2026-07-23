@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./BranchTypeDto.yaml
+  notEq:
+    $ref: ./BranchTypeDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./BranchTypeDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./BranchTypeDto.yaml
+  isNull:
+    type: boolean
+description: Тип подразделения. in + equals.

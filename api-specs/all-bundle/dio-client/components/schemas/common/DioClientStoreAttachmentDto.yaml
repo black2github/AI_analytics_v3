@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  attachmentId:
+    type: string
+    description: Идентификатор вложения FS
+    format: uuid
+description: Транспортное описание вложения к документу

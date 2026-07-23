@@ -1,0 +1,468 @@
+openapi: 3.0.1
+info:
+  title: Сервис создания короткой заявки на открытие первого счета. Клиентская часть.
+  description: Сервис создания короткой заявки на открытие первого счета.
+  version: 1.9.0
+servers:
+- url: /onboarding-short-client
+security:
+- Bearer: []
+tags:
+- name: Информация об оплате комиссии по QRC.
+- name: API получения информации об организации.
+- name: Короткая заявка на открытие первого счета. Операции процессинга.
+- name: Справочник тарифов на обслуживание счета
+- name: Базовые операции для работы с асинхронными задачами
+- name: API короткой заявки на формирование пакета документов. Контроли наличия активных заявок.
+- name: Короткая заявка на открытие первого счета. История изменений.
+- name: АPI Определения соответствия пилотного города при подаче короткой заявки
+- name: Проверки блокировки пользователя по организации
+- name: API короткой заявки на открытие первого счета для встречи
+- name: Распознавание данных документов
+- name: АPI Определения соответствия ЮЛ профилю короткой заявки
+- name: Физические лица в заявке
+- name: ПФ оплата комиссии по QRC.
+- name: Короткая заявка на открытие первого счета. Операции печати.
+- name: Заявка на открытие первого счета. Клиентские операции.
+- name: API проверки наличия действующей организации, представителем которой является пользователь
+- name: Справочник значений сайтов партнёров
+- name: Клиентское API короткой заявки на открытие первого счета для встречи
+- name: Короткая заявка на открытие первого счета. Базовые операции.
+- name: Базовые операции для работы с заявкой на ЭП
+- name: Оригиналы документов
+paths:
+  /async-task/{id}:
+    $ref: ./paths/misc/async_task_id.yaml
+  /checks/active-org-representative:
+    $ref: ./paths/misc/checks_active_org_representative.yaml
+  /dictionary/partner-sites/all:
+    $ref: ./paths/misc/dictionary_partner_sites_all.yaml
+  /dictionary/tariff/all:
+    $ref: ./paths/misc/dictionary_tariff_all.yaml
+  /dictionary/tariff/by-promo-codes:
+    $ref: ./paths/misc/dictionary_tariff_by_promo_codes.yaml
+  /documents-ocr/passport:
+    $ref: ./paths/misc/documents_ocr_passport.yaml
+  /esign-request/status-info:
+    $ref: ./paths/misc/esign_request_status_info.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /onboarding-short-request:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request.yaml
+  /onboarding-short-request/active-requests/check-active-1091-fns-requests:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_active_1091_fns_requests.yaml
+  /onboarding-short-request/active-requests/check-active-115-fns-requests:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_active_115_fns_requests.yaml
+  /onboarding-short-request/active-requests/check-active-115-requests:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_active_115_requests.yaml
+  /onboarding-short-request/active-requests/check-create:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_create.yaml
+  /onboarding-short-request/active-requests/check-open-account:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_open_account.yaml
+  /onboarding-short-request/active-requests/check-send-bank:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_send_bank.yaml
+  /onboarding-short-request/active-requests/check-send-user:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_check_send_user.yaml
+  /onboarding-short-request/active-requests/get-active-onboarding-requests:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_active_requests_get_active_onboarding_requests.yaml
+  /onboarding-short-request/available-for-meeting/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_available_for_meeting_id.yaml
+  /onboarding-short-request/check-user-block-by-org:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_check_user_block_by_org.yaml
+  /onboarding-short-request/client/related-not-rejected-vm-request-exists/{requestId}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_client_related_not_rejected_vm_request_exists_requestId.yaml
+  /onboarding-short-request/client/related-waiting-vm-request-exists/{requestId}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_client_related_waiting_vm_request_exists_requestId.yaml
+  /onboarding-short-request/client/update-contact/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_client_update_contact_id.yaml
+  /onboarding-short-request/delete:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_delete.yaml
+  /onboarding-short-request/export-applications:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_applications.yaml
+  /onboarding-short-request/export-final-docs-for-ip-oper-acc:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_final_docs_for_ip_oper_acc.yaml
+  /onboarding-short-request/export-list-as-file:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_list_as_file.yaml
+  /onboarding-short-request/export-preview-docs-for-ip-oper-acc:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_preview_docs_for_ip_oper_acc.yaml
+  /onboarding-short-request/export-print-forms:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_print_forms.yaml
+  /onboarding-short-request/export-print-report:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_export_print_report.yaml
+  /onboarding-short-request/for-meeting/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_for_meeting_id.yaml
+  /onboarding-short-request/history/{id}/contains-status:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_history_id_contains_status.yaml
+  /onboarding-short-request/new/async:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_new_async.yaml
+  /onboarding-short-request/organization/check-acting:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_organization_check_acting.yaml
+  /onboarding-short-request/original-documents/generate-dynamic-documents:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_original_documents_generate_dynamic_documents.yaml
+  /onboarding-short-request/original-documents/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_original_documents_id.yaml
+  /onboarding-short-request/persons/authorized-persons:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_persons_authorized_persons.yaml
+  /onboarding-short-request/print-list:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_print_list.yaml
+  /onboarding-short-request/refuse/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_refuse_id.yaml
+  /onboarding-short-request/send:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_send.yaml
+  /onboarding-short-request/{id}:
+    $ref: ./paths/onboarding-short-request/onboarding_short_request_id.yaml
+  /pilot-city/{city}:
+    $ref: ./paths/misc/pilot_city_city.yaml
+  /profile-compliance/{ogrn}:
+    $ref: ./paths/misc/profile_compliance_ogrn.yaml
+  /qrc-commission-payment/all-by-onboarding-short-request-id/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_all_by_onboarding_short_request_id_onboardingShortRequestId.yaml
+  /qrc-commission-payment/all-by-onboarding-short-request-ids-and-statuses:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_all_by_onboarding_short_request_ids_and_statuses.yaml
+  /qrc-commission-payment/change-tariff:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_change_tariff.yaml
+  /qrc-commission-payment/last/{onboardingShortId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_last_onboardingShortId.yaml
+  /qrc-commission-payment/notify:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_notify.yaml
+  /qrc-commission-payment/pay:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_pay.yaml
+  /qrc-commission-payment/payment-commission-qrc/download/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_commission_qrc_download_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-commission-qrc/export/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_commission_qrc_export_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-details/download/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_details_download_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-details/export/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_details_export_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-receipt/download/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_receipt_download_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-receipt/export/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_receipt_export_onboardingShortRequestId.yaml
+  /qrc-commission-payment/payment-receipt/upload/{onboardingShortRequestId}:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_payment_receipt_upload_onboardingShortRequestId.yaml
+  /qrc-commission-payment/set-individual-amount:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_set_individual_amount.yaml
+  /qrc-commission-payment/{id}/commission-required:
+    $ref: ./paths/qrc-commission-payment/qrc_commission_payment_id_commission_required.yaml
+  /tariff-promo/{requestId}:
+    $ref: ./paths/misc/tariff_promo_requestId.yaml
+components:
+  schemas:
+    AccountInfoDto:
+      $ref: ./components/schemas/common/AccountInfoDto.yaml
+    AcquiringDto:
+      $ref: ./components/schemas/common/AcquiringDto.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/onboarding-short-request/ActiveAccountsCheckParamsDto.yaml
+    ActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/onboarding-short-request/ActiveAccountsCheckResultDto.yaml
+    ActiveRequestsCheckParamsDto:
+      $ref: ./components/schemas/onboarding-short-request/ActiveRequestsCheckParamsDto.yaml
+    ActiveRequestsValidationResultDto:
+      $ref: ./components/schemas/onboarding-short-request/ActiveRequestsValidationResultDto.yaml
+    AdditionalDocsGenFlagsDto:
+      $ref: ./components/schemas/common/AdditionalDocsGenFlagsDto.yaml
+    AdmCardDto:
+      $ref: ./components/schemas/common/AdmCardDto.yaml
+    AsyncTaskDto:
+      $ref: ./components/schemas/common/AsyncTaskDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    AuthorizedPersonDto:
+      $ref: ./components/schemas/onboarding-short-request/AuthorizedPersonDto.yaml
+    AvailableAndAppliedPromosDto:
+      $ref: ./components/schemas/misc/AvailableAndAppliedPromosDto.yaml
+    BankClientForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/BankClientForMeetingDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    BranchForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/BranchForMeetingDto.yaml
+    BusinessActivityDto:
+      $ref: ./components/schemas/common/BusinessActivityDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/onboarding-short-request/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/onboarding-short-request/CheckResult.yaml
+    CheckUserActiveClientRepresentativeRequestDto:
+      $ref: ./components/schemas/misc/CheckUserActiveClientRepresentativeRequestDto.yaml
+    ClientCallHistoryDto:
+      $ref: ./components/schemas/common/ClientCallHistoryDto.yaml
+    CommentDto:
+      $ref: ./components/schemas/onboarding-short-request/CommentDto.yaml
+    ConstituentDocumentChangesDto:
+      $ref: ./components/schemas/common/ConstituentDocumentChangesDto.yaml
+    ContactInfoDto:
+      $ref: ./components/schemas/common/ContactInfoDto.yaml
+    ContractSignerDocumentDto:
+      $ref: ./components/schemas/common/ContractSignerDocumentDto.yaml
+    ControlResult:
+      $ref: ./components/schemas/onboarding-short-request/ControlResult.yaml
+    CorporateCardIssuingDataDto:
+      $ref: ./components/schemas/common/CorporateCardIssuingDataDto.yaml
+    CreateNewOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/CreateNewOnboardingShortRequestDto.yaml
+    CreateResponseOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/CreateResponseOnboardingShortRequestDto.yaml
+    DocsExportDto:
+      $ref: ./components/schemas/onboarding-short-request/DocsExportDto.yaml
+    DocumentOcrRequestDto:
+      $ref: ./components/schemas/misc/DocumentOcrRequestDto.yaml
+    DocumentOcrResponseDto:
+      $ref: ./components/schemas/misc/DocumentOcrResponseDto.yaml
+    ESignRequestPersonStatusesDto:
+      $ref: ./components/schemas/misc/ESignRequestPersonStatusesDto.yaml
+    ESignRequestStatusDto:
+      $ref: ./components/schemas/misc/ESignRequestStatusDto.yaml
+    ESignRequestStatusResultDto:
+      $ref: ./components/schemas/misc/ESignRequestStatusResultDto.yaml
+    EioInfoDto:
+      $ref: ./components/schemas/common/EioInfoDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/misc/ErrorData.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    EskSearchRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/EskSearchRequestDto.yaml
+    EskSearchResponseDto:
+      $ref: ./components/schemas/onboarding-short-request/EskSearchResponseDto.yaml
+    EvaluationClientIPBeneficialOwnersSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIPBeneficialOwnersSheetDto.yaml
+    EvaluationClientIPCRSStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIPCRSStatusSheetDto.yaml
+    EvaluationClientIPFatcaStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIPFatcaStatusSheetDto.yaml
+    EvaluationClientSignSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientSignSheetDto.yaml
+    EvaluationClientULBeneficialOwnersSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientULBeneficialOwnersSheetDto.yaml
+    EvaluationClientULCRSStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientULCRSStatusSheetDto.yaml
+    EvaluationClientULFatcaStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientULFatcaStatusSheetDto.yaml
+    ExtendedFileStorageStatusDto:
+      $ref: ./components/schemas/common/ExtendedFileStorageStatusDto.yaml
+    ExternalSystemsRequisitesDto:
+      $ref: ./components/schemas/common/ExternalSystemsRequisitesDto.yaml
+    FinancialInfoDto:
+      $ref: ./components/schemas/common/FinancialInfoDto.yaml
+    FormedDocsPrintRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/FormedDocsPrintRequestDto.yaml
+    FormedDocsPrintZipRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/FormedDocsPrintZipRequestDto.yaml
+    FormedDocumentDto:
+      $ref: ./components/schemas/common/FormedDocumentDto.yaml
+    FormedDocumentSignatureDto:
+      $ref: ./components/schemas/common/FormedDocumentSignatureDto.yaml
+    GenericCommandActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandActiveAccountsCheckParamsDto.yaml
+    GenericCommandActiveRequestsCheckParamsDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandActiveRequestsCheckParamsDto.yaml
+    GenericCommandCheckUserActiveClientRepresentativeRequestDto:
+      $ref: ./components/schemas/misc/GenericCommandCheckUserActiveClientRepresentativeRequestDto.yaml
+    GenericCommandCommentDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandCommentDto.yaml
+    GenericCommandCreateNewOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandCreateNewOnboardingShortRequestDto.yaml
+    GenericCommandDocsExportDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandDocsExportDto.yaml
+    GenericCommandDocumentOcrRequestDto:
+      $ref: ./components/schemas/misc/GenericCommandDocumentOcrRequestDto.yaml
+    GenericCommandEskSearchRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandEskSearchRequestDto.yaml
+    GenericCommandFormedDocsPrintRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandFormedDocsPrintRequestDto.yaml
+    GenericCommandFormedDocsPrintZipRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandFormedDocsPrintZipRequestDto.yaml
+    GenericCommandListString:
+      $ref: ./components/schemas/misc/GenericCommandListString.yaml
+    GenericCommandNewPersonContact:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandNewPersonContact.yaml
+    GenericCommandOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandOnboardingShortRequestDto.yaml
+    GenericCommandQrcChangeTariffDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericCommandQrcChangeTariffDto.yaml
+    GenericCommandQrcCommissionPaymentRequestDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericCommandQrcCommissionPaymentRequestDto.yaml
+    GenericCommandQrcIndividualCommissionAmountRequestDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericCommandQrcIndividualCommissionAmountRequestDto.yaml
+    GenericCommandQrcNotificationDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericCommandQrcNotificationDto.yaml
+    GenericCommandQrcPaymentDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericCommandQrcPaymentDto.yaml
+    GenericCommandRequestExportDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandRequestExportDto.yaml
+    GenericCommandString:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandString.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandUUID.yaml
+    GenericCommandUploadOriginalDocumentsDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericCommandUploadOriginalDocumentsDto.yaml
+    GenericResponseErrorDataAvailableAndAppliedPromosDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataAvailableAndAppliedPromosDto.yaml
+    GenericResponseErrorDataListString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListString.yaml
+    GenericResponseErrorDataListTariffDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListTariffDto.yaml
+    GenericResponseSimpleErrorDataActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataActiveAccountsCheckResultDto.yaml
+    GenericResponseSimpleErrorDataActiveRequestsValidationResultDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataActiveRequestsValidationResultDto.yaml
+    GenericResponseSimpleErrorDataAsyncTaskDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAsyncTaskDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    GenericResponseSimpleErrorDataDocumentOcrResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataDocumentOcrResponseDto.yaml
+    GenericResponseSimpleErrorDataESignRequestStatusResultDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataESignRequestStatusResultDto.yaml
+    GenericResponseSimpleErrorDataEskSearchResponseDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataEskSearchResponseDto.yaml
+    GenericResponseSimpleErrorDataInteger:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataInteger.yaml
+    GenericResponseSimpleErrorDataListAuthorizedPersonDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataListAuthorizedPersonDto.yaml
+    GenericResponseSimpleErrorDataListOriginalDocumentDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataListOriginalDocumentDto.yaml
+    GenericResponseSimpleErrorDataListQrcCommissionPaymentDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericResponseSimpleErrorDataListQrcCommissionPaymentDto.yaml
+    GenericResponseSimpleErrorDataListUUID:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataListUUID.yaml
+    GenericResponseSimpleErrorDataOnboardingShortRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataOnboardingShortRequestDto.yaml
+    GenericResponseSimpleErrorDataOnboardingShortRequestForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataOnboardingShortRequestForMeetingDto.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataPrintResponse.yaml
+    GenericResponseSimpleErrorDataQrcCommissionPaymentDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericResponseSimpleErrorDataQrcCommissionPaymentDto.yaml
+    GenericResponseSimpleErrorDataQrcDocumentDto:
+      $ref: ./components/schemas/qrc-commission-payment/GenericResponseSimpleErrorDataQrcDocumentDto.yaml
+    GenericResponseSimpleErrorDataValidationResultWrapperOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataValidationResultWrapperOnboardingShortRequestDto.yaml
+    GovernanceBodyDto:
+      $ref: ./components/schemas/common/GovernanceBodyDto.yaml
+    GovernanceBodyMemberDto:
+      $ref: ./components/schemas/common/GovernanceBodyMemberDto.yaml
+    GozAccountDto:
+      $ref: ./components/schemas/common/GozAccountDto.yaml
+    GozContractorDto:
+      $ref: ./components/schemas/common/GozContractorDto.yaml
+    GpbBoConnectionInfoDto:
+      $ref: ./components/schemas/common/GpbBoConnectionInfoDto.yaml
+    GroupResult:
+      $ref: ./components/schemas/onboarding-short-request/GroupResult.yaml
+    LicenseDto:
+      $ref: ./components/schemas/common/LicenseDto.yaml
+    ManagementCompanyDocumentDto:
+      $ref: ./components/schemas/common/ManagementCompanyDocumentDto.yaml
+    ManagerVisitHistoryDto:
+      $ref: ./components/schemas/common/ManagerVisitHistoryDto.yaml
+    NewPersonContact:
+      $ref: ./components/schemas/onboarding-short-request/NewPersonContact.yaml
+    OnboardingShortRequestDto:
+      $ref: ./components/schemas/common/OnboardingShortRequestDto.yaml
+    OnboardingShortRequestForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/OnboardingShortRequestForMeetingDto.yaml
+    OnlineCashCollectionDto:
+      $ref: ./components/schemas/common/OnlineCashCollectionDto.yaml
+    OpeningAccountDto:
+      $ref: ./components/schemas/common/OpeningAccountDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    OriginalDocumentCheckboxesDto:
+      $ref: ./components/schemas/common/OriginalDocumentCheckboxesDto.yaml
+    OriginalDocumentDto:
+      $ref: ./components/schemas/common/OriginalDocumentDto.yaml
+    OriginalDocumentFileDto:
+      $ref: ./components/schemas/common/OriginalDocumentFileDto.yaml
+    OriginalDocumentSignatureFileDto:
+      $ref: ./components/schemas/common/OriginalDocumentSignatureFileDto.yaml
+    PassportRecognitionDto:
+      $ref: ./components/schemas/common/PassportRecognitionDto.yaml
+    PersonContactInfoForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/PersonContactInfoForMeetingDto.yaml
+    PersonDocumentDto:
+      $ref: ./components/schemas/common/PersonDocumentDto.yaml
+    PersonDto:
+      $ref: ./components/schemas/common/PersonDto.yaml
+    PersonForMeetingDto:
+      $ref: ./components/schemas/onboarding-short-request/PersonForMeetingDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/onboarding-short-request/PrintResponse.yaml
+    QrcChangeTariffDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcChangeTariffDto.yaml
+    QrcCommissionPaymentDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcCommissionPaymentDto.yaml
+    QrcCommissionPaymentRequestDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcCommissionPaymentRequestDto.yaml
+    QrcDocumentDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcDocumentDto.yaml
+    QrcIndividualCommissionAmountRequestDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcIndividualCommissionAmountRequestDto.yaml
+    QrcNotificationDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcNotificationDto.yaml
+    QrcPaymentDto:
+      $ref: ./components/schemas/qrc-commission-payment/QrcPaymentDto.yaml
+    QuestionnaireCommonDto:
+      $ref: ./components/schemas/common/QuestionnaireCommonDto.yaml
+    QuestionnaireIpDto:
+      $ref: ./components/schemas/common/QuestionnaireIpDto.yaml
+    QuestionnaireOfficialFormsIpDto:
+      $ref: ./components/schemas/common/QuestionnaireOfficialFormsIpDto.yaml
+    QuestionnaireOfficialFormsUlDto:
+      $ref: ./components/schemas/common/QuestionnaireOfficialFormsUlDto.yaml
+    QuestionnaireUlDto:
+      $ref: ./components/schemas/common/QuestionnaireUlDto.yaml
+    RegistrationRequisitesDto:
+      $ref: ./components/schemas/common/RegistrationRequisitesDto.yaml
+    RequestAddressDto:
+      $ref: ./components/schemas/common/RequestAddressDto.yaml
+    RequestExportDto:
+      $ref: ./components/schemas/onboarding-short-request/RequestExportDto.yaml
+    ResidenceDocumentDto:
+      $ref: ./components/schemas/common/ResidenceDocumentDto.yaml
+    SalaryProjectInfoDto:
+      $ref: ./components/schemas/common/SalaryProjectInfoDto.yaml
+    ScheduledCallInfoDto:
+      $ref: ./components/schemas/common/ScheduledCallInfoDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    TariffDto:
+      $ref: ./components/schemas/misc/TariffDto.yaml
+    TariffPromoDto:
+      $ref: ./components/schemas/misc/TariffPromoDto.yaml
+    TaxResidentJurisdictionDto:
+      $ref: ./components/schemas/common/TaxResidentJurisdictionDto.yaml
+    TemplateDataDto:
+      $ref: ./components/schemas/onboarding-short-request/TemplateDataDto.yaml
+    TessaDocumentDto:
+      $ref: ./components/schemas/common/TessaDocumentDto.yaml
+    TessaDocumentFileDto:
+      $ref: ./components/schemas/common/TessaDocumentFileDto.yaml
+    TravelBusinessDto:
+      $ref: ./components/schemas/common/TravelBusinessDto.yaml
+    UploadOriginalDocumentsDto:
+      $ref: ./components/schemas/onboarding-short-request/UploadOriginalDocumentsDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/common/UserInfoDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/onboarding-short-request/ValidationResult.yaml
+    ValidationResultWrapperOnboardingShortRequestDto:
+      $ref: ./components/schemas/onboarding-short-request/ValidationResultWrapperOnboardingShortRequestDto.yaml
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header

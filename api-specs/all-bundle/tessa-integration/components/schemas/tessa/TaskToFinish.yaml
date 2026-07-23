@@ -1,0 +1,13 @@
+type: object
+properties:
+  taskId:
+    type: string
+    format: uuid
+  finishCode:
+    type: string
+    format: uuid
+  rolesIds:
+    type: array
+    items:
+      type: string
+      format: uuid

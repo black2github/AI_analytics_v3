@@ -1,0 +1,14 @@
+type: object
+properties:
+  tradingFloor:
+    type: string
+    description: Код торговой площадки
+  ruName:
+    type: string
+    description: Наименование площадки
+  currencies:
+    type: array
+    description: Список валют доступных для торговой площадки
+    items:
+      $ref: ../common/BrokerageDictCurrencyDto.yaml
+description: Список торговых площадок и валют доступных для них

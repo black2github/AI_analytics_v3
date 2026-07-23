@@ -1,0 +1,8 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  passportData:
+    $ref: ../common/PassportDtoV2.yaml
+description: Запрос печати заявки на ОЭП/НЭП с передачей паспортных данных

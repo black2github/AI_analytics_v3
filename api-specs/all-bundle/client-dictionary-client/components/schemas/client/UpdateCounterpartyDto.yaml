@@ -1,0 +1,32 @@
+required:
+- bankClientId
+- name
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  inn:
+    maxLength: 12
+    minLength: 0
+    type: string
+    description: ИНН контрагента
+  name:
+    maxLength: 160
+    minLength: 0
+    type: string
+    description: Наименование контрагента
+  counterpartyKppSet:
+    uniqueItems: true
+    type: array
+    description: Набор КПП контрагента
+    items:
+      $ref: ./UpdateCounterpartyKppDto.yaml
+  counterpartyAccountSet:
+    uniqueItems: true
+    type: array
+    description: Набор счетов контрагента
+    items:
+      $ref: ./UpdateCounterpartyAccountDto.yaml
+description: Контрагент

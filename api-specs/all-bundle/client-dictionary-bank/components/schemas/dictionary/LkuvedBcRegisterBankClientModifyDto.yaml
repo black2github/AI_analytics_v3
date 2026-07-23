@@ -1,0 +1,18 @@
+required:
+- inn
+- name
+- rnkF1
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование организации
+  inn:
+    pattern: ^[0-9]+$
+    type: string
+    description: ИНН организации
+  rnkF1:
+    pattern: ^[0-9]+$
+    type: string
+    description: РНК организации
+description: ЛК УВЭД. Реестр организаций. Данные организации. Создание и изменение.

@@ -1,0 +1,34 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Составной идентификатор номера счета {accountNumber}-{accountBranch}
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountBranch:
+    type: string
+    description: Филиал баланса
+  departmentCode:
+    type: string
+    description: Код подразделения
+  name:
+    type: string
+    description: Название счета
+  accountCurrency:
+    type: string
+    description: Валюта счета
+  accountOpenDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  accountCloseDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  documents:
+    type: array
+    description: Документы договора
+    items:
+      $ref: ../common/DocumentDto.yaml
+description: Список счетов, доступных для заказа справки

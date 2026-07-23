@@ -1,0 +1,9 @@
+type: object
+properties:
+  fullName:
+    type: string
+    description: Полное наименование организации
+  shortName:
+    type: string
+    description: Короткое наименование организации
+description: Представление результата выборки организации, упомянутой в заявках

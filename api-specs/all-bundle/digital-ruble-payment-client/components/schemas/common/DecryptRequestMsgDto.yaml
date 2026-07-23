@@ -1,0 +1,16 @@
+required:
+- cbdcMessage
+- msgId
+- msgType
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор входящего ЭС заявки
+    format: uuid
+  msgType:
+    $ref: ./DecryptMsgTypeDto.yaml
+  cbdcMessage:
+    type: string
+    description: Расшифрованное CBDC-сообщение (Base64)
+description: Сохранение расшифрованных данных от ПлЦР по выполненной заявке.

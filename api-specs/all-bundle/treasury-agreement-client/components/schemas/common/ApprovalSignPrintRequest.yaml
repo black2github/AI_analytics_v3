@@ -1,0 +1,14 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  printFormType:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - DOCX
+    - XLS
+    - PDF
+description: Запрос печатной формы

@@ -1,0 +1,50 @@
+required:
+- createdAt
+- directBankClientActionType
+- directBankClientId
+- id
+- userType
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  directBankClientId:
+    type: string
+    description: Идентификатор записи "Картотека клиентов DirectBank"
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата время создания
+    format: date-time
+  directBankClientActionType:
+    type: string
+    description: Тип события
+    enum:
+    - ADD
+    - RULES_UPDATE
+    - LOCK
+    - UNLOCK
+    - SETTINGS_CREATE
+    - SETTINGS_CREATE_WARNING
+  actionParameters:
+    type: string
+    description: Параметры события
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  surname:
+    type: string
+    description: Отчество
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Данные

@@ -1,0 +1,24 @@
+type: object
+description: Ведомственная информация
+properties:
+  field101:
+    type: string
+    description: Поле 101
+  field104:
+    type: string
+    description: Поле 104
+  field105:
+    type: string
+    description: Поле 105
+  field106:
+    type: string
+    description: Поле 106
+  field107:
+    type: string
+    description: Поле 107
+  field108:
+    type: string
+    description: Поле 108
+  field109:
+    type: string
+    description: Поле 109

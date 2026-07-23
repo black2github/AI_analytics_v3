@@ -1,0 +1,20 @@
+type: object
+properties:
+  series:
+    type: string
+    description: Серия документа
+  number:
+    type: string
+    description: Номер документа
+  issuerDate:
+    type: string
+    description: Дата выдачи
+    format: date
+  expirationDate:
+    type: string
+    description: Дата окончания действительности документа
+    format: date
+  docName:
+    type: string
+    description: Наименование документа
+description: Виза или миграционная виза

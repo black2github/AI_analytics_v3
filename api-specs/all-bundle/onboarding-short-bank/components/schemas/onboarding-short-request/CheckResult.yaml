@@ -1,0 +1,12 @@
+type: object
+properties:
+  fieldName:
+    type: string
+  message:
+    $ref: ../common/CheckMessage.yaml
+  result:
+    type: string
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED

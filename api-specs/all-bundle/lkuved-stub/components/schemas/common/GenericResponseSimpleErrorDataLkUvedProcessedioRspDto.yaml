@@ -1,0 +1,13 @@
+type: object
+description: Базовая структура ответа на REST HTTP запрос
+properties:
+  data:
+    $ref: ./LkUvedProcessedioRspDto.yaml
+    type: object
+    description: Данные
+  error:
+    type: object
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

@@ -1,0 +1,63 @@
+type: object
+properties:
+  organizationName:
+    type: string
+    description: Наименование организации
+  debitAccount:
+    type: string
+    description: Счет списания
+  saleAmount:
+    type: string
+    description: Сумма продажи
+  saleCurrencyCode:
+    type: string
+    description: Код валюты документа (ISO) для продажи
+  transferAmount:
+    type: string
+    description: Сумма перечисления
+  transferCurrencyCode:
+    type: string
+    description: Код валюты документа (ISO) для перечисления
+  makeSale:
+    type: boolean
+    description: Параметр осуществления продажи
+  makeTransfer:
+    type: boolean
+    description: Параметр осуществления перечисления
+  saleAccount:
+    type: string
+    description: Номер счета получателя (продажа)
+  transferAccount:
+    type: string
+    description: Номер счета перечисления в нашем банке
+  saleBankName:
+    type: string
+    description: Наименование банка продажи
+  saleBankBic:
+    type: string
+    description: БИК банка продажи
+  saleBankCorrAccount:
+    type: string
+    description: Корреспондентский счет банка продажи
+  transferBankBic:
+    type: string
+    description: БИК банка перечисления
+  transferBankSwift:
+    type: string
+    description: SWIFT банка перечисления
+  transferBankName:
+    type: string
+    description: Наименование банка перечисления
+  accountNumberUfk:
+    type: string
+    description: Лицевой счет в УФК
+  budgetClassificationCode:
+    type: string
+    description: КБК
+  oktmo:
+    type: string
+    description: ОКТМО
+  transferToUfk:
+    type: boolean
+    description: Признак перевода в УФК
+description: Информация связанного документа ППТС

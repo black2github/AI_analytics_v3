@@ -1,0 +1,18 @@
+type: object
+properties:
+  isResident:
+    type: boolean
+    description: Признак резидента
+  okopf:
+    type: string
+    description: ОКОПФ
+  inn:
+    type: string
+    description: ИНН
+  okved:
+    type: string
+    description: ОКВЭД
+  okfs:
+    type: string
+    description: ОКФС
+description: Данные

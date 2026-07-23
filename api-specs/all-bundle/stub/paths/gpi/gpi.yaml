@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Отправление сообщения с GPI-треками от Ф1 в очередь
+  summary: Отправка сообщения с GPI-треками от Ф1 в очередь
+  operationId: sendMessageUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: trackerF1Dto
+    description: trackerF1Dto
+    required: true
+    schema:
+      $ref: '#/definitions/GpiTrackerF1Dto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,Void»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

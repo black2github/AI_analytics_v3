@@ -1,0 +1,8 @@
+type: object
+properties:
+  ResponseFromMsgId:
+    $ref: ./UUID.yaml
+  ProcessingStatus:
+    $ref: ./EntryProcessingStatus.yaml
+  ErrorMessage:
+    type: string

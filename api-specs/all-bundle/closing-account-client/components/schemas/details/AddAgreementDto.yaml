@@ -1,0 +1,13 @@
+type: object
+properties:
+  agreementDate:
+    type: string
+    description: Дата доп-соглашения
+    format: date
+  agreementName:
+    type: string
+    description: Название доп-соглашения
+  agreementNumber:
+    type: string
+    description: Номер доп-соглашения
+description: Список дополнительных соглашений

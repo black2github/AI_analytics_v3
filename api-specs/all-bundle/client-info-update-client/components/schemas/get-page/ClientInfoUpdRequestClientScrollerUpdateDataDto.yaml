@@ -1,0 +1,16 @@
+type: object
+properties:
+  typeId:
+    type: string
+    description: Тип обновления сведений
+    enum:
+    - IDENTITY_DOCUMENT_UPD
+    - HEAD_APPOINTMENT_UPD
+    - MC_RIGHTS_UPD
+    - SIGNER_RIGHTS_UPD
+    - ARTICLES_OF_ASSOCIATION_CHANGES_UPD
+    - ARTICLES_OF_ASSOCIATION_UPD
+    - KPP_LARGEST_TAXPAYER_UPD
+    - ACTUAL_ADDRESS_ORGANIZATION_UPD
+    - ADD_FREE_FORMAT_DOCUMENT
+description: Обновляемые сведения заявки на скроллере

@@ -1,0 +1,25 @@
+required:
+- account
+- bankBic
+- bankName
+- inn
+- kpp
+- name
+type: object
+properties:
+  name:
+    type: string
+  inn:
+    type: string
+  kpp:
+    type: string
+  ogrn:
+    type: string
+  account:
+    type: string
+  bankName:
+    type: string
+  bankBic:
+    type: string
+  corAccount:
+    type: string

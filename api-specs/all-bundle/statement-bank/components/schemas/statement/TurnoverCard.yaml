@@ -1,0 +1,28 @@
+type: object
+properties:
+  account:
+    $ref: ../common/AccountCard.yaml
+  incomingBalance:
+    type: number
+  incomingBalanceInNationalCurrency:
+    type: number
+  outgoingBalance:
+    type: number
+  outgoingBalanceInNationalCurrency:
+    type: number
+  turnoverByCredit:
+    type: number
+  turnoverByDebit:
+    type: number
+  turnoverByCreditInNationalCurrency:
+    type: number
+  turnoverByDebitInNationalCurrency:
+    type: number
+  turnoverDate:
+    type: string
+    format: date
+  balanceBranch:
+    $ref: ../common/BranchCard.yaml
+  serviceBranch:
+    $ref: ../common/BranchCard.yaml
+description: Страница с данными

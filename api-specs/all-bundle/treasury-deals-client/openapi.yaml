@@ -1,0 +1,1411 @@
+openapi: 3.0.1
+info:
+  title: Сервис формирования сделок. Клиентская часть.
+  version: 1.69.0
+servers:
+- url: /treasury-deals-client
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /account/{id}:
+    $ref: ./paths/account/account_id.yaml
+  /work-calendar/days:
+    $ref: ./paths/misc/work_calendar_days.yaml
+  /user-param:
+    $ref: ./paths/misc/user_param.yaml
+  /update-mno-document:
+    $ref: ./paths/update-mno-document/update_mno_document.yaml
+  /update-mno-document/validate:
+    $ref: ./paths/update-mno-document/update_mno_document_validate.yaml
+  /update-mno-document/sign-certificates:
+    $ref: ./paths/update-mno-document/update_mno_document_sign_certificates.yaml
+  /update-mno-document/sign-and-send:
+    $ref: ./paths/update-mno-document/update_mno_document_sign_and_send.yaml
+  /update-mno-document/remove-sign:
+    $ref: ./paths/update-mno-document/update_mno_document_remove_sign.yaml
+  /update-mno-document/print-report:
+    $ref: ./paths/update-mno-document/update_mno_document_print_report.yaml
+  /update-mno-document/generate-sign-data:
+    $ref: ./paths/update-mno-document/update_mno_document_generate_sign_data.yaml
+  /update-mno-document/generate-sign-data-v2:
+    $ref: ./paths/update-mno-document/update_mno_document_generate_sign_data_v2.yaml
+  /update-mno-document/delete:
+    $ref: ./paths/update-mno-document/update_mno_document_delete.yaml
+  /update-mno-document/accounts-intpay:
+    $ref: ./paths/update-mno-document/update_mno_document_accounts_intpay.yaml
+  /update-deposit-document:
+    $ref: ./paths/update-deposit-document/update_deposit_document.yaml
+  /update-deposit-document/validate:
+    $ref: ./paths/update-deposit-document/update_deposit_document_validate.yaml
+  /update-deposit-document/sign-certificates:
+    $ref: ./paths/update-deposit-document/update_deposit_document_sign_certificates.yaml
+  /update-deposit-document/sign-and-send:
+    $ref: ./paths/update-deposit-document/update_deposit_document_sign_and_send.yaml
+  /update-deposit-document/remove-sign:
+    $ref: ./paths/update-deposit-document/update_deposit_document_remove_sign.yaml
+  /update-deposit-document/print-report:
+    $ref: ./paths/update-deposit-document/update_deposit_document_print_report.yaml
+  /update-deposit-document/generate-sign-data:
+    $ref: ./paths/update-deposit-document/update_deposit_document_generate_sign_data.yaml
+  /update-deposit-document/generate-sign-data-v2:
+    $ref: ./paths/update-deposit-document/update_deposit_document_generate_sign_data_v2.yaml
+  /update-deposit-document/delete:
+    $ref: ./paths/update-deposit-document/update_deposit_document_delete.yaml
+  /update-deposit-document/accounts-refund:
+    $ref: ./paths/update-deposit-document/update_deposit_document_accounts_refund.yaml
+  /update-deposit-document/accounts-intpay:
+    $ref: ./paths/update-deposit-document/update_deposit_document_accounts_intpay.yaml
+  /rates/calculator/v2/calculate-deposit-rate:
+    $ref: ./paths/rates/rates_calculator_v2_calculate_deposit_rate.yaml
+  /rates/calculator/v2/calculate-deposit-rate-init:
+    $ref: ./paths/rates/rates_calculator_v2_calculate_deposit_rate_init.yaml
+  /rates/calculator/calculate-deposit-rate:
+    $ref: ./paths/rates/rates_calculator_calculate_deposit_rate.yaml
+  /mno/visa/v2.1/generate-sign-data:
+    $ref: ./paths/mno/mno_visa_v2_1_generate_sign_data.yaml
+  /mno/visa/sign:
+    $ref: ./paths/mno/mno_visa_sign.yaml
+  /mno/visa/print-list-fs:
+    $ref: ./paths/mno/mno_visa_print_list_fs.yaml
+  /mno/visa/print-fs:
+    $ref: ./paths/mno/mno_visa_print_fs.yaml
+  /mno/visa/generate-digest:
+    $ref: ./paths/mno/mno_visa_generate_digest.yaml
+  /mno/visa/generate-digest/version:
+    $ref: ./paths/mno/mno_visa_generate_digest_version.yaml
+  /mno/visa/generate-digest/list:
+    $ref: ./paths/mno/mno_visa_generate_digest_list.yaml
+  /mno-document:
+    $ref: ./paths/mno-document/mno_document.yaml
+  /mno-document/validate:
+    $ref: ./paths/mno-document/mno_document_validate.yaml
+  /mno-document/v2/accounts-mno:
+    $ref: ./paths/mno-document/mno_document_v2_accounts_mno.yaml
+  /mno-document/v2/accounts-intpay:
+    $ref: ./paths/mno-document/mno_document_v2_accounts_intpay.yaml
+  /mno-document/sign:
+    $ref: ./paths/mno-document/mno_document_sign.yaml
+  /mno-document/sign-certificates:
+    $ref: ./paths/mno-document/mno_document_sign_certificates.yaml
+  /mno-document/sign-and-send:
+    $ref: ./paths/mno-document/mno_document_sign_and_send.yaml
+  /mno-document/send-to-visa:
+    $ref: ./paths/mno-document/mno_document_send_to_visa.yaml
+  /mno-document/save-template:
+    $ref: ./paths/mno-document/mno_document_save_template.yaml
+  /mno-document/remove-sign:
+    $ref: ./paths/mno-document/mno_document_remove_sign.yaml
+  /mno-document/rate:
+    $ref: ./paths/mno-document/mno_document_rate.yaml
+  /mno-document/print-reportclient:
+    $ref: ./paths/mno-document/mno_document_print_reportclient.yaml
+  /mno-document/print-reportbank:
+    $ref: ./paths/mno-document/mno_document_print_reportbank.yaml
+  /mno-document/log-deal-event:
+    $ref: ./paths/mno-document/mno_document_log_deal_event.yaml
+  /mno-document/generate-sign-data:
+    $ref: ./paths/mno-document/mno_document_generate_sign_data.yaml
+  /mno-document/generate-sign-data-v2:
+    $ref: ./paths/mno-document/mno_document_generate_sign_data_v2.yaml
+  /mno-document/export-sign:
+    $ref: ./paths/mno-document/mno_document_export_sign.yaml
+  /mno-document/delete:
+    $ref: ./paths/mno-document/mno_document_delete.yaml
+  /mno-document/currencies:
+    $ref: ./paths/mno-document/mno_document_currencies.yaml
+  /mno-document/close-edit:
+    $ref: ./paths/mno-document/mno_document_close_edit.yaml
+  /mno-document/cancel-visa:
+    $ref: ./paths/mno-document/mno_document_cancel_visa.yaml
+  /mno-document/cancel-edit:
+    $ref: ./paths/mno-document/mno_document_cancel_edit.yaml
+  /mno-document/cancel-document:
+    $ref: ./paths/mno-document/mno_document_cancel_document.yaml
+  /mno-document/cancel-document/sign-certificates:
+    $ref: ./paths/mno-document/mno_document_cancel_document_sign_certificates.yaml
+  /mno-document/cancel-document/sign-and-send:
+    $ref: ./paths/mno-document/mno_document_cancel_document_sign_and_send.yaml
+  /mno-document/cancel-document/remove-sign:
+    $ref: ./paths/mno-document/mno_document_cancel_document_remove_sign.yaml
+  /mno-document/cancel-document/print-reportclient:
+    $ref: ./paths/mno-document/mno_document_cancel_document_print_reportclient.yaml
+  /mno-document/cancel-document/generate-sign-data:
+    $ref: ./paths/mno-document/mno_document_cancel_document_generate_sign_data.yaml
+  /mno-document/cancel-document/generate-sign-data-v2:
+    $ref: ./paths/mno-document/mno_document_cancel_document_generate_sign_data_v2.yaml
+  /mno-document/cancel-document/delete:
+    $ref: ./paths/mno-document/mno_document_cancel_document_delete.yaml
+  /mno-document/best-rates:
+    $ref: ./paths/mno-document/mno_document_best_rates.yaml
+  /mno-document/accounts-mno:
+    $ref: ./paths/mno-document/mno_document_accounts_mno.yaml
+  /mno-document/accounts-intpay:
+    $ref: ./paths/mno-document/mno_document_accounts_intpay.yaml
+  /logserver/log:
+    $ref: ./paths/misc/logserver_log.yaml
+  /logserver/log-batch:
+    $ref: ./paths/misc/logserver_log_batch.yaml
+  /investment-document/unprocessed-mno-confirmations:
+    $ref: ./paths/investment-document/investment_document_unprocessed_mno_confirmations.yaml
+  /investment-document/unprocessed-gsno-confirmations:
+    $ref: ./paths/investment-document/investment_document_unprocessed_gsno_confirmations.yaml
+  /investment-document/unprocessed-deposit-confirmations:
+    $ref: ./paths/investment-document/investment_document_unprocessed_deposit_confirmations.yaml
+  /investment-document/unprocessed-confirmations:
+    $ref: ./paths/investment-document/investment_document_unprocessed_confirmations.yaml
+  /investment-document/sign-batch-and-send:
+    $ref: ./paths/investment-document/investment_document_sign_batch_and_send.yaml
+  /investment-document/management-fund-names-by-filter:
+    $ref: ./paths/investment-document/investment_document_management_fund_names_by_filter.yaml
+  /investment-document/get-page:
+    $ref: ./paths/investment-document/investment_document_get_page.yaml
+  /investment-document/get-page-group:
+    $ref: ./paths/investment-document/investment_document_get_page_group.yaml
+  /investment-document/get-deal-accounts:
+    $ref: ./paths/investment-document/investment_document_get_deal_accounts.yaml
+  /investment-document/get-count:
+    $ref: ./paths/investment-document/investment_document_get_count.yaml
+  /investment-document/get-count-by-client:
+    $ref: ./paths/investment-document/investment_document_get_count_by_client.yaml
+  /investment-document/generate-batch-sign-data-v2:
+    $ref: ./paths/investment-document/investment_document_generate_batch_sign_data_v2.yaml
+  /investment-document/export-reports:
+    $ref: ./paths/investment-document/investment_document_export_reports.yaml
+  /investment-document/export-list:
+    $ref: ./paths/investment-document/investment_document_export_list.yaml
+  /investment-document/export-list-async:
+    $ref: ./paths/investment-document/investment_document_export_list_async.yaml
+  /investment-document/doc-statuses-by-filter:
+    $ref: ./paths/investment-document/investment_document_doc_statuses_by_filter.yaml
+  /investment-document/deal-statuses-by-filter:
+    $ref: ./paths/investment-document/investment_document_deal_statuses_by_filter.yaml
+  /investment-document/currencies-by-filter:
+    $ref: ./paths/investment-document/investment_document_currencies_by_filter.yaml
+  /investment-document/categories-by-filter:
+    $ref: ./paths/investment-document/investment_document_categories_by_filter.yaml
+  /investment-document/batch-sign-preview:
+    $ref: ./paths/investment-document/investment_document_batch_sign_preview.yaml
+  /info/user/by-clients:
+    $ref: ./paths/misc/info_user_by_clients.yaml
+  /gsno-document:
+    $ref: ./paths/gsno-document/gsno_document.yaml
+  /gsno-document/validate:
+    $ref: ./paths/gsno-document/gsno_document_validate.yaml
+  /gsno-document/sign:
+    $ref: ./paths/gsno-document/gsno_document_sign.yaml
+  /gsno-document/sign-certificates:
+    $ref: ./paths/gsno-document/gsno_document_sign_certificates.yaml
+  /gsno-document/sign-and-send:
+    $ref: ./paths/gsno-document/gsno_document_sign_and_send.yaml
+  /gsno-document/send-to-visa:
+    $ref: ./paths/gsno-document/gsno_document_send_to_visa.yaml
+  /gsno-document/save-template:
+    $ref: ./paths/gsno-document/gsno_document_save_template.yaml
+  /gsno-document/remove-sign:
+    $ref: ./paths/gsno-document/gsno_document_remove_sign.yaml
+  /gsno-document/rate:
+    $ref: ./paths/gsno-document/gsno_document_rate.yaml
+  /gsno-document/print-reportclient:
+    $ref: ./paths/gsno-document/gsno_document_print_reportclient.yaml
+  /gsno-document/print-reportbank:
+    $ref: ./paths/gsno-document/gsno_document_print_reportbank.yaml
+  /gsno-document/log-deal-event:
+    $ref: ./paths/gsno-document/gsno_document_log_deal_event.yaml
+  /gsno-document/generate-sign-data:
+    $ref: ./paths/gsno-document/gsno_document_generate_sign_data.yaml
+  /gsno-document/generate-sign-data-v2:
+    $ref: ./paths/gsno-document/gsno_document_generate_sign_data_v2.yaml
+  /gsno-document/export-sign:
+    $ref: ./paths/gsno-document/gsno_document_export_sign.yaml
+  /gsno-document/delete:
+    $ref: ./paths/gsno-document/gsno_document_delete.yaml
+  /gsno-document/currencies:
+    $ref: ./paths/gsno-document/gsno_document_currencies.yaml
+  /gsno-document/close-edit:
+    $ref: ./paths/gsno-document/gsno_document_close_edit.yaml
+  /gsno-document/cancel-visa:
+    $ref: ./paths/gsno-document/gsno_document_cancel_visa.yaml
+  /gsno-document/cancel-edit:
+    $ref: ./paths/gsno-document/gsno_document_cancel_edit.yaml
+  /gsno-document/cancel-document:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document.yaml
+  /gsno-document/cancel-document/sign-certificates:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_sign_certificates.yaml
+  /gsno-document/cancel-document/sign-and-send:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_sign_and_send.yaml
+  /gsno-document/cancel-document/remove-sign:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_remove_sign.yaml
+  /gsno-document/cancel-document/print-reportclient:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_print_reportclient.yaml
+  /gsno-document/cancel-document/generate-sign-data:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_generate_sign_data.yaml
+  /gsno-document/cancel-document/generate-sign-data-v2:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_generate_sign_data_v2.yaml
+  /gsno-document/cancel-document/delete:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_delete.yaml
+  /gsno-document/best-rates:
+    $ref: ./paths/gsno-document/gsno_document_best_rates.yaml
+  /general-agreement/v2/get-page-with-funds:
+    $ref: ./paths/general-agreement/general_agreement_v2_get_page_with_funds.yaml
+  /general-agreement/update-visa-info/{id}:
+    $ref: ./paths/general-agreement/general_agreement_update_visa_info_id.yaml
+  /general-agreement/get-user-organizations-with-gsno-agreements:
+    $ref: ./paths/general-agreement/general_agreement_get_user_organizations_with_gsno_agreements.yaml
+  /general-agreement/get-pool-members:
+    $ref: ./paths/general-agreement/general_agreement_get_pool_members.yaml
+  /general-agreement/get-pool-accounts:
+    $ref: ./paths/general-agreement/general_agreement_get_pool_accounts.yaml
+  /general-agreement/get-page:
+    $ref: ./paths/general-agreement/general_agreement_get_page.yaml
+  /general-agreement/get-page-with-funds:
+    $ref: ./paths/general-agreement/general_agreement_get_page_with_funds.yaml
+  /general-agreement/get-for-users/count:
+    $ref: ./paths/general-agreement/general_agreement_get_for_users_count.yaml
+  /general-agreement/get-exclusive-fund-names:
+    $ref: ./paths/general-agreement/general_agreement_get_exclusive_fund_names.yaml
+  /general-agreement/get-count:
+    $ref: ./paths/general-agreement/general_agreement_get_count.yaml
+  /general-agreement/get-count-by-client:
+    $ref: ./paths/general-agreement/general_agreement_get_count_by_client.yaml
+  /general-agreement/get-all-active-with-active-funds-or-accounts/{clientId}/{usage}:
+    $ref: ./paths/general-agreement/general_agreement_get_all_active_with_active_funds_or_accounts_clientId_usage.yaml
+  /general-agreement/export-report:
+    $ref: ./paths/general-agreement/general_agreement_export_report.yaml
+  /general-agreement/export-list:
+    $ref: ./paths/general-agreement/general_agreement_export_list.yaml
+  /general-agreement/export-list-async:
+    $ref: ./paths/general-agreement/general_agreement_export_list_async.yaml
+  /general-agreement/change-default:
+    $ref: ./paths/general-agreement/general_agreement_change_default.yaml
+  /general-agreement/category:
+    $ref: ./paths/general-agreement/general_agreement_category.yaml
+  /early-refund:
+    $ref: ./paths/early-refund/early_refund.yaml
+  /early-refund/validate:
+    $ref: ./paths/early-refund/early_refund_validate.yaml
+  /early-refund/sign:
+    $ref: ./paths/early-refund/early_refund_sign.yaml
+  /early-refund/sign-certificates:
+    $ref: ./paths/early-refund/early_refund_sign_certificates.yaml
+  /early-refund/sign-and-send:
+    $ref: ./paths/early-refund/early_refund_sign_and_send.yaml
+  /early-refund/remove-sign:
+    $ref: ./paths/early-refund/early_refund_remove_sign.yaml
+  /early-refund/print-reportclient:
+    $ref: ./paths/early-refund/early_refund_print_reportclient.yaml
+  /early-refund/generate-sign-data:
+    $ref: ./paths/early-refund/early_refund_generate_sign_data.yaml
+  /early-refund/generate-sign-data-v2:
+    $ref: ./paths/early-refund/early_refund_generate_sign_data_v2.yaml
+  /early-refund/delete:
+    $ref: ./paths/early-refund/early_refund_delete.yaml
+  /early-refund/accounts-refund:
+    $ref: ./paths/early-refund/early_refund_accounts_refund.yaml
+  /early-refund/accounts-refund-v2:
+    $ref: ./paths/early-refund/early_refund_accounts_refund_v2.yaml
+  /deposit/visa/v2.1/generate-sign-data:
+    $ref: ./paths/deposit/deposit_visa_v2_1_generate_sign_data.yaml
+  /deposit/visa/sign:
+    $ref: ./paths/deposit/deposit_visa_sign.yaml
+  /deposit/visa/print-list-fs:
+    $ref: ./paths/deposit/deposit_visa_print_list_fs.yaml
+  /deposit/visa/print-fs:
+    $ref: ./paths/deposit/deposit_visa_print_fs.yaml
+  /deposit/visa/generate-digest:
+    $ref: ./paths/deposit/deposit_visa_generate_digest.yaml
+  /deposit/visa/generate-digest/version:
+    $ref: ./paths/deposit/deposit_visa_generate_digest_version.yaml
+  /deposit/visa/generate-digest/list:
+    $ref: ./paths/deposit/deposit_visa_generate_digest_list.yaml
+  /deposit-document:
+    $ref: ./paths/deposit-document/deposit_document.yaml
+  /deposit-document/validate:
+    $ref: ./paths/deposit-document/deposit_document_validate.yaml
+  /deposit-document/v2/accounts-write-off:
+    $ref: ./paths/deposit-document/deposit_document_v2_accounts_write_off.yaml
+  /deposit-document/v2/accounts-refund:
+    $ref: ./paths/deposit-document/deposit_document_v2_accounts_refund.yaml
+  /deposit-document/v2/accounts-intpay:
+    $ref: ./paths/deposit-document/deposit_document_v2_accounts_intpay.yaml
+  /deposit-document/sign:
+    $ref: ./paths/deposit-document/deposit_document_sign.yaml
+  /deposit-document/sign-certificates:
+    $ref: ./paths/deposit-document/deposit_document_sign_certificates.yaml
+  /deposit-document/sign-and-send:
+    $ref: ./paths/deposit-document/deposit_document_sign_and_send.yaml
+  /deposit-document/send-to-visa:
+    $ref: ./paths/deposit-document/deposit_document_send_to_visa.yaml
+  /deposit-document/save-template:
+    $ref: ./paths/deposit-document/deposit_document_save_template.yaml
+  /deposit-document/remove-sign:
+    $ref: ./paths/deposit-document/deposit_document_remove_sign.yaml
+  /deposit-document/rate:
+    $ref: ./paths/deposit-document/deposit_document_rate.yaml
+  /deposit-document/print-reportclient:
+    $ref: ./paths/deposit-document/deposit_document_print_reportclient.yaml
+  /deposit-document/print-reportbank:
+    $ref: ./paths/deposit-document/deposit_document_print_reportbank.yaml
+  /deposit-document/log-deal-event:
+    $ref: ./paths/deposit-document/deposit_document_log_deal_event.yaml
+  /deposit-document/generate-sign-data:
+    $ref: ./paths/deposit-document/deposit_document_generate_sign_data.yaml
+  /deposit-document/generate-sign-data-v2:
+    $ref: ./paths/deposit-document/deposit_document_generate_sign_data_v2.yaml
+  /deposit-document/export-sign:
+    $ref: ./paths/deposit-document/deposit_document_export_sign.yaml
+  /deposit-document/delete:
+    $ref: ./paths/deposit-document/deposit_document_delete.yaml
+  /deposit-document/currencies:
+    $ref: ./paths/deposit-document/deposit_document_currencies.yaml
+  /deposit-document/close-edit:
+    $ref: ./paths/deposit-document/deposit_document_close_edit.yaml
+  /deposit-document/cancel-visa:
+    $ref: ./paths/deposit-document/deposit_document_cancel_visa.yaml
+  /deposit-document/cancel-edit:
+    $ref: ./paths/deposit-document/deposit_document_cancel_edit.yaml
+  /deposit-document/cancel-document:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document.yaml
+  /deposit-document/cancel-document/sign-certificates:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_sign_certificates.yaml
+  /deposit-document/cancel-document/sign-and-send:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_sign_and_send.yaml
+  /deposit-document/cancel-document/remove-sign:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_remove_sign.yaml
+  /deposit-document/cancel-document/print-reportclient:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_print_reportclient.yaml
+  /deposit-document/cancel-document/generate-sign-data:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_generate_sign_data.yaml
+  /deposit-document/cancel-document/generate-sign-data-v2:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_generate_sign_data_v2.yaml
+  /deposit-document/cancel-document/delete:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_delete.yaml
+  /deposit-document/best-rates:
+    $ref: ./paths/deposit-document/deposit_document_best_rates.yaml
+  /deposit-document/allowed-interest-payment-methods:
+    $ref: ./paths/deposit-document/deposit_document_allowed_interest_payment_methods.yaml
+  /deposit-document/accounts-write-off:
+    $ref: ./paths/deposit-document/deposit_document_accounts_write_off.yaml
+  /deposit-document/accounts-refund:
+    $ref: ./paths/deposit-document/deposit_document_accounts_refund.yaml
+  /deposit-document/accounts-intpay:
+    $ref: ./paths/deposit-document/deposit_document_accounts_intpay.yaml
+  /dashboard/violated-or-denied-events:
+    $ref: ./paths/misc/dashboard_violated_or_denied_events.yaml
+  /dashboard/get-user-organizations-with-gsno-agreements:
+    $ref: ./paths/misc/dashboard_get_user_organizations_with_gsno_agreements.yaml
+  /dashboard/get-gsno-agreements:
+    $ref: ./paths/misc/dashboard_get_gsno_agreements.yaml
+  /dashboard/calendar-deal-markers:
+    $ref: ./paths/misc/dashboard_calendar_deal_markers.yaml
+  /dashboard/calendar-deal-events:
+    $ref: ./paths/misc/dashboard_calendar_deal_events.yaml
+  /advice:
+    $ref: ./paths/misc/advice.yaml
+  /account:
+    $ref: ./paths/account/account.yaml
+  /account/validate:
+    $ref: ./paths/account/account_validate.yaml
+  /account/internal-accounts/available/get-page:
+    $ref: ./paths/account/account_internal_accounts_available_get_page.yaml
+  /account/internal-accounts/append/get-page:
+    $ref: ./paths/account/account_internal_accounts_append_get_page.yaml
+  /account/internal-accounts/append/add:
+    $ref: ./paths/account/account_internal_accounts_append_add.yaml
+  /account/get-page:
+    $ref: ./paths/account/account_get_page.yaml
+  /account/get-page-merge-accounts-create-clients:
+    $ref: ./paths/account/account_get_page_merge_accounts_create_clients.yaml
+  /account/get-count:
+    $ref: ./paths/account/account_get_count.yaml
+  /account/get-count-by-client:
+    $ref: ./paths/account/account_get_count_by_client.yaml
+  /account/export-list:
+    $ref: ./paths/account/account_export_list.yaml
+  /account/export-list-async:
+    $ref: ./paths/account/account_export_list_async.yaml
+  /account/delete:
+    $ref: ./paths/account/account_delete.yaml
+  /account/delete-by-ids:
+    $ref: ./paths/account/account_delete_by_ids.yaml
+  /account/delete-by-filter:
+    $ref: ./paths/account/account_delete_by_filter.yaml
+  /account/currencies-by-filter:
+    $ref: ./paths/account/account_currencies_by_filter.yaml
+  /account/category:
+    $ref: ./paths/account/account_category.yaml
+  /account/active-by-clientId-and-defaultUsage:
+    $ref: ./paths/account/account_active_by_clientId_and_defaultUsage.yaml
+  /user-param/{code}:
+    $ref: ./paths/misc/user_param_code.yaml
+  /update-mno-document/{id}:
+    $ref: ./paths/update-mno-document/update_mno_document_id.yaml
+  /update-mno-document/new/{docId}:
+    $ref: ./paths/update-mno-document/update_mno_document_new_docId.yaml
+  /update-deposit-document/{id}:
+    $ref: ./paths/update-deposit-document/update_deposit_document_id.yaml
+  /update-deposit-document/new/{docId}:
+    $ref: ./paths/update-deposit-document/update_deposit_document_new_docId.yaml
+  /sign-service/certificate:
+    $ref: ./paths/misc/sign_service_certificate.yaml
+  /ref/bic/code/{code}:
+    $ref: ./paths/misc/ref_bic_code_code.yaml
+  /rates/calculator/get-calculator-visible:
+    $ref: ./paths/rates/rates_calculator_get_calculator_visible.yaml
+  /rates/best-rates-msb:
+    $ref: ./paths/rates/rates_best_rates_msb.yaml
+  /rates/best-rates-msb/{clientId}:
+    $ref: ./paths/rates/rates_best_rates_msb_clientId.yaml
+  /notification/unread/{clientId}:
+    $ref: ./paths/misc/notification_unread_clientId.yaml
+  /mno/visa/signature-info/{id}:
+    $ref: ./paths/mno/mno_visa_signature_info_id.yaml
+  /mno/visa/signature-check/{id}:
+    $ref: ./paths/mno/mno_visa_signature_check_id.yaml
+  /mno/visa/additional-info/{id}:
+    $ref: ./paths/mno/mno_visa_additional_info_id.yaml
+  /mno-document/{id}:
+    $ref: ./paths/mno-document/mno_document_id.yaml
+  /mno-document/new/{clientId}:
+    $ref: ./paths/mno-document/mno_document_new_clientId.yaml
+  /mno-document/new-or-draft-for-edit/{clientId}:
+    $ref: ./paths/mno-document/mno_document_new_or_draft_for_edit_clientId.yaml
+  /mno-document/new-for-edit/{clientId}:
+    $ref: ./paths/mno-document/mno_document_new_for_edit_clientId.yaml
+  /mno-document/get-for-edit/{id}:
+    $ref: ./paths/mno-document/mno_document_get_for_edit_id.yaml
+  /mno-document/general-agreements/{clientId}:
+    $ref: ./paths/mno-document/mno_document_general_agreements_clientId.yaml
+  /mno-document/full/{id}:
+    $ref: ./paths/mno-document/mno_document_full_id.yaml
+  /mno-document/draft/exists/{clientId}:
+    $ref: ./paths/mno-document/mno_document_draft_exists_clientId.yaml
+  /mno-document/copy/{id}:
+    $ref: ./paths/mno-document/mno_document_copy_id.yaml
+  /mno-document/cancel-document/{id}:
+    $ref: ./paths/mno-document/mno_document_cancel_document_id.yaml
+  /mno-document/cancel-document/new/{canceledDocId}:
+    $ref: ./paths/mno-document/mno_document_cancel_document_new_canceledDocId.yaml
+  /investment-document/types:
+    $ref: ./paths/investment-document/investment_document_types.yaml
+  /investment-document/management-fund-names:
+    $ref: ./paths/investment-document/investment_document_management_fund_names.yaml
+  /investment-document/filters:
+    $ref: ./paths/investment-document/investment_document_filters.yaml
+  /investment-document/export-list-async-result/{id}:
+    $ref: ./paths/investment-document/investment_document_export_list_async_result_id.yaml
+  /investment-document/doc-statuses:
+    $ref: ./paths/investment-document/investment_document_doc_statuses.yaml
+  /investment-document/deal-statuses:
+    $ref: ./paths/investment-document/investment_document_deal_statuses.yaml
+  /investment-document/currencies:
+    $ref: ./paths/investment-document/investment_document_currencies.yaml
+  /investment-document/categories:
+    $ref: ./paths/investment-document/investment_document_categories.yaml
+  /info/user/{userId}:
+    $ref: ./paths/misc/info_user_userId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /gsno-document/{id}:
+    $ref: ./paths/gsno-document/gsno_document_id.yaml
+  /gsno-document/new/{clientId}:
+    $ref: ./paths/gsno-document/gsno_document_new_clientId.yaml
+  /gsno-document/new-or-draft-for-edit/{clientId}:
+    $ref: ./paths/gsno-document/gsno_document_new_or_draft_for_edit_clientId.yaml
+  /gsno-document/new-for-edit/{clientId}:
+    $ref: ./paths/gsno-document/gsno_document_new_for_edit_clientId.yaml
+  /gsno-document/get-for-edit/{id}:
+    $ref: ./paths/gsno-document/gsno_document_get_for_edit_id.yaml
+  /gsno-document/general-agreements/{clientId}:
+    $ref: ./paths/gsno-document/gsno_document_general_agreements_clientId.yaml
+  /gsno-document/full/{id}:
+    $ref: ./paths/gsno-document/gsno_document_full_id.yaml
+  /gsno-document/draft/exists/{clientId}:
+    $ref: ./paths/gsno-document/gsno_document_draft_exists_clientId.yaml
+  /gsno-document/copy/{id}:
+    $ref: ./paths/gsno-document/gsno_document_copy_id.yaml
+  /gsno-document/cancel-document/{id}:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_id.yaml
+  /gsno-document/cancel-document/new/{canceledDocId}:
+    $ref: ./paths/gsno-document/gsno_document_cancel_document_new_canceledDocId.yaml
+  /gsno-document-provider/{askId}:
+    $ref: ./paths/misc/gsno_document_provider_askId.yaml
+  /general-agreement/{id}:
+    $ref: ./paths/general-agreement/general_agreement_id.yaml
+  /general-agreement/{id}/children:
+    $ref: ./paths/general-agreement/general_agreement_id_children.yaml
+  /general-agreement/{id}/children-and-parent-accounts-by-client-and-usage/{clientId}/{usage}:
+    $ref: ./paths/general-agreement/general_agreement_id_children_and_parent_accounts_by_client_and_usage_clientId_usage.yaml
+  /general-agreement/{id}/children-and-parent-accounts-by-agreement-and-client:
+    $ref: ./paths/general-agreement/general_agreement_id_children_and_parent_accounts_by_agreement_and_client.yaml
+  /general-agreement/{id}/children-and-parent-accounts-by-agreement-and-client/{clientId}:
+    $ref: ./paths/general-agreement/general_agreement_id_children_and_parent_accounts_by_agreement_and_client_clientId.yaml
+  /general-agreement/{id}/children-accounts:
+    $ref: ./paths/general-agreement/general_agreement_id_children_accounts.yaml
+  /general-agreement/{id}/accounts:
+    $ref: ./paths/general-agreement/general_agreement_id_accounts.yaml
+  /general-agreement/usages:
+    $ref: ./paths/general-agreement/general_agreement_usages.yaml
+  /general-agreement/statuses:
+    $ref: ./paths/general-agreement/general_agreement_statuses.yaml
+  /general-agreement/get-pool-members/{agrId}:
+    $ref: ./paths/general-agreement/general_agreement_get_pool_members_agrId.yaml
+  /general-agreement/get-pool-accounts-currencies/{agrId}:
+    $ref: ./paths/general-agreement/general_agreement_get_pool_accounts_currencies_agrId.yaml
+  /general-agreement/get-pool-accounts-clients/{agrId}:
+    $ref: ./paths/general-agreement/general_agreement_get_pool_accounts_clients_agrId.yaml
+  /general-agreement/get-by-id-enriched/{id}:
+    $ref: ./paths/general-agreement/general_agreement_get_by_id_enriched_id.yaml
+  /general-agreement/full-by-contract-id/{contractId}:
+    $ref: ./paths/general-agreement/general_agreement_full_by_contract_id_contractId.yaml
+  /general-agreement/export-list-async-result/{id}:
+    $ref: ./paths/general-agreement/general_agreement_export_list_async_result_id.yaml
+  /general-agreement/contract-types:
+    $ref: ./paths/general-agreement/general_agreement_contract_types.yaml
+  /general-agreement/by-contract-id/{contractId}:
+    $ref: ./paths/general-agreement/general_agreement_by_contract_id_contractId.yaml
+  /general-agreement/by-clientWebDealing-usage-subUsage-contract/{clientWebDealingId}/{usage}/{subUsage}/{contractId}:
+    $ref: ./paths/general-agreement/general_agreement_by_clientWebDealing_usage_subUsage_contract_clientWebDealingId_usage_subUsage_contractId.yaml
+  /general-agreement/by-clientWebDealing-usage-contract/{clientWebDealingId}/{usage}/{contractId}:
+    $ref: ./paths/general-agreement/general_agreement_by_clientWebDealing_usage_contract_clientWebDealingId_usage_contractId.yaml
+  /general-agreement/all/{usage}/{clientId}:
+    $ref: ./paths/general-agreement/general_agreement_all_usage_clientId.yaml
+  /general-agreement/active/{usage}/{clientId}:
+    $ref: ./paths/general-agreement/general_agreement_active_usage_clientId.yaml
+  /general-agreement/active/gsno-child/{parentId}/{clientId}:
+    $ref: ./paths/general-agreement/general_agreement_active_gsno_child_parentId_clientId.yaml
+  /general-agreement/active-by-clientWebDealing/{usage}/{subUsage}/{clientWebDealingId}:
+    $ref: ./paths/general-agreement/general_agreement_active_by_clientWebDealing_usage_subUsage_clientWebDealingId.yaml
+  /general-agreement/active-by-clientWebDealing/{usage}/{clientWebDealingId}:
+    $ref: ./paths/general-agreement/general_agreement_active_by_clientWebDealing_usage_clientWebDealingId.yaml
+  /general-agreement/accounts/by-clientWebDealing-usage/{clientWebDealingId}/{usage}:
+    $ref: ./paths/general-agreement/general_agreement_accounts_by_clientWebDealing_usage_clientWebDealingId_usage.yaml
+  /general-agreement/accounts/by-clientWebDealing-usage-contractType/{clientWebDealingId}/{usage}/{contractTypes}:
+    $ref: ./paths/general-agreement/general_agreement_accounts_by_clientWebDealing_usage_contractType_clientWebDealingId_usage_contractTypes.yaml
+  /early-refund/{id}:
+    $ref: ./paths/early-refund/early_refund_id.yaml
+  /early-refund/new/{depositId}:
+    $ref: ./paths/early-refund/early_refund_new_depositId.yaml
+  /deposit/visa/signature-info/{id}:
+    $ref: ./paths/deposit/deposit_visa_signature_info_id.yaml
+  /deposit/visa/signature-check/{id}:
+    $ref: ./paths/deposit/deposit_visa_signature_check_id.yaml
+  /deposit/visa/additional-info/{id}:
+    $ref: ./paths/deposit/deposit_visa_additional_info_id.yaml
+  /deposit-document/{id}:
+    $ref: ./paths/deposit-document/deposit_document_id.yaml
+  /deposit-document/{docId}/account-eco-id:
+    $ref: ./paths/deposit-document/deposit_document_docId_account_eco_id.yaml
+  /deposit-document/new/{clientId}:
+    $ref: ./paths/deposit-document/deposit_document_new_clientId.yaml
+  /deposit-document/new-or-draft-for-edit/{clientId}:
+    $ref: ./paths/deposit-document/deposit_document_new_or_draft_for_edit_clientId.yaml
+  /deposit-document/new-for-edit/{clientId}:
+    $ref: ./paths/deposit-document/deposit_document_new_for_edit_clientId.yaml
+  /deposit-document/interest-payment-methods:
+    $ref: ./paths/deposit-document/deposit_document_interest_payment_methods.yaml
+  /deposit-document/get-for-edit/{id}:
+    $ref: ./paths/deposit-document/deposit_document_get_for_edit_id.yaml
+  /deposit-document/general-agreements/{clientId}:
+    $ref: ./paths/deposit-document/deposit_document_general_agreements_clientId.yaml
+  /deposit-document/general-agreement-management-funds/{agreementId}:
+    $ref: ./paths/deposit-document/deposit_document_general_agreement_management_funds_agreementId.yaml
+  /deposit-document/full/{id}:
+    $ref: ./paths/deposit-document/deposit_document_full_id.yaml
+  /deposit-document/draft/exists/{clientId}:
+    $ref: ./paths/deposit-document/deposit_document_draft_exists_clientId.yaml
+  /deposit-document/copy/{id}:
+    $ref: ./paths/deposit-document/deposit_document_copy_id.yaml
+  /deposit-document/cancel-document/{id}:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_id.yaml
+  /deposit-document/cancel-document/new/{canceledDocId}:
+    $ref: ./paths/deposit-document/deposit_document_cancel_document_new_canceledDocId.yaml
+  /dashboard/get-pool-members/{gsnoParentAgreementId}:
+    $ref: ./paths/misc/dashboard_get_pool_members_gsnoParentAgreementId.yaml
+  /dashboard/get-dashboard-user-info:
+    $ref: ./paths/misc/dashboard_get_dashboard_user_info.yaml
+  /dashboard/dashboard-events:
+    $ref: ./paths/misc/dashboard_dashboard_events.yaml
+  /client/organizations-web-dealing:
+    $ref: ./paths/misc/client_organizations_web_dealing.yaml
+  /base-rate/get-by-code/{code}:
+    $ref: ./paths/misc/base_rate_get_by_code_code.yaml
+  /base-rate/get-all:
+    $ref: ./paths/misc/base_rate_get_all.yaml
+  /bank-client/get-clients-for-visa/{agreementId}:
+    $ref: ./paths/misc/bank_client_get_clients_for_visa_agreementId.yaml
+  /advice/{id}:
+    $ref: ./paths/misc/advice_id.yaml
+  /account/val-account/currencies/{clientId}:
+    $ref: ./paths/account/account_val_account_currencies_clientId.yaml
+  /account/usages:
+    $ref: ./paths/account/account_usages.yaml
+  /account/usages-by-client/{clientId}:
+    $ref: ./paths/account/account_usages_by_client_clientId.yaml
+  /account/update-accounts/{clientWebDealingId}:
+    $ref: ./paths/account/account_update_accounts_clientWebDealingId.yaml
+  /account/rub-account/new/{clientId}:
+    $ref: ./paths/account/account_rub_account_new_clientId.yaml
+  /account/rub-account/currencies:
+    $ref: ./paths/account/account_rub_account_currencies.yaml
+  /account/internal-accounts/new/{clientId}/count:
+    $ref: ./paths/account/account_internal_accounts_new_clientId_count.yaml
+  /account/internal-accounts/new/{clientId}/by-currency/{curr}:
+    $ref: ./paths/account/account_internal_accounts_new_clientId_by_currency_curr.yaml
+  /account/internal-accounts/new/{clientId}/add:
+    $ref: ./paths/account/account_internal_accounts_new_clientId_add.yaml
+  /account/internal-account/currencies/{clientId}:
+    $ref: ./paths/account/account_internal_account_currencies_clientId.yaml
+  /account/export-list-async-result/{id}:
+    $ref: ./paths/account/account_export_list_async_result_id.yaml
+  /account/currencies:
+    $ref: ./paths/account/account_currencies.yaml
+  /account/currencies/{dealType}:
+    $ref: ./paths/account/account_currencies_dealType.yaml
+  /account/by-clientWebDealing-businessId/{clientWebDealingId}/{businessId}:
+    $ref: ./paths/account/account_by_clientWebDealing_businessId_clientWebDealingId_businessId.yaml
+  /account/by-clientWebDealing-absId/{clientWebDealingId}/{absId}:
+    $ref: ./paths/account/account_by_clientWebDealing_absId_clientWebDealingId_absId.yaml
+  /account/all-account/currencies:
+    $ref: ./paths/account/account_all_account_currencies.yaml
+  /account/active/{curr}/{usage}/{clientId}/{statuses}:
+    $ref: ./paths/account/account_active_curr_usage_clientId_statuses.yaml
+  /account/active-by-clientWebDealingId/{curr}/{usage}/{clientWebDealingId}/{statuses}:
+    $ref: ./paths/account/account_active_by_clientWebDealingId_curr_usage_clientWebDealingId_statuses.yaml
+  /account/active-by-clientWebDealing-businessId/{clientWebDealingId}/{businessId}:
+    $ref: ./paths/account/account_active_by_clientWebDealing_businessId_clientWebDealingId_businessId.yaml
+  /account/account-types:
+    $ref: ./paths/account/account_account_types.yaml
+  /caches/clear:
+    $ref: ./paths/misc/caches_clear.yaml
+components:
+  schemas:
+    SingleResponseObject:
+      $ref: ./components/schemas/common/SingleResponseObject.yaml
+    SingleResponse:
+      $ref: ./components/schemas/common/SingleResponse.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    AccountDto:
+      $ref: ./components/schemas/account/AccountDto.yaml
+    AccountUserActionInfoDto:
+      $ref: ./components/schemas/common/AccountUserActionInfoDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    ClientWebDealingDto:
+      $ref: ./components/schemas/common/ClientWebDealingDto.yaml
+    GenericCommandAccountDto:
+      $ref: ./components/schemas/account/GenericCommandAccountDto.yaml
+    CreateResponseAccountDto:
+      $ref: ./components/schemas/account/CreateResponseAccountDto.yaml
+    GenericCommandWorkCalendarRangeDto:
+      $ref: ./components/schemas/misc/GenericCommandWorkCalendarRangeDto.yaml
+    WorkCalendarRangeDto:
+      $ref: ./components/schemas/misc/WorkCalendarRangeDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataWorkCalendarPeriodDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataWorkCalendarPeriodDto.yaml
+    WorkCalendarDayDto:
+      $ref: ./components/schemas/misc/WorkCalendarDayDto.yaml
+    WorkCalendarPeriodDto:
+      $ref: ./components/schemas/misc/WorkCalendarPeriodDto.yaml
+    CreateCommandUserParamDto:
+      $ref: ./components/schemas/misc/CreateCommandUserParamDto.yaml
+    UserParamDto:
+      $ref: ./components/schemas/misc/UserParamDto.yaml
+    CreateResponseUserParamDto:
+      $ref: ./components/schemas/misc/CreateResponseUserParamDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientDto:
+      $ref: ./components/schemas/common/ClientDto.yaml
+    CreateCommandUpdateMNODocDto:
+      $ref: ./components/schemas/update-mno-document/CreateCommandUpdateMNODocDto.yaml
+    InvestmentDocAccountDto:
+      $ref: ./components/schemas/common/InvestmentDocAccountDto.yaml
+    InvestmentDocGeneralAgreementDto:
+      $ref: ./components/schemas/common/InvestmentDocGeneralAgreementDto.yaml
+    InvestmentDocManagementFundDto:
+      $ref: ./components/schemas/common/InvestmentDocManagementFundDto.yaml
+    InvestmentDocRateInfoDto:
+      $ref: ./components/schemas/common/InvestmentDocRateInfoDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/common/SignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    UpdateMNODocDto:
+      $ref: ./components/schemas/update-mno-document/UpdateMNODocDto.yaml
+    CreateResponseUpdateMNODocDto:
+      $ref: ./components/schemas/update-mno-document/CreateResponseUpdateMNODocDto.yaml
+    GenericCommandUpdateMNODocDto:
+      $ref: ./components/schemas/update-mno-document/GenericCommandUpdateMNODocDto.yaml
+    GenericResponseErrorDataUpdateMNODocDto:
+      $ref: ./components/schemas/update-mno-document/GenericResponseErrorDataUpdateMNODocDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericResponseErrorDataListUniCertificateTreasuryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListUniCertificateTreasuryDto.yaml
+    UniCertificateTreasuryDto:
+      $ref: ./components/schemas/common/UniCertificateTreasuryDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    GenericCommandPrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestDtoWdUUID.yaml
+    PrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoWdUUID.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/common/PrintResponseTreasury.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    DigestInfoDto:
+      $ref: ./components/schemas/common/DigestInfoDto.yaml
+    DigestInfoFieldDto:
+      $ref: ./components/schemas/common/DigestInfoFieldDto.yaml
+    GenericResponseErrorDataUniSignDataTreasuryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUniSignDataTreasuryDto.yaml
+    UniSignDataTreasuryDto:
+      $ref: ./components/schemas/common/UniSignDataTreasuryDto.yaml
+    GenericResponseErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    AccountRequestDto:
+      $ref: ./components/schemas/common/AccountRequestDto.yaml
+    GenericCommandAccountRequestDto:
+      $ref: ./components/schemas/common/GenericCommandAccountRequestDto.yaml
+    GenericResponseErrorDataListInvestmentDocAccountExtendedDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocAccountExtendedDto.yaml
+    InvestmentDocAccountExtendedDto:
+      $ref: ./components/schemas/common/InvestmentDocAccountExtendedDto.yaml
+    CreateCommandUpdateDepositDocDto:
+      $ref: ./components/schemas/update-deposit-document/CreateCommandUpdateDepositDocDto.yaml
+    UpdateDepositDocDto:
+      $ref: ./components/schemas/update-deposit-document/UpdateDepositDocDto.yaml
+    CreateResponseUpdateDepositDocDto:
+      $ref: ./components/schemas/update-deposit-document/CreateResponseUpdateDepositDocDto.yaml
+    GenericCommandUpdateDepositDocDto:
+      $ref: ./components/schemas/update-deposit-document/GenericCommandUpdateDepositDocDto.yaml
+    GenericResponseErrorDataUpdateDepositDocDto:
+      $ref: ./components/schemas/update-deposit-document/GenericResponseErrorDataUpdateDepositDocDto.yaml
+    DepositRateRequestDto:
+      $ref: ./components/schemas/rates/DepositRateRequestDto.yaml
+    GenericCommandDepositRateRequestDto:
+      $ref: ./components/schemas/rates/GenericCommandDepositRateRequestDto.yaml
+    GenericResponseErrorDataRateCalculatorResultDto:
+      $ref: ./components/schemas/rates/GenericResponseErrorDataRateCalculatorResultDto.yaml
+    RateCalculatorResultDto:
+      $ref: ./components/schemas/rates/RateCalculatorResultDto.yaml
+    ApprovalSignDataRequest:
+      $ref: ./components/schemas/common/ApprovalSignDataRequest.yaml
+    GenericCommandApprovalSignDataRequest:
+      $ref: ./components/schemas/common/GenericCommandApprovalSignDataRequest.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ApprovalSignCommand:
+      $ref: ./components/schemas/common/ApprovalSignCommand.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    ApprovalSignPrintRequest:
+      $ref: ./components/schemas/common/ApprovalSignPrintRequest.yaml
+    GenericCommandListApprovalSignPrintRequest:
+      $ref: ./components/schemas/common/GenericCommandListApprovalSignPrintRequest.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/common/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataListAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListAttachmentAccessData.yaml
+    GenericCommandApprovalSignPrintRequest:
+      $ref: ./components/schemas/common/GenericCommandApprovalSignPrintRequest.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    ApprovalSignDigestRequest:
+      $ref: ./components/schemas/common/ApprovalSignDigestRequest.yaml
+    GenericCommandApprovalSignDigestRequest:
+      $ref: ./components/schemas/common/GenericCommandApprovalSignDigestRequest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDigest.yaml
+    ApprovalSignDigestVersionRequest:
+      $ref: ./components/schemas/common/ApprovalSignDigestVersionRequest.yaml
+    GenericCommandApprovalSignDigestVersionRequest:
+      $ref: ./components/schemas/common/GenericCommandApprovalSignDigestVersionRequest.yaml
+    GenericCommandListApprovalSignDigestRequest:
+      $ref: ./components/schemas/common/GenericCommandListApprovalSignDigestRequest.yaml
+    DigestResponse:
+      $ref: ./components/schemas/common/DigestResponse.yaml
+    GenericResponseSimpleErrorDataListDigestResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListDigestResponse.yaml
+    ClientVisaInfoDto:
+      $ref: ./components/schemas/common/ClientVisaInfoDto.yaml
+    CreateCommandMNODocDto:
+      $ref: ./components/schemas/mno-document/CreateCommandMNODocDto.yaml
+    InvestmentDocUserActionInfoDto:
+      $ref: ./components/schemas/common/InvestmentDocUserActionInfoDto.yaml
+    MNODocDto:
+      $ref: ./components/schemas/mno-document/MNODocDto.yaml
+    MNODocRateDto:
+      $ref: ./components/schemas/mno-document/MNODocRateDto.yaml
+    UpdateDocInfoDto:
+      $ref: ./components/schemas/common/UpdateDocInfoDto.yaml
+    VisaSignatureDto:
+      $ref: ./components/schemas/common/VisaSignatureDto.yaml
+    CreateResponseMNODocDto:
+      $ref: ./components/schemas/mno-document/CreateResponseMNODocDto.yaml
+    GenericCommandMNODocDto:
+      $ref: ./components/schemas/mno-document/GenericCommandMNODocDto.yaml
+    GenericResponseErrorDataMNODocDto:
+      $ref: ./components/schemas/mno-document/GenericResponseErrorDataMNODocDto.yaml
+    GenericResponseErrorDataListInvestmentDocAccountWithBalanceV2Dto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocAccountWithBalanceV2Dto.yaml
+    InvestmentDocAccountWithBalanceV2Dto:
+      $ref: ./components/schemas/common/InvestmentDocAccountWithBalanceV2Dto.yaml
+    GenericResponseErrorDataListInvestmentDocAccountExtendedV2Dto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocAccountExtendedV2Dto.yaml
+    InvestmentDocAccountExtendedV2Dto:
+      $ref: ./components/schemas/common/InvestmentDocAccountExtendedV2Dto.yaml
+    SignCommandTreasury:
+      $ref: ./components/schemas/common/SignCommandTreasury.yaml
+    CreateCommandForceMNODocDto:
+      $ref: ./components/schemas/mno-document/CreateCommandForceMNODocDto.yaml
+    LogDealCommandMNODocDto:
+      $ref: ./components/schemas/mno-document/LogDealCommandMNODocDto.yaml
+    FileDataResponseDto:
+      $ref: ./components/schemas/common/FileDataResponseDto.yaml
+    GenericResponseErrorDataFileDataResponseDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataFileDataResponseDto.yaml
+    CurrencyDto:
+      $ref: ./components/schemas/common/CurrencyDto.yaml
+    CurrencyServicesDto:
+      $ref: ./components/schemas/common/CurrencyServicesDto.yaml
+    GenericResponseErrorDataListCurrencyDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListCurrencyDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    CancelMNODocDto:
+      $ref: ./components/schemas/mno-document/CancelMNODocDto.yaml
+    CreateCommandCancelMNODocDto:
+      $ref: ./components/schemas/mno-document/CreateCommandCancelMNODocDto.yaml
+    CreateResponseCancelMNODocDto:
+      $ref: ./components/schemas/mno-document/CreateResponseCancelMNODocDto.yaml
+    GenericResponseErrorDataCancelMNODocDto:
+      $ref: ./components/schemas/mno-document/GenericResponseErrorDataCancelMNODocDto.yaml
+    GenericResponseErrorDataListInvestmentDocBestRateDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocBestRateDto.yaml
+    InvestmentDocBestRateDto:
+      $ref: ./components/schemas/common/InvestmentDocBestRateDto.yaml
+    GenericResponseErrorDataListInvestmentDocAccountWithBalanceDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocAccountWithBalanceDto.yaml
+    InvestmentDocAccountWithBalanceDto:
+      $ref: ./components/schemas/common/InvestmentDocAccountWithBalanceDto.yaml
+    LogServerCommand:
+      $ref: ./components/schemas/misc/LogServerCommand.yaml
+    GenericResponseErrorDataVoid:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataVoid.yaml
+    LogServerBatchCommand:
+      $ref: ./components/schemas/misc/LogServerBatchCommand.yaml
+    LogServerEvent:
+      $ref: ./components/schemas/misc/LogServerEvent.yaml
+    GenericCommandUnprocessedConfirmationsParamsDto:
+      $ref: ./components/schemas/investment-document/GenericCommandUnprocessedConfirmationsParamsDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UnprocessedConfirmationsParamsDto:
+      $ref: ./components/schemas/investment-document/UnprocessedConfirmationsParamsDto.yaml
+    GenericResponseErrorDataUnprocessedConfirmationsDto:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataUnprocessedConfirmationsDto.yaml
+    UnprocessedConfirmationsDto:
+      $ref: ./components/schemas/investment-document/UnprocessedConfirmationsDto.yaml
+    BatchSignCommand:
+      $ref: ./components/schemas/investment-document/BatchSignCommand.yaml
+    ErrorDescriptionDto:
+      $ref: ./components/schemas/investment-document/ErrorDescriptionDto.yaml
+    GenericResponseErrorDataListSignResultDto:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataListSignResultDto.yaml
+    SignResultDto:
+      $ref: ./components/schemas/investment-document/SignResultDto.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/investment-document/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/investment-document/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GenericCommandInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/GenericCommandInvestmentDocClientFilter.yaml
+    InvestmentDealStatusFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDealStatusFilter.yaml
+    InvestmentDocCategoryFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocCategoryFilter.yaml
+    InvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocClientFilter.yaml
+    InvestmentDocRateTypeFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocRateTypeFilter.yaml
+    InvestmentDocStatusFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocStatusFilter.yaml
+    InvestmentDocSubTypeFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocSubTypeFilter.yaml
+    GenericResponseErrorDataListString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListString.yaml
+    GetPageCommandInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/GetPageCommandInvestmentDocClientFilter.yaml
+    PageParamsInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/PageParamsInvestmentDocClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    GenericResponseErrorDataPageDataInvestmentDocDto:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataPageDataInvestmentDocDto.yaml
+    InvestmentDocDto:
+      $ref: ./components/schemas/common/InvestmentDocDto.yaml
+    PageDataInvestmentDocDto:
+      $ref: ./components/schemas/investment-document/PageDataInvestmentDocDto.yaml
+    GenericCommandGetDealAccountsRequestDto:
+      $ref: ./components/schemas/investment-document/GenericCommandGetDealAccountsRequestDto.yaml
+    GetDealAccountsRequestDto:
+      $ref: ./components/schemas/investment-document/GetDealAccountsRequestDto.yaml
+    AccountDealDto:
+      $ref: ./components/schemas/investment-document/AccountDealDto.yaml
+    GenericResponseErrorDataListAccountDealDto:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataListAccountDealDto.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/common/GenericResponseErrorDataLong.yaml
+    GenericResponseErrorDataListObjectCountByClientDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListObjectCountByClientDto.yaml
+    ObjectCountByClientDto:
+      $ref: ./components/schemas/common/ObjectCountByClientDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/investment-document/GenericCommandListUUID.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/GenericCommandPrintRequestTypeDtoWdUUIDInvestmentDocClientFilter.yaml
+    PrintRequestTypeDtoWdUUIDInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/PrintRequestTypeDtoWdUUIDInvestmentDocClientFilter.yaml
+    GenericResponseErrorDataPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPrintResponseTreasury.yaml
+    ColumnDefinitionDto:
+      $ref: ./components/schemas/common/ColumnDefinitionDto.yaml
+    GenericCommandListReportDtoFilterUUIDInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/GenericCommandListReportDtoFilterUUIDInvestmentDocClientFilter.yaml
+    ListReportDtoFilterUUIDInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/ListReportDtoFilterUUIDInvestmentDocClientFilter.yaml
+    GenericResponseErrorDataUUID:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUUID.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/common/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListEnumObjectDto.yaml
+    GenericCommandInvestmentDocBatchSignDtoClientFilter:
+      $ref: ./components/schemas/investment-document/GenericCommandInvestmentDocBatchSignDtoClientFilter.yaml
+    InvestmentDocBatchSignDtoClientFilter:
+      $ref: ./components/schemas/investment-document/InvestmentDocBatchSignDtoClientFilter.yaml
+    BatchSignSummaryDto:
+      $ref: ./components/schemas/investment-document/BatchSignSummaryDto.yaml
+    ClientBatchSignSummaryDto:
+      $ref: ./components/schemas/investment-document/ClientBatchSignSummaryDto.yaml
+    DocSigningOptionsDto:
+      $ref: ./components/schemas/investment-document/DocSigningOptionsDto.yaml
+    GenericResponseErrorDataBatchSignSummaryDto:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataBatchSignSummaryDto.yaml
+    UserInformationByClientBaseDto:
+      $ref: ./components/schemas/misc/UserInformationByClientBaseDto.yaml
+    DealBaseRateVariantsDto:
+      $ref: ./components/schemas/misc/DealBaseRateVariantsDto.yaml
+    DealRateTypeDto:
+      $ref: ./components/schemas/misc/DealRateTypeDto.yaml
+    GenericResponseErrorDataUserInformationV2ByServiceDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUserInformationV2ByServiceDto.yaml
+    UserInformationByClientByServiceDto:
+      $ref: ./components/schemas/misc/UserInformationByClientByServiceDto.yaml
+    UserInformationByDealTypeDto:
+      $ref: ./components/schemas/misc/UserInformationByDealTypeDto.yaml
+    UserInformationV2ByServiceDto:
+      $ref: ./components/schemas/misc/UserInformationV2ByServiceDto.yaml
+    CreateCommandGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CreateCommandGSNODocDto.yaml
+    GSNODocDto:
+      $ref: ./components/schemas/common/GSNODocDto.yaml
+    GSNODocRateDto:
+      $ref: ./components/schemas/common/GSNODocRateDto.yaml
+    CreateResponseGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CreateResponseGSNODocDto.yaml
+    GenericCommandGSNODocDto:
+      $ref: ./components/schemas/gsno-document/GenericCommandGSNODocDto.yaml
+    GenericResponseErrorDataGSNODocDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataGSNODocDto.yaml
+    CreateCommandForceGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CreateCommandForceGSNODocDto.yaml
+    LogDealCommandGSNODocDto:
+      $ref: ./components/schemas/gsno-document/LogDealCommandGSNODocDto.yaml
+    CancelGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CancelGSNODocDto.yaml
+    CreateCommandCancelGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CreateCommandCancelGSNODocDto.yaml
+    CreateResponseCancelGSNODocDto:
+      $ref: ./components/schemas/gsno-document/CreateResponseCancelGSNODocDto.yaml
+    GenericResponseErrorDataCancelGSNODocDto:
+      $ref: ./components/schemas/gsno-document/GenericResponseErrorDataCancelGSNODocDto.yaml
+    GeneralAgreementWithFundsRequestDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementWithFundsRequestDto.yaml
+    GetPageCommandGeneralAgreementWithFundsRequestDto:
+      $ref: ./components/schemas/general-agreement/GetPageCommandGeneralAgreementWithFundsRequestDto.yaml
+    PageParamsGeneralAgreementWithFundsRequestDto:
+      $ref: ./components/schemas/general-agreement/PageParamsGeneralAgreementWithFundsRequestDto.yaml
+    FundShortDto:
+      $ref: ./components/schemas/general-agreement/FundShortDto.yaml
+    GeneralAgreementWithFundsV2Dto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementWithFundsV2Dto.yaml
+    GenericResponseErrorDataPageDataGeneralAgreementWithFundsV2Dto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataPageDataGeneralAgreementWithFundsV2Dto.yaml
+    PageDataGeneralAgreementWithFundsV2Dto:
+      $ref: ./components/schemas/general-agreement/PageDataGeneralAgreementWithFundsV2Dto.yaml
+    GeneralAgreementDto:
+      $ref: ./components/schemas/common/GeneralAgreementDto.yaml
+    GeneralAgreementUserActionInfoDto:
+      $ref: ./components/schemas/common/GeneralAgreementUserActionInfoDto.yaml
+    GenericCommandGeneralAgreementDto:
+      $ref: ./components/schemas/general-agreement/GenericCommandGeneralAgreementDto.yaml
+    GenericResponseErrorDataGeneralAgreementDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataGeneralAgreementDto.yaml
+    GetClientListCommand:
+      $ref: ./components/schemas/common/GetClientListCommand.yaml
+    GenericResponseErrorDataListClientWebDealingDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListClientWebDealingDto.yaml
+    GetPageCommandPoolMemberFilter:
+      $ref: ./components/schemas/general-agreement/GetPageCommandPoolMemberFilter.yaml
+    PageParamsPoolMemberFilter:
+      $ref: ./components/schemas/general-agreement/PageParamsPoolMemberFilter.yaml
+    PoolMemberFilter:
+      $ref: ./components/schemas/general-agreement/PoolMemberFilter.yaml
+    PoolMemberStatusFilter:
+      $ref: ./components/schemas/general-agreement/PoolMemberStatusFilter.yaml
+    GenericResponseErrorDataPageDataPoolMemberDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataPageDataPoolMemberDto.yaml
+    PageDataPoolMemberDto:
+      $ref: ./components/schemas/general-agreement/PageDataPoolMemberDto.yaml
+    PoolMemberDto:
+      $ref: ./components/schemas/general-agreement/PoolMemberDto.yaml
+    GetPageCommandPoolAccountFilter:
+      $ref: ./components/schemas/general-agreement/GetPageCommandPoolAccountFilter.yaml
+    PageParamsPoolAccountFilter:
+      $ref: ./components/schemas/general-agreement/PageParamsPoolAccountFilter.yaml
+    PoolAccountFilter:
+      $ref: ./components/schemas/general-agreement/PoolAccountFilter.yaml
+    GenericResponseErrorDataPageDataPoolAccountDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataPageDataPoolAccountDto.yaml
+    PageDataPoolAccountDto:
+      $ref: ./components/schemas/general-agreement/PageDataPoolAccountDto.yaml
+    PoolAccountDto:
+      $ref: ./components/schemas/general-agreement/PoolAccountDto.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    GeneralAgreementContractTypeFilter:
+      $ref: ./components/schemas/common/GeneralAgreementContractTypeFilter.yaml
+    GeneralAgreementFilter:
+      $ref: ./components/schemas/common/GeneralAgreementFilter.yaml
+    GeneralAgreementStatusFilter:
+      $ref: ./components/schemas/common/GeneralAgreementStatusFilter.yaml
+    GeneralAgreementSubUsageFilter:
+      $ref: ./components/schemas/common/GeneralAgreementSubUsageFilter.yaml
+    GeneralAgreementUsageFilter:
+      $ref: ./components/schemas/common/GeneralAgreementUsageFilter.yaml
+    GetPageCommandGeneralAgreementFilter:
+      $ref: ./components/schemas/common/GetPageCommandGeneralAgreementFilter.yaml
+    PageParamsGeneralAgreementFilter:
+      $ref: ./components/schemas/common/PageParamsGeneralAgreementFilter.yaml
+    GenericResponseErrorDataPageDataGeneralAgreementDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataPageDataGeneralAgreementDto.yaml
+    PageDataGeneralAgreementDto:
+      $ref: ./components/schemas/general-agreement/PageDataGeneralAgreementDto.yaml
+    GeneralAgreementWithFundsDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementWithFundsDto.yaml
+    GenericResponseErrorDataPageDataGeneralAgreementWithFundsDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataPageDataGeneralAgreementWithFundsDto.yaml
+    PageDataGeneralAgreementWithFundsDto:
+      $ref: ./components/schemas/general-agreement/PageDataGeneralAgreementWithFundsDto.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/general-agreement/GenericCommandSetUUID.yaml
+    GeneralAgreementWithFundNameRequestDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementWithFundNameRequestDto.yaml
+    GenericCommandGeneralAgreementFilter:
+      $ref: ./components/schemas/general-agreement/GenericCommandGeneralAgreementFilter.yaml
+    GeneralAgreementAccountDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementAccountDto.yaml
+    GeneralAgreementFullDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementFullDto.yaml
+    GeneralAgreementManagementFundDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementManagementFundDto.yaml
+    GenericResponseErrorDataListGeneralAgreementFullDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataListGeneralAgreementFullDto.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDGeneralAgreementFilter:
+      $ref: ./components/schemas/general-agreement/GenericCommandPrintRequestTypeDtoWdUUIDGeneralAgreementFilter.yaml
+    PrintRequestTypeDtoWdUUIDGeneralAgreementFilter:
+      $ref: ./components/schemas/general-agreement/PrintRequestTypeDtoWdUUIDGeneralAgreementFilter.yaml
+    DownloadCommand:
+      $ref: ./components/schemas/common/DownloadCommand.yaml
+    GenericResponseErrorDataDownloadCommand:
+      $ref: ./components/schemas/common/GenericResponseErrorDataDownloadCommand.yaml
+    GenericCommandListReportDtoFilterUUIDGeneralAgreementFilter:
+      $ref: ./components/schemas/general-agreement/GenericCommandListReportDtoFilterUUIDGeneralAgreementFilter.yaml
+    ListReportDtoFilterUUIDGeneralAgreementFilter:
+      $ref: ./components/schemas/general-agreement/ListReportDtoFilterUUIDGeneralAgreementFilter.yaml
+    GenericCommandIdentificationDto:
+      $ref: ./components/schemas/general-agreement/GenericCommandIdentificationDto.yaml
+    IdentificationDto:
+      $ref: ./components/schemas/general-agreement/IdentificationDto.yaml
+    GenericResponseErrorDataListGeneralAgreementDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListGeneralAgreementDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    GenericResponseErrorDataListCategoryCount:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListCategoryCount.yaml
+    CreateCommandEarlyRefundDocDto:
+      $ref: ./components/schemas/early-refund/CreateCommandEarlyRefundDocDto.yaml
+    EarlyRefundDocDto:
+      $ref: ./components/schemas/early-refund/EarlyRefundDocDto.yaml
+    CreateResponseEarlyRefundDocDto:
+      $ref: ./components/schemas/early-refund/CreateResponseEarlyRefundDocDto.yaml
+    GenericCommandEarlyRefundDocDto:
+      $ref: ./components/schemas/early-refund/GenericCommandEarlyRefundDocDto.yaml
+    GenericResponseErrorDataEarlyRefundDocDto:
+      $ref: ./components/schemas/early-refund/GenericResponseErrorDataEarlyRefundDocDto.yaml
+    GenericResponseErrorDataListInvestmentDocAccountDto:
+      $ref: ./components/schemas/early-refund/GenericResponseErrorDataListInvestmentDocAccountDto.yaml
+    AccountRequestV2Dto:
+      $ref: ./components/schemas/early-refund/AccountRequestV2Dto.yaml
+    GenericCommandAccountRequestV2Dto:
+      $ref: ./components/schemas/early-refund/GenericCommandAccountRequestV2Dto.yaml
+    CreateCommandDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CreateCommandDepositDocDto.yaml
+    DepositDocDto:
+      $ref: ./components/schemas/deposit-document/DepositDocDto.yaml
+    DepositDocRateDto:
+      $ref: ./components/schemas/deposit-document/DepositDocRateDto.yaml
+    EarlyRefundInfoDto:
+      $ref: ./components/schemas/deposit-document/EarlyRefundInfoDto.yaml
+    CreateResponseDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CreateResponseDepositDocDto.yaml
+    GenericCommandDepositDocDto:
+      $ref: ./components/schemas/deposit-document/GenericCommandDepositDocDto.yaml
+    GenericResponseErrorDataDepositDocDto:
+      $ref: ./components/schemas/deposit-document/GenericResponseErrorDataDepositDocDto.yaml
+    CreateCommandForceDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CreateCommandForceDepositDocDto.yaml
+    LogDealCommandDepositDocDto:
+      $ref: ./components/schemas/deposit-document/LogDealCommandDepositDocDto.yaml
+    CancelDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CancelDepositDocDto.yaml
+    CreateCommandCancelDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CreateCommandCancelDepositDocDto.yaml
+    CreateResponseCancelDepositDocDto:
+      $ref: ./components/schemas/deposit-document/CreateResponseCancelDepositDocDto.yaml
+    GenericResponseErrorDataCancelDepositDocDto:
+      $ref: ./components/schemas/deposit-document/GenericResponseErrorDataCancelDepositDocDto.yaml
+    DashboardViolatedOrDeniedEventsFilter:
+      $ref: ./components/schemas/misc/DashboardViolatedOrDeniedEventsFilter.yaml
+    DashboardViolatedOrDeniedEventDto:
+      $ref: ./components/schemas/misc/DashboardViolatedOrDeniedEventDto.yaml
+    GenericResponseErrorDataListDashboardViolatedOrDeniedEventDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListDashboardViolatedOrDeniedEventDto.yaml
+    GetGsnoAgreementListCommand:
+      $ref: ./components/schemas/misc/GetGsnoAgreementListCommand.yaml
+    DashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/misc/DashboardCalendarDealEventsFilter.yaml
+    DealEventDealTypeFilter:
+      $ref: ./components/schemas/misc/DealEventDealTypeFilter.yaml
+    DealEventTypeFilter:
+      $ref: ./components/schemas/misc/DealEventTypeFilter.yaml
+    GetPageCommandDashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/misc/GetPageCommandDashboardCalendarDealEventsFilter.yaml
+    PageParamsDashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/misc/PageParamsDashboardCalendarDealEventsFilter.yaml
+    DashboardDealMarkerPeriodDto:
+      $ref: ./components/schemas/misc/DashboardDealMarkerPeriodDto.yaml
+    DealEventMarkerDto:
+      $ref: ./components/schemas/misc/DealEventMarkerDto.yaml
+    GenericResponseErrorDataListDashboardDealMarkerPeriodDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListDashboardDealMarkerPeriodDto.yaml
+    DashboardDealEventDto:
+      $ref: ./components/schemas/misc/DashboardDealEventDto.yaml
+    PageDataDashboardDealEventDto:
+      $ref: ./components/schemas/misc/PageDataDashboardDealEventDto.yaml
+    AdviceDto:
+      $ref: ./components/schemas/misc/AdviceDto.yaml
+    CreateCommandAdviceDto:
+      $ref: ./components/schemas/misc/CreateCommandAdviceDto.yaml
+    CreateResponseAdviceDto:
+      $ref: ./components/schemas/misc/CreateResponseAdviceDto.yaml
+    CreateCommandAccountDto:
+      $ref: ./components/schemas/account/CreateCommandAccountDto.yaml
+    GenericResponseErrorDataValidationResult:
+      $ref: ./components/schemas/account/GenericResponseErrorDataValidationResult.yaml
+    GenericResponseErrorDataTrPageResponseAccountDto:
+      $ref: ./components/schemas/account/GenericResponseErrorDataTrPageResponseAccountDto.yaml
+    TrPageResponseAccountDto:
+      $ref: ./components/schemas/account/TrPageResponseAccountDto.yaml
+    AccountFilter:
+      $ref: ./components/schemas/account/AccountFilter.yaml
+    AccountStatusFilter:
+      $ref: ./components/schemas/account/AccountStatusFilter.yaml
+    AccountTypeFilter:
+      $ref: ./components/schemas/account/AccountTypeFilter.yaml
+    AccountUsageFilter:
+      $ref: ./components/schemas/account/AccountUsageFilter.yaml
+    GetSessionPageCommandAccountFilter:
+      $ref: ./components/schemas/account/GetSessionPageCommandAccountFilter.yaml
+    PageParamsAccountFilter:
+      $ref: ./components/schemas/account/PageParamsAccountFilter.yaml
+    AccountsListDto:
+      $ref: ./components/schemas/account/AccountsListDto.yaml
+    GenericCommandAccountsListDto:
+      $ref: ./components/schemas/account/GenericCommandAccountsListDto.yaml
+    GenericResponseErrorDataListAccountDto:
+      $ref: ./components/schemas/account/GenericResponseErrorDataListAccountDto.yaml
+    GetPageCommandAccountFilter:
+      $ref: ./components/schemas/account/GetPageCommandAccountFilter.yaml
+    GenericResponseErrorDataPageDataAccountDto:
+      $ref: ./components/schemas/account/GenericResponseErrorDataPageDataAccountDto.yaml
+    PageDataAccountDto:
+      $ref: ./components/schemas/account/PageDataAccountDto.yaml
+    GenericCommandAccountFilter:
+      $ref: ./components/schemas/account/GenericCommandAccountFilter.yaml
+    GenericCommandListReportDtoFilterUUIDAccountFilter:
+      $ref: ./components/schemas/account/GenericCommandListReportDtoFilterUUIDAccountFilter.yaml
+    ListReportDtoFilterUUIDAccountFilter:
+      $ref: ./components/schemas/account/ListReportDtoFilterUUIDAccountFilter.yaml
+    GenericResponseErrorDataAccountDto:
+      $ref: ./components/schemas/account/GenericResponseErrorDataAccountDto.yaml
+    GenericCommandIdsListDto:
+      $ref: ./components/schemas/account/GenericCommandIdsListDto.yaml
+    IdsListDto:
+      $ref: ./components/schemas/account/IdsListDto.yaml
+    AccountDefaultUsageRequestDto:
+      $ref: ./components/schemas/account/AccountDefaultUsageRequestDto.yaml
+    GenericCommandAccountDefaultUsageRequestDto:
+      $ref: ./components/schemas/account/GenericCommandAccountDefaultUsageRequestDto.yaml
+    GenericResponseErrorDataUserParamDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUserParamDto.yaml
+    CertificateDto:
+      $ref: ./components/schemas/misc/CertificateDto.yaml
+    GenericResponseErrorDataCertificateDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataCertificateDto.yaml
+    BicDto:
+      $ref: ./components/schemas/misc/BicDto.yaml
+    SingleResponseBicDto:
+      $ref: ./components/schemas/misc/SingleResponseBicDto.yaml
+    GenericResponseErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseErrorDataBoolean.yaml
+    GenericResponseErrorDataListInvestmentDocBestRateMSBDto:
+      $ref: ./components/schemas/rates/GenericResponseErrorDataListInvestmentDocBestRateMSBDto.yaml
+    InvestmentDocBestRateMSBDto:
+      $ref: ./components/schemas/rates/InvestmentDocBestRateMSBDto.yaml
+    GenericResponseErrorDataListNotificationDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListNotificationDto.yaml
+    NotificationDto:
+      $ref: ./components/schemas/misc/NotificationDto.yaml
+    DocumentSignatureCertificateInfoDto:
+      $ref: ./components/schemas/common/DocumentSignatureCertificateInfoDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/common/DocumentSignatureDto.yaml
+    DocumentSignatureInfoDto:
+      $ref: ./components/schemas/common/DocumentSignatureInfoDto.yaml
+    DocumentSignatureValueDto:
+      $ref: ./components/schemas/common/DocumentSignatureValueDto.yaml
+    GenericResponseSimpleErrorDataDocumentSignatureInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDocumentSignatureInfoDto.yaml
+    DocumentSignatureCheckDataDto:
+      $ref: ./components/schemas/common/DocumentSignatureCheckDataDto.yaml
+    DocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/common/DocumentSignatureCheckResultDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto.yaml
+    DocumentAdditionalInfoDto:
+      $ref: ./components/schemas/common/DocumentAdditionalInfoDto.yaml
+    DocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/common/DocumentAdditionalInfoResponseDto.yaml
+    FieldValueDto:
+      $ref: ./components/schemas/common/FieldValueDto.yaml
+    GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto.yaml
+    GenericResponseErrorDataListInvestmentDocGeneralAgreementDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListInvestmentDocGeneralAgreementDto.yaml
+    GenericResponseErrorDataInvestmentDocDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataInvestmentDocDto.yaml
+    GenericResponseErrorDataListPredefinedFilterDtoInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/GenericResponseErrorDataListPredefinedFilterDtoInvestmentDocClientFilter.yaml
+    PredefinedFilterDtoInvestmentDocClientFilter:
+      $ref: ./components/schemas/investment-document/PredefinedFilterDtoInvestmentDocClientFilter.yaml
+    GenericResponseErrorDataListUserInformationByClientDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListUserInformationByClientDto.yaml
+    UserInformationByClientDto:
+      $ref: ./components/schemas/misc/UserInformationByClientDto.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataMapStringString.yaml
+    GeneralAgreementAccountExtendedDto:
+      $ref: ./components/schemas/general-agreement/GeneralAgreementAccountExtendedDto.yaml
+    GenericResponseErrorDataListGeneralAgreementAccountExtendedDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataListGeneralAgreementAccountExtendedDto.yaml
+    GenericResponseErrorDataListPoolMemberDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataListPoolMemberDto.yaml
+    GenericResponseErrorDataListPoolAccountClientDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataListPoolAccountClientDto.yaml
+    PoolAccountClientDto:
+      $ref: ./components/schemas/general-agreement/PoolAccountClientDto.yaml
+    GenericResponseErrorDataGeneralAgreementFullDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataGeneralAgreementFullDto.yaml
+    GenericResponseErrorDataListGeneralAgreementAccountDto:
+      $ref: ./components/schemas/general-agreement/GenericResponseErrorDataListGeneralAgreementAccountDto.yaml
+    GenericResponseErrorDataListInvestmentDocManagementFundDto:
+      $ref: ./components/schemas/deposit-document/GenericResponseErrorDataListInvestmentDocManagementFundDto.yaml
+    DashboardUserInfoDto:
+      $ref: ./components/schemas/misc/DashboardUserInfoDto.yaml
+    GenericResponseErrorDataDashboardUserInfoDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataDashboardUserInfoDto.yaml
+    DashboardEventDto:
+      $ref: ./components/schemas/misc/DashboardEventDto.yaml
+    GenericResponseErrorDataListDashboardEventDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListDashboardEventDto.yaml
+    BaseRateDto:
+      $ref: ./components/schemas/misc/BaseRateDto.yaml
+    GenericResponseErrorDataBaseRateDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataBaseRateDto.yaml
+    GenericResponseErrorDataListBaseRateDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListBaseRateDto.yaml
+    ClientVisaInfoExtendedDto:
+      $ref: ./components/schemas/misc/ClientVisaInfoExtendedDto.yaml
+    GenericResponseErrorDataAdviceDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataAdviceDto.yaml
+    GenericResponseErrorDataInteger:
+      $ref: ./components/schemas/account/GenericResponseErrorDataInteger.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataString.yaml

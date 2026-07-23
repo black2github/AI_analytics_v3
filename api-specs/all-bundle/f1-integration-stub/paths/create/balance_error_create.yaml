@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице VW_RPT_GPB_KXD_RST_PLN_ECO_ERR
+  tags:
+  - Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO_ERR (эмуляции ошибок на запрос об остатках на счетах)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/BalanceErrorDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/BalanceErrorDto.yaml
+    '400':
+      description: Bad Request

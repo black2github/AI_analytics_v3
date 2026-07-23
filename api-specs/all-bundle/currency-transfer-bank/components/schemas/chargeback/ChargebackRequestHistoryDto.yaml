@@ -1,0 +1,56 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор поручения
+    format: uuid
+  changedIn:
+    type: string
+    description: Дата и время установки статуса
+    format: date-time
+  status:
+    type: string
+    description: Транспортное представление констант для передачи банковского статуса
+    enum:
+    - NONE
+    - NEW
+    - DELETED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - ACCEPTED
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPT_FOR_EXECUTION
+    - COMPLETED
+    - REJECTED
+    - WAITING_FOR_CANCEL_BASE_DOCUMENT
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userName:
+    type: string
+    description: ФИО Пользователя, который произвел операцию
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Транспортное представление записи исторического состояния отзыва валютного перевода

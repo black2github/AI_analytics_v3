@@ -1,0 +1,44 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер счета
+  status:
+    type: string
+    description: Статус счета
+    enum:
+    - ACTIVE
+    - CLOSED
+  dateOpen:
+    type: string
+    description: Дата открытия счета
+    format: date
+  dateClose:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  dealNumber:
+    type: string
+    description: Номер сделки
+  dealAmount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта
+  dealRate:
+    type: string
+    description: Процентная ставка
+  dealDate:
+    type: string
+    description: Дата заключения сделки
+    format: date
+  dealEndPlanDate:
+    type: string
+    description: Дата планового окончания сделки
+    format: date
+  dealEndFactDate:
+    type: string
+    description: Дата фактического окончания сделки
+    format: date
+description: Информация о депозитном счете

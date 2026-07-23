@@ -1,0 +1,41 @@
+type: object
+properties:
+  accountOpeningFree:
+    type: boolean
+    description: Открытие счета бесплатно по акции
+  appliedPromo:
+    $ref: ../common/TariffPromoDto.yaml
+  availableForSigning:
+    type: boolean
+    description: Признак доступности подписания документов по заявке
+  availableForSigningByCurrentUser:
+    type: boolean
+    description: Признак доступности подписания документов текущим пользователем
+  availablePromos:
+    type: array
+    description: Доступные акции
+    deprecated: true
+    items:
+      $ref: ../common/TariffPromoDto.yaml
+  hasNonFinalRequest115:
+    type: boolean
+    description: Признак наличия заявки 115 в не финальном статусе
+  hasNotOperatingRubCorpCard:
+    type: boolean
+    description: Есть ли в заявке ФЛ с необходимостью выпуска корпоративной карты не к расчётному счёту в рублях
+  promotionFreeAccountAndSalaryProjectSuitable:
+    type: boolean
+    description: Подходит ли заявка под акцию "РКО+Зарплатный проект"
+  remoteAccountOpeningEnabled:
+    type: boolean
+    description: Признак удаленного открытия счета
+  remoteAccountOpeningRefusedByEsk:
+    type: boolean
+    description: Признак технического отказа от УО
+  remoteAccountOpeningRefusedByUser:
+    type: boolean
+    description: Признак отказа пользователя от УО счета
+  remoteAccountOpeningUnavailable:
+    type: boolean
+    description: Признак невозможности дальнейшего открытия счета удаленно
+description: Дополнительные параметры

@@ -1,0 +1,26 @@
+type: object
+properties:
+  companyGUID:
+    type: string
+    description: GUID организации в ЕСК
+  name:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  address:
+    type: string
+    description: Адрес регистрации
+  persons:
+    type: array
+    description: Информация о представителях
+    items:
+      $ref: ./PersonDto.yaml
+description: Данные об организации

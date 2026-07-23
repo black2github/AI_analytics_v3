@@ -1,0 +1,22 @@
+get:
+  tags:
+  - Внутренний API переменных окружения пользователя
+  summary: Получить список доступных переменных окружения для пользователя банка
+  description: 'Привилегии: BANK_USER_ENV_VIEW'
+  operationId: getAvailableBankUserEnvironmentUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«UserEnvironmentInfoDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

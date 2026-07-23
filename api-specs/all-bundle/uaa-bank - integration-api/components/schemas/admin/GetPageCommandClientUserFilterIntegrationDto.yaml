@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsClientUserFilterIntegrationDto.yaml
+description: Запрос страницы

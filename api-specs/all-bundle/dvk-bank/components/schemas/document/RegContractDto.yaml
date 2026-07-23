@@ -1,0 +1,28 @@
+type: object
+description: Контракт для постановки на учет
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    dealPassportNumber:
+      type: string
+      description: Номер паспорта сделки
+    branchName:
+      type: string
+      description: Наименование филиала
+    clientName:
+      type: string
+      description: Наименование инициатора Паспорта сделки
+    owner:
+      $ref: ./ClientDto.yaml
+    nonresidents:
+      type: array
+      description: Список нерезидентов
+      items:
+        $ref: ./NonresidentDto.yaml
+    contract:
+      $ref: ./ContractDto.yaml
+    prevDealPassport:
+      $ref: ./PrevDealPassportDto.yaml
+    authorizedPerson:
+      $ref: ./AuthorizedPersonDto.yaml

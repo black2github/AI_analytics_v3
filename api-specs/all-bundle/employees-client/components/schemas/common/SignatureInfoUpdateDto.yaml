@@ -1,0 +1,13 @@
+type: object
+properties:
+  userPosition:
+    maxLength: 255
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Должность пользователя, подписавшего заявку
+  baseDoc:
+    maxLength: 255
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Документ, на основании которого пользователь подписал заявку
+description: Данные обновления реквизитов ЭП заявки

@@ -1,0 +1,23 @@
+required:
+- autoIssue
+- certValidityDays
+- signAlgorithm
+type: object
+properties:
+  autoIssue:
+    type: boolean
+    description: Автоматический выпуск сертификатов
+  certValidityDays:
+    type: integer
+    description: Период действия выпускаемого сертификата, дней
+    format: int32
+  signAlgorithm:
+    type: string
+    description: Алгоритм подписи
+    enum:
+    - GOST_3410_WITH_GOST_3411_2012_512
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+description: Настройки УЦ

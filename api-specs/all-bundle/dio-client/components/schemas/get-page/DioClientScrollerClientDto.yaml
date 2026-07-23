@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  name:
+    type: string
+    description: Краткое или полное наименование
+  branch:
+    $ref: ./DioClientScrollerBranchDto.yaml
+  contactId:
+    type: string
+    description: Представитель клиента (идентификатор)
+    format: uuid
+  contactName:
+    type: string
+    description: Представитель клиента (наименование)
+  contactPhone:
+    type: string
+    description: Телефон представителя клиента
+description: Транспортное описание клиента на просмотр

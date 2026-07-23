@@ -1,0 +1,13 @@
+type: object
+properties:
+  addressProviderOrder:
+    type: array
+    description: Порядок получения адреса из мастер-систем
+    items:
+      type: string
+      description: Порядок получения адреса из мастер-систем
+  addressFromMasterSystem:
+    $ref: ./AddressProviderResultDto.yaml
+  addressFromDpsitProvider:
+    $ref: ./AddressProviderResultDto.yaml
+description: Ответ на расчет аттрибутов CSR для клиента V2

@@ -1,0 +1,10 @@
+type: object
+properties:
+  artifact:
+    type: string
+  time:
+    $ref: ../common/OffsetDateTime.yaml
+  version:
+    type: string
+  group:
+    type: string

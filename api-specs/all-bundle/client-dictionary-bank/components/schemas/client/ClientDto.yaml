@@ -1,0 +1,43 @@
+required:
+- clientType
+- inn
+- isResident
+- kpp
+- ogrn
+- regNumber
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  clientType:
+    type: string
+    description: 'UL - Юридическое лицо;
+
+      IP - Индивидуальный предприниматель.'
+    enum:
+    - UL
+    - IP
+  isResident:
+    type: boolean
+  inn:
+    maxLength: 12
+    minLength: 0
+    type: string
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true и clientType = UL.
+  ogrn:
+    maxLength: 15
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true.
+  regNumber:
+    maxLength: 30
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = false.
+  empty:
+    type: boolean

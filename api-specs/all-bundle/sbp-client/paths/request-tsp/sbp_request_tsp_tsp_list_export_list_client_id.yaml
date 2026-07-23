@@ -1,0 +1,69 @@
+post:
+  tags:
+  - API заявки на регистрацию ТСП в СБП. Базовые операции. Deprecated - необходимо использовать API заявки на регистрацию ТСП в СБП. Базовые операции. Версия 2
+  summary: Экспорт списка ТСП, deprecated - использовать /sbp/tsp-list/export-list/{client_id}
+  operationId: exportList_5
+  parameters:
+  - name: client_id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: OrganizationId
+    in: header
+    description: Идентификатор клиента
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandSbpPrintRequestDtoString.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataAttachmentResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  deprecated: true

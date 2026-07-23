@@ -1,0 +1,23 @@
+type: object
+properties:
+  series:
+    type: string
+    description: Серия временного удостоверения личности
+  number:
+    type: string
+    description: Номер временного удостоверения личности
+  issuedBy:
+    type: string
+    description: Наименование органа, выдавшего временное удостоверение личности
+  authorityCode:
+    type: string
+    description: Код подразделения, выдавшего временное удостоверение личности
+  issueDate:
+    type: string
+    description: Дата выдачи временного удостоверения личности
+    format: date
+  expirationDate:
+    type: string
+    description: Дата окончания срока действия временного удостоверения личности
+    format: date
+description: Временное удостоверение личности гражданина РФ

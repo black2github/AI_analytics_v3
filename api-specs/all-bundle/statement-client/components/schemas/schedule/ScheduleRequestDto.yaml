@@ -1,0 +1,111 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  sourcePage:
+    type: string
+  period:
+    type: string
+    enum:
+    - CURRENT_DAY
+    - PREVIOUS_DAY
+    - PREVIOUS_WEEK
+    - PREVIOUS_MONTH
+    - PREVIOUS_QUARTER
+  times:
+    type: array
+    items:
+      type: string
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  separateAccountsFiles:
+    type: boolean
+  signNeeded:
+    type: boolean
+  hideEmptyTurnovers:
+    type: boolean
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  packageOfDocuments:
+    type: boolean
+  separateDocumentsFiles:
+    type: boolean
+  onlyStatementDocuments:
+    type: boolean
+  includeDebitStatements:
+    type: boolean
+  includeDebitOrders:
+    type: boolean
+  includeCreditStatements:
+    type: boolean
+  includeCreditOrders:
+    type: boolean
+  emails:
+    type: array
+    items:
+      type: string
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+  mobileSdkData:
+    type: string
+  counterpartyFilterType:
+    type: string
+    enum:
+    - INN
+    - NAME
+    - ACCOUNT
+  counterpartyFilters:
+    type: array
+    items:
+      $ref: ../common/CounterpartyFilterDataDto.yaml
+  withDataMT:
+    type: boolean
+  makeFileStatement:
+    type: boolean
+  reportType:
+    type: string
+    enum:
+    - STATEMENT_AND_DOCUMENTS
+    - DOCUMENTS
+  templateDocumentType:
+    type: string
+    enum:
+    - ONE_FILE
+    - SEPARATE_ACCOUNT_FILE
+    - SEPARATE_FILES
+description: Данные

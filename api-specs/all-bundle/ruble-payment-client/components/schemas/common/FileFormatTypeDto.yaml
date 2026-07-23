@@ -1,0 +1,9 @@
+type: string
+description: Классификатор типов файлов платежных документов
+enum:
+- UFEBS
+- FILE_1C
+- SWIFT
+- PAYDOCRU
+- ISO
+- TDIF

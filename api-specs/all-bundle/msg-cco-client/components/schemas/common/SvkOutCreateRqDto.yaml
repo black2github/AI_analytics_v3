@@ -1,0 +1,33 @@
+required:
+- bankClientInfo
+- docDate
+- message
+- system
+type: object
+properties:
+  docNumber:
+    maximum: 999999
+    minimum: 1
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  linkedDocumentInfo:
+    $ref: ./SvkOutLinkedDocumentInfoRqDto.yaml
+  branchInfo:
+    $ref: ./SvkOutBranchInfoRqDto.yaml
+  message:
+    $ref: ./SvkOutMessageInfoRqDto.yaml
+  bankClientInfo:
+    $ref: ./SvkOutBankClientInfoRqDto.yaml
+  system:
+    $ref: ./SvkOutSourceSystemInfoRqDto.yaml
+  attachments:
+    type: array
+    description: Файловые вложения документа
+    items:
+      $ref: ./SvkOutAttachmentInfoRqDto.yaml
+description: ДТО на создание СВК

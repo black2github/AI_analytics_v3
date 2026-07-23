@@ -1,0 +1,11 @@
+required:
+- dssProfileId
+type: object
+properties:
+  dssProfileId:
+    type: string
+    description: ID ДСС профиля
+    format: uuid
+  description:
+    $ref: ./DeleteDssProfileDescriptionInfoDto.yaml
+description: Запрос на удаление ДСС профиля

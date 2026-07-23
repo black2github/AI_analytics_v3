@@ -1,0 +1,12 @@
+required:
+- role
+- segment
+type: object
+properties:
+  segment:
+    type: string
+    description: Код сегмента
+  role:
+    type: string
+    description: Код роли
+description: ДТО объект сегмент-роль

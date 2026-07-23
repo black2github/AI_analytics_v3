@@ -1,0 +1,53 @@
+required:
+- accountId
+- accountNumber
+- accountWorkMode
+- clientId
+- createdAt
+- f1AccountId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID счета ТНФ
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountId:
+    type: string
+    description: ID счета
+    format: uuid
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1
+    format: int64
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  organizationName:
+    type: string
+    description: Наименования организации
+  organizationInn:
+    type: string
+    description: ИНН
+  organizationRnk:
+    type: string
+    description: РНК
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+  accountWorkMode:
+    type: string
+    description: Режим работы счёта
+    enum:
+    - ACCEPT
+    - MONITORING
+description: Данные скроллера списка счетов ТНФ

@@ -1,0 +1,133 @@
+openapi: 3.0.1
+info:
+  title: Сервис оферт. Банковская часть
+  version: 3.1.0
+servers:
+- url: /offer-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /offer/repeat-send:
+    $ref: ./paths/repeat-send/offer_repeat_send.yaml
+  /offer/reject:
+    $ref: ./paths/reject/offer_reject.yaml
+  /offer/print:
+    $ref: ./paths/print/offer_print.yaml
+  /offer/get-page:
+    $ref: ./paths/get-page/offer_get_page.yaml
+  /offer/generate-digest/version:
+    $ref: ./paths/generate-digest/offer_generate_digest_version.yaml
+  /offer/export-sign:
+    $ref: ./paths/export-sign/offer_export_sign.yaml
+  /offer/category:
+    $ref: ./paths/category/offer_category.yaml
+  /offer/accept-successful:
+    $ref: ./paths/accept-successful/offer_accept_successful.yaml
+  /offer/{id}:
+    $ref: ./paths/{id}/offer_id.yaml
+  /offer/history/{id}:
+    $ref: ./paths/history/offer_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    ContractorsRegistryRecordDto:
+      $ref: ./components/schemas/common/ContractorsRegistryRecordDto.yaml
+    F1OfferScanResponseDto:
+      $ref: ./components/schemas/common/F1OfferScanResponseDto.yaml
+    InteractionF1Dto:
+      $ref: ./components/schemas/common/InteractionF1Dto.yaml
+    OfferAttachmentsDto:
+      $ref: ./components/schemas/common/OfferAttachmentsDto.yaml
+    OfferDto:
+      $ref: ./components/schemas/common/OfferDto.yaml
+    OfferProjectParametersDto:
+      $ref: ./components/schemas/common/OfferProjectParametersDto.yaml
+    OfferSignatureDto:
+      $ref: ./components/schemas/common/OfferSignatureDto.yaml
+    RequestDataDto:
+      $ref: ./components/schemas/common/RequestDataDto.yaml
+    RequisiteBankAccountAgreementDto:
+      $ref: ./components/schemas/common/RequisiteBankAccountAgreementDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SingleResponseOfferDto:
+      $ref: ./components/schemas/common/SingleResponseOfferDto.yaml
+    OfferCommentDto:
+      $ref: ./components/schemas/reject/OfferCommentDto.yaml
+    SingleCommandOfferCommentDto:
+      $ref: ./components/schemas/reject/SingleCommandOfferCommentDto.yaml
+    OfferPrintFormatDto:
+      $ref: ./components/schemas/print/OfferPrintFormatDto.yaml
+    SingleCommandOfferPrintFormatDto:
+      $ref: ./components/schemas/print/SingleCommandOfferPrintFormatDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoOfferStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOfferStatusDto.yaml
+    FilterValueEnumDtoStageInteractionDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoStageInteractionDto.yaml
+    GetPageCommandOfferBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandOfferBankFilter.yaml
+    OfferBankFilter:
+      $ref: ./components/schemas/common/OfferBankFilter.yaml
+    PageParamsOfferBankFilter:
+      $ref: ./components/schemas/common/PageParamsOfferBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    OfferBankScrollerClientInfoDto:
+      $ref: ./components/schemas/get-page/OfferBankScrollerClientInfoDto.yaml
+    OfferBankScrollerDto:
+      $ref: ./components/schemas/get-page/OfferBankScrollerDto.yaml
+    OfferBankScrollerInteractionF1Dto:
+      $ref: ./components/schemas/get-page/OfferBankScrollerInteractionF1Dto.yaml
+    OfferBankScrollerRequestDataDto:
+      $ref: ./components/schemas/get-page/OfferBankScrollerRequestDataDto.yaml
+    PageDataOfferBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataOfferBankScrollerDto.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    SingleResponseDigest:
+      $ref: ./components/schemas/generate-digest/SingleResponseDigest.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    OfferHistoryDto:
+      $ref: ./components/schemas/history/OfferHistoryDto.yaml
+    SingleResponseListOfferHistoryDto:
+      $ref: ./components/schemas/history/SingleResponseListOfferHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

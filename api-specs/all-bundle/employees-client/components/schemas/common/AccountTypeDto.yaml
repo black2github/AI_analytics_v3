@@ -1,0 +1,13 @@
+type: object
+properties:
+  code:
+    type: integer
+    description: Код типа счета
+    format: int64
+  description:
+    type: string
+    description: Краткое наименование
+  fullDescription:
+    type: string
+    description: Полное наименование
+description: Тип

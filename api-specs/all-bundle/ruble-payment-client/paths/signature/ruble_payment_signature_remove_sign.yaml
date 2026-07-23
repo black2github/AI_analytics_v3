@@ -1,0 +1,56 @@
+post:
+  tags:
+  - АПИ для работы с подписью платёжного поручения
+  summary: Снять подпись. Данное АПИ устарело и будет удалено в будущем. Необходимо использовать /remove-document-version-sign
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.REMOVE_SIGN'
+  operationId: removeSignature
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/signature/BatchClientRemoveSignCommand.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseRublePaymentErrorListPaymentOrderRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+  deprecated: true

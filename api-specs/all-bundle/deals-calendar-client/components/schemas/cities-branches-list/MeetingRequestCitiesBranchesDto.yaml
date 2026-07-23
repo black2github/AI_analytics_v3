@@ -1,0 +1,12 @@
+type: object
+properties:
+  cityName:
+    type: string
+    description: Наименование города
+  branchNameList:
+    uniqueItems: true
+    type: array
+    description: Список подразделений
+    items:
+      $ref: ./BranchDtoV2.yaml
+description: Список городов и подразделений к ним

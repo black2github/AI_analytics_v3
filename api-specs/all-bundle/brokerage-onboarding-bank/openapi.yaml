@@ -1,0 +1,98 @@
+openapi: 3.0.1
+info:
+  title: БРК. Onboarding. Банковская часть.
+  version: 3.0.0
+servers:
+- url: /brokerage-onboarding-bank
+security:
+- bearer-key: []
+paths:
+  /request-service/stats-by-category:
+    $ref: ./paths/stats-by-category/request_service_stats_by_category.yaml
+  /request-service/retry:
+    $ref: ./paths/retry/request_service_retry.yaml
+  /request-service/get-page:
+    $ref: ./paths/get-page/request_service_get_page.yaml
+  /request-service/cancel:
+    $ref: ./paths/cancel/request_service_cancel.yaml
+  /request-service/{requestId}:
+    $ref: ./paths/{requestId}/request_service_requestId.yaml
+  /request-service/{requestId}/history:
+    $ref: ./paths/{requestId}/request_service_requestId_history.yaml
+  /file-storage/{attachmentId}/access-token:
+    $ref: ./paths/{attachmentId}/file_storage_attachmentId_access_token.yaml
+components:
+  schemas:
+    BrkOnbBankRequestRequestFilterDto:
+      $ref: ./components/schemas/common/BrkOnbBankRequestRequestFilterDto.yaml
+    FilterValueDtoBrkOnbBankRequestRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueDtoBrkOnbBankRequestRequestStatusDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GenericCommandBrkOnbBankRequestRequestFilterDto:
+      $ref: ./components/schemas/stats-by-category/GenericCommandBrkOnbBankRequestRequestFilterDto.yaml
+    BrkOnbStatusCategoryStatDto:
+      $ref: ./components/schemas/stats-by-category/BrkOnbStatusCategoryStatDto.yaml
+    GenericResponseSimpleErrorDataListBrkOnbStatusCategoryStatDto:
+      $ref: ./components/schemas/stats-by-category/GenericResponseSimpleErrorDataListBrkOnbStatusCategoryStatDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    BrkOnbAdminRequestDto:
+      $ref: ./components/schemas/common/BrkOnbAdminRequestDto.yaml
+    GenericCommandBrkOnbAdminRequestDto:
+      $ref: ./components/schemas/common/GenericCommandBrkOnbAdminRequestDto.yaml
+    BrkFileStorageDataDto:
+      $ref: ./components/schemas/common/BrkFileStorageDataDto.yaml
+    BrkOnbFloorViewDto:
+      $ref: ./components/schemas/common/BrkOnbFloorViewDto.yaml
+    BrkOnbRequestViewDto:
+      $ref: ./components/schemas/common/BrkOnbRequestViewDto.yaml
+    BrkOnbSignatureDto:
+      $ref: ./components/schemas/common/BrkOnbSignatureDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GenericResponseSimpleErrorDataBrkOnbRequestViewDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBrkOnbRequestViewDto.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    GetPageCommandBrkOnbBankRequestRequestFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandBrkOnbBankRequestRequestFilterDto.yaml
+    PageParamsBrkOnbBankRequestRequestFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsBrkOnbBankRequestRequestFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    BrkOnbRequestItemDto:
+      $ref: ./components/schemas/get-page/BrkOnbRequestItemDto.yaml
+    PageDataBrkOnbRequestItemDto:
+      $ref: ./components/schemas/get-page/PageDataBrkOnbRequestItemDto.yaml
+    BrkBankRequestHistoryViewDto:
+      $ref: ./components/schemas/{requestId}/BrkBankRequestHistoryViewDto.yaml
+    GenericResponseSimpleErrorDataListBrkBankRequestHistoryViewDto:
+      $ref: ./components/schemas/{requestId}/GenericResponseSimpleErrorDataListBrkBankRequestHistoryViewDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/{attachmentId}/ErrorData.yaml
+    FileAccessTokenResponseDto:
+      $ref: ./components/schemas/{attachmentId}/FileAccessTokenResponseDto.yaml
+    GenericResponseErrorDataFileAccessTokenResponseDto:
+      $ref: ./components/schemas/{attachmentId}/GenericResponseErrorDataFileAccessTokenResponseDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

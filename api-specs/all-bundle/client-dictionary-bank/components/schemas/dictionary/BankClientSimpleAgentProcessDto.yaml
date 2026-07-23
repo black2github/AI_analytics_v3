@@ -1,0 +1,49 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  processEndDate:
+    type: string
+    description: Дата завершения процесса
+    format: date-time
+  processStatus:
+    type: string
+    description: Статус процесса
+    enum:
+    - COMPLETED
+    - IN_PROGRESS
+    - CREATED
+    - ERROR
+  userId:
+    type: string
+    description: Идентификатор пользователя, запустившего процесс
+    format: uuid
+  errorDescription:
+    type: string
+    description: Описание ошибки выполнения процесса
+  totalChangeCount:
+    type: integer
+    description: Общее количество записей для обработки
+    format: int64
+  currentChangeCount:
+    type: integer
+    description: Количество уже обработанных записей
+    format: int64
+  irrelevantClientCount:
+    type: integer
+    description: Нерелевантные Клиенты
+    format: int64
+  errorClientCount:
+    type: integer
+    description: Количество ошибок
+    format: int64
+  filterForSelect:
+    type: string
+    description: Условие выборки
+description: Запись процесса актуализации простого клиента банка

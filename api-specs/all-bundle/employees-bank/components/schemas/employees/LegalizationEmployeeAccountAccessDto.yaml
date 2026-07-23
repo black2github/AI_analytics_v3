@@ -1,0 +1,26 @@
+required:
+- access
+- accountId
+- accountNumber
+type: object
+properties:
+  accountId:
+    type: string
+    description: ID Счета клиента
+    format: uuid
+  accountNumber:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Номер счета
+  access:
+    maximum: 2
+    minimum: 0
+    type: integer
+    description: Доступ к счету
+    format: int32
+    enum:
+    - 0
+    - 1
+    - 2
+description: Выдаваемые доступы по счетам. Информация об одном счете

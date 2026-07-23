@@ -1,0 +1,41 @@
+required:
+- accountNumber
+- accountType
+- currency
+- id
+- isSignatory
+- state
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер
+  currency:
+    $ref: ./AccountCurrencyDto.yaml
+  accountType:
+    $ref: ./AccountTypeDto.yaml
+  accountName:
+    type: string
+    description: Наименование
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  signatory:
+    $ref: ./Signatory.yaml
+  accesses:
+    $ref: ./Accesses.yaml
+  isSignatory:
+    type: boolean
+    description: Наличие подписанта
+description: Данные счета (настройка доступа по счету)

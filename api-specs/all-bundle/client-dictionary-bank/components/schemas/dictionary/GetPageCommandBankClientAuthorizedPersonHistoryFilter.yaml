@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBankClientAuthorizedPersonHistoryFilter.yaml
+description: Запрос страницы

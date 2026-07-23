@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  f1AccountId:
+    type: integer
+    format: int64
+  accountNumber:
+    type: string
+  balance:
+    type: number
+  state:
+    type: string
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  bankClient:
+    $ref: ./BankClientLightDto.yaml
+  currency:
+    $ref: ./CurrencyLightDto.yaml
+  regBranchCode:
+    type: string
+  accountTypeName:
+    type: string
+  openDate:
+    type: string
+    format: date
+  closeDate:
+    type: string
+    format: date
+description: Данные

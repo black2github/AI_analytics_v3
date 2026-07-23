@@ -1,0 +1,8 @@
+type: object
+properties:
+  agreementRequestId:
+    type: string
+    format: uuid
+  attachmentId:
+    type: string
+    format: uuid

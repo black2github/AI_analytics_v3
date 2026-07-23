@@ -1,0 +1,22 @@
+type: object
+description: Запрос на блокировку и разблокировку ТСП
+properties:
+  legalIds:
+    type: array
+    items:
+      type: string
+    description: Массив Идентификаторов ЮЛ, ИП в СБП
+  merchantIds:
+    type: array
+    items:
+      type: string
+    description: Массив Идентификаторов ТСП
+  status:
+    type: string
+    description: Статус блокировки/разблокировки ТСП
+  docType:
+    type: string
+    description: Тип документа
+  guid:
+    type: string
+    description: ID заявки в Экосистеме

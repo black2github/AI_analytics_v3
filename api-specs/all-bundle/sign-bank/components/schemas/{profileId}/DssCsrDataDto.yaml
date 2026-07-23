@@ -1,0 +1,10 @@
+type: object
+properties:
+  csrId:
+    type: integer
+    description: ID CSR в DSS
+    format: int64
+  csrData:
+    type: string
+    description: CSR в base64
+description: Данные с CSR

@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  letterCode:
+    type: string
+    description: Буквенный код валюты счета
+  typeCode:
+    type: integer
+    description: Код типа счета
+    format: int64
+description: Сведения об открываемых счетах для сервиса ГС

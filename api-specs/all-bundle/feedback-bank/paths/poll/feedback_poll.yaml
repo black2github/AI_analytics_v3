@@ -1,0 +1,19 @@
+post:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Создать новый опрос
+  description: 'Привилегии: FEEDBACK.BANK.POLL_CREATE'
+  operationId: createPoll
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/poll/PollParameterCreateUpdateDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/poll/GenericResponseSimpleErrorDataPollDetailDto.yaml

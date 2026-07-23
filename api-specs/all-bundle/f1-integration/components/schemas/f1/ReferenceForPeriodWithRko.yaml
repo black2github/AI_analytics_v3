@@ -1,0 +1,12 @@
+required:
+- numberRKO
+- referenceCode
+type: object
+properties:
+  referenceCode:
+    type: string
+    description: Код вида справки
+  numberRKO:
+    type: string
+    description: Номер договора РКО
+description: Информация о справки

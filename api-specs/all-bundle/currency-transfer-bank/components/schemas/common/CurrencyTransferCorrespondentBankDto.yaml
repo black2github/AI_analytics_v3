@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор банк-корреспондента банка получателя
+    format: uuid
+  name:
+    type: string
+    description: Наименование банк-корреспондента банка получателя
+  bic:
+    type: string
+    description: BIC-код банка-корреспондента банка получателя
+  accountType:
+    type: string
+    description: Транспортное представление для передачи тип счета
+    enum:
+    - IBAN
+    - OTHER
+  accountNumber:
+    type: string
+    description: Номер счета банка-корреспондента банка получателя (IBAN/прочий)
+description: Транспортное представление реквизитов банк-корреспондента банка получателя

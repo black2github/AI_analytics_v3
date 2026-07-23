@@ -1,0 +1,17 @@
+type: object
+properties:
+  priority:
+    type: integer
+    description: Приоритет
+    format: int64
+  accountId:
+    type: string
+    description: Идентификатор
+    format: uuid
+  visible:
+    type: boolean
+    description: Признак отображения счета
+  name:
+    type: string
+    description: Имя счета
+description: Настройки счетов клиента

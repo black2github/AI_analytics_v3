@@ -1,0 +1,29 @@
+type: object
+description: Запрос смены статуса заявки на блокировку и разблокировку ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_TSP_CHANGE_STATUS_TO_AS_SBP
+    - EXPORT_TSP_CHANGE_STATUS_TO_AS_SBP_ERROR
+    - EXECUTED_BY_AS_SBP_TSP_CHANGE_STATUS
+    - EXECUTED
+    - REJECTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id
+- nextStatus

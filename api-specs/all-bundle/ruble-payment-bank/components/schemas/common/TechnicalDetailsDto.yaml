@@ -1,0 +1,8 @@
+type: object
+properties:
+  newHistoryOperations:
+    type: boolean
+    description: Признак поддержки новой истории операций.
+  kpRetailStatus:
+    $ref: ./KpRetailStatusDto.yaml
+description: Техническая информация о документе.

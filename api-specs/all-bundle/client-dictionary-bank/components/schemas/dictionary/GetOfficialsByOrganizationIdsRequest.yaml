@@ -1,0 +1,12 @@
+type: object
+properties:
+  organizationIds:
+    maxItems: 1000
+    minItems: 1
+    type: array
+    description: Список ID организаций
+    items:
+      type: string
+      description: Список ID организаций
+      format: uuid
+description: Запрос поиска представителей по списку ID организаций

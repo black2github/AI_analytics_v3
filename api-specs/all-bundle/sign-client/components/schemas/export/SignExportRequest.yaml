@@ -1,0 +1,23 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Наименование файлов
+  digest:
+    type: string
+    description: Дайджест
+  cmsList:
+    type: array
+    description: Список записей, содержащих сертификат ЭП (id или тело сертификата) и электронную подпись
+    items:
+      $ref: ./CmsItem.yaml
+  additionalContent:
+    type: array
+    description: Дополнительные файлы включаемые в архив
+    items:
+      $ref: ./ContentItem.yaml
+  signCheckDate:
+    type: string
+    description: Дата проверки подписи
+    format: date-time
+description: Запрос на выгрузку реквизитов ЭП для проверки

@@ -1,0 +1,13 @@
+type: object
+properties:
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.BBAN
+    - RU.CBR.EPID
+    - RU.CBR.PAN
+    - RU.CBR.MTEL
+    - RU.CBR.ORID
+  identification:
+    type: string
+description: Корреспондентский счет

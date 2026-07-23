@@ -1,0 +1,38 @@
+required:
+- accessCreateUpdate
+- accessView
+- accountId
+- accountNumber
+- accountType
+- currencyCode
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  currencyCode:
+    type: string
+    description: ISO код валюты счета
+  accountId:
+    type: string
+    description: Идентификатор счета клиента
+    format: uuid
+  accountType:
+    type: string
+    description: Тип счета
+  accountName:
+    type: string
+    description: Наименование счета
+  accountStatus:
+    type: string
+    description: Статус счета
+  accessView:
+    type: boolean
+    description: Доступ на просмотр остатка, выписки и документов по счету (VIEW)
+  accessCreateUpdate:
+    type: boolean
+    description: Доступ на создание и редактирование документов по счету (CREATE_UPDATE)
+  hasSignatory:
+    type: boolean
+    description: Признак наличия подписанта по счету
+description: Доступы сотрудника к счетам в заявке

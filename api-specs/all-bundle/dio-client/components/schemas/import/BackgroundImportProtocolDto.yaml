@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  fileDetails:
+    $ref: ./FileDetailsDto.yaml
+  launchAt:
+    type: string
+    description: Дата и время запуска
+    format: date-time
+  completeAt:
+    type: string
+    description: Дата и время завершения
+    format: date-time
+  totalDocCount:
+    type: integer
+    description: Всего документов
+    format: int64
+  importedDocumentDetails:
+    type: array
+    description: Данные об импортированных документах
+    items:
+      $ref: ./ImportedDocumentProtocolDetailsDto.yaml
+  cannotBeImportedDocuments:
+    type: array
+    description: 'Список документов сеанса импорта: нет возможности импортировать'
+    items:
+      $ref: ../common/BackgroundImportDocumentLightDto.yaml
+  importedDocuments:
+    type: array
+    description: 'Список документов сеанса импорта: импортированы'
+    items:
+      $ref: ../common/BackgroundImportDocumentLightDto.yaml
+description: Данные протокола файлового импорта

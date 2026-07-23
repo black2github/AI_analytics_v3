@@ -1,0 +1,45 @@
+type: object
+description: Фильтр по периодичности платежа по Подписке
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Периодичность платежа
+    enum:
+    - DAILY
+    - WEEKLY
+    - MONTHLY
+    - QUARTERLY
+  notEq:
+    type: string
+    description: Периодичность платежа
+    enum:
+    - DAILY
+    - WEEKLY
+    - MONTHLY
+    - QUARTERLY
+  in:
+    type: array
+    items:
+      type: string
+      description: Периодичность платежа
+      enum:
+      - DAILY
+      - WEEKLY
+      - MONTHLY
+      - QUARTERLY
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Периодичность платежа
+      enum:
+      - DAILY
+      - WEEKLY
+      - MONTHLY
+      - QUARTERLY
+  isNull:
+    type: boolean

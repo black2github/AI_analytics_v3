@@ -1,0 +1,47 @@
+type: object
+properties:
+  classifierId:
+    type: string
+    description: Идентификатор в Классификаторе ЕСК
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  fullName:
+    type: string
+    description: Полное имя
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  jobTitle:
+    type: string
+    description: Должность
+  identityCard:
+    $ref: ../common/IdentityCardDto.yaml
+  identityCardStatus:
+    type: string
+    description: Результат проверки паспорта представителя
+    enum:
+    - VALID
+    - INVALID
+    - UNDEFINED
+  personalDataStatus:
+    type: string
+    description: Статус комплекта персональных данных представителя
+    enum:
+    - COMPLETE
+    - INCOMPLETE
+  contactsInfo:
+    $ref: ./PersonContactsInfoDto.yaml
+  authorizingDocuments:
+    type: array
+    description: Список документов, на основании которых действует лицо, взаимодействующее с банком
+    items:
+      $ref: ./PersonAuthorizingDocumentDto.yaml
+description: Представитель организации (формат 2)

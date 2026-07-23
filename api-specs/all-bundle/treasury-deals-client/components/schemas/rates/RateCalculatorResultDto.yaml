@@ -1,0 +1,24 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Клиент имеющий эту ставку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  rateReceivingCode:
+    type: integer
+    description: Код получения ставки
+    format: int32
+  rateReceivingTitle:
+    type: string
+    description: Описание кода получения ставки
+  rate:
+    type: string
+    description: Ставка
+  income:
+    type: string
+    description: Сумма процентов
+  finalAmount:
+    type: string
+    description: Сумма в конце срока
+description: Данные

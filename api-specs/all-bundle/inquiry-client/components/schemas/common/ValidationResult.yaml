@@ -1,0 +1,15 @@
+type: object
+properties:
+  result:
+    type: string
+    example: null
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  groupResults:
+    type: array
+    example: null
+    items:
+      $ref: ./GroupResult.yaml
+example: null

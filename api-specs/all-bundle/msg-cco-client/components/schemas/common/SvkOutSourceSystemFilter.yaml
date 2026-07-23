@@ -1,0 +1,81 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  notEq:
+    type: string
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - WEB
+      - MBC
+      - MBC_NATIVE
+      - DIRECT_1C
+      - F1
+      - SKVO
+      - LK_UVED
+      - TNF
+      - IMPORT_SERVICE
+      - SINGLE_WINDOW_SERVICE
+      - OPEN_API_CB
+      - MSB_IB
+      - MSB_APP
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - WEB
+      - MBC
+      - MBC_NATIVE
+      - DIRECT_1C
+      - F1
+      - SKVO
+      - LK_UVED
+      - TNF
+      - IMPORT_SERVICE
+      - SINGLE_WINDOW_SERVICE
+      - OPEN_API_CB
+      - MSB_IB
+      - MSB_APP
+  isNull:
+    type: boolean
+description: Фильтр по системе создания документа.

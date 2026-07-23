@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице gps_eco_accs_card_count_err
+  tags:
+  - Обновление заглушек ошибок GPS_ECO_CNT_CCARD_ACCL (Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС))
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

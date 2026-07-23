@@ -1,0 +1,16 @@
+required:
+- requestId
+type: object
+properties:
+  requestId:
+    type: string
+    description: ID Заявки
+    format: uuid
+  snils:
+    type: string
+    description: СНИЛС
+  birthday:
+    type: string
+    description: Дата рождения
+    format: date
+description: Запрос для обновления информации о ЕПГУ в заявке

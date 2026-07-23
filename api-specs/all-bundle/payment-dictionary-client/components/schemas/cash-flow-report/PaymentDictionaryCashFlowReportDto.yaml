@@ -1,0 +1,30 @@
+type: object
+properties:
+  paymentDictionaryResponsibilityCenterName:
+    type: string
+    description: Наименование центра ответственности
+  paymentDictionaryAnalyticClassifierCode:
+    type: string
+    description: Наименование аналитические классификаторы
+  paymentDictionaryPlanningPeriodName:
+    type: string
+    description: Наименование периода планирования
+  entrance:
+    type: number
+    description: Поступление
+  real:
+    type: number
+    description: Подтверждено
+  finance:
+    type: number
+    description: Расход
+  plan:
+    type: number
+    description: Лимит
+  restLimit:
+    type: number
+    description: Остаток лимит
+  actualLimitBalance:
+    type: number
+    description: Фактический остаток лимита
+description: Отчет о движении средств

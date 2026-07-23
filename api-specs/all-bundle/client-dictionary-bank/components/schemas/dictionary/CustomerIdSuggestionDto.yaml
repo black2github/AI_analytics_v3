@@ -1,0 +1,6 @@
+type: object
+properties:
+  customerId:
+    type: string
+    description: ID клиента сервиса
+description: 'Подсказки: ID клиента сервиса'

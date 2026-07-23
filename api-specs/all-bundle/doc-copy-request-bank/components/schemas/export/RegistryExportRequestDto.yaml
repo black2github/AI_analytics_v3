@@ -1,0 +1,42 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы заявок, подлежащие экспорту.
+    items:
+      type: string
+      description: Идентификаторы заявок, подлежащие экспорту.
+      format: uuid
+  visibleColumns:
+    type: array
+    description: Колонки, которые будут отображены в реестре.
+    items:
+      type: string
+      description: Колонки, которые будут отображены в реестре.
+      enum:
+      - ID
+      - NUMBER
+      - DATE
+      - ORGANIZATION
+      - ORGANIZATION_NAME
+      - INN
+      - DOCUMENT_TYPE
+      - ACCOUNT_NUMBERS
+      - DOCS_AMOUNT
+      - DOCS_RETRIEVE_METHOD
+      - STATUS
+      - CREATOR
+      - CREATOR_FIO
+      - CREATOR_ID
+  format:
+    type: string
+    description: Формат отчета.
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+description: Запрос на экспорт реестра заявок.

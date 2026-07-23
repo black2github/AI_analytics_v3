@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи справочника
+    format: uuid
+  serviceCode:
+    type: string
+    description: Код сервиса
+  name:
+    type: string
+    description: Наименование сервиса (RU)
+  nameEn:
+    type: string
+    description: Наименование сервиса (EN)
+  servicePath:
+    title: Путь
+    type: string
+    description: Относительный путь к странице, на которой необходимо отображать дисклеймер для данного сервиса
+  iconName:
+    title: Иконка
+    type: string
+    description: Название файла иконки данного сервиса в библиотеке иконок
+description: Справочник сервисов дисклеймера

@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankClientEskId:
+    type: string
+  accounts:
+    type: array
+    items:
+      $ref: ./AccountDtoV2.yaml
+description: Ответ на список счетов

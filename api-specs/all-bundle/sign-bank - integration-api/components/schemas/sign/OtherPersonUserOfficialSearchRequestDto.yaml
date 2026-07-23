@@ -1,0 +1,14 @@
+type: object
+properties:
+  absId:
+    type: string
+    description: ID физического лица в РКО Ф1
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  remoteId:
+    type: integer
+    description: ID учетной записи в системе источнике
+    format: int32
+description: Запрос поиска представителей клиентов СЭП других пользователей физического лица

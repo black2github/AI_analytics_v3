@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  number:
+    type: string
+    description: Номер документа
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  documentType:
+    type: string
+    description: Тип документа
+  status:
+    type: string
+    description: Статус документа
+  messageInfo:
+    type: string
+    description: Информация
+  documentInfo:
+    $ref: ./DocumentInfoDto.yaml
+  dioDocumentType:
+    type: string
+    description: Тип документа дио
+description: DTO сообщения связанного документа для скроллера

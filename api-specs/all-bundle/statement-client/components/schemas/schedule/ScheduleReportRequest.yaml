@@ -1,0 +1,9 @@
+type: object
+properties:
+  connectId:
+    type: string
+    format: uuid
+  disconnectId:
+    type: string
+    format: uuid
+description: Данные

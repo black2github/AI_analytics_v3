@@ -1,0 +1,15 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Признак успешности проверки
+    enum:
+    - OK
+    - CLIENTS_NOT_FOUND
+    - NO_AUTHORIZED_PERSON
+    - CLIENTS_WITHOUT_AGREEMENT_FOUND
+  details:
+    type: array
+    items:
+      $ref: ./BankClientMiniInfoDto.yaml
+description: Результат проверки Представителя Клиента

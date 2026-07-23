@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Вид дисклеймеров
+    enum:
+    - ERROR
+    - WARNING
+    - INFO
+    - MESSAGE
+  notEq:
+    type: string
+    description: Вид дисклеймеров
+    enum:
+    - ERROR
+    - WARNING
+    - INFO
+    - MESSAGE
+  in:
+    type: array
+    items:
+      type: string
+      description: Вид дисклеймеров
+      enum:
+      - ERROR
+      - WARNING
+      - INFO
+      - MESSAGE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Вид дисклеймеров
+      enum:
+      - ERROR
+      - WARNING
+      - INFO
+      - MESSAGE
+  isNull:
+    type: boolean
+description: Фильтр для DisclaimerTypeDto

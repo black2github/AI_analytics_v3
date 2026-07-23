@@ -1,0 +1,23 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientContractName:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  contractTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  requestFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  requestTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  type:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Запрос отчета брокера (банковская сторона)

@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Место подписания договора с банком
+    enum:
+    - BANK_OFFICE
+    - DEPARTURE_OF_BANK_EMPLOYEE
+  in:
+    type: array
+    items:
+      type: string
+      description: Место подписания договора с банком
+      enum:
+      - BANK_OFFICE
+      - DEPARTURE_OF_BANK_EMPLOYEE
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Место подписания договора с банком
+    enum:
+    - BANK_OFFICE
+    - DEPARTURE_OF_BANK_EMPLOYEE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Место подписания договора с банком
+      enum:
+      - BANK_OFFICE
+      - DEPARTURE_OF_BANK_EMPLOYEE
+description: Сервис выездного подписания. Полное совпадение (eq)

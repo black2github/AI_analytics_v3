@@ -1,0 +1,21 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID Пользователь
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientRnk:
+    type: string
+    description: Регистрационный номер клиента (РНК) в РКО Ф1
+  eskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+description: Бизнес реквизиты клиента

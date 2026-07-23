@@ -1,0 +1,9 @@
+required:
+- linkedDocId
+type: object
+properties:
+  linkedDocId:
+    type: string
+    description: ID связанного документа
+    format: uuid
+description: Дто журнала документов.

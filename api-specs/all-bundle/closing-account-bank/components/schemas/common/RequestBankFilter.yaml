@@ -1,0 +1,47 @@
+type: object
+properties:
+  accountAssignment:
+    $ref: ./FilterValueEnumDtoAccountAssignmentDto.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  accountType:
+    $ref: ./FilterValueDtoString.yaml
+  cacheBalance:
+    $ref: ./FilterValueDtoBoolean.yaml
+  checkbookPresent:
+    $ref: ./FilterValueDtoBoolean.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  commissionDebt:
+    $ref: ./FilterValueDtoBoolean.yaml
+  currency:
+    $ref: ./FilterValueDtoString.yaml
+  dbsClosed:
+    $ref: ./FilterValueDtoBoolean.yaml
+  dbsDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dbsNumber:
+    $ref: ./FilterValueDtoString.yaml
+  divisionName:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoClosingRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Банковская категория
+    enum:
+    - PROCESSING_ERROR
+    - IN_PROGRESS
+    - COMPLETED
+    - ALL
+  user:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для поиска заявок на закрытие счета для банковского скроллера

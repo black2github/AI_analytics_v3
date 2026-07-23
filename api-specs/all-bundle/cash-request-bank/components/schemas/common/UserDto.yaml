@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  surname:
+    type: string
+    description: Фамилия
+description: ФИО пользователя

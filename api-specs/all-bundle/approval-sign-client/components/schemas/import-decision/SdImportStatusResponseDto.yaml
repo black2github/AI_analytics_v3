@@ -1,0 +1,29 @@
+type: object
+properties:
+  sdImportStatus:
+    type: string
+    description: Статус импорта списка платежей
+    enum:
+    - NEW
+    - AWAIT_CONFIRMATION
+    - CANCELED
+    - IN_PROGRESS
+    - COMPLETED
+    - ERROR
+  documentsCount:
+    type: integer
+    description: Общее количество документов
+    format: int32
+  importCount:
+    type: integer
+    description: Всего обработано
+    format: int32
+  importSuccessCount:
+    type: integer
+    description: Успешно обработано
+    format: int32
+  importFailedCount:
+    type: integer
+    description: Обработано с ошибкой
+    format: int32
+description: Информация о процессе импорта обработанного реестра платежных поручений

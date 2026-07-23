@@ -1,0 +1,8 @@
+type: object
+properties:
+  list:
+    type: array
+    example: null
+    items:
+      $ref: ./InquiryRequestHistoryDto.yaml
+example: null

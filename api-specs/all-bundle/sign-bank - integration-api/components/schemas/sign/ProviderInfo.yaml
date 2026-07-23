@@ -1,0 +1,9 @@
+type: object
+properties:
+  providerInterface:
+    type: string
+  providerName:
+    type: string
+  providerType:
+    type: integer
+    format: int32

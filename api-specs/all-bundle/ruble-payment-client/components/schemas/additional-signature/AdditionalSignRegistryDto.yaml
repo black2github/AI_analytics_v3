@@ -1,0 +1,13 @@
+required:
+- documentsRegistry
+- statistics
+type: object
+properties:
+  documentsRegistry:
+    type: array
+    description: Документы в разрезе клиента
+    items:
+      $ref: ./AdditionalSignRegistryClientDocumentDto.yaml
+  statistics:
+    $ref: ./AdditionalSignRegistryStatisticsDto.yaml
+description: Реестр документов на дополнительную подпись

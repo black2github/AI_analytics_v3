@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор привилегии записи ограничения
+    format: uuid
+  authorityId:
+    type: string
+    description: Идентификатор привилегии
+    format: uuid
+description: ДТО сохранения привилегии записи ограничения

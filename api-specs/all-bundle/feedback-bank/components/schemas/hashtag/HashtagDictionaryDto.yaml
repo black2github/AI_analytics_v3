@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  name:
+    maxLength: 50
+    type: string
+    description: Текст хештега
+description: DTO с данными хештега из справочника

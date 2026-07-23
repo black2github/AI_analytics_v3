@@ -1,0 +1,39 @@
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: Идентификатор уполномоченного лица
+    format: uuid
+  clientInn:
+    type: string
+    description: ИНН клиента банка
+  clientKpp:
+    type: string
+    description: КПП клиента банка
+  clientOgrn:
+    type: string
+    description: ОГРН клиента банка
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента банка
+  forename:
+    type: string
+    description: Имя
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+  patronymic:
+    type: string
+    description: Отчества
+  personEskId:
+    type: string
+    description: Идентификатор физ. лица в ECK
+  personId:
+    type: string
+    description: Идентификатор физ. лица в сервисе заявок на открытие первого счета
+    format: uuid
+  surname:
+    type: string
+    description: Фамилия
+description: Данные физ. лиц для операции определения списка лиц, которым ошибочно отозвали права доступа.

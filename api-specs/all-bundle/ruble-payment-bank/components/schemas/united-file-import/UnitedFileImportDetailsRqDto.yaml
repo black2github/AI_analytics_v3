@@ -1,0 +1,13 @@
+required:
+- importId
+- signedFileImport
+type: object
+properties:
+  importId:
+    type: string
+    description: ID Файла импорта/фонового процесса импорта
+    format: uuid
+  signedFileImport:
+    type: boolean
+    description: Признак импорт подписанного/неподписанного файла
+description: Данные для получения деталей по файловому импорту/фоновому процессу импорта

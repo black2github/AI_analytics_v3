@@ -1,0 +1,24 @@
+type: object
+properties:
+  accountNumberWriting:
+    type: string
+    description: Номер счета для списания комиссии
+    example: null
+  departmentCode:
+    maxLength: 255
+    pattern: ^[0-9\s\/]+$
+    type: string
+    description: Подразделения счета списания комиссии
+    example: null
+  sumCommission:
+    type: string
+    description: Сумма комиссии
+    example: null
+  sumCommissionNds:
+    type: string
+    description: Сумма НДС
+    example: null
+  paymentResult:
+    $ref: ./CommissionPaymentResultDto.yaml
+description: Сведения о комиссии
+example: null

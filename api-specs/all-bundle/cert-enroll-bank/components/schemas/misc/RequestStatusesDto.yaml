@@ -1,0 +1,11 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  requests:
+    type: array
+    description: Массив заявок на ЭП
+    items:
+      $ref: ./RequestDto.yaml
+description: Результат запроса статуса заявок на ЭП по идентификатору ФЛ в ЕСК

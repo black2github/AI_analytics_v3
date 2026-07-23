@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+  allowedDstKinds:
+    uniqueItems: true
+    type: array
+    description: Перечень видов СЭП которыми можно подписать документ, если пуст то любым
+    items:
+      $ref: ./SignRegistryDocumentAllowedDstKind.yaml
+  signDataViewList:
+    type: array
+    description: Блок отображения подписываемых данных
+    items:
+      $ref: ./UniSignDataViewDto.yaml
+description: Подписываемый документ в реестре

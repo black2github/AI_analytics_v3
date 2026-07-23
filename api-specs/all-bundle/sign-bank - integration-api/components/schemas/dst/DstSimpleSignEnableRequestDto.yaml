@@ -1,0 +1,27 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userAbsId:
+    type: string
+    description: Идентификатор физического лица в РКО Ф1
+  userFamilyName:
+    type: string
+    description: Фамилия пользователя
+  userFirstName:
+    type: string
+    description: Имя пользователя
+  userMiddleName:
+    type: string
+    description: Отчество пользователя
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: Идентификатор представителя клиента
+    format: uuid
+description: Запрос включения СЭП ПЭП

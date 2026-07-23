@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBusinessCardRequestDto.yaml
+description: Запрос страницы

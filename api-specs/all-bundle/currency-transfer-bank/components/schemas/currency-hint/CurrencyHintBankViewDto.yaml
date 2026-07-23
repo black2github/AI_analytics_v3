@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подсказки
+    format: uuid
+  code:
+    type: string
+    description: ISO код валюты
+  numericCode:
+    type: string
+    description: Цифровой код валюты
+  name:
+    type: string
+    description: Наименование валюты
+  tooltipText:
+    type: string
+    description: Текст подсказки
+  comment:
+    type: string
+    description: Комментарий
+  isActive:
+    type: boolean
+    description: Активность подсказки
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  createdUser:
+    type: string
+    description: Пользователь, создавший запись
+    format: uuid
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  updatedUser:
+    type: string
+    description: Пользователь, изменивший запись
+    format: uuid
+description: Транспортное представление для просмотра подсказки

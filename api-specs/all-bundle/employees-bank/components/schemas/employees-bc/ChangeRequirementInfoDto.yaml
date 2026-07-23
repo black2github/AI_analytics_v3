@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  changeRequirement:
+    type: string
+  requirementPriority:
+    type: string
+  expiryDate:
+    type: string
+    format: date
+description: Краткое описание требований на обновление сведений Клиента

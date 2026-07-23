@@ -1,0 +1,18 @@
+required:
+- attachments
+- employeeInfo
+- version
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  employeeInfo:
+    $ref: ./EmployeeInfo.yaml
+  attachments:
+    type: array
+    description: Список вложений
+    items:
+      $ref: ../common/IdentityDocumentAttachmentDto.yaml
+description: Данные для подтверждения

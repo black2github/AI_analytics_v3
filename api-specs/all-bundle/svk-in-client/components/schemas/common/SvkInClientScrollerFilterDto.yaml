@@ -1,0 +1,30 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категория записей
+    enum:
+    - ALL
+    - NEW
+    - READ
+    - CANCELED
+    - FAVORITES
+  messageTopic:
+    $ref: ./FilterValueDtoString.yaml
+  organization:
+    $ref: ./FilterValueDtoString.yaml
+  skvoDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  statusFilter:
+    $ref: ./DioSvkInDocumentStatusFilterValueDto.yaml
+  skvoDocumentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  bankBranch:
+    $ref: ./FilterValueDtoString.yaml
+  existenceAttachment:
+    $ref: ./FilterValueDtoBoolean.yaml
+  dioNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  dioDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Фильтр сообщения валютного контролера для скроллера

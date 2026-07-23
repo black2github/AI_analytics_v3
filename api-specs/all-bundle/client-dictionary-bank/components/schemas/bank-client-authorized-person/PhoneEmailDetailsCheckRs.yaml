@@ -1,0 +1,11 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код результата
+    enum:
+    - UNIQUE
+    - PHONE_NOT_UNIQUE
+    - EMAIL_NOT_UNIQUE
+    - PHONE_EMAIL_NOT_UNIQUE
+description: ДТО ответа на запрос проверки использования телефона/email другими УЛ

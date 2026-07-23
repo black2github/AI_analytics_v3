@@ -1,0 +1,14 @@
+type: object
+properties:
+  fullName:
+    type: string
+  shortName:
+    type: string
+  innKio:
+    type: string
+  kpp:
+    type: string
+  ogrn:
+    type: string
+  absF1Id:
+    type: string

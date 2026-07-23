@@ -1,0 +1,54 @@
+type: object
+description: Уведомление о завершении операции В2С
+properties:
+  transactionId:
+    type: string
+    description: Внутренний идентификатор СБП
+  refMessageId:
+    type: string
+    description: Референсный идентификатор операции СБП
+  recipientId:
+    type: string
+    description: Идентификатор Получателя
+  recipientTypeId:
+    type: string
+    description: Тип Идентификатора Получателя
+  amount:
+    type: string
+    description: Сумма операции (в копейках)
+  currency:
+    type: string
+    description: Валюта операции
+  dateTime:
+    type: string
+    description: Дата и Время обработки операции
+  fpMessageId:
+    type: string
+    description: Идентификатор Операции ОПКЦ СБП
+  comment:
+    type: string
+    description: Назначение Платежа
+  fpTransactionType:
+    type: string
+    description: Тип Операции СБП
+  senderBic:
+    type: string
+    description: Банковский Идентификационный Код Банка Отправителя
+  timestamp:
+    type: string
+    description: Метка времени операции СБП
+  respCode:
+    type: string
+    description: Код Ответа
+  status:
+    type: string
+    description: 'Статус операции '
+  tscName:
+    type: string
+    description: Торговое Наименование Торгово-сервисного предприятия
+  legalName:
+    type: string
+    description: Наименование Юридического Лица Торгово-сервисного предприятия
+  callbackMerchantNotifications:
+    type: string
+    description: URL системы для получения сообщения о совершении перевода

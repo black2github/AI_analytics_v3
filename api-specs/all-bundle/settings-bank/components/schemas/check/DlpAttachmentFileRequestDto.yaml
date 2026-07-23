@@ -1,0 +1,18 @@
+required:
+- fileId
+- fromUserId
+- serviceCode
+type: object
+properties:
+  fileId:
+    type: string
+    format: uuid
+  serviceCode:
+    type: string
+  fromUserId:
+    type: string
+  fromClientIp:
+    type: string
+  toUserId:
+    type: string
+    format: uuid

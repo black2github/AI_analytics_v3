@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  reportType:
+    $ref: ./DashboardReportTypeFilter.yaml
+  reportGroup:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./DashboardReportStatusFilter.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userFullName:
+    $ref: ./FilterValueDtoString.yaml
+  readByUser:
+    $ref: ./FilterValueDtoBoolean.yaml
+  startDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  endDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Данные

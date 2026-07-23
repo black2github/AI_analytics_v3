@@ -1,0 +1,9 @@
+type: object
+properties:
+  isOtherResident:
+    type: boolean
+    description: Признак налогового резидента иностранного государства
+  isUsaResident:
+    type: boolean
+    description: Признак налогового резидента США
+description: Сведения из опросника для ИП

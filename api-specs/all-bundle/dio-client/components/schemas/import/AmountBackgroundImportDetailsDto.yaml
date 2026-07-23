@@ -1,0 +1,20 @@
+type: object
+properties:
+  amount:
+    type: number
+    description: Сумма документов
+  docCount:
+    type: integer
+    description: 'Количество документов: По конкретной валюте'
+    format: int64
+  currencyCode:
+    type: string
+    description: Код валюты документов
+  type:
+    type: string
+    description: Тип рассчитанной суммы
+    enum:
+    - IMPORTED
+    - NEW
+    - DRAFT
+description: Данные о сумме для фонового процесса импорта

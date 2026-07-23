@@ -1,0 +1,17 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Ссылка на сущность "Банковский пользователь"
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  familyName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+description: Данные

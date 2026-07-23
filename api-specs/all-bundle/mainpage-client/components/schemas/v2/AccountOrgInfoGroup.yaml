@@ -1,0 +1,31 @@
+type: object
+properties:
+  rollUp:
+    type: boolean
+    description: Признак свернут
+  clientVisible:
+    type: boolean
+    description: Признак сокрытия организации
+  priority:
+    type: integer
+    description: Приоритет
+    format: int64
+  orgLogo:
+    type: string
+    description: Логотип организации
+  bankClientDto:
+    $ref: ./BankClientShortDto.yaml
+  accounts:
+    type: array
+    description: Данные по счетам
+    items:
+      $ref: ./AccountInfoV2Dto.yaml
+  total:
+    type: array
+    description: Данные по счетам
+    items:
+      $ref: ./AccountOrgTotalInfo.yaml
+  allAccountsBlocked:
+    type: boolean
+    description: Признак все счета заблокированы
+description: Данные по счетам организации

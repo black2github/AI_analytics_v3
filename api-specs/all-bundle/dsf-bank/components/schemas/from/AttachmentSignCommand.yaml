@@ -1,0 +1,7 @@
+type: object
+properties:
+  documentId:
+    type: string
+    format: uuid
+  signCommand:
+    $ref: ../common/SignCommand.yaml

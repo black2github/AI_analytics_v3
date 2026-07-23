@@ -1,0 +1,10 @@
+type: object
+properties:
+  orderIds:
+    type: array
+    description: Идентификаторы заявки
+    items:
+      type: string
+      description: Идентификаторы заявки
+      format: uuid
+description: Запрос на изменение одной или нескольких заявок

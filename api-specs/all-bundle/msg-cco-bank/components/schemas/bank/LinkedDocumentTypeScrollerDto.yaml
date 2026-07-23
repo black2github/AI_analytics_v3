@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код типа документа
+  description:
+    type: string
+    description: Описание типа документа
+description: DTO тип связанного документа для скроллера

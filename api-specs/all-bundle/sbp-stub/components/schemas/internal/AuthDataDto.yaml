@@ -1,0 +1,9 @@
+type: object
+description: Объект авторизационных данных
+properties:
+  newLogin:
+    type: string
+    description: Новый логин
+  newPassword:
+    type: string
+    description: Новый пароль

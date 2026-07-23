@@ -1,0 +1,20 @@
+type: object
+properties:
+  walletBalanceDateTime:
+    type: string
+    description: Дата и время проверки текущего баланса цифрового кошелька
+    format: date-time
+  walletBalanceCurrency:
+    type: string
+    description: Валюта баланса цифрового кошелька
+    default: RUB
+  currentWalletBalance:
+    type: string
+    description: Текущий баланс цифрового кошелька
+  amountOfBlockedFunds:
+    type: string
+    description: Сумма заблокированных средств
+  amountOfAvailableFunds:
+    type: string
+    description: Доступный остаток = Текущий баланс - Сумма заблокированных средств
+description: Информация о балансе СЦР

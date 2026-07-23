@@ -1,0 +1,29 @@
+required:
+- authorityCertId
+- reason
+- revocationDate
+- serialNumber
+type: object
+properties:
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  revocationDate:
+    type: string
+    description: Дата отзыва
+    format: date-time
+  reason:
+    type: string
+    description: Причина отзыва сертификата
+    enum:
+    - UNSPECIFIED
+    - KEY_COMPROMISE
+    - CA_COMPROMISE
+    - AFFILIATION_CHANGED
+    - SUPERSEDED
+    - CESSATION_OF_OPERATION
+description: Запрос отзыва сертификата

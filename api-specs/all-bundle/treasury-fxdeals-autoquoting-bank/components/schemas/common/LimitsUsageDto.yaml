@@ -1,0 +1,15 @@
+type: object
+properties:
+  ordersTotalAmount:
+    type: string
+    description: Сумма по заявкам за день
+  ordersTotalCount:
+    type: integer
+    description: Количество заявок за день (по всем каналам)
+    format: int32
+  limitsUsageInstruments:
+    type: array
+    description: Утилизация ограничений Клиента по инструментам
+    items:
+      $ref: ./InstrumentLimitsUsageDto.yaml
+description: Утилизация ограничений Клиента

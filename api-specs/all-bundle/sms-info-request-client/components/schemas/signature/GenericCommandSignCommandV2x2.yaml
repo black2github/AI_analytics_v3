@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./SignCommandV2x2.yaml
+description: Запрос

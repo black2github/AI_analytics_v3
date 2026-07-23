@@ -1,0 +1,23 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип
+  seriesAndNumber:
+    type: string
+    description: Серия и номер
+  subdivisionCode:
+    type: string
+    description: Код подразделения
+  issuePlace:
+    type: string
+    description: Место выдачи удостоверения
+  issueDate:
+    type: string
+    description: Дата выдачи
+    format: date
+  validityPeriod:
+    type: string
+    description: Срок действия
+    format: date
+description: Данные создания/обновления документа удостоверяющего личность (ДУЛ)

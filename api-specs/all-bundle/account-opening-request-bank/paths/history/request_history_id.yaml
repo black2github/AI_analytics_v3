@@ -1,0 +1,56 @@
+get:
+  tags:
+  - API заявки на открытие 2+ счета. Базовые операции.
+  summary: Получить историю изменений заявки по её идентификатору
+  description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.BANK.SHOW_HISTORY'') or hasAuthority(''ACCOUNT_OPENING_REQUEST.TECH.SHOW_HISTORY'')'
+  operationId: getRequestHistory
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/history/ListResponseAccountOpeningRequestHistoryDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

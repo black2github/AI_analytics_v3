@@ -1,0 +1,33 @@
+type: object
+properties:
+  productType:
+    $ref: ./ProductTypeDtoFilter.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  remoteSource:
+    $ref: ./RemoteSourceDtoFilter.yaml
+  bankClientExternalClientGuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientKpp:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientFullName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  offerNumber:
+    $ref: ./FilterValueDtoString.yaml
+  offerDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  manuallyCreated:
+    $ref: ./FilterValueDtoBoolean.yaml
+  status:
+    $ref: ./BankClientAgreementStatusFilterDto.yaml
+  breakDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+description: Фильтр скроллера

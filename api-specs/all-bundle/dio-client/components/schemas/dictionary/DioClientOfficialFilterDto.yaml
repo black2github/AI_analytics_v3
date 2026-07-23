@@ -1,0 +1,12 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  search:
+    type: string
+    description: Подстрока для поиска по ФИО
+description: Фильтр скроллера справочных представлений представителей клиента

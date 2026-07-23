@@ -1,0 +1,19 @@
+type: object
+properties:
+  isMSPSubject:
+    type: boolean
+    description: Признак регистрации организации в едином реестре малого и среднего предпринимательства
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта
+  period:
+    type: integer
+    description: Срок сделки
+    format: int32
+  earlyRefund:
+    type: boolean
+    description: Возможно досрочное истребование
+description: Данные

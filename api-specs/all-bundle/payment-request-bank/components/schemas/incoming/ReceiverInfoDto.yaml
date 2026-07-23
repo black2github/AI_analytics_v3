@@ -1,0 +1,49 @@
+required:
+- bankBic
+- bankLocalityName
+- bankLocalityType
+- bankName
+- name
+type: object
+properties:
+  name:
+    maxLength: 160
+    type: string
+    description: Наименование получателя
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН/КИО получателя
+    nullable: true
+  kpp:
+    maxLength: 9
+    type: string
+    description: КПП получателя
+    nullable: true
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет получателя
+    nullable: true
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование Банка получателя
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка получателя
+  bankCorrespondentAccountNumber:
+    maxLength: 20
+    type: string
+    description: Корсчет банка получателя
+    nullable: true
+  bankLocalityName:
+    maxLength: 25
+    type: string
+    description: Название населенного пункта Банка получателя
+  bankLocalityType:
+    maxLength: 5
+    type: string
+    description: Краткое название типа населенного пункта Банка получателя
+description: Реквизиты организации (получателя)

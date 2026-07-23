@@ -1,0 +1,40 @@
+required:
+- encryptedMessage
+- msgId
+- msgType
+- signatures
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  msgType:
+    type: string
+    description: Тип сообщения
+    enum:
+    - MSG1_OUT
+    - MSG1_IN
+    - MSG2_OUT
+    - MSG2_IN
+    - MSG3_OUT
+    - MSG3_IN
+    - MSG4_OUT
+    - MSG4_IN
+  msgId:
+    type: string
+    description: Идентификатор электронного сообщения заявки
+    format: uuid
+  plainCbdc:
+    type: string
+    description: Нешифрованное CBDC-сообщение (Base64, обязательно для MSG2_OUT)
+    format: byte
+  encryptedMessage:
+    type: string
+    description: Сообщение зашифрованное (Base64-строка)
+  signatures:
+    type: array
+    description: Подписи
+    items:
+      $ref: ./MsgSignatureDto.yaml
+description: Сохранение подписи сообщения.

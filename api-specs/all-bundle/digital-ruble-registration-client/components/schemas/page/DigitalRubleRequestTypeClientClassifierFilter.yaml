@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип заявки.
+    enum:
+    - WalletIdentify
+    - CertRegistration
+    - WalletClose
+    - WalletBlock
+    - WalletUnlock
+    - CertRevocation
+    - OperationHistory
+    - WalletBalance
+  notEq:
+    type: string
+    description: Тип заявки.
+    enum:
+    - WalletIdentify
+    - CertRegistration
+    - WalletClose
+    - WalletBlock
+    - WalletUnlock
+    - CertRevocation
+    - OperationHistory
+    - WalletBalance
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип заявки.
+      enum:
+      - WalletIdentify
+      - CertRegistration
+      - WalletClose
+      - WalletBlock
+      - WalletUnlock
+      - CertRevocation
+      - OperationHistory
+      - WalletBalance
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип заявки.
+      enum:
+      - WalletIdentify
+      - CertRegistration
+      - WalletClose
+      - WalletBlock
+      - WalletUnlock
+      - CertRevocation
+      - OperationHistory
+      - WalletBalance
+  isNull:
+    type: boolean
+description: Тип заявки (in).

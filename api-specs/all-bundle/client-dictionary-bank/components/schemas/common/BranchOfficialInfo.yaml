@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  position:
+    maxLength: 100
+    minLength: 0
+    type: string
+  blockState:
+    type: string
+    description: 'BLOCKED - Заблокирован;
+
+      UNBLOCKED - Незаблокирован.'
+    readOnly: true
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  branch:
+    $ref: ./BranchDto.yaml
+  userId:
+    type: string
+    format: uuid

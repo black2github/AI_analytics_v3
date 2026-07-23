@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID связанного ДИО.
+    format: uuid
+  number:
+    type: integer
+    description: Номер связанного ДИО
+    format: int64
+  date:
+    type: string
+    description: Дата связанного ДИО
+    format: date
+description: Информация ДИО для банковского API

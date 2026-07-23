@@ -1,0 +1,25 @@
+post:
+  parameters:
+  - name: key
+    in: path
+    required: true
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          $ref: ../../components/schemas/updating/SearchInCacheResponse.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/updating/KnosisEntity.yaml
+    '400':
+      description: Bad Request
+  summary: Create
+  tags:
+  - Knosis Update Controller

@@ -1,0 +1,42 @@
+type: object
+description: Реквизиты клиента по заявке на платеж B2B СБП
+properties:
+  shortName:
+    type: string
+    description: Наименование Плательщика
+  inn:
+    type: string
+    description: ИНН Плательщика
+  kpp:
+    type: string
+    description: КПП Плательщика
+  legalId:
+    type: string
+    description: Идентификатор Клиента (ЮЛ) в АС СБП
+  ogrnOgrip:
+    type: string
+    description: ОГРН/ОГРНИП Клиента
+  account:
+    type: string
+    description: Счет Клиента
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета Клиента в ЭКО
+  clientMerchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  clientMerchantName:
+    type: string
+    description: Наименование точки продаж
+  clientMerchantStatus:
+    type: string
+    description: Статус точки продаж
+    enum:
+    - ACTIVE
+    - BLOCKED
+  clientMerchantAddress:
+    type: string
+    description: Адрес Точки продаж
+required:
+- shortName

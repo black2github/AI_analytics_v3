@@ -1,0 +1,77 @@
+required:
+- foreignAddress
+- id
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор адреса
+    format: uuid
+  type:
+    type: string
+    description: Тип адреса
+    enum:
+    - LEGAL
+    - POST
+    - ACTUAL
+  fullAddress:
+    type: string
+    description: Адрес одной строкой
+  zipCode:
+    type: string
+    description: Индекс
+  foreignAddress:
+    type: boolean
+    description: Иностранный адрес
+  country:
+    type: string
+    description: Страна
+    format: uuid
+  countryCode:
+    type: string
+    description: Код страны
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  district:
+    type: string
+    description: Район
+  districtFias:
+    type: string
+    description: ФИАС код района
+  cityOrLocality:
+    type: string
+    description: Город / населенный пункт
+  cityOrLocalityFias:
+    type: string
+    description: ФИАС код города / населенного пункта
+  street:
+    type: string
+    description: Улица
+  streetFias:
+    type: string
+    description: ФИАС код улицы
+  building:
+    type: string
+    description: Номер дома
+  buildingFias:
+    type: string
+    description: ФИАС код дома
+  block:
+    type: string
+    description: Корпус/строение
+  apartment:
+    type: string
+    description: Квартира
+  fiasGuid:
+    type: string
+    description: ФИАС GUID код
+  fiasLevel:
+    type: integer
+    description: Уровень кода
+    format: int32
+description: Адрес сотрудника Клиента

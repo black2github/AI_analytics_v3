@@ -1,0 +1,61 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  cardHolderFullName:
+    type: string
+    description: Наименование держателя карты
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  cardMaskedNumber:
+    type: string
+    description: PAN (маскированный)
+  cardVirtualNumber:
+    type: string
+    description: Виртуальный ID карты (VPAN)
+  clientCode:
+    type: string
+    description: Код клиента (РНК)
+    nullable: true
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование организации
+  holdAmount:
+    type: number
+    description: Заблокированная сумма
+  operations:
+    type: array
+    description: Массив с перечнем операций и их параметрами
+    items:
+      $ref: ./CardOperationClientDto.yaml
+  result:
+    type: string
+    description: Результат выполнения запроса
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  size:
+    type: integer
+    description: Количество отфильтрованных записей
+    format: int64
+  totalAmount:
+    type: number
+    description: Итоговая сумма операций
+description: Данные об операциях по карте в сервисе корпоративных карт

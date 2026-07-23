@@ -1,0 +1,31 @@
+required:
+- clientId
+- dstType
+- requestDate
+type: object
+properties:
+  requestDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  clientOfficialSignatureToolId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userAbsId:
+    type: string
+    description: ID пользователя в РКО Ф1
+  dstType:
+    type: string
+    description: Тип выпускаемого СЭПа по заявке
+    enum:
+    - NOT_QUALIFIED_SIGN
+    - CLOUD_SIGN
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Входящие параметры создания заявки на выпуск регистрацию СЭП.

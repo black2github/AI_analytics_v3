@@ -1,0 +1,6 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsInquiryCommissionAccountsClientFilter.yaml
+description: Запрос страницы
+example: null

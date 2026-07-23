@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankStatus:
+    type: string
+    description: Текущий статус Банка
+  clientStatus:
+    type: string
+    description: Текущий статус Клиета
+description: История заявки на выпуск карты

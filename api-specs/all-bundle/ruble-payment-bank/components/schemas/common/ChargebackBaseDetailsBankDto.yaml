@@ -1,0 +1,23 @@
+type: object
+properties:
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  docDate:
+    type: string
+    description: Дата документа
+    format: date-time
+  docNumber:
+    type: string
+    description: Номер документа
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+description: Базовые реквизиты сущности "Заявка на отзыв", данные для сотрудника банка

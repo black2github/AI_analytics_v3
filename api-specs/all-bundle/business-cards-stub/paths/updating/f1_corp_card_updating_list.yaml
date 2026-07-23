@@ -1,0 +1,19 @@
+post:
+  summary: Получение постраничного списка карт по запросу
+  tags:
+  - API для работы с корпоративными картами
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/updating/GetPageCommandCorpCardFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/updating/PageDataCorpCardDto.yaml
+    '400':
+      description: Bad Request

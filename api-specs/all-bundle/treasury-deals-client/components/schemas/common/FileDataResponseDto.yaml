@@ -1,0 +1,16 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Наименование файла
+  content:
+    type: array
+    description: Данные файла
+    items:
+      type: string
+      description: Данные файла
+      format: byte
+  mimeType:
+    type: string
+    description: Тип файла
+description: Данные

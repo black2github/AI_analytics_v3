@@ -1,0 +1,28 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+    nullable: true
+  clientAccountId:
+    type: string
+    description: Идентификатор счёта клиента
+    format: uuid
+    nullable: true
+  clientRnk:
+    maxLength: 50
+    type: string
+    description: РНК клиента (Идентификатор клиента в АС Ф1)
+    nullable: true
+  clientEskId:
+    type: string
+    description: GUID клиента (Идентификатор клиента в ЕСК)
+    format: uuid
+    nullable: true
+  branchName:
+    type: string
+    description: Наименование филиала обслуживания
+    nullable: true
+description: Идентификация организации
+nullable: true

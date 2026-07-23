@@ -1,0 +1,186 @@
+openapi: 3.0.1
+info:
+  title: Сервис резервирования счетов. Банковская часть.
+  description: Сервис резервирования счетов.
+  version: 3.1.0
+servers:
+- url: /acc-reservation-bank
+security:
+- bearerAuth: []
+paths:
+  /request/draft/{id}:
+    $ref: ./paths/draft/request_draft_id.yaml
+  /spark/search:
+    $ref: ./paths/search/spark_search.yaml
+  /request/send:
+    $ref: ./paths/send/request_send.yaml
+  /request/resend-to-abs:
+    $ref: ./paths/resend-to-abs/request_resend_to_abs.yaml
+  /request/get-page:
+    $ref: ./paths/get-page/request_get_page.yaml
+  /request/draft:
+    $ref: ./paths/draft/request_draft.yaml
+  /request/delete-drafts:
+    $ref: ./paths/delete-drafts/request_delete_drafts.yaml
+  /request/category:
+    $ref: ./paths/category/request_category.yaml
+  /print/request-notifications:
+    $ref: ./paths/request-notifications/print_request_notifications.yaml
+  /print/request-notification:
+    $ref: ./paths/request-notification/print_request_notification.yaml
+  /print/request-list:
+    $ref: ./paths/request-list/print_request_list.yaml
+  /print/conditions:
+    $ref: ./paths/conditions/print_conditions.yaml
+  /balance-position:
+    $ref: ./paths/balance-position/balance_position.yaml
+  /api/account/get-for-mainpage:
+    $ref: ./paths/account/api_account_get_for_mainpage.yaml
+  /api/account/automatic-reservation:
+    $ref: ./paths/account/api_account_automatic_reservation.yaml
+  /account/check-open-account:
+    $ref: ./paths/check-open-account/account_check_open_account.yaml
+  /request/{id}:
+    $ref: ./paths/{id}/request_id.yaml
+  /request/history/{id}:
+    $ref: ./paths/history/request_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /balance-position/check/{taskId}:
+    $ref: ./paths/check/balance_position_check_taskId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/send/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/send/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/send/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/send/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/send/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AccReservationRequestDto:
+      $ref: ./components/schemas/common/AccReservationRequestDto.yaml
+    AccountsInfoDto:
+      $ref: ./components/schemas/common/AccountsInfoDto.yaml
+    BankClientDto:
+      $ref: ./components/schemas/common/BankClientDto.yaml
+    GenericCommandAccReservationRequestDto:
+      $ref: ./components/schemas/common/GenericCommandAccReservationRequestDto.yaml
+    GenericResponseSimpleErrorDataAccReservationRequestDto:
+      $ref: ./components/schemas/draft/GenericResponseSimpleErrorDataAccReservationRequestDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandSparkSearchRequestDto:
+      $ref: ./components/schemas/search/GenericCommandSparkSearchRequestDto.yaml
+    SparkSearchRequestDto:
+      $ref: ./components/schemas/search/SparkSearchRequestDto.yaml
+    GenericResponseSimpleErrorDataSparkSearchResponseDto:
+      $ref: ./components/schemas/search/GenericResponseSimpleErrorDataSparkSearchResponseDto.yaml
+    SparkSearchResponseDto:
+      $ref: ./components/schemas/search/SparkSearchResponseDto.yaml
+    GenericResponseSimpleErrorDataWithValidationResultAccReservationRequestDto:
+      $ref: ./components/schemas/send/GenericResponseSimpleErrorDataWithValidationResultAccReservationRequestDto.yaml
+    SimpleErrorDataWithValidationResult:
+      $ref: ./components/schemas/send/SimpleErrorDataWithValidationResult.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataListAccReservationRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListAccReservationRequestDto.yaml
+    AccReservationBankScrollerFilter:
+      $ref: ./components/schemas/common/AccReservationBankScrollerFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoAccReservationRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoAccReservationRequestStatusDto.yaml
+    FilterValueEnumDtoUserType:
+      $ref: ./components/schemas/common/FilterValueEnumDtoUserType.yaml
+    GetPageCommandAccReservationBankScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandAccReservationBankScrollerFilter.yaml
+    PageParamsAccReservationBankScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsAccReservationBankScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    AccReservationBankScrollerDto:
+      $ref: ./components/schemas/get-page/AccReservationBankScrollerDto.yaml
+    AccountsInfoScrollerDto:
+      $ref: ./components/schemas/get-page/AccountsInfoScrollerDto.yaml
+    PageDataAccReservationBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataAccReservationBankScrollerDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/common/UserInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    GenericCommandPrintRequestDtoUUID:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestDtoUUID.yaml
+    PrintRequestDtoUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoUUID.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    BalancePositionRequestDto:
+      $ref: ./components/schemas/balance-position/BalancePositionRequestDto.yaml
+    GenericCommandBalancePositionRequestDto:
+      $ref: ./components/schemas/balance-position/GenericCommandBalancePositionRequestDto.yaml
+    BalancePositionResponseDto:
+      $ref: ./components/schemas/common/BalancePositionResponseDto.yaml
+    BalancePositionTaskResponseDto:
+      $ref: ./components/schemas/common/BalancePositionTaskResponseDto.yaml
+    GenericResponseSimpleErrorDataBalancePositionTaskResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBalancePositionTaskResponseDto.yaml
+    AccReservationRequestMainPageFilterDto:
+      $ref: ./components/schemas/account/AccReservationRequestMainPageFilterDto.yaml
+    GetPageCommandAccReservationRequestMainPageFilterDto:
+      $ref: ./components/schemas/account/GetPageCommandAccReservationRequestMainPageFilterDto.yaml
+    PageParamsAccReservationRequestMainPageFilterDto:
+      $ref: ./components/schemas/account/PageParamsAccReservationRequestMainPageFilterDto.yaml
+    AccReservationRequestMainPageDto:
+      $ref: ./components/schemas/account/AccReservationRequestMainPageDto.yaml
+    PageDataAccReservationRequestMainPageDto:
+      $ref: ./components/schemas/account/PageDataAccReservationRequestMainPageDto.yaml
+    AccAutoReservationRequestDto:
+      $ref: ./components/schemas/account/AccAutoReservationRequestDto.yaml
+    AccAutoReservationResponseDto:
+      $ref: ./components/schemas/account/AccAutoReservationResponseDto.yaml
+    GenericResponseSimpleErrorDataAccAutoReservationResponseDto:
+      $ref: ./components/schemas/account/GenericResponseSimpleErrorDataAccAutoReservationResponseDto.yaml
+    ActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/check-open-account/ActiveAccountsCheckParamsDto.yaml
+    GenericCommandActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/check-open-account/GenericCommandActiveAccountsCheckParamsDto.yaml
+    ActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/check-open-account/ActiveAccountsCheckResultDto.yaml
+    GenericResponseSimpleErrorDataActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/check-open-account/GenericResponseSimpleErrorDataActiveAccountsCheckResultDto.yaml
+    AccReservationRequestBankViewDto:
+      $ref: ./components/schemas/{id}/AccReservationRequestBankViewDto.yaml
+    AccountsInfoViewDto:
+      $ref: ./components/schemas/{id}/AccountsInfoViewDto.yaml
+    GenericResponseSimpleErrorDataAccReservationRequestBankViewDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataAccReservationRequestBankViewDto.yaml
+    AccReservationRequestHistoryDto:
+      $ref: ./components/schemas/history/AccReservationRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataListAccReservationRequestHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListAccReservationRequestHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

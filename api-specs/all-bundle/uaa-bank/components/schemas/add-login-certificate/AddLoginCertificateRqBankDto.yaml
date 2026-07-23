@@ -1,0 +1,19 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  remoteSource:
+    type: string
+    enum:
+    - BSS_ECO
+    - BSS_200_BX1
+  clientName:
+    type: string
+    description: Наименование организации
+description: Запрос добавления сертификата для входа

@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице VW_RPT_GPB_KXD_RST_PLN_ECO_ERR
+  tags:
+  - Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO_ERR (эмуляции ошибок на запрос об остатках на счетах)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

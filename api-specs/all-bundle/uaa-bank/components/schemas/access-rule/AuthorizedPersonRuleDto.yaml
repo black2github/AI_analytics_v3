@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID УЛ
+    format: uuid
+  fio:
+    type: string
+    description: ФИО УЛ
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Данные УЛ для правил предоставления доступа. ДТО

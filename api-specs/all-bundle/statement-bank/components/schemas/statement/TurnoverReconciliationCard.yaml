@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  accountNumber:
+    type: string
+  operationDate:
+    type: string
+    format: date
+  source:
+    type: string
+    enum:
+    - DAY_CLOSING
+    - DAY_CLOSING_1
+    - DAY_CLOSING_3
+    - ENTRIES_QUANTITY_CHANGED
+    - DBO_CONTRACT
+    - EXT_REQUEST
+  incomingBalance:
+    type: number
+  outgoingBalance:
+    type: number
+  turnoverByDebit:
+    type: number
+  turnoverByCredit:
+    type: number
+  reconciliationTime:
+    type: string
+    format: date-time
+  status:
+    type: string
+    enum:
+    - NONE
+    - NO_TURNOVER_FOUND
+    - SUCCESS
+    - FAILURE
+    - UNDER_REPAIR
+    - REPAIR_FAILED
+    - PREVIOUS_NONE
+description: Страница с данными

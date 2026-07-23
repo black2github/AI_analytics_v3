@@ -1,0 +1,23 @@
+type: object
+properties:
+  createdAtRange:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  importId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  encrypted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docCount:
+    $ref: ./FilterValueDtoLong.yaml
+  signStatus:
+    $ref: ./UnitedFileImportSignStatusFilter.yaml
+  status:
+    $ref: ./UnitedFileImportStatusFilter.yaml
+  amount:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    $ref: ./UnitedFileImportBankCategoryDto.yaml
+description: Фильтр скроллера журнала загруженных файлов

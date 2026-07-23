@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор системы
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  scopes:
+    uniqueItems: true
+    type: array
+    description: Массив скоупов
+    items:
+      type: string
+      description: Массив скоупов
+description: Запрос отзыва подтверждений согласий

@@ -1,0 +1,12 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН клиента
+  name:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+description: Реквизиты клиента по объединённой заявке на клиентском скроллере

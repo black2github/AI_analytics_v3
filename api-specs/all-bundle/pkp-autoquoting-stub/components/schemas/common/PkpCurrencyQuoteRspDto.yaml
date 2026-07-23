@@ -1,0 +1,31 @@
+type: object
+properties:
+  InstrumentCode:
+    type: string
+  State:
+    $ref: ./PkpCurrencyQuoteStateRspDto.yaml
+  MinVolumeOrderBase:
+    type: integer
+    format: int64
+  MaxVolumeOrderBase:
+    type: integer
+    format: int64
+  MinVolumeOrderQuoting:
+    type: number
+  MaxVolumeOrderQuoting:
+    type: number
+  QuoteBuy:
+    type: number
+  QuoteSell:
+    type: number
+  NoQuoteReasonBuy:
+    $ref: ./PkpNoQuoteReasonRspDto.yaml
+  NoQuoteReasonSell:
+    $ref: ./PkpNoQuoteReasonRspDto.yaml
+  CurrencyUnit:
+    type: integer
+    format: int32
+  VolumeQuotes:
+    type: array
+    items:
+      $ref: ./PkpVolumeCurrencyQuoteRspDto.yaml

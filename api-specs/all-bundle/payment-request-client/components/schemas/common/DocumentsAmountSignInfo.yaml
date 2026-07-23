@@ -1,0 +1,47 @@
+type: object
+properties:
+  totalAmount:
+    type: integer
+    description: 'Количество документов: общее'
+    format: int32
+  unableToSignWithStatusAmount:
+    type: integer
+    description: 'Количество документов: Невозможно подписать документ в статусе'
+    format: int32
+  levelSignedAmount:
+    type: integer
+    description: 'Количество документов: Документ уже подписан уровнем'
+    format: int32
+  levelSignNotRequiredAmount:
+    type: integer
+    description: 'Количество документов: Документ не требует подписи уровнем'
+    format: int32
+  signRestrictedAmount:
+    type: integer
+    description: 'Количество документов: Нет полномочий на подпись документа по счету'
+    format: int32
+  noCertificateAmount:
+    type: integer
+    description: 'Количество документов: Нет сертификата для документа от организации'
+    format: int32
+  signAllowedAmount:
+    type: integer
+    description: 'Количество документов: Можно подписать'
+    format: int32
+  cannotSignAmount:
+    type: integer
+    description: 'Количество документов: Нельзя подписать'
+    format: int32
+  readyToSend:
+    type: integer
+    description: 'Количество документов: Документ готов к отправке'
+    format: int32
+  canBeSent:
+    type: integer
+    description: 'Количество документов: Документ можно будет отправить'
+    format: int32
+  unableToSend:
+    type: integer
+    description: 'Количество документов: Документ можно подписать, но нельзя отправить'
+    format: int32
+description: Количество документов

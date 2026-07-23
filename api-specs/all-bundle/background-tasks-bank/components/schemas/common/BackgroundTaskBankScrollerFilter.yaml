@@ -1,0 +1,35 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории фильтрации фоновых процессов. Банковская часть
+    enum:
+    - ALL
+    - ACTIVE
+    - FINISHED
+    - CANCELLED
+    - FAILED
+    - UNKNOWN
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  taskId:
+    $ref: ./FilterValueDtoString.yaml
+  serviceCode:
+    $ref: ./FilterValueDtoString.yaml
+  name:
+    $ref: ./FilterValueDtoString.yaml
+  description:
+    $ref: ./FilterValueDtoString.yaml
+  userFullName:
+    $ref: ./FilterValueDtoString.yaml
+  type:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./BackgroundTaskStatusFilter.yaml
+  startedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  finishedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр фоновых задач. Банковская часть

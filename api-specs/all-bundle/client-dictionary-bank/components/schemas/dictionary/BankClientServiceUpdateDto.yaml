@@ -1,0 +1,16 @@
+required:
+- code
+- state
+type: object
+properties:
+  code:
+    maxLength: 50
+    type: string
+    description: Услуги Клиента Банка
+    enum:
+    - FAKTURA_PRIV
+    - USES_DSF_IN_H2H
+  state:
+    type: boolean
+    description: Статус услуги
+description: Услуги Клиента Банка. ДТО для изменения статуса

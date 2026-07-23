@@ -1,0 +1,17 @@
+type: object
+required:
+- guid
+- acceptedTime
+properties:
+  guid:
+    type: string
+    minLength: 1
+  orderId:
+    type: string
+  acceptedTime:
+    type: string
+    minLength: 1
+  scenario:
+    $ref: ./SipSvfeUserChosenBlockingScenarioDto.yaml
+  svfe:
+    $ref: ./SipSvfeBlockingOperationStateDto.yaml

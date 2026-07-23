@@ -1,0 +1,16 @@
+get:
+  tags:
+  - one-window-controller
+  summary: vc3Send
+  operationId: vc3SendUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

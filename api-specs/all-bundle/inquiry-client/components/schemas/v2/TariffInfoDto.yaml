@@ -1,0 +1,20 @@
+required:
+- individualTariff
+- referenceRates
+- summaryReferenceRate
+type: object
+properties:
+  individualTariff:
+    type: boolean
+    description: Признак индивидуального тарифа
+    example: null
+  referenceRates:
+    type: array
+    description: Информацией о комиссионных тарифах по справкам
+    example: null
+    items:
+      $ref: ./F1ReferenceRate.yaml
+  summaryReferenceRate:
+    $ref: ./F1SummaryReferenceRate.yaml
+description: Блок информации о тарифе
+example: null

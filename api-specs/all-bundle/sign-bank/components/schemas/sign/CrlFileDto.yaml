@@ -1,0 +1,10 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Наименование файла
+  content:
+    type: string
+    description: Данные СОС
+    format: byte
+description: ДТО для скачивания файла СОС

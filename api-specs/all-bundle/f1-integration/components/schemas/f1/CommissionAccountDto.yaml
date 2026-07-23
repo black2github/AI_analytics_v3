@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  bic:
+    type: string
+    description: Бик счета
+description: Информация о счете, доступном для списания комиссии за открытие счета в рамках филиала. Версия 2

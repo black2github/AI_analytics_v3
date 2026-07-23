@@ -1,0 +1,17 @@
+type: object
+properties:
+  externalIp:
+    type: string
+    description: Внешний IP-адрес
+  systemInfo:
+    type: string
+    description: Системная информация о устройстве Клиента
+  systemDateTime:
+    type: string
+    description: Дата и время Клиента
+    format: date-time
+  signCommands:
+    type: array
+    description: Информация о подписи
+    items:
+      $ref: ../common/SignCommand.yaml

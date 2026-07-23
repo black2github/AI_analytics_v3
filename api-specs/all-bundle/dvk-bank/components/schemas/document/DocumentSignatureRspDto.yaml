@@ -1,0 +1,32 @@
+type: object
+properties:
+  level:
+    type: string
+    description: Уровень подписи
+  required:
+    type: boolean
+    description: Требуется подпись
+  signerId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  serialNumber:
+    type: string
+    description: Серийный номер
+  sppVersion:
+    type: integer
+    description: СПП версия
+    format: int32
+  signature:
+    type: string
+    description: Электронная подпись
+  certificate:
+    $ref: ./DocumentSignatureCertificateDto.yaml
+description: Подписи

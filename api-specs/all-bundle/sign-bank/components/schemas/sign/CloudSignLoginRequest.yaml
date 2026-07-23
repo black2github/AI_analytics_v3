@@ -1,0 +1,37 @@
+required:
+- digest
+- dstId
+- userId
+type: object
+properties:
+  dstId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь выполняющий подпись
+    format: uuid
+  digest:
+    minLength: 1
+    type: string
+    description: Подписываемый дайджест
+  language:
+    type: string
+    description: Язык интерфейса пользователя
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  pinCode:
+    type: string
+    description: Пин-код для доступа к закрытому ключу сертификата
+  dboBssPersonalizedUsersUaaIds:
+    uniqueItems: true
+    type: array
+    description: ID персонализированных пользователей БСС входивших в ЭКО
+    items:
+      type: string
+      description: ID персонализированных пользователей БСС входивших в ЭКО
+      format: uuid
+description: Запрос подписи дайджеста при логине с помощью облачного СЭП

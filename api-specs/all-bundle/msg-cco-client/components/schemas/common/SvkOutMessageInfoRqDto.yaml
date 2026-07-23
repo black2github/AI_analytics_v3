@@ -1,0 +1,11 @@
+type: object
+properties:
+  topicId:
+    type: string
+    description: Идентификатор темы сообщения
+    format: uuid
+  text:
+    maxLength: 10000
+    type: string
+    description: Текст сообщения
+description: Данные сообщения

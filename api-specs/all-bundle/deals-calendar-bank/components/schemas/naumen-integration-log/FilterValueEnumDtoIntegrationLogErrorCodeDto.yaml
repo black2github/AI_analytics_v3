@@ -1,0 +1,57 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Код ошибки интеграции
+    enum:
+    - BAD_REQUEST
+    - UNAUTHORIZED
+    - REQUEST_TIMEOUT
+    - EXCEPTION
+    - NOT_FOUND
+    - ALREADY_EXISTS
+    - BUSINESS_VALIDATION_ERROR
+  notEq:
+    type: string
+    description: Код ошибки интеграции
+    enum:
+    - BAD_REQUEST
+    - UNAUTHORIZED
+    - REQUEST_TIMEOUT
+    - EXCEPTION
+    - NOT_FOUND
+    - ALREADY_EXISTS
+    - BUSINESS_VALIDATION_ERROR
+  in:
+    type: array
+    items:
+      type: string
+      description: Код ошибки интеграции
+      enum:
+      - BAD_REQUEST
+      - UNAUTHORIZED
+      - REQUEST_TIMEOUT
+      - EXCEPTION
+      - NOT_FOUND
+      - ALREADY_EXISTS
+      - BUSINESS_VALIDATION_ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Код ошибки интеграции
+      enum:
+      - BAD_REQUEST
+      - UNAUTHORIZED
+      - REQUEST_TIMEOUT
+      - EXCEPTION
+      - NOT_FOUND
+      - ALREADY_EXISTS
+      - BUSINESS_VALIDATION_ERROR
+  isNull:
+    type: boolean
+description: Код ошибки, множественный выбор (in)

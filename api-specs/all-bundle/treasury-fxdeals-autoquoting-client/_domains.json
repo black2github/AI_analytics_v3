@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for treasury-fxdeals-autoquoting-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/fx-rates-subscribe",
+      "domain": "fx-rates-subscribe"
+    },
+    {
+      "prefix": "/fx-deal",
+      "domain": "fx-deal"
+    }
+  ]
+}

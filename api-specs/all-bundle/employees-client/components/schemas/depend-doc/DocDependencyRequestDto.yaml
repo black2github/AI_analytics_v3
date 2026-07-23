@@ -1,0 +1,13 @@
+required:
+- bankClientId
+- docId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  docId:
+    type: string
+    description: Идентификатор целевого документа
+    format: uuid

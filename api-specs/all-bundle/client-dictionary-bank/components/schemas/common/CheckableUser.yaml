@@ -1,0 +1,13 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка. Если идентификатор не передан, то проверка будет выполнена для всех клиентов, представителем которых является пользователь
+    format: uuid
+description: Проверяемый пользователь

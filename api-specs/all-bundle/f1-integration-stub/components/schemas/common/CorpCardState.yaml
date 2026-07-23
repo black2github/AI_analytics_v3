@@ -1,0 +1,14 @@
+type: string
+enum:
+- CRT
+- ARC
+- CLS
+- RIS
+- RJT
+- OWS
+- OWSNT5
+- SNT
+- ACP
+- WRK
+- TRN
+description: Состояние карты в АБС Ф1

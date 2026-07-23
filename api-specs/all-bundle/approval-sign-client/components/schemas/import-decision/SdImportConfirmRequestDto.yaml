@@ -1,0 +1,16 @@
+required:
+- confirmation
+- processId
+type: object
+properties:
+  processId:
+    type: string
+    description: Идентификатор процесса импорта
+    format: uuid
+  confirmation:
+    type: string
+    description: Решение пользователя при подтверждении процесса импорта решений
+    enum:
+    - CONFIRMED
+    - CANCELLED
+description: Входные данные при подтверждении пользователем продолжения процесса импорта решений

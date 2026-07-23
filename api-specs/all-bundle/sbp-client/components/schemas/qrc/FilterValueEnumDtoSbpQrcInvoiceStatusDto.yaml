@@ -1,0 +1,48 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус входящего QR кода
+    enum:
+    - NONE
+    - ACTIVE
+    - DELETED
+    - INACTIVE
+    - EXECUTED
+  notEq:
+    type: string
+    description: Статус входящего QR кода
+    enum:
+    - NONE
+    - ACTIVE
+    - DELETED
+    - INACTIVE
+    - EXECUTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус входящего QR кода
+      enum:
+      - NONE
+      - ACTIVE
+      - DELETED
+      - INACTIVE
+      - EXECUTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус входящего QR кода
+      enum:
+      - NONE
+      - ACTIVE
+      - DELETED
+      - INACTIVE
+      - EXECUTED
+  isNull:
+    type: boolean

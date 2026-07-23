@@ -1,0 +1,33 @@
+type: object
+description: Запрос смены статуса заявки на списание средств по подписке
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - QR_CREATED
+    - PAYMENT_REQUEST
+    - PAYMENT_ERROR
+    - PAYMENT_PERMITTED
+    - REJECTED
+    - EXECUTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id
+- nextStatus

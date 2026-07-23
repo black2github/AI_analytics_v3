@@ -1,0 +1,16 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Место гос. регистрации
+  bodyCode:
+    type: string
+    description: Код регистрирующего органа
+  bodyName:
+    type: string
+    description: Наименование регистрирующего органа
+  date:
+    type: string
+    description: Дата гос. регистрации
+    format: date
+description: Реквизиты гос. регистрации клиента

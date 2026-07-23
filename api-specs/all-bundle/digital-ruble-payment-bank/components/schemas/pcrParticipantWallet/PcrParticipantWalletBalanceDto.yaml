@@ -1,0 +1,26 @@
+required:
+- cbrParticipantWalletId
+- pcrParticipantWalletId
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька ЦР
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька ЦР на ПлЦР
+  cbrAccountNumber:
+    type: string
+    description: Номер СЦР на ПлЦР
+  walletBalanceDetails:
+    $ref: ../common/WalletBalanceDetailsDto.yaml
+  balanceCurrency:
+    type: string
+  currentBalance:
+    type: string
+  amountOfBlockedFunds:
+    type: string
+  amountOfAvailableFunds:
+    type: string
+description: Информация о балансе кошелька участника ПлЦР.

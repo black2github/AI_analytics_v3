@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./CreateNewOnboardingRequestDto.yaml
+description: Запрос

@@ -1,0 +1,7 @@
+type: object
+properties:
+  commentForClient:
+    type: string
+  commentForBank:
+    type: string
+description: Комментарии

@@ -1,0 +1,75 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID профиля ФНС ЭКО
+    format: uuid
+  fnsCustomerId:
+    type: string
+    description: ИД пользователя ФНС
+    format: uuid
+  esiaOid:
+    type: string
+    description: OID пользователя в ЕСИА
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+  innFl:
+    type: string
+    description: ИНН физ. лица или ИП
+  innUl:
+    type: string
+    description: ИНН ЮЛ
+  ogrnIp:
+    type: string
+    description: ОГРН или ОГРНИП
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  notBefore:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  notAfter:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  thumbprint:
+    type: string
+    description: Отпечаток сертификата
+  clientOfficials:
+    type: array
+    description: Ссылки на представителей
+    items:
+      $ref: ./ClientOfficialRefDto.yaml
+  deleted:
+    type: boolean
+    description: Признак удаленной записи
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+description: Аттрибуты из профиля Моя подпись ФНС для скроллера СЭП

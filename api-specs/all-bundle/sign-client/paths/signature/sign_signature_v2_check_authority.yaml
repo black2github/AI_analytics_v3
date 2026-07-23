@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Работа с подписью и полномочиями
+  summary: Проверить полномочия подписи пользователя V2
+  description: 'Привилегии: @eco.userPassedMfa() OR hasAuthority(''SIGN_CHECK'')'
+  operationId: checkSignAuthorityV2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/signature/SignAuthorityRequestV2.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/signature/SingleResponseSignAuthorityResponseV2.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

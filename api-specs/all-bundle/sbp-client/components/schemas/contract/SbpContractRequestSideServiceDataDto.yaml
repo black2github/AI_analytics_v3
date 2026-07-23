@@ -1,0 +1,15 @@
+type: object
+description: Реквизиты, получаемые в процессе создания заявки из других сервисов ЭКО.
+properties:
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса из справочника сервисов Экосистемы
+  ecoServiceDescription:
+    type: string
+    description: Описание ЭКО сервиса из справочника сервисов Экосистемы
+  ecoTypeId:
+    type: string
+    description: Идентификатор типа документа ЭКО
+  ecoDocTypeDescription:
+    type: string
+    description: Описание типа документа ЭКО

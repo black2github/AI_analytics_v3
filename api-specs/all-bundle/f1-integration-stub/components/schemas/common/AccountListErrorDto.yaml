@@ -1,0 +1,22 @@
+type: object
+description: Ошибка для счета в Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  clientGuid:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  source:
+    type: string
+    description: Тип заявки
+  clientRegNum:
+    type: string
+    description: РНК клиента
+  responseJson:
+    type: string
+    description: Сырой JSON ответ

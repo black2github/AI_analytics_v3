@@ -1,0 +1,119 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  clientEmployeeId:
+    type: string
+    description: ID сотрудника клиента
+    format: uuid
+  addressType:
+    type: string
+    description: Тип адреса
+    enum:
+    - LEGAL
+    - POST
+    - ACTUAL
+    - BIRTH_PLACE
+    - TEMPORARY_REG
+  addr:
+    type: string
+    description: Адрес одной строкой
+  street:
+    type: string
+    description: Название улицы
+  streetCode:
+    type: string
+    description: Код улицы (КЛАДР)
+  fiasStreetCode:
+    type: string
+    description: Код улицы (ФИАС)
+  houseNum:
+    type: string
+    description: Номер дома
+  houseCode:
+    type: string
+    description: Код дома (КЛАДР)
+  houseExt:
+    type: string
+    description: Расширение номера дома (корпуса, строения)
+  fiasHouseCode:
+    type: string
+    description: ФИАС код типа и номера здания, строения
+  unit:
+    type: string
+    description: Единица адресации
+  unitNum:
+    type: string
+    description: Номер единицы адресации
+  fiasUnitNumCode:
+    type: string
+    description: ФИАС код типа и номера помещения в пределах здания
+  settlement:
+    type: string
+    description: Населенный пункт
+  fiasSettlementCode:
+    type: string
+    description: ФИАС код населенного пункта
+  area:
+    type: string
+    description: Район
+  areaCode:
+    type: string
+    description: Код района
+  fiasAreaCode:
+    type: string
+    description: ФИАС код района
+  district:
+    type: string
+    description: Район города
+  districtCode:
+    type: string
+    description: Код района города
+  fiasDistrictCode:
+    type: string
+    description: ФИАС код внутригородского района
+  city:
+    type: string
+    description: Город
+  cityCode:
+    type: string
+    description: Код города
+  fiasCityCode:
+    type: string
+    description: ФИАС код города
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  fiasRegionCode:
+    type: string
+    description: ФИАС код региона
+  stateProv:
+    type: string
+    description: Область/провинция
+  stateProvCode:
+    type: string
+    description: Код области/провинции
+  fiasStateProvCode:
+    type: string
+    description: ФИАС код субъекта РФ
+  postCode:
+    type: string
+    description: Почтовый индекс
+  country:
+    type: integer
+    description: Страна
+    format: int32
+  startDate:
+    type: string
+    description: Начальная дата действия
+    format: date
+  endDate:
+    type: string
+    description: Конечная дата действия
+    format: date
+description: Адрес сотрудника клиента

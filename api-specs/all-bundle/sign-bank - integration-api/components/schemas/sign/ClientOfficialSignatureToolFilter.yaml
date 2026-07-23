@@ -1,0 +1,41 @@
+type: object
+properties:
+  dstKind:
+    $ref: ./ClientOfficialSignatureToolKindFilter.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientOfficialId:
+    $ref: ./FilterValueDtoUUID.yaml
+  dstUserId:
+    $ref: ./FilterValueDtoUUID.yaml
+  certValidStart:
+    $ref: ./FilterValueDtoInstant.yaml
+  certValidEnd:
+    $ref: ./FilterValueDtoInstant.yaml
+  dstStatus:
+    $ref: ./ClientOfficialSignatureToolDstStatusFilter.yaml
+  certSerialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  profileSecondaryAuthMethod:
+    $ref: ./ClientOfficialSignatureToolSecondaryAuthMethodFilter.yaml
+  dstEnabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  dstLoginEnabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  statusCategory:
+    type: string
+    description: Категории СЭП
+    enum:
+    - ALL
+    - ACTIVE
+    - NOT_ACTIVE
+    - DELETED
+  certificateOwnerName:
+    $ref: ../common/FilterValueDtoString.yaml
+  dstDeleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  eskUserId:
+    $ref: ../common/FilterValueDtoString.yaml
+  dssLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для истории СЭП

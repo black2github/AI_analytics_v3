@@ -1,0 +1,32 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+  accountBranchCode:
+    type: string
+    description: Код филиала для счета клиента (филиал баланса)
+  currencyCode:
+    type: string
+    description: Код валюты счета по которому запрашивается документ
+  accountName:
+    type: string
+    description: Название счета по которому запрашивается справка
+  accountId:
+    type: string
+    description: Составной идентификатор счета
+  docType:
+    type: string
+    description: Тип докумета
+    enum:
+    - KOPOP
+    - AKZEPT
+    - DBS
+  documentNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+description: Информация о договорных документах для ЮЛ

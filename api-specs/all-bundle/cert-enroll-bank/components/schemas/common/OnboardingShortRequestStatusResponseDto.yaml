@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор короткой заявки
+    format: uuid
+  status:
+    type: string
+    description: Текущий статус обработки короткой заявки
+description: Данные статуса короткой заявки на онбординг

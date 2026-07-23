@@ -1,0 +1,20 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./DocType.yaml
+  notEq:
+    $ref: ./DocType.yaml
+  in:
+    type: array
+    items:
+      $ref: ./DocType.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./DocType.yaml
+  isNull:
+    type: boolean

@@ -1,0 +1,12 @@
+type: object
+properties:
+  creationPage:
+    maxLength: 255
+    pattern: ^[A-Za-z0-9/._-]*$
+    type: string
+    description: Страница, с которой вызвано создание документа
+  docId:
+    type: string
+    description: Идентификатор документа, на основе которого создан документ
+    format: uuid
+description: Данные для создания/обновления блока информации о создании документа

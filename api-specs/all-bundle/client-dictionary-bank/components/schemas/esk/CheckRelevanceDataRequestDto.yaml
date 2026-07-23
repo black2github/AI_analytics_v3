@@ -1,0 +1,17 @@
+required:
+- checkProcessGUID
+type: object
+properties:
+  checkProcessGUID:
+    type: string
+    description: ProcessGUID запроса проверки
+    format: uuid
+  clientGuid:
+    type: string
+    description: GUID организации в ЕСК
+  clientOrgRegNum:
+    type: string
+    description: Рег. номер организации (РНК)
+  inn:
+    type: string
+    description: ИНН организации/ИП

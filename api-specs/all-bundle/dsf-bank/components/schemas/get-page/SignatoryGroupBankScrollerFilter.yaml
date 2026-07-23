@@ -1,0 +1,18 @@
+type: object
+description: Фильтр скроллера ДСФ из Банка. Банковская часть.
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по коду группы. Полное совпдадение.
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по email подписанта или оповещаемого. Полное совпдадение.
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по имени группы. Полное совпдадение in, частичное совпадение contains.
+  notifiablePersonFio:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ФИО подписанта. Полное совпдадение.
+  signatoryPersonFio:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по ФИО подписанта. Полное совпдадение.

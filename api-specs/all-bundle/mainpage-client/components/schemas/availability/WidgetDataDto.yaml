@@ -1,0 +1,13 @@
+type: object
+properties:
+  isAvailable:
+    type: boolean
+    writeOnly: true
+  requests:
+    type: array
+    description: Заявки
+    items:
+      $ref: ../common/RecentDocDto.yaml
+  available:
+    type: boolean
+description: Данные о доступности виджета для отображения

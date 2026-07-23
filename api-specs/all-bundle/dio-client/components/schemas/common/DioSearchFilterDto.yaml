@@ -1,0 +1,6 @@
+type: object
+properties:
+  search:
+    type: string
+    description: Универсальный поиск по тексту
+description: Транспортное представление банковского DTO быстрого фильтра для поиска по подсктроке

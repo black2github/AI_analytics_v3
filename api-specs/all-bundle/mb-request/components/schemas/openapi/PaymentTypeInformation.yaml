@@ -1,0 +1,28 @@
+type: object
+properties:
+  localInstrument:
+    type: string
+    enum:
+    - '01'
+    - '02'
+    - '03'
+    - '04'
+    - '06'
+    - '16'
+    - '17'
+    - 09
+  categoryPurpose:
+    type: string
+    enum:
+    - '0'
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+  serviceLevel:
+    type: string
+    enum:
+    - URGP
+    - NURG
+description: Информация о платеже

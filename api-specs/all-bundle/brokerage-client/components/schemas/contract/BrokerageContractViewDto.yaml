@@ -1,0 +1,12 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  exchanges:
+    type: array
+    description: Массив данных о биржах
+    items:
+      $ref: ./BrokerageContractViewTradingFloorDto.yaml
+description: Сведения о договоре

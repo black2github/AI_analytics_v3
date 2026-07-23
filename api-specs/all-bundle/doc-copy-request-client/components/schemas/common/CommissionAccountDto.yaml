@@ -1,0 +1,12 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Счет списания комиссии.
+  accountId:
+    type: string
+    description: Составной идентификатор счета списания комиссии.
+  accountBranchCode:
+    type: string
+    description: Филиал баланса счета списания комиссии.
+description: Информация о счете комиссии

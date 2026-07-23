@@ -1,0 +1,9 @@
+required:
+- endDate
+type: object
+properties:
+  endDate:
+    type: string
+    description: Дата окончания действия доверенности
+    format: date
+description: Данные для выдачи доверенности на получение банковской информации

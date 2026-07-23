@@ -1,0 +1,8 @@
+required:
+- eskId
+type: object
+properties:
+  eskId:
+    type: string
+    description: ESK ID физ лица
+description: Запрос информации о физ лице в Ф1 по esk ID

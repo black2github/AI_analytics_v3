@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./CreatePaymentOrderRequestDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда создания

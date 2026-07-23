@@ -1,0 +1,17 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер
+  currency:
+    $ref: ./CurrencyDto.yaml
+  amount:
+    type: string
+    description: Сумма транша
+  providedTerm:
+    $ref: ./LoaningTermsCodeDto.yaml
+  trancheDate:
+    type: string
+    description: Ожидаемая дата поступления транша
+    format: date
+description: Сведения о сумме и сроках привлечения (предоставления) траншей

@@ -1,0 +1,44 @@
+type: object
+description: Справка о подтверждающих документах
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    certificateDate:
+      type: string
+      description: Дата СПД
+      format: date
+    filialName:
+      type: string
+      description: Наименование подразделения
+    orgName:
+      type: string
+      description: Наименование организации
+    correctionFlag:
+      type: boolean
+      description: Признак корректировки по 138-И
+    dealPassportNumber:
+      type: string
+      description: Уникальный номер контракта
+    executorName:
+      type: string
+      description: Исполнитель
+    contact:
+      type: string
+      description: Телефон
+    inn:
+      type: string
+      description: ИНН
+    notes:
+      type: array
+      description: Примечание
+      items:
+        $ref: ./NoteDto.yaml
+    commentForBank:
+      type: string
+      description: Комментарий для Банка
+    sustainingDocuments:
+      type: array
+      description: Подтверждающие документы
+      items:
+        $ref: ./SustainingDocumentDto.yaml

@@ -1,0 +1,27 @@
+type: object
+properties:
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueDtoString.yaml
+  method:
+    $ref: ./DocCopyMethodFilterValueDto.yaml
+  type:
+    $ref: ./DocCopyTypeCodeFilterValueDto.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - FINISHED
+    - DRAFT
+  accountId:
+    $ref: ./FilterValueDtoString.yaml
+  creationDate:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр

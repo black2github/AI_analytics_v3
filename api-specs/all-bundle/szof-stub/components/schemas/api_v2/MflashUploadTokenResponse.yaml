@@ -1,0 +1,9 @@
+type: object
+properties:
+  upload_token:
+    type: string
+  file_id:
+    type: string
+  parts:
+    type: integer
+    format: int32

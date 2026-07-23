@@ -1,0 +1,6 @@
+type: object
+description: Запрос страницы
+properties:
+  params:
+    $ref: ./PageParamsSbpBankTransactionCommonRequestFilter.yaml
+    description: Параметры

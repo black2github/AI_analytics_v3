@@ -1,0 +1,44 @@
+type: object
+properties:
+  additionalInfoForBank:
+    type: string
+    description: Дополнительная информация для банка
+  changedIn:
+    type: string
+    description: Дата и время происхождения события.
+    format: date-time
+  commentForStatus:
+    type: string
+    description: 'Комментарий к статусу документа. Если значение не пустое -  отображать рядом со статусом '
+  documentId:
+    type: string
+    description: Идентификатор документа.
+    format: uuid
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  infoForBank:
+    type: string
+    description: Информация для Банка
+  infoForClient:
+    type: string
+    description: Информация для Клиента
+  status:
+    type: string
+    description: Статус документа.
+  userId:
+    type: string
+    description: Идентификатор пользователя инициатора события
+    format: uuid
+  userName:
+    type: string
+    description: Имя пользователя инициатора события.
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Документ в банк. ДТО истории документа

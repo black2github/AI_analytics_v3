@@ -1,0 +1,25 @@
+delete:
+  tags:
+  - Работа с заглушками локальных транзакций в Ф1 (VW_RPT_GPS_CARD_DOCS_IRAO_ECO)
+  summary: Удаление заглушки транзакции
+  operationId: deleteStubUsingDELETE_11
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: integer
+    format: int64
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«ErrorData,LocalTransactionDto»'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

@@ -1,0 +1,127 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  requestNumber:
+    type: string
+    description: Номер заявки
+  requestNumberSystem:
+    type: integer
+    description: Номер заявки общий
+    format: int64
+  requestNumberUser:
+    type: integer
+    description: Номер заявки пользователя
+    format: int64
+  requestDate:
+    type: string
+    description: Дата заявки
+    format: date-time
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  signCheckDate:
+    type: string
+    description: Дата проверки подписи
+    format: date-time
+  orgName:
+    type: string
+    description: Наименование организации
+  innKio:
+    type: string
+    description: ИНН/КИО
+  ogrn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  fio:
+    type: string
+    description: ФИО
+  clientOfficialDstId:
+    type: string
+    description: Идентификатор СЭП представителя клиента
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя UAA
+    format: uuid
+  certData:
+    type: string
+    description: Сертификат ЭП, загруженный пользователем
+    format: byte
+  stableId:
+    type: string
+    description: Stable ID сертификата
+  ssdVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signature:
+    $ref: ./RegCertRequestSignatureDto.yaml
+  certParsedData:
+    $ref: ./RegCertParsedDataDto.yaml
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - NEW
+    - TO_KPP_ATTACH
+    - KPP_ATTACHED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - GET_DBO_CONTRACTS
+    - GET_DBO_CONTRACTS_EXECUTED
+    - GET_DBO_CONTRACTS_ERROR
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - REGISTER_CERT
+    - DENIED
+    - DELETED
+    - EXECUTED
+    - NEED_ATTACH_KPP_OR_NOT
+    - SIGN_VALID_OR_NOT
+    - RECEIVED_OR_NOT
+    - COMPLETED
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  certType:
+    type: string
+    description: Тип сертификата
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+    - MOB_QUALIFIED_SIGN_FNS
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  backUrl:
+    type: string
+    description: URL перехода при завершении процесса регистрации
+  fnsProfileId:
+    type: string
+    description: ID профиля ФНС
+    format: uuid
+description: ДТО заявки на регистрацию сертификата

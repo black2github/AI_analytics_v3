@@ -1,0 +1,915 @@
+openapi: 3.1.0
+info:
+  title: Сервис СБП. Банковская часть.
+  version: 3.0.0
+servers:
+- url: /sbp-bank
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /sbp/bank/update-tsp/status-change:
+    $ref: ./paths/bank/sbp_bank_update_tsp_status_change.yaml
+  /sbp/bank/update-tsp/retry:
+    $ref: ./paths/bank/sbp_bank_update_tsp_retry.yaml
+  /sbp/bank/tsp-block-request/status-change:
+    $ref: ./paths/bank/sbp_bank_tsp_block_request_status_change.yaml
+  /sbp/bank/tsp-block-request/retry:
+    $ref: ./paths/bank/sbp_bank_tsp_block_request_retry.yaml
+  /sbp/bank/transaction/v3/get-page:
+    $ref: ./paths/bank/sbp_bank_transaction_v3_get_page.yaml
+  /sbp/bank/transaction/v3/fs/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_v3_fs_export_list.yaml
+  /sbp/bank/transaction/v3/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_v3_export_list.yaml
+  /sbp/bank/transaction/v2/get-page:
+    $ref: ./paths/bank/sbp_bank_transaction_v2_get_page.yaml
+  /sbp/bank/transaction/v2/fs/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_v2_fs_export_list.yaml
+  /sbp/bank/transaction/v2/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_v2_export_list.yaml
+  /sbp/bank/transaction/status-change:
+    $ref: ./paths/bank/sbp_bank_transaction_status_change.yaml
+  /sbp/bank/transaction/request/retry:
+    $ref: ./paths/bank/sbp_bank_transaction_request_retry.yaml
+  /sbp/bank/transaction/request/retry-batch:
+    $ref: ./paths/bank/sbp_bank_transaction_request_retry_batch.yaml
+  /sbp/bank/transaction/request/get-page:
+    $ref: ./paths/bank/sbp_bank_transaction_request_get_page.yaml
+  /sbp/bank/transaction/request/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_request_export_list.yaml
+  /sbp/bank/transaction/request/category:
+    $ref: ./paths/bank/sbp_bank_transaction_request_category.yaml
+  /sbp/bank/transaction/export-sign:
+    $ref: ./paths/bank/sbp_bank_transaction_export_sign.yaml
+  /sbp/bank/transaction/common/request/retry-batch:
+    $ref: ./paths/bank/sbp_bank_transaction_common_request_retry_batch.yaml
+  /sbp/bank/transaction/common/request/get-page:
+    $ref: ./paths/bank/sbp_bank_transaction_common_request_get_page.yaml
+  /sbp/bank/transaction/common/request/export-list:
+    $ref: ./paths/bank/sbp_bank_transaction_common_request_export_list.yaml
+  /sbp/bank/transaction/common/request/category:
+    $ref: ./paths/bank/sbp_bank_transaction_common_request_category.yaml
+  /sbp/bank/transaction/b2b/status-change:
+    $ref: ./paths/bank/sbp_bank_transaction_b2b_status_change.yaml
+  /sbp/bank/transaction/b2b/retry:
+    $ref: ./paths/bank/sbp_bank_transaction_b2b_retry.yaml
+  /sbp/bank/transaction/b2b/export-sign:
+    $ref: ./paths/bank/sbp_bank_transaction_b2b_export_sign.yaml
+  /sbp/bank/subscription/payment/status-change:
+    $ref: ./paths/bank/sbp_bank_subscription_payment_status_change.yaml
+  /sbp/bank/subscription/payment/retry:
+    $ref: ./paths/bank/sbp_bank_subscription_payment_retry.yaml
+  /sbp/bank/subscription/get-page:
+    $ref: ./paths/bank/sbp_bank_subscription_get_page.yaml
+  /sbp/bank/subscription/export-list:
+    $ref: ./paths/bank/sbp_bank_subscription_export_list.yaml
+  /sbp/bank/request/v2/get-page:
+    $ref: ./paths/bank/sbp_bank_request_v2_get_page.yaml
+  /sbp/bank/request/v2/category:
+    $ref: ./paths/bank/sbp_bank_request_v2_category.yaml
+  /sbp/bank/request/status-change:
+    $ref: ./paths/bank/sbp_bank_request_status_change.yaml
+  /sbp/bank/request/retry:
+    $ref: ./paths/bank/sbp_bank_request_retry.yaml
+  /sbp/bank/request/get-page:
+    $ref: ./paths/bank/sbp_bank_request_get_page.yaml
+  /sbp/bank/request/export-list:
+    $ref: ./paths/bank/sbp_bank_request_export_list.yaml
+  /sbp/bank/request/eco/get-page:
+    $ref: ./paths/bank/sbp_bank_request_eco_get_page.yaml
+  /sbp/bank/request/eco/export-list:
+    $ref: ./paths/bank/sbp_bank_request_eco_export_list.yaml
+  /sbp/bank/request/eco/category:
+    $ref: ./paths/bank/sbp_bank_request_eco_category.yaml
+  /sbp/bank/request/category:
+    $ref: ./paths/bank/sbp_bank_request_category.yaml
+  /sbp/bank/request-tsp/v2/status-change:
+    $ref: ./paths/bank/sbp_bank_request_tsp_v2_status_change.yaml
+  /sbp/bank/request-tsp/v2/retry:
+    $ref: ./paths/bank/sbp_bank_request_tsp_v2_retry.yaml
+  /sbp/bank/request-tsp/tsp-list:
+    $ref: ./paths/bank/sbp_bank_request_tsp_tsp_list.yaml
+  /sbp/bank/request-tsp/tsp-list/{client_id}:
+    $ref: ./paths/bank/sbp_bank_request_tsp_tsp_list_client_id.yaml
+  /sbp/bank/request-tsp/tsp-list/export-list/{client_id}:
+    $ref: ./paths/bank/sbp_bank_request_tsp_tsp_list_export_list_client_id.yaml
+  /sbp/bank/request-tsp/status-change:
+    $ref: ./paths/bank/sbp_bank_request_tsp_status_change.yaml
+  /sbp/bank/request-tsp/retry:
+    $ref: ./paths/bank/sbp_bank_request_tsp_retry.yaml
+  /sbp/bank/request-tsp/get-page:
+    $ref: ./paths/bank/sbp_bank_request_tsp_get_page.yaml
+  /sbp/bank/request-tsp/category:
+    $ref: ./paths/bank/sbp_bank_request_tsp_category.yaml
+  /sbp/bank/qrc/status-change:
+    $ref: ./paths/bank/sbp_bank_qrc_status_change.yaml
+  /sbp/bank/qrc/retry:
+    $ref: ./paths/bank/sbp_bank_qrc_retry.yaml
+  /sbp/bank/qrc/invoice/get-page:
+    $ref: ./paths/bank/sbp_bank_qrc_invoice_get_page.yaml
+  /sbp/bank/qrc/invoice/export-list:
+    $ref: ./paths/bank/sbp_bank_qrc_invoice_export_list.yaml
+  /sbp/bank/qrc/entity/get-page:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_get_page.yaml
+  /sbp/bank/qrc/entity/export-list:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_export_list.yaml
+  /sbp/bank/qrc/entity/eco/get-page:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_eco_get_page.yaml
+  /sbp/bank/qrc/entity/eco/export-list:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_eco_export_list.yaml
+  /sbp/bank/qrc/callback-message/get-page:
+    $ref: ./paths/bank/sbp_bank_qrc_callback_message_get_page.yaml
+  /sbp/bank/qrc/callback-message/export-list:
+    $ref: ./paths/bank/sbp_bank_qrc_callback_message_export_list.yaml
+  /sbp/bank/qrc/block/status-change:
+    $ref: ./paths/bank/sbp_bank_qrc_block_status_change.yaml
+  /sbp/bank/qrc/block/retry:
+    $ref: ./paths/bank/sbp_bank_qrc_block_retry.yaml
+  /sbp/bank/qrc/b2b/status-change:
+    $ref: ./paths/bank/sbp_bank_qrc_b2b_status_change.yaml
+  /sbp/bank/qrc/b2b/retry:
+    $ref: ./paths/bank/sbp_bank_qrc_b2b_retry.yaml
+  /sbp/bank/disconnect-agents/status-change:
+    $ref: ./paths/bank/sbp_bank_disconnect_agents_status_change.yaml
+  /sbp/bank/disconnect-agents/retry:
+    $ref: ./paths/bank/sbp_bank_disconnect_agents_retry.yaml
+  /sbp/bank/disconnect-agents/export-sign:
+    $ref: ./paths/bank/sbp_bank_disconnect_agents_export_sign.yaml
+  /sbp/bank/contract/status-change:
+    $ref: ./paths/bank/sbp_bank_contract_status_change.yaml
+  /sbp/bank/contract/retry:
+    $ref: ./paths/bank/sbp_bank_contract_retry.yaml
+  /sbp/bank/contract/print:
+    $ref: ./paths/bank/sbp_bank_contract_print.yaml
+  /sbp/bank/contract/get-page:
+    $ref: ./paths/bank/sbp_bank_contract_get_page.yaml
+  /sbp/bank/contract/export:
+    $ref: ./paths/bank/sbp_bank_contract_export.yaml
+  /sbp/bank/contract/export-sign:
+    $ref: ./paths/bank/sbp_bank_contract_export_sign.yaml
+  /sbp/bank/contract/export-list:
+    $ref: ./paths/bank/sbp_bank_contract_export_list.yaml
+  /sbp/bank/contract/category:
+    $ref: ./paths/bank/sbp_bank_contract_category.yaml
+  /sbp/bank/bank/get-page:
+    $ref: ./paths/bank/sbp_bank_bank_get_page.yaml
+  /sbp/bank/agents/request/retry:
+    $ref: ./paths/bank/sbp_bank_agents_request_retry.yaml
+  /sbp/bank/agents/request/get-page:
+    $ref: ./paths/bank/sbp_bank_agents_request_get_page.yaml
+  /sbp/bank/agents/request/export-list:
+    $ref: ./paths/bank/sbp_bank_agents_request_export_list.yaml
+  /sbp/bank/agents/request/category:
+    $ref: ./paths/bank/sbp_bank_agents_request_category.yaml
+  /internal/v1/contract:
+    $ref: ./paths/v1/internal_v1_contract.yaml
+  /internal/qrc/get-status:
+    $ref: ./paths/qrc/internal_qrc_get_status.yaml
+  /internal/qrc/create:
+    $ref: ./paths/qrc/internal_qrc_create.yaml
+  /internal/qrc/block:
+    $ref: ./paths/qrc/internal_qrc_block.yaml
+  /sbp/bank/update-tsp/{id}:
+    $ref: ./paths/bank/sbp_bank_update_tsp_id.yaml
+  /sbp/bank/update-tsp/history/{id}:
+    $ref: ./paths/bank/sbp_bank_update_tsp_history_id.yaml
+  /sbp/bank/tsp-block-request/{id}:
+    $ref: ./paths/bank/sbp_bank_tsp_block_request_id.yaml
+  /sbp/bank/tsp-block-request/history/{id}:
+    $ref: ./paths/bank/sbp_bank_tsp_block_request_history_id.yaml
+  /sbp/bank/transaction/{id}:
+    $ref: ./paths/bank/sbp_bank_transaction_id.yaml
+  /sbp/bank/transaction/request/history/{id}:
+    $ref: ./paths/bank/sbp_bank_transaction_request_history_id.yaml
+  /sbp/bank/transaction/b2b/{id}:
+    $ref: ./paths/bank/sbp_bank_transaction_b2b_id.yaml
+  /sbp/bank/transaction/b2b/history/{id}:
+    $ref: ./paths/bank/sbp_bank_transaction_b2b_history_id.yaml
+  /sbp/bank/subscription/{id}:
+    $ref: ./paths/bank/sbp_bank_subscription_id.yaml
+  /sbp/bank/subscription/schedule/{id}:
+    $ref: ./paths/bank/sbp_bank_subscription_schedule_id.yaml
+  /sbp/bank/subscription/schedule/history/{id}:
+    $ref: ./paths/bank/sbp_bank_subscription_schedule_history_id.yaml
+  /sbp/bank/subscription/payment/{id}:
+    $ref: ./paths/bank/sbp_bank_subscription_payment_id.yaml
+  /sbp/bank/subscription/payment/history/{id}:
+    $ref: ./paths/bank/sbp_bank_subscription_payment_history_id.yaml
+  /sbp/bank/request/get-eco-service-id-list:
+    $ref: ./paths/bank/sbp_bank_request_get_eco_service_id_list.yaml
+  /sbp/bank/request/get-eco-doc-type-id-list:
+    $ref: ./paths/bank/sbp_bank_request_get_eco_doc_type_id_list.yaml
+  /sbp/bank/request-tsp/{id}:
+    $ref: ./paths/bank/sbp_bank_request_tsp_id.yaml
+  /sbp/bank/request-tsp/v2/{id}:
+    $ref: ./paths/bank/sbp_bank_request_tsp_v2_id.yaml
+  /sbp/bank/request-tsp/history/{id}:
+    $ref: ./paths/bank/sbp_bank_request_tsp_history_id.yaml
+  /sbp/bank/qrc/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_id.yaml
+  /sbp/bank/qrc/invoice/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_invoice_id.yaml
+  /sbp/bank/qrc/history/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_history_id.yaml
+  /sbp/bank/qrc/entity/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_id.yaml
+  /sbp/bank/qrc/entity/image/{imageName}:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_image_imageName.yaml
+  /sbp/bank/qrc/entity/image/{imageName}/id:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_image_imageName_id.yaml
+  /sbp/bank/qrc/entity/image/download/{imageName}/:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_image_download_imageName.yaml
+  /sbp/bank/qrc/entity/eco/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_entity_eco_id.yaml
+  /sbp/bank/qrc/eco/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_eco_id.yaml
+  /sbp/bank/qrc/callback-message/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_callback_message_id.yaml
+  /sbp/bank/qrc/block/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_block_id.yaml
+  /sbp/bank/qrc/block/history/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_block_history_id.yaml
+  /sbp/bank/qrc/block/eco/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_block_eco_id.yaml
+  /sbp/bank/qrc/b2b/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_b2b_id.yaml
+  /sbp/bank/qrc/b2b/history/{id}:
+    $ref: ./paths/bank/sbp_bank_qrc_b2b_history_id.yaml
+  /sbp/bank/disconnect-agents/{id}:
+    $ref: ./paths/bank/sbp_bank_disconnect_agents_id.yaml
+  /sbp/bank/disconnect-agents/history/{id}:
+    $ref: ./paths/bank/sbp_bank_disconnect_agents_history_id.yaml
+  /sbp/bank/contract/{id}:
+    $ref: ./paths/bank/sbp_bank_contract_id.yaml
+  /sbp/bank/contract/info/{clientId}:
+    $ref: ./paths/bank/sbp_bank_contract_info_clientId.yaml
+  /sbp/bank/contract/info/v2/{clientId}:
+    $ref: ./paths/bank/sbp_bank_contract_info_v2_clientId.yaml
+  /sbp/bank/contract/info/v2/exists/{clientId}:
+    $ref: ./paths/bank/sbp_bank_contract_info_v2_exists_clientId.yaml
+  /sbp/bank/contract/info/exists/{clientId}:
+    $ref: ./paths/bank/sbp_bank_contract_info_exists_clientId.yaml
+  /sbp/bank/contract/history/{id}:
+    $ref: ./paths/bank/sbp_bank_contract_history_id.yaml
+  /sbp/bank/agents:
+    $ref: ./paths/bank/sbp_bank_agents.yaml
+  /sbp/bank/agents/client-agents/{clientId}:
+    $ref: ./paths/bank/sbp_bank_agents_client_agents_clientId.yaml
+  /internal/qrc/{ecoServiceCode}/{qrcId}:
+    $ref: ./paths/qrc/internal_qrc_ecoServiceCode_qrcId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/bank/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/bank/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/bank/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/bank/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/bank/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    SbpTspChangeRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestStatusChangeDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/bank/ErrorData.yaml
+    GenericResponseErrorDataSbpTspChangeRequestResponseV2Dto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpTspChangeRequestResponseV2Dto.yaml
+    SbpTspChangeRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestBankClientDto.yaml
+    SbpTspChangeRequestDataResponseV2Dto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestDataResponseV2Dto.yaml
+    SbpTspChangeRequestMerchantDto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestMerchantDto.yaml
+    SbpTspChangeRequestResponseV2Dto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestResponseV2Dto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/bank/GenericCommandUUID.yaml
+    SbpTspBlockRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpTspBlockRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpTspBlockRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpTspBlockRequestDto.yaml
+    SbpTspBlockRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpTspBlockRequestBankClientDto.yaml
+    SbpTspBlockRequestDto:
+      $ref: ./components/schemas/bank/SbpTspBlockRequestDto.yaml
+    SbpTspBlockRequestMerchantDto:
+      $ref: ./components/schemas/bank/SbpTspBlockRequestMerchantDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/bank/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/bank/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/bank/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/bank/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/bank/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/bank/FilterValueDtoUUID.yaml
+    GetPageCommandSbpTransactionFilterV3BankDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpTransactionFilterV3BankDto.yaml
+    PageParamsSbpTransactionFilterV3BankDto:
+      $ref: ./components/schemas/bank/PageParamsSbpTransactionFilterV3BankDto.yaml
+    Paging:
+      $ref: ./components/schemas/bank/Paging.yaml
+    SbpTransactionFilterV3BankDto:
+      $ref: ./components/schemas/bank/SbpTransactionFilterV3BankDto.yaml
+    SbpTransactionStatusFilter:
+      $ref: ./components/schemas/bank/SbpTransactionStatusFilter.yaml
+    Sort:
+      $ref: ./components/schemas/bank/Sort.yaml
+    GenericResponseErrorDataPageDataSbpMerchantTransactionDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataPageDataSbpMerchantTransactionDto.yaml
+    PageDataSbpMerchantTransactionDto:
+      $ref: ./components/schemas/bank/PageDataSbpMerchantTransactionDto.yaml
+    SbpMerchantTransactionDto:
+      $ref: ./components/schemas/bank/SbpMerchantTransactionDto.yaml
+    GenericCommandSbpTransactionFilterV3BankDto:
+      $ref: ./components/schemas/bank/GenericCommandSbpTransactionFilterV3BankDto.yaml
+    AttachmentResponseDto:
+      $ref: ./components/schemas/bank/AttachmentResponseDto.yaml
+    GenericResponseErrorDataAttachmentResponseDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataAttachmentResponseDto.yaml
+    GetPageCommandSbpTransactionFilterV2Dto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpTransactionFilterV2Dto.yaml
+    PageParamsSbpTransactionFilterV2Dto:
+      $ref: ./components/schemas/bank/PageParamsSbpTransactionFilterV2Dto.yaml
+    SbpTransactionFilterV2Dto:
+      $ref: ./components/schemas/bank/SbpTransactionFilterV2Dto.yaml
+    GenericCommandSbpTransactionFilterV2Dto:
+      $ref: ./components/schemas/bank/GenericCommandSbpTransactionFilterV2Dto.yaml
+    SbpTransactionRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestStatusChangeDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/bank/CertificateInfoDto.yaml
+    GenericResponseErrorDataSbpTransactionRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpTransactionRequestDto.yaml
+    SbpTransactionCommissionDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionCommissionDataDto.yaml
+    SbpTransactionOperationDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionOperationDataDto.yaml
+    SbpTransactionProcessDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionProcessDataDto.yaml
+    SbpTransactionRecipientDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionRecipientDataDto.yaml
+    SbpTransactionRequestAccountDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestAccountDataDto.yaml
+    SbpTransactionRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestBankClientDto.yaml
+    SbpTransactionRequestDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestDataDto.yaml
+    SbpTransactionRequestDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestDto.yaml
+    SbpTransactionRequestMerchantDataDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestMerchantDataDto.yaml
+    SbpTransactionRequestSignatureDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestSignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/bank/SignatureValueDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/bank/GenericCommandListUUID.yaml
+    GenericResponseErrorDataSbpTransactionRequestAdminDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpTransactionRequestAdminDto.yaml
+    SbpTransactionRequestAdminDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestAdminDto.yaml
+    GetPageCommandSbpTransactionRequestFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpTransactionRequestFilter.yaml
+    PageParamsSbpTransactionRequestFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpTransactionRequestFilter.yaml
+    SbpTransactionRequestFilter:
+      $ref: ./components/schemas/bank/SbpTransactionRequestFilter.yaml
+    SbpTransactionRequestStatusFilter:
+      $ref: ./components/schemas/bank/SbpTransactionRequestStatusFilter.yaml
+    SbpTransactionRequestTypeFilter:
+      $ref: ./components/schemas/bank/SbpTransactionRequestTypeFilter.yaml
+    PageDataSbpTransactionRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpTransactionRequestDto.yaml
+    PrintCommandUUID:
+      $ref: ./components/schemas/bank/PrintCommandUUID.yaml
+    PrintRequestDtoUUID:
+      $ref: ./components/schemas/bank/PrintRequestDtoUUID.yaml
+    CategoryCount:
+      $ref: ./components/schemas/bank/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/bank/CategoryResponse.yaml
+    GenericResponseErrorDataListAttachmentResponseDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListAttachmentResponseDto.yaml
+    GetPageCommandSbpBankTransactionCommonRequestFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpBankTransactionCommonRequestFilter.yaml
+    PageParamsSbpBankTransactionCommonRequestFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpBankTransactionCommonRequestFilter.yaml
+    SbpBankTransactionCommonRequestFilter:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestFilter.yaml
+    SbpTransactionCommonRequestStatusFilter:
+      $ref: ./components/schemas/bank/SbpTransactionCommonRequestStatusFilter.yaml
+    SbpTransactionCommonRequestTypeFilter:
+      $ref: ./components/schemas/bank/SbpTransactionCommonRequestTypeFilter.yaml
+    PageDataSbpBankTransactionCommonRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpBankTransactionCommonRequestDto.yaml
+    SbpBankTransactionCommonRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestBankClientDto.yaml
+    SbpBankTransactionCommonRequestCommissionDataDto:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestCommissionDataDto.yaml
+    SbpBankTransactionCommonRequestDataDto:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestDataDto.yaml
+    SbpBankTransactionCommonRequestDto:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestDto.yaml
+    SbpBankTransactionCommonRequestRecipientDataDto:
+      $ref: ./components/schemas/bank/SbpBankTransactionCommonRequestRecipientDataDto.yaml
+    GenericCommandSbpPrintRequestDtoUUID:
+      $ref: ./components/schemas/bank/GenericCommandSbpPrintRequestDtoUUID.yaml
+    SbpPrintRequestDtoUUID:
+      $ref: ./components/schemas/bank/SbpPrintRequestDtoUUID.yaml
+    SbpB2bTransactionRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpB2bTransactionRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpB2bTransactionRequestDto.yaml
+    SbpB2bTransactionProcessDataDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionProcessDataDto.yaml
+    SbpB2bTransactionRecipientDataDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRecipientDataDto.yaml
+    SbpB2bTransactionRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestBankClientDto.yaml
+    SbpB2bTransactionRequestCommissionDataDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestCommissionDataDto.yaml
+    SbpB2bTransactionRequestDataDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestDataDto.yaml
+    SbpB2bTransactionRequestDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestDto.yaml
+    SbpB2bTransactionRequestSignatureDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestSignatureDto.yaml
+    SbpQrcPaymentRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpQrcPaymentRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpQrcPaymentRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcPaymentRequestDto.yaml
+    SbpQrcBankClientDto:
+      $ref: ./components/schemas/bank/SbpQrcBankClientDto.yaml
+    SbpQrcPaymentRequestDataDto:
+      $ref: ./components/schemas/bank/SbpQrcPaymentRequestDataDto.yaml
+    SbpQrcPaymentRequestDto:
+      $ref: ./components/schemas/bank/SbpQrcPaymentRequestDto.yaml
+    SbpQrcPaymentRequestSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcPaymentRequestSubscriptionDataDto.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/bank/FilterValueDtoInteger.yaml
+    GetPageCommandSbpQrcSubscriptionFilterDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpQrcSubscriptionFilterDto.yaml
+    PageParamsSbpQrcSubscriptionFilterDto:
+      $ref: ./components/schemas/bank/PageParamsSbpQrcSubscriptionFilterDto.yaml
+    SbpQrcSubscriptionFilterDto:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionFilterDto.yaml
+    SbpQrcSubscriptionPaymentFrequencyFilter:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionPaymentFrequencyFilter.yaml
+    SbpQrcSubscriptionStatusFilter:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionStatusFilter.yaml
+    PageDataSbpQrcSubscriptionDto:
+      $ref: ./components/schemas/bank/PageDataSbpQrcSubscriptionDto.yaml
+    SbpQrcDataDto:
+      $ref: ./components/schemas/common/SbpQrcDataDto.yaml
+    SbpQrcSubscriptionDto:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionDto.yaml
+    SbpQrcSubscriptionSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionSubscriptionDataDto.yaml
+    GenericCommandPrintRequestDtoUUID:
+      $ref: ./components/schemas/bank/GenericCommandPrintRequestDtoUUID.yaml
+    GetPageCommandSbpBankCommonRequestFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpBankCommonRequestFilter.yaml
+    PageParamsSbpBankCommonRequestFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpBankCommonRequestFilter.yaml
+    SbpBankCommonRequestFilter:
+      $ref: ./components/schemas/bank/SbpBankCommonRequestFilter.yaml
+    SbpCommonRequestStatusFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestStatusFilterDto.yaml
+    SbpRequestTypeFilterDto:
+      $ref: ./components/schemas/bank/SbpRequestTypeFilterDto.yaml
+    PageDataSbpCommonRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpCommonRequestDto.yaml
+    SbpB2bQrcRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpB2bQrcRequestBankClientDto.yaml
+    SbpB2bQrcRequestDataDto:
+      $ref: ./components/schemas/bank/SbpB2bQrcRequestDataDto.yaml
+    SbpB2bQrcRequestDto:
+      $ref: ./components/schemas/bank/SbpB2bQrcRequestDto.yaml
+    SbpCommonRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestBankClientDto.yaml
+    SbpCommonRequestDetailsDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestDetailsDto.yaml
+    SbpCommonRequestDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestDto.yaml
+    SbpCommonRequestSideServiceDataDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestSideServiceDataDto.yaml
+    SbpPaymentServiceAccountDto:
+      $ref: ./components/schemas/bank/SbpPaymentServiceAccountDto.yaml
+    SbpPaymentServiceDto:
+      $ref: ./components/schemas/bank/SbpPaymentServiceDto.yaml
+    SbpQrcAdditionalDataDto:
+      $ref: ./components/schemas/common/SbpQrcAdditionalDataDto.yaml
+    SbpQrcB2bDataDto:
+      $ref: ./components/schemas/bank/SbpQrcB2bDataDto.yaml
+    SbpQrcBlockRequestDataDto:
+      $ref: ./components/schemas/bank/SbpQrcBlockRequestDataDto.yaml
+    SbpQrcBlockRequestDto:
+      $ref: ./components/schemas/bank/SbpQrcBlockRequestDto.yaml
+    SbpQrcBlockRequestSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcBlockRequestSubscriptionDataDto.yaml
+    SbpQrcRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestBankClientDto.yaml
+    SbpQrcRequestDataDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestDataDto.yaml
+    SbpQrcRequestDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestDto.yaml
+    SbpQrcRequestSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestSubscriptionDataDto.yaml
+    SbpQrcScheduleRequestDataDto:
+      $ref: ./components/schemas/bank/SbpQrcScheduleRequestDataDto.yaml
+    SbpQrcScheduleRequestDto:
+      $ref: ./components/schemas/bank/SbpQrcScheduleRequestDto.yaml
+    SbpQrcScheduleRequestSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcScheduleRequestSubscriptionDataDto.yaml
+    SbpQrcSideServiceDataDto:
+      $ref: ./components/schemas/bank/SbpQrcSideServiceDataDto.yaml
+    SbpRequestTspBankClientDto:
+      $ref: ./components/schemas/bank/SbpRequestTspBankClientDto.yaml
+    SbpRequestTspV2Dto:
+      $ref: ./components/schemas/bank/SbpRequestTspV2Dto.yaml
+    GenericCommandSbpCommonRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/GenericCommandSbpCommonRequestStatusChangeDto.yaml
+    SbpCommonRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpCommonRequestAdminDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpCommonRequestAdminDto.yaml
+    SbpCommonRequestAdminDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestAdminDto.yaml
+    GetPageCommandSbpCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpCommonRequestFilterDto.yaml
+    PageParamsSbpCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/PageParamsSbpCommonRequestFilterDto.yaml
+    SbpCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonRequestFilterDto.yaml
+    GetPageCommandSbpBankServiceCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpBankServiceCommonRequestFilterDto.yaml
+    PageParamsSbpBankServiceCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/PageParamsSbpBankServiceCommonRequestFilterDto.yaml
+    SbpBankServiceCommonRequestFilterDto:
+      $ref: ./components/schemas/bank/SbpBankServiceCommonRequestFilterDto.yaml
+    SbpBankServiceCommonRequestPaymentChannelFilterDto:
+      $ref: ./components/schemas/bank/SbpBankServiceCommonRequestPaymentChannelFilterDto.yaml
+    SbpBankServiceCommonRequestStatusFilterDto:
+      $ref: ./components/schemas/bank/SbpBankServiceCommonRequestStatusFilterDto.yaml
+    SbpBankServiceRequestTypeFilterDto:
+      $ref: ./components/schemas/bank/SbpBankServiceRequestTypeFilterDto.yaml
+    PageDataSbpBankServiceCommonRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpBankServiceCommonRequestDto.yaml
+    SbpBankServiceCommonRequestDetailsDto:
+      $ref: ./components/schemas/bank/SbpBankServiceCommonRequestDetailsDto.yaml
+    SbpBankServiceCommonRequestDto:
+      $ref: ./components/schemas/bank/SbpBankServiceCommonRequestDto.yaml
+    SbpEcoQrcBlockRequestDto:
+      $ref: ./components/schemas/bank/SbpEcoQrcBlockRequestDto.yaml
+    SbpQrcRequestBankSideServiceDataDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestBankSideServiceDataDto.yaml
+    SbpQrcRequestBankSideServiceDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestBankSideServiceDto.yaml
+    SbpQrcRequestBankSideServiceInfoDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestBankSideServiceInfoDto.yaml
+    SbpQrcSideServiceClientDataDto:
+      $ref: ./components/schemas/bank/SbpQrcSideServiceClientDataDto.yaml
+    GenericCommandSbpRequestTspStatusChangeDto:
+      $ref: ./components/schemas/bank/GenericCommandSbpRequestTspStatusChangeDto.yaml
+    SbpRequestTspStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpRequestTspStatusChangeDto.yaml
+    GenericResponseErrorDataSbpRequestTspV2Dto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpRequestTspV2Dto.yaml
+    GetPageCommandTspEntityExtendedDtoFilter:
+      $ref: ./components/schemas/bank/GetPageCommandTspEntityExtendedDtoFilter.yaml
+    PageParamsTspEntityExtendedDtoFilter:
+      $ref: ./components/schemas/bank/PageParamsTspEntityExtendedDtoFilter.yaml
+    TspEntityExtendedDtoFilter:
+      $ref: ./components/schemas/bank/TspEntityExtendedDtoFilter.yaml
+    PageDataTspEntityDto:
+      $ref: ./components/schemas/bank/PageDataTspEntityDto.yaml
+    TspEntityDto:
+      $ref: ./components/schemas/bank/TspEntityDto.yaml
+    GetPageCommandTspEntityDtoFilter:
+      $ref: ./components/schemas/bank/GetPageCommandTspEntityDtoFilter.yaml
+    PageParamsTspEntityDtoFilter:
+      $ref: ./components/schemas/bank/PageParamsTspEntityDtoFilter.yaml
+    TspEntityDtoFilter:
+      $ref: ./components/schemas/bank/TspEntityDtoFilter.yaml
+    GenericCommandSbpPrintRequestDtoString:
+      $ref: ./components/schemas/bank/GenericCommandSbpPrintRequestDtoString.yaml
+    SbpPrintRequestDtoString:
+      $ref: ./components/schemas/bank/SbpPrintRequestDtoString.yaml
+    SbpRequestTspDto:
+      $ref: ./components/schemas/bank/SbpRequestTspDto.yaml
+    SingleResponseSbpRequestTspDto:
+      $ref: ./components/schemas/bank/SingleResponseSbpRequestTspDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/bank/SingleCommandUUID.yaml
+    GetPageCommandSbpRequestTspDtoFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpRequestTspDtoFilter.yaml
+    PageParamsSbpRequestTspDtoFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpRequestTspDtoFilter.yaml
+    SbpRequestTspDtoFilter:
+      $ref: ./components/schemas/bank/SbpRequestTspDtoFilter.yaml
+    SbpRequestTspStatusFilter:
+      $ref: ./components/schemas/bank/SbpRequestTspStatusFilter.yaml
+    PageDataSbpRequestTspDto:
+      $ref: ./components/schemas/bank/PageDataSbpRequestTspDto.yaml
+    SbpQrcRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpQrcRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcRequestDto.yaml
+    FilterValueEnumDtoSbpQrcInvoiceStatusDto:
+      $ref: ./components/schemas/bank/FilterValueEnumDtoSbpQrcInvoiceStatusDto.yaml
+    GetPageCommandSbpQrcInvoiceFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpQrcInvoiceFilter.yaml
+    PageParamsSbpQrcInvoiceFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpQrcInvoiceFilter.yaml
+    SbpQrcInvoiceFilter:
+      $ref: ./components/schemas/bank/SbpQrcInvoiceFilter.yaml
+    PageDataSbpQrcInvoiceResponseDto:
+      $ref: ./components/schemas/bank/PageDataSbpQrcInvoiceResponseDto.yaml
+    SbpQrcInvoiceRecipientDataDto:
+      $ref: ./components/schemas/bank/SbpQrcInvoiceRecipientDataDto.yaml
+    SbpQrcInvoiceResponseDto:
+      $ref: ./components/schemas/bank/SbpQrcInvoiceResponseDto.yaml
+    GetPageCommandSbpBankQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/GetPageCommandSbpBankQrcDtoFilterImpl.yaml
+    PageParamsSbpBankQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/PageParamsSbpBankQrcDtoFilterImpl.yaml
+    SbpBankQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/SbpBankQrcDtoFilterImpl.yaml
+    SbpPaymentServiceNameFilter:
+      $ref: ./components/schemas/bank/SbpPaymentServiceNameFilter.yaml
+    SbpQrcStatusFilter:
+      $ref: ./components/schemas/bank/SbpQrcStatusFilter.yaml
+    SbpQrcTypeFilter:
+      $ref: ./components/schemas/bank/SbpQrcTypeFilter.yaml
+    PageDataSbpQrcDto:
+      $ref: ./components/schemas/bank/PageDataSbpQrcDto.yaml
+    SbpQrcDto:
+      $ref: ./components/schemas/bank/SbpQrcDto.yaml
+    SbpQrcSubscriptionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcSubscriptionDataDto.yaml
+    SbpQrcTransactionDataDto:
+      $ref: ./components/schemas/bank/SbpQrcTransactionDataDto.yaml
+    GetPageCommandSbpQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/GetPageCommandSbpQrcDtoFilterImpl.yaml
+    PageParamsSbpQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/PageParamsSbpQrcDtoFilterImpl.yaml
+    SbpQrcDtoFilterImpl:
+      $ref: ./components/schemas/bank/SbpQrcDtoFilterImpl.yaml
+    PageDataSbpEcoQrcDto:
+      $ref: ./components/schemas/bank/PageDataSbpEcoQrcDto.yaml
+    SbpEcoQrcDataDto:
+      $ref: ./components/schemas/bank/SbpEcoQrcDataDto.yaml
+    SbpEcoQrcDto:
+      $ref: ./components/schemas/bank/SbpEcoQrcDto.yaml
+    GetPageCommandSbpCallbackMessageDtoFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpCallbackMessageDtoFilter.yaml
+    PageParamsSbpCallbackMessageDtoFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpCallbackMessageDtoFilter.yaml
+    SbpCallbackMessageDtoFilter:
+      $ref: ./components/schemas/bank/SbpCallbackMessageDtoFilter.yaml
+    SbpCallbackMessageTypeFilter:
+      $ref: ./components/schemas/bank/SbpCallbackMessageTypeFilter.yaml
+    PageDataSbpCallbackMessageDto:
+      $ref: ./components/schemas/bank/PageDataSbpCallbackMessageDto.yaml
+    SbpCallbackMessageDto:
+      $ref: ./components/schemas/bank/SbpCallbackMessageDto.yaml
+    SbpQrcBlockRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpQrcBlockRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpQrcBlockRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcBlockRequestDto.yaml
+    SbpB2bQrcRequestStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpB2bQrcRequestStatusChangeDto.yaml
+    GenericResponseErrorDataSbpB2bQrcRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpB2bQrcRequestDto.yaml
+    SbpDisconnectAgentsStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpDisconnectAgentsStatusChangeDto.yaml
+    GenericResponseErrorDataSbpDisconnectAgentsRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpDisconnectAgentsRequestDto.yaml
+    SbpDisconnectAgentsRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpDisconnectAgentsRequestBankClientDto.yaml
+    SbpDisconnectAgentsRequestDto:
+      $ref: ./components/schemas/bank/SbpDisconnectAgentsRequestDto.yaml
+    SbpDisconnectAgentsRequestSignatureDto:
+      $ref: ./components/schemas/bank/SbpDisconnectAgentsRequestSignatureDto.yaml
+    SbpRequestAgentTspDto:
+      $ref: ./components/schemas/bank/SbpRequestAgentTspDto.yaml
+    SbpContractStatusChangeDto:
+      $ref: ./components/schemas/bank/SbpContractStatusChangeDto.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/bank/AgreementsDto.yaml
+    DppDataDto:
+      $ref: ./components/schemas/bank/DppDataDto.yaml
+    SbpAccountRequestDto:
+      $ref: ./components/schemas/bank/SbpAccountRequestDto.yaml
+    SbpContractBankClientDto:
+      $ref: ./components/schemas/bank/SbpContractBankClientDto.yaml
+    SbpContractRequestDto:
+      $ref: ./components/schemas/bank/SbpContractRequestDto.yaml
+    SbpContractRequestSideServiceDataDto:
+      $ref: ./components/schemas/bank/SbpContractRequestSideServiceDataDto.yaml
+    SbpContractRequestSignatureDto:
+      $ref: ./components/schemas/bank/SbpContractRequestSignatureDto.yaml
+    SingleResponseSbpContractRequestDto:
+      $ref: ./components/schemas/bank/SingleResponseSbpContractRequestDto.yaml
+    GenericCommandSbpContractRequestPrintDto:
+      $ref: ./components/schemas/bank/GenericCommandSbpContractRequestPrintDto.yaml
+    SbpContractRequestPrintDto:
+      $ref: ./components/schemas/bank/SbpContractRequestPrintDto.yaml
+    DppServiceCodeFilter:
+      $ref: ./components/schemas/bank/DppServiceCodeFilter.yaml
+    GetPageCommandSbpContractRequestFilter:
+      $ref: ./components/schemas/bank/GetPageCommandSbpContractRequestFilter.yaml
+    PageParamsSbpContractRequestFilter:
+      $ref: ./components/schemas/bank/PageParamsSbpContractRequestFilter.yaml
+    SbpContractRequestFilter:
+      $ref: ./components/schemas/bank/SbpContractRequestFilter.yaml
+    SbpContractRequestStatusFilter:
+      $ref: ./components/schemas/bank/SbpContractRequestStatusFilter.yaml
+    PageDataSbpContractRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpContractRequestDto.yaml
+    GetPageCommandSbpBankFilterDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpBankFilterDto.yaml
+    PageParamsSbpBankFilterDto:
+      $ref: ./components/schemas/bank/PageParamsSbpBankFilterDto.yaml
+    SbpBankFilterDto:
+      $ref: ./components/schemas/bank/SbpBankFilterDto.yaml
+    PageDataSbpBankDto:
+      $ref: ./components/schemas/bank/PageDataSbpBankDto.yaml
+    SbpBankDto:
+      $ref: ./components/schemas/bank/SbpBankDto.yaml
+    SbpBankDtoScenario:
+      $ref: ./components/schemas/bank/SbpBankDtoScenario.yaml
+    GetPageCommandSbpCommonAgentsRequestFilterDto:
+      $ref: ./components/schemas/bank/GetPageCommandSbpCommonAgentsRequestFilterDto.yaml
+    PageParamsSbpCommonAgentsRequestFilterDto:
+      $ref: ./components/schemas/bank/PageParamsSbpCommonAgentsRequestFilterDto.yaml
+    SbpCommonAgentsRequestDppServiceCodeFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestDppServiceCodeFilterDto.yaml
+    SbpCommonAgentsRequestFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestFilterDto.yaml
+    SbpCommonAgentsRequestStatusFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestStatusFilterDto.yaml
+    SbpCommonAgentsRequestTypeFilterDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestTypeFilterDto.yaml
+    PageDataSbpCommonAgentsRequestDto:
+      $ref: ./components/schemas/bank/PageDataSbpCommonAgentsRequestDto.yaml
+    SbpCommonAgentsRequestBankClientDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestBankClientDto.yaml
+    SbpCommonAgentsRequestDetailsDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestDetailsDto.yaml
+    SbpCommonAgentsRequestDto:
+      $ref: ./components/schemas/bank/SbpCommonAgentsRequestDto.yaml
+    GenericCommandSbpContractRequestSideServiceRequestDto:
+      $ref: ./components/schemas/v1/GenericCommandSbpContractRequestSideServiceRequestDto.yaml
+    SbpContractRequestSideServiceRequestDto:
+      $ref: ./components/schemas/v1/SbpContractRequestSideServiceRequestDto.yaml
+    GenericResponseSbpSideServiceRequestErrorSbpContractRequestSideServiceResponseDto:
+      $ref: ./components/schemas/v1/GenericResponseSbpSideServiceRequestErrorSbpContractRequestSideServiceResponseDto.yaml
+    SbpContractRequestSideServiceResponseDto:
+      $ref: ./components/schemas/v1/SbpContractRequestSideServiceResponseDto.yaml
+    SbpSideServiceRequestError:
+      $ref: ./components/schemas/common/SbpSideServiceRequestError.yaml
+    GenericCommandSbpQrcGetStatusRequestDto:
+      $ref: ./components/schemas/qrc/GenericCommandSbpQrcGetStatusRequestDto.yaml
+    SbpQrcGetStatusRequestDto:
+      $ref: ./components/schemas/qrc/SbpQrcGetStatusRequestDto.yaml
+    GenericResponseSbpSideServiceRequestErrorSbpQrcGetStatusResponseDto:
+      $ref: ./components/schemas/qrc/GenericResponseSbpSideServiceRequestErrorSbpQrcGetStatusResponseDto.yaml
+    SbpQrcGetStatusResponseDataDto:
+      $ref: ./components/schemas/qrc/SbpQrcGetStatusResponseDataDto.yaml
+    SbpQrcGetStatusResponseDto:
+      $ref: ./components/schemas/qrc/SbpQrcGetStatusResponseDto.yaml
+    GenericCommandSbpQrcRequestSideServiceRequestDto:
+      $ref: ./components/schemas/qrc/GenericCommandSbpQrcRequestSideServiceRequestDto.yaml
+    SbpQrcRequestSideServiceRequestDto:
+      $ref: ./components/schemas/qrc/SbpQrcRequestSideServiceRequestDto.yaml
+    GenericResponseSbpSideServiceRequestErrorSbpQrcRequestSideServiceResponseDto:
+      $ref: ./components/schemas/qrc/GenericResponseSbpSideServiceRequestErrorSbpQrcRequestSideServiceResponseDto.yaml
+    SbpQrcImageDto:
+      $ref: ./components/schemas/qrc/SbpQrcImageDto.yaml
+    SbpQrcRequestSideServiceResponseDataDto:
+      $ref: ./components/schemas/qrc/SbpQrcRequestSideServiceResponseDataDto.yaml
+    SbpQrcRequestSideServiceResponseDto:
+      $ref: ./components/schemas/qrc/SbpQrcRequestSideServiceResponseDto.yaml
+    GenericCommandSbpQrcBlockSideServiceRequestDto:
+      $ref: ./components/schemas/qrc/GenericCommandSbpQrcBlockSideServiceRequestDto.yaml
+    SbpQrcBlockSideServiceRequestDto:
+      $ref: ./components/schemas/qrc/SbpQrcBlockSideServiceRequestDto.yaml
+    GenericResponseSbpSideServiceRequestErrorSbpQrcBlockSideServiceResponseDto:
+      $ref: ./components/schemas/qrc/GenericResponseSbpSideServiceRequestErrorSbpQrcBlockSideServiceResponseDto.yaml
+    SbpQrcBlockSideServiceResponseDto:
+      $ref: ./components/schemas/qrc/SbpQrcBlockSideServiceResponseDto.yaml
+    GenericResponseErrorDataListSbpTspChangeRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpTspChangeRequestHistoryDto.yaml
+    SbpTspChangeRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpTspChangeRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpTspBlockRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpTspBlockRequestHistoryDto.yaml
+    SbpTspBlockRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpTspBlockRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpTransactionRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpTransactionRequestHistoryDto.yaml
+    SbpTransactionRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpTransactionRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpB2bTransactionRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpB2bTransactionRequestHistoryDto.yaml
+    SbpB2bTransactionRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpB2bTransactionRequestHistoryDto.yaml
+    GenericResponseErrorDataSbpQrcSubscriptionDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcSubscriptionDto.yaml
+    GenericResponseErrorDataSbpQrcScheduleRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcScheduleRequestDto.yaml
+    GenericResponseErrorDataListSbpQrcScheduleRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpQrcScheduleRequestHistoryDto.yaml
+    SbpQrcScheduleRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpQrcScheduleRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpQrcPaymentRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpQrcPaymentRequestHistoryDto.yaml
+    SbpQrcPaymentRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpQrcPaymentRequestHistoryDto.yaml
+    GenericResponseErrorDataSbpClassifierParamDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpClassifierParamDto.yaml
+    SbpClassifierDto:
+      $ref: ./components/schemas/bank/SbpClassifierDto.yaml
+    SbpClassifierParamDto:
+      $ref: ./components/schemas/bank/SbpClassifierParamDto.yaml
+    ListResponseSbpRequestTspHistoryDto:
+      $ref: ./components/schemas/bank/ListResponseSbpRequestTspHistoryDto.yaml
+    SbpRequestTspHistoryDto:
+      $ref: ./components/schemas/bank/SbpRequestTspHistoryDto.yaml
+    SingleResponseSbpQrcRequestDto:
+      $ref: ./components/schemas/bank/SingleResponseSbpQrcRequestDto.yaml
+    GenericResponseErrorDataSbpQrcInvoiceDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcInvoiceDto.yaml
+    SbpQrcInvoiceDto:
+      $ref: ./components/schemas/bank/SbpQrcInvoiceDto.yaml
+    GenericResponseErrorDataListSbpQrcRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpQrcRequestHistoryDto.yaml
+    SbpQrcRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpQrcRequestHistoryDto.yaml
+    GenericResponseErrorDataSbpEcoQrcDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpEcoQrcDto.yaml
+    GenericResponseErrorDataSbpQrcRequestBankSideServiceDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpQrcRequestBankSideServiceDto.yaml
+    GenericResponseErrorDataSbpCallbackMessageDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpCallbackMessageDto.yaml
+    GenericResponseErrorDataListSbpQrcBlockRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpQrcBlockRequestHistoryDto.yaml
+    SbpQrcBlockRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpQrcBlockRequestHistoryDto.yaml
+    GenericResponseErrorDataSbpEcoQrcBlockRequestDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpEcoQrcBlockRequestDto.yaml
+    GenericResponseErrorDataListSbpB2bQrcRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpB2bQrcRequestHistoryDto.yaml
+    SbpB2bQrcRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpB2bQrcRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpDisconnectAgentsRequestHistoryDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpDisconnectAgentsRequestHistoryDto.yaml
+    SbpDisconnectAgentsRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpDisconnectAgentsRequestHistoryDto.yaml
+    ActionByDocTypeDto:
+      $ref: ./components/schemas/bank/ActionByDocTypeDto.yaml
+    GenericResponseErrorDataSbpContractInfoDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataSbpContractInfoDto.yaml
+    SbpContractB2bCommissionTariff:
+      $ref: ./components/schemas/bank/SbpContractB2bCommissionTariff.yaml
+    SbpContractCommissionTariff:
+      $ref: ./components/schemas/bank/SbpContractCommissionTariff.yaml
+    SbpContractInfoDto:
+      $ref: ./components/schemas/bank/SbpContractInfoDto.yaml
+    SbpInnerClientAccountDto:
+      $ref: ./components/schemas/bank/SbpInnerClientAccountDto.yaml
+    SignatoryInfoDto:
+      $ref: ./components/schemas/bank/SignatoryInfoDto.yaml
+    GenericResponseErrorDataBoolean:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataBoolean.yaml
+    ListResponseSbpContractRequestHistoryDto:
+      $ref: ./components/schemas/bank/ListResponseSbpContractRequestHistoryDto.yaml
+    SbpContractRequestHistoryDto:
+      $ref: ./components/schemas/bank/SbpContractRequestHistoryDto.yaml
+    GenericResponseErrorDataListSbpAgentTspRspDataDto:
+      $ref: ./components/schemas/bank/GenericResponseErrorDataListSbpAgentTspRspDataDto.yaml
+    SbpAgentTspRspDataDto:
+      $ref: ./components/schemas/bank/SbpAgentTspRspDataDto.yaml
+    GenericResponseSbpSideServiceRequestErrorSbpQrcDataResponseDto:
+      $ref: ./components/schemas/qrc/GenericResponseSbpSideServiceRequestErrorSbpQrcDataResponseDto.yaml
+    SbpQrcDataResponseDto:
+      $ref: ./components/schemas/qrc/SbpQrcDataResponseDto.yaml
+    SbpQrcDetailsDto:
+      $ref: ./components/schemas/qrc/SbpQrcDetailsDto.yaml

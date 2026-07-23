@@ -1,0 +1,24 @@
+post:
+  tags:
+  - client-info-update-client-sign-controller
+  summary: Сформировать данные для функции подписи версии 2.2
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.SIGN'
+  operationId: generateSignDataV2x2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          maxItems: 1
+          minItems: 1
+          type: array
+          items:
+            type: string
+            format: uuid
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml

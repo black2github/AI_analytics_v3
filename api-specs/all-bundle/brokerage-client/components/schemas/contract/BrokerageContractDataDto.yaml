@@ -1,0 +1,9 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер договора
+  brief:
+    type: string
+    description: Краткое наименование договора
+description: Данные виртуального справочника номера договора и краткого наименования договора

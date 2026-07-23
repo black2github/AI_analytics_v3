@@ -1,0 +1,9 @@
+type: object
+properties:
+  comment:
+    type: string
+  documentIds:
+    type: array
+    items:
+      type: string
+      format: uuid

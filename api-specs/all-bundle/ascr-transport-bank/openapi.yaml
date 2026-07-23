@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: Сервис "Адаптер АС ЦР". Банковское приложение.
+  description: Сервис "Адаптер АС ЦР".
+  version: 3.1.0
+servers:
+- url: /ascr-transport-bank
+security:
+- basicAuth: []
+paths:
+  /api/v4/organisation/callback/wallet/{callbackType}:
+    $ref: ./paths/v4/api_v4_organisation_callback_wallet_callbackType.yaml
+  /api/v4/organisation/callback/wallet/OrganisationRegistration:
+    $ref: ./paths/v4/api_v4_organisation_callback_wallet_OrganisationRegistration.yaml
+  /api/v4/organisation/callback/wallet/OrganisationCertRegistration:
+    $ref: ./paths/v4/api_v4_organisation_callback_wallet_OrganisationCertRegistration.yaml
+  /api/v4/organisation/callback/error:
+    $ref: ./paths/v4/api_v4_organisation_callback_error.yaml
+  /api/v4/organisation/callback/aml-cft/{amlCftReceiptType}:
+    $ref: ./paths/v4/api_v4_organisation_callback_aml_cft_amlCftReceiptType.yaml
+  /api/v4/organisation/callback/aml-cft/OrganisationInfoSender:
+    $ref: ./paths/v4/api_v4_organisation_callback_aml_cft_OrganisationInfoSender.yaml
+  /api/v4/organisation/callback/aml-cft/OrganisationInfoResponse:
+    $ref: ./paths/v4/api_v4_organisation_callback_aml_cft_OrganisationInfoResponse.yaml
+  /api/v4/organisation/callback/aml-cft/OrganisationInfoRecipient:
+    $ref: ./paths/v4/api_v4_organisation_callback_aml_cft_OrganisationInfoRecipient.yaml
+  /api/v4/organisation/callback/OrganisationWalletManagement:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationWalletManagement.yaml
+  /api/v4/organisation/callback/OrganisationWalletManagementPossibilityResponse:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationWalletManagementPossibilityResponse.yaml
+  /api/v4/organisation/callback/OrganisationWalletInfo:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationWalletInfo.yaml
+  /api/v4/organisation/callback/OrganisationTermination:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationTermination.yaml
+  /api/v4/organisation/callback/OrganisationSenderOpTransferToDCA:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSenderOpTransferToDCA.yaml
+  /api/v4/organisation/callback/OrganisationSenderOpTransferToBank:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSenderOpTransferToBank.yaml
+  /api/v4/organisation/callback/OrganisationSenderOpTransferToBankRefund:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSenderOpTransferToBankRefund.yaml
+  /api/v4/organisation/callback/OrganisationSenderB2BDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSenderB2BDC.yaml
+  /api/v4/organisation/callback/OrganisationSellingDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSellingDC.yaml
+  /api/v4/organisation/callback/OrganisationSellingDCPossibilityResponse:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationSellingDCPossibilityResponse.yaml
+  /api/v4/organisation/callback/OrganisationRecipientOpTransferToDCA:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationRecipientOpTransferToDCA.yaml
+  /api/v4/organisation/callback/OrganisationRecipientG2BTransfer:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationRecipientG2BTransfer.yaml
+  /api/v4/organisation/callback/OrganisationRecipientB2BDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationRecipientB2BDC.yaml
+  /api/v4/organisation/callback/OrganisationDataChange:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationDataChange.yaml
+  /api/v4/organisation/callback/OrganisationCertRevoke:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationCertRevoke.yaml
+  /api/v4/organisation/callback/OrganisationC2BDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationC2BDC.yaml
+  /api/v4/organisation/callback/OrganisationBuyingDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationBuyingDC.yaml
+  /api/v4/organisation/callback/OrganisationB2CRefundDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationB2CRefundDC.yaml
+  /api/v4/organisation/callback/OrganisationB2CRefundDCPossibilityResponse:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationB2CRefundDCPossibilityResponse.yaml
+  /api/v4/organisation/callback/OrganisationB2CRefundAuthFI:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationB2CRefundAuthFI.yaml
+  /api/v4/organisation/callback/OrganisationB2CRefundAuthDC:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationB2CRefundAuthDC.yaml
+  /api/v4/organisation/callback/OrganisationB2BPossibilityResponse:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationB2BPossibilityResponse.yaml
+  /api/v4/organisation/callback/OrganisationAuthManagement:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationAuthManagement.yaml
+  /api/v4/organisation/callback/OrganisationAuthList:
+    $ref: ./paths/v4/api_v4_organisation_callback_OrganisationAuthList.yaml
+  /api/v4/fi/callback/wallet/status/FIOrganisationTermination:
+    $ref: ./paths/v4/api_v4_fi_callback_wallet_status_FIOrganisationTermination.yaml
+  /api/v4/fi/callback/operation/{callbackType}:
+    $ref: ./paths/v4/api_v4_fi_callback_operation_callbackType.yaml
+  /api/v4/fi/callback/error:
+    $ref: ./paths/v4/api_v4_fi_callback_error.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/v4/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/v4/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/v4/ActionResultObject.yaml
+    OrganisationWalletStatusCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationWalletStatusCallbackDto.yaml
+    PropsDto:
+      $ref: ./components/schemas/v4/PropsDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/v4/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/v4/SimpleErrorData.yaml
+    OrganisationStatusCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationStatusCallbackDto.yaml
+    AgreementData:
+      $ref: ./components/schemas/v4/AgreementData.yaml
+    OrganisationCertRegistrationCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationCertRegistrationCallbackDto.yaml
+    ErrorAdditionalDataDto:
+      $ref: ./components/schemas/v4/ErrorAdditionalDataDto.yaml
+    OrganisationErrorCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationErrorCallbackDto.yaml
+    OrganisationAmlCftReceiptCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationAmlCftReceiptCallbackDto.yaml
+    AdditionalInfo:
+      $ref: ./components/schemas/v4/AdditionalInfo.yaml
+    BalanceInfo:
+      $ref: ./components/schemas/v4/BalanceInfo.yaml
+    BankAccount:
+      $ref: ./components/schemas/v4/BankAccount.yaml
+    ClientNotificationData:
+      $ref: ./components/schemas/v4/ClientNotificationData.yaml
+    FullName:
+      $ref: ./components/schemas/v4/FullName.yaml
+    MessageHeader:
+      $ref: ./components/schemas/v4/MessageHeader.yaml
+    OpTransferToBankSender:
+      $ref: ./components/schemas/v4/OpTransferToBankSender.yaml
+    OpTransferToDcaSender:
+      $ref: ./components/schemas/v4/OpTransferToDcaSender.yaml
+    OperationInfoKv:
+      $ref: ./components/schemas/v4/OperationInfoKv.yaml
+    OrganisationInfoSenderCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationInfoSenderCallbackDto.yaml
+    Recipient:
+      $ref: ./components/schemas/v4/Recipient.yaml
+    Sender:
+      $ref: ./components/schemas/v4/Sender.yaml
+    TransferB2CRefundAuthBusiness:
+      $ref: ./components/schemas/v4/TransferB2CRefundAuthBusiness.yaml
+    TransferB2CRefundBusiness:
+      $ref: ./components/schemas/v4/TransferB2CRefundBusiness.yaml
+    AdditionalAmlCftInfo:
+      $ref: ./components/schemas/v4/AdditionalAmlCftInfo.yaml
+    DepartmentalInfo:
+      $ref: ./components/schemas/v4/DepartmentalInfo.yaml
+    ModelData:
+      $ref: ./components/schemas/v4/ModelData.yaml
+    OrganisationInfoResponseCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationInfoResponseCallbackDto.yaml
+    PostalAddress:
+      $ref: ./components/schemas/v4/PostalAddress.yaml
+    Recepient:
+      $ref: ./components/schemas/v4/Recepient.yaml
+    SellerInfo:
+      $ref: ./components/schemas/v4/SellerInfo.yaml
+    TransferB2B:
+      $ref: ./components/schemas/v4/TransferB2B.yaml
+    TransferB2G:
+      $ref: ./components/schemas/v4/TransferB2G.yaml
+    TransferDcSelling:
+      $ref: ./components/schemas/v4/TransferDcSelling.yaml
+    X2GPayee:
+      $ref: ./components/schemas/v4/X2GPayee.yaml
+    X2GPayer:
+      $ref: ./components/schemas/v4/X2GPayer.yaml
+    X2GRecipient:
+      $ref: ./components/schemas/v4/X2GRecipient.yaml
+    X2GSender:
+      $ref: ./components/schemas/v4/X2GSender.yaml
+    OrganisationInfoRecipientCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationInfoRecipientCallbackDto.yaml
+    CbdcMessageCallbackDto:
+      $ref: ./components/schemas/v4/CbdcMessageCallbackDto.yaml
+    AddressDto:
+      $ref: ./components/schemas/v4/AddressDto.yaml
+    ChangedDataDto:
+      $ref: ./components/schemas/v4/ChangedDataDto.yaml
+    OrganisationDataChangeCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationDataChangeCallbackDto.yaml
+    PhoneNumberChangeDto:
+      $ref: ./components/schemas/v4/PhoneNumberChangeDto.yaml
+    OrganisationCertRevokeCallbackDto:
+      $ref: ./components/schemas/v4/OrganisationCertRevokeCallbackDto.yaml
+    OrganisationB2CRefundAuthFICallbackDto:
+      $ref: ./components/schemas/v4/OrganisationB2CRefundAuthFICallbackDto.yaml
+    AdditionalDataDto:
+      $ref: ./components/schemas/v4/AdditionalDataDto.yaml
+    FiOrganisationTerminationCallbackDto:
+      $ref: ./components/schemas/v4/FiOrganisationTerminationCallbackDto.yaml
+    FiBalanceInfo:
+      $ref: ./components/schemas/v4/FiBalanceInfo.yaml
+    FiOrganisationDCExchangeCallbackV3Dto:
+      $ref: ./components/schemas/v4/FiOrganisationDCExchangeCallbackV3Dto.yaml
+    FiErrorCallbackDto:
+      $ref: ./components/schemas/v4/FiErrorCallbackDto.yaml
+  securitySchemes:
+    basicAuth:
+      type: http
+      name: basicAuth
+      scheme: basic

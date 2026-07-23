@@ -1,0 +1,41 @@
+type: object
+description: Фильтр по типу Qr-кода
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип QR кода
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  notEq:
+    type: string
+    description: Тип QR кода
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип QR кода
+      enum:
+      - STATIC
+      - DYNAMIC
+      - SUBSCRIPTION
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип QR кода
+      enum:
+      - STATIC
+      - DYNAMIC
+      - SUBSCRIPTION
+  isNull:
+    type: boolean

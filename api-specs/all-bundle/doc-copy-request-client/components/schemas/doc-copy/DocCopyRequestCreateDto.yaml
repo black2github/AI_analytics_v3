@@ -1,0 +1,60 @@
+required:
+- clientId
+- commissionAccountId
+- contracts
+- payments
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организациии
+    format: uuid
+  type:
+    type: string
+    description: Виды справок для ЮЛ.
+    enum:
+    - PAYMENT
+    - CONTRACT
+  method:
+    type: string
+    description: Способ получения документов
+    enum:
+    - DIGITAL
+    - OFFICE
+  payments:
+    type: array
+    description: Идентификаторы проводок, для изготовления копий документов для ЮЛ
+    items:
+      type: integer
+      description: Идентификаторы проводок, для изготовления копий документов для ЮЛ
+      format: int64
+  contracts:
+    type: array
+    description: Типы договорных документов, для изготовления копий документов для ЮЛ
+    items:
+      $ref: ./DocCopyContractDescriptorDto.yaml
+  commissionAccountId:
+    type: string
+    description: Составной идентификатор счета списания комиссии
+  duplicateByEmails:
+    type: boolean
+    description: Продублировать на email
+  emailReceptionAgreed:
+    type: boolean
+    description: Согласие на получение по email
+  emails:
+    type: array
+    description: Email адреса для дублирования уведомлений
+    items:
+      type: string
+      description: Email адреса для дублирования уведомлений
+  notifyByEmail:
+    type: boolean
+    description: Уведомление по email
+  notifyBySms:
+    type: boolean
+    description: Уведомление по sms
+  branchCode:
+    type: string
+    description: Код подразделения для получения копий печатных документов.
+description: Запрос для создания запроса на копии документов для ЮЛ

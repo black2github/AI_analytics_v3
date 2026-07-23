@@ -1,0 +1,14 @@
+type: object
+properties:
+  customerId:
+    type: string
+  bankClientId:
+    type: string
+    format: uuid
+  documentKindCodes:
+    type: array
+    items:
+      type: string
+  blocked:
+    type: boolean
+description: Данные

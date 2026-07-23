@@ -1,0 +1,25 @@
+required:
+- issueDate
+- issuePlace
+- seriesAndNumber
+- subdivisionCode
+type: object
+properties:
+  seriesAndNumber:
+    pattern: ^\d{10}$|^$
+    type: string
+    description: Серия и номер
+  issueDate:
+    type: string
+    description: Дата выдачи
+    format: date
+  subdivisionCode:
+    pattern: ^\d{6}$|^$
+    type: string
+    description: Код подразделения
+  issuePlace:
+    maxLength: 255
+    pattern: ^[ЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Кем выдан
+description: Документ удостоверяющий личность

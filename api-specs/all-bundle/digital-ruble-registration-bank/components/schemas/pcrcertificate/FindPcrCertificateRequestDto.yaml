@@ -1,0 +1,19 @@
+required:
+- bankClientId
+- pcrCertificateId
+- userId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  pcrCertificateId:
+    type: string
+    description: Идентификатор сертификата ПлЦР
+    format: uuid
+description: Запрос на поиск сертификата для доступа к цифровому счёту ПлЦР

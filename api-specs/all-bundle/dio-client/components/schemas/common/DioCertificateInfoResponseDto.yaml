@@ -1,0 +1,30 @@
+required:
+- id
+- serialNumber
+- subject
+- validFrom
+- validTo
+- value
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сертфиката (расчитанный)
+  value:
+    type: string
+    description: Base64 представление сертификата
+  subject:
+    type: string
+    description: Кому выдан сертификат
+  serialNumber:
+    type: string
+    description: Серийный номер
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+description: Информация о сертификате

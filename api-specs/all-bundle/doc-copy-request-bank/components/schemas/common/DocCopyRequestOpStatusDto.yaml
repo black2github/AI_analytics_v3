@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  success:
+    type: boolean
+    description: Результат операции
+  error:
+    type: string
+    description: Текст ошибки
+description: Статус операции для запроса на копии документов для ЮЛ

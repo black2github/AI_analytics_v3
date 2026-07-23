@@ -1,0 +1,529 @@
+required:
+- biwWrntShort
+- caZpAgrText
+- caZpAllText
+- caZpExecText
+- decodingAdm
+- decodingAdmEx
+- decodingCaZp
+- decodingCorpCards
+- decodingGpbBo
+- decodingLkMp
+- decodingLkUved
+- decodingSbp
+- decodingTrDep
+- decodingTrFx
+- decodingTrGsno
+- decodingTrNes
+- decodingZp
+- globalWrntShort
+- gpbBoAgrText
+- gpbBoAllText
+- gpbBoExecText
+- lkMpAgrText
+- lkMpAllText
+- lkMpExecText
+- lkUvedAgrText
+- lkUvedAllText
+- lkUvedExecText
+- prodAdmCommonText
+- prodAdmExCommonText
+- prodKaznaCommonText
+- prodWrntAdmAgrText
+- prodWrntAdmAgrTxShort
+- prodWrntAdmAllText
+- prodWrntAdmAllTxShort
+- prodWrntAdmExAgrText
+- prodWrntAdmExAgrTxShort
+- prodWrntAdmExAllText
+- prodWrntAdmExAllTxShort
+- prodWrntAdmExExecText
+- prodWrntAdmExExecTxShort
+- prodWrntAdmExecText
+- prodWrntAdmExecTxShort
+- prodWrntCaZpAgrTxShort
+- prodWrntCaZpAllTxShort
+- prodWrntCaZpExecTxShort
+- prodWrntCorpCardsExecText
+- prodWrntCorpCardsExecTxShort
+- prodWrntFinalText
+- prodWrntGpbBoAgrTxShort
+- prodWrntGpbBoAllTxShort
+- prodWrntGpbBoExecTxShort
+- prodWrntLkMpAgrTxShort
+- prodWrntLkMpAllTxShort
+- prodWrntLkMpExecTxShort
+- prodWrntLkUvedAgrTxShort
+- prodWrntLkUvedAllTxShort
+- prodWrntLkUvedExecTxShort
+- prodWrntSbpAgrText
+- prodWrntSbpAgrTxShort
+- prodWrntTrDepAgrText
+- prodWrntTrDepAgrTxShort
+- prodWrntTrFxAgrText
+- prodWrntTrFxAgrTxShort
+- prodWrntTrGsnoAgrText1
+- prodWrntTrGsnoAgrText2
+- prodWrntTrGsnoAgrText3
+- prodWrntTrGsnoAgrTxShort
+- prodWrntTrNesAgrText
+- prodWrntTrNesAgrTxShort
+- prodWrntZpAgrTxShort
+- prodWrntZpAllTxShort
+- prodWrntZpExecTxShort
+- zpAgrText
+- zpAllText
+- zpExecText
+type: object
+properties:
+  gpbBoAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта GPB_BO (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта GPB_BO (Заключение)
+  gpbBoExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта GPB_BO (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта GPB_BO (Исполнение)
+  gpbBoAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта GPB_BO (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта GPB_BO (Заключение и Исполнение)
+  lkMpAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_MP (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_MP (Заключение)
+  lkMpExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_MP (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_MP (Исполнение)
+  lkMpAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_MP (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_MP (Заключение и Исполнение)
+  lkUvedAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_UVED (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_UVED (Заключение)
+  lkUvedExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_UVED (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_UVED (Исполнение)
+  lkUvedAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта LK_UVED (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта LK_UVED (Заключение и Исполнение)
+  zpAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+  zpExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+  zpAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение и Исполнение)
+  caZpAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+  caZpExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+  caZpAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SALARY_PROJECT (Заключение и Исполнение)
+  prodKaznaCommonText:
+    type: array
+    description: Общая часть текста продуктовой доверенности для казначейских продуктов
+    items:
+      type: string
+      description: Общая часть текста продуктовой доверенности для казначейских продуктов
+  prodWrntTrDepAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта TREASURY_DEPOSIT (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта TREASURY_DEPOSIT (Заключение)
+  prodWrntTrFxAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта TREASURY_FX (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта TREASURY_FX (Заключение)
+  prodWrntTrNesAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта TREASURY_NESNIZ (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта TREASURY_NESNIZ (Заключение)
+  prodWrntTrGsnoAgrText1:
+    type: array
+    description: Текст 1-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+    items:
+      type: string
+      description: Текст 1-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+  prodWrntTrGsnoAgrText2:
+    type: array
+    description: Текст 2-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+    items:
+      type: string
+      description: Текст 2-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+  prodWrntTrGsnoAgrText3:
+    type: array
+    description: Текст 3-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+    items:
+      type: string
+      description: Текст 3-й части продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+  prodAdmCommonText:
+    type: array
+    description: Общая часть текста продуктовой доверенности для продукта ENCASHMENT
+    items:
+      type: string
+      description: Общая часть текста продуктовой доверенности для продукта ENCASHMENT
+  prodWrntAdmAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT (Заключение)
+  prodWrntAdmExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT (Исполнение)
+  prodWrntAdmAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT (Заключение и Исполнение)
+  prodAdmExCommonText:
+    type: array
+    description: Общая часть текста продуктовой доверенности для продукта ENCASHMENT_EX
+    items:
+      type: string
+      description: Общая часть текста продуктовой доверенности для продукта ENCASHMENT_EX
+  prodWrntAdmExAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Заключение)
+  prodWrntAdmExExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Исполнение)
+  prodWrntAdmExAllText:
+    type: array
+    description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Заключение и Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта ENCASHMENT_EX (Заключение и Исполнение)
+  prodWrntSbpAgrText:
+    type: array
+    description: Текст продуктовой доверенности для продукта SBP (Заключение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта SBP (Заключение)
+  prodWrntCorpCardsExecText:
+    type: array
+    description: Текст продуктовой доверенности для продукта CORP_CARDS (Исполнение)
+    items:
+      type: string
+      description: Текст продуктовой доверенности для продукта CORP_CARDS (Исполнение)
+  prodWrntFinalText:
+    type: array
+    description: Общий завершающий текст продуктовой доверенности
+    items:
+      type: string
+      description: Общий завершающий текст продуктовой доверенности
+  decodingGpbBo:
+    type: array
+    description: Расшифровка наименования продукта GPB_BO
+    items:
+      type: string
+      description: Расшифровка наименования продукта GPB_BO
+  decodingLkUved:
+    type: array
+    description: Расшифровка наименования продукта LK_UVED
+    items:
+      type: string
+      description: Расшифровка наименования продукта LK_UVED
+  decodingLkMp:
+    type: array
+    description: Расшифровка наименования продукта LK_MP
+    items:
+      type: string
+      description: Расшифровка наименования продукта LK_MP
+  decodingZp:
+    type: array
+    description: Расшифровка наименования продукта SALARY_PROJECT
+    items:
+      type: string
+      description: Расшифровка наименования продукта SALARY_PROJECT
+  decodingCaZp:
+    type: array
+    description: Расшифровка наименования продукта UNI_BUH_OF_SALARY_GPBBO
+    items:
+      type: string
+      description: Расшифровка наименования продукта UNI_BUH_OF_SALARY_GPBBO
+  decodingTrDep:
+    type: array
+    description: Расшифровка наименования продукта TREASURY_DEPOSIT
+    items:
+      type: string
+      description: Расшифровка наименования продукта TREASURY_DEPOSIT
+  decodingTrFx:
+    type: array
+    description: Расшифровка наименования продукта TREASURY_FX
+    items:
+      type: string
+      description: Расшифровка наименования продукта TREASURY_FX
+  decodingTrNes:
+    type: array
+    description: Расшифровка наименования продукта TREASURY_NESNIZ
+    items:
+      type: string
+      description: Расшифровка наименования продукта TREASURY_NESNIZ
+  decodingTrGsno:
+    type: array
+    description: Расшифровка наименования продукта TREASURY_GSNO
+    items:
+      type: string
+      description: Расшифровка наименования продукта TREASURY_GSNO
+  decodingAdm:
+    type: array
+    description: Расшифровка наименования продукта ENCASHMENT
+    items:
+      type: string
+      description: Расшифровка наименования продукта ENCASHMENT
+  decodingAdmEx:
+    type: array
+    description: Расшифровка наименования продукта ENCASHMENT_EX
+    items:
+      type: string
+      description: Расшифровка наименования продукта ENCASHMENT_EX
+  decodingSbp:
+    type: array
+    description: Расшифровка наименования продукта SBP
+    items:
+      type: string
+      description: Расшифровка наименования продукта SBP
+  decodingCorpCards:
+    type: array
+    description: Расшифровка наименования продукта CORP_CARDS
+    items:
+      type: string
+      description: Расшифровка наименования продукта CORP_CARDS
+  globalWrntShort:
+    type: array
+    description: Краткое описание мегадоверенности
+    items:
+      type: string
+      description: Краткое описание мегадоверенности
+  prodWrntGpbBoAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта GPB_BO (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта GPB_BO (Заключение)
+  prodWrntGpbBoExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта GPB_BO (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта GPB_BO (Исполнение)
+  prodWrntGpbBoAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта GPB_BO (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта GPB_BO (Заключение + Исполнение)
+  prodWrntLkUvedAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_UVED (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_UVED (Заключение)
+  prodWrntLkUvedExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_UVED (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_UVED (Исполнение)
+  prodWrntLkUvedAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_UVED (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_UVED (Заключение + Исполнение)
+  prodWrntLkMpAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_MP (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_MP (Заключение)
+  prodWrntLkMpExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_MP (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_MP (Исполнение)
+  prodWrntLkMpAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта LK_MP (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта LK_MP (Заключение + Исполнение)
+  prodWrntZpAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Заключение)
+  prodWrntZpExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Исполнение)
+  prodWrntZpAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта SALARY_PROJECT (Заключение + Исполнение)
+  prodWrntCaZpAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Заключение)
+  prodWrntCaZpExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Исполнение)
+  prodWrntCaZpAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта UNI_BUH_OF_SALARY_GPBBO (Заключение + Исполнение)
+  prodWrntTrDepAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта TREASURY_DEPOSIT (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта TREASURY_DEPOSIT (Заключение)
+  prodWrntTrFxAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта TREASURY_FX (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта TREASURY_FX (Заключение)
+  prodWrntTrNesAgrTxShort:
+    type: array
+    description: Расшифровка наименования продукта TREASURY_NESNIZ
+    items:
+      type: string
+      description: Расшифровка наименования продукта TREASURY_NESNIZ
+  prodWrntTrGsnoAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта TREASURY_GSNO (Заключение)
+  prodWrntAdmAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Заключение)
+  prodWrntAdmExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Исполнение)
+  prodWrntAdmAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT (Заключение + Исполнение)
+  prodWrntAdmExAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Заключение)
+  prodWrntAdmExExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Исполнение)
+  prodWrntAdmExAllTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Заключение + Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта ENCASHMENT_EX (Заключение + Исполнение)
+  prodWrntSbpAgrTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта SBP (Заключение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта SBP (Заключение)
+  prodWrntCorpCardsExecTxShort:
+    type: array
+    description: Краткое описание продуктовой доверенности для продукта CORP_CARDS (Исполнение)
+    items:
+      type: string
+      description: Краткое описание продуктовой доверенности для продукта CORP_CARDS (Исполнение)
+  biwWrntShort:
+    type: array
+    description: Краткое описание доверенности на получение информации
+    items:
+      type: string
+      description: Краткое описание доверенности на получение информации
+description: Настраиваемые параметры продуктовых доверенностей

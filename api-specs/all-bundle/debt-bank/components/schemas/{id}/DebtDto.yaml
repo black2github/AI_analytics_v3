@@ -1,0 +1,64 @@
+required:
+- accrualAmount
+- amountToPay
+- clientId
+- formationAccrualsAt
+- id
+- kbk
+- lastModifyAt
+- okato
+- payerFnsId
+- paymentInfo
+- receiver
+- startAt
+- uin
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  startAt:
+    type: string
+    format: date-time
+  lastModifyAt:
+    type: string
+    format: date-time
+  finishAt:
+    type: string
+    format: date-time
+  clientId:
+    type: string
+    format: uuid
+  uin:
+    type: string
+  formationAccrualsAt:
+    type: string
+    format: date-time
+  relevantUntil:
+    type: string
+    format: date
+  paymentGround:
+    type: string
+  accrualAmount:
+    type: string
+  amountToPay:
+    type: string
+  kbk:
+    type: string
+  okato:
+    type: string
+  payerFnsId:
+    type: string
+  federalTreasuryShortName:
+    type: string
+  receiptStatus:
+    type: string
+  receiver:
+    $ref: ./ReceiverDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoDto.yaml
+  amountOfDiscount:
+    type: string
+  discountValidUntil:
+    type: string
+    format: date

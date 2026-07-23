@@ -1,0 +1,37 @@
+type: object
+properties:
+  birthDate:
+    type: string
+    description: Дата рождения получателя
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения получателя
+  citizenship:
+    type: string
+    description: Гражданство получателя
+  series:
+    type: string
+    description: Серия паспорта
+  number:
+    type: string
+    description: Номер паспорта
+  documentType:
+    type: string
+    description: Идентификатор типа документа из справочника
+  issueDate:
+    type: string
+    description: Дата выдачи документа
+    format: date
+  issuerCode:
+    type: string
+    description: Код подразделения
+  issuerName:
+    type: string
+    description: Наименование подразделения, выдавшего паспорт
+  registrationAddress:
+    $ref: ./AddressDto.yaml
+  registrationAddressFiasId:
+    type: string
+    description: ФИАС-код адреса
+description: Паспорт клиента-получателя

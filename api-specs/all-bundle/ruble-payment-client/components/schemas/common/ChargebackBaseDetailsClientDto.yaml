@@ -1,0 +1,13 @@
+type: object
+properties:
+  docDate:
+    type: string
+    description: Дата документа
+    format: date-time
+  docNumber:
+    type: string
+    description: Номер документа
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+description: Базовые реквизиты сущности "Заявка на отзыв", данные для клиента

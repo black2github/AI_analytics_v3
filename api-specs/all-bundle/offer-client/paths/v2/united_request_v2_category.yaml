@@ -1,0 +1,54 @@
+post:
+  tags:
+  - united-request-v-2-client-scroller-controller
+  description: 'Привилегии: CONSTITUTION_ACCEPTANCE.VIEW, CONSTITUTION_ACCESS.VIEW, LKMP.ACCESS.VIEW, LKMP.OFFER.VIEW, LKUVED.VIEW, LKUVED.ACCESS.VIEW, OFFER_ACCEPTANCE.VIEW, TREASURY_AGREEMENT_REQUEST_MNO_VIEW, TREASURY_AGREEMENT_REQUEST_DEPOSIT_VIEW, TREASURY_AGREEMENT_REQUEST_CONVERSION_VIEW, TMG.ACCESS.VIEW, TMG.OFFER.VIEW, CONSTITUTION_REGISTRATION_CLIENT.VIEW_LIST, ECO_PARTNER_CHECK_CLIENT.VIEW_MANAGE_SERVICE_PAGE, SBP.CONTRACT.REQUEST.VIEW.LIST'
+  operationId: getCategoryCount
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v2/GetPageCommandUnitedRequestV2ClientFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/CategoryResponse.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

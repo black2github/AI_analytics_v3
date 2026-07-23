@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор записи
+  documentId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Заявки на изменение Графика платежей"
+  status:
+    type: string
+    description: Статус документа
+  changedIn:
+    type: string
+    format: date-time
+    description: Дата и время присвоения статуса документу
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Пользователь". Nullable for AUTOMAT user.
+  userType:
+    type: string
+    description: Тип пользователя.
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userName:
+    type: string
+    description: Имя пользователя.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+required:
+- changedIn
+- documentId
+- id
+- status
+- userName

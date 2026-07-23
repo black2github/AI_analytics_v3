@@ -1,0 +1,32 @@
+type: object
+properties:
+  Id:
+    type: string
+    description: ID операции
+    format: uuid
+  Result:
+    $ref: ./DssCallbackOperationResultDto.yaml
+  Status:
+    type: string
+    description: Статус операции подписи
+    enum:
+    - Created
+    - Challenged
+    - Cancelled
+    - Declined
+    - Confirmed
+    - Processing
+    - Completed
+    - Error
+    - Expired
+  Error:
+    type: string
+    description: Ошибка
+  ErrorDescription:
+    type: string
+    description: Описание ошибки
+  ExpirationDate:
+    type: string
+    description: Дата истечения срока действия
+    format: date-time
+description: Callback операция

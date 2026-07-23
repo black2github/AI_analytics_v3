@@ -1,0 +1,22 @@
+required:
+- id
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  type:
+    type: string
+    description: Типы печатных форм
+    enum:
+    - REQ_OR_BLOCK_UL
+    - MEGA_WARRANTY
+    - PRODUCT_WARRANTY
+    - BANK_INFO_WARRANTY
+    - REPRESENTATIVE_INDIVIDUAL
+    - ARCHIVE
+    - WARRANTY_CANCEL_NOTIFICATION
+    - ESTABLISH_AP_ROLE_RQ
+description: Запрос на создание ПФ для выбранной заявки

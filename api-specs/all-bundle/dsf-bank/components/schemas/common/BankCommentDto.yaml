@@ -1,0 +1,51 @@
+type: object
+description: Содержит информацию для комментариев
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  status:
+    type: string
+    description: Целевой статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - NO_DETACH
+    - DETACH_ERROR
+    - WAIT_PUBLISH
+    - PUBLISH_ERROR
+    - PUBLISH_EXECUTED
+    - WAIT_PROCESSING
+    - WAIT_VERIFICATE
+    - WAIT_BANK_SIGN
+    - BANK_SIGNED
+    - DENIED
+    - EXECUTED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - WAIT_POSTPONED
+    - DRAFT_OR_NEW
+    - WAIT_BANK_SIGN_OR_WAIT_PROCESSING
+    - WAIT_BANK_SIGN_OR_DETACH_ERROR
+    - SIGN_VALID_OR_DENIED
+    - AUTO_EXECUTE_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGNED_OR_SIGNED_1_OR_SIGNED_2
+    - CLIENT_AUTO_DETACH_REQUIRED_OR_NOT
+    - PUBLISH_REQUIRED_OR_NOT
+    - WAIT_FINALIZE_REQUIRED_OR_NOT

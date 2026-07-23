@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ORIGINAL_DOCUMENT
+    - PRINTING_FORM_BANK
+  notEq:
+    type: string
+    enum:
+    - ORIGINAL_DOCUMENT
+    - PRINTING_FORM_BANK
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ORIGINAL_DOCUMENT
+      - PRINTING_FORM_BANK
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ORIGINAL_DOCUMENT
+      - PRINTING_FORM_BANK
+  isNull:
+    type: boolean
+description: Класс документа

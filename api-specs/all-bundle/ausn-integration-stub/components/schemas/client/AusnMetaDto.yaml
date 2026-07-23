@@ -1,0 +1,14 @@
+type: object
+required:
+- message_id
+- chunkIndex
+- totalChunks
+properties:
+  message_id:
+    $ref: ../common/UUID.yaml
+  chunkIndex:
+    type: integer
+    format: int32
+  totalChunks:
+    type: integer
+    format: int32

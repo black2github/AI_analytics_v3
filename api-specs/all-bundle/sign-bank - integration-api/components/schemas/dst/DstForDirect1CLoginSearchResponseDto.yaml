@@ -1,0 +1,8 @@
+type: object
+properties:
+  digitalSignatureTools:
+    type: array
+    description: СЭП для для аутентификации через 1C DirectBank
+    items:
+      $ref: ./DstForDirect1CLoginDto.yaml
+description: Ответ на запрос поиска СЭП для аутентификации через 1C DirectBank

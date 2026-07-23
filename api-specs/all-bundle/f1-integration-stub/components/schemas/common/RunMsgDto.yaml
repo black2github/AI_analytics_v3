@@ -1,0 +1,20 @@
+type: object
+description: Заглушка ответа процедуры RUN_MSG
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  rootTagName:
+    type: string
+    description: Корневой тег запроса, для которого создана заглушка
+  tagName:
+    type: string
+    description: Тег запроса, по которому осуществляется поиск заглушки
+  tagValue:
+    type: string
+    description: Значение тега, по которому осуществляется поиск заглушки
+  response:
+    type: string
+    description: Заглушка возвращаемого ответа в формате XML

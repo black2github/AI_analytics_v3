@@ -1,0 +1,12 @@
+required:
+- cbrParticipantId
+- cbrParticipantWalletId
+type: object
+properties:
+  cbrParticipantId:
+    type: string
+    description: Идентификатор участника ПлЦР в ЦБ
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового счёта участника ПлЦР в ЦБ
+description: Запрос на поиск цифрового счёта ПлЦР по идентификаторам участника ПлЦР в ЦБ и его цифрового счёта

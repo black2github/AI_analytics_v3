@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ../common/DocumentSourceSystemDto.yaml
+  notEq:
+    $ref: ../common/DocumentSourceSystemDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ../common/DocumentSourceSystemDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ../common/DocumentSourceSystemDto.yaml
+  isNull:
+    type: boolean
+description: Фильтр по источнику создания документа ПТИ
+nullable: true

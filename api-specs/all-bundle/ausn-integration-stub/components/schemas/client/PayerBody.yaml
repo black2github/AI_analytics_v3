@@ -1,0 +1,11 @@
+type: object
+required:
+- date
+- taxpayers
+properties:
+  date:
+    $ref: ../common/LocalDate.yaml
+  taxpayers:
+    type: array
+    items:
+      $ref: ./TaxPayerDto.yaml

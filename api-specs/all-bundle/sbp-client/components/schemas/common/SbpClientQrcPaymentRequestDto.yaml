@@ -1,0 +1,76 @@
+type: object
+description: Заявка на списание средств по подписке
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата создания заявки
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на пользователя, создавшего заявку
+  userName:
+    type: string
+    description: ФИО пользователя, создавшего заявку
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - TECHNICAL
+    - CLIENTS
+  bankClient:
+    $ref: ./SbpQrcBankClientDto.yaml
+    description: Реквизиты клиента по Qr-коду
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - QR_CREATED
+    - PAYMENT_REQUEST
+    - PAYMENT_ERROR
+    - PAYMENT_PERMITTED
+    - REJECTED
+    - EXECUTED
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  data:
+    $ref: ./SbpClientQrcPaymentRequestDataDto.yaml
+    description: Реквизиты QR-кода
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода на оплату в СБП
+  subscriptionId:
+    type: string
+    description: Идентификатор подписки в системе АС СБП
+  subscriptionData:
+    $ref: ./SbpQrcPaymentRequestSubscriptionDataDto.yaml
+    description: Данные подписки
+  validationResult:
+    $ref: ./ValidationResult.yaml
+    description: Результат валидации заявки
+required:
+- docDate
+- docNumber
+- id
+- status
+- subscriptionId
+- userType

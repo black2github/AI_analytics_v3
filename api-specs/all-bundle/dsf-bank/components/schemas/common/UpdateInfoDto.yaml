@@ -1,0 +1,15 @@
+type: object
+description: Информация о пользователях при добавлении/редактировании записи.
+properties:
+  creatorFio:
+    type: string
+    description: ФИО Пользователя, создавшего запись.
+  creatorLogin:
+    type: string
+    description: Логин Пользователя, создавшего запись.
+  updaterFio:
+    type: string
+    description: ФИО Пользователя, внёсшего последнее изменение.
+  updaterLogin:
+    type: string
+    description: Логин Пользователя, внёсшего последнее изменение.

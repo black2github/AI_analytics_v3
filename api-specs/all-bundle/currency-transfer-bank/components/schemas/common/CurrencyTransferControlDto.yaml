@@ -1,0 +1,40 @@
+type: object
+properties:
+  contactName:
+    type: string
+    description: ФИО контактного лица (УЛ)
+  contactId:
+    type: string
+    description: Идентификатор контактного лица (УЛ)
+    format: uuid
+  phone:
+    type: string
+    description: Номер телефона контактного лица
+  contractNumber:
+    type: string
+    description: Уникальный номер контракта (кредитного договора)
+  operationCode:
+    type: string
+    description: Код вида операции
+  operationName:
+    type: string
+    description: Наименование вида операции
+  expectedDate:
+    type: string
+    description: Ожидаемый срок
+    format: date
+  advanceReturnDate:
+    type: string
+    description: Срок возврата аванса
+    format: date
+  info:
+    type: string
+    description: Доп. информация для валютного контроля
+  notifyNumber:
+    type: string
+    description: Номер уведомления
+  notifyDate:
+    type: string
+    description: Дата уведомления
+    format: date
+description: Транспортное представление блока атрибутов валютного контроля

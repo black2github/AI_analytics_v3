@@ -1,0 +1,19 @@
+required:
+- useCatalogChain
+type: object
+properties:
+  application:
+    $ref: ./OAuth2ApplicationViewDto.yaml
+  mfaChains:
+    type: array
+    description: Цепочки аутентификации
+    items:
+      $ref: ./MfaChainViewDto.yaml
+  defaultChainId:
+    type: string
+    description: Идентификатор цепочки по-умолчанию
+    format: uuid
+  useCatalogChain:
+    type: boolean
+    description: Признак использования цепочки аутентификации каталога
+description: ДТО отображения цепочек аутентификации для приложения OAuth2

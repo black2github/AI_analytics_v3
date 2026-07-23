@@ -1,0 +1,16 @@
+required:
+- resultCode
+type: object
+properties:
+  resultCode:
+    type: string
+    description: Код результата
+    enum:
+    - PIN_CODE_SET
+    - INVALID_PIN_CODE
+    - DST_PRIVATE_KEY_BLOCKED
+  remaining:
+    type: integer
+    description: Оставшиеся попытки
+    format: int32
+description: Ответ вызова API изменения пин-кода ОЭП

@@ -1,0 +1,16 @@
+type: object
+properties:
+  sightClientName:
+    type: string
+    description: Наименование визирующей организации
+  sightClientInn:
+    type: string
+    description: ИНН визирующей организации
+  sightClientId:
+    type: string
+    description: Визирующая организация (ID "Клиент Банка")
+    format: uuid
+  sightClientRnk:
+    type: string
+    description: РНК визирующей организации
+description: Данные визирующей организации

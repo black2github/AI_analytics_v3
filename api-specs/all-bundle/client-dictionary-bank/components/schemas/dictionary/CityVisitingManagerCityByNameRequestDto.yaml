@@ -1,0 +1,13 @@
+type: object
+properties:
+  city:
+    type: string
+    description: Наименование населенного пункта
+  marketingCampaign:
+    type: string
+    description: Тип маркетинговой кампании
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+description: Запрос данных по населенному пункту из справочника городов выездных менеджеров

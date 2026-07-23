@@ -1,0 +1,100 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Id
+    format: uuid
+  number:
+    type: integer
+    description: Number
+    format: int32
+  date:
+    type: string
+    description: Date
+    format: date
+  status:
+    type: string
+    description: Status
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - SIGN_INVALID
+    - SIGN_VALID
+    - DETAILS_ERROR
+    - EXPORTED_TO_ESK
+    - RECEIVED
+    - READY_FOR_PROCESSING
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - DENIED_BY_ESK
+    - EXPORTED_TO_RKO_F1
+    - EXPORT_TO_RKO_F1_ERROR
+    - RKO_F1_ACCOUNT_OPENED
+    - ECO_ACCOUNT_OPENING_ERROR
+    - EXECUTED
+    - DENIED
+    - EXPORTED_TO_ELAR
+    - EXPORT_TO_ELAR_ERROR
+    - NOT_EXPORTED_TO_ELAR
+  confirmNoChanges:
+    type: boolean
+    description: Confirm no changes mark
+  isRulesJoined:
+    type: boolean
+    description: Sign of joining the rules of support of the state contract in the Bank
+  userId:
+    type: string
+    description: User ID
+    format: uuid
+  requestType:
+    type: string
+    description: Классификатор типов документов.
+    enum:
+    - ACC_OPEN_SECOND_REQ
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  commissionAccount:
+    $ref: ./CommissionAccountDto.yaml
+  opopAccount:
+    $ref: ./OpopAccountDto.yaml
+  contract:
+    $ref: ./ContractDto.yaml
+  branch:
+    $ref: ./BranchDto.yaml
+  openedAccounts:
+    type: array
+    description: Opened account list
+    items:
+      $ref: ./OpenedAccountDto.yaml
+  accountInfos:
+    type: array
+    description: Opening accounts info
+    items:
+      $ref: ./AccountInfoDto.yaml
+  signature:
+    $ref: ./AccountOpeningRequestSignatureDto.yaml
+  errors:
+    type: string
+    description: Processing errors
+  commentForClient:
+    type: string
+    description: Processing errors for client
+  version:
+    type: integer
+    description: Entity version
+    format: int32
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+description: Account opening request DTO

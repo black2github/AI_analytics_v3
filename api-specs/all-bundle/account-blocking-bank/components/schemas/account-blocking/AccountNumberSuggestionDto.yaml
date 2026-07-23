@@ -1,0 +1,6 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+description: 'Подсказки: Номер счета клиента'

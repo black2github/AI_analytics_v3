@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    $ref: ./UniSignV2x1Dto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

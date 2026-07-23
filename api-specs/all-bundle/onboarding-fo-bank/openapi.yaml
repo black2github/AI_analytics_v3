@@ -1,0 +1,127 @@
+openapi: 3.0.1
+info:
+  title: Сервис создания заявки на открытие первого счета в офисе банка.
+  version: 3.0.0
+servers:
+- url: /onboarding-fo-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /onboarding-request-fo/{id}/status:
+    $ref: ./paths/{id}/onboarding_request_fo_id_status.yaml
+  /onboarding-request-fo/{id}/status-sync:
+    $ref: ./paths/{id}/onboarding_request_fo_id_status_sync.yaml
+  /onboarding-request-fo/{id}/re-export:
+    $ref: ./paths/{id}/onboarding_request_fo_id_re_export.yaml
+  /onboarding-request-fo/status-sync:
+    $ref: ./paths/status-sync/onboarding_request_fo_status_sync.yaml
+  /onboarding-request-fo/re-export:
+    $ref: ./paths/re-export/onboarding_request_fo_re_export.yaml
+  /onboarding-request-fo/print-list:
+    $ref: ./paths/print-list/onboarding_request_fo_print_list.yaml
+  /onboarding-request-fo/get-page:
+    $ref: ./paths/get-page/onboarding_request_fo_get_page.yaml
+  /onboarding-request-fo/export-list:
+    $ref: ./paths/export-list/onboarding_request_fo_export_list.yaml
+  /onboarding-request-fo/export-list-as-file:
+    $ref: ./paths/export-list-as-file/onboarding_request_fo_export_list_as_file.yaml
+  /onboarding-request-fo/category:
+    $ref: ./paths/category/onboarding_request_fo_category.yaml
+  /local/branches/update:
+    $ref: ./paths/branches/local_branches_update.yaml
+  /onboarding-request-fo/{id}:
+    $ref: ./paths/{id}/onboarding_request_fo_id.yaml
+  /onboarding-request-fo/{id}/history:
+    $ref: ./paths/{id}/onboarding_request_fo_id_history.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    StatusChangeParamsDto:
+      $ref: ./components/schemas/{id}/StatusChangeParamsDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    CommonAccountsInfoDto:
+      $ref: ./components/schemas/{id}/CommonAccountsInfoDto.yaml
+    ExtendedOnboardingFoRequestDto:
+      $ref: ./components/schemas/{id}/ExtendedOnboardingFoRequestDto.yaml
+    ExternalSystemsRequisitesDto:
+      $ref: ./components/schemas/{id}/ExternalSystemsRequisitesDto.yaml
+    GenericResponseSimpleErrorDataExtendedOnboardingFoRequestDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataExtendedOnboardingFoRequestDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    StatusSynchronizationParamsDto:
+      $ref: ./components/schemas/status-sync/StatusSynchronizationParamsDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    ReExportParamsDto:
+      $ref: ./components/schemas/re-export/ReExportParamsDto.yaml
+    RequestExportParamsDto:
+      $ref: ./components/schemas/common/RequestExportParamsDto.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/print-list/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/print-list/PrintResponse.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandOnboardingFoRequestFilter:
+      $ref: ./components/schemas/common/GetPageCommandOnboardingFoRequestFilter.yaml
+    OnboardingFoRequestFilter:
+      $ref: ./components/schemas/common/OnboardingFoRequestFilter.yaml
+    OnboardingFoRequestStatusFilterValueDto:
+      $ref: ./components/schemas/common/OnboardingFoRequestStatusFilterValueDto.yaml
+    PageParamsOnboardingFoRequestFilter:
+      $ref: ./components/schemas/common/PageParamsOnboardingFoRequestFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    OnboardingFoRequestScrollerDto:
+      $ref: ./components/schemas/get-page/OnboardingFoRequestScrollerDto.yaml
+    PageDataOnboardingFoRequestScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataOnboardingFoRequestScrollerDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/export-list-as-file/AttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/export-list-as-file/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    BranchAbsCodesUpdateDto:
+      $ref: ./components/schemas/branches/BranchAbsCodesUpdateDto.yaml
+    BranchesUpdateMassRequestDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassRequestDto.yaml
+    BranchUpdateStatisticsDto:
+      $ref: ./components/schemas/branches/BranchUpdateStatisticsDto.yaml
+    BranchesUpdateMassResponseDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassResponseDto.yaml
+    ParticularBranchUpdateResultDto:
+      $ref: ./components/schemas/branches/ParticularBranchUpdateResultDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingFoRequestHistoryDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataListOnboardingFoRequestHistoryDto.yaml
+    OnboardingFoRequestHistoryDto:
+      $ref: ./components/schemas/{id}/OnboardingFoRequestHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

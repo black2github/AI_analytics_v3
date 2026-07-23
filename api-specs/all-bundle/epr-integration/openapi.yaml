@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: Сервис интеграции с ЕПР.
+  version: 3.3.0
+servers:
+- url: /epr-integration
+security:
+- bearerAuth: []
+paths:
+  /integration/epr/print:
+    $ref: ./paths/epr/integration_epr_print.yaml
+  /integration/epr/document-ocr:
+    $ref: ./paths/epr/integration_epr_document_ocr.yaml
+components:
+  schemas:
+    GenericCommandPrintInput:
+      $ref: ./components/schemas/epr/GenericCommandPrintInput.yaml
+    PrintFormData:
+      $ref: ./components/schemas/epr/PrintFormData.yaml
+    PrintInput:
+      $ref: ./components/schemas/epr/PrintInput.yaml
+    GenericResponseSimpleErrorDataPrintOutput:
+      $ref: ./components/schemas/epr/GenericResponseSimpleErrorDataPrintOutput.yaml
+    PrintFormFile:
+      $ref: ./components/schemas/epr/PrintFormFile.yaml
+    PrintOutput:
+      $ref: ./components/schemas/epr/PrintOutput.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/epr/SimpleErrorData.yaml
+    OcrInput:
+      $ref: ./components/schemas/epr/OcrInput.yaml
+    SingleCommandOcrInput:
+      $ref: ./components/schemas/epr/SingleCommandOcrInput.yaml
+    Document:
+      $ref: ./components/schemas/epr/Document.yaml
+    DocumentField:
+      $ref: ./components/schemas/epr/DocumentField.yaml
+    FilePage:
+      $ref: ./components/schemas/epr/FilePage.yaml
+    OcrOutput:
+      $ref: ./components/schemas/epr/OcrOutput.yaml
+    SingleResponseOcrOutput:
+      $ref: ./components/schemas/epr/SingleResponseOcrOutput.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

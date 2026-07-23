@@ -1,0 +1,15 @@
+get:
+  tags:
+  - АПИ Банка для работы с Consul
+  summary: Получение всех зарегистрированных сервисов
+  description: 'Привилегии: CONSUL_ACCESS'
+  operationId: getAll_3
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: array
+            items:
+              $ref: ../../components/schemas/consul/ConsulDto.yaml

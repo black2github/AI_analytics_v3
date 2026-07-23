@@ -1,0 +1,12 @@
+type: object
+description: Удаление тип ДСФ.
+properties:
+  approve:
+    type: boolean
+    description: Подтверждение удаления.
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор тип ДСФ.
+required:
+- id

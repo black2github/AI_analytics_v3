@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID настройки
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  page:
+    type: string
+    description: Страница на которой используется настройка
+  settingType:
+    type: string
+    description: Код типа настройки
+  valueStr:
+    type: string
+    description: Строковое значение
+  valueBool:
+    type: boolean
+    description: Логическое значение
+  valueLong:
+    type: integer
+    description: Целочисленное значение
+    format: int64
+  valueUUID:
+    type: string
+    description: Ссылочное значение
+    format: uuid
+description: DTO пользовательских настроек

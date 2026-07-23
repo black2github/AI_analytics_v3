@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsScheduleScrollerFilter.yaml
+description: Запрос страницы

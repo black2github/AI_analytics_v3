@@ -1,0 +1,27 @@
+required:
+- certificate
+- ownerId
+- signatureId
+- signedAt
+type: object
+properties:
+  ownerId:
+    type: string
+    description: Идентификатор владельца подписи
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  signatureId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signature:
+    type: string
+    description: Base64 представление сертификата
+  certificate:
+    $ref: ../common/CertificateInfoResponseDto.yaml
+  sourceSystem:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+description: Дто подписи файла импорта

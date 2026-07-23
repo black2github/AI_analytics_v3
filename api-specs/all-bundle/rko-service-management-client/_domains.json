@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for rko-service-management-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/periodic-money-transfer",
+      "domain": "periodic-money-transfer"
+    },
+    {
+      "prefix": "/prior-acceptance-mandate",
+      "domain": "prior-acceptance-mandate"
+    }
+  ]
+}

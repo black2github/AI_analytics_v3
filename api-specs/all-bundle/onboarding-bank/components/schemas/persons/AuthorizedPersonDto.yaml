@@ -1,0 +1,28 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Электронная почта
+  isPotential:
+    type: boolean
+    description: Признак потенциальный или действующий УЛ
+  name:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Имя
+  patronymic:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Отчество
+  personId:
+    type: string
+    description: Идентификатор
+    format: uuid
+  phone:
+    type: string
+    description: Мобильный телефон
+  surname:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Фамилия
+description: Физические лица в заявке

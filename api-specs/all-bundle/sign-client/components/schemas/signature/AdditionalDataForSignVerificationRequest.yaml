@@ -1,0 +1,9 @@
+type: object
+properties:
+  signaturesData:
+    uniqueItems: true
+    type: array
+    description: Список данных о подписях для котрых нужна доп. информация
+    items:
+      $ref: ./SignatureData.yaml
+description: Запрос для получения доп. данных о подписях из документов различных бизнес систем для проверки криптомодулем на фронте.

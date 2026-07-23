@@ -1,0 +1,22 @@
+type: object
+properties:
+  dateBuy:
+    type: string
+    description: Дата валютирования
+    format: date
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  clientWebDealingId:
+    type: string
+    description: Идентификатор клиента ВебДилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  investmentDocType:
+    type: string
+    description: Тип документа на размещение денежных средств
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+description: Данные

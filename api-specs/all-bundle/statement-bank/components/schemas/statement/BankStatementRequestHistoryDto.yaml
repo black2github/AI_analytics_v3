@@ -1,0 +1,35 @@
+type: object
+properties:
+  createdAt:
+    type: string
+    format: date-time
+  statementRequestStatus:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - FILE
+    - VIEW
+    - WAIT_RESPONSE
+    - SNAPSHOT_REQUESTED
+    - FILE_REQUESTED
+    - EXECUTED
+    - DENIED
+    - CANCELED
+  documentType:
+    type: string
+    enum:
+    - STATEMENT
+    - INQUIRY
+  statementStatus:
+    type: string
+    enum:
+    - NOT_EXECUTED
+    - EXECUTED
+    - ERROR
+    - NOT_RELEVANT
+  isEntrySetChanged:
+    type: boolean
+description: Данные

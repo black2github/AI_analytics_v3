@@ -1,0 +1,12 @@
+type: object
+properties:
+  surname:
+    type: string
+    description: Фамилия сотрудника
+  forename:
+    type: string
+    description: Имя сотрудника
+  patronymic:
+    type: string
+    description: Отчество сотрудника
+description: Объединенные реквизиты сотрудника, которому предоставляется доступ по заявке ЛК МП

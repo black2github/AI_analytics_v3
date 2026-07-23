@@ -1,0 +1,8 @@
+type: object
+description: Привилегии
+properties:
+  privileges:
+    type: array
+    description: Привилегии
+    items:
+      type: string

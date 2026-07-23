@@ -1,0 +1,32 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  name:
+    type: string
+    description: Краткое или полное наименование
+  rkoF1Id:
+    type: string
+    description: Регистрационный номер клиента (РНК) в РКО Ф1
+  eskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  branch:
+    $ref: ./DioClientViewBranchDto.yaml
+  contactId:
+    type: string
+    description: Представитель клиента (идентификатор)
+    format: uuid
+  contactName:
+    type: string
+    description: Представитель клиента (наименование)
+  contactPhone:
+    type: string
+    description: Телефон представителя клиента
+description: Транспортное описание клиента на просмотр

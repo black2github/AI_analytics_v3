@@ -1,0 +1,26 @@
+required:
+- branchCode
+- clientAbsId
+- clientInn
+- period
+- tariffCode
+type: object
+properties:
+  clientAbsId:
+    type: string
+    description: Идентификатор Клиента Банка (РНК)
+  clientInn:
+    type: string
+    description: ИНН Клиента Банка
+  branchCode:
+    type: string
+    description: Код филиала
+    example: '0000'
+  tariffCode:
+    type: string
+    description: Код тарифа в Ф1
+  period:
+    type: string
+    description: Период действия тарифа
+    example: 1M
+description: Запрос на изменение тарифного плана в F1

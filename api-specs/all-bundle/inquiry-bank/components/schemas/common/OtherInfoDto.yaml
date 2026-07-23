@@ -1,0 +1,51 @@
+required:
+- inquiryMethod
+type: object
+properties:
+  inquiryType:
+    $ref: ./InquiryTypeDto.yaml
+  emailReport:
+    type: boolean
+    description: Оповестить о готовности отчета через Email
+    example: null
+  smsReport:
+    type: boolean
+    description: Оповестить о готовности отчета через смс
+    example: null
+  inquiryNumber:
+    type: string
+    description: Исходящий номер справки
+    example: null
+  inquiryDate:
+    type: string
+    description: Дата справки
+    format: date
+    example: null
+  sendInquiryToEmail:
+    type: boolean
+    description: Отправить справку на e-mail
+    example: null
+  inquiryMethod:
+    $ref: ./InquiryMethodDto.yaml
+  filialAbsCode:
+    type: string
+    description: ДО обслуживания
+    example: null
+  filialAbsAddress:
+    type: string
+    description: Адрес ДО обслуживания
+    example: null
+  filialName:
+    type: string
+    description: Наименование подразделения
+    example: null
+  filialCity:
+    type: string
+    description: Населенный пункт, в котором открыт офис
+    example: null
+  receptionEmailAgreement:
+    type: boolean
+    description: Согласие на получение по email
+    example: null
+description: Иные сведения
+example: null

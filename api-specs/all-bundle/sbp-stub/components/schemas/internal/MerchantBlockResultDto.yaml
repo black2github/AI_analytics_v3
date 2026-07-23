@@ -1,0 +1,28 @@
+type: object
+description: Ответ на запрос блокировки и разблокировки ТСП
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  docType:
+    type: string
+    description: Тип документа
+  guid:
+    type: string
+    description: ID заявки в Экосистеме
+  transactionId:
+    type: string
+    description: Идентификатор операции в таблице NONFIN_OP. Обязателен, если code = «000»
+  merchants:
+    type: array
+    items:
+      $ref: ./MerchantBlockResultDataDto.yaml
+    description: Полученные данные от СБП по merchantIds
+  legals:
+    type: array
+    items:
+      $ref: ./MerchantBlockResultLegalDataDto.yaml
+    description: Полученные данные от СБП по legalIds

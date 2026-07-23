@@ -1,0 +1,4 @@
+type: object
+properties:
+  fileData:
+    type: string

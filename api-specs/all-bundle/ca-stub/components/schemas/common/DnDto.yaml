@@ -1,0 +1,41 @@
+required:
+- commonName
+type: object
+properties:
+  commonName:
+    type: string
+    description: Общее наименование
+  country:
+    type: string
+    description: Страна
+  state:
+    type: string
+    description: Регион
+  locality:
+    type: string
+    description: Населенный пункт
+  organization:
+    type: string
+    description: Организация
+  organizationalUnit:
+    type: string
+    description: Подразделение организации
+  email:
+    type: string
+    description: Адрес электронной почты
+  inn:
+    type: string
+    description: ИНН
+  innle:
+    type: string
+    description: ИНН ЮЛ
+  ogrn:
+    type: string
+    description: ОГРН
+  ogrnip:
+    type: string
+    description: ОГРН ИП
+  snils:
+    type: string
+    description: СНИЛС
+description: Различительное имя

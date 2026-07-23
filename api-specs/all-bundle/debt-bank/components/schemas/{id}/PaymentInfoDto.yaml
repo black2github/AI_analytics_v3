@@ -1,0 +1,20 @@
+required:
+- basisOfPayment
+- docDate
+- docNumber
+- status
+- taxPeriodOrCustomsCode
+type: object
+properties:
+  status:
+    type: string
+  basisOfPayment:
+    type: string
+  taxPeriodOrCustomsCode:
+    type: string
+  docNumber:
+    type: string
+  docDate:
+    type: string
+  paymentType:
+    type: string

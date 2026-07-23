@@ -1,0 +1,11 @@
+type: object
+properties:
+  contact:
+    $ref: ./LeadContactDto.yaml
+  general:
+    $ref: ./LeadGeneralDto.yaml
+  organization:
+    $ref: ./LeadOrganizationDto.yaml
+  product:
+    $ref: ./LeadProductDto.yaml
+description: Лид на открытие первого счета

@@ -1,0 +1,19 @@
+type: object
+properties:
+  Result:
+    type: string
+    description: Статус подтверждения операции пользователем в ДСС
+    enum:
+    - success
+    - failed
+  TransactionId:
+    type: string
+    description: ID транзакции
+    format: uuid
+  Error:
+    type: string
+    description: Ошибка
+  ErrorDescription:
+    type: string
+    description: Описание ошибки
+description: Запрос DSS на callback url операции подтверждения

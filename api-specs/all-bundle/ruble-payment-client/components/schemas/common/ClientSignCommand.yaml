@@ -1,0 +1,34 @@
+required:
+- digest
+- documentId
+- signature
+- version
+type: object
+properties:
+  documentId:
+    type: string
+    description: id документа
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат клиента (заполняется, если certificateId=null)
+    nullable: true
+  certificateId:
+    type: string
+    description: Идентификатор сертификат клиента (заполняется, если certificate=null)
+    format: uuid
+    nullable: true
+  signature:
+    type: string
+    description: Подпись клиента
+  digest:
+    type: string
+    description: Дайджест подписи
+  docSignPage:
+    type: string
+    description: Страница, с которой осуществляется подпись
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Данные о клиентской подписи

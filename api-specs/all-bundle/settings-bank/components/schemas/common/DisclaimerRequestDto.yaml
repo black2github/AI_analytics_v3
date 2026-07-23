@@ -1,0 +1,48 @@
+type: object
+properties:
+  enabled:
+    title: Включен
+    type: boolean
+    description: Признак необходимости отображать дисклеймер пользователю Клиента
+  serviceCode:
+    type: string
+    description: Код сервиса
+  iconRelativePath:
+    type: string
+    description: Иконка дисклеймера
+  serviceUsePaths:
+    title: URL использования сервиса
+    uniqueItems: true
+    type: array
+    description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+    items:
+      title: URL использования сервиса
+      type: string
+      description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+  template:
+    type: string
+    description: Шаблон дисклеймера
+  disclaimerType:
+    type: string
+    description: Вид дисклеймеров
+    enum:
+    - ERROR
+    - WARNING
+    - INFO
+    - MESSAGE
+  title:
+    type: string
+    description: Заголовок дисклеймера (RU)
+  text:
+    type: string
+    description: Текст дисклеймера (RU)
+  titleEn:
+    type: string
+    description: Заголовок дисклеймера (EN)
+  textEn:
+    type: string
+    description: Текст дисклеймера (EN)
+  displayedInUnauthorizedArea:
+    type: boolean
+    description: Отображается в неавторизованной зоне
+description: Дисклеймер

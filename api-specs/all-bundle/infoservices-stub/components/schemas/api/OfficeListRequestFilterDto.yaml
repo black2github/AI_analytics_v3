@@ -1,0 +1,28 @@
+type: object
+properties:
+  accessibility:
+    type: boolean
+  client:
+    $ref: ./OfficeListRequestClientFilterDto.yaml
+  code:
+    type: string
+  codes:
+    type: array
+    items:
+      type: string
+  forDisabled:
+    type: boolean
+  forJuric:
+    type: boolean
+  forPhys:
+    type: boolean
+  isAccessibility:
+    type: boolean
+  isFunctioning:
+    type: boolean
+  schedule:
+    $ref: ./OfficeListRequestScheduleFilterDto.yaml
+  services:
+    type: array
+    items:
+      $ref: ./OfficeListRequestServiceFilterDto.yaml

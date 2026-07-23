@@ -1,0 +1,15 @@
+type: object
+properties:
+  services:
+    type: array
+    description: Набор услуг
+    items:
+      $ref: ../common/BankClientServiceDto.yaml
+  products:
+    type: array
+    description: Список продуктов ЭДО
+    items:
+      $ref: ./EdoProductDto.yaml
+  lastUpdateInfo:
+    $ref: ./BankClientEdoSettingsLastUpdateInfoDto.yaml
+description: Настройки ЭДО клиента Банка.

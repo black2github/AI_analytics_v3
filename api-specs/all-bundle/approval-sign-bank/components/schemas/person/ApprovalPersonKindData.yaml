@@ -1,0 +1,13 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Тип(категория) визирующих лиц
+  description:
+    type: string
+    description: Описание типа(категории) визирующих лиц
+  count:
+    type: integer
+    description: Количество визирующих лиц
+    format: int64
+description: DTO типа(катагории) визирующего лица

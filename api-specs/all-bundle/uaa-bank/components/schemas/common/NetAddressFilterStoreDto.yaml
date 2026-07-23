@@ -1,0 +1,24 @@
+required:
+- ipEnabled
+- macEnabled
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  macEnabled:
+    type: boolean
+    description: Состояние МАС фильтра
+  ipEnabled:
+    type: boolean
+    description: Состояние IP фильтра
+  comments:
+    type: string
+    description: Комментарий для Банка
+  rules:
+    type: array
+    description: Правила IP/MAC фильтра
+    items:
+      $ref: ./NetAddressFilterRuleStoreDto.yaml
+description: Правило IP/MAC фильтра

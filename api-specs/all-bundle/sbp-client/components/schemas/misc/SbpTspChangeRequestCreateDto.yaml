@@ -1,0 +1,16 @@
+type: object
+description: Заявка на изменение параметров ТСП
+properties:
+  bankClient:
+    $ref: ./SbpTspChangeRequestCreateBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  merchant:
+    $ref: ./SbpTspChangeRequestCreateMerchantDto.yaml
+    description: Реквизиты ТСП по заявке на изменение параметров ТСП
+  data:
+    $ref: ./SbpTspChangeRequestCreateDataDto.yaml
+    description: Параметры по заявке на изменение параметров ТСП
+required:
+- bankClient
+- data
+- merchant

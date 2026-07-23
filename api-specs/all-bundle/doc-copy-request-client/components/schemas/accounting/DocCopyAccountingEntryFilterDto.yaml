@@ -1,0 +1,29 @@
+required:
+- accountId
+- clientId
+- date
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentTypeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  debit:
+    $ref: ./FilterValueDtoBoolean.yaml
+  counterpartyAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  amount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  fromId:
+    type: integer
+    description: Идентификатор последней записи
+    format: int64
+  clientId:
+    type: string
+    description: id организации
+    format: uuid
+description: Фильтр

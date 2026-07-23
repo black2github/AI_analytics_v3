@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  clientSegment:
+    type: string
+    description: Код сегмента клиента
+    enum:
+    - MSB
+    - KIK
+  clientStatus:
+    type: string
+    description: Код статуса организации клиента
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+description: Информация о сегментах клиента

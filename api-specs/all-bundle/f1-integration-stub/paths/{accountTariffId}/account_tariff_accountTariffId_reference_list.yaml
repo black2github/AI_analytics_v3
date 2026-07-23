@@ -1,0 +1,19 @@
+get:
+  summary: Список всех записей из таблицы gps_eco_accs_det_ref_rates
+  tags:
+  - Обновление заглушек gps_eco_accs_det (Информация о тарифах по счету в Ф1)
+  parameters:
+  - name: accountTariffId
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../components/schemas/{accountTariffId}/AccountTariffReferenceRateDto.yaml

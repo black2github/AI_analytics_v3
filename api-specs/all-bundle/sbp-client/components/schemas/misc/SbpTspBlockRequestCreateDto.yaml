@@ -1,0 +1,20 @@
+type: object
+description: Запрос создания заявки на блокировку/разблокировку ТСП в СБП
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП
+  docType:
+    type: string
+    description: Тип заявки
+    enum:
+    - ACTIVATE
+    - BLOCK
+required:
+- clientId
+- docType
+- merchantId

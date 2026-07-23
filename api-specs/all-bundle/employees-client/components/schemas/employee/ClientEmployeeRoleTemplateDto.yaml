@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ШР
+    format: uuid
+  rolesTemplateVersion:
+    type: integer
+    description: Версия шаблона ролей
+    format: int32
+description: Шаблон ролей сотрудника

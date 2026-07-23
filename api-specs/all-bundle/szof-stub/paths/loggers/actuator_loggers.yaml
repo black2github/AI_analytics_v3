@@ -1,0 +1,11 @@
+get:
+  responses:
+    '200':
+      description: OK
+      content:
+        application/vnd.spring-boot.actuator.v2+json:
+          schema:
+            $ref: ../../components/schemas/loggers/ActuatorLoggersDto.yaml
+  summary: Get Loggers
+  tags:
+  - Actuator Controller

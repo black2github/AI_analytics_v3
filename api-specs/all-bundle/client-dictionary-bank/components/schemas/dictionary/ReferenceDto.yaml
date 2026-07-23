@@ -1,0 +1,9 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес ссылки
+  text:
+    type: string
+    description: Текст ссылки
+description: Ссылка

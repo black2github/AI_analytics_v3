@@ -1,0 +1,5 @@
+type: object
+properties:
+  validationResult:
+    $ref: ./ValidationResult.yaml
+description: Создание заявки на хранение архивных документов. Возвращаемое ДТО

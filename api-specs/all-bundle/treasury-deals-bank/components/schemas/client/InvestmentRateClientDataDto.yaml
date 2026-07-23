@@ -1,0 +1,18 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  clientGroupId:
+    type: integer
+    description: Идентификатор группы клиента
+    format: int64
+  generalAgreementStatus:
+    type: string
+    description: Статус его генерального соглашения
+    enum:
+    - ACTIVE
+    - ENDED
+    - BLOCKED
+    - DELETED
+description: Данные

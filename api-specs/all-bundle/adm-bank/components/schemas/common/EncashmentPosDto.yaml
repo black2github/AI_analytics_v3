@@ -1,0 +1,52 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес Торговой точки
+  deliveryTariffAmount:
+    type: number
+    description: Сумма тарифа за доставку размена
+  encashmentEndTime:
+    pattern: ^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$
+    type: string
+    description: Время, до которого допустим приезд на адрес торговой точки для оказания услуг в формате HH:mm
+  encashmentStartTime:
+    pattern: ^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$
+    type: string
+    description: Время, с которого допустим приезд на адрес торговой точки для оказания услуг в формате HH:mm
+  encashmentTariffAmount:
+    type: number
+    description: Сумма тарифа за инкассацию
+  exchangeAmount:
+    type: number
+    description: Объем размена
+  exchangeDeliveryPeriod:
+    type: integer
+    description: Периодичность доставки размена
+    format: int32
+  exchangePossibility:
+    type: boolean
+    description: Возможность оказания услуги размена
+  exchangeTariffAmount:
+    type: number
+    description: Сумма тарифа за формирование размена
+  exchangeTariffRate:
+    type: number
+    description: Ставка тарифа за формирование размена
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  isAddressValid:
+    type: boolean
+    description: Результат проверки адресной информации
+  receptionAndRecalculationTariffAmount:
+    type: number
+    description: Сумма тарифа за прием и пересчет
+  receptionAndRecalculationTariffRate:
+    type: number
+    description: Ставка тарифа за прием и пересчет
+  tid:
+    type: string
+    description: TID
+description: Информация о торговой точке

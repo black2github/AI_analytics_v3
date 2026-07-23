@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код типа договора
+  name:
+    type: string
+    description: Наименование типа договора
+  localizationKey:
+    type: string
+    description: Ключ локализации
+description: Тип договора

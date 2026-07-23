@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./IncomingPaymentRequestStatusDto.yaml
+  notEq:
+    $ref: ./IncomingPaymentRequestStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./IncomingPaymentRequestStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./IncomingPaymentRequestStatusDto.yaml
+  isNull:
+    type: boolean
+description: Статус документа (равенство, содержится в списке)
+nullable: true

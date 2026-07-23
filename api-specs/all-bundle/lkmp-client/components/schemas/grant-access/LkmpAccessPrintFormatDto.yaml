@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "ЛК МП".
+    format: uuid
+  templateType:
+    type: string
+    description: Тип печатной формы.
+    enum:
+    - LK_MP_ACCESS_REQUEST
+  reportFormat:
+    type: string
+    description: Формат печатной формы.
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+description: Тип формата печатной формы

@@ -1,0 +1,33 @@
+type: object
+properties:
+  statusCategory:
+    $ref: ./AcceptPaymentRequestBankCategoryDto.yaml
+  createDocPeriod:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  payer:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./AcceptPaymentRequestStatusEnumDto.yaml
+  docPeriod:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  requestPeriod:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  payerBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  decision:
+    $ref: ./AcceptPaymentRequestDecisionEnumDto.yaml
+  acceptAmount:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverName:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverBankBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр банковского скроллера акцепта платежного требования

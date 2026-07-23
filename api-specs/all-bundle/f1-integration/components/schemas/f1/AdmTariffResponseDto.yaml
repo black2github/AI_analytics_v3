@@ -1,0 +1,8 @@
+type: object
+properties:
+  tariffList:
+    type: array
+    description: Список тарифов АДМ
+    items:
+      $ref: ./AdmTariffDto.yaml
+description: Ответ на запрос списка тарифов АДМ

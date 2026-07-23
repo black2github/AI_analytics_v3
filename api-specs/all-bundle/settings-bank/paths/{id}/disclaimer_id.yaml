@@ -1,0 +1,46 @@
+get:
+  tags:
+  - АПИ Банка для управления дисклеймерами
+  summary: Получить запись по идентификатору
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_VIEW'
+  operationId: getById_5
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataDisclaimerDto.yaml
+put:
+  tags:
+  - АПИ Банка для управления дисклеймерами
+  summary: Изменить запись
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_EDIT'
+  operationId: update_5
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandDisclaimerRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataDisclaimerDto.yaml

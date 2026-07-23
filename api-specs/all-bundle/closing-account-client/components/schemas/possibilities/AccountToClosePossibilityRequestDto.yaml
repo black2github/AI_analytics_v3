@@ -1,0 +1,8 @@
+required:
+- accountId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+description: Запрос на получение счетов, доступных для закрытия

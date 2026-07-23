@@ -1,0 +1,25 @@
+type: object
+description: Данные агента ТСП
+properties:
+  agentId:
+    type: string
+    description: Идентификатор агента
+  agentName:
+    type: string
+    description: Наименование агента
+    maxLength: 512
+  agentInn:
+    type: string
+    description: ИНН агента
+  agentOgrn:
+    type: string
+    description: ОГРН агента
+  agentBic:
+    type: string
+    description: БИК Агента ТСП
+  status:
+    type: string
+    description: БИК Агента ТСП
+    enum:
+    - CONNECTED
+    - AVAILABLE

@@ -1,0 +1,11 @@
+type: object
+properties:
+  code:
+    type: integer
+    format: int32
+  data:
+    type: array
+    items:
+      $ref: ./OnboardingRequestHistoryDto.yaml
+  message:
+    type: string

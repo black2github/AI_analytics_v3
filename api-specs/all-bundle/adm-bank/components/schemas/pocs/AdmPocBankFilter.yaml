@@ -1,0 +1,5 @@
+type: object
+properties:
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр на запрос АДМ. Банковская часть

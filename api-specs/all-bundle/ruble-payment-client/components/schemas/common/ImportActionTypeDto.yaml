@@ -1,0 +1,6 @@
+type: string
+description: Действие пользователя
+enum:
+- NOT_DEFINED
+- IMPORT_SELECTED
+- REJECT_IMPORT

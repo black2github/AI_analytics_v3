@@ -1,0 +1,24 @@
+required:
+- Идентификатор счета в РКО Ф1
+type: object
+properties:
+  Идентификатор счета в РКО Ф1:
+    type: integer
+    format: int64
+  clientAbsId:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  account:
+    type: string
+    description: Номер счета
+  currency:
+    type: string
+    description: Валюта счета
+  currentBalance:
+    type: number
+    description: Сумма собственных доступных средств (без учета овердрафта)
+  currentOverdraft:
+    type: number
+    description: Сумма неиспользованного овердрафта
+description: Баланс счета

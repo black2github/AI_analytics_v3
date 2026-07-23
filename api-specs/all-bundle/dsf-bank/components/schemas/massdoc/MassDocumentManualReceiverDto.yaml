@@ -1,0 +1,10 @@
+type: object
+description: Получатель массовой рассылки добавленный вручную
+properties:
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+    description: Информация о клиенте банка
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор получателя

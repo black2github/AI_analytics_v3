@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи (ЭКО)
+    format: uuid
+  numericCode:
+    type: string
+    description: Цифровой код валюты
+  code:
+    type: string
+    description: Буквенный код валюты
+  name:
+    type: string
+    description: Наименование валюты
+  dateTo:
+    type: string
+    description: Дата действия по
+    format: date
+  applicationArea:
+    type: array
+    description: Области применения валюты
+    items:
+      $ref: ./CurrencyServicesDto.yaml
+  minorUnit:
+    type: integer
+    description: Количество копеек в дробной части валюты
+    format: int32
+  updatedAt:
+    type: string
+    description: Дата и время обновления
+    format: date-time
+  status:
+    type: string
+    description: Статус записи
+    enum:
+    - ACTIVE
+    - DELETED
+description: Транспортное представление валюты

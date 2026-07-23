@@ -1,0 +1,8 @@
+type: object
+properties:
+  checkedUsers:
+    type: array
+    description: Список проверенных пользователей
+    items:
+      $ref: ./CheckedUser.yaml
+description: Результат проверки блокировки пользователей по организации

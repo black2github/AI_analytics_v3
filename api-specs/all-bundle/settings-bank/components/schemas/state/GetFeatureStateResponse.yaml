@@ -1,0 +1,9 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - EXAMPLE
+  enabled:
+    type: boolean
+description: Данные

@@ -1,0 +1,22 @@
+required:
+- currencyCode
+type: object
+properties:
+  documentNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  documentDate:
+    type: string
+    description: Дата документа
+    format: date
+  documentSummary:
+    type: number
+    description: Сумма документа
+  currencyCode:
+    type: string
+    description: Буквенный код валюты
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+description: ДТО Основные реквизиты документа для банка

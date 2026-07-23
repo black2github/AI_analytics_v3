@@ -1,0 +1,28 @@
+required:
+- certificate
+- signatureId
+- signedAt
+- signerId
+type: object
+properties:
+  signerId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  signerFio:
+    type: string
+    description: ФИО подписанта
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  signatureId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signature:
+    type: string
+    description: Электронная подпись (может быть пустой для ATTACHED или DETACHED подписей)
+  certificate:
+    $ref: ./CertificateInfoResponseDto.yaml
+description: Данные ЭП

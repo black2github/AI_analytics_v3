@@ -1,0 +1,122 @@
+put:
+  tags:
+  - API заявки на встречу. Базовые операции.
+  summary: Обновить заявку
+  description: 'Привилегии: MCB_MEETING_REQUEST.UPDATE,MCB_MEETING_REQUEST.BANK.UPDATE,DEALS_CALENDAR.BANK.UPDATE_MEETING'
+  operationId: update
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/meeting/UpdateCommandMeetingUpdateRestRequestDtoUUID.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/meeting/CreateResponseMeetingRestResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+post:
+  tags:
+  - API заявки на встречу. Базовые операции.
+  summary: Создать заявку
+  description: 'Привилегии: MCB_MEETING_REQUEST.CREATE,MCB_MEETING_REQUEST.BANK.CREATE,DEALS_CALENDAR.BANK.CREATE_MEETING'
+  operationId: create
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/meeting/CreateCommandMeetingCreateRestRequestDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/meeting/CreateResponseMeetingRestResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

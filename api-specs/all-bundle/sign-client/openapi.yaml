@@ -1,0 +1,417 @@
+openapi: 3.0.1
+info:
+  title: Сервис подписи.
+  version: 3.9.0
+servers:
+- url: /signature
+security:
+- bearerAuth: []
+paths:
+  /third-parties/signature/info/file:
+    $ref: ./paths/signature/third_parties_signature_info_file.yaml
+  /third-parties/signature/info/file/zip:
+    $ref: ./paths/signature/third_parties_signature_info_file_zip.yaml
+  /simple-sign/resend:
+    $ref: ./paths/resend/simple_sign_resend.yaml
+  /simple-sign/create-sign-operation:
+    $ref: ./paths/create-sign-operation/simple_sign_create_sign_operation.yaml
+  /simple-sign/confirm:
+    $ref: ./paths/confirm/simple_sign_confirm.yaml
+  /simple-sign/cancel:
+    $ref: ./paths/cancel/simple_sign_cancel.yaml
+  /sign/signature/verify:
+    $ref: ./paths/signature/sign_signature_verify.yaml
+  /sign/signature/verify-documents-crypto:
+    $ref: ./paths/signature/sign_signature_verify_documents_crypto.yaml
+  /sign/signature/verify-crypto:
+    $ref: ./paths/signature/sign_signature_verify_crypto.yaml
+  /sign/signature/verify-batch:
+    $ref: ./paths/signature/sign_signature_verify_batch.yaml
+  /sign/signature/v3/check-authority:
+    $ref: ./paths/signature/sign_signature_v3_check_authority.yaml
+  /sign/signature/v2/check-authority:
+    $ref: ./paths/signature/sign_signature_v2_check_authority.yaml
+  /sign/signature/get-verify-data:
+    $ref: ./paths/signature/sign_signature_get_verify_data.yaml
+  /sign/signature/get-additional-verify-data:
+    $ref: ./paths/signature/sign_signature_get_additional_verify_data.yaml
+  /sign/signature/cloud-sign:
+    $ref: ./paths/signature/sign_signature_cloud_sign.yaml
+  /sign/signature/check-authority:
+    $ref: ./paths/signature/sign_signature_check_authority.yaml
+  /sign/sign-type/get-page:
+    $ref: ./paths/sign-type/sign_sign_type_get_page.yaml
+  /sign/export/zip:
+    $ref: ./paths/export/sign_export_zip.yaml
+  /sign/export/zip/batch:
+    $ref: ./paths/export/sign_export_zip_batch.yaml
+  /sign/export/v4/zip/batch:
+    $ref: ./paths/export/sign_export_v4_zip_batch.yaml
+  /sign/export/v3/zip/batch:
+    $ref: ./paths/export/sign_export_v3_zip_batch.yaml
+  /sign/export/v2/zip/batch:
+    $ref: ./paths/export/sign_export_v2_zip_batch.yaml
+  /sign/dst-history/get-list:
+    $ref: ./paths/dst-history/sign_dst_history_get_list.yaml
+  /sign/certificate/v2/update-user-certificates:
+    $ref: ./paths/certificate/sign_certificate_v2_update_user_certificates.yaml
+  /sign/certificate/v2/get-page:
+    $ref: ./paths/certificate/sign_certificate_v2_get_page.yaml
+  /sign/certificate/update-user-certificates:
+    $ref: ./paths/certificate/sign_certificate_update_user_certificates.yaml
+  /sign/certificate/search:
+    $ref: ./paths/certificate/sign_certificate_search.yaml
+  /sign/certificate/search-duplicates:
+    $ref: ./paths/certificate/sign_certificate_search_duplicates.yaml
+  /sign/certificate/parse:
+    $ref: ./paths/certificate/sign_certificate_parse.yaml
+  /sign/certificate/get-page:
+    $ref: ./paths/certificate/sign_certificate_get_page.yaml
+  /sign/certificate/get-info:
+    $ref: ./paths/certificate/sign_certificate_get_info.yaml
+  /sign/certificate/find-by-cert:
+    $ref: ./paths/certificate/sign_certificate_find_by_cert.yaml
+  /sign/certificate/create-or-update:
+    $ref: ./paths/certificate/sign_certificate_create_or_update.yaml
+  /sign/certificate/by-issued-cert:
+    $ref: ./paths/certificate/sign_certificate_by_issued_cert.yaml
+  /dss-profile/{profileId}/{dssVersion}/generate-qr-code:
+    $ref: ./paths/{profileId}/dss_profile_profileId_dssVersion_generate_qr_code.yaml
+  /dss-profile/{profileId}/{dssVersion}/generate-deep-link-data:
+    $ref: ./paths/{profileId}/dss_profile_profileId_dssVersion_generate_deep_link_data.yaml
+  /digital-sign-tool/{dstId}/pin-code:
+    $ref: ./paths/{dstId}/digital_sign_tool_dstId_pin_code.yaml
+  /digital-sign-tool/{dstId}/pin-code/check:
+    $ref: ./paths/{dstId}/digital_sign_tool_dstId_pin_code_check.yaml
+  /digital-sign-tool/v2/for-sign/get:
+    $ref: ./paths/v2/digital_sign_tool_v2_for_sign_get.yaml
+  /digital-sign-tool/get-sign-dst:
+    $ref: ./paths/get-sign-dst/digital_sign_tool_get_sign_dst.yaml
+  /digital-sign-tool/for-sign/get:
+    $ref: ./paths/for-sign/digital_sign_tool_for_sign_get.yaml
+  /digital-sign-tool/client-official/{clientOfficialId}/abs-id/{absId}:
+    $ref: ./paths/client-official/digital_sign_tool_client_official_clientOfficialId_abs_id_absId.yaml
+  /digital-sign-tool/bank-client/{clientId}:
+    $ref: ./paths/bank-client/digital_sign_tool_bank_client_clientId.yaml
+  /sign/sign-type/code/{code}:
+    $ref: ./paths/sign-type/sign_sign_type_code_code.yaml
+  /sign/cloud-sign-result/{id}:
+    $ref: ./paths/cloud-sign-result/sign_cloud_sign_result_id.yaml
+  /sign/cloud-sign-result/dss/{id}:
+    $ref: ./paths/cloud-sign-result/sign_cloud_sign_result_dss_id.yaml
+  /sign/certificate/{id}:
+    $ref: ./paths/certificate/sign_certificate_id.yaml
+  /sign/certificate/{id}/download:
+    $ref: ./paths/certificate/sign_certificate_id_download.yaml
+  /sign/certificate/parse/{certificateId}:
+    $ref: ./paths/certificate/sign_certificate_parse_certificateId.yaml
+  /sign/ca/export/accredited-and-work:
+    $ref: ./paths/ca/sign_ca_export_accredited_and_work.yaml
+  /sign/ca/accredited:
+    $ref: ./paths/ca/sign_ca_accredited.yaml
+  /sign/ca/accredited-name:
+    $ref: ./paths/ca/sign_ca_accredited_name.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /dss-profile/{profileId}/devices:
+    $ref: ./paths/{profileId}/dss_profile_profileId_devices.yaml
+  /digital-sign-tool/{dstId}:
+    $ref: ./paths/{dstId}/digital_sign_tool_dstId.yaml
+  /digital-sign-tool/client-official-dst-id/{clientOfficialDstId}:
+    $ref: ./paths/client-official-dst-id/digital_sign_tool_client_official_dst_id_clientOfficialDstId.yaml
+  /digital-sign-tool/cert-id/{certId}:
+    $ref: ./paths/cert-id/digital_sign_tool_cert_id_certId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseThirdPartiesSignatureInfoDto:
+      $ref: ./components/schemas/signature/SingleResponseThirdPartiesSignatureInfoDto.yaml
+    ThirdPartiesSignatureInfoDto:
+      $ref: ./components/schemas/signature/ThirdPartiesSignatureInfoDto.yaml
+    SingleResponseMapStringThirdPartiesSignatureInfoDto:
+      $ref: ./components/schemas/signature/SingleResponseMapStringThirdPartiesSignatureInfoDto.yaml
+    SimpleSignResendOtpCodeRequestDto:
+      $ref: ./components/schemas/resend/SimpleSignResendOtpCodeRequestDto.yaml
+    CloudSignOperationDto:
+      $ref: ./components/schemas/common/CloudSignOperationDto.yaml
+    GenericResponseSimpleErrorDataCloudSignOperationDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCloudSignOperationDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    CreateSimpleSignOperationRequestDto:
+      $ref: ./components/schemas/create-sign-operation/CreateSimpleSignOperationRequestDto.yaml
+    SimpleSignDocDto:
+      $ref: ./components/schemas/create-sign-operation/SimpleSignDocDto.yaml
+    SimpleSignConfirmRequestDto:
+      $ref: ./components/schemas/confirm/SimpleSignConfirmRequestDto.yaml
+    SimpleSignCancelRequestDto:
+      $ref: ./components/schemas/cancel/SimpleSignCancelRequestDto.yaml
+    VerifySignRequest:
+      $ref: ./components/schemas/signature/VerifySignRequest.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/signature/SingleResponseBoolean.yaml
+    DocumentSignDataDto:
+      $ref: ./components/schemas/signature/DocumentSignDataDto.yaml
+    VerifySignDocumentRequest:
+      $ref: ./components/schemas/signature/VerifySignDocumentRequest.yaml
+    CryptoSignType:
+      $ref: ./components/schemas/signature/CryptoSignType.yaml
+    GenericResponseSimpleErrorDataMapUUIDVerifySignDocumentResultDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataMapUUIDVerifySignDocumentResultDto.yaml
+    ParsedSignatureShortDataDto:
+      $ref: ./components/schemas/signature/ParsedSignatureShortDataDto.yaml
+    SignerShortInfo:
+      $ref: ./components/schemas/signature/SignerShortInfo.yaml
+    VerifySignDocumentResultDto:
+      $ref: ./components/schemas/signature/VerifySignDocumentResultDto.yaml
+    VerifyCryptoSignRequest:
+      $ref: ./components/schemas/signature/VerifyCryptoSignRequest.yaml
+    VerifySignBatchClientRequest:
+      $ref: ./components/schemas/signature/VerifySignBatchClientRequest.yaml
+    VerifySignBatchRequestCertificateItem:
+      $ref: ./components/schemas/signature/VerifySignBatchRequestCertificateItem.yaml
+    VerifySignBatchRequestSignItem:
+      $ref: ./components/schemas/signature/VerifySignBatchRequestSignItem.yaml
+    GenericResponseSimpleErrorDataVerifySignBatchResponse:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataVerifySignBatchResponse.yaml
+    SignatureVerifyResultDto:
+      $ref: ./components/schemas/signature/SignatureVerifyResultDto.yaml
+    VerifySignBatchResponse:
+      $ref: ./components/schemas/signature/VerifySignBatchResponse.yaml
+    PresetCredentialsEskDto:
+      $ref: ./components/schemas/signature/PresetCredentialsEskDto.yaml
+    ProdCredentialsEskDto:
+      $ref: ./components/schemas/signature/ProdCredentialsEskDto.yaml
+    RelPersonClientDto:
+      $ref: ./components/schemas/signature/RelPersonClientDto.yaml
+    SignAuthorityRequestClientDto:
+      $ref: ./components/schemas/signature/SignAuthorityRequestClientDto.yaml
+    AuthorityValidatorResultV2:
+      $ref: ./components/schemas/signature/AuthorityValidatorResultV2.yaml
+    GenericResponseSimpleErrorDataSignAuthorityResponseV2:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataSignAuthorityResponseV2.yaml
+    SignAuthorityCertificateResponseV2:
+      $ref: ./components/schemas/signature/SignAuthorityCertificateResponseV2.yaml
+    SignAuthorityResponseV2:
+      $ref: ./components/schemas/signature/SignAuthorityResponseV2.yaml
+    RelPersonEskDto:
+      $ref: ./components/schemas/signature/RelPersonEskDto.yaml
+    SignAuthorityRequestV2:
+      $ref: ./components/schemas/signature/SignAuthorityRequestV2.yaml
+    SingleResponseSignAuthorityResponseV2:
+      $ref: ./components/schemas/signature/SingleResponseSignAuthorityResponseV2.yaml
+    VerifySignByDateFields:
+      $ref: ./components/schemas/signature/VerifySignByDateFields.yaml
+    VerifySignByDateRequest:
+      $ref: ./components/schemas/signature/VerifySignByDateRequest.yaml
+    CryptoModuleVerifySignDto:
+      $ref: ./components/schemas/signature/CryptoModuleVerifySignDto.yaml
+    SingleResponseMapUUIDCryptoModuleVerifySignDto:
+      $ref: ./components/schemas/signature/SingleResponseMapUUIDCryptoModuleVerifySignDto.yaml
+    AdditionalDataForSignVerificationRequest:
+      $ref: ./components/schemas/signature/AdditionalDataForSignVerificationRequest.yaml
+    SignatureData:
+      $ref: ./components/schemas/signature/SignatureData.yaml
+    AdditionalDataForSignVerificationResponse:
+      $ref: ./components/schemas/signature/AdditionalDataForSignVerificationResponse.yaml
+    AdditionalSignData:
+      $ref: ./components/schemas/signature/AdditionalSignData.yaml
+    SingleResponseAdditionalDataForSignVerificationResponse:
+      $ref: ./components/schemas/signature/SingleResponseAdditionalDataForSignVerificationResponse.yaml
+    CloudSignDocDto:
+      $ref: ./components/schemas/signature/CloudSignDocDto.yaml
+    CloudSignRequest:
+      $ref: ./components/schemas/signature/CloudSignRequest.yaml
+    CloudSignErrorDto:
+      $ref: ./components/schemas/signature/CloudSignErrorDto.yaml
+    GenericResponseCloudSignErrorDtoCloudSignOperationDto:
+      $ref: ./components/schemas/signature/GenericResponseCloudSignErrorDtoCloudSignOperationDto.yaml
+    SignAuthorityRequest:
+      $ref: ./components/schemas/signature/SignAuthorityRequest.yaml
+    ComposeResponseBooleanSignAuthorityResponse:
+      $ref: ./components/schemas/signature/ComposeResponseBooleanSignAuthorityResponse.yaml
+    SignAuthorityResponse:
+      $ref: ./components/schemas/signature/SignAuthorityResponse.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/sign-type/FilterValueDtoString.yaml
+    GetPageCommandSignTypeFilter:
+      $ref: ./components/schemas/sign-type/GetPageCommandSignTypeFilter.yaml
+    PageParamsSignTypeFilter:
+      $ref: ./components/schemas/sign-type/PageParamsSignTypeFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    SignTypeFilter:
+      $ref: ./components/schemas/sign-type/SignTypeFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageDataSignTypeDto:
+      $ref: ./components/schemas/sign-type/PageDataSignTypeDto.yaml
+    SignTypeDto:
+      $ref: ./components/schemas/sign-type/SignTypeDto.yaml
+    CmsItem:
+      $ref: ./components/schemas/export/CmsItem.yaml
+    ContentItem:
+      $ref: ./components/schemas/export/ContentItem.yaml
+    SignExportRequest:
+      $ref: ./components/schemas/export/SignExportRequest.yaml
+    ByteArrSingleResponse:
+      $ref: ./components/schemas/export/ByteArrSingleResponse.yaml
+    SignBatchExportRequest:
+      $ref: ./components/schemas/export/SignBatchExportRequest.yaml
+    SignExportContent:
+      $ref: ./components/schemas/export/SignExportContent.yaml
+    CmsItemV2:
+      $ref: ./components/schemas/export/CmsItemV2.yaml
+    SignBatchExportRequestV3:
+      $ref: ./components/schemas/export/SignBatchExportRequestV3.yaml
+    SignExportContentV2:
+      $ref: ./components/schemas/export/SignExportContentV2.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataUUID.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/export/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/export/PrintResponse.yaml
+    SignBatchExportRequestV2:
+      $ref: ./components/schemas/export/SignBatchExportRequestV2.yaml
+    DigitalSignatureToolHistoryActionFilter:
+      $ref: ./components/schemas/dst-history/DigitalSignatureToolHistoryActionFilter.yaml
+    DigitalSignatureToolHistoryFilter:
+      $ref: ./components/schemas/dst-history/DigitalSignatureToolHistoryFilter.yaml
+    DigitalSignatureToolHistoryKindFilter:
+      $ref: ./components/schemas/dst-history/DigitalSignatureToolHistoryKindFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/dst-history/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/dst-history/FilterValueDtoLong.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    CertificateDto:
+      $ref: ./components/schemas/common/CertificateDto.yaml
+    ClientOfficialSignatureToolFlatDto:
+      $ref: ./components/schemas/common/ClientOfficialSignatureToolFlatDto.yaml
+    DigitalSignatureToolDto:
+      $ref: ./components/schemas/common/DigitalSignatureToolDto.yaml
+    DigitalSignatureToolHistoryDto:
+      $ref: ./components/schemas/dst-history/DigitalSignatureToolHistoryDto.yaml
+    DssProfileDto:
+      $ref: ./components/schemas/common/DssProfileDto.yaml
+    UpdateUserCertificatesRequest:
+      $ref: ./components/schemas/certificate/UpdateUserCertificatesRequest.yaml
+    ListResponseCertificateDto:
+      $ref: ./components/schemas/certificate/ListResponseCertificateDto.yaml
+    CertificateClientFilter:
+      $ref: ./components/schemas/certificate/CertificateClientFilter.yaml
+    GetPageCommandCertificateClientFilter:
+      $ref: ./components/schemas/certificate/GetPageCommandCertificateClientFilter.yaml
+    PageParamsCertificateClientFilter:
+      $ref: ./components/schemas/certificate/PageParamsCertificateClientFilter.yaml
+    CertificateV2Dto:
+      $ref: ./components/schemas/certificate/CertificateV2Dto.yaml
+    PageDataCertificateV2Dto:
+      $ref: ./components/schemas/certificate/PageDataCertificateV2Dto.yaml
+    SingleResponseInteger:
+      $ref: ./components/schemas/certificate/SingleResponseInteger.yaml
+    CertificateSearchRequest:
+      $ref: ./components/schemas/certificate/CertificateSearchRequest.yaml
+    ListResponseUUID:
+      $ref: ./components/schemas/certificate/ListResponseUUID.yaml
+    CertificateSearchDuplicatesRequest:
+      $ref: ./components/schemas/certificate/CertificateSearchDuplicatesRequest.yaml
+    CertificateDuplicatesDto:
+      $ref: ./components/schemas/certificate/CertificateDuplicatesDto.yaml
+    CertificateSearchDuplicatesResponse:
+      $ref: ./components/schemas/certificate/CertificateSearchDuplicatesResponse.yaml
+    SingleResponseCertificateSearchDuplicatesResponse:
+      $ref: ./components/schemas/certificate/SingleResponseCertificateSearchDuplicatesResponse.yaml
+    ParseCertificateRequest:
+      $ref: ./components/schemas/certificate/ParseCertificateRequest.yaml
+    CertificateDataDto:
+      $ref: ./components/schemas/certificate/CertificateDataDto.yaml
+    SingleResponseCertificateDataDto:
+      $ref: ./components/schemas/certificate/SingleResponseCertificateDataDto.yaml
+    PageDataCertificateDto:
+      $ref: ./components/schemas/certificate/PageDataCertificateDto.yaml
+    GetByIdsRequest:
+      $ref: ./components/schemas/certificate/GetByIdsRequest.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/certificate/CertificateInfoDto.yaml
+    ListResponseCertificateInfoDto:
+      $ref: ./components/schemas/certificate/ListResponseCertificateInfoDto.yaml
+    FindUserCertificateRequest:
+      $ref: ./components/schemas/certificate/FindUserCertificateRequest.yaml
+    SingleResponseCertificateDto:
+      $ref: ./components/schemas/certificate/SingleResponseCertificateDto.yaml
+    CreateCertificateRequest:
+      $ref: ./components/schemas/certificate/CreateCertificateRequest.yaml
+    IssuerCertificateRequest:
+      $ref: ./components/schemas/certificate/IssuerCertificateRequest.yaml
+    GenericResponseSimpleErrorDataDssProfileDto:
+      $ref: ./components/schemas/{profileId}/GenericResponseSimpleErrorDataDssProfileDto.yaml
+    DssDeepLinkData:
+      $ref: ./components/schemas/{profileId}/DssDeepLinkData.yaml
+    GenericResponseSimpleErrorDataDssDeepLinkData:
+      $ref: ./components/schemas/{profileId}/GenericResponseSimpleErrorDataDssDeepLinkData.yaml
+    DstPinCodeChangeDto:
+      $ref: ./components/schemas/{dstId}/DstPinCodeChangeDto.yaml
+    DstPinCodeChangeResponseDto:
+      $ref: ./components/schemas/{dstId}/DstPinCodeChangeResponseDto.yaml
+    GenericResponseSimpleErrorDataDstPinCodeChangeResponseDto:
+      $ref: ./components/schemas/{dstId}/GenericResponseSimpleErrorDataDstPinCodeChangeResponseDto.yaml
+    DstPinCodeCheckDto:
+      $ref: ./components/schemas/{dstId}/DstPinCodeCheckDto.yaml
+    DstPinCodeCheckResponseDto:
+      $ref: ./components/schemas/{dstId}/DstPinCodeCheckResponseDto.yaml
+    GenericResponseSimpleErrorDataDstPinCodeCheckResponseDto:
+      $ref: ./components/schemas/{dstId}/GenericResponseSimpleErrorDataDstPinCodeCheckResponseDto.yaml
+    DstForSignSearchRequest:
+      $ref: ./components/schemas/common/DstForSignSearchRequest.yaml
+    GenericCommandDstForSignSearchRequest:
+      $ref: ./components/schemas/common/GenericCommandDstForSignSearchRequest.yaml
+    DstForSignDto:
+      $ref: ./components/schemas/common/DstForSignDto.yaml
+    GenericResponseSimpleErrorDataListDstForSignDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListDstForSignDto.yaml
+    DigitalSignToolClientSearchRequest:
+      $ref: ./components/schemas/get-sign-dst/DigitalSignToolClientSearchRequest.yaml
+    GenericResponseSimpleErrorDataSetDigitalSignatureToolDto:
+      $ref: ./components/schemas/get-sign-dst/GenericResponseSimpleErrorDataSetDigitalSignatureToolDto.yaml
+    ClientOfficialSignatureToolDto:
+      $ref: ./components/schemas/common/ClientOfficialSignatureToolDto.yaml
+    GenericResponseSimpleErrorDataListClientOfficialSignatureToolDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListClientOfficialSignatureToolDto.yaml
+    SingleResponseSignTypeDto:
+      $ref: ./components/schemas/sign-type/SingleResponseSignTypeDto.yaml
+    CloudDocumentSignInfoDto:
+      $ref: ./components/schemas/cloud-sign-result/CloudDocumentSignInfoDto.yaml
+    CloudSignResultDto:
+      $ref: ./components/schemas/cloud-sign-result/CloudSignResultDto.yaml
+    GenericResponseSimpleErrorDataCloudSignResultDto:
+      $ref: ./components/schemas/cloud-sign-result/GenericResponseSimpleErrorDataCloudSignResultDto.yaml
+    CertificateFileDto:
+      $ref: ./components/schemas/certificate/CertificateFileDto.yaml
+    SingleResponseCertificateFileDto:
+      $ref: ./components/schemas/certificate/SingleResponseCertificateFileDto.yaml
+    ListResponseString:
+      $ref: ./components/schemas/ca/ListResponseString.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/ca/GenericResponseSimpleErrorDataListString.yaml
+    DssDeviceDto:
+      $ref: ./components/schemas/{profileId}/DssDeviceDto.yaml
+    GenericResponseSimpleErrorDataListDssDeviceDto:
+      $ref: ./components/schemas/{profileId}/GenericResponseSimpleErrorDataListDssDeviceDto.yaml
+    GenericResponseSimpleErrorDataDigitalSignatureToolDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDigitalSignatureToolDto.yaml
+    GenericResponseSimpleErrorDataClientOfficialSignatureToolDto:
+      $ref: ./components/schemas/client-official-dst-id/GenericResponseSimpleErrorDataClientOfficialSignatureToolDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

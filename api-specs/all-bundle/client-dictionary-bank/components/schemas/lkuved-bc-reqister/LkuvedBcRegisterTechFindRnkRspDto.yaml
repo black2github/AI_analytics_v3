@@ -1,0 +1,9 @@
+required:
+- signtype
+type: object
+properties:
+  signtype:
+    type: integer
+    description: Возможность подписания в ГПБ БОЛ
+    format: int32
+description: ЛК УВЭД Техническое ДТО. Ответ на поиск по РКН клиента в Ф1

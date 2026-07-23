@@ -1,0 +1,8 @@
+type: object
+properties:
+  organizations:
+    type: array
+    description: Наборы данных в разрезе организации
+    items:
+      $ref: ./SignStatisticsRequestOrganizationDto.yaml
+description: Запрос на получение статистики

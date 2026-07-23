@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOutgoingPaymentRequestDocumentStateFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,79 @@
+type: object
+description: Запрос создания заявки на регистрацию QR-кода от сервиса Банка
+properties:
+  traceId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор запроса
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса
+  ecoDocTypeId:
+    type: string
+    description: Идентификатор типа заявки
+  docId:
+    type: string
+    description: Идентификатор заявки
+  docUrl:
+    type: string
+    description: Ссылка на заявку ЭКО сервиса
+  account:
+    type: string
+    description: Номер счета юридического лица. Обязательно для заполнения, если qrcType = STATIC или qrcType = DYNAMIC
+  legalID:
+    type: string
+    description: Идентификатор ЮЛ/ИП – клиента Банка в СБП
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC, DYNAMIC
+  amount:
+    type: integer
+    format: int64
+    description: Сумма операции в копейках. Обязателен при значении параметра «qrcType» = «02»
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  callbackMerchantNotifications:
+    type: string
+    description: Адрес получения колбэка о финальном статусе QR-кода
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни Функциональной ссылки СБП в минутах. По умолчанию, до конца операционного дня.
+  additionalData:
+    type: array
+    description: Распределение платежа
+    items:
+      $ref: ../common/SbpQrcAdditionalDataDto.yaml
+  paymentChannel:
+    type: string
+    description: Канал оплаты
+    enum:
+    - CLIENT_USER
+    - FRONT_OFFICE_EMPLOYEE
+    - FIELD_MANAGER
+  clientId:
+    type: string
+    format: uuid
+    description: Идентификатор клиента ЭКО, для которого создается QR-код
+  tariffName:
+    type: string
+    description: Название тарифа
+required:
+- account
+- docId
+- docUrl
+- ecoDocTypeId
+- ecoServiceCode
+- legalID
+- merchantId
+- qrcType
+- traceId

@@ -1,0 +1,18 @@
+{
+  "_comment": "Auto domain map for cert-enroll-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/unq-cert-request",
+      "domain": "unq-cert-request"
+    },
+    {
+      "prefix": "/dst-request",
+      "domain": "dst-request"
+    },
+    {
+      "prefix": "/reg-cert-request",
+      "domain": "reg-cert-request"
+    }
+  ]
+}

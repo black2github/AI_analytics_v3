@@ -1,0 +1,69 @@
+required:
+- bankClientId
+- date
+- email
+- firstName
+- lastName
+- phoneNumber
+- requestId
+- requestNumber
+- type
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ИД клиента банка.
+    format: uuid
+  lastName:
+    type: string
+    description: Фамилия УЛ.
+  firstName:
+    type: string
+    description: Имя УЛ.
+  patronymic:
+    type: string
+    description: Отчество УЛ.
+  email:
+    type: string
+    description: Адрес электронной почты УЛ.
+  phoneNumber:
+    maxLength: 16
+    pattern: ^\+\d+$
+    type: string
+    description: Номер телефона УЛ.
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК.
+  type:
+    type: string
+    description: Тип заявления.
+    enum:
+    - LKUVED_OFFER_REQUEST
+    - LKUVED_ACCESS_REQUEST
+    - LKMP_OFFER_REQUEST
+    - LKMP_ACCESS_REQUEST
+    - TMG_OFFER_REQUEST
+    - TMG_ACCESS_REQUEST
+  requestId:
+    type: string
+    description: ИД заявления
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер заявления
+    format: int32
+  date:
+    type: string
+    description: Дата заявления
+    format: date-time
+  newRoleType:
+    type: string
+    description: Новая роль
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS

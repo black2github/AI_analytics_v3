@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Способ нотификации
+    enum:
+    - SMS
+    - EMAIL
+  notEq:
+    type: string
+    description: Способ нотификации
+    enum:
+    - SMS
+    - EMAIL
+  in:
+    type: array
+    items:
+      type: string
+      description: Способ нотификации
+      enum:
+      - SMS
+      - EMAIL
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Способ нотификации
+      enum:
+      - SMS
+      - EMAIL
+  isNull:
+    type: boolean
+description: Фильтр по типу нотификации. Полное совпадение. Мультивыбор.

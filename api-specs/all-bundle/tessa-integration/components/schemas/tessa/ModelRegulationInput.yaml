@@ -1,0 +1,10 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    format: uuid
+  documents:
+    type: array
+    items:
+      $ref: ./ModelRegulationDocument.yaml
+description: Данные

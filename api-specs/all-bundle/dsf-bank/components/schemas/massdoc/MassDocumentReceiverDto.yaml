@@ -1,0 +1,29 @@
+type: object
+description: Получатель массовой рассылки
+properties:
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+    description: Информация о клиенте банка
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа письма из банка
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор получателя
+  processedAt:
+    type: string
+    format: date-time
+    description: Дата обработки
+  status:
+    type: string
+    description: Статус обработки
+    enum:
+    - NEW
+    - PROCEED
+    - FAILED
+    - SENT

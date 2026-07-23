@@ -1,0 +1,16 @@
+required:
+- paymentAmount
+- vatCalculationMethod
+- vatPercentRate
+type: object
+properties:
+  paymentAmount:
+    type: string
+    description: Сумма платежа
+  vatCalculationMethod:
+    $ref: ../common/VatCalculationTypeDto.yaml
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+description: Запрос расчета суммы НДС

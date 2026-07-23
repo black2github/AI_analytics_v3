@@ -1,0 +1,7 @@
+type: object
+properties:
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userType:
+    $ref: ../common/FilterValueEnumDtoUserTypeDto.yaml
+description: Фильтр групп доступа пользователя

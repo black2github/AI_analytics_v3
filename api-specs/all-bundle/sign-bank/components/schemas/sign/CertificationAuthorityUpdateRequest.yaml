@@ -1,0 +1,31 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование УЦ
+  ogrn:
+    type: string
+    description: ОГРН
+  inn:
+    type: string
+    description: ИНН
+  address:
+    $ref: ./AddressDto.yaml
+  registryNumber:
+    type: string
+    description: Реестровый номер
+  trusted:
+    type: boolean
+    description: Доверять сертификатам УЦ
+  accredited:
+    type: boolean
+    description: Аккредитованный УЦ
+  actionStatus:
+    type: string
+    description: Статус действия УЦ
+    enum:
+    - WORK
+    - SUSPENDED
+    - TERMINATED
+    - NOT_WORK
+description: DTO для редактирования записи справочника УЦ

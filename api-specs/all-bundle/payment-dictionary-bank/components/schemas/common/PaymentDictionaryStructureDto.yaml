@@ -1,0 +1,27 @@
+required:
+- active
+- analyticalClassifier
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  tmgId:
+    type: string
+    description: Идентификатор в TMG
+  active:
+    type: boolean
+    description: Действующая запись
+  paymentDictionaryStructureName:
+    type: string
+    description: Наименование
+  financeYear:
+    type: integer
+    description: Финансовый год
+    format: int32
+  analyticalClassifier:
+    type: boolean
+    description: Использование аналитических классификаторов
+description: Справочник Структуры

@@ -1,0 +1,10 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат для расчета хэша
+description: Команда генерации дайджеста вложения

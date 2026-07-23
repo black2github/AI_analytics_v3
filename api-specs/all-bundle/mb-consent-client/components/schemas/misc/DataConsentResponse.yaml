@@ -1,0 +1,46 @@
+type: object
+properties:
+  consentId:
+    type: string
+  creationDateTime:
+    type: string
+    format: date-time
+  status:
+    type: string
+    enum:
+    - AwaitingAuthorisation
+    - Rejected
+    - Authorised
+    - Revoked
+  statusUpdateDateTime:
+    type: string
+    format: date-time
+  permissions:
+    type: array
+    items:
+      type: string
+      enum:
+      - ReadAccountsBasic
+      - ReadAccountsDetail
+      - ReadBalances
+      - ReadParty
+      - ReadProducts
+      - ReadStandingOrdersBasic
+      - ReadStandingOrdersDetail
+      - ReadStatementsBasic
+      - ReadStatementsDetail
+      - ReadTransactionsBasic
+      - ReadTransactionsCredits
+      - ReadTransactionsDebits
+      - ReadTransactionsDetail
+      - ReadPaymentCards
+  expirationDateTime:
+    type: string
+    format: date-time
+  transactionFromDateTime:
+    type: string
+    format: date-time
+  transactionToDateTime:
+    type: string
+    format: date-time
+description: Раздел данных полезной нагрузки ответа согласия на доступ к счету

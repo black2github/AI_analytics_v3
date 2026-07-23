@@ -1,0 +1,22 @@
+post:
+  parameters:
+  - name: chunk
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int32
+  - name: token
+    in: path
+    required: true
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/api_v2/FileUploadRequest.yaml
+    required: true
+  responses:
+    '201':
+      description: Created

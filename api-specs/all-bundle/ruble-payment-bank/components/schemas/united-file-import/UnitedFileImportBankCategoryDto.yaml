@@ -1,0 +1,7 @@
+type: string
+description: Категории объединенного импорта файлов для скроллера админа
+enum:
+- PROCESSING_ERROR
+- IN_PROCESSING
+- COMPLETED
+- ALL

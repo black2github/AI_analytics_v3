@@ -1,0 +1,40 @@
+required:
+- alfa2
+- code
+- engName
+- name
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи (ЭКО)
+    format: uuid
+  code:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Код страны стандарта ISO (3 сим.)
+  countryId:
+    type: integer
+    description: Идентификатор страны в КНОСИС
+    format: int64
+  name:
+    maxLength: 100
+    minLength: 0
+    type: string
+    description: Код ALFA3 стандарта ISO (3 сим.)
+  alfa2:
+    maxLength: 2
+    minLength: 0
+    type: string
+    description: Код ALFA2 стандарта ISO (2 сим.)
+  engName:
+    maxLength: 2
+    minLength: 0
+    type: string
+    description: Название на латинице
+  dateTo:
+    type: string
+    description: Дата действия по
+    format: date
+description: Транспортное представление страны (v2)

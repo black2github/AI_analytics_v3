@@ -1,0 +1,33 @@
+type: object
+properties:
+  finCost:
+    type: number
+  plannedLeasingPeriod:
+    type: integer
+    format: int32
+  corpLeasingDocTypes:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      enum:
+      - EQUIPMENT
+      - RAILWAY_TRANSPORT
+      - CONSTRUCTION
+      - WATER_TRANSPORT
+      - AUTO_TRANSPORT
+      - IMMOVABLES
+      - OTHER
+      - AIR_TRANSPORT
+      - AGRICULTURAL_MACHINERY
+  phone:
+    type: string
+  email:
+    type: string
+  advance:
+    type: number
+  comment:
+    type: string
+  bankClientId:
+    type: string
+    format: uuid

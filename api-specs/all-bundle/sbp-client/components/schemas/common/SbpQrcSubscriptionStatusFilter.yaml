@@ -1,0 +1,49 @@
+type: object
+description: Фильтр по статусу Подписки
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус подписки
+    enum:
+    - NONE
+    - AWAITING
+    - SUBSCRIBED
+    - UNSUBSCRIBED
+    - BLOCKED
+  notEq:
+    type: string
+    description: Статус подписки
+    enum:
+    - NONE
+    - AWAITING
+    - SUBSCRIBED
+    - UNSUBSCRIBED
+    - BLOCKED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус подписки
+      enum:
+      - NONE
+      - AWAITING
+      - SUBSCRIBED
+      - UNSUBSCRIBED
+      - BLOCKED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус подписки
+      enum:
+      - NONE
+      - AWAITING
+      - SUBSCRIBED
+      - UNSUBSCRIBED
+      - BLOCKED
+  isNull:
+    type: boolean

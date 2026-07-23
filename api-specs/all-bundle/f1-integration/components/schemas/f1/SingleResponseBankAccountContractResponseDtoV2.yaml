@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    $ref: ./BankAccountContractResponseDtoV2.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

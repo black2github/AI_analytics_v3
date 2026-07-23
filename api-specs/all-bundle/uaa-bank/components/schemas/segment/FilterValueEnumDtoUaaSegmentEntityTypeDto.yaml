@@ -1,0 +1,36 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - USER
+    - CLIENT_OFFICIAL
+    - BRANCH_OFFICIAL
+  notEq:
+    type: string
+    enum:
+    - USER
+    - CLIENT_OFFICIAL
+    - BRANCH_OFFICIAL
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - USER
+      - CLIENT_OFFICIAL
+      - BRANCH_OFFICIAL
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - USER
+      - CLIENT_OFFICIAL
+      - BRANCH_OFFICIAL
+  isNull:
+    type: boolean

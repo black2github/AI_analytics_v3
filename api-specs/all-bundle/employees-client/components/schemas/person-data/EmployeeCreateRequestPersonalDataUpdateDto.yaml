@@ -1,0 +1,28 @@
+required:
+- agreements
+- attachments
+- employeeInfo
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  employeeInfo:
+    $ref: ./PersonalDataEmployeeInfoDto.yaml
+  attachments:
+    type: array
+    description: Реквизиты сотрудника из заявки
+    items:
+      $ref: ../common/IdentityDocumentAttachmentDto.yaml
+  authPersonRights:
+    $ref: ../common/AuthorizedPersonRightsDto.yaml
+  agreements:
+    $ref: ../common/EmployeeCreateAgreementsDto.yaml
+description: Заявка на добавление нового сотрудника. Личные данные

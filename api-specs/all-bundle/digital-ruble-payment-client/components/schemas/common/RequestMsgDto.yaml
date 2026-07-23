@@ -1,0 +1,74 @@
+required:
+- cbdcType
+- creationDateTime
+- msgId
+- pcrParticipantWalletId
+- requestId
+- requestType
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения заявки
+    format: uuid
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  requestType:
+    type: string
+    description: Тип заявки.
+    enum:
+    - OperationHistory
+    - WalletBalance
+    - WalletDeposit
+    - WalletWithdraw
+    - OperationRefund
+    - BusinessTransfer
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  creationDateTime:
+    type: string
+    description: Дата и время создания сообщения
+    format: date-time
+  cbdcType:
+    type: string
+    description: Код типа CBDC-сообщения
+    enum:
+    - cbdc.010.001.04 GetOrganisationWalletInfo_2022.2
+    - cbdc.011.001.04 ReturnOrganisationWalletInfo_2022.2
+    - cbdc.010.001.04 GetOrganisationWalletInfo_2022.2
+    - cbdc.011.001.04 ReturnOrganisationWalletInfo_2022.2
+    - cbdc.777.001.04 OrganisationDCBuyingNotification_2022.2
+    - cbdc.012.001.04 OrganisationDСSellingPossibilityRequest_2022.2
+    - cbdc.013.001.04 OrganisationDCSellingPossibilityResponse_2022.2
+    - cbdc.002.001.04 OrganisationDCSellingRequest_2022.2
+    - cbdc.777.001.04 OrganisationDCSellingNotification_2022.2
+    - cbdc.012.001.04 B2CRefundPossibilityRequest_2022.2
+    - cbdc.013.001.04 B2CRefundPossibilityResponse_2022.2
+    - cbdc.005.001.01 B2CRefund_2022.2
+    - cbdc.777.001.04 B2CRefundBusinessNotification_2022.2
+    - cbdc.012.001.04.B2BPossibilityRequest_2024.03
+    - cbdc.013.001.04.B2BPossibilityResponse_2024.03
+    - cbdc.006.001.01.B2B_2024.03
+    - cbdc.777.001.04.B2BSenderNotification_2024.03
+  plainCbdc:
+    type: string
+    description: CBDC-сообщение (Base64)
+    format: byte
+  encryptedCbdc:
+    type: string
+    description: Зашифрованное CBDC-сообщение (Base64)
+  signatures:
+    type: array
+    description: Список подписей
+    items:
+      type: string
+      description: Список подписей
+  userId:
+    type: string
+    description: Идентификатор Пользователя
+    format: uuid
+description: Электронное сообщение заявки.

@@ -1,0 +1,28 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./CounterpartyResponseDto.yaml
+  notEq:
+    $ref: ./CounterpartyResponseDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./CounterpartyResponseDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./CounterpartyResponseDto.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./CounterpartyResponseDto.yaml
+  ge:
+    $ref: ./CounterpartyResponseDto.yaml
+  lt:
+    $ref: ./CounterpartyResponseDto.yaml
+  le:
+    $ref: ./CounterpartyResponseDto.yaml

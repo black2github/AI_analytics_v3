@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Инициализация возврата'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/B2cReturnInitRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/B2cReturnInitResultDto.yaml
+    '400':
+      description: Bad Request

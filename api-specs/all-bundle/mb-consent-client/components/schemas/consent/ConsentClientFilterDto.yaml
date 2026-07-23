@@ -1,0 +1,17 @@
+type: object
+properties:
+  bank:
+    $ref: ./FilterValueEnumDtoBankCodeDto.yaml
+  consentInitBank:
+    $ref: ./FilterValueEnumDtoBankCodeDto.yaml
+  bankClient:
+    $ref: ./FilterValueDtoUUID.yaml
+  account:
+    $ref: ./FilterValueDtoString.yaml
+  agreementDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  consentStatus:
+    $ref: ./FilterValueEnumDtoConsentStatusDto.yaml
+  availableActions:
+    $ref: ./ConsentAvailableActionFilterDto.yaml
+description: Фильтр на запрос скроллера согласий.

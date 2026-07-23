@@ -1,0 +1,13 @@
+type: object
+properties:
+  subUsages:
+    uniqueItems: true
+    type: array
+    description: Набор вторичных назначений для генсоглашений
+    items:
+      type: string
+      description: Набор вторичных назначений для генсоглашений
+      enum:
+      - NONE
+      - PARENT
+      - CHILD

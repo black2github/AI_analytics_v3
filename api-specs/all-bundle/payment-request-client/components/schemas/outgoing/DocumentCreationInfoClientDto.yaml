@@ -1,0 +1,15 @@
+type: object
+properties:
+  docCreationPage:
+    type: string
+    description: Страница с которой вызвано создание документа
+    nullable: true
+  originDocumentId:
+    type: string
+    description: ID документа-основания
+    format: uuid
+    nullable: true
+  creationType:
+    $ref: ./DocumentCreationTypeDto.yaml
+description: Информация о создании документа (платежное требование исходящее данные для клиента)
+nullable: true

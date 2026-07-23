@@ -1,0 +1,16 @@
+required:
+- approvalPersonIds
+- status
+type: object
+properties:
+  status:
+    type: boolean
+    description: Полномочия
+  approvalPersonIds:
+    type: array
+    description: Список идентификаторов физирующих лиц
+    items:
+      type: string
+      description: Список идентификаторов физирующих лиц
+      format: uuid
+description: Информация для обновления полномочий визирующих лица для ТНФ.

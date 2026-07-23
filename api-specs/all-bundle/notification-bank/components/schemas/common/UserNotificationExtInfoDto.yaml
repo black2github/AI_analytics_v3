@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  extId:
+    type: string
+    description: Идентификатор связанного объекта
+description: Уведомление, краткая информация о связанном объекте

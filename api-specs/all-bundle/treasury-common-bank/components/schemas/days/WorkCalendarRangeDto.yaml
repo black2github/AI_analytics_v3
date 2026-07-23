@@ -1,0 +1,14 @@
+required:
+- beginDate
+- endDate
+type: object
+properties:
+  beginDate:
+    type: string
+    description: Начало периода
+    format: date
+  endDate:
+    type: string
+    description: Конец периода
+    format: date
+description: Данные

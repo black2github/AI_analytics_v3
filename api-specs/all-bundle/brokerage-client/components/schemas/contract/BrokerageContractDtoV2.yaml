@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+  contractId:
+    type: string
+    description: Идентификатор записи (внешний)
+  status:
+    type: string
+    description: Статус контракта
+    enum:
+    - OPENED
+    - CLOSED
+  number:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Номер контракта
+  brief:
+    type: string
+    description: Краткое наименование договора
+  contractDate:
+    type: string
+    description: Дата контракта
+    format: date
+  clientName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Наименование клиента в контракте
+  clientCode:
+    type: string
+    description: Наименование кода клиента
+  tariffName:
+    type: string
+    description: Наименование тарифа
+  tariffCode:
+    type: string
+    description: Код тарифа
+  assetsAmount:
+    type: number
+    description: Стоимость активов
+    format: double
+description: Сведения о модели договора V2

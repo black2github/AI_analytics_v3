@@ -1,0 +1,12 @@
+required:
+- clientAbsIds
+type: object
+properties:
+  clientAbsIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиентской организации в банке (АБС)
+    items:
+      type: string
+      description: Идентификаторы клиентской организации в банке (АБС)
+description: Запрос данные пои лимитам клиентов банка

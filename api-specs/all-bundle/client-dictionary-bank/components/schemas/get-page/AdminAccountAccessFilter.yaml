@@ -1,0 +1,11 @@
+type: object
+properties:
+  account:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAuthorizedPerson:
+    $ref: ../common/FilterValueDtoString.yaml
+  access:
+    $ref: ./AccountAccessPermissionFilter.yaml
+  empty:
+    type: boolean
+description: Фильтр для "Доступы к счетам".

@@ -1,0 +1,12 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Наименование поля
+  oldValue:
+    type: string
+    description: Старое значение
+  newValue:
+    type: string
+    description: Новое значение
+description: Дто полей сравнения шаблона с моделью Исходящего Платежного требования

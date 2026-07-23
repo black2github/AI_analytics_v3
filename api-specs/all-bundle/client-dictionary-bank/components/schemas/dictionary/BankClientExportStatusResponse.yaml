@@ -1,0 +1,20 @@
+required:
+- operationId
+- status
+type: object
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции
+    format: uuid
+  fileId:
+    type: string
+    description: Идентификатор файла
+    format: uuid
+  status:
+    type: string
+    description: Статус операции
+  accessToken:
+    type: string
+    description: Токен доступа к файлу
+description: Ответ c информацией об операции экспорта клиентов банка

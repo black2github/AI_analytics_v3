@@ -1,0 +1,19 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  forename:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  personId:
+    type: string
+    description: Идентификатор физического лица
+    format: uuid
+  surname:
+    type: string
+    description: Фамилия
+description: ФИО и ЕСК ID физического лица (ПУЛ)

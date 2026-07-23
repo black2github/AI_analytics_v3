@@ -1,0 +1,7 @@
+type: object
+properties:
+  orderId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+description: Запрос на изменение заявки

@@ -1,0 +1,16 @@
+type: object
+properties:
+  dateTime:
+    type: string
+    description: Дата и время создания операции
+    format: date-time
+  userFio:
+    type: string
+    description: ФИО пользователя
+  operation:
+    type: string
+    description: Операция
+  additionalInfo:
+    type: string
+    description: Информация для клиента/банка
+description: Операции с заявкой

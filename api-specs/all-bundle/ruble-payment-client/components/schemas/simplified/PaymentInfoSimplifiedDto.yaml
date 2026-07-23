@@ -1,0 +1,11 @@
+type: object
+properties:
+  docNumber:
+    pattern: ^\d{0,6}$
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+description: Упрощенная форма создания ПП. Базовые реквизиты документа.

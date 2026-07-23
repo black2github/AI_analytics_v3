@@ -1,0 +1,20 @@
+get:
+  tags:
+  - АПИ Банка для работы с историей настроек
+  summary: Получить запись истории настройки по идентификатору
+  description: 'Привилегии: SETTING_HISTORY_VIEW'
+  operationId: getById_2
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataИстория Настройки.yaml

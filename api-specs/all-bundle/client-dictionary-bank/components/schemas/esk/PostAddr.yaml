@@ -1,0 +1,30 @@
+type: object
+properties:
+  postCode:
+    type: string
+    description: Почтовый индекс
+  countryCode:
+    type: string
+    description: Код страны по ОКСМ
+  regionCode:
+    type: string
+    description: Код субъекта РФ
+  area:
+    type: string
+    description: Район
+  settlement:
+    type: string
+    description: Населённый пункт
+  street:
+    type: string
+    description: Улица (проспект, переулок, квартал)
+  houseNum:
+    type: string
+    description: Дом (владение)
+  houseExt:
+    type: string
+    description: Корпус (строение)
+  unitNum:
+    type: string
+    description: Квартира (офис)
+description: Почтовый адрес

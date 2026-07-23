@@ -1,0 +1,13 @@
+type: object
+properties:
+  calculatorId:
+    type: integer
+    format: int64
+  monthlyPayment:
+    type: number
+  totalCost:
+    type: number
+  vat:
+    type: number
+  incomeTaxSavings:
+    type: number

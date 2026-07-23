@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Контактные данные получателя (Наименование)
+  phone:
+    type: string
+    description: Номер телефона получателя
+  email:
+    type: string
+    description: Адрес эл.почты получателя
+description: Транспортное представление вложенных атрибутов контактных данных получателя

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API сверки
+  summary: Получение признака, что запрос на получение Выписки сверен
+  description: 'Привилегии: ODS_RECONCILIATION_VIEW'
+  operationId: isRequestReconciledUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: reconciliationRequestDto
+    description: reconciliationRequestDto
+    required: true
+    schema:
+      $ref: '#/definitions/ReconciliationRequestDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

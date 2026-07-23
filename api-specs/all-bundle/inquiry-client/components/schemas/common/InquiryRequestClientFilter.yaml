@@ -1,0 +1,14 @@
+type: object
+properties:
+  statusCategory:
+    $ref: ./InquiryRequestClientCategoryDto.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./InquiryRequestStatusFilter.yaml
+description: Фильтр заявок на запрос справок для ЮЛ. Клиентская часть
+example: null

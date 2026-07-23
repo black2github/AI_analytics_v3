@@ -1,0 +1,168 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Идентификатор объекта для сопоставления
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор счёта
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientWebDealing:
+    $ref: ../common/ClientWebDealingDto.yaml
+  accountType:
+    type: string
+    description: Тип счёта
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  currencyCode:
+    type: string
+    description: Цифровой код валюты счёта
+  accountNumber:
+    type: string
+    description: Номер счёта
+  bankName:
+    type: string
+    description: Наименование банка
+  bankCode:
+    type: string
+    description: БИК/SWIFT банка
+  bankKS:
+    type: string
+    description: Корсчёт банка
+  corrBankName:
+    type: string
+    description: Наименование банка-корреспондента
+  corrBankCode:
+    type: string
+    description: БИК/SWIFT банка-корреспондента
+  accountUsage:
+    uniqueItems: true
+    type: array
+    description: Назначение счёта
+    items:
+      type: string
+      description: Назначение счёта
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+  defaultUsage:
+    uniqueItems: true
+    type: array
+    description: Назначение счёта по умолчанию
+    items:
+      type: string
+      description: Назначение счёта по умолчанию
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+  kbk:
+    type: string
+    description: КБК счёта
+  accountName:
+    type: string
+    description: Наименование счёта
+  accountNameExtended:
+    type: string
+    description: Наименование счёта в АБС банка
+  status:
+    type: string
+    description: Статус счёта
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - DELETED
+  statusDetails:
+    type: string
+    description: Детализация статуса
+  absId:
+    type: string
+    description: Идентификатор счета в СУВ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  absLongId:
+    type: integer
+    description: Идентификатор счёта в АБС Ф1
+    format: int64
+  absBranch:
+    $ref: ../common/BranchDto.yaml
+  isDU:
+    type: boolean
+    description: Счёт является счетом ДУ
+  duOrganizationName:
+    type: string
+    description: Наименование организации ДУ
+  absPropertyMNO:
+    type: string
+    description: Признак возможности размещения на счете МНО
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyDepositValue:
+    type: string
+    description: Признак возможности списания денежных средств со счета в дату валютирования
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyDepositMaturity:
+    type: string
+    description: Признак возможности зачисления денежных средств на счет в дату погашения
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyInterest:
+    type: string
+    description: Признак возможности зачисления на счет начисленных процентов по сделке
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyFXWriteOff:
+    type: string
+    description: Признак возможности безакцептного списания со счета суммы по конверсионной сделке
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyFXWriteOn:
+    type: string
+    description: Признак возможности зачисления на счёт суммы по конверсионной сделке
+    enum:
+    - FORBIDDEN
+    - ACCEPTABLE
+    - STRICTLY_BACK
+  absPropertyPlanEndDateMno:
+    type: string
+    description: Дата окончания последней сделки МНО по данному счёту
+    format: date
+  userActions:
+    type: array
+    description: Список пользовательских действий
+    items:
+      $ref: ../common/AccountUserActionInfoDto.yaml
+  default:
+    type: boolean
+description: Данные

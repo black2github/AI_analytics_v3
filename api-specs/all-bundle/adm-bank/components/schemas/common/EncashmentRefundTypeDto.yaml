@@ -1,0 +1,5 @@
+type: string
+description: Тип возмещения за размен
+enum:
+- CASH
+- NON_CASH

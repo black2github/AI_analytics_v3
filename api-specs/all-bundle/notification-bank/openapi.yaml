@@ -1,0 +1,257 @@
+openapi: 3.0.1
+info:
+  title: Сервис нотификации. Банковская часть.
+  version: 3.11.0
+servers:
+- url: /notification-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /internal/user-notification-type:
+    $ref: ./paths/user-notification-type/internal_user_notification_type.yaml
+  /internal/user-notification-system:
+    $ref: ./paths/user-notification-system/internal_user_notification_system.yaml
+  /v2/internal/user-notification:
+    $ref: ./paths/internal/v2_internal_user_notification.yaml
+  /v2/internal/user-notification/get-page:
+    $ref: ./paths/internal/v2_internal_user_notification_get_page.yaml
+  /v2/internal/user-notification/get-ext-info-page:
+    $ref: ./paths/internal/v2_internal_user_notification_get_ext_info_page.yaml
+  /v2/internal/user-notification/create-zip:
+    $ref: ./paths/internal/v2_internal_user_notification_create_zip.yaml
+  /v2/internal/user-notification/admin/get-page/:
+    $ref: ./paths/internal/v2_internal_user_notification_admin_get_page.yaml
+  /internal/user-notification:
+    $ref: ./paths/user-notification/internal_user_notification.yaml
+  /internal/user-notification/get-page:
+    $ref: ./paths/user-notification/internal_user_notification_get_page.yaml
+  /internal/user-notification/get-ext-info-page:
+    $ref: ./paths/user-notification/internal_user_notification_get_ext_info_page.yaml
+  /internal/user-notification/create-zip:
+    $ref: ./paths/user-notification/internal_user_notification_create_zip.yaml
+  /internal/user-notification/admin/get-page/:
+    $ref: ./paths/user-notification/internal_user_notification_admin_get_page.yaml
+  /internal/user-notification-type/get-page:
+    $ref: ./paths/user-notification-type/internal_user_notification_type_get_page.yaml
+  /internal/user-notification-type/check/unique:
+    $ref: ./paths/user-notification-type/internal_user_notification_type_check_unique.yaml
+  /internal/user-notification-type/check/delete:
+    $ref: ./paths/user-notification-type/internal_user_notification_type_check_delete.yaml
+  /internal/user-notification-system/get-page:
+    $ref: ./paths/user-notification-system/internal_user_notification_system_get_page.yaml
+  /internal/user-notification-system/check/unique/name:
+    $ref: ./paths/user-notification-system/internal_user_notification_system_check_unique_name.yaml
+  /internal/user-notification-system/check/unique/code:
+    $ref: ./paths/user-notification-system/internal_user_notification_system_check_unique_code.yaml
+  /internal/user-notification-system/check/delete:
+    $ref: ./paths/user-notification-system/internal_user_notification_system_check_delete.yaml
+  /internal/notification-journal-v2/retry/{id}:
+    $ref: ./paths/notification-journal-v2/internal_notification_journal_v2_retry_id.yaml
+  /internal/notification-journal-v2/get-page:
+    $ref: ./paths/notification-journal-v2/internal_notification_journal_v2_get_page.yaml
+  /internal/notification-journal-v2/category:
+    $ref: ./paths/notification-journal-v2/internal_notification_journal_v2_category.yaml
+  /v2/internal/user-notification/{id}:
+    $ref: ./paths/internal/v2_internal_user_notification_id.yaml
+  /internal/user-notification/{id}:
+    $ref: ./paths/user-notification/internal_user_notification_id.yaml
+  /internal/user-notification-type/{code}:
+    $ref: ./paths/user-notification-type/internal_user_notification_type_code.yaml
+  /internal/notification-journal-v2/{id}:
+    $ref: ./paths/notification-journal-v2/internal_notification_journal_v2_id.yaml
+  /internal/notification-journal-v2/request-types:
+    $ref: ./paths/notification-journal-v2/internal_notification_journal_v2_request_types.yaml
+  /internal/dictionary/eco-services:
+    $ref: ./paths/dictionary/internal_dictionary_eco_services.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/common/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/common/SingleResponseBoolean.yaml
+    SingleCommandUserNotificationTypeV2Dto:
+      $ref: ./components/schemas/user-notification-type/SingleCommandUserNotificationTypeV2Dto.yaml
+    UserNotificationSystemDto:
+      $ref: ./components/schemas/common/UserNotificationSystemDto.yaml
+    UserNotificationTypeV2Dto:
+      $ref: ./components/schemas/common/UserNotificationTypeV2Dto.yaml
+    SingleResponseUserNotificationTypeV2Dto:
+      $ref: ./components/schemas/user-notification-type/SingleResponseUserNotificationTypeV2Dto.yaml
+    SingleCommandUserNotificationSystemDto:
+      $ref: ./components/schemas/user-notification-system/SingleCommandUserNotificationSystemDto.yaml
+    SingleResponseUserNotificationSystemDto:
+      $ref: ./components/schemas/user-notification-system/SingleResponseUserNotificationSystemDto.yaml
+    GenericCommandUserNotificationCreateV2Dto:
+      $ref: ./components/schemas/internal/GenericCommandUserNotificationCreateV2Dto.yaml
+    UserNotificationCreateV2Dto:
+      $ref: ./components/schemas/internal/UserNotificationCreateV2Dto.yaml
+    ActionDto:
+      $ref: ./components/schemas/common/ActionDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    GenericResponseSimpleErrorDataListUserNotificationV2Dto:
+      $ref: ./components/schemas/internal/GenericResponseSimpleErrorDataListUserNotificationV2Dto.yaml
+    NotificationBankClientDto:
+      $ref: ./components/schemas/common/NotificationBankClientDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UserNotificationAttachmentDto:
+      $ref: ./components/schemas/common/UserNotificationAttachmentDto.yaml
+    UserNotificationSignatureDto:
+      $ref: ./components/schemas/common/UserNotificationSignatureDto.yaml
+    UserNotificationV2Dto:
+      $ref: ./components/schemas/common/UserNotificationV2Dto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBlockServiceDto:
+      $ref: ./components/schemas/internal/FilterValueEnumDtoBlockServiceDto.yaml
+    GetPageCommandUserNotificationFilterV2:
+      $ref: ./components/schemas/internal/GetPageCommandUserNotificationFilterV2.yaml
+    PageParamsUserNotificationFilterV2:
+      $ref: ./components/schemas/internal/PageParamsUserNotificationFilterV2.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UserNotificationCodeFilter:
+      $ref: ./components/schemas/common/UserNotificationCodeFilter.yaml
+    UserNotificationExecutionStatusFilter:
+      $ref: ./components/schemas/common/UserNotificationExecutionStatusFilter.yaml
+    UserNotificationFilterV2:
+      $ref: ./components/schemas/internal/UserNotificationFilterV2.yaml
+    UserNotificationImportanceFilter:
+      $ref: ./components/schemas/common/UserNotificationImportanceFilter.yaml
+    UserNotificationStatusFilter:
+      $ref: ./components/schemas/common/UserNotificationStatusFilter.yaml
+    PageDataUserNotificationV2Dto:
+      $ref: ./components/schemas/common/PageDataUserNotificationV2Dto.yaml
+    GetPageCommandUserNotificationFilter:
+      $ref: ./components/schemas/common/GetPageCommandUserNotificationFilter.yaml
+    PageParamsUserNotificationFilter:
+      $ref: ./components/schemas/common/PageParamsUserNotificationFilter.yaml
+    UserNotificationFilter:
+      $ref: ./components/schemas/common/UserNotificationFilter.yaml
+    PageDataUserNotificationExtInfoDto:
+      $ref: ./components/schemas/common/PageDataUserNotificationExtInfoDto.yaml
+    UserNotificationExtInfoDto:
+      $ref: ./components/schemas/common/UserNotificationExtInfoDto.yaml
+    ZipAttachmentCreateDto:
+      $ref: ./components/schemas/common/ZipAttachmentCreateDto.yaml
+    GenericResponseSimpleErrorDataUserNotificationAttachmentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUserNotificationAttachmentDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    GetPageCommandUserNotificationAdminFilterV2:
+      $ref: ./components/schemas/internal/GetPageCommandUserNotificationAdminFilterV2.yaml
+    PageParamsUserNotificationAdminFilterV2:
+      $ref: ./components/schemas/internal/PageParamsUserNotificationAdminFilterV2.yaml
+    UserNotificationAdminFilterV2:
+      $ref: ./components/schemas/internal/UserNotificationAdminFilterV2.yaml
+    GenericCommandUserNotificationCreateDto:
+      $ref: ./components/schemas/user-notification/GenericCommandUserNotificationCreateDto.yaml
+    UserNotificationCreateDto:
+      $ref: ./components/schemas/user-notification/UserNotificationCreateDto.yaml
+    GenericResponseSimpleErrorDataListUserNotificationDto:
+      $ref: ./components/schemas/user-notification/GenericResponseSimpleErrorDataListUserNotificationDto.yaml
+    UserNotificationDto:
+      $ref: ./components/schemas/user-notification/UserNotificationDto.yaml
+    UserNotificationTypeDto:
+      $ref: ./components/schemas/common/UserNotificationTypeDto.yaml
+    GetPageCommandUserNotificationAdminFilter:
+      $ref: ./components/schemas/user-notification/GetPageCommandUserNotificationAdminFilter.yaml
+    PageParamsUserNotificationAdminFilter:
+      $ref: ./components/schemas/user-notification/PageParamsUserNotificationAdminFilter.yaml
+    UserNotificationAdminFilter:
+      $ref: ./components/schemas/user-notification/UserNotificationAdminFilter.yaml
+    FilterValueEnumDtoImportanceDto:
+      $ref: ./components/schemas/user-notification-type/FilterValueEnumDtoImportanceDto.yaml
+    GetPageCommandUserNotificationTypeFilter:
+      $ref: ./components/schemas/user-notification-type/GetPageCommandUserNotificationTypeFilter.yaml
+    PageParamsUserNotificationTypeFilter:
+      $ref: ./components/schemas/user-notification-type/PageParamsUserNotificationTypeFilter.yaml
+    UserNotificationTypeFilter:
+      $ref: ./components/schemas/user-notification-type/UserNotificationTypeFilter.yaml
+    PageDataUserNotificationTypeV2Dto:
+      $ref: ./components/schemas/user-notification-type/PageDataUserNotificationTypeV2Dto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    GetPageCommandUserNotificationSystemFilter:
+      $ref: ./components/schemas/user-notification-system/GetPageCommandUserNotificationSystemFilter.yaml
+    PageParamsUserNotificationSystemFilter:
+      $ref: ./components/schemas/user-notification-system/PageParamsUserNotificationSystemFilter.yaml
+    UserNotificationSystemFilter:
+      $ref: ./components/schemas/user-notification-system/UserNotificationSystemFilter.yaml
+    PageDataUserNotificationSystemDto:
+      $ref: ./components/schemas/user-notification-system/PageDataUserNotificationSystemDto.yaml
+    AttachmentDto:
+      $ref: ./components/schemas/notification-journal-v2/AttachmentDto.yaml
+    NotificationJournalV2Dto:
+      $ref: ./components/schemas/notification-journal-v2/NotificationJournalV2Dto.yaml
+    SingleResponseNotificationJournalV2Dto:
+      $ref: ./components/schemas/notification-journal-v2/SingleResponseNotificationJournalV2Dto.yaml
+    GetPageCommandNotificationJournalV2Filter:
+      $ref: ./components/schemas/notification-journal-v2/GetPageCommandNotificationJournalV2Filter.yaml
+    NotificationJournalEcoServiceFilter:
+      $ref: ./components/schemas/notification-journal-v2/NotificationJournalEcoServiceFilter.yaml
+    NotificationJournalStatusFilter:
+      $ref: ./components/schemas/notification-journal-v2/NotificationJournalStatusFilter.yaml
+    NotificationJournalV2Filter:
+      $ref: ./components/schemas/notification-journal-v2/NotificationJournalV2Filter.yaml
+    NotificationTypeFilter:
+      $ref: ./components/schemas/notification-journal-v2/NotificationTypeFilter.yaml
+    PageParamsNotificationJournalV2Filter:
+      $ref: ./components/schemas/notification-journal-v2/PageParamsNotificationJournalV2Filter.yaml
+    PageDataNotificationJournalV2Dto:
+      $ref: ./components/schemas/notification-journal-v2/PageDataNotificationJournalV2Dto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/notification-journal-v2/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/notification-journal-v2/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataUserNotificationV2Dto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUserNotificationV2Dto.yaml
+    SingleResponseUserNotificationTypeDto:
+      $ref: ./components/schemas/user-notification-type/SingleResponseUserNotificationTypeDto.yaml
+    RequestTypeCodeDto:
+      $ref: ./components/schemas/notification-journal-v2/RequestTypeCodeDto.yaml
+    SingleResponseListRequestTypeCodeDto:
+      $ref: ./components/schemas/notification-journal-v2/SingleResponseListRequestTypeCodeDto.yaml
+    EcoServiceClassifierDto:
+      $ref: ./components/schemas/dictionary/EcoServiceClassifierDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/dictionary/ErrorData.yaml
+    GenericResponseErrorDataListEcoServiceClassifierDto:
+      $ref: ./components/schemas/dictionary/GenericResponseErrorDataListEcoServiceClassifierDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

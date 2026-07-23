@@ -1,0 +1,14 @@
+type: object
+properties:
+  bankDeadlineAt:
+    type: string
+    description: Срок предоставления ответа, установленный банком
+    format: date-time
+  bankDeadlineType:
+    type: string
+    description: Тип срока предоставления ответа на запрос документов
+    enum:
+    - URGENT
+    - STANDARD
+    - INDIVIDUAL
+description: AML-специфичные поля диалога. Возвращаемое ДТО скроллера для приложения клиента.

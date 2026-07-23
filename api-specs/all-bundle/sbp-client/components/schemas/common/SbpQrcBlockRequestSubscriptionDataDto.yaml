@@ -1,0 +1,9 @@
+type: object
+description: Реквизиты подписки
+properties:
+  subscriptionPurpose:
+    type: string
+    description: Цель подписки. Обязателен при значении параметра «qrcType» = SUBSCRIPTION
+  payer:
+    type: string
+    description: Плательщик

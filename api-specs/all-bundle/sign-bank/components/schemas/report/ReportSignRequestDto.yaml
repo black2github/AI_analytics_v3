@@ -1,0 +1,44 @@
+type: object
+properties:
+  reportData:
+    type: string
+    description: Отчет для подписи (PDF в кодировке Base64)
+  attachmentId:
+    type: string
+    description: ID вложения
+    format: uuid
+  reportType:
+    type: string
+    description: Классификатор типов отчетов
+    enum:
+    - INFO
+    - STATEMENT
+    - LETTER
+    - PAYDOC
+    - CURRCONTROLDOC
+    - DIRECT_1C
+    - COPY_DOC
+    - PAYDOC_OUTGOING_REGISTRY
+    - SIGN_BRK_BO
+    - SIGN_BRK_DO
+  reportSignType:
+    type: string
+    description: Классификатор типов данных отчетов
+    enum:
+    - PDF
+    - DIGEST
+    - ATTACHMENT_DIGEST
+    - PLAIN
+  filialCode:
+    type: string
+    description: Филиал (список кодов АБС Ф1)
+  letterCode:
+    type: string
+    description: Типы писем (список кодов из Справочника типов ДСФ)
+  location:
+    type: string
+    description: Местоположение, где накладывалась подпись
+  reason:
+    type: string
+    description: Причина наложения подписи
+description: Запрос встраивания ЭП в отчет

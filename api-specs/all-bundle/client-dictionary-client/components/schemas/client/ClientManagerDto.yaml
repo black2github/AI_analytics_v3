@@ -1,0 +1,30 @@
+type: object
+properties:
+  firstName:
+    type: string
+    description: Имя клиентского менеджера
+  lastName:
+    type: string
+    description: Фамилия клиентского менеджера
+  patronymic:
+    type: string
+    description: Отчество клиентского менеджера
+  position:
+    type: string
+    description: Должность клиентского менеджера
+  division:
+    type: string
+    description: Управление клиентского менеджера
+  department:
+    type: string
+    description: Департамент клиентского менеджера
+  email:
+    type: string
+    description: Email клиентского менеджера
+  phone:
+    type: string
+    description: Телефон клиентского менеджера
+  role:
+    type: string
+    description: Роль клиентского менеджера
+description: Клиентский менеджер

@@ -1,0 +1,37 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи.
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки на выезд менеджера.
+    format: uuid
+  status:
+    type: string
+    description: Статус документа.
+  changedIn:
+    type: string
+    description: Дата и время происхождения события.
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя инициатора события.
+    format: uuid
+  userName:
+    type: string
+    description: Имя пользователя инициатора события.
+  userType:
+    type: string
+    description: Тип пользователя.
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  executor:
+    $ref: ../common/ShortUserInfoDto.yaml
+description: История документа.

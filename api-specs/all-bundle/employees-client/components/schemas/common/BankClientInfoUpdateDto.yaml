@@ -1,0 +1,9 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+description: Данные клиента Банка

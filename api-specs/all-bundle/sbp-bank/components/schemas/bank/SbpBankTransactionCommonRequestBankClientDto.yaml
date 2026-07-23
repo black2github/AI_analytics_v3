@@ -1,0 +1,42 @@
+type: object
+description: Информация о клиенте банка в обобщенном заявлении на платеж СБП
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  shortName:
+    type: string
+    description: Организация
+  clientInn:
+    type: string
+    description: ИНН Клиента
+  clientKpp:
+    type: string
+    description: КПП Клиента
+  legalId:
+    type: string
+    description: Идентификатор Клиента (ЮЛ) в АС СБП
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  merchantName:
+    type: string
+    description: ИНаименование точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес Точки продаж
+  account:
+    type: string
+    description: Счет
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета Клиента в Экосистеме
+  accountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета Клиента в АБС Ф1
+required:
+- clientId
+- merchantId

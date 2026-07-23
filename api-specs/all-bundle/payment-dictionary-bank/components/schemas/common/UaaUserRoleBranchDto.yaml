@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  branchId:
+    type: string
+    description: ID филиала
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения
+  number:
+    type: string
+    description: Номер подразделения
+  parentBranchId:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  absCode:
+    type: string
+    description: Код подразделения
+description: Филиал роли пользователя

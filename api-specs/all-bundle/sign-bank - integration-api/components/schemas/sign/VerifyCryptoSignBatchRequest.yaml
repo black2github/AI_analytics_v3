@@ -1,0 +1,27 @@
+type: object
+properties:
+  requests:
+    type: array
+    description: Запросы на проверку подписей
+    items:
+      $ref: ./VerifyCryptoSignRequest.yaml
+  language:
+    type: string
+    description: Локаль в которой требуется выдать ответ
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  allowedSignKinds:
+    uniqueItems: true
+    type: array
+    description: Допустимые виды СЭП
+    items:
+      type: string
+      description: Допустимые виды СЭП
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+description: Запрос пакетной проверки подписей

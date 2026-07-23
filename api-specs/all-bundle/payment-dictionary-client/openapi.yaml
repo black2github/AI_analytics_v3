@@ -1,0 +1,299 @@
+openapi: 3.0.1
+info:
+  title: Платежные справочники. Клиентская часть.
+  description: Сервис платежных справочников.
+  version: 1.20.0
+servers:
+- url: /payment-dictionary-client
+tags:
+- name: API справочника Центры ответственности
+- name: API Отчёт о движении денежных средств
+- name: Платежные справочники. Базовые операции.
+- name: Пользователи UAA
+- name: API справочника Структуры
+- name: API справочника Аналитические классификаторы
+paths:
+  /user:
+    $ref: ./paths/user/user.yaml
+  /user/add-login-certificate:
+    $ref: ./paths/add-login-certificate/user_add_login_certificate.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /user/v2/user-authorities-fallback:
+    $ref: ./paths/v2/user_v2_user_authorities_fallback.yaml
+  /user/user-authorities:
+    $ref: ./paths/user-authorities/user_user_authorities.yaml
+  /user/unblock:
+    $ref: ./paths/unblock/user_unblock.yaml
+  /user/unblockList:
+    $ref: ./paths/unblockList/user_unblockList.yaml
+  /user/toggle-block-list:
+    $ref: ./paths/toggle-block-list/user_toggle_block_list.yaml
+  /user/is-role-conflict/{roleId}:
+    $ref: ./paths/is-role-conflict/user_is_role_conflict_roleId.yaml
+  /user/find-client-official-ids:
+    $ref: ./paths/find-client-official-ids/user_find_client_official_ids.yaml
+  /user/client-official-roles-exist:
+    $ref: ./paths/client-official-roles-exist/user_client_official_roles_exist.yaml
+  /user/client-official-role-exist:
+    $ref: ./paths/client-official-role-exist/user_client_official_role_exist.yaml
+  /user/block:
+    $ref: ./paths/block/user_block.yaml
+  /user/blockList:
+    $ref: ./paths/blockList/user_blockList.yaml
+  /user/add-role-by-external-system:
+    $ref: ./paths/add-role-by-external-system/user_add_role_by_external_system.yaml
+  /payment-dictionary/structure/get-for-filter-report:
+    $ref: ./paths/structure/payment_dictionary_structure_get_for_filter_report.yaml
+  /payment-dictionary/structure/get-by-id-list:
+    $ref: ./paths/structure/payment_dictionary_structure_get_by_id_list.yaml
+  /payment-dictionary/responsibility-center/scroller:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_scroller.yaml
+  /payment-dictionary/responsibility-center/get-page:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_get_page.yaml
+  /payment-dictionary/responsibility-center/get-for-filter-report:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_get_for_filter_report.yaml
+  /payment-dictionary/cash-flow-report:
+    $ref: ./paths/cash-flow-report/payment_dictionary_cash_flow_report.yaml
+  /payment-dictionary/cash-flow-report/planning-period:
+    $ref: ./paths/cash-flow-report/payment_dictionary_cash_flow_report_planning_period.yaml
+  /payment-dictionary/analytical-classifier/scroller:
+    $ref: ./paths/analytical-classifier/payment_dictionary_analytical_classifier_scroller.yaml
+  /payment-dictionary/analytical-classifier/get-page:
+    $ref: ./paths/analytical-classifier/payment_dictionary_analytical_classifier_get_page.yaml
+  /user/{id}:
+    $ref: ./paths/{id}/user_id.yaml
+  /user/{id}/has-active-session:
+    $ref: ./paths/{id}/user_id_has_active_session.yaml
+  /user/user-authorities/{id}:
+    $ref: ./paths/user-authorities/user_user_authorities_id.yaml
+  /user/user-authorities-fallback/{id}:
+    $ref: ./paths/user-authorities-fallback/user_user_authorities_fallback_id.yaml
+  /user/is-role-conflict/{userId}/{roleId}:
+    $ref: ./paths/is-role-conflict/user_is_role_conflict_userId_roleId.yaml
+  /payment-dictionary/test:
+    $ref: ./paths/test/payment_dictionary_test.yaml
+  /payment-dictionary/structure/{id}:
+    $ref: ./paths/structure/payment_dictionary_structure_id.yaml
+  /payment-dictionary/structure/name:
+    $ref: ./paths/structure/payment_dictionary_structure_name.yaml
+  /payment-dictionary/responsibility-center/{id}:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_id.yaml
+  /payment-dictionary/responsibility-center/name:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_name.yaml
+  /payment-dictionary/responsibility-center/bank-client-id/{bankClientId}:
+    $ref: ./paths/responsibility-center/payment_dictionary_responsibility_center_bank_client_id_bankClientId.yaml
+  /payment-dictionary/analytical-classifier/{id}:
+    $ref: ./paths/analytical-classifier/payment_dictionary_analytical_classifier_id.yaml
+  /payment-dictionary/analytical-classifier/name:
+    $ref: ./paths/analytical-classifier/payment_dictionary_analytical_classifier_name.yaml
+  /payment-dictionary/analytical-classifier/code/{code}:
+    $ref: ./paths/analytical-classifier/payment_dictionary_analytical_classifier_code_code.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /user/delete-user-roles-by-official/{clientOfficialId}:
+    $ref: ./paths/delete-user-roles-by-official/user_delete_user_roles_by_official_clientOfficialId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/is-role-conflict/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/is-role-conflict/CheckResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AvailableSegmentDto:
+      $ref: ./components/schemas/common/AvailableSegmentDto.yaml
+    UaaAuthorityDto:
+      $ref: ./components/schemas/common/UaaAuthorityDto.yaml
+    UaaRoleAuthorityDto:
+      $ref: ./components/schemas/common/UaaRoleAuthorityDto.yaml
+    UaaRoleDto:
+      $ref: ./components/schemas/common/UaaRoleDto.yaml
+    UaaSegmentDto:
+      $ref: ./components/schemas/common/UaaSegmentDto.yaml
+    UaaUserClientInfo:
+      $ref: ./components/schemas/common/UaaUserClientInfo.yaml
+    UaaUserRoleBranchDto:
+      $ref: ./components/schemas/common/UaaUserRoleBranchDto.yaml
+    UaaUserRoleDto:
+      $ref: ./components/schemas/common/UaaUserRoleDto.yaml
+    UaaUserShortInfoDto:
+      $ref: ./components/schemas/common/UaaUserShortInfoDto.yaml
+    UpdateCommandUserDtoUUID:
+      $ref: ./components/schemas/user/UpdateCommandUserDtoUUID.yaml
+    UserDto:
+      $ref: ./components/schemas/common/UserDto.yaml
+    ActionResultSingleResponseUserDto:
+      $ref: ./components/schemas/common/ActionResultSingleResponseUserDto.yaml
+    SingleResponseUserDto:
+      $ref: ./components/schemas/common/SingleResponseUserDto.yaml
+    AddLoginCertificateRq:
+      $ref: ./components/schemas/add-login-certificate/AddLoginCertificateRq.yaml
+    SingleResponseUUID:
+      $ref: ./components/schemas/common/SingleResponseUUID.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    UserAuthorityFallbackRequest:
+      $ref: ./components/schemas/v2/UserAuthorityFallbackRequest.yaml
+    GenericResponseSimpleErrorDataUserAuthorities:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataUserAuthorities.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UserAuthorities:
+      $ref: ./components/schemas/common/UserAuthorities.yaml
+    CheckUserAuthorityRequestDto:
+      $ref: ./components/schemas/user-authorities/CheckUserAuthorityRequestDto.yaml
+    CheckUserAuthorityResponseDto:
+      $ref: ./components/schemas/user-authorities/CheckUserAuthorityResponseDto.yaml
+    SingleResponseCheckUserAuthorityResponseDto:
+      $ref: ./components/schemas/user-authorities/SingleResponseCheckUserAuthorityResponseDto.yaml
+    ActionResultSingleResponseUUID:
+      $ref: ./components/schemas/common/ActionResultSingleResponseUUID.yaml
+    ActionResultDataListResponseUUID:
+      $ref: ./components/schemas/common/ActionResultDataListResponseUUID.yaml
+    DataListResponseUUID:
+      $ref: ./components/schemas/common/DataListResponseUUID.yaml
+    ToggleBlockUsersRequest:
+      $ref: ./components/schemas/toggle-block-list/ToggleBlockUsersRequest.yaml
+    GenericResponseSimpleErrorDataListUUID:
+      $ref: ./components/schemas/toggle-block-list/GenericResponseSimpleErrorDataListUUID.yaml
+    SegmentRolePairDto:
+      $ref: ./components/schemas/find-client-official-ids/SegmentRolePairDto.yaml
+    UaaClientOfficialIdsFindRequestDto:
+      $ref: ./components/schemas/find-client-official-ids/UaaClientOfficialIdsFindRequestDto.yaml
+    ListResponseUUID:
+      $ref: ./components/schemas/find-client-official-ids/ListResponseUUID.yaml
+    UaaClientOfficialRoleDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRoleDto.yaml
+    UaaClientOfficialRolesExistRequestDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRolesExistRequestDto.yaml
+    GenericResponseSimpleErrorDataUaaClientOfficialRolesExistResponseDto:
+      $ref: ./components/schemas/client-official-roles-exist/GenericResponseSimpleErrorDataUaaClientOfficialRolesExistResponseDto.yaml
+    UaaClientOfficialRoleExistDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRoleExistDto.yaml
+    UaaClientOfficialRolesExistResponseDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRolesExistResponseDto.yaml
+    UaaClientOfficialRoleExistCommand:
+      $ref: ./components/schemas/client-official-role-exist/UaaClientOfficialRoleExistCommand.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    AddRoleRq:
+      $ref: ./components/schemas/add-role-by-external-system/AddRoleRq.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/add-role-by-external-system/GenericResponseSimpleErrorDataUUID.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandPaymentDictionaryStructureForCashFlowReportFilter:
+      $ref: ./components/schemas/structure/GetPageCommandPaymentDictionaryStructureForCashFlowReportFilter.yaml
+    PageParamsPaymentDictionaryStructureForCashFlowReportFilter:
+      $ref: ./components/schemas/structure/PageParamsPaymentDictionaryStructureForCashFlowReportFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    PaymentDictionaryStructureForCashFlowReportFilter:
+      $ref: ./components/schemas/structure/PaymentDictionaryStructureForCashFlowReportFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageDataPaymentDictionaryStructureFilterResponseDto:
+      $ref: ./components/schemas/structure/PageDataPaymentDictionaryStructureFilterResponseDto.yaml
+    PaymentDictionaryStructureFilterResponseDto:
+      $ref: ./components/schemas/structure/PaymentDictionaryStructureFilterResponseDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/structure/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataListPaymentDictionaryStructureDto:
+      $ref: ./components/schemas/structure/GenericResponseSimpleErrorDataListPaymentDictionaryStructureDto.yaml
+    PaymentDictionaryStructureDto:
+      $ref: ./components/schemas/structure/PaymentDictionaryStructureDto.yaml
+    GetPageCommandPaymentDictionaryResponsibilityCenterScrollerFilter:
+      $ref: ./components/schemas/responsibility-center/GetPageCommandPaymentDictionaryResponsibilityCenterScrollerFilter.yaml
+    PageParamsPaymentDictionaryResponsibilityCenterScrollerFilter:
+      $ref: ./components/schemas/responsibility-center/PageParamsPaymentDictionaryResponsibilityCenterScrollerFilter.yaml
+    PaymentDictionaryResponsibilityCenterScrollerFilter:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterScrollerFilter.yaml
+    GenericResponseSimpleErrorDataPageDataPaymentDictionaryResponsibilityCenterScrollerDto:
+      $ref: ./components/schemas/responsibility-center/GenericResponseSimpleErrorDataPageDataPaymentDictionaryResponsibilityCenterScrollerDto.yaml
+    PageDataPaymentDictionaryResponsibilityCenterScrollerDto:
+      $ref: ./components/schemas/responsibility-center/PageDataPaymentDictionaryResponsibilityCenterScrollerDto.yaml
+    PaymentDictionaryResponsibilityCenterScrollerDto:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterScrollerDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandPaymentDictionaryResponsibilityCenterFilter:
+      $ref: ./components/schemas/responsibility-center/GetPageCommandPaymentDictionaryResponsibilityCenterFilter.yaml
+    PageParamsPaymentDictionaryResponsibilityCenterFilter:
+      $ref: ./components/schemas/responsibility-center/PageParamsPaymentDictionaryResponsibilityCenterFilter.yaml
+    PaymentDictionaryResponsibilityCenterFilter:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterFilter.yaml
+    GenericResponseSimpleErrorDataPageDataPaymentDictionaryResponsibilityCenterDto:
+      $ref: ./components/schemas/responsibility-center/GenericResponseSimpleErrorDataPageDataPaymentDictionaryResponsibilityCenterDto.yaml
+    PageDataPaymentDictionaryResponsibilityCenterDto:
+      $ref: ./components/schemas/responsibility-center/PageDataPaymentDictionaryResponsibilityCenterDto.yaml
+    PaymentDictionaryResponsibilityCenterDto:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterDto.yaml
+    GetPageCommandPaymentDictionaryResponsibilityCenterForCashFlowReportFilter:
+      $ref: ./components/schemas/responsibility-center/GetPageCommandPaymentDictionaryResponsibilityCenterForCashFlowReportFilter.yaml
+    PageParamsPaymentDictionaryResponsibilityCenterForCashFlowReportFilter:
+      $ref: ./components/schemas/responsibility-center/PageParamsPaymentDictionaryResponsibilityCenterForCashFlowReportFilter.yaml
+    PaymentDictionaryResponsibilityCenterForCashFlowReportFilter:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterForCashFlowReportFilter.yaml
+    PageDataPaymentDictionaryResponsibilityCenterFilterResponseDto:
+      $ref: ./components/schemas/responsibility-center/PageDataPaymentDictionaryResponsibilityCenterFilterResponseDto.yaml
+    PaymentDictionaryResponsibilityCenterFilterResponseDto:
+      $ref: ./components/schemas/responsibility-center/PaymentDictionaryResponsibilityCenterFilterResponseDto.yaml
+    GetPageCommandPaymentDictionaryCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/GetPageCommandPaymentDictionaryCashFlowReportFilter.yaml
+    PageParamsPaymentDictionaryCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/PageParamsPaymentDictionaryCashFlowReportFilter.yaml
+    PaymentDictionaryCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/PaymentDictionaryCashFlowReportFilter.yaml
+    PageDataPaymentDictionaryCashFlowReportDto:
+      $ref: ./components/schemas/cash-flow-report/PageDataPaymentDictionaryCashFlowReportDto.yaml
+    PaymentDictionaryCashFlowReportDto:
+      $ref: ./components/schemas/cash-flow-report/PaymentDictionaryCashFlowReportDto.yaml
+    GetPageCommandPaymentDictionaryPlanningPeriodForCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/GetPageCommandPaymentDictionaryPlanningPeriodForCashFlowReportFilter.yaml
+    PageParamsPaymentDictionaryPlanningPeriodForCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/PageParamsPaymentDictionaryPlanningPeriodForCashFlowReportFilter.yaml
+    PaymentDictionaryPlanningPeriodForCashFlowReportFilter:
+      $ref: ./components/schemas/cash-flow-report/PaymentDictionaryPlanningPeriodForCashFlowReportFilter.yaml
+    PageDataPaymentDictionaryPlanningPeriodFilterResponseDto:
+      $ref: ./components/schemas/cash-flow-report/PageDataPaymentDictionaryPlanningPeriodFilterResponseDto.yaml
+    PaymentDictionaryPlanningPeriodFilterResponseDto:
+      $ref: ./components/schemas/cash-flow-report/PaymentDictionaryPlanningPeriodFilterResponseDto.yaml
+    GetPageCommandPaymentDictionaryAnalyticalClassifierScrollerFilter:
+      $ref: ./components/schemas/analytical-classifier/GetPageCommandPaymentDictionaryAnalyticalClassifierScrollerFilter.yaml
+    PageParamsPaymentDictionaryAnalyticalClassifierScrollerFilter:
+      $ref: ./components/schemas/analytical-classifier/PageParamsPaymentDictionaryAnalyticalClassifierScrollerFilter.yaml
+    PaymentDictionaryAnalyticalClassifierScrollerFilter:
+      $ref: ./components/schemas/analytical-classifier/PaymentDictionaryAnalyticalClassifierScrollerFilter.yaml
+    GenericResponseSimpleErrorDataPageDataPaymentDictionaryAnalyticalClassifierDto:
+      $ref: ./components/schemas/analytical-classifier/GenericResponseSimpleErrorDataPageDataPaymentDictionaryAnalyticalClassifierDto.yaml
+    PageDataPaymentDictionaryAnalyticalClassifierDto:
+      $ref: ./components/schemas/analytical-classifier/PageDataPaymentDictionaryAnalyticalClassifierDto.yaml
+    PaymentDictionaryAnalyticalClassifierDto:
+      $ref: ./components/schemas/analytical-classifier/PaymentDictionaryAnalyticalClassifierDto.yaml
+    GetPageCommandPaymentDictionaryAnalyticalClassifierFilter:
+      $ref: ./components/schemas/analytical-classifier/GetPageCommandPaymentDictionaryAnalyticalClassifierFilter.yaml
+    PageParamsPaymentDictionaryAnalyticalClassifierFilter:
+      $ref: ./components/schemas/analytical-classifier/PageParamsPaymentDictionaryAnalyticalClassifierFilter.yaml
+    PaymentDictionaryAnalyticalClassifierFilter:
+      $ref: ./components/schemas/analytical-classifier/PaymentDictionaryAnalyticalClassifierFilter.yaml
+    SingleResponseUserAuthorities:
+      $ref: ./components/schemas/common/SingleResponseUserAuthorities.yaml
+    SingleResponseString:
+      $ref: ./components/schemas/test/SingleResponseString.yaml
+    GenericResponseSimpleErrorDataPaymentDictionaryStructureDto:
+      $ref: ./components/schemas/structure/GenericResponseSimpleErrorDataPaymentDictionaryStructureDto.yaml
+    GenericResponseSimpleErrorDataPaymentDictionaryResponsibilityCenterDto:
+      $ref: ./components/schemas/responsibility-center/GenericResponseSimpleErrorDataPaymentDictionaryResponsibilityCenterDto.yaml
+    GenericResponseSimpleErrorDataPaymentDictionaryAnalyticalClassifierDto:
+      $ref: ./components/schemas/analytical-classifier/GenericResponseSimpleErrorDataPaymentDictionaryAnalyticalClassifierDto.yaml
+    GenericResponseSimpleErrorDataListPaymentDictionaryAnalyticalClassifierDto:
+      $ref: ./components/schemas/analytical-classifier/GenericResponseSimpleErrorDataListPaymentDictionaryAnalyticalClassifierDto.yaml
+    SingleResponseLong:
+      $ref: ./components/schemas/delete-user-roles-by-official/SingleResponseLong.yaml

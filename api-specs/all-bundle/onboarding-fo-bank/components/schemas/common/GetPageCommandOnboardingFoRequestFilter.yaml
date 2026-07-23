@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOnboardingFoRequestFilter.yaml
+description: Запрос страницы

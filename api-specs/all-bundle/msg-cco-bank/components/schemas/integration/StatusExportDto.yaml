@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  status:
+    type: string
+    description: Статус
+  clientStatusName:
+    type: string
+    description: Название статуса для клиента
+  bankStatusName:
+    type: string
+    description: Название статуса для банка
+  filialCode:
+    type: string
+    description: Код филиала
+  docDate:
+    type: string
+    description: Дата и время создания документа
+  docNumber:
+    type: string
+    description: Номер документа
+  orgName:
+    type: string
+    description: Краткое наименование организации
+  clientRnk:
+    type: string
+    description: РНК клиента
+description: Сущность для экспорта статусов документов валютного контроля в файл

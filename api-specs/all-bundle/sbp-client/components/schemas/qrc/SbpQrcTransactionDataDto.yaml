@@ -1,0 +1,9 @@
+type: object
+description: Данные транзакции оплаты по Qr коду
+properties:
+  timestamp:
+    type: string
+    description: Дата и время операции по QR коду
+  paymentTransactionId:
+    type: string
+    description: Идентификатор транзакции оплаты в АС СБП

@@ -1,0 +1,8 @@
+type: object
+description: Заявка на блокировку QR-кода в системе АС СБП
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор QR кода в СБП
+required:
+- qrcId

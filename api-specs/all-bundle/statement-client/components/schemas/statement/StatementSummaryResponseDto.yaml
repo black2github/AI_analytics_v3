@@ -1,0 +1,44 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  accountNumber:
+    type: string
+  accountId:
+    type: integer
+    format: int64
+  organizationName:
+    type: string
+  currencyCode:
+    type: string
+  incomingBalance:
+    type: number
+  incomingBalanceNatCurr:
+    type: number
+  outgoingBalance:
+    type: number
+  outgoingBalanceNatCurr:
+    type: number
+  income:
+    type: number
+  incomeNatCurr:
+    type: number
+  outcome:
+    type: number
+  outcomeNatCurr:
+    type: number
+  incomesCount:
+    type: integer
+    format: int64
+  outcomesCount:
+    type: integer
+    format: int64
+  nationalCurrency:
+    type: boolean
+  contractType:
+    type: string
+description: Данные

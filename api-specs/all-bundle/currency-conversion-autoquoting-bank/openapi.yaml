@@ -1,0 +1,54 @@
+openapi: 3.1.0
+info:
+  title: Автокотирование для валютной конверсии ВРКО. Банковская часть.
+  description: Сервис получения котировок для валютной конверсии из ПКП
+  version: 3.1.0
+servers:
+- url: /currency-conversion-autoquoting-bank
+security:
+- bearerAuth: []
+paths:
+  /api/v1/tech/autoquoting/init-org-subscription:
+    $ref: ./paths/v1/api_v1_tech_autoquoting_init_org_subscription.yaml
+  /api/v1/tech/autoquoting/get-quote-volumes:
+    $ref: ./paths/v1/api_v1_tech_autoquoting_get_quote_volumes.yaml
+  /api/v1/tech/autoquoting/check-org-active-profile:
+    $ref: ./paths/v1/api_v1_tech_autoquoting_check_org_active_profile.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/v1/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/v1/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/v1/ActionResultObject.yaml
+    AutoquotingSubscriptionRqDto:
+      $ref: ./components/schemas/v1/AutoquotingSubscriptionRqDto.yaml
+    AutoquotingClientProfileRspDto:
+      $ref: ./components/schemas/v1/AutoquotingClientProfileRspDto.yaml
+    AutoquotingCurrencyQuoteRspDto:
+      $ref: ./components/schemas/v1/AutoquotingCurrencyQuoteRspDto.yaml
+    AutoquotingSubscriptionRspDto:
+      $ref: ./components/schemas/v1/AutoquotingSubscriptionRspDto.yaml
+    AutoquotingVolumeQuoteRspDto:
+      $ref: ./components/schemas/v1/AutoquotingVolumeQuoteRspDto.yaml
+    GenericResponseSimpleErrorDataAutoquotingSubscriptionRspDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataAutoquotingSubscriptionRspDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/v1/SimpleErrorData.yaml
+    AutoquotingVolumeRqDto:
+      $ref: ./components/schemas/v1/AutoquotingVolumeRqDto.yaml
+    AutoquotingVolumeRspDto:
+      $ref: ./components/schemas/v1/AutoquotingVolumeRspDto.yaml
+    GenericResponseSimpleErrorDataAutoquotingVolumeRspDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataAutoquotingVolumeRspDto.yaml
+    AutoquotingOrgCheckRqDto:
+      $ref: ./components/schemas/v1/AutoquotingOrgCheckRqDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataBoolean.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

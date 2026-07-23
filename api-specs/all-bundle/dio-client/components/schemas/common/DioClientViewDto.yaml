@@ -1,0 +1,121 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  client:
+    $ref: ./DioClientViewClientDto.yaml
+  isCorrect:
+    type: boolean
+    description: Признак корректировки
+  status:
+    type: string
+    description: Клиентский статус записи
+    enum:
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELETED
+    - COMPLETED
+    - DELIVERED
+    - WAITING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - REJECTED
+    - DECLINED
+    - EXPORT_TO_TESSA
+    - EXECUTED_BY_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - ACCEPTED
+    - IMPORTED
+    - IMPORTED_DENY
+    - CANCELED_LKUVED
+  comment:
+    type: string
+    description: Коментарий
+  attachments:
+    type: array
+    description: Набор транспортных представлений вложений
+    items:
+      $ref: ./DioAttachmentDto.yaml
+  operations:
+    type: array
+    description: Набор транспортных представлений валютных операций
+    items:
+      $ref: ./DioClientViewCurrencyOperationDto.yaml
+  validation:
+    $ref: ./ValidationResult.yaml
+  signatures:
+    type: array
+    description: Подписи ДИО
+    items:
+      $ref: ./DioSignatureDto.yaml
+  ssdVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  commentClient:
+    $ref: ./DioClientViewInformationCommentDto.yaml
+  docSourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docCreationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  creationPage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+  docId:
+    type: string
+    description: Идентификатор документа или шаблона на основе которого создан документ
+    format: uuid
+description: Транспортное описание ДИО на просмотр

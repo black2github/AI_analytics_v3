@@ -1,0 +1,54 @@
+{
+  "_comment": "Auto domain map for treasury-deals-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/account",
+      "domain": "account"
+    },
+    {
+      "prefix": "/update-mno-document",
+      "domain": "update-mno-document"
+    },
+    {
+      "prefix": "/update-deposit-document",
+      "domain": "update-deposit-document"
+    },
+    {
+      "prefix": "/rates",
+      "domain": "rates"
+    },
+    {
+      "prefix": "/mno",
+      "domain": "mno"
+    },
+    {
+      "prefix": "/mno-document",
+      "domain": "mno-document"
+    },
+    {
+      "prefix": "/investment-document",
+      "domain": "investment-document"
+    },
+    {
+      "prefix": "/gsno-document",
+      "domain": "gsno-document"
+    },
+    {
+      "prefix": "/general-agreement",
+      "domain": "general-agreement"
+    },
+    {
+      "prefix": "/early-refund",
+      "domain": "early-refund"
+    },
+    {
+      "prefix": "/deposit",
+      "domain": "deposit"
+    },
+    {
+      "prefix": "/deposit-document",
+      "domain": "deposit-document"
+    }
+  ]
+}

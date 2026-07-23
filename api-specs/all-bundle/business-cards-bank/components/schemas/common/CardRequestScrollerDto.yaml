@@ -1,0 +1,90 @@
+type: object
+properties:
+  cardHolder:
+    type: string
+    description: ФИО держателя карты
+  cardId:
+    type: string
+    description: Виртуальный номер карты
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  creatorLogin:
+    type: string
+    description: Логин пользователя, создавшего заявку
+  extendedInfo:
+    $ref: ./ExtendedInfoDto.yaml
+  id:
+    type: string
+    description: Уникальный идентификатор заявки в Экосистеме
+    format: uuid
+  maskedNum:
+    type: string
+    description: Маскированный номер карты
+  reqDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Уникальный номер заявки в разрезе Пользователя, создавшего заявку, и года создания заявки
+    format: int32
+  reqType:
+    type: string
+    description: Код типа документа из Классификатора [Типы документов]
+  signerDetails:
+    type: string
+    description: ФИО подписанта + Login подписанта + ID подписанта
+  signerId:
+    type: string
+    description: ID пользователя, подписавшего заявку
+    format: uuid
+  signerLogin:
+    type: string
+    description: Логин пользователя, подписавшего заявку
+  signerUser:
+    type: string
+    description: Информация о пользователе, подписавшем заявку (ФИО)
+  status:
+    type: string
+    description: Статус документа, устанавливаемый в соответствии с ЖЦ заявки
+  statusName:
+    type: string
+    description: Локализованный статус документа
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+  user:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userDetails:
+    type: string
+    description: ФИО создателя + Login создателя + ID создателя
+  userId:
+    type: string
+    description: ID создателя
+    format: uuid
+  userLogin:
+    type: string
+    description: Login создателя
+description: Список заявок по картам

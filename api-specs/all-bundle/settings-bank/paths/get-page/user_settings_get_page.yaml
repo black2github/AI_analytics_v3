@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Получить страницу записей
+  description: 'Привилегии: USER_SETTINGS_VIEW_TECH'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandUserSettingsFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataUserSettingsDto.yaml

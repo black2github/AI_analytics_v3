@@ -1,0 +1,96 @@
+required:
+- clientInfo
+- createdAt
+- date
+- id
+- number
+- status
+- updatedData
+- userFio
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - EXECUTED
+    - REJECTED
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя, создавшего заявку
+  clientInfo:
+    $ref: ./BankClientInfoDto.yaml
+  subject:
+    $ref: ./SubjectDto.yaml
+  updatedData:
+    type: array
+    description: Обновляемые сведения Заявки
+    items:
+      $ref: ./ClientInfoUpdRequestUpdateDataDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signatures:
+    type: array
+    description: Подпись заявки
+    items:
+      $ref: ./ClientInfoUpdateSignatureDto.yaml
+  notificationOfExecution:
+    $ref: ./NotificationOfExecutionDto.yaml
+  validationResult:
+    $ref: ./ValidationResult.yaml
+description: Заявка на обновление сведений

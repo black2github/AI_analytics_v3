@@ -1,0 +1,36 @@
+required:
+- blockedActions
+- blockedDocs
+- createdAt
+- id
+- messageId
+type: object
+properties:
+  id:
+    type: string
+    description: ID блокировки
+    format: uuid
+  messageId:
+    type: string
+    description: ID сообщения
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  blockedBankClient:
+    $ref: ./BankClientInfoDto.yaml
+  blockedDocs:
+    type: string
+    description: Документы, подлежащие блокировке
+  blockedActions:
+    type: string
+    description: Действия над документами, подлежащие блокировке
+  blockActive:
+    type: boolean
+    description: Блокировка активна
+description: Запись журнала блокировок H2H по клиенту

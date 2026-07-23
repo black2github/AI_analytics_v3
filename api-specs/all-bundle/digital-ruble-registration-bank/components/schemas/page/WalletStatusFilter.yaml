@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус кошелька в ЦБ.
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - CLOSED
+    - PROCESSED
+  notEq:
+    type: string
+    description: Статус кошелька в ЦБ.
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - CLOSED
+    - PROCESSED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус кошелька в ЦБ.
+      enum:
+      - ACTIVE
+      - BLOCKED
+      - CLOSED
+      - PROCESSED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус кошелька в ЦБ.
+      enum:
+      - ACTIVE
+      - BLOCKED
+      - CLOSED
+      - PROCESSED
+  isNull:
+    type: boolean
+description: Статус кошелька в ЦБ (in).

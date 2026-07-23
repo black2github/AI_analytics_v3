@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  suvId:
+    type: string
+    description: СУВ ИД
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  rnk:
+    type: string
+    description: РНК
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  ogrn:
+    type: string
+    description: ОГРН
+  innKio:
+    type: string
+    description: ИНН/КИО
+  kpp:
+    type: string
+    description: КПП
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+description: Страница с данными

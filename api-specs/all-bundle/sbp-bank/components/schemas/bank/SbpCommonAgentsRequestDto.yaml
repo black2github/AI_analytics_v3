@@ -1,0 +1,77 @@
+type: object
+description: Обобщенная заявка c агентами
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - SBP_CONTRACT
+    - DISCONNECT_REQUEST
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - CLIENT_REGISTRATION_DELIVERED
+    - CLIENT_REGISTRATION_RECEIVED
+    - CLIENT_REGISTRATION_ERROR
+    - CLIENT_REGISTERED
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+    - EXPORT_AGENTS_PRE_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_PRE_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_PRE_CONNECTION
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - EXPORT_AGENTS_CONNECTION_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_AGENTS_CONNECTION_ERROR
+    - EXECUTED_BY_AS_SBP_AGENTS_CONNECTION
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP_ERROR
+    - EXECUTED_BY_AS_SBP_DISCONNECT_AGENTS
+    - EXPORT_DISCONNECT_AGENTS_TO_F1
+    - EXPORT_DISCONNECT_AGENTS_TO_F1_ERROR
+    - EXECUTED_BY_F1_DISCONNECT_AGENTS
+    - EXECUTED
+    - REJECTED
+  hasAgents:
+    type: boolean
+    description: Признак наличия агентов в заявке
+  systemInitiatedRequest:
+    type: boolean
+    description: Признак автоматического создания сервисом ЭКО
+  resident:
+    type: boolean
+    description: Признак резиднтства
+  bankClient:
+    $ref: ./SbpCommonAgentsRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  details:
+    $ref: ./SbpCommonAgentsRequestDetailsDto.yaml
+    description: Детализированная информация по заявкам

@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./SendMobileRequestDto.yaml
+description: Запрос

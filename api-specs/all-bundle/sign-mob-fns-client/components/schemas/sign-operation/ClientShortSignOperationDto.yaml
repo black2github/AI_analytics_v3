@@ -1,0 +1,20 @@
+required:
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: ID операции подписи
+    format: uuid
+  status:
+    type: string
+    description: Статус операции подписи ФНС
+    enum:
+    - WAITING_CONFIRMATION
+    - EXPIRED
+    - DECLINED
+    - COMPLETED
+    - REJECTED
+    - ERROR
+description: Краткое представление операции подписи для клиента

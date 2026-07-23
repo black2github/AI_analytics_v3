@@ -1,0 +1,73 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Классификатор - Типы продуктов в соответствии с ЦРМ
+    enum:
+    - RRKO
+    - VRKO
+    - DVK
+    - TREASURY_DEPOSITS
+    - TREASURY_MNO
+    - TREASURY_GSNO
+    - TREASURY_CONVERSION
+    - BANK_GUARANTEES
+    - CREDITING
+    - SBP
+    - CROSS_BORDER
+  in:
+    type: array
+    items:
+      type: string
+      description: Классификатор - Типы продуктов в соответствии с ЦРМ
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Классификатор - Типы продуктов в соответствии с ЦРМ
+    enum:
+    - RRKO
+    - VRKO
+    - DVK
+    - TREASURY_DEPOSITS
+    - TREASURY_MNO
+    - TREASURY_GSNO
+    - TREASURY_CONVERSION
+    - BANK_GUARANTEES
+    - CREDITING
+    - SBP
+    - CROSS_BORDER
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Классификатор - Типы продуктов в соответствии с ЦРМ
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+description: Фильтрация по типам продуктов ЦРМ. Мультивыбор.

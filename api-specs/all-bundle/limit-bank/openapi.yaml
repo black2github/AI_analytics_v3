@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: Сервис лимитов подписи. Банковская часть.
+  version: 1.4.0-hf-1
+servers:
+- url: /limit-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /sign-limit/consume:
+    $ref: ./paths/consume/sign_limit_consume.yaml
+  /limits/integration/sign-limit/consume:
+    $ref: ./paths/integration/limits_integration_sign_limit_consume.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    SignLimitOperationDocumentRequestDto:
+      $ref: ./components/schemas/common/SignLimitOperationDocumentRequestDto.yaml
+    SignLimitOperationRequestDto:
+      $ref: ./components/schemas/common/SignLimitOperationRequestDto.yaml
+    GenericResponseSignLimitErrorListSignLimitOperationDocumentResponseDto:
+      $ref: ./components/schemas/consume/GenericResponseSignLimitErrorListSignLimitOperationDocumentResponseDto.yaml
+    SignLimitError:
+      $ref: ./components/schemas/consume/SignLimitError.yaml
+    SignLimitOperationDocumentResponseDto:
+      $ref: ./components/schemas/common/SignLimitOperationDocumentResponseDto.yaml
+    GenericResponseSimpleErrorDataListSignLimitOperationDocumentResponseDto:
+      $ref: ./components/schemas/integration/GenericResponseSimpleErrorDataListSignLimitOperationDocumentResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/integration/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

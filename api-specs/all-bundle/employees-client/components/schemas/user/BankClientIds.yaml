@@ -1,0 +1,12 @@
+required:
+- bankClientIds
+type: object
+properties:
+  bankClientIds:
+    type: array
+    description: Идентификаторы клиента банка
+    items:
+      type: string
+      description: Идентификаторы клиента банка
+      format: uuid
+description: Обертка для идентификаторов клиента банка

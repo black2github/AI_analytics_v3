@@ -1,0 +1,19 @@
+type: object
+properties:
+  registrationDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  cbrAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cbrParticipantWalletStatus:
+    $ref: ./WalletStatusFilter.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cbrParticipantWalletId:
+    $ref: ../common/FilterValueDtoString.yaml
+  cbrParticipantId:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskBankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр счета цифрового рубля

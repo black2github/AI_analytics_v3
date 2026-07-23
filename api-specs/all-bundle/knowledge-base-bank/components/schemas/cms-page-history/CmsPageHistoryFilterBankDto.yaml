@@ -1,0 +1,9 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  pageId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр истории CMS страниц

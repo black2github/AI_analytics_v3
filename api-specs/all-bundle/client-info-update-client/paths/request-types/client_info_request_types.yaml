@@ -1,0 +1,13 @@
+get:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Получить типы заявок
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_CREATE,CLIENT_INFO_UPD.CLIENT.REQUEST_EDIT'
+  operationId: getRequestTypes
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request-types/GenericResponseSimpleErrorDataListClientInfoUpdRequestTypesDto.yaml

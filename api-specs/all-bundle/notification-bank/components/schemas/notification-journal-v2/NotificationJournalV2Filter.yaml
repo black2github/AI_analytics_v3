@@ -1,0 +1,48 @@
+required:
+- statusCategory
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  dispatchDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  notificationType:
+    $ref: ./NotificationTypeFilter.yaml
+  notificationAddress:
+    $ref: ../common/FilterValueDtoString.yaml
+  notificationStatus:
+    $ref: ./NotificationJournalStatusFilter.yaml
+  ecoService:
+    $ref: ./NotificationJournalEcoServiceFilter.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  userSurname:
+    $ref: ../common/FilterValueDtoString.yaml
+  userForename:
+    $ref: ../common/FilterValueDtoString.yaml
+  userPatronymic:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestType:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории для скроллера на стороне банка
+    enum:
+    - NEW
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - DELIVERED
+    - ALL
+description: Фильтр журнала нотификаций.

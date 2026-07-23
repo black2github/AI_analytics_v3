@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientId:
+    type: array
+    description: Список ИД клиентов
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  dealIds:
+    type: array
+    description: Список ИД сделок
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор сделки
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  status:
+    type: string
+    description: Статус сделок
+    enum:
+    - NEW
+    - VIOLATED
+    - DENIED

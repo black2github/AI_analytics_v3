@@ -1,0 +1,62 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  row:
+    type: integer
+    description: Номер строки
+    format: int32
+    nullable: true
+  number:
+    pattern: ^[0-9]*$
+    type: string
+    description: Номер документа
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  code:
+    pattern: ^[0-9]*$
+    type: string
+    description: Код вида операции
+  currency:
+    type: string
+    description: Код валюты операции
+  currencyNumeric:
+    pattern: ^[0-9]*$
+    type: string
+    description: Цифровой код валюты операции
+  amount:
+    pattern: ^[0-9.]*$
+    type: string
+    description: Сумма операции
+  contractNumber:
+    pattern: ^[0-9GUИФ\/]*$
+    type: string
+    description: Уникальный номер контракта (кредитного договора)
+  contractCurrency:
+    type: string
+    description: Код валюты контракта
+  contractCurrencyNumeric:
+    pattern: ^[0-9]*$
+    type: string
+    description: Цифровой код валюты контракта
+  contractAmount:
+    pattern: ^[0-9.]*$
+    type: string
+    description: Сумма в валюте контракта
+  expectDate:
+    type: string
+    description: Ожидаемый срок
+    format: date
+  advanceDate:
+    type: string
+    description: Срок возврата аванса
+    format: date
+  info:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\n\r\\]*$
+    type: string
+    description: Примечание
+description: Валютные операции

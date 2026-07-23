@@ -1,0 +1,39 @@
+required:
+- isRevokeProductWarranty
+- issueBankInfoWarranty
+- issueMegaWarranty
+- productsToIssue
+- revocableWarrantyProducts
+type: object
+properties:
+  productsToIssue:
+    uniqueItems: true
+    type: array
+    description: Список продуктов к выдаче
+    items:
+      $ref: ./IssuedProduct.yaml
+  issueMegaWarranty:
+    type: boolean
+    description: Признак необходимости выдачи новой мега-доверенности
+  issueBankInfoWarranty:
+    type: boolean
+    description: Признак необходимости выдачи новой доверенности на получение информации
+  hasActiveMegaWarranty:
+    type: boolean
+    description: Признак наличия у сотрудника действующей мега-доверенности
+  endDate:
+    type: string
+    description: Дата окончания действия новой доверенности (при необходимости ее выдачи)
+    format: date
+  revokeBankInfoWarranty:
+    type: boolean
+    description: Признак необходимости отзыва действующей доверенности на получение информации
+  revocableWarrantyProducts:
+    type: array
+    description: Список продуктов отзываемой доверенности
+    items:
+      $ref: ./RevocableProduct.yaml
+  isRevokeProductWarranty:
+    type: boolean
+    description: Отозвать действующую продуктовую доверенность
+description: Данные продуктовой доверенности к выдаче в рамках шаблонов ролей

@@ -1,0 +1,9 @@
+type: object
+properties:
+  upInfoPassportRecognitionEnabled:
+    type: boolean
+    description: Признак включения распознавания паспорта
+  upInfoLinkInstruction:
+    type: string
+    description: Ссылка на инструкцию для банера в заявках ОС
+description: Настраиваемые параметры

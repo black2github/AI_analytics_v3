@@ -1,0 +1,21 @@
+post:
+  summary: Сохранить остатки для отправки в F1 ODS
+  tags:
+  - API заглушки для остатков F1 ODS
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: ../../components/schemas/common/AccTurn.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

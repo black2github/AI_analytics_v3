@@ -1,0 +1,24 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./FatfAddressDto.yaml
+  error:
+    type: string
+    description: Ошибка
+    enum:
+    - RECORD_NOT_FOUND
+    - FAILED_TO_FIND_RECORDS_BY_CLIENT_ID
+    - FAILED_TO_FIND_RECORDS_BY_CLIENT_IDS
+    - FAILED_TO_FIND_RECORD
+    - FAILED_TO_COUNT
+    - RECORD_ALREADY_EXISTS
+    - FAILED_TO_DELETE
+    - FAILED_TO_SAVE_ERROR
+    - VALIDATION_ERROR
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

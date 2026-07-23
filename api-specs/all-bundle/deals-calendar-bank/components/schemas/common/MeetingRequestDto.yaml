@@ -1,0 +1,59 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  operationType:
+    type: string
+    description: Тип операции по заявке на встречу
+    enum:
+    - CHANGE_CLIENT_DATA
+    - OPEN_PAYMENT_ACCOUNT
+    - OPEN_GOZ_ACCOUNT
+    - OPEN_SPECIAL_PURCHASE_ACCOUNT
+  meetingSource:
+    type: string
+    description: Система создания встречи
+    enum:
+    - ECO
+    - NAUMEN
+  meetingEcoSource:
+    type: string
+    description: Место создания встречи в Экосистеме
+    enum:
+    - MAIN_PAGE
+    - CLIENT_CARD
+    - ONBOARDING
+    - ONBOARDING_2
+    - NEW_MAIN_PAGE
+    - ONB_KZ
+  bankClient:
+    $ref: ./MeetingRequestBankClientDto.yaml
+  branch:
+    $ref: ./MeetingRequestBranchDto.yaml
+  contact:
+    $ref: ./MeetingContactDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+  documentType:
+    type: string
+    description: Классификатор типов документов
+    enum:
+    - MEETINGS_REQUEST
+description: Заявка на встречу

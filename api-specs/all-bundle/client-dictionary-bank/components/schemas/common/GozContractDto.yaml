@@ -1,0 +1,27 @@
+required:
+- date
+- identify
+- number
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    maxLength: 50
+    minLength: 0
+    type: string
+  date:
+    type: string
+    format: date
+  identify:
+    maxLength: 20
+    minLength: 0
+    type: string
+  subNumber:
+    maxLength: 50
+    minLength: 0
+    type: string
+  subDate:
+    type: string
+    format: date

@@ -1,0 +1,67 @@
+required:
+- code
+- docForConfiguringAccessId
+- editEnabled
+- inDevelopment
+- name
+- relativeProducts
+- showInformer
+- signKopopRegulation
+type: object
+properties:
+  name:
+    type: string
+    description: Название продукта/документа
+  code:
+    type: string
+    description: Код продукта
+  view:
+    type: boolean
+    description: Просмотр
+  createAndUpdate:
+    type: boolean
+    description: Создание и редактирование
+  signAndSend:
+    type: boolean
+    description: Подписание и отправка
+  import:
+    type: boolean
+    description: Импорт
+  importEdit:
+    type: boolean
+    description: Признак "Отображать информер для Редактирования импорта"
+  editEnabled:
+    type: boolean
+    description: Доступно для редактирования
+  docForConfiguringAccessId:
+    type: string
+    description: Идентификатор документа для настройки доступа
+    format: uuid
+  signKopopRegulation:
+    type: boolean
+    description: Право подписи регулируется КОПОП
+  inDevelopment:
+    type: boolean
+    description: В разработке
+  relativeProducts:
+    type: array
+    description: Список продуктов, к которым относится документ
+    items:
+      type: string
+      description: Список продуктов, к которым относится документ
+  signInformerText:
+    type: string
+    description: Текст для информера подписи
+  fullAccessControl:
+    type: boolean
+    description: Управление полным доступом
+  showInformer:
+    type: boolean
+    description: Признак "Отображать информер для продукта/документа"
+  informerText:
+    type: string
+    description: Текст для информера для продукта/документа
+  importEditInformerText:
+    type: string
+    description: Текст для информера Редактирования импорта
+description: Документ

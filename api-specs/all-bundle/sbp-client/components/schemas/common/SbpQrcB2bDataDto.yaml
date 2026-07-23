@@ -1,0 +1,15 @@
+type: object
+description: Реквизиты QR-кода для B2B
+properties:
+  takeVat:
+    type: boolean
+    description: Информация о взимании НДС, false - не взимается
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках
+  noAmountQrc:
+    type: boolean
+    description: Признак наличия суммы во входящем QRC
+required:
+- takeVat

@@ -1,0 +1,13 @@
+type: object
+description: Параметры универсальной функции электронной подписи
+properties:
+  certificates:
+    type: array
+    description: Сертификаты
+    items:
+      $ref: ./UniCertificateDto.yaml
+  signDocuments:
+    type: array
+    description: Набор подписываемых документов
+    items:
+      $ref: ./UniSignDocumentDto.yaml

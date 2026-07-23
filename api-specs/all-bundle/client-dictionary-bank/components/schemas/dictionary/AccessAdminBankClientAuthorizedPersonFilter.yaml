@@ -1,0 +1,12 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountIdWithoutAccess:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  personId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  textQuery:
+    type: string
+    description: Общая строка поиска по ФИО, Идентификатору УЛ.
+description: Фильтр УЛ для админки доступов

@@ -1,0 +1,53 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  firstName:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  emailCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+  lastLogin:
+    $ref: ../common/FilterValueDtoZonedDateTime.yaml
+  uaaUserId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  blockedByAnyReason:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  roles:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  uaaRoles:
+    $ref: ../common/FilterValueDtoString.yaml
+  notInUaaRoles:
+    $ref: ../common/FilterValueDtoString.yaml
+  segments:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  uaaSegments:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  f1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+  fullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  marketingCampaign:
+    $ref: ./FilterValueEnumDtoUaaPartnerCompanyClassifierDto.yaml
+  blockUserAssociation:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  notPersonalized:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр пользователей Клиентов Банка

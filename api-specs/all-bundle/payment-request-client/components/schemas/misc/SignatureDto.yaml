@@ -1,0 +1,44 @@
+required:
+- certificate
+- ownerId
+- signature
+- signatureId
+- signedAt
+type: object
+properties:
+  ownerId:
+    type: string
+    description: Идентификатор владельца подписи
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  signatureId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signature:
+    type: string
+    description: Base64 представление сертификата
+  certificate:
+    $ref: ../common/CertificateInfoResponseDto.yaml
+  sourceSystem:
+    type: string
+    description: Система подписи документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+description: Дто подписи файла импорта

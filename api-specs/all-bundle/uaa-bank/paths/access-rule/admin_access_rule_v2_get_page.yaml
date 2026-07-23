@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для Правил доступности сегмента. V2
+  summary: Получить страницу записей
+  description: 'Привилегии: ACCESS_RULE_VIEW (publicAuthority = false)'
+  operationId: getPage_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/access-rule/GetPageCommandAccessRuleV2Filter.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseVoid.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/access-rule/PageDataAccessRuleV2Dto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml

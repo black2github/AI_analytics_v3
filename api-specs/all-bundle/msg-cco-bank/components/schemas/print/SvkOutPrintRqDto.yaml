@@ -1,0 +1,23 @@
+required:
+- archive
+- ids
+- reportFormat
+type: object
+properties:
+  ids:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  reportFormat:
+    type: string
+    description: Форматы печатных форм
+    enum:
+    - PDF
+  archive:
+    type: boolean
+    description: Необходимость архивировать файлы
+description: Запрос на формирование печатной формы

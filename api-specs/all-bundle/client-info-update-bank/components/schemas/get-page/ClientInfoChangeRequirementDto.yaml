@@ -1,0 +1,85 @@
+required:
+- actual
+- bankClientId
+- changeRequirement
+- expiryDate
+- id
+- requirementPriority
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  recordSource:
+    type: string
+    description: Источник записи
+    enum:
+    - BSS_ECO
+    - CFT_BOX_1
+    - CFT_RKO
+    - SYN_TESS
+    - CIN_SKVO
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  bankClientName:
+    type: string
+    description: Наименование организации
+  eskUserId:
+    type: string
+    description: ID пользователя Клиента в ЕСК
+  userFio:
+    type: string
+    description: ФИО пользователя, которому необходимо обновить сведения
+  changeRequirement:
+    type: string
+    description: Вид требования на обновление сведения
+    enum:
+    - CFT_RKO_IDENTITY_DOCUMENT_EXPIRES
+    - CFT_RKO_IDENTITY_DOCUMENT_NOT_VALID
+    - CFT_RKO_REPRESENTATIVE_CREDENTIALS_DOCUMENT_EXPIRES
+    - CFT_RKO_REPRESENTATIVE_CREDENTIALS_DOCUMENT_NOT_VALID
+    - CFT_RKO_MANAGEMENT_COMPANY_CREDENTIALS_DOCUMENT_EXPIRES
+    - CFT_RKO_MANAGEMENT_COMPANY_CREDENTIALS_DOCUMENT_NOT_VALID
+    - CFT_BOX1_SIGNER_CREDENTIALS_DOCUMENT_EXPIRES
+    - CFT_BOX1_SIGNER_CREDENTIALS_DOCUMENT_NOT_VALID
+  requirementPriority:
+    type: string
+    description: Критичность требования на обновление сведения
+    enum:
+    - CRITICAL
+    - UNCRITICAL
+  expiryDate:
+    type: string
+    description: Дата истечения сведения
+    format: date
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  actual:
+    type: boolean
+    description: Актуальность
+  description:
+    type: string
+    description: Дополнительная информация
+  lastNotification:
+    type: string
+    description: Дата последнего уведомления
+    format: date-time
+  type:
+    type: string
+    description: Тип обновления сведений
+  typeId:
+    type: string
+    description: Идентификатор типа обновления сведений
+description: Страница с данными

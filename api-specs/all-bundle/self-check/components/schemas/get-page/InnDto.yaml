@@ -1,0 +1,9 @@
+type: object
+description: ИНН
+properties:
+  inn:
+    type: string
+    description: ИНН
+  organizationName:
+    type: string
+    description: Название организации

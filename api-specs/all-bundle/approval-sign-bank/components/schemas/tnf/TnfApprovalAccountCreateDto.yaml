@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  f1Id:
+    type: integer
+    description: Идентификатор счета в системе Ф1
+    format: int64
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  tnfApprovalOrganizationId:
+    type: string
+    description: Идентификатор визирующей организации
+    format: uuid
+description: Информация о счете визирования для ТНФ.

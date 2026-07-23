@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  notEq:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  isNull:
+    type: boolean
+description: Способ создания. Поиск по Запрос на отзыв.<Способ создания документа>. Равенство, содержится в списке

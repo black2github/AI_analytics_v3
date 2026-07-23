@@ -1,0 +1,6 @@
+type: object
+description: Ответ API Регистрации юридического лица
+properties:
+  ticketId:
+    type: string
+    description: Временный регистрационный номер

@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  responseAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  hasError:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр

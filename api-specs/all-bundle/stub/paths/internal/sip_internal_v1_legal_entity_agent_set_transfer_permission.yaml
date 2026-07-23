@@ -1,0 +1,72 @@
+post:
+  tags:
+  - СИП. Сервис Internal Merchant API
+  summary: 'Сервис: Запрос на подключение/отключение агентов ТСП'
+  operationId: agentSetTransferPermissionUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.agents
+    in: query
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  - name: body.docType
+    in: query
+    required: false
+    type: string
+  - name: body.guid
+    in: query
+    required: false
+    type: string
+  - name: body.legalId
+    in: query
+    required: false
+    type: string
+  - name: body.state
+    in: query
+    required: false
+    type: string
+    enum:
+    - ACTIVE
+    - BLOCKED
+    - DRAFT
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/AgentSetTransferPermissionResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,188 @@
+type: object
+properties:
+  DTSTAMP:
+    $ref: ./LocalDateTime.yaml
+  NOBJID:
+    type: integer
+    format: int64
+  SOBJSTATUS:
+    $ref: ./EntryStatus.yaml
+  NRECORDSID:
+    type: integer
+    format: int64
+  NACCOUNTID:
+    type: integer
+    format: int64
+  SACCOUNT:
+    type: string
+  SACCOUNTREGFILCODE:
+    type: string
+  DTASTR_TIME_PROV:
+    $ref: ./LocalDateTime.yaml
+  DTDATE:
+    $ref: ./LocalDate.yaml
+  DTDATESTAMP:
+    $ref: ./LocalDateTime.yaml
+  NDTKT:
+    type: integer
+    format: int8
+  SDOCUMENTBALFILCODE:
+    type: string
+  SDOCUMENTNUMBER:
+    type: integer
+    format: int64
+  DTDOCUMENTDATE:
+    $ref: ./LocalDate.yaml
+  SOPERTYPE:
+    type: string
+  SSENDTYPE:
+    type: string
+  NAMOUNT:
+    type: number
+  NAMOUNTDT:
+    type: number
+  NAMOUNTKT:
+    type: number
+  NAMOUNTNAT:
+    type: number
+  SCURRCODEDT:
+    type: string
+  SCURRCODEKT:
+    type: string
+  SACCDT:
+    type: string
+  SACCKT:
+    type: string
+  SPAYERBIC:
+    type: string
+  SPAYERBANKNAME:
+    type: string
+  SPAYERBANKCITY:
+    type: string
+  SPAYERCORRACCOUNT:
+    type: string
+  SPAYERACCOUNT:
+    type: string
+  SPAYERINN:
+    type: string
+  SPAYERKPP:
+    type: string
+  SPAYER:
+    type: string
+  SRECEIVERBIC:
+    type: string
+  SRECEIVERBANKNAME:
+    type: string
+  SRECEIVERBANKCITY:
+    type: string
+  SRECEIVERCORRACCOUNT:
+    type: string
+  SRECEIVERACCOUNT:
+    type: string
+  SRECEIVERINN:
+    type: string
+  SRECEIVERKPP:
+    type: string
+  SRECEIVER:
+    type: string
+  SGROUND:
+    type: string
+  SPAYMENTURGENT:
+    type: integer
+    format: int64
+  SPAYMENTID:
+    type: string
+  STAXPERIOD:
+    type: string
+  SDOCNUMPARAM:
+    type: string
+  SDOCDATE:
+    type: string
+  SCBCCODE:
+    type: string
+  SPAYGRMDPARAM:
+    type: string
+  SOKTMOCODE:
+    type: string
+  SSTAT1256:
+    type: string
+  SPAYTYPE:
+    type: string
+  SNOTEFROMBANK:
+    type: string
+  SCORRACCOUNT:
+    type: string
+  SPAIDDOCNUMBER:
+    type: string
+  DTPAIDDOCDATE:
+    $ref: ./LocalDate.yaml
+  NNUMPARTPAYMENT:
+    type: integer
+    format: int64
+  SPAIDDOCCODE:
+    type: string
+  NRESTAMOUNT:
+    type: number
+  SPAYCONDITION:
+    type: string
+  SACPTTERM:
+    type: string
+  DTDATEACCEPT:
+    $ref: ./LocalDate.yaml
+  DDATEINCARD:
+    $ref: ./LocalDate.yaml
+  DTCHARGEOFFDATE:
+    $ref: ./LocalDate.yaml
+  DDATEPL:
+    type: string
+  SINCOMETYPECODE:
+    type: string
+  DTPAYUNTIL:
+    $ref: ./LocalDate.yaml
+  NRCREF:
+    type: integer
+    format: int64
+  NSALEREF:
+    type: integer
+    format: int64
+  NMDREF:
+    type: integer
+    format: int64
+  NSTARTREST:
+    type: number
+  NENDREST:
+    type: number
+  NSTARTRESTNAT:
+    type: number
+  NENDRESTNAT:
+    type: number
+  SRECONT:
+    type: string
+  SEXTREF:
+    type: string
+  SKONTRAGENT:
+    type: string
+  SSYMBKASSA:
+    type: string
+  SSYMBSUMMA:
+    type: string
+  SPREDDOCUM:
+    type: string
+  SSIGNATURE1:
+    type: string
+  SSIGNATURE2:
+    type: string
+  SSIGNATURE3:
+    type: string
+  SPAYERBANKDETAIL:
+    type: string
+  SRECEIVERACCOUNT_VIRTUAL:
+    type: string
+  SUPNO:
+    type: string
+  DocumMDInf:
+    $ref: ./DocumMDInf.yaml
+  DocumRCInf:
+    $ref: ./DocumRCInf.yaml
+  DocumSALEInf:
+    $ref: ./DocumSaleInf.yaml

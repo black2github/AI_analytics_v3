@@ -1,0 +1,67 @@
+type: object
+description: Фильтр скроллера Подписок
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка".
+  docNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Номер документа
+  subscriptionPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Цель подписки
+  createdAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата создания
+  dateStart:
+    $ref: ../common/FilterValueDtoInstant.yaml
+    description: Дата и время получения колбэка о привязке счета
+  status:
+    $ref: ../common/SbpQrcSubscriptionStatusFilter.yaml
+    description: Текущий статус
+  hidden:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Признак "Скрытые подписки" для прямой фильтрации in
+  paymentFrequency:
+    $ref: ./SbpQrcSubscriptionPaymentFrequencyFilter.yaml
+    description: Периодичность платежа по Подписке
+  paymentsQuantity:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Количество платежей
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН клиента
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: КПП клиента
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Торговое название
+  merchantAddress:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Адрес ТСП
+  paid:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма проведенных платежей в копейках
+  paymentsCount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Количество проведенных платежей
+  paymentsCountSchedule:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Количество платежей проведенных в текущем графике
+  paymentFailed:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Признак "Последний платеж отклонен"
+  paymentAmount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма платежа по графику
+  payer:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Плательщик
+  showHidden:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    deprecated: true
+    description: Показать "Скрытые подписки" (Устарело. Не учитывается при фильтрации)

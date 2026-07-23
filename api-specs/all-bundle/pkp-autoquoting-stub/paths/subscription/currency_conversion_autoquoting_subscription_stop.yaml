@@ -1,0 +1,21 @@
+post:
+  summary: Остановить подписки для переданных идентификаторов
+  tags:
+  - АС ПКП. API заглушек подписки профилей автокотирования для поручения на покупку/продажу валюты.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

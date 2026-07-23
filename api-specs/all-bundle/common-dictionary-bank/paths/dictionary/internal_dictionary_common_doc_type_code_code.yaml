@@ -1,0 +1,28 @@
+get:
+  tags:
+  - Справочник Типы документов
+  summary: Получить по коду
+  description: 'Привилегии: hasAuthority(''DOC_TYPE_GET_BY_CODE'')'
+  operationId: getByCodeUsingGET_1
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: path
+    description: code
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«DocTypeDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

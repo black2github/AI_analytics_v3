@@ -1,0 +1,9 @@
+type: object
+properties:
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+  contract:
+    $ref: ../common/FilterValueDtoString.yaml
+  tradingFloor:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для получения данных по остатка ДС

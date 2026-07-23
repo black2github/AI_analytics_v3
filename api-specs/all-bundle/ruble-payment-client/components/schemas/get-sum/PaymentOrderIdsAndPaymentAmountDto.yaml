@@ -1,0 +1,17 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы заявок "Платежное поручение"
+    items:
+      type: string
+      description: Идентификаторы заявок "Платежное поручение"
+      format: uuid
+  count:
+    type: integer
+    description: Количество заявок "Платежное поручение"
+    format: int64
+  amount:
+    type: number
+    description: Сумма заявок "Платежное поручение"
+description: Данные

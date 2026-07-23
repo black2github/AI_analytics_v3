@@ -1,0 +1,9 @@
+type: object
+description: Ошибка
+properties:
+  text:
+    type: string
+    description: Наименование ошибки
+  serverErrorInfo:
+    type: string
+    description: Детальная информация об ошибке

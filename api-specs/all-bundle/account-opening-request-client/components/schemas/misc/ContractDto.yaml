@@ -1,0 +1,16 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Number
+  date:
+    type: string
+    description: Date
+    format: date
+  absId:
+    type: string
+    description: Abs id
+  isCommissionDebitingRequired:
+    type: boolean
+    description: Commission debiting required or not
+description: Contract DTO.

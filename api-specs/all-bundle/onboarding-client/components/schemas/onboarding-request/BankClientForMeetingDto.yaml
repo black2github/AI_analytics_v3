@@ -1,0 +1,19 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+  marketingCampaignCode:
+    type: string
+    description: Классификатор маркетинговых кампаний
+    enum:
+    - STANDARD
+    - GPN_CRED
+description: Реквизиты клиента по заявке на открытие первого счета для встречи

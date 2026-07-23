@@ -1,0 +1,16 @@
+type: object
+properties:
+  responsibilityCenterId:
+    type: string
+    description: Идентификатор Центра ответственности
+    format: uuid
+  responsibilityCenterName:
+    type: string
+    description: Наименование Центра ответственности
+  budget:
+    type: string
+    description: Бюджет
+  financeYear:
+    type: string
+    description: Год
+description: DTO для скроллера Справочник "Центры ответственности"

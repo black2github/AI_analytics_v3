@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsH2hBankClientBlockingMessageFilter.yaml
+description: Запрос страницы

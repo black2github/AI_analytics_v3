@@ -1,0 +1,11 @@
+type: object
+properties:
+  success:
+    type: array
+    items:
+      type: string
+  errors:
+    type: array
+    items:
+      $ref: ./DiscoverError.yaml
+description: Данные

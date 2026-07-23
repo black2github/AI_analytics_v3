@@ -1,0 +1,63 @@
+type: object
+properties:
+  dstId:
+    type: string
+    description: Идентификатор СЭП
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  certificateData:
+    type: string
+    description: Данные сертификата
+  organizationName:
+    type: string
+    description: Наименование организации
+  signKind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  dstStatus:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  profileDssSecondaryAuthMethod:
+    type: string
+    description: Метод вторичной аутентификации MyDss
+    enum:
+    - UNKNOWN
+    - MOBILE
+    - MY_DSS
+    - OTP_VIA_SMS
+  certificateAuthority:
+    type: string
+    description: Удостоверяющий центр
+  expirationDate:
+    type: string
+    description: Срок действия
+    format: date
+  certificateOwner:
+    type: string
+    description: Владелец сертификата
+  containerNameLocation:
+    type: string
+    description: Имя и расположение контейнера
+  pinCodeEnabled:
+    type: boolean
+    description: Признак установленного пинкода для сертификата на стороне КритоПРО ДСС
+description: СЭП для универсальной функции электронной подписи

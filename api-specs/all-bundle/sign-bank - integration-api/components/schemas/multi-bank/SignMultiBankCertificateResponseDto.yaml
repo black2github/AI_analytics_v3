@@ -1,0 +1,9 @@
+type: object
+properties:
+  header:
+    type: string
+    description: JWT заголовок в base64url
+  signedData:
+    type: string
+    description: Подпись в base64url
+description: Ответ на запрос межбанковской подписи

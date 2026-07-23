@@ -1,0 +1,8 @@
+type: object
+properties:
+  system_type:
+    type: string
+    description: Тип системы для токена в неавторизованной зоне
+    enum:
+    - CHAT_BOT_UNAUTHORIZED
+description: Запрос токена в неавторизованной зоне

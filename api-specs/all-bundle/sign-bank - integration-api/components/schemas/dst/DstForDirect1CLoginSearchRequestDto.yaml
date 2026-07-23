@@ -1,0 +1,19 @@
+type: object
+properties:
+  certSerialNumber:
+    type: string
+    description: Серийный номер сертификата
+  certIssuerName:
+    type: string
+    description: Имя издателя сертификата
+  certData:
+    type: string
+    description: Данные сертификата
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  dstForLogin:
+    type: boolean
+    description: Признак разрешения на использование СЭП для входа
+description: Запрос поиска СЭП для аутентификации через 1C DirectBank

@@ -1,0 +1,13 @@
+type: object
+properties:
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.TXID
+    - RU.CBR.LEI
+    - RU.CBR.TAXT
+    - RU.CBR.OGRN
+    - RU.CBR.OKPO
+  identification:
+    type: string
+description: Идентификация юридического лица

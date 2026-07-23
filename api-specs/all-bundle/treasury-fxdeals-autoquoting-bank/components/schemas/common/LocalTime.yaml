@@ -1,0 +1,15 @@
+type: object
+properties:
+  hour:
+    type: integer
+    format: int32
+  minute:
+    type: integer
+    format: int32
+  second:
+    type: integer
+    format: int32
+  nano:
+    type: integer
+    format: int32
+description: Время окончания торговой сессии

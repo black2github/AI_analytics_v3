@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  code:
+    type: string
+    description: Код банка
+    enum:
+    - GPB
+    - VTB
+    - SBR
+description: Запрос актуализации существующего авторизованного согласия

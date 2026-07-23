@@ -1,0 +1,56 @@
+required:
+- canRemoveSign
+- id
+- newOperationHistory
+- status
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  status:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  commentForClient:
+    maxLength: 255
+    type: string
+    description: Комментарий для клиента
+    nullable: true
+  bankClientInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BankClientInfoClientScrollerDto.yaml
+  documentBusinessInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.DocumentBusinessInfoClientScrollerDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoClientScrollerDto.yaml
+  payerInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.PayerInfoClientScrollerDto.yaml
+  receiverInfo:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.ReceiverInfoClientScrollerDto.yaml
+  operationHistory:
+    $ref: ./OutgoingPaymentRequestHistoryInfoClientDto.yaml
+  importDetails:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BackgroundImportProcessClientScrollerDto.yaml
+  canRemoveSign:
+    type: boolean
+    description: Доступно ли пользователю снятие подписи
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  newOperationHistory:
+    type: boolean
+    description: Признак использования новой истории операций
+  chargebackRequest:
+    $ref: ./OutgoingPaymentChargebackRequestClientDto.yaml
+  sourceSystem:
+    type: string
+    description: Система создания документа
+  creationType:
+    type: string
+    description: Способ создания документа
+description: Платежное требование исходящее (скроллер клиента)

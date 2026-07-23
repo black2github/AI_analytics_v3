@@ -1,0 +1,17 @@
+type: object
+description: Дополнительная информация по СЦР Клиента-ЮЛ
+properties:
+  agreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента-ЮЛ
+  agreementDate:
+    type: string
+    format: date
+    description: Дата договора СЦР Клиента-ЮЛ
+  dcAccountNumber:
+    type: string
+    description: Номер СЦР Клиента-ЮЛ
+required:
+- agreementDate
+- agreementNumber
+- dcAccountNumber

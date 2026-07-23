@@ -1,0 +1,9 @@
+type: object
+properties:
+  requisite:
+    type: string
+    description: Наименование реквизита
+  result:
+    type: string
+    description: Результат проверки реквизита
+description: Транспортное представление проверки БСК по определенному реквизиту

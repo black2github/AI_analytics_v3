@@ -1,0 +1,25 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Тип статуса
+    enum:
+    - ALL
+    - WAIT_SIGN
+    - WAIT_ACCEPT
+    - WAIT_VISA
+    - IN_PROCESS
+    - IN_CARD_FILE
+    - CANCELED
+    - DRAFT
+    - EXECUTED
+  total:
+    type: integer
+    description: Количество документов
+    format: int64
+  typePaymentDocTotal:
+    type: array
+    description: Список типов платежных документов
+    items:
+      $ref: ./CounterPaymentDocType.yaml
+description: Статистика по платежным поручениям в разрезе дат

@@ -1,0 +1,19 @@
+get:
+  tags:
+  - АПИ получения переменных окружения для пользователя клиента
+  summary: Получить переменные окружения для пользователя клиента
+  operationId: getEnvironmentByUserId
+  parameters:
+  - name: user-id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/client-user/SingleResponseClientUserEnvironmentDto.yaml

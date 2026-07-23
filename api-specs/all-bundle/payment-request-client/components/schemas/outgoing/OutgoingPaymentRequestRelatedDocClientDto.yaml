@@ -1,0 +1,29 @@
+type: object
+properties:
+  docNumber:
+    maxLength: 15
+    type: string
+    description: Номер документа
+    nullable: true
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+    nullable: true
+  userFio:
+    type: string
+    description: ФИО пользователя
+    nullable: true
+  status:
+    type: string
+    description: Статус
+    nullable: true
+  statusComment:
+    type: string
+    description: Комментарий к статусу
+    nullable: true
+description: Данные связанных документов заявки Платежное требование исходящее (данные для клиента)

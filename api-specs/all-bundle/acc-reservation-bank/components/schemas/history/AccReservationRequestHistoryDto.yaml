@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки на резервирование счетов 2.0
+    format: uuid
+  bankStatus:
+    type: string
+    description: Статус (название для Банка)
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса документу
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  userName:
+    type: string
+    description: ФИО пользователя инициатора события
+description: Данные

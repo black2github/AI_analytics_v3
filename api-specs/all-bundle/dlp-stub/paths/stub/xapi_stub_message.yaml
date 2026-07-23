@@ -1,0 +1,10 @@
+get:
+  parameters:
+  - name: message
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK

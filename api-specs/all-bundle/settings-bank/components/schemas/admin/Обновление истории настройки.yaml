@@ -1,0 +1,23 @@
+required:
+- authorId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи истории настройки
+    format: uuid
+  userId:
+    type: string
+    description: Какому пользователю предназначена настройка
+    format: uuid
+  authorId:
+    type: string
+    description: Автор изменения настройки
+    format: uuid
+  comments:
+    type: string
+    description: Комментарий автора изменений
+  locked:
+    type: boolean
+    description: Запись защищена от автоматического удаления

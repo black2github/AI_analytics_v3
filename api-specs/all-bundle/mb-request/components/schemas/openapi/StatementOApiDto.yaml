@@ -1,0 +1,28 @@
+required:
+- Links
+- Meta
+type: object
+properties:
+  errorMessage:
+    type: string
+    description: Краткое сообщение об ошибке. Например, 'Что-то не так с предоставленными параметрами запроса'
+  Data:
+    $ref: ./Statement.yaml
+  Risk:
+    type: object
+    description: Индикаторы риска
+  Links:
+    $ref: ./OApiLinksDto.yaml
+  Meta:
+    $ref: ./OApiMetaDto.yaml
+  Errors:
+    type: array
+    description: Ошибки
+    items:
+      $ref: ./OApiErrorItemDto.yaml
+  code:
+    type: string
+    description: Высокоуровневый текстовый код ошибки, необходимый для классификации
+  id:
+    type: string
+    description: Уникальный идентификатор ошибки для целей аудита в случае неизвестных / неклассифицированных ошибок

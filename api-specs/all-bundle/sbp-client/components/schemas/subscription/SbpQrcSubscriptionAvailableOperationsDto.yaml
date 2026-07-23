@@ -1,0 +1,21 @@
+type: object
+description: Информация о доступных пользователю действиях с подпиской
+properties:
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  hide:
+    type: boolean
+    description: Признак возможности скрытия
+  show:
+    type: boolean
+    description: Признак возможности отображения в списке
+  createPayment:
+    type: boolean
+    description: Признак возможности создания платежа
+  createSchedule:
+    type: boolean
+    description: Признак возможности создания графика
+  removeSchedule:
+    type: boolean
+    description: Признак возможности удаления графика

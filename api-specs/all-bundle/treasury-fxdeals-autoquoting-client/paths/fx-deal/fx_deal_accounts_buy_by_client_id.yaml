@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Конверсионные сделки в режиме автокотирования
+  summary: Получение списка счетов для покупки по clientId
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_FX_DEALS_AUTOQUOTING_COMMON'')'
+  operationId: getAccountsBuyByClientId_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/fx-deal/GenericCommandAccountRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/fx-deal/GenericResponseErrorDataListDealDocAccountBuyDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

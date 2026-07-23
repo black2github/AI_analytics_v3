@@ -1,0 +1,36 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CREATE_DS_IN_RKO_F1
+    - UNLOAD_PF_OFFER_IN_RKO_F1
+    - CREATE_DOSSIER_IN_TESSA
+  notEq:
+    type: string
+    enum:
+    - CREATE_DS_IN_RKO_F1
+    - UNLOAD_PF_OFFER_IN_RKO_F1
+    - CREATE_DOSSIER_IN_TESSA
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CREATE_DS_IN_RKO_F1
+      - UNLOAD_PF_OFFER_IN_RKO_F1
+      - CREATE_DOSSIER_IN_TESSA
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CREATE_DS_IN_RKO_F1
+      - UNLOAD_PF_OFFER_IN_RKO_F1
+      - CREATE_DOSSIER_IN_TESSA
+  isNull:
+    type: boolean

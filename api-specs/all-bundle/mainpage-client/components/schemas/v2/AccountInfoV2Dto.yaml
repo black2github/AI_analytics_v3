@@ -1,0 +1,108 @@
+type: object
+properties:
+  visible:
+    type: boolean
+    description: Показывать счет
+  priority:
+    type: integer
+    description: Приоритет
+    format: int64
+  accountNumber:
+    type: string
+    description: Номер счета
+  type:
+    type: string
+    description: Тип счета
+  openDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  currencyCode:
+    type: string
+    description: Буквенный код валюты
+  accountId:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountF1Number:
+    type: integer
+    description: Номер счета в Ф1
+    format: int64
+  accountName:
+    type: string
+    description: Наименование счёта
+  ecoAccountName:
+    type: string
+    description: Название счёта в ЭКО системе
+  transitAccount:
+    $ref: ./AccountInfoV2Dto.yaml
+  accountRatioToRkoVrko:
+    type: integer
+    description: Отношение счета к РКО/ВРКО
+    format: int64
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  turnoverDebit:
+    type: number
+    description: Обороты по дебету
+  turnoverCredit:
+    type: number
+    description: Обороты о кредиту
+  currentBalanceNat:
+    type: number
+    description: Текущий остаток в национальной валюте
+  incomingBalanceNat:
+    type: number
+    description: Входящий остаток в национальной валюте
+  turnoverDebitNat:
+    type: number
+    description: Обороты по дебету в национальной валюте
+  turnoverCreditNat:
+    type: number
+    description: Обороты о кредиту в национальной валюте
+  planeBalanceNat:
+    type: number
+    description: Плановый остаток в национальной валюте
+  turnoverUpdatedAt:
+    type: string
+    description: Дата последнего изменения остатка
+    format: date-time
+  operationDate:
+    type: string
+    description: Операционная дата
+    format: date
+  accountBlockState:
+    type: string
+    description: Статус блокировки счета
+    enum:
+    - FULL
+    - PARTIAL
+    - NONE
+  accountBlockData:
+    $ref: ./AccountBlockAggregateDto.yaml
+  contractType:
+    $ref: ./ContractTypeDtoV2.yaml
+  accountKind:
+    $ref: ./AccountKindDto.yaml
+  tariffInfo:
+    $ref: ./TariffInfoV2Dto.yaml
+  branchInfo:
+    $ref: ./BranchInfoV2Dto.yaml
+  cardAccount:
+    type: boolean
+    description: Карточный счет
+  cardMark:
+    type: boolean
+    description: Признак наличия корпоративной карты к расчетному счету
+  cardCount:
+    type: integer
+    description: Количество карт
+    format: int32
+  mnoDogMark:
+    type: boolean
+    description: Признак наличия договора МНО к расчетному счету
+description: Данные по счетам

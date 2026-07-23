@@ -1,0 +1,6 @@
+type: object
+description: Объект разрешений подписи
+properties:
+  isSignPermitted:
+    type: boolean
+    description: Разрешение на использование (и проверку) подписи

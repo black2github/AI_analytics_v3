@@ -1,0 +1,15 @@
+required:
+- code
+type: object
+properties:
+  code:
+    type: string
+    description: Код короткого URL
+  usageStatus:
+    type: string
+    description: Статус использования ссылки
+    enum:
+    - UNKNOWN
+    - USED
+    - NOT_USED
+description: ДТО с информацией о деактивации ссылки

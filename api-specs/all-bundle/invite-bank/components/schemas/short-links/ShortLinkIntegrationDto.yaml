@@ -1,0 +1,80 @@
+required:
+- expiredAt
+- fullUrl
+- isActive
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ссылки
+    format: uuid
+  remoteId:
+    type: string
+    description: Связь длинной ссылки с короткой
+    format: uuid
+  code:
+    type: string
+    description: Уникальный код
+  fullUrl:
+    type: string
+    description: Полная ссылка
+  shortUrlParams:
+    type: string
+    description: Передаваемые параметры
+  service:
+    type: string
+    description: Сервис, инициировавший запрос
+  isActive:
+    type: boolean
+    description: Статус ссылки
+  comment:
+    type: string
+    description: Комментарий
+  expiredAt:
+    type: string
+    description: Дата/время истечения ссылки
+    format: date-time
+  requestId:
+    type: string
+    description: Идентификатор заявки, для которой создана короткая ссылка
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя, изменившего запись
+    format: uuid
+  userLogin:
+    type: string
+    description: Логин пользователя, изменившего запись
+  userFio:
+    type: string
+    description: ФИО пользователя, изменившего запись
+  createdAt:
+    type: string
+    description: Дата/время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата/время изменения
+    format: date-time
+  Статус использования ссылки:
+    type: string
+    enum:
+    - UNKNOWN
+    - USED
+    - NOT_USED
+  surname:
+    type: string
+    description: Фамилия
+  name:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  email:
+    type: string
+    description: email
+  phone:
+    type: string
+    description: Телефон
+description: Короткая ссылка

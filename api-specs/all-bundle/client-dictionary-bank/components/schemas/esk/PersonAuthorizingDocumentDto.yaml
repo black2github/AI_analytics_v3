@@ -1,0 +1,19 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код документа, на основании которого действует лицо, взаимодействующее с банком
+    deprecated: true
+    enum:
+    - REPR_GPB_BO_REG
+    - GLOBAL_WARRANT
+  expiryDate:
+    type: string
+    description: Дата окончания действия документа
+    format: date
+  credentials:
+    type: array
+    description: Полномочия в рамках документа
+    items:
+      $ref: ./PersonAuthorizingDocumentCredential.yaml
+description: Документ, на основании которого действует лицо, взаимодействующее с банком.

@@ -1,0 +1,12 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientsInfo:
+    type: array
+    description: Базовая информация по Клиентам пользователя
+    items:
+      $ref: ./UserInformationByClientBaseDto.yaml

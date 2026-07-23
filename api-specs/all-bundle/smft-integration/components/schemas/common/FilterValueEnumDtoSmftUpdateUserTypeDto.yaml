@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - MOB_APPL
+    - MOB_APPL_DISABLE
+    - ADD_PRODUCT_REPO_BROWSER
+    - ACCEPT_DISAGREEMENT_BROWSER
+  notEq:
+    type: string
+    enum:
+    - MOB_APPL
+    - MOB_APPL_DISABLE
+    - ADD_PRODUCT_REPO_BROWSER
+    - ACCEPT_DISAGREEMENT_BROWSER
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - MOB_APPL
+      - MOB_APPL_DISABLE
+      - ADD_PRODUCT_REPO_BROWSER
+      - ACCEPT_DISAGREEMENT_BROWSER
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - MOB_APPL
+      - MOB_APPL_DISABLE
+      - ADD_PRODUCT_REPO_BROWSER
+      - ACCEPT_DISAGREEMENT_BROWSER
+  isNull:
+    type: boolean

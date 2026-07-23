@@ -1,0 +1,47 @@
+get:
+  tags:
+  - gpb-api-fns-stub-config-controller
+  summary: Получить настройки заглушки для отправки статуса дополнительных продуктов
+  operationId: getSendAdditionalProductsStatusPropsUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SendStatusPropsDto'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+post:
+  tags:
+  - gpb-api-fns-stub-config-controller
+  summary: Настроить эндпойнт отправки статуса дополнительных продуктов
+  operationId: sendAdditionalProductsStatusUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: sendAdditionalProductsStatusPropsDto
+    description: sendAdditionalProductsStatusPropsDto
+    required: true
+    schema:
+      $ref: '#/definitions/SendStatusPropsDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SendStatusPropsDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,9 @@
+required:
+- operationDate
+type: object
+properties:
+  operationDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoLong.yaml
+description: Фильтр

@@ -1,0 +1,21 @@
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    description: ID финансового счета в АБС Ф1
+    format: int64
+  tariffSMSCommon:
+    type: number
+    description: Ставка по базовому тарифу
+  tariffSMS:
+    type: number
+    description: Действующий Тариф за Сервис СМС
+  tariffSMSStartDate:
+    type: string
+    description: Дата начала действия индивидуального тарифа
+    format: date-time
+  tariffSMSEndDate:
+    type: string
+    description: Дата окончания действия индивидуального тарифа
+    format: date-time
+description: Блок с информацией о счете и тарифе

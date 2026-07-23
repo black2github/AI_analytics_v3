@@ -1,0 +1,7 @@
+type: object
+properties:
+  expectedApAmount:
+    type: integer
+    description: Ожидаемое кол-во УЛ, которым будет предоставлен доступ по шаблонам ролей
+    format: int64
+description: Результат запуска процесса выдачи шаблонов ролей уполномоченным лицам клиентов банка

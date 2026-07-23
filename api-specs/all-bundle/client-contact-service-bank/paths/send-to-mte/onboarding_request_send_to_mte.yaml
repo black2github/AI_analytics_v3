@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Api повторной отправки
+  summary: Отправить повторно запрос на звонок в КЦ
+  description: 'Привилегии: NSK.CLASSIC.BANK.ONBOARDING_REQUEST.SEND_TO_MTE'
+  operationId: resendMteRequest
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/send-to-mte/MteResendRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/send-to-mte/GenericResponseErrorDataMteResendResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

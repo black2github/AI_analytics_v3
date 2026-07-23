@@ -1,0 +1,27 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      enum:
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - FILE
+      - VIEW
+      - WAIT_RESPONSE
+      - SNAPSHOT_REQUESTED
+      - FILE_REQUESTED
+      - EXECUTED
+      - DENIED
+      - CANCELED
+  error:
+    $ref: ../common/StatementError.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

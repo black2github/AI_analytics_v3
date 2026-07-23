@@ -1,0 +1,10 @@
+type: string
+description: Тип печатной формы
+enum:
+- PDF
+- XLS
+- RTF
+- HTML
+- DOC
+- DOCX
+- DOCX_TO_PDF

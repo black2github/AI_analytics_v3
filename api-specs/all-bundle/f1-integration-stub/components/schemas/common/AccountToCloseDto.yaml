@@ -1,0 +1,80 @@
+type: object
+required:
+- id
+- clientGuid
+- clId
+- clientRegnum
+- clientInn
+- mainVId
+- f1AccountType
+- curShort
+- saldo
+- debt
+- filialShortLabel
+- accDepOrg
+- accDepName
+- accDepAddressFact
+description: Доступный счет для закрытия
+properties:
+  id:
+    type: integer
+    format: int64
+    description: Идентификатор
+  clientGuid:
+    type: string
+    description: GUID клиента
+  clId:
+    type: integer
+    format: int64
+    description: Id клиента
+  clientRegnum:
+    type: integer
+    format: int64
+    description: Регистрационный номер клиента (РНК)
+  clientInn:
+    type: string
+    description: ИНН клиента
+  mainVId:
+    type: string
+    description: Номер счета
+  f1AccountType:
+    type: string
+    examples:
+    - РАСЧЕТНЫЙ
+    description: Типы счета в РКО Ф1
+  curShort:
+    type: string
+    description: Код валюты
+  saldo:
+    type: number
+    description: Остаток денежных средств
+  debt:
+    type: number
+    description: Текущая задолженность по комиссии перед Банком
+  filialShortLabel:
+    type: string
+    description: Наименование филиала
+  accDepOrg:
+    type: string
+    description: Код оргструктуры
+  accDepName:
+    type: string
+    description: Наименование подразделения обслуживания счета
+  accDepAddressFact:
+    type: string
+    description: Адрес подразделения обслуживания счета
+  restrictions:
+    type: string
+    description: Ограничения на закрытие счета
+  accountAssignment:
+    type: string
+    examples:
+    - BASE
+    description: Назначение счета
+  accountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета в Ф1
+  error:
+    type: boolean
+    description: Признак бизнес ошибки

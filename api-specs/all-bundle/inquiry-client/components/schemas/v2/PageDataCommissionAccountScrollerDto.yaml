@@ -1,0 +1,18 @@
+required:
+- page
+- size
+type: object
+properties:
+  page:
+    type: array
+    description: Страница с данными
+    example: null
+    items:
+      $ref: ./CommissionAccountScrollerDto.yaml
+  size:
+    type: integer
+    description: Размер страницы
+    format: int64
+    example: null
+description: Страничные данные
+example: null

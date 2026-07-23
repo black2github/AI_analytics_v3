@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  askId:
+    type: integer
+    description: ИД в АСК
+    format: int64
+  name:
+    type: string
+    description: Наименование управляющего фонда
+description: Фонд ДУ

@@ -1,0 +1,29 @@
+get:
+  tags:
+  - API информации об устройстве пользователя
+  summary: Получить информацию об устройстве пользователя по идентификатору сессии
+  description: 'Привилегии: CASA.TECH.GET_USER_DEVICE_INFO'
+  operationId: getUserDeviceInfoUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: sessionId
+    in: path
+    description: sessionId
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,Информация об устройстве пользователя»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

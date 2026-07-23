@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    type: string
+  signType:
+    type: string

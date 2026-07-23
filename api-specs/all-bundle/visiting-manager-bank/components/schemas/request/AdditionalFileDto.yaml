@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности.
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор соответствующего документа заявки на выезд менеджера.
+    format: uuid
+  fileId:
+    type: string
+    description: Идентификатор файла в хранилище.
+    format: uuid
+  fileSize:
+    type: integer
+    description: Размер файла.
+    format: int64
+  fileName:
+    type: string
+    description: Название файла.
+  uploadedById:
+    type: string
+    description: Идентификатор пользователя, загрузившего файл.
+    format: uuid
+  tessaFileId:
+    type: string
+    description: ' Идентификатор файла в ТЕССА.'
+    format: uuid
+  signatureBody:
+    type: string
+    description: 'Электронная подпись в формате Base-64. '
+description: Метаданные дополнительного файла к документу заявки.

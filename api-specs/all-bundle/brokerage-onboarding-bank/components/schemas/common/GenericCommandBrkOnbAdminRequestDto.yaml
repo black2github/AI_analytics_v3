@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./BrkOnbAdminRequestDto.yaml
+description: Запрос

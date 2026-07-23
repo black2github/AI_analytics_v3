@@ -1,0 +1,7 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+description: Сведения о подразделении по короткой заявке на открытие первого счета для встречи

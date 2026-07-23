@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип органа
+    enum:
+    - FSSP
+    - FTS
+    - FNS
+    - OEP
+  notEq:
+    type: string
+    description: Тип органа
+    enum:
+    - FSSP
+    - FTS
+    - FNS
+    - OEP
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип органа
+      enum:
+      - FSSP
+      - FTS
+      - FNS
+      - OEP
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип органа
+      enum:
+      - FSSP
+      - FTS
+      - FNS
+      - OEP
+  isNull:
+    type: boolean
+description: От кого. Поиск по <Тип организации источника блокировки>. Содержится в списке

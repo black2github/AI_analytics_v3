@@ -1,0 +1,7 @@
+type: string
+description: Категории скроллера заявок
+enum:
+- TOTAL
+- COMPLETED
+- IN_PROCESSING
+- PROCESSING_ERROR

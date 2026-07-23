@@ -1,0 +1,8 @@
+required:
+- userEskId
+type: object
+properties:
+  userEskId:
+    type: string
+    description: Идентификатор пользователя в ЕСК
+description: Данные запроса синхронизации ИО Клиент INDIVIDUAL

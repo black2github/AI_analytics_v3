@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsApprovalScrollerFilterDto.yaml
+description: Запрос страницы

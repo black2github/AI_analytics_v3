@@ -1,0 +1,9 @@
+type: string
+description: ДТО Классификатор видов электронной подписи
+enum:
+- LOCAL
+- CLOUD_SIGN
+- NOT_QUALIFIED_SIGN
+- QUALIFIED_SIGN
+- SIMPLE_SIGN
+- MOBILE_QUALIFIED_SIGN

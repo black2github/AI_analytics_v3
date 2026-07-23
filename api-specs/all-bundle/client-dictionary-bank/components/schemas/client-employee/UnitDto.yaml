@@ -1,0 +1,12 @@
+type: object
+properties:
+  unit:
+    type: string
+    description: Единица адресации
+  unitNum:
+    type: string
+    description: Номер единицы адресации
+  fiasUnitNumCode:
+    type: string
+    description: ФИАС код типа и номера помещения в пределах здания
+description: Единица адресации. Интеграционное ДТО

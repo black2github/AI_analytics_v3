@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ACTIVE
+    - ENDED
+    - BLOCKED
+    - DELETED
+  notEq:
+    type: string
+    enum:
+    - ACTIVE
+    - ENDED
+    - BLOCKED
+    - DELETED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - ENDED
+      - BLOCKED
+      - DELETED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - ENDED
+      - BLOCKED
+      - DELETED
+  isNull:
+    type: boolean

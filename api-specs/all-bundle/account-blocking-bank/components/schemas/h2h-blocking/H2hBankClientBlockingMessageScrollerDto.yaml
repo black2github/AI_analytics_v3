@@ -1,0 +1,42 @@
+required:
+- createdAt
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID сообщения
+    format: uuid
+  docNumber:
+    type: string
+    description: Номер документа
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  initiator:
+    $ref: ./BankClientInfoDto.yaml
+  fileName:
+    type: string
+    description: Наименование файла документа
+  bankComment:
+    type: string
+    description: Комментарий для банка
+  status:
+    type: string
+    description: Текущий статус обработки сообщения о блокировке H2H
+    enum:
+    - RECEIVED
+    - READ_SUCCEEDED
+    - PROCESSING
+    - PROCESSED
+    - PRINT_PROCESSING
+    - PRINT_SUCCEEDED
+    - PROCESS_ERROR
+    - EXECUTED
+    - NOT_EXECUTED
+description: Запись журнала сообщений о блокировках H2H

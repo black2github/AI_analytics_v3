@@ -1,0 +1,37 @@
+type: object
+description: СМФТ событие открытия сессии
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сообщения (UUID)
+  timeOfOccurrence:
+    type: string
+    format: date-time
+    description: Дата и время формирования события
+  clientUserFullName:
+    type: string
+    description: Пользователь
+  login:
+    type: string
+    description: Логин
+  uaaUserId:
+    type: string
+    format: uuid
+    description: UAA ID пользователя
+  catalog:
+    type: string
+    description: Наименование каталога пользователя
+  macAddress:
+    type: string
+    description: MAC адрес
+  ipAddress:
+    type: string
+    description: IP-адрес пользовательского устройства
+required:
+- clientUserFullName
+- id
+- ipAddress
+- login
+- timeOfOccurrence
+- uaaUserId

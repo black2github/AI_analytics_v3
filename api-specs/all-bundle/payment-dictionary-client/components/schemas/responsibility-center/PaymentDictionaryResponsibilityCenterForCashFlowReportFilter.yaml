@@ -1,0 +1,7 @@
+type: object
+properties:
+  responsibilityCenterName:
+    $ref: ../common/FilterValueDtoString.yaml
+  isDownstreamResponsibilityCenter:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр справочника Центры ответственности для "Отчета о движении средств"

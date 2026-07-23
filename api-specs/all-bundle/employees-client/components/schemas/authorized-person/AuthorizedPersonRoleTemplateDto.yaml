@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  rolesTemplateVersion:
+    type: integer
+    description: Версия шаблона ролей
+    format: int32
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  roleTemplateId:
+    type: string
+    description: Идентификатор шаблона роли
+    format: uuid
+  roleTemplateCode:
+    type: string
+    description: Код шаблона роли
+  employeeRequestId:
+    type: string
+    description: Идентификатор заявки на создание нового/изменение данных и полномочий сотрудника клиента
+    format: uuid
+  originalService:
+    type: string
+    description: Источник записи
+  comment:
+    type: string
+    description: Комментарий
+  creatorId:
+    type: string
+    description: Идентификатор пользователя создавшего запись
+    format: uuid
+  issuedManually:
+    type: boolean
+    description: Признак ручной выдачи
+description: Данные шаблона роли УЛ

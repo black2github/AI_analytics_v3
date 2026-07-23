@@ -1,0 +1,55 @@
+type: object
+properties:
+  supplyMode:
+    type: string
+    description: Способ оформления доверенности
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+  hasActiveWarranty:
+    type: boolean
+    description: Есть действующая мегадоверенность
+  activeWarrantyNumber:
+    type: string
+    description: Номер действующей мегадоверенности
+  activeWarrantyIssueDate:
+    type: string
+    description: Дата выдачи действующей мегадоверенности
+    format: date
+  activeWarrantyStartDate:
+    type: string
+    description: Дата начала действия действующей мегадоверенности
+    format: date
+  currentExpirationDate:
+    type: string
+    description: Текущая дата окончания действия
+    format: date
+  activeWarrantyEndDate:
+    type: string
+    description: Дата окончания действия действующей мегадоверенности
+    format: date
+  activeWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую мегадоверенность
+  grantNewWarranty:
+    type: boolean
+    description: Выдать новую мегадоверенность
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности
+    format: date
+  credentialsText:
+    type: string
+    description: Текст предоставляемых полномочий
+description: Электронная мегадоверенность сотрудника

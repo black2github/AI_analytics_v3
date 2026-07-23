@@ -1,0 +1,57 @@
+type: object
+properties:
+  paymentType:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Код вида платежа
+    nullable: true
+  paymentConditionCode:
+    maximum: 2
+    minimum: 1
+    type: integer
+    description: Код условия оплаты
+    format: int32
+    nullable: true
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  incomeType:
+    maxLength: 210
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Назначение платежа
+    nullable: true
+  sentDate:
+    type: string
+    description: Дата отсылки (вручения) контрагенту предусмотренных договором документов
+    format: date
+    nullable: true
+  paymentPriorityCode:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Код очередности платежа
+    nullable: true
+  paymentPurposeCode:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Кодовое назначение платежа
+    nullable: true
+  uipCode:
+    maxLength: 25
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Код (УИП)
+    nullable: true
+  backupField:
+    maxLength: 35
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Резервное поле
+    nullable: true
+description: Реквизиты исходящего платежного требования (данные для создания)
+nullable: true

@@ -1,0 +1,17 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - ERROR
+    - DECLINED
+    - NEW
+    - IN_PROCESS
+    - EXECUTED
+  count:
+    type: integer
+    description: Статистика
+    format: int64
+description: Статистика по категориям статусов

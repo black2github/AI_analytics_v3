@@ -1,0 +1,13 @@
+required:
+- data
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      type: integer
+      description: Данные
+      format: int64
+description: Запрос

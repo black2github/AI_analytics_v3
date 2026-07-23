@@ -1,0 +1,23 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Имя кэша
+    enum:
+    - CLIENT_OFFICIALS_CONTACT_INFO
+  status:
+    type: string
+    description: Статус
+    enum:
+    - TERMINATED
+    - NOT_READY
+    - WARMING_UP
+    - READY
+  version:
+    type: string
+    description: Версия кэша
+  updatedAt:
+    type: string
+    description: Дата последнего обновления
+    format: date-time
+description: Информация о кэше

@@ -1,0 +1,13 @@
+get:
+  tags:
+  - АПИ Банка для управления дисклеймерами
+  summary: Получить список категорий
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_VIEW'
+  operationId: getCategories
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/category/CategoryResponse.yaml

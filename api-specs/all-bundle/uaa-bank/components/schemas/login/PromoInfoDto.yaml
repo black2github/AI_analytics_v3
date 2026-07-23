@@ -1,0 +1,27 @@
+type: object
+properties:
+  orgId:
+    type: string
+    description: Идентификатор организации. (не связан с ид. в ЭКО)
+    format: uuid
+  marketingCampaign:
+    type: string
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - GPB_AUTOLEASING
+    - GPB_FACTORING
+    - GPB_CARCADE
+    - GPB_BSK
+    - ESIA
+    - GPB_IO_BSK
+    - CP_RETAIL
+    - ETP_GAZ
+    - FAP_DARK
+    - AB_PAYMENTS
+    - ETP_EDO
+    - ETP_VESNA
+    - AUTO_USN
+    - ULUKY
+    - OB_VTB
+description: Информация о промокампаниях пользователя

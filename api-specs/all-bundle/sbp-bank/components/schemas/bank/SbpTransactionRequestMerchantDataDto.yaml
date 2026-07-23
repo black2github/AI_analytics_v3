@@ -1,0 +1,21 @@
+type: object
+description: ДТО с реквизитами точки продаж
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  merchantName:
+    type: string
+    description: Наименование точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес Точки продаж
+  merchantStatus:
+    type: string
+    description: Текущий статус ТСП
+    enum:
+    - ACTIVE
+    - BLOCKED
+required:
+- merchantId
+- merchantName

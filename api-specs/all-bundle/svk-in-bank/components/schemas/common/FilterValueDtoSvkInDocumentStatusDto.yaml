@@ -1,0 +1,93 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  notEq:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - IMPORTED
+      - SIGN_ERROR
+      - IMPORTED_FILE_ERROR
+      - SIGNED
+      - NEW
+      - READ
+      - CANCELED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - IMPORTED
+      - SIGN_ERROR
+      - IMPORTED_FILE_ERROR
+      - SIGNED
+      - NEW
+      - READ
+      - CANCELED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  ge:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  lt:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  le:
+    type: string
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+description: Статус документа

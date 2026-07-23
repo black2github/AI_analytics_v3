@@ -1,0 +1,11 @@
+type: object
+properties:
+  backgroundImportProcessId:
+    type: string
+    description: ID "[РРКО_ПП_NEW] МД. Сеанс импорта платежных документов"
+    format: uuid
+  fileImportId:
+    type: string
+    description: ID "[Импорт ПЭД] МД. Файл импорта"
+    format: uuid
+description: Входящие параметры "Функция экспорта протокола импорта"

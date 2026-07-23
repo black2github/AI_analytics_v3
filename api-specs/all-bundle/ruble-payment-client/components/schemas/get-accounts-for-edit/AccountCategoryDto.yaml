@@ -1,0 +1,7 @@
+type: string
+description: Категория счета.
+enum:
+- ALL
+- OPENED
+- RESERVED
+- ANNULLED

@@ -1,0 +1,22 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - IMPORTED_ERROR
+    - IMPORTED_CORRECT
+    - IMPORTED_WARNING
+    - IMPORTED_SIGNED
+    - IMPORTED_SIGNED1
+    - IMPORTED_SIGNED2
+    - IMPORTED_FLK_ERROR
+    - IMPORTED_ACCESS_ERROR
+  amount:
+    type: number
+    description: Общая сумма документов
+  count:
+    type: integer
+    description: Общее количество документов
+    format: int64
+description: Статистика по документам файла импорта в разрезе статуса

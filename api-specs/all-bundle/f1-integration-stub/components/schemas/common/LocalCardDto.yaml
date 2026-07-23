@@ -1,0 +1,88 @@
+type: object
+required:
+- clientAbsId
+- cardNumber
+- cardNumberMasked
+- virtualCardNumber
+- statusCode
+- stateCode
+- expireDate
+- account
+- ownerLastName
+- ownerFirstName
+- ownerBirthDate
+- cardHash
+description: Локальная карта питания
+properties:
+  id:
+    type: integer
+    description: Внутренний ID карты в АБС Ф1
+  clientAbsId:
+    type: integer
+    format: int64
+    description: РНК клиента в РКО Ф1
+  cardNumber:
+    type: string
+    maxLength: 20
+    description: Полный номер карты
+  cardNumberMasked:
+    type: string
+    maxLength: 16
+    description: Маскированный номер карты
+  virtualCardNumber:
+    type: string
+    maxLength: 50
+    description: Виртуальный номер карты
+  statusCode:
+    type: string
+    maxLength: 10
+    description: Код статуса карты в АБС Ф1
+  stateCode:
+    type: string
+    maxLength: 10
+    description: Код состояния карты в АБС Ф1
+  expireDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата окончания действия
+  account:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счёта карты
+  ownerLastName:
+    type: string
+    maxLength: 255
+    description: Фамилия владельца карты
+  ownerFirstName:
+    type: string
+    maxLength: 255
+    description: Имя владельца карты
+  ownerPatronymicName:
+    type: string
+    maxLength: 255
+    description: Отчество владельца карты
+  ownerBirthDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата рождения владельца карты
+  cardHash:
+    type: integer
+    format: int64
+    description: Хэш данных карты
+  paySystemCode:
+    type: string
+    maxLength: 100
+    description: Код технологического продукта
+  paySystemName:
+    type: string
+    maxLength: 50
+    description: Наименование технологического продукта
+  productName:
+    type: string
+    maxLength: 50
+    description: Наименование карточного продукта

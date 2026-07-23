@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./StatusCategoryDto.yaml
+  notEq:
+    $ref: ./StatusCategoryDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./StatusCategoryDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./StatusCategoryDto.yaml
+  isNull:
+    type: boolean
+description: Категория заявки (eq).

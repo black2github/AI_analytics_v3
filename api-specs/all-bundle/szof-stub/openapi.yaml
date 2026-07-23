@@ -1,0 +1,115 @@
+openapi: 3.1.0
+info:
+  title: szof-stub API
+  version: 1.5.0
+servers:
+- url: /szof-stub
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /gpb-api/fns/config/ext-files:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files.yaml
+  /gpb-api/fns/config/ext-files/download:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files_download.yaml
+  /gpb-api/fns/config/ext-files/{id}:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files_id.yaml
+  /gpb-api/fns/ext-files/download:
+    $ref: ./paths/fns/gpb_api_fns_ext_files_download.yaml
+  /mflash/api_v2/action/delete:
+    $ref: ./paths/api_v2/mflash_api_v2_action_delete.yaml
+  /mflash/api_v2/auth:
+    $ref: ./paths/api_v2/mflash_api_v2_auth.yaml
+  /mflash/api_v2/download/prepare:
+    $ref: ./paths/api_v2/mflash_api_v2_download_prepare.yaml
+  /mflash/api_v2/download/{token}:
+    $ref: ./paths/api_v2/mflash_api_v2_download_token.yaml
+  /mflash/api_v2/file/{id}/status:
+    $ref: ./paths/api_v2/mflash_api_v2_file_id_status.yaml
+  /mflash/api_v2/flash/list:
+    $ref: ./paths/api_v2/mflash_api_v2_flash_list.yaml
+  /mflash/api_v2/stubsettings/clear:
+    $ref: ./paths/api_v2/mflash_api_v2_stubsettings_clear.yaml
+  /mflash/api_v2/stubsettings/remove/{fileHash}:
+    $ref: ./paths/api_v2/mflash_api_v2_stubsettings_remove_fileHash.yaml
+  /mflash/api_v2/stubsettings/upload:
+    $ref: ./paths/api_v2/mflash_api_v2_stubsettings_upload.yaml
+  /mflash/api_v2/stubsettings/{fileHash}:
+    $ref: ./paths/api_v2/mflash_api_v2_stubsettings_fileHash.yaml
+  /mflash/api_v2/upload/prepare:
+    $ref: ./paths/api_v2/mflash_api_v2_upload_prepare.yaml
+  /mflash/api_v2/upload/{token}/{chunk}:
+    $ref: ./paths/api_v2/mflash_api_v2_upload_token_chunk.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    FileUploadRequest:
+      $ref: ./components/schemas/api_v2/FileUploadRequest.yaml
+    FnsFileUploadRequest:
+      $ref: ./components/schemas/fns/FnsFileUploadRequest.yaml
+    GetArchiveFileIdPropsDto:
+      $ref: ./components/schemas/fns/GetArchiveFileIdPropsDto.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    LocalDateTime:
+      $ref: ./components/schemas/api_v2/LocalDateTime.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    MflashAuthRequest:
+      $ref: ./components/schemas/api_v2/MflashAuthRequest.yaml
+    MflashAuthResponse:
+      $ref: ./components/schemas/api_v2/MflashAuthResponse.yaml
+    MflashDownloadTokenRequest:
+      $ref: ./components/schemas/api_v2/MflashDownloadTokenRequest.yaml
+    MflashDownloadTokenResponse:
+      $ref: ./components/schemas/api_v2/MflashDownloadTokenResponse.yaml
+    MflashFileDeleteRequest:
+      $ref: ./components/schemas/api_v2/MflashFileDeleteRequest.yaml
+    MflashFileDeleteResponse:
+      $ref: ./components/schemas/api_v2/MflashFileDeleteResponse.yaml
+    MflashFileStatusResponse:
+      $ref: ./components/schemas/api_v2/MflashFileStatusResponse.yaml
+    MflashFolderInfoResponse:
+      $ref: ./components/schemas/api_v2/MflashFolderInfoResponse.yaml
+    MflashUploadTokenRequest:
+      $ref: ./components/schemas/api_v2/MflashUploadTokenRequest.yaml
+    MflashUploadTokenResponse:
+      $ref: ./components/schemas/api_v2/MflashUploadTokenResponse.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    Owner:
+      $ref: ./components/schemas/api_v2/Owner.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    StubMode:
+      $ref: ./components/schemas/fns/StubMode.yaml
+    StubSettingsUpload:
+      $ref: ./components/schemas/api_v2/StubSettingsUpload.yaml
+    TokenInfo:
+      $ref: ./components/schemas/api_v2/TokenInfo.yaml

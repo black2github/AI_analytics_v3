@@ -1,0 +1,29 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код акции
+  end:
+    type: string
+    description: Дата окончания акции
+    format: date
+  f1Code:
+    type: string
+    description: Код акции в Ф1
+  info:
+    type: string
+    description: Дополнительная информация об акции
+  informer:
+    type: string
+    description: Информер об акции
+  name:
+    type: string
+    description: Наименование акции
+  start:
+    type: string
+    description: Дата начала акции
+    format: date
+  termsLink:
+    type: string
+    description: Условия акции
+description: Справочник акций по тарифам на обслуживание счета

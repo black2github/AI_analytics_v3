@@ -1,0 +1,32 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Ссылка на документ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docSignerName:
+    type: string
+    description: Подписант
+  status:
+    type: string
+    description: Статус
+    enum:
+    - RECEIVED
+    - SENT_TO_ASK
+    - SENT_TO_ASK_SUCCESS
+    - SENT_TO_ASK_FAIL
+    - EXECUTED
+    - DENIED
+  statusDetails:
+    type: string
+    description: Детализация статуса
+description: Информация о документе об изменении

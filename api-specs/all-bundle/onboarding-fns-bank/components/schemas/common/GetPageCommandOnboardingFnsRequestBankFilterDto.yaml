@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOnboardingFnsRequestBankFilterDto.yaml
+description: Запрос страницы

@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID пользователя клиента
+    format: uuid
+  uaaId:
+    type: string
+    description: UAA ID пользователя клиента
+    format: uuid
+  login:
+    type: string
+    description: Логин пользователя
+  eskId:
+    type: string
+    description: ЕСК ИД пользователя
+  absId:
+    type: string
+    description: F1 ИД пользователя
+description: Информация о пользователе клиента

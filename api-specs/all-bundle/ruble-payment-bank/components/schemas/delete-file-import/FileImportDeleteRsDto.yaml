@@ -1,0 +1,13 @@
+required:
+- fileImportId
+- status
+type: object
+properties:
+  status:
+    type: string
+    description: Статус
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+description: '[Импорт ПЭД] Система: Функция создания удаления файла импорта. Исходящие параметры.'

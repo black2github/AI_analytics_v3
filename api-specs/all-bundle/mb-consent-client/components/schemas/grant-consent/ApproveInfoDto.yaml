@@ -1,0 +1,25 @@
+type: object
+properties:
+  extConsentId:
+    type: string
+    description: Внешний идентификатор согласия
+    format: uuid
+  bankPartner:
+    type: string
+    description: Код банка партнера
+  organization:
+    $ref: ../common/BankClientInfoDto.yaml
+  permitsExpiration:
+    type: string
+    description: Дата и время истечения разрешений
+    format: date-time
+  availableActions:
+    type: array
+    description: Доступные операции
+    items:
+      type: string
+      description: Доступные операции
+      enum:
+      - BASE
+      - TRANSACTIONS
+description: Информация для формы подтверждения согласия

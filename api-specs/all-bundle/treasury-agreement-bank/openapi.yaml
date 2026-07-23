@@ -1,0 +1,1186 @@
+openapi: 3.0.1
+info:
+  title: Сервис соглашений. Банковская часть.
+  version: 1.69.0-SNAPSHOT
+servers:
+- url: /treasury-agreement-internal
+tags:
+- name: Заявка на заключение генерального соглашения - ДУ МНО (банк)
+  description: AgreementRequestDUMNOBankController
+- name: Заявка на заключение генерального соглашения - ГСНО Присоединения (ГО) (банк)
+  description: AgreementRequestGSNOChildHeadBankController
+- name: Заявка на заключение генерального соглашения - МНО (банк подпись)
+  description: AgreementRequestMNOBankSignController
+- name: Заявка на заключение генерального соглашения - ГСНО Присоединения (Друг) (банк)
+  description: AgreementRequestGSNOChildFriendBankController
+- name: Заявка на заключение генерального соглашения - ГСНО ГО (банк)
+  description: AgreementRequestGSNOParentBankController
+- name: Заявка на добавление счетов к генеральному соглашению ГСНО (банк)
+  description: ChangeAccountsRequestBankController
+- name: Заявка на заключение генерального соглашения - ДУ Конверсия (банк)
+  description: AgreementRequestDUConversionBankController
+- name: Заявка на заключение генерального соглашения - ГСНО Присоединения (ГО) (банк подпись)
+  description: AgreementRequestGSNOChildHeadBankSignController
+- name: Заявка на заключение генерального соглашения - МНО (банк)
+  description: AgreementRequestMNOBankController
+- name: Заявка на заключение генерального соглашения - Депозит
+  description: AgreementRequestDepositBankController
+- name: Скроллер и общее API
+  description: AgreementRequestBankSignBatchController
+- name: Заявка на заключение генерального соглашения - ДУ Депозит (банк)
+  description: AgreementRequestDUDepositBankController
+- name: Заявка на заключение генерального соглашения - ГСНО Присоединения (Друг) (банк подпись)
+  description: AgreementRequestGSNOChildFriendBankSignController
+- name: Заявка на заключение генерального соглашения - Конверсия (банк)
+  description: AgreementRequestConversionBankController
+- name: Заявка на заключение генерального соглашения - ДУ Конверсия (банк подпись)
+  description: AgreementRequestDUConversionBankSignController
+- name: Заявка на заключение генерального соглашения - ДУ Депозит (банк подпись)
+  description: AgreementRequestDUDepositBankSignController
+- name: Заявка на заключение генерального соглашения - Депозит
+  description: AgreementRequestDepositBankSignController
+- name: Заявка на заключение генерального соглашения - ГСНО ГО (банк подпись)
+  description: AgreementRequestGSNOParentBankSignController
+- name: Заявка на заключение генерального соглашения - Конверсия (банк подпись)
+  description: AgreementRequestConversionBankSignController
+- name: Заявка на заключение генерального соглашения - ДУ МНО (банк подпись)
+  description: AgreementRequestDUMNOBankSignController
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /agreement-request/mno/{id}:
+    $ref: ./paths/mno/agreement_request_mno_id.yaml
+  /agreement-request/mno/verify/{id}:
+    $ref: ./paths/mno/agreement_request_mno_verify_id.yaml
+  /agreement-request/mno/update-checklist/{id}:
+    $ref: ./paths/mno/agreement_request_mno_update_checklist_id.yaml
+  /agreement-request/mno/save-draft/{id}:
+    $ref: ./paths/mno/agreement_request_mno_save_draft_id.yaml
+  /agreement-request/mno/reject/{id}:
+    $ref: ./paths/mno/agreement_request_mno_reject_id.yaml
+  /agreement-request/mno/decline-sign/{id}:
+    $ref: ./paths/mno/agreement_request_mno_decline_sign_id.yaml
+  /agreement-request/mno/assign/{id}:
+    $ref: ./paths/mno/agreement_request_mno_assign_id.yaml
+  /agreement-request/mno/approve-sign/{id}:
+    $ref: ./paths/mno/agreement_request_mno_approve_sign_id.yaml
+  /agreement-request/gsno-parent/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_id.yaml
+  /agreement-request/gsno-parent/verify/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_verify_id.yaml
+  /agreement-request/gsno-parent/update-checklist/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_update_checklist_id.yaml
+  /agreement-request/gsno-parent/save-draft/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_save_draft_id.yaml
+  /agreement-request/gsno-parent/reject/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_reject_id.yaml
+  /agreement-request/gsno-parent/decline-sign/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_decline_sign_id.yaml
+  /agreement-request/gsno-parent/assign/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_assign_id.yaml
+  /agreement-request/gsno-parent/approve-sign/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_approve_sign_id.yaml
+  /agreement-request/gsno-child-head/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_id.yaml
+  /agreement-request/gsno-child-head/verify/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_verify_id.yaml
+  /agreement-request/gsno-child-head/update-checklist/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_update_checklist_id.yaml
+  /agreement-request/gsno-child-head/save-draft/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_save_draft_id.yaml
+  /agreement-request/gsno-child-head/reject/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_reject_id.yaml
+  /agreement-request/gsno-child-head/decline-sign/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_decline_sign_id.yaml
+  /agreement-request/gsno-child-head/assign/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_assign_id.yaml
+  /agreement-request/gsno-child-head/approve-sign/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_approve_sign_id.yaml
+  /agreement-request/gsno-child-friend/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_id.yaml
+  /agreement-request/gsno-child-friend/verify/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_verify_id.yaml
+  /agreement-request/gsno-child-friend/update-checklist/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_update_checklist_id.yaml
+  /agreement-request/gsno-child-friend/save-draft/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_save_draft_id.yaml
+  /agreement-request/gsno-child-friend/reject/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_reject_id.yaml
+  /agreement-request/gsno-child-friend/decline-sign/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_decline_sign_id.yaml
+  /agreement-request/gsno-child-friend/assign/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_assign_id.yaml
+  /agreement-request/gsno-child-friend/approve-sign/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_approve_sign_id.yaml
+  /agreement-request/du-mno/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_id.yaml
+  /agreement-request/du-mno/verify/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_verify_id.yaml
+  /agreement-request/du-mno/update-checklist/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_update_checklist_id.yaml
+  /agreement-request/du-mno/save-draft/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_save_draft_id.yaml
+  /agreement-request/du-mno/reject/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_reject_id.yaml
+  /agreement-request/du-mno/decline-sign/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_decline_sign_id.yaml
+  /agreement-request/du-mno/assign/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_assign_id.yaml
+  /agreement-request/du-mno/approve-sign/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_approve_sign_id.yaml
+  /agreement-request/du-deposit/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_id.yaml
+  /agreement-request/du-deposit/verify/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_verify_id.yaml
+  /agreement-request/du-deposit/update-checklist/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_update_checklist_id.yaml
+  /agreement-request/du-deposit/save-draft/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_save_draft_id.yaml
+  /agreement-request/du-deposit/reject/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_reject_id.yaml
+  /agreement-request/du-deposit/decline-sign/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_decline_sign_id.yaml
+  /agreement-request/du-deposit/assign/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_assign_id.yaml
+  /agreement-request/du-deposit/approve-sign/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_approve_sign_id.yaml
+  /agreement-request/du-conversion/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_id.yaml
+  /agreement-request/du-conversion/verify/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_verify_id.yaml
+  /agreement-request/du-conversion/update-checklist/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_update_checklist_id.yaml
+  /agreement-request/du-conversion/save-draft/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_save_draft_id.yaml
+  /agreement-request/du-conversion/reject/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_reject_id.yaml
+  /agreement-request/du-conversion/decline-sign/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_decline_sign_id.yaml
+  /agreement-request/du-conversion/assign/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_assign_id.yaml
+  /agreement-request/du-conversion/approve-sign/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_approve_sign_id.yaml
+  /agreement-request/deposit/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_id.yaml
+  /agreement-request/deposit/verify/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_verify_id.yaml
+  /agreement-request/deposit/update-checklist/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_update_checklist_id.yaml
+  /agreement-request/deposit/save-draft/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_save_draft_id.yaml
+  /agreement-request/deposit/reject/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_reject_id.yaml
+  /agreement-request/deposit/decline-sign/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_decline_sign_id.yaml
+  /agreement-request/deposit/assign/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_assign_id.yaml
+  /agreement-request/deposit/approve-sign/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_approve_sign_id.yaml
+  /agreement-request/conversion/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_id.yaml
+  /agreement-request/conversion/verify/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_verify_id.yaml
+  /agreement-request/conversion/update-checklist/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_update_checklist_id.yaml
+  /agreement-request/conversion/save-draft/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_save_draft_id.yaml
+  /agreement-request/conversion/reject/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_reject_id.yaml
+  /agreement-request/conversion/decline-sign/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_decline_sign_id.yaml
+  /agreement-request/conversion/assign/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_assign_id.yaml
+  /agreement-request/conversion/approve-sign/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_approve_sign_id.yaml
+  /additional-request/change-accounts/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_id.yaml
+  /additional-request/change-accounts/reject/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_reject_id.yaml
+  /additional-request/change-accounts/assign/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_assign_id.yaml
+  /watch/pkp-message-log/get-page:
+    $ref: ./paths/misc/watch_pkp_message_log_get_page.yaml
+  /user-param:
+    $ref: ./paths/misc/user_param.yaml
+  /universal-request/watch/get-page:
+    $ref: ./paths/misc/universal_request_watch_get_page.yaml
+  /universal-request/watch/category:
+    $ref: ./paths/misc/universal_request_watch_category.yaml
+  /universal-request/get-page:
+    $ref: ./paths/misc/universal_request_get_page.yaml
+  /universal-request/export-reports:
+    $ref: ./paths/misc/universal_request_export_reports.yaml
+  /universal-request/export-list:
+    $ref: ./paths/misc/universal_request_export_list.yaml
+  /universal-request/export-list-async:
+    $ref: ./paths/misc/universal_request_export_list_async.yaml
+  /universal-request/category:
+    $ref: ./paths/misc/universal_request_category.yaml
+  /pkp-message-log/get-page:
+    $ref: ./paths/misc/pkp_message_log_get_page.yaml
+  /agreement-request/sign-batch:
+    $ref: ./paths/misc/agreement_request_sign_batch.yaml
+  /agreement-request/mno:
+    $ref: ./paths/mno/agreement_request_mno.yaml
+  /agreement-request/mno/verify-for-new-request:
+    $ref: ./paths/mno/agreement_request_mno_verify_for_new_request.yaml
+  /agreement-request/mno/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/mno/agreement_request_mno_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/mno/sign:
+    $ref: ./paths/mno/agreement_request_mno_sign.yaml
+  /agreement-request/mno/sign-certificates:
+    $ref: ./paths/mno/agreement_request_mno_sign_certificates.yaml
+  /agreement-request/mno/sign-attachment:
+    $ref: ./paths/mno/agreement_request_mno_sign_attachment.yaml
+  /agreement-request/mno/send-to-pkp:
+    $ref: ./paths/mno/agreement_request_mno_send_to_pkp.yaml
+  /agreement-request/mno/send-to-client:
+    $ref: ./paths/mno/agreement_request_mno_send_to_client.yaml
+  /agreement-request/mno/return-from-pkp:
+    $ref: ./paths/mno/agreement_request_mno_return_from_pkp.yaml
+  /agreement-request/mno/resend-to-pkp:
+    $ref: ./paths/mno/agreement_request_mno_resend_to_pkp.yaml
+  /agreement-request/mno/print-visa-list:
+    $ref: ./paths/mno/agreement_request_mno_print_visa_list.yaml
+  /agreement-request/mno/print-report:
+    $ref: ./paths/mno/agreement_request_mno_print_report.yaml
+  /agreement-request/mno/organizations-get-page-with-constitution:
+    $ref: ./paths/mno/agreement_request_mno_organizations_get_page_with_constitution.yaml
+  /agreement-request/mno/generate-sign-data:
+    $ref: ./paths/mno/agreement_request_mno_generate_sign_data.yaml
+  /agreement-request/mno/generate-sign-data-v2:
+    $ref: ./paths/mno/agreement_request_mno_generate_sign_data_v2.yaml
+  /agreement-request/mno/generate-sign-data-for-attachment:
+    $ref: ./paths/mno/agreement_request_mno_generate_sign_data_for_attachment.yaml
+  /agreement-request/mno/delete:
+    $ref: ./paths/mno/agreement_request_mno_delete.yaml
+  /agreement-request/mno/delete-attachment:
+    $ref: ./paths/mno/agreement_request_mno_delete_attachment.yaml
+  /agreement-request/gsno-parent:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent.yaml
+  /agreement-request/gsno-parent/verify-for-new-request:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_verify_for_new_request.yaml
+  /agreement-request/gsno-parent/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/gsno-parent/sign:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_sign.yaml
+  /agreement-request/gsno-parent/sign-certificates:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_sign_certificates.yaml
+  /agreement-request/gsno-parent/sign-attachment:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_sign_attachment.yaml
+  /agreement-request/gsno-parent/send-to-client:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_send_to_client.yaml
+  /agreement-request/gsno-parent/resend:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_resend.yaml
+  /agreement-request/gsno-parent/print-visa-list:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_print_visa_list.yaml
+  /agreement-request/gsno-parent/print-report:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_print_report.yaml
+  /agreement-request/gsno-parent/print-report-by-child-head-id:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_print_report_by_child_head_id.yaml
+  /agreement-request/gsno-parent/print-report-by-child-friend-id:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_print_report_by_child_friend_id.yaml
+  /agreement-request/gsno-parent/organizations-get-page-with-constitution:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_organizations_get_page_with_constitution.yaml
+  /agreement-request/gsno-parent/generate-sign-data:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_generate_sign_data.yaml
+  /agreement-request/gsno-parent/generate-sign-data-v2:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_generate_sign_data_v2.yaml
+  /agreement-request/gsno-parent/generate-sign-data-for-attachment:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_generate_sign_data_for_attachment.yaml
+  /agreement-request/gsno-parent/delete:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_delete.yaml
+  /agreement-request/gsno-parent/delete-attachment:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_delete_attachment.yaml
+  /agreement-request/gsno-child-head:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head.yaml
+  /agreement-request/gsno-child-head/verify-for-new-request:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_verify_for_new_request.yaml
+  /agreement-request/gsno-child-head/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/gsno-child-head/sign:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_sign.yaml
+  /agreement-request/gsno-child-head/sign-certificates:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_sign_certificates.yaml
+  /agreement-request/gsno-child-head/sign-attachment:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_sign_attachment.yaml
+  /agreement-request/gsno-child-head/send-to-client:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_send_to_client.yaml
+  /agreement-request/gsno-child-head/resend:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_resend.yaml
+  /agreement-request/gsno-child-head/print-visa-list:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_print_visa_list.yaml
+  /agreement-request/gsno-child-head/print-report:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_print_report.yaml
+  /agreement-request/gsno-child-head/print-report-by-child-friend-id:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_print_report_by_child_friend_id.yaml
+  /agreement-request/gsno-child-head/organizations-get-page-with-constitution:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_organizations_get_page_with_constitution.yaml
+  /agreement-request/gsno-child-head/get-received-original-by-id:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_get_received_original_by_id.yaml
+  /agreement-request/gsno-child-head/generate-sign-data:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_generate_sign_data.yaml
+  /agreement-request/gsno-child-head/generate-sign-data-v2:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_generate_sign_data_v2.yaml
+  /agreement-request/gsno-child-head/generate-sign-data-for-attachment:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_generate_sign_data_for_attachment.yaml
+  /agreement-request/gsno-child-head/delete:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_delete.yaml
+  /agreement-request/gsno-child-head/delete-attachment:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_delete_attachment.yaml
+  /agreement-request/gsno-child-friend:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend.yaml
+  /agreement-request/gsno-child-friend/verify-for-new-request:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_verify_for_new_request.yaml
+  /agreement-request/gsno-child-friend/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/gsno-child-friend/sign:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_sign.yaml
+  /agreement-request/gsno-child-friend/sign-certificates:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_sign_certificates.yaml
+  /agreement-request/gsno-child-friend/sign-attachment:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_sign_attachment.yaml
+  /agreement-request/gsno-child-friend/send-to-client:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_send_to_client.yaml
+  /agreement-request/gsno-child-friend/resend:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_resend.yaml
+  /agreement-request/gsno-child-friend/print-visa-list:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_print_visa_list.yaml
+  /agreement-request/gsno-child-friend/print-report:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_print_report.yaml
+  /agreement-request/gsno-child-friend/print-report-by-liked-id:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_print_report_by_liked_id.yaml
+  /agreement-request/gsno-child-friend/organizations-get-page-with-constitution:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_organizations_get_page_with_constitution.yaml
+  /agreement-request/gsno-child-friend/generate-sign-data:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_generate_sign_data.yaml
+  /agreement-request/gsno-child-friend/generate-sign-data-v2:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_generate_sign_data_v2.yaml
+  /agreement-request/gsno-child-friend/generate-sign-data-for-attachment:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_generate_sign_data_for_attachment.yaml
+  /agreement-request/gsno-child-friend/delete:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_delete.yaml
+  /agreement-request/gsno-child-friend/delete-attachment:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_delete_attachment.yaml
+  /agreement-request/get-page:
+    $ref: ./paths/misc/agreement_request_get_page.yaml
+  /agreement-request/generate-sign-data-batch:
+    $ref: ./paths/misc/agreement_request_generate_sign_data_batch.yaml
+  /agreement-request/generate-sign-data-batch-v2:
+    $ref: ./paths/misc/agreement_request_generate_sign_data_batch_v2.yaml
+  /agreement-request/du-mno:
+    $ref: ./paths/du-mno/agreement_request_du_mno.yaml
+  /agreement-request/du-mno/verify-for-new-request:
+    $ref: ./paths/du-mno/agreement_request_du_mno_verify_for_new_request.yaml
+  /agreement-request/du-mno/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/du-mno/sign:
+    $ref: ./paths/du-mno/agreement_request_du_mno_sign.yaml
+  /agreement-request/du-mno/sign-certificates:
+    $ref: ./paths/du-mno/agreement_request_du_mno_sign_certificates.yaml
+  /agreement-request/du-mno/sign-attachment:
+    $ref: ./paths/du-mno/agreement_request_du_mno_sign_attachment.yaml
+  /agreement-request/du-mno/send-to-client:
+    $ref: ./paths/du-mno/agreement_request_du_mno_send_to_client.yaml
+  /agreement-request/du-mno/resend:
+    $ref: ./paths/du-mno/agreement_request_du_mno_resend.yaml
+  /agreement-request/du-mno/print-visa-list:
+    $ref: ./paths/du-mno/agreement_request_du_mno_print_visa_list.yaml
+  /agreement-request/du-mno/print-report:
+    $ref: ./paths/du-mno/agreement_request_du_mno_print_report.yaml
+  /agreement-request/du-mno/print-contract-by-id:
+    $ref: ./paths/du-mno/agreement_request_du_mno_print_contract_by_id.yaml
+  /agreement-request/du-mno/organizations-get-page-with-constitution:
+    $ref: ./paths/du-mno/agreement_request_du_mno_organizations_get_page_with_constitution.yaml
+  /agreement-request/du-mno/generate-sign-data:
+    $ref: ./paths/du-mno/agreement_request_du_mno_generate_sign_data.yaml
+  /agreement-request/du-mno/generate-sign-data-v2:
+    $ref: ./paths/du-mno/agreement_request_du_mno_generate_sign_data_v2.yaml
+  /agreement-request/du-mno/generate-sign-data-for-attachment:
+    $ref: ./paths/du-mno/agreement_request_du_mno_generate_sign_data_for_attachment.yaml
+  /agreement-request/du-mno/delete:
+    $ref: ./paths/du-mno/agreement_request_du_mno_delete.yaml
+  /agreement-request/du-mno/delete-attachment:
+    $ref: ./paths/du-mno/agreement_request_du_mno_delete_attachment.yaml
+  /agreement-request/du-deposit:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit.yaml
+  /agreement-request/du-deposit/verify-for-new-request:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_verify_for_new_request.yaml
+  /agreement-request/du-deposit/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/du-deposit/sign:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_sign.yaml
+  /agreement-request/du-deposit/sign-certificates:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_sign_certificates.yaml
+  /agreement-request/du-deposit/sign-attachment:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_sign_attachment.yaml
+  /agreement-request/du-deposit/send-to-client:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_send_to_client.yaml
+  /agreement-request/du-deposit/resend:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_resend.yaml
+  /agreement-request/du-deposit/print-visa-list:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_print_visa_list.yaml
+  /agreement-request/du-deposit/print-report:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_print_report.yaml
+  /agreement-request/du-deposit/print-contract-by-id:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_print_contract_by_id.yaml
+  /agreement-request/du-deposit/organizations-get-page-with-constitution:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_organizations_get_page_with_constitution.yaml
+  /agreement-request/du-deposit/generate-sign-data:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_generate_sign_data.yaml
+  /agreement-request/du-deposit/generate-sign-data-v2:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_generate_sign_data_v2.yaml
+  /agreement-request/du-deposit/generate-sign-data-for-attachment:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_generate_sign_data_for_attachment.yaml
+  /agreement-request/du-deposit/delete:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_delete.yaml
+  /agreement-request/du-deposit/delete-attachment:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_delete_attachment.yaml
+  /agreement-request/du-conversion:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion.yaml
+  /agreement-request/du-conversion/verify-for-new-request:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_verify_for_new_request.yaml
+  /agreement-request/du-conversion/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/du-conversion/sign:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_sign.yaml
+  /agreement-request/du-conversion/sign-certificates:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_sign_certificates.yaml
+  /agreement-request/du-conversion/sign-attachment:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_sign_attachment.yaml
+  /agreement-request/du-conversion/send-to-client:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_send_to_client.yaml
+  /agreement-request/du-conversion/resend:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_resend.yaml
+  /agreement-request/du-conversion/print-visa-list:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_print_visa_list.yaml
+  /agreement-request/du-conversion/print-report:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_print_report.yaml
+  /agreement-request/du-conversion/print-contract-by-id:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_print_contract_by_id.yaml
+  /agreement-request/du-conversion/organizations-get-page-with-constitution:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_organizations_get_page_with_constitution.yaml
+  /agreement-request/du-conversion/generate-sign-data:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_generate_sign_data.yaml
+  /agreement-request/du-conversion/generate-sign-data-v2:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_generate_sign_data_v2.yaml
+  /agreement-request/du-conversion/generate-sign-data-for-attachment:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_generate_sign_data_for_attachment.yaml
+  /agreement-request/du-conversion/delete:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_delete.yaml
+  /agreement-request/du-conversion/delete-attachment:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_delete_attachment.yaml
+  /agreement-request/deposit:
+    $ref: ./paths/deposit/agreement_request_deposit.yaml
+  /agreement-request/deposit/verify-for-new-request:
+    $ref: ./paths/deposit/agreement_request_deposit_verify_for_new_request.yaml
+  /agreement-request/deposit/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/deposit/agreement_request_deposit_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/deposit/sign:
+    $ref: ./paths/deposit/agreement_request_deposit_sign.yaml
+  /agreement-request/deposit/sign-certificates:
+    $ref: ./paths/deposit/agreement_request_deposit_sign_certificates.yaml
+  /agreement-request/deposit/sign-attachment:
+    $ref: ./paths/deposit/agreement_request_deposit_sign_attachment.yaml
+  /agreement-request/deposit/send-to-pkp:
+    $ref: ./paths/deposit/agreement_request_deposit_send_to_pkp.yaml
+  /agreement-request/deposit/send-to-client:
+    $ref: ./paths/deposit/agreement_request_deposit_send_to_client.yaml
+  /agreement-request/deposit/return-from-pkp:
+    $ref: ./paths/deposit/agreement_request_deposit_return_from_pkp.yaml
+  /agreement-request/deposit/resend-to-pkp:
+    $ref: ./paths/deposit/agreement_request_deposit_resend_to_pkp.yaml
+  /agreement-request/deposit/print-visa-list:
+    $ref: ./paths/deposit/agreement_request_deposit_print_visa_list.yaml
+  /agreement-request/deposit/print-report:
+    $ref: ./paths/deposit/agreement_request_deposit_print_report.yaml
+  /agreement-request/deposit/organizations-get-page-with-constitution:
+    $ref: ./paths/deposit/agreement_request_deposit_organizations_get_page_with_constitution.yaml
+  /agreement-request/deposit/generate-sign-data:
+    $ref: ./paths/deposit/agreement_request_deposit_generate_sign_data.yaml
+  /agreement-request/deposit/generate-sign-data-v2:
+    $ref: ./paths/deposit/agreement_request_deposit_generate_sign_data_v2.yaml
+  /agreement-request/deposit/generate-sign-data-for-attachment:
+    $ref: ./paths/deposit/agreement_request_deposit_generate_sign_data_for_attachment.yaml
+  /agreement-request/deposit/delete:
+    $ref: ./paths/deposit/agreement_request_deposit_delete.yaml
+  /agreement-request/deposit/delete-attachment:
+    $ref: ./paths/deposit/agreement_request_deposit_delete_attachment.yaml
+  /agreement-request/conversion:
+    $ref: ./paths/conversion/agreement_request_conversion.yaml
+  /agreement-request/conversion/verify-for-new-request:
+    $ref: ./paths/conversion/agreement_request_conversion_verify_for_new_request.yaml
+  /agreement-request/conversion/upload-attachment/by-agreement-request-id/{agreementRequestId}:
+    $ref: ./paths/conversion/agreement_request_conversion_upload_attachment_by_agreement_request_id_agreementRequestId.yaml
+  /agreement-request/conversion/sign:
+    $ref: ./paths/conversion/agreement_request_conversion_sign.yaml
+  /agreement-request/conversion/sign-certificates:
+    $ref: ./paths/conversion/agreement_request_conversion_sign_certificates.yaml
+  /agreement-request/conversion/sign-attachment:
+    $ref: ./paths/conversion/agreement_request_conversion_sign_attachment.yaml
+  /agreement-request/conversion/send-to-pkp:
+    $ref: ./paths/conversion/agreement_request_conversion_send_to_pkp.yaml
+  /agreement-request/conversion/send-to-client:
+    $ref: ./paths/conversion/agreement_request_conversion_send_to_client.yaml
+  /agreement-request/conversion/return-from-pkp:
+    $ref: ./paths/conversion/agreement_request_conversion_return_from_pkp.yaml
+  /agreement-request/conversion/resend-to-pkp:
+    $ref: ./paths/conversion/agreement_request_conversion_resend_to_pkp.yaml
+  /agreement-request/conversion/print-visa-list:
+    $ref: ./paths/conversion/agreement_request_conversion_print_visa_list.yaml
+  /agreement-request/conversion/print-report:
+    $ref: ./paths/conversion/agreement_request_conversion_print_report.yaml
+  /agreement-request/conversion/organizations-get-page-with-constitution:
+    $ref: ./paths/conversion/agreement_request_conversion_organizations_get_page_with_constitution.yaml
+  /agreement-request/conversion/generate-sign-data:
+    $ref: ./paths/conversion/agreement_request_conversion_generate_sign_data.yaml
+  /agreement-request/conversion/generate-sign-data-v2:
+    $ref: ./paths/conversion/agreement_request_conversion_generate_sign_data_v2.yaml
+  /agreement-request/conversion/generate-sign-data-for-attachment:
+    $ref: ./paths/conversion/agreement_request_conversion_generate_sign_data_for_attachment.yaml
+  /agreement-request/conversion/delete:
+    $ref: ./paths/conversion/agreement_request_conversion_delete.yaml
+  /agreement-request/conversion/delete-attachment:
+    $ref: ./paths/conversion/agreement_request_conversion_delete_attachment.yaml
+  /agreement-request/category:
+    $ref: ./paths/misc/agreement_request_category.yaml
+  /agreement-data-sync/entities-updated:
+    $ref: ./paths/misc/agreement_data_sync_entities_updated.yaml
+  /agreement-data-sync/entities-updated-async:
+    $ref: ./paths/misc/agreement_data_sync_entities_updated_async.yaml
+  /agreement-data-sync/entities-deleted:
+    $ref: ./paths/misc/agreement_data_sync_entities_deleted.yaml
+  /agreement-data-sync/entities-deleted-async:
+    $ref: ./paths/misc/agreement_data_sync_entities_deleted_async.yaml
+  /additional-request/change-accounts/print-report:
+    $ref: ./paths/misc/additional_request_change_accounts_print_report.yaml
+  /additional-request/change-accounts/get-by-agreement-to-change:
+    $ref: ./paths/misc/additional_request_change_accounts_get_by_agreement_to_change.yaml
+  /additional-request/change-accounts/get-accounts-by-agreement-id-and-status-list:
+    $ref: ./paths/misc/additional_request_change_accounts_get_accounts_by_agreement_id_and_status_list.yaml
+  /additional-request/change-accounts/execute:
+    $ref: ./paths/misc/additional_request_change_accounts_execute.yaml
+  /watch/pkp-message-log/{id}:
+    $ref: ./paths/misc/watch_pkp_message_log_id.yaml
+  /watch/pkp-message-log/response-body/{id}:
+    $ref: ./paths/misc/watch_pkp_message_log_response_body_id.yaml
+  /watch/pkp-message-log/request-body/{id}:
+    $ref: ./paths/misc/watch_pkp_message_log_request_body_id.yaml
+  /watch/agreement-request/send-doc-metric/{code}:
+    $ref: ./paths/misc/watch_agreement_request_send_doc_metric_code.yaml
+  /watch/agreement-request/get-metric-excel/{code}:
+    $ref: ./paths/misc/watch_agreement_request_get_metric_excel_code.yaml
+  /watch/agreement-request/doc-metrics:
+    $ref: ./paths/misc/watch_agreement_request_doc_metrics.yaml
+  /user-param/{code}:
+    $ref: ./paths/misc/user_param_code.yaml
+  /universal-request/{id}:
+    $ref: ./paths/misc/universal_request_id.yaml
+  /universal-request/export-list-async-result/{id}:
+    $ref: ./paths/misc/universal_request_export_list_async_result_id.yaml
+  /pkp-message-log/{id}:
+    $ref: ./paths/misc/pkp_message_log_id.yaml
+  /pkp-message-log/response-body/{id}:
+    $ref: ./paths/misc/pkp_message_log_response_body_id.yaml
+  /pkp-message-log/request-body/{id}:
+    $ref: ./paths/misc/pkp_message_log_request_body_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /dummy-tester:
+    $ref: ./paths/misc/dummy_tester.yaml
+  /bank-user/ssp-managers:
+    $ref: ./paths/misc/bank_user_ssp_managers.yaml
+  /agreement-request/mno/{id}/export/sign:
+    $ref: ./paths/mno/agreement_request_mno_id_export_sign.yaml
+  /agreement-request/mno/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/mno/agreement_request_mno_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/mno/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/mno/agreement_request_mno_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/mno/new:
+    $ref: ./paths/mno/agreement_request_mno_new.yaml
+  /agreement-request/mno/history/{id}:
+    $ref: ./paths/mno/agreement_request_mno_history_id.yaml
+  /agreement-request/mno/full/{id}:
+    $ref: ./paths/mno/agreement_request_mno_full_id.yaml
+  /agreement-request/mno/full-history/{id}:
+    $ref: ./paths/mno/agreement_request_mno_full_history_id.yaml
+  /agreement-request/mno/download-attachment/{attachmentId}/data:
+    $ref: ./paths/mno/agreement_request_mno_download_attachment_attachmentId_data.yaml
+  /agreement-request/mno/attachment/{attachmentId}:
+    $ref: ./paths/mno/agreement_request_mno_attachment_attachmentId.yaml
+  /agreement-request/gsno-parent/{id}/export/sign:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_id_export_sign.yaml
+  /agreement-request/gsno-parent/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-parent/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-parent/new:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_new.yaml
+  /agreement-request/gsno-parent/history/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_history_id.yaml
+  /agreement-request/gsno-parent/full/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_full_id.yaml
+  /agreement-request/gsno-parent/full-history/{id}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_full_history_id.yaml
+  /agreement-request/gsno-parent/download-attachment/{attachmentId}/data:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_download_attachment_attachmentId_data.yaml
+  /agreement-request/gsno-parent/attachment/{attachmentId}:
+    $ref: ./paths/gsno-parent/agreement_request_gsno_parent_attachment_attachmentId.yaml
+  /agreement-request/gsno-child-head/{id}/export/sign:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_id_export_sign.yaml
+  /agreement-request/gsno-child-head/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-child-head/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-child-head/new:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_new.yaml
+  /agreement-request/gsno-child-head/history/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_history_id.yaml
+  /agreement-request/gsno-child-head/full/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_full_id.yaml
+  /agreement-request/gsno-child-head/full-history/{id}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_full_history_id.yaml
+  /agreement-request/gsno-child-head/download-attachment/{attachmentId}/data:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_download_attachment_attachmentId_data.yaml
+  /agreement-request/gsno-child-head/attachment/{attachmentId}:
+    $ref: ./paths/gsno-child-head/agreement_request_gsno_child_head_attachment_attachmentId.yaml
+  /agreement-request/gsno-child-friend/{id}/export/sign:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_id_export_sign.yaml
+  /agreement-request/gsno-child-friend/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-child-friend/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/gsno-child-friend/new:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_new.yaml
+  /agreement-request/gsno-child-friend/history/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_history_id.yaml
+  /agreement-request/gsno-child-friend/full/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_full_id.yaml
+  /agreement-request/gsno-child-friend/full-history/{id}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_full_history_id.yaml
+  /agreement-request/gsno-child-friend/download-attachment/{attachmentId}/data:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_download_attachment_attachmentId_data.yaml
+  /agreement-request/gsno-child-friend/attachment/{attachmentId}:
+    $ref: ./paths/gsno-child-friend/agreement_request_gsno_child_friend_attachment_attachmentId.yaml
+  /agreement-request/du-mno/{id}/export/sign:
+    $ref: ./paths/du-mno/agreement_request_du_mno_id_export_sign.yaml
+  /agreement-request/du-mno/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-mno/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-mno/new:
+    $ref: ./paths/du-mno/agreement_request_du_mno_new.yaml
+  /agreement-request/du-mno/kind-types:
+    $ref: ./paths/du-mno/agreement_request_du_mno_kind_types.yaml
+  /agreement-request/du-mno/history/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_history_id.yaml
+  /agreement-request/du-mno/full/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_full_id.yaml
+  /agreement-request/du-mno/full-history/{id}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_full_history_id.yaml
+  /agreement-request/du-mno/download-attachment/{attachmentId}/data:
+    $ref: ./paths/du-mno/agreement_request_du_mno_download_attachment_attachmentId_data.yaml
+  /agreement-request/du-mno/bank-types:
+    $ref: ./paths/du-mno/agreement_request_du_mno_bank_types.yaml
+  /agreement-request/du-mno/attachment/{attachmentId}:
+    $ref: ./paths/du-mno/agreement_request_du_mno_attachment_attachmentId.yaml
+  /agreement-request/du-deposit/{id}/export/sign:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_id_export_sign.yaml
+  /agreement-request/du-deposit/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-deposit/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-deposit/new:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_new.yaml
+  /agreement-request/du-deposit/kind-types:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_kind_types.yaml
+  /agreement-request/du-deposit/history/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_history_id.yaml
+  /agreement-request/du-deposit/full/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_full_id.yaml
+  /agreement-request/du-deposit/full-history/{id}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_full_history_id.yaml
+  /agreement-request/du-deposit/download-attachment/{attachmentId}/data:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_download_attachment_attachmentId_data.yaml
+  /agreement-request/du-deposit/bank-types:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_bank_types.yaml
+  /agreement-request/du-deposit/attachment/{attachmentId}:
+    $ref: ./paths/du-deposit/agreement_request_du_deposit_attachment_attachmentId.yaml
+  /agreement-request/du-conversion/{id}/export/sign:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_id_export_sign.yaml
+  /agreement-request/du-conversion/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-conversion/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/du-conversion/new:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_new.yaml
+  /agreement-request/du-conversion/history/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_history_id.yaml
+  /agreement-request/du-conversion/full/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_full_id.yaml
+  /agreement-request/du-conversion/full-history/{id}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_full_history_id.yaml
+  /agreement-request/du-conversion/download-attachment/{attachmentId}/data:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_download_attachment_attachmentId_data.yaml
+  /agreement-request/du-conversion/bank-types:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_bank_types.yaml
+  /agreement-request/du-conversion/attachment/{attachmentId}:
+    $ref: ./paths/du-conversion/agreement_request_du_conversion_attachment_attachmentId.yaml
+  /agreement-request/deposit/{id}/export/sign:
+    $ref: ./paths/deposit/agreement_request_deposit_id_export_sign.yaml
+  /agreement-request/deposit/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/deposit/agreement_request_deposit_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/deposit/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/deposit/agreement_request_deposit_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/deposit/new:
+    $ref: ./paths/deposit/agreement_request_deposit_new.yaml
+  /agreement-request/deposit/history/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_history_id.yaml
+  /agreement-request/deposit/full/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_full_id.yaml
+  /agreement-request/deposit/full-history/{id}:
+    $ref: ./paths/deposit/agreement_request_deposit_full_history_id.yaml
+  /agreement-request/deposit/download-attachment/{attachmentId}/data:
+    $ref: ./paths/deposit/agreement_request_deposit_download_attachment_attachmentId_data.yaml
+  /agreement-request/deposit/attachment/{attachmentId}:
+    $ref: ./paths/deposit/agreement_request_deposit_attachment_attachmentId.yaml
+  /agreement-request/conversion/{id}/export/sign:
+    $ref: ./paths/conversion/agreement_request_conversion_id_export_sign.yaml
+  /agreement-request/conversion/upload-attachment/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/conversion/agreement_request_conversion_upload_attachment_agreementRequestId_attachmentId.yaml
+  /agreement-request/conversion/print-attachment-signatures/{agreementRequestId}/{attachmentId}:
+    $ref: ./paths/conversion/agreement_request_conversion_print_attachment_signatures_agreementRequestId_attachmentId.yaml
+  /agreement-request/conversion/new:
+    $ref: ./paths/conversion/agreement_request_conversion_new.yaml
+  /agreement-request/conversion/history/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_history_id.yaml
+  /agreement-request/conversion/full/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_full_id.yaml
+  /agreement-request/conversion/full-history/{id}:
+    $ref: ./paths/conversion/agreement_request_conversion_full_history_id.yaml
+  /agreement-request/conversion/download-attachment/{attachmentId}/data:
+    $ref: ./paths/conversion/agreement_request_conversion_download_attachment_attachmentId_data.yaml
+  /agreement-request/conversion/attachment/{attachmentId}:
+    $ref: ./paths/conversion/agreement_request_conversion_attachment_attachmentId.yaml
+  /additional-request/change-accounts/history/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_history_id.yaml
+  /additional-request/change-accounts/get-last-executed-accounts-by-agreementId/{agreementId}:
+    $ref: ./paths/misc/additional_request_change_accounts_get_last_executed_accounts_by_agreementId_agreementId.yaml
+  /additional-request/change-accounts/full/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_full_id.yaml
+  /additional-request/change-accounts/full-history/{id}:
+    $ref: ./paths/misc/additional_request_change_accounts_full_history_id.yaml
+  /caches/clear:
+    $ref: ./paths/misc/caches_clear.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    AgreementRequestAttachmentDto:
+      $ref: ./components/schemas/common/AgreementRequestAttachmentDto.yaml
+    AgreementRequestMNOCheckListDto:
+      $ref: ./components/schemas/mno/AgreementRequestMNOCheckListDto.yaml
+    AgreementRequestMNODto:
+      $ref: ./components/schemas/mno/AgreementRequestMNODto.yaml
+    AuthorizedPersonInfoDto:
+      $ref: ./components/schemas/common/AuthorizedPersonInfoDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    GenericCommandAgreementRequestMNODto:
+      $ref: ./components/schemas/mno/GenericCommandAgreementRequestMNODto.yaml
+    PersonContactInfoDto:
+      $ref: ./components/schemas/common/PersonContactInfoDto.yaml
+    PersonDocumentDto:
+      $ref: ./components/schemas/common/PersonDocumentDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/common/SignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    CreateResponseAgreementRequestMNODto:
+      $ref: ./components/schemas/mno/CreateResponseAgreementRequestMNODto.yaml
+    BankVerifyDto:
+      $ref: ./components/schemas/common/BankVerifyDto.yaml
+    GenericCommandBankVerifyDto:
+      $ref: ./components/schemas/common/GenericCommandBankVerifyDto.yaml
+    GenericResponseErrorDataAgreementRequestMNODto:
+      $ref: ./components/schemas/mno/GenericResponseErrorDataAgreementRequestMNODto.yaml
+    GenericCommandAgreementRequestMNOCheckListDto:
+      $ref: ./components/schemas/mno/GenericCommandAgreementRequestMNOCheckListDto.yaml
+    BankCommentDto:
+      $ref: ./components/schemas/common/BankCommentDto.yaml
+    GenericCommandBankCommentDto:
+      $ref: ./components/schemas/common/GenericCommandBankCommentDto.yaml
+    BankUserDto:
+      $ref: ./components/schemas/common/BankUserDto.yaml
+    GenericCommandBankUserDto:
+      $ref: ./components/schemas/common/GenericCommandBankUserDto.yaml
+    AgreementRequestGSNOParentCheckListDto:
+      $ref: ./components/schemas/gsno-parent/AgreementRequestGSNOParentCheckListDto.yaml
+    AgreementRequestGSNOParentDto:
+      $ref: ./components/schemas/gsno-parent/AgreementRequestGSNOParentDto.yaml
+    ClientContactsDto:
+      $ref: ./components/schemas/gsno-parent/ClientContactsDto.yaml
+    GenericCommandAgreementRequestGSNOParentDto:
+      $ref: ./components/schemas/gsno-parent/GenericCommandAgreementRequestGSNOParentDto.yaml
+    CreateResponseAgreementRequestGSNOParentDto:
+      $ref: ./components/schemas/gsno-parent/CreateResponseAgreementRequestGSNOParentDto.yaml
+    GenericResponseErrorDataAgreementRequestGSNOParentDto:
+      $ref: ./components/schemas/gsno-parent/GenericResponseErrorDataAgreementRequestGSNOParentDto.yaml
+    GenericCommandAgreementRequestGSNOParentCheckListDto:
+      $ref: ./components/schemas/gsno-parent/GenericCommandAgreementRequestGSNOParentCheckListDto.yaml
+    AgreementRequestGSNOChildHeadCheckListDto:
+      $ref: ./components/schemas/gsno-child-head/AgreementRequestGSNOChildHeadCheckListDto.yaml
+    AgreementRequestGSNOChildHeadDto:
+      $ref: ./components/schemas/gsno-child-head/AgreementRequestGSNOChildHeadDto.yaml
+    DealDocGeneralAgreementDto:
+      $ref: ./components/schemas/common/DealDocGeneralAgreementDto.yaml
+    GenericCommandAgreementRequestGSNOChildHeadDto:
+      $ref: ./components/schemas/gsno-child-head/GenericCommandAgreementRequestGSNOChildHeadDto.yaml
+    CreateResponseAgreementRequestGSNOChildHeadDto:
+      $ref: ./components/schemas/gsno-child-head/CreateResponseAgreementRequestGSNOChildHeadDto.yaml
+    GenericResponseErrorDataAgreementRequestGSNOChildHeadDto:
+      $ref: ./components/schemas/gsno-child-head/GenericResponseErrorDataAgreementRequestGSNOChildHeadDto.yaml
+    GenericCommandAgreementRequestGSNOChildHeadCheckListDto:
+      $ref: ./components/schemas/gsno-child-head/GenericCommandAgreementRequestGSNOChildHeadCheckListDto.yaml
+    AgreementRequestGSNOChildFriendCheckListDto:
+      $ref: ./components/schemas/gsno-child-friend/AgreementRequestGSNOChildFriendCheckListDto.yaml
+    AgreementRequestGSNOChildFriendDto:
+      $ref: ./components/schemas/gsno-child-friend/AgreementRequestGSNOChildFriendDto.yaml
+    GenericCommandAgreementRequestGSNOChildFriendDto:
+      $ref: ./components/schemas/gsno-child-friend/GenericCommandAgreementRequestGSNOChildFriendDto.yaml
+    CreateResponseAgreementRequestGSNOChildFriendDto:
+      $ref: ./components/schemas/gsno-child-friend/CreateResponseAgreementRequestGSNOChildFriendDto.yaml
+    GenericResponseErrorDataAgreementRequestGSNOChildFriendDto:
+      $ref: ./components/schemas/gsno-child-friend/GenericResponseErrorDataAgreementRequestGSNOChildFriendDto.yaml
+    GenericCommandAgreementRequestGSNOChildFriendCheckListDto:
+      $ref: ./components/schemas/gsno-child-friend/GenericCommandAgreementRequestGSNOChildFriendCheckListDto.yaml
+    AgreementRequestDUAccountDto:
+      $ref: ./components/schemas/common/AgreementRequestDUAccountDto.yaml
+    AgreementRequestDUMNOCheckListDto:
+      $ref: ./components/schemas/du-mno/AgreementRequestDUMNOCheckListDto.yaml
+    AgreementRequestDUMNODto:
+      $ref: ./components/schemas/du-mno/AgreementRequestDUMNODto.yaml
+    GenericCommandAgreementRequestDUMNODto:
+      $ref: ./components/schemas/du-mno/GenericCommandAgreementRequestDUMNODto.yaml
+    CreateResponseAgreementRequestDUMNODto:
+      $ref: ./components/schemas/du-mno/CreateResponseAgreementRequestDUMNODto.yaml
+    GenericResponseErrorDataAgreementRequestDUMNODto:
+      $ref: ./components/schemas/du-mno/GenericResponseErrorDataAgreementRequestDUMNODto.yaml
+    GenericCommandAgreementRequestDUMNOCheckListDto:
+      $ref: ./components/schemas/du-mno/GenericCommandAgreementRequestDUMNOCheckListDto.yaml
+    AgreementRequestDUDepositCheckListDto:
+      $ref: ./components/schemas/du-deposit/AgreementRequestDUDepositCheckListDto.yaml
+    AgreementRequestDUDepositDto:
+      $ref: ./components/schemas/du-deposit/AgreementRequestDUDepositDto.yaml
+    GenericCommandAgreementRequestDUDepositDto:
+      $ref: ./components/schemas/du-deposit/GenericCommandAgreementRequestDUDepositDto.yaml
+    CreateResponseAgreementRequestDUDepositDto:
+      $ref: ./components/schemas/du-deposit/CreateResponseAgreementRequestDUDepositDto.yaml
+    GenericResponseErrorDataAgreementRequestDUDepositDto:
+      $ref: ./components/schemas/du-deposit/GenericResponseErrorDataAgreementRequestDUDepositDto.yaml
+    GenericCommandAgreementRequestDUDepositCheckListDto:
+      $ref: ./components/schemas/du-deposit/GenericCommandAgreementRequestDUDepositCheckListDto.yaml
+    AgreementRequestDUConversionCheckListDto:
+      $ref: ./components/schemas/du-conversion/AgreementRequestDUConversionCheckListDto.yaml
+    AgreementRequestDUConversionDto:
+      $ref: ./components/schemas/du-conversion/AgreementRequestDUConversionDto.yaml
+    GenericCommandAgreementRequestDUConversionDto:
+      $ref: ./components/schemas/du-conversion/GenericCommandAgreementRequestDUConversionDto.yaml
+    CreateResponseAgreementRequestDUConversionDto:
+      $ref: ./components/schemas/du-conversion/CreateResponseAgreementRequestDUConversionDto.yaml
+    GenericResponseErrorDataAgreementRequestDUConversionDto:
+      $ref: ./components/schemas/du-conversion/GenericResponseErrorDataAgreementRequestDUConversionDto.yaml
+    GenericCommandAgreementRequestDUConversionCheckListDto:
+      $ref: ./components/schemas/du-conversion/GenericCommandAgreementRequestDUConversionCheckListDto.yaml
+    AgreementRequestDepositCheckListDto:
+      $ref: ./components/schemas/deposit/AgreementRequestDepositCheckListDto.yaml
+    AgreementRequestDepositDto:
+      $ref: ./components/schemas/deposit/AgreementRequestDepositDto.yaml
+    GenericCommandAgreementRequestDepositDto:
+      $ref: ./components/schemas/deposit/GenericCommandAgreementRequestDepositDto.yaml
+    CreateResponseAgreementRequestDepositDto:
+      $ref: ./components/schemas/deposit/CreateResponseAgreementRequestDepositDto.yaml
+    GenericResponseErrorDataAgreementRequestDepositDto:
+      $ref: ./components/schemas/deposit/GenericResponseErrorDataAgreementRequestDepositDto.yaml
+    GenericCommandAgreementRequestDepositCheckListDto:
+      $ref: ./components/schemas/deposit/GenericCommandAgreementRequestDepositCheckListDto.yaml
+    AgreementRequestConversionCheckListDto:
+      $ref: ./components/schemas/conversion/AgreementRequestConversionCheckListDto.yaml
+    AgreementRequestConversionDto:
+      $ref: ./components/schemas/conversion/AgreementRequestConversionDto.yaml
+    GenericCommandAgreementRequestConversionDto:
+      $ref: ./components/schemas/conversion/GenericCommandAgreementRequestConversionDto.yaml
+    CreateResponseAgreementRequestConversionDto:
+      $ref: ./components/schemas/conversion/CreateResponseAgreementRequestConversionDto.yaml
+    GenericResponseErrorDataAgreementRequestConversionDto:
+      $ref: ./components/schemas/conversion/GenericResponseErrorDataAgreementRequestConversionDto.yaml
+    GenericCommandAgreementRequestConversionCheckListDto:
+      $ref: ./components/schemas/conversion/GenericCommandAgreementRequestConversionCheckListDto.yaml
+    ChangeAccountsRequestAccountDto:
+      $ref: ./components/schemas/misc/ChangeAccountsRequestAccountDto.yaml
+    ChangeAccountsRequestClientDto:
+      $ref: ./components/schemas/misc/ChangeAccountsRequestClientDto.yaml
+    ChangeAccountsRequestDto:
+      $ref: ./components/schemas/misc/ChangeAccountsRequestDto.yaml
+    GenericCommandChangeAccountsRequestDto:
+      $ref: ./components/schemas/misc/GenericCommandChangeAccountsRequestDto.yaml
+    CreateResponseChangeAccountsRequestDto:
+      $ref: ./components/schemas/misc/CreateResponseChangeAccountsRequestDto.yaml
+    GenericResponseErrorDataChangeAccountsRequestDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataChangeAccountsRequestDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoPkpMessageLogDirectionDto:
+      $ref: ./components/schemas/misc/FilterValueDtoPkpMessageLogDirectionDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandPkpMessageLogFilter:
+      $ref: ./components/schemas/misc/GetPageCommandPkpMessageLogFilter.yaml
+    PageParamsPkpMessageLogFilter:
+      $ref: ./components/schemas/misc/PageParamsPkpMessageLogFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    PkpMessageLogFilter:
+      $ref: ./components/schemas/misc/PkpMessageLogFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponseErrorDataPageDataPkpMessageLogDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataPageDataPkpMessageLogDto.yaml
+    PageDataPkpMessageLogDto:
+      $ref: ./components/schemas/misc/PageDataPkpMessageLogDto.yaml
+    PkpMessageLogDto:
+      $ref: ./components/schemas/misc/PkpMessageLogDto.yaml
+    GenericCommandUserParamDto:
+      $ref: ./components/schemas/misc/GenericCommandUserParamDto.yaml
+    UserParamDto:
+      $ref: ./components/schemas/misc/UserParamDto.yaml
+    GenericResponseErrorDataUserParamDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUserParamDto.yaml
+    AgreementRequestStatusFilter:
+      $ref: ./components/schemas/misc/AgreementRequestStatusFilter.yaml
+    AgreementRequestTypeFilter:
+      $ref: ./components/schemas/misc/AgreementRequestTypeFilter.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/misc/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/misc/FilterValueDtoLocalDate.yaml
+    GetPageCommandUniversalRequestDutyFilter:
+      $ref: ./components/schemas/misc/GetPageCommandUniversalRequestDutyFilter.yaml
+    PageParamsUniversalRequestDutyFilter:
+      $ref: ./components/schemas/misc/PageParamsUniversalRequestDutyFilter.yaml
+    UniversalRequestDutyFilter:
+      $ref: ./components/schemas/misc/UniversalRequestDutyFilter.yaml
+    GenericResponseErrorDataPageDataUniversalRequestDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataPageDataUniversalRequestDto.yaml
+    PageDataUniversalRequestDto:
+      $ref: ./components/schemas/misc/PageDataUniversalRequestDto.yaml
+    UniversalRequestDto:
+      $ref: ./components/schemas/misc/UniversalRequestDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/misc/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/misc/CategoryResponse.yaml
+    GetPageCommandUniversalRequestBankFilter:
+      $ref: ./components/schemas/misc/GetPageCommandUniversalRequestBankFilter.yaml
+    PageParamsUniversalRequestBankFilter:
+      $ref: ./components/schemas/misc/PageParamsUniversalRequestBankFilter.yaml
+    UniversalRequestBankFilter:
+      $ref: ./components/schemas/misc/UniversalRequestBankFilter.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDUniversalRequestBankFilter:
+      $ref: ./components/schemas/misc/GenericCommandPrintRequestTypeDtoWdUUIDUniversalRequestBankFilter.yaml
+    PrintRequestTypeDtoWdUUIDUniversalRequestBankFilter:
+      $ref: ./components/schemas/misc/PrintRequestTypeDtoWdUUIDUniversalRequestBankFilter.yaml
+    GenericResponseErrorDataPrintResponseTreasury:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/common/PrintResponseTreasury.yaml
+    GenericResponseErrorDataUUID:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUUID.yaml
+    BankSignCommand:
+      $ref: ./components/schemas/common/BankSignCommand.yaml
+    GenericCommandListBankSignCommand:
+      $ref: ./components/schemas/misc/GenericCommandListBankSignCommand.yaml
+    AgreementRequestDtoObject:
+      $ref: ./components/schemas/misc/AgreementRequestDtoObject.yaml
+    GenericResponseErrorDataAgreementRequestDtoObject:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataAgreementRequestDtoObject.yaml
+    GenericResponseErrorDataListGenericResponseErrorDataAgreementRequestDtoObject:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListGenericResponseErrorDataAgreementRequestDtoObject.yaml
+    ClientActionValidateDto:
+      $ref: ./components/schemas/common/ClientActionValidateDto.yaml
+    SingleResponseAgreementRequestAttachmentDto:
+      $ref: ./components/schemas/common/SingleResponseAgreementRequestAttachmentDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericResponseErrorDataListUniCertificateTreasuryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListUniCertificateTreasuryDto.yaml
+    UniCertificateTreasuryDto:
+      $ref: ./components/schemas/common/UniCertificateTreasuryDto.yaml
+    AttachmentBankSignCommand:
+      $ref: ./components/schemas/common/AttachmentBankSignCommand.yaml
+    GenericResponseErrorDataAgreementRequestAttachmentDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAgreementRequestAttachmentDto.yaml
+    GenericCommandPrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestDtoWdUUID.yaml
+    PrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoWdUUID.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    BankClientBlockStateFilter:
+      $ref: ./components/schemas/common/BankClientBlockStateFilter.yaml
+    BankClientDboCategoryFilter:
+      $ref: ./components/schemas/common/BankClientDboCategoryFilter.yaml
+    BankClientFilter:
+      $ref: ./components/schemas/common/BankClientFilter.yaml
+    BankClientResidentSignFilter:
+      $ref: ./components/schemas/common/BankClientResidentSignFilter.yaml
+    BankClientStatusFilter:
+      $ref: ./components/schemas/common/BankClientStatusFilter.yaml
+    BankClientTypeFilter:
+      $ref: ./components/schemas/common/BankClientTypeFilter.yaml
+    FilterValueEnumDtoClientSegmentDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClientSegmentDto.yaml
+    GetPageCommandBankClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandBankClientFilter.yaml
+    PageParamsBankClientFilter:
+      $ref: ./components/schemas/common/PageParamsBankClientFilter.yaml
+    ProductTypeDtoFilter:
+      $ref: ./components/schemas/common/ProductTypeDtoFilter.yaml
+    TextCompoundFilterForBankClientFilter:
+      $ref: ./components/schemas/common/TextCompoundFilterForBankClientFilter.yaml
+    GenericResponseErrorDataPageDataClientInfoDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPageDataClientInfoDto.yaml
+    PageDataClientInfoDto:
+      $ref: ./components/schemas/common/PageDataClientInfoDto.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    DigestInfoDto:
+      $ref: ./components/schemas/common/DigestInfoDto.yaml
+    DigestInfoFieldDto:
+      $ref: ./components/schemas/common/DigestInfoFieldDto.yaml
+    GenericResponseErrorDataUniSignDataTreasuryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUniSignDataTreasuryDto.yaml
+    UniSignDataTreasuryDto:
+      $ref: ./components/schemas/common/UniSignDataTreasuryDto.yaml
+    GenericResponseErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    AttachmentGenerateDigestCommand:
+      $ref: ./components/schemas/common/AttachmentGenerateDigestCommand.yaml
+    GenericResponseErrorDataListAgreementRequestGSNOChildHeadDto:
+      $ref: ./components/schemas/gsno-child-head/GenericResponseErrorDataListAgreementRequestGSNOChildHeadDto.yaml
+    AgreementRequestBankFilter:
+      $ref: ./components/schemas/misc/AgreementRequestBankFilter.yaml
+    GetPageCommandAgreementRequestBankFilter:
+      $ref: ./components/schemas/misc/GetPageCommandAgreementRequestBankFilter.yaml
+    PageParamsAgreementRequestBankFilter:
+      $ref: ./components/schemas/misc/PageParamsAgreementRequestBankFilter.yaml
+    GenericResponseErrorDataPageDataAgreementRequestDtoObject:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataPageDataAgreementRequestDtoObject.yaml
+    PageDataAgreementRequestDtoObject:
+      $ref: ./components/schemas/misc/PageDataAgreementRequestDtoObject.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/misc/GenericCommandListUUID.yaml
+    GenericResponseErrorDataListGenericResponseErrorDataUniSignDataTreasuryDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListGenericResponseErrorDataUniSignDataTreasuryDto.yaml
+    AgreementSyncRequestDto:
+      $ref: ./components/schemas/misc/AgreementSyncRequestDto.yaml
+    AgreementSyncRequestFilter:
+      $ref: ./components/schemas/misc/AgreementSyncRequestFilter.yaml
+    SingleCommandAgreementSyncRequestDto:
+      $ref: ./components/schemas/misc/SingleCommandAgreementSyncRequestDto.yaml
+    SingleResponseInteger:
+      $ref: ./components/schemas/misc/SingleResponseInteger.yaml
+    SingleResponseString:
+      $ref: ./components/schemas/misc/SingleResponseString.yaml
+    GenericResponseErrorDataListChangeAccountsRequestDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListChangeAccountsRequestDto.yaml
+    AdditionalRequestFilterByContactAndStatuses:
+      $ref: ./components/schemas/misc/AdditionalRequestFilterByContactAndStatuses.yaml
+    GenericCommandAdditionalRequestFilterByContactAndStatuses:
+      $ref: ./components/schemas/misc/GenericCommandAdditionalRequestFilterByContactAndStatuses.yaml
+    ChangeAccountsRequestAccountExtendedDto:
+      $ref: ./components/schemas/misc/ChangeAccountsRequestAccountExtendedDto.yaml
+    GenericResponseErrorDataListChangeAccountsRequestAccountExtendedDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListChangeAccountsRequestAccountExtendedDto.yaml
+    GenericResponseErrorDataPkpMessageLogDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataPkpMessageLogDto.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataString.yaml
+    DealInfoDto:
+      $ref: ./components/schemas/misc/DealInfoDto.yaml
+    GenericResponseErrorDataMetricsDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataMetricsDto.yaml
+    MetricsDto:
+      $ref: ./components/schemas/misc/MetricsDto.yaml
+    GenericResponseErrorDataListMetricsDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListMetricsDto.yaml
+    GenericResponseErrorDataUniversalRequestDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUniversalRequestDto.yaml
+    DownloadCommand:
+      $ref: ./components/schemas/misc/DownloadCommand.yaml
+    GenericResponseErrorDataDownloadCommand:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataDownloadCommand.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataMapStringString.yaml
+    BankUserExecutorDto:
+      $ref: ./components/schemas/misc/BankUserExecutorDto.yaml
+    GenericResponseErrorDataListBankUserExecutorDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListBankUserExecutorDto.yaml
+    FileDataResponseDto:
+      $ref: ./components/schemas/common/FileDataResponseDto.yaml
+    GenericResponseErrorDataFileDataResponseDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataFileDataResponseDto.yaml
+    AgreementRequestHistoryDto:
+      $ref: ./components/schemas/common/AgreementRequestHistoryDto.yaml
+    GenericResponseErrorDataListAgreementRequestHistoryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListAgreementRequestHistoryDto.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/common/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListEnumObjectDto.yaml
+    AdditionalRequestHistoryDto:
+      $ref: ./components/schemas/misc/AdditionalRequestHistoryDto.yaml
+    GenericResponseErrorDataListAdditionalRequestHistoryDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListAdditionalRequestHistoryDto.yaml

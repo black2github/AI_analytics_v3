@@ -1,0 +1,68 @@
+type: object
+description: Массовая рассылка. ДТО на создание
+properties:
+  attachmentIds:
+    type: array
+    description: Список идентификаторов вложений.
+    items:
+      type: string
+      format: uuid
+  bankClientIds:
+    type: array
+    description: Список получателей добавленных вручную.
+    items:
+      type: string
+      format: uuid
+  branchId:
+    type: string
+    format: uuid
+    description: Идентификатор подразделения.
+  branchIds:
+    type: array
+    description: Список подразделений.
+    items:
+      type: string
+      format: uuid
+  clientsWithForeignCurrencyOnly:
+    type: boolean
+    description: Только клиенты с валютными счетами
+  excludeClientIds:
+    type: array
+    description: Список получателей для исключения.
+    items:
+      type: string
+      format: uuid
+  excludeClients:
+    type: boolean
+    description: Исключить клинтов
+  excludeFileId:
+    type: string
+    format: uuid
+    description: Идентификатор файла со списком получателей для исключения
+  excludeFileName:
+    type: string
+    description: Имя файла со списком получателей для исключения
+  importFileId:
+    type: string
+    format: uuid
+    description: Идентификатор файла со списком получателей
+  importFileName:
+    type: string
+    description: Имя файла со списком получателей
+  message:
+    type: string
+    description: Текст письма.
+  mode:
+    type: string
+    description: Режим добавления получателей.
+    enum:
+    - ALL
+    - MANUAL
+    - IMPORT
+    - INDIVIDUAL
+  subject:
+    type: string
+    description: Тема письма.
+  typeCode:
+    type: string
+    description: Код типа документа.

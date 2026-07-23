@@ -1,0 +1,47 @@
+required:
+- nrt
+type: object
+properties:
+  active:
+    type: boolean
+    description: Признак активности
+  scope:
+    type: string
+    description: Скоуп
+  client_id:
+    type: string
+    description: Идентификатор клиента
+  user_name:
+    type: string
+    description: Имя пользователя
+  token_type:
+    type: string
+    description: Тип токена
+  exp:
+    type: integer
+    description: Время истечения жизни токена
+    format: int64
+  iat:
+    type: integer
+    description: Время создания токена
+    format: int64
+  sub:
+    type: string
+    description: Назначение токена
+  aud:
+    uniqueItems: true
+    type: array
+    description: Получатели токена
+    items:
+      type: string
+      description: Получатели токена
+  iss:
+    type: string
+    description: Издатель токена
+  jti:
+    type: string
+    description: Идентификатор токена
+  nrt:
+    type: boolean
+    description: Признак необходимости обновления токена
+description: Ответ на запрос проверки токена

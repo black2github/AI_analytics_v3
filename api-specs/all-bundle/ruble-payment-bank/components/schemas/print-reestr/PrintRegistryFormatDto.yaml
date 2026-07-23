@@ -1,0 +1,15 @@
+required:
+- ids
+- reportFormat
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы ПП
+    items:
+      type: string
+      description: Идентификаторы ПП
+      format: uuid
+  reportFormat:
+    $ref: ../common/ReportFormat.yaml
+description: Запрос ПФ реестра ПП

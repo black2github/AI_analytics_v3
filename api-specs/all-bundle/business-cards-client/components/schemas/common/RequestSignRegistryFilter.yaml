@@ -1,0 +1,23 @@
+type: object
+properties:
+  absClientId:
+    $ref: ./FilterValueDtoString.yaml
+  batchId:
+    $ref: ./FilterValueDtoUUID.yaml
+  batchMode:
+    $ref: ./BatchModeFilterValueDto.yaml
+  cardCommonInfoFilter:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  reqDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  reqIds:
+    $ref: ./FilterValueDtoUUID.yaml
+  reqType:
+    $ref: ./FilterValueEnumDtoDocumentTypeDto.yaml
+  signedReqIds:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoCardRequestStatusDto.yaml
+description: Фильтр для запроса реестровой подписи заявок

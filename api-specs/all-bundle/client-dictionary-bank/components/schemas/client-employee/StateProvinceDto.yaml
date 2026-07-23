@@ -1,0 +1,12 @@
+type: object
+properties:
+  stateProv:
+    type: string
+    description: Область/провинция
+  stateProvCode:
+    type: string
+    description: Код области/провинции
+  fiasStateProvCode:
+    type: string
+    description: ФИАС код субъекта РФ
+description: Область/провинция. Интеграционное ДТО

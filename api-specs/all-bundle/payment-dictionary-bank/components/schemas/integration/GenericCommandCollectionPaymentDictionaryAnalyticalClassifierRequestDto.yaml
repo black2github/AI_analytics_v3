@@ -1,0 +1,10 @@
+required:
+- data
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./PaymentDictionaryAnalyticalClassifierRequestDto.yaml
+description: Запрос

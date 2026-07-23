@@ -1,0 +1,36 @@
+type: object
+description: Информация о доступных пользователю действиях
+properties:
+  edit:
+    type: boolean
+    description: Признак возможности редактирования
+  repeat:
+    type: boolean
+    description: Признак возможности повтора
+  remove:
+    type: boolean
+    description: Признак возможности удаления
+  send:
+    type: boolean
+    description: Признак возможности отправки после подписи
+  sign:
+    type: boolean
+    description: Признак возможности подписи
+  clickSign:
+    type: boolean
+    description: Признак возможности нажатия на подпись
+  removeSign:
+    type: boolean
+    description: Признак возможности снятия подписи
+  checkSign:
+    type: boolean
+    description: Признак возможности проверки подписи
+  export:
+    type: boolean
+    description: Признак возможности экспорта
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  authority:
+    type: boolean
+    description: Признак что требуется выполнить проверку полномочий

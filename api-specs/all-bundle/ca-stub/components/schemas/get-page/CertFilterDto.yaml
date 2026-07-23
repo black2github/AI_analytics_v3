@@ -1,0 +1,11 @@
+type: object
+properties:
+  ca:
+    $ref: ./FilterValueDtoBoolean.yaml
+  authorityCertId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  subjectCommonName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр сертификатов

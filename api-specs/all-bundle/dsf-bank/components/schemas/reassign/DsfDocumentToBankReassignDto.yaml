@@ -1,0 +1,10 @@
+type: object
+description: Данные для запроса 'Сменить менеджера'
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  responsibleBankUserId:
+    type: string
+    format: uuid
+    description: ID менеджера

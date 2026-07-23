@@ -1,0 +1,33 @@
+put:
+  tags:
+  - Распоряжение на периодический перевод денежных средств. Базовые операции.
+  summary: Обновление черновика документа
+  description: 'Привилегии: PERIODIC_MONEY_TRANSFER.EDIT'
+  operationId: updateDraftUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: cmd
+    description: cmd
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«PeriodicMoneyTransferUpdateDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CreateResponse«PeriodicMoneyTransferDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,27 @@
+required:
+- certificateId
+- digest
+- documentId
+- id
+- signature
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подписанного объекта
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  digest:
+    type: string
+    description: Дайджест
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  signature:
+    type: string
+    description: Значение подписи
+description: Команда подписания заявки

@@ -1,0 +1,33 @@
+required:
+- chargeAccountF1Id
+- chargeAccountId
+- chargeAccountNumber
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  chargeAccountId:
+    type: string
+    description: Идентификатор счета для списания комиссии
+    format: uuid
+  chargeAccountF1Id:
+    type: integer
+    description: Идентификатор счета Ф1 для списания комиссии
+    format: int64
+  chargeAccountNumber:
+    maxLength: 20
+    minLength: 0
+    pattern: \d+
+    type: string
+    description: Номер счета для списания комиссии
+  users:
+    type: array
+    items:
+      $ref: ./SmsInfoRequestCreateUserDto.yaml
+  chargeableCount:
+    type: integer
+    format: int32
+description: Новая заявка на отключение услуги СМС-информирования

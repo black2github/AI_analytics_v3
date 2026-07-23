@@ -1,0 +1,13 @@
+type: object
+properties:
+  hash:
+    type: string
+    description: Хеш файла
+  id:
+    type: string
+    description: Ссылка на файл документа
+    format: uuid
+  name:
+    type: string
+    description: Наименование документа
+description: Информация о документе

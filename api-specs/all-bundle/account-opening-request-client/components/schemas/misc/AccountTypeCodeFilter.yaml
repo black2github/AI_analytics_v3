@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+  notEq:
+    type: string
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - PAYMENT
+      - EXECUTOR_GOZ
+      - HEAD_EXECUTOR_GOZ
+      - SPECIAL_PURCHASE_ACCOUNT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - PAYMENT
+      - EXECUTOR_GOZ
+      - HEAD_EXECUTOR_GOZ
+      - SPECIAL_PURCHASE_ACCOUNT
+  isNull:
+    type: boolean
+description: Фильтр по типу счёта

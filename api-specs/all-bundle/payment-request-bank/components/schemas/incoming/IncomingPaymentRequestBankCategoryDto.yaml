@@ -1,0 +1,8 @@
+type: string
+description: Категории для скроллера банка
+nullable: true
+enum:
+- PROCESSING_ERROR
+- IN_PROCESSING
+- COMPLETED
+- ALL

@@ -1,0 +1,14 @@
+type: object
+required:
+- mode
+properties:
+  mode:
+    $ref: ./StubMode.yaml
+  delay:
+    type: integer
+    format: int32
+  fakeFileId:
+    type: string
+  errorStatus:
+    type: integer
+    format: int32

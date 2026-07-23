@@ -1,0 +1,8 @@
+type: object
+properties:
+  days:
+    type: array
+    description: Дни периода календаря
+    items:
+      $ref: ./WorkCalendarDayDto.yaml
+description: Данные

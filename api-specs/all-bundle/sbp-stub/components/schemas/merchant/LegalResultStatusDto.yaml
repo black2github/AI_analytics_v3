@@ -1,0 +1,6 @@
+type: string
+enum:
+- IN_PROCESS
+- CREATED
+- ERROR
+description: Статус запроса в merchant API

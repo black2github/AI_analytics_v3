@@ -1,0 +1,45 @@
+type: object
+properties:
+  clientGroupCode:
+    type: string
+    description: Код группы тарифов. Группа тарифов - объединение однотипных тарифах в разных филиалах
+    example: standard_base
+  clientGroupName:
+    type: string
+    description: Наименование группы тарифов. Используется для отображения клиенту в ЭКО
+    example: Стандартный Базовый
+  absCode:
+    type: string
+    description: Код тарифа в АБС
+    example: ГПБ_МСК_СТД_1701
+  absName:
+    type: string
+    description: Наименование тарифа в АБС
+    example: ГПБ. Москва. Стандартный Базовый тарифный план (с 23.10.2018)
+  clientAbsId:
+    type: string
+    description: Идентификатор Клиента Банка
+  branchCode:
+    type: string
+    description: Код филиала
+    example: '0000'
+  period:
+    type: string
+    description: Период действия тарифа
+    example: 1M
+  nextPaymentDate:
+    type: string
+    description: Дата следующего платежа
+    format: date
+    example: '2027-01-03'
+  limitsRefreshDate:
+    type: string
+    description: Дата обновления всех лимитов
+    format: date
+    example: '2027-02-03'
+  services:
+    type: array
+    description: Услуги по тарифам
+    items:
+      $ref: ./TariffServiceDto.yaml
+description: Тарифный план

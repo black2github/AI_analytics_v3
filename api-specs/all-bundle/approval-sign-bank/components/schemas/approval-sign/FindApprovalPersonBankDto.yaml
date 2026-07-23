@@ -1,0 +1,14 @@
+required:
+- approvingOrganizationId
+- uaaId
+type: object
+properties:
+  uaaId:
+    type: string
+    description: Id UAA пользователя клиента
+    format: uuid
+  approvingOrganizationId:
+    type: string
+    description: Id визирующей организации
+    format: uuid
+description: ДТО для поиска визирующего лица по id UAA пользователя клиента и id визирующей организации.

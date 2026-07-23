@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: number
+  ge:
+    type: number
+  gt:
+    type: number
+  in:
+    type: array
+    items:
+      type: number
+  isNull:
+    type: boolean
+  le:
+    type: number
+  lt:
+    type: number
+  notContains:
+    type: string
+  notEq:
+    type: number
+  notIn:
+    type: array
+    items:
+      type: number
+description: Ставка тарифа (eq)

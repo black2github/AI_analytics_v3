@@ -1,0 +1,32 @@
+type: object
+properties:
+  lockDetails:
+    $ref: ./LockDetailsBankDto.yaml
+  linkedObject:
+    $ref: ./OrgAndAccIdentBankDto.yaml
+  status:
+    type: string
+    description: Статус блокировки документа
+    enum:
+    - IMPORT_ERROR
+    - ACTIVE
+    - INACTIVE
+  id:
+    type: string
+    description: 3.10/4.4 ID документа
+    format: uuid
+  f1DocId:
+    type: string
+    description: 3.11/4.5 Идентификатор документа в Ф1
+  informationForBank:
+    type: string
+    description: 4.1 Информация для банка
+  createdAt:
+    type: string
+    description: 3.2/4.11 Дата и время создания записи о блокировке в Экосистеме
+    format: date-time
+  updatedAt:
+    type: string
+    description: 3.19/4.12 Дата и время изменения записи о блокировкн в Экосистеме
+    format: date-time
+description: Основные реквизиты документа

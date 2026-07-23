@@ -1,0 +1,5 @@
+type: string
+description: Профиль клиента.
+enum:
+- ECO
+- MTE

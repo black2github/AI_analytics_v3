@@ -1,0 +1,24 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета зачисления
+  bic:
+    type: string
+    description: БИК филиала банка по счету зачисления
+  bankName:
+    type: string
+    description: Наименование банка по счету зачисления
+  corrAccountNumber:
+    type: string
+    description: Корреспондентский счет
+  companyName:
+    type: string
+    description: Наименование получателя
+  innKio:
+    type: string
+    description: ИНН/КИО получателя
+  kpp:
+    type: string
+    description: КПП получателя
+description: Реквизиты получателя

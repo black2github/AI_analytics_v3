@@ -1,0 +1,17 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Код статуса
+  localizationForBank:
+    type: string
+    description: Название статуса для Банка
+  localizationForClient:
+    type: string
+    description: Название статуса для Клиента
+  operations:
+    type: array
+    description: Операции
+    items:
+      $ref: ./DocumentOperationHistoryBankDto.yaml
+description: История операций документа. Админка

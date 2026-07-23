@@ -1,0 +1,42 @@
+type: object
+properties:
+  operator:
+    type: string
+    enum:
+    - AND
+    - OR
+  nodes:
+    type: array
+    items:
+      $ref: ./RecursiveNode.yaml
+  comparator:
+    type: string
+    enum:
+    - 'TRUE'
+    - 'FALSE'
+    - IS_EMPTY
+    - IS_NOT_EMPTY
+    - IS_NULL
+    - IS_NOT_NULL
+    - IS_TRUE
+    - IS_FALSE
+    - EQUAL
+    - NOT_EQUAL
+    - LESS
+    - LESS_OR_EQUAL
+    - GREATER
+    - GREATER_OR_EQUAL
+    - BEGINS_WITH
+    - NOT_BEGINS_WITH
+    - CONTAINS
+    - NOT_CONTAINS
+    - ENDS_WITH
+    - NOT_ENDS_WITH
+    - BETWEEN
+    - NOT_BETWEEN
+    - IN
+    - NOT_IN
+  operands:
+    type: array
+    items:
+      $ref: ./RecursiveNodeOperand.yaml

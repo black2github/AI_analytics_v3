@@ -1,0 +1,4 @@
+type: string
+enum:
+- C
+- D

@@ -1,0 +1,104 @@
+type: object
+description: Заявка на регистрацию ТСП в СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  number:
+    type: integer
+    format: int32
+    description: Номер заявки
+  date:
+    type: string
+    format: date-time
+    description: Дата заявки
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - REJECTED
+    - RECEIVED
+    - EXECUTED
+    - CLIENT_REGISTRATION_DELIVERED
+    - CLIENT_REGISTRATION_RECEIVED
+    - CLIENT_REGISTRATION_ERROR
+    - CLIENT_REGISTERED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  tradeName:
+    type: string
+    description: Торговое название
+  fullAddress:
+    type: string
+    description: Полный адрес
+  houseFiasId:
+    type: string
+    description: Идентификатор дома ФИАС
+  postalCode:
+    type: string
+    description: Индекс
+  oktmo:
+    type: string
+    description: Код ОКТМО
+  city:
+    type: string
+    description: Город
+  countryCode:
+    type: string
+    description: Код страны
+  capabilities:
+    type: string
+    description: Возможности ТСП по взаимодействию с покупателем страны
+  phoneNumber:
+    type: string
+    description: Телефон
+  isReturned:
+    type: boolean
+    description: Возможен возврат платежа
+  passwordOfReturning:
+    type: string
+    description: Пароль возврата
+  bankClient:
+    $ref: ../common/SbpRequestTspBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  legalId:
+    type: string
+    description: Идентификатор Клиента в АС СБП.
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП.
+  mccCode:
+    type: string
+    description: Код МСС
+  mccName:
+    type: string
+    description: Вид деятельности
+  resident:
+    type: boolean
+    description: Признак резидента
+  redirectUrl:
+    type: string
+    description: Страница платформы Агента ТСП
+    maxLength: 1024

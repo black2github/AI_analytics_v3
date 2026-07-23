@@ -1,0 +1,17 @@
+type: object
+properties:
+  accountTypeCode:
+    type: string
+    description: Код типа счета.
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+  letterCurrencyCode:
+    type: string
+    description: Буквенный код валюты счета.
+  reservedAccountNumber:
+    type: string
+    description: Номер зарезервированного счета.
+description: Сведения об открываемом счете.

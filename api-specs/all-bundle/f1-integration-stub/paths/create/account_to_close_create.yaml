@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице VW_RPT_GPB_ECO_CLOSE_ACC
+  tags:
+  - Обновление заглушек VW_RPT_GPB_ECO_CLOSE_ACC (счета для закрытия в Ф1)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/AccountToCloseDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountToCloseDto.yaml
+    '400':
+      description: Bad Request

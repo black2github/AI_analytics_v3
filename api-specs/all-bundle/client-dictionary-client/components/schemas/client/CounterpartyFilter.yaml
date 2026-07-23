@@ -1,0 +1,7 @@
+type: object
+properties:
+  innOrNameOrAccount:
+    $ref: ./FilterValueDtoString.yaml
+  innOrName:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр справочника контрагентов

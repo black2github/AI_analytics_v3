@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ограничения
+    format: uuid
+  restrictionType:
+    type: string
+    enum:
+    - EXCLUDE_ROLE
+    - INCLUDE_AUTHORITY
+    - EXCLUDE_AUTHORITY
+  roleId:
+    type: string
+    description: Идентификатор роли
+    format: uuid
+  authorities:
+    type: array
+    description: Привилегии ограничения
+    items:
+      $ref: ./RestrictionAuthorityStoreDto.yaml
+description: ДТО сохранения ограничения

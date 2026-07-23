@@ -1,0 +1,25 @@
+required:
+- comment
+- type
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - BLOCK
+    - UNBLOCK
+  userIds:
+    type: array
+    description: Идентификаторы пользователей на блокировку/разблокировку
+    items:
+      type: string
+      description: Идентификаторы пользователей на блокировку/разблокировку
+      format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  comment:
+    type: string
+    description: Комментарий к блокировке/разблокировке пользователей
+description: Запрос на блокировку/разблокировку пользователя(-ей)

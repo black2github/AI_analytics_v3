@@ -1,0 +1,96 @@
+type: object
+description: Заявка на регистрацию QR-кода c данными о доступных действиях в системе АС СБП для клиента
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - REGISTRATION_ERROR
+    - REGISTRATION_REQUEST
+    - QR_CREATED
+    - SUBS_CREATED
+    - REGISTERED
+    - QRC_IMAGE_REQUEST
+    - QRC_IMAGE_NOT_RECEIVED
+    - QRC_IMAGE_RECEIVED
+    - REJECTED
+    - EXECUTED
+    - REGISTRATION_WAIT
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  userName:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  bankClient:
+    $ref: ./SbpQrcRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  sideServiceData:
+    $ref: ./SbpQrcSideServiceDataDto.yaml
+    description: Реквизиты сервиса, инициировавшего заявку
+  clientRequest:
+    type: boolean
+    description: 'Признак создания заявки клиентом банка: "true" - заявка создана Клиентом, "false" - заявка создана через сервис Банка'
+  data:
+    $ref: ./SbpClientQrcRequestDataV2Dto.yaml
+    description: Реквизиты QR-кода
+  subscriptionData:
+    $ref: ./SbpQrcRequestSubscriptionDataV2Dto.yaml
+    description: Реквизиты подписки
+  paymentServices:
+    type: array
+    description: Платежные сервисы
+    items:
+      $ref: ./SbpPaymentServiceDto.yaml
+  payersEmail:
+    type: string
+    description: Адрес электронной почты Плательщика
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  payload:
+    type: string
+    description: Payload зарегистрированного QR кода в СБП
+  availableOperations:
+    $ref: ./SbpQrcRequestAvailableOperationsDto.yaml
+    description: Информация о доступных пользователю действиях c заявкой на регистрацию Qr-кода
+  validationResult:
+    $ref: ./ValidationResult.yaml
+    description: Результат контролей
+required:
+- docDate
+- docNumber
+- id
+- status
+- userId
+- userName

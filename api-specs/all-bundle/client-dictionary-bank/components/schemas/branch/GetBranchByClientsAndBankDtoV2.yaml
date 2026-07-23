@@ -1,0 +1,21 @@
+required:
+- clientIds
+- userId
+type: object
+properties:
+  clientIds:
+    type: array
+    description: Идентификаторы клиента банка
+    items:
+      type: string
+      description: Идентификаторы клиента банка
+      format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  bank:
+    type: boolean
+  client:
+    type: boolean
+description: Параметры запроса подразделения

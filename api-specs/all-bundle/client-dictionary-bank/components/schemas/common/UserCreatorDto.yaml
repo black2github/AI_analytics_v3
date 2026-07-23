@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  firstName:
+    type: string
+    description: Имя
+  familyName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+description: ДТО пользователь, создавший запись

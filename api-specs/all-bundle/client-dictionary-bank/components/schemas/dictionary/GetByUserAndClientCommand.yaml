@@ -1,0 +1,11 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор банковского клиента
+    format: uuid
+description: Команда получения представителя клиента

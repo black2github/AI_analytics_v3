@@ -1,0 +1,34 @@
+type: object
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма денежных средств по одному ордеру
+  bankAddress:
+    type: string
+    description: Адрес банка
+  vspNumber:
+    type: string
+    description: Учётный номер ВСП
+  transactionDate:
+    type: string
+    description: Дата и время исполнения
+    format: date-time
+  cashSymbols:
+    type: array
+    description: Коллекция всех кассовых символов
+    items:
+      $ref: ./CashSymbolExtDto.yaml
+  officeSchedule:
+    type: string
+    description: Часы работы офиса
+  lunchBreaks:
+    type: string
+    description: Обеденный перерыв
+  orderCheck:
+    $ref: ./CashOutOrderCheckDto.yaml
+  banknotes:
+    type: array
+    description: Банкноты для проведения транзакции на выдачу наличных денег
+    items:
+      $ref: ./BanknoteDto.yaml
+description: Сборник всей финансовой информации по заявке на выдачу наличных денег

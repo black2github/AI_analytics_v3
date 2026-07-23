@@ -1,0 +1,9 @@
+required:
+- asyncTaskId
+type: object
+properties:
+  asyncTaskId:
+    type: string
+    description: Идентификатор фоновой задачи отправки в банк
+    format: uuid
+description: Результат массовой отправки документов в банк

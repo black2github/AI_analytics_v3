@@ -1,0 +1,4 @@
+type: object
+properties:
+  externalCardId:
+    type: string

@@ -1,0 +1,33 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: ИД подписи
+    format: uuid
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+  caCertificates:
+    type: array
+    description: Список корневых сертификатов УЦ  в base64
+    items:
+      type: string
+      description: Список корневых сертификатов УЦ  в base64
+  revokedCertificates:
+    type: array
+    description: Список отозванных сертификатов в base64
+    items:
+      type: string
+      description: Список отозванных сертификатов в base64
+  signerInfo:
+    $ref: ./SignerShortInfo.yaml
+  providerInfo:
+    type: string
+    description: Информация о требуемом провайдере
+  error:
+    type: string
+    description: Ошибка получения данных, заполняется в случае невозможности получить данные из подписи
+    enum:
+    - CANT_RETRIEVE_INFO_ABOUT_SIGNER_OR_CERTIFICATE
+description: Доп данные о подписи

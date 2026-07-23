@@ -1,0 +1,7 @@
+type: string
+enum:
+- DRAFT
+- IN_PROGRESS
+- PERFORMED
+- CANCELLED
+description: Статус транзакции

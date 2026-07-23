@@ -1,0 +1,15 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  accountNumber:
+    type: string
+    description: Номер счета плательщика
+  bankName:
+    type: string
+    description: Наименование банка плательщика
+  bic:
+    type: string
+    description: БИК/SWIFT-код банка плательщика
+description: Реквизиты получателя в отзываемом документе

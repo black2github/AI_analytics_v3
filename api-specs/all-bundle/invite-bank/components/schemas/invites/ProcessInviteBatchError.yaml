@@ -1,0 +1,10 @@
+required:
+- error
+- targetPerson
+type: object
+properties:
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+description: ДТО ошибки обработки инвайта

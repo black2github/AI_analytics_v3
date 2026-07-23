@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUnitedLkmpRequestBankFilter.yaml
+description: Запрос страницы

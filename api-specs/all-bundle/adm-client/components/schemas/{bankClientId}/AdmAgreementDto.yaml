@@ -1,0 +1,24 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  commissionAccountNumber:
+    type: string
+    description: Счёт списания комиссии
+  commissionType:
+    $ref: ../common/AdmCommissionTypeDto.yaml
+  contractDate:
+    type: string
+    description: Дата Договора АДМ
+    format: date
+  contractNumber:
+    type: string
+    description: Номер Договора АДМ
+  contractType:
+    type: string
+    description: Тип контракта
+  status:
+    $ref: ./AdmAgreementStatusDto.yaml
+description: Ответ на запрос информации по Договору АДМ

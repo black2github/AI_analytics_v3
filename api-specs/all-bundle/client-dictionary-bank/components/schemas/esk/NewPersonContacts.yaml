@@ -1,0 +1,12 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор в ЕСК
+  phone:
+    type: string
+    description: Номер телефона
+  email:
+    type: string
+    description: Адрес электронной почты
+description: Список контактов физ.лиц для изменения

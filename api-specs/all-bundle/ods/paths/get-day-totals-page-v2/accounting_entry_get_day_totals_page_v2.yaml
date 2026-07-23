@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API проводок
+  summary: Получить страницу итогов по дням. Каждый элемент содержит первую страницу записей проводок
+  description: 'Привилегии: ODS_ACCOUNTING_ENTRY_VIEW'
+  operationId: getDayTotalsPageV2UsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«StatementDayTotalsScrollerFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,SliceData«StatementDayTotalsDtoV2»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

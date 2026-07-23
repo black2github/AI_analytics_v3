@@ -1,0 +1,20 @@
+type: object
+properties:
+  objectActionType:
+    type: string
+    description: Тип действия над объектом
+    enum:
+    - SAVE
+    - DELETE
+  objectType:
+    type: string
+    description: Тип объекта
+    enum:
+    - CIU_CLIENT_INFO_UPDATE_REQUEST
+    - CIU_CLIENT_INFO_CHANGE_REQUIREMENT
+    - UAA_CLIENT_USER
+    - CD_CLIENT_EMPLOYEE
+    - CD_CLIENT_OFFICIAL
+  objectFilter:
+    $ref: ./EdsObjectFilter.yaml
+description: Данные для ручной синхронизации данных в рамках сотрудников

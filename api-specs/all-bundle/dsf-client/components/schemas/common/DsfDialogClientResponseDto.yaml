@@ -1,0 +1,44 @@
+type: object
+properties:
+  createdAt:
+    type: string
+    description: Дата создания диалога
+    format: date-time
+  dialogIsOpen:
+    type: boolean
+    description: Признак открытого диалога
+  dialogNameEn:
+    type: string
+    description: Название диалога на английском языке
+  dialogNameRu:
+    type: string
+    description: Название диалога на русском языке
+  dialogStatus:
+    type: string
+    description: Статус диалога
+    enum:
+    - OPEN
+    - REVOKED_BY_BANK
+    - SENT_TO_BANK
+    - ACCEPTED_FOR_CONSIDERATION
+    - COMPLETED
+    - REJECTED
+  externalId:
+    type: string
+    description: Внешний идентификатор диалога
+  externalSystem:
+    type: string
+    description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  id:
+    type: string
+    description: Идентификатор диалога
+    format: uuid
+  lastDocumentAt:
+    type: string
+    description: Дата и время получения последнего письма в диалоге
+    format: date-time
+description: Диалог. Возвращаемое ДТО для приложения клиента.

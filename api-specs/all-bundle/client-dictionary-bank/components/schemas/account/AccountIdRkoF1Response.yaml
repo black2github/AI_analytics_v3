@@ -1,0 +1,14 @@
+required:
+- accounts
+- inn
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+  accounts:
+    type: array
+    description: Данные по счетам
+    items:
+      $ref: ./AccountIdRkoF1Dto.yaml
+description: Данные по ид счету и ид РКО Ф1

@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  notEq:
+    type: string
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BSS_ECO
+      - CFT_RKO
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BSS_ECO
+      - CFT_RKO
+  isNull:
+    type: boolean
+description: Система источник (=)

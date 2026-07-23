@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Создать или обновить
+  description: 'Привилегии: USER_SETTINGS_EDIT'
+  operationId: createOrUpdate
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/UserSettingsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml

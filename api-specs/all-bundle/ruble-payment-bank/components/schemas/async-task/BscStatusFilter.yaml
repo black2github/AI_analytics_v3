@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./BankSupportingFilterStatusDto.yaml
+  notEq:
+    $ref: ./BankSupportingFilterStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./BankSupportingFilterStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./BankSupportingFilterStatusDto.yaml
+  isNull:
+    type: boolean
+description: Банковское сопровождение (содержится в списке).

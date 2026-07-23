@@ -1,0 +1,15 @@
+post:
+  summary: Блокирование карты по запросу
+  tags:
+  - API для работы с корпоративными картами
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/updating/CorpCardBlockRequestDto.yaml
+    required: true
+  responses:
+    '201':
+      description: Created
+    '400':
+      description: Bad Request

@@ -1,0 +1,39 @@
+type: object
+properties:
+  executionDatetime:
+    $ref: ../common/ExecutionDatetimeFilter.yaml
+  amount:
+    $ref: ../common/AmountFilter.yaml
+  operationType:
+    $ref: ../common/OperationViewTypeFilter.yaml
+  contractorAccountNumber:
+    $ref: ../common/ContractorAccountNumberFilter.yaml
+  fiName:
+    $ref: ../common/FiNameFilter.yaml
+  fiBic:
+    $ref: ../common/FiBicFilter.yaml
+  fiBicOrFiName:
+    $ref: ../common/FiBicOrFiNameFilter.yaml
+  purposeOfPayment:
+    $ref: ../common/PurposeOfPaymentFilter.yaml
+  contractorCbrParticipantWalletId:
+    $ref: ../common/ContractorCbrParticipantWalletIdFilter.yaml
+  contractorName:
+    $ref: ../common/ContractorNameFilter.yaml
+  contractorFio:
+    $ref: ../common/ContractorFioFilter.yaml
+  contractorNameOrContractorFio:
+    $ref: ../common/ContractorNameOrContractorFioFilter.yaml
+  contractorCbrAccountNumber:
+    $ref: ../common/ContractorCbrAccountNumberFilter.yaml
+  pointOfSaleName:
+    $ref: ../common/PointOfSaleNameFilter.yaml
+  cbrOperationId:
+    $ref: ../common/CbrOperationIdFilter.yaml
+  uip:
+    $ref: ./UipFilter.yaml
+  cbrParticipantWalletId:
+    $ref: ../common/CbrParticipantWalletIdFilter.yaml
+  treasuryPersonalAccount:
+    $ref: ../common/TreasuryPersonalAccountFilter.yaml
+description: Фильтр для уведомлений

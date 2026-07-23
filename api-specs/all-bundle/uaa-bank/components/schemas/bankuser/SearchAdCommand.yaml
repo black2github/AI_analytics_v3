@@ -1,0 +1,6 @@
+required:
+- searchText
+type: object
+properties:
+  searchText:
+    type: string

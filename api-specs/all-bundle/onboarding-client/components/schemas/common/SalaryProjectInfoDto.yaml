@@ -1,0 +1,22 @@
+type: object
+properties:
+  clientLegalForm:
+    type: string
+    description: Организационно-правовая форма организации
+    enum:
+    - COMMERCIAL
+    - GOVERNMENT
+    - EDUCATION
+  connected:
+    type: boolean
+    description: Подключение зарплатного проекта
+  moneyTransferDirection:
+    type: string
+    description: Направление перевода денежных средств
+    enum:
+    - SINGLE_BRANCH
+    - MULTIPLE_BRANCHES
+  payCommissionFromGpbAccount:
+    type: boolean
+    description: Источник оплаты комиссии - счет в ГПБ
+description: Изменения в учредительных документах

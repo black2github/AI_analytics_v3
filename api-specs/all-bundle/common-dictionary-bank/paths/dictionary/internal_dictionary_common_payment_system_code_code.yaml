@@ -1,0 +1,28 @@
+get:
+  tags:
+  - API для справочника платёжных систем и категорий корпоративных карт
+  summary: Получить запись по коду
+  description: 'Привилегии: PAYMENT_SYSTEM_GET_BY_CODE'
+  operationId: getByCodeUsingGET_8
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: path
+    description: code
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«PaymentSystemDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

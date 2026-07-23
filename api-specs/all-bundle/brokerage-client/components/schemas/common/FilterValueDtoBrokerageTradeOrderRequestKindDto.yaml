@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  notEq:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BUY
+      - EXECUTE
+      - SELL
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BUY
+      - EXECUTE
+      - SELL
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  ge:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  lt:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  le:
+    type: string
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+description: Вид сделки

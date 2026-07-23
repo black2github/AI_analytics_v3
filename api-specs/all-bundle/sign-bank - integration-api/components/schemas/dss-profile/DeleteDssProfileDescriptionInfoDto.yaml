@@ -1,0 +1,6 @@
+type: object
+properties:
+  orgName:
+    type: string
+    description: Название организации
+description: Данные для формирования сообщения о причине удаления ДСС профиля

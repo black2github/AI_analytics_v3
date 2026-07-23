@@ -1,0 +1,7 @@
+type: object
+properties:
+  consentId:
+    type: string
+    description: Идентификатор Согласия, которое соответствует заявке на получение Согласия
+    format: uuid
+description: Запрос на повторную попытку обработки заявки на получение Согласия

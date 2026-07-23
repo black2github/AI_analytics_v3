@@ -1,0 +1,26 @@
+type: object
+properties:
+  separateAccountsFiles:
+    type: boolean
+  signNeeded:
+    type: boolean
+  hideEmptyTurnovers:
+    type: boolean
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  packageOfDocuments:
+    type: boolean
+  separateDocumentsFiles:
+    type: boolean
+  includeDebitStatements:
+    type: boolean
+  includeDebitOrders:
+    type: boolean
+  includeCreditStatements:
+    type: boolean
+  includeCreditOrders:
+    type: boolean

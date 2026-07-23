@@ -1,0 +1,26 @@
+type: object
+properties:
+  certificate:
+    type: string
+  certificatesCA:
+    type: array
+    items:
+      type: string
+  data:
+    type: array
+    items:
+      type: string
+  signedData:
+    type: array
+    items:
+      $ref: ./SignedData.yaml
+  providerInfo:
+    $ref: ./ProviderInfo.yaml
+  calculatedHash:
+    type: boolean
+  detached:
+    type: boolean
+  crls:
+    type: array
+    items:
+      type: string

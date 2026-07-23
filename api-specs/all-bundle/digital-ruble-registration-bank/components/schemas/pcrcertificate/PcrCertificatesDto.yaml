@@ -1,0 +1,17 @@
+type: object
+properties:
+  certificatesOfBankOfRussiaCertificationCenter:
+    uniqueItems: true
+    type: array
+    description: Сертификат ключа Удостоверяющего Центра Банка России
+    items:
+      type: string
+      description: Сертификат ключа Удостоверяющего Центра Банка России
+  certificatesOfFiCertificationCenter:
+    uniqueItems: true
+    type: array
+    description: Сертификат ключа Удостоверяющего Центра Финансового посредника
+    items:
+      type: string
+      description: Сертификат ключа Удостоверяющего Центра Финансового посредника
+description: Служебные сертификаты ПлЦР

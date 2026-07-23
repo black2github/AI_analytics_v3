@@ -1,0 +1,8 @@
+type: string
+enum:
+- BSS_DBO_320
+- ECO
+- RKO_F1
+- ESK
+- SBP
+- TESSA

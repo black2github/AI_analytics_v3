@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Составной идентификатор счета по которому запрашивается справка.
+  docType:
+    type: string
+    description: Тип докумета
+    enum:
+    - KOPOP
+    - AKZEPT
+    - DBS
+description: Справки, запрашиваемой по запросу для ЮЛ

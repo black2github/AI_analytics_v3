@@ -1,0 +1,138 @@
+required:
+- blockUserAssociation
+- canChangeContactData
+- linkedWithEsia
+- notPersonalized
+- ruleExecuted
+- shouldNotification
+- simpleInterface
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  firstName:
+    type: string
+    description: Имя
+  familyName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+  email:
+    type: string
+    description: Email
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  login:
+    type: string
+    description: Логин
+  confirmed:
+    type: boolean
+    description: Признак подтвержденного пользователя
+  emailConfirmed:
+    type: boolean
+    description: Признак подтвержденного email
+  phoneConfirmed:
+    type: boolean
+    description: Признак подтвержденного телефона
+  uaaUser:
+    $ref: ./UserIntegrationDto.yaml
+  lastPasswordChange:
+    type: string
+    description: Время последней смены пароля
+    format: date-time
+  lastLogin:
+    type: string
+    description: Время последнего входа
+    format: date-time
+  createDate:
+    type: string
+    description: Время создания клиента
+    format: date-time
+  isDataUsageApproved:
+    type: boolean
+    description: Признак подтверждения использования данных
+  showNotificationAfter:
+    type: string
+    description: Время после которого необходимо показывать уведомление о необходимости смены email/телефона
+    format: date-time
+  catalog:
+    type: string
+    description: Наименование каталога
+  eskId:
+    type: string
+    description: Идентификатор клиента в ЕСК
+  f1Id:
+    type: string
+    description: Идентификатор клиента в F1
+  cryptoPlugin:
+    type: string
+    enum:
+    - BSS
+    - SFT
+  ruleExecuted:
+    type: boolean
+    description: Признак применения правил
+  canChangeContactData:
+    type: boolean
+    description: Возможность изменения контактных данных
+  notPersonalized:
+    type: boolean
+    description: Признак не персонализированной учетной записи
+  closedServicesAvailable:
+    type: boolean
+    description: Признак доступности сервисов закрытых на тех. обслуживание
+  linkedWithEsia:
+    type: boolean
+    description: Признак связи аккаунта ЕСИА и пользователя клиента
+  consents:
+    uniqueItems: true
+    type: array
+    description: Согласия пользователя
+    items:
+      $ref: ./ClientUserConsentIntegrationDto.yaml
+  marketingCampaign:
+    type: string
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - GPB_AUTOLEASING
+    - GPB_FACTORING
+    - GPB_CARCADE
+    - GPB_BSK
+    - ESIA
+    - GPB_IO_BSK
+    - CP_RETAIL
+    - ETP_GAZ
+    - FAP_DARK
+    - AB_PAYMENTS
+    - ETP_EDO
+    - ETP_VESNA
+    - AUTO_USN
+    - ULUKY
+    - OB_VTB
+  needPasswordChange:
+    type: boolean
+    description: Признак необходимости смены пароля
+  language:
+    type: string
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  lastLoginNetAddress:
+    type: string
+    description: Адрес последнего входа в Систему
+  blockUserAssociation:
+    type: boolean
+    description: Запрет на привязку организации через правило
+  simpleInterface:
+    type: boolean
+    description: Признак простого интерфейса
+  shouldNotification:
+    type: boolean
+description: ДТО клиентского пользователя

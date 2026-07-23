@@ -1,0 +1,16 @@
+required:
+- groupTaskId
+- signInfos
+type: object
+properties:
+  groupTaskId:
+    type: string
+    description: Идентификатор группы задач
+    format: uuid
+  signInfos:
+    uniqueItems: true
+    type: array
+    description: Множество данных о подписи файла
+    items:
+      $ref: ./FileSignInfoDto.yaml
+description: Команда для пакетной подписи документов визирования

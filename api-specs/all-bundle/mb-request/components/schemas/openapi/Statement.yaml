@@ -1,0 +1,26 @@
+type: object
+properties:
+  statementId:
+    type: string
+  accountId:
+    type: string
+  fromBookingDateTime:
+    type: string
+    format: date-time
+  toBookingDateTime:
+    type: string
+    format: date-time
+  creationDateTime:
+    type: string
+    format: date-time
+  Balance:
+    type: array
+    items:
+      $ref: ./CashBalance.yaml
+  TransactionsSummary:
+    $ref: ./TransactionsSummary.yaml
+  Entry:
+    type: array
+    items:
+      $ref: ./ReportEntry.yaml
+description: Выписка по счету

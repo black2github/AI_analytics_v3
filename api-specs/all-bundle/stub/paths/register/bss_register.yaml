@@ -1,0 +1,29 @@
+post:
+  tags:
+  - API регистрации пользователя ДБО БСС
+  summary: Создание новой учетной записи
+  operationId: registerUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/BssRegisterRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BssUser'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

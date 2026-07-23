@@ -1,0 +1,112 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип формата выписки в истории запросов
+    enum:
+    - ALL
+    - VIEW
+    - PDF
+    - PDF_IMPERSONAL
+    - C1
+    - EXCEL
+    - EXCEL_XLSX
+    - RTF
+    - DOCX
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - C1_02
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - MT940
+    - MULTICASH
+    - XML0
+    - XML1
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  notEq:
+    type: string
+    description: Тип формата выписки в истории запросов
+    enum:
+    - ALL
+    - VIEW
+    - PDF
+    - PDF_IMPERSONAL
+    - C1
+    - EXCEL
+    - EXCEL_XLSX
+    - RTF
+    - DOCX
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - C1_02
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - MT940
+    - MULTICASH
+    - XML0
+    - XML1
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип формата выписки в истории запросов
+      enum:
+      - ALL
+      - VIEW
+      - PDF
+      - PDF_IMPERSONAL
+      - C1
+      - EXCEL
+      - EXCEL_XLSX
+      - RTF
+      - DOCX
+      - TXT
+      - TXT_WITHOUT_AMOUNTS
+      - C1_02
+      - C1_SPECIAL
+      - C1_SPECIAL_2
+      - MT940
+      - MULTICASH
+      - XML0
+      - XML1
+      - CAMT053
+      - PDF_MULTIBANKING
+      - EXCEL_MULTIBANKING
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип формата выписки в истории запросов
+      enum:
+      - ALL
+      - VIEW
+      - PDF
+      - PDF_IMPERSONAL
+      - C1
+      - EXCEL
+      - EXCEL_XLSX
+      - RTF
+      - DOCX
+      - TXT
+      - TXT_WITHOUT_AMOUNTS
+      - C1_02
+      - C1_SPECIAL
+      - C1_SPECIAL_2
+      - MT940
+      - MULTICASH
+      - XML0
+      - XML1
+      - CAMT053
+      - PDF_MULTIBANKING
+      - EXCEL_MULTIBANKING
+  isNull:
+    type: boolean

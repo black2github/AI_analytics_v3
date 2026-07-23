@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент"
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  innKio:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrn:
+    type: string
+    description: ОГРН клиента
+  absF1Id:
+    type: string
+    description: РНК клиента в РКО Ф1 (ABS_ID)
+  suvId:
+    type: string
+    description: Идентификатор при передаче через СУВ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+description: Информация о визирующем Клиенте

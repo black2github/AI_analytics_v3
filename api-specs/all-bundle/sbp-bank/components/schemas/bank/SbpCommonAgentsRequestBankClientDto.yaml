@@ -1,0 +1,29 @@
+type: object
+description: ДТО с реквизитами клиента
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка".
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП
+  externalClientGuid:
+    type: string
+    format: uuid
+    description: GUID клиента, присваивается в ЕСК
+  rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  legalId:
+    type: string
+    description: Идентификатор Клиента (ЮЛ) в АС СБП

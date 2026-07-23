@@ -1,0 +1,12 @@
+required:
+- employeeIds
+type: object
+properties:
+  employeeIds:
+    type: array
+    description: Идентификаторы сотрудников
+    items:
+      type: string
+      description: Идентификаторы сотрудников
+      format: uuid
+description: Данные для проверки сотрудников на статус заблокированного УЛ по организации

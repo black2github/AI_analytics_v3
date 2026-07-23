@@ -1,0 +1,27 @@
+get:
+  tags:
+  - Локализация сообщений.
+  summary: Получить кастомные сообщения
+  operationId: getResourceUsingGET
+  produces:
+  - application/json
+  parameters:
+  - name: locale
+    in: path
+    description: locale
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

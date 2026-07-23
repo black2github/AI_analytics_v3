@@ -1,0 +1,32 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: integer
+    format: int32
+  date:
+    type: string
+    format: date-time
+  status:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_LEASING
+    - EXPORT_REQUEST_TO_LEASING_ERROR
+    - EXECUTED_BY_LEASING
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+  bankClientInfo:
+    $ref: ../common/BankClientInfoResponseDto.yaml
+  leasingApplicantInfo:
+    $ref: ../common/LeasingApplicantInfoResponseDto.yaml
+  leasingParameters:
+    $ref: ./AutoLeasingParametersResponseDto.yaml

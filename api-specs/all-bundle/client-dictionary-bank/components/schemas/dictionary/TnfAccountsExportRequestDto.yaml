@@ -1,0 +1,12 @@
+type: object
+properties:
+  selectedIds:
+    type: array
+    description: Список выбранных в скроллере для экспорта ID сущности Счет ТНФ
+    items:
+      type: string
+      description: Список выбранных в скроллере для экспорта ID сущности Счет ТНФ
+      format: uuid
+  filter:
+    $ref: ./AccountTnfFilter.yaml
+description: Запрос на экспорт списка Счета ТНФ.

@@ -1,0 +1,19 @@
+type: object
+properties:
+  initSubscribeId:
+    type: string
+    description: ID новой подписки Клиента
+  cancelSubscribeId:
+    type: string
+    description: Идентификатор отменяемой подписки Клиента
+  clientWebDealingId:
+    type: string
+    description: ID Клиента - ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  instruments:
+    type: array
+    description: Коды инструментов
+    items:
+      type: string
+      description: Коды инструментов

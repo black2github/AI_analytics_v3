@@ -1,0 +1,26 @@
+type: object
+properties:
+  eSignRequestType:
+    type: string
+    description: Тип заявки на ЭП
+    writeOnly: true
+    enum:
+    - LOCAL_ESIGN
+    - CLOUD_ESIGN
+    - REGISTER_SIGN
+  esignRequestType:
+    type: string
+    description: Тип заявки на ЭП
+    enum:
+    - LOCAL_ESIGN
+    - CLOUD_ESIGN
+    - REGISTER_SIGN
+  nameForClient:
+    type: string
+    description: Наименование статуса заявки на ЭП для Клиента
+    enum:
+    - SENT
+    - AWAITING_SEND
+    - EXECUTED
+    - REJECTED
+description: Статус заявки на ЭП для ФЛ

@@ -1,0 +1,13 @@
+type: object
+properties:
+  content:
+    type: string
+    description: Содержимое файла. Бинарные данные в формате Base64
+    format: byte
+  contentType:
+    type: string
+    description: Тип содержимого файла
+  fileName:
+    type: string
+    description: Наименование файла
+description: Обертка файла выгрузки

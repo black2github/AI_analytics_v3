@@ -1,0 +1,11 @@
+type: object
+properties:
+  templateName:
+    type: string
+    description: Наименование шаблона
+  fields:
+    type: array
+    description: Поля сравнения шаблона с моделью Исходящего Платежного требования
+    items:
+      $ref: ./OutgoingPaymentRequestTemplateComparisonFieldDto.yaml
+description: Дто ответа сравнения шаблона с моделью Исходящего Платежного требования

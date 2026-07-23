@@ -1,0 +1,24 @@
+type: object
+properties:
+  rnk:
+    type: string
+    description: РНК клиента
+  nmShrt:
+    type: string
+    description: Краткое наименование клиента
+  nmFull:
+    type: string
+    description: Полное наименование клиента
+  inn:
+    type: string
+    description: ИНН Клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП Клиента
+  kpp:
+    type: string
+    description: КПП Клиента
+  id:
+    type: string
+    description: GUID Клиента
+description: Блок с информацией по клиента

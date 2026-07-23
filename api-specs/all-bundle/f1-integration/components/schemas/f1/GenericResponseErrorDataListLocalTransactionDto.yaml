@@ -1,0 +1,13 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./LocalTransactionDto.yaml
+  error:
+    $ref: ./ErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

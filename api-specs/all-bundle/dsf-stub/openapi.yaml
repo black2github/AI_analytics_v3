@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: dsf-stub API
+  version: 1.5.0
+servers:
+- url: /dsf-stub
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /aml/request:
+    $ref: ./paths/request/aml_request.yaml
+  /aml/request/change-status:
+    $ref: ./paths/request/aml_request_change_status.yaml
+  /aml/request/change-status/from:
+    $ref: ./paths/request/aml_request_change_status_from.yaml
+  /aml/request/change-status/to:
+    $ref: ./paths/request/aml_request_change_status_to.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml

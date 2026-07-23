@@ -1,0 +1,10 @@
+type: object
+properties:
+  degree:
+    $ref: ./OfficeServiceDegreeDto.yaml
+  forJuric:
+    type: boolean
+  forPhys:
+    type: boolean
+  type:
+    $ref: ./OfficeServiceTypeDto.yaml

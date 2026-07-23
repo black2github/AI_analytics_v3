@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - STATEMENT_BROWSER
+    - DOCUMENT_BROWSER
+    - STATEMENT_MOBILE
+    - DOCUMENT_MOBILE
+  notEq:
+    type: string
+    enum:
+    - STATEMENT_BROWSER
+    - DOCUMENT_BROWSER
+    - STATEMENT_MOBILE
+    - DOCUMENT_MOBILE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - STATEMENT_BROWSER
+      - DOCUMENT_BROWSER
+      - STATEMENT_MOBILE
+      - DOCUMENT_MOBILE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - STATEMENT_BROWSER
+      - DOCUMENT_BROWSER
+      - STATEMENT_MOBILE
+      - DOCUMENT_MOBILE
+  isNull:
+    type: boolean

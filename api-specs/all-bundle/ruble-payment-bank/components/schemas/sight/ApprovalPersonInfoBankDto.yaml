@@ -1,0 +1,21 @@
+type: object
+properties:
+  signerFio:
+    type: string
+    description: ФИО визирующего лица
+  f1PersonId:
+    type: integer
+    description: Идентификатор РКО Ф1 визирующего лица
+    format: int64
+  eskPersonId:
+    type: integer
+    description: Идентификатор ЕСК визирующего лица
+    format: int64
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника клиента
+    format: uuid
+  isAddedManually:
+    type: boolean
+    description: Признак добавления записи вручную
+description: Данные о визирующем лице

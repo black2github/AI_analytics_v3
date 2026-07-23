@@ -1,0 +1,17 @@
+type: object
+properties:
+  sparkStatus:
+    type: string
+    description: Статус ЕИО
+    enum:
+    - LEADER
+    - MANAGEMENT_COMPANY
+    - MANAGING_IE
+  status:
+    type: string
+    description: Статус ЕИО
+    enum:
+    - LEADER
+    - MANAGEMENT_COMPANY
+    - MANAGING_IE
+description: Сведения о ЕИО клиента

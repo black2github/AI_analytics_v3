@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Заявка на отзыв"
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  status:
+    $ref: ../common/ChargebackRequestStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  baseDetails:
+    $ref: ../common/ChargebackBaseDetailsClientDto.yaml
+  documentDetails:
+    $ref: ../common/ChargebackDocumentDetailsDto.yaml
+description: Заявка на отзыв, данные для клиента

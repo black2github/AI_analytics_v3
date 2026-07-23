@@ -1,0 +1,11 @@
+type: object
+properties:
+  PlainCardData:
+    $ref: ./PlainCardData1.yaml
+  cardCountryCode:
+    type: string
+  CardBrand:
+    $ref: ./GenericIdentification32.yaml
+  additionalCardData:
+    type: string
+description: Данные по платежной карте

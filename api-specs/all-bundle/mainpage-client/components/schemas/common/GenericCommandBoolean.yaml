@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    type: boolean
+    description: Данные
+description: Запрос

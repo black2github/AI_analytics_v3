@@ -1,0 +1,17 @@
+type: object
+properties:
+  beginDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date
+  periodType:
+    type: string
+    enum:
+    - WORK_DAY
+    - DAY_OFF
+    - NOT_USED
+  description:
+    type: string
+description: Данные

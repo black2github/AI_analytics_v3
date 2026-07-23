@@ -1,0 +1,10 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Код результата отмены подписи ПФ
+    enum:
+    - SUCCESS
+    - FAILURE
+    - UNAVAILABLE
+description: Ответ на запрос отмены подписи ПФ

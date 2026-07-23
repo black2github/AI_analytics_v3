@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+  notEq:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CREATED
+      - UNCREATED
+      - ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CREATED
+      - UNCREATED
+      - ERROR
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+  ge:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+  lt:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+  le:
+    type: string
+    enum:
+    - CREATED
+    - UNCREATED
+    - ERROR
+description: Статус импорта. Рвенство

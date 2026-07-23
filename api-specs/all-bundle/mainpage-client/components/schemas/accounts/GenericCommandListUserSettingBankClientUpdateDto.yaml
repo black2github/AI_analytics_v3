@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./UserSettingBankClientUpdateDto.yaml
+description: Запрос

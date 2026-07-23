@@ -1,0 +1,7 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр получение списка карт и лимитов по счету карты.

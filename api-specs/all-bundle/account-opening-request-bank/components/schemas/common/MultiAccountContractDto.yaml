@@ -1,0 +1,16 @@
+type: object
+properties:
+  conclude:
+    type: boolean
+    description: Заключить новый многосчетовой договор (ДБС).
+  number:
+    type: string
+    description: Номер договора.
+  date:
+    type: string
+    description: Дата договора.
+    format: date
+  contractId:
+    type: string
+    description: Значение идентификатора договора банковского счета в АБС. Идентификатор договора в АБС РКО Ф1.
+description: Сведения о многосчетовом договоре, в рамках которого открывается доп счет.

@@ -1,0 +1,141 @@
+get:
+  tags:
+  - Logout
+  summary: Завершение сессии с редиректом
+  operationId: logoutWithRedirect
+  parameters:
+  - name: app_id
+    in: query
+    required: true
+    schema:
+      type: string
+  - name: post_logout_redirect_uri
+    in: query
+    required: false
+    schema:
+      type: string
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '301':
+      description: Redirect to post_logout_redirect_uri
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    default:
+      description: Redirect to post_logout_redirect_uri
+post:
+  tags:
+  - Logout
+  summary: logout
+  operationId: logout
+  requestBody:
+    content:
+      application/x-www-form-urlencoded;charset=UTF-8:
+        schema:
+          type: object
+          properties:
+            login_uri:
+              type: string
+              description: Login URI
+      application/x-www-form-urlencoded:
+        schema:
+          type: object
+          properties:
+            login_uri:
+              type: string
+              description: Login URI
+  responses:
+    '400':
+      description: Session is not valid
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/OAuth2Error.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

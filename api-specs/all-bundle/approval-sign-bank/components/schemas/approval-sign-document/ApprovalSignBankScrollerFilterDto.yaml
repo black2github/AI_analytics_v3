@@ -1,0 +1,46 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории банковского скроллера документов
+    enum:
+    - ALL
+    - IN_PROCESS
+    - FINISHED
+  documentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  senderClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  approverClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  senderClientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  senderClientAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  approverClientAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  visaDateTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  receiverName:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentType:
+    $ref: ../common/RequestClassifierFilterDto.yaml
+  visaUserName:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  documentCreatedDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  documentNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  status:
+    $ref: ../common/ApprovalSignDocumentStatusFilterDto.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAccountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  visaType:
+    $ref: ./VisaTypeFilterDto.yaml
+description: Фильтр банковского скроллера документов

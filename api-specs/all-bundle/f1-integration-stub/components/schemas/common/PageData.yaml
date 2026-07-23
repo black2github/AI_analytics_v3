@@ -1,0 +1,10 @@
+type: object
+description: Страничные данные
+properties:
+  data:
+    type: array
+    items: {}
+    description: Страница данных
+  hasNext:
+    type: boolean
+    description: Признак наличия следующей страницы

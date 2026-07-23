@@ -1,0 +1,13 @@
+type: object
+properties:
+  passportRf:
+    $ref: ./Passport.yaml
+  temporaryPassport:
+    $ref: ./TemporaryPassport.yaml
+  foreignPassport:
+    $ref: ./ForeignPassport.yaml
+  residentCard:
+    $ref: ./ResidentCard.yaml
+  rightToStay:
+    $ref: ./RightToStay.yaml
+description: Данные документа, удостоверяющего личность СЛ Клиента-ФЛ

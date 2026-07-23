@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Интеграционное API для работы с сертификатами ПлЦР.
+  summary: Получить сертификат ПлЦР (включая сертификаты УЦ ЦБ, УЦ ФП и соответствующие списки отзывов)
+  description: 'Привилегии: DRUB.TECH.CERTIFICATE_VIEW'
+  operationId: findPcrCertificate
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/pcrcertificate/FindPcrCertificateRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/pcrcertificate/GenericResponseDigitalRubleErrorFindPcrCertificateResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

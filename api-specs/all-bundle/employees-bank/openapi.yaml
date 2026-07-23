@@ -1,0 +1,361 @@
+openapi: 3.0.1
+info:
+  title: Сотрудники. Банковская часть
+  description: 'Сервис '
+  version: 3.0.0
+servers:
+- url: /employees-bank
+security:
+- bearer-key: []
+paths:
+  /employees/unsticking/unstick:
+    $ref: ./paths/employees/employees_unsticking_unstick.yaml
+  /employees/unsticking/start:
+    $ref: ./paths/employees/employees_unsticking_start.yaml
+  /employees/unsticking/check:
+    $ref: ./paths/employees/employees_unsticking_check.yaml
+  /employees/to-executed-by-tessa:
+    $ref: ./paths/employees/employees_to_executed_by_tessa.yaml
+  /employees/to-executed-by-esk:
+    $ref: ./paths/employees/employees_to_executed_by_esk.yaml
+  /employees/to-create-access-rules:
+    $ref: ./paths/employees/employees_to_create_access_rules.yaml
+  /employees/to-account-access-updated:
+    $ref: ./paths/employees/employees_to_account_access_updated.yaml
+  /employees/to-account-access-update:
+    $ref: ./paths/employees/employees_to_account_access_update.yaml
+  /employees/to-access-rules-created:
+    $ref: ./paths/employees/employees_to_access_rules_created.yaml
+  /employees/signature/export:
+    $ref: ./paths/employees/employees_signature_export.yaml
+  /employees/send-to-tessa:
+    $ref: ./paths/employees/employees_send_to_tessa.yaml
+  /employees/send-to-esk:
+    $ref: ./paths/employees/employees_send_to_esk.yaml
+  /employees/role/template/search:
+    $ref: ./paths/employees/employees_role_template_search.yaml
+  /employees/role/template/get-page:
+    $ref: ./paths/employees/employees_role_template_get_page.yaml
+  /employees/role/template/authorities-and-actions/form:
+    $ref: ./paths/employees/employees_role_template_authorities_and_actions_form.yaml
+  /employees/reject:
+    $ref: ./paths/employees/employees_reject.yaml
+  /employees/recreate-access-rules:
+    $ref: ./paths/employees/employees_recreate_access_rules.yaml
+  /employees/print:
+    $ref: ./paths/employees/employees_print.yaml
+  /employees/print-v2:
+    $ref: ./paths/employees/employees_print_v2.yaml
+  /employees/legalization:
+    $ref: ./paths/employees/employees_legalization.yaml
+  /employees/integration/role/template/create:
+    $ref: ./paths/employees/employees_integration_role_template_create.yaml
+  /employees/get-page:
+    $ref: ./paths/employees/employees_get_page.yaml
+  /employees/export-requests-list:
+    $ref: ./paths/employees/employees_export_requests_list.yaml
+  /employees/export-requests-list-v2:
+    $ref: ./paths/employees/employees_export_requests_list_v2.yaml
+  /employees/execute:
+    $ref: ./paths/employees/employees_execute.yaml
+  /employees/delete:
+    $ref: ./paths/employees/employees_delete.yaml
+  /employees/category:
+    $ref: ./paths/employees/employees_category.yaml
+  /employees-bc/get-page:
+    $ref: ./paths/employees-bc/employees_bc_get_page.yaml
+  /employees-bc/find:
+    $ref: ./paths/employees-bc/employees_bc_find.yaml
+  /employees-bc/export-employees:
+    $ref: ./paths/employees-bc/employees_bc_export_employees.yaml
+  /employees-bc/export-employees-v3:
+    $ref: ./paths/employees-bc/employees_bc_export_employees_v3.yaml
+  /employees-bc/export-employees-v2:
+    $ref: ./paths/employees-bc/employees_bc_export_employees_v2.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /employees/{id}:
+    $ref: ./paths/employees/employees_id.yaml
+  /employees/settings:
+    $ref: ./paths/employees/employees_settings.yaml
+  /employees/history/{id}:
+    $ref: ./paths/employees/employees_history_id.yaml
+  /employees/dictionary/product-types:
+    $ref: ./paths/employees/employees_dictionary_product_types.yaml
+  /accounts/to-set-up-access:
+    $ref: ./paths/misc/accounts_to_set_up_access.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/employees/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/employees/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/employees/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/employees/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/employees/ValidationResult.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataListUserUnstickResultDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataListUserUnstickResultDto.yaml
+    StickingAuthorizedPersonDto:
+      $ref: ./components/schemas/employees/StickingAuthorizedPersonDto.yaml
+    UserDeletedDigitalSignatureToolDto:
+      $ref: ./components/schemas/employees/UserDeletedDigitalSignatureToolDto.yaml
+    UserDeletedRoleDto:
+      $ref: ./components/schemas/employees/UserDeletedRoleDto.yaml
+    UserUnstickResultDto:
+      $ref: ./components/schemas/employees/UserUnstickResultDto.yaml
+    BatchStartResultDto:
+      $ref: ./components/schemas/employees/BatchStartResultDto.yaml
+    GenericResponseErrorDataBatchStartResultDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataBatchStartResultDto.yaml
+    GenericResponseErrorDataListUserStickingCheckResultDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataListUserStickingCheckResultDto.yaml
+    UserStickingCheckResultDto:
+      $ref: ./components/schemas/employees/UserStickingCheckResultDto.yaml
+    CommentDto:
+      $ref: ./components/schemas/employees/CommentDto.yaml
+    GenericCommandReqStatusChangeCommand:
+      $ref: ./components/schemas/employees/GenericCommandReqStatusChangeCommand.yaml
+    ReqStatusChangeCommand:
+      $ref: ./components/schemas/employees/ReqStatusChangeCommand.yaml
+    EmployeeRequestBriefResponseDto:
+      $ref: ./components/schemas/employees/EmployeeRequestBriefResponseDto.yaml
+    GenericResponseErrorDataListEmployeeRequestBriefResponseDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataListEmployeeRequestBriefResponseDto.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/employees/GenericCommandSetUUID.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/employees/SingleCommandUUID.yaml
+    RoleTemplatesSearchingDto:
+      $ref: ./components/schemas/employees/RoleTemplatesSearchingDto.yaml
+    GenericResponseErrorDataListRoleTemplateDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataListRoleTemplateDto.yaml
+    RoleTemplateDto:
+      $ref: ./components/schemas/employees/RoleTemplateDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/employees/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/employees/FilterValueDtoInteger.yaml
+    FilterValueDtoRoleTemplateTypeDto:
+      $ref: ./components/schemas/employees/FilterValueDtoRoleTemplateTypeDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandRoleTemplatesFilterDto:
+      $ref: ./components/schemas/employees/GetPageCommandRoleTemplatesFilterDto.yaml
+    PageParamsRoleTemplatesFilterDto:
+      $ref: ./components/schemas/employees/PageParamsRoleTemplatesFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RoleTemplatesFilterDto:
+      $ref: ./components/schemas/employees/RoleTemplatesFilterDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BankClient:
+      $ref: ./components/schemas/employees/BankClient.yaml
+    GenericResponseErrorDataPageDataRoleTemplateScrollerDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataPageDataRoleTemplateScrollerDto.yaml
+    PageDataRoleTemplateScrollerDto:
+      $ref: ./components/schemas/employees/PageDataRoleTemplateScrollerDto.yaml
+    RoleTemplateScrollerDto:
+      $ref: ./components/schemas/employees/RoleTemplateScrollerDto.yaml
+    User:
+      $ref: ./components/schemas/employees/User.yaml
+    AuthoritiesAndActionsFormationDto:
+      $ref: ./components/schemas/employees/AuthoritiesAndActionsFormationDto.yaml
+    Document:
+      $ref: ./components/schemas/employees/Document.yaml
+    DocumentsByProduct:
+      $ref: ./components/schemas/employees/DocumentsByProduct.yaml
+    GenericResponseErrorDataAuthoritiesAndActionsFormedDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataAuthoritiesAndActionsFormedDto.yaml
+    Product:
+      $ref: ./components/schemas/employees/Product.yaml
+    EmployeeRequestPrintDto:
+      $ref: ./components/schemas/employees/EmployeeRequestPrintDto.yaml
+    SingleCommandEmployeeRequestPrintDto:
+      $ref: ./components/schemas/employees/SingleCommandEmployeeRequestPrintDto.yaml
+    GenericResponseErrorDataPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    GenericCommandEmployeeRequestPrintDto:
+      $ref: ./components/schemas/employees/GenericCommandEmployeeRequestPrintDto.yaml
+    AttachmentWithAccessTokenDto:
+      $ref: ./components/schemas/common/AttachmentWithAccessTokenDto.yaml
+    GenericResponseErrorDataAttachmentWithAccessTokenDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAttachmentWithAccessTokenDto.yaml
+    LegalizationEmployeeAccountAccessDto:
+      $ref: ./components/schemas/employees/LegalizationEmployeeAccountAccessDto.yaml
+    LegalizationEmployeeDto:
+      $ref: ./components/schemas/employees/LegalizationEmployeeDto.yaml
+    LegalizationEmployeeRequestCreationDto:
+      $ref: ./components/schemas/employees/LegalizationEmployeeRequestCreationDto.yaml
+    GenericResponseErrorDataLegalizationEmployeeRequestCreationResponseDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataLegalizationEmployeeRequestCreationResponseDto.yaml
+    LegalizationEmployeeRequestCreationResponseDto:
+      $ref: ./components/schemas/employees/LegalizationEmployeeRequestCreationResponseDto.yaml
+    Access:
+      $ref: ./components/schemas/employees/Access.yaml
+    RoleTemplateTechnicalCreationDto:
+      $ref: ./components/schemas/employees/RoleTemplateTechnicalCreationDto.yaml
+    GenericResponseErrorDataRoleTemplateDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataRoleTemplateDto.yaml
+    EmployeeRequestBankScrollerFilter:
+      $ref: ./components/schemas/employees/EmployeeRequestBankScrollerFilter.yaml
+    EmployeeRequestStatusFilter:
+      $ref: ./components/schemas/employees/EmployeeRequestStatusFilter.yaml
+    EmployeeRequestTypeFilter:
+      $ref: ./components/schemas/employees/EmployeeRequestTypeFilter.yaml
+    GetPageCommandEmployeeRequestBankScrollerFilter:
+      $ref: ./components/schemas/employees/GetPageCommandEmployeeRequestBankScrollerFilter.yaml
+    PageParamsEmployeeRequestBankScrollerFilter:
+      $ref: ./components/schemas/employees/PageParamsEmployeeRequestBankScrollerFilter.yaml
+    AdditionalRequestDetailsDto:
+      $ref: ./components/schemas/employees/AdditionalRequestDetailsDto.yaml
+    AuthorizedPersonRightsDto:
+      $ref: ./components/schemas/employees/AuthorizedPersonRightsDto.yaml
+    EmployeeRequestScrollerResponseDto:
+      $ref: ./components/schemas/employees/EmployeeRequestScrollerResponseDto.yaml
+    PageDataEmployeeRequestScrollerResponseDto:
+      $ref: ./components/schemas/employees/PageDataEmployeeRequestScrollerResponseDto.yaml
+    EmployeeRequestPrintListDto:
+      $ref: ./components/schemas/employees/EmployeeRequestPrintListDto.yaml
+    SingleCommandEmployeeRequestPrintListDto:
+      $ref: ./components/schemas/employees/SingleCommandEmployeeRequestPrintListDto.yaml
+    GenericCommandEmployeeRequestPrintListDto:
+      $ref: ./components/schemas/employees/GenericCommandEmployeeRequestPrintListDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/employees/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/employees/CategoryResponse.yaml
+    EmployeeFindRequestDto:
+      $ref: ./components/schemas/employees-bc/EmployeeFindRequestDto.yaml
+    EmployeeUnitedBankScrollerFilter:
+      $ref: ./components/schemas/employees-bc/EmployeeUnitedBankScrollerFilter.yaml
+    FilterValueDtoAuthorizedPersonType:
+      $ref: ./components/schemas/employees-bc/FilterValueDtoAuthorizedPersonType.yaml
+    GetPageCommandEmployeeUnitedBankScrollerFilter:
+      $ref: ./components/schemas/employees-bc/GetPageCommandEmployeeUnitedBankScrollerFilter.yaml
+    PageParamsEmployeeUnitedBankScrollerFilter:
+      $ref: ./components/schemas/employees-bc/PageParamsEmployeeUnitedBankScrollerFilter.yaml
+    EmployeeUnitedBankScrollerDto:
+      $ref: ./components/schemas/employees-bc/EmployeeUnitedBankScrollerDto.yaml
+    PageDataEmployeeUnitedBankScrollerDto:
+      $ref: ./components/schemas/employees-bc/PageDataEmployeeUnitedBankScrollerDto.yaml
+    ShortRequestInfo:
+      $ref: ./components/schemas/employees-bc/ShortRequestInfo.yaml
+    EmployeeFindRequestBankDto:
+      $ref: ./components/schemas/employees-bc/EmployeeFindRequestBankDto.yaml
+    SingleCommandEmployeeFindRequestBankDto:
+      $ref: ./components/schemas/employees-bc/SingleCommandEmployeeFindRequestBankDto.yaml
+    ChangeRequirementInfoDto:
+      $ref: ./components/schemas/employees-bc/ChangeRequirementInfoDto.yaml
+    EmployeeUnitedResponseBankDto:
+      $ref: ./components/schemas/employees-bc/EmployeeUnitedResponseBankDto.yaml
+    EmployeeWarrantyInfoDto:
+      $ref: ./components/schemas/employees-bc/EmployeeWarrantyInfoDto.yaml
+    GenericResponseErrorDataEmployeeUnitedResponseBankDto:
+      $ref: ./components/schemas/employees-bc/GenericResponseErrorDataEmployeeUnitedResponseBankDto.yaml
+    SelfRequestInfoDto:
+      $ref: ./components/schemas/employees-bc/SelfRequestInfoDto.yaml
+    UpdateRequestInfoDto:
+      $ref: ./components/schemas/employees-bc/UpdateRequestInfoDto.yaml
+    EmployeeUnitedBankScrollerFilterV3:
+      $ref: ./components/schemas/employees-bc/EmployeeUnitedBankScrollerFilterV3.yaml
+    GetPageCommandEmployeeUnitedBankScrollerFilterV3:
+      $ref: ./components/schemas/employees-bc/GetPageCommandEmployeeUnitedBankScrollerFilterV3.yaml
+    PageParamsEmployeeUnitedBankScrollerFilterV3:
+      $ref: ./components/schemas/employees-bc/PageParamsEmployeeUnitedBankScrollerFilterV3.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/employees/AgreementsDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/employees/BankClientInfoDto.yaml
+    BankInfoWarrantyDto:
+      $ref: ./components/schemas/employees/BankInfoWarrantyDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/employees/CertificateInfoDto.yaml
+    ConstitutionInfoDto:
+      $ref: ./components/schemas/employees/ConstitutionInfoDto.yaml
+    CreateResponseEmployeeRequestResponseDto:
+      $ref: ./components/schemas/employees/CreateResponseEmployeeRequestResponseDto.yaml
+    DocTypeDto:
+      $ref: ./components/schemas/employees/DocTypeDto.yaml
+    EmployeeAddressDto:
+      $ref: ./components/schemas/employees/EmployeeAddressDto.yaml
+    EmployeeDto:
+      $ref: ./components/schemas/employees/EmployeeDto.yaml
+    EmployeeInfoDto:
+      $ref: ./components/schemas/employees/EmployeeInfoDto.yaml
+    EmployeeRequestAccessDto:
+      $ref: ./components/schemas/employees/EmployeeRequestAccessDto.yaml
+    EmployeeRequestAccountAccessDto:
+      $ref: ./components/schemas/employees/EmployeeRequestAccountAccessDto.yaml
+    EmployeeRequestAttachmentDto:
+      $ref: ./components/schemas/employees/EmployeeRequestAttachmentDto.yaml
+    EmployeeRequestDsfTypeDto:
+      $ref: ./components/schemas/employees/EmployeeRequestDsfTypeDto.yaml
+    EmployeeRequestResponseDto:
+      $ref: ./components/schemas/employees/EmployeeRequestResponseDto.yaml
+    EmployeeRequestRoleTemplateDto:
+      $ref: ./components/schemas/employees/EmployeeRequestRoleTemplateDto.yaml
+    IdentityDocumentDto:
+      $ref: ./components/schemas/employees/IdentityDocumentDto.yaml
+    MegaWarrantyDto:
+      $ref: ./components/schemas/employees/MegaWarrantyDto.yaml
+    ProductWarrantyDto:
+      $ref: ./components/schemas/employees/ProductWarrantyDto.yaml
+    ProductWarrantyRecordDto:
+      $ref: ./components/schemas/employees/ProductWarrantyRecordDto.yaml
+    RequestExecutionDataDto:
+      $ref: ./components/schemas/employees/RequestExecutionDataDto.yaml
+    SignatureDataDto:
+      $ref: ./components/schemas/employees/SignatureDataDto.yaml
+    SignatureInfoDto:
+      $ref: ./components/schemas/employees/SignatureInfoDto.yaml
+    AgreementTextsDto:
+      $ref: ./components/schemas/employees/AgreementTextsDto.yaml
+    EmployeesConfigurableSettingsDto:
+      $ref: ./components/schemas/employees/EmployeesConfigurableSettingsDto.yaml
+    GenericResponseErrorDataEmployeesConfigurableSettingsDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataEmployeesConfigurableSettingsDto.yaml
+    ProductWarrantyTexts:
+      $ref: ./components/schemas/employees/ProductWarrantyTexts.yaml
+    ProductsForIssuingWarrantyDto:
+      $ref: ./components/schemas/employees/ProductsForIssuingWarrantyDto.yaml
+    EmployeeRequestHistoryDto:
+      $ref: ./components/schemas/employees/EmployeeRequestHistoryDto.yaml
+    GenericResponseErrorDataListEmployeeRequestHistoryDto:
+      $ref: ./components/schemas/employees/GenericResponseErrorDataListEmployeeRequestHistoryDto.yaml
+    ActualProductDto:
+      $ref: ./components/schemas/employees/ActualProductDto.yaml
+    Accesses:
+      $ref: ./components/schemas/misc/Accesses.yaml
+    AccountCurrencyDto:
+      $ref: ./components/schemas/misc/AccountCurrencyDto.yaml
+    AccountToSetUpAccessDto:
+      $ref: ./components/schemas/misc/AccountToSetUpAccessDto.yaml
+    AccountTypeDto:
+      $ref: ./components/schemas/misc/AccountTypeDto.yaml
+    CurrencyServicesDto:
+      $ref: ./components/schemas/misc/CurrencyServicesDto.yaml
+    GenericResponseErrorDataListAccountToSetUpAccessDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListAccountToSetUpAccessDto.yaml
+    Signatory:
+      $ref: ./components/schemas/misc/Signatory.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

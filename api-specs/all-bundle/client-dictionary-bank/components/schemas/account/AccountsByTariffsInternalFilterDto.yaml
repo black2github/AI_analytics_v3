@@ -1,0 +1,22 @@
+required:
+- clientAbsIds
+- tariffPlanAbsIds
+type: object
+properties:
+  clientAbsIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиентов в АБС Ф1
+    items:
+      type: integer
+      description: Идентификаторы клиентов в АБС Ф1
+      format: int64
+  tariffPlanAbsIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы тарифных планов в АБС Ф1
+    items:
+      type: integer
+      description: Идентификаторы тарифных планов в АБС Ф1
+      format: int64
+description: Данные

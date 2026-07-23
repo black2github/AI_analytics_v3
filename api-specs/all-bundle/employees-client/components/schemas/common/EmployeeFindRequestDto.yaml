@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  bankClientId:
+    type: string
+    format: uuid
+  eskId:
+    type: string
+  emplId:
+    type: string
+    format: uuid
+  userUaaId:
+    type: string
+    format: uuid
+description: Поиск по выбранным параметрам

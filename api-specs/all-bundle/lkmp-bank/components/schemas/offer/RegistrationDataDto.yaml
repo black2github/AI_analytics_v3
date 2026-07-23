@@ -1,0 +1,14 @@
+type: object
+properties:
+  agreementNumber:
+    type: string
+    description: Номер зарегистрированного соглашения
+  agreementDate:
+    type: string
+    description: Дата регистрации соглашения
+    format: date
+  agreementId:
+    type: string
+    description: Ссылка на сущность "Соглашения Клиента Банка"
+    format: uuid
+description: Регистрационные данные Соглашения о подключении к ЛК МП.

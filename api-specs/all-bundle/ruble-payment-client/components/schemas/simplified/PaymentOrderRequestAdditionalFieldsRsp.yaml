@@ -1,0 +1,8 @@
+type: object
+properties:
+  bkrContractNumber:
+    type: string
+    description: Код брокерского договора
+  tradingFloor:
+    $ref: ./TradingFloorDto.yaml
+description: Исходящие параметры дополнительных полей функции создания перевода на брокерский счёт

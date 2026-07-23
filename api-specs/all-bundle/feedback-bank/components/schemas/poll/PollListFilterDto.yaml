@@ -1,0 +1,58 @@
+type: object
+properties:
+  category:
+    type: string
+    description: Категория опросов
+    default: ALL
+    enum:
+    - ALL
+    - ACTIVE
+    - INACTIVE
+  scenarioId:
+    type: string
+    description: ID сценария опроса
+    format: uuid
+  sources:
+    type: array
+    description: Список источников оценки
+    items:
+      type: string
+      description: Список источников оценки
+  names:
+    type: array
+    description: Список наименований опросов
+    items:
+      type: string
+      description: Список наименований опросов
+  useHashtags:
+    type: boolean
+    description: Использовать хештеги
+  daysSinceFeedbackCancel:
+    type: integer
+    description: Дней с отказа от оценки
+    format: int32
+  daysSinceLastFeedback:
+    type: integer
+    description: Дней с последней оценки
+    format: int32
+  creationDate:
+    $ref: ./DateRangeDto.yaml
+  modificationDate:
+    $ref: ./DateRangeDto.yaml
+  hashtags:
+    type: array
+    description: Список хештегов
+    items:
+      type: string
+      description: Список хештегов
+  page:
+    type: integer
+    description: Номер страницы (начинается с 0)
+    format: int32
+    default: 0
+  size:
+    type: integer
+    description: Размер страницы
+    format: int32
+    default: 20
+description: Фильтр для списка опросов

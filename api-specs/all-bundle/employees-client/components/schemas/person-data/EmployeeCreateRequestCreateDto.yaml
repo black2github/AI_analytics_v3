@@ -1,0 +1,22 @@
+required:
+- agreements
+- attachments
+- authPersonRights
+- bankClientInfo
+- employeeInfo
+type: object
+properties:
+  employeeInfo:
+    $ref: ./PersonalDataEmployeeInfoDto.yaml
+  bankClientInfo:
+    $ref: ../common/BankClientInfoUpdateDto.yaml
+  attachments:
+    type: array
+    description: Список вложений
+    items:
+      $ref: ../common/IdentityDocumentAttachmentDto.yaml
+  authPersonRights:
+    $ref: ../common/AuthorizedPersonRightsDto.yaml
+  agreements:
+    $ref: ../common/EmployeeCreateAgreementsDto.yaml
+description: Заявка на добавление нового сотрудника. Личные данные

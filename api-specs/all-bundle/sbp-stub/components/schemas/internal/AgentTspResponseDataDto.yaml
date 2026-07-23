@@ -1,0 +1,16 @@
+type: object
+description: Полученные данные по агентам от АС СБП
+properties:
+  id:
+    type: string
+    description: Идентификатор агента, присвоенный ОПКЦ СБП
+  legal_name:
+    type: string
+    description: Наименование Агента ТСП
+  role_mask:
+    type: string
+    description: Функциональная роль
+  member:
+    $ref: ./AgentTspResponseMemberDto.yaml
+    type: object
+    description: Блок данных с информацией об Участнике СБП

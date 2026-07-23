@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи о корпоративной карте
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARDS_ECO (Данные о корпоративной карте)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+  responses:
+    '204':
+      description: No Content

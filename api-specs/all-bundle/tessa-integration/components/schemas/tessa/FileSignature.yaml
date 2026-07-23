@@ -1,0 +1,53 @@
+type: object
+properties:
+  Comment:
+    type: string
+  Company:
+    type: string
+  Data::bin:
+    type: string
+  EventID:
+    type: string
+    enum:
+    - Other
+    - Imported
+    - Signed
+  IssuerName:
+    type: string
+  RowID::uid:
+    type: string
+    format: uuid
+  SerialNumber:
+    type: string
+  Signed:
+    type: string
+    format: date-time
+  SubjectName:
+    type: string
+  UserID::uid:
+    type: string
+    format: uuid
+  UserName:
+    type: string
+  VersionRowID::uid:
+    type: string
+    format: uuid
+  SignatureTypeID:
+    type: string
+    enum:
+    - None
+    - CAdES
+  SignatureProfileID:
+    type: string
+    enum:
+    - None
+    - BES
+    - EPES
+    - T
+    - C
+    - XL
+    - XType1
+    - XType2
+    - XLType1
+    - XLType2
+    - A

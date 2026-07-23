@@ -1,0 +1,10 @@
+type: object
+properties:
+  authData:
+    type: string
+    description: Данные
+  expireAt:
+    type: string
+    description: Время жизни данных
+    format: date-time
+description: Данные для генерации deep link

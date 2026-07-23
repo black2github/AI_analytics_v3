@@ -1,0 +1,80 @@
+required:
+- amount
+- clientId
+- contractId
+- currency
+- tradingFloor
+- withdrawalAccount
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  tradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка
+  currency:
+    maxLength: 3
+    pattern: ^[A-Z]{3}$
+    type: string
+    description: Код валюты
+  amount:
+    type: string
+    description: Сумма
+  clientEngName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Наименование клиента на английском языке
+  additionalCondition:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Назначение неторгового поручения
+  withdrawalAccount:
+    maxLength: 20
+    pattern: ^[+0-9]+$
+    type: string
+    description: Номер расчетного счета клиента
+  bankBic:
+    maxLength: 9
+    pattern: ^[+0-9]+$
+    type: string
+    description: Бик банка, где открыт счет для перечисления ДС
+  bankSwift:
+    maxLength: 20
+    pattern: ^[0-9A-Za-z]+$
+    type: string
+    description: SWIFT код банка, где открыт счет для перечисления ДС
+  corrAccount:
+    maxLength: 20
+    pattern: ^[+0-9]+$
+    type: string
+    description: Номер корреспондентского счета кредитной организации, открытый в подразделении Банка России
+  corrBankBic:
+    maxLength: 9
+    pattern: ^[+0-9]+$
+    type: string
+    description: Бик банка посредника
+  corrBankSwift:
+    maxLength: 20
+    pattern: ^[0-9A-Za-z]+$
+    type: string
+    description: SWIFT код банка посредника
+  cityEng:
+    maxLength: 255
+    pattern: ^\s*[0-9A-Za-z]+(?:[-\s'][0-9A-Za-z]+)*\s*$
+    type: string
+    description: Город на английском
+  countryEng:
+    maxLength: 255
+    pattern: ^\s*[0-9A-Za-z]+(?:[-\s'][0-9A-Za-z]+)*\s*$
+    type: string
+    description: Страна на английском
+description: Транспортная сущность для создания неторгового поручения на вывод денежных средств

@@ -1,0 +1,10 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  eskId:
+    type: string
+    description: ID физ лица в ЕСК
+description: Запрос проверки полномочий УЛ на подачу заявления на выпуск ОЭП

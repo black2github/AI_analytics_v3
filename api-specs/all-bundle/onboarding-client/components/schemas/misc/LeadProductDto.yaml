@@ -1,0 +1,7 @@
+type: object
+properties:
+  type:
+    type: integer
+    description: Тип счета
+    format: int32
+description: Сведения о продукте

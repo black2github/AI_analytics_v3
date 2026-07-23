@@ -1,0 +1,22 @@
+type: object
+properties:
+  expiration:
+    type: string
+    description: Дата и время удаления файла
+    format: date-time
+  id:
+    type: string
+    description: ИД версии файла
+    format: uuid
+  signature:
+    type: string
+    description: Подпись файла
+  size:
+    type: integer
+    description: Размер файла
+    format: int32
+  uploadedById:
+    type: string
+    description: ИД пользователя Тессы, который сохранил файл
+    format: uuid
+description: Данные

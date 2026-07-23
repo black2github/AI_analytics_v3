@@ -1,0 +1,24 @@
+type: object
+description: Адрес местонахождения (регистрации) Клиента
+properties:
+  streetName:
+    type: string
+    description: Улица
+  buildingNumber:
+    type: string
+    description: Дом (Строение)
+  room:
+    type: string
+    description: Офис (квартира)
+  townName:
+    type: string
+    description: Населенный пункт
+  countrySubDivision:
+    type: string
+    description: Регион
+  country:
+    type: string
+    description: Код страны по ISO 3166 (Alpha-2 code)
+required:
+- country
+- townName

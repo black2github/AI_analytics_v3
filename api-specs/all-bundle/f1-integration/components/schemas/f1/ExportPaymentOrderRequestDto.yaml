@@ -1,0 +1,143 @@
+required:
+- bssId
+- docDate
+- docId
+- docNumber
+- firstSignFio
+- operationType
+- payerDetails
+- paymentAmount
+- paymentUrgent
+- receiveTime
+- receiverDetails
+- requestId
+- sendType
+type: object
+properties:
+  bssId:
+    type: integer
+    description: Уникальный номер клиента
+    format: int32
+  docId:
+    type: string
+    description: Уникальный идентификатор документа
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  payerDetails:
+    $ref: ./PaymentDetailsDto.yaml
+  receiverDetails:
+    $ref: ./PaymentDetailsDto.yaml
+  paymentAmount:
+    type: number
+    description: Сумма документа
+  paymentGround:
+    type: string
+    description: Назначение платежа
+  paymentUrgent:
+    type: string
+    description: Очередность
+  payUntil:
+    type: string
+    description: Срок платежа
+    format: date
+  operationType:
+    type: string
+    description: Вид операции
+  sendType:
+    type: string
+    description: Способ отправки
+  docAuthorStatus:
+    type: string
+    description: Показатель статуса согласно 1256-У
+  cbc:
+    type: string
+    description: Код бюджетной классификации
+  oktmo:
+    type: string
+    description: Код ОКТМО (поле 105)
+  uin:
+    type: string
+    description: Код УИН/УИП
+  paymentBasis:
+    type: string
+    description: Показатель основания платежа
+  taxPeriodValueType:
+    type: string
+    description: Показатель налогового периода. Тип значения
+  taxPeriodType:
+    type: string
+    description: Показатель налогового периода. Тип периода
+  taxPeriodCustomsCode:
+    type: string
+    description: Показатель налогового периода. Код таможенного органа
+  taxPeriod:
+    type: string
+    description: Показатель налогового периода. Период
+  taxPeriodDate:
+    type: string
+    description: Показатель налогового периода. Дата
+    format: date
+  taxPeriodYear:
+    type: string
+    description: Показатель налогового периода. Год
+  paymentBasisDocNumber:
+    type: string
+    description: Номер документа основания платежа
+  paymentBasisDocDate:
+    type: string
+    description: Дата документа основания платежа
+  paymentType:
+    type: string
+    description: Показатель типа платежа
+  receiveTime:
+    type: string
+    description: Время приема документа от клиента
+    format: date-time
+  requestId:
+    type: string
+    description: Уникальный идентификатор запроса к БД
+  firstSignFio:
+    type: string
+    description: ФИО подписанта первого уровня
+  secondSignFio:
+    type: string
+    description: ФИО подписанта второго уровня
+  thirdSignFio:
+    type: string
+    description: ФИО подписанта третьего уровня
+  numberCcf:
+    type: string
+    description: Цепочка целевого финансирования
+  transferConditions:
+    type: string
+    description: Резервное поле (Указывается признак условий перевода, в том числе в виде кода)
+  paymentPurposeCode:
+    type: string
+    description: Назначение платежа кодовое
+  structureId:
+    type: string
+    description: Идентификатор структуры
+  structureTmgId:
+    type: string
+    description: Идентификатор TMG структуры
+  structureName:
+    type: string
+    description: Наименование структуры
+  responsibilityCenterId:
+    type: string
+    description: Идентификатор центра ответственности
+  responsibilityCenterTmgId:
+    type: string
+    description: Идентификатор  TMG центра ответственности
+  responsibilityCenterName:
+    type: string
+    description: Наименование центра ответственности
+  analyticalClassifierCode:
+    type: string
+    description: Код аналитического классификатора
+description: Запрос экспорта Платежного поручения в РКО Ф1

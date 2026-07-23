@@ -1,0 +1,21 @@
+type: object
+description: Блок данных с информацией об Участнике СБП
+properties:
+  id:
+    type: string
+    description: Идентификатор участника СБП присвоенный ОПКЦ СБП
+  bic:
+    type: string
+    description: БИК участника СБП
+  name_eng:
+    type: string
+    description: Наименование участника СБП (транаслитерация на английском языке)
+  name_rus:
+    type: string
+    description: Наименование участника СБП
+  app_deeplink:
+    type: string
+    description: Идентификатор (<member_id>), используемый для перехода в Банковское приложение Участника СБП, по ссылке
+  app_url:
+    type: string
+    description: Доменное имя Участника СБП (<Доменное имя Участника СБП>/<...>/) для перехода в его Банковское приложение по Функциональной ссылке

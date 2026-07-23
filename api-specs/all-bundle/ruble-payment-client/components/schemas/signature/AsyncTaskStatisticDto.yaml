@@ -1,0 +1,24 @@
+required:
+- sendErrorCount
+- sendSuccessCount
+- signErrorCount
+- signSuccessCount
+type: object
+properties:
+  signSuccessCount:
+    type: integer
+    description: Количество успешно подписанных документов
+    format: int32
+  signErrorCount:
+    type: integer
+    description: Количество неуспешно подписанных документов
+    format: int32
+  sendSuccessCount:
+    type: integer
+    description: Количество успешно отправленных документов
+    format: int32
+  sendErrorCount:
+    type: integer
+    description: Количество неуспешно отправленных документов
+    format: int32
+description: Статистика массового подписания и отправки документов

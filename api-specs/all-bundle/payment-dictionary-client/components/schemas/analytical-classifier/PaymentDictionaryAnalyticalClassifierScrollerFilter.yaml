@@ -1,0 +1,15 @@
+type: object
+properties:
+  paymentDictionaryStructureId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  operation:
+    type: string
+    description: Логическая операция
+    enum:
+    - OR
+    - AND
+description: Фильтр справочника Аналитические классификаторы

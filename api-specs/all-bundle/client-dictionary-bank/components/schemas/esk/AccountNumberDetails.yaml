@@ -1,0 +1,8 @@
+type: object
+properties:
+  bic:
+    type: string
+    description: БИК
+  accountNumber:
+    $ref: ./AccountNumber.yaml
+description: Реквизиты банковского счёта

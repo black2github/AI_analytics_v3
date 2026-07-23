@@ -1,0 +1,6 @@
+type: object
+properties:
+  bankName:
+    type: string
+    description: Наименование банка получателя
+description: 'Подсказки: Банк получателя'

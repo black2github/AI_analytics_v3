@@ -1,0 +1,28 @@
+get:
+  tags:
+  - API справочника "Регион"
+  summary: Получить записи по коду
+  description: 'Привилегии: REGION_GET_PAGE'
+  operationId: getByCodeUsingGET_9
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: path
+    description: code
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«RegionDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

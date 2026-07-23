@@ -1,0 +1,73 @@
+type: object
+required:
+- qrcId
+- qrcType
+- agentId
+- memberId
+- legalId
+- legalName
+- inn
+- merchantId
+- brandName
+- address
+- mcc
+- uip
+description: Данные входящего QR-кода
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR в СБП.
+  qrcType:
+    type: string
+    description: Тип QR
+  agentId:
+    type: string
+    description: Идентификатор Агента ТСП
+  memberId:
+    type: string
+    description: Идентификатор Банка Получателя
+  legalId:
+    type: string
+    description: Идентификатор Клиента в АС СБП
+  legalName:
+    type: string
+    description: Наименование Получателя
+  inn:
+    type: string
+    description: ИНН Получателя
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж
+  brandName:
+    type: string
+    description: Наименование точки продаж
+  address:
+    type: string
+    description: Адрес точки продаж
+  mcc:
+    type: string
+    description: Код вида деятельности Получателя
+  amount:
+    type: string
+    description: Сумма платежа в копейках
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  fraudScore:
+    type: string
+    description: Индикатор Подозрительной Операции Агента ТСП
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата Плательщика из приложения Банка в приложение или на сайт ТСП
+  takeTax:
+    type: boolean
+    description: Информация о взимании НДС
+  totalTaxAmount:
+    type: string
+    description: Сумма НДС в копейках. Всегда отсутствует при takeTax=FALSE
+  uip:
+    type: string
+    description: Уникальный Идентификатор Платежа, назначаемый Получателем
+  receiverAccount:
+    type: string
+    description: Счет Получателя

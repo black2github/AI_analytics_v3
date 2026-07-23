@@ -1,0 +1,51 @@
+required:
+- bankClientId
+- name
+- updatedAt
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме.
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  sourceRecordClassifier:
+    type: string
+    description: Классификатор источников записи справочника.
+    enum:
+    - MIGRATION
+    - MANUAL
+    - AUTOFILL
+    - IMPORT
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  inn:
+    maxLength: 12
+    minLength: 0
+    type: string
+    description: ИНН контрагента
+  name:
+    maxLength: 160
+    minLength: 0
+    type: string
+    description: Наименование контрагента
+  counterpartyKppSet:
+    uniqueItems: true
+    type: array
+    description: Набор КПП контрагента
+    items:
+      $ref: ./CounterpartyKppDto.yaml
+  counterpartyAccountSet:
+    uniqueItems: true
+    type: array
+    description: Набор счетов контрагента
+    items:
+      $ref: ./CounterpartyAccountDto.yaml
+  trafficLightIndicator:
+    $ref: ./IndicatorDto.yaml
+description: Контрагент

@@ -1,0 +1,20 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  account:
+    type: string
+    description: Счет
+  branchId:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  bic:
+    type: string
+    description: БИК
+  branchAbsNumber:
+    type: string
+    description: Номер филиала
+description: Зарезервированный счет

@@ -1,0 +1,24 @@
+type: object
+required:
+- systemID
+- requestID
+- type
+- virtualCardNumbers
+properties:
+  systemID:
+    type: string
+    minLength: 1
+  channel:
+    type: string
+  requestID:
+    type: string
+    minLength: 1
+  traceID:
+    type: string
+  type:
+    type: string
+    minLength: 1
+  virtualCardNumbers:
+    type: array
+    items:
+      type: string

@@ -1,0 +1,34 @@
+required:
+- accountName
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountName:
+    type: string
+    description: Идентификатор счета
+  accountNumber:
+    type: string
+    description: Номер
+  accountType:
+    type: string
+    description: Тип счета
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  bankClient:
+    $ref: ./BankClientSelectDto.yaml
+  contractInfo:
+    $ref: ./ContractInfoSelectDto.yaml
+  balanceBranch:
+    $ref: ./BranchSelectDto.yaml
+description: Информация о счете

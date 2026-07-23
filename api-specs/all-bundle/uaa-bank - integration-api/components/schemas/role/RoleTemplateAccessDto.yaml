@@ -1,0 +1,16 @@
+required:
+- roleId
+type: object
+properties:
+  roleId:
+    type: string
+    description: Идентификатор роли
+    format: uuid
+  dsfTypeCodes:
+    uniqueItems: true
+    type: array
+    description: Список типов ДСФ
+    items:
+      type: string
+      description: Список типов ДСФ
+description: Доступ для включения в шаблон

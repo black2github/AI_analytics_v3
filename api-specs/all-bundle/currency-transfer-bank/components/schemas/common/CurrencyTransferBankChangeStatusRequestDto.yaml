@@ -1,0 +1,16 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для банковского сотрудника
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+description: Транспортное представление запроса об изменении статусов документов на банковской стороне

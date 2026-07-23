@@ -1,0 +1,219 @@
+openapi: 3.0.1
+info:
+  title: Сервис оферт. Клиентская часть
+  version: 3.1.0
+servers:
+- url: /offer-client
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /offer:
+    $ref: ./paths/offer/offer.yaml
+  /united-request/v2/get-page:
+    $ref: ./paths/v2/united_request_v2_get_page.yaml
+  /united-request/v2/category:
+    $ref: ./paths/v2/united_request_v2_category.yaml
+  /spark/organization:
+    $ref: ./paths/organization/spark_organization.yaml
+  /offer/validate-sign:
+    $ref: ./paths/validate-sign/offer_validate_sign.yaml
+  /offer/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/offer_v2_1_generate_sign_data.yaml
+  /offer/sign:
+    $ref: ./paths/sign/offer_sign.yaml
+  /offer/send:
+    $ref: ./paths/send/offer_send.yaml
+  /offer/print:
+    $ref: ./paths/print/offer_print.yaml
+  /offer/get-page:
+    $ref: ./paths/get-page/offer_get_page.yaml
+  /offer/generate-sign-data:
+    $ref: ./paths/generate-sign-data/offer_generate_sign_data.yaml
+  /offer/generate-digest:
+    $ref: ./paths/generate-digest/offer_generate_digest.yaml
+  /offer/generate-digest/version:
+    $ref: ./paths/generate-digest/offer_generate_digest_version.yaml
+  /offer/category:
+    $ref: ./paths/category/offer_category.yaml
+  /offer/account-list:
+    $ref: ./paths/account-list/offer_account_list.yaml
+  /offer/{id}:
+    $ref: ./paths/{id}/offer_id.yaml
+  /offer/new:
+    $ref: ./paths/new/offer_new.yaml
+  /offer/i18n/{locale}:
+    $ref: ./paths/i18n/offer_i18n_locale.yaml
+  /offer/history/{id}:
+    $ref: ./paths/history/offer_history_id.yaml
+  /offer/contracts/restricted:
+    $ref: ./paths/contracts/offer_contracts_restricted.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/offer/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/offer/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/offer/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/offer/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/offer/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    OfferProjectParametersDto:
+      $ref: ./components/schemas/common/OfferProjectParametersDto.yaml
+    UpdateCommandUpdateOfferDtoUUID:
+      $ref: ./components/schemas/offer/UpdateCommandUpdateOfferDtoUUID.yaml
+    UpdateOfferDto:
+      $ref: ./components/schemas/offer/UpdateOfferDto.yaml
+    UpsertClientInfoDto:
+      $ref: ./components/schemas/offer/UpsertClientInfoDto.yaml
+    UpsertRequestDataDto:
+      $ref: ./components/schemas/offer/UpsertRequestDataDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    ContractorsRegistryRecordDto:
+      $ref: ./components/schemas/common/ContractorsRegistryRecordDto.yaml
+    CreateResponseOfferDto:
+      $ref: ./components/schemas/offer/CreateResponseOfferDto.yaml
+    F1OfferScanResponseDto:
+      $ref: ./components/schemas/common/F1OfferScanResponseDto.yaml
+    InteractionF1Dto:
+      $ref: ./components/schemas/common/InteractionF1Dto.yaml
+    OfferAttachmentsDto:
+      $ref: ./components/schemas/common/OfferAttachmentsDto.yaml
+    OfferDto:
+      $ref: ./components/schemas/common/OfferDto.yaml
+    OfferSignatureDto:
+      $ref: ./components/schemas/common/OfferSignatureDto.yaml
+    RequestDataDto:
+      $ref: ./components/schemas/common/RequestDataDto.yaml
+    RequisiteBankAccountAgreementDto:
+      $ref: ./components/schemas/common/RequisiteBankAccountAgreementDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/v2/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoUnitedRequestStatusDto:
+      $ref: ./components/schemas/v2/FilterValueEnumDtoUnitedRequestStatusDto.yaml
+    GetPageCommandUnitedRequestV2ClientFilter:
+      $ref: ./components/schemas/v2/GetPageCommandUnitedRequestV2ClientFilter.yaml
+    PageParamsUnitedRequestV2ClientFilter:
+      $ref: ./components/schemas/v2/PageParamsUnitedRequestV2ClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UnitedRequestV2ClientFilter:
+      $ref: ./components/schemas/v2/UnitedRequestV2ClientFilter.yaml
+    UnitedRequestV2NewRoleFilter:
+      $ref: ./components/schemas/v2/UnitedRequestV2NewRoleFilter.yaml
+    UnitedRequestV2TypeFilter:
+      $ref: ./components/schemas/v2/UnitedRequestV2TypeFilter.yaml
+    PageDataUnitedRequestV2Dto:
+      $ref: ./components/schemas/v2/PageDataUnitedRequestV2Dto.yaml
+    UnitedRequestV2Dto:
+      $ref: ./components/schemas/v2/UnitedRequestV2Dto.yaml
+    UnitedSignatureDto:
+      $ref: ./components/schemas/v2/UnitedSignatureDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    SparkOrganizationRequestDto:
+      $ref: ./components/schemas/organization/SparkOrganizationRequestDto.yaml
+    SingleResponseSparkOrganizationResponseDto:
+      $ref: ./components/schemas/organization/SingleResponseSparkOrganizationResponseDto.yaml
+    SparkOrganizationResponseDto:
+      $ref: ./components/schemas/organization/SparkOrganizationResponseDto.yaml
+    CreateCommandCreateOfferDto:
+      $ref: ./components/schemas/offer/CreateCommandCreateOfferDto.yaml
+    CreateOfferDto:
+      $ref: ./components/schemas/offer/CreateOfferDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    SingleResponseOfferDto:
+      $ref: ./components/schemas/common/SingleResponseOfferDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/v2.1/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/v2.1/SimpleErrorData.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignV2x1Dto.yaml
+    SignCommand:
+      $ref: ./components/schemas/sign/SignCommand.yaml
+    OfferPrintFormatDto:
+      $ref: ./components/schemas/print/OfferPrintFormatDto.yaml
+    SingleCommandOfferPrintFormatDto:
+      $ref: ./components/schemas/print/SingleCommandOfferPrintFormatDto.yaml
+    FilterValueEnumDtoOfferStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOfferStatusDto.yaml
+    GetPageCommandOfferClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandOfferClientFilter.yaml
+    OfferClientFilter:
+      $ref: ./components/schemas/common/OfferClientFilter.yaml
+    PageParamsOfferClientFilter:
+      $ref: ./components/schemas/common/PageParamsOfferClientFilter.yaml
+    PageDataOfferDto:
+      $ref: ./components/schemas/get-page/PageDataOfferDto.yaml
+    SingleResponseUniSignDto:
+      $ref: ./components/schemas/generate-sign-data/SingleResponseUniSignDto.yaml
+    UniCertificateDto:
+      $ref: ./components/schemas/generate-sign-data/UniCertificateDto.yaml
+    UniSignDocumentDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDocumentDto.yaml
+    UniSignDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDto.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    SingleResponseDigest:
+      $ref: ./components/schemas/generate-digest/SingleResponseDigest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    ReservedAccountDto:
+      $ref: ./components/schemas/account-list/ReservedAccountDto.yaml
+    SingleResponseListReservedAccountDto:
+      $ref: ./components/schemas/account-list/SingleResponseListReservedAccountDto.yaml
+    OfferHistoryDto:
+      $ref: ./components/schemas/history/OfferHistoryDto.yaml
+    SingleResponseListOfferHistoryDto:
+      $ref: ./components/schemas/history/SingleResponseListOfferHistoryDto.yaml
+    SingleResponseSetString:
+      $ref: ./components/schemas/contracts/SingleResponseSetString.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

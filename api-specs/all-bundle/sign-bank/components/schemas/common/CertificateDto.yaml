@@ -1,0 +1,69 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя в UAA
+    format: uuid
+  userName:
+    type: string
+    description: ФИО владельца сертификата
+  organizationName:
+    type: string
+    description: Наименование организации
+  data:
+    type: string
+    description: Данные сертификата base64
+  origin:
+    type: string
+    description: Источник сертификата
+    enum:
+    - DBO
+    - CA
+    - ECO
+  absId:
+    type: string
+    description: Идентификатор в АБС
+  signParams:
+    type: string
+    description: Параметры подписи
+  containerNameLocation:
+    type: string
+    description: Имя и расположение контейнера. Всегда вычисляется на основе signparams
+  footprint:
+    type: string
+    description: Отпечаток
+  keyId:
+    type: string
+    description: Идентификатор ключа УЦ
+    format: uuid
+  serialNumber:
+    type: string
+    description: Серийный номер
+  stableId:
+    type: string
+    description: Уникальный идентификатор сертификата
+  whomIssued:
+    type: string
+    description: Кому выдан
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  authorityCertificate:
+    $ref: ./CertificateDto.yaml
+  renewalForbidden:
+    type: boolean
+    description: Признак запрета продления
+  renewalForbiddenDate:
+    type: string
+    description: Дата актуализации запрета продления
+    format: date-time
+description: DTO сертификат

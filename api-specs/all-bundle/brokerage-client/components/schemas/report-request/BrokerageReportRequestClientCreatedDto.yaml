@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+description: Созданный запрос отчета брокера

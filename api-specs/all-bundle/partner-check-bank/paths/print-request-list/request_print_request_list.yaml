@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API методы Админки
+  summary: Распечатать список заявок
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.EXPORT_REQUEST'
+  operationId: printRequestListUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/PrintRequestDto«uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,ResponseEntity«Array«byte»»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

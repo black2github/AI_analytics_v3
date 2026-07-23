@@ -1,0 +1,37 @@
+type: object
+properties:
+  errorCode:
+    type: string
+    description: Низкоуровневое текстовое описание ошибки. Например, RU.SBRF.Field.Missing
+    enum:
+    - RU.CBR.Field.Expected
+    - RU.CBR.Field.Invalid
+    - RU.CBR.Field.InvalidDate
+    - RU.CBR.Field.Missing
+    - RU.CBR.Header.Invalid
+    - RU.CBR.Header.Missing
+    - RU.CBR.Resource.InvalidFormat
+    - RU.CBR.Resource.NotFound
+    - RU.CBR.Resource.NotCreated
+    - RU.CBR.Rules.AfterCutOffDateTime
+    - RU.CBR.Signature.Invalid
+    - RU.CBR.Signature.InvalidClaim
+    - RU.CBR.Signature.MissingClaim
+    - RU.CBR.Signature.Malformed
+    - RU.CBR.Signature.Missing
+    - RU.CBR.Unsupported.AccountIdentifier
+    - RU.CBR.Unsupported.LocalInstrument
+    - RU.CBR.Authenticate.InvalidScope
+    - RU.CBR.Authenticate.InvalidConsent
+    - RU.CBR.Rules.ResourceAlreadyExists
+    - RU.CBR.UnexpectedError
+  message:
+    type: string
+    description: Описание ошибки. Например, 'Обязательное поле не указано'
+  path:
+    type: string
+    description: Путь к элементу с ошибкой в JSON объекте. Рекомендуемое, но необязательное поле
+  url:
+    type: string
+    description: URL для помощи в устранении проблемы
+description: Ошибки

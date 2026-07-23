@@ -1,0 +1,133 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  fnsDocId:
+    type: string
+    description: Идентификатор заявки в ФНС
+  externalFsArchiveFileId:
+    type: string
+    description: Идентификатор контейнера MFlash
+    format: uuid
+  internalFsArchiveFileId:
+    type: string
+    description: Идентификатор файла архива в ФС
+    format: uuid
+  onboardingRequestFileId:
+    type: string
+    description: Идентификатор файла заявления на открытие счета
+    format: uuid
+  egrulExtractFileId:
+    type: string
+    description: Идентификатор файла выписки из ЕГРЮЛ
+    format: uuid
+  egripExtractFileId:
+    type: string
+    description: Идентификатор файла выписки из ЕГРИП
+    format: uuid
+  eskRequestId:
+    type: integer
+    description: ID заявки 115 в ЕСК
+    format: int64
+  tessaDossierId:
+    type: string
+    description: ID досье 115 в ТЕССА
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  statusUpdatedAt:
+    type: string
+    description: Дата и время изменения статуса
+    format: date-time
+  comment:
+    type: string
+    description: Комментарий
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - EXTERNAL_FILE_ID_RECEIVED
+    - EXTERNAL_FILE_ID_RECEIVING_ERROR
+    - WAITING_FOR_INT_FILE_ID_RECEIVING
+    - INTERNAL_FILE_ID_RECEIVED
+    - INTERNAL_FILE_ID_RECEIVING_ERROR
+    - REQUEST_CREATED_BY_ARCHIVE
+    - WAITING_FOR_ARCHIVE_UNZIPPING
+    - ARCHIVE_UNZIPPED
+    - ARCHIVE_UNZIPPING_ERROR
+    - STATUS_12_SENT
+    - STATUS_12_SENDING_ERROR
+    - FILES_DOWNLOADED_AND_PROCESSED
+    - FILES_DOWNLOADING_AND_PROCESSING_ERROR
+    - STATUS_10_SENT
+    - STATUS_10_SENDING_ERROR
+    - STARTED_ESK_PROCESSING
+    - EXPORTED_TO_ESK
+    - STARTED_ESK_PROCESSING_ERROR
+    - ACCEPTED_BY_ESK
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - REJECTED
+    - EXPORT_TO_TESSA
+    - EXECUTED_BY_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXPORT_TO_ESK
+    - EXECUTED_BY_ESK_OR_ERROR
+    - EXTERNAL_FILE_ID_RECEIVED_OR_ERROR
+    - WAITING_FOR_INT_FILE_ID_RECEIVING_OR_ERROR
+    - WAITING_FOR_ARCHIVE_UNZIPPING_OR_ERROR
+    - FILES_DOWNLOADED_AND_PROCESSED_OR_ERROR
+    - STATUS_12_SENDING_OR_ERROR
+    - STATUS_10_SENDING_OR_ERROR
+    - STARTED_ESK_PROCESSING_TO_ESK_OR_ERROR
+    - REJECTED_OR_STATUS_12_SENT
+    - EXECUTED_BY_TESSA_OR_ERROR
+    - WAITING_FOR_IDENTIFICATION
+    - WAITING_FOR_IDENTIFICATION_ERROR
+    - SHORT_LINK_GENERATION_ERROR
+    - NEED_IDENTIFICATION
+    - NEED_IDENTIFICATION_OR_SHORT_LINK_GENERATION_ERROR
+    - NEED_IDENTIFICATION_OR_WAITING_FOR_IDENTIFICATION_ERROR
+    - IN_PROGRESS_AFTER_IDENTIFICATION
+    - WAITING_FOR_REACQUIRE_IDENTIFICATION
+    - WAITING_FOR_REACQUIRE_IDENTIFICATION_ERROR
+    - NEED_REACQUIRE_IDENTIFICATION
+    - NEED_REACQUIRE_IDENTIFICATION_OR_ERROR
+    - ACCEPTED_BY_TESSA
+    - APPROVED_BY_TESSA
+    - EXECUTED
+  clientFullName:
+    type: string
+    description: Полное название организации
+  clientShortName:
+    type: string
+    description: Краткое название организации
+  clientInn:
+    type: string
+    description: ИНН организации
+  ogrn:
+    type: string
+    description: ОГРН организации
+  representativeSurname:
+    type: string
+    description: Фамилия ИП/представителя
+  representativeForename:
+    type: string
+    description: Имя ИП/представителя
+  representativePatronymic:
+    type: string
+    description: Отчество ИП/представителя
+  representativeEmail:
+    type: string
+    description: Email ИП/Представителя
+  representativePhone:
+    type: string
+    description: Телефон ИП/представителя
+  additionalProducts:
+    $ref: ../common/AdditionalProductsDto.yaml
+description: Заявка на удаленное открытие первого счета по данным ФНС на банковском скроллере

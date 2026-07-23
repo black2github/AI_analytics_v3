@@ -1,0 +1,12 @@
+type: object
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  result:
+    $ref: ./CheckResultType.yaml
+  controlResults:
+    type: array
+    items:
+      $ref: ./ControlResult.yaml

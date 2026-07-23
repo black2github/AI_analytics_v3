@@ -1,0 +1,8 @@
+type: object
+properties:
+  requests:
+    type: array
+    description: Список встреч
+    items:
+      $ref: ./MeetingInfoRestDto.yaml
+description: Ответ на запрос списка встреч

@@ -1,0 +1,9 @@
+type: object
+description: Данные изображения QR кода для B2b
+properties:
+  mediaType:
+    type: string
+    description: 'Формат получаемого файла: image/png - png image/svg+xml - xml of svg'
+  content:
+    type: string
+    description: base64encoded image. Формат для декодирования зависит от mediaType

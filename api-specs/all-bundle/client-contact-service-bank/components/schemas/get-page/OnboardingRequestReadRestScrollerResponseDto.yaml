@@ -1,0 +1,120 @@
+type: object
+description: Сводные данные по заявкам для скроллера "Журнала звонков"
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  applicationId:
+    type: string
+    format: uuid
+    description: Идентификатор заявки во внешнем сервисе-источнике
+  docType:
+    $ref: ../common/DocType.yaml
+    description: Тип заявки (используется в сортировке)
+  sourceCreatedAt:
+    type: string
+    format: date-time
+    description: Дата заявки (используется в сортировке)
+  serviceName:
+    type: string
+    description: Сервис
+  organizationId:
+    type: string
+    format: uuid
+    description: Организация ID
+  organizationName:
+    type: string
+    description: Организация Имя
+  organizationInn:
+    type: string
+    description: Организация ИНН
+  organizationOgrn:
+    type: string
+    description: Организация ОГРН/ОГРНИП
+  nextCallDateTimeFrom:
+    type: string
+    format: date-time
+    description: Следующий звонок дата и время от
+  nextCallDateTimeTo:
+    type: string
+    format: date-time
+    description: Следующий звонок дата и время до
+  callDateTime:
+    type: string
+    format: date-time
+    description: Дата и время звонка
+  callResult:
+    $ref: ../common/CallResult.yaml
+    description: Результат звонка
+  responsibleId:
+    type: string
+    format: uuid
+    description: Ответственный Id
+  responsibleFio:
+    type: string
+    description: Ответственный ФИО
+  responsibleLogin:
+    type: string
+    description: Ответственный Логин
+  requestStatus:
+    $ref: ../common/CommonMergedStatus.yaml
+    description: Статус заявки
+  clientProblemReason:
+    $ref: ../common/ClientProblemReason.yaml
+    description: Причина затруднений
+  comment:
+    type: string
+    description: Комментарий
+  applicantId:
+    type: string
+    format: uuid
+    description: Id заявителя
+  applicant:
+    type: string
+    description: Заявитель
+  applicantPhone:
+    type: string
+    description: Телефон заявителя
+  branchId:
+    type: string
+    format: uuid
+    description: Id подразделения
+  branchName:
+    type: string
+    description: Офис обслуживания название
+  branchCity:
+    type: string
+    description: Офис населенный пункт
+  callRequestId:
+    type: string
+    format: uuid
+    description: Id задачи
+  callRequestNumber:
+    type: integer
+    format: int64
+    description: № задачи
+  callRequestDateTime:
+    type: string
+    format: date-time
+    description: Дата и время задачи
+  callRequestStatus:
+    $ref: ../common/CallRequestStatus.yaml
+    description: Статус задачи
+  onRework:
+    type: boolean
+    description: Признак на доработке
+required:
+- applicant
+- applicantId
+- applicantPhone
+- applicationId
+- branchCity
+- branchId
+- docType
+- id
+- organizationId
+- organizationInn
+- requestStatus
+- serviceName
+- sourceCreatedAt

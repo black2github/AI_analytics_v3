@@ -1,0 +1,12 @@
+type: object
+properties:
+  fiasUnitNumCode:
+    type: string
+    description: ФИАС код типа и номера помещения в пределах здания
+  unit:
+    type: string
+    description: Единица адресации
+  unitNum:
+    type: string
+    description: Номер единицы адресации
+description: Единица адресации

@@ -1,0 +1,9 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      $ref: ../common/AccountDto.yaml
+  total:
+    type: integer
+    format: int64

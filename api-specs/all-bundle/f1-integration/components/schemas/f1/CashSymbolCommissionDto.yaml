@@ -1,0 +1,13 @@
+required:
+- cashRegisterSymbol
+- sumForCashRegisterSymbol
+type: object
+properties:
+  sumForCashRegisterSymbol:
+    type: number
+    description: Сумма для выдачи/взноса по выбранному символу кассы
+  cashRegisterSymbol:
+    maxLength: 3
+    type: string
+    description: Символ кассы
+description: Кассовый символ для расчета комиссии

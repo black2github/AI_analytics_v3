@@ -1,0 +1,63 @@
+required:
+- accessCreateUpdate
+- accessImport
+- accessSignSend
+- accessUpdateImported
+- accessView
+- docCode
+- docId
+- docName
+- productCode
+- productId
+- productName
+type: object
+properties:
+  productId:
+    type: string
+    description: Идентификатор продукта
+    format: uuid
+  productName:
+    type: string
+    description: Наименование продукта
+  productCode:
+    type: string
+    description: Код продукта
+  docId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  docName:
+    type: string
+    description: Наименование документа
+  docCode:
+    type: string
+    description: Код документа
+  productPriority:
+    type: integer
+    description: Приоритет отображения продукта
+    format: int32
+  docPriority:
+    type: integer
+    description: Приоритет отображения документа
+    format: int32
+  accessView:
+    type: integer
+    description: Доступ на просмотр (VIEW)
+    format: int32
+  accessCreateUpdate:
+    type: integer
+    description: Доступ на создание и редактирование (CREATE_UPDATE)
+    format: int32
+  accessSignSend:
+    type: integer
+    description: Доступ на подписание и отправку (SIGN_SEND)
+    format: int32
+  accessImport:
+    type: integer
+    description: Доступ на импорт (IMPORT)
+    format: int32
+  accessUpdateImported:
+    type: integer
+    description: Доступ на редактирование импортированных документов (UPDATE_IMPORTED)
+    format: int32
+description: Доступы сотрудника в заявке

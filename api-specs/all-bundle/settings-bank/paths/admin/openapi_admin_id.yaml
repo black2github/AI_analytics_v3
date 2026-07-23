@@ -1,0 +1,66 @@
+get:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Получить запись по идентификатору
+  description: 'Привилегии: OPEN_API_SPEC_VIEW'
+  operationId: getById_3
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml
+put:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Обновить запись
+  description: 'Привилегии: OPEN_API_SPEC_UPDATE'
+  operationId: update_3
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/OpenApiSpecDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml
+delete:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Удалить запись
+  description: 'Привилегии: OPEN_API_SPEC_DELETE'
+  operationId: delete_2
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml

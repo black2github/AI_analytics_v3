@@ -1,0 +1,24 @@
+required:
+- code
+- description
+- id
+- shortDescription
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме
+    format: uuid
+  code:
+    maxLength: 3
+    type: string
+    description: Код
+  description:
+    maxLength: 500
+    type: string
+    description: Пояснение
+  shortDescription:
+    maxLength: 255
+    type: string
+    description: Краткое пояснение для подсказок
+description: '[РРКО_ПТ Исх] Справочник кодовых назначений платежа'

@@ -1,0 +1,15 @@
+type: object
+description: Запрос изменения данных ТСП
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  guid:
+    type: string
+    description: Идентификатор заявки
+  docType:
+    type: string
+    description: Тип заявки в экосистеме

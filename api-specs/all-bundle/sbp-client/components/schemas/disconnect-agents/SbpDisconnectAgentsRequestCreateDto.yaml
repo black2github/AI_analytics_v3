@@ -1,0 +1,18 @@
+type: object
+description: Запрос на создание Заявки на отключение агентов ТСП в системе АС СБП
+properties:
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  agentsIds:
+    type: array
+    description: Идентификаторы агентов клиента для отключения
+    items:
+      type: string
+required:
+- clientId

@@ -1,0 +1,23 @@
+type: object
+properties:
+  signLevel:
+    type: string
+    description: Уровень подписи
+    enum:
+    - LEVEL_1
+    - LEVEL_2
+  authorityStartDate:
+    type: string
+    description: Дата начала полномочий
+    format: date
+  authorityEndDate:
+    type: string
+    description: Дата окончания полномочий
+    format: date
+  authorityStatus:
+    type: string
+    description: Статус полномочий
+    enum:
+    - ACTIVE
+    - INACTIVE
+description: Информация о полномочиях КОПОП

@@ -1,0 +1,31 @@
+required:
+- active
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  tmgId:
+    type: string
+    description: Идентификатор в TMG
+  active:
+    type: boolean
+    description: Действующая запись
+  paymentDictionaryStructureId:
+    type: string
+    description: Идентификатор справочника Структуры
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  paymentDictionaryResponsibilityCenterName:
+    type: string
+    description: Наименование центра ответственности
+  parentResponsibilityCenterId:
+    type: string
+    description: Идентификатор вышестоящего центра ответственности
+    format: uuid
+description: Справочник Центры ответственности

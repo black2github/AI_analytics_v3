@@ -1,0 +1,11 @@
+type: object
+description: Данные об устройстве пользователя, производившего вход в экосистему
+properties:
+  ipAddress:
+    type: string
+    description: IP-адрес пользовательского устройства
+  macAddress:
+    type: string
+    description: MAC адрес
+required:
+- ipAddress

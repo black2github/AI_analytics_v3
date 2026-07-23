@@ -1,0 +1,11 @@
+required:
+- token
+type: object
+properties:
+  token:
+    type: string
+    description: Token
+  tokenTypeHint:
+    type: string
+    description: Token type hint
+    nullable: true

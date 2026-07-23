@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - GAZPROM_CONTRACTOR
+    - BSC
+    - MARKETING_CAMPAIGN_GPN_CRED
+    - CLIENT_FL
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - GAZPROM_CONTRACTOR
+      - BSC
+      - MARKETING_CAMPAIGN_GPN_CRED
+      - CLIENT_FL
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - GAZPROM_CONTRACTOR
+    - BSC
+    - MARKETING_CAMPAIGN_GPN_CRED
+    - CLIENT_FL
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - GAZPROM_CONTRACTOR
+      - BSC
+      - MARKETING_CAMPAIGN_GPN_CRED
+      - CLIENT_FL
+description: Бизнес-признаки. Множественный выбор (in)

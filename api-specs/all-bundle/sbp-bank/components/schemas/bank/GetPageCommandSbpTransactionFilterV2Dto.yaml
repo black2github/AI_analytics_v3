@@ -1,0 +1,6 @@
+type: object
+description: Запрос страницы
+properties:
+  params:
+    $ref: ./PageParamsSbpTransactionFilterV2Dto.yaml
+    description: Параметры

@@ -1,0 +1,6 @@
+type: object
+properties:
+  shortLink:
+    type: string
+    description: Короткая ссылка
+description: Результат генерации короткой ссылки

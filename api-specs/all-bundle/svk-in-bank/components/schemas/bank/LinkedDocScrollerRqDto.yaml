@@ -1,0 +1,17 @@
+required:
+- linkedDocId
+- userId
+type: object
+properties:
+  linkedDocId:
+    type: string
+    description: ID связанного документа
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+description: Дто запроса связанного документа.

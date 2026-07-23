@@ -1,0 +1,13 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  accountIds:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./ScheduleScrollerStatusFilter.yaml
+  format:
+    $ref: ./ScheduleScrollerFormatFilter.yaml
+  period:
+    $ref: ./ScheduleScrollerPeriodFilter.yaml
+description: Фильтр

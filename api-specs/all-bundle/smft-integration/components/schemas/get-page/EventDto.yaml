@@ -1,0 +1,115 @@
+type: object
+description: СМФТ событие на скроллере
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сообщения (UUID)
+  timeOfOccurrence:
+    type: string
+    format: date-time
+    description: Дата и время формирования события
+  eventType:
+    type: string
+    description: Тип события
+    enum:
+    - SESSION_SIGNIN
+    - PAYMENT
+    - VIEW_STATEMENT
+    - REQUEST_STATEMENT_COPY
+    - CLIENT_DEFINED
+    - OPEN_NEW_ACCOUNT
+    - UPDATE_USER
+    - CHANGE_LOGIN_ID
+  eventStatus:
+    type: string
+    description: Статус отправки
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  statusChangedAt:
+    type: string
+    format: date-time
+    description: Дата изменения статуса
+  clientUserFullName:
+    type: string
+    description: Пользователь
+  clientName:
+    type: string
+    description: Организация
+  login:
+    type: string
+    description: Логин
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  clientId:
+    type: string
+    format: uuid
+    description: ИД клиента
+  uaaUserId:
+    type: string
+    format: uuid
+    description: UAA ID пользователя
+  paymentActionType:
+    type: string
+    description: Вид события (для действий с платежным документом)
+    enum:
+    - CREATED
+    - EDITED
+    - SIGNED_MULTIPLE
+    - SENT
+  subjectActionType:
+    type: string
+    description: Вид события (для действий с просмотром выписки)
+    enum:
+    - STATEMENT_BROWSER
+    - DOCUMENT_BROWSER
+    - STATEMENT_MOBILE
+    - DOCUMENT_MOBILE
+  subjectActionType2:
+    type: string
+    description: Вид события (для действий с созданием выписки)
+    enum:
+    - SESSION_SIGNIN
+    - PAYMENT
+    - VIEW_STATEMENT
+    - REQUEST_STATEMENT_COPY
+    - CLIENT_DEFINED
+    - OPEN_NEW_ACCOUNT
+    - UPDATE_USER
+    - CHANGE_LOGIN_ID
+  loginType:
+    type: string
+    description: Вид события (для события входа в систему)
+    enum:
+    - PASSWORD
+    - PIN
+  clientDefActionType:
+    type: string
+    description: Вид события (для события действия с информационным эл. документом)
+    enum:
+    - CREATED
+    - EDITED
+    - SIGNED_MULTIPLE
+    - SENT
+  updateUserType:
+    type: string
+    description: Вид события (для события изменения способа входа в систему)
+    enum:
+    - MOB_APPL
+    - MOB_APPL_DISABLE
+    - ADD_PRODUCT_REPO_BROWSER
+    - ACCEPT_DISAGREEMENT_BROWSER
+required:
+- clientUserFullName
+- eventStatus
+- eventType
+- id
+- login
+- statusChangedAt
+- timeOfOccurrence
+- uaaUserId

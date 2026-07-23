@@ -1,0 +1,97 @@
+info:
+  title: Конституция. Клиентская часть.
+tags:
+- name: API заявки заявки на добавление/изменение данных и полномочий сотрудника клиента. Операции подписи.
+  description: Constitution Access Sign Client Controller
+- name: API заявки заявки на регистрацию данных сотрудника. Операции подписи.
+  description: Constitution Registration Sign Client Controller
+- name: API заявки на добавление/изменение данных и полномочий сотрудника клиента. Базовые операции.
+  description: Constitution Access Client Controller
+- name: API заявки на регистрацию данных сотрудника. Базовые операции.
+  description: Constitution Registration Client Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API принятия конституции клиентом банка.
+  description: Constitution Acceptance Client Controller
+- name: privilege-registration-controller
+  description: Privilege Registration Controller
+- name: Локализация сообщений.
+  description: Constitution Acceptance Localization Controller
+- name: Подпись конституции.
+  description: Constitution Sign Controller
+paths:
+  /constitution:
+    $ref: ./paths/misc/constitution.yaml
+  /constitution/access/client-employees:
+    $ref: ./paths/access/constitution_access_client_employees.yaml
+  /constitution/access/generate-digest:
+    $ref: ./paths/access/constitution_access_generate_digest.yaml
+  /constitution/access/generate-digest/version:
+    $ref: ./paths/access/constitution_access_generate_digest_version.yaml
+  /constitution/access/generate-sign-data:
+    $ref: ./paths/access/constitution_access_generate_sign_data.yaml
+  /constitution/access/issue-attorney:
+    $ref: ./paths/access/constitution_access_issue_attorney.yaml
+  /constitution/access/print:
+    $ref: ./paths/access/constitution_access_print.yaml
+  /constitution/access/print-v2:
+    $ref: ./paths/access/constitution_access_print_v2.yaml
+  /constitution/access/send:
+    $ref: ./paths/access/constitution_access_send.yaml
+  /constitution/access/sign:
+    $ref: ./paths/access/constitution_access_sign.yaml
+  /constitution/access/user-add:
+    $ref: ./paths/access/constitution_access_user_add.yaml
+  /constitution/access/v2/generate-sign-data:
+    $ref: ./paths/access/constitution_access_v2_generate_sign_data.yaml
+  /constitution/access/{id}:
+    $ref: ./paths/access/constitution_access_id.yaml
+  /constitution/generate-digest:
+    $ref: ./paths/misc/constitution_generate_digest.yaml
+  /constitution/generate-digest/version:
+    $ref: ./paths/misc/constitution_generate_digest_version.yaml
+  /constitution/generate-sign-data:
+    $ref: ./paths/misc/constitution_generate_sign_data.yaml
+  /constitution/i18n/{locale}:
+    $ref: ./paths/misc/constitution_i18n_locale.yaml
+  /constitution/print:
+    $ref: ./paths/misc/constitution_print.yaml
+  /constitution/print-v2:
+    $ref: ./paths/misc/constitution_print_v2.yaml
+  /constitution/registration:
+    $ref: ./paths/registration/constitution_registration.yaml
+  /constitution/registration/generate-digest:
+    $ref: ./paths/registration/constitution_registration_generate_digest.yaml
+  /constitution/registration/generate-digest/version:
+    $ref: ./paths/registration/constitution_registration_generate_digest_version.yaml
+  /constitution/registration/generate-sign-data:
+    $ref: ./paths/registration/constitution_registration_generate_sign_data.yaml
+  /constitution/registration/print:
+    $ref: ./paths/registration/constitution_registration_print.yaml
+  /constitution/registration/print-v2:
+    $ref: ./paths/registration/constitution_registration_print_v2.yaml
+  /constitution/registration/send:
+    $ref: ./paths/registration/constitution_registration_send.yaml
+  /constitution/registration/sign:
+    $ref: ./paths/registration/constitution_registration_sign.yaml
+  /constitution/registration/{id}:
+    $ref: ./paths/registration/constitution_registration_id.yaml
+  /constitution/repr-auth-check:
+    $ref: ./paths/misc/constitution_repr_auth_check.yaml
+  /constitution/send:
+    $ref: ./paths/misc/constitution_send.yaml
+  /constitution/sign:
+    $ref: ./paths/misc/constitution_sign.yaml
+  /constitution/v2.1/generate-sign-data:
+    $ref: ./paths/misc/constitution_v2_1_generate_sign_data.yaml
+  /constitution/v2/generate-sign-data:
+    $ref: ./paths/misc/constitution_v2_generate_sign_data.yaml
+  /constitution/validate-sign:
+    $ref: ./paths/misc/constitution_validate_sign.yaml
+  /constitution/{id}:
+    $ref: ./paths/misc/constitution_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+components: {}

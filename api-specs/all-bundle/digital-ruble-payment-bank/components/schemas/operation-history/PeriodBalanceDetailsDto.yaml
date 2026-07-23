@@ -1,0 +1,15 @@
+type: object
+properties:
+  openingBalanceAtPeriodStart:
+    type: string
+    description: Входящий остаток на начало периода (2024.3)
+  closingBalanceAtPeriodEnd:
+    type: string
+    description: Исходящий остаток на конец периода (2024.3)
+  periodDebitedAmount:
+    type: string
+    description: Общая сумма списанных средств (2024.3)
+  periodCreditedAmount:
+    type: string
+    description: Общая сумма зачисленных средств (2024.3)
+description: Агрегированная информация о балансе СЦР за период

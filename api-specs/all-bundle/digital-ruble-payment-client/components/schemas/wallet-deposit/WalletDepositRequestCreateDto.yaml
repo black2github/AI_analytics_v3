@@ -1,0 +1,30 @@
+required:
+- bankClientId
+- clientAccount
+- fingerprint
+- organization
+- paymentDetails
+- pcrParticipantWalletId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  paymentDetails:
+    $ref: ../common/PaymentDetailsDto.yaml
+  clientAccount:
+    $ref: ../common/ClientAccountDto.yaml
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+description: DTO для запроса на создание заявки на покупку ЦР.

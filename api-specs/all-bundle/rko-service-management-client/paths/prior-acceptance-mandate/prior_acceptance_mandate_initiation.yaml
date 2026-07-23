@@ -1,0 +1,66 @@
+post:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: createInitiation
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.CREATE_INIT'
+  operationId: createInitiationUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«PriorAcceptanceInitiationMandateCreateDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,PriorAcceptanceMandateValidationDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: Обновить распоряжение на подключение ЗДА
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.UPDATE_INIT'
+  operationId: updateInitiationUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«PriorAcceptanceInitiationMandateUpdateDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,PriorAcceptanceMandateValidationDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,6 @@
+type: object
+properties:
+  paging:
+    $ref: ./Paging.yaml
+  str:
+    type: string

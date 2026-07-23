@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  notEq:
+    type: string
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BLOCKED
+      - UNBLOCKED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BLOCKED
+      - UNBLOCKED
+  isNull:
+    type: boolean
+description: Клиент Банка статус заблокирован

@@ -1,0 +1,95 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер
+  accountName:
+    type: string
+    description: Наименование счета
+  transitAccountNumber:
+    type: string
+    description: Транзитный номер
+  startDate:
+    type: string
+    description: Дата начала резервирования
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания резервирования
+    format: date
+  annulledDate:
+    type: string
+    description: Дата аннулирования
+    format: date
+  openDate:
+    type: string
+    description: Дата открытия
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  branch:
+    $ref: ../common/BranchDtoV2.yaml
+  balanceBranch:
+    $ref: ../common/BranchDtoV2.yaml
+  bankClient:
+    $ref: ../common/BankClientPlainDto.yaml
+  requestId:
+    type: string
+    description: Ссылка на запрос на бронирование
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  openingRequestId:
+    type: string
+    description: Идентификатор запроса на открытие
+    format: uuid
+  openingContractRequestId:
+    type: string
+    description: Ссылка на заявку на открытие доп счета и заключение ДБС
+    format: uuid
+  documentPackageRequestId:
+    type: string
+    description: Ссылка на идентификатор ОНБ
+    format: uuid
+  accountingBalanceHeadUnit:
+    type: boolean
+    description: Признак учета на Балансе ГО
+  onbAutomaticReservation:
+    type: boolean
+    description: Признак Автоматического резервирования в ОНБ
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  duplicate:
+    type: boolean
+    description: Признак дубликата счета
+  originalId:
+    type: string
+    description: ID оригинального счета, в случае, если счет - дубликат
+    format: uuid
+  accountBlockState:
+    type: string
+    description: Статус блокировки счета
+    enum:
+    - FULL
+    - PARTIAL
+  state:
+    type: string
+    description: Статус
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+description: Счет. Облегченная версия.

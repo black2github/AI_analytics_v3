@@ -1,0 +1,76 @@
+required:
+- clientId
+- clientName
+- contractNumber
+- createdAt
+- docNumber
+- hasLinked
+- id
+- orderType
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  orderType:
+    type: string
+    description: Тип поручения
+    enum:
+    - OPERATION_WITHDRAWAL_MONEY
+    - OPERATION_TRANSFER_STOCK
+    - OPERATION_RESERVING_FUNDS
+    - OPERATION_CANCELLATION_WITHDRAWAL_MONEY
+    - OPERATION_CANCELLATION_TRANSFER_STOCK
+    - OPERATION_CANCELLATION_RESERVING_FUNDS
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  hasLinked:
+    type: boolean
+    description: Признак наличия связанных поручений
+  cancelDescription:
+    type: string
+    description: Причина отмены
+  commentForClient:
+    type: string
+    description: Комментарий для пользователя
+  commentForBank:
+    type: string
+    description: Комментарий для сотрудника банка
+description: Транспортная сущность записи о неторговом поручении в скроллере (банковская сторона)

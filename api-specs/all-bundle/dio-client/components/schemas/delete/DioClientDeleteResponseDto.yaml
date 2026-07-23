@@ -1,0 +1,20 @@
+required:
+- failed
+- successful
+type: object
+properties:
+  successful:
+    type: array
+    description: Идентификаторы успешно удаленных заявок
+    items:
+      type: string
+      description: Идентификаторы успешно удаленных заявок
+      format: uuid
+  failed:
+    type: array
+    description: Идентификаторы заявок, удаление которых не произошло
+    items:
+      type: string
+      description: Идентификаторы заявок, удаление которых не произошло
+      format: uuid
+description: Ответ операции по массовому удалению заявок

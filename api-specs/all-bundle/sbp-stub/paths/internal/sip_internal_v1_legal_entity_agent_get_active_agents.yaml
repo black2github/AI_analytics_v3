@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос списка Агентов ТСП подключенных к клиенту'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/ClientAgentsTspRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/ClientAgentsTspResponseDto.yaml
+    '400':
+      description: Bad Request

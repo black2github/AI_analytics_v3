@@ -1,0 +1,31 @@
+required:
+- authPersId
+- bankClientId
+- recordIdSet
+- userId
+type: object
+properties:
+  recordIdSet:
+    uniqueItems: true
+    type: array
+    description: Массив "ID записи"
+    items:
+      type: string
+      description: Массив "ID записи"
+      format: uuid
+  authPersId:
+    type: string
+    description: ID УЛ
+    format: uuid
+  isAccountAccessRestriction:
+    type: boolean
+    description: Установлено ограничение доступа к счетам
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+description: Доступ УЛ к счёту (удаление). Банковская часть.

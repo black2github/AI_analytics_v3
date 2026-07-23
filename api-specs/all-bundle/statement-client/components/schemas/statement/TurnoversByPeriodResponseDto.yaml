@@ -1,0 +1,42 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  organizationName:
+    type: string
+  organizationId:
+    type: string
+    format: uuid
+  innKio:
+    type: string
+  accountId:
+    type: string
+    format: uuid
+  accountNumber:
+    type: string
+  accountType:
+    type: string
+  accountName:
+    type: string
+  currencyCode:
+    type: string
+  currencyName:
+    type: string
+  branchName:
+    type: string
+  branchId:
+    type: string
+    format: uuid
+  incomingBalance:
+    type: number
+  income:
+    type: number
+  outcome:
+    type: number
+  outgoingBalance:
+    type: number
+description: Данные

@@ -1,0 +1,23 @@
+required:
+- level
+- signRequired
+type: object
+properties:
+  level:
+    $ref: ../common/SignatureLevelDto.yaml
+  signRequired:
+    type: boolean
+    description: Требуется подпись
+  docSourceSystem:
+    $ref: ../common/DocumentSourceSystemDto.yaml
+  docSignPage:
+    type: string
+    description: Страница, с которой вызвана подпись документа
+  isSigned:
+    type: boolean
+    writeOnly: true
+  signatureData:
+    $ref: ../common/acceptSignatureDataDto.yaml
+  signed:
+    type: boolean
+description: Подпись отзыв ПТИ, данные для клиента

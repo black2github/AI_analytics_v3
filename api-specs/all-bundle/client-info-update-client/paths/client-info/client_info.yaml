@@ -1,0 +1,39 @@
+put:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Обновление документа
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_EDIT'
+  operationId: update
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/client-info/UpdateCommandClientInfoUpdChangeRequestDtoUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseClientInfoUpdateRequestDto.yaml
+post:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Создание документа
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_CREATE'
+  operationId: create
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/client-info/CreateCommandClientInfoUpdCreateRequestDto.yaml
+    required: true
+  responses:
+    '201':
+      description: Created
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/CreateResponseClientInfoUpdateRequestDto.yaml
+  deprecated: true

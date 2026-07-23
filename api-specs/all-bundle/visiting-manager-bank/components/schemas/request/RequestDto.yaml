@@ -1,0 +1,120 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки.
+    format: uuid
+  systemDocNum:
+    type: integer
+    description: Уникальный идентификатор заявки в Системе.
+    format: int64
+  version:
+    type: integer
+    description: Версия заявки для блокировки.
+    format: int32
+  number:
+    type: integer
+    description: Номер заявки.
+    format: int32
+  createdAt:
+    type: string
+    description: Дата и время создания заявки.
+    format: date-time
+  visitDate:
+    type: string
+    description: Дата и время выезда менеджера.
+    format: date-time
+  visitingServiceType:
+    type: string
+    description: Тип ВС
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+  deliveryId:
+    type: string
+    description: Идентификатор доставки АС ЛБП
+    format: uuid
+  status:
+    type: string
+    description: Статусы ЖЦ заявки на выезд менеджера.
+    enum:
+    - NONE
+    - CREATED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - DRAFT
+    - EXPORT_TO_LBP
+    - EXPORT_TO_LBP_ERROR
+    - EXPORTED_TO_LBP
+    - EXECUTED_BY_LBP
+    - ACCEPTED_BY_LBP
+    - COMPLETED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - TESSA_DOSSIER_REJECT
+    - TESSA_DOSSIER_REJECT_ERROR
+    - TESSA_DOSSIER_REJECTED
+    - WAITING_FOR_ESK_ACCOUNT
+    - CORRECTION
+    - ACCOUNT_OPENED
+    - EXECUTED
+    - REJECTED
+    - EXPORT_TO_TESSA_PROCESS_OR_EXPORT_TO_LBP_ERROR
+    - EXPORTED_TO_LBP_OR_EXPORT_TO_LBP_ERROR
+    - EXPORT_TO_TESSA_OR_EXPORT_TO_LBP_ERROR
+    - WAITING_FOR_ESK_ACCOUNT_OR_DRAFT
+    - EXPORT_TO_TESSA_OR_EXPORT_TO_TESSA_ERROR
+    - ACCEPTED_BY_LBP_OR_EXPORT_TO_LBP
+    - EXPORT_TO_ESK_OR_EXPORT_TO_ESK_ERROR
+    - DRAFT_OR_EXPORT_TO_ESK_ERROR
+    - TESSA_DOSSIER_REJECT_OR_TESSA_DOSSIER_REJECT_ERROR
+    - TESSA_DOSSIER_REJECT_OR_REJECTED
+    - DRAFT_OR_EXPORT_TO_LBP
+  afterCorrectionStatus:
+    type: boolean
+    description: Признак прохождения заявки через статус CORRECTION.
+  hasPreviouslyOpenedAccounts:
+    type: boolean
+    description: Признак наличия ранее открытых банковских счетов
+  onboardingRequest:
+    $ref: ./OnboardingRequestInfoDto.yaml
+  client:
+    $ref: ../common/BankClientInfoDto.yaml
+  contact:
+    $ref: ../common/ContactInfoDto.yaml
+  user:
+    $ref: ../common/ShortUserInfoDto.yaml
+  executor:
+    $ref: ../common/ShortUserInfoDto.yaml
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  documents:
+    type: array
+    description: Документы, загружаемые выездным менеджером.
+    items:
+      $ref: ./RequestDocumentDto.yaml
+  questionnaire:
+    $ref: ./QuestionnaireDto.yaml
+  branch:
+    $ref: ../common/BranchInfoDto.yaml
+  onboardingVersion:
+    type: string
+    description: Версия сервиса Онбординга.
+    enum:
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_FIRST_REQ_2021
+    - ACC_OPEN_FIRST_REQ_KZ
+  compromised:
+    type: boolean
+    description: Признак компрометации ЭП.
+  ukepFormedDocumentsReworkRequired:
+    type: boolean
+    description: Признак необходимости доработки ПФ, подписанных УКЭП.
+description: ДТО заявки на выезд менеджера.

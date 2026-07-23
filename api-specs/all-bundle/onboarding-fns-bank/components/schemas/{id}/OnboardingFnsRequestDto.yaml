@@ -1,0 +1,259 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время последнего обновления записи
+    format: date-time
+  fnsDocId:
+    type: string
+    description: Идентификатор заявки ФНС
+  externalFsArchiveFileId:
+    type: string
+    description: Идентификатор файла архива в MFlash
+    format: uuid
+  internalFsArchiveFileId:
+    type: string
+    description: Идентификатор файла архива в файловом сервисе
+    format: uuid
+  onboardingRequestFileId:
+    type: string
+    description: Идентификатор файла заявления на открытие счета
+    format: uuid
+  egrulExtractFileId:
+    type: string
+    description: Идентификатор файла выписки из ЕГРЮЛ
+    format: uuid
+  egripExtractFileId:
+    type: string
+    description: Идентификатор файла выписки из ЕГРИП
+    format: uuid
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - NEW
+    - EXTERNAL_FILE_ID_RECEIVED
+    - EXTERNAL_FILE_ID_RECEIVING_ERROR
+    - WAITING_FOR_INT_FILE_ID_RECEIVING
+    - INTERNAL_FILE_ID_RECEIVED
+    - INTERNAL_FILE_ID_RECEIVING_ERROR
+    - REQUEST_CREATED_BY_ARCHIVE
+    - WAITING_FOR_ARCHIVE_UNZIPPING
+    - ARCHIVE_UNZIPPED
+    - ARCHIVE_UNZIPPING_ERROR
+    - STATUS_12_SENT
+    - STATUS_12_SENDING_ERROR
+    - FILES_DOWNLOADED_AND_PROCESSED
+    - FILES_DOWNLOADING_AND_PROCESSING_ERROR
+    - STATUS_10_SENT
+    - STATUS_10_SENDING_ERROR
+    - STARTED_ESK_PROCESSING
+    - EXPORTED_TO_ESK
+    - STARTED_ESK_PROCESSING_ERROR
+    - ACCEPTED_BY_ESK
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - REJECTED
+    - EXPORT_TO_TESSA
+    - EXECUTED_BY_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXPORT_TO_ESK
+    - EXECUTED_BY_ESK_OR_ERROR
+    - EXTERNAL_FILE_ID_RECEIVED_OR_ERROR
+    - WAITING_FOR_INT_FILE_ID_RECEIVING_OR_ERROR
+    - WAITING_FOR_ARCHIVE_UNZIPPING_OR_ERROR
+    - FILES_DOWNLOADED_AND_PROCESSED_OR_ERROR
+    - STATUS_12_SENDING_OR_ERROR
+    - STATUS_10_SENDING_OR_ERROR
+    - STARTED_ESK_PROCESSING_TO_ESK_OR_ERROR
+    - REJECTED_OR_STATUS_12_SENT
+    - EXECUTED_BY_TESSA_OR_ERROR
+    - WAITING_FOR_IDENTIFICATION
+    - WAITING_FOR_IDENTIFICATION_ERROR
+    - SHORT_LINK_GENERATION_ERROR
+    - NEED_IDENTIFICATION
+    - NEED_IDENTIFICATION_OR_SHORT_LINK_GENERATION_ERROR
+    - NEED_IDENTIFICATION_OR_WAITING_FOR_IDENTIFICATION_ERROR
+    - IN_PROGRESS_AFTER_IDENTIFICATION
+    - WAITING_FOR_REACQUIRE_IDENTIFICATION
+    - WAITING_FOR_REACQUIRE_IDENTIFICATION_ERROR
+    - NEED_REACQUIRE_IDENTIFICATION
+    - NEED_REACQUIRE_IDENTIFICATION_OR_ERROR
+    - ACCEPTED_BY_TESSA
+    - APPROVED_BY_TESSA
+    - EXECUTED
+  comment:
+    type: string
+    description: Комментарий
+  applicationDate:
+    type: string
+    description: Дата заявления на открытие счета
+    format: date
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  clientInn:
+    type: string
+    description: ИНН клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  ogrnDate:
+    type: string
+    description: Дата ОГРН/ОГРНИП
+    format: date
+  clientKpp:
+    type: string
+    description: КПП клиента
+  okved:
+    type: string
+    description: ОКВЭД
+  registrationAddress:
+    $ref: ./OnboardingFnsRequestAddressDto.yaml
+  actualAddress:
+    $ref: ./OnboardingFnsRequestAddressDto.yaml
+  postalAddress:
+    $ref: ./OnboardingFnsRequestAddressDto.yaml
+  email:
+    type: string
+    description: Электронная почта
+  representativeSurname:
+    type: string
+    description: Фамилия ИП / Представителя клиента
+  representativeForename:
+    type: string
+    description: Имя ИП / Представителя клиента
+  representativePatronymic:
+    type: string
+    description: Отчество ИП / Представителя клиента
+  representativePosition:
+    type: string
+    description: Должность Представителя клиента
+  representativeInn:
+    type: string
+    description: ИНН Представителя клиента
+  representativeBirthDate:
+    type: string
+    description: Дата рождения ИП / Представителя клиента
+    format: date
+  representativeGender:
+    type: integer
+    description: Пол ИП / Представителя клиента
+    format: int32
+  representativeCitizenship:
+    type: string
+    description: Гражданство ИП / Представителя клиента
+  representativeRegistrationAddress:
+    $ref: ./OnboardingFnsRequestAddressDto.yaml
+  representativeBirthplace:
+    $ref: ./OnboardingFnsRequestAddressDto.yaml
+  representativeEmail:
+    type: string
+    description: Email ИП / Представителя клиента
+  representativePhone:
+    type: string
+    description: Телефон ИП / Представителя клиента
+  representativeIdentityDocCode:
+    type: string
+    description: Код ДУЛ ИП / Представителя клиента
+  representativeIdentityDocSeriesNumber:
+    type: string
+    description: Серия и номер ДУЛ ИП / Представителя клиента
+  representativeIdentityDocIssuedBy:
+    type: string
+    description: Кем выдан ДУЛ ИП / Представителя клиента
+  representativeIdentityDocIssueDate:
+    type: string
+    description: Дата выдачи ДУЛ ИП / Представителя клиента
+    format: date
+  representativeIdentityDocDepartmentCode:
+    type: string
+    description: Код подразделения, выдавшего ДУЛ ИП / Представителя клиента
+  govRegistrationPlace:
+    type: string
+    description: Место гос. регистрации
+  govRegistrationDate:
+    type: string
+    description: Дата гос. регистрации
+    format: date
+  govRegistrationBodyCode:
+    type: string
+    description: Код регистрирующего органа
+  govRegistrationBodyName:
+    type: string
+    description: Наименование регистрирующего органа
+  taxBodyCode:
+    type: string
+    description: Код налогового органа
+  taxBodyName:
+    type: string
+    description: Наименование налогового органа
+  moneySources:
+    uniqueItems: true
+    type: array
+    description: Источники происхождения денежных средств
+    items:
+      type: string
+      description: Источники происхождения денежных средств
+      enum:
+      - CHARTER_CAPITAL
+      - BUSINESS_PROFIT
+      - LOANS_CREDITS
+      - GRANTS_DONATIONS
+  withdrawalAmountType:
+    type: integer
+    description: Тип суммы операции по снятию наличных
+    format: int32
+  plannedOperationsCountType:
+    type: integer
+    description: Тип количества планируемых операций
+    format: int32
+  counterpartyOperationAmountType:
+    type: integer
+    description: Тип суммы операции по переводу контрагентам
+    format: int32
+  hasInternetServices:
+    type: boolean
+    description: Оказывает ли компания услуги с использованием сайта в сети интернет?
+  website:
+    type: string
+    description: Сайт, на котором осуществляется деятельность
+  additionalProducts:
+    $ref: ../common/AdditionalProductsDto.yaml
+  eskRequestId:
+    type: integer
+    description: ID заявки 115 в ЕСК
+    format: int64
+  tessaDossierId:
+    type: string
+    description: ID досье 115 в ТЕССА
+  fromEskToFnsRejectionCode:
+    type: integer
+    description: Код отказа для отправки в ФНС, полученный от ЕСК
+    format: int32
+  eskRejectionText:
+    type: string
+    description: Текст отказа для отправки в ФНС, полученный от ЕСК
+  statusUpdatedAt:
+    type: string
+    description: Дата и время изменения статуса
+    format: date-time
+description: Данные

@@ -1,0 +1,39 @@
+type: object
+properties:
+  sessionId:
+    type: string
+    description: Идентификатор сессии журнала
+    format: uuid
+  organizationChecks:
+    type: array
+    description: Список организаций с проведенным аудитом
+    items:
+      $ref: ./OrganizationCheckDto.yaml
+  statuses:
+    $ref: ./StatusAggregatorDto.yaml
+  organizations:
+    type: array
+    description: Справочник организаций по наименованиям для фильтров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  accounts:
+    type: array
+    description: Ссылочный справочник аккаунтов с указателем на организации для фильтров
+    items:
+      $ref: ./DictionaryRefDto.yaml
+  orderTypes:
+    type: array
+    description: Справочник типов ордеров для фильтров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  offices:
+    type: array
+    description: Справочник офисов
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  organizationsForBank:
+    type: array
+    description: Справочник организаций для банковского пользователя
+    items:
+      $ref: ./OrganizationForBankDictionary.yaml
+description: Ответ для заполнения полей журнала ордеров на выдачу или внесение наличных

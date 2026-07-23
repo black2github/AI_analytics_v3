@@ -1,0 +1,49 @@
+type: object
+properties:
+  country:
+    type: string
+    description: Страна
+  postcode:
+    type: integer
+    description: Почтовый индекс
+    format: int32
+  settlement:
+    type: string
+    description: Населённый пункт
+  city:
+    type: string
+    description: Город
+  street:
+    type: string
+    description: Название улицы
+  house:
+    type: string
+    description: Номер дома
+  building:
+    type: string
+    description: Корпус дома
+  flat:
+    type: string
+    description: Номер квартиры
+  fullAddress:
+    type: string
+    description: Полный адрес
+  region:
+    type: string
+    description: Регион
+  countryCode:
+    type: string
+    description: Код страны
+  regionCode:
+    type: string
+    description: Код региона
+  district:
+    type: string
+    description: Район
+  isForeignAddress:
+    type: boolean
+    description: Иностранный адрес
+  isBuildingMissed:
+    type: boolean
+    description: В адресе нет номера дома
+description: Полный адрес

@@ -1,0 +1,20 @@
+get:
+  tags:
+  - '[Оценка 5*]. Банк — работа с хештегами'
+  summary: Получить хештеги, сгруппированные по оценкам, для сценария опроса
+  description: 'Привилегии: FEEDBACK.BANK.HASHTAG_VIEW'
+  operationId: getHashtagsByPollParameter
+  parameters:
+  - name: pollParameterId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/hashtag/GenericResponseSimpleErrorDataHashtagsByResultDto.yaml

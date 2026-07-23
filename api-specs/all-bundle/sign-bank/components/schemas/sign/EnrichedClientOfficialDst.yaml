@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID СЭП представителя
+    format: uuid
+  user:
+    $ref: ./ClientUserInfo.yaml
+  client:
+    $ref: ./BankClientInfo.yaml
+  unitedSign:
+    type: boolean
+    description: Признак единой подписи
+  originalId:
+    type: string
+    description: ID оригинальной записи
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя
+    format: uuid
+description: Обогащенная данными клиента и пользователя клиента запись СЭП представителя

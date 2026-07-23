@@ -1,0 +1,27 @@
+type: object
+properties:
+  clientSubscribeId:
+    type: string
+    description: ID подписки Клиента
+  clientWebDealingId:
+    type: string
+    description: ID Клиента - ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  amount:
+    type: string
+    description: Объем Инструмента (если не передан то 1)
+  isBaseCurr:
+    type: boolean
+    description: Признак базовой валюты объема инструмента
+  instrument:
+    type: string
+    description: Код инструмента
+  executionType:
+    type: string
+    description: Тип исполнения сделки
+    enum:
+    - FOK
+    - IOC
+    - ORDER
+    - ORDER_PF

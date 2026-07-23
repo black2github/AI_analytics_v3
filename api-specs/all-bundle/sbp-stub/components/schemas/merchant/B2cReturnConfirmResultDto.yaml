@@ -1,0 +1,21 @@
+type: object
+description: Ответа на запрос подтверждения возврата.
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБП
+  extTrxId:
+    type: string
+    description: ID операции в Ф1
+  docType:
+    type: string
+    description: Тип документа. Передается эхом из запроса
+  guid:
+    type: string
+    description: GUID из исходного запроса. Передается эхом из запроса

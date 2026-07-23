@@ -1,0 +1,15 @@
+type: object
+properties:
+  fullOrgName:
+    type: string
+    description: Полное наименование Клиента
+  shortOrgName:
+    type: string
+    description: Краткое наименование Клиента
+  abbreviationOrgName:
+    type: string
+    description: Сокращенное наименование Клиента
+  internationalOrgName:
+    type: string
+    description: Международное наименование Клиента
+description: Наименования Клиента банка

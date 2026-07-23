@@ -1,0 +1,74 @@
+type: object
+description: Созданная заявка блокировку/разблокировку ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки.
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки.
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки.
+  docType:
+    type: string
+    description: Тип заявки
+    enum:
+    - ACTIVATE
+    - BLOCK
+  status:
+    type: string
+    description: Статус обработки заявки на блокировку и разблокировку ТСП
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_TSP_CHANGE_STATUS_TO_AS_SBP
+    - EXPORT_TSP_CHANGE_STATUS_TO_AS_SBP_ERROR
+    - EXECUTED_BY_AS_SBP_TSP_CHANGE_STATUS
+    - EXECUTED
+    - REJECTED
+  legalId:
+    type: string
+    description: Идентификатор Клиента (ЮЛ) в АС СБП
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку (Идентификатор пользователя в экосистеме).
+  userFio:
+    type: string
+    description: ФИО пользователя, создавшего заявку.
+  userEmail:
+    type: string
+    description: Электронная почта пользователя
+  userPhoneNumber:
+    type: string
+    description: Номер телефона пользователя.
+  merchantData:
+    $ref: ./SbpTspBlockRequestMerchantDto.yaml
+    description: Реквизиты ТСП
+  bankClient:
+    $ref: ./SbpTspBlockRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке на блокировку/разблокировку ТСП.
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+    description: Результат контролей
+required:
+- bankClient
+- docDate
+- docNumber
+- docType
+- id
+- merchantData
+- status
+- userId

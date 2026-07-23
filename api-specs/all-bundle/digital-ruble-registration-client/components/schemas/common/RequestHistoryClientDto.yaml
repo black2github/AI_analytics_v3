@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  status:
+    type: string
+    description: Статус документа
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса документу
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, выполнивший смену статуса
+    format: uuid
+  userName:
+    type: string
+    description: Имя пользователя, выполнившего смену статуса
+  userType:
+    type: string
+    description: Типы пользователей.
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  statusErrorCode:
+    type: string
+    description: Код ошибки заявки
+  clientStatus:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Клиентский статус.
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для клиента или комментарий если отсутствует код ошибки
+description: DTO для истории заявки.

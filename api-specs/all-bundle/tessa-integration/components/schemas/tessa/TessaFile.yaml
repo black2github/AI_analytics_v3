@@ -1,0 +1,44 @@
+type: object
+properties:
+  ID::uid:
+    type: string
+    format: uuid
+  UploadedByID::uid:
+    type: string
+    format: uuid
+  Size:
+    type: integer
+    format: int32
+  HasExistingFileID:
+    type: boolean
+  ExistingFileID::uid:
+    type: string
+    format: uuid
+  FileName:
+    type: string
+  Expiration::dtm:
+    type: string
+    format: date-time
+  CategoryID::uid:
+    type: string
+    format: uuid
+  CategoryCaption:
+    type: string
+  Signature:
+    type: string
+  HasFileSignature:
+    type: boolean
+  FileSignature:
+    $ref: ./FileSignature.yaml
+  HasFileSignatures:
+    type: boolean
+  FileSignatures:
+    type: array
+    items:
+      $ref: ./FileSignature.yaml
+  Versions:
+    type: array
+    items:
+      $ref: ./FileVersion.yaml
+  Card:
+    $ref: ./FileCard.yaml

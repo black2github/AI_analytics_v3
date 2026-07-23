@@ -1,0 +1,22 @@
+required:
+- inn
+- kpp
+- name
+type: object
+properties:
+  name:
+    maxLength: 1000
+    minLength: 1
+    type: string
+    description: Наименование организации
+  inn:
+    maxLength: 12
+    minLength: 10
+    type: string
+    description: ИНН
+  kpp:
+    maxLength: 9
+    minLength: 9
+    type: string
+    description: КПП
+description: DTO для сведений об организации.

@@ -1,0 +1,36 @@
+type: object
+properties:
+  lawCountry:
+    type: string
+    description: Код страны
+  lawZip:
+    type: string
+    description: Почтовый идекс
+  lawState:
+    type: string
+    description: Cубъект РФ
+  lawDistrict:
+    type: string
+    description: Район
+  lawCity:
+    type: string
+    description: Город
+  lawPlaceType:
+    type: string
+    description: Тип населенного пункта
+  lawPlace:
+    type: string
+    description: Населенный пункт
+  lawStreet:
+    type: string
+    description: Улица
+  lawBuilding:
+    type: string
+    description: Дом
+  lawBlock:
+    type: string
+    description: Cтроение
+  lawOffice:
+    type: string
+    description: Квартира/Офис
+description: Юридический адрес клиента по полям

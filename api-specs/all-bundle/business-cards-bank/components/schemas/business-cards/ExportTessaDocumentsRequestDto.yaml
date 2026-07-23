@@ -1,0 +1,25 @@
+required:
+- reportTypeDtoList
+- requestId
+type: object
+properties:
+  reportTypeDtoList:
+    type: array
+    description: Список типов документов, которые необходимо выгрузить.
+    items:
+      type: string
+      description: Список типов документов, которые необходимо выгрузить.
+      enum:
+      - IDENTITY_DOCUMENT
+      - CORP_CARD_QUESTIONNAIRE
+      - NEW_RKO_ACC_CARD_OPEN
+      - NEW_RKO_ACC_OPEN
+      - ADD_ACC_OPEN
+      - HOLDER_LIST
+      - CORP_CARD_ISSUE_APP
+      - ACC_OPENING_NOTICE
+  requestId:
+    type: string
+    description: ID заявки на выпуск карты.
+    format: uuid
+description: Запрос на экспорт документов из ТЕССЫ

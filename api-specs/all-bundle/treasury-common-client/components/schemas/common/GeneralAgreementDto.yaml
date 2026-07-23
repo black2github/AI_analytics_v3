@@ -1,0 +1,120 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Идентификатор объекта для сопоставления
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор генерального соглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  contractId:
+    type: integer
+    description: Идентификатор генерального соглашения в АСК
+    format: int64
+  clientWebDealing:
+    $ref: ./ClientWebDealingDto.yaml
+  contractType:
+    type: string
+    description: Тип генерального соглашения
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  number:
+    type: string
+    description: Номер генерального соглашения
+  date:
+    type: string
+    description: Дата генерального соглашения
+    format: date
+  startDate:
+    type: string
+    description: Дата начала действия генерального соглашения
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия генерального соглашения
+    format: date
+  status:
+    type: string
+    description: Статус генерального соглашения
+    enum:
+    - ACTIVE
+    - ENDED
+    - BLOCKED
+    - DELETED
+  usage:
+    uniqueItems: true
+    type: array
+    description: Назначение генерального соглашения
+    items:
+      type: string
+      description: Назначение генерального соглашения
+      enum:
+      - DEPOSIT
+      - MNO
+      - GSNO
+      - FX
+  subUsage:
+    type: string
+    description: Тип генерального соглашения ГСНО
+    enum:
+    - NONE
+    - PARENT
+    - CHILD
+  earlyRefund:
+    type: boolean
+    description: Возможность досрочного истребования
+  earlyRefundRateRub:
+    type: string
+    description: Ставка досрочного истребования в рублях
+  earlyRefundRateFor:
+    type: string
+    description: Ставка досрочного истребования в валюте
+  uuid:
+    type: integer
+    description: Идентификатор для быстрого поиска
+    format: int64
+  gsnoAgreementManageEnabled:
+    type: boolean
+    description: Активирует возможность управления соглашением из ВебДилинга
+  gsnoAgreementManageKnosisBranchId:
+    type: integer
+    description: Идентификатор филиала (в КНОСИС) для которого заключено генеральное соглашение
+    format: int64
+  documentId:
+    type: string
+    description: Идентификатор внутрисистемного генерального соглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  fundName:
+    type: string
+    description: Наименование фонда (учредителя)
+  documentType:
+    type: string
+    description: Тип заявки для текущего генерального соглашения
+  userActions:
+    type: array
+    description: Список пользовательских действий
+    items:
+      $ref: ./GeneralAgreementUserActionInfoDto.yaml
+  clientVisaInfo:
+    $ref: ./ClientVisaInfoDto.yaml
+  default:
+    type: boolean
+  active:
+    type: boolean
+    description: Генеральное соглашение активно на текущую дату
+description: Данные

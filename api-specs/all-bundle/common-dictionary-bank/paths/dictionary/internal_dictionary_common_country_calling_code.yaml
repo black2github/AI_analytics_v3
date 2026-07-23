@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API справочника "Телефонные коды стран"
+  summary: Создать новую запись в справочнике
+  description: 'Привилегии: COUNTRY_CALLING_CODE_CREATE'
+  operationId: createUsingPOST_2
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: data
+    description: data
+    required: true
+    schema:
+      $ref: '#/definitions/CountryCallingCodeDataDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,CountryCallingCodeDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,9 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Порядковый номер волны миграции
+  actual:
+    type: boolean
+    description: Признак текущей волны
+description: Сущность Справочник Волн миграции

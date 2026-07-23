@@ -1,0 +1,102 @@
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+tags:
+- name: API feature toggle
+  description: Internal File Storage Feature Toggle Controller
+- name: API загрузки файла
+  description: Internal File Storage Upload Controller
+- name: API загрузки файла. Вторая версия.
+  description: Internal File Storage Upload V 2 Controller
+- name: API подписи файлов
+  description: Internal File Storage Sign Controller
+- name: API подписи файлов. Вторая версия.
+  description: Internal File Storage Sign V 2 Controller
+- name: API скачивания файла
+  description: Internal File Storage Download Controller
+- name: Внутренний интерфейс сервиса хранения файлов
+  description: Internal File Storage Controller
+- name: Внутренний интерфейс сервиса хранения файлов. Вторая версия.
+  description: Internal File Storage V 2 Controller
+paths:
+  /filestorage/internal/batch-delete:
+    $ref: ./paths/internal/filestorage_internal_batch_delete.yaml
+  /filestorage/internal/check:
+    $ref: ./paths/internal/filestorage_internal_check.yaml
+  /filestorage/internal/consume:
+    $ref: ./paths/internal/filestorage_internal_consume.yaml
+  /filestorage/internal/copy:
+    $ref: ./paths/internal/filestorage_internal_copy.yaml
+  /filestorage/internal/create-zip:
+    $ref: ./paths/internal/filestorage_internal_create_zip.yaml
+  /filestorage/internal/create-zip-with-ext-data:
+    $ref: ./paths/internal/filestorage_internal_create_zip_with_ext_data.yaml
+  /filestorage/internal/data-stream-with-consume:
+    $ref: ./paths/internal/filestorage_internal_data_stream_with_consume.yaml
+  /filestorage/internal/download:
+    $ref: ./paths/internal/filestorage_internal_download.yaml
+  /filestorage/internal/download/one-time-data:
+    $ref: ./paths/internal/filestorage_internal_download_one_time_data.yaml
+  /filestorage/internal/download/outside-file:
+    $ref: ./paths/internal/filestorage_internal_download_outside_file.yaml
+  /filestorage/internal/form-data/upload:
+    $ref: ./paths/internal/filestorage_internal_form_data_upload.yaml
+  /filestorage/internal/form-download/{attachmentId}:
+    $ref: ./paths/internal/filestorage_internal_form_download_attachmentId.yaml
+  /filestorage/internal/ft/load:
+    $ref: ./paths/internal/filestorage_internal_ft_load.yaml
+  /filestorage/internal/ft/save:
+    $ref: ./paths/internal/filestorage_internal_ft_save.yaml
+  /filestorage/internal/getStatus:
+    $ref: ./paths/internal/filestorage_internal_getStatus.yaml
+  /filestorage/internal/public-file/download:
+    $ref: ./paths/internal/filestorage_internal_public_file_download.yaml
+  /filestorage/internal/public-file/download-video:
+    $ref: ./paths/internal/filestorage_internal_public_file_download_video.yaml
+  /filestorage/internal/public-file/upload:
+    $ref: ./paths/internal/filestorage_internal_public_file_upload.yaml
+  /filestorage/internal/sign/digest:
+    $ref: ./paths/internal/filestorage_internal_sign_digest.yaml
+  /filestorage/internal/sign/pdf:
+    $ref: ./paths/internal/filestorage_internal_sign_pdf.yaml
+  /filestorage/internal/token:
+    $ref: ./paths/internal/filestorage_internal_token.yaml
+  /filestorage/internal/upload:
+    $ref: ./paths/internal/filestorage_internal_upload.yaml
+  /filestorage/internal/upload-with-consume:
+    $ref: ./paths/internal/filestorage_internal_upload_with_consume.yaml
+  /filestorage/internal/v2/checked-upload:
+    $ref: ./paths/internal/filestorage_internal_v2_checked_upload.yaml
+  /filestorage/internal/v2/create-zip:
+    $ref: ./paths/internal/filestorage_internal_v2_create_zip.yaml
+  /filestorage/internal/v2/sign/digest:
+    $ref: ./paths/internal/filestorage_internal_v2_sign_digest.yaml
+  /filestorage/internal/v2/sign/digest-list:
+    $ref: ./paths/internal/filestorage_internal_v2_sign_digest_list.yaml
+  /filestorage/internal/v2/sign/pdf:
+    $ref: ./paths/internal/filestorage_internal_v2_sign_pdf.yaml
+  /filestorage/internal/v2/token:
+    $ref: ./paths/internal/filestorage_internal_v2_token.yaml
+  /filestorage/internal/{id}:
+    $ref: ./paths/internal/filestorage_internal_id.yaml
+  /filestorage/internal/{id}/data:
+    $ref: ./paths/internal/filestorage_internal_id_data.yaml
+  /filestorage/internal/{id}/data-stream:
+    $ref: ./paths/internal/filestorage_internal_id_data_stream.yaml
+  /filestorage/internal/{id}/data/base64:
+    $ref: ./paths/internal/filestorage_internal_id_data_base64.yaml
+  /filestorage/internal/{id}/one-time-data:
+    $ref: ./paths/internal/filestorage_internal_id_one_time_data.yaml
+  /filestorage/internal/{id}/temp:
+    $ref: ./paths/internal/filestorage_internal_id_temp.yaml
+  /filestorage/internal/{id}/temp-data:
+    $ref: ./paths/internal/filestorage_internal_id_temp_data.yaml
+  /filestorage/internal/{id}/temp-data-stream:
+    $ref: ./paths/internal/filestorage_internal_id_temp_data_stream.yaml
+components: {}

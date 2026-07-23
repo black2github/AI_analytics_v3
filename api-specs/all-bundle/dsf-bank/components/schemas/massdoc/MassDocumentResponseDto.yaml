@@ -1,0 +1,156 @@
+type: object
+description: Массовая рассылка. Возвращаемое ДТО.
+properties:
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./MassDocumentAttachmentDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+    description: Информация о подразделении.
+  branches:
+    type: array
+    description: Список подразделений.
+    items:
+      $ref: ./MassDocumentBranchDto.yaml
+  clientsWithForeignCurrencyOnly:
+    type: boolean
+    description: Только клиенты с валютными счетами
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания заявки.
+  date:
+    type: string
+    format: date
+    description: Дата создания заявки.
+  dsfType:
+    $ref: ../common/DsfTypeResponseDto.yaml
+    description: Тип документа.
+  excludeClients:
+    type: boolean
+    description: Исключить клинтов
+  excludeFileId:
+    type: string
+    format: uuid
+    description: Идентификатор файла со списком получателей для исключения
+  excludeFileName:
+    type: string
+    description: Имя файла со списком получателей для исключения
+  excludeReceivers:
+    type: array
+    description: Список получателей для исключения.
+    items:
+      $ref: ./MassDocumentExcludeReceiverDto.yaml
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор массовой рассылки.
+  importFileId:
+    type: string
+    format: uuid
+    description: Идентификатор файла со списком получателей
+  importFileName:
+    type: string
+    description: Имя файла со списком получателей
+  importFileRecords:
+    type: integer
+    format: int32
+    description: Количество распознанных получателей
+  manualReceivers:
+    type: array
+    description: Список получателей.
+    items:
+      $ref: ./MassDocumentManualReceiverDto.yaml
+  message:
+    type: string
+    description: Текст письма.
+  mode:
+    type: string
+    description: Режим добавления получателей.
+    enum:
+    - ALL
+    - MANUAL
+    - IMPORT
+    - INDIVIDUAL
+  number:
+    type: integer
+    format: int32
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+  numberOfReceivers:
+    type: integer
+    format: int32
+    description: Количество получателей.
+  numberOfReceiversSent:
+    type: integer
+    format: int32
+    description: Количество получателей получивших рассылку.
+  receivedAt:
+    type: string
+    format: date-time
+    description: Дата и время завершения отправки массовой рассылки.
+  receiverProcessingState:
+    type: string
+    description: Статус добавления получателей
+    enum:
+    - EMPTY
+    - PROCESSING
+    - READY
+  sendDate:
+    type: string
+    format: date-time
+    description: Дата и время отправки массовой рассылки.
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - PAUSE
+    - REJECTED
+    - DETAILS_VALID
+    - TO_SEND
+    - IN_PROCESS
+    - DELETED
+    - SENT
+    - SENT_PART
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_REQUIRED_OR_NOT
+    - SIGN_CHECK_VALID_OR_DENIED
+    - SIGN_CHECK_VALID
+    - DRAFT_OR_NEW
+  subject:
+    type: string
+    description: Тема письма.
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeLetterClassifier:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления заявки.
+  userFIO:
+    type: string
+    description: ФИО Пользователя, создавшего заявку.
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку.
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+    description: Результат проверки.
+  version:
+    type: integer
+    format: int32
+    description: Текущая версия документа в банк.

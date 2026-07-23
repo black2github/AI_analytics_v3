@@ -1,0 +1,37 @@
+required:
+- certificate
+- data
+- signData
+- signDate
+- signId
+- uaaUserId
+type: object
+properties:
+  signId:
+    type: string
+    description: Локальный(в рамках бизнес систем) ИД подписи
+    format: uuid
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signData:
+    minLength: 1
+    type: string
+    description: Подпись в base64
+  data:
+    minLength: 1
+    type: string
+    description: Подписанные данные в base64
+  certificate:
+    minLength: 1
+    type: string
+    description: Сертификат которым был подписан документ в base64
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя подписавшего документ
+    format: uuid
+  hashed:
+    type: boolean
+    description: Признак что данные хэшированы
+description: Данные о подписи документа для проверки

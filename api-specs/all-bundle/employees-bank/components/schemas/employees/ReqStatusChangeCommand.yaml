@@ -1,0 +1,15 @@
+required:
+- comment
+- documentIds
+type: object
+properties:
+  documentIds:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+  comment:
+    $ref: ./CommentDto.yaml
+description: Команда изменения статуса заявки

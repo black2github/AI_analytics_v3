@@ -1,0 +1,11 @@
+type: object
+description: Информация о счетах клиента для регистрации в системе АС СБП
+properties:
+  accounts:
+    type: array
+    description: Счет клиента для регистрации в системе АС СБП
+    items:
+      $ref: ./SbpClientAccountV2Dto.yaml
+  digitalRubleAccount:
+    $ref: ./SbpDigitalRubleAccountDto.yaml
+    description: Реквизиты счета Клиента в сервисе Цифровой рубль

@@ -1,0 +1,10 @@
+type: object
+properties:
+  accountId:
+    type: string
+    format: uuid
+  f1AccountId:
+    type: integer
+    format: int64
+  regBranchCode:
+    type: string

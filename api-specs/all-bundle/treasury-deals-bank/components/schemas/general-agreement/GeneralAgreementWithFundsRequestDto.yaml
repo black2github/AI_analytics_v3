@@ -1,0 +1,19 @@
+type: object
+properties:
+  usage:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  currencies:
+    type: array
+    items:
+      type: string
+  textForSearch:
+    type: string
+  clientWebDealingId:
+    type: string
+    format: uuid
+description: Фильтр

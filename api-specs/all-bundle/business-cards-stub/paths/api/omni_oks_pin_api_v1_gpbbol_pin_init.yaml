@@ -1,0 +1,15 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/api/OmniOksRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Change Pin Init
+  tags:
+  - Omni Oks Pin Controller

@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  notEq:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  in:
+    type: array
+    items:
+      type: string
+      description: ДТО статусов СЭП
+      enum:
+      - ACTIVE
+      - EXPIRED
+      - DISABLED
+      - BLOCKED
+      - INACTIVE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: ДТО статусов СЭП
+      enum:
+      - ACTIVE
+      - EXPIRED
+      - DISABLED
+      - BLOCKED
+      - INACTIVE
+  isNull:
+    type: boolean
+description: Фильтр по статусу СЭП

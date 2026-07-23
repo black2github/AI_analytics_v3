@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Эмулятор сообщений от Ф1 для отзыва платежного требования исходящего
+  summary: Отправка квитанции от Ф1 для отзыва платежного требования исходящего в очередь
+  operationId: receiptUsingPOST_3
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: receiptData
+    description: receiptData
+    required: true
+    schema:
+      $ref: '#/definitions/OutgoingPaymentChargebackRequestF1ReceiptDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,string»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

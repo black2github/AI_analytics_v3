@@ -1,0 +1,16 @@
+type: object
+description: Реквизиты, получаемые в процессе обработки заявления
+properties:
+  transactionId:
+    type: string
+    description: Идентификатор транзакции
+  fpMessageId:
+    type: string
+    description: ID запроса из НСПК
+  initiatedAt:
+    type: string
+    format: date-time
+    description: Дата и время входящей операции
+required:
+- initiatedAt
+- transactionId

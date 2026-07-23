@@ -1,0 +1,70 @@
+post:
+  tags:
+  - СИП. Сервис Internal Operation API
+  summary: 'Сервис: Запрос статуса операций B2C'
+  operationId: operationInfoUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.docType
+    in: query
+    description: Тип документа
+    required: true
+    type: string
+  - name: body.guid
+    in: query
+    description: GUID из исходного запроса на перевод, идентификатор BSS
+    required: true
+    type: string
+  - name: body.sign
+    in: query
+    description: Подпись сообщения
+    required: false
+    type: string
+  - name: body.transactionId
+    in: query
+    description: ID операции
+    required: true
+    type: string
+  - name: body.type
+    in: query
+    description: Тип операции
+    required: true
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/B2cOperationInfoResultDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

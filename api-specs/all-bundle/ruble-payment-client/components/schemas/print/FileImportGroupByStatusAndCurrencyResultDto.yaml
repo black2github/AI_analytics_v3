@@ -1,0 +1,15 @@
+type: object
+properties:
+  status:
+    $ref: ./FileImportResultStatusDto.yaml
+  currencyIsoCode:
+    type: string
+    description: ISO код валюты
+  docCount:
+    type: integer
+    description: Количество документов
+    format: int32
+  totalAmount:
+    type: number
+    description: Сумма по всем документам
+description: Данные протокола файлового импорта, результат по группе документов

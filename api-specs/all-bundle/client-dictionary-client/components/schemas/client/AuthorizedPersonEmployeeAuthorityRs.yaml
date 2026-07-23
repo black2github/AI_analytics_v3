@@ -1,0 +1,8 @@
+type: object
+properties:
+  isEio:
+    type: boolean
+    writeOnly: true
+  eio:
+    type: boolean
+description: Данные полномочий УЛа-сотрудника

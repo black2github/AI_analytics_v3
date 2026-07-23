@@ -1,0 +1,49 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Бизнес-идентификатор генерального соглашения
+  id:
+    type: string
+    description: Идентификатор генерального соглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  contractId:
+    type: integer
+    description: Идентификатор генерального соглашения в АСК
+    format: int64
+  contractType:
+    type: string
+    description: Тип генерального соглашения
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  date:
+    type: string
+    description: Дата генерального соглашения
+    format: date
+  number:
+    type: string
+    description: Номер генерального соглашения
+  earlyRefund:
+    type: boolean
+    description: Возможность досрочного расторжения
+  earlyRefundRateRub:
+    type: string
+    description: Ставка досрочного истребования для рублей
+  earlyRefundRateFor:
+    type: string
+    description: Ставка досрочного истребования для валюты
+  fundNames:
+    type: string
+    description: Названия фондов в одной строке через запятую
+  fundBusinessId:
+    type: string
+    description: Идентификатор фонда. Заполняется только в случае, если найден один фонд
+  fund:
+    $ref: ./FundShortDto.yaml
+description: Страница с данными

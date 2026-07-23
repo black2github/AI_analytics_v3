@@ -1,0 +1,15 @@
+type: object
+properties:
+  roleCode:
+    type: string
+    description: Код роли
+  roleName:
+    type: string
+    description: Наименование роли
+  segmentCode:
+    type: string
+    description: Код сегмента
+  segmentName:
+    type: string
+    description: Наименование сегмента
+description: Удаленный доступ

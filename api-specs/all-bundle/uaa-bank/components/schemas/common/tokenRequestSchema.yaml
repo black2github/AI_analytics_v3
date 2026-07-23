@@ -1,0 +1,67 @@
+required:
+- grant_type
+type: object
+properties:
+  client_id:
+    type: string
+    description: Client ID
+    nullable: true
+  client_secret:
+    type: string
+    description: Client secret
+    nullable: true
+  client_assertion:
+    type: string
+    description: Client assertion
+    nullable: true
+  client_assertion_type:
+    type: string
+    description: Client assertion type
+    nullable: true
+  grant_type:
+    type: string
+    description: Grant type
+  scope:
+    type: string
+    description: ApplicationScope
+    nullable: true
+  code:
+    type: string
+    description: Code
+    nullable: true
+  refresh_token:
+    type: string
+    description: Refresh token
+    nullable: true
+  username:
+    type: string
+    description: User name
+    nullable: true
+  password:
+    type: string
+    description: User password
+    nullable: true
+  redirect_uri:
+    type: string
+    description: Redirect URI
+    nullable: true
+  subject_token:
+    type: string
+    description: Subject token
+    nullable: true
+  subject_token_type:
+    type: string
+    description: Subject token type
+    nullable: true
+  actor_token:
+    type: string
+    description: Actor token
+    nullable: true
+  actor_token_type:
+    type: string
+    description: Actor token type
+    nullable: true
+  code_verifier:
+    type: string
+    description: Code verifier PKCE
+    nullable: true

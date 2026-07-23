@@ -1,0 +1,39 @@
+post:
+  tags:
+  - Скачивание вложений с авторизацией
+  summary: Скачивание файла через form-urlencoded
+  operationId: downloadByFormUrlEncodedUsingPOST
+  consumes:
+  - application/x-www-form-urlencoded
+  produces:
+  - '*/*'
+  parameters:
+  - name: attachment_access_token
+    in: formData
+    description: attachment_access_token
+    required: true
+    type: string
+  - name: firstPos
+    in: formData
+    required: false
+    type: integer
+    format: int64
+  - name: lastPos
+    in: formData
+    required: false
+    type: integer
+    format: int64
+  responses:
+    '200':
+      description: OK
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

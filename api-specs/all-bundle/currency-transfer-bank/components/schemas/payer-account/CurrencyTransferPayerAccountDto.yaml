@@ -1,0 +1,9 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер счета списания
+  name:
+    type: string
+    description: Наименование счета списания
+description: Транспортное представление счета списания

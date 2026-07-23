@@ -1,0 +1,16 @@
+required:
+- data
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Состояние фоновых процессов пользователя
+      enum:
+      - BG_TASKS_COMPLETED
+      - BG_TASKS_NEED_ATTENTION
+      - UNKNOWN
+description: Запрос

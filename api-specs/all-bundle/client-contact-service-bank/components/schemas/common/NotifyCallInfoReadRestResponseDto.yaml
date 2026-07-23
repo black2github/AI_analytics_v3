@@ -1,0 +1,44 @@
+type: object
+description: Коммуникация по телефону с клиентом
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор коммуникации в сервисе НСК
+  callDateTime:
+    type: string
+    format: date-time
+    description: Дата и время звонка
+  documentStatus:
+    $ref: ./CommonMergedStatus.yaml
+    description: Статус заявки
+  callResult:
+    $ref: ./CallResult.yaml
+    description: Результат звонка
+  nextCallDateTime:
+    type: string
+    format: date-time
+    description: Дата и время следующего звонка
+  clientProblemReason:
+    $ref: ./ClientProblemReason.yaml
+    description: Причина затруднений клиента
+  operatorComment:
+    type: string
+    description: Комментарий
+  sourceSystem:
+    $ref: ./SourceSystem.yaml
+    description: Система-источник коммуникации
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя в экосистеме (идентификатор UAA)
+  managerFio:
+    type: string
+    description: Менеджер ФИО
+  managerLogin:
+    type: string
+    description: Менеджер Логин
+required:
+- callDateTime
+- documentStatus
+- id

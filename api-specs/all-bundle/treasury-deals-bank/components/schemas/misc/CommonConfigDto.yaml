@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    type: string
+  description:
+    type: string
+  valueType:
+    type: string
+    enum:
+    - STRING
+    - INTEGER
+    - FLOAT
+    - CURRENCY
+    - DATE
+    - DATETIME
+    - TIME
+  value:
+    type: string
+  isPublic:
+    type: boolean
+description: Данные

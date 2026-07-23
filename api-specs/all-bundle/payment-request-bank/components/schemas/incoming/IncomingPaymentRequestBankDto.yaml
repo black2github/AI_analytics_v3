@@ -1,0 +1,33 @@
+required:
+- additionalInfo
+- documentBusinessInfo
+- id
+- payerInfo
+- receiverInfo
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  status:
+    $ref: ./IncomingPaymentRequestStatusDto.yaml
+  commentForBank:
+    maxLength: 255
+    type: string
+    description: Комментарий для банка
+    nullable: true
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoDto.yaml
+  additionalInfo:
+    $ref: ./AdditionalInfoClientDto.yaml
+  documentSignatureDto:
+    $ref: ../common/DocumentSignatureDto.yaml
+description: Платежное требование (входящее) данные для банка

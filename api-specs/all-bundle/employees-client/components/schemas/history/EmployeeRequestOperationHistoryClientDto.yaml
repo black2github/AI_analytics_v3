@@ -1,0 +1,16 @@
+required:
+- date
+- fio
+type: object
+properties:
+  date:
+    type: string
+    description: Дата операции
+    format: date-time
+  fio:
+    type: string
+    description: ФИО
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+description: Операция над заявкой

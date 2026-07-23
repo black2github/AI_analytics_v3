@@ -1,0 +1,13 @@
+type: object
+description: Ответ, содержащий файл и информацию о нем
+properties:
+  content:
+    type: string
+    format: byte
+    description: Данные файла
+  fileName:
+    type: string
+    description: Наименование файла
+  mimeType:
+    type: string
+    description: Тип файла

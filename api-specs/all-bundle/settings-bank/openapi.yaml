@@ -1,0 +1,333 @@
+openapi: 3.0.1
+info:
+  title: Сервис настроек. Банковская часть.
+  version: 2.28.0
+servers:
+- url: /settings-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: АПИ Клиента для управления пользовательскими настройками
+- name: АПИ Банка для работы со справочниками сервисов дисклеймеров
+- name: АПИ Банка для управления дисклеймерами
+- name: API интеграции с DLP
+- name: АПИ получения переменных окружения для пользователя банка
+- name: АПИ Банка для работы с историей настроек
+- name: АПИ для выполнения CRUD операций с OpenApi спецификациями
+- name: АПИ публичного пользователя для работы с системными настройками
+- name: АПИ получения переменных окружения для пользователя клиента
+- name: АПИ Банка для работы с Consul
+- name: АПИ Банка для управления настройками
+- name: АПИ для работы с настройками пользователей
+- name: АПИ Банка для работы с системными настройками
+- name: АПИ для выполнения CRUD операций с фичами
+- name: АПИ Банка для управления пользовательскими настройками
+- name: АПИ Банка для работы с шаблонами дисклеймера
+- name: АПИ для выполнения операций с OpenApi спецификациями через ansible-скрипты
+paths:
+  /user-settings/{id}:
+    $ref: ./paths/{id}/user_settings_id.yaml
+  /settings/admin:
+    $ref: ./paths/admin/settings_admin.yaml
+  /setting-history/admin:
+    $ref: ./paths/admin/setting_history_admin.yaml
+  /setting-history/admin/edit-for-deleting:
+    $ref: ./paths/admin/setting_history_admin_edit_for_deleting.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /openapi/admin/{id}:
+    $ref: ./paths/admin/openapi_admin_id.yaml
+  /feature-toggling/admin/{id}:
+    $ref: ./paths/admin/feature_toggling_admin_id.yaml
+  /disclaimer/{id}:
+    $ref: ./paths/{id}/disclaimer_id.yaml
+  /consul/register:
+    $ref: ./paths/register/consul_register.yaml
+  /consul/deregister/{serviceId}:
+    $ref: ./paths/deregister/consul_deregister_serviceId.yaml
+  /user-settings:
+    $ref: ./paths/user-settings/user_settings.yaml
+  /user-settings/get-page:
+    $ref: ./paths/get-page/user_settings_get_page.yaml
+  /user-settings/create-or-update:
+    $ref: ./paths/create-or-update/user_settings_create_or_update.yaml
+  /settings/admin/get-user-settings:
+    $ref: ./paths/admin/settings_admin_get_user_settings.yaml
+  /settings/admin/get-system-settings:
+    $ref: ./paths/admin/settings_admin_get_system_settings.yaml
+  /settings/admin/get-page:
+    $ref: ./paths/admin/settings_admin_get_page.yaml
+  /setting-history/admin/get-page:
+    $ref: ./paths/admin/setting_history_admin_get_page.yaml
+  /openapi/admin:
+    $ref: ./paths/admin/openapi_admin.yaml
+  /openapi/admin/revert/{id}/revision/{revisionId}:
+    $ref: ./paths/admin/openapi_admin_revert_id_revision_revisionId.yaml
+  /openapi/admin/recover/{id}:
+    $ref: ./paths/admin/openapi_admin_recover_id.yaml
+  /openapi/admin/get-page:
+    $ref: ./paths/admin/openapi_admin_get_page.yaml
+  /openapi/admin/external/update:
+    $ref: ./paths/admin/openapi_admin_external_update.yaml
+  /openapi/admin/discover:
+    $ref: ./paths/admin/openapi_admin_discover.yaml
+  /openapi/admin/discover/{serviceId}:
+    $ref: ./paths/admin/openapi_admin_discover_serviceId.yaml
+  /feature-toggling/state/simple:
+    $ref: ./paths/state/feature_toggling_state_simple.yaml
+  /feature-toggling/state/complex:
+    $ref: ./paths/state/feature_toggling_state_complex.yaml
+  /feature-toggling/admin:
+    $ref: ./paths/admin/feature_toggling_admin.yaml
+  /feature-toggling/admin/get-page:
+    $ref: ./paths/admin/feature_toggling_admin_get_page.yaml
+  /dlp-integration/check/message:
+    $ref: ./paths/check/dlp_integration_check_message.yaml
+  /dlp-integration/check/attachment-file:
+    $ref: ./paths/check/dlp_integration_check_attachment_file.yaml
+  /disclaimer:
+    $ref: ./paths/disclaimer/disclaimer.yaml
+  /disclaimer/get-page:
+    $ref: ./paths/get-page/disclaimer_get_page.yaml
+  /bank/user-settings/create-or-update:
+    $ref: ./paths/user-settings/bank_user_settings_create_or_update.yaml
+  /user-settings/all:
+    $ref: ./paths/all/user_settings_all.yaml
+  /settings/user:
+    $ref: ./paths/user/settings_user.yaml
+  /settings/user/{code}:
+    $ref: ./paths/user/settings_user_code.yaml
+  /settings/system:
+    $ref: ./paths/system/settings_system.yaml
+  /settings/system/{code}:
+    $ref: ./paths/system/settings_system_code.yaml
+  /settings/public/system:
+    $ref: ./paths/public/settings_public_system.yaml
+  /settings/public/system/{code}:
+    $ref: ./paths/public/settings_public_system_code.yaml
+  /settings/client-user/env/{user-id}:
+    $ref: ./paths/client-user/settings_client_user_env_user_id.yaml
+  /settings/client-user/env/available:
+    $ref: ./paths/client-user/settings_client_user_env_available.yaml
+  /settings/bank-user/env/{user-id}:
+    $ref: ./paths/bank-user/settings_bank_user_env_user_id.yaml
+  /settings/bank-user/env/available:
+    $ref: ./paths/bank-user/settings_bank_user_env_available.yaml
+  /settings/admin/{id}:
+    $ref: ./paths/admin/settings_admin_id.yaml
+  /settings/admin/get-all-settings:
+    $ref: ./paths/admin/settings_admin_get_all_settings.yaml
+  /setting-history/admin/{id}:
+    $ref: ./paths/admin/setting_history_admin_id.yaml
+  /openapi/admin/download/{id}:
+    $ref: ./paths/admin/openapi_admin_download_id.yaml
+  /feature-toggling/admin/config:
+    $ref: ./paths/admin/feature_toggling_admin_config.yaml
+  /disclaimer/template/all:
+    $ref: ./paths/template/disclaimer_template_all.yaml
+  /disclaimer/service/dictionary/all:
+    $ref: ./paths/service/disclaimer_service_dictionary_all.yaml
+  /disclaimer/category:
+    $ref: ./paths/category/disclaimer_category.yaml
+  /consul:
+    $ref: ./paths/consul/consul.yaml
+  /bank/user-settings/find/{type}/{page}:
+    $ref: ./paths/user-settings/bank_user_settings_find_type_page.yaml
+  /bank/user-settings/all:
+    $ref: ./paths/user-settings/bank_user_settings_all.yaml
+  /ansible/openapi/discover:
+    $ref: ./paths/openapi/ansible_openapi_discover.yaml
+  /ansible/openapi/discover/{serviceId}:
+    $ref: ./paths/openapi/ansible_openapi_discover_serviceId.yaml
+components:
+  schemas:
+    UserSettingsDto:
+      $ref: ./components/schemas/common/UserSettingsDto.yaml
+    GenericResponseSimpleErrorDataUserSettingsDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SettingAdminDto:
+      $ref: ./components/schemas/admin/SettingAdminDto.yaml
+    UpdateCommandSettingAdminDtoUUID:
+      $ref: ./components/schemas/admin/UpdateCommandSettingAdminDtoUUID.yaml
+    GenericResponseListOfSimpleErrorsSettingAdminDto:
+      $ref: ./components/schemas/admin/GenericResponseListOfSimpleErrorsSettingAdminDto.yaml
+    ListOfSimpleErrors:
+      $ref: ./components/schemas/admin/ListOfSimpleErrors.yaml
+    UpdateCommandОбновление Истории НастройкиUUID:
+      $ref: ./components/schemas/admin/UpdateCommandОбновление Истории НастройкиUUID.yaml
+    Обновление истории настройки:
+      $ref: ./components/schemas/admin/Обновление истории настройки.yaml
+    GenericResponseSimpleErrorDataИстория Настройки:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataИстория Настройки.yaml
+    История настройки:
+      $ref: ./components/schemas/admin/История настройки.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    OpenApiSpecDto:
+      $ref: ./components/schemas/admin/OpenApiSpecDto.yaml
+    OpenApiSpecRevisionDto:
+      $ref: ./components/schemas/admin/OpenApiSpecRevisionDto.yaml
+    GenericResponseSimpleErrorDataOpenApiSpecDto:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml
+    FeatureDto:
+      $ref: ./components/schemas/admin/FeatureDto.yaml
+    GenericResponseSimpleErrorDataFeatureDto:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataFeatureDto.yaml
+    DisclaimerRequestDto:
+      $ref: ./components/schemas/common/DisclaimerRequestDto.yaml
+    GenericCommandDisclaimerRequestDto:
+      $ref: ./components/schemas/common/GenericCommandDisclaimerRequestDto.yaml
+    DisclaimerDto:
+      $ref: ./components/schemas/common/DisclaimerDto.yaml
+    DisclaimerDynamicFieldDto:
+      $ref: ./components/schemas/common/DisclaimerDynamicFieldDto.yaml
+    DisclaimerTemplateDto:
+      $ref: ./components/schemas/common/DisclaimerTemplateDto.yaml
+    GenericResponseSimpleErrorDataDisclaimerDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDisclaimerDto.yaml
+    ConsulRegisterServiceDto:
+      $ref: ./components/schemas/register/ConsulRegisterServiceDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandUserSettingsFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandUserSettingsFilter.yaml
+    PageParamsUserSettingsFilter:
+      $ref: ./components/schemas/get-page/PageParamsUserSettingsFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UserSettingsFilter:
+      $ref: ./components/schemas/get-page/UserSettingsFilter.yaml
+    PageDataUserSettingsDto:
+      $ref: ./components/schemas/get-page/PageDataUserSettingsDto.yaml
+    GetUserSettingsRequest:
+      $ref: ./components/schemas/admin/GetUserSettingsRequest.yaml
+    GetSystemSettingsRequest:
+      $ref: ./components/schemas/admin/GetSystemSettingsRequest.yaml
+    FilterValueEnumDtoSettingTypeDto:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoSettingTypeDto.yaml
+    GetPageCommandSettingFilter:
+      $ref: ./components/schemas/admin/GetPageCommandSettingFilter.yaml
+    PageParamsSettingFilter:
+      $ref: ./components/schemas/admin/PageParamsSettingFilter.yaml
+    SettingFilter:
+      $ref: ./components/schemas/admin/SettingFilter.yaml
+    PageDataSettingAdminDto:
+      $ref: ./components/schemas/admin/PageDataSettingAdminDto.yaml
+    GetPageCommandSettingHistoryFilter:
+      $ref: ./components/schemas/admin/GetPageCommandSettingHistoryFilter.yaml
+    PageParamsSettingHistoryFilter:
+      $ref: ./components/schemas/admin/PageParamsSettingHistoryFilter.yaml
+    SettingHistoryFilter:
+      $ref: ./components/schemas/admin/SettingHistoryFilter.yaml
+    PageDataSettingHistoryScrollerDto:
+      $ref: ./components/schemas/admin/PageDataSettingHistoryScrollerDto.yaml
+    SettingHistoryScrollerDto:
+      $ref: ./components/schemas/admin/SettingHistoryScrollerDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueEnumDtoOpenApiSpecCategoryDto:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoOpenApiSpecCategoryDto.yaml
+    GetPageCommandOpenApiSpecFilter:
+      $ref: ./components/schemas/admin/GetPageCommandOpenApiSpecFilter.yaml
+    OpenApiSpecFilter:
+      $ref: ./components/schemas/admin/OpenApiSpecFilter.yaml
+    PageParamsOpenApiSpecFilter:
+      $ref: ./components/schemas/admin/PageParamsOpenApiSpecFilter.yaml
+    OpenApiSpecScrollerDto:
+      $ref: ./components/schemas/admin/OpenApiSpecScrollerDto.yaml
+    PageDataOpenApiSpecScrollerDto:
+      $ref: ./components/schemas/admin/PageDataOpenApiSpecScrollerDto.yaml
+    DiscoverError:
+      $ref: ./components/schemas/admin/DiscoverError.yaml
+    DiscoverResponse:
+      $ref: ./components/schemas/admin/DiscoverResponse.yaml
+    GenericResponseSimpleErrorDataDiscoverResponse:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataDiscoverResponse.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataString.yaml
+    GetSimpleFeatureStateRequest:
+      $ref: ./components/schemas/state/GetSimpleFeatureStateRequest.yaml
+    GenericResponseSimpleErrorDataGetFeatureStateResponse:
+      $ref: ./components/schemas/state/GenericResponseSimpleErrorDataGetFeatureStateResponse.yaml
+    GetFeatureStateResponse:
+      $ref: ./components/schemas/state/GetFeatureStateResponse.yaml
+    GetComplexFeatureStateRequest:
+      $ref: ./components/schemas/state/GetComplexFeatureStateRequest.yaml
+    FeatureFilter:
+      $ref: ./components/schemas/admin/FeatureFilter.yaml
+    FilterValueEnumDtoFeatureTypeDto:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoFeatureTypeDto.yaml
+    GetPageCommandFeatureFilter:
+      $ref: ./components/schemas/admin/GetPageCommandFeatureFilter.yaml
+    PageParamsFeatureFilter:
+      $ref: ./components/schemas/admin/PageParamsFeatureFilter.yaml
+    FeatureScrollerDto:
+      $ref: ./components/schemas/admin/FeatureScrollerDto.yaml
+    PageDataFeatureScrollerDto:
+      $ref: ./components/schemas/admin/PageDataFeatureScrollerDto.yaml
+    DlpMessageRequestDto:
+      $ref: ./components/schemas/check/DlpMessageRequestDto.yaml
+    DlpAttachmentFileRequestDto:
+      $ref: ./components/schemas/check/DlpAttachmentFileRequestDto.yaml
+    DisclaimerFilter:
+      $ref: ./components/schemas/get-page/DisclaimerFilter.yaml
+    DisclaimerTypeFilter:
+      $ref: ./components/schemas/get-page/DisclaimerTypeFilter.yaml
+    FilterValueDtoDisclaimerCategoryDto:
+      $ref: ./components/schemas/get-page/FilterValueDtoDisclaimerCategoryDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/get-page/FilterValueDtoInstant.yaml
+    GetPageCommandDisclaimerFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandDisclaimerFilter.yaml
+    PageParamsDisclaimerFilter:
+      $ref: ./components/schemas/get-page/PageParamsDisclaimerFilter.yaml
+    PageDataDisclaimerDto:
+      $ref: ./components/schemas/get-page/PageDataDisclaimerDto.yaml
+    GenericResponseSimpleErrorDataListUserSettingsDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListUserSettingsDto.yaml
+    SettingDto:
+      $ref: ./components/schemas/common/SettingDto.yaml
+    SingleResponseSettingDto:
+      $ref: ./components/schemas/common/SingleResponseSettingDto.yaml
+    ClientUserEnvironmentDto:
+      $ref: ./components/schemas/client-user/ClientUserEnvironmentDto.yaml
+    SingleResponseClientUserEnvironmentDto:
+      $ref: ./components/schemas/client-user/SingleResponseClientUserEnvironmentDto.yaml
+    ListResponseUserEnvironmentDto:
+      $ref: ./components/schemas/common/ListResponseUserEnvironmentDto.yaml
+    UserEnvironmentDto:
+      $ref: ./components/schemas/common/UserEnvironmentDto.yaml
+    BankUserEnvironmentDto:
+      $ref: ./components/schemas/bank-user/BankUserEnvironmentDto.yaml
+    SingleResponseBankUserEnvironmentDto:
+      $ref: ./components/schemas/bank-user/SingleResponseBankUserEnvironmentDto.yaml
+    GenericResponseSimpleErrorDataSettingAdminDto:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataSettingAdminDto.yaml
+    FeatureScrollerConfigDto:
+      $ref: ./components/schemas/admin/FeatureScrollerConfigDto.yaml
+    GenericResponseSimpleErrorDataFeatureScrollerConfigDto:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataFeatureScrollerConfigDto.yaml
+    DisclaimerServiceDictionaryDto:
+      $ref: ./components/schemas/service/DisclaimerServiceDictionaryDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    ConsulDto:
+      $ref: ./components/schemas/consul/ConsulDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

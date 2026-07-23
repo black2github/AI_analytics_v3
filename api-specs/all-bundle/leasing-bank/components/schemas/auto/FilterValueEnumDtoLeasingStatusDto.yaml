@@ -1,0 +1,64 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_LEASING
+    - EXPORT_REQUEST_TO_LEASING_ERROR
+    - EXECUTED_BY_LEASING
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_LEASING
+    - EXPORT_REQUEST_TO_LEASING_ERROR
+    - EXECUTED_BY_LEASING
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - EXPORT_REQUEST_TO_LEASING
+      - EXPORT_REQUEST_TO_LEASING_ERROR
+      - EXECUTED_BY_LEASING
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - EXPORT_REQUEST_TO_LEASING
+      - EXPORT_REQUEST_TO_LEASING_ERROR
+      - EXECUTED_BY_LEASING
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean

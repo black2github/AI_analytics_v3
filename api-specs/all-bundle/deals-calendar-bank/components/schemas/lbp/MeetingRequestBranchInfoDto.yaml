@@ -1,0 +1,31 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  absCode:
+    type: string
+    description: Код подразделения в АБС
+  name:
+    type: string
+    description: Наименование подразделения
+  number:
+    type: string
+    description: Номер подразделения
+  address:
+    type: string
+    description: Адрес подразделения
+  metroStation:
+    type: string
+    description: Ближайшая станция метро
+  metroLine:
+    type: string
+    description: Ветка ближайшего метро
+  metroLineColor:
+    type: string
+    description: Цвет ветки
+  metroDistance:
+    type: string
+    description: Дистанция до станции метро
+description: Информация о подразделении по заявке на встречу

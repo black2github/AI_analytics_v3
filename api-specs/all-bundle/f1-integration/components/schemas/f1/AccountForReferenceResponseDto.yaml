@@ -1,0 +1,24 @@
+type: object
+properties:
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int64
+  error:
+    type: string
+    description: Описание ошибки
+  clientEskGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  accounts:
+    type: array
+    description: Список счетов
+    items:
+      $ref: ./AccountForReferenceAccountDto.yaml
+  commissionAccounts:
+    type: array
+    description: Список счетов для списания комиссии
+    items:
+      $ref: ./AccountForReferenceCommissionDto.yaml
+description: Ответ на запрос получения списка счетов для запроса справок

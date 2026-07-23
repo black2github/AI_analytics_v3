@@ -1,0 +1,18 @@
+post:
+  tags:
+  - debt-request-history-scroller-bank-controller
+  description: 'Привилегии: hasAuthority(''DEBT.VIEW_REQUEST_HISTORY'')'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/history/GetPageCommandDebtRequestHistoryBankFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/history/PageDataDebtRequestHistoryDto.yaml

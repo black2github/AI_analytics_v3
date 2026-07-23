@@ -1,0 +1,34 @@
+{
+  "_comment": "Auto domain map for sbp-client (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/sbp/transaction",
+      "domain": "transaction"
+    },
+    {
+      "prefix": "/sbp/request-tsp",
+      "domain": "request-tsp"
+    },
+    {
+      "prefix": "/sbp/qrc",
+      "domain": "qrc"
+    },
+    {
+      "prefix": "/sbp/disconnect-agents",
+      "domain": "disconnect-agents"
+    },
+    {
+      "prefix": "/sbp/contract",
+      "domain": "contract"
+    },
+    {
+      "prefix": "/sbp/subscription",
+      "domain": "subscription"
+    },
+    {
+      "prefix": "/sbp",
+      "domain": "misc"
+    }
+  ]
+}

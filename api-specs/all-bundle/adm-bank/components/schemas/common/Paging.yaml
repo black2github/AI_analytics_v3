@@ -1,0 +1,13 @@
+type: object
+properties:
+  limit:
+    minimum: 1
+    type: integer
+    description: Количество записей
+    format: int32
+  offset:
+    minimum: 0
+    type: integer
+    description: Смещение
+    format: int32
+description: Пагинация

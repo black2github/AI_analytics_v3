@@ -1,0 +1,61 @@
+type: object
+description: Фильтр по статусу Qr-кода
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус QR-кода
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  notEq:
+    type: string
+    description: Статус QR-кода
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус QR-кода
+      enum:
+      - NONE
+      - NOT_STARTED
+      - RECEIVED
+      - IN_PROGRESS
+      - EXPIRED
+      - BLOCKED
+      - ACCEPTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус QR-кода
+      enum:
+      - NONE
+      - NOT_STARTED
+      - RECEIVED
+      - IN_PROGRESS
+      - EXPIRED
+      - BLOCKED
+      - ACCEPTED
+      - REJECTED
+  isNull:
+    type: boolean

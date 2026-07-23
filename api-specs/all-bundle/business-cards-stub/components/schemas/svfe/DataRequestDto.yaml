@@ -1,0 +1,13 @@
+type: object
+properties:
+  guid:
+    type: string
+  orderId:
+    type: string
+  acceptedTime:
+    type: integer
+    format: int64
+  scenario:
+    $ref: ./ScenarioRequestDto.yaml
+  svfe:
+    $ref: ./SvfeRequestDto.yaml

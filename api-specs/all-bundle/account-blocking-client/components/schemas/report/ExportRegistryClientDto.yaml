@@ -1,0 +1,32 @@
+required:
+- columns
+- multiSort
+type: object
+properties:
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/AccountBlockingRequestClientScrollerFilter.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Колонки скроллера блокировок
+      enum:
+      - COMPANY_NAME
+      - CURRENCY
+      - DOC_SUM
+      - ORG_NAME
+      - INCOMING_DATE
+      - BLOCK_NUMBER
+      - BLOCK_DOC_TYPE
+      - BLOCK_REASON
+      - ACCOUNT_NUMBER
+      - ORG_TYPE
+      - DOC_DATE
+      - BLOCK_SUM
+description: Запрос экспорта блокировок по счетам организации

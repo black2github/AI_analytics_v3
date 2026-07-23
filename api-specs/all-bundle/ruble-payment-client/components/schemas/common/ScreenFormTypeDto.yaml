@@ -1,0 +1,6 @@
+type: string
+description: Тип ЭФ
+enum:
+- SIMPLIFIED_TAX
+- SIMPLIFIED_CUSTOMS
+- SIMPLIFIED_BROKERAGE

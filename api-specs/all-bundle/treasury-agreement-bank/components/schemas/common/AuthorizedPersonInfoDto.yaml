@@ -1,0 +1,24 @@
+type: object
+properties:
+  surname:
+    type: string
+    description: Фамилия УЛ
+  forename:
+    type: string
+    description: Имя УЛ
+  patronymic:
+    type: string
+    description: Отчество УЛ
+  mobile:
+    type: string
+    description: Номер телефона УЛ
+  email:
+    type: string
+    description: Адрес электронной почты УЛ
+  position:
+    type: string
+    description: Должность
+  eskId:
+    type: string
+    description: Идентификатор Уполномоченного лица в ЕСК
+description: Реквизиты уполномоченного лица, на которого подается заявка

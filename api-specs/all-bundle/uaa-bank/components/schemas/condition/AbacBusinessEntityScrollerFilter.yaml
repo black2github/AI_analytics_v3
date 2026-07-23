@@ -1,0 +1,20 @@
+type: object
+properties:
+  roleCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  segmentCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  businessEntity:
+    $ref: ../common/FilterValueDtoString.yaml
+  consumer:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    enum:
+    - BANK_ROLE
+    - CLIENT_ROLE
+    - BANK_USER
+    - CLIENT_USER
+description: Фильтр

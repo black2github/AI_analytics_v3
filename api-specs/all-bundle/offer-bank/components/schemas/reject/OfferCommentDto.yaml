@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Оферта"
+    format: uuid
+  comment:
+    type: string
+    description: Текст комментария
+description: Комментарий по оферте

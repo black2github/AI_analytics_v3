@@ -1,0 +1,9 @@
+type: object
+properties:
+  fiasSettlementCode:
+    type: string
+    description: ФИАС код населенного пункта
+  settlement:
+    type: string
+    description: Населенный пункт
+description: Населенный пункт

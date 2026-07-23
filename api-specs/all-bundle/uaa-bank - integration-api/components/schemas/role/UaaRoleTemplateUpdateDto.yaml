@@ -1,0 +1,37 @@
+required:
+- initiatorId
+- name
+- roleIds
+type: object
+properties:
+  name:
+    maxLength: 255
+    minLength: 0
+    pattern: .*\S.*
+    type: string
+    description: Наименование
+  description:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Описание
+  commentary:
+    maxLength: 500
+    minLength: 0
+    type: string
+    description: Комментарий
+  roleIds:
+    maxItems: 2147483647
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Список доступов для включения в шаблон
+    items:
+      type: string
+      description: Список доступов для включения в шаблон
+      format: uuid
+  initiatorId:
+    type: string
+    description: Id инициатора операции
+    format: uuid
+description: DTO обновления шаблона роли

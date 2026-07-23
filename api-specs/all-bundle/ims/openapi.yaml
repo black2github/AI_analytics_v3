@@ -1,0 +1,73 @@
+openapi: 3.0.1
+info:
+  title: Сервис СУВ.
+  version: 3.8.0
+servers:
+- url: /ims
+security:
+- bearerAuth: []
+paths:
+  /ims-journal/repeat/{id}:
+    $ref: ./paths/repeat/ims_journal_repeat_id.yaml
+  /ims-journal/repeat/message-id/{id}:
+    $ref: ./paths/repeat/ims_journal_repeat_message_id_id.yaml
+  /ims-journal/get-page:
+    $ref: ./paths/get-page/ims_journal_get_page.yaml
+  /ims-journal/{id}:
+    $ref: ./paths/{id}/ims_journal_id.yaml
+  /ims-journal/unique-object-types:
+    $ref: ./paths/unique-object-types/ims_journal_unique_object_types.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/repeat/GenericResponseErrorDataString.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/get-page/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/get-page/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/get-page/FilterValueDtoLocalDate.yaml
+    FilterValueDtoMessageSubtypeDto:
+      $ref: ./components/schemas/get-page/FilterValueDtoMessageSubtypeDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/get-page/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/get-page/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoDocumentTypeDto:
+      $ref: ./components/schemas/get-page/FilterValueEnumDtoDocumentTypeDto.yaml
+    GetPageCommandImsJournalFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandImsJournalFilter.yaml
+    ImsJournalFilter:
+      $ref: ./components/schemas/get-page/ImsJournalFilter.yaml
+    PageParamsImsJournalFilter:
+      $ref: ./components/schemas/get-page/PageParamsImsJournalFilter.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    GenericResponseErrorDataPageDataЗапись Журанала Сообщений СУВ (для Отображения Списочной Формы).:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataЗапись Журанала Сообщений СУВ (для Отображения Списочной Формы)..yaml
+    PageDataЗапись Журанала Сообщений СУВ (для Отображения Списочной Формы).:
+      $ref: ./components/schemas/get-page/PageDataЗапись Журанала Сообщений СУВ (для Отображения Списочной Формы)..yaml
+    Запись журанала сообщений СУВ (для отображения списочной формы).:
+      $ref: ./components/schemas/get-page/Запись журанала сообщений СУВ (для отображения списочной формы)..yaml
+    ImsJournalDto:
+      $ref: ./components/schemas/{id}/ImsJournalDto.yaml
+    SingleResponseImsJournalDto:
+      $ref: ./components/schemas/{id}/SingleResponseImsJournalDto.yaml
+    ListResponseString:
+      $ref: ./components/schemas/unique-object-types/ListResponseString.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,133 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+  notEq:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BANK_NEW
+      - BANK_SIGNED
+      - BANK_DELIVERED
+      - BANK_DETAILS_VALID
+      - BANK_SIGN_VALID
+      - BANK_RECEIVED
+      - BANK_WAIT_DETACH
+      - BANK_DETACH_EXECUTED
+      - BANK_DETACH_ERROR
+      - BANK_PROCESSED
+      - BANK_REJECTED
+      - BANK_DELETED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BANK_NEW
+      - BANK_SIGNED
+      - BANK_DELIVERED
+      - BANK_DETAILS_VALID
+      - BANK_SIGN_VALID
+      - BANK_RECEIVED
+      - BANK_WAIT_DETACH
+      - BANK_DETACH_EXECUTED
+      - BANK_DETACH_ERROR
+      - BANK_PROCESSED
+      - BANK_REJECTED
+      - BANK_DELETED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+  ge:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+  lt:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+  le:
+    type: string
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+description: Статуса заявки

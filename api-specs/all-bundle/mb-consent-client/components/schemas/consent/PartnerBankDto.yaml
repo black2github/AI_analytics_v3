@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: ClientId банка партнёра
+    format: uuid
+  url:
+    type: string
+    description: URL сервера авторизации банка партнёра
+description: DTO Банка партнера

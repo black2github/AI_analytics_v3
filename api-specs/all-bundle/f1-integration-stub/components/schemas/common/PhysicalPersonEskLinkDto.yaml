@@ -1,0 +1,41 @@
+type: object
+required:
+- personId
+- eskId
+description: Представление со связью АБС ИД и ЕСК ИД физ.лица
+properties:
+  id:
+    type: integer
+    description: Первичный ключ
+  personId:
+    type: integer
+    format: int64
+    description: Идентификатор физ.лица в Ф1 (АБС ИД)
+  eskId:
+    type: string
+    maxLength: 255
+    description: Идентификатор физического лица в ЕСК (ЕСК ИД)
+  name:
+    type: string
+    maxLength: 255
+    description: ФИО
+  guid:
+    type: string
+    maxLength: 255
+    description: Нет описания
+  orgId:
+    type: integer
+    format: int64
+    description: Идентификатор организации
+  orgRegNum:
+    type: integer
+    format: int64
+    description: Регистрационный номер организации
+  orgGuid:
+    type: string
+    maxLength: 255
+    description: Нет описания
+  orgName:
+    type: string
+    maxLength: 255
+    description: Наименование организации

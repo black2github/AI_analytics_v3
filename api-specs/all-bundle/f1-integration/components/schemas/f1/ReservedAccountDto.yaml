@@ -1,0 +1,14 @@
+type: object
+properties:
+  accountType:
+    type: string
+    description: Тип счета
+    enum:
+    - GOZ
+    - PAYMENT
+    - ANY_ANOTHER
+  branch:
+    type: string
+  account:
+    type: string
+description: Счет

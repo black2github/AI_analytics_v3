@@ -1,0 +1,67 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Внутренний идентификатор согласия
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания согласия
+    format: date-time
+  ownerBank:
+    type: string
+    description: Банк-владелец согласия
+    enum:
+    - GPB
+    - VTB
+    - SBR
+  organization:
+    $ref: ../common/BankClientInfoDto.yaml
+  accounts:
+    type: array
+    description: Счета в согласии
+    items:
+      $ref: ./ConsentAccountScrollerDto.yaml
+  agreementDate:
+    type: string
+    description: Срок действия согласия
+    format: date-time
+  availableActions:
+    type: array
+    description: Доступные операции
+    items:
+      type: string
+      description: Доступные операции
+      enum:
+      - BASE
+      - TRANSACTIONS
+  userFio:
+    type: string
+    description: ФИО пользователя
+  userUaaId:
+    type: string
+    description: UAA id пользователя
+    format: uuid
+  tokenId:
+    type: string
+    description: Идентификатор токена
+  tokenExpiresAt:
+    type: string
+    description: Срок действия токена
+    format: date-time
+  status:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  initBank:
+    type: string
+    description: Банк-инициатор согласия
+    enum:
+    - GPB
+    - VTB
+    - SBR
+description: Ответ на запрос банковского скроллера согласий

@@ -1,0 +1,48 @@
+required:
+- canCreateDocuments
+- canSignDocuments
+- documentType
+- fileFormat
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  canCreateDocuments:
+    type: boolean
+    description: Создать документы
+  canSignDocuments:
+    type: boolean
+    description: Подписать файл
+  fileFormat:
+    type: string
+    description: Формат файла
+    enum:
+    - UFEBS
+    - ONE_C
+    - SWIFT
+    - PAYDOCCUR
+    - PAYDOCRU
+    - ONE_C_PAYREQRUOUT
+    - DBF_PAYREQRUOUT
+    - ONE_C_PAY_COLLECTION_OUT
+    - GPB_TRANSIT_2023
+    - UNC_DOC_INF
+  documentType:
+    type: string
+    description: Тип документов
+    enum:
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_CONVERSION
+    - VRKO_TRANSIT
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+description: Данные

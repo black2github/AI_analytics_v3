@@ -1,0 +1,39 @@
+required:
+- commonName
+- country
+- email
+- inn
+- locality
+- ogrn
+- organization
+type: object
+properties:
+  commonName:
+    minLength: 1
+    type: string
+    description: Значение CN
+  email:
+    minLength: 1
+    type: string
+    description: Значение E
+  inn:
+    minLength: 1
+    type: string
+    description: Значение INN
+  ogrn:
+    minLength: 1
+    type: string
+    description: Значение OGRN/OGRNIP в зависимости от длины INN
+  organization:
+    minLength: 1
+    type: string
+    description: Значение O
+  country:
+    minLength: 1
+    type: string
+    description: Значение C
+  locality:
+    minLength: 1
+    type: string
+    description: Значение L
+description: Различительное имя устанавливаемое для профиля ДСС

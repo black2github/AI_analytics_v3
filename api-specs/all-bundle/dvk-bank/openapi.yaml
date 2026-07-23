@@ -1,0 +1,277 @@
+openapi: 3.0.1
+info:
+  title: Сервис документов валютного контроля. Банковская часть.
+  version: 3.6.0
+servers:
+- url: /dvk-bank
+security:
+- bearerAuth: []
+paths:
+  /integration/update-document-bank-answer/{id}:
+    $ref: ./paths/update-document-bank-answer/integration_update_document_bank_answer_id.yaml
+  /integration/get-documents:
+    $ref: ./paths/get-documents/integration_get_documents.yaml
+  /integration/get-document-by-src-doc-id-and-user:
+    $ref: ./paths/get-document-by-src-doc-id-and-user/integration_get_document_by_src_doc_id_and_user.yaml
+  /integration/get-doc-by-id-and-user:
+    $ref: ./paths/get-doc-by-id-and-user/integration_get_doc_by_id_and_user.yaml
+  /bank/linked-documents/get-linked-documents:
+    $ref: ./paths/linked-documents/bank_linked_documents_get_linked_documents.yaml
+  /bank/document/sign/generate-digest/batch:
+    $ref: ./paths/document/bank_document_sign_generate_digest_batch.yaml
+  /bank/document/sign/export:
+    $ref: ./paths/document/bank_document_sign_export.yaml
+  /bank/document/repeat-export-to-abs:
+    $ref: ./paths/document/bank_document_repeat_export_to_abs.yaml
+  /bank/document/reject:
+    $ref: ./paths/document/bank_document_reject.yaml
+  /bank/document/get-page:
+    $ref: ./paths/document/bank_document_get_page.yaml
+  /bank/document/export-task:
+    $ref: ./paths/document/bank_document_export_task.yaml
+  /bank/document/change-status:
+    $ref: ./paths/document/bank_document_change_status.yaml
+  /bank/document/category:
+    $ref: ./paths/document/bank_document_category.yaml
+  /bank/document/bank-client/get-page:
+    $ref: ./paths/document/bank_document_bank_client_get_page.yaml
+  /integration/get-document-by-src-doc-id/{id}:
+    $ref: ./paths/get-document-by-src-doc-id/integration_get_document_by_src_doc_id_id.yaml
+  /integration/get-document-by-id/{id}:
+    $ref: ./paths/get-document-by-id/integration_get_document_by_id_id.yaml
+  /integration/check-document-by-id/{id}:
+    $ref: ./paths/check-document-by-id/integration_check_document_by_id_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /bank/document/{id}:
+    $ref: ./paths/document/bank_document_id.yaml
+  /bank/document/history/{id}:
+    $ref: ./paths/document/bank_document_history_id.yaml
+  /bank/document/generate-download-zip-token/{id}:
+    $ref: ./paths/document/bank_document_generate_download_zip_token_id.yaml
+  /bank/document/generate-download-token/{id}:
+    $ref: ./paths/document/bank_document_generate_download_token_id.yaml
+  /bank/document/export-task/{taskId}:
+    $ref: ./paths/document/bank_document_export_task_taskId.yaml
+  /bank/document/export-task/{taskId}/attachment:
+    $ref: ./paths/document/bank_document_export_task_taskId_attachment.yaml
+components:
+  schemas:
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    DvkStatusExportRqDto:
+      $ref: ./components/schemas/get-documents/DvkStatusExportRqDto.yaml
+    GetPageCommandDvkStatusExportRqDto:
+      $ref: ./components/schemas/get-documents/GetPageCommandDvkStatusExportRqDto.yaml
+    PageParamsDvkStatusExportRqDto:
+      $ref: ./components/schemas/get-documents/PageParamsDvkStatusExportRqDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    DvkStatusExportDto:
+      $ref: ./components/schemas/get-documents/DvkStatusExportDto.yaml
+    GenericResponseSimpleErrorDataSliceDataDvkStatusExportDto:
+      $ref: ./components/schemas/get-documents/GenericResponseSimpleErrorDataSliceDataDvkStatusExportDto.yaml
+    SliceDataDvkStatusExportDto:
+      $ref: ./components/schemas/get-documents/SliceDataDvkStatusExportDto.yaml
+    DocumentLinkedDocRequest:
+      $ref: ./components/schemas/common/DocumentLinkedDocRequest.yaml
+    GenericCommandDocumentLinkedDocRequest:
+      $ref: ./components/schemas/common/GenericCommandDocumentLinkedDocRequest.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    DocumentInfoDto:
+      $ref: ./components/schemas/common/DocumentInfoDto.yaml
+    DvkDocumentDto:
+      $ref: ./components/schemas/common/DvkDocumentDto.yaml
+    GenericResponseSimpleErrorDataDvkDocumentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDvkDocumentDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandLinkedDocsScrollerFilter:
+      $ref: ./components/schemas/linked-documents/GetPageCommandLinkedDocsScrollerFilter.yaml
+    LinkedDocsScrollerFilter:
+      $ref: ./components/schemas/linked-documents/LinkedDocsScrollerFilter.yaml
+    PageParamsLinkedDocsScrollerFilter:
+      $ref: ./components/schemas/linked-documents/PageParamsLinkedDocsScrollerFilter.yaml
+    DocumentError:
+      $ref: ./components/schemas/common/DocumentError.yaml
+    GenericResponseDocumentErrorPageDataDvkDocumentDto:
+      $ref: ./components/schemas/linked-documents/GenericResponseDocumentErrorPageDataDvkDocumentDto.yaml
+    PageDataDvkDocumentDto:
+      $ref: ./components/schemas/linked-documents/PageDataDvkDocumentDto.yaml
+    DocumentDigestRequest:
+      $ref: ./components/schemas/document/DocumentDigestRequest.yaml
+    GenericCommandListDocumentDigestRequest:
+      $ref: ./components/schemas/document/GenericCommandListDocumentDigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/document/Digest.yaml
+    DocumentDigestResponse:
+      $ref: ./components/schemas/document/DocumentDigestResponse.yaml
+    GenericResponseDocumentErrorListDocumentDigestResponse:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorListDocumentDigestResponse.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/document/GenericCommandUUID.yaml
+    DocumentFileDataForDownloadDto:
+      $ref: ./components/schemas/document/DocumentFileDataForDownloadDto.yaml
+    GenericResponseDocumentErrorListDocumentFileDataForDownloadDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorListDocumentFileDataForDownloadDto.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/document/GenericCommandSetUUID.yaml
+    GenericResponseDocumentErrorBoolean:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorBoolean.yaml
+    DocumentBankChangeStatusRqDto:
+      $ref: ./components/schemas/document/DocumentBankChangeStatusRqDto.yaml
+    GenericCommandDocumentBankChangeStatusRqDto:
+      $ref: ./components/schemas/document/GenericCommandDocumentBankChangeStatusRqDto.yaml
+    DocumentBankFilter:
+      $ref: ./components/schemas/document/DocumentBankFilter.yaml
+    DocumentStatusFilter:
+      $ref: ./components/schemas/document/DocumentStatusFilter.yaml
+    DocumentTypeFilter:
+      $ref: ./components/schemas/document/DocumentTypeFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/document/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/document/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/document/FilterValueDtoString.yaml
+    GetPageCommandDocumentBankFilter:
+      $ref: ./components/schemas/document/GetPageCommandDocumentBankFilter.yaml
+    PageParamsDocumentBankFilter:
+      $ref: ./components/schemas/document/PageParamsDocumentBankFilter.yaml
+    AttachmentDto:
+      $ref: ./components/schemas/document/AttachmentDto.yaml
+    DocumentBankClientDto:
+      $ref: ./components/schemas/document/DocumentBankClientDto.yaml
+    DocumentBankScrollerDto:
+      $ref: ./components/schemas/document/DocumentBankScrollerDto.yaml
+    DocumentBankUserInfo:
+      $ref: ./components/schemas/document/DocumentBankUserInfo.yaml
+    DocumentCreationInfoBankDto:
+      $ref: ./components/schemas/document/DocumentCreationInfoBankDto.yaml
+    DocumentSignatureCertificateDto:
+      $ref: ./components/schemas/document/DocumentSignatureCertificateDto.yaml
+    DocumentSignatureRspDto:
+      $ref: ./components/schemas/document/DocumentSignatureRspDto.yaml
+    ExtendedInfoDto:
+      $ref: ./components/schemas/document/ExtendedInfoDto.yaml
+    GenericResponseDocumentErrorPageDataDocumentBankScrollerDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorPageDataDocumentBankScrollerDto.yaml
+    PageDataDocumentBankScrollerDto:
+      $ref: ./components/schemas/document/PageDataDocumentBankScrollerDto.yaml
+    ExportRegistryRequestDtoDocumentBankFilterDocumentScrollerBankColumnDto:
+      $ref: ./components/schemas/document/ExportRegistryRequestDtoDocumentBankFilterDocumentScrollerBankColumnDto.yaml
+    ExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/document/ExportRegistryTaskStubRspDto.yaml
+    GenericResponseDocumentErrorExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorExportRegistryTaskStubRspDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/document/CategoryCount.yaml
+    GenericResponseDocumentErrorListCategoryCount:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorListCategoryCount.yaml
+    DocumentBankInnerClientSearchFilterDto:
+      $ref: ./components/schemas/document/DocumentBankInnerClientSearchFilterDto.yaml
+    GetPageCommandDocumentBankInnerClientSearchFilterDto:
+      $ref: ./components/schemas/document/GetPageCommandDocumentBankInnerClientSearchFilterDto.yaml
+    PageParamsDocumentBankInnerClientSearchFilterDto:
+      $ref: ./components/schemas/document/PageParamsDocumentBankInnerClientSearchFilterDto.yaml
+    DocumentBankOrganizationInfo:
+      $ref: ./components/schemas/document/DocumentBankOrganizationInfo.yaml
+    GenericResponseDocumentErrorPageDataDocumentBankOrganizationInfo:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorPageDataDocumentBankOrganizationInfo.yaml
+    PageDataDocumentBankOrganizationInfo:
+      $ref: ./components/schemas/document/PageDataDocumentBankOrganizationInfo.yaml
+    AddressDto:
+      $ref: ./components/schemas/document/AddressDto.yaml
+    AuthorizedPersonDto:
+      $ref: ./components/schemas/document/AuthorizedPersonDto.yaml
+    BankInformationDto:
+      $ref: ./components/schemas/document/BankInformationDto.yaml
+    ClientDto:
+      $ref: ./components/schemas/document/ClientDto.yaml
+    CloseContractDto:
+      $ref: ./components/schemas/document/CloseContractDto.yaml
+    ContactInfoDto:
+      $ref: ./components/schemas/document/ContactInfoDto.yaml
+    ContractDto:
+      $ref: ./components/schemas/document/ContractDto.yaml
+    ContractorDto:
+      $ref: ./components/schemas/document/ContractorDto.yaml
+    CountryDto:
+      $ref: ./components/schemas/document/CountryDto.yaml
+    CreditContractCardDto:
+      $ref: ./components/schemas/document/CreditContractCardDto.yaml
+    CreditContractDto:
+      $ref: ./components/schemas/document/CreditContractDto.yaml
+    CurrencyDto:
+      $ref: ./components/schemas/document/CurrencyDto.yaml
+    DealPassportExtDto:
+      $ref: ./components/schemas/document/DealPassportExtDto.yaml
+    DebtDto:
+      $ref: ./components/schemas/document/DebtDto.yaml
+    DocumentCardDto:
+      $ref: ./components/schemas/document/DocumentCardDto.yaml
+    GenericResponseDocumentErrorDocumentCardDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorDocumentCardDto.yaml
+    InterestPaymentsDto:
+      $ref: ./components/schemas/document/InterestPaymentsDto.yaml
+    LoaningTermsCodeDto:
+      $ref: ./components/schemas/document/LoaningTermsCodeDto.yaml
+    NewOwnerDto:
+      $ref: ./components/schemas/document/NewOwnerDto.yaml
+    NonresidentDto:
+      $ref: ./components/schemas/document/NonresidentDto.yaml
+    NoteDto:
+      $ref: ./components/schemas/document/NoteDto.yaml
+    PaymentAmountDto:
+      $ref: ./components/schemas/document/PaymentAmountDto.yaml
+    PaymentScheduleDto:
+      $ref: ./components/schemas/document/PaymentScheduleDto.yaml
+    PaymentScheduleGroundsDto:
+      $ref: ./components/schemas/document/PaymentScheduleGroundsDto.yaml
+    PrevDealPassportDto:
+      $ref: ./components/schemas/document/PrevDealPassportDto.yaml
+    RegContractDto:
+      $ref: ./components/schemas/document/RegContractDto.yaml
+    ReissueDocumentDto:
+      $ref: ./components/schemas/document/ReissueDocumentDto.yaml
+    RenewContractDto:
+      $ref: ./components/schemas/document/RenewContractDto.yaml
+    RenewCreditContractCardDto:
+      $ref: ./components/schemas/document/RenewCreditContractCardDto.yaml
+    ShipmentInfoDto:
+      $ref: ./components/schemas/document/ShipmentInfoDto.yaml
+    ShipperInfoDto:
+      $ref: ./components/schemas/document/ShipperInfoDto.yaml
+    SustainingDocumentCodeDto:
+      $ref: ./components/schemas/document/SustainingDocumentCodeDto.yaml
+    SustainingDocumentDto:
+      $ref: ./components/schemas/document/SustainingDocumentDto.yaml
+    SustainingDocumentsCertificateDto:
+      $ref: ./components/schemas/document/SustainingDocumentsCertificateDto.yaml
+    TrancheDto:
+      $ref: ./components/schemas/document/TrancheDto.yaml
+    DocumentHistoryBankDto:
+      $ref: ./components/schemas/document/DocumentHistoryBankDto.yaml
+    DocumentOperationHistoryBankDto:
+      $ref: ./components/schemas/document/DocumentOperationHistoryBankDto.yaml
+    GenericResponseDocumentErrorListDocumentHistoryBankDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorListDocumentHistoryBankDto.yaml
+    DocumentFileResponse:
+      $ref: ./components/schemas/document/DocumentFileResponse.yaml
+    GenericResponseDocumentErrorDocumentFileResponse:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorDocumentFileResponse.yaml
+    ExportRegistryAttachmentDto:
+      $ref: ./components/schemas/document/ExportRegistryAttachmentDto.yaml
+    GenericResponseDocumentErrorExportRegistryAttachmentDto:
+      $ref: ./components/schemas/document/GenericResponseDocumentErrorExportRegistryAttachmentDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

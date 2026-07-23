@@ -1,0 +1,9 @@
+type: string
+description: Вид ЭП
+enum:
+- UNKNOWN
+- LOCAL
+- CLOUD_SIGN
+- NOT_QUALIFIED_SIGN
+- QUALIFIED_SIGN
+- SIMPLE_SIGN

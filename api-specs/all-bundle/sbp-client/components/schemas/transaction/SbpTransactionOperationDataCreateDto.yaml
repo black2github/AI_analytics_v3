@@ -1,0 +1,13 @@
+type: object
+description: Реквизиты входящей операции
+properties:
+  operationTransactionTime:
+    type: string
+    format: date-time
+    description: Дата и время входящей операции
+  operationTransactionId:
+    type: string
+    description: Идентификатор транзакции
+required:
+- operationTransactionId
+- operationTransactionTime

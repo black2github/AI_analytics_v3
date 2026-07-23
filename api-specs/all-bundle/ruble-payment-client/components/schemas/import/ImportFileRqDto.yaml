@@ -1,0 +1,16 @@
+required:
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID "[Импорт ПЭД] МД. Файл импорта"
+    format: uuid
+  encryptedFileImportId:
+    type: string
+    description: ID зашифрованного файла в файловом сервисе
+    format: uuid
+  autoComplete:
+    type: boolean
+    description: Автоматическое завершение импорта файлов
+description: Входящие параметры "Импорт платежных поручений из файла"

@@ -1,0 +1,15 @@
+type: object
+properties:
+  houseNum:
+    type: string
+    description: Номер дома
+  houseCode:
+    type: string
+    description: Код дома (КЛАДР)
+  houseExt:
+    type: string
+    description: Расширение номера дома (корпуса, строения)
+  fiasHouseCode:
+    type: string
+    description: ФИАС код типа и номера здания, строения
+description: Дом. Интеграционное ДТО

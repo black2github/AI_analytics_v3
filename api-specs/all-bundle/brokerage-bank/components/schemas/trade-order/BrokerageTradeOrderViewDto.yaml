@@ -1,0 +1,218 @@
+required:
+- clientId
+- clientName
+- contractClientName
+- contractDate
+- contractNumber
+- createdAt
+- currency
+- id
+- isin
+- issuer
+- requestKind
+- requestNumber
+- status
+- tradingFloorName
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractBrief:
+    type: string
+    description: Краткое наименование договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  tradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка
+  tradingFloorName:
+    type: string
+    description: Локализованная торговая площадка
+  currency:
+    type: string
+    description: Валюта
+  isin:
+    type: string
+    description: Код ценной бумаги
+  number:
+    type: string
+    description: Регистрационный номер ценной бумаги
+  ticker:
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    type: string
+    description: Локализованный эмитент
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  requestKind:
+    type: string
+    description: Вид сделки
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  quantity:
+    type: string
+    description: Количество
+  unitPrice:
+    type: string
+    description: Цена за штуку
+  amount:
+    type: string
+    description: Сумма
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  additionalCondition:
+    type: string
+    description: Дополнительные условия (ручной ввод)
+  status:
+    $ref: ../common/BrokerageRequestStatusDto.yaml
+  requestNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  clientComment:
+    type: string
+    description: Комментарий клиента
+  branchNumber:
+    type: string
+    description: Код филиала
+  signature:
+    $ref: ./BrokerageTradeOrderSignatureDto.yaml
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  linkedOrders:
+    type: array
+    description: Связанные поручения
+    items:
+      $ref: ./BrokerageTradeOrderViewDto.yaml
+  cancelDescription:
+    type: string
+    description: Причина отмены
+  requestSubtype:
+    type: string
+    description: Тип поручения
+  clientFullName:
+    type: string
+    description: Полное наименование организации
+  contractClientName:
+    type: string
+    description: Наименование клиента по договору
+  secGuid:
+    type: string
+    description: GUID ЦБ
+  repoTypeTransactions:
+    type: string
+    description: Вид сделки РЕПО
+    enum:
+    - MARKET
+    - NONMARKET
+    - CK
+  repoClassTransactions:
+    type: string
+    description: Класс
+    enum:
+    - CK_KSU
+    - CK_BONDS
+    - CK_EQUITIES
+  repoTerm:
+    type: string
+    description: Срок РЕПО
+  repoRateYear:
+    type: string
+    description: Ставка РЕПО (годовые)
+  tradingMode:
+    type: string
+    description: Режим торгов
+    enum:
+    - REPO_M
+    - ADDRESS_WITH_CK
+  initDiscount:
+    type: string
+    description: Начальный дисконт
+  minDiscountFinal:
+    type: string
+    description: Минимальное предельное значение дисконта
+  contragent:
+    type: string
+    description: Контрагент
+  isinNominal:
+    type: string
+    description: Номинал ценной бумаги (необязательно)
+  interestBase:
+    type: string
+    description: База начисления процентов
+  currencyDebit:
+    type: string
+    description: Валюта расчетов
+  repoWithoutNkd:
+    type: string
+    description: Сумма РЕПО без НКД
+  repoWithNkd:
+    type: string
+    description: Сумма РЕПО c НКД
+  repoNkd:
+    type: string
+    description: НКД
+  revaluationLevel:
+    type: string
+    description: Уровень переоценки
+  minDiscount:
+    type: string
+    description: Минимальный дисконт
+  repoExecuteDate:
+    type: string
+    description: Дата исполнения первой части РЕПО
+  transferRate:
+    type: string
+    description: Кросс курс
+  attachmentId:
+    type: string
+    description: Идентификатор файла на ФС
+  source:
+    type: string
+    description: Источник торгового поручения
+    enum:
+    - BROKERAGE
+    - BRK_CRM
+  signingDeadline:
+    type: string
+    description: Срок, до которого можно подписать торговое поручение
+    format: date-time
+  mode:
+    type: string
+    enum:
+    - SET_PRICE
+    - MARKET
+description: Данные

@@ -1,0 +1,11 @@
+type: object
+properties:
+  from:
+    type: string
+    description: Период от
+    format: date
+  to:
+    type: string
+    description: Период до
+    format: date
+description: Период формирования отчета

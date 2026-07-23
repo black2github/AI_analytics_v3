@@ -1,0 +1,8 @@
+required:
+- result
+type: object
+properties:
+  result:
+    type: boolean
+    description: Результат отмены распарсивания архива ФНС
+description: Результат запроса на отмену распарсивания архива ФНС

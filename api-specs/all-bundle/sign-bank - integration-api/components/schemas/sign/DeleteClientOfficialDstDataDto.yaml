@@ -1,0 +1,19 @@
+required:
+- bankClientId
+- clientOfficialId
+- userId
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  bankClientId:
+    type: string
+    description: ID Клиента Банка
+    format: uuid
+description: Данные представителя для удаления связей с СЭП

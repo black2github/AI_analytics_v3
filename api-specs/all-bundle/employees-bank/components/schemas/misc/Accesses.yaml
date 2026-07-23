@@ -1,0 +1,14 @@
+required:
+- accessToCreateAndUpdate
+- accessToView
+type: object
+properties:
+  accessToView:
+    type: integer
+    description: Доступ на просмотр остатка, выписки и документов по счету (VIEW)
+    format: int32
+  accessToCreateAndUpdate:
+    type: integer
+    description: Доступ на создание и редактирование документов по счету (CREATE_UPDATE)
+    format: int32
+description: Данные по доступам

@@ -1,0 +1,9 @@
+type: object
+description: Изображение QR
+properties:
+  mediaType:
+    type: string
+    description: 'Формат получаемого файла: image/png - png, image/svg+xml - xml of svg'
+  content:
+    type: string
+    description: Закодированное base64 изображение QR.  Формат для декодирования зависит от mediaType

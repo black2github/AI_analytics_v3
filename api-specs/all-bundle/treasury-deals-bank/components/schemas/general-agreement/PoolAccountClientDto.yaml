@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  shortName:
+    type: string
+    description: Краткое наименование Клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+description: Данные

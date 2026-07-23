@@ -1,0 +1,10 @@
+put:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/set-mode/IcapChangeModeRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK

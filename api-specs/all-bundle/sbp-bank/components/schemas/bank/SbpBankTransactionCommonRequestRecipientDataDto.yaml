@@ -1,0 +1,36 @@
+type: object
+description: Информация о контрагенте в обобщенном заявлении на платеж СБП
+properties:
+  recipientName:
+    type: string
+    description: Контрагент
+  recipientInn:
+    type: string
+    description: ИНН Контрагента
+  recipientMerchantId:
+    type: string
+    description: Идентификатор точки продаж Контрагента
+  recipientMerchantName:
+    type: string
+    description: Наименование точки продаж Контрагента
+  recipientMerchantAddress:
+    type: string
+    description: Адрес точки продаж Контрагента
+  recipientMccCode:
+    type: string
+    description: Код вида деятельности Контрагента
+  recipientMccName:
+    type: string
+    description: Наименование вида деятельности Контрагента
+  recipientId:
+    type: string
+    description: Идентификатор Контрагента
+  recipientBankName:
+    type: string
+    description: Банк Контрагента
+  recipientBankBic:
+    type: string
+    description: БИК Банка Контрагента
+  recipientBankId:
+    type: string
+    description: Идентификатор Банка Контрагента

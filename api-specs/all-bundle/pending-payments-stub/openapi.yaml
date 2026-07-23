@@ -1,0 +1,16 @@
+openapi: 3.1.0
+info:
+  title: Стаб сервис для Pending Payments
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /pending-payments-stub
+paths:
+  /pending-payments/create-get-card:
+    $ref: ./paths/create-get-card/pending_payments_create_get_card.yaml
+components:
+  schemas:
+    CardIndexDto:
+      $ref: ./components/schemas/create-get-card/CardIndexDto.yaml
+    DocTypeDto:
+      $ref: ./components/schemas/create-get-card/DocTypeDto.yaml

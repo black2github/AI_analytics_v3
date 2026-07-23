@@ -1,0 +1,7 @@
+type: object
+properties:
+  requestId:
+    type: string
+    format: uuid
+  emailCode:
+    type: string

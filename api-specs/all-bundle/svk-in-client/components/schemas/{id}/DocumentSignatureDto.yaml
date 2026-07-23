@@ -1,0 +1,27 @@
+type: object
+properties:
+  sppVersion:
+    type: integer
+    description: Версия СПП (состав подписываемых полей)
+    format: int32
+  userFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  userId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  date:
+    type: string
+    description: Дата и время подписания
+    format: date-time
+  certificateUid:
+    type: string
+    description: UID сертификата
+    format: uuid
+  certificate:
+    $ref: ./DocumentSignatureCertificateDto.yaml
+  electronicSignature:
+    type: string
+    description: Электронная подпись
+description: Подпись документа

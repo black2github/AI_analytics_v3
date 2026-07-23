@@ -1,0 +1,22 @@
+{
+  "_comment": "Auto domain map for payment-request-bank (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/payment-request/outgoing",
+      "domain": "outgoing"
+    },
+    {
+      "prefix": "/payment-request/incoming",
+      "domain": "incoming"
+    },
+    {
+      "prefix": "/payment-request/accept",
+      "domain": "accept"
+    },
+    {
+      "prefix": "/payment-request",
+      "domain": "misc"
+    }
+  ]
+}

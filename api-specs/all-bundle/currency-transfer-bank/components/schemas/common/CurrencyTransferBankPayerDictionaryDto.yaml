@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  innKio:
+    type: string
+    description: ИНН плательщика
+  rnk:
+    type: string
+    description: РНК плательщика
+description: Транспортное представление банковского DTO плательщика для быстрого справочника

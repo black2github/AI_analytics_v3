@@ -1,0 +1,17 @@
+type: object
+description: Результат проверки полномочий пользователя
+properties:
+  personSuccess:
+    type: boolean
+    description: Признак успешной проверки полномочий
+  message:
+    type: string
+    description: Сообщение в случае непрохождения проверки полномочий
+  clientPosition:
+    type: string
+    description: Должность
+  authorizingDocument:
+    type: string
+    description: Документ, позволяющий подписать заявление
+required:
+- personSuccess

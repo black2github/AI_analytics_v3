@@ -1,0 +1,23 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус обработки документов файлового импорта
+    enum:
+    - NEW
+    - ERROR
+    - SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - REJECTED
+  currencyIsoCode:
+    type: string
+    description: ISO код валюты
+  docCount:
+    type: integer
+    description: Количество документов
+    format: int32
+  totalAmount:
+    type: number
+    description: Сумма по всем документам
+description: Данные протокола файлового импорта, результат по группе документов

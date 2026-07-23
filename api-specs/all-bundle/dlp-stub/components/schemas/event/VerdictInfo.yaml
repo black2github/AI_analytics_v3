@@ -1,0 +1,12 @@
+type: object
+properties:
+  DOCUMENT_ID:
+    type: string
+  VERDICT:
+    $ref: ../common/VerdictEnum.yaml
+  OBJECT_ID:
+    type: integer
+    format: int32
+  TBS_ID:
+    type: integer
+    format: int32

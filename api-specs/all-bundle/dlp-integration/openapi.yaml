@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: Сервис интеграции с DLP.
+  description: Сервис интеграции с DLP.
+  version: 3.0.0
+servers:
+- url: /dlp-integration
+security:
+- bearerAuth: []
+paths:
+  /dlp-integration/check/message:
+    $ref: ./paths/check/dlp_integration_check_message.yaml
+  /dlp-integration/check/attachment-file:
+    $ref: ./paths/check/dlp_integration_check_attachment_file.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    DlpMessageRequestDto:
+      $ref: ./components/schemas/check/DlpMessageRequestDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/check/GenericResponseSimpleErrorDataBoolean.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/check/SimpleErrorData.yaml
+    DlpAttachmentFileRequestDto:
+      $ref: ./components/schemas/check/DlpAttachmentFileRequestDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

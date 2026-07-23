@@ -1,0 +1,8 @@
+type: object
+properties:
+  signatures:
+    type: array
+    description: Массив подписей
+    items:
+      $ref: ./SignatureDto.yaml
+description: Запрос на сохранение подписей

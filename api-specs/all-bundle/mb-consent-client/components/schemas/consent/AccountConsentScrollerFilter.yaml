@@ -1,0 +1,11 @@
+type: object
+properties:
+  bank:
+    $ref: ./BankCodeFilterDto.yaml
+  bankClient:
+    $ref: ./FilterValueDtoUUID.yaml
+  account:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountStatus:
+    $ref: ./FilterValueDtoAccountStatusDto.yaml
+description: Фильтр на запрос скроллера счетов согласий

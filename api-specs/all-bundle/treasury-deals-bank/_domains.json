@@ -1,0 +1,46 @@
+{
+  "_comment": "Auto domain map for treasury-deals-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/account",
+      "domain": "account"
+    },
+    {
+      "prefix": "/rate",
+      "domain": "rate"
+    },
+    {
+      "prefix": "/mno-document",
+      "domain": "mno-document"
+    },
+    {
+      "prefix": "/investment-document",
+      "domain": "investment-document"
+    },
+    {
+      "prefix": "/gsno-document",
+      "domain": "gsno-document"
+    },
+    {
+      "prefix": "/general-agreement",
+      "domain": "general-agreement"
+    },
+    {
+      "prefix": "/early-refund",
+      "domain": "early-refund"
+    },
+    {
+      "prefix": "/deposit",
+      "domain": "deposit"
+    },
+    {
+      "prefix": "/deposit-document",
+      "domain": "deposit-document"
+    },
+    {
+      "prefix": "/client",
+      "domain": "client"
+    }
+  ]
+}

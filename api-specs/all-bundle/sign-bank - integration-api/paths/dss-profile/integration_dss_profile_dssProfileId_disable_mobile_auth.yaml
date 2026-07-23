@@ -1,0 +1,57 @@
+delete:
+  tags:
+  - Интеграционное API по профилям пользователей DSS
+  summary: Отключение метода аутентификации myDSS 1.0
+  description: 'Привилегии: INTEGRATION_DSS_PROFILES_DISABLE_MOBILE_AUTH_METHOD'
+  operationId: disableMobileAuthMethod
+  parameters:
+  - name: dssProfileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/dss-profile/GenericResponseSimpleErrorDataVoid.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security: []

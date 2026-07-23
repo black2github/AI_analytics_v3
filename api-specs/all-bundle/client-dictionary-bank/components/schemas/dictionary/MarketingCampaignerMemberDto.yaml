@@ -1,0 +1,27 @@
+required:
+- marketingCampaignCode
+- marketingCampaignMember
+- organizationId
+type: object
+properties:
+  organizationId:
+    type: string
+    description: Идентификатор организации.
+    format: uuid
+  inn:
+    type: string
+    description: ИНН организации.
+  marketingCampaignCode:
+    type: string
+    description: Код маркетинговой кампании.
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  marketingCampaignMember:
+    type: boolean
+    description: Признак участника маркетинговой компании
+  comment:
+    type: string
+    description: Комментарий
+description: Управление баннером маркетинговой кампании

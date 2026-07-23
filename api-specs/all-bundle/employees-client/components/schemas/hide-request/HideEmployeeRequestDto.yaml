@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  requestType:
+    type: string
+    enum:
+    - UPDATE_INFORM
+    - ADD_EDIT_USER

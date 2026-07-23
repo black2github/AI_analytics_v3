@@ -1,0 +1,23 @@
+required:
+- amount
+- docDate
+- docNumber
+- paymentPurpose
+type: object
+properties:
+  docNumber:
+    maxLength: 15
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  amount:
+    type: string
+    description: Сумма
+  paymentPurpose:
+    maxLength: 210
+    type: string
+    description: Назначение платежа
+description: Основные бизнес-реквизиты документа, скроллер клиента

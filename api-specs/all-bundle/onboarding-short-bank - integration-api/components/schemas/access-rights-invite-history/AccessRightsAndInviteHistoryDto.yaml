@@ -1,0 +1,30 @@
+type: object
+properties:
+  accessRightGrantingStatus:
+    type: string
+    description: Статус выдачи прав доступа и отправки инвайта
+    enum:
+    - ACCESS_GRANTED_INVITE_SENT
+    - ERROR_ACCESS_GRANTED_INVITE_SENT
+    - ACCESS_AND_INVITE_REVOKED
+    - ERROR_ACCESS_AND_INVITE_REVOKED
+    - ACCESS_AND_INVITE_NOT_GRANTED
+    - INVITE_SENT
+    - ERROR_INVITE_SENT
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  onboardingShortRequestId:
+    type: string
+    description: Ссылка на Короткая заявка на открытие первого счета
+    format: uuid
+  personId:
+    type: string
+    description: Ссылка на физическое лицо, для которого создана запись в истории
+    format: uuid
+  statusAssignedAt:
+    type: string
+    description: Дата и время присвоения статуса
+    format: date-time
+description: История изменений статусов выдачи прав доступа и отправки инвайта

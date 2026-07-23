@@ -1,0 +1,12 @@
+type: object
+properties:
+  legalWeekday:
+    type: string
+  physicalHoliday:
+    type: string
+  physicalWeekday:
+    type: string
+  specialLegalWeekday:
+    type: string
+  specialPhysicalWeekday:
+    type: string

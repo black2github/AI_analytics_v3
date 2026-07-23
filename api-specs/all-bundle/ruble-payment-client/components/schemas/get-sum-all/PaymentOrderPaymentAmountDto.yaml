@@ -1,0 +1,10 @@
+type: object
+properties:
+  count:
+    type: integer
+    description: Количество заявок "Платежное поручение"
+    format: int64
+  amount:
+    type: number
+    description: Сумма заявок "Платежное поручение"
+description: Данные

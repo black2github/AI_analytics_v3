@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBankClientChangeLogFilter.yaml
+description: Запрос страницы

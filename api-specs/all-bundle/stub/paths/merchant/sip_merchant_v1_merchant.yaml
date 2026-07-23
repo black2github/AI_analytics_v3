@@ -1,0 +1,110 @@
+post:
+  tags:
+  - СИП. Сервис Merchant API
+  summary: 'Сервис: Регистрация ТСП'
+  operationId: merchantUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.address
+    in: query
+    description: Юридический адрес
+    required: false
+    type: string
+  - name: body.brandName
+    in: query
+    description: Название ТСП (имя по вывеске)
+    required: false
+    type: string
+  - name: body.capabilities
+    in: query
+    description: Возможности ТСП по взаимодействию с покупателем
+    required: false
+    type: string
+  - name: body.city
+    in: query
+    description: Город
+    required: false
+    type: string
+  - name: body.contactPhoneNumber
+    in: query
+    description: Контактный номер телефона ТСП
+    required: false
+    type: string
+  - name: body.countryCode
+    in: query
+    description: Код страны-регистрации юридического лица, в формате "ISO 3166, Alpha-2"
+    required: false
+    type: string
+  - name: body.countrySubDivisionCode
+    in: query
+    description: Код региона-регистрации юридического лица, первые две цифры кода ОКТМО
+    required: false
+    type: string
+  - name: body.inn
+    in: query
+    description: Государственный идентификатор налогоплательщика ТСП. Для РФ - ИНН
+    required: false
+    type: string
+  - name: body.legalId
+    in: query
+    description: Идентификатор юридического лица
+    required: false
+    type: string
+  - name: body.mcc
+    in: query
+    description: MCC код
+    required: false
+    type: string
+  - name: body.salesMode
+    in: query
+    description: Способ приема оплаты ТСП
+    required: false
+    type: string
+  - name: body.url
+    in: query
+    description: Веб-сайт ТСП
+    required: false
+    type: string
+  - name: body.zip
+    in: query
+    description: Индекс
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/LegalResultDto«MerchantResultDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,62 @@
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  bankClient:
+    $ref: ../common/AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commissionType:
+    $ref: ../common/AdmCommissionTypeDto.yaml
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  newCommissionType:
+    $ref: ../common/AdmCommissionTypeDto.yaml
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  otherInfo:
+    $ref: ../common/OtherInfoDto.yaml
+  requestType:
+    $ref: ../common/AdmRequestTypeDto.yaml
+  signature:
+    $ref: ../common/AdmSignatureDto.yaml
+  status:
+    $ref: ../common/AdmRequestStatusDto.yaml
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка на изменение периодичности оплаты комиссии

@@ -1,0 +1,18 @@
+post:
+  tags:
+  - feature-toggling-state-controller
+  description: 'Привилегии: FEATURE_VIEW'
+  operationId: getComplexFeatureState
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/state/GetComplexFeatureStateRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/state/GenericResponseSimpleErrorDataGetFeatureStateResponse.yaml

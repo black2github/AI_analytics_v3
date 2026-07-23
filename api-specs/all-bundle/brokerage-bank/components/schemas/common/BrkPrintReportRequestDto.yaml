@@ -1,0 +1,9 @@
+type: object
+properties:
+  reportFormat:
+    type: string
+    enum:
+    - PDF
+    - XLS
+    - DOCX
+description: Данные

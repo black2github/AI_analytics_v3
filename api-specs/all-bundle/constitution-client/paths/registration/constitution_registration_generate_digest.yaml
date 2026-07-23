@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API заявки заявки на регистрацию данных сотрудника. Операции подписи.
+  summary: Сгенерировать дайджест из подписываемых полей документа
+  description: 'Привилегии: CONSTITUTION_REGISTRATION.SIGN'
+  operationId: generateDigestUsingPOST_3
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/SingleCommand«uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CompositeResponse«Digest»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

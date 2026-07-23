@@ -1,0 +1,16 @@
+type: object
+description: Данные о наличии договора
+properties:
+  existByContract:
+    type: boolean
+    description: Результат проверки наличия договора в Ф1
+  existByRequest:
+    type: boolean
+    description: Результат проверки наличия исполненной заявки на Договор СБП
+  clientRestriction:
+    type: string
+    description: Ограничение клиента в СБП, допустимые значения = FULL_ACCESS_FOR_RESIDENT, B2C_ACCESS_FOR_NON_RESIDENT, NO_ACCESS_FOR_NON_RESIDENT
+    enum:
+    - FULL_ACCESS_FOR_RESIDENT
+    - B2C_ACCESS_FOR_NON_RESIDENT
+    - NO_ACCESS_FOR_NON_RESIDENT

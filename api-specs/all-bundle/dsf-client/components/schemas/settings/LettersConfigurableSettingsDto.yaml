@@ -1,0 +1,53 @@
+type: object
+properties:
+  downloadAttachmentsTotalSize:
+    type: integer
+    description: Максимально допустимый суммарный объем вложений (в Гб) для скачивания
+    format: int32
+  filialGoId:
+    type: string
+    description: Идентификатор филиала ГО
+    format: uuid
+  filterCorpcardCategories:
+    type: array
+    description: Фильтр писем по категориям для Корпоративных карт
+    items:
+      type: string
+      description: Фильтр писем по категориям для Корпоративных карт
+  filterCreditCategories:
+    type: array
+    description: Фильтр писем по категориям для Кредитных продуктов
+    items:
+      type: string
+      description: Фильтр писем по категориям для Кредитных продуктов
+  filterRrkoTrmproduct:
+    type: array
+    description: Фильтр писем по продуктам ЦРМ для Рублевых операций
+    items:
+      type: string
+      description: Фильтр писем по продуктам ЦРМ для Рублевых операций
+  filterVrkoTrmproduct:
+    type: array
+    description: Фильтр писем по продуктам ЦРМ для Валютных операций
+    items:
+      type: string
+      description: Фильтр писем по продуктам ЦРМ для Валютных операций
+  groupOperationMaxDocumentsCount:
+    type: integer
+    description: Максимально допустимое количество писем для выполнения групповых операций
+    format: int32
+  h2hPath:
+    type: string
+    description: Сетевой каталог Н2Н
+  h2hSize:
+    type: integer
+    description: Максимальный объем H2H (Мб)
+    format: int64
+  notifRmCheck:
+    type: boolean
+    description: Пропустить проверку применение правила доступа по реквизиту при посылке пользователю уведомления об отправленном письме
+  scrollMaxRows:
+    type: integer
+    description: Лимит количества записей скроллера доступных для выгрузки
+    format: int32
+description: Настраиваемые параметры

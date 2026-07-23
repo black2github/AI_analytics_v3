@@ -1,0 +1,19 @@
+post:
+  summary: Отправить о сообщение о закрытие дня F1 ODS
+  tags:
+  - API заглушки для закрытия дня в F1 ODS
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/closed-day/F1ClosedDayRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

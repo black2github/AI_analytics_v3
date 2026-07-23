@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Данные
+    format: uuid
+  userDeviceInfo:
+    $ref: ./UserDeviceInfo.yaml
+description: Запрос

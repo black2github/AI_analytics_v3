@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип блокировки
+    enum:
+    - BLOCK_OF_THE_ELECTRONIC_PLATFORM
+    - SUSPEND_OF_ACCOUNT_TRANSACTIONS
+  notEq:
+    type: string
+    description: Тип блокировки
+    enum:
+    - BLOCK_OF_THE_ELECTRONIC_PLATFORM
+    - SUSPEND_OF_ACCOUNT_TRANSACTIONS
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип блокировки
+      enum:
+      - BLOCK_OF_THE_ELECTRONIC_PLATFORM
+      - SUSPEND_OF_ACCOUNT_TRANSACTIONS
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип блокировки
+      enum:
+      - BLOCK_OF_THE_ELECTRONIC_PLATFORM
+      - SUSPEND_OF_ACCOUNT_TRANSACTIONS
+  isNull:
+    type: boolean
+description: 3.7 Тип блокировки. Поиск по <Тип блокировки>. Содержится в списке.

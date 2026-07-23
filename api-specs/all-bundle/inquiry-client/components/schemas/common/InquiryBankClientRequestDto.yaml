@@ -1,0 +1,9 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+    example: null
+description: Реквизиты клиента по запросу для ЮЛ
+example: null

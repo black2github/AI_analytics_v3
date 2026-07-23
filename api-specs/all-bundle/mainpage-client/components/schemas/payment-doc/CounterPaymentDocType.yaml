@@ -1,0 +1,10 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип платежного документа
+  total:
+    type: integer
+    description: Количество документов
+    format: int64
+description: Итоговая информация по типу документам

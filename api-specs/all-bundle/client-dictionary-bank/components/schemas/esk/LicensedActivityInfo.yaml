@@ -1,0 +1,20 @@
+type: object
+properties:
+  licenseNum:
+    type: string
+    description: Серия и номер лицензии
+  issueDate:
+    type: string
+    description: Дата выдачи лицензии
+    format: date
+  issuer:
+    type: string
+    description: Наименование органа, выдавшего лицензию
+  expirationDate:
+    type: string
+    description: Дата окончания действия лицензии
+    format: date
+  activity:
+    type: string
+    description: Наименование лицензируемого вида деятельности
+description: Сведения о деятельности подлежащей лицензированию

@@ -1,0 +1,19 @@
+type: object
+properties:
+  keyId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  changedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  caName:
+    $ref: ../common/FilterValueDtoString.yaml
+  orderNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  deltaOrderNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  validFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  nextUpdate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  nextPublicationDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр

@@ -1,0 +1,60 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  certificateIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы сертификатов
+    items:
+      type: string
+      description: Идентификаторы сертификатов
+      format: uuid
+  documentType:
+    type: string
+    description: Тип документа, заполняется опционально для проверки прав ЕИО
+    enum:
+    - GPB_BO_AGR_SIGN_AUTH_CHECK
+    - GPB_DOG_ACC_OPEN_AUTH_CHECK
+    - GPB_ACC_OPEN_AUTH_CHECK
+    - GPB_EXTRA_SERVICES_RKO_AUTH_CHECK
+    - OFFER_JOIN_GPB_BO1_REQ
+    - REPR_REG_CERT
+    - GPB_BO_GLOB_EMPW_BLOCK_AUTH_CHECK
+    - GPB_BO_REPR_REG_BLOCK_AUTH_CHECK
+    - GPB_CORP_CARD_ISSUE_AUTH_CHECK
+    - GPB_PRESETCREDENTIALS_AUTH_CHECK
+    - GPB_PROD_CREDENTIALS_COMB_AUTH_CHECK
+    - DEFAULT_DOCUMENT_TYPE
+  productCodes:
+    type: array
+    description: Коды продуктов банка
+    items:
+      type: string
+      description: Коды продуктов банка
+  relPerson:
+    $ref: ./RelPersonClientDto.yaml
+  presetCredentials:
+    $ref: ./PresetCredentialsEskDto.yaml
+  prodCredentials:
+    type: array
+    description: Перечень полномочий по набору продуктов
+    items:
+      $ref: ./ProdCredentialsEskDto.yaml
+  validators:
+    uniqueItems: true
+    type: array
+    description: Типы проверок полномочий
+    items:
+      type: string
+      description: Типы проверок полномочий
+      enum:
+      - EIO
+      - CERTIFICATE
+      - CONSTITUTION
+  skipControlDul:
+    type: boolean
+    description: Признак отмены контроля ДУЛ
+description: Запрос проверки полномочий пользователем клиента

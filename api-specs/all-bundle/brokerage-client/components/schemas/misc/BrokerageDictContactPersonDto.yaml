@@ -1,0 +1,13 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО контактного лица
+  phone:
+    type: string
+    description: Номер телефона контактного лица
+  ordinal:
+    type: integer
+    description: Порядок отображения на ЭФ
+    format: int32
+description: Контактное лицо со стороны Брокера

@@ -1,0 +1,11 @@
+type: object
+description: Данные подписки
+properties:
+  subscriptionPurpose:
+    type: string
+    description: Цель подписки
+  payer:
+    type: string
+    description: Плательщик
+required:
+- subscriptionPurpose

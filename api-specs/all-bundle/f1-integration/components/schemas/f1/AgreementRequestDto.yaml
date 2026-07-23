@@ -1,0 +1,47 @@
+type: object
+properties:
+  account:
+    type: string
+    description: Номер счета
+    example: '48700810000000000002'
+  bic:
+    type: string
+    description: БИК
+    example: 044525823
+  contractId:
+    type: string
+    description: ID контракта
+    example: '123'
+  phoneNumber:
+    type: string
+    description: Номер мобильного телефона заявителя для регистрации в личном кабинете
+  email:
+    type: string
+    description: Адрес электронной почты заявителя для регистрации в личном кабинете
+  contractClientRole:
+    type: string
+    description: Роль клиента в договоре
+    enum:
+    - PROVIDER
+    - CONTRACTOR
+  customerName:
+    type: string
+    description: Наименование заказчика/покупателя
+  customerInn:
+    type: string
+    description: ИНН заказчика/покупателя
+  customerContractNumber:
+    type: string
+    description: Номер договора заказчика/покупателя
+  customerContractDate:
+    type: string
+    description: Дата договора заказчика/покупателя
+    format: date
+  customerContractAmount:
+    type: number
+    description: Сумма договора заказчика/покупателя
+  verifyCreatingOnly:
+    type: boolean
+    description: Если true то не создавать доп. договор, а проверить возможность создания
+    example: true
+description: Запрос дополнительного договора

@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Naumen. API заглушек временных слотов
+  summary: Получить список заглушек временных слотов
+  operationId: getListUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: filter
+    description: filter
+    required: true
+    schema:
+      $ref: '#/definitions/NaumenTimeSlotFilter'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ListResponse«NaumenTimeSlotStubDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

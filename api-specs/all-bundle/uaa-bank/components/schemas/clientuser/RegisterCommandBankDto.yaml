@@ -1,0 +1,65 @@
+required:
+- details
+type: object
+properties:
+  details:
+    $ref: ./ClientUserInfoBankDto.yaml
+  confirmationId:
+    type: string
+    description: Идентификатор запроса на подтверждение
+    format: uuid
+  captchaId:
+    type: string
+    description: Идентификатор каптчи.
+    format: uuid
+  captchaText:
+    type: string
+    description: Текст каптчи.
+  isDataUsageApproved:
+    type: boolean
+    description: Признак согласия на обработку данных.
+  addConsentRq:
+    $ref: ./AddConsentRq.yaml
+  registrationMethod:
+    type: string
+    enum:
+    - DEFAULT
+    - CHATBOT
+    - CONFIRMED_PHONE_NUMBER
+    - EXTERNAL_SITE
+  marketingCampaign:
+    type: string
+    description: Источник регистрации пользователя (Маркетинговая кампания)
+  marketingCampaignOrgId:
+    type: string
+    description: Идентификатор организации (Маркетинговая кампания)
+    format: uuid
+  partnerCode:
+    type: string
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - GPB_AUTOLEASING
+    - GPB_FACTORING
+    - GPB_CARCADE
+    - GPB_BSK
+    - ESIA
+    - GPB_IO_BSK
+    - CP_RETAIL
+    - ETP_GAZ
+    - FAP_DARK
+    - AB_PAYMENTS
+    - ETP_EDO
+    - ETP_VESNA
+    - AUTO_USN
+    - ULUKY
+    - OB_VTB
+  localeCode:
+    type: string
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  captchaData:
+    $ref: ./RequestCaptchaDataDto.yaml
+description: Запрос регистрации пользователя

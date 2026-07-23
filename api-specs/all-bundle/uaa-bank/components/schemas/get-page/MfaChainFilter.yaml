@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  title:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

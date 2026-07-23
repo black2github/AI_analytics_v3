@@ -1,0 +1,9 @@
+type: object
+properties:
+  access_token:
+    type: string
+  refresh_token:
+    type: string
+  expires:
+    type: integer
+    format: int64

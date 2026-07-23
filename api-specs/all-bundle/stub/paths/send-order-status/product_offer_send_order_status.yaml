@@ -1,0 +1,34 @@
+post:
+  tags:
+  - product-offer-controller
+  summary: sendArbitrary
+  operationId: sendArbitraryUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: body
+    description: body
+    required: true
+    schema:
+      type: string
+  - name: ver
+    in: query
+    description: ver
+    required: false
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,Void»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

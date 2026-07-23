@@ -1,0 +1,63 @@
+required:
+- clientName
+- createdAt
+- id
+- officeCity
+- representativeEmail
+- representativeName
+- representativePhone
+- requestNumber
+- requestStatus
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер запроса
+    format: int32
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  clientName:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+  isNonResident:
+    type: boolean
+    description: Признак нерезидента
+  legalAddress:
+    type: string
+    description: Юридический адрес организации
+  representativeName:
+    type: string
+    description: ФИО представителя
+  representativePhone:
+    type: string
+    description: Телефон представителя
+  representativeEmail:
+    type: string
+    description: Электронная почта представителя
+  officeCity:
+    type: string
+    description: Населенный пункт
+  clientComment:
+    type: string
+    description: Комментарий клиента
+  requestStatus:
+    type: string
+    description: Тип состояние отчета
+    enum:
+    - CLIENT_DELIVERED
+    - CLIENT_NEW
+    - CLIENT_REJECTED
+    - CLIENT_SENT
+description: Зарегистрированный запрос открытия брокерского счета клиентской стороны

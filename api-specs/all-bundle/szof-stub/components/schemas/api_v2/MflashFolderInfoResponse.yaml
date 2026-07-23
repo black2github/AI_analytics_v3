@@ -1,0 +1,8 @@
+type: object
+properties:
+  code:
+    type: string
+  root:
+    type: string
+  owner:
+    $ref: ./Owner.yaml

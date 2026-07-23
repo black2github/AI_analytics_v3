@@ -1,0 +1,71 @@
+type: object
+properties:
+  messageId:
+    type: string
+    description: Идентификатор сообщения запроса
+    format: uuid
+  clientRegNum:
+    type: string
+    description: Рег. номер организации (РНК) (параметр CL_ORG_REG_NUM)
+  clientINN:
+    type: string
+    description: ИНН организации (параметр CL_ORG_TaxId)
+  clientKPP:
+    type: string
+    description: КПП организации (параметр CL_ORG_TaxRegReasonCode)
+  clientOGRN:
+    type: string
+    description: ОГРН организации (параметр CL_ORG_StateRegPrimeNum)
+  clientName:
+    type: string
+    description: Полное наименование организации (параметр CL_ORG_LegalName)
+  clientGUID:
+    type: string
+    description: GUID организации (параметр CL_ORG_GUID)
+  clientLocalIdRkoF1:
+    type: string
+    description: Local ID представителя в АС РКО Ф1 (параметр CL_PRIV_ID)
+  clientLocalEskId:
+    type: string
+    description: Local ID представителя в ЕСК (параметр CL_PRIV_ESK_ID)
+  privNickName:
+    type: string
+    description: ФИО представителя (параметр CL_PRIV_NickName)
+  productCodes:
+    type: array
+    description: Список продуктов (параметр PRODUCT_LIST)
+    items:
+      type: string
+      description: Список продуктов (параметр PRODUCT_LIST)
+  relPersons:
+    type: array
+    description: Персоны, взаимосвязанные в рамках проверки
+    items:
+      $ref: ./RelPersonDto.yaml
+  prodCredentials:
+    type: array
+    description: Перечень наборов полномочий
+    items:
+      $ref: ./ProdCredentialDto.yaml
+  presetCredentials:
+    $ref: ./PresetCredentialsDto.yaml
+  documentType:
+    type: string
+    description: Тип документа
+    enum:
+    - GPB_BO_AGR_SIGN_AUTH_CHECK
+    - GPB_DOG_ACC_OPEN_AUTH_CHECK
+    - GPB_ACC_OPEN_AUTH_CHECK
+    - GPB_EXTRA_SERVICES_RKO_AUTH_CHECK
+    - OFFER_JOIN_GPB_BO1_REQ
+    - REPR_REG_CERT
+    - GPB_BO_GLOB_EMPW_BLOCK_AUTH_CHECK
+    - GPB_BO_REPR_REG_BLOCK_AUTH_CHECK
+    - GPB_CORP_CARD_ISSUE_AUTH_CHECK
+    - GPB_PRESETCREDENTIALS_AUTH_CHECK
+    - GPB_PROD_CREDENTIALS_COMB_AUTH_CHECK
+    - DEFAULT_DOCUMENT_TYPE
+  skipControlDul:
+    type: boolean
+    description: Признак формирования vars SKIP_CONTROL_DUL для отмены контроля ДУЛ
+description: Запрос в ЕСК

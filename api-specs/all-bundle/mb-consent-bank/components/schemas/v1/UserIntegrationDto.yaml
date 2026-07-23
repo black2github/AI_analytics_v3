@@ -1,0 +1,10 @@
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: Пользователь, создавший заявку на авторизацию согласия
+    format: uuid
+  fio:
+    type: string
+    description: Пользователь, создавший заявку на авторизацию согласия (ФИО)
+description: Информация о пользователе, создавшем заявку

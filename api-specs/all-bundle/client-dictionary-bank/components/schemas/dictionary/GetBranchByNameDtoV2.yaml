@@ -1,0 +1,8 @@
+required:
+- name
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование подразделения
+description: Параметры запроса подразделения

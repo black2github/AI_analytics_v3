@@ -1,0 +1,12 @@
+type: object
+properties:
+  banknote:
+    type: string
+    description: Идентификатор банкноты из справочника
+  number:
+    type: number
+    description: Число выбранных банкнот
+  sum:
+    type: number
+    description: Сумма по банкнотам
+description: Банкнота заявки

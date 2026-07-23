@@ -1,0 +1,100 @@
+type: object
+properties:
+  accessRightGrantingStatus:
+    type: string
+    description: Статус выдачи прав доступа и отправки инвайта
+    enum:
+    - ACCESS_GRANTED_INVITE_SENT
+    - ERROR_ACCESS_GRANTED_INVITE_SENT
+    - ACCESS_AND_INVITE_REVOKED
+    - ERROR_ACCESS_AND_INVITE_REVOKED
+    - ACCESS_AND_INVITE_NOT_GRANTED
+    - INVITE_SENT
+    - ERROR_INVITE_SENT
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlaceAddressId:
+    type: string
+    description: Место рождения
+    format: uuid
+  citizenshipCountryCode:
+    type: string
+    description: Код страны гражданства
+  companyShare:
+    type: string
+    description: Доля владения
+  contactInfo:
+    $ref: ./ContactInfoDto.yaml
+  contractSignerDocument:
+    $ref: ./ContractSignerDocumentDto.yaml
+  corporateCardIssuingData:
+    $ref: ./CorporateCardIssuingDataDto.yaml
+  factAddressId:
+    type: string
+    description: Фактический адрес
+    format: uuid
+  forename:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Имя
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  isZkboSigner:
+    type: boolean
+    description: Признак подписанта ЗКБО
+  patronymic:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Отчество
+  personDocument:
+    $ref: ./PersonDocumentDto.yaml
+  position:
+    type: string
+    description: Должность
+  regAddressSameAsFact:
+    type: boolean
+    description: Признак совпадения фактического адреса с адресом регистрации
+  registrationAddressId:
+    type: string
+    description: Адрес места регистрации
+    format: uuid
+  residenceDocument:
+    $ref: ./ResidenceDocumentDto.yaml
+  roles:
+    uniqueItems: true
+    type: array
+    description: Список ролей физического лица
+    items:
+      type: string
+      description: Классификатор ролей физических лиц в заявке
+      enum:
+      - LEADER
+      - LEADERMC
+      - INDIVIDUAL
+      - INDIVIDUALMC
+      - SHAREHOLDER
+      - BENEFICIARY
+      - ACCOUNTSIGNER
+      - CONTRACTSIGNER
+  signType:
+    type: string
+    description: Тип подписи
+    enum:
+    - FIRST
+    - SECOND
+    - SINGLE
+  snils:
+    type: string
+    description: СНИЛС
+  surname:
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Фамилия
+description: Физические лица в заявке

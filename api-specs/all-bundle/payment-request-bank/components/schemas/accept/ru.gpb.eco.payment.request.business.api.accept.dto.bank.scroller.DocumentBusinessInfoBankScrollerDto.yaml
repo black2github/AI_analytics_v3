@@ -1,0 +1,14 @@
+type: object
+properties:
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  docNumber:
+    maxLength: 15
+    type: string
+    description: Номер документа
+    nullable: true
+description: Основные бизнес-реквизиты документа, скроллер банка
+nullable: true

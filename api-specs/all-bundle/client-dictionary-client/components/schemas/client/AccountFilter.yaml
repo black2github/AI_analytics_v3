@@ -1,0 +1,91 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  approvalSearch:
+    $ref: ./FilterValueDtoString.yaml
+  state:
+    $ref: ./AccountStateFilter.yaml
+  startDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  endDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  accountType:
+    $ref: ./FilterValueDtoString.yaml
+  contractType:
+    $ref: ./FilterValueDtoString.yaml
+  accountTypeCode:
+    $ref: ./FilterValueDtoLong.yaml
+  currency:
+    $ref: ./FilterValueDtoString.yaml
+  currencyNumericCode:
+    $ref: ./FilterValueDtoString.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  branch:
+    $ref: ./FilterValueDtoString.yaml
+  branchBic:
+    $ref: ./FilterValueDtoString.yaml
+  branchNumber:
+    $ref: ./FilterValueDtoString.yaml
+  branchType:
+    $ref: ./BranchTypeFilter.yaml
+  clientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  clientFullName:
+    $ref: ./FilterValueDtoString.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientOgrnOgrip:
+    $ref: ./FilterValueDtoString.yaml
+  clientRegNumber:
+    $ref: ./FilterValueDtoString.yaml
+  clientAbsId:
+    $ref: ./FilterValueDtoString.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  documentPackageRequestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  clientUuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ./FilterValueDtoLong.yaml
+  gozContractIdentify:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория счета.
+    enum:
+    - ALL
+    - OPENED
+    - RESERVED
+    - ANNULLED
+  remoteSource:
+    $ref: ./RemoteSourceDtoFilter.yaml
+  remoteSourceCategory:
+    type: string
+    description: Тип системы, источника счета.
+    enum:
+    - ECO
+    - DBO_BSS
+  isConnectedToDbo:
+    $ref: ./FilterValueDtoBoolean.yaml
+  hasContractWithDbo:
+    $ref: ./FilterValueDtoBoolean.yaml
+  isDisconnectedFromRko:
+    $ref: ./FilterValueDtoBoolean.yaml
+  duplicate:
+    $ref: ./FilterValueDtoBoolean.yaml
+  hasAccountTnf:
+    $ref: ./FilterValueDtoBoolean.yaml
+  hasF1AccountId:
+    $ref: ./FilterValueDtoBoolean.yaml
+  bankClientStatus:
+    $ref: ./FilterValueEnumDtoBankClientStatusDto.yaml
+description: Фильтр для скроллера счетов

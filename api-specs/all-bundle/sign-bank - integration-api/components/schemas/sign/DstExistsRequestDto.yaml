@@ -1,0 +1,10 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  phoneNumber:
+    type: string
+    description: Номер телефона пользователя
+description: Запрос проверки наличия СЭП

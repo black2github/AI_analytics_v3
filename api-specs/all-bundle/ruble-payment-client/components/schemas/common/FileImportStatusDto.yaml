@@ -1,0 +1,14 @@
+type: string
+description: Статус файла (Статус импорта)
+enum:
+- DRAFT
+- DELETED
+- ERROR
+- NOT_SIGNED
+- SIGNED_1
+- SIGNED_2
+- SIGNED
+- IMPORT
+- IMPORT_CONFIRMED
+- IMPORTED
+- IMPORTED_ERROR

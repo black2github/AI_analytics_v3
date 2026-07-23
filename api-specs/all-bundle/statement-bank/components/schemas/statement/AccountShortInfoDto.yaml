@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountId:
+    type: string
+    format: uuid
+  accountNumber:
+    type: string
+  bankClientId:
+    type: string
+    format: uuid
+  bankClientName:
+    type: string
+description: Данные

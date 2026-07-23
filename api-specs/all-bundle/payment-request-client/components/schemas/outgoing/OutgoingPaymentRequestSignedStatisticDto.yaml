@@ -1,0 +1,17 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  count:
+    type: integer
+    description: Количество подписанных документов
+    format: int64
+  amount:
+    type: number
+    description: Общая сумма документов
+description: Данные

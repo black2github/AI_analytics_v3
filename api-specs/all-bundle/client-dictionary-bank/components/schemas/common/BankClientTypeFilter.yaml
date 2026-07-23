@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UL
+    - IP
+    - FL
+  notEq:
+    type: string
+    enum:
+    - UL
+    - IP
+    - FL
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UL
+      - IP
+      - FL
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UL
+      - IP
+      - FL
+  isNull:
+    type: boolean
+description: Тип клиента банка  - ИП, ЮЛ, ФЛЗЧП. Равенство, диапазон

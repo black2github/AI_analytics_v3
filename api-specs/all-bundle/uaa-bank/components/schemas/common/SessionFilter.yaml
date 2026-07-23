@@ -1,0 +1,13 @@
+type: object
+properties:
+  login:
+    $ref: ./FilterValueDtoString.yaml
+  userType:
+    $ref: ./FilterValueDtoUserTypeDto.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  expiresIn:
+    $ref: ./FilterValueDtoInstant.yaml
+  uaaId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр журнала сессий

@@ -1,0 +1,20 @@
+required:
+- authorityCertId
+- nextUpdate
+- signAlgorithm
+type: object
+properties:
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+  nextUpdate:
+    type: string
+    description: Дата следующего обновления
+    format: date-time
+  signAlgorithm:
+    type: string
+    description: Алгоритм подписи
+    enum:
+    - GOST_3410_WITH_GOST_3411_2012_512
+description: Запрос выпуска CRL

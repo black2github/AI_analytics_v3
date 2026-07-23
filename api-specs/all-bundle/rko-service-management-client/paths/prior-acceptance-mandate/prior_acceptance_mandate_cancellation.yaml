@@ -1,0 +1,66 @@
+post:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: createCancellation
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.CREATE_CANCEL'
+  operationId: createCancellationUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«PriorAcceptanceCancellationMandateCreateDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,PriorAcceptanceMandateValidationDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: updateCancellation
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.UPDATE_CANCEL'
+  operationId: updateCancellationUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«PriorAcceptanceCancellationMandateUpdateDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,PriorAcceptanceMandateValidationDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

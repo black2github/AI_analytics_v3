@@ -1,0 +1,38 @@
+type: object
+properties:
+  address:
+    $ref: ./AtmListRequestAddressFilterDto.yaml
+  atmType:
+    type: string
+  client:
+    $ref: ./AtmListRequestClientFilterDto.yaml
+  currencies:
+    type: array
+    items:
+      type: string
+  devices:
+    type: array
+    items:
+      $ref: ./AtmListRequestDevicesFilterDto.yaml
+  isAccessibility:
+    type: boolean
+  isAroundTheClock:
+    type: boolean
+  isPersonalATM:
+    type: boolean
+  paymentSystems:
+    type: array
+    items:
+      type: string
+  services:
+    type: array
+    items:
+      type: string
+  tid:
+    type: string
+  tids:
+    type: array
+    items:
+      type: string
+  workingHours:
+    $ref: ./AtmListRequestWorkingHoursFilterDto.yaml

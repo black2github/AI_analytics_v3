@@ -1,0 +1,9 @@
+type: object
+properties:
+  type:
+    $ref: ./FilterValueEnumDtoRoleNotificationTypeDto.yaml
+  shortText:
+    $ref: ../common/FilterValueDtoString.yaml
+  text:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для шаблонов уведомления об изменении прав доступа

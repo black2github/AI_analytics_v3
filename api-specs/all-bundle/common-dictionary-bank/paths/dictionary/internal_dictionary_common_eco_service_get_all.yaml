@@ -1,0 +1,22 @@
+get:
+  tags:
+  - API справочника ЭКО сервисов.
+  summary: Получить список всех ЭКО сервисов
+  description: 'Привилегии: ABAC_SCHEMA_VIEW'
+  operationId: getAllServicesUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«EcoServiceDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

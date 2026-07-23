@@ -1,0 +1,29 @@
+type: object
+properties:
+  bankClientIds:
+    maxItems: 1000
+    minItems: 0
+    type: array
+    description: Идентификаторы клиентов банка
+    items:
+      type: string
+      description: Идентификаторы клиентов банка
+      format: uuid
+  externalClientGuids:
+    maxItems: 1000
+    minItems: 0
+    type: array
+    description: Идентификаторы клиентов банка в ЕСК
+    items:
+      type: string
+      description: Идентификаторы клиентов банка в ЕСК
+      format: uuid
+  absIds:
+    maxItems: 1000
+    minItems: 0
+    type: array
+    description: Идентификаторы клиентов банка в Ф1
+    items:
+      type: string
+      description: Идентификаторы клиентов банка в Ф1
+description: Запрос поиска представителей клиента по полям клиента банка

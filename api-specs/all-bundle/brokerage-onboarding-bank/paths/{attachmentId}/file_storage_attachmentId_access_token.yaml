@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Работа с файловым хранилищем (Клиент)
+  summary: Получить токен для скачивания файла
+  description: 'Привилегии: BRK_ONBOARDING.BANK.REQUEST.PRINT_DOCUMENT'
+  operationId: getFileAccessToken
+  parameters:
+  - name: attachmentId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/{attachmentId}/GenericResponseErrorDataFileAccessTokenResponseDto.yaml

@@ -1,0 +1,38 @@
+required:
+- contractId
+- documentType
+type: object
+properties:
+  contractId:
+    type: string
+    description: Идентификатор договора
+    format: uuid
+  documentType:
+    type: string
+    description: Тип заявки
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  currencies:
+    uniqueItems: true
+    type: array
+    items:
+      maxLength: 3
+      pattern: ^[A-Z]{3}$
+      type: string
+      description: Подключаемые валюты
+  market:
+    type: string
+    description: Подключаемая площадка
+    enum:
+    - MOEX_FOND
+    - MOEX_FORTS
+    - SPB
+    - OTC
+    - INTERNATIONAL
+  serviceId:
+    type: string
+    description: Подключаемая услуга
+    format: uuid
+description: Транспортная сущность для создания заявки на подключение услуг/валют к брокерскому договору

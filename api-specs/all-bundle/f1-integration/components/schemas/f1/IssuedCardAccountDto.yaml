@@ -1,0 +1,47 @@
+required:
+- accountNumber
+- balance
+- bic
+- currencyCode
+- id
+- isAddAgrmtExist
+- rkoContract
+- serviceBranchCodeF1
+- serviceOfficeCode
+- serviceOfficeCodeF1
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    type: integer
+    description: Код типа счета
+    format: int32
+  serviceBranchCodeF1:
+    type: string
+    description: Код филиала обслуживания (РКО Ф1)
+  serviceOfficeCodeF1:
+    type: string
+    description: Код подразделения обслуживания (РКО Ф1)
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания (КНОСИС)
+  currencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  balance:
+    type: number
+    description: Остаток на счете
+  bic:
+    type: string
+    description: БИК филиала обслуживания
+  rkoContract:
+    $ref: ./RkoContractDto.yaml
+  isAddAgrmtExist:
+    type: boolean
+    description: Признак наличия/ отсутствия доп.соглашения Корпоративная карта на Р/С
+description: Счет для выпущенных карт

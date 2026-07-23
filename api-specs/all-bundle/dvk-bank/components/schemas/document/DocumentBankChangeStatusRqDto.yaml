@@ -1,0 +1,27 @@
+required:
+- requestIds
+type: object
+properties:
+  requestIds:
+    uniqueItems: true
+    type: array
+    description: Уникальный идентификатор документа
+    items:
+      type: string
+      description: Уникальный идентификатор документа
+      format: uuid
+  status:
+    type: string
+    description: Транспортное представление возможных статусов для функции изменения статуса документов
+    enum:
+    - DECLINED
+    - COMPLETED
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+    nullable: true
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+    nullable: true
+description: Запрос изменения статуса документа

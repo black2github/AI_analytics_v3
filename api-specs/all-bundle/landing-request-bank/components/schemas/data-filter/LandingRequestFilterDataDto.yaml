@@ -1,0 +1,25 @@
+type: object
+properties:
+  statuses:
+    type: array
+    description: Статусы документа
+    items:
+      type: string
+      description: Статус заявки посадочной страницы с описанием для фронта
+      enum:
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - EXECUTED
+      - REJECTED
+  types:
+    type: array
+    description: Типы заявок посадочной страницы
+    items:
+      type: string
+      description: Типы заявки посадочной страницы с описанием для фронта
+      enum:
+      - ARCHIVAL_DOC
+      - GPB_MOBILE
+description: Данные для фильтрации. ДТО

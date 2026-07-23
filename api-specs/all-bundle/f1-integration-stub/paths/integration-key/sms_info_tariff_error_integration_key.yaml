@@ -1,0 +1,24 @@
+get:
+  summary: Получение записи из таблицы gps_eco_accs_smsinfo_err по интеграционному ключу
+  tags:
+  - Обновление заглушек ошибок GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+  parameters:
+  - name: clientGuid
+    in: query
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  - name: clientRegNum
+    in: query
+    schema:
+      type: string
+  - name: source
+    in: query
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountSmsInfoTariffErrorDto.yaml

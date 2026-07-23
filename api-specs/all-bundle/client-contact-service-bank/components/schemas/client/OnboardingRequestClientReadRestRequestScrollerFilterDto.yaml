@@ -1,0 +1,6 @@
+type: object
+description: Запрос-фильтр на получение данных по организациям по которым есть заявки.
+properties:
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Подстрока для поиска

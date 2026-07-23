@@ -1,0 +1,12 @@
+type: string
+description: Статусы заявки Входящие платежные требования
+enum:
+- PRE_APPROVED
+- APPROVAL_REQUIRED
+- EXPIRED
+- CANCELED
+- APPROVED
+- REJECTED
+- PARTLY_COMPLETED
+- INSERTED_TO_WAITING_LIST
+- COMPLETED

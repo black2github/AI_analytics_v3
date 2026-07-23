@@ -1,0 +1,66 @@
+type: object
+description: Данные из эталона ЭС cbdc.006.001.01 B2B_2024.03 "Распоряжение Клиента на перевод ЦР (B2B)"
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма операции
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции
+  senderWalletId:
+    type: string
+    description: Номер Счета ЦР Клиента-ЮЛ отправителя
+  senderDcAccountNumber:
+    type: string
+    description: Общая сумма операции
+  recipientOrganisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ получателя на ПлЦР
+  recipientWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента-ЮЛ получателя на ПлЦР
+  recipientDcAccountNumber:
+    type: string
+    description: Номер Счета ЦР Клиента-ЮЛ получателя
+  recipientName:
+    type: string
+    description: Наименование юридического лица
+  recipientNameReduction:
+    type: string
+    description: Сокращенное наименование юридического лица
+  recipientOgrn:
+    type: string
+    description: ОГРН юридического лица
+  recipientKpp:
+    type: string
+    description: КПП юридического лица
+  recipientInn:
+    type: string
+    description: ИНН юридического лица
+  intermediary:
+    type: string
+    description: Идентификатор посредника, через которого происходит взаимодействие Клиента с ПлЦР по операции
+  purpose:
+    type: string
+    description: Назначение платежа
+  debtorReferenceType:
+    type: string
+    description: Тип реквизита, содержащий дополнительную информацию о назначении платежа
+  debtorReferenceInfo:
+    type: string
+    description: Значение дополнительной информации о назначении платежа
+  record:
+    type: string
+    description: Транзакционное сообщение (дайджест РР)
+required:
+- intermediary
+- recipientDcAccountNumber
+- recipientInn
+- recipientKpp
+- recipientOgrn
+- recipientWalletId
+- record
+- senderDcAccountNumber
+- senderWalletId
+- totalAmount
+- totalAmountCcy

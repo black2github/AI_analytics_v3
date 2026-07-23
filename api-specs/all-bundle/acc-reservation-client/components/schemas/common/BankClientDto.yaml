@@ -1,0 +1,57 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Короткое наименование
+  internationalName:
+    type: string
+    description: Международное наименование
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН/ОГНРИП
+  okopf:
+    type: string
+    description: ОКОПФ
+  okfs:
+    type: string
+    description: ОКФС
+  okved:
+    type: string
+    description: ОКВЭД
+  nonResidentRegNum:
+    type: string
+    description: Регистрационный номер нерезидента
+  tin:
+    type: string
+    description: Налоговый идентификационный номер нерезидента (TIN)
+  isNonResident:
+    type: boolean
+    description: Признак компании нерезидента
+  countryId:
+    type: string
+    description: Идентификатор страны
+    format: uuid
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки ОНБ
+    format: uuid
+description: Данные клиента банка

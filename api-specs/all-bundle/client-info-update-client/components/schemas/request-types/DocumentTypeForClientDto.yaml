@@ -1,0 +1,59 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Уникальные коды типов документов
+    enum:
+    - IDENTITY_DOCUMENT
+    - HEAD_APPOINTMENT
+    - PROTOCOL
+    - ADD_AGREEMENT
+    - CONTRACT
+    - ORDER
+    - POWER_ATTORNEY
+    - OTHER_DOCUMENTS
+    - CERTIFICATE_LARGEST_TAXPAYER
+    - CONSTITUENT_DOCUMENT_CHANGES
+    - CONSTITUENT_DOCUMENT
+  documentClass:
+    type: string
+    description: 'Класс документа, возможные значения:
+
+      ORIGINAL_DOCUMENT - оригинал документа
+
+      PRINTING_FROM_BANK - печатная форма банк'
+    enum:
+    - ORIGINAL_DOCUMENT
+    - PRINTING_FROM_BANK
+  name:
+    type: string
+    description: Наименование типа документа
+  shortName:
+    type: string
+    description: Краткое наименование типа документа
+  uploadChoice:
+    type: string
+    description: Вариант загрузки
+    enum:
+    - SCAN
+    - SCAN_OR_EDOC
+  paperworkRequirements:
+    type: array
+    description: Требования к оформлению документа
+    items:
+      $ref: ./FormattedTextDto.yaml
+  paperworkRequirementsEdoc:
+    type: array
+    description: Требования к оформлению (Электронный документ)
+    items:
+      $ref: ./FormattedTextDto.yaml
+  paperworkRequirementsSign:
+    type: array
+    description: Требования к оформлению (ЭП)
+    items:
+      $ref: ./FormattedTextDto.yaml
+  maxAttachmentFileSize:
+    type: integer
+    description: Максимальный размер вложения в мегабайтах
+    format: int32
+description: Данные типов документов

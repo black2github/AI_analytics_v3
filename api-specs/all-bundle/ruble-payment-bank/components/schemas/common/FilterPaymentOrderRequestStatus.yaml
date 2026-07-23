@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./PaymentOrderRequestStatusDto.yaml
+  notEq:
+    $ref: ./PaymentOrderRequestStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestStatusDto.yaml
+  isNull:
+    type: boolean
+description: Статус документа. Поиск по <Текущий статус документа>. Равенство, содержится в списке

@@ -1,0 +1,7 @@
+type: object
+properties:
+  requestId:
+    type: string
+  file:
+    type: string
+    format: binary

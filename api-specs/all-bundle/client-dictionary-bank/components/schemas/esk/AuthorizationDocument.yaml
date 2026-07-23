@@ -1,0 +1,17 @@
+type: object
+properties:
+  documentCodeOfPrivateAuthority:
+    type: string
+    description: Код документа, подтверждающий наличие у лица полномочий распоряжения СЦР (предоставляется физ.лицом)
+  issueDate:
+    type: string
+    description: Дата выдачи документа
+    format: date
+  expirationDate:
+    type: string
+    description: Дата окончания срока действия документа
+    format: date
+  number:
+    type: string
+    description: Номер документа
+description: Сведение о документе, подтверждающих наличие у лица полномочий распоряжения СЦР

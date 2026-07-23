@@ -1,0 +1,16 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  signatureInfo:
+    $ref: ../common/SignatureInfoUpdateDto.yaml
+description: Заявка на добавление нового сотрудника. Подписант и доверитель.

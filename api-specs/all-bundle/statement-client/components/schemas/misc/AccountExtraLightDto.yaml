@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  accountNumber:
+    type: string
+  organizationNames:
+    type: string
+description: Страница с данными

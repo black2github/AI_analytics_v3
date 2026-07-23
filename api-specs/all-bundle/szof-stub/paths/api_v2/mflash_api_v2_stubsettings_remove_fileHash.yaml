@@ -1,0 +1,10 @@
+delete:
+  parameters:
+  - name: fileHash
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '204':
+      description: No Content

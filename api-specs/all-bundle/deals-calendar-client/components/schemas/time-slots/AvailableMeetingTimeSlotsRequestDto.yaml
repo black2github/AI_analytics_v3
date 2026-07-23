@@ -1,0 +1,42 @@
+required:
+- endInterval
+- operationType
+- startInterval
+type: object
+properties:
+  branchIds:
+    maxItems: 2147483647
+    minItems: 1
+    type: array
+    description: Список идентификаторов подразделений
+    items:
+      type: string
+      description: Список идентификаторов подразделений
+      format: uuid
+  operationType:
+    type: string
+    description: Тип операции по заявке на встречу
+    enum:
+    - CHANGE_CLIENT_DATA
+    - OPEN_PAYMENT_ACCOUNT
+    - OPEN_GOZ_ACCOUNT
+    - OPEN_SPECIAL_PURCHASE_ACCOUNT
+  meetingPlace:
+    type: string
+    description: Место встречи
+    enum:
+    - OFFICE
+    - EMPLOYEE_VISIT
+  startInterval:
+    type: string
+    description: Начало интервала
+    format: date-time
+  endInterval:
+    type: string
+    description: Конец интервала
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Запрос получения доступных временных слотов

@@ -1,0 +1,9 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН клиента.
+  rnk:
+    type: string
+    description: РНК клиента.
+description: Данные для запроса ИО клиента и проверок.

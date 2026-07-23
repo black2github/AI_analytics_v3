@@ -1,0 +1,26 @@
+type: object
+description: Запрос на создание документа из ЛК УВЭД
+properties:
+  objType:
+    type: string
+    description: Тип документа
+  eventType:
+    type: string
+    description: Тип события
+  locId:
+    type:
+    - string
+    - 'null'
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Локальный идентификатор ИО в Компоненте
+  objBody:
+    type: string
+    description: Тег "ObjectBody" XML-объекта
+  attachedFiles:
+    type:
+    - array
+    - 'null'
+    items:
+      $ref: ./AttachedFileDto.yaml
+    description: Прикрепленные файлы для составления тега "AttachedFiles"

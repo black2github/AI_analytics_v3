@@ -1,0 +1,23 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес точки инкассации
+  bankProvided:
+    type: boolean
+    description: Устройство предоставлено банком, а не клиентом
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  name:
+    type: string
+    description: Наименование
+  onlineCashCollectionId:
+    type: string
+    description: Ссылка на "Онлайн инкассация"
+    format: uuid
+  plannedRevenue:
+    type: string
+    description: Плановый объём выручки
+description: Карточка АДМ в заявке на открытие первого счёта

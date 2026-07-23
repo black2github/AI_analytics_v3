@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API для визирующей организации.
+  summary: Получить визирующее лицо по id пользователя и id визирующей организации
+  description: 'Привилегии: APPROVAL_SIGN.CLIENT_FIND'
+  operationId: getApprovalPersonClientBySignerIdAndSightClientIdUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: findApprovalPersonDto
+    description: findApprovalPersonDto
+    required: true
+    schema:
+      $ref: '#/definitions/FindApprovalPersonDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,ApprovalPersonDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

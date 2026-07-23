@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUaaRoleFilterBankDto.yaml
+description: Запрос страницы

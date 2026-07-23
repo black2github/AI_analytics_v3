@@ -1,0 +1,20 @@
+type: object
+properties:
+  documentDate:
+    type: string
+    description: Дата
+    format: date
+  currency:
+    type: string
+    description: Валюта
+  creditTotal:
+    type: number
+    description: Сумма поступления
+  debitTotal:
+    type: number
+    description: Сумма списания
+  count:
+    type: integer
+    description: Количество операций
+    format: int32
+description: Итоги дня для ленты операции

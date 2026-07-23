@@ -1,0 +1,16 @@
+required:
+- format
+- importId
+- signedFileImport
+type: object
+properties:
+  importId:
+    type: string
+    description: Идентификатор файла импорта или фонового процесса импорта
+    format: uuid
+  format:
+    $ref: ../common/ReportFormat.yaml
+  signedFileImport:
+    type: boolean
+    description: Признак импорта документов с подписью
+description: Запрос на печать объединенного файлового импорта

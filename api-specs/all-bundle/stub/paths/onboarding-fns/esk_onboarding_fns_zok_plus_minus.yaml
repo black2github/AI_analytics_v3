@@ -1,0 +1,18 @@
+get:
+  tags:
+  - esk-onboarding-fns-controller
+  summary: sendZokPlusMinus
+  operationId: sendZokPlusMinusUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

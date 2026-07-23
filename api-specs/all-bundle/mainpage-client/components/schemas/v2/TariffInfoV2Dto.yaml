@@ -1,0 +1,17 @@
+type: object
+properties:
+  tariffPlanStartDate:
+    type: string
+    description: Дата начала действия тарифного плана
+    format: date
+  tariffPlanName:
+    type: string
+    description: Наименование тарифного плана
+  tariffPlanId:
+    type: integer
+    description: ID тарифного плана
+    format: int64
+  currentTariffPlan:
+    type: string
+    description: Текущий Тарифный план
+description: Информация о тарифе

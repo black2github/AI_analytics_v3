@@ -1,0 +1,9 @@
+type: object
+properties:
+  devicePrint:
+    type: string
+    description: Цифровой отпечаток устройства
+  macAddress:
+    type: string
+    description: MAC адрес
+description: Данные устройства пользователя

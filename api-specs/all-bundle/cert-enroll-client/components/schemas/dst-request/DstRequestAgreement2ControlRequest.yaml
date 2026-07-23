@@ -1,0 +1,11 @@
+type: object
+properties:
+  dstRequestId:
+    type: string
+    description: Идентификатор заявки на выпуск/регистрацию СЭП для ОЭП
+    format: uuid
+  signClientOfficialDstId:
+    type: string
+    description: Идентификатор СЭП представителя клиента для подписи заявки
+    format: uuid
+description: Запрос проверки доступности согласия 2 по заявке на выпуск/регистрацию СЭП для ОЭП

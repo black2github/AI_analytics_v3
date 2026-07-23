@@ -1,0 +1,20 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://onboarding-fns-processing
+  description: Generated server url
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/force-update/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/force-update/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/force-update/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml

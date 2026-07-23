@@ -1,0 +1,16 @@
+type: object
+required:
+- account
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  account:
+    type: string
+    description: Номер счета ТСП или ЮЛ
+  inn:
+    type: string
+    description: ИНН плательщика
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ в СБП

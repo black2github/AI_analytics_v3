@@ -1,0 +1,809 @@
+openapi: 3.0.1
+info:
+  title: Сервис справочника клиентов. Клиентская часть.
+  version: 1.158.0
+servers:
+- url: /client-dictionary
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: Тип счёта
+- name: Справочник счетов контрагентов
+- name: Справочник городов выездных менеджеров
+- name: API Уполномоченных Лиц (клиентская сторона)
+- name: Справочник Международные адреса Клиента Банка (ФАТФ).
+- name: Вид деятельности для ГОЗ
+- name: Справочник контрагентов
+- name: Тип документа
+- name: Проверки Представителя Клиента
+- name: Загрузка реквизитов счета
+- name: Представитель Клиента
+- name: Страны (v2)
+- name: Валюта счёта
+- name: Подразделение Банка, v2
+- name: АПИ для сущности "Сотрудники клиента"
+- name: Клиентский менеджер
+- name: API информера в профиле пользователя
+- name: Клиент Банка. Общие операции.
+- name: Партнерский баннер
+- name: API Полномочий УЛ
+- name: Клиент Банка
+- name: Подразделение Банка. Deprecated.
+- name: Справочник документов согласий
+- name: API ручной синхронизации данных в рамках сотрудников
+- name: Страна
+- name: Счёт
+- name: Контракт ГОЗ
+- name: Справочник Соглашения Клиента Банка.
+- name: Выписка ЕГРЮЛ/ЕГРИП
+- name: Справочник КПП Клиента Банка.
+- name: Справочник организаций участников маркетинговых кампаний
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /dictionary/client/counterparty:
+    $ref: ./paths/client/dictionary_client_counterparty.yaml
+  /dictionary/client/account/{id}:
+    $ref: ./paths/client/dictionary_client_account_id.yaml
+  /employees/data/sync:
+    $ref: ./paths/data/employees_data_sync.yaml
+  /dictionary/client/marketing-campaigner/check:
+    $ref: ./paths/client/dictionary_client_marketing_campaigner_check.yaml
+  /dictionary/client/marketing-campaigner/batch-check:
+    $ref: ./paths/client/dictionary_client_marketing_campaigner_batch_check.yaml
+  /dictionary/client/manager/get-by-client:
+    $ref: ./paths/client/dictionary_client_manager_get_by_client.yaml
+  /dictionary/client/kpp/find-by-bank-client-kpp-request:
+    $ref: ./paths/client/dictionary_client_kpp_find_by_bank_client_kpp_request.yaml
+  /dictionary/client/kpp/find-by-bank-client-ids:
+    $ref: ./paths/client/dictionary_client_kpp_find_by_bank_client_ids.yaml
+  /dictionary/client/goz-contract/get-page:
+    $ref: ./paths/client/dictionary_client_goz_contract_get_page.yaml
+  /dictionary/client/fatf/find-by-client-id:
+    $ref: ./paths/client/dictionary_client_fatf_find_by_client_id.yaml
+  /dictionary/client/egrul/short:
+    $ref: ./paths/client/dictionary_client_egrul_short.yaml
+  /dictionary/client/document-type/get-page:
+    $ref: ./paths/client/dictionary_client_document_type_get_page.yaml
+  /dictionary/client/currency/v2/get-page:
+    $ref: ./paths/client/dictionary_client_currency_v2_get_page.yaml
+  /dictionary/client/currency/get-page:
+    $ref: ./paths/client/dictionary_client_currency_get_page.yaml
+  /dictionary/client/country/v2/get-page:
+    $ref: ./paths/client/dictionary_client_country_v2_get_page.yaml
+  /dictionary/client/country/get-page:
+    $ref: ./paths/client/dictionary_client_country_get_page.yaml
+  /dictionary/client/counterparty/get-suggestion-page:
+    $ref: ./paths/client/dictionary_client_counterparty_get_suggestion_page.yaml
+  /dictionary/client/counterparty/get-page:
+    $ref: ./paths/client/dictionary_client_counterparty_get_page.yaml
+  /dictionary/client/counterparty/get-page-with-indicators:
+    $ref: ./paths/client/dictionary_client_counterparty_get_page_with_indicators.yaml
+  /dictionary/client/counterparty/create:
+    $ref: ./paths/client/dictionary_client_counterparty_create.yaml
+  /dictionary/client/counterparty-account/find:
+    $ref: ./paths/client/dictionary_client_counterparty_account_find.yaml
+  /dictionary/client/city-visiting-manager/zone-by-city:
+    $ref: ./paths/client/dictionary_client_city_visiting_manager_zone_by_city.yaml
+  /dictionary/client/city-visiting-manager/docpack-zone:
+    $ref: ./paths/client/dictionary_client_city_visiting_manager_docpack_zone.yaml
+  /dictionary/client/branch/v2/locality-list:
+    $ref: ./paths/client/dictionary_client_branch_v2_locality_list.yaml
+  /dictionary/client/branch/v2/locality-list-by-branch-services:
+    $ref: ./paths/client/dictionary_client_branch_v2_locality_list_by_branch_services.yaml
+  /dictionary/client/branch/v2/get-page:
+    $ref: ./paths/client/dictionary_client_branch_v2_get_page.yaml
+  /dictionary/client/branch/v2/get-page-consider-unavailable-schedule:
+    $ref: ./paths/client/dictionary_client_branch_v2_get_page_consider_unavailable_schedule.yaml
+  /dictionary/client/branch/v2/bic-page:
+    $ref: ./paths/client/dictionary_client_branch_v2_bic_page.yaml
+  /dictionary/client/branch/get-page:
+    $ref: ./paths/client/dictionary_client_branch_get_page.yaml
+  /dictionary/client/branch/bic-page:
+    $ref: ./paths/client/dictionary_client_branch_bic_page.yaml
+  /dictionary/client/bank-client/list/ogrn:
+    $ref: ./paths/client/dictionary_client_bank_client_list_ogrn.yaml
+  /dictionary/client/bank-client/list/inn:
+    $ref: ./paths/client/dictionary_client_bank_client_list_inn.yaml
+  /dictionary/client/bank-client/get-page:
+    $ref: ./paths/client/dictionary_client_bank_client_get_page.yaml
+  /dictionary/client/bank-client-authorized-person/get-page:
+    $ref: ./paths/client/dictionary_client_bank_client_authorized_person_get_page.yaml
+  /dictionary/client/bank-client-agreement/has-agreement:
+    $ref: ./paths/client/dictionary_client_bank_client_agreement_has_agreement.yaml
+  /dictionary/client/bank-client-agreement/get-page:
+    $ref: ./paths/client/dictionary_client_bank_client_agreement_get_page.yaml
+  /dictionary/client/authorized-person-authority/has-authority:
+    $ref: ./paths/client/dictionary_client_authorized_person_authority_has_authority.yaml
+  /dictionary/client/activity-type/get-page:
+    $ref: ./paths/client/dictionary_client_activity_type_get_page.yaml
+  /dictionary/client/account/list:
+    $ref: ./paths/client/dictionary_client_account_list.yaml
+  /dictionary/client/account/list-with-balance-head-unit:
+    $ref: ./paths/client/dictionary_client_account_list_with_balance_head_unit.yaml
+  /dictionary/client/account/get-page:
+    $ref: ./paths/client/dictionary_client_account_get_page.yaml
+  /dictionary/client/account/get-page-abac:
+    $ref: ./paths/client/dictionary_client_account_get_page_abac.yaml
+  /dictionary/client/account-type/get-page:
+    $ref: ./paths/client/dictionary_client_account_type_get_page.yaml
+  /dictionary/client/account-details/print:
+    $ref: ./paths/client/dictionary_client_account_details_print.yaml
+  /dictionary/client/account-details/get-details:
+    $ref: ./paths/client/dictionary_client_account_details_get_details.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /dictionary/client/{clientId}/bank-client-authorized-person/employee-authorities:
+    $ref: ./paths/client/dictionary_client_clientId_bank_client_authorized_person_employee_authorities.yaml
+  /dictionary/client/secure-bank/profile:
+    $ref: ./paths/client/dictionary_client_secure_bank_profile.yaml
+  /dictionary/client/partner-banner:
+    $ref: ./paths/client/dictionary_client_partner_banner.yaml
+  /dictionary/client/goz-contract/{id}:
+    $ref: ./paths/client/dictionary_client_goz_contract_id.yaml
+  /dictionary/client/document-type/{id}:
+    $ref: ./paths/client/dictionary_client_document_type_id.yaml
+  /dictionary/client/currency/{id}:
+    $ref: ./paths/client/dictionary_client_currency_id.yaml
+  /dictionary/client/currency/v2/{id}:
+    $ref: ./paths/client/dictionary_client_currency_v2_id.yaml
+  /dictionary/client/country/{id}:
+    $ref: ./paths/client/dictionary_client_country_id.yaml
+  /dictionary/client/counterparty/{id}:
+    $ref: ./paths/client/dictionary_client_counterparty_id.yaml
+  /dictionary/client/consent-document/{type}/version:
+    $ref: ./paths/client/dictionary_client_consent_document_type_version.yaml
+  /dictionary/client/consent-document/{type}/content:
+    $ref: ./paths/client/dictionary_client_consent_document_type_content.yaml
+  /dictionary/client/client-profile-informer/cd-ul-update-informer/{userId}:
+    $ref: ./paths/client/dictionary_client_client_profile_informer_cd_ul_update_informer_userId.yaml
+  /dictionary/client/client-official/user/{id}:
+    $ref: ./paths/client/dictionary_client_client_official_user_id.yaml
+  /dictionary/client/client-official/self-check/warranties:
+    $ref: ./paths/client/dictionary_client_client_official_self_check_warranties.yaml
+  /dictionary/client/client-official/self-check/nrs/organizations:
+    $ref: ./paths/client/dictionary_client_client_official_self_check_nrs_organizations.yaml
+  /dictionary/client/client-official/self-check/auth-person:
+    $ref: ./paths/client/dictionary_client_client_official_self_check_auth_person.yaml
+  /dictionary/client/client-official/self-check/agreements:
+    $ref: ./paths/client/dictionary_client_client_official_self_check_agreements.yaml
+  /dictionary/client/client-official/light-weight/user:
+    $ref: ./paths/client/dictionary_client_client_official_light_weight_user.yaml
+  /dictionary/client/client-employee/user:
+    $ref: ./paths/client/dictionary_client_client_employee_user.yaml
+  /dictionary/client/client-employee/employee-full-data/{clientId}:
+    $ref: ./paths/client/dictionary_client_client_employee_employee_full_data_clientId.yaml
+  /dictionary/client/client-employee/client/{clientId}:
+    $ref: ./paths/client/dictionary_client_client_employee_client_clientId.yaml
+  /dictionary/client/client-employee/client/{clientId}/esk/{eskId}:
+    $ref: ./paths/client/dictionary_client_client_employee_client_clientId_esk_eskId.yaml
+  /dictionary/client/city-visiting-manager/docpack-zone/{branchId}:
+    $ref: ./paths/client/dictionary_client_city_visiting_manager_docpack_zone_branchId.yaml
+  /dictionary/client/branch/{id}:
+    $ref: ./paths/client/dictionary_client_branch_id.yaml
+  /dictionary/client/branch/v2/{id}:
+    $ref: ./paths/client/dictionary_client_branch_v2_id.yaml
+  /dictionary/client/branch/v2/subdivision-locality-list:
+    $ref: ./paths/client/dictionary_client_branch_v2_subdivision_locality_list.yaml
+  /dictionary/client/branch/v2/head-unit:
+    $ref: ./paths/client/dictionary_client_branch_v2_head_unit.yaml
+  /dictionary/client/branch/v2/find-first-branch-by-locality:
+    $ref: ./paths/client/dictionary_client_branch_v2_find_first_branch_by_locality.yaml
+  /dictionary/client/branch/locality-list:
+    $ref: ./paths/client/dictionary_client_branch_locality_list.yaml
+  /dictionary/client/bank-client/{id}:
+    $ref: ./paths/client/dictionary_client_bank_client_id.yaml
+  /dictionary/client/bank-client/user:
+    $ref: ./paths/client/dictionary_client_bank_client_user.yaml
+  /dictionary/client/bank-client/user/migration-waves:
+    $ref: ./paths/client/dictionary_client_bank_client_user_migration_waves.yaml
+  /dictionary/client/bank-client/user/external-info:
+    $ref: ./paths/client/dictionary_client_bank_client_user_external_info.yaml
+  /dictionary/client/bank-client/user/authorized/{authority}:
+    $ref: ./paths/client/dictionary_client_bank_client_user_authorized_authority.yaml
+  /dictionary/client/activity-type/{id}:
+    $ref: ./paths/client/dictionary_client_activity_type_id.yaml
+  /dictionary/client/account/category-count:
+    $ref: ./paths/client/dictionary_client_account_category_count.yaml
+  /dictionary/client/account/category-count/{clientId}:
+    $ref: ./paths/client/dictionary_client_account_category_count_clientId.yaml
+  /dictionary/client/account-type/description/{description}:
+    $ref: ./paths/client/dictionary_client_account_type_description_description.yaml
+  /dictionary/client/account-type/code/{code}:
+    $ref: ./paths/client/dictionary_client_account_type_code_code.yaml
+  /dictionary/client/fatf/{id}:
+    $ref: ./paths/client/dictionary_client_fatf_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/client/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/client/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/client/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/client/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/client/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/common/SingleResponseBoolean.yaml
+    UpdateCommandUpdateCounterpartyDtoUUID:
+      $ref: ./components/schemas/client/UpdateCommandUpdateCounterpartyDtoUUID.yaml
+    UpdateCounterpartyAccountDto:
+      $ref: ./components/schemas/client/UpdateCounterpartyAccountDto.yaml
+    UpdateCounterpartyDto:
+      $ref: ./components/schemas/client/UpdateCounterpartyDto.yaml
+    UpdateCounterpartyKppDto:
+      $ref: ./components/schemas/client/UpdateCounterpartyKppDto.yaml
+    CounterpartyAccountDto:
+      $ref: ./components/schemas/client/CounterpartyAccountDto.yaml
+    CounterpartyDto:
+      $ref: ./components/schemas/client/CounterpartyDto.yaml
+    CounterpartyKppDto:
+      $ref: ./components/schemas/client/CounterpartyKppDto.yaml
+    CreateResponseCounterpartyDto:
+      $ref: ./components/schemas/client/CreateResponseCounterpartyDto.yaml
+    IndicatorDto:
+      $ref: ./components/schemas/client/IndicatorDto.yaml
+    GenericCommandString:
+      $ref: ./components/schemas/client/GenericCommandString.yaml
+    AccountCurrencyDto:
+      $ref: ./components/schemas/client/AccountCurrencyDto.yaml
+    AccountDtoV2:
+      $ref: ./components/schemas/client/AccountDtoV2.yaml
+    AccountKindDto:
+      $ref: ./components/schemas/client/AccountKindDto.yaml
+    AccountTypeDto:
+      $ref: ./components/schemas/client/AccountTypeDto.yaml
+    BankClientAgreementResponseDto:
+      $ref: ./components/schemas/client/BankClientAgreementResponseDto.yaml
+    BankClientCustomerIdDto:
+      $ref: ./components/schemas/client/BankClientCustomerIdDto.yaml
+    BankClientDto:
+      $ref: ./components/schemas/client/BankClientDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/client/BankClientInfoDto.yaml
+    BankClientSupplementaryOkvedDto:
+      $ref: ./components/schemas/client/BankClientSupplementaryOkvedDto.yaml
+    BranchDtoV2:
+      $ref: ./components/schemas/client/BranchDtoV2.yaml
+    ContractInfoDto:
+      $ref: ./components/schemas/client/ContractInfoDto.yaml
+    ContractTypeDtoV2:
+      $ref: ./components/schemas/client/ContractTypeDtoV2.yaml
+    CountryDto:
+      $ref: ./components/schemas/client/CountryDto.yaml
+    CurrencyServicesDto:
+      $ref: ./components/schemas/client/CurrencyServicesDto.yaml
+    GenericResponseSimpleErrorDataAccountDtoV2:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataAccountDtoV2.yaml
+    GozContractDto:
+      $ref: ./components/schemas/client/GozContractDto.yaml
+    MigrationWaveDto:
+      $ref: ./components/schemas/client/MigrationWaveDto.yaml
+    RequisitesDtoV2:
+      $ref: ./components/schemas/client/RequisitesDtoV2.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/client/SimpleErrorData.yaml
+    TurnoverInfoDto:
+      $ref: ./components/schemas/client/TurnoverInfoDto.yaml
+    EdsDataSyncRequestBody:
+      $ref: ./components/schemas/data/EdsDataSyncRequestBody.yaml
+    EdsObjectFilter:
+      $ref: ./components/schemas/data/EdsObjectFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/data/GenericResponseErrorDataLong.yaml
+    CheckMarketingCampaignerRequest:
+      $ref: ./components/schemas/client/CheckMarketingCampaignerRequest.yaml
+    SingleCommandCheckMarketingCampaignerRequest:
+      $ref: ./components/schemas/client/SingleCommandCheckMarketingCampaignerRequest.yaml
+    CheckMarketingCampaignerResponse:
+      $ref: ./components/schemas/client/CheckMarketingCampaignerResponse.yaml
+    SingleResponseCheckMarketingCampaignerResponse:
+      $ref: ./components/schemas/client/SingleResponseCheckMarketingCampaignerResponse.yaml
+    CheckMarketingCampaignerBatchRequest:
+      $ref: ./components/schemas/client/CheckMarketingCampaignerBatchRequest.yaml
+    GenericResponseSimpleErrorDataSetCheckMarketingCampaignerResponse:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSetCheckMarketingCampaignerResponse.yaml
+    ClientManagersRequestDto:
+      $ref: ./components/schemas/client/ClientManagersRequestDto.yaml
+    ClientDataDto:
+      $ref: ./components/schemas/client/ClientDataDto.yaml
+    ClientManagerDto:
+      $ref: ./components/schemas/client/ClientManagerDto.yaml
+    ClientManagersInfoDto:
+      $ref: ./components/schemas/client/ClientManagersInfoDto.yaml
+    GenericResponseSimpleErrorDataClientManagersInfoDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataClientManagersInfoDto.yaml
+    BankClientKppRequestDto:
+      $ref: ./components/schemas/client/BankClientKppRequestDto.yaml
+    BankClientKppDto:
+      $ref: ./components/schemas/client/BankClientKppDto.yaml
+    GenericResponseSimpleErrorDataSetBankClientKppDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSetBankClientKppDto.yaml
+    BankClientKppFullDto:
+      $ref: ./components/schemas/client/BankClientKppFullDto.yaml
+    GenericResponseSimpleErrorDataSetBankClientKppFullDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSetBankClientKppFullDto.yaml
+    Filter:
+      $ref: ./components/schemas/client/Filter.yaml
+    GetPageCommandFilter:
+      $ref: ./components/schemas/client/GetPageCommandFilter.yaml
+    PageParamsFilter:
+      $ref: ./components/schemas/client/PageParamsFilter.yaml
+    Paging:
+      $ref: ./components/schemas/client/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/client/Sort.yaml
+    ActionResultPageResponseGozContractDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseGozContractDto.yaml
+    PageGozContractDto:
+      $ref: ./components/schemas/client/PageGozContractDto.yaml
+    PageResponseGozContractDto:
+      $ref: ./components/schemas/client/PageResponseGozContractDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/client/SingleCommandUUID.yaml
+    FatfAddressDto:
+      $ref: ./components/schemas/client/FatfAddressDto.yaml
+    GenericResponseFatfAddressErrorListFatfAddressDto:
+      $ref: ./components/schemas/client/GenericResponseFatfAddressErrorListFatfAddressDto.yaml
+    EgrulShortRequestDto:
+      $ref: ./components/schemas/client/EgrulShortRequestDto.yaml
+    EgrulShortResponseDto:
+      $ref: ./components/schemas/client/EgrulShortResponseDto.yaml
+    SingleResponseEgrulShortResponseDto:
+      $ref: ./components/schemas/client/SingleResponseEgrulShortResponseDto.yaml
+    DocumentClassFilter:
+      $ref: ./components/schemas/client/DocumentClassFilter.yaml
+    DocumentTypeCodeFilter:
+      $ref: ./components/schemas/client/DocumentTypeCodeFilter.yaml
+    DocumentTypeFilter:
+      $ref: ./components/schemas/client/DocumentTypeFilter.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/client/FilterValueDtoBoolean.yaml
+    GetPageCommandDocumentTypeFilter:
+      $ref: ./components/schemas/client/GetPageCommandDocumentTypeFilter.yaml
+    PageParamsDocumentTypeFilter:
+      $ref: ./components/schemas/client/PageParamsDocumentTypeFilter.yaml
+    DocumentTypeForClientDto:
+      $ref: ./components/schemas/client/DocumentTypeForClientDto.yaml
+    PageDataDocumentTypeForClientDto:
+      $ref: ./components/schemas/client/PageDataDocumentTypeForClientDto.yaml
+    ReferenceDto:
+      $ref: ./components/schemas/client/ReferenceDto.yaml
+    CurrencyFilter:
+      $ref: ./components/schemas/client/CurrencyFilter.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/client/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/client/FilterValueDtoString.yaml
+    FilterValueEnumDtoCurrencyDtoStatus:
+      $ref: ./components/schemas/client/FilterValueEnumDtoCurrencyDtoStatus.yaml
+    GetPageCommandCurrencyFilter:
+      $ref: ./components/schemas/client/GetPageCommandCurrencyFilter.yaml
+    PageParamsCurrencyFilter:
+      $ref: ./components/schemas/client/PageParamsCurrencyFilter.yaml
+    ActionResultPageResponseCurrencyDtoV2:
+      $ref: ./components/schemas/client/ActionResultPageResponseCurrencyDtoV2.yaml
+    CurrencyDtoV2:
+      $ref: ./components/schemas/client/CurrencyDtoV2.yaml
+    PageCurrencyDtoV2:
+      $ref: ./components/schemas/client/PageCurrencyDtoV2.yaml
+    PageResponseCurrencyDtoV2:
+      $ref: ./components/schemas/client/PageResponseCurrencyDtoV2.yaml
+    ActionResultPageResponseCurrencyDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseCurrencyDto.yaml
+    CurrencyDto:
+      $ref: ./components/schemas/client/CurrencyDto.yaml
+    PageCurrencyDto:
+      $ref: ./components/schemas/client/PageCurrencyDto.yaml
+    PageResponseCurrencyDto:
+      $ref: ./components/schemas/client/PageResponseCurrencyDto.yaml
+    CountryFilterSearchDto:
+      $ref: ./components/schemas/client/CountryFilterSearchDto.yaml
+    CountryFilterV2:
+      $ref: ./components/schemas/client/CountryFilterV2.yaml
+    GetPageCommandCountryFilterV2:
+      $ref: ./components/schemas/client/GetPageCommandCountryFilterV2.yaml
+    PageParamsCountryFilterV2:
+      $ref: ./components/schemas/client/PageParamsCountryFilterV2.yaml
+    CountryDtoV2:
+      $ref: ./components/schemas/client/CountryDtoV2.yaml
+    PageDataCountryDtoV2:
+      $ref: ./components/schemas/client/PageDataCountryDtoV2.yaml
+    CountryFilter:
+      $ref: ./components/schemas/client/CountryFilter.yaml
+    FilterValueEnumDtoCountryStatusDto:
+      $ref: ./components/schemas/client/FilterValueEnumDtoCountryStatusDto.yaml
+    GetPageCommandCountryFilter:
+      $ref: ./components/schemas/client/GetPageCommandCountryFilter.yaml
+    PageParamsCountryFilter:
+      $ref: ./components/schemas/client/PageParamsCountryFilter.yaml
+    ActionResultPageResponseCountryDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseCountryDto.yaml
+    PageCountryDto:
+      $ref: ./components/schemas/client/PageCountryDto.yaml
+    PageResponseCountryDto:
+      $ref: ./components/schemas/client/PageResponseCountryDto.yaml
+    CreateCommandCreateCounterpartyDto:
+      $ref: ./components/schemas/client/CreateCommandCreateCounterpartyDto.yaml
+    CreateCounterpartyAccountDto:
+      $ref: ./components/schemas/client/CreateCounterpartyAccountDto.yaml
+    CreateCounterpartyDto:
+      $ref: ./components/schemas/client/CreateCounterpartyDto.yaml
+    CreateCounterpartyKppDto:
+      $ref: ./components/schemas/client/CreateCounterpartyKppDto.yaml
+    CounterpartyFilter:
+      $ref: ./components/schemas/client/CounterpartyFilter.yaml
+    GetPageCommandCounterpartyFilter:
+      $ref: ./components/schemas/client/GetPageCommandCounterpartyFilter.yaml
+    PageParamsCounterpartyFilter:
+      $ref: ./components/schemas/client/PageParamsCounterpartyFilter.yaml
+    PageDataCounterpartyDto:
+      $ref: ./components/schemas/client/PageDataCounterpartyDto.yaml
+    CounterpartyCreateDto:
+      $ref: ./components/schemas/client/CounterpartyCreateDto.yaml
+    CreateCommandCounterpartyCreateDto:
+      $ref: ./components/schemas/client/CreateCommandCounterpartyCreateDto.yaml
+    GenericResponseCounterpartyErrorCounterpartyDto:
+      $ref: ./components/schemas/client/GenericResponseCounterpartyErrorCounterpartyDto.yaml
+    FindCounterpartyAccountCommandDto:
+      $ref: ./components/schemas/client/FindCounterpartyAccountCommandDto.yaml
+    FindCounterpartyAccountDto:
+      $ref: ./components/schemas/client/FindCounterpartyAccountDto.yaml
+    CounterpartyAccountResultDto:
+      $ref: ./components/schemas/client/CounterpartyAccountResultDto.yaml
+    GenericResponseSimpleErrorDataListCounterpartyAccountResultDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListCounterpartyAccountResultDto.yaml
+    CityVisitingManagerCityByNameRequestDto:
+      $ref: ./components/schemas/client/CityVisitingManagerCityByNameRequestDto.yaml
+    CityVisitingManagerForMapDto:
+      $ref: ./components/schemas/client/CityVisitingManagerForMapDto.yaml
+    SingleResponseCityVisitingManagerForMapDto:
+      $ref: ./components/schemas/client/SingleResponseCityVisitingManagerForMapDto.yaml
+    CityVisitingManagerForDocPackRequest:
+      $ref: ./components/schemas/client/CityVisitingManagerForDocPackRequest.yaml
+    CityVisitingManagerDto:
+      $ref: ./components/schemas/client/CityVisitingManagerDto.yaml
+    SingleResponseCityVisitingManagerDto:
+      $ref: ./components/schemas/client/SingleResponseCityVisitingManagerDto.yaml
+    ListResponseString:
+      $ref: ./components/schemas/client/ListResponseString.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListString.yaml
+    AccountStateFilter:
+      $ref: ./components/schemas/client/AccountStateFilter.yaml
+    BranchClientFilter:
+      $ref: ./components/schemas/client/BranchClientFilter.yaml
+    BranchTypeFilter:
+      $ref: ./components/schemas/client/BranchTypeFilter.yaml
+    FilterValueEnumDtoBranchStateTypeDto:
+      $ref: ./components/schemas/client/FilterValueEnumDtoBranchStateTypeDto.yaml
+    GetPageCommandBranchClientFilter:
+      $ref: ./components/schemas/client/GetPageCommandBranchClientFilter.yaml
+    PageParamsBranchClientFilter:
+      $ref: ./components/schemas/client/PageParamsBranchClientFilter.yaml
+    TextCompoundFilterForBranchFilter:
+      $ref: ./components/schemas/client/TextCompoundFilterForBranchFilter.yaml
+    PageDataBranchDtoV2:
+      $ref: ./components/schemas/client/PageDataBranchDtoV2.yaml
+    AvailableBranchesDto:
+      $ref: ./components/schemas/client/AvailableBranchesDto.yaml
+    BicPageCommand:
+      $ref: ./components/schemas/client/BicPageCommand.yaml
+    BicPageDto:
+      $ref: ./components/schemas/client/BicPageDto.yaml
+    PageDataString:
+      $ref: ./components/schemas/client/PageDataString.yaml
+    BranchFilter:
+      $ref: ./components/schemas/client/BranchFilter.yaml
+    GetPageCommandBranchFilter:
+      $ref: ./components/schemas/client/GetPageCommandBranchFilter.yaml
+    PageParamsBranchFilter:
+      $ref: ./components/schemas/client/PageParamsBranchFilter.yaml
+    ActionResultPageResponseBranchDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseBranchDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/client/BranchDto.yaml
+    PageBranchDto:
+      $ref: ./components/schemas/client/PageBranchDto.yaml
+    PageResponseBranchDto:
+      $ref: ./components/schemas/client/PageResponseBranchDto.yaml
+    RequisitesDto:
+      $ref: ./components/schemas/client/RequisitesDto.yaml
+    ActionResultPageResponseString:
+      $ref: ./components/schemas/client/ActionResultPageResponseString.yaml
+    PageResponseString:
+      $ref: ./components/schemas/client/PageResponseString.yaml
+    PageString:
+      $ref: ./components/schemas/client/PageString.yaml
+    BankClientOgrnFilter:
+      $ref: ./components/schemas/client/BankClientOgrnFilter.yaml
+    BankClientInnFilter:
+      $ref: ./components/schemas/client/BankClientInnFilter.yaml
+    BankClientBlockStateFilter:
+      $ref: ./components/schemas/client/BankClientBlockStateFilter.yaml
+    BankClientDboCategoryFilter:
+      $ref: ./components/schemas/client/BankClientDboCategoryFilter.yaml
+    BankClientFilter:
+      $ref: ./components/schemas/client/BankClientFilter.yaml
+    BankClientResidentSignFilter:
+      $ref: ./components/schemas/client/BankClientResidentSignFilter.yaml
+    BankClientStatusFilter:
+      $ref: ./components/schemas/client/BankClientStatusFilter.yaml
+    BankClientTypeFilter:
+      $ref: ./components/schemas/client/BankClientTypeFilter.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/client/FilterValueDtoLong.yaml
+    FilterValueEnumDtoClientSegmentDto:
+      $ref: ./components/schemas/client/FilterValueEnumDtoClientSegmentDto.yaml
+    GetPageCommandBankClientFilter:
+      $ref: ./components/schemas/client/GetPageCommandBankClientFilter.yaml
+    PageParamsBankClientFilter:
+      $ref: ./components/schemas/client/PageParamsBankClientFilter.yaml
+    ProductTypeDtoFilter:
+      $ref: ./components/schemas/client/ProductTypeDtoFilter.yaml
+    TextCompoundFilterForBankClientFilter:
+      $ref: ./components/schemas/client/TextCompoundFilterForBankClientFilter.yaml
+    ActionResultPageResponseBankClientDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseBankClientDto.yaml
+    PageBankClientDto:
+      $ref: ./components/schemas/client/PageBankClientDto.yaml
+    PageResponseBankClientDto:
+      $ref: ./components/schemas/client/PageResponseBankClientDto.yaml
+    BankClientAuthorizedPersonFilter:
+      $ref: ./components/schemas/client/BankClientAuthorizedPersonFilter.yaml
+    FilterValueEnumDtoBankClientAuthorizedPersonActual:
+      $ref: ./components/schemas/client/FilterValueEnumDtoBankClientAuthorizedPersonActual.yaml
+    FilterValueEnumDtoProductTypeDto:
+      $ref: ./components/schemas/client/FilterValueEnumDtoProductTypeDto.yaml
+    GetPageCommandBankClientAuthorizedPersonFilter:
+      $ref: ./components/schemas/client/GetPageCommandBankClientAuthorizedPersonFilter.yaml
+    PageParamsBankClientAuthorizedPersonFilter:
+      $ref: ./components/schemas/client/PageParamsBankClientAuthorizedPersonFilter.yaml
+    RemoteSourceDtoFilter:
+      $ref: ./components/schemas/client/RemoteSourceDtoFilter.yaml
+    AuthorizedPersonAuthorityDto:
+      $ref: ./components/schemas/client/AuthorizedPersonAuthorityDto.yaml
+    BankClientAuthorizedPersonDto:
+      $ref: ./components/schemas/client/BankClientAuthorizedPersonDto.yaml
+    DigitalSignToolDto:
+      $ref: ./components/schemas/client/DigitalSignToolDto.yaml
+    PageDataBankClientAuthorizedPersonDto:
+      $ref: ./components/schemas/client/PageDataBankClientAuthorizedPersonDto.yaml
+    BankClientAgreementClientFilterDto:
+      $ref: ./components/schemas/client/BankClientAgreementClientFilterDto.yaml
+    SingleCommandBankClientAgreementClientFilterDto:
+      $ref: ./components/schemas/client/SingleCommandBankClientAgreementClientFilterDto.yaml
+    GetPageCommandBankClientAgreementClientFilterDto:
+      $ref: ./components/schemas/client/GetPageCommandBankClientAgreementClientFilterDto.yaml
+    PageParamsBankClientAgreementClientFilterDto:
+      $ref: ./components/schemas/client/PageParamsBankClientAgreementClientFilterDto.yaml
+    BankClientAgreementClientViewDto:
+      $ref: ./components/schemas/client/BankClientAgreementClientViewDto.yaml
+    PageDataBankClientAgreementClientViewDto:
+      $ref: ./components/schemas/client/PageDataBankClientAgreementClientViewDto.yaml
+    AuthorizedPersonHasAuthorityRequest:
+      $ref: ./components/schemas/client/AuthorizedPersonHasAuthorityRequest.yaml
+    GenericCommandAuthorizedPersonHasAuthorityRequest:
+      $ref: ./components/schemas/client/GenericCommandAuthorizedPersonHasAuthorityRequest.yaml
+    AuthorizedPersonHasAuthorityResponse:
+      $ref: ./components/schemas/client/AuthorizedPersonHasAuthorityResponse.yaml
+    GenericResponseSimpleErrorDataAuthorizedPersonHasAuthorityResponse:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataAuthorizedPersonHasAuthorityResponse.yaml
+    ActivityTypeFilter:
+      $ref: ./components/schemas/client/ActivityTypeFilter.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/client/FilterValueDtoInteger.yaml
+    GetPageCommandActivityTypeFilter:
+      $ref: ./components/schemas/client/GetPageCommandActivityTypeFilter.yaml
+    PageParamsActivityTypeFilter:
+      $ref: ./components/schemas/client/PageParamsActivityTypeFilter.yaml
+    ActionResultPageResponseActivityTypeDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseActivityTypeDto.yaml
+    ActivityTypeDto:
+      $ref: ./components/schemas/client/ActivityTypeDto.yaml
+    PageActivityTypeDto:
+      $ref: ./components/schemas/client/PageActivityTypeDto.yaml
+    PageResponseActivityTypeDto:
+      $ref: ./components/schemas/client/PageResponseActivityTypeDto.yaml
+    GetByIdsCommandUUID:
+      $ref: ./components/schemas/client/GetByIdsCommandUUID.yaml
+    AccountDto:
+      $ref: ./components/schemas/client/AccountDto.yaml
+    ActionResultDataListResponseAccountDto:
+      $ref: ./components/schemas/client/ActionResultDataListResponseAccountDto.yaml
+    DataListResponseAccountDto:
+      $ref: ./components/schemas/client/DataListResponseAccountDto.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/client/ListCommandUUID.yaml
+    ListResponseAccountDtoV2:
+      $ref: ./components/schemas/client/ListResponseAccountDtoV2.yaml
+    AccountFilter:
+      $ref: ./components/schemas/client/AccountFilter.yaml
+    FilterValueEnumDtoBankClientStatusDto:
+      $ref: ./components/schemas/client/FilterValueEnumDtoBankClientStatusDto.yaml
+    GetPageCommandAccountFilter:
+      $ref: ./components/schemas/client/GetPageCommandAccountFilter.yaml
+    PageParamsAccountFilter:
+      $ref: ./components/schemas/client/PageParamsAccountFilter.yaml
+    ActionResultPageResponseAccountDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseAccountDto.yaml
+    PageAccountDto:
+      $ref: ./components/schemas/client/PageAccountDto.yaml
+    PageResponseAccountDto:
+      $ref: ./components/schemas/client/PageResponseAccountDto.yaml
+    AccountTypeFilter:
+      $ref: ./components/schemas/client/AccountTypeFilter.yaml
+    GetPageCommandAccountTypeFilter:
+      $ref: ./components/schemas/client/GetPageCommandAccountTypeFilter.yaml
+    PageParamsAccountTypeFilter:
+      $ref: ./components/schemas/client/PageParamsAccountTypeFilter.yaml
+    ActionResultPageResponseAccountTypeDto:
+      $ref: ./components/schemas/client/ActionResultPageResponseAccountTypeDto.yaml
+    PageAccountTypeDto:
+      $ref: ./components/schemas/client/PageAccountTypeDto.yaml
+    PageResponseAccountTypeDto:
+      $ref: ./components/schemas/client/PageResponseAccountTypeDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/client/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/client/PrintResponse.yaml
+    AccountRequisitesDto:
+      $ref: ./components/schemas/client/AccountRequisitesDto.yaml
+    GenericResponseSimpleErrorDataAccountRequisitesDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataAccountRequisitesDto.yaml
+    AuthorizedPersonEmployeeAuthorityRs:
+      $ref: ./components/schemas/client/AuthorizedPersonEmployeeAuthorityRs.yaml
+    GenericResponseSimpleErrorDataAuthorizedPersonEmployeeAuthorityRs:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataAuthorizedPersonEmployeeAuthorityRs.yaml
+    GenericResponseSimpleErrorDataSecureBankProfileDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSecureBankProfileDto.yaml
+    SecureBankProfileDto:
+      $ref: ./components/schemas/client/SecureBankProfileDto.yaml
+    GenericResponseErrorDataListPartnerBannerClientDto:
+      $ref: ./components/schemas/client/GenericResponseErrorDataListPartnerBannerClientDto.yaml
+    PartnerBannerClientDto:
+      $ref: ./components/schemas/client/PartnerBannerClientDto.yaml
+    ActionResultSingleResponseGozContractDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseGozContractDto.yaml
+    SingleResponseGozContractDto:
+      $ref: ./components/schemas/client/SingleResponseGozContractDto.yaml
+    SingleResponseDocumentTypeForClientDto:
+      $ref: ./components/schemas/client/SingleResponseDocumentTypeForClientDto.yaml
+    ActionResultSingleResponseCurrencyDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseCurrencyDto.yaml
+    SingleResponseCurrencyDto:
+      $ref: ./components/schemas/client/SingleResponseCurrencyDto.yaml
+    ActionResultSingleResponseCurrencyDtoV2:
+      $ref: ./components/schemas/client/ActionResultSingleResponseCurrencyDtoV2.yaml
+    SingleResponseCurrencyDtoV2:
+      $ref: ./components/schemas/client/SingleResponseCurrencyDtoV2.yaml
+    ActionResultSingleResponseCountryDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseCountryDto.yaml
+    SingleResponseCountryDto:
+      $ref: ./components/schemas/client/SingleResponseCountryDto.yaml
+    SingleResponseCounterpartyDto:
+      $ref: ./components/schemas/client/SingleResponseCounterpartyDto.yaml
+    SingleResponseInteger:
+      $ref: ./components/schemas/client/SingleResponseInteger.yaml
+    ClientContactDataUpdateInformerDto:
+      $ref: ./components/schemas/client/ClientContactDataUpdateInformerDto.yaml
+    GenericResponseSimpleErrorDataClientContactDataUpdateInformerDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataClientContactDataUpdateInformerDto.yaml
+    ActionResultDataListResponseClientOfficialDto:
+      $ref: ./components/schemas/client/ActionResultDataListResponseClientOfficialDto.yaml
+    ClientOfficialDto:
+      $ref: ./components/schemas/client/ClientOfficialDto.yaml
+    DataListResponseClientOfficialDto:
+      $ref: ./components/schemas/client/DataListResponseClientOfficialDto.yaml
+    ClientOfficialSelfCheckResultLiteDto:
+      $ref: ./components/schemas/client/ClientOfficialSelfCheckResultLiteDto.yaml
+    GenericResponseSimpleErrorDataClientOfficialSelfCheckResultLiteDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataClientOfficialSelfCheckResultLiteDto.yaml
+    GenericResponseSimpleErrorDataListNrsCheckResultDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListNrsCheckResultDto.yaml
+    NrsAccountAccessDto:
+      $ref: ./components/schemas/client/NrsAccountAccessDto.yaml
+    NrsCheckParamDto:
+      $ref: ./components/schemas/client/NrsCheckParamDto.yaml
+    NrsCheckResultDto:
+      $ref: ./components/schemas/client/NrsCheckResultDto.yaml
+    BankClientMiniInfoDto:
+      $ref: ./components/schemas/client/BankClientMiniInfoDto.yaml
+    ClientOfficialSelfCheckResultDto:
+      $ref: ./components/schemas/client/ClientOfficialSelfCheckResultDto.yaml
+    GenericResponseSimpleErrorDataClientOfficialSelfCheckResultDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataClientOfficialSelfCheckResultDto.yaml
+    BankClientPlainDto:
+      $ref: ./components/schemas/client/BankClientPlainDto.yaml
+    ClientOfficialLightWeightDto:
+      $ref: ./components/schemas/client/ClientOfficialLightWeightDto.yaml
+    GenericResponseSimpleErrorDataSetClientOfficialLightWeightDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSetClientOfficialLightWeightDto.yaml
+    ClientEmployeeAddressDto:
+      $ref: ./components/schemas/client/ClientEmployeeAddressDto.yaml
+    ClientEmployeeDto:
+      $ref: ./components/schemas/client/ClientEmployeeDto.yaml
+    GenericResponseSimpleErrorDataMapUUIDListClientEmployeeDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataMapUUIDListClientEmployeeDto.yaml
+    GenericResponseSimpleErrorDataListClientEmployeeDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListClientEmployeeDto.yaml
+    ListResponseClientEmployeeDto:
+      $ref: ./components/schemas/client/ListResponseClientEmployeeDto.yaml
+    GenericResponseErrorDataClientEmployeeDto:
+      $ref: ./components/schemas/client/GenericResponseErrorDataClientEmployeeDto.yaml
+    ActionResultSingleResponseBranchDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseBranchDto.yaml
+    SingleResponseBranchDto:
+      $ref: ./components/schemas/client/SingleResponseBranchDto.yaml
+    SingleResponseBranchDtoV2:
+      $ref: ./components/schemas/client/SingleResponseBranchDtoV2.yaml
+    GenericResponseSimpleErrorDataBranchDtoV2:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataBranchDtoV2.yaml
+    ActionResultListString:
+      $ref: ./components/schemas/client/ActionResultListString.yaml
+    ActionResultSingleResponseBankClientDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseBankClientDto.yaml
+    SingleResponseBankClientDto:
+      $ref: ./components/schemas/client/SingleResponseBankClientDto.yaml
+    ActionResultDataListResponseBankClientDto:
+      $ref: ./components/schemas/client/ActionResultDataListResponseBankClientDto.yaml
+    DataListResponseBankClientDto:
+      $ref: ./components/schemas/client/DataListResponseBankClientDto.yaml
+    GenericResponseSimpleErrorDataMigrationWavesDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataMigrationWavesDto.yaml
+    MigrationWavesDto:
+      $ref: ./components/schemas/client/MigrationWavesDto.yaml
+    BankClientExternalInfoDto:
+      $ref: ./components/schemas/client/BankClientExternalInfoDto.yaml
+    GenericResponseSimpleErrorDataSetBankClientExternalInfoDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataSetBankClientExternalInfoDto.yaml
+    GenericResponseSimpleErrorDataListBankClientPlainDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListBankClientPlainDto.yaml
+    ActionResultSingleResponseActivityTypeDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseActivityTypeDto.yaml
+    SingleResponseActivityTypeDto:
+      $ref: ./components/schemas/client/SingleResponseActivityTypeDto.yaml
+    ActionResultSingleResponseAccountDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseAccountDto.yaml
+    SingleResponseAccountDto:
+      $ref: ./components/schemas/client/SingleResponseAccountDto.yaml
+    ActionResultCategoryResponse:
+      $ref: ./components/schemas/client/ActionResultCategoryResponse.yaml
+    CategoryCount:
+      $ref: ./components/schemas/client/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/client/CategoryResponse.yaml
+    ActionResultDataListResponseAccountTypeDto:
+      $ref: ./components/schemas/client/ActionResultDataListResponseAccountTypeDto.yaml
+    DataListResponseAccountTypeDto:
+      $ref: ./components/schemas/client/DataListResponseAccountTypeDto.yaml
+    ActionResultSingleResponseAccountTypeDto:
+      $ref: ./components/schemas/client/ActionResultSingleResponseAccountTypeDto.yaml
+    SingleResponseAccountTypeDto:
+      $ref: ./components/schemas/client/SingleResponseAccountTypeDto.yaml
+    GenericResponseFatfAddressErrorFatfAddressDto:
+      $ref: ./components/schemas/client/GenericResponseFatfAddressErrorFatfAddressDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

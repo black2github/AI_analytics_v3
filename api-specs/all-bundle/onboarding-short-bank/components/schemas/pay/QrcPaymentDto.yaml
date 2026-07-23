@@ -1,0 +1,10 @@
+type: object
+properties:
+  isVisitingManager:
+    type: boolean
+    description: Признак вызова функции из сервиса выездного менеджера
+  onboardingShortRequestId:
+    type: string
+    description: Ссылка на "Короткая заявка на открытие первого счета"
+    format: uuid
+description: Данные об оплате

@@ -1,0 +1,22 @@
+required:
+- clientGUID
+- commissionAccount
+- obtainMethod
+- referenceList
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  obtainMethod:
+    type: string
+    description: Метод получения справки
+    enum:
+    - DIGITAL
+    - OFFICE
+  commissionAccount:
+    $ref: ./CommissionAccount.yaml
+  referenceList:
+    $ref: ./ReferenceList.yaml
+description: Запрос возможности получения справки

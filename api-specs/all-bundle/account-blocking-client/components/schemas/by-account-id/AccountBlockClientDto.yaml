@@ -1,0 +1,11 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    type: string
+    description: Тип счета
+  aggregate:
+    $ref: ./AccountBlockAggregateDto.yaml
+description: Поля ЭФ блокировок по счету клиента

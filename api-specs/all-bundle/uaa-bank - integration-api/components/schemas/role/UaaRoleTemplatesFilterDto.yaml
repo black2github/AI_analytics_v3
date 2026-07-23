@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  archival:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  type:
+    $ref: ./FilterValueDtoUaaRoleTemplateTypeDto.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  creatorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  displayPriority:
+    $ref: ./FilterValueDtoInteger.yaml
+  visibility:
+    type: boolean
+    description: Видимость
+description: DTO фильтра шаблонов ролей

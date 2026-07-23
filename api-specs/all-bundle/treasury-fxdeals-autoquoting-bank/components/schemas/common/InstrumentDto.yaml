@@ -1,0 +1,36 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код инструмента
+  baseCurr:
+    type: string
+    description: Базовая валюта
+  quotedCurr:
+    type: string
+    description: Котируемая валюта
+  valueDateType:
+    type: string
+    description: Тип даты валютирования
+    enum:
+    - TOD
+    - TOM
+  ratePrecision:
+    type: integer
+    description: Точность отображения
+    format: int32
+  accessType:
+    type: string
+    description: Уровень доступа
+    enum:
+    - NOT_AVAILABLE
+    - DISABLED
+    - ENABLED_ALL
+    - ENABLED_BUY
+    - ENABLED_SELL
+  tradingIntervals:
+    $ref: ./TradingIntervalsDto.yaml
+  rateDeviation:
+    type: string
+    description: Допустимое отклонение ручной котировки
+description: Список инструментов

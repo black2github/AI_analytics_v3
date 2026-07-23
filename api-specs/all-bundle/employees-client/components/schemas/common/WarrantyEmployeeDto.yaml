@@ -1,0 +1,13 @@
+type: object
+properties:
+  birthPlace:
+    maxLength: 255
+    pattern: ^[ЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Место рождения
+  position:
+    maxLength: 255
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Должность
+description: Данные по сотруднику

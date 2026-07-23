@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  destination:
+    type: string
+    description: Система в которую осуществляется экспорт
+    enum:
+    - DBO17
+    - H2H
+description: Запрос на экспорт сертификатов

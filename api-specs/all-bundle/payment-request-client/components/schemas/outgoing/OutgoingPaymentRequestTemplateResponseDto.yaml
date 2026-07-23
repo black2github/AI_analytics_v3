@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  documentType:
+    type: string
+    description: Тип документа
+  createdAt:
+    type: string
+    description: Дата и время создания шаблона
+    format: date
+  version:
+    type: integer
+    description: Версия данных
+    format: int32
+  templateName:
+    type: string
+    description: Наименование шаблона
+  usedCount:
+    type: integer
+    description: Счетчик использования шаблона
+    format: int32
+  bssId:
+    type: string
+    description: Идентификатор шаблона БСС
+  userId:
+    type: string
+    description: Пользователь, создавший шаблон
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший шаблон (ФИО)
+  bankClientInfo:
+    $ref: ./BankClientInfoTemplateResponseClientDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessTemplateInfoClientDto.yaml
+  paymentInfo:
+    $ref: ./PaymentTemplateInfoClientDto.yaml
+  payerInfo:
+    $ref: ./PayerTemplateInfoClientDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverTemplateInfoClientDto.yaml
+description: Шаблон Исходящего Платежного требования

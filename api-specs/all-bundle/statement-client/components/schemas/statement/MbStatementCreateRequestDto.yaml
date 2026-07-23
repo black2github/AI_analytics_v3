@@ -1,0 +1,85 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - ONETIME
+    - HIDDEN_VIEW
+    - HIDDEN_PRINT_EXPORT_OSV
+    - TNF
+    - OPEN_API_CB
+    - ECO_OPEN_API_CB
+    - TA_FOR_MC
+  creationType:
+    type: string
+    enum:
+    - NEW
+    - COPY
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+  mobileSdkData:
+    type: string
+  accounts:
+    type: array
+    items:
+      $ref: ./MbAccountCreateDto.yaml
+  periodType:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  action:
+    type: string
+    enum:
+    - DOWNLOAD
+    - PRINT
+    - VIEW
+    - SEND_TO_EMAIL
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  hideEmptyTurnovers:
+    type: boolean
+  separateAccountsFiles:
+    type: boolean
+  userFileSettingsDtos:
+    type: array
+    items:
+      $ref: ../common/UserFileSettingsDto.yaml
+description: Данные

@@ -1,0 +1,10 @@
+type: object
+description: Транспортное представление ответа на запрос на старт потока профилей от АС ПКП
+properties:
+  clientId:
+    type: string
+    description: Идентификатор профиля клиента
+  effectiveDurationSeconds:
+    type: integer
+    format: int64
+    description: Эффективная длительность подписки

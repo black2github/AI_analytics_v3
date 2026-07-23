@@ -1,0 +1,35 @@
+required:
+- consumer
+- holder
+- name
+- userId
+- userType
+type: object
+properties:
+  holder:
+    type: string
+    description: Наименование микросервиса-владельца
+  consumer:
+    type: string
+    description: Наименование сервиса-потребителя
+  name:
+    type: string
+    description: Наименование бизнес-сущности
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userId:
+    type: string
+    description: Идентификатор пользователя, для которого создана ABAC сущность
+    format: uuid
+  bankClientIds:
+    type: array
+    description: Список идентификаторов Клиентов Банка, для которых создана ABAC сущность
+    items:
+      type: string
+      description: Список идентификаторов Клиентов Банка, для которых создана ABAC сущность
+      format: uuid
+description: Запрос поиска выражения V2 из ABAC сущности

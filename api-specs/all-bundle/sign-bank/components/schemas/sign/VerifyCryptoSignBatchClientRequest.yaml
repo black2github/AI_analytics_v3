@@ -1,0 +1,15 @@
+type: object
+properties:
+  requests:
+    type: array
+    description: Запросы на проверку подписей
+    items:
+      $ref: ./VerifyCryptoSignRequest.yaml
+  language:
+    type: string
+    description: Локаль в которой требуется выдать ответ
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+description: Запрос пакетной проверки подписей через крипто-модуль Банк/Клиент

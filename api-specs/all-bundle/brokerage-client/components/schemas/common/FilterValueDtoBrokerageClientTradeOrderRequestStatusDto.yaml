@@ -1,0 +1,93 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+  notEq:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CLIENT_NEW
+      - CLIENT_SIGNED
+      - CLIENT_DELIVERED
+      - CLIENT_REJECTED
+      - CLIENT_DELETED
+      - CLIENT_SENT
+      - CLIENT_PROCESSED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CLIENT_NEW
+      - CLIENT_SIGNED
+      - CLIENT_DELIVERED
+      - CLIENT_REJECTED
+      - CLIENT_DELETED
+      - CLIENT_SENT
+      - CLIENT_PROCESSED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+  ge:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+  lt:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+  le:
+    type: string
+    enum:
+    - CLIENT_NEW
+    - CLIENT_SIGNED
+    - CLIENT_DELIVERED
+    - CLIENT_REJECTED
+    - CLIENT_DELETED
+    - CLIENT_SENT
+    - CLIENT_PROCESSED
+description: Статуса заявки

@@ -1,0 +1,27 @@
+type: object
+properties:
+  operationDate:
+    type: string
+    description: Дата
+    format: date
+  outgoingBalance:
+    type: number
+    description: Исходящий остаток
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  debit:
+    type: number
+    description: Списания
+  credit:
+    type: number
+    description: Поступления
+  currency:
+    type: string
+    description: Валюта
+  accountingEntries:
+    type: array
+    description: Первая страница проводок за день
+    items:
+      $ref: ./StatementAccountingEntryScrollerDto.yaml
+description: Страница с данными

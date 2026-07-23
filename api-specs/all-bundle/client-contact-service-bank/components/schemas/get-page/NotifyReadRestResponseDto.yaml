@@ -1,0 +1,31 @@
+type: object
+description: Коммуникация
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор коммуникации
+  email:
+    type: string
+    description: E-mail получателя нотификации
+  phone:
+    type: string
+    description: Номер телефона получателя нотификации
+  type:
+    $ref: ./CommunicationType.yaml
+    description: Тип коммуникации
+  sendDateTime:
+    type: string
+    format: date-time
+    description: Дата и время отправки коммуникации
+  subject:
+    type: string
+    description: Тема письма
+  text:
+    type: string
+    description: Текст сообщения
+required:
+- id
+- sendDateTime
+- text
+- type

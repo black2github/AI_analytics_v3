@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientGroup:
+    $ref: ../common/FilterValueDtoString.yaml
+  askId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  beginDate:
+    $ref: ./FilterValueDtoLocalDateTime.yaml
+  endDate:
+    $ref: ./FilterValueDtoLocalDateTime.yaml
+  branchFilialName:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientGroupId:
+    $ref: ../common/FilterValueDtoLong.yaml
+description: Фильтр

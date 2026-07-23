@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: null
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+    example: null
+  branchCode:
+    type: string
+    description: Подразделение счета по которому запрашивается справка
+    example: null
+  filialCode:
+    pattern: ^[0-9\s\/]+$
+    type: string
+    description: Филиал счета по которому запрашивается справка
+    example: null
+  currencyCode:
+    maxLength: 3
+    pattern: ^[A-Z0-9]{3}$
+    type: string
+    description: Код валюты
+    example: null
+description: Сведения о счетах по которым запрашивается справка
+example: null

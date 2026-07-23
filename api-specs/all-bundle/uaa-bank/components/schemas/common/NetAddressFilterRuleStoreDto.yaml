@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор правила IP/MAC фильтра
+    format: uuid
+  filterType:
+    type: string
+    description: Тип фильтра.
+    enum:
+    - MAC
+    - IP
+  netAddressFilterId:
+    type: string
+    description: Идентификатор IP/MAC фильтра
+    format: uuid
+  filterTypeRule:
+    type: string
+    description: Тип правила фильтра
+    enum:
+    - ADR
+    - ADR_RNG
+    - ADR_SUB
+  enabled:
+    type: boolean
+    description: Признак активности правила
+  ruleExprPart1:
+    type: string
+    description: Выражение правила - 1
+  ruleExprPart2:
+    type: string
+    description: Выражение правила - 2
+  comments:
+    type: string
+    description: Комментарий для Банка
+description: IP/MAC фильтр

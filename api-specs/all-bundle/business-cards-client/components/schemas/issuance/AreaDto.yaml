@@ -1,0 +1,12 @@
+type: object
+properties:
+  area:
+    type: string
+    description: Район
+  areaCode:
+    type: string
+    description: Код района
+  fiasAreaCode:
+    type: string
+    description: ФИАС код района
+description: Район

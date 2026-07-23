@@ -1,0 +1,6 @@
+type: object
+description: Фильтр скроллера записей статуса публикации для типов ДСФ.
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Код типа ДСФ. Обязательный параметр. Полное совпадение или совпадение по списку.

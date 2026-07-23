@@ -1,0 +1,53 @@
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения из СИП
+  requestID:
+    type: string
+    description: Идентификатор запроса из СИП
+  direction:
+    type: string
+    description: Тип сообщения
+    enum:
+    - IN
+    - OUT
+  objectType:
+    type: string
+    description: Тип объекта в сообщении
+  objectId:
+    type: string
+    description: Идентификатор объекта
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  objectPkpId:
+    type: integer
+    description: Идентификатор объекта в ПКП
+    format: int64
+  actionType:
+    type: string
+    description: Тип действия для сделки
+  responseStatus:
+    type: string
+    description: Тип статус ответа
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int32
+  responseMessage:
+    type: string
+    description: Текст ответа
+  requestBody:
+    type: string
+    description: Тело запроса
+  responseBody:
+    type: string
+    description: Тело ответа
+  createDateTime:
+    type: string
+    description: Дата создания
+    format: date-time
+  sent:
+    type: boolean
+    description: Признак отправки
+description: Страница с данными

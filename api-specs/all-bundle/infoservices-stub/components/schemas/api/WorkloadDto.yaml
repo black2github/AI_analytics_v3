@@ -1,0 +1,10 @@
+type: object
+properties:
+  current:
+    $ref: ./LoadingDto.yaml
+  prognostic:
+    type: object
+    additionalProperties:
+      type: object
+      additionalProperties:
+        $ref: ./LoadingDto.yaml

@@ -1,0 +1,15 @@
+type: object
+description: Реквизиты платежного сервиса
+properties:
+  paymentServiceName:
+    type: string
+    description: Наименование платежного сервиса
+    enum:
+    - DR
+    - SBP
+  paymentServiceId:
+    type: string
+    description: Идентификатор платежного сервиса
+  serviceAccount:
+    $ref: ./SbpPaymentServiceAccountDto.yaml
+    description: Реквизиты счета платежного сервиса

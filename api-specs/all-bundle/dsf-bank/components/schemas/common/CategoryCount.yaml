@@ -1,0 +1,17 @@
+type: object
+description: Категория с количеством сущностей
+properties:
+  count:
+    type: integer
+    format: int64
+    description: Количество сущностей в категории
+  desc:
+    type: string
+    description: Описание категории
+  name:
+    type: string
+    description: Наименование категории
+required:
+- count
+- desc
+- name

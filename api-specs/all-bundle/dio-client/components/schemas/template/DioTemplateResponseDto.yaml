@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  documentType:
+    type: string
+    description: Тип документа
+  createdAt:
+    type: string
+    description: Дата и время создания шаблона
+    format: date
+  version:
+    type: integer
+    description: Версия данных
+    format: int32
+  templateName:
+    maxLength: 255
+    type: string
+    description: Наименование шаблона
+  usedAt:
+    type: string
+    description: Дата последнего использования шаблона
+    format: date-time
+  bssId:
+    type: string
+    description: Идентификатор шаблона БСС
+  client:
+    $ref: ./DioTemplateClientResponseDto.yaml
+  dioTemplateBusinessInfo:
+    $ref: ./DioTemplateBusinessInfoDto.yaml
+  dioTemplateCurrencyOperations:
+    type: array
+    description: DTO Валютных операций для шаблона
+    items:
+      $ref: ./DioTemplateCurrencyOperationDto.yaml
+description: Дто шаблона валютных переводов

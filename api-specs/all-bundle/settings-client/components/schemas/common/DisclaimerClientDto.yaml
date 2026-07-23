@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID дисклеймера
+    format: uuid
+  serviceCode:
+    type: string
+    description: Код сервиса
+  iconRelativePath:
+    type: string
+    description: Иконка дисклеймера
+  template:
+    $ref: ./DisclaimerTemplateDto.yaml
+  serviceUsePaths:
+    title: URL использования сервиса
+    uniqueItems: true
+    type: array
+    description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+    items:
+      title: URL использования сервиса
+      type: string
+      description: Список относительных путей до страницы, на которой должен быть отображен дисклеймер
+  enabled:
+    title: Включен
+    type: boolean
+    description: Признак необходимости отображать дисклеймер пользователю Клиента
+  disclaimerType:
+    type: string
+    description: Вид дисклеймеров
+    enum:
+    - ERROR
+    - WARNING
+    - INFO
+    - MESSAGE
+  title:
+    type: string
+    description: Заголовок дисклеймера
+  text:
+    type: string
+    description: Текст дисклеймера
+  hash:
+    type: string
+    description: Хэш для отслеживания изменений в дисклеймере
+description: 'Клиентская часть: Дисклеймер'

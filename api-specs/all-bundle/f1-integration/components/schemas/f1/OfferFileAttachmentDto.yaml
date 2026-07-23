@@ -1,0 +1,17 @@
+type: object
+properties:
+  number:
+    type: integer
+    description: Порядковый номер вложения
+    format: int64
+  fileName:
+    type: string
+    description: Имя файла
+  fileSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int64
+  data:
+    type: string
+    description: Содержимое файла в Base64
+description: Файл с данными образа документа

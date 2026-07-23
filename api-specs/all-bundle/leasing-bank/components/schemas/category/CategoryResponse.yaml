@@ -1,0 +1,10 @@
+type: object
+description: Список категорий
+properties:
+  data:
+    type: array
+    description: Категории
+    items:
+      $ref: ./CategoryCount.yaml
+required:
+- data

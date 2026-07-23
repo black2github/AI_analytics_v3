@@ -1,0 +1,433 @@
+openapi: 3.0.1
+info:
+  title: Сервис регистрации сертификатов. Банковская часть.
+  version: 3.10.0
+servers:
+- url: /cert-enroll-bank
+security:
+- bearerAuth: []
+paths:
+  /unq-cert-request/{requestId}/onboarding-short-request-status:
+    $ref: ./paths/unq-cert-request/unq_cert_request_requestId_onboarding_short_request_status.yaml
+  /unq-cert-request/v2/get-page:
+    $ref: ./paths/unq-cert-request/unq_cert_request_v2_get_page.yaml
+  /unq-cert-request/repeat-export-to-abs:
+    $ref: ./paths/unq-cert-request/unq_cert_request_repeat_export_to_abs.yaml
+  /unq-cert-request/reject/{id}:
+    $ref: ./paths/unq-cert-request/unq_cert_request_reject_id.yaml
+  /unq-cert-request/print-with-passport:
+    $ref: ./paths/unq-cert-request/unq_cert_request_print_with_passport.yaml
+  /unq-cert-request/organizations/{id}:
+    $ref: ./paths/unq-cert-request/unq_cert_request_organizations_id.yaml
+  /unq-cert-request/get-page:
+    $ref: ./paths/unq-cert-request/unq_cert_request_get_page.yaml
+  /unq-cert-request/generate-digest/version:
+    $ref: ./paths/unq-cert-request/unq_cert_request_generate_digest_version.yaml
+  /unq-cert-request/for-dst-history:
+    $ref: ./paths/unq-cert-request/unq_cert_request_for_dst_history.yaml
+  /unq-cert-request/export/streaming/excel:
+    $ref: ./paths/unq-cert-request/unq_cert_request_export_streaming_excel.yaml
+  /unq-cert-request/export/excel:
+    $ref: ./paths/unq-cert-request/unq_cert_request_export_excel.yaml
+  /unq-cert-request/export-sign:
+    $ref: ./paths/unq-cert-request/unq_cert_request_export_sign.yaml
+  /unq-cert-request/execute/{id}:
+    $ref: ./paths/unq-cert-request/unq_cert_request_execute_id.yaml
+  /unq-cert-request/change-status:
+    $ref: ./paths/unq-cert-request/unq_cert_request_change_status.yaml
+  /unq-cert-request/category:
+    $ref: ./paths/unq-cert-request/unq_cert_request_category.yaml
+  /united-cert-request/get-page:
+    $ref: ./paths/misc/united_cert_request_get_page.yaml
+  /revoke-cert-request/get-page:
+    $ref: ./paths/revoke-cert-request/revoke_cert_request_get_page.yaml
+  /revoke-cert-request/export/excel:
+    $ref: ./paths/revoke-cert-request/revoke_cert_request_export_excel.yaml
+  /revoke-cert-request/category:
+    $ref: ./paths/revoke-cert-request/revoke_cert_request_category.yaml
+  /reg-cert-request/{id}/onboarding-short-request-status:
+    $ref: ./paths/reg-cert-request/reg_cert_request_id_onboarding_short_request_status.yaml
+  /reg-cert-request/v2/get-page:
+    $ref: ./paths/reg-cert-request/reg_cert_request_v2_get_page.yaml
+  /reg-cert-request/retry:
+    $ref: ./paths/reg-cert-request/reg_cert_request_retry.yaml
+  /reg-cert-request/reject:
+    $ref: ./paths/reg-cert-request/reg_cert_request_reject.yaml
+  /reg-cert-request/get-page:
+    $ref: ./paths/reg-cert-request/reg_cert_request_get_page.yaml
+  /reg-cert-request/for-dst-history:
+    $ref: ./paths/reg-cert-request/reg_cert_request_for_dst_history.yaml
+  /reg-cert-request/export/streaming/excel:
+    $ref: ./paths/reg-cert-request/reg_cert_request_export_streaming_excel.yaml
+  /reg-cert-request/export/excel:
+    $ref: ./paths/reg-cert-request/reg_cert_request_export_excel.yaml
+  /reg-cert-request/export-sign:
+    $ref: ./paths/reg-cert-request/reg_cert_request_export_sign.yaml
+  /reg-cert-request/change-status:
+    $ref: ./paths/reg-cert-request/reg_cert_request_change_status.yaml
+  /reg-cert-request/category:
+    $ref: ./paths/reg-cert-request/reg_cert_request_category.yaml
+  /integration/request/united-cert-request/print-with-passport:
+    $ref: ./paths/misc/integration_request_united_cert_request_print_with_passport.yaml
+  /integration/request/statuses-by-esk-ids:
+    $ref: ./paths/misc/integration_request_statuses_by_esk_ids.yaml
+  /integration/reg-cert-request/get-page:
+    $ref: ./paths/misc/integration_reg_cert_request_get_page.yaml
+  /dst-request/{requestId}/onboarding-short-request-status:
+    $ref: ./paths/dst-request/dst_request_requestId_onboarding_short_request_status.yaml
+  /dst-request/v2/get-page:
+    $ref: ./paths/dst-request/dst_request_v2_get_page.yaml
+  /dst-request/retry:
+    $ref: ./paths/dst-request/dst_request_retry.yaml
+  /dst-request/reject:
+    $ref: ./paths/dst-request/dst_request_reject.yaml
+  /dst-request/print:
+    $ref: ./paths/dst-request/dst_request_print.yaml
+  /dst-request/get-page:
+    $ref: ./paths/dst-request/dst_request_get_page.yaml
+  /dst-request/for-dst-history:
+    $ref: ./paths/dst-request/dst_request_for_dst_history.yaml
+  /dst-request/export/streaming/excel:
+    $ref: ./paths/dst-request/dst_request_export_streaming_excel.yaml
+  /dst-request/export/excel:
+    $ref: ./paths/dst-request/dst_request_export_excel.yaml
+  /dst-request/export-sign:
+    $ref: ./paths/dst-request/dst_request_export_sign.yaml
+  /dst-request/execute_manually:
+    $ref: ./paths/dst-request/dst_request_execute_manually.yaml
+  /dst-request/change-status:
+    $ref: ./paths/dst-request/dst_request_change_status.yaml
+  /dst-request/category:
+    $ref: ./paths/dst-request/dst_request_category.yaml
+  /csr-attribute/v2/evaluate-csr-info:
+    $ref: ./paths/misc/csr_attribute_v2_evaluate_csr_info.yaml
+  /csr-attribute/export-to-file:
+    $ref: ./paths/misc/csr_attribute_export_to_file.yaml
+  /csr-attribute/evaluate-csr-info:
+    $ref: ./paths/misc/csr_attribute_evaluate_csr_info.yaml
+  /csr-attribute/check-csr-address/{dstId}:
+    $ref: ./paths/misc/csr_attribute_check_csr_address_dstId.yaml
+  /unq-cert-request/{id}:
+    $ref: ./paths/unq-cert-request/unq_cert_request_id.yaml
+  /unq-cert-request/history/{id}:
+    $ref: ./paths/unq-cert-request/unq_cert_request_history_id.yaml
+  /revoke-cert-request/{id}:
+    $ref: ./paths/revoke-cert-request/revoke_cert_request_id.yaml
+  /revoke-cert-request/history/{id}:
+    $ref: ./paths/revoke-cert-request/revoke_cert_request_history_id.yaml
+  /reject-reason-catalog:
+    $ref: ./paths/misc/reject_reason_catalog.yaml
+  /reg-cert-request/{id}:
+    $ref: ./paths/reg-cert-request/reg_cert_request_id.yaml
+  /reg-cert-request/history/{id}:
+    $ref: ./paths/reg-cert-request/reg_cert_request_history_id.yaml
+  /reg-cert-request/cert-data/{requestId}:
+    $ref: ./paths/reg-cert-request/reg_cert_request_cert_data_requestId.yaml
+  /integration/reg-cert-request/history/{id}:
+    $ref: ./paths/misc/integration_reg_cert_request_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /dst-request/{requestId}:
+    $ref: ./paths/dst-request/dst_request_requestId.yaml
+  /dst-request/official-dst-id/all/{officialDstId}:
+    $ref: ./paths/dst-request/dst_request_official_dst_id_all_officialDstId.yaml
+  /dst-request/history/{id}:
+    $ref: ./paths/dst-request/dst_request_history_id.yaml
+  /aggregate/requests-in-progress/renew-certificates:
+    $ref: ./paths/misc/aggregate_requests_in_progress_renew_certificates.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    GenericResponseSimpleErrorDataOnboardingShortRequestStatusResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataOnboardingShortRequestStatusResponseDto.yaml
+    OnboardingShortRequestStatusResponseDto:
+      $ref: ./components/schemas/common/OnboardingShortRequestStatusResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    CsrDataFormatFilter:
+      $ref: ./components/schemas/unq-cert-request/CsrDataFormatFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoRequestApplicationKindDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoRequestApplicationKindDto.yaml
+    FilterValueEnumDtoUCRTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoUCRTypeDto.yaml
+    GetPageCommandUnqCertRequestBankFilter:
+      $ref: ./components/schemas/unq-cert-request/GetPageCommandUnqCertRequestBankFilter.yaml
+    PageParamsUnqCertRequestBankFilter:
+      $ref: ./components/schemas/unq-cert-request/PageParamsUnqCertRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UnqCertRequestBankFilter:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestBankFilter.yaml
+    UnqCertRequestStatusFilter:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestStatusFilter.yaml
+    CertInfoDto:
+      $ref: ./components/schemas/common/CertInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    PageDataUCRBankScrollerDto:
+      $ref: ./components/schemas/common/PageDataUCRBankScrollerDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/common/SignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    UCRBankScrollerDto:
+      $ref: ./components/schemas/common/UCRBankScrollerDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    EpguInfoDto:
+      $ref: ./components/schemas/common/EpguInfoDto.yaml
+    SingleResponseUnqCertRequestDto:
+      $ref: ./components/schemas/unq-cert-request/SingleResponseUnqCertRequestDto.yaml
+    UnqCertRequestDto:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestDto.yaml
+    UnqCertRequestSignatureDto:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestSignatureDto.yaml
+    CommentDto:
+      $ref: ./components/schemas/unq-cert-request/CommentDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/unq-cert-request/SingleCommandCommentDto.yaml
+    PassportDtoV2:
+      $ref: ./components/schemas/common/PassportDtoV2.yaml
+    PrintFormatDto:
+      $ref: ./components/schemas/common/PrintFormatDto.yaml
+    UnqCertPrintRequest:
+      $ref: ./components/schemas/unq-cert-request/UnqCertPrintRequest.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    SingleCommandString:
+      $ref: ./components/schemas/unq-cert-request/SingleCommandString.yaml
+    PageDataUnqCertRequestDto:
+      $ref: ./components/schemas/unq-cert-request/PageDataUnqCertRequestDto.yaml
+    DigestRequest:
+      $ref: ./components/schemas/unq-cert-request/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/unq-cert-request/Digest.yaml
+    SingleResponseDigest:
+      $ref: ./components/schemas/unq-cert-request/SingleResponseDigest.yaml
+    GetCertEnrollRequestsForDstHistoryRequest:
+      $ref: ./components/schemas/common/GetCertEnrollRequestsForDstHistoryRequest.yaml
+    CertEnrollRequestDstHistoryDto:
+      $ref: ./components/schemas/common/CertEnrollRequestDstHistoryDto.yaml
+    GenericResponseSimpleErrorDataListCertEnrollRequestDstHistoryDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListCertEnrollRequestDstHistoryDto.yaml
+    UnqCertRequestExportRequest:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestExportRequest.yaml
+    StreamingResponseBody:
+      $ref: ./components/schemas/common/StreamingResponseBody.yaml
+    CertEnrollRequestExportToFileDto:
+      $ref: ./components/schemas/common/CertEnrollRequestExportToFileDto.yaml
+    ExportedFileContentDto:
+      $ref: ./components/schemas/common/ExportedFileContentDto.yaml
+    GenericResponseSimpleErrorDataExportedFileContentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataExportedFileContentDto.yaml
+    ChangeStatusRequestDto:
+      $ref: ./components/schemas/common/ChangeStatusRequestDto.yaml
+    GenericResponseSimpleErrorDataListUnqCertRequestDto:
+      $ref: ./components/schemas/unq-cert-request/GenericResponseSimpleErrorDataListUnqCertRequestDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    GetPageCommandUnitedCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/misc/GetPageCommandUnitedCertRequestBankScrollerFilter.yaml
+    PageParamsUnitedCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/misc/PageParamsUnitedCertRequestBankScrollerFilter.yaml
+    RequestTypeFilter:
+      $ref: ./components/schemas/misc/RequestTypeFilter.yaml
+    UnitedCertRequestBankCategoryFilter:
+      $ref: ./components/schemas/misc/UnitedCertRequestBankCategoryFilter.yaml
+    UnitedCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/misc/UnitedCertRequestBankScrollerFilter.yaml
+    PageDataUnitedCertRequestBankScrollerDto:
+      $ref: ./components/schemas/misc/PageDataUnitedCertRequestBankScrollerDto.yaml
+    UnitedCertRequestBankScrollerDto:
+      $ref: ./components/schemas/misc/UnitedCertRequestBankScrollerDto.yaml
+    FilterValueEnumDtoRevokeCertRequestStatusDto:
+      $ref: ./components/schemas/revoke-cert-request/FilterValueEnumDtoRevokeCertRequestStatusDto.yaml
+    GetPageCommandRevokeCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/revoke-cert-request/GetPageCommandRevokeCertRequestBankScrollerFilter.yaml
+    PageParamsRevokeCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/revoke-cert-request/PageParamsRevokeCertRequestBankScrollerFilter.yaml
+    RevokeCertRequestBankScrollerFilter:
+      $ref: ./components/schemas/revoke-cert-request/RevokeCertRequestBankScrollerFilter.yaml
+    PageDataRevokeCertRequestBankScrollerDto:
+      $ref: ./components/schemas/revoke-cert-request/PageDataRevokeCertRequestBankScrollerDto.yaml
+    RevokeCertRequestBankScrollerDto:
+      $ref: ./components/schemas/revoke-cert-request/RevokeCertRequestBankScrollerDto.yaml
+    RevokeCertRequestExportRequest:
+      $ref: ./components/schemas/revoke-cert-request/RevokeCertRequestExportRequest.yaml
+    GenericResponseSimpleErrorDataCategoryResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCategoryResponse.yaml
+    FilterValueDtoZonedDateTime:
+      $ref: ./components/schemas/common/FilterValueDtoZonedDateTime.yaml
+    FilterValueEnumDtoRegCertRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoRegCertRequestStatusDto.yaml
+    FilterValueEnumDtoRegCertTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoRegCertTypeDto.yaml
+    GetPageCommandRegCertRequestFilter:
+      $ref: ./components/schemas/common/GetPageCommandRegCertRequestFilter.yaml
+    PageParamsRegCertRequestFilter:
+      $ref: ./components/schemas/common/PageParamsRegCertRequestFilter.yaml
+    RegCertRequestFilter:
+      $ref: ./components/schemas/common/RegCertRequestFilter.yaml
+    PageDataRCRBankScrollerDto:
+      $ref: ./components/schemas/reg-cert-request/PageDataRCRBankScrollerDto.yaml
+    RCRBankScrollerDto:
+      $ref: ./components/schemas/reg-cert-request/RCRBankScrollerDto.yaml
+    GenericResponseRegCertRequestErrorRegCertRequestDto:
+      $ref: ./components/schemas/reg-cert-request/GenericResponseRegCertRequestErrorRegCertRequestDto.yaml
+    RegCertParsedDataDto:
+      $ref: ./components/schemas/common/RegCertParsedDataDto.yaml
+    RegCertRequestDto:
+      $ref: ./components/schemas/common/RegCertRequestDto.yaml
+    RegCertRequestError:
+      $ref: ./components/schemas/common/RegCertRequestError.yaml
+    RegCertRequestSignatureDto:
+      $ref: ./components/schemas/common/RegCertRequestSignatureDto.yaml
+    RegCertRequestRejectRequest:
+      $ref: ./components/schemas/reg-cert-request/RegCertRequestRejectRequest.yaml
+    PageDataRegCertRequestDto:
+      $ref: ./components/schemas/common/PageDataRegCertRequestDto.yaml
+    RegCertRequestExportRequest:
+      $ref: ./components/schemas/reg-cert-request/RegCertRequestExportRequest.yaml
+    GenericResponseSimpleErrorDataListRegCertRequestDto:
+      $ref: ./components/schemas/reg-cert-request/GenericResponseSimpleErrorDataListRegCertRequestDto.yaml
+    GenericResponseRegCertRequestErrorCategoryResponse:
+      $ref: ./components/schemas/reg-cert-request/GenericResponseRegCertRequestErrorCategoryResponse.yaml
+    PrintRequest:
+      $ref: ./components/schemas/misc/PrintRequest.yaml
+    UnitedCertPrintRequest:
+      $ref: ./components/schemas/misc/UnitedCertPrintRequest.yaml
+    GenericResponseSimpleErrorDataListReportResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataListReportResponseDto.yaml
+    ReportResponseDto:
+      $ref: ./components/schemas/misc/ReportResponseDto.yaml
+    RequestStatusesRequestDto:
+      $ref: ./components/schemas/misc/RequestStatusesRequestDto.yaml
+    GenericResponseSimpleErrorDataListRequestStatusesDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataListRequestStatusesDto.yaml
+    RequestDto:
+      $ref: ./components/schemas/misc/RequestDto.yaml
+    RequestStatusesDto:
+      $ref: ./components/schemas/misc/RequestStatusesDto.yaml
+    DstRequestScrollerFilter:
+      $ref: ./components/schemas/dst-request/DstRequestScrollerFilter.yaml
+    FilterValueEnumDtoDstRequestStatusDto:
+      $ref: ./components/schemas/dst-request/FilterValueEnumDtoDstRequestStatusDto.yaml
+    GetPageCommandDstRequestScrollerFilter:
+      $ref: ./components/schemas/dst-request/GetPageCommandDstRequestScrollerFilter.yaml
+    PageParamsDstRequestScrollerFilter:
+      $ref: ./components/schemas/dst-request/PageParamsDstRequestScrollerFilter.yaml
+    CsrBinaryDataDto:
+      $ref: ./components/schemas/dst-request/CsrBinaryDataDto.yaml
+    DstRequestDto:
+      $ref: ./components/schemas/dst-request/DstRequestDto.yaml
+    GenericResponseSimpleErrorDataListDstRequestDto:
+      $ref: ./components/schemas/dst-request/GenericResponseSimpleErrorDataListDstRequestDto.yaml
+    DstRequestPrintRequest:
+      $ref: ./components/schemas/dst-request/DstRequestPrintRequest.yaml
+    PageDataDstRequestDto:
+      $ref: ./components/schemas/dst-request/PageDataDstRequestDto.yaml
+    DstCertRequestExportRequest:
+      $ref: ./components/schemas/dst-request/DstCertRequestExportRequest.yaml
+    CsrInfoForBankClientRequestDto:
+      $ref: ./components/schemas/misc/CsrInfoForBankClientRequestDto.yaml
+    AddressProviderParametersDto:
+      $ref: ./components/schemas/misc/AddressProviderParametersDto.yaml
+    AddressProviderResultDto:
+      $ref: ./components/schemas/misc/AddressProviderResultDto.yaml
+    CsrInfoForBankClientResponseV2Dto:
+      $ref: ./components/schemas/misc/CsrInfoForBankClientResponseV2Dto.yaml
+    GenericResponseSimpleErrorDataCsrInfoForBankClientResponseV2Dto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataCsrInfoForBankClientResponseV2Dto.yaml
+    CsrInfoForBankClientResponseDto:
+      $ref: ./components/schemas/misc/CsrInfoForBankClientResponseDto.yaml
+    GenericResponseSimpleErrorDataCsrInfoForBankClientResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataCsrInfoForBankClientResponseDto.yaml
+    UserAuthorities:
+      $ref: ./components/schemas/misc/UserAuthorities.yaml
+    UserContext:
+      $ref: ./components/schemas/misc/UserContext.yaml
+    CsrAddressCheckResponseDto:
+      $ref: ./components/schemas/misc/CsrAddressCheckResponseDto.yaml
+    GenericResponseSimpleErrorDataCsrAddressCheckResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataCsrAddressCheckResponseDto.yaml
+    ListResponseOrganizationDto:
+      $ref: ./components/schemas/unq-cert-request/ListResponseOrganizationDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/unq-cert-request/OrganizationDto.yaml
+    PersonDto:
+      $ref: ./components/schemas/unq-cert-request/PersonDto.yaml
+    ListResponseUnqCertRequestHistoryDto:
+      $ref: ./components/schemas/unq-cert-request/ListResponseUnqCertRequestHistoryDto.yaml
+    UnqCertRequestHistoryDto:
+      $ref: ./components/schemas/unq-cert-request/UnqCertRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataRevokeCertRequestDto:
+      $ref: ./components/schemas/revoke-cert-request/GenericResponseSimpleErrorDataRevokeCertRequestDto.yaml
+    RevokeCertRequestDto:
+      $ref: ./components/schemas/revoke-cert-request/RevokeCertRequestDto.yaml
+    GenericResponseSimpleErrorDataListRevokeCertRequestHistoryDto:
+      $ref: ./components/schemas/revoke-cert-request/GenericResponseSimpleErrorDataListRevokeCertRequestHistoryDto.yaml
+    RevokeCertRequestHistoryDto:
+      $ref: ./components/schemas/revoke-cert-request/RevokeCertRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataRequestRejectReasonCatalogResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataRequestRejectReasonCatalogResponseDto.yaml
+    RejectReasonDto:
+      $ref: ./components/schemas/misc/RejectReasonDto.yaml
+    RequestRejectReasonCatalogResponseDto:
+      $ref: ./components/schemas/misc/RequestRejectReasonCatalogResponseDto.yaml
+    GenericResponseRegCertRequestErrorListRegCertRequestHistoryDto:
+      $ref: ./components/schemas/common/GenericResponseRegCertRequestErrorListRegCertRequestHistoryDto.yaml
+    RegCertRequestHistoryDto:
+      $ref: ./components/schemas/common/RegCertRequestHistoryDto.yaml
+    CertificateFileDto:
+      $ref: ./components/schemas/reg-cert-request/CertificateFileDto.yaml
+    GenericResponseRegCertRequestErrorCertificateFileDto:
+      $ref: ./components/schemas/reg-cert-request/GenericResponseRegCertRequestErrorCertificateFileDto.yaml
+    GenericResponseSimpleErrorDataDstRequestDto:
+      $ref: ./components/schemas/dst-request/GenericResponseSimpleErrorDataDstRequestDto.yaml
+    DstRequestError:
+      $ref: ./components/schemas/dst-request/DstRequestError.yaml
+    GenericResponseDstRequestErrorListDstRequestDto:
+      $ref: ./components/schemas/dst-request/GenericResponseDstRequestErrorListDstRequestDto.yaml
+    DstRequestHistoryDto:
+      $ref: ./components/schemas/dst-request/DstRequestHistoryDto.yaml
+    GenericResponseDstRequestErrorListDstRequestHistoryDto:
+      $ref: ./components/schemas/dst-request/GenericResponseDstRequestErrorListDstRequestHistoryDto.yaml
+    AggregateRenewCertificatesResultDto:
+      $ref: ./components/schemas/misc/AggregateRenewCertificatesResultDto.yaml
+    GenericResponseSimpleErrorDataAggregateRenewCertificatesResultDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataAggregateRenewCertificatesResultDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

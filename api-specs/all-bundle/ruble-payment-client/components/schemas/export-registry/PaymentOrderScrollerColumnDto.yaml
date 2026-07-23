@@ -1,0 +1,24 @@
+type: string
+description: Колонки скроллера платежных поручений
+enum:
+- NUMBER
+- DATE
+- ORG
+- ORG_ACC
+- ORG_NAME
+- ORG_INN
+- CNT
+- CNT_NAME
+- CNT_INN
+- CNT_ACC
+- CNT_BIC
+- PURPOSE
+- LIGHT
+- AMOUNT
+- STATUS
+- BANK_COMMENT
+- FIN_NUMBER
+- KESRCODE
+- KESRNAME
+- SIGHT_DETAILS_SIGHT_TIMESTAMP
+- SIGHT_DETAILS_SIGHT_SIGNER_FIO

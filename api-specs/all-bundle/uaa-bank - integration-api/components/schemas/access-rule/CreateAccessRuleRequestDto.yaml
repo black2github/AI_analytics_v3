@@ -1,0 +1,23 @@
+required:
+- data
+- originEcoService
+- originSystem
+type: object
+properties:
+  originSystem:
+    type: string
+    description: Система источник
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  originEcoService:
+    minLength: 1
+    type: string
+    description: Сервис инициатор
+  data:
+    minItems: 1
+    type: array
+    description: Список сотрудников и параметров правил
+    items:
+      $ref: ./AccessRuleDataDto.yaml
+description: Запрос создания правил предоставления доступа

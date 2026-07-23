@@ -1,0 +1,15 @@
+type: object
+properties:
+  result:
+    $ref: ./RkoAgreementResult.yaml
+  agreementNumber:
+    type: string
+    description: Номер дополнительного соглашения
+  agreementDate:
+    type: string
+    description: Дата дополнительного соглашения
+    format: date
+  agreementId:
+    type: string
+    description: Идентификатор доп. соглашения в РКО Ф1
+description: Результат выполнения запроса создания доп. соглашения в РКО Ф1 по услуге "Периодический перевод денежных средств"

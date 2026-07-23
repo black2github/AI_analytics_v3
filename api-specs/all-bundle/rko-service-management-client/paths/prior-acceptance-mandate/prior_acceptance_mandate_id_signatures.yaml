@@ -1,0 +1,29 @@
+get:
+  tags:
+  - prior-acceptance-mandate-client-controller
+  summary: Получить подписи распоряжения
+  description: 'Привилегии: PRIOR_ACCEPTANCE_MANDATE.VIEW'
+  operationId: getSignaturesUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«PriorAcceptanceMandateSignatureClientDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

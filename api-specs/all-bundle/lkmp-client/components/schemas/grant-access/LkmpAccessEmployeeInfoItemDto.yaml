@@ -1,0 +1,43 @@
+type: object
+properties:
+  surname:
+    type: string
+    description: Фамилия сотрудника
+  forename:
+    type: string
+    description: Имя сотрудника
+  patronymic:
+    type: string
+    description: Отчество сотрудника
+  phone:
+    type: string
+    description: Номер телефона сотрудника
+  email:
+    type: string
+    description: Адрес электронной почты сотрудника
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  userId:
+    type: string
+    description: Пользователь, которому предоставляют доступ (Ссылка на сущность"Пользователь")
+    format: uuid
+  bankClientAuthorizedPersonId:
+    type: string
+    description: Уполномоченное лицо, которому предоставляют доступ (Ссылка на сущность УЛ Клиента Банка")
+    format: uuid
+  currentRole:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  authorizedPersonBlocked:
+    type: boolean
+    description: Признак блокировки УЛ
+description: Сотрудник, которому предоставляется доступ

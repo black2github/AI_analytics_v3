@@ -1,0 +1,15 @@
+required:
+- ids
+- reportFormat
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификатор сущностей
+    items:
+      type: string
+      description: Идентификатор сущностей
+      format: uuid
+  reportFormat:
+    $ref: ./ReportFormat.yaml
+description: Тип формата печатных форм

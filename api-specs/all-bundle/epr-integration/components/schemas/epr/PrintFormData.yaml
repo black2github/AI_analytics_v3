@@ -1,0 +1,21 @@
+type: object
+properties:
+  data:
+    type: object
+    additionalProperties:
+      type: object
+      description: Данные для заполнения полей печатной формы
+    description: Данные для заполнения полей печатной формы
+  tables:
+    type: object
+    additionalProperties:
+      type: array
+      description: Данные для заполнения табличных частей печатной формы
+      items:
+        type: object
+        additionalProperties:
+          type: object
+          description: Данные для заполнения табличных частей печатной формы
+        description: Данные для заполнения табличных частей печатной формы
+    description: Данные для заполнения табличных частей печатной формы
+description: Данные для заполнения печатной формы

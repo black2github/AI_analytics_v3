@@ -1,0 +1,82 @@
+type: object
+description: Заявка на изменение параметров ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - PERMISSIONS_REQUEST
+    - PERMISSIONS_ERROR
+    - PERMISSION_REGISTERED
+    - AUTH_REQUEST
+    - AUTH_REQUEST_ERROR
+    - AUTH_REGISTERED
+    - EXECUTED
+    - REJECTED
+    - PERMISSIONS_REPEAT
+    - EXPORT_UPDATE_URL_TO_AS_SBP
+    - EXPORT_TO_AS_SBP_UPDATE_URL_ERROR
+    - REJECTED_BY_AS_SBP_UPDATE_URL
+    - EXECUTED_BY_AS_SBP_UPDATE_URL
+    - REJECTED_PERMISSIONS_REQUEST
+    - REJECTED_AUTH_REQUEST
+    - RESULTS_PROCESSING
+    - PARTIALLY_EXECUTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку (Идентификатор пользователя в экосистеме)
+  userName:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  bankClient:
+    $ref: ./SbpTspChangeRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  merchant:
+    $ref: ./SbpTspChangeRequestMerchantDto.yaml
+    description: Реквизиты ТСП по заявке на изменение параметров ТСП
+  data:
+    $ref: ./SbpTspChangeRequestDataResponseV2Dto.yaml
+    description: Параметры по заявке на изменение параметров ТСП
+  resident:
+    type: boolean
+    description: Признак резидента
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+    description: Результат валидации заявки
+required:
+- bankClient
+- data
+- docDate
+- docNumber
+- id
+- merchant
+- status
+- userId
+- version

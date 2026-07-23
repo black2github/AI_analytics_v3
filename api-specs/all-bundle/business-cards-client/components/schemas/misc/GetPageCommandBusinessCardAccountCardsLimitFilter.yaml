@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBusinessCardAccountCardsLimitFilter.yaml
+description: Запрос страницы

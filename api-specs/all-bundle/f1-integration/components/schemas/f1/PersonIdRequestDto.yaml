@@ -1,0 +1,7 @@
+type: object
+properties:
+  personId:
+    type: integer
+    description: Идентификатор ФЛ в АБС Ф1
+    format: int64
+description: Данные идентификатора ФЛ в АБС Ф1

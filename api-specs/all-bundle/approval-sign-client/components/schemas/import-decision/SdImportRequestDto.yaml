@@ -1,0 +1,9 @@
+required:
+- attachmentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор файла импорта в File-Storage
+    format: uuid
+description: Входные данные для функции импорта обработанного реестра платёжных поручений

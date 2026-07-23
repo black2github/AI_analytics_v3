@@ -1,0 +1,44 @@
+type: object
+description: Тариф СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  RecordID:
+    type: integer
+    format: int64
+    description: Идентификатор тарифа
+  ABS_TariffID:
+    type: integer
+    format: int64
+    description: Идентификатор тарифа в Ф1
+  OKVED:
+    type: string
+    description: Код ОКВЭД
+  MCC_Code:
+    type: string
+    description: Код MCC
+  MCC_Name:
+    type: string
+    description: Наименование MCC
+  PercentRate:
+    type: number
+    description: Тариф
+  SumMin:
+    type: number
+    description: Тариф минимум
+  SumMax:
+    type: number
+    description: Тариф максимум
+  StartingDate:
+    type: string
+    format: date
+    description: Дата начала действия
+  EndingDate:
+    type: string
+    format: date
+    description: Дата окончания действия
+  IsPrimary:
+    type: boolean
+    description: Признак основного тарифа

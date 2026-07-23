@@ -1,0 +1,58 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  number:
+    type: string
+    description: Номер
+  date:
+    type: string
+    description: Дата
+    format: date
+    nullable: true
+  row:
+    pattern: ^(-[0-9])?[0-9]*$
+    type: string
+    description: Номер строки
+  code:
+    maxLength: 5
+    pattern: ^[0-9]*$
+    type: string
+    description: Код ВО
+  amount:
+    type: string
+    description: Сумма
+  currency:
+    type: string
+    description: Валюта операции (ISO, буквенный)
+  currencyNumeric:
+    type: string
+    description: Валюта операции (числовой)
+  contractNumber:
+    type: string
+    description: Уникальный номер контракта
+  contractAmount:
+    type: string
+    description: Сумма контракта
+  contractCurrency:
+    type: string
+    description: Валюта контракта
+  contractCurrencyNumeric:
+    type: string
+    description: Валюта контракта (числовой)
+  expectDate:
+    type: string
+    description: Ожидаемый срок возврата
+    format: date
+    nullable: true
+  advanceDate:
+    type: string
+    description: Срок возврата аванса
+    format: date
+    nullable: true
+  info:
+    type: string
+    description: Примечание
+description: Транспортное описание валютной операции на сохранение

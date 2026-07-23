@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientUserId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  comment:
+    $ref: ../common/FilterValueDtoString.yaml
+  originService:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  authorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  functionality:
+    $ref: ./FilterValueEnumDtoClientUserCommentFunctionalityDto.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр комментариев пользователей Клиентов Банка

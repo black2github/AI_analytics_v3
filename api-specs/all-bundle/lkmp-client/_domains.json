@@ -1,0 +1,18 @@
+{
+  "_comment": "Auto domain map for lkmp-client (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/lkmp/offer",
+      "domain": "offer"
+    },
+    {
+      "prefix": "/lkmp/grant-access",
+      "domain": "grant-access"
+    },
+    {
+      "prefix": "/lkmp",
+      "domain": "misc"
+    }
+  ]
+}

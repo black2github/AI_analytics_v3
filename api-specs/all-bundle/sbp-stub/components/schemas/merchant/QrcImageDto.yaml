@@ -1,0 +1,9 @@
+type: object
+description: Данные изображения QR кода
+properties:
+  mediaType:
+    type: string
+    description: Формат получаемого файла
+  content:
+    type: string
+    description: Изображение, закодированное в base64

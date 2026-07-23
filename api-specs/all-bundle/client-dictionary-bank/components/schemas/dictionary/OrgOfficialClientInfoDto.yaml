@@ -1,0 +1,43 @@
+required:
+- fullName
+- inn
+type: object
+properties:
+  active:
+    type: boolean
+    description: Признак активного клиента
+  inn:
+    type: string
+    description: ИНН
+  ogrnOrOgrnip:
+    type: string
+    description: ОГРН
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  filialName:
+    type: string
+    description: Наименование филиала
+  kpp:
+    type: string
+    description: КПП клиента
+  okopf:
+    type: string
+    description: ОКОПФ
+  externalClientGuid:
+    type: string
+    description: ID клиента в ЕСК
+    format: uuid
+  absId:
+    type: string
+    description: ID клиента в АБС
+  emails:
+    type: array
+    description: Email адреса клиента в ЕСК
+    items:
+      type: string
+      description: Email адреса клиента в ЕСК
+description: Информация о клиенте

@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID переменной окружения
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя клиента
+    format: uuid
+  edoProducts:
+    uniqueItems: true
+    type: array
+    description: Список продуктов ЭДО для пользователя клиента
+    items:
+      type: string
+      description: Список продуктов ЭДО для пользователя клиента
+description: Переменные окружения для пользователя клиента

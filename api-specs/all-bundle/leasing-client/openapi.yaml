@@ -1,0 +1,79 @@
+openapi: 3.0.1
+info:
+  title: Сервис лизинга. Клиентская часть.
+  version: 3.3.0
+servers:
+- url: /leasing-client
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /leasing/corp:
+    $ref: ./paths/corp/leasing_corp.yaml
+  /leasing/auto:
+    $ref: ./paths/auto/leasing_auto.yaml
+  /leasing/auto/calculate:
+    $ref: ./paths/auto/leasing_auto_calculate.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/common/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    CorporateLeasingCreateDto:
+      $ref: ./components/schemas/corp/CorporateLeasingCreateDto.yaml
+    CreateCommandCorporateLeasingCreateDto:
+      $ref: ./components/schemas/corp/CreateCommandCorporateLeasingCreateDto.yaml
+    BankClientInfoResponseDto:
+      $ref: ./components/schemas/common/BankClientInfoResponseDto.yaml
+    CorporateLeasingParametersResponseDto:
+      $ref: ./components/schemas/corp/CorporateLeasingParametersResponseDto.yaml
+    CorporateLeasingResponseDto:
+      $ref: ./components/schemas/corp/CorporateLeasingResponseDto.yaml
+    CreateResponseCorporateLeasingResponseDto:
+      $ref: ./components/schemas/corp/CreateResponseCorporateLeasingResponseDto.yaml
+    LeasingApplicantInfoResponseDto:
+      $ref: ./components/schemas/common/LeasingApplicantInfoResponseDto.yaml
+    AutoLeasingCreateDto:
+      $ref: ./components/schemas/auto/AutoLeasingCreateDto.yaml
+    CreateCommandAutoLeasingCreateDto:
+      $ref: ./components/schemas/auto/CreateCommandAutoLeasingCreateDto.yaml
+    AutoLeasingParametersResponseDto:
+      $ref: ./components/schemas/auto/AutoLeasingParametersResponseDto.yaml
+    AutoLeasingResponseDto:
+      $ref: ./components/schemas/auto/AutoLeasingResponseDto.yaml
+    CreateResponseAutoLeasingResponseDto:
+      $ref: ./components/schemas/auto/CreateResponseAutoLeasingResponseDto.yaml
+    AutoLeasingCalcRequestDto:
+      $ref: ./components/schemas/auto/AutoLeasingCalcRequestDto.yaml
+    SingleCommandAutoLeasingCalcRequestDto:
+      $ref: ./components/schemas/auto/SingleCommandAutoLeasingCalcRequestDto.yaml
+    AutoLeasingCalcResponseDto:
+      $ref: ./components/schemas/auto/AutoLeasingCalcResponseDto.yaml
+    CreateResponseAutoLeasingCalcResponseDto:
+      $ref: ./components/schemas/auto/CreateResponseAutoLeasingCalcResponseDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

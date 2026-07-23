@@ -1,0 +1,24 @@
+type: object
+properties:
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета.
+    format: uuid
+  visitDate:
+    type: string
+    description: Дата и время встречи.
+    format: date-time
+  onboardingVersion:
+    type: string
+    description: Версия сервиса Онбординга.
+    enum:
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_FIRST_REQ_2021
+    - ACC_OPEN_FIRST_REQ_KZ
+  needManualChanges:
+    type: boolean
+    description: Требуется ручное изменение данных.
+  contractSigner:
+    type: string
+    description: ФИО лица, подписавшего договор с клиентом.
+description: Новая заявка на выезд менеджера.

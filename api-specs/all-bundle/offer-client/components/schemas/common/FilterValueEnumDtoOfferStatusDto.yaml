@@ -1,0 +1,88 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ERROR
+    - EXECUTED_BY_ABS
+    - DENIED
+    - EXECUTED
+    - ACCEPTED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ERROR
+    - EXECUTED_BY_ABS
+    - DENIED
+    - EXECUTED
+    - ACCEPTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - ERROR
+      - EXECUTED_BY_ABS
+      - DENIED
+      - EXECUTED
+      - ACCEPTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - ERROR
+      - EXECUTED_BY_ABS
+      - DENIED
+      - EXECUTED
+      - ACCEPTED
+  isNull:
+    type: boolean

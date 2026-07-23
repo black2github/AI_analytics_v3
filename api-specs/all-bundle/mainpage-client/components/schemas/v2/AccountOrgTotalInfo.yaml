@@ -1,0 +1,33 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Буквенный код валюты
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  turnoverDebit:
+    type: number
+    description: Обороты по дебету
+  turnoverCredit:
+    type: number
+    description: Обороты о кредиту
+  incomingBalanceNat:
+    type: number
+    description: Входящий остаток в национальной валюте
+  currentBalanceNat:
+    type: number
+    description: Текущий остаток в нац валюте
+  planeBalanceNat:
+    type: number
+    description: Плановый остаток в нац валюте
+  turnoverDebitNat:
+    type: number
+    description: Обороты по дебету в нац валюте
+  turnoverCreditNat:
+    type: number
+    description: Обороты о кредиту в нац валюте
+description: Общие данные по счету

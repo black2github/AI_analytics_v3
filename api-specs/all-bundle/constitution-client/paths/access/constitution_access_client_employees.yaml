@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API заявки на добавление/изменение данных и полномочий сотрудника клиента. Базовые операции.
+  summary: Получить список сотрудников клиента
+  description: 'Привилегии: CONSTITUTION_ACCESS.CREATE_USER_ADD, CONSTITUTION_ACCESS.CREATE_ISSUE_ATTORNEY'
+  operationId: getClientEmployeesUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: requestDto
+    description: requestDto
+    required: true
+    schema:
+      $ref: '#/definitions/ConstitutionAccessClientEmployeesRequestDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«ConstitutionAccessClientEmployeesResponseDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

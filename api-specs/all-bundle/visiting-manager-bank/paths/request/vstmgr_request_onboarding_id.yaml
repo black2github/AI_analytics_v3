@@ -1,0 +1,62 @@
+get:
+  tags:
+  - API заявки на выезд менеджера. Интеграция с сервисом заявки на открытие первого счета.
+  summary: Найти заявку на выезд менеджера по идентификатору заявки на открытие первого счета
+  description: 'Привилегии: VISITING_MANAGER_REQUEST.VIEW, VISITING_MANAGER_REQUEST.VIEW_RETAIL_DELIVERY'
+  operationId: findByOnboardingRequestId
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: includeRejected
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: false
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/SingleResponseRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

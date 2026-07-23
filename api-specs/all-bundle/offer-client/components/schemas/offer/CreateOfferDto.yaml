@@ -1,0 +1,14 @@
+type: object
+properties:
+  step:
+    type: string
+    description: Шаг заявки
+    enum:
+    - DATA
+    - ADDITIONAL_DATA
+    - CONFIRMATION
+  clientInfo:
+    $ref: ./UpsertClientInfoDto.yaml
+  requestData:
+    $ref: ./UpsertRequestDataDto.yaml
+description: Создание оферты

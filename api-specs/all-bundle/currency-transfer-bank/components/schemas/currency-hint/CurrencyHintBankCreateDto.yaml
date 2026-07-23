@@ -1,0 +1,20 @@
+required:
+- code
+- isActive
+type: object
+properties:
+  code:
+    maxLength: 3
+    minLength: 3
+    type: string
+  tooltipText:
+    maxLength: 200000
+    minLength: 0
+    type: string
+  comment:
+    maxLength: 100
+    minLength: 0
+    type: string
+  isActive:
+    type: boolean
+description: Транспортное представление для создания подсказки

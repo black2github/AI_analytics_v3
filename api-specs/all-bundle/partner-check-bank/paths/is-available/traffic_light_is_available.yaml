@@ -1,0 +1,21 @@
+get:
+  tags:
+  - API методы сервиса Светофор.
+  summary: Признак, включена ли интеграция со "Светофором"
+  operationId: isAvailableUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«TrafficLightError,boolean»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

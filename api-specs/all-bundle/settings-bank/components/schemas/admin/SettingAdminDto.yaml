@@ -1,0 +1,49 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID настройки
+    format: uuid
+  settingType:
+    type: string
+    description: Тип настройки
+    enum:
+    - PUBLIC
+    - BANK_PUBLIC
+    - CLIENT
+    - BANK
+    - USER
+  title:
+    type: string
+    description: Наименование настройки
+  code:
+    type: string
+    description: Код настройки
+  codeDescription:
+    type: string
+    description: Описание кода настройки
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  authorId:
+    type: string
+    description: ID автора изменений
+    format: uuid
+  login:
+    type: string
+    description: Логин автора изменений
+  valueStr:
+    type: string
+    description: Строковое значение настройки
+  valueBool:
+    type: boolean
+    description: Логическое значение настройки
+  valueLong:
+    type: integer
+    description: Целочисленное значение настройки
+    format: int64
+  valueCurrency:
+    type: string
+    description: Денежное значение настройки
+description: Настройка

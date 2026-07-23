@@ -1,0 +1,38 @@
+type: object
+properties:
+  bankUserCertificateId:
+    type: string
+    description: Идентификатор сертификата пользователя банка
+    format: uuid
+  cloudDstId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  containerNameLocation:
+    type: string
+    description: Имя и расположение ключевого контейнера
+  data:
+    type: string
+    description: Base64 представление сертификата
+  id:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  issuedBy:
+    type: string
+    description: Издатель сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    type: string
+    description: Владелец сертификата
+  validFrom:
+    type: string
+    description: Действует с
+    format: date-time
+  validTo:
+    type: string
+    description: Действует по
+    format: date-time
+description: Сертификат

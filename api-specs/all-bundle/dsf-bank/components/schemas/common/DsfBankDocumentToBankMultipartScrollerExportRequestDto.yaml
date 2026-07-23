@@ -1,0 +1,22 @@
+type: object
+description: DTO запроса на многофайловую выгрузку документов в банк
+properties:
+  fields:
+    type: array
+    description: Поля в выгрузке; если не указаны, то выгружаются все поля
+    items:
+      type: string
+  filter:
+    $ref: ./DsfDocumentToBankBankScrollerFilter.yaml
+    description: Фильтр скроллера документов в банк
+  multiSort:
+    type: array
+    description: Сортировка скроллера документов в банк по нескольким полям
+    items:
+      $ref: ./Sort.yaml
+  sort:
+    $ref: ./Sort.yaml
+    description: Сортировка скроллера документов в банк
+  state:
+    $ref: ./MultipartScrollerExportStateDto.yaml
+    description: Объект-состояние, который был получен от сервера в результате предыдущего запроса. Если это первый запрос, то нужно передать null. Если это не первый запрос, то необходимо передать значение, взятое из ответа сервера.

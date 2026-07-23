@@ -1,0 +1,19 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Транспортное представление Gpi статусов документа (банк)
+      enum:
+      - GPI_SENDED
+      - GPI_IN_PROCESS
+      - GPI_COMPLETED
+      - GPI_REJECTED
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

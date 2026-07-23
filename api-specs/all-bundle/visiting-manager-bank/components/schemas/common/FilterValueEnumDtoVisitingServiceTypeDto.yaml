@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип ВС
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+  notEq:
+    type: string
+    description: Тип ВС
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип ВС
+      enum:
+      - VISITING_MANAGER
+      - RETAIL_DELIVERY
+      - OFFICE
+      - UNKNOWN
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип ВС
+      enum:
+      - VISITING_MANAGER
+      - RETAIL_DELIVERY
+      - OFFICE
+      - UNKNOWN
+  isNull:
+    type: boolean
+description: Фильтрация по типу выездного сервиса. Полное совпадение.

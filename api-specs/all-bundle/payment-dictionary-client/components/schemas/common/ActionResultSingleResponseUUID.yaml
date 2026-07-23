@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    $ref: ./SingleResponseUUID.yaml
+  errorInfo:
+    $ref: ./ErrorInfo.yaml

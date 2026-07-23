@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  result:
+    $ref: ./CheckResultType.yaml
+  level:
+    $ref: ./ControlLevel.yaml
+  checkResults:
+    type: array
+    items:
+      $ref: ./CheckResult.yaml

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API методы Админки
+  summary: Получение списка заявок с параметрами
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.VIEW_REQUEST_JOURNAL'
+  operationId: getCheckRequestsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/PageParams«RequestFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,Page«RequestResponseDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

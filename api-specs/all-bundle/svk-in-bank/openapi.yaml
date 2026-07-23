@@ -1,0 +1,228 @@
+openapi: 3.0.1
+info:
+  title: СВК2. Банковская часть
+  description: 'Сервис '
+  version: 3.7.0
+servers:
+- url: /svk-in-bank
+security:
+- bearerAuth: []
+paths:
+  /svk-in/signature/generate-digest:
+    $ref: ./paths/signature/svk_in_signature_generate_digest.yaml
+  /svk-in/signature/export:
+    $ref: ./paths/signature/svk_in_signature_export.yaml
+  /svk-in/retry-export-to-tessa:
+    $ref: ./paths/retry-export-to-tessa/svk_in_retry_export_to_tessa.yaml
+  /svk-in/resend-receipt:
+    $ref: ./paths/resend-receipt/svk_in_resend_receipt.yaml
+  /svk-in/repeat-upload-attach:
+    $ref: ./paths/repeat-upload-attach/svk_in_repeat_upload_attach.yaml
+  /svk-in/print:
+    $ref: ./paths/print/svk_in_print.yaml
+  /svk-in/get-page:
+    $ref: ./paths/get-page/svk_in_get_page.yaml
+  /svk-in/get-linked-document:
+    $ref: ./paths/get-linked-document/svk_in_get_linked_document.yaml
+  /svk-in/get-dio-linked-documents:
+    $ref: ./paths/get-dio-linked-documents/svk_in_get_dio_linked_documents.yaml
+  /svk-in/export-task:
+    $ref: ./paths/export-task/svk_in_export_task.yaml
+  /svk-in/category:
+    $ref: ./paths/category/svk_in_category.yaml
+  /svk-in/cancel:
+    $ref: ./paths/cancel/svk_in_cancel.yaml
+  /svk-in/bank/retry:
+    $ref: ./paths/bank/svk_in_bank_retry.yaml
+  /svk-in/bank-client/get-page:
+    $ref: ./paths/bank-client/svk_in_bank_client_get_page.yaml
+  /svk-in/attach/zip-access-token:
+    $ref: ./paths/attach/svk_in_attach_zip_access_token.yaml
+  /integration/bank/get-linked-documents:
+    $ref: ./paths/bank/integration_bank_get_linked_documents.yaml
+  /integration/bank/get-linked-document-by-dvk-id:
+    $ref: ./paths/bank/integration_bank_get_linked_document_by_dvk_id.yaml
+  /integration/bank/get-documents/svk:
+    $ref: ./paths/bank/integration_bank_get_documents_svk.yaml
+  /svk-in/{id}:
+    $ref: ./paths/{id}/svk_in_id.yaml
+  /svk-in/{id}/attach/{attachId}/token:
+    $ref: ./paths/{id}/svk_in_id_attach_attachId_token.yaml
+  /svk-in/history/{id}:
+    $ref: ./paths/history/svk_in_history_id.yaml
+  /svk-in/export-task/{taskId}:
+    $ref: ./paths/export-task/svk_in_export_task_taskId.yaml
+  /svk-in/export-task/{taskId}/attachment:
+    $ref: ./paths/export-task/svk_in_export_task_taskId_attachment.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    DigestRequest:
+      $ref: ./components/schemas/signature/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/signature/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    FileDataForDownloadDto:
+      $ref: ./components/schemas/common/FileDataForDownloadDto.yaml
+    GenericResponseSimpleErrorDataFileDataForDownloadDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataFileDataForDownloadDto.yaml
+    GenericCommandSvkInTessaRetryExportRqDto:
+      $ref: ./components/schemas/retry-export-to-tessa/GenericCommandSvkInTessaRetryExportRqDto.yaml
+    SvkInTessaRetryExportRqDto:
+      $ref: ./components/schemas/retry-export-to-tessa/SvkInTessaRetryExportRqDto.yaml
+    GenericResponseSimpleErrorDataInteger:
+      $ref: ./components/schemas/retry-export-to-tessa/GenericResponseSimpleErrorDataInteger.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/common/GenericCommandSetUUID.yaml
+    GenericCommandSvkInPrintRequestDto:
+      $ref: ./components/schemas/print/GenericCommandSvkInPrintRequestDto.yaml
+    SvkInPrintRequestDto:
+      $ref: ./components/schemas/print/SvkInPrintRequestDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoSvkInDocumentStatusDto:
+      $ref: ./components/schemas/common/FilterValueDtoSvkInDocumentStatusDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandSvkInBankScrollerFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandSvkInBankScrollerFilterDto.yaml
+    PageParamsSvkInBankScrollerFilterDto:
+      $ref: ./components/schemas/common/PageParamsSvkInBankScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    SvkInBankScrollerFilterDto:
+      $ref: ./components/schemas/common/SvkInBankScrollerFilterDto.yaml
+    AttachmentBankInfoDto:
+      $ref: ./components/schemas/common/AttachmentBankInfoDto.yaml
+    GenericResponseSimpleErrorDataPageDataSvkInBankScrollerRspDto:
+      $ref: ./components/schemas/get-page/GenericResponseSimpleErrorDataPageDataSvkInBankScrollerRspDto.yaml
+    LinkedDocumentBankInfoDto:
+      $ref: ./components/schemas/common/LinkedDocumentBankInfoDto.yaml
+    OrganizationBankInfoDto:
+      $ref: ./components/schemas/common/OrganizationBankInfoDto.yaml
+    PageDataSvkInBankScrollerRspDto:
+      $ref: ./components/schemas/get-page/PageDataSvkInBankScrollerRspDto.yaml
+    SkvoBankInfoDto:
+      $ref: ./components/schemas/common/SkvoBankInfoDto.yaml
+    SvkInBankScrollerRspDto:
+      $ref: ./components/schemas/get-page/SvkInBankScrollerRspDto.yaml
+    GetPageCommandLinkedDocFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandLinkedDocFilterDto.yaml
+    LinkedDocFilterDto:
+      $ref: ./components/schemas/common/LinkedDocFilterDto.yaml
+    PageParamsLinkedDocFilterDto:
+      $ref: ./components/schemas/common/PageParamsLinkedDocFilterDto.yaml
+    AttachmentLinkedDocumentInfoDto:
+      $ref: ./components/schemas/common/AttachmentLinkedDocumentInfoDto.yaml
+    LinkedDocInfoDto:
+      $ref: ./components/schemas/common/LinkedDocInfoDto.yaml
+    LinkedDocRspDto:
+      $ref: ./components/schemas/common/LinkedDocRspDto.yaml
+    LinkedDocTypeDto:
+      $ref: ./components/schemas/common/LinkedDocTypeDto.yaml
+    PageLinkedDocRspDto:
+      $ref: ./components/schemas/common/PageLinkedDocRspDto.yaml
+    ExportRegistryRequestDtoSvkInBankScrollerFilterDtoSvkInBankColumnDto:
+      $ref: ./components/schemas/export-task/ExportRegistryRequestDtoSvkInBankScrollerFilterDtoSvkInBankColumnDto.yaml
+    ExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/ExportRegistryTaskStubRspDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    GenericResponseSimpleErrorDataListCategoryCount:
+      $ref: ./components/schemas/category/GenericResponseSimpleErrorDataListCategoryCount.yaml
+    GenericCommandSvkInChangeStatusRqDto:
+      $ref: ./components/schemas/cancel/GenericCommandSvkInChangeStatusRqDto.yaml
+    SvkInChangeStatusRqDto:
+      $ref: ./components/schemas/cancel/SvkInChangeStatusRqDto.yaml
+    GenericResponseSimpleErrorDataSvkInStatusEditRspDto:
+      $ref: ./components/schemas/bank/GenericResponseSimpleErrorDataSvkInStatusEditRspDto.yaml
+    SvkInStatusEditRspDto:
+      $ref: ./components/schemas/bank/SvkInStatusEditRspDto.yaml
+    GetPageCommandSvkInBankOrganizationFilterDto:
+      $ref: ./components/schemas/bank-client/GetPageCommandSvkInBankOrganizationFilterDto.yaml
+    PageParamsSvkInBankOrganizationFilterDto:
+      $ref: ./components/schemas/bank-client/PageParamsSvkInBankOrganizationFilterDto.yaml
+    SvkInBankOrganizationFilterDto:
+      $ref: ./components/schemas/bank-client/SvkInBankOrganizationFilterDto.yaml
+    GenericResponseSimpleErrorDataPageDataSvkInBankOrganizationInfoRspDto:
+      $ref: ./components/schemas/bank-client/GenericResponseSimpleErrorDataPageDataSvkInBankOrganizationInfoRspDto.yaml
+    PageDataSvkInBankOrganizationInfoRspDto:
+      $ref: ./components/schemas/bank-client/PageDataSvkInBankOrganizationInfoRspDto.yaml
+    SvkInBankOrganizationInfoRspDto:
+      $ref: ./components/schemas/bank-client/SvkInBankOrganizationInfoRspDto.yaml
+    GenericCommandLinkedDocScrollerRqDto:
+      $ref: ./components/schemas/bank/GenericCommandLinkedDocScrollerRqDto.yaml
+    LinkedDocScrollerRqDto:
+      $ref: ./components/schemas/bank/LinkedDocScrollerRqDto.yaml
+    GenericResponseSimpleErrorDataPageDataLinkedDocScrollerRspDto:
+      $ref: ./components/schemas/bank/GenericResponseSimpleErrorDataPageDataLinkedDocScrollerRspDto.yaml
+    LinkedDocScrollerInfoDto:
+      $ref: ./components/schemas/bank/LinkedDocScrollerInfoDto.yaml
+    LinkedDocScrollerRspDto:
+      $ref: ./components/schemas/bank/LinkedDocScrollerRspDto.yaml
+    PageDataLinkedDocScrollerRspDto:
+      $ref: ./components/schemas/bank/PageDataLinkedDocScrollerRspDto.yaml
+    GetPageCommandStatusExportRqDto:
+      $ref: ./components/schemas/bank/GetPageCommandStatusExportRqDto.yaml
+    PageParamsStatusExportRqDto:
+      $ref: ./components/schemas/bank/PageParamsStatusExportRqDto.yaml
+    StatusExportRqDto:
+      $ref: ./components/schemas/bank/StatusExportRqDto.yaml
+    GenericResponseSimpleErrorDataSliceDataStatusExportRspDto:
+      $ref: ./components/schemas/bank/GenericResponseSimpleErrorDataSliceDataStatusExportRspDto.yaml
+    SliceDataStatusExportRspDto:
+      $ref: ./components/schemas/bank/SliceDataStatusExportRspDto.yaml
+    StatusExportRspDto:
+      $ref: ./components/schemas/bank/StatusExportRspDto.yaml
+    DocumentSignatureCertificateDto:
+      $ref: ./components/schemas/{id}/DocumentSignatureCertificateDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/{id}/DocumentSignatureDto.yaml
+    GenericResponseSimpleErrorDataSvkInBankViewRspDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataSvkInBankViewRspDto.yaml
+    SvkInBankViewRspDto:
+      $ref: ./components/schemas/{id}/SvkInBankViewRspDto.yaml
+    SvkInHistoryInfo:
+      $ref: ./components/schemas/{id}/SvkInHistoryInfo.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataString.yaml
+    GenericResponseSimpleErrorDataListSvkInBankHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListSvkInBankHistoryDto.yaml
+    SvkInBankHistoryDto:
+      $ref: ./components/schemas/history/SvkInBankHistoryDto.yaml
+    SvkInBankOperationHistoryDto:
+      $ref: ./components/schemas/history/SvkInBankOperationHistoryDto.yaml
+    ExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/ExportRegistryAttachmentDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryAttachmentDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

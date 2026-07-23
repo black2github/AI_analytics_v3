@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UL
+    - IP
+  notEq:
+    type: string
+    enum:
+    - UL
+    - IP
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UL
+      - IP
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UL
+      - IP
+  isNull:
+    type: boolean
+description: Тип клиента (eq)

@@ -1,0 +1,172 @@
+type: object
+properties:
+  typeCode:
+    type: string
+    description: Идентификаторы типов уведомлений
+    enum:
+    - NOTIF_CERT_EXPIRED
+    - NOTIF_QUAL_CERT_EXPIRED
+    - NOTIF_CERT_ISSUE
+    - NOTIF_CERT_REG
+    - NOTIF_RIGHTS_CHANGE
+    - NOTIF_CERT_ADD
+    - NOTIF_ACC_CANCEL_SOON
+    - NOTIF_ACC_CANCEL
+    - NOTIF_UPDATE_INFO_SUCCESS
+    - NOTIF_UPD_INFO_SUCCESS
+    - NOTIF_UPDATE_INFO_FAILED
+    - NOTIF_UPD_INFO_FAILED
+    - NOTIF_REQ_UPDATE_INFO
+    - NOTIF_RUN_ECO_SERVICE
+    - FACTORING_DOC_NEED_SIGNATURE
+    - FACTORING_DOC_REQUEST
+    - FACTORING_KP_UNHANDLED_KP
+    - FACTORING_CONTRACT_INFO
+    - FACTORING_REQUEST_REJECTED
+    - FACTORING_KP_RECEIVED
+    - LEASING_INCIDENT_STATUS
+    - LEASING_INCIDENT_COMMENT
+    - LEASING_INCIDENT_CLOSED
+    - LEASING_CONTRACT_STATUS_REFUSED
+    - LEASING_CONTRACT_STATUS_SIGNED_BY_GPBL
+    - LEASING_CONTRACT_STATUS_SIGNED_BY_LP
+    - LEASING_CONTRACT_DS_STATUS_SIGNED_BY_LP
+    - LEASING_CONTRACT_DS_STATUS_SIGNED_BY_GPBL
+    - LEASING_CONTRACT_DS_STATUS_REFUSED
+    - LEASING_CONTRACT_NEW_DOCUMENT
+    - LEASING_CONTRACT_NEW_DS
+    - LEASING_REQUEST_STATUS
+    - LEASING_REQUEST_PREPAYMENT
+    - LEASING_REQUEST_PL_READY
+    - LEASING_REQUEST_CONTRACT_READY
+    - LEASING_REQUEST_NEW_OFFER
+    - LEASING_REQUEST_NEW_DS
+    - NOTIF_ADD_UL
+    - NOTIF_ADD_WRNT
+    - NOTIF_ENABLE_ECO_SERVICE
+    - NOTIF_DISABLE_ECO_SERVICE
+    - NOTIF_CHECK_SERVICE_CONNECTED
+    - NOTIF_CHECK_SERVICE_DISABLED
+    - NOTIF_CHECK_SERVICE_DISABLED_BANK_DEBT
+    - NOTIF_CHECK_SERVICE_REJECTED
+    - NOTIF_CHECK_SERVICE_DISABLED_BANK_CLOSED_ACCOUNT
+    - NOTIF_CHECK_SERVICE_TARIFF_CHANGED
+    - NOTIF_CH_CNT
+    - NOTIF_CANCEL_WRNT
+    - NOTIF_CHANGE_WRNT
+    - NOTIF_CREAT_REQUEST_LEGALIZATION
+    - DSF_UNIVERSAL_HIGH
+    - NOTIF_UPDATE_INFO_WAIT_REQUISITES
+    - NOTIF_UPDATE_INFO_WAIT_SIGN
+    - ALERT_UNIVERSAL
+    - NEWS
+    - DIGITAL_RUBLE_OPERATION_HISTORY_SUCCESS
+    - GPB_RESTRICTION_INFO
+    - NOTIF_CARD_CHARGE
+    - STATEMENT_IS_NOT_CURRENT
+    - COPIES_DOC_COMMISSION
+    - NOTIF_SBP_SERVICE_CONNECTED
+    - NOTIF_SBP_SERVICE_REJECTED
+    - DSF_MUST_READ
+    - GPB_REQUEST_STATUS_CHANGE
+    - GPB_CALC_LIM
+    - DSF_DENIED_HIGH
+    - DSF_EXECUTED_HIGH
+    - DSF_WAIT_POSTPONED_HIGH
+    - NOTIF_CERT_REFUSE_BY_UC
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_CLIENT_BLOCK
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_CLIENT_ACTIVE
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_FI_BLOCK
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_FI_ACTIVE
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_OTHER_BLOCK
+    - NOTIF_WALLET_STATUS_CHANGE_INITIAL_OTHER_ACTIVE
+    - NOTIF_WALLET_STATUS_CHANGE_CLOSE
+    - DR_P_KEY_DATE_END_WALLET_ACTIVE
+    - DR_P_KEY_DATE_END_WALLET_BLOCK_INITIAL_CLIENT
+    - DR_P_KEY_DATE_END_WALLET_BLOCK_INITIAL_NO_CLIENT
+    - FCS_MSB_MESSAGE_INFO
+    - SW_CREATE_PAYDOC
+    - SW_ERROR_CREATE_PAYDOC
+    - UAA_NEED_PASSWORD
+    - GPBBOL_APPROVE_SIGNING_APPLICATION
+    - GPBBOL_APPROVE_SIGNING_APPLICATION_REMINDER
+    - GPBBOL_DECISION_PROCESSING_OFFER_SENT
+    - GPBBOL_DECISION_PROCESSING_OFFER_SENT_REMINDER
+    - GPBBOL_DECISION_PROCESSING_REQUEST_BY_BANK
+    - GPBBOL_DECISION_PROCESSING_REQUEST_BY_BANK_R
+    - GPBBOL_ACCEPTED
+    - GPBBOL_ACCEPTED_REMINDER
+    - GPBBOL_ISSUED
+    - GPBBOL_REJECTED
+    - GPBBOL_APPLICATION_EXPIRED
+    - GPBBOL_OFFER_EXPIRED
+    - NOTIF_CHECK_SERVICE_CONNECTION_COMPLETE
+    - CLAIM_STATUS_UPDATE
+    - SFZU_STATEMENT_DEBIT
+    - SFZU_STATEMENT_CREDIT
+    - SFZU_RRKO_PP_REJECTED
+    - SFZU_RRKO_PP_CANCELED
+    - SIMPLE_DST_UNAVAILABLE
+    - NOTIF_PEP_ENROLL_AVAILABLE
+    - NOTIF_TSP_CONNECTED
+    - NOTIF_TSP_REJECTED
+    - NOTIF_REMOTE_ACC
+    - NOTIF_REMOTE_ACC_UNAVAILABLE
+    - NOTIF_WALLET_CONTRACT_TERMINATION_BY_115FZ
+    - GPB_CHANGE_RATE_CR_SELL
+    - NOTIF_CHANGE_USER_DATA
+    - BROKERAGE_TRADE_ORDER_CREATED
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  eskId:
+    title: Идентификатор физического лица в ЕСК
+    type: string
+    description: Обязателен, если <Идентификатор пользователя> не заполнен
+  bankClientId:
+    title: Идентификатор клиента Банка
+    type: string
+    description: Обязателен, если <Идентификатор пользователя> не заполнен
+    format: uuid
+  executionStatus:
+    title: Статус выполнения
+    type: string
+    description: Статус выполнения
+    enum:
+    - NOT_EXECUTED
+    - POSTPONED
+    - EXECUTED
+    - CANCELED
+    - INFORMATIONAL
+  relevanceEndDate:
+    type: string
+    description: Дата окончания актуальности
+    format: date
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  resourceName:
+    type: string
+    description: Сервис-источник уведомления
+  body:
+    type: string
+    description: Текст уведомления
+  brief:
+    type: string
+    description: Краткий текст уведомления
+  executionDeadline:
+    type: string
+    description: Выполнить до
+    format: date
+  extId:
+    type: string
+    description: Идентификатор связанного объекта
+  actionUrl:
+    type: string
+    description: Адрес формы исполнения
+  userLogin:
+    type: string
+    description: Логин пользователя, внесшего последние изменения
+description: Уведомление. ДТО на создание

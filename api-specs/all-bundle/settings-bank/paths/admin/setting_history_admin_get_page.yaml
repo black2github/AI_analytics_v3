@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Банка для работы с историей настроек
+  summary: Получить страницу записей истории настроек
+  description: 'Привилегии: SETTING_HISTORY_VIEW'
+  operationId: getPage_2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/GetPageCommandSettingHistoryFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/PageDataSettingHistoryScrollerDto.yaml

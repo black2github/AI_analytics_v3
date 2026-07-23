@@ -1,0 +1,65 @@
+required:
+- dsfTypeId
+- needMailing
+type: object
+properties:
+  absId:
+    type: string
+    description: РНК получателя (РНК клиента в РКО Ф1).
+  autoSend:
+    type: boolean
+    description: Автоматическая отправка письма.
+  catalogPathBlocks:
+    type: array
+    description: Блоки путей до каталогов авторассылки.
+    items:
+      $ref: ./CatalogPathBlock.yaml
+  checkBeforeSend:
+    type: boolean
+    description: Выполнять проверку файлов перед отправкой.
+  copyCatalogPath:
+    type: string
+    description: Путь до каталога, в который копируются файлы в ДБО BSS20.
+  dsfTypeId:
+    type: string
+    description: Идентификатор типа письма.
+    format: uuid
+  errorSendEmails:
+    type: string
+    description: Адреса для уведомления сотрудников об ошибках рассылки.
+  failDaysClear:
+    type: integer
+    description: Кол-во дней глубины очистки для неуспешно обработанных файлов.
+    format: int32
+  filialId:
+    type: string
+    description: Код филиала-отправителя.
+    format: uuid
+  id:
+    type: string
+    description: Уникальный идентификатор настройки каталога.
+    format: uuid
+  massDocConfiguration:
+    type: boolean
+    description: Настройка сертификата для массовой рассылки.
+  message:
+    type: string
+    description: Текст письма.
+  modeFileProcessing:
+    type: string
+    description: Режим обработки файла
+    enum:
+    - MASK
+    - CATALOG
+    - SETTINGS
+  needMailing:
+    type: boolean
+    description: Признак необходимости рассылки из каталога.
+  subject:
+    type: string
+    description: Тема письма.
+  successDaysClear:
+    type: integer
+    description: Кол-во дней глубины очистки для успешно обработанных файлов.
+    format: int32
+description: Настройки для массовой рассылки ДСФ из банка для определенного каталога.

@@ -1,0 +1,12 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Наименование поля
+    example: null
+  value:
+    type: string
+    description: Значение поля
+    example: null
+description: Отображение подписываемого поля
+example: null

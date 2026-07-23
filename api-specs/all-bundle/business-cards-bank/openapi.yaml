@@ -1,0 +1,249 @@
+openapi: 3.0.1
+info:
+  title: Сервис корпоративных карт. Банковская часть
+  version: 3.6.0
+servers:
+- url: /business-cards-bank
+security:
+- Authorization: []
+paths:
+  /bank/block-card/category:
+    $ref: ./paths/misc/bank_block_card_category.yaml
+  /bank/block-card/get-page:
+    $ref: ./paths/misc/bank_block_card_get_page.yaml
+  /bank/block/{id}:
+    $ref: ./paths/misc/bank_block_id.yaml
+  /bank/business-card/account-number/get-page:
+    $ref: ./paths/business-card/bank_business_card_account_number_get_page.yaml
+  /bank/business-card/block/export-list:
+    $ref: ./paths/business-card/bank_business_card_block_export_list.yaml
+  /bank/business-card/block/export-list-fs:
+    $ref: ./paths/business-card/bank_business_card_block_export_list_fs.yaml
+  /bank/business-card/category:
+    $ref: ./paths/business-card/bank_business_card_category.yaml
+  /bank/business-card/export-list:
+    $ref: ./paths/business-card/bank_business_card_export_list.yaml
+  /bank/business-card/export-list-fs:
+    $ref: ./paths/business-card/bank_business_card_export_list_fs.yaml
+  /bank/business-card/get-page:
+    $ref: ./paths/business-card/bank_business_card_get_page.yaml
+  /bank/business-card/modify-status:
+    $ref: ./paths/business-card/bank_business_card_modify_status.yaml
+  /bank/business-card/retry:
+    $ref: ./paths/business-card/bank_business_card_retry.yaml
+  /bank/business-card/set-limit/export-list:
+    $ref: ./paths/business-card/bank_business_card_set_limit_export_list.yaml
+  /bank/business-card/set-limit/export-list-fs:
+    $ref: ./paths/business-card/bank_business_card_set_limit_export_list_fs.yaml
+  /bank/business-cards/export-documents/issued-card/{id}:
+    $ref: ./paths/business-cards/bank_business_cards_export_documents_issued_card_id.yaml
+  /bank/business-cards/export-documents/tessa:
+    $ref: ./paths/business-cards/bank_business_cards_export_documents_tessa.yaml
+  /bank/business-cards/filters/currency-codes:
+    $ref: ./paths/business-cards/bank_business_cards_filters_currency_codes.yaml
+  /bank/business-cards/history/{id}:
+    $ref: ./paths/business-cards/bank_business_cards_history_id.yaml
+  /bank/business-cards/signature/{id}:
+    $ref: ./paths/business-cards/bank_business_cards_signature_id.yaml
+  /bank/business-cards/{id}:
+    $ref: ./paths/business-cards/bank_business_cards_id.yaml
+  /bank/common/account-number/get-page:
+    $ref: ./paths/misc/bank_common_account_number_get_page.yaml
+  /bank/common/export-card-request/{id}:
+    $ref: ./paths/misc/bank_common_export_card_request_id.yaml
+  /bank/common/filters/payment-systems:
+    $ref: ./paths/misc/bank_common_filters_payment_systems.yaml
+  /bank/common/get-categories-with-statuses/{reqType}:
+    $ref: ./paths/misc/bank_common_get_categories_with_statuses_reqType.yaml
+  /bank/common/history/{id}:
+    $ref: ./paths/misc/bank_common_history_id.yaml
+  /bank/common/signature/{id}:
+    $ref: ./paths/misc/bank_common_signature_id.yaml
+  /bank/set-limit/category:
+    $ref: ./paths/limits/bank_set_limit_category.yaml
+  /bank/set-limit/get-page:
+    $ref: ./paths/limits/bank_set_limit_get_page.yaml
+  /bank/set-limit/history/{id}:
+    $ref: ./paths/limits/bank_set_limit_history_id.yaml
+  /bank/set-limit/modify-status:
+    $ref: ./paths/limits/bank_set_limit_modify_status.yaml
+  /bank/set-limit/retry:
+    $ref: ./paths/limits/bank_set_limit_retry.yaml
+  /bank/set-limit/set-processing-tag:
+    $ref: ./paths/limits/bank_set_limit_set_processing_tag.yaml
+  /bank/set-limit/{id}:
+    $ref: ./paths/limits/bank_set_limit_id.yaml
+  /business-cards/bank/block/modify-status:
+    $ref: ./paths/misc/business_cards_bank_block_modify_status.yaml
+  /business-cards/bank/block/retry:
+    $ref: ./paths/misc/business_cards_bank_block_retry.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+components:
+  schemas:
+    AttachmentDto:
+      $ref: ./components/schemas/business-card/AttachmentDto.yaml
+    BlockCardRequestBankFilter:
+      $ref: ./components/schemas/misc/BlockCardRequestBankFilter.yaml
+    BlockCardRequestDetailsForBankDto:
+      $ref: ./components/schemas/misc/BlockCardRequestDetailsForBankDto.yaml
+    CardRequestAccountNumberFilter:
+      $ref: ./components/schemas/common/CardRequestAccountNumberFilter.yaml
+    CardRequestHistoryDto:
+      $ref: ./components/schemas/common/CardRequestHistoryDto.yaml
+    CardRequestHistoryItemDto:
+      $ref: ./components/schemas/common/CardRequestHistoryItemDto.yaml
+    CardRequestModifyStatusDto:
+      $ref: ./components/schemas/common/CardRequestModifyStatusDto.yaml
+    CardRequestScrollerDto:
+      $ref: ./components/schemas/common/CardRequestScrollerDto.yaml
+    CardRequestStatusEditResponseDto:
+      $ref: ./components/schemas/common/CardRequestStatusEditResponseDto.yaml
+    CategoriesWithStatusesDto:
+      $ref: ./components/schemas/misc/CategoriesWithStatusesDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryDescriptionDto:
+      $ref: ./components/schemas/misc/CategoryDescriptionDto.yaml
+    CategoryStatusDto:
+      $ref: ./components/schemas/misc/CategoryStatusDto.yaml
+    ExportTessaDocumentsRequestDto:
+      $ref: ./components/schemas/business-cards/ExportTessaDocumentsRequestDto.yaml
+    ExtendedInfoDto:
+      $ref: ./components/schemas/common/ExtendedInfoDto.yaml
+    FileContent:
+      $ref: ./components/schemas/common/FileContent.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/business-card/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBlockCardReason:
+      $ref: ./components/schemas/misc/FilterValueEnumDtoBlockCardReason.yaml
+    FilterValueEnumDtoCardRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoCardRequestStatusDto.yaml
+    FilterValueEnumDtoChangeStatusActionDto:
+      $ref: ./components/schemas/misc/FilterValueEnumDtoChangeStatusActionDto.yaml
+    FilterValueEnumDtoDocumentTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoDocumentTypeDto.yaml
+    FilterValueEnumDtoLimitChangeTypeDto:
+      $ref: ./components/schemas/limits/FilterValueEnumDtoLimitChangeTypeDto.yaml
+    GenericCommandCardRequestModifyStatusDto:
+      $ref: ./components/schemas/common/GenericCommandCardRequestModifyStatusDto.yaml
+    GenericCommandDocumentTypeDto:
+      $ref: ./components/schemas/misc/GenericCommandDocumentTypeDto.yaml
+    GenericCommandExportTessaDocumentsRequestDto:
+      $ref: ./components/schemas/business-cards/GenericCommandExportTessaDocumentsRequestDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericCommandPrintCardRequestDto:
+      $ref: ./components/schemas/business-card/GenericCommandPrintCardRequestDto.yaml
+    GenericCommandSetLimitCardRequestSetProcessingTagBankDto:
+      $ref: ./components/schemas/limits/GenericCommandSetLimitCardRequestSetProcessingTagBankDto.yaml
+    GenericResponseProcessErrorBoolean:
+      $ref: ./components/schemas/limits/GenericResponseProcessErrorBoolean.yaml
+    GenericResponseSimpleErrorDataAttachmentDto:
+      $ref: ./components/schemas/business-card/GenericResponseSimpleErrorDataAttachmentDto.yaml
+    GenericResponseSimpleErrorDataBlockCardRequestDetailsForBankDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataBlockCardRequestDetailsForBankDto.yaml
+    GenericResponseSimpleErrorDataCardRequestHistoryDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCardRequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataCardRequestStatusEditResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCardRequestStatusEditResponseDto.yaml
+    GenericResponseSimpleErrorDataCategoriesWithStatusesDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataCategoriesWithStatusesDto.yaml
+    GenericResponseSimpleErrorDataFileContent:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataFileContent.yaml
+    GenericResponseSimpleErrorDataIssueCardRequestDto:
+      $ref: ./components/schemas/business-cards/GenericResponseSimpleErrorDataIssueCardRequestDto.yaml
+    GenericResponseSimpleErrorDataListCategoryCount:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListCategoryCount.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListString.yaml
+    GenericResponseSimpleErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataObject.yaml
+    GenericResponseSimpleErrorDataPageDataCardRequestScrollerDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPageDataCardRequestScrollerDto.yaml
+    GenericResponseSimpleErrorDataPageDataString:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPageDataString.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPrintResponse.yaml
+    GenericResponseSimpleErrorDataSetLimitCardRequestDetailForBankDto:
+      $ref: ./components/schemas/limits/GenericResponseSimpleErrorDataSetLimitCardRequestDetailForBankDto.yaml
+    GetPageCommandBlockCardRequestBankFilter:
+      $ref: ./components/schemas/misc/GetPageCommandBlockCardRequestBankFilter.yaml
+    GetPageCommandCardRequestAccountNumberFilter:
+      $ref: ./components/schemas/common/GetPageCommandCardRequestAccountNumberFilter.yaml
+    GetPageCommandIssueCardRequestBankFilter:
+      $ref: ./components/schemas/business-card/GetPageCommandIssueCardRequestBankFilter.yaml
+    GetPageCommandSetLimitCardRequestBankFilter:
+      $ref: ./components/schemas/limits/GetPageCommandSetLimitCardRequestBankFilter.yaml
+    IssueCardDocumentShortDto:
+      $ref: ./components/schemas/business-cards/IssueCardDocumentShortDto.yaml
+    IssueCardRequestBankFilter:
+      $ref: ./components/schemas/business-card/IssueCardRequestBankFilter.yaml
+    IssueCardRequestConcludeDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestConcludeDto.yaml
+    IssueCardRequestDetailsDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestDetailsDto.yaml
+    IssueCardRequestDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestDto.yaml
+    IssueCardRequestHistoryDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestHistoryDto.yaml
+    IssueCardRequestHolderInfoDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestHolderInfoDto.yaml
+    IssueCardRequestOpeningAccountDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestOpeningAccountDto.yaml
+    IssueCardRequestParamsDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestParamsDto.yaml
+    IssueCardRequestQuestionnaireDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestQuestionnaireDto.yaml
+    IssueCardRequestQuestionnaireInfoDto:
+      $ref: ./components/schemas/business-cards/IssueCardRequestQuestionnaireInfoDto.yaml
+    PageDataCardRequestScrollerDto:
+      $ref: ./components/schemas/common/PageDataCardRequestScrollerDto.yaml
+    PageDataString:
+      $ref: ./components/schemas/common/PageDataString.yaml
+    PageParamsBlockCardRequestBankFilter:
+      $ref: ./components/schemas/misc/PageParamsBlockCardRequestBankFilter.yaml
+    PageParamsCardRequestAccountNumberFilter:
+      $ref: ./components/schemas/common/PageParamsCardRequestAccountNumberFilter.yaml
+    PageParamsIssueCardRequestBankFilter:
+      $ref: ./components/schemas/business-card/PageParamsIssueCardRequestBankFilter.yaml
+    PageParamsSetLimitCardRequestBankFilter:
+      $ref: ./components/schemas/limits/PageParamsSetLimitCardRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    PrintCardRequestDto:
+      $ref: ./components/schemas/business-card/PrintCardRequestDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    ProcessError:
+      $ref: ./components/schemas/limits/ProcessError.yaml
+    SetLimitCardRequestBankFilter:
+      $ref: ./components/schemas/limits/SetLimitCardRequestBankFilter.yaml
+    SetLimitCardRequestDetailForBankDto:
+      $ref: ./components/schemas/limits/SetLimitCardRequestDetailForBankDto.yaml
+    SetLimitCardRequestLimitInfoForBankDto:
+      $ref: ./components/schemas/limits/SetLimitCardRequestLimitInfoForBankDto.yaml
+    SetLimitCardRequestLimitParamsForBankDto:
+      $ref: ./components/schemas/limits/SetLimitCardRequestLimitParamsForBankDto.yaml
+    SetLimitCardRequestSetProcessingTagBankDto:
+      $ref: ./components/schemas/limits/SetLimitCardRequestSetProcessingTagBankDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SipLimitParameterDto:
+      $ref: ./components/schemas/limits/SipLimitParameterDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+  securitySchemes:
+    Bearer:
+      bearerFormat: JWT
+      name: Authorization
+      scheme: Bearer
+      type: http

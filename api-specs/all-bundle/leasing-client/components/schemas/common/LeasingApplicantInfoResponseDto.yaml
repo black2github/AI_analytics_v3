@@ -1,0 +1,8 @@
+type: object
+properties:
+  fio:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string

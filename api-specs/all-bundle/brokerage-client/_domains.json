@@ -1,0 +1,38 @@
+{
+  "_comment": "Auto domain map for brokerage-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/trade-order",
+      "domain": "trade-order"
+    },
+    {
+      "prefix": "/withdrawal-money-order",
+      "domain": "withdrawal-money-order"
+    },
+    {
+      "prefix": "/transfer-security-order",
+      "domain": "transfer-security-order"
+    },
+    {
+      "prefix": "/reserve-money-order",
+      "domain": "reserve-money-order"
+    },
+    {
+      "prefix": "/report-request",
+      "domain": "report-request"
+    },
+    {
+      "prefix": "/open-account",
+      "domain": "open-account"
+    },
+    {
+      "prefix": "/contract",
+      "domain": "contract"
+    },
+    {
+      "prefix": "/contract-service",
+      "domain": "contract-service"
+    }
+  ]
+}

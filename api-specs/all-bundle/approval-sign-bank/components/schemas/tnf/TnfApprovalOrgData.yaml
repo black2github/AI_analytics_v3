@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Внутренний идентификатор
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор визирующей организации
+    format: uuid
+  absId:
+    type: integer
+    description: РНК визирующей организации
+    format: int64
+description: Модель данных создания новой записи о визирующей организации

@@ -1,0 +1,38 @@
+required:
+- code
+- docForConfiguringAccessId
+- inDevelopment
+- name
+- showInformer
+- signKopopRegulation
+type: object
+properties:
+  docForConfiguringAccessId:
+    type: string
+    description: Идентификатор продукта для настройки доступа
+    format: uuid
+  name:
+    type: string
+    description: Наименование
+  code:
+    type: string
+    description: Код
+  signKopopRegulation:
+    type: boolean
+    description: Право подписи регулируется КОПОП
+  inDevelopment:
+    type: boolean
+    description: В разработке
+  signInformerText:
+    type: string
+    description: Текст для информера подписи
+  fullAccessControl:
+    type: boolean
+    description: Управление полным доступом
+  showInformer:
+    type: boolean
+    description: Признак "Отображать информер для продукта/документа"
+  informerText:
+    type: string
+    description: Текст для информера для продукта/документа
+description: Продукт

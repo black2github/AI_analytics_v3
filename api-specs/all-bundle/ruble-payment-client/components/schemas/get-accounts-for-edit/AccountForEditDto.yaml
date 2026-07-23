@@ -1,0 +1,44 @@
+required:
+- accountNumber
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountNumber:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Номер
+  accountName:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Наименование счета
+  accountType:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Тип счета
+  state:
+    $ref: ./AccountStateDto.yaml
+  bankClient:
+    $ref: ./BankClientForEditDto.yaml
+  contractInfo:
+    $ref: ./ContractInfoForEditDto.yaml
+  balanceBranch:
+    $ref: ./BranchForEditDto.yaml
+  tmgAccountType:
+    type: string
+    description: Тип счёта в TMG
+  mnoContract:
+    type: boolean
+    description: Признак наличия договора МНО к расчетному счету
+  snoContract:
+    type: boolean
+    description: Признак наличия договора СНО к расчетному счету
+  gsnoContract:
+    type: boolean
+    description: Признак наличия договора ГСНО к расчетному счету
+description: Доступные клиенту счета

@@ -1,0 +1,12 @@
+type: object
+properties:
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  fiasRegionCode:
+    type: string
+    description: ФИАС код региона
+description: Регион. Интеграционное ДТО

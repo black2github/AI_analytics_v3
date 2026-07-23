@@ -1,0 +1,12 @@
+type: object
+properties:
+  applicationType:
+    type: string
+    description: Тип заявки (выдача или внесение)
+  clientRegNumList:
+    type: array
+    description: Список РНК клиентов, доступных распорядителю счета
+    items:
+      type: integer
+      description: Список РНК клиентов, доступных распорядителю счета
+description: Запрос списка получателей или вносителей денежных средств

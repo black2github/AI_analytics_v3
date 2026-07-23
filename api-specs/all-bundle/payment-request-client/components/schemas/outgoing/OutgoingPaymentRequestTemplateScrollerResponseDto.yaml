@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    type: string
+    description: Имя шаблона
+  payerName:
+    type: string
+    description: Плательщик имя
+  payerInnKio:
+    type: string
+    description: Плательщик ИНН/КИО
+  accountNumber:
+    type: string
+    description: Счет зачисления
+  accountAvailability:
+    type: boolean
+    description: Признак доступности счета
+  amount:
+    type: string
+    description: Сумма
+  currency:
+    type: string
+    description: Валюта
+description: Дто шаблона Исходящего Платежного требования

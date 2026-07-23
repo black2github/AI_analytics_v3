@@ -1,0 +1,8 @@
+type: object
+properties:
+  struct:
+    $ref: ./RecursiveNode.yaml
+  formatted:
+    type: string
+    description: Форматированное дерево выражений
+description: Сведения о выражении "доступа по реквизитам"

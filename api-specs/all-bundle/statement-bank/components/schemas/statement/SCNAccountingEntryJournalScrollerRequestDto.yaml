@@ -1,0 +1,14 @@
+required:
+- entryDate
+- turnoverEventId
+type: object
+properties:
+  turnoverEventId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  entryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  textSearch:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

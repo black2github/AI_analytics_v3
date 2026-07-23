@@ -1,0 +1,69 @@
+openapi: 3.0.1
+info:
+  title: Сервис динамических продуктовых предложений. Клиентская часть.
+  version: 3.1.0
+servers:
+- url: /product-offer-client
+security:
+- bearerAuth: []
+paths:
+  /v1/consultation:
+    $ref: ./paths/consultation/v1_consultation.yaml
+  /v1/recommendation:
+    $ref: ./paths/recommendation/v1_recommendation.yaml
+  /v1/product-offer/other:
+    $ref: ./paths/product-offer/v1_product_offer_other.yaml
+  /v1/product-offer/main:
+    $ref: ./paths/product-offer/v1_product_offer_main.yaml
+  /v1/product-offer/current:
+    $ref: ./paths/product-offer/v1_product_offer_current.yaml
+components:
+  schemas:
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    CheckMessage:
+      $ref: ./components/schemas/consultation/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/consultation/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/consultation/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/consultation/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/consultation/ValidationResult.yaml
+    ClientOfficialDto:
+      $ref: ./components/schemas/consultation/ClientOfficialDto.yaml
+    ConsultationRequestDto:
+      $ref: ./components/schemas/consultation/ConsultationRequestDto.yaml
+    ConsultationDto:
+      $ref: ./components/schemas/consultation/ConsultationDto.yaml
+    ConsultationResponseDto:
+      $ref: ./components/schemas/consultation/ConsultationResponseDto.yaml
+    GenericResponseSimpleErrorDataConsultationResponseDto:
+      $ref: ./components/schemas/consultation/GenericResponseSimpleErrorDataConsultationResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    RecommendationDto:
+      $ref: ./components/schemas/recommendation/RecommendationDto.yaml
+    RecommendationsDto:
+      $ref: ./components/schemas/recommendation/RecommendationsDto.yaml
+    GenericResponseSimpleErrorDataListLocationDto:
+      $ref: ./components/schemas/product-offer/GenericResponseSimpleErrorDataListLocationDto.yaml
+    LocationBannerDto:
+      $ref: ./components/schemas/product-offer/LocationBannerDto.yaml
+    LocationDto:
+      $ref: ./components/schemas/product-offer/LocationDto.yaml
+    BannerDto:
+      $ref: ./components/schemas/product-offer/BannerDto.yaml
+    GenericResponseSimpleErrorDataListBannerDto:
+      $ref: ./components/schemas/product-offer/GenericResponseSimpleErrorDataListBannerDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

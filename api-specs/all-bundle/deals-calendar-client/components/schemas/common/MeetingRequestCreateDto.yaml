@@ -1,0 +1,36 @@
+required:
+- bankClient
+- contact
+type: object
+properties:
+  operationType:
+    type: string
+    description: Тип операции по заявке на встречу
+    enum:
+    - CHANGE_CLIENT_DATA
+    - OPEN_PAYMENT_ACCOUNT
+    - OPEN_GOZ_ACCOUNT
+    - OPEN_SPECIAL_PURCHASE_ACCOUNT
+  meetingEcoSource:
+    type: string
+    description: Место создания встречи в Экосистеме
+    enum:
+    - MAIN_PAGE
+    - CLIENT_CARD
+    - ONBOARDING
+    - ONBOARDING_2
+    - NEW_MAIN_PAGE
+    - ONB_KZ
+  bankClient:
+    $ref: ./MeetingRequestBankClientDto.yaml
+  branch:
+    $ref: ./MeetingRequestBranchUpdateDto.yaml
+  contact:
+    $ref: ./MeetingContactDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoCreateDto.yaml
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: ДТО создания заявки на встречу

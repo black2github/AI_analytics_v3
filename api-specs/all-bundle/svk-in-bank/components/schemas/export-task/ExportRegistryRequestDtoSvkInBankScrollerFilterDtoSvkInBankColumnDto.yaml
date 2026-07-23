@@ -1,0 +1,47 @@
+required:
+- columns
+- filter
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов для экспорта
+    items:
+      type: string
+      description: Идентификаторы документов для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/SvkInBankScrollerFilterDto.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Колонки скроллера, доступные для экспорта реестра. Банк
+      enum:
+      - CREATED_AT
+      - NUMBER
+      - DATE
+      - DATE_NUMBER
+      - ORG_INN_BRANCH
+      - ORGANIZATION_NAME
+      - INN
+      - BRANCH
+      - SUBJECT
+      - ATTACHMENT_STATUS
+      - STATUS
+      - ID
+      - DVK_DATE
+      - DVK_NUMBER
+      - SKVO_DOC_ID
+      - SKVO_MSG_ID
+      - ABS_ID
+  timeZone:
+    type: string
+    description: Временная зона
+description: Транспортное представление запроса на экспорт реестра

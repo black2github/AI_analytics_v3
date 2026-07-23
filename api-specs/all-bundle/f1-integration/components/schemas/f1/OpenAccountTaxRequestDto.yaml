@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientGUID:
+    type: string
+    format: uuid
+  rkoID:
+    type: integer
+    format: int64
+  totalNumber:
+    type: integer
+    format: int32
+  commissionAccount:
+    type: string
+description: Запроса комиссии по счету

@@ -1,0 +1,5 @@
+type: object
+properties:
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр организаций по ИНН

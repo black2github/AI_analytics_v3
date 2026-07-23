@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Клиентское API для работы с уведомлениями.
+  summary: Поиск непрочитанных уведомлений
+  description: 'Привилегии: DRUB.CLIENT.NOTIFICATIONS_LIST_VIEW'
+  operationId: getUnreadNotifications
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/unread/UnreadNotificationsRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/unread/GenericResponseDigitalRubleErrorNotificationsDto.yaml

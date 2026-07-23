@@ -1,0 +1,14 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  name:
+    type: string
+    description: Имя (ФИО) представителя клиента
+description: Транспортное представление представителя клиента

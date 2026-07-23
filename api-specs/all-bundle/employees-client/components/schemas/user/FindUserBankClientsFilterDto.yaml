@@ -1,0 +1,10 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+description: Фильтр для поиска клиентов банка, где пользователь является представителем

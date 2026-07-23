@@ -1,0 +1,13 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Вид документа
+  number:
+    type: string
+    description: Номер документа
+  issueDate:
+    type: string
+    description: Дата начала действия
+    format: date
+description: Документ позволяющий подписать заявление.

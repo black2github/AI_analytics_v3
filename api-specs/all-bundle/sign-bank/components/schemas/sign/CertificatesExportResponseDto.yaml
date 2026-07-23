@@ -1,0 +1,14 @@
+type: object
+properties:
+  requestedCount:
+    type: integer
+    description: Количество сертификатов отправленных на экспорт
+    format: int32
+  failedCount:
+    type: integer
+    description: Количество сертификатов с ошибкой экспорта
+    format: int32
+  startError:
+    type: string
+    description: Ошибка старта заданий на экспорт
+description: Результат запроса на экспорт сертификатов

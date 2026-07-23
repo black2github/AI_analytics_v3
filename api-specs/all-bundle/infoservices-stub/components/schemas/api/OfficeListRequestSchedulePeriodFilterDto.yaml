@@ -1,0 +1,10 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+  dateTo:
+    type: string
+  timeFrom:
+    type: string
+  timeTo:
+    type: string

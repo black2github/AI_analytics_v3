@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  postponedUntil:
+    type: string
+    description: Дата, на которую откладывается уведомление
+    format: date
+description: Команда "Отложить уведомление"

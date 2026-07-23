@@ -1,0 +1,56 @@
+type: object
+properties:
+  address:
+    $ref: ./AtmDeviceAddressDto.yaml
+  atmType:
+    type: string
+  bank:
+    $ref: ./AtmDeviceBankDto.yaml
+  calculatedDistance:
+    type: string
+  currencies:
+    type: array
+    items:
+      type: string
+  exchangeCurrencies:
+    type: array
+    items:
+      type: string
+  geolocation:
+    $ref: ./AtmDeviceGeoLocationDto.yaml
+  inventoryNumber:
+    type: string
+  isAccessibility:
+    type: boolean
+  isPersonalAtm:
+    type: boolean
+  model:
+    type: string
+  moscowTimeDifference:
+    type: string
+  notice:
+    type: string
+  paymentSystems:
+    type: array
+    items:
+      type: string
+  schedule:
+    type: string
+  schedules:
+    type: array
+    items:
+      $ref: ./AtmDeviceScheduleDto.yaml
+  serialNumber:
+    type: string
+  services:
+    type: array
+    items:
+      $ref: ./AtmDeviceServiceDto.yaml
+  swallowedCard:
+    $ref: ./AtmDeviceSwallowedCardDto.yaml
+  tid:
+    type: string
+  banknotes:
+    type: array
+    items:
+      $ref: ./AtmBanknoteDto.yaml

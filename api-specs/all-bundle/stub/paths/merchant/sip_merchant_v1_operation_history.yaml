@@ -1,0 +1,96 @@
+post:
+  tags:
+  - СИП. Сервис Merchant API
+  summary: 'Сервис: Запрос истории операций СБП'
+  operationId: getOperationHistoryUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.endDate
+    in: query
+    description: Конечная дата выбора операций
+    required: false
+    type: string
+  - name: body.legalId
+    in: query
+    description: Идентификатор ЮЛ
+    required: false
+    type: string
+  - name: body.listParam
+    in: query
+    description: Список полей, которые необходимо вернуть по операции
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  - name: body.merchantId
+    in: query
+    description: Идентификатор ТСП
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  - name: body.page
+    in: query
+    description: Номер страницы
+    required: false
+    type: integer
+    format: int32
+  - name: body.size
+    in: query
+    description: Количество записей
+    required: false
+    type: integer
+    format: int32
+  - name: body.startDate
+    in: query
+    description: Начальная дата выбора операций
+    required: false
+    type: string
+  - name: body.status
+    in: query
+    description: Статус операции
+    required: false
+    type: array
+    items:
+      type: string
+    collectionFormat: multi
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/Данные транзакций клиента'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

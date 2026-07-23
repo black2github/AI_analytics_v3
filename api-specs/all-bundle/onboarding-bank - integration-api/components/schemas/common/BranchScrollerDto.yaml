@@ -1,0 +1,10 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения
+description: Сведения о Подразделении, в котором открывается счет и заключается ДБС, на скроллере

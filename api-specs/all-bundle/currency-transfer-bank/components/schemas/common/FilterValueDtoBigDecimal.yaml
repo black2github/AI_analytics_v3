@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: number
+  notEq:
+    type: number
+  in:
+    type: array
+    items:
+      type: number
+  notIn:
+    type: array
+    items:
+      type: number
+  isNull:
+    type: boolean
+  gt:
+    type: number
+  ge:
+    type: number
+  lt:
+    type: number
+  le:
+    type: number
+description: Сумма документа

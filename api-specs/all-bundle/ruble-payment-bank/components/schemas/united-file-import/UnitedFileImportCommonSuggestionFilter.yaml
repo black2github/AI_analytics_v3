@@ -1,0 +1,5 @@
+type: object
+properties:
+  createdAtRange:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр подсказок с фильтрацией по дате для ЭФ Банка "Журнал загруженных файлов"

@@ -1,0 +1,16 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    example: null
+    items:
+      $ref: ./InquiryFileDto.yaml
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+    example: null
+description: Ответ, содержащий результат операции или ошибку
+example: null

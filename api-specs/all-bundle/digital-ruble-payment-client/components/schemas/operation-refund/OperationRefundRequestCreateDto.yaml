@@ -1,0 +1,33 @@
+required:
+- bankClientId
+- c2bOperationId
+- fingerprint
+- organization
+- paymentDetails
+- pcrParticipantWalletId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    minLength: 1
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  paymentDetails:
+    $ref: ../common/PaymentDetailsDto.yaml
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  c2bOperationId:
+    type: string
+    description: Идентификатор операции C2B
+    format: uuid
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+description: DTO для запроса на создание заявки на возврат ЦР.

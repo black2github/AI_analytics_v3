@@ -1,0 +1,23 @@
+required:
+- amlAttachmentType
+- attachmentId
+type: object
+properties:
+  amlAttachmentType:
+    type: string
+    description: Тип вложения AML
+    enum:
+    - DOC_FIN_POSITION
+    - DOC_TRANSACTIONS_INFO
+    - DOC_MATERIAL_RES_INFO
+    - DOC_STAFF_INFO
+    - DOC_ACTIVITY_INFO
+    - DOC_ACTIVITY_DETAILS
+    - DOC_TRANS_ELECTRONIC_SERV
+    - DOC_METAL_COLLECT
+    - DOC_OTHERS
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+description: ДТО на заполнение дополнительных AML-полей вложений писем в банк

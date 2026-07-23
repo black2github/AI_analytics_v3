@@ -1,0 +1,45 @@
+info:
+  title: Сервис заглушек
+tags:
+- name: Naumen. API заглушек временных слотов
+  description: Naumen Time Slot Stub Controller
+- name: Naumen. API заглушек задач
+  description: Naumen Task Stub Controller
+- name: common-properties-controller
+  description: Common Properties Controller
+- name: ЛБП. API заглушек о встрече
+  description: Lbp Delivery Stub Controller
+- name: СИП. Сервис Naumen
+  description: Sip Naumen Controller
+paths:
+  /common-properties:
+    $ref: ./paths/common-properties/common_properties.yaml
+  /lbp/meetings/{deliveryId}:
+    $ref: ./paths/meetings/lbp_meetings_deliveryId.yaml
+  /lbp/meetings/{deliveryId}/status:
+    $ref: ./paths/meetings/lbp_meetings_deliveryId_status.yaml
+  /naumen-stub/task:
+    $ref: ./paths/task/naumen_stub_task.yaml
+  /naumen-stub/task/list:
+    $ref: ./paths/task/naumen_stub_task_list.yaml
+  /naumen-stub/task/{id}:
+    $ref: ./paths/task/naumen_stub_task_id.yaml
+  /naumen-stub/time-slot:
+    $ref: ./paths/time-slot/naumen_stub_time_slot.yaml
+  /naumen-stub/time-slot/list:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_list.yaml
+  /naumen-stub/time-slot/send-update:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_send_update.yaml
+  /naumen-stub/time-slot/{id}:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_id.yaml
+  /sip/naumen/create-task:
+    $ref: ./paths/naumen/sip_naumen_create_task.yaml
+  /sip/naumen/get-available-time-slots:
+    $ref: ./paths/naumen/sip_naumen_get_available_time_slots.yaml
+  /sip/naumen/get-task:
+    $ref: ./paths/naumen/sip_naumen_get_task.yaml
+  /sip/naumen/get-task-list:
+    $ref: ./paths/naumen/sip_naumen_get_task_list.yaml
+  /sip/naumen/set-task:
+    $ref: ./paths/naumen/sip_naumen_set_task.yaml
+components: {}

@@ -1,0 +1,7 @@
+required:
+- topic
+type: object
+properties:
+  topic:
+    type: string
+description: Информация о теме

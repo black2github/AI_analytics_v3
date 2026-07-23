@@ -1,0 +1,9 @@
+type: object
+properties:
+  corporateCardIssuingData:
+    $ref: ../common/CorporateCardIssuingDataDto.yaml
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+description: Физическое лицо запроса корректировки дополнительных продуктов

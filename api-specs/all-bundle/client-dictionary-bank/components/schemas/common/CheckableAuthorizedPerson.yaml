@@ -1,0 +1,14 @@
+required:
+- authorizedPersonId
+- bankClientId
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Проверяемое УЛ

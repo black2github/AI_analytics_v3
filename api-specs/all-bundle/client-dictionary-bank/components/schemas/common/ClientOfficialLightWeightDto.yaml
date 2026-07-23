@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  position:
+    type: string
+    description: Позиция представителя клиента
+  blockState:
+    type: string
+    description: Признак блокировки
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  client:
+    $ref: ./BankClientPlainDto.yaml
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Облегченная ДТО представителя клиента

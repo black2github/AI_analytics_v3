@@ -1,0 +1,23 @@
+type: object
+properties:
+  dstRequests:
+    type: array
+    description: Заявки ОЭП
+    items:
+      $ref: ../common/DstRequestDto.yaml
+  unqCertRequests:
+    type: array
+    description: Заявки НЭП
+    items:
+      $ref: ../common/UnqCertRequestDto.yaml
+  regCertRequests:
+    type: array
+    description: Заявки РЭП
+    items:
+      $ref: ../common/RegCertRequestDto.yaml
+  revokeCertRequests:
+    type: array
+    description: Заявки на отзыв сертификата
+    items:
+      $ref: ./RevokeCertRequestDto.yaml
+description: Последние заявки пользователя клиента

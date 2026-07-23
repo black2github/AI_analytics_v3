@@ -1,0 +1,11 @@
+type: object
+description: Справочник-классификатор
+properties:
+  paramType:
+    type: string
+    description: Тип классификатора
+  classifierDtos:
+    type: array
+    description: Список значений классификатора для данного типа
+    items:
+      $ref: ./SbpClassifierDto.yaml

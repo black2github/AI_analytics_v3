@@ -1,0 +1,5 @@
+type: object
+properties:
+  uaaUserId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр OAuth2 приложений

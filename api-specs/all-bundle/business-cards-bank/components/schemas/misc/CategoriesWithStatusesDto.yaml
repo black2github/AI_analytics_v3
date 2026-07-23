@@ -1,0 +1,15 @@
+type: object
+properties:
+  category:
+    type: array
+    description: Категория заявки с описанием
+    items:
+      $ref: ./CategoryDescriptionDto.yaml
+  type:
+    type: string
+    description: Тип Заявки
+    enum:
+    - BC_BLOCK_REQUEST
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+description: Группированные статусы

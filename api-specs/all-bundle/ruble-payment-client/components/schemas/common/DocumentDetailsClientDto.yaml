@@ -1,0 +1,11 @@
+type: object
+properties:
+  payerAccountDebitingDate:
+    type: string
+    description: Дата и время списания со счета плательщика
+    format: date-time
+  payerAccountReceiptDate:
+    type: string
+    description: Дата и время поступления в банк плательщика
+    format: date-time
+description: Реквизиты документа, заполняемые банком, доступные для клиента

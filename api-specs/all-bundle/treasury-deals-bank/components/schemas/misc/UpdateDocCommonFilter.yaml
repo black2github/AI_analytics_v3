@@ -1,0 +1,5 @@
+type: object
+properties:
+  baseDocId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр

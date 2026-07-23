@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRevokeCertRequestBankScrollerFilter.yaml
+description: Запрос страницы

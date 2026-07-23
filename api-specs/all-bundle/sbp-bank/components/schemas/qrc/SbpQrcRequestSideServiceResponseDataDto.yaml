@@ -1,0 +1,28 @@
+type: object
+description: Параметры зарегистрированного QR
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  payload:
+    type: string
+    description: Payload зарегистрированного QR кода в СБП
+  status:
+    type: string
+    description: Статус QR
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  image:
+    $ref: ./SbpQrcImageDto.yaml
+    description: Изображение QR
+required:
+- payload
+- qrcId
+- status

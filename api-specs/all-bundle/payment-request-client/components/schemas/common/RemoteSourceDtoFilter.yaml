@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  notEq:
+    type: string
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BSS_DBO_320
+      - ECO
+      - RKO_F1
+      - ESK
+      - SBP
+      - TESSA
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BSS_DBO_320
+      - ECO
+      - RKO_F1
+      - ESK
+      - SBP
+      - TESSA
+  isNull:
+    type: boolean
+description: Система источник записи.

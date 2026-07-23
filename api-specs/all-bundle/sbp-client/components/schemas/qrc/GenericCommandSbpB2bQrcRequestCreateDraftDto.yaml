@@ -1,0 +1,6 @@
+type: object
+description: Запрос
+properties:
+  data:
+    $ref: ./SbpB2bQrcRequestCreateDraftDto.yaml
+    description: Данные

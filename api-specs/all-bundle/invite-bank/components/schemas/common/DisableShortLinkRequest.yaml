@@ -1,0 +1,14 @@
+required:
+- links
+- service
+type: object
+properties:
+  service:
+    type: string
+    description: Код сервиса, из которого вызвана функция
+  links:
+    type: array
+    description: Список кодов коротких ссылок и дополнительной информации
+    items:
+      $ref: ./DisableLinkInfoDto.yaml
+description: ДТО деактивации коротких ссылок

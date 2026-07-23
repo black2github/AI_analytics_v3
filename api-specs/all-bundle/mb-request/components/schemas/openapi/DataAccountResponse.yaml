@@ -1,0 +1,7 @@
+type: object
+properties:
+  Account:
+    type: array
+    items:
+      $ref: ./Account.yaml
+description: Раздел данных полезной нагрузки ответа на запрос о списке счетов

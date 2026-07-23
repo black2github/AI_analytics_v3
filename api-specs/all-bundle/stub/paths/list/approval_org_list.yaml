@@ -1,0 +1,18 @@
+get:
+  tags:
+  - Заглушка Ф1 для создания визирующей организации
+  summary: Получить список визирующих организаций
+  operationId: getAllUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«ApprovalOrgDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  markerCodes:
+    type: array
+    description: Коды меток представителя клиента
+    items:
+      type: string
+      description: Коды меток представителя клиента
+description: Набор данных меток представителя клиента.

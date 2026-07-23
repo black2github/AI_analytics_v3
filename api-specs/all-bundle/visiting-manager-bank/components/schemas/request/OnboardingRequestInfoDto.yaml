@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки.
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки.
+    format: int32
+  date:
+    type: string
+    description: Дата заявки.
+    format: date
+description: Информация о заявке на открытие первого счета.

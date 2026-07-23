@@ -1,0 +1,15 @@
+type: object
+properties:
+  creatorsLogin:
+    type: string
+    description: Логин пользователя, создавшего запись
+  creatorsFio:
+    type: string
+    description: ФИО пользователя, создавшего запись
+  updatersLogin:
+    type: string
+    description: Логин пользователя, внёсшего последнее изменение
+  updatersFio:
+    type: string
+    description: ФИО пользователя, внёсшего последнее изменение
+description: Данные о создавшем и изменявшем запись пользователях.

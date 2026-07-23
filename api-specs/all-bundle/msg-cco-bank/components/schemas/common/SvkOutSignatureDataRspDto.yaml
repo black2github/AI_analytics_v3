@@ -1,0 +1,25 @@
+required:
+- certificate
+- signature
+- signedAt
+- signerFio
+- signerId
+type: object
+properties:
+  signerId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  certificate:
+    $ref: ./SvkOutCertificateInfoRspDto.yaml
+  signature:
+    type: string
+    description: Электронная подпись
+description: Данные ЭП

@@ -1,0 +1,11 @@
+type: object
+properties:
+  accAdditionalInfo:
+    $ref: ./AccAdditionalInfoDto.yaml
+  accountNumber:
+    type: string
+    description: Номер счета, по которому необходимо предоставить детальную информацию
+  clientGUID:
+    type: string
+    description: GUID клиента
+description: Детальная информация по счету

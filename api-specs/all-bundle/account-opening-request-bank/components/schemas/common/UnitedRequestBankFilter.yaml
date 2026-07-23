@@ -1,0 +1,41 @@
+type: object
+properties:
+  organization:
+    $ref: ./FilterValueDtoString.yaml
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  branchId:
+    $ref: ./FilterValueDtoUUID.yaml
+  status:
+    $ref: ./UnitedRequestStatusFilter.yaml
+  contractNumber:
+    $ref: ./FilterValueDtoString.yaml
+  contractDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  openedAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории статусов унифицированной заявки для скроллера. Банковская часть.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  requestId:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountTypeCode:
+    $ref: ./UnitedRequestAccountTypeCodeFilter.yaml
+  multiAccountContractConclude:
+    $ref: ./FilterValueDtoBoolean.yaml
+  bankClientInn:
+    $ref: ./FilterValueDtoString.yaml
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр скроллера объединенной заявоки. Банковская часть.

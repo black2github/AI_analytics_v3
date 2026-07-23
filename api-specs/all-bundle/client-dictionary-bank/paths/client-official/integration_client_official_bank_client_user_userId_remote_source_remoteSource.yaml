@@ -1,0 +1,74 @@
+get:
+  tags:
+  - Интеграционное API представителей клиента
+  summary: Получить идентификаторы клиентов банка, где пользователь является представителем
+  description: 'Привилегии: CLIENT_OFFICIAL.TECH.GET_BC_IDS_BY_USER_AND_REMOTE_SRC'
+  operationId: getClientIds_1
+  parameters:
+  - name: userId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: remoteSource
+    in: path
+    required: true
+    schema:
+      type: string
+      enum:
+      - BSS_DBO_320
+      - ECO
+      - RKO_F1
+      - ESK
+      - SBP
+      - TESSA
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataSetUUID.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

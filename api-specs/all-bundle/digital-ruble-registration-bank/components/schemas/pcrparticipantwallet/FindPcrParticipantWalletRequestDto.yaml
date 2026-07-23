@@ -1,0 +1,9 @@
+required:
+- bankClientId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Запрос на поиск цифрового счёта ПлЦР для Клиента Банка

@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./PaymentOrderRequestClientStatusDto.yaml
+  notEq:
+    $ref: ./PaymentOrderRequestClientStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestClientStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestClientStatusDto.yaml
+  isNull:
+    type: boolean
+description: Фильтр по статусу документа (содержится в списке)

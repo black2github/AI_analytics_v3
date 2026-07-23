@@ -1,0 +1,17 @@
+required:
+- deliveryStatus
+- shortUrlCode
+type: object
+properties:
+  shortUrlCode:
+    type: string
+    description: Код короткого URL
+  deliveryStatus:
+    type: string
+    description: Статус доставки нотификации
+    enum:
+    - NEW
+    - UPDATE_STATUS_ERROR
+    - DELIVERY_ERROR
+    - DELIVERED
+description: ДТО обновления статуса доставки нотификации

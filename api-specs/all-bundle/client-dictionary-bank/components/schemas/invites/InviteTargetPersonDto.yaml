@@ -1,0 +1,21 @@
+type: object
+properties:
+  name:
+    type: string
+  surname:
+    type: string
+  patronymic:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  eskId:
+    type: string
+  authorizedPersonId:
+    type: string
+    format: uuid
+  bankClientId:
+    type: string
+    format: uuid
+description: ДТО представителя клиента, которому должен быть отправлен инвайт

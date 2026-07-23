@@ -1,0 +1,81 @@
+required:
+- authEnabled
+- manuallyCreated
+- publicClient
+- trusted
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+  systemId:
+    type: string
+    description: Идентификатор системы
+  issuerToken:
+    type: string
+    description: Идентификатор издателя токена
+  name:
+    type: string
+    description: Наименование
+  secret:
+    type: string
+    description: Пароль
+  description:
+    type: string
+    description: Описание
+  scopes:
+    type: array
+    description: Список скоупов
+    items:
+      $ref: ../common/ScopeDto.yaml
+  redirectUri:
+    type: array
+    description: URI для перенаправления
+    items:
+      type: string
+      description: URI для перенаправления
+  catalogType:
+    type: string
+    description: Тип каталога
+  manuallyCreated:
+    type: boolean
+    description: Признак ручного создания
+  trusted:
+    type: boolean
+    description: Признак доверенного приложения
+  priorityView:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+  authEnabled:
+    type: boolean
+    description: Признак возможности аутентификации
+  publicClient:
+    type: boolean
+    description: Признак публичного клиента
+  clientJwksUri:
+    type: string
+    description: JWKS URI для получения открытых ключей клиента
+  clientExtKeyUsage:
+    uniqueItems: true
+    type: array
+    description: OID расширенного использования ключа клиента
+    items:
+      type: string
+      description: OID расширенного использования ключа клиента
+  userInfoResponseType:
+    type: string
+    enum:
+    - JSON
+    - JWT
+  keySet:
+    type: string
+    enum:
+    - ECO
+    - OPENAPI
+  keyType:
+    type: string
+    enum:
+    - RSA
+    - EC
+description: ДТО приложения OAuth2

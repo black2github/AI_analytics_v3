@@ -1,0 +1,11 @@
+get:
+  summary: Получить идентификаторы профилей, по которым активны подписки
+  tags:
+  - АС ПКП. API заглушек подписки профилей автокотирования для поручения на покупку/продажу валюты.
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/subscription/GenericResponseSimpleErrorDataPkpProfileActiveSubscriptionsRspDto.yaml

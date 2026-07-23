@@ -1,0 +1,41 @@
+required:
+- fileImportId
+- operation
+- status
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  status:
+    type: string
+    description: Статус импорта
+    enum:
+    - DRAFT
+    - DELETED
+    - ERROR
+    - NOT_SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - IMPORT
+    - IMPORT_TO_CONFIRM
+    - IMPORT_CONFIRMED
+    - IMPORT_NOT_CONFIRMED
+    - IMPORTED
+    - IMPORTED_ERROR
+  operation:
+    type: string
+    description: Операция с файлом импорта
+    enum:
+    - NO_CODE
+    - CREATE
+    - PREPARE_TO_IMPORT
+    - IMPORT
+    - SIGN
+    - SIGN_REMOVE
+    - DELETE
+    - SIGN_CHECK
+    - RECEIVE_CHECK
+description: Ответ на запрос снятия подписи

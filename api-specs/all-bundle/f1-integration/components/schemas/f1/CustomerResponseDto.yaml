@@ -1,0 +1,16 @@
+type: object
+properties:
+  rc:
+    type: integer
+    description: Результат выполнения
+    format: int64
+    example: 0
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+  clients:
+    type: array
+    items:
+      $ref: ./CustomerDto.yaml
+description: Ответа на запрос поиска организации

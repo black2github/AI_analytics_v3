@@ -1,0 +1,19 @@
+required:
+- accruedValue
+- debtId
+- lastModifyAt
+- payValue
+type: object
+properties:
+  debtId:
+    type: string
+    format: uuid
+  description:
+    type: string
+  accruedValue:
+    type: string
+  payValue:
+    type: string
+  lastModifyAt:
+    type: string
+    format: date-time

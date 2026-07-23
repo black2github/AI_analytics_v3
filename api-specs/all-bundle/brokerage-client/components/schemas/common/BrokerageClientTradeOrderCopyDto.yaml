@@ -1,0 +1,95 @@
+required:
+- clientEcoId
+- clientId
+- contractId
+- contractNumber
+- currency
+- guid
+- isin
+- requestKind
+- requestMode
+- requestSubtype
+- tradingFloor
+- type
+type: object
+properties:
+  clientId:
+    type: string
+    description: РНК клиента
+  clientEcoId:
+    type: string
+    description: Наименование клиента (короткое / полное)
+    format: uuid
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractId:
+    type: string
+    description: Идентификатор договора
+    format: uuid
+  tradingFloor:
+    type: string
+    description: Код торговой площадки
+  currency:
+    type: string
+    description: Валюта (3 симв.)
+  isin:
+    type: string
+    description: Код ценной бумаги
+  guid:
+    type: string
+    description: UUID ценной бумаги
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  requestKind:
+    type: string
+    description: Вид сделки
+    enum:
+    - BUY
+    - EXECUTE
+    - SELL
+  requestSubtype:
+    type: string
+    description: Подтип заявки
+    enum:
+    - OPERATION_SECURITIES
+    - OPERATION_QUICK
+    - OPERATION_REPO
+    - OPERATION_CANCEL_SECURITIES
+    - OPERATION_CANCEL_QUICK
+    - OPERATION_CANCEL_REPO
+  requestMode:
+    type: string
+    description: Режим заявки
+    enum:
+    - SET_PRICE
+    - MARKET
+  quantity:
+    type: string
+    description: Количество
+  unitPrice:
+    type: string
+    description: Цена за штуку
+  amount:
+    type: string
+    description: Сумма
+  additionalCondition:
+    type: string
+    description: Дополнительные условия (ручной ввод)
+  ticker:
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Эмитент ценной бумаги
+description: Транспортная сущность для копирования записи о торговом поручении

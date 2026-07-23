@@ -1,0 +1,17 @@
+required:
+- name
+type: object
+properties:
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Название филиала
+  requisites:
+    $ref: ./RequisitesSelectDto.yaml
+  docsName:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Название филиала для платежных документов
+description: Филиал баланса

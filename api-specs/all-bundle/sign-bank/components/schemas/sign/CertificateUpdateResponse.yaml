@@ -1,0 +1,6 @@
+type: object
+properties:
+  isUpdateStarted:
+    type: boolean
+    description: Признак запуска обновления сертификатов
+description: Ответ обновления сертификатов

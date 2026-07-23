@@ -1,0 +1,25 @@
+required:
+- actions
+- bankClientId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: id организации
+    format: uuid
+  actions:
+    uniqueItems: true
+    type: array
+    description: Поддерживаемые операции
+    items:
+      type: string
+      description: Типы операций
+      enum:
+      - ACTION_CLIENT_USER_SIGN
+      - ACTION_CLIENT_USER_VIEW
+      - ACTION_CLIENT_USER_PRINT
+      - ACTION_CLIENT_USER_LISTVIEW
+      - ACTION_CLIENT_USER_EDIT
+      - ACTION_CLIENT_USER_CREATE
+      - ACTION_CLIENT_USER_SIGN_CLICK
+description: Поддерживаемые операции в разрезе организации

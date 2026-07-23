@@ -1,0 +1,9 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО дежурного
+  email:
+    type: string
+    description: E-mail дежурного
+description: Данные

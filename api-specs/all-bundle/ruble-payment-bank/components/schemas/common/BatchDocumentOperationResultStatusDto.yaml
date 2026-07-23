@@ -1,0 +1,7 @@
+type: string
+description: Статус результата массовой операции по документам
+enum:
+- SINGLE_DOCUMENT_SUCCESS
+- SINGLE_DOCUMENT_FAIL
+- DOCUMENT_BATCH_SUCCESS
+- DOCUMENT_BATCH_FAIL

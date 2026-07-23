@@ -1,0 +1,17 @@
+type: object
+description: Ответ на запрос списка счетов
+properties:
+  error:
+    $ref: ./WebGateErrorDto.yaml
+    type: object
+    description: Блок с телом ошибки
+  clientGUID:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  accounts:
+    type: array
+    items:
+      $ref: ./AccountElem.yaml
+    description: Блок счетов клиента

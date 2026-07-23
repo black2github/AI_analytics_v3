@@ -1,0 +1,15 @@
+type: object
+description: Полученные данные от СБП по legalIds
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ в СБП
+  status:
+    type: string
+    description: Статус блокировки/разблокировки ТСП

@@ -1,0 +1,26 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип документа
+  status:
+    type: string
+    description: Статус документа (код)
+  docTypeCategory:
+    type: string
+    description: Категория типа документа
+  docTypeName:
+    type: string
+    description: Наименование типа документа
+  docTypeShortName:
+    type: string
+    description: Краткое наименование типа документа
+  docAcceptWithType:
+    type: integer
+    description: Количество документов на акцепт в соответствии с типом
+    format: int32
+  displayOrder:
+    type: integer
+    description: Порядок отображения
+    format: int32
+description: Документ на визирование

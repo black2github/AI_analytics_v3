@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./AcceptPaymentRequestClientStatusDto.yaml
+  notEq:
+    $ref: ./AcceptPaymentRequestClientStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./AcceptPaymentRequestClientStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./AcceptPaymentRequestClientStatusDto.yaml
+  isNull:
+    type: boolean
+description: Статус решения (содержится в списке)
+nullable: true

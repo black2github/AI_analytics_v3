@@ -1,0 +1,26 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientIds:
+    type: array
+    description: Список идентификаторов клиента
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  sort:
+    $ref: ../common/Sort.yaml
+  excludeId:
+    type: string
+    description: Идентификатор подтверждения, которое нужно исключить из выборки
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

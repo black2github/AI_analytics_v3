@@ -1,0 +1,26 @@
+type: object
+description: Правило нотификации для типа ДСФ. ДТО на создание
+properties:
+  address:
+    type: string
+    description: Группа рассылки(email)
+  branchAll:
+    type: boolean
+    description: Создать для всех доступных подразделений.
+  branchId:
+    type: string
+    format: uuid
+    description: Идентификатор подразделения.
+  code:
+    type: string
+    description: Код типа письма
+  eventType:
+    type: string
+    description: Тип события.
+    enum:
+    - ON_WAIT_PROCESSING
+    - ON_WAIT_BANK_SIGN
+    - REJECTED
+    - REVOKED
+    - CLIENT_SIGNED
+    - TO_SEND

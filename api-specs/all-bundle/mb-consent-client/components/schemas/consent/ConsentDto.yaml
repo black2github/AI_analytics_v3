@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор согласия
+    format: uuid
+  extConsentId:
+    type: string
+    description: Внешний идентификатор согласия
+    format: uuid
+  status:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  createdAt:
+    type: string
+    description: Время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время последнего обновления заявки
+    format: date-time
+description: Запрос справок для ЮЛ

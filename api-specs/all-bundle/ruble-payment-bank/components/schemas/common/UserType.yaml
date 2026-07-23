@@ -1,0 +1,6 @@
+type: string
+description: Тип пользователя
+enum:
+- CLIENT
+- BANK
+- TECHNICAL

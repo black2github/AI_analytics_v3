@@ -1,0 +1,9 @@
+type: object
+properties:
+  additionalDocsGenFlags:
+    $ref: ./AdditionalDocsGenFlagsDto.yaml
+  managementCompanyConstituentDocumentChanges:
+    $ref: ./ConstituentDocumentChangesDto.yaml
+  requestConstituentDocumentChanges:
+    $ref: ./ConstituentDocumentChangesDto.yaml
+description: Чекбоксы устанавливаемые на ЭФ "Документы"

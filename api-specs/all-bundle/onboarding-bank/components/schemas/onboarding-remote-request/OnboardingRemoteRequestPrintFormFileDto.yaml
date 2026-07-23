@@ -1,0 +1,24 @@
+type: object
+properties:
+  fileHash:
+    type: string
+    description: Хеш-сумма файла
+  fileId:
+    type: string
+    description: Идентификатор файла в хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  signature:
+    type: string
+    description: Подпись
+  tessaFileId:
+    type: string
+    description: Идентификатор файла на стороне ТЕССА
+    format: uuid
+description: Сведения о файле ПФ для сервиса процессинга заявки на удалённое открытие счёта

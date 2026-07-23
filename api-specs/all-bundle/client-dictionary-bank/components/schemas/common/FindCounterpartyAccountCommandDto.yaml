@@ -1,0 +1,15 @@
+required:
+- accounts
+- userId
+type: object
+properties:
+  accounts:
+    type: array
+    description: Список данных по счетам
+    items:
+      $ref: ./FindCounterpartyAccountDto.yaml
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Дто поиска счетов контрагентов

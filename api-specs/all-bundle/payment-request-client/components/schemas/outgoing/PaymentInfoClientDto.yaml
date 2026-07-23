@@ -1,0 +1,70 @@
+type: object
+properties:
+  operationType:
+    maxLength: 2
+    type: string
+    description: Вид операции
+    nullable: true
+  incomeType:
+    maxLength: 210
+    type: string
+    description: Назначение платежа
+    nullable: true
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  paymentConditionCode:
+    maxLength: 1
+    type: integer
+    description: Код условия оплаты
+    format: int32
+    nullable: true
+  paymentConditionDescription:
+    maxLength: 140
+    type: string
+    description: Расшифровка условия оплаты
+    nullable: true
+  paymentTypeName:
+    maxLength: 20
+    type: string
+    description: Наименование вида платежа
+    nullable: true
+  paymentPriorityCode:
+    maxLength: 1
+    type: string
+    description: Код очередности платежа
+    nullable: true
+  paymentPriorityDescription:
+    maxLength: 255
+    type: string
+    description: Расшифровка очередности платежа
+    nullable: true
+  paymentPurposeCode:
+    maxLength: 1
+    type: string
+    description: Кодовое назначение платежа
+    nullable: true
+  paymentPurposeDescription:
+    maxLength: 256
+    type: string
+    description: Расшифровка назначения платежа
+    nullable: true
+  uipCode:
+    maxLength: 25
+    type: string
+    description: Код (УИП)
+    nullable: true
+  backupField:
+    maxLength: 35
+    type: string
+    description: Резервное поле
+    nullable: true
+  sentDate:
+    type: string
+    description: Дата отсылки (вручения) контрагенту предусмотренных договором документов
+    format: date
+    nullable: true
+description: Реквизиты исходящего платежного требования (данные для клиента)
+nullable: true

@@ -1,0 +1,51 @@
+type: object
+properties:
+  actualAddress:
+    type: string
+    description: Фактический адрес
+  birthDate:
+    type: string
+    description: Дата рождения
+  birthPlace:
+    type: string
+    description: Место рождения
+  citizenship:
+    type: string
+    description: Гражданство
+  email:
+    type: string
+    description: Электронная почта
+  fileName:
+    type: string
+    description: Основной разворат паспорта с фото и местом выдачи
+  fio:
+    type: string
+    description: ФИО
+  holderName:
+    type: string
+    description: Имя и фамилия на карте
+  identifyingDocument:
+    type: string
+    description: Документ удостоверяющий личность
+  inn:
+    type: string
+    description: ИНН
+  mobilePhone:
+    type: string
+    description: Мобильный телефон
+  publicPerson:
+    type: string
+    description: Публичное должностное лицо
+  registrationAddress:
+    type: string
+    description: Адрес места жительства
+  sex:
+    type: string
+    description: Пол
+  snils:
+    type: string
+    description: СНИЛС
+  temporaryAddress:
+    type: string
+    description: Адрес пребывания
+description: Держателя карты для ЭФ

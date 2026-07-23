@@ -1,0 +1,18 @@
+type: object
+properties:
+  backgroundProcessId:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  completeAt:
+    type: string
+    description: Дата и время завершения
+    format: date-time
+  fileName:
+    type: string
+    description: Имя файла
+description: Фоновый процесс импорта, скроллер клиента

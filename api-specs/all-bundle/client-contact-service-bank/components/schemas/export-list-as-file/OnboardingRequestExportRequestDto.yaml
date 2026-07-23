@@ -1,0 +1,23 @@
+type: object
+description: Запрос на экспорт скроллера заявок
+properties:
+  requestIds:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      format: uuid
+  format:
+    type: string
+    description: Формат документа
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  splitReport:
+    type: boolean
+    description: Признак объединения отчетов в один документ

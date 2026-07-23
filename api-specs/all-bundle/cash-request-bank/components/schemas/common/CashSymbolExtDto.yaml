@@ -1,0 +1,9 @@
+type: object
+properties:
+  symbol:
+    $ref: ./CashSymbolDto.yaml
+  priority:
+    type: integer
+    description: Очередность исполнения
+    format: int32
+description: Дополненная информация по кассовому символу

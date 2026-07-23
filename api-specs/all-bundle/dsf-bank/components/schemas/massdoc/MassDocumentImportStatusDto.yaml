@@ -1,0 +1,38 @@
+type: object
+description: Массовая рассылка. Статус импорта получателей.
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор массовой рассылки.
+  mode:
+    type: string
+    description: Режим добавления получателей.
+    enum:
+    - ALL
+    - MANUAL
+    - IMPORT
+    - INDIVIDUAL
+  numberOfReceivers:
+    type: integer
+    format: int32
+    description: Количество получателей.
+  receiverCount:
+    type: integer
+    format: int32
+    description: Количество получателей для обработки
+  receiverProcessed:
+    type: integer
+    format: int32
+    description: Количество обработанных получателей
+  receiverProcessingState:
+    type: string
+    description: Статус добавления получателей
+    enum:
+    - EMPTY
+    - PROCESSING
+    - READY
+  version:
+    type: integer
+    format: int32
+    description: Текущая версия массовой рассылки.

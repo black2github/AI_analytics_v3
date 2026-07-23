@@ -1,0 +1,43 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: boolean
+    example: null
+  notEq:
+    type: boolean
+    example: null
+  in:
+    type: array
+    example: null
+    items:
+      type: boolean
+      example: null
+  notIn:
+    type: array
+    example: null
+    items:
+      type: boolean
+      example: null
+  isNull:
+    type: boolean
+    example: null
+  gt:
+    type: boolean
+    example: null
+  ge:
+    type: boolean
+    example: null
+  lt:
+    type: boolean
+    example: null
+  le:
+    type: boolean
+    example: null
+description: Отправить справку на e-mail
+example: null

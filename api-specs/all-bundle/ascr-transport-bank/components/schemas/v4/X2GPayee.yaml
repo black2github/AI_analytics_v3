@@ -1,0 +1,28 @@
+type: object
+description: Данные фактического получателя
+properties:
+  bankAccount:
+    type: string
+    description: Банковский счет фактического получателя
+  name:
+    type: string
+    description: Наименование фактического получателя
+  inn:
+    type: string
+    description: ИНН фактического получателя
+  kpp:
+    type: string
+    description: КПП фактического получателя
+  bankBic:
+    type: string
+    description: БИК банка фактического получателя
+  corrAccount:
+    type: string
+    description: Корр.счёт банка фактического получателя
+required:
+- bankAccount
+- bankBic
+- corrAccount
+- inn
+- kpp
+- name

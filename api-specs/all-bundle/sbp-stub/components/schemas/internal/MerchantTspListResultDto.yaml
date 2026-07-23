@@ -1,0 +1,29 @@
+type: object
+description: Формат ответа на получение списка ТСП
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБПGate Master System
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ/ИП – клиента Банка в СБП
+  ogrn:
+    type: string
+    description: Основной государственный регистрационный номер
+  merchants:
+    type: array
+    items:
+      $ref: ./MerchantTspDto.yaml
+    description: Список ТСП
+  sign:
+    type: string
+    description: Подпись сообщения
+  requestSign:
+    type: string
+    description: Подпись входящего запроса

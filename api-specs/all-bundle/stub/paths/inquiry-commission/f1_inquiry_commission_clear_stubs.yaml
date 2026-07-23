@@ -1,0 +1,21 @@
+delete:
+  tags:
+  - inquiry-commission-v-2-controller
+  summary: Удалить все заглушки
+  operationId: clearStubsUsingDELETE
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        uniqueItems: true
+        items:
+          $ref: '#/definitions/InquiryCommissionDto'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

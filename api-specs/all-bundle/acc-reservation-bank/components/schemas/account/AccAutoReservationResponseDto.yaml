@@ -1,0 +1,7 @@
+type: object
+properties:
+  reservationRequestId:
+    type: string
+    description: Идентификатор заявки на резервирование
+    format: uuid
+description: Данные результата автоматического резервирования счета

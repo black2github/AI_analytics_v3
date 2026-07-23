@@ -1,0 +1,12 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета списания комиссии
+  departmentCode:
+    type: string
+    description: Подразделение обслуживания счета
+  isEnoughFunds:
+    type: boolean
+    description: Достаточность средств
+description: Информацией о возможности списания комиссии

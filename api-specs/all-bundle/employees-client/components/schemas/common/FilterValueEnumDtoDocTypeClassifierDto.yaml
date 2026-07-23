@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Классификатор типа документа
+    enum:
+    - UPDATE_INFORM
+    - ADD_EDIT_USER
+  notEq:
+    type: string
+    description: Классификатор типа документа
+    enum:
+    - UPDATE_INFORM
+    - ADD_EDIT_USER
+  in:
+    type: array
+    items:
+      type: string
+      description: Классификатор типа документа
+      enum:
+      - UPDATE_INFORM
+      - ADD_EDIT_USER
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Классификатор типа документа
+      enum:
+      - UPDATE_INFORM
+      - ADD_EDIT_USER
+  isNull:
+    type: boolean
+description: Классификатор типа документа

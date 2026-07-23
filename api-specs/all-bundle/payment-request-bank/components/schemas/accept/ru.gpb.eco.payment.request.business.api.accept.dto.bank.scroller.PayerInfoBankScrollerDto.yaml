@@ -1,0 +1,29 @@
+type: object
+properties:
+  name:
+    maxLength: 160
+    type: string
+    description: Наименование плательщика
+    nullable: true
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет плательщика
+    nullable: true
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН/КИО плательщика
+    nullable: true
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка плательщика
+    nullable: true
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование Банка плательщика
+    nullable: true
+description: Реквизиты контрагента (плательщика), скроллер банка
+nullable: true

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API для справочника платёжных систем и категорий корпоративных карт
+  summary: Получить страницу активных / неактивных записей
+  description: 'Привилегии: PAYMENT_SYSTEM_GET_PAGE'
+  operationId: getPageUsingPOST_14
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«PaymentSystemFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«PaymentSystemDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,77 @@
+required:
+- createdAt
+- number
+- requestId
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: string
+    description: Номер заявки
+  createdAt:
+    type: string
+    description: Дата
+    format: date-time
+  requestType:
+    type: string
+    description: Тип заявки
+  status:
+    type: string
+    description: Статус заявки
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Детализация причины отказа (Клиент).
+  bankClientShortName:
+    type: string
+    description: Краткое наименование организации (сущность Клиент банка)
+  bankClientInn:
+    type: string
+    description: ИНН/КИО (сущность Клиент банка)
+  statusDateTime:
+    type: string
+    description: Дата и время установки текущего статуса
+    format: date-time
+  statusErrorCode:
+    type: string
+    description: Код ошибки заявки
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации на ПлЦР
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  organizationName:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН организации
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+  user:
+    type: string
+    description: Пользователь, создавший заявку
+  bankRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Детализация причины отказа (Банк).
+  hasRequestJson:
+    type: boolean
+    description: Признак наличия JSON с данными запроса Журнала формирования данных для регистрации/обновления сведений СЦР
+  hasRemarks:
+    type: boolean
+    description: Признак наличия замечаний в журнале формирования данных для регистрации/обновления сведений СЦР
+description: DTO заявки для скроллера Управление счетом

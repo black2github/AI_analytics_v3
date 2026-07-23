@@ -1,0 +1,11 @@
+type: object
+description: Параметры по заявке на изменение параметров ТСП
+properties:
+  isReturnPermitted:
+    type: boolean
+    description: Признак "Разрешение на возвраты"
+  newPassword:
+    type: string
+    description: Новый пароль точки продаж (Задается в случае влючения разрешения на возвраты)
+required:
+- isReturnPermitted

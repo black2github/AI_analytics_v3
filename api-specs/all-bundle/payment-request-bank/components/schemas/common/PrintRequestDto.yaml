@@ -1,0 +1,15 @@
+required:
+- ids
+- reportFormat
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  reportFormat:
+    $ref: ./ReportFormat.yaml
+description: Запрос печати списка документов

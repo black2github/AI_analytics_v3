@@ -1,0 +1,6 @@
+type: object
+properties:
+  git:
+    $ref: ./Git.yaml
+  build:
+    $ref: ./Build.yaml

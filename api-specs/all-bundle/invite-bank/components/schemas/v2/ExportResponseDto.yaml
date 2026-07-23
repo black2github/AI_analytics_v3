@@ -1,0 +1,13 @@
+required:
+- fileId
+- token
+type: object
+properties:
+  token:
+    type: string
+    description: Токен для скачивания файла
+  fileId:
+    type: string
+    description: Идентификатор файла
+    format: uuid
+description: Результат экспорта

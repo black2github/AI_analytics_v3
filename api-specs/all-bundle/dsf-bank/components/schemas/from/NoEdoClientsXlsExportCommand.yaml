@@ -1,0 +1,20 @@
+type: object
+description: Запрос на выгрузку XLS-отчета "Клиенты без ГПБ БОЛ"
+properties:
+  dateFrom:
+    type: string
+    format: date
+    description: Начало диапазона дат рассылки
+  dateTo:
+    type: string
+    format: date
+    description: Конец диапазона дат рассылки
+  dsfTypeCodes:
+    type: array
+    description: Коды типов писем
+    items:
+      type: string
+required:
+- dateFrom
+- dateTo
+- dsfTypeCodes

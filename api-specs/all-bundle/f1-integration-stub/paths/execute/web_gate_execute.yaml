@@ -1,0 +1,19 @@
+post:
+  summary: Запустить хранимую процедуру и получить результат
+  tags:
+  - Эмуляция шлюза в Ф1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/execute/WebGateRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/execute/WebGateRspDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,24 @@
+type: object
+properties:
+  error:
+    $ref: ./AccountError.yaml
+  accountNumber:
+    type: string
+    description: Номер счета
+  f1AccountId:
+    type: integer
+    description: ID счет в F1
+    format: int64
+  individualTariff:
+    type: boolean
+    description: Флаг индивидуальной тарификации
+  referenceRates:
+    type: array
+    description: Тарифная сетка по справкам
+    items:
+      $ref: ./ReferenceRate.yaml
+  summaryReferenceRates:
+    $ref: ./SummaryReferenceRates.yaml
+  tariffInfo:
+    $ref: ./TariffInfo.yaml
+description: Тарифная сетка для конкретного счета

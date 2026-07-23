@@ -1,0 +1,32 @@
+type: object
+properties:
+  account:
+    type: string
+    description: Номер счета
+  department:
+    type: string
+    description: Подразделение
+  currency:
+    type: string
+    description: Валюта счета
+  status:
+    type: string
+    description: Статус счета
+    enum:
+    - OPEN
+    - CLOSE
+  openDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  rkoNumber:
+    type: string
+    description: Номер договора РКО для счета
+  officeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+description: Счет

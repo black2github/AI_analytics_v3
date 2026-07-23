@@ -1,0 +1,17 @@
+type: object
+properties:
+  errorRequestsIds:
+    type: array
+    description: Идентификаторы заявок, в процессе обработки которы возникла ошибка
+    items:
+      type: string
+      description: Идентификаторы заявок, в процессе обработки которы возникла ошибка
+      format: uuid
+  successfulRequestsIds:
+    type: array
+    description: Идентификаторы успешно обработанных заявок
+    items:
+      type: string
+      description: Идентификаторы успешно обработанных заявок
+      format: uuid
+description: Результат выполнения функции массовой повторной выдачи и массового повторного отзыва прав и приглашений

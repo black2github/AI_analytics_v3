@@ -1,0 +1,6 @@
+type: object
+properties:
+  kindRowId:
+    type: string
+  kindName:
+    type: string

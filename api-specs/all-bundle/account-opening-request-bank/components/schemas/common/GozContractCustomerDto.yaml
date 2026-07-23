@@ -1,0 +1,13 @@
+type: object
+properties:
+  inn:
+    pattern: '[0-9]{10}|[0-9]{12}'
+    type: string
+    description: ИНН Заказчика.
+  name:
+    type: string
+    description: Наименование Заказчика.
+  accountNumber:
+    type: string
+    description: Номер счета заказчика.
+description: Сведения о Заказчике по государственному контракту.

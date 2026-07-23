@@ -1,0 +1,33 @@
+type: object
+properties:
+  receiptAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  recipientNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOutgoingPaymentChargebackRequestStatusBankDto.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  sourceSystem:
+    $ref: ./FilterValueEnumDtoDocumentSystemClassifierDto.yaml
+  creationType:
+    $ref: ./FilterValueEnumDtoDocumentCreationMethodClassifierDto.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  rnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentAmountIncludeVat:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentCreatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  paymentDocNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  recipientBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  recipientAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    $ref: ./OutgoingPaymentRequestBankCategoryDto.yaml
+description: Фильтр отзыва ПТИ. Банковская часть.

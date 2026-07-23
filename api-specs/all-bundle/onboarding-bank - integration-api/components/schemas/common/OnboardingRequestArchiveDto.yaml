@@ -1,0 +1,88 @@
+type: object
+properties:
+  accountTypeCode:
+    type: integer
+    description: Код типа счета
+    format: int64
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  eskRequestId:
+    type: integer
+    description: ID заявки 1091 в ЕСК
+    format: int64
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  name:
+    type: string
+    description: Полное наименование клиента
+  number:
+    type: integer
+    description: Номер документа
+    format: int32
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  status:
+    type: string
+    description: Статус архивной заявки
+    enum:
+    - NONE
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - DELETED
+    - FORMED
+    - DATA_ERROR
+    - REPLACING_DOCS
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - PROCESSING_TESSA_COMMENTS
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - EDITING
+    - DETAILS_ERROR
+    - REFUSED
+    - PREDRAFT
+  step:
+    type: string
+    description: Информация о шаге архивации архивной заявки
+    enum:
+    - IN_PROGRESS
+    - DONE
+  tessaDocId:
+    type: string
+    description: ID досье в ТЕССА
+  userEmail:
+    type: string
+    description: Email пользователя, создавшего заявку
+  userFio:
+    type: string
+    description: ФИО пользователя, создавшего заявку
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  userPhone:
+    type: string
+    description: Телефон пользователя, создавшего заявку
+description: Архивная заявка

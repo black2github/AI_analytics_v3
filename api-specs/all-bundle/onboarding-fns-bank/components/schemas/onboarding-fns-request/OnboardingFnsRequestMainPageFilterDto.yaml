@@ -1,0 +1,15 @@
+type: object
+properties:
+  representativeSurname:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativeForename:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativePatronymic:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativeEmail:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativePhone:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoOnboardingFnsRequestStatusDto.yaml
+description: Фильтр для поиска заявок на открытие первого счёта по данным ФНС

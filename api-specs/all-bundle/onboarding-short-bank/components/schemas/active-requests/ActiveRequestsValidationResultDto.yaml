@@ -1,0 +1,22 @@
+type: object
+properties:
+  activeRequestId:
+    type: string
+    description: Идентификатор активной короткой заявки.
+    format: uuid
+  activeRequestSource:
+    type: string
+    description: Сервис, в котором найдена активная заявка
+    enum:
+    - ONBOARDING_SHORT
+    - DOCUMENT_PACKAGE
+  checkMessage:
+    $ref: ../common/CheckMessage.yaml
+  result:
+    type: string
+    description: Результат проверки.
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+description: Результат проверки короткой заявки.

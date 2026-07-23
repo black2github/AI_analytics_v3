@@ -1,0 +1,5 @@
+type: object
+properties:
+  kpRetailStatus:
+    $ref: ../common/KpRetailStatusDto.yaml
+description: Техническая информация о документе.

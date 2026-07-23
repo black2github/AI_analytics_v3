@@ -1,0 +1,12 @@
+required:
+- authorizedPersonId
+type: object
+description: Данные для удаления шаблона роли УЛ по идентификатору УЛ и типу шаблона отличному от "Технический"
+allOf:
+- $ref: ./ApRoleTemplateDeleteDto.yaml
+- type: object
+  properties:
+    authorizedPersonId:
+      type: string
+      description: Идентификатор УЛ
+      format: uuid

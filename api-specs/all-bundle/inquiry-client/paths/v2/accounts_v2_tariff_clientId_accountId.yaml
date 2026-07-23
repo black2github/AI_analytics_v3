@@ -1,0 +1,76 @@
+get:
+  tags:
+  - API списка счетов для запроса справок. Версия 2
+  summary: Получить информацию о тарифе
+  description: 'Привилегии: INQUIRY.CLIENT.CREATE,INQUIRY.CLIENT.UPDATE,INQUIRY_REQUEST.CREATE,INQUIRY_REQUEST.UPDATE'
+  operationId: getTariff_1
+  parameters:
+  - name: clientId
+    in: path
+    required: true
+    schema:
+      type: string
+      example: null
+  - name: accountId
+    in: path
+    required: true
+    schema:
+      type: string
+      example: null
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v2/GenericResponseSimpleErrorDataTariffInfoDto.yaml
+          example: null

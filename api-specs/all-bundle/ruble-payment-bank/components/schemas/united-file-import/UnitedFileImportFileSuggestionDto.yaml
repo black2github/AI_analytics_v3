@@ -1,0 +1,17 @@
+required:
+- createdAt
+- importId
+type: object
+properties:
+  importId:
+    type: string
+    description: Идентификатор сущности "Файл импорта" или "Фоновый процесс импорта"
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  fileName:
+    type: string
+    description: Наименование файла
+description: Подсказка для поля "Файл"

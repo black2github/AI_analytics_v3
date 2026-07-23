@@ -1,0 +1,52 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  branchServiceCode:
+    type: string
+    description: Филиал (код)
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  clientCode:
+    type: string
+    description: Код клиента (РНК)
+    nullable: true
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  clientName:
+    type: string
+    description: Краткое наименование организации
+  departmentCode:
+    type: string
+    description: Подразделение (Код)
+  operations:
+    type: array
+    description: Массив с перечнем операций и их параметрами
+    items:
+      $ref: ./CardAccountOperationClientDto.yaml
+  result:
+    type: string
+    description: Результат выполнения запроса
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  size:
+    type: integer
+    description: Количество отфильтрованных записей
+    format: int64
+description: Данные об операциях по карточному счёту в сервисе корпоративных карт

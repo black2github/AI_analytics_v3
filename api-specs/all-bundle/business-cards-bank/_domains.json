@@ -1,0 +1,22 @@
+{
+  "_comment": "Auto domain map for business-cards-bank (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/bank/business-card",
+      "domain": "business-card"
+    },
+    {
+      "prefix": "/bank/business-cards",
+      "domain": "business-cards"
+    },
+    {
+      "prefix": "/bank/set-limit",
+      "domain": "limits"
+    },
+    {
+      "prefix": "/bank",
+      "domain": "misc"
+    }
+  ]
+}

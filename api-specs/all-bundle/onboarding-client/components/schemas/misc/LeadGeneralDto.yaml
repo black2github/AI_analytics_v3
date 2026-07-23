@@ -1,0 +1,13 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата и время запроса
+    format: date-time
+  idSale:
+    type: string
+    description: Внутренний ID заявки, который пришел с сайта Банка
+  systemId:
+    type: string
+    description: Идентификатор системы-источника
+description: Служебные параметры запроса

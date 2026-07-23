@@ -1,0 +1,22 @@
+type: object
+properties:
+  terminalNumber:
+    type: string
+    description: Номер терминала
+  merchantCode:
+    type: string
+    description: Код мерчанта
+  cardNumber:
+    type: string
+    description: Номер карты
+  rrn:
+    type: string
+    description: Ссылочный номер операции
+  comment:
+    type: string
+    description: Комментарий к статусу операции
+  transactionTime:
+    type: integer
+    description: Дата и время транзакции
+    format: int64
+description: Данные ЛК_ПВ для клиентского скроллера (Эквайринг).

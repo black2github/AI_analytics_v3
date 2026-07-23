@@ -1,0 +1,11 @@
+type: object
+description: Объект разрешений
+properties:
+  operationPermition:
+    $ref: ./MerchantTspOperationPermitionDto.yaml
+    type: object
+    description: Объект разрешений финансовых операций
+  signPermition:
+    $ref: ./MerchantTspSignPermitionDto.yaml
+    type: object
+    description: Объект разрешений подписи

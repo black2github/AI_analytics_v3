@@ -1,0 +1,5 @@
+type: object
+properties:
+  printFormFile:
+    $ref: ./PrintFormFile.yaml
+description: Выходные данные метода формирования печатной формы

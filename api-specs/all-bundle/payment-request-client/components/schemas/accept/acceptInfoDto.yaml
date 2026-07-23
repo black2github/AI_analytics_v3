@@ -1,0 +1,10 @@
+type: object
+properties:
+  decision:
+    $ref: ../common/AcceptPaymentRequestDecisionDto.yaml
+  amount:
+    type: number
+    description: Сумма акцепта
+    nullable: true
+description: Решение по акцепту
+nullable: true

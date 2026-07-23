@@ -1,0 +1,45 @@
+type: object
+description: Фильтр по типу сообщения АС СБП
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - SUBSCRIPTION
+    - RESOLUTION
+    - PAYMENT
+    - TRANSACTION
+    - B2B_PAYMENT
+  notEq:
+    type: string
+    enum:
+    - SUBSCRIPTION
+    - RESOLUTION
+    - PAYMENT
+    - TRANSACTION
+    - B2B_PAYMENT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - SUBSCRIPTION
+      - RESOLUTION
+      - PAYMENT
+      - TRANSACTION
+      - B2B_PAYMENT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - SUBSCRIPTION
+      - RESOLUTION
+      - PAYMENT
+      - TRANSACTION
+      - B2B_PAYMENT
+  isNull:
+    type: boolean

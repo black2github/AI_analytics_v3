@@ -1,0 +1,12 @@
+type: object
+properties:
+  rubbles:
+    type: number
+    description: Денежная сумма по символу
+  symbol:
+    type: string
+    description: Идентификатор кассового символа в справочнике
+  comment:
+    type: string
+    description: Комментарий
+description: Кассовый символ заявки

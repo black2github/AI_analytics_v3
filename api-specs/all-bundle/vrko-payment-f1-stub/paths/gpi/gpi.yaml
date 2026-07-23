@@ -1,0 +1,19 @@
+post:
+  summary: Отправка сообщения с GPI-треками от Ф1 в очередь
+  tags:
+  - Отправление сообщения с GPI-треками от Ф1 в очередь
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/gpi/GpiTrackerF1Dto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataString.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,10 @@
+type: object
+properties:
+  message:
+    type: string
+    description: Сообщение комментария
+  datetime:
+    type: string
+    description: Время сообщения
+    format: date-time
+description: Транспортное представление комментария

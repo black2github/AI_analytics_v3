@@ -1,0 +1,18 @@
+required:
+- bankClientId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка (организации)
+    format: uuid
+  includeMigration:
+    type: boolean
+    description: Включить в выборку шаблоны ролей с типом "MIGRATION"
+  includeArchived:
+    type: boolean
+    description: Включить в выборку архивные шаблоны ролей
+  includeTechnical:
+    type: boolean
+    description: Включить в выборку шаблоны ролей с типом "TECHNICAL"
+description: Данные для поиска шаблонов ролей

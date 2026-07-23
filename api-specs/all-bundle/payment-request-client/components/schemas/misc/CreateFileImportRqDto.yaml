@@ -1,0 +1,52 @@
+required:
+- dataSize
+- duplicate
+- fileName
+- fileStorageId
+- hashAmount
+- hashFunction
+- importDocumentType
+type: object
+properties:
+  fileStorageId:
+    type: string
+    description: ID файла (ID файла в файловом сервисе)
+    format: uuid
+  fileName:
+    maxLength: 255
+    type: string
+    description: Имя файла
+  dataSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  hashAmount:
+    maxLength: 1024
+    type: string
+    description: Хеш сумма
+  hashFunction:
+    maxLength: 46
+    type: string
+    description: Хеш функция
+  importedWithSign:
+    type: boolean
+    description: Признак импорта с ЭП
+  importDocumentType:
+    type: string
+    description: Тип документов
+    enum:
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_CONVERSION
+    - VRKO_TRANSIT
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+  duplicate:
+    type: boolean
+    description: Признак дублирования
+description: '[Импорт ПЭД] Система: Функция создания записи файла импорта. Входящие параметры.'

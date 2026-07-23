@@ -1,0 +1,33 @@
+required:
+- fullName
+- inn
+- ogrn
+type: object
+properties:
+  fullName:
+    type: string
+    description: Полное наименование организации/ИП
+  ogrn:
+    type: string
+    description: ОГРН/ОРГНИП
+  inn:
+    type: string
+    description: ИНН организации/ИП
+  kpp:
+    type: string
+    description: КПП организации
+  shortName:
+    type: string
+    description: КПП организации/ИП
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  requestType:
+    type: string
+    description: Тип заявки

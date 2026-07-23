@@ -1,0 +1,43 @@
+required:
+- accountId
+- accountNumber
+- clientId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  accountName:
+    type: string
+    description: Название счета
+  ecoAccountName:
+    type: string
+    description: Название счёта в ЭКО системе
+  type:
+    type: string
+    description: Тип счета
+  contractTypeCode:
+    type: string
+    description: Код типа договора
+  currencyNumericCode:
+    type: string
+    description: Цифровой код валюты
+  chargeAccount:
+    type: boolean
+    description: Счет для списания комиссии
+  chargeTariff:
+    type: number
+    description: Тариф
+description: Счет клиента

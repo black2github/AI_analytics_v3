@@ -1,0 +1,29 @@
+get:
+  tags:
+  - API ДБО БСС для внешних систем
+  summary: Получение списка новостей
+  operationId: getNewsUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: custids
+    in: query
+    description: custids
+    required: false
+    type: string
+  - name: remoteId
+    in: header
+    description: remoteId
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BssNewsResponse'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

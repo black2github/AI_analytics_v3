@@ -1,0 +1,32 @@
+required:
+- counterpartyId
+- mandatory
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме.
+    format: uuid
+  counterpartyId:
+    type: string
+    description: Ссылка на сущность "Контрагент".
+    format: uuid
+  sourceRecordClassifier:
+    type: string
+    description: Классификатор источников записи справочника.
+    enum:
+    - MIGRATION
+    - MANUAL
+    - AUTOFILL
+    - IMPORT
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  kpp:
+    type: string
+    description: КПП контрагента
+  mandatory:
+    type: boolean
+    description: Признак основного КПП
+description: КПП контрагента

@@ -1,0 +1,20 @@
+required:
+- attachmentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  typeClass:
+    type: string
+    description: Класс типа письма
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+    - REPLY_MAIL_TO_BANK
+description: DTO запроса на получение токена доступа к вложению.

@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор встречи
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  meetingEcoSource:
+    type: string
+    description: Место создания встречи в Экосистеме
+    enum:
+    - MAIN_PAGE
+    - CLIENT_CARD
+    - ONBOARDING
+    - ONBOARDING_2
+    - NEW_MAIN_PAGE
+  bankClient:
+    $ref: ./BankClientInfoRestDto.yaml
+  branch:
+    $ref: ./BranchInfoRestDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+description: Информация о встрече

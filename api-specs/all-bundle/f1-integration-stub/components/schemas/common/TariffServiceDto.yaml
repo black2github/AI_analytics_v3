@@ -1,0 +1,21 @@
+type: object
+description: Услуга тарифа
+properties:
+  clientServiceCode:
+    type: string
+  clientServiceName:
+    type: string
+  limitValue:
+    type: integer
+    format: int64
+  limitValueCurrency:
+    $ref: ./LimitValueCurrency.yaml
+    type: string
+    description: Размерность лимита
+  limitPeriod:
+    type: string
+  limitsRefreshDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'

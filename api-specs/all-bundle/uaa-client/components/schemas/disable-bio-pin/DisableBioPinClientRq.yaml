@@ -1,0 +1,24 @@
+required:
+- clientId
+- deviceId
+- disableType
+type: object
+properties:
+  deviceId:
+    type: string
+    description: Идентификатор мобильного устройства
+  clientId:
+    type: string
+    description: Идентификатор мобильного приложения
+  disableType:
+    type: string
+    enum:
+    - PIN
+    - BIOMETRIC
+  mobileSdkData:
+    type: string
+    description: Данные, полученные с мобильного устройства
+  userEnvironment:
+    type: string
+    description: Информация об окружении пользователя
+description: ДТО удаления биометрии и PIN-кода в профиле пользователя

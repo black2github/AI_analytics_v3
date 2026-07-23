@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Содержимое файла
+    format: byte
+description: Содержимое файла ПФ, относящейся к оплате по QR коду

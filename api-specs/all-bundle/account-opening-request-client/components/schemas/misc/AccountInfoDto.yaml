@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Id
+    format: uuid
+  accountTypeCode:
+    type: integer
+    description: Account type code. 1 - Payment, 2 - GOZ
+    format: int64
+  accountTypeDescription:
+    type: string
+    description: Account type description
+  needConnectMobileBank:
+    type: boolean
+    description: Is connected to internet or mobile bank
+  statementType:
+    type: string
+    description: Statement type
+    enum:
+    - STANDARD
+    - EXTENDED
+  reservedAccounts:
+    type: array
+    description: Reserved accounts
+    items:
+      $ref: ./ReservedAccountDto.yaml
+  openingAccountsInfos:
+    type: array
+    description: Opening accounts info
+    items:
+      $ref: ./OpeningAccountInfoDto.yaml
+  govContractInfo:
+    $ref: ./GovContractInfoDto.yaml
+  govContractCustomerInfo:
+    $ref: ./GovContractCustomerInfoDto.yaml
+  document:
+    $ref: ./DocumentDto.yaml
+description: Opening account info DTO

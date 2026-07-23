@@ -1,0 +1,9 @@
+type: object
+properties:
+  authorityCertId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./RevokedCertStatusFilterDto.yaml
+description: Фильтр отозванных сертификатов

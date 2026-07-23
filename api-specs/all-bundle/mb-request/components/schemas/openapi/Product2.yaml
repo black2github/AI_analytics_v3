@@ -1,0 +1,53 @@
+type: object
+properties:
+  productCode:
+    type: string
+  unitOfMeasure:
+    type: string
+    enum:
+    - PIEC
+    - TONS
+    - FOOT
+    - GBGA
+    - USGA
+    - GRAM
+    - INCH
+    - KILO
+    - PUND
+    - METR
+    - CMET
+    - MMET
+    - LITR
+    - CELI
+    - MILI
+    - GBOU
+    - USOU
+    - GBQA
+    - USQA
+    - GBPI
+    - USPI
+    - MILE
+    - KMET
+    - YARD
+    - SQKI
+    - HECT
+    - ARES
+    - SMET
+    - SCMT
+    - SMIL
+    - SQMI
+    - SQYA
+    - SQFO
+    - SQIN
+    - ACRE
+  productQuantity:
+    type: string
+  unitPrice:
+    type: string
+  productAmount:
+    type: string
+  taxType:
+    type: string
+  additionalProductInformation:
+    type: string
+description: Информация о продукте

@@ -1,0 +1,6 @@
+type: object
+properties:
+  applicant:
+    type: boolean
+    description: Признак заявителя
+description: Персона, взаимосвязанная в рамках проверки полномочий пользователем клиента

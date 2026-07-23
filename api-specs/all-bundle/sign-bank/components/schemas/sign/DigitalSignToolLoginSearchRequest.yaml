@@ -1,0 +1,17 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя который прошел первый фактор
+    format: uuid
+  dboBssPersonalizedUsersUaaIds:
+    uniqueItems: true
+    type: array
+    description: ID персонализированных пользователей БСС входивших в ЭКО
+    items:
+      type: string
+      description: ID персонализированных пользователей БСС входивших в ЭКО
+      format: uuid
+description: Запрос поиска СЭП для логина

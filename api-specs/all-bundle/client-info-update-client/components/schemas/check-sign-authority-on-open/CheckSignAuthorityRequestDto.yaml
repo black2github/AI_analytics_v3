@@ -1,0 +1,14 @@
+type: object
+properties:
+  requirementId:
+    type: string
+    description: Ссылка на требование на обновление сведений Клиента
+    format: uuid
+  employeeId:
+    type: string
+    description: ID сотрудника Клиента
+    format: uuid
+  requestId:
+    type: string
+    description: Ссылка на заявку
+    format: uuid

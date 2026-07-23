@@ -1,0 +1,6 @@
+type: string
+enum:
+- DRAFT
+- ACTIVE
+- BLOCKED
+description: Статус подключения агентов ТСП

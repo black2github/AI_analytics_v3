@@ -1,0 +1,31 @@
+get:
+  tags:
+  - API файлов сертификатов
+  summary: Выгрузить сертификат
+  operationId: export_1
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: format
+    in: path
+    required: true
+    schema:
+      type: string
+      description: Формат данных
+      enum:
+      - DER
+      - PEM
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: array
+            items:
+              type: string
+              format: byte

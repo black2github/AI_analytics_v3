@@ -1,0 +1,11 @@
+type: object
+properties:
+  statusName:
+    type: string
+  localizationStatus:
+    type: string
+  historyEntries:
+    type: array
+    items:
+      $ref: ./HistoryGroupEntryDto.yaml
+description: Данные

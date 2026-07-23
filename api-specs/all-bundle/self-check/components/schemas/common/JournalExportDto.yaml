@@ -1,0 +1,13 @@
+type: object
+description: Результат экспорта журнала сообщений
+properties:
+  content:
+    type: string
+    format: byte
+    description: Данные файла
+  filename:
+    type: string
+    description: Имя файла
+required:
+- content
+- filename

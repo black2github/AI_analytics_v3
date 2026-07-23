@@ -1,0 +1,12 @@
+type: object
+properties:
+  reqId:
+    type: string
+  typeRowId:
+    type: string
+  typeName:
+    type: string
+  docTypes:
+    type: array
+    items:
+      $ref: ./AdditionalDocTypeInfo.yaml

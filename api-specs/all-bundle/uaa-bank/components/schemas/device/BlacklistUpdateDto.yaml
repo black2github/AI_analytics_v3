@@ -1,0 +1,9 @@
+type: object
+properties:
+  deviceId:
+    type: string
+    description: Уникальный идентификатор мобильного устройства, для которого запрещена авторизация в ЭКО
+  comments:
+    type: string
+    description: Комментарии
+description: ДТО обновления черного списка идентификаторов мобильных устройств

@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца подписи
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  level:
+    type: string
+    description: Уровень подписи
+    enum:
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+    - SIGHTING
+    - CONTROL
+  mode:
+    type: string
+    description: Тип подписания
+    enum:
+    - STANDARD_KEP_OEP
+    - SIGNED_1C_DIRECT_PACKAGE
+    - SIGNED_1C_FILE_ATTACHED_SIGNATURE
+    - SIGNED_1C_FILE_DETACHED_SIGNATURE
+    - SIGNED_TNF
+    - BULK_SIGNATURE_FILE
+  value:
+    $ref: ./DocumentSignatureValueDto.yaml
+  certificate:
+    $ref: ./DocumentSignatureCertificateInfoDto.yaml
+description: Подпись документа

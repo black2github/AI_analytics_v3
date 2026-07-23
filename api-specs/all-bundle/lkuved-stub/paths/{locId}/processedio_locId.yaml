@@ -1,0 +1,17 @@
+get:
+  summary: Получить документ по локальному идентификатору сообщения
+  tags:
+  - API заглушек документов, полученных из ЛК УВЭД
+  parameters:
+  - name: locId
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/{locId}/UUID.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataLkUvedProcessedioRspDto.yaml

@@ -1,0 +1,68 @@
+post:
+  tags:
+  - Интеграционное API по профилям пользователей DSS
+  summary: Изменение метода вторичной аутентификации
+  description: 'Привилегии: INTEGRATION_DSS_PROFILES_CHANGE_SECONDARY_AUTH_METHOD'
+  operationId: changeSecondaryAuthMethod
+  parameters:
+  - name: dssProfileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: secondaryAuthMethod
+    in: path
+    description: "* UNKNOWN: \n* MOBILE: \n* MY_DSS: \n* OTP_VIA_SMS: "
+    required: true
+    schema:
+      type: string
+      enum:
+      - UNKNOWN
+      - MOBILE
+      - MY_DSS
+      - OTP_VIA_SMS
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/dss-profile/GenericResponseSimpleErrorDataDssProfileDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security: []

@@ -1,0 +1,22 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип документа
+    enum:
+    - PASSPORT_MAIN
+    - PASSPORT_REGISTRATION
+    - PASSPORT_MAIN_HANDWRITTEN
+    - PASSPORT_REGISTRATION_HANDWRITTEN
+    - UNKNOWN
+  pages:
+    type: array
+    description: Страницы файла, на которых находится документ
+    items:
+      $ref: ./FilePage.yaml
+  fields:
+    type: object
+    additionalProperties:
+      $ref: ./DocumentField.yaml
+    description: Распознанные поля документа
+description: Распознанный документ

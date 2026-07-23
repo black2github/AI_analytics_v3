@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор справочника "Центр ответственности"
+    format: uuid
+  name:
+    type: string
+    description: Наименование справочника "Центр ответственности"
+  isParent:
+    type: boolean
+    description: Головной "Центр отвественности"
+description: Наименование справочника "Центр ответственности"

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUniversalRequestDutyFilter.yaml
+description: Запрос страницы

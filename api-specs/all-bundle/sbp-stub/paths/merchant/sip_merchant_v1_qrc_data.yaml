@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Регистрация QRC'
+  tags:
+  - СИП. Сервис Merchant API - QRC
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/QrcDataDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/QrcDataResultDto.yaml
+    '400':
+      description: Bad Request

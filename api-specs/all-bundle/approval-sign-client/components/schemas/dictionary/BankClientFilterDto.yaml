@@ -1,0 +1,9 @@
+type: object
+properties:
+  innKio:
+    type: string
+    description: ИНН/КИО клиента
+  fullName:
+    type: string
+    description: Наименование клиента
+description: Информация о клиенте банка

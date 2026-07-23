@@ -1,0 +1,21 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      enum:
+      - ACCESSION
+      - STANDART
+      - INDIVIDUAL
+      - ACCESSION_DU
+      - INDIVIDUAL_DU
+      - STANDART_DU
+  error:
+    $ref: ../common/ErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

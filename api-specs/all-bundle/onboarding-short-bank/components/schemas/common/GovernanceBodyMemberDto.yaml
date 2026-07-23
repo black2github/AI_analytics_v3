@@ -1,0 +1,13 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО/Наименование юридического лица
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  position:
+    type: string
+    description: Должность
+description: Участник органа управления

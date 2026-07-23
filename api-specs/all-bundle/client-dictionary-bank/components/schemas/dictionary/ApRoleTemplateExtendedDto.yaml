@@ -1,0 +1,23 @@
+type: object
+properties:
+  roleTemplate:
+    $ref: ../common/RoleTemplateDto.yaml
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  originalService:
+    type: string
+    description: Источник записи
+  employeeRequestId:
+    type: string
+    description: Заявка инициатор
+    format: uuid
+  comment:
+    type: string
+    description: Комментарий
+  rolesTemplateVersion:
+    type: integer
+    description: Версия шаблона ролей
+    format: int32
+description: ДТО детальной иформации о шаблоне роли УЛ

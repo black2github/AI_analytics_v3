@@ -1,0 +1,7 @@
+type: object
+properties:
+  clientUuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр

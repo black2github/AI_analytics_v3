@@ -1,0 +1,20 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  viewOnlyAccessibleAccounts:
+    type: boolean
+    description: Показать только доступные счета
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  state:
+    $ref: ../common/AccountStateFilter.yaml
+  accountType:
+    $ref: ./BankAccountTypeFilter.yaml
+description: Фильтр для ЭФ "Счета пользователя".

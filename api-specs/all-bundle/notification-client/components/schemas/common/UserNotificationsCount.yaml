@@ -1,0 +1,15 @@
+type: object
+properties:
+  count:
+    type: integer
+    format: int64
+  pollingInterval:
+    type: integer
+    format: int32
+  importantCount:
+    type: integer
+    format: int32
+  requiredReadCount:
+    type: integer
+    format: int32
+description: Данные

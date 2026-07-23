@@ -1,0 +1,50 @@
+type: object
+properties:
+  commissionAmount:
+    type: number
+    description: Сумма комиссии для оплаты через QR-код
+  id:
+    type: string
+    description: Ссылка на объекут оплаты QR
+    format: uuid
+  individualCommissionAmount:
+    type: number
+    description: Индивидуальная сумма комиссии
+  onboardingRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета"
+    format: uuid
+  openAccountCommissionAmount:
+    type: number
+    description: Сумма комиссии за открытие первого счета для оплаты через QR-код
+  payLink:
+    type: string
+    description: Ссылка для оплаты
+  qrExpirationDate:
+    type: string
+    description: Дата и время истечения срока QR-кода
+    format: date-time
+  qrImage:
+    type: string
+    description: Изображение QR-кода
+  sksCommissionAmount:
+    type: number
+    description: Сумма для СКС
+  status:
+    type: string
+    description: Статус оплаты qrc
+    enum:
+    - CREATED
+    - ACTIVE
+    - EXECUTED
+    - CANCELED
+    - TO_CANCEL
+    - FEE_FREE
+    - TO_PAY
+  tessaStatus:
+    type: string
+    description: Статус выгрузки документов для опплат qrc
+    enum:
+    - UPLOADED
+    - ERROR
+description: Информация об оплате комиссии по QRC

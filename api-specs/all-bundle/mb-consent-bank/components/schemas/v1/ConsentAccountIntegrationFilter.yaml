@@ -1,0 +1,7 @@
+type: object
+properties:
+  openApiConsentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  openApiAccountId:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для получения списка счетов в Согласии

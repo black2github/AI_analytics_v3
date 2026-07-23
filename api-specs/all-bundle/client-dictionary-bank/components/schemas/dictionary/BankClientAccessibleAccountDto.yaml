@@ -1,0 +1,19 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер доступного счета.
+  currency:
+    type: string
+    description: Валюта доступного счета.
+  accountType:
+    type: string
+    description: Тип доступного счета.
+  accountName:
+    type: string
+    description: Название доступного счета.
+description: Доступный счет Клиента Банка. ДТО.

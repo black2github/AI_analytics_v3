@@ -1,0 +1,9 @@
+type: object
+properties:
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+description: Объединенные реквизиты клиента по заявке ЛК МП

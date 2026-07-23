@@ -1,0 +1,11 @@
+type: object
+description: Страничные данные
+properties:
+  data:
+    type: array
+    items:
+      $ref: ../common/AccountListErrorDto.yaml
+    description: Страница данных
+  hasNext:
+    type: boolean
+    description: Признак наличия следующей страницы

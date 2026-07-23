@@ -1,0 +1,23 @@
+type: object
+properties:
+  templateName:
+    type: string
+  fileName:
+    type: string
+  data:
+    type: object
+    additionalProperties:
+      type: object
+  tables:
+    type: object
+    additionalProperties:
+      type: array
+      items:
+        type: object
+        additionalProperties:
+          type: string
+  params:
+    type: object
+    additionalProperties:
+      type: object
+description: Данные

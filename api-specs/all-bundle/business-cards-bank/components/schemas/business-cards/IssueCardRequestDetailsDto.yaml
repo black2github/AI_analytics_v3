@@ -1,0 +1,18 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  clientInn:
+    type: string
+    description: ИНН
+  clientName:
+    type: string
+    description: Организация
+  currencyCode:
+    type: string
+    description: Валюта
+  productName:
+    type: string
+    description: Тип карты
+description: Детали заявки на выпуск карты для ЭФ

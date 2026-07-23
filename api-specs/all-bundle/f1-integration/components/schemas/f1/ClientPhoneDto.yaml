@@ -1,0 +1,13 @@
+type: object
+properties:
+  dboPhone1:
+    type: string
+  dboPhone2:
+    type: string
+  phone1:
+    type: string
+  mobilePhone1:
+    type: string
+  fax1:
+    type: string
+description: Контактные телефоны клиента

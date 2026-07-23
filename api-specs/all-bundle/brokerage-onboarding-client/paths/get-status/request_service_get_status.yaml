@@ -1,0 +1,13 @@
+get:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Получить список возможных клиентских статусов
+  description: 'Привилегии: BRK_ONBOARDING.CLIENT.REQUEST.VIEW,BRK_ONBOARDING.CLIENT.REQUEST.LIST'
+  operationId: getStatus
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-status/GenericResponseErrorDataListBrkOnbClientStatusDto.yaml

@@ -1,0 +1,13 @@
+delete:
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+  summary: Delete Fns Archive
+  tags:
+  - Gpb Api Fns Stub Config Controller

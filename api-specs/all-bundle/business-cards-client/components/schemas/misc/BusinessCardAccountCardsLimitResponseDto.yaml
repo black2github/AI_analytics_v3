@@ -1,0 +1,15 @@
+required:
+- cards
+- size
+type: object
+properties:
+  cards:
+    type: array
+    description: Массив карт
+    items:
+      $ref: ../common/CardDto.yaml
+  size:
+    type: integer
+    description: Всего доступно записей по фильтру
+    format: int32
+description: Ответ со списком карт и лимитов по счёту карты

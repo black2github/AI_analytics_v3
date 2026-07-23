@@ -1,0 +1,8 @@
+type: object
+properties:
+  signerFio:
+    type: string
+    description: ФИО подписанта
+  signerEskId:
+    type: string
+    description: Ссылка на подписанта из ЕСК

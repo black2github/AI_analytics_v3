@@ -1,0 +1,27 @@
+type: object
+properties:
+  evaluationClientIPBeneficialOwnersSheet:
+    $ref: ./EvaluationClientIPBeneficialOwnersSheetDto.yaml
+  evaluationClientIPCRSStatusSheet:
+    $ref: ./EvaluationClientIPCRSStatusSheetDto.yaml
+  evaluationClientIPFatcaStatusSheet:
+    $ref: ./EvaluationClientIPFatcaStatusSheetDto.yaml
+  evaluationClientSignSheet:
+    $ref: ./EvaluationClientSignSheetDto.yaml
+  id:
+    type: string
+    description: Уникальный идентификатор записи.
+    format: uuid
+  onboardingShortRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета.
+    format: uuid
+  question_12:
+    type: string
+    description: Комментарии работника банка.
+  taxResidentJurisdiction:
+    type: array
+    description: Страна/юрисдикция налогового резидента ИП.
+    items:
+      $ref: ./TaxResidentJurisdictionDto.yaml
+description: Опросник для формирования cлужебных форм ИП.

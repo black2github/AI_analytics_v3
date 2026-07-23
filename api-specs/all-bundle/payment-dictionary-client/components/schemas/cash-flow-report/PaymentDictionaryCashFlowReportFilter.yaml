@@ -1,0 +1,11 @@
+type: object
+properties:
+  structureId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  responsibilityCenterId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  periodId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  isShowNullRows:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр для "Отчет о движении средств"

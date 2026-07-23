@@ -1,0 +1,18 @@
+type: object
+description: Данные регистрируемого юридического лица не резидента
+properties:
+  docId:
+    type: string
+    description: Идентификатор заявки
+  name:
+    type: string
+    description: Полное наименование юридического лица
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  countryCode:
+    type: string
+    description: Код страны-регистрации юридического лица, в формате "ISO 3166, Alpha-2"

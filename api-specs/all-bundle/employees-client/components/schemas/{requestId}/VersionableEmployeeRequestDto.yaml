@@ -1,0 +1,9 @@
+required:
+- version
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+description: Версия заявки и только

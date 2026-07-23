@@ -1,0 +1,17 @@
+required:
+- bannerType
+- productCode
+- rating
+type: object
+properties:
+  productCode:
+    type: string
+    description: Код предложения
+  bannerType:
+    type: string
+    description: Тип баннера для отображения
+  rating:
+    type: integer
+    description: Рейтинг предложения
+    format: int32
+description: Баннер для конкретной локации

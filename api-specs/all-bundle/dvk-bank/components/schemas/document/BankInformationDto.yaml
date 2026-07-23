@@ -1,0 +1,10 @@
+type: object
+properties:
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  historyCreatedAt:
+    type: string
+    description: Дата и время создания записи истории
+    format: date-time
+description: Информация из банка

@@ -1,0 +1,7 @@
+type: object
+properties:
+  name:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoCmsPageStatusBankDto.yaml
+description: Фильтр CMS страниц

@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: Сервис лизинга. Банковская часть.
+  version: 3.3.0
+servers:
+- url: /leasing-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /leasing/get-page:
+    $ref: ./paths/get-page/leasing_get_page.yaml
+  /leasing/category:
+    $ref: ./paths/category/leasing_category.yaml
+  /leasing/auto/retry:
+    $ref: ./paths/auto/leasing_auto_retry.yaml
+  /leasing/auto/find:
+    $ref: ./paths/auto/leasing_auto_find.yaml
+  /leasing/corp/{id}:
+    $ref: ./paths/corp/leasing_corp_id.yaml
+  /leasing/corp/history/{id}:
+    $ref: ./paths/corp/leasing_corp_history_id.yaml
+  /leasing/auto/{id}:
+    $ref: ./paths/auto/leasing_auto_id.yaml
+  /leasing/auto/history/{id}:
+    $ref: ./paths/auto/leasing_auto_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandLeasingBankScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandLeasingBankScrollerFilter.yaml
+    LeasingBankScrollerFilter:
+      $ref: ./components/schemas/common/LeasingBankScrollerFilter.yaml
+    LeasingTypeFilter:
+      $ref: ./components/schemas/common/LeasingTypeFilter.yaml
+    PageParamsLeasingBankScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsLeasingBankScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    LeasingScrollerResponseDto:
+      $ref: ./components/schemas/get-page/LeasingScrollerResponseDto.yaml
+    PageDataLeasingScrollerResponseDto:
+      $ref: ./components/schemas/get-page/PageDataLeasingScrollerResponseDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/auto/SingleCommandUUID.yaml
+    AutoLeasingParametersResponseDto:
+      $ref: ./components/schemas/auto/AutoLeasingParametersResponseDto.yaml
+    AutoLeasingResponseDto:
+      $ref: ./components/schemas/auto/AutoLeasingResponseDto.yaml
+    BankClientInfoResponseDto:
+      $ref: ./components/schemas/common/BankClientInfoResponseDto.yaml
+    LeasingApplicantInfoResponseDto:
+      $ref: ./components/schemas/common/LeasingApplicantInfoResponseDto.yaml
+    SingleResponseAutoLeasingResponseDto:
+      $ref: ./components/schemas/auto/SingleResponseAutoLeasingResponseDto.yaml
+    AutoLeasingFilterDto:
+      $ref: ./components/schemas/auto/AutoLeasingFilterDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/auto/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoLeasingStatusDto:
+      $ref: ./components/schemas/auto/FilterValueEnumDtoLeasingStatusDto.yaml
+    FilterValueEnumDtoLeasingTypeDto:
+      $ref: ./components/schemas/auto/FilterValueEnumDtoLeasingTypeDto.yaml
+    GenericResponseSimpleErrorDataListAutoLeasingResponseDto:
+      $ref: ./components/schemas/auto/GenericResponseSimpleErrorDataListAutoLeasingResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/auto/SimpleErrorData.yaml
+    CorporateLeasingParametersResponseDto:
+      $ref: ./components/schemas/corp/CorporateLeasingParametersResponseDto.yaml
+    CorporateLeasingResponseDto:
+      $ref: ./components/schemas/corp/CorporateLeasingResponseDto.yaml
+    SingleResponseCorporateLeasingResponseDto:
+      $ref: ./components/schemas/corp/SingleResponseCorporateLeasingResponseDto.yaml
+    LeasingHistoryDto:
+      $ref: ./components/schemas/common/LeasingHistoryDto.yaml
+    ListResponseLeasingHistoryDto:
+      $ref: ./components/schemas/common/ListResponseLeasingHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

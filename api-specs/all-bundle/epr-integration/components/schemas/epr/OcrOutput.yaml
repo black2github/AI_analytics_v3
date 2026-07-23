@@ -1,0 +1,8 @@
+type: object
+properties:
+  documents:
+    type: array
+    description: Распознанные документы
+    items:
+      $ref: ./Document.yaml
+description: Выходные данные методов распознавания документов

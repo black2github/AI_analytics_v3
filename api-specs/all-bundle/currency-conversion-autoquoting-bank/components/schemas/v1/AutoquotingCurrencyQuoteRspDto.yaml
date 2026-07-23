@@ -1,0 +1,57 @@
+type: object
+description: Транспортная сущность валютные котировки
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  convBaseCurrency:
+    type: string
+    description: Базовая валюта
+  convQuoteCurrency:
+    type: string
+    description: Валюта котировки
+  status:
+    type: string
+    description: Статус
+    enum:
+    - OK
+    - NOT_AVAILABLE
+    - POSITION_LIMIT_EXCEEDED
+  f1ValueDate:
+    type: string
+    description: Дата валютирования
+    enum:
+    - TOD
+    - TOM
+  quotingUnitAmount:
+    type: integer
+    format: int32
+    description: Единица котирования (количество единиц базовой валюты)
+  minOrderVolumeBase:
+    type: integer
+    format: int64
+    description: Минимальный объем по заявке в базовой валюте
+  maxOrderVolumeBase:
+    type: integer
+    format: int64
+    description: Максимальный объем по заявке в базовой валюте
+  minOrderVolumeQuote:
+    type: number
+    description: Минимальный объем по заявке в котируемой валюте
+  maxOrderVolumeQuote:
+    type: number
+    description: Максимальный объем по заявке в котируемой валюте
+  purchaseQuote:
+    type: number
+    description: Котировка покупки
+  saleQuote:
+    type: number
+    description: Котировка продажи
+  volumeQuotes:
+    type: array
+    description: Валютные котировки за объем
+    items:
+      $ref: ./AutoquotingVolumeQuoteRspDto.yaml
+required:
+- volumeQuotes

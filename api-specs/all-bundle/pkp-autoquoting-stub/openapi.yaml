@@ -1,0 +1,51 @@
+openapi: 3.1.0
+info:
+  title: Сервис эмуляции взаимодействия сервисов автокотирования с АС ПКП
+  version: 1.0.0
+  description: Сервис
+servers:
+- url: /pkp-autoquoting-stub
+tags:
+- name: АС ПКП. API автокотирования для поручения на покупку/продажу валюты
+- name: АС ПКП. API заглушек подписки профилей автокотирования для поручения на покупку/продажу валюты.
+paths:
+  /currency-conversion-autoquoting/send:
+    $ref: ./paths/send/currency_conversion_autoquoting_send.yaml
+  /currency-conversion-autoquoting/subscription/active-subscriptions:
+    $ref: ./paths/subscription/currency_conversion_autoquoting_subscription_active_subscriptions.yaml
+  /currency-conversion-autoquoting/subscription/start:
+    $ref: ./paths/subscription/currency_conversion_autoquoting_subscription_start.yaml
+  /currency-conversion-autoquoting/subscription/stop:
+    $ref: ./paths/subscription/currency_conversion_autoquoting_subscription_stop.yaml
+  /currency-conversion-autoquoting/subscription/stop-all:
+    $ref: ./paths/subscription/currency_conversion_autoquoting_subscription_stop_all.yaml
+components:
+  schemas:
+    DelayBounds:
+      $ref: ./components/schemas/subscription/DelayBounds.yaml
+    GenericResponse:
+      $ref: ./components/schemas/common/GenericResponse.yaml
+    GenericResponseSimpleErrorDataPkpProfileActiveSubscriptionsRspDto:
+      $ref: ./components/schemas/subscription/GenericResponseSimpleErrorDataPkpProfileActiveSubscriptionsRspDto.yaml
+    GenericResponseSimpleErrorDataPkpStartSubscriptionRspDto:
+      $ref: ./components/schemas/subscription/GenericResponseSimpleErrorDataPkpStartSubscriptionRspDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    PkpClientProfileRspDto:
+      $ref: ./components/schemas/common/PkpClientProfileRspDto.yaml
+    PkpClientProfileStateRspDto:
+      $ref: ./components/schemas/common/PkpClientProfileStateRspDto.yaml
+    PkpCurrencyQuoteRspDto:
+      $ref: ./components/schemas/common/PkpCurrencyQuoteRspDto.yaml
+    PkpCurrencyQuoteStateRspDto:
+      $ref: ./components/schemas/common/PkpCurrencyQuoteStateRspDto.yaml
+    PkpNoQuoteReasonRspDto:
+      $ref: ./components/schemas/common/PkpNoQuoteReasonRspDto.yaml
+    PkpProfileActiveSubscriptionsRspDto:
+      $ref: ./components/schemas/subscription/PkpProfileActiveSubscriptionsRspDto.yaml
+    PkpStartSubscriptionRqDto:
+      $ref: ./components/schemas/subscription/PkpStartSubscriptionRqDto.yaml
+    PkpStartSubscriptionRspDto:
+      $ref: ./components/schemas/subscription/PkpStartSubscriptionRspDto.yaml
+    PkpVolumeCurrencyQuoteRspDto:
+      $ref: ./components/schemas/common/PkpVolumeCurrencyQuoteRspDto.yaml

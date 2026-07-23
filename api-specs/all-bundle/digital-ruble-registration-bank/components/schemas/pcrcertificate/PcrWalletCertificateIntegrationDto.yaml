@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientPcrCertificate:
+    $ref: ../common/PcrParticipantCertificateDto.yaml
+  pcrCertificates:
+    $ref: ./PcrCertificatesDto.yaml
+  pcrCrls:
+    $ref: ./PcrCrlsDto.yaml
+  participantCertificate:
+    type: string
+  fiCrls:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  bankOfRussiaCrls:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  bankOfRussiaCACerts:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  fiCACerts:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+description: Сертификаты организации для операций с кошельком.

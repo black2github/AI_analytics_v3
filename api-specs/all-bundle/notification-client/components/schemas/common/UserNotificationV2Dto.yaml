@@ -1,0 +1,152 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  type:
+    $ref: ./UserNotificationTypeV2Dto.yaml
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  bankClient:
+    $ref: ./NotificationBankClientDto.yaml
+  createdAt:
+    type: string
+    description: Дата уведомления
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления записи
+    format: date-time
+  relevanceEndDate:
+    type: string
+    description: Дата окончания актуальности
+    format: date
+  body:
+    type: string
+    description: Текст уведомления
+  brief:
+    type: string
+    description: Краткий текст уведомления
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  resourceName:
+    type: string
+    description: Сервис-источник уведомления
+  status:
+    type: string
+    description: Статус уведомления
+    enum:
+    - NEW
+    - READ
+    - REVOKED
+  readDate:
+    type: string
+    description: Дата прочтения
+    format: date-time
+  executionStatus:
+    type: string
+    description: Статус выполнения
+    enum:
+    - NOT_EXECUTED
+    - POSTPONED
+    - EXECUTED
+    - CANCELED
+    - INFORMATIONAL
+  executionDate:
+    type: string
+    description: Дата исполнения
+    format: date-time
+  executionDeadline:
+    type: string
+    description: Выполнить до
+    format: date
+  postponedUntil:
+    type: string
+    description: Отложено до
+    format: date
+  extId:
+    type: string
+    description: Идентификатор связанного объекта
+  actionUrl:
+    type: string
+    description: Адрес формы исполнения
+  systemId:
+    type: string
+    description: Идентификатор системы - источника уведомления
+  isCreatedByUser:
+    type: boolean
+    description: Признак ручного создания уведомления
+  userLogin:
+    type: string
+    description: Логин пользователя, внесшего последние изменения
+  updatedByUserId:
+    type: string
+    description: Идентификатор пользователя, внесшего последние изменения
+    format: uuid
+  isRequiredRead:
+    type: boolean
+    description: Обязательно к прочтению
+  isRequiredSing:
+    type: boolean
+    description: Требуется подпись получателя
+  picture:
+    $ref: ./UserNotificationAttachmentDto.yaml
+  attachments:
+    type: array
+    description: Список вложений
+    items:
+      $ref: ./UserNotificationAttachmentDto.yaml
+  messageId:
+    type: string
+    description: Ссылка на сообщение ЭКО
+    format: uuid
+  blockService:
+    uniqueItems: true
+    type: array
+    description: Блокировка сервисов
+    items:
+      type: string
+      description: Блокируемые сервисы/страницы
+      enum:
+      - BLOCK_ALL
+      - BLOCK_RKO
+  favorite:
+    type: boolean
+    description: Избранное
+  isBanner:
+    type: boolean
+    description: Баннер
+  bannerDisplayType:
+    type: string
+    description: Тип показа баннера
+    enum:
+    - PERSISTENT
+    - REGULAR
+    - SINGLE
+  displayEverywhere:
+    type: boolean
+    description: Показывать везде
+  displayPageCodes:
+    type: array
+    description: Наименование страницы отображения
+    items:
+      type: string
+      description: Наименование страницы отображения
+  isBlocked:
+    type: boolean
+    description: Признак заблокированного УЛ
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи уведомления
+    items:
+      $ref: ./UserNotificationSignatureDto.yaml
+  actions:
+    type: array
+    items:
+      $ref: ./ActionDto.yaml
+description: Уведомление

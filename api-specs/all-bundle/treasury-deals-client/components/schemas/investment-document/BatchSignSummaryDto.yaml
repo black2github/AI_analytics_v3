@@ -1,0 +1,24 @@
+type: object
+properties:
+  clientSummaries:
+    type: array
+    description: Агрегированная информация о подписываемых документах по клиенту
+    items:
+      $ref: ./ClientBatchSignSummaryDto.yaml
+  selectedDocsCount:
+    type: integer
+    description: Количество документов выбранных для подписи
+    format: int64
+  signableDocsCount:
+    type: integer
+    description: Количество документов с возможностью подписать
+    format: int64
+  unsignableDocsCount:
+    type: integer
+    description: Количество документов, для которых невозможна подпись
+    format: int64
+  totalClientCount:
+    type: integer
+    description: Количество клиентов для подписываемых сделок
+    format: int64
+description: Агрегированная информация о подписываемых документах

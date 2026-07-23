@@ -1,0 +1,28 @@
+required:
+- level
+- signRequired
+- signed
+type: object
+properties:
+  level:
+    $ref: ./SignatureLevelClassifierDto.yaml
+  signRequired:
+    type: boolean
+    description: Требуется подпись
+  docSourceSystem:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  signatureKind:
+    $ref: ./DigitalSignatureClassifierDto.yaml
+  docSignPage:
+    type: string
+    description: Страница, с которой вызвана подпись документа
+  signed:
+    type: boolean
+    description: Признак, что содержится подпись
+  signatureData:
+    $ref: ./SignatureDataDto.yaml
+  importSignatureData:
+    $ref: ./ImportSignatureDataDto.yaml
+  approvalSignatureInfo:
+    $ref: ./ApprovalSignatureInfoDto.yaml
+description: Подпись платежного поручения, данные для клиента

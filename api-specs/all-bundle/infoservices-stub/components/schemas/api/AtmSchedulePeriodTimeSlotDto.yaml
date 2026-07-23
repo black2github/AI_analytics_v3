@@ -1,0 +1,10 @@
+type: object
+properties:
+  lunchBreakFrom:
+    type: string
+  lunchBreakTo:
+    type: string
+  timeFrom:
+    type: string
+  timeTo:
+    type: string
