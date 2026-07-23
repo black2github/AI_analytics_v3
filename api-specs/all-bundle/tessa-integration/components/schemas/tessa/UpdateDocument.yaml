@@ -1,0 +1,6 @@
+type: object
+properties:
+  document:
+    $ref: ./Document.yaml
+  fileInfo:
+    $ref: ./JSONObject.yaml

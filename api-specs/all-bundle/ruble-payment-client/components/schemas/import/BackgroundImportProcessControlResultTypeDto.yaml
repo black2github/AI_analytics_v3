@@ -1,0 +1,5 @@
+type: string
+description: Тип контроля
+enum:
+- CRITICAL
+- WARNING

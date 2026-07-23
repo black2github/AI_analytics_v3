@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи о локальной карте питания
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARDS_IRAO_ECO (Данные о локальной карте питания карте)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+  responses:
+    '204':
+      description: No Content

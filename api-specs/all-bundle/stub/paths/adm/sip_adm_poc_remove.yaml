@@ -1,0 +1,65 @@
+post:
+  tags:
+  - sip-adm-remove-collection-points-controller
+  summary: 'Сервис: Исключение точек инкассации с передачей параметра ok/не ok'
+  operationId: removePocsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - name: body.params.clientId
+    in: query
+    description: Идентификтор клиента
+    required: false
+    type: string
+  - name: body.params.points[0].blockDate
+    in: query
+    description: Дата исключения (для исключенных из перечня инкассируемых)
+    required: false
+    type: string
+  - name: body.params.points[0].mainTID
+    in: query
+    description: ID устройства (главный TID)
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: result
+    in: query
+    description: result
+    required: true
+    type: string
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SipAdmRemoveCollectionPointsResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CONTRACTORS
+    - GOVERNMENT
+    - FEE
+    - OTHER
+  notEq:
+    type: string
+    enum:
+    - CONTRACTORS
+    - GOVERNMENT
+    - FEE
+    - OTHER
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CONTRACTORS
+      - GOVERNMENT
+      - FEE
+      - OTHER
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CONTRACTORS
+      - GOVERNMENT
+      - FEE
+      - OTHER
+  isNull:
+    type: boolean
+description: Фильтр по "Категория платежа" (равенство, содержится в списке)

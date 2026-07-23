@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  requestNumber:
+    type: string
+    description: Номер заявки
+  requestType:
+    type: string
+    description: Тип заявки
+    enum:
+    - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+    - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+    - REG_QUALIFIED_SIGN
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - SENT
+    - EXECUTED
+    - REJECTED
+    - WAITING_TO_BE_SENT
+description: ДТО заявки

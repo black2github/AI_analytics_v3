@@ -1,0 +1,57 @@
+get:
+  tags:
+  - API ленты операций.
+  summary: Получить информацию по документу
+  description: 'Привилегии: ACTIVITY_FEED.CLIENT.LO_GET_PAGE'
+  operationId: getDocumentInfo
+  parameters:
+  - name: id
+    in: path
+    description: Id документа
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document-info/GenericResponseSimpleErrorDataActivityFeedDocInfoDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

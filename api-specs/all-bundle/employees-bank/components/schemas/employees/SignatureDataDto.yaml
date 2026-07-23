@@ -1,0 +1,15 @@
+type: object
+properties:
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  certificate:
+    type: string
+    description: Сертификат ЭП
+  certificateData:
+    $ref: ./CertificateInfoDto.yaml
+  signature:
+    type: string
+    description: Электронная подпись
+description: Подпись

@@ -1,0 +1,61 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  matrixId:
+    type: string
+    description: Идентификатор матрицы ставок
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  rateAskId:
+    type: integer
+    description: Уникальный идентификатор в АСК
+    format: int64
+  dealType:
+    type: string
+    description: Тип сделки
+  amountFrom:
+    type: string
+    description: Сумма сделки c
+  amountTo:
+    type: string
+    description: Сумма сделки по
+  periodFrom:
+    type: integer
+    description: Период сделки с
+    format: int32
+  periodTo:
+    type: integer
+    description: Период сделки по
+    format: int32
+  currency:
+    type: string
+    description: Валюта сделки
+  value:
+    type: string
+    description: Значение ставки
+  type:
+    type: string
+    description: Тип ставки
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  baseRateCode:
+    type: string
+    description: Код базовой ставки для плавающей ставки
+  variant:
+    type: string
+    description: Вариант ставки
+    enum:
+    - COEFFICIENT
+    - MARGIN
+  margin:
+    type: string
+    description: Маржа для плавающей ставки
+  coefficient:
+    type: string
+    description: Коэффициент для плавающей ставки
+description: Страница с данными

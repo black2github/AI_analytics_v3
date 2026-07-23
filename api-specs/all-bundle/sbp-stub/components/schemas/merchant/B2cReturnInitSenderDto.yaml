@@ -1,0 +1,14 @@
+type: object
+required:
+- legalId
+description: Отправитель перевода в запросе инициирования возврата
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  inn:
+    type: string
+    description: ИНН плательщика
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ в СБП

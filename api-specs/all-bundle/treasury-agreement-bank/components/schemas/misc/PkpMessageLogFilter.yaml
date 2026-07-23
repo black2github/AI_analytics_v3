@@ -1,0 +1,19 @@
+type: object
+properties:
+  objectType:
+    $ref: ../common/FilterValueDtoString.yaml
+  objectId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  objectPkpId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  direction:
+    $ref: ./FilterValueDtoPkpMessageLogDirectionDto.yaml
+  actionType:
+    $ref: ../common/FilterValueDtoString.yaml
+  responseStatus:
+    $ref: ../common/FilterValueDtoString.yaml
+  createDateTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  sent:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDashboardReportFilter.yaml
+description: Запрос страницы

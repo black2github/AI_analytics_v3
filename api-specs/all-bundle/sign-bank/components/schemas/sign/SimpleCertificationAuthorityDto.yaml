@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  name:
+    type: string
+    description: Наименование УЦ
+  trusted:
+    type: boolean
+    description: Признак доверенного УЦ
+  actionStatus:
+    type: string
+    description: Статус действия УЦ
+    enum:
+    - WORK
+    - SUSPENDED
+    - TERMINATED
+    - NOT_WORK
+description: Упрощенное представление удостоверяющего центра

@@ -1,0 +1,17 @@
+get:
+  tags:
+  - i-18n-controller
+  operationId: getLocResources
+  parameters:
+  - name: locale
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: string

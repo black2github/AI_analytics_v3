@@ -1,0 +1,42 @@
+type: object
+properties:
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  docDate:
+    $ref: ./FilterValueDtoInstant.yaml
+  contractId:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOfferStatusDto.yaml
+  offerId:
+    $ref: ./FilterValueDtoUUID.yaml
+  branchBankId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  branchCode:
+    $ref: ./FilterValueDtoString.yaml
+  branchBic:
+    $ref: ./FilterValueDtoString.yaml
+  stageInteraction:
+    $ref: ./FilterValueEnumDtoStageInteractionDto.yaml
+description: Фильтр

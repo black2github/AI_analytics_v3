@@ -1,0 +1,8 @@
+required:
+- totalAmount
+type: object
+properties:
+  totalAmount:
+    type: string
+    description: Общая сумма по документам
+description: Общая сумма по документам

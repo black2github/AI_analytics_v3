@@ -1,0 +1,20 @@
+type: string
+description: Статусы заявки Входящие платежные требования для фильтров
+enum:
+- DRAFT
+- NEW
+- WAIT_FOR_SIGN
+- SIGNED_1
+- SIGNED_2
+- SIGNED
+- DELIVERED
+- SIGN_VALID
+- DETAILS_VALID
+- EXPORT_TO_ABS
+- EXPORTED_TO_ABS
+- EXPORT_TO_ABS_ERROR
+- ACCEPTED
+- COMPLETED
+- REJECTED
+- CANCELED
+- NEW_FROM_1C

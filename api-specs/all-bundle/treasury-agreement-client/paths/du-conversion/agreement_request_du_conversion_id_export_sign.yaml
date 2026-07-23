@@ -1,0 +1,57 @@
+get:
+  tags:
+  - Заявка на заключение генерального соглашения - ДУ Конверсия (клиент подпись)
+  - Заявка на заключение генерального соглашения. Операции подписи.
+  summary: Экспорт подписи
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_AGREEMENT_REQUEST_DU_CONVERSION_VIEW'')'
+  operationId: exportSign_6
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataFileDataResponseDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

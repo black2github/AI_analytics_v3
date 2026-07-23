@@ -1,0 +1,19 @@
+post:
+  summary: Сохранить сообщение от F1 ODS по счету
+  tags:
+  - API заглушки для закрытия дня в F1 ODS
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/AccTurn.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

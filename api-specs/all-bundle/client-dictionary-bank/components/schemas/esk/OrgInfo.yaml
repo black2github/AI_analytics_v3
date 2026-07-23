@@ -1,0 +1,64 @@
+type: object
+properties:
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в банке
+  rpLegalEntityIdrs:
+    type: string
+    description: Идентификатор СЛ ЮЛ
+  identifiersType:
+    type: string
+    description: Тип идентификатора СЛ ЮЛ
+  organisationName:
+    type: string
+    description: Полное наименование ЮЛ
+  organisationNameReduction:
+    type: string
+    description: Сокращенное наименование ЮЛ
+  organisationNameForeign:
+    type: string
+    description: Наименование на иностранном языке
+  customerCode:
+    type: string
+    description: Код юридического лица
+  legalForm:
+    type: string
+    description: Организационно-правовая форма
+  inn:
+    type: string
+    description: ИНН ЮЛ
+  kio:
+    type: string
+    description: Код иностранной организации
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  okfs:
+    type: string
+    description: ОКФС
+  okpo:
+    type: string
+    description: Код ЮЛ
+  dateRegistrationOrg:
+    type: string
+    description: Дата государственной регистрации
+    format: date
+  intelligOrganLegalEntity:
+    type: string
+    description: Сведения об органах ЮЛ
+  numRecAccreditation:
+    type: string
+    description: Запись об аккредитации филиала/представительства
+  okvedMain:
+    type: string
+    description: Основной ОКВЭД ЮЛ
+  okvedAdd:
+    type: array
+    description: Список дополнительных ОКВЭД ЮЛ
+    items:
+      type: string
+      description: Список дополнительных ОКВЭД ЮЛ
+description: Данные регистрации

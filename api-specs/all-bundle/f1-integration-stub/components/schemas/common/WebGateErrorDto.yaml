@@ -1,0 +1,13 @@
+type: object
+description: Тело ошибки
+properties:
+  code:
+    type: integer
+    format: int32
+    description: Код ошибки
+  text:
+    type: string
+    description: Текст ошибки
+  serverErrorInfo:
+    type: string
+    description: Текст технической ошибки, наверняка stacktrace

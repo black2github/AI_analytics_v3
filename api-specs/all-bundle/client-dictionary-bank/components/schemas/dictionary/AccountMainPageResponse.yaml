@@ -1,0 +1,13 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Счета ГС
+    items:
+      $ref: ./AccountDtoV4MainPage.yaml
+  userAccountDtos:
+    type: array
+    description: Все счета пользователя для организаций которых пройден тираж
+    items:
+      $ref: ../common/AccountDto.yaml
+description: Данные для отображения счетов на главной странице

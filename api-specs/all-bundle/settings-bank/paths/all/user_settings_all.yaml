@@ -1,0 +1,13 @@
+get:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Получить список всех настроек пользователя
+  description: 'Привилегии: USER_SETTINGS_VIEW_TECH'
+  operationId: getList
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataListUserSettingsDto.yaml

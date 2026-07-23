@@ -1,0 +1,31 @@
+required:
+- dateCancellation
+- emailChannel
+- fileId
+- smsChannel
+- systemChannel
+type: object
+properties:
+  fileId:
+    type: string
+    description: Ид файла с списком счетов
+    format: uuid
+  isCancellation:
+    type: boolean
+    writeOnly: true
+  dateCancellation:
+    type: string
+    description: Дата аннулирования
+    format: date
+  emailChannel:
+    type: boolean
+    description: Включить уведомление по каналу e-mail
+  smsChannel:
+    type: boolean
+    description: Включить уведомление по каналу SMS
+  systemChannel:
+    type: boolean
+    description: Включить уведомление в системе
+  cancellation:
+    type: boolean
+description: Запрос на аннулирование счетов.

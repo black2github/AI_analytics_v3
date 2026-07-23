@@ -1,0 +1,189 @@
+get:
+  tags:
+  - Работа с неторговыми поручениями
+  summary: Получить неторговое поручение на перевод ЦБ по идентификатору
+  operationId: getRequest_5
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/transfer-security-order/GenericResponseErrorDataBrokerageClientSecurityTransferOrderViewDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+put:
+  tags:
+  - Работа с неторговыми поручениями
+  summary: Обновить неторговое поручение на перевод ЦБ по идентификатору
+  operationId: updateRequest_1
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/transfer-security-order/GenericCommandBrokerageClientSecurityTransferOrderCreateDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/transfer-security-order/GenericResponseErrorDataBrokerageClientSecurityTransferOrderViewDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+delete:
+  tags:
+  - Работа с неторговыми поручениями
+  summary: Удалить неторговое поручение на перевод ЦБ по идентификатору
+  operationId: deleteRequest_3
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/transfer-security-order/GenericResponseErrorDataBrokerageClientSecurityTransferOrderViewDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

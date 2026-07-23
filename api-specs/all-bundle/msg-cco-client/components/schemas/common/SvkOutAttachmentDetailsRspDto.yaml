@@ -1,0 +1,12 @@
+required:
+- allUploadedToTessa
+type: object
+properties:
+  allUploadedToTessa:
+    type: boolean
+    description: Признак, что все вложения были выгружены в ТЕССА
+  attachmentCount:
+    type: integer
+    description: Общее количество вложений
+    format: int32
+description: Информация о вложениях

@@ -1,0 +1,111 @@
+openapi: 3.0.1
+info:
+  title: Сервис запросов мультибанкинг. Интеграционная часть.
+  version: 1.0.0
+servers:
+- url: /mb-request
+tags:
+- name: API для Openapi запросов Мультибанкинга. Операции с счетами
+paths:
+  /v1/openapi/accounts:
+    $ref: ./paths/openapi/v1_openapi_accounts.yaml
+  /v1/openapi/accounts/{accountId}:
+    $ref: ./paths/openapi/v1_openapi_accounts_accountId.yaml
+  /v1/openapi/accounts/{accountId}/statements:
+    $ref: ./paths/openapi/v1_openapi_accounts_accountId_statements.yaml
+components:
+  schemas:
+    Account:
+      $ref: ./components/schemas/openapi/Account.yaml
+    AccountServicer:
+      $ref: ./components/schemas/openapi/AccountServicer.yaml
+    AccountsOApiDto:
+      $ref: ./components/schemas/openapi/AccountsOApiDto.yaml
+    BranchAndFinancialInstitutionIdentification:
+      $ref: ./components/schemas/openapi/BranchAndFinancialInstitutionIdentification.yaml
+    BranchAndFinancialInstitutionInformationPilot_CorrespondentAccount:
+      $ref: ./components/schemas/openapi/BranchAndFinancialInstitutionInformationPilot_CorrespondentAccount.yaml
+    CashAccount:
+      $ref: ./components/schemas/openapi/CashAccount.yaml
+    DataAccountResponse:
+      $ref: ./components/schemas/openapi/DataAccountResponse.yaml
+    IdentificationType:
+      $ref: ./components/schemas/openapi/IdentificationType.yaml
+    OApiErrorItemDto:
+      $ref: ./components/schemas/openapi/OApiErrorItemDto.yaml
+    OApiLinksDto:
+      $ref: ./components/schemas/openapi/OApiLinksDto.yaml
+    OApiMetaDto:
+      $ref: ./components/schemas/openapi/OApiMetaDto.yaml
+    OrganizationIdentificationType:
+      $ref: ./components/schemas/openapi/OrganizationIdentificationType.yaml
+    PartyIdentification:
+      $ref: ./components/schemas/openapi/PartyIdentification.yaml
+    PostalAddress:
+      $ref: ./components/schemas/openapi/PostalAddress.yaml
+    ActiveOrHistoricCurrencyAndAmount:
+      $ref: ./components/schemas/openapi/ActiveOrHistoricCurrencyAndAmount.yaml
+    AmountAndCurrencyExchangeDetails:
+      $ref: ./components/schemas/openapi/AmountAndCurrencyExchangeDetails.yaml
+    BankTransactionCode:
+      $ref: ./components/schemas/openapi/BankTransactionCode.yaml
+    BranchAndFinancialInstitutionInformation:
+      $ref: ./components/schemas/openapi/BranchAndFinancialInstitutionInformation.yaml
+    BranchAndFinancialInstitutionInformationShort:
+      $ref: ./components/schemas/openapi/BranchAndFinancialInstitutionInformationShort.yaml
+    CardIndividualTransaction2:
+      $ref: ./components/schemas/openapi/CardIndividualTransaction2.yaml
+    CardSecurityInformation1:
+      $ref: ./components/schemas/openapi/CardSecurityInformation1.yaml
+    CardTransaction18:
+      $ref: ./components/schemas/openapi/CardTransaction18.yaml
+    CashBalance:
+      $ref: ./components/schemas/openapi/CashBalance.yaml
+    CreditorReferenceInformation:
+      $ref: ./components/schemas/openapi/CreditorReferenceInformation.yaml
+    CurrencyExchange:
+      $ref: ./components/schemas/openapi/CurrencyExchange.yaml
+    GenericIdentification32:
+      $ref: ./components/schemas/openapi/GenericIdentification32.yaml
+    NumberAndSumOfTransactions:
+      $ref: ./components/schemas/openapi/NumberAndSumOfTransactions.yaml
+    PartyChoice:
+      $ref: ./components/schemas/openapi/PartyChoice.yaml
+    PaymentCard4:
+      $ref: ./components/schemas/openapi/PaymentCard4.yaml
+    PaymentTypeInformation:
+      $ref: ./components/schemas/openapi/PaymentTypeInformation.yaml
+    PlainCardData1:
+      $ref: ./components/schemas/openapi/PlainCardData1.yaml
+    PointOfInteraction1:
+      $ref: ./components/schemas/openapi/PointOfInteraction1.yaml
+    PointOfInteractionComponent1:
+      $ref: ./components/schemas/openapi/PointOfInteractionComponent1.yaml
+    Product2:
+      $ref: ./components/schemas/openapi/Product2.yaml
+    ReferredDocumentInformation:
+      $ref: ./components/schemas/openapi/ReferredDocumentInformation.yaml
+    RemittanceInformation:
+      $ref: ./components/schemas/openapi/RemittanceInformation.yaml
+    ReportEntry:
+      $ref: ./components/schemas/openapi/ReportEntry.yaml
+    Statement:
+      $ref: ./components/schemas/openapi/Statement.yaml
+    StatementOApiDto:
+      $ref: ./components/schemas/openapi/StatementOApiDto.yaml
+    TaxAmount:
+      $ref: ./components/schemas/openapi/TaxAmount.yaml
+    TaxInformation:
+      $ref: ./components/schemas/openapi/TaxInformation.yaml
+    TaxParty:
+      $ref: ./components/schemas/openapi/TaxParty.yaml
+    TaxPeriod:
+      $ref: ./components/schemas/openapi/TaxPeriod.yaml
+    TaxRecord:
+      $ref: ./components/schemas/openapi/TaxRecord.yaml
+    TrackData1:
+      $ref: ./components/schemas/openapi/TrackData1.yaml
+    TransactionIdentifier1:
+      $ref: ./components/schemas/openapi/TransactionIdentifier1.yaml
+    TransactionsSummary:
+      $ref: ./components/schemas/openapi/TransactionsSummary.yaml

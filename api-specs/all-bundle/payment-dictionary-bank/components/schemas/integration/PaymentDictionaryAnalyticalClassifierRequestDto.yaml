@@ -1,0 +1,13 @@
+required:
+- code
+- structureId
+type: object
+properties:
+  structureId:
+    type: string
+    description: Идентификатор справочника Структуры
+    format: uuid
+  code:
+    type: string
+    description: Код аналитического классификатора
+description: ДТО для поиска аналитического классификатора

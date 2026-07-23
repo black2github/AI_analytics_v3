@@ -1,0 +1,44 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  shortName:
+    type: string
+    description: Краткое наименование Клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  accountNumber:
+    type: string
+    description: Номер счёта
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  absId:
+    type: string
+    description: Идентификатор в АБС
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  planEndDateMno:
+    type: string
+    description: Дата окончания последней сделки МНО по счёту
+    format: date
+  status:
+    type: string
+    description: Статус счета генерального соглашения
+    enum:
+    - POTENTIAL
+    - ACTIVE
+    - REMOVED
+description: Данные

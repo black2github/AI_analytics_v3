@@ -1,0 +1,39 @@
+required:
+- paymentOrder
+- paymentTerms
+type: object
+properties:
+  paymentTerms:
+    type: integer
+    description: Условие оплаты
+    format: int32
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  acceptPeriodEnd:
+    type: string
+    description: Окончание срока акцепта
+    format: date
+    nullable: true
+  deliveryDate:
+    type: string
+    description: Дата вручения
+    format: date
+    nullable: true
+  decision:
+    type: integer
+    description: Решение
+    format: int32
+    nullable: true
+  paymentOrder:
+    maxLength: 1
+    type: string
+    description: Очерёдность платежа
+  paymentCode:
+    maxLength: 25
+    type: string
+    description: Код платежа
+    nullable: true
+description: Дополнительные реквизиты

@@ -1,0 +1,171 @@
+required:
+- accesses
+- accountAccesses
+- additionalDetails
+- attachments
+- date
+- dsfTypes
+- id
+- number
+- requestStatus
+- roleTemplates
+- texts
+- type
+- userFio
+- userId
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ./EmployeeRequestAttachmentDto.yaml
+  accesses:
+    type: array
+    description: Доступы сотрудника в заявке
+    items:
+      $ref: ./EmployeeRequestAccessDto.yaml
+  roleTemplates:
+    type: array
+    description: Шаблоны ролей сотрудника в заявке
+    items:
+      $ref: ./EmployeeRequestRoleTemplateDto.yaml
+  accountAccesses:
+    type: array
+    description: Доступы сотрудника к счетам в заявке
+    items:
+      $ref: ./EmployeeRequestAccountAccessDto.yaml
+  dsfTypes:
+    type: array
+    description: Список типов ДСФ
+    items:
+      $ref: ./EmployeeRequestDsfTypeDto.yaml
+  texts:
+    type: object
+    additionalProperties:
+      type: string
+      description: Согласия и тексты в заявке
+    description: Согласия и тексты в заявке
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+  requestTypeName:
+    type: string
+    description: Наименование типа заявки
+  requestName:
+    type: string
+    description: Наименование заявки
+  requestStatus:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - GENERATE_TESSA_DOCUMENTS_ERROR
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - EXECUTED_IN_ESK
+    - WAITING_FOR_IO_CUSTOMER_RESULT
+    - CREATE_ACCESS_RULES
+    - CREATE_ACCESS_RULES_ERROR
+    - ACCESS_RULES_CREATED
+    - ACCOUNT_ACCESS_UPDATE
+    - ACCOUNT_ACCESS_UPDATE_ERROR
+    - ACCOUNT_ACCESS_UPDATED
+    - EXECUTED
+    - REJECTED
+  requestStep:
+    type: string
+    description: Информация о шаге заявки
+    enum:
+    - EMPLOYEE_DATA
+    - ACCESS_TO_GBO
+    - EMPLOYEE_ROLES
+    - EMPLOYEE_WARRANTY
+    - CONFIRM
+    - EMPLOYEE_DATA_CONFIRM
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  tessaDossierId:
+    type: string
+    description: Идентификатор досье в ТЕССА
+    format: uuid
+  bankClientInfo:
+    $ref: ./BankClientInfoDto.yaml
+  signatureInfo:
+    $ref: ./SignatureInfoDto.yaml
+  employeeInfo:
+    $ref: ./EmployeeInfoDto.yaml
+  constitutionInfo:
+    $ref: ./ConstitutionInfoDto.yaml
+  authPersonRights:
+    $ref: ./AuthorizedPersonRightsDto.yaml
+  employeeMegaWarranty:
+    $ref: ./MegaWarrantyDto.yaml
+  employeeProductWarranty:
+    $ref: ./ProductWarrantyDto.yaml
+  employeeBankInfoWarranty:
+    $ref: ./BankInfoWarrantyDto.yaml
+  requestExecutionData:
+    $ref: ./RequestExecutionDataDto.yaml
+  requestInitiator:
+    $ref: ./EmployeeDto.yaml
+  updatedAt:
+    type: string
+    description: Дата изменения заявки
+    format: date-time
+  additionalDetails:
+    $ref: ./AdditionalRequestDetailsDto.yaml
+  agreements:
+    $ref: ./AgreementsDto.yaml
+  validationResult:
+    $ref: ./ValidationResult.yaml
+description: Заявка на создание нового/изменение данных и полномочий сотрудника Клиента

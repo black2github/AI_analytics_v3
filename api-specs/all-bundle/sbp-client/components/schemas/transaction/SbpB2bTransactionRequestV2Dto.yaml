@@ -1,0 +1,119 @@
+type: object
+description: Заявка на регистрацию платежа B2B в системе АС СБП с блоком данных о доступных пользователю действиях
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docType:
+    type: string
+    description: Тип документа
+    enum:
+    - TRANSFER
+    - BUDGET
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SBP_B2B_GET_QR_REQUEST
+    - SBP_B2B_GET_QR_ERROR
+    - SBP_B2B_GET_QR_RECEIVED
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+    - SBP_B2B_CONFIRM_REQUEST
+    - SBP_B2B_CONFIRM_ERROR
+    - SBP_B2B_CONFIRM_DELIVERED
+    - ACCEPTED
+    - SBP_B2B_INFO_REQUEST
+    - SBP_B2B_INFO_ERROR
+    - SBP_B2B_FINAL_STATUS_RECEIVED
+    - COMPLETED
+    - REJECTED
+    - SBP_B2B_AWATING_FINAL_STATUS
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность Клиент Банка
+  clientRnk:
+    type: string
+    description: РНК Клиента
+  clientGuid:
+    type: string
+    description: 'GUID Клиента '
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на на сущность "Пользователь", создавшего заявления
+  userName:
+    type: string
+    description: ФИО пользователя, создавшего заявления
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  currency:
+    type: string
+    description: Код валюты платежа
+  data:
+    $ref: ../common/SbpB2bTransactionRequestDataDto.yaml
+    description: Реквизиты заявления
+  invoiceData:
+    $ref: ./SbpB2bTransactionRequestInvoiceDataDto.yaml
+    description: Реквизиты входящего кода
+  commissionData:
+    $ref: ../common/SbpB2bTransactionRequestCommissionDataDto.yaml
+    description: Реквизиты комиссии
+  bankClient:
+    $ref: ./SbpClientB2bTransactionRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  recipientData:
+    $ref: ../common/SbpB2bTransactionRecipientDataDto.yaml
+    description: Реквизиты получателя
+  processData:
+    $ref: ../common/SbpB2bTransactionProcessDataDto.yaml
+    description: Реквизиты, получаемые в процессе обработки заявления
+  availableOperations:
+    $ref: ./SbpAvailableOperationsDto.yaml
+    description: Информация о доступных пользователю действиях
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки
+    items:
+      $ref: ../common/SbpB2bTransactionRequestSignatureDto.yaml
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+    description: Результат валидации заявки
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+required:
+- clientId
+- data
+- docType
+- id
+- status
+- userId
+- userName

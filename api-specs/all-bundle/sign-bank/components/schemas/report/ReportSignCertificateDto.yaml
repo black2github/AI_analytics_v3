@@ -1,0 +1,104 @@
+required:
+- bankCertificateId
+- certificateId
+- dateStart
+- isEndless
+- signerPosition
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  reportTypes:
+    type: array
+    description: Назначение
+    items:
+      type: string
+      description: Классификатор типов отчетов
+      enum:
+      - INFO
+      - STATEMENT
+      - LETTER
+      - PAYDOC
+      - CURRCONTROLDOC
+      - DIRECT_1C
+      - COPY_DOC
+      - PAYDOC_OUTGOING_REGISTRY
+      - SIGN_BRK_BO
+      - SIGN_BRK_DO
+  filialCodes:
+    type: array
+    description: Филиал (список кодов АБС Ф1)
+    items:
+      type: string
+      description: Филиал (список кодов АБС Ф1)
+  letterCodes:
+    type: array
+    description: Типы писем (список кодов из Справочника типов ДСФ)
+    items:
+      type: string
+      description: Типы писем (список кодов из Справочника типов ДСФ)
+  userId:
+    type: string
+    description: Пользователь Банка, создавший/изменивший запись (Ссылка на сущность "Пользователь").
+    format: uuid
+  certificateId:
+    type: string
+    description: Ссылка на сущность "Сертификаты ЭП"
+    format: uuid
+  bankCertificateId:
+    type: string
+    description: Ссылка на сущность "Сертификат пользователя банка"
+    format: uuid
+  pin:
+    type: string
+    description: PIN-код к ключевому контейнеру
+  dateStart:
+    type: string
+    description: 'Период действия сертификата: с'
+    format: date
+  dateEnd:
+    type: string
+    description: 'Период действия сертификата: по'
+    format: date
+  isEndless:
+    type: boolean
+    description: Период действия не ограничен
+  signerPosition:
+    type: string
+    description: Должность подписанта
+  facsimileAttachment:
+    $ref: ./AttachmentInfoDto.yaml
+  stampAttachment:
+    $ref: ./AttachmentInfoDto.yaml
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+  status:
+    type: string
+    description: Статус сертификата для подписания отчетов
+    enum:
+    - ADDED
+    - UPDATED
+    - DELETED
+  ownerId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  ownerFio:
+    type: string
+    description: ФИО пользователя
+  mainCertificateId:
+    type: string
+    description: Ссылка на основной сертификат
+    format: uuid
+  isBlocked:
+    type: boolean
+    description: Временная блокировка
+description: Сертификат для подписи отчетов

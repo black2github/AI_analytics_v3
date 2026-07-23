@@ -1,0 +1,91 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  approvalSearch:
+    $ref: ../common/FilterValueDtoString.yaml
+  state:
+    $ref: ../common/AccountStateFilter.yaml
+  startDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  endDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  accountType:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractType:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountTypeCode:
+    $ref: ../common/FilterValueDtoLong.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyNumericCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  branch:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchType:
+    $ref: ../common/BranchTypeFilter.yaml
+  clientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientFullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOgrnOgrip:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientRegNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  documentPackageRequestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientUuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  gozContractIdentify:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория счета.
+    enum:
+    - ALL
+    - OPENED
+    - RESERVED
+    - ANNULLED
+  remoteSource:
+    $ref: ../common/RemoteSourceDtoFilter.yaml
+  remoteSourceCategory:
+    type: string
+    description: Тип системы, источника счета.
+    enum:
+    - ECO
+    - DBO_BSS
+  isConnectedToDbo:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  hasContractWithDbo:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isDisconnectedFromRko:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  duplicate:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  hasAccountTnf:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  hasF1AccountId:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  bankClientStatus:
+    $ref: ./FilterValueEnumDtoBankClientStatusDto.yaml
+description: Фильтр для скроллера счетов

@@ -1,0 +1,16 @@
+required:
+- docTypeCode
+- fileId
+type: object
+properties:
+  fileId:
+    type: string
+    description: ID файла архива в файловом сервисе
+    format: uuid
+  docTypeCode:
+    type: string
+    description: Код типа документа
+    enum:
+    - CONSTITUENT_DOCUMENT
+    - CONSTITUENT_DOCUMENT_CHANGES
+description: Параметры функции распарсивания архива ФНС

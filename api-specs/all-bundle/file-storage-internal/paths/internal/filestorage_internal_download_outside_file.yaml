@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API скачивания файла
+  summary: Скачать файл из внешней системы
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'') or #eco.userTypeIs(''BANK'')'
+  operationId: downloadOutsideFileUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/OutsideFileDownloadCommand'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,InternalAttachmentDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

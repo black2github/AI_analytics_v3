@@ -1,0 +1,9 @@
+type: object
+properties:
+  acceptPeriodEnd:
+    type: string
+    description: Срок акцепта
+    format: date
+    nullable: true
+description: Информация от банка плательщика (скроллер админа платежное требование исходящее)
+nullable: true

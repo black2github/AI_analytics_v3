@@ -1,0 +1,9 @@
+type: object
+description: Запрос проверки активного профиля организации
+properties:
+  bankClientId:
+    type: string
+    format: uuid
+    description: Идентификатор организации
+required:
+- bankClientId

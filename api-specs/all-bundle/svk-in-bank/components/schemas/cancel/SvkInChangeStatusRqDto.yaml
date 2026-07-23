@@ -1,0 +1,16 @@
+required:
+- ids
+type: object
+properties:
+  ids:
+    uniqueItems: true
+    type: array
+    description: Уникальный идентификатор документов
+    items:
+      type: string
+      description: Уникальный идентификатор документов
+      format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+description: Транспортное представление запроса на изменение статуса документов

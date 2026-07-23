@@ -1,0 +1,28 @@
+type: object
+properties:
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН
+  orgn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  id:
+    type: string
+    description: GUID клиента, присвоенный в СУВ
+    format: uuid
+  rnk:
+    type: string
+    description: РНК Клиента
+  productCode:
+    type: string
+    description: Код услуги
+    enum:
+    - PERIODIC_MONEY_TRANSFER
+    - PRIOR_ACCEPTANCE
+description: Информация о клиенте банка.

@@ -1,0 +1,7 @@
+type: string
+description: Система-источник коммуникации.
+enum:
+- CCS
+- MTE
+- ONB
+- OST

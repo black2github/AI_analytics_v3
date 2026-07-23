@@ -1,0 +1,11 @@
+type: object
+properties:
+  companyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  companyInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  partnerCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  productCode:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр справочника баннеров партнёров

@@ -1,0 +1,17 @@
+type: object
+description: Реквизиты входящего QR кода заявки на регистрацию платежа B2B в системе АС СБП
+properties:
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  takeVat:
+    type: boolean
+    description: Информация о взимании НДС
+  totalVatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках

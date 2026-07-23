@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  fio:
+    type: string
+    description: ФИО подписанта
+  serialNumber:
+    type: string
+    description: Серийный номер
+  level:
+    $ref: ./SignatureLevelDto.yaml
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+description: Подпись документа

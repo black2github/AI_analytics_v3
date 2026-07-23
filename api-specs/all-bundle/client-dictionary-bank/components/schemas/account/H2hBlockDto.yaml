@@ -1,0 +1,41 @@
+type: object
+properties:
+  documentType:
+    type: string
+    description: Тип документа заблокированный блокировкой host to host
+    enum:
+    - UNKNOWN
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_TRANSIT
+    - VRKO_CONVERSION
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+    - SBP
+    - DW_WALLET_IDENTIFY
+    - DW_WALLET_DEPOSIT
+    - DW_WALLET_WITHDRAW
+  actionTypes:
+    uniqueItems: true
+    type: array
+    description: Типы действий, которые должны быть запрещены для заданного документа для блокировки host to host
+    items:
+      type: string
+      description: Типы действий, которые должны быть запрещены для заданного документа для блокировки host to host
+      enum:
+      - UNKNOWN
+      - ACTION_CLIENT_USER_SIGN
+      - ACTION_CLIENT_USER_VIEW
+      - ACTION_CLIENT_USER_PRINT
+      - ACTION_CLIENT_USER_LISTVIEW
+      - ACTION_CLIENT_USER_EDIT
+      - ACTION_CLIENT_USER_CREATE
+      - ACTION_CLIENT_USER_IMPORT
+      - ACTION_CLIENT_USER_STATEMENT_CREATE
+      - ACTION_CLIENT_USER_SIGN_CLICK
+description: Блокировка host to host

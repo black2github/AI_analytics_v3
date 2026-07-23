@@ -1,0 +1,41 @@
+type: object
+description: Фильтр по каналу оплаты обобщенной заявки сервисов банка
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Канал оплаты
+    enum:
+    - CLIENT_USER
+    - FRONT_OFFICE_EMPLOYEE
+    - FIELD_MANAGER
+  notEq:
+    type: string
+    description: Канал оплаты
+    enum:
+    - CLIENT_USER
+    - FRONT_OFFICE_EMPLOYEE
+    - FIELD_MANAGER
+  in:
+    type: array
+    items:
+      type: string
+      description: Канал оплаты
+      enum:
+      - CLIENT_USER
+      - FRONT_OFFICE_EMPLOYEE
+      - FIELD_MANAGER
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Канал оплаты
+      enum:
+      - CLIENT_USER
+      - FRONT_OFFICE_EMPLOYEE
+      - FIELD_MANAGER
+  isNull:
+    type: boolean

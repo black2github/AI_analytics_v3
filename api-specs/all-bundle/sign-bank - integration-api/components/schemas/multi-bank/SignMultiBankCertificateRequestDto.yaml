@@ -1,0 +1,14 @@
+required:
+- kid
+- signData
+type: object
+properties:
+  kid:
+    minLength: 1
+    type: string
+    description: Kid сертификата
+  signData:
+    minLength: 1
+    type: string
+    description: Данные для подписи в base64url
+description: Запрос подписи межбанковскими сертификатами

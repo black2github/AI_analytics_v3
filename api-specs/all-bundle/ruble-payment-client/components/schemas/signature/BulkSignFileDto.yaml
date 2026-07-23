@@ -1,0 +1,29 @@
+required:
+- documentCount
+- fileStorageId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности 'Файл массовой подписи'
+    format: uuid
+  fileStorageId:
+    type: string
+    description: ID файла в файловом сервисе
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  bankClientName:
+    type: string
+    description: Наименование клиента банка
+  documentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+description: Данные файла для массовой подписи документов

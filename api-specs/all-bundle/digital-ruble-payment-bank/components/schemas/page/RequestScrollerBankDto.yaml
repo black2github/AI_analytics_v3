@@ -1,0 +1,137 @@
+required:
+- createdAt
+- number
+- requestId
+type: object
+properties:
+  number:
+    type: string
+    description: Номер заявки
+  requestType:
+    type: string
+    description: Тип заявки
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для клиента или комментарий если отсутствует код ошибки
+  organizationName:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН организации
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счёта
+  paymentAmount:
+    type: number
+    description: Сумма платежа
+  contractorCbrWalletId:
+    type: string
+    description: ID счета цифрового рубля контрагента в ЦБ
+  operationId:
+    type: string
+    description: Идентификатор операции
+    format: uuid
+  cbrC2bOperationId:
+    type: string
+    description: ID операции C2B для возврата
+    format: uuid
+  c2bOperationId:
+    type: string
+    description: ID операции C2B.
+    format: uuid
+  pointOfSaleName:
+    type: string
+    description: Наименование точки продаж
+  bankClientShortName:
+    type: string
+    description: Краткое наименование организации (сущность Клиент банка)
+  bankClientInn:
+    type: string
+    description: ИНН/КИО (сущность Клиент банка)
+  statusErrorCode:
+    type: string
+    description: Код ошибки заявки
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации на ПлЦР
+  cbrAccountNumber:
+    type: string
+    description: Счет цифрового рубля клиента
+  cbrOperationId:
+    type: string
+    description: ID операции на ПлЦР
+    format: uuid
+  user:
+    type: string
+    description: Пользователь, создавший заявку
+  c2bExecutionDatetime:
+    type: string
+    description: Дата операции C2B
+    format: date-time
+  c2bAmount:
+    type: number
+    description: Сумма операции C2B
+  receiverName:
+    type: string
+    description: Имя Отчество Ф. контрагента
+  historyStartDate:
+    type: string
+    description: Дата начала истории операций.
+    format: date-time
+  historyEndDate:
+    type: string
+    description: Дата окончания истории операций.
+    format: date-time
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  bankRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для банка или комментарий если отсутствует код ошибки
+  contractorKpp:
+    type: string
+    description: КПП контрагента
+  contractorOgrn:
+    type: string
+    description: ОГРН Контрагента
+  contractorInn:
+    type: string
+    description: ИНН Контрагента
+  contractorName:
+    type: string
+    description: Наименование организации контрагента
+  contractorAccountNumber:
+    type: string
+    description: Счет цифрового рубля контрагента
+  contractorCbrParticipantId:
+    type: string
+    description: ID контрагента на ПлЦР
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+description: DTO заявки для скроллера Платежи

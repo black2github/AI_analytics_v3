@@ -1,0 +1,29 @@
+post:
+  tags:
+  - product-offer-controller
+  summary: generateOffersDataset
+  operationId: generateOffersDatasetUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: generateRq
+    description: generateRq
+    required: true
+    schema:
+      $ref: '#/definitions/GenerateRqDtoReq'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,GenerateRqDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

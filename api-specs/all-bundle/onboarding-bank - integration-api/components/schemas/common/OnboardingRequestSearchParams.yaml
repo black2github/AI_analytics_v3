@@ -1,0 +1,10 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Запрос на поиск заявок на онбординг

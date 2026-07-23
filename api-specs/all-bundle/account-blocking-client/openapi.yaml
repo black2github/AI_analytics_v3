@@ -1,0 +1,129 @@
+openapi: 3.0.1
+info:
+  title: Сервис блокировок. Клиентская часть.
+  version: 1.51.0
+servers:
+- url: /account-blocking-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: Подсказки для выпадающих списков клиентского скроллера.
+- name: Сервис блокировок ДФМ. Клиент. Базовые операции.
+- name: Сервис блокировок. Клиент. Базовые операции.
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /account-blocking/suggestion/org-name:
+    $ref: ./paths/suggestion/account_blocking_suggestion_org_name.yaml
+  /account-blocking/suggestion/client-name:
+    $ref: ./paths/suggestion/account_blocking_suggestion_client_name.yaml
+  /account-blocking/suggestion/block-number:
+    $ref: ./paths/suggestion/account_blocking_suggestion_block_number.yaml
+  /account-blocking/suggestion/account-number:
+    $ref: ./paths/suggestion/account_blocking_suggestion_account_number.yaml
+  /account-blocking/report:
+    $ref: ./paths/report/account_blocking_report.yaml
+  /account-blocking/get-page:
+    $ref: ./paths/get-page/account_blocking_get_page.yaml
+  /account-blocking/category:
+    $ref: ./paths/category/account_blocking_category.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /dfm-block/get-suspended-organizations:
+    $ref: ./paths/get-suspended-organizations/dfm_block_get_suspended_organizations.yaml
+  /account-blocking/{id}:
+    $ref: ./paths/{id}/account_blocking_id.yaml
+  /account-blocking/by-account-id/{id}:
+    $ref: ./paths/by-account-id/account_blocking_by_account_id_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    AccountBlockSuggestionFilter:
+      $ref: ./components/schemas/suggestion/AccountBlockSuggestionFilter.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandAccountBlockSuggestionFilter:
+      $ref: ./components/schemas/suggestion/GetPageCommandAccountBlockSuggestionFilter.yaml
+    PageParamsAccountBlockSuggestionFilter:
+      $ref: ./components/schemas/suggestion/PageParamsAccountBlockSuggestionFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    AccountBlockClientSuggestionDto:
+      $ref: ./components/schemas/suggestion/AccountBlockClientSuggestionDto.yaml
+    GenericResponseSimpleErrorDataPageDataAccountBlockClientSuggestionDto:
+      $ref: ./components/schemas/suggestion/GenericResponseSimpleErrorDataPageDataAccountBlockClientSuggestionDto.yaml
+    PageDataAccountBlockClientSuggestionDto:
+      $ref: ./components/schemas/suggestion/PageDataAccountBlockClientSuggestionDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    AccountBlockingRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/AccountBlockingRequestClientScrollerFilter.yaml
+    ExportRegistryClientDto:
+      $ref: ./components/schemas/report/ExportRegistryClientDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBlockTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoBlockTypeDto.yaml
+    GenericCommandExportRegistryClientDto:
+      $ref: ./components/schemas/report/GenericCommandExportRegistryClientDto.yaml
+    OrgTypeFilterValueDto:
+      $ref: ./components/schemas/common/OrgTypeFilterValueDto.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/report/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/report/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    GetPageCommandAccountBlockingRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandAccountBlockingRequestClientScrollerFilter.yaml
+    PageParamsAccountBlockingRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsAccountBlockingRequestClientScrollerFilter.yaml
+    AccountBlockClientScrollerDto:
+      $ref: ./components/schemas/get-page/AccountBlockClientScrollerDto.yaml
+    GenericResponseSimpleErrorDataPageDataAccountBlockClientScrollerDto:
+      $ref: ./components/schemas/get-page/GenericResponseSimpleErrorDataPageDataAccountBlockClientScrollerDto.yaml
+    PageDataAccountBlockClientScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataAccountBlockClientScrollerDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/get-suspended-organizations/GenericResponseSimpleErrorDataListString.yaml
+    AccountBlockDto:
+      $ref: ./components/schemas/{id}/AccountBlockDto.yaml
+    GenericResponseSimpleErrorDataAccountBlockDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataAccountBlockDto.yaml
+    LockDetailsDto:
+      $ref: ./components/schemas/{id}/LockDetailsDto.yaml
+    OrgAndAccIdentDto:
+      $ref: ./components/schemas/{id}/OrgAndAccIdentDto.yaml
+    AccountBlockAggregateDto:
+      $ref: ./components/schemas/by-account-id/AccountBlockAggregateDto.yaml
+    AccountBlockClientDto:
+      $ref: ./components/schemas/by-account-id/AccountBlockClientDto.yaml
+    AccountBlockInfoDto:
+      $ref: ./components/schemas/by-account-id/AccountBlockInfoDto.yaml
+    GenericResponseSimpleErrorDataAccountBlockClientDto:
+      $ref: ./components/schemas/by-account-id/GenericResponseSimpleErrorDataAccountBlockClientDto.yaml
+    OrganInfoDto:
+      $ref: ./components/schemas/by-account-id/OrganInfoDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

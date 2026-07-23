@@ -1,0 +1,47 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  contractId:
+    type: integer
+    description: ИД в АСК
+    format: int64
+  contractType:
+    type: string
+    description: Тип генерального соглашения
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  date:
+    type: string
+    description: Дата генерального соглашения
+    format: date
+  number:
+    type: string
+    description: Номер генерального соглашения
+  businessId:
+    type: string
+    description: Бизнес id
+    nullable: true
+  earlyRefund:
+    type: boolean
+    description: Возможно досрочное истребование
+    nullable: true
+  earlyRefundRateRub:
+    type: string
+    description: Ставка досрочного истребования для рублей
+    nullable: true
+  earlyRefundRateFor:
+    type: string
+    description: Ставка досрочного истребования для валюты
+    nullable: true
+  default:
+    type: boolean
+description: Генеральное соглашение

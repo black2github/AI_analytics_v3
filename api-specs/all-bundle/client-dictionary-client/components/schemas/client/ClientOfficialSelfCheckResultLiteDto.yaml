@@ -1,0 +1,6 @@
+type: object
+properties:
+  passed:
+    type: boolean
+    description: Признак успешности проверки
+description: Результат проверки Представителя Клиента

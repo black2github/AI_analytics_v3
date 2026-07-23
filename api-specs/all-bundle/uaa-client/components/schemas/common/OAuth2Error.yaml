@@ -1,0 +1,8 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Ошибка
+  error_description:
+    type: string
+    description: Описание ошибки

@@ -1,0 +1,11 @@
+type: object
+properties:
+  startInterval:
+    type: string
+    description: Начало интервала
+    format: date-time
+  endInterval:
+    type: string
+    description: Конец интервала
+    format: date-time
+description: Временной слот по заявке на встречу

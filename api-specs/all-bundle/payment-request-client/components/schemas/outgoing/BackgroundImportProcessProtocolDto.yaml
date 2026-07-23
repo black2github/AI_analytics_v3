@@ -1,0 +1,35 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  title:
+    type: string
+    description: Заголовок
+  createAt:
+    type: string
+    description: Дата и время
+  totalDocs:
+    type: integer
+    description: Всего документов
+    format: int32
+  processedDocs:
+    type: integer
+    description: Обработано документов
+    format: int32
+  errorDocs:
+    type: integer
+    description: Ошибочных документов
+    format: int32
+  groupByStatusAndCurrencyResults:
+    type: array
+    description: Список с результатами по группе документов (группировка по статусу и валюте)
+    items:
+      $ref: ./BackgroundImportProcessDocumentGroupProcessingResultDto.yaml
+  docResults:
+    type: array
+    description: Список с результатами по документам
+    items:
+      $ref: ./BackgroundImportProcessDocumentProcessingResultDto.yaml
+description: Данные протокола для фонового процесса импорта

@@ -1,0 +1,13 @@
+type: object
+properties:
+  concludes:
+    $ref: ./IssueCardRequestConcludeDto.yaml
+  details:
+    $ref: ./IssueCardRequestDetailsDto.yaml
+  id:
+    type: string
+    description: Иидентификатор заявки
+    format: uuid
+  openingAccount:
+    $ref: ./IssueCardRequestOpeningAccountDto.yaml
+description: Параметры заявки на выпуск карты для ЭФ

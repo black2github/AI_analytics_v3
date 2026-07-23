@@ -1,0 +1,58 @@
+required:
+- access
+- name
+- type
+type: object
+properties:
+  code:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Код
+  name:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Наименование
+  description:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Описание
+  type:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка (организации)
+    format: uuid
+  displayPriority:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+  creatorId:
+    type: string
+    description: Идентификатор пользователя создавшего запись
+    format: uuid
+  commentary:
+    maxLength: 500
+    minLength: 0
+    type: string
+    description: Комментарий
+  rolesListVersion:
+    type: integer
+    description: Версия. Версия шаблона (по составу ролей)
+    format: int32
+  access:
+    maxItems: 2147483647
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Список доступов для включения в шаблон
+    items:
+      $ref: ./RoleTemplateAccessDto.yaml
+description: DTO создания шаблона роли

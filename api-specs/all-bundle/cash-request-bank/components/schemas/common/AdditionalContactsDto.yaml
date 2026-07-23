@@ -1,0 +1,9 @@
+type: object
+properties:
+  email:
+    type: string
+    description: E-mail для связи
+  mobilePhone:
+    type: string
+    description: Мобильный телефон для связи
+description: Дополнительные контакты для связи

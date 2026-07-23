@@ -1,0 +1,8 @@
+type: object
+properties:
+  clientId:
+    type: string
+    format: uuid
+  userId:
+    type: string
+    format: uuid

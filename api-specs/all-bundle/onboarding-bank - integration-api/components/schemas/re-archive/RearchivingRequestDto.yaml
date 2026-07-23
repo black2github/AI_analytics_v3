@@ -1,0 +1,10 @@
+type: object
+properties:
+  requestIds:
+    type: array
+    description: Идентификаторы заявок, которые необходимо повторно архивировать
+    items:
+      type: string
+      description: Идентификаторы заявок, которые необходимо повторно архивировать
+      format: uuid
+description: Запрос на повторную архивацию заявки

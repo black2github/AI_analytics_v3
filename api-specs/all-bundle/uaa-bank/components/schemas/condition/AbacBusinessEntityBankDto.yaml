@@ -1,0 +1,60 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  name:
+    type: string
+    description: Уникальное наименование бизнес-сущности
+  description:
+    type: string
+    description: Описание бизнес-сущности
+  destinationUserType:
+    type: string
+    description: Тип пользователя, для которого будет применяться правило
+  holder:
+    type: string
+    description: Наименование держателя сущности
+  user:
+    $ref: ./AbacBusinessEntityUserBankDto.yaml
+  role:
+    $ref: ./AbacBusinessEntityRoleDto.yaml
+  condition:
+    $ref: ./AbacBusinessEntityConditionDto.yaml
+  consumer:
+    type: string
+    description: Код сервиса потребителя сущности
+  requireExecution:
+    type: boolean
+    description: Индикатор обязательности исполнения правила
+  operator:
+    type: string
+    enum:
+    - AND
+    - OR
+  bankClientInfo:
+    $ref: ./AbacBankClientInfo.yaml
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  source:
+    type: string
+    enum:
+    - AUTO
+    - MANUAL
+  comment:
+    type: string
+    description: Пользовательский комментарий при создании или изменении записи
+  updateInfo:
+    $ref: ../common/UpdateInfoDto.yaml
+  createdAt:
+    type: string
+    description: Время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время изменении записи
+    format: date-time
+description: Сведения о модели "доступа по реквизитам"

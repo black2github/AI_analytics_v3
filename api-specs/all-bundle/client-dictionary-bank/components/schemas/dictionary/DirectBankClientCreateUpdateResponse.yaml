@@ -1,0 +1,8 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  customerId:
+    type: string
+description: Данные

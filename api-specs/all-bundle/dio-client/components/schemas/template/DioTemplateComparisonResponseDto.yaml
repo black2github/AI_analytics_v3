@@ -1,0 +1,12 @@
+type: object
+properties:
+  templateName:
+    maxLength: 255
+    type: string
+    description: Наименование шаблона
+  fields:
+    type: array
+    description: Поля сравнения шаблона с ДИО
+    items:
+      $ref: ./DioTemplateComparisonFieldDto.yaml
+description: Дто ответа сравнения шаблона с ДИО

@@ -1,0 +1,17 @@
+type: object
+description: Тип формата печатной формы клиента
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сущности.
+  templateType:
+    type: string
+    description: Тип печатной формы.
+    enum:
+    - SBP_CONTRACT_REQUEST
+  reportFormat:
+    type: string
+    description: Формат печатной формы.
+    enum:
+    - PDF

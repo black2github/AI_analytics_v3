@@ -1,0 +1,19 @@
+type: object
+properties:
+  cardProcessingStatus:
+    type: string
+    description: Статус обработки
+  cardProcessingStatusName:
+    type: string
+    description: Текст статуса обработки
+  eskErrorDesc:
+    type: string
+    description: Текст ошибки от ЕСК
+  holderInfo:
+    $ref: ./IssueCardRequestHolderInfoDto.yaml
+  questionnaireInfo:
+    $ref: ./IssueCardRequestQuestionnaireInfoDto.yaml
+  title:
+    type: string
+    description: Заголовок анкеты
+description: Анкета заявки на выпуск карты для ЭФ

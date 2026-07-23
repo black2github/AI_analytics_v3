@@ -1,0 +1,14 @@
+required:
+- accountNumber
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  countCCard:
+    type: integer
+    description: Количество корпоративных карт
+    format: int32
+  errorInfo:
+    $ref: ./CorpCardErrorDto.yaml
+description: Ответ к запросу на получение числа действующих карт

@@ -1,0 +1,19 @@
+required:
+- userId
+- userType
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя (равенство)
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя (равенство)
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр выборки представлений счетов клиента внутреннего API

@@ -1,0 +1,78 @@
+type: object
+description: Обобщенная заявка для представления "Список заявок" сервисов банка
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - QRC_CREATE
+    - QRC_BLOCK
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    type: string
+    description: Торговое название
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - DRAFT
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - DELETED
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - QRC_IMAGE_REQUEST
+    - QRC_IMAGE_NOT_RECEIVED
+    - QRC_IMAGE_RECEIVED
+    - BLOCK_ERROR
+    - BLOCK_REQUEST
+    - REQUEST_EXECUTED
+    - REJECTED
+    - QR_CREATED
+    - SUBS_CREATED
+    - REGISTRATION_WAIT
+    - QR_BLOCKED
+    - SUBS_BLOCKED
+    - EXECUTED
+  account:
+    type: string
+    description: Счет зачисления для оплаты по QR
+  qrcId:
+    type: string
+    description: Идентификатор QR
+  details:
+    $ref: ./SbpBankServiceCommonRequestDetailsDto.yaml
+    description: Детализированная информация по заявкам
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  sideServiceData:
+    $ref: ./SbpCommonRequestSideServiceDataDto.yaml
+    description: Реквизиты, получаемые в процессе создания заявки из других сервисов ЭКО.
+required:
+- details
+- docDate
+- docNumber
+- id
+- status
+- type

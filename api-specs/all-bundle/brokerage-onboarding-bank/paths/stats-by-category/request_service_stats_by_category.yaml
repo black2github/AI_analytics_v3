@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Получить статистику по категориям статусов
+  description: 'Привилегии: BRK_ONBOARDING.BANK.REQUEST.LIST'
+  operationId: getStatusCategoryStats
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/stats-by-category/GenericCommandBrkOnbBankRequestRequestFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/stats-by-category/GenericResponseSimpleErrorDataListBrkOnbStatusCategoryStatDto.yaml

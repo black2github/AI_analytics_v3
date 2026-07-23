@@ -1,0 +1,69 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  branchId:
+    type: string
+    description: Идентификатор филиала и подразделения Банка
+    format: uuid
+  serviceCode:
+    type: string
+    description: Код услуги
+  scheduleId:
+    type: integer
+    description: Идентификатор расписания
+    format: int64
+  workTypeDayId:
+    type: string
+    description: Идентификатор типа рабочего дня
+  workTypeDayName:
+    type: string
+    description: Название типа рабочего дня
+  weekDay:
+    type: string
+    description: Конкретный день недели
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  weekDayFrom:
+    type: string
+    description: День недели с (включительно)
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  weekDayTo:
+    type: string
+    description: День недели по (включительно)
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  exactDate:
+    type: string
+    description: Точный день
+  dateTo:
+    type: string
+    description: Действует до (включительно)
+  timeFrom:
+    type: string
+    description: Время работы с
+  timeTo:
+    type: string
+    description: Время работы по
+description: Расписание подразделения

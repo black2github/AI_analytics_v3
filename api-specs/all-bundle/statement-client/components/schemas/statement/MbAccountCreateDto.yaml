@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  clientId:
+    type: string
+    format: uuid
+  external:
+    type: boolean

@@ -1,0 +1,5 @@
+type: object
+properties:
+  ID::uid:
+    type: string
+    format: uuid

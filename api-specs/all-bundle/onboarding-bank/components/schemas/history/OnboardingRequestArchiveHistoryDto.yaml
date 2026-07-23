@@ -1,0 +1,38 @@
+type: object
+properties:
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса
+    format: date-time
+  documentId:
+    type: string
+    description: Ссылка на сущность "Архивная заявка"
+    format: uuid
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  infoForBank:
+    type: string
+    description: Комментарий для Банка
+  infoForClient:
+    type: string
+    description: Комментарий для клиента
+  status:
+    type: string
+    description: Статус заявки
+  userId:
+    type: string
+    description: Пользователь, выполнивший смену статуса
+    format: uuid
+  userName:
+    type: string
+    description: ФИО пользователя инициатора события
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: История изменений статусов архивной заявки

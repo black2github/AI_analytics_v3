@@ -1,0 +1,15 @@
+required:
+- createdAt
+type: object
+properties:
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  commentForClient:
+    maxLength: 50
+    type: string
+    description: Комментарий для Клиента
+    nullable: true
+description: Краткая история изменения исходящего платежного требования (данные для банка)
+nullable: true

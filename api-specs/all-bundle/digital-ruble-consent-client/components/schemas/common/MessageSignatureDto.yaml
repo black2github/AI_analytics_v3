@@ -1,0 +1,13 @@
+required:
+- pcrCertificateId
+- signature
+type: object
+properties:
+  pcrCertificateId:
+    type: string
+    description: Идентификатор сертификата участника ПлЦР
+    format: uuid
+  signature:
+    type: string
+    description: Подпись
+description: DTO для подписи сообщения.

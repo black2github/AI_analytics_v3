@@ -1,0 +1,55 @@
+post:
+  tags:
+  - АPI печати ПФ для банка
+  summary: Получить список заявок
+  description: 'Привилегии: ACC_RESERVATION.BANK.REQUEST_EXPORT_PRINT'
+  operationId: printRequestList
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandPrintRequestDtoUUID.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

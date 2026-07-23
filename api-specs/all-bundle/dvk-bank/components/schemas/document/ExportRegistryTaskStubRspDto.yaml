@@ -1,0 +1,18 @@
+required:
+- status
+- taskId
+type: object
+properties:
+  taskId:
+    type: string
+    description: Идентификатор задания
+    format: uuid
+  status:
+    type: string
+    description: Статус задания
+    enum:
+    - NEW
+    - PROCESSING
+    - EXECUTED
+    - FAILED
+description: ДТО для опроса статуса задания на экспорт

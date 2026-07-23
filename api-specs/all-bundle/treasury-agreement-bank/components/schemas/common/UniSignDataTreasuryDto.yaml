@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор набора данных
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  digest:
+    $ref: ./Digest.yaml
+  digestInfo:
+    $ref: ./DigestInfoDto.yaml
+  dssLabel:
+    type: string
+    description: Информация для облачной подписи
+description: Данные

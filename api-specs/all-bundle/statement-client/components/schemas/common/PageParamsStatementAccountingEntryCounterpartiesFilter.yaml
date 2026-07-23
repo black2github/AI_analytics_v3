@@ -1,0 +1,13 @@
+type: object
+properties:
+  filter:
+    $ref: ./StatementAccountingEntryCounterpartiesFilter.yaml
+  sort:
+    $ref: ./Sort.yaml
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ./Sort.yaml
+  paging:
+    $ref: ./Paging.yaml

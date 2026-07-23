@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Интеграция с ЕПР
+  summary: Распознавание данных документа
+  description: 'Привилегии: EPR_INTEGRATION'
+  operationId: processDocumentOcr
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/epr/SingleCommandOcrInput.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/epr/SingleResponseOcrOutput.yaml

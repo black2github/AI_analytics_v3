@@ -1,0 +1,57 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  notEq:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+  in:
+    type: array
+    items:
+      type: string
+      description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+      enum:
+      - PROCESS
+      - VIEW
+      - NO_ACCESS
+      - PROCESS_RESTR
+      - CLIENT_TMG_SUBSIDIARY
+      - CLIENT_TMG_TREASURER
+      - CLIENT_TMG_ACCESS
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Классификатор ролей пользователя в сервисе ЛК УВЭД/МП
+      enum:
+      - PROCESS
+      - VIEW
+      - NO_ACCESS
+      - PROCESS_RESTR
+      - CLIENT_TMG_SUBSIDIARY
+      - CLIENT_TMG_TREASURER
+      - CLIENT_TMG_ACCESS
+  isNull:
+    type: boolean
+description: Фильтр по роли пользователя в сервисе ЛК УВЭД/МП

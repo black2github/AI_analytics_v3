@@ -1,0 +1,16 @@
+type: object
+properties:
+  authorities:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  clientAuthorities:
+    type: object
+    additionalProperties:
+      uniqueItems: true
+      type: array
+      items:
+        type: string
+  tmgUser:
+    type: boolean

@@ -1,0 +1,65 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  accountId:
+    type: integer
+    description: Идентификатор счета
+    format: int64
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+  subdivisionNumber:
+    type: string
+    description: Идентификатор Подразделения
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountStartDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  accountRole:
+    type: string
+    description: Роль счета. "Зачисление", "Списание", "Комиссия"
+  tariffId:
+    type: integer
+    description: Идентификатор записи тарифа. заполняется только для счета роль=зачисление
+    format: int64
+  tariffRate:
+    type: number
+    description: Ставка тарифа. заполняется только для счета роль=зачисление
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма тарифа. заполняется только для счета роль=зачисление
+  tariffMaxAmount:
+    type: number
+    description: Максимальная сумма тарифа (SumMax)
+  tariffType:
+    type: string
+    description: Тип тарифа
+  accountState:
+    type: string
+    description: Статус счета
+  accountLinkId:
+    type: integer
+    description: Идентификатор связи счета с договором
+    format: int64
+  subdivisionId:
+    type: integer
+    description: Идентификатор Подразделения
+    format: int64
+  accountEndDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  b2bOnly:
+    type: boolean
+    description: Признак разрешенной операции по счету, true - разрешены только B2B, false - разрешены B2B и B2C
+  crNoKopop:
+    type: boolean
+    description: Признак "возврат вне КОПОП", true - Дополнительное соглашение "Распоряжение на возврат" есть, false - нет
+description: Данные параметров счетов в продукте СБП

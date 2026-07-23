@@ -1,0 +1,10 @@
+type: object
+properties:
+  filter:
+    $ref: ./AdmReportFilter.yaml
+  format:
+    $ref: ./AdmReportFormat.yaml
+  zoneId:
+    type: string
+    description: Временная зона
+description: Запрос экспорта отчёта АДМ

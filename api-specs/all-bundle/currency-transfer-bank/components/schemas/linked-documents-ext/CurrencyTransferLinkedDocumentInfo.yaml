@@ -1,0 +1,5 @@
+type: object
+description: Информация о связанном документе
+oneOf:
+- $ref: ./ChargebackRequestLinkedDocumentInfoDto.yaml
+- $ref: ./DioLinkedDocumentInfoDto.yaml

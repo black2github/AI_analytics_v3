@@ -1,0 +1,20 @@
+type: object
+properties:
+  checkbookSeries:
+    type: string
+    description: Серия чековой книжки
+  closingRequestId:
+    type: string
+    description: Ссылка на Заявка на закрытие счета
+    format: uuid
+  firstCheckNumber:
+    type: string
+    description: Номер первого чека
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  lastCheckNumber:
+    type: string
+    description: Номер последнего чека
+description: Чековые книжки

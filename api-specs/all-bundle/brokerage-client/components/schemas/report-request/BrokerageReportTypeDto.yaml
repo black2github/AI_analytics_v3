@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код
+  name:
+    type: string
+    description: Наименование
+description: Тип отчета брокера

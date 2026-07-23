@@ -1,0 +1,14 @@
+required:
+- categories
+- isAuthPersonRestricted
+type: object
+properties:
+  isAuthPersonRestricted:
+    type: boolean
+    description: Флаг наличия ограничений по письмам для УЛ
+  categories:
+    type: array
+    description: Категории типов ДСФ
+    items:
+      $ref: ./EmpDsfTypeCategoryDtoV4.yaml
+description: Категоризированные типы ДСФ. V4

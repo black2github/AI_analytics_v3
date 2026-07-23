@@ -1,0 +1,104 @@
+get:
+  tags:
+  - API статистики по платежным документам
+  summary: Получить статистику по платежным документам для пользователя
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.SCROLLER_VIEW,CURRENCY_TRANSFER_CLIENT_SCROLLER_VIEW,ACCEPT_PAYMENT_REQUEST.VIEW_LIST'
+  operationId: getPaymentDocTotal
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/payment-doc/GenericResponseSimpleErrorDataListCounterPaymentDocDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+post:
+  tags:
+  - API статистики по платежным документам
+  summary: Получить статистику по платежным документам по датам
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.SCROLLER_VIEW,CURRENCY_TRANSFER_CLIENT_SCROLLER_VIEW,ACCEPT_PAYMENT_REQUEST.VIEW_LIST'
+  operationId: getPaymentDocTotalFilter
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payment-doc/GenericCommandPaymentDocTotalFilterDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/payment-doc/GenericResponseSimpleErrorDataListCounterPaymentDocDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

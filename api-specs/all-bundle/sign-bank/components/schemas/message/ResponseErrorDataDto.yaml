@@ -1,0 +1,12 @@
+type: object
+properties:
+  systemId:
+    type: string
+    description: Мнемокод системы отправителя
+  code:
+    type: string
+    description: Код ошибки
+  message:
+    type: string
+    description: Описание ошибки
+description: Данные об ошибке

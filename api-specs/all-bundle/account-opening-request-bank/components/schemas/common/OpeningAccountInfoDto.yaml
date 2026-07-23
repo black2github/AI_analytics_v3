@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: id
+    format: uuid
+  currencyNumericCode:
+    type: string
+    description: Currency numeric code
+  currencyCode:
+    type: string
+    description: Currency code
+  balancePosition:
+    type: string
+    description: Balance position
+  balancePositionDescription:
+    type: string
+    description: Balance position description
+  count:
+    type: integer
+    description: Opening accounts count
+    format: int32
+description: Info about new opening accounts.

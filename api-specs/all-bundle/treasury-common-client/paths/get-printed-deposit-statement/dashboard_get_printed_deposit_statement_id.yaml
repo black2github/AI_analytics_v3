@@ -1,0 +1,56 @@
+get:
+  tags:
+  - Печатные формы готовых отчетов для дашборда
+  summary: Получить информацию о доступе к напечатанной депозитной выписке
+  description: 'Привилегии: (#eco.userTypeIs(''CLIENT'') AND hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_REPORTS_COMMON'')) OR ((#eco.userTypeIs(''BANK'') OR #eco.userTypeIs(''TECHNICAL'')) AND hasAuthority(''TREASURY_COMMON_REPORTS_VIEW''))'
+  operationId: getPrintedDepositStatement
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataDownloadCommand.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

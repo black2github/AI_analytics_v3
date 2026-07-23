@@ -1,0 +1,48 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Классификатор "Виды справок"
+    enum:
+    - OPEN_ACCOUNT
+    - INFORMATION_CURRENCY
+    - CASH_BALANCE
+    - ACCOUNT_RESTRICTION
+    - FILE_CABINET
+    - MUTUAL_SETTLEMENTS
+    - MNO
+    - DEPOSIT_ACCOUNTS
+    - PERCENTAGE_STATEMENT
+    - CREDIT_DEALS_SECURITY
+    - CREDIT_AGREEMENT_BALANCE
+    - AUDITOR_REQUEST
+    - LOAN_DEBT_PRESENCE
+    - CREDIT_HISTORY_PRESENCE
+    - GUARANTEES
+  date:
+    type: string
+    description: Дата
+    format: date
+  startDate:
+    type: string
+    description: Дата с
+    format: date
+  endDate:
+    type: string
+    description: Дата по
+    format: date
+  splitByMonth:
+    type: boolean
+    description: Признак "Разбить по месяцам"
+  accounts:
+    type: array
+    description: Сведения о счетах по которым запрашивается справка
+    items:
+      $ref: ./RkoReferenceAvailabilityAccountDto.yaml
+  numberRKO:
+    type: string
+    description: Номер договора РКО
+  branchCode:
+    type: string
+    description: Код филиала обслуживания
+description: Информация о справки

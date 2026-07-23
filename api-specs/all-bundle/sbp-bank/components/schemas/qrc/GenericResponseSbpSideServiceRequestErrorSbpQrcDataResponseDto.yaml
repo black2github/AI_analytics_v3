@@ -1,0 +1,12 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    $ref: ./SbpQrcDataResponseDto.yaml
+    description: Данные
+  error:
+    $ref: ../common/SbpSideServiceRequestError.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

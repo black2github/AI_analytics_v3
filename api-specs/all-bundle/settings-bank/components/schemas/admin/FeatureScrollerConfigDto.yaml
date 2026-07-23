@@ -1,0 +1,35 @@
+type: object
+properties:
+  featureTypes:
+    uniqueItems: true
+    type: array
+    description: Множество типов фич
+    items:
+      type: string
+      description: Множество типов фич
+      enum:
+      - EXAMPLE
+  strategies:
+    uniqueItems: true
+    type: array
+    description: Множество стратегий
+    items:
+      type: string
+      description: Множество стратегий
+      enum:
+      - USER
+      - BRANCH
+      - CLIENT
+      - REGION
+      - PERCENT
+  operators:
+    uniqueItems: true
+    type: array
+    description: Множество операторов стратегий
+    items:
+      type: string
+      description: Множество операторов стратегий
+      enum:
+      - AND
+      - OR
+description: Настройки скроллера фич

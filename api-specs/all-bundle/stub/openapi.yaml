@@ -1,0 +1,944 @@
+info:
+  title: Сервис заглушек
+tags:
+- name: API ДБО БСС для внешних систем
+  description: Bss External Controller
+- name: API для эмуляции файлового обмена
+  description: File Sharing Controller
+- name: API заглушки АСЦР (КО ЮЛ - баланс кошелька) V4
+  description: Ascr Organization Wallet Balance Controller
+- name: API заглушки АСЦР (КО ЮЛ - сертификаты) V4
+  description: Ascr Organization Certificate V 4 Controller
+- name: API заглушки АСЦР (КО ЮЛ - статус кошелька) V4
+  description: Ascr Organization Wallet Status V 4 Controller
+- name: API заглушки АСЦР (КО ЮЛ) V4
+  description: Ascr Organization V 4 Controller
+- name: API заглушки АСЦР (для работы с КО ФП) V2
+  description: Ascr Fi V 2 Controller
+- name: API заглушки ЕПГУ
+  description: Epgu Controller
+- name: API заглушки сервиса подсказок
+  description: Suggestion Stub Controller
+- name: API регистрации пользователя ДБО БСС
+  description: Bss Register Controller
+- name: AgentTspConnection Entity
+  description: Agent Tsp Connection
+- name: BssAccount Entity
+  description: Bss Account
+- name: BssAccountBlock Entity
+  description: Bss Account Block
+- name: BssDssUser Entity
+  description: Bss Dss User
+- name: BssUser Entity
+  description: Bss User
+- name: BssUserProfile Entity
+  description: Bss User Profile
+- name: GPB API. Сервис лизинга.
+  description: Gpb Api Leasing Stub Controller
+- name: GPB API. ФНС.
+  description: Gpb Api Fns Stub Controller
+- name: GPB API. Файловый сервис.
+  description: Gpb Api File Service Stub Controller
+- name: GPB Leasing. Сервис лизинга.
+  description: Gpb Leasing Lk Stub Controller
+- name: Naumen. API заглушек временных слотов
+  description: Naumen Time Slot Stub Controller
+- name: Naumen. API заглушек задач
+  description: Naumen Task Stub Controller
+- name: acting-client-controller
+  description: Acting Client Controller
+- name: ascr-aml-cft-v-4-controller
+  description: Ascr Aml Cft V 4 Controller
+- name: bsk-controller
+  description: BSK Controller
+- name: clean-service-stub-controller
+  description: Clean Service Stub Controller
+- name: clear-controller
+  description: Clear Controller
+- name: common-properties-controller
+  description: Common Properties Controller
+- name: currency-rates-controller
+  description: Currency Rates Controller
+- name: dbo-320-info-controller
+  description: Dbo 320 Info Controller
+- name: dbo-320-payment-order-controller
+  description: Dbo 320 Payment Order Controller
+- name: direct-1-c-controller
+  description: Direct 1 C Controller
+- name: doc-copy-f-1-commission-controller
+  description: Doc Copy F 1 Commission Controller
+- name: doc-copy-f-1-docs-controller
+  description: Doc Copy F 1 Docs Controller
+- name: doc-copy-f-1-office-controller
+  description: Doc Copy F 1 Office Controller
+- name: elar-controller
+  description: Elar Controller
+- name: esk-client-info-update-controller
+  description: Esk Client Info Update Controller
+- name: esk-get-customer-controller
+  description: Esk Get Customer Controller
+- name: esk-onboarding-controller
+  description: Esk Onboarding Controller
+- name: esk-onboarding-fns-controller
+  description: Esk Onboarding Fns Controller
+- name: esk-onboarding-fo-controller
+  description: Esk Onboarding Fo Controller
+- name: esk-primary-check-controller
+  description: Esk Primary Check Controller
+- name: esk-universal-customer-search-controller
+  description: Esk Universal Customer Search Controller
+- name: esk-vm-onboarding-controller
+  description: Esk Vm Onboarding Controller
+- name: esk-vm-onboarding-short-controller
+  description: Esk Vm Onboarding Short Controller
+- name: gpb-api-fns-stub-config-controller
+  description: Gpb Api Fns Stub Config Controller
+- name: gpb-api-pak-ebs-controller
+  description: Gpb Api Pak Ebs Controller
+- name: http-stub-controller
+  description: Http Stub Controller
+- name: inquiry-commission-v-2-controller
+  description: Inquiry Commission V 2 Controller
+- name: isin-buy-controller
+  description: Isin Buy Controller
+- name: lbp-response-configuration-controller
+  description: Lbp Response Configuration Controller
+- name: manual-io-client-generation-controller
+  description: Manual Io Client Generation Controller
+- name: one-window-controller
+  description: One Window Controller
+- name: pp-sip-controller
+  description: Pp Sip Controller
+- name: pp-sip-kafka-send-controller
+  description: Pp Sip Kafka Send Controller
+- name: product-offer-controller
+  description: Product Offer Controller
+- name: sip-adm-remove-collection-points-controller
+  description: Sip Adm Remove Collection Points Controller
+- name: АПИ Сириус
+  description: Sirius Api Impl
+- name: АПИ для работы с заглушкой ЕСК
+  description: Esk Integration Controller
+- name: АПИ для работы с заглушкой ЕСК регистрация данных сотрудника
+  description: Esk Employee Registration Controller
+- name: АПИ для работы с заглушкой СПАРК
+  description: Spark Integration Controller
+- name: АС ПКП. API автокотирования
+  description: Pkp Autoquoting Stub Controller
+- name: Заглушка GPB API для СКБ Контур.
+  description: Gpb Api Kontur Stub Controller
+- name: Заглушка АС Стоп-Лист
+  description: Stop List Controller
+- name: Заглушка ЕСК для короткой заявки на онбординг 1070
+  description: Esk Onboarding Short Init Controller
+- name: Заглушка ЕСК для короткой заявки на онбординг 1099
+  description: Esk Onboarding Short Full Controller
+- name: Заглушка ЕСК для короткой заявки на онбординг 115
+  description: Esk Onboarding Short Law Controller
+- name: Заглушка Ф1 для создания визирующей организации
+  description: Approval Org Controller
+- name: Контроллер F1 версии 2.
+  description: F 1 Controller
+- name: Контроллер ручной отправки ответа из АБС Ф1 для Закрытия счета
+  description: Close Acc Controller
+- name: Контроллер ручной отправки ответа из АБС Ф1 для отзыва платежных документов
+  description: Ruble Payment Processing Chargeback F 1 Controller
+- name: Контроллер ручной отправки ответа из АБС Ф1 для платежных документов
+  description: F 1 Ruble Payment Processing Controller
+- name: Контроллер ручной отправки ответа из АБС Ф1 для платежных справочников
+  description: Payment Dictionary F 1 Controller
+- name: Контроллер ручной отправки ответа из АБС Ф1 о закрытии операционного дня
+  description: Ods Sync F 1 Controller
+- name: Настройка ответотв заглушки ДБО БСС 320
+  description: Dbo 320 Stub Controller
+- name: Настройка ответотв заглушки УЦ
+  description: Ca Stub Controller
+- name: Настройка ответотв заглушки ФНС
+  description: Fns Stub Controller
+- name: Обновление заглушек TABLE_RPT_GPB_KXD_KOPOP_ECO (подписанты и уровни подписей в Ф1)
+  description: F 1 Signatory Controller
+- name: Обновление заглушек VW_RPT_GPB_CARD_ACCOUNTS_ECO онлайн-адаптера Ф1
+  description: F 1 Corp Card Account Update Controller
+- name: Обновление заглушек VW_RPT_GPB_ECO_CLOSE_ACC (счета для закрытия в Ф1)
+  description: F 1 Account To Close Controller
+- name: Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO (баланс счета в Ф1)
+  description: F 1 Balance CRUD Controller
+- name: Обновление заглушек VW_RPT_GPS_CARD_ACC_DOCS_ECO онлайн-адаптера Ф1
+  description: F 1 Card Acc Doc Update Controller
+- name: Обновление заглушек для корпоративных карт онлайн-адаптера Ф1
+  description: F 1 Corp Card Update Controller
+- name: Обновление заглушек процедуры PLAT_NEW онлайн-адаптера Ф1
+  description: F 1 Plat New Update Controller
+- name: Обновление заглушек процедуры RUN_MSG онлайн-адаптера Ф1
+  description: F 1 Run Msg Update Controller
+- name: Отправка запроса от CRM Infor в ms-adm
+- name: Отправление сообщения с GPI-треками от Ф1 в очередь
+  description: Gpi Tracker F 1 Controller
+- name: Работа с заглушками локальных карт в Ф1 (VW_RPT_GPS_CARDS_IRAO_ECO)
+  description: Local Card CRUD Controller
+- name: Работа с заглушками локальных транзакций в Ф1 (VW_RPT_GPS_CARD_DOCS_IRAO_ECO)
+  description: Local Transaction Controller
+- name: СИП. Сервис ADM API
+  description: Sip Adm Controller
+- name: СИП. Сервис Internal Merchant API
+  description: Sip Internal Merchant Controller
+- name: СИП. Сервис Internal Operation API
+  description: Sip Internal Operation Controller
+- name: СИП. Сервис Merchant API
+  description: Sip Merchant Controller
+- name: СИП. Сервис Naumen
+  description: Sip Naumen Controller
+- name: СИП. Сервис SVFE
+  description: Sip Svfe Controller
+- name: СИП. Сервис b2b API
+  description: Sip B 2b Controller
+- name: СИП. Сервис b2c API
+  description: Sip B 2c Controller
+- name: Эмулятор запросов Ф1 блокировки по счету
+  description: Account Block F 1 Controller
+- name: Эмулятор запросов от Ф1 на импорт инкассовых поручений (входящих)
+  description: Incoming Collection Order F 1 Controller
+- name: Эмулятор запросов от Ф1 на импорт платежных требований (входящих)
+  description: Incoming Payment Request F 1 Controller
+- name: Эмулятор ответов РКО Ф1 по платежным документам
+  description: F 1 Document Status Controller
+- name: Эмулятор ответов Ф1 для документа инкассовое поручение исходящее
+  description: Outgoing Collection Order F 1 Controller
+- name: Эмулятор сообщений от Ф1 для отзыва платежного требования исходящего
+  description: Outgoing Payment Chargeback Request F 1 Controller
+- name: Эмулятор сообщений от Ф1 для платежных требований исходящих
+  description: Outgoing Payment Request F 1 Controller
+paths:
+  /1c-direct/GetPack:
+    $ref: ./paths/GetPack/1c_direct_GetPack.yaml
+  /1c-direct/GetPackList:
+    $ref: ./paths/GetPackList/1c_direct_GetPackList.yaml
+  /1c-direct/LogonCert:
+    $ref: ./paths/LogonCert/1c_direct_LogonCert.yaml
+  /1c-direct/SendPack:
+    $ref: ./paths/SendPack/1c_direct_SendPack.yaml
+  /CleanService/doClean:
+    $ref: ./paths/doClean/CleanService_doClean.yaml
+  /adm/contractByRnk:
+    $ref: ./paths/contractByRnk/adm_contractByRnk.yaml
+  /adm/contractCustom:
+    $ref: ./paths/contractCustom/adm_contractCustom.yaml
+  /agentTspConnections/{id}/agentTsp:
+    $ref: ./paths/{id}/agentTspConnections_id_agentTsp.yaml
+  /api/v1/catalog/anyscheme/import:
+    $ref: ./paths/v1/api_v1_catalog_anyscheme_import.yaml
+  /api/v1/catalog/news:
+    $ref: ./paths/v1/api_v1_catalog_news.yaml
+  /api/v1/catalog/paydocru:
+    $ref: ./paths/v1/api_v1_catalog_paydocru.yaml
+  /api/v1/service/schemecount:
+    $ref: ./paths/v1/api_v1_service_schemecount.yaml
+  /api/v1/user/accountsinfo:
+    $ref: ./paths/v1/api_v1_user_accountsinfo.yaml
+  /api/v1/user/attachments:
+    $ref: ./paths/v1/api_v1_user_attachments.yaml
+  /api/v1/user/login:
+    $ref: ./paths/v1/api_v1_user_login.yaml
+  /api/v1/user/logout:
+    $ref: ./paths/v1/api_v1_user_logout.yaml
+  /approval-org:
+    $ref: ./paths/approval-org/approval_org.yaml
+  /approval-org/create:
+    $ref: ./paths/create/approval_org_create.yaml
+  /approval-org/delete/{id}:
+    $ref: ./paths/delete/approval_org_delete_id.yaml
+  /approval-org/list:
+    $ref: ./paths/list/approval_org_list.yaml
+  /approval-org/{id}:
+    $ref: ./paths/{id}/approval_org_id.yaml
+  /ascr-v2/fi/organisation/wallet/status:
+    $ref: ./paths/fi/ascr_v2_fi_organisation_wallet_status.yaml
+  /ascr-v3/organisation/wallet/status/possibility:
+    $ref: ./paths/organisation/ascr_v3_organisation_wallet_status_possibility.yaml
+  /ascr-v4/aml-cft/delay:
+    $ref: ./paths/aml-cft/ascr_v4_aml_cft_delay.yaml
+  /ascr-v4/aml-cft/message:
+    $ref: ./paths/aml-cft/ascr_v4_aml_cft_message.yaml
+  /ascr-v4/aml-cft/rejection:
+    $ref: ./paths/aml-cft/ascr_v4_aml_cft_rejection.yaml
+  /ascr-v4/organisation/certificate/list:
+    $ref: ./paths/organisation/ascr_v4_organisation_certificate_list.yaml
+  /ascr-v4/organisation/certificate/organisationId/{organisationId}/deviceId/{deviceId}:
+    $ref: ./paths/organisation/ascr_v4_organisation_certificate_organisationId_organisationId_deviceId_deviceId.yaml
+  /ascr-v4/organisation/certificate/revoke-serial-number:
+    $ref: ./paths/organisation/ascr_v4_organisation_certificate_revoke_serial_number.yaml
+  /ascr-v4/organisation/currency/b2b/pay:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_b2b_pay.yaml
+  /ascr-v4/organisation/currency/b2b/possibility:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_b2b_possibility.yaml
+  /ascr-v4/organisation/currency/b2crefund/pay:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_b2crefund_pay.yaml
+  /ascr-v4/organisation/currency/b2crefund/possibility:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_b2crefund_possibility.yaml
+  /ascr-v4/organisation/currency/buy:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_buy.yaml
+  /ascr-v4/organisation/currency/sell:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_sell.yaml
+  /ascr-v4/organisation/currency/sell/possibility:
+    $ref: ./paths/organisation/ascr_v4_organisation_currency_sell_possibility.yaml
+  /ascr-v4/organisation/register:
+    $ref: ./paths/organisation/ascr_v4_organisation_register.yaml
+  /ascr-v4/organisation/wallet/balance:
+    $ref: ./paths/organisation/ascr_v4_organisation_wallet_balance.yaml
+  /ascr-v4/organisation/wallet/status:
+    $ref: ./paths/organisation/ascr_v4_organisation_wallet_status.yaml
+  /ascr-v4/organisation/wallet/status/possibility:
+    $ref: ./paths/organisation/ascr_v4_organisation_wallet_status_possibility.yaml
+  /ascr-v4/organisation/{organisationId}/certificate/register:
+    $ref: ./paths/organisation/ascr_v4_organisation_organisationId_certificate_register.yaml
+  /ascr-v4/service/requisites/certificates:
+    $ref: ./paths/service/ascr_v4_service_requisites_certificates.yaml
+  /ascr-v4/service/requisites/crls:
+    $ref: ./paths/service/ascr_v4_service_requisites_crls.yaml
+  /bsk/report_get_igk_info.pl:
+    $ref: ./paths/report_get_igk_info.pl/bsk_report_get_igk_info_pl.yaml
+  /bss-account-block/{id}/account:
+    $ref: ./paths/{id}/bss_account_block_id_account.yaml
+  /bss-account/{id}/customer:
+    $ref: ./paths/{id}/bss_account_id_customer.yaml
+  /bss-dss-user/{id}/profile:
+    $ref: ./paths/{id}/bss_dss_user_id_profile.yaml
+  /bss-user-profile/{id}/user:
+    $ref: ./paths/{id}/bss_user_profile_id_user.yaml
+  /bss-user/{id}/profiles:
+    $ref: ./paths/{id}/bss_user_id_profiles.yaml
+  /bss-user/{id}/profiles/{bssuserprofileId}:
+    $ref: ./paths/{id}/bss_user_id_profiles_bssuserprofileId.yaml
+  /bss/external/catalog/customer:
+    $ref: ./paths/external/bss_external_catalog_customer.yaml
+  /bss/external/catalog/news:
+    $ref: ./paths/external/bss_external_catalog_news.yaml
+  /bss/external/service/privileges:
+    $ref: ./paths/external/bss_external_service_privileges.yaml
+  /bss/external/user/accountsblockinfo:
+    $ref: ./paths/external/bss_external_user_accountsblockinfo.yaml
+  /bss/external/user/accountsblockinfo2:
+    $ref: ./paths/external/bss_external_user_accountsblockinfo2.yaml
+  /bss/external/user/accountsinfo:
+    $ref: ./paths/external/bss_external_user_accountsinfo.yaml
+  /bss/external/user/accountsinfo2:
+    $ref: ./paths/external/bss_external_user_accountsinfo2.yaml
+  /bss/external/user/context:
+    $ref: ./paths/external/bss_external_user_context.yaml
+  /bss/external/user/cryptoabonents:
+    $ref: ./paths/external/bss_external_user_cryptoabonents.yaml
+  /bss/external/user/cryptoabonents/cert:
+    $ref: ./paths/external/bss_external_user_cryptoabonents_cert.yaml
+  /bss/external/user/cryptoabonents/{serialNumber}:
+    $ref: ./paths/external/bss_external_user_cryptoabonents_serialNumber.yaml
+  /bss/external/user/dssusers:
+    $ref: ./paths/external/bss_external_user_dssusers.yaml
+  /bss/external/user/password:
+    $ref: ./paths/external/bss_external_user_password.yaml
+  /bss/register:
+    $ref: ./paths/register/bss_register.yaml
+  /ca-cert-stub:
+    $ref: ./paths/ca-cert-stub/ca_cert_stub.yaml
+  /ca-cert-stub/clear:
+    $ref: ./paths/clear/ca_cert_stub_clear.yaml
+  /close-account:
+    $ref: ./paths/close-account/close_account.yaml
+  /common-properties:
+    $ref: ./paths/common-properties/common_properties.yaml
+  /crmbrk/isin/buy:
+    $ref: ./paths/isin/crmbrk_isin_buy.yaml
+  /dbo-bss320-stub:
+    $ref: ./paths/dbo-bss320-stub/dbo_bss320_stub.yaml
+  /dbo-bss320-stub/clear:
+    $ref: ./paths/clear/dbo_bss320_stub_clear.yaml
+  /doc-copy:
+    $ref: ./paths/doc-copy/doc_copy.yaml
+  /doc-copy/commission:
+    $ref: ./paths/commission/doc_copy_commission.yaml
+  /doc-copy/office:
+    $ref: ./paths/office/doc_copy_office.yaml
+  /epgu:
+    $ref: ./paths/epgu/epgu.yaml
+  /epgu/{requestId}/confirmation-request/epgu-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_confirmation_request_epgu_reply.yaml
+  /epgu/{requestId}/confirmation-request/gpb-smev-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_confirmation_request_gpb_smev_reply.yaml
+  /epgu/{requestId}/confirmation-request/sip-error:
+    $ref: ./paths/{requestId}/epgu_requestId_confirmation_request_sip_error.yaml
+  /epgu/{requestId}/confirmation-request/smev-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_confirmation_request_smev_reply.yaml
+  /epgu/{requestId}/notification-request/epgu-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_notification_request_epgu_reply.yaml
+  /epgu/{requestId}/notification-request/gpb-smev-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_notification_request_gpb_smev_reply.yaml
+  /epgu/{requestId}/notification-request/sip-error:
+    $ref: ./paths/{requestId}/epgu_requestId_notification_request_sip_error.yaml
+  /epgu/{requestId}/notification-request/smev-reply:
+    $ref: ./paths/{requestId}/epgu_requestId_notification_request_smev_reply.yaml
+  /esk/acting-client/create:
+    $ref: ./paths/acting-client/esk_acting_client_create.yaml
+  /esk/acting-client/create/default/constitution:
+    $ref: ./paths/acting-client/esk_acting_client_create_default_constitution.yaml
+  /esk/acting-client/create/default/no-constitution:
+    $ref: ./paths/acting-client/esk_acting_client_create_default_no_constitution.yaml
+  /esk/acting-client/create/xml:
+    $ref: ./paths/acting-client/esk_acting_client_create_xml.yaml
+  /esk/client-info-update/create:
+    $ref: ./paths/client-info-update/esk_client_info_update_create.yaml
+  /esk/employee-registration/nok:
+    $ref: ./paths/employee-registration/esk_employee_registration_nok.yaml
+  /esk/employee-registration/pok:
+    $ref: ./paths/employee-registration/esk_employee_registration_pok.yaml
+  /esk/employee-registration/stub/nok:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_nok.yaml
+  /esk/employee-registration/stub/pok:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_pok.yaml
+  /esk/employee-registration/stub/zok-minus:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_zok_minus.yaml
+  /esk/employee-registration/stub/zok-plus-minus:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_zok_plus_minus.yaml
+  /esk/employee-registration/stub/zok-plus-plus:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_zok_plus_plus.yaml
+  /esk/employee-registration/stub/{id}:
+    $ref: ./paths/employee-registration/esk_employee_registration_stub_id.yaml
+  /esk/employee-registration/stubs:
+    $ref: ./paths/employee-registration/esk_employee_registration_stubs.yaml
+  /esk/employee-registration/zok-minus:
+    $ref: ./paths/employee-registration/esk_employee_registration_zok_minus.yaml
+  /esk/employee-registration/zok-plus-minus:
+    $ref: ./paths/employee-registration/esk_employee_registration_zok_plus_minus.yaml
+  /esk/employee-registration/zok-plus-plus:
+    $ref: ./paths/employee-registration/esk_employee_registration_zok_plus_plus.yaml
+  /esk/integration/response:
+    $ref: ./paths/integration/esk_integration_response.yaml
+  /esk/integration/response/{id}:
+    $ref: ./paths/integration/esk_integration_response_id.yaml
+  /esk/onboarding-fns/default-params:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_default_params.yaml
+  /esk/onboarding-fns/identification-result/default-params:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_identification_result_default_params.yaml
+  /esk/onboarding-fns/identification-result/params:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_identification_result_params.yaml
+  /esk/onboarding-fns/identification-result/zok-minus:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_identification_result_zok_minus.yaml
+  /esk/onboarding-fns/identification-result/zok-plus:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_identification_result_zok_plus.yaml
+  /esk/onboarding-fns/nok:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_nok.yaml
+  /esk/onboarding-fns/params:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_params.yaml
+  /esk/onboarding-fns/pok-folder-approved:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_pok_folder_approved.yaml
+  /esk/onboarding-fns/pok-folder-created:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_pok_folder_created.yaml
+  /esk/onboarding-fns/pok-folder-in-work:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_pok_folder_in_work.yaml
+  /esk/onboarding-fns/pok-need-rel-person-ident:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_pok_need_rel_person_ident.yaml
+  /esk/onboarding-fns/pok-need-rel-person-reident:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_pok_need_rel_person_reident.yaml
+  /esk/onboarding-fns/zok-minus:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_zok_minus.yaml
+  /esk/onboarding-fns/zok-plus-minus:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_zok_plus_minus.yaml
+  /esk/onboarding-fns/zok-plus-plus:
+    $ref: ./paths/onboarding-fns/esk_onboarding_fns_zok_plus_plus.yaml
+  /esk/onboarding-fo/bn-executed:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_bn_executed.yaml
+  /esk/onboarding-fo/bn-rejected:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_bn_rejected.yaml
+  /esk/onboarding-fo/default-params:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_default_params.yaml
+  /esk/onboarding-fo/nok:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_nok.yaml
+  /esk/onboarding-fo/params:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_params.yaml
+  /esk/onboarding-fo/pok:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_pok.yaml
+  /esk/onboarding-fo/zok-minus:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_zok_minus.yaml
+  /esk/onboarding-fo/zok-plus-minus:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_zok_plus_minus.yaml
+  /esk/onboarding-fo/zok-plus-plus:
+    $ref: ./paths/onboarding-fo/esk_onboarding_fo_zok_plus_plus.yaml
+  /esk/onboarding-short-full/default-params:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_default_params.yaml
+  /esk/onboarding-short-full/nok:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_nok.yaml
+  /esk/onboarding-short-full/params:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_params.yaml
+  /esk/onboarding-short-full/zok-minus:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_zok_minus.yaml
+  /esk/onboarding-short-full/zok-plus-minus:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_zok_plus_minus.yaml
+  /esk/onboarding-short-full/zok-plus-plus:
+    $ref: ./paths/onboarding-short-full/esk_onboarding_short_full_zok_plus_plus.yaml
+  /esk/onboarding-short-init/bn-aborted:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_bn_aborted.yaml
+  /esk/onboarding-short-init/bn-approved:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_bn_approved.yaml
+  /esk/onboarding-short-init/default-params:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_default_params.yaml
+  /esk/onboarding-short-init/nok:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_nok.yaml
+  /esk/onboarding-short-init/params:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_params.yaml
+  /esk/onboarding-short-init/zok-minus:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_zok_minus.yaml
+  /esk/onboarding-short-init/zok-plus-minus:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_zok_plus_minus.yaml
+  /esk/onboarding-short-init/zok-plus-plus:
+    $ref: ./paths/onboarding-short-init/esk_onboarding_short_init_zok_plus_plus.yaml
+  /esk/onboarding-short-law/bn-executed:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_bn_executed.yaml
+  /esk/onboarding-short-law/bn-rejected:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_bn_rejected.yaml
+  /esk/onboarding-short-law/default-params:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_default_params.yaml
+  /esk/onboarding-short-law/nok:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_nok.yaml
+  /esk/onboarding-short-law/params:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_params.yaml
+  /esk/onboarding-short-law/pok-approved:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_pok_approved.yaml
+  /esk/onboarding-short-law/pok-created:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_pok_created.yaml
+  /esk/onboarding-short-law/pok-in-work:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_pok_in_work.yaml
+  /esk/onboarding-short-law/zok-minus:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_zok_minus.yaml
+  /esk/onboarding-short-law/zok-plus-minus:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_zok_plus_minus.yaml
+  /esk/onboarding-short-law/zok-plus-plus:
+    $ref: ./paths/onboarding-short-law/esk_onboarding_short_law_zok_plus_plus.yaml
+  /esk/onboarding/add-request-1091:
+    $ref: ./paths/onboarding/esk_onboarding_add_request_1091.yaml
+  /esk/onboarding/constitution-sign/pok-accept-in-work:
+    $ref: ./paths/onboarding/esk_onboarding_constitution_sign_pok_accept_in_work.yaml
+  /esk/onboarding/constitution-sign/pok-created-folder:
+    $ref: ./paths/onboarding/esk_onboarding_constitution_sign_pok_created_folder.yaml
+  /esk/onboarding/constitution-sign/zok-minus:
+    $ref: ./paths/onboarding/esk_onboarding_constitution_sign_zok_minus.yaml
+  /esk/onboarding/constitution-sign/zok-plus-minus:
+    $ref: ./paths/onboarding/esk_onboarding_constitution_sign_zok_plus_minus.yaml
+  /esk/onboarding/constitution-sign/zok-plus-minus-24:
+    $ref: ./paths/onboarding/esk_onboarding_constitution_sign_zok_plus_minus_24.yaml
+  /esk/onboarding/receipt/subsequence/zok-minus:
+    $ref: ./paths/onboarding/esk_onboarding_receipt_subsequence_zok_minus.yaml
+  /esk/onboarding/receipt/zok-minus:
+    $ref: ./paths/onboarding/esk_onboarding_receipt_zok_minus.yaml
+  /esk/onboarding/receipt/zok-plus-minus:
+    $ref: ./paths/onboarding/esk_onboarding_receipt_zok_plus_minus.yaml
+  /esk/onboarding/skvo/zok-minus:
+    $ref: ./paths/onboarding/esk_onboarding_skvo_zok_minus.yaml
+  /esk/onboarding/stub/{id}:
+    $ref: ./paths/onboarding/esk_onboarding_stub_id.yaml
+  /esk/onboarding/stubs:
+    $ref: ./paths/onboarding/esk_onboarding_stubs.yaml
+  /esk/onboarding/success-bn/{id}:
+    $ref: ./paths/onboarding/esk_onboarding_success_bn_id.yaml
+  /esk/visiting-manager-onboarding-short/get-params:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_get_params.yaml
+  /esk/visiting-manager-onboarding-short/return-default-params:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_return_default_params.yaml
+  /esk/visiting-manager-onboarding-short/send-bn-correction:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_send_bn_correction.yaml
+  /esk/visiting-manager-onboarding-short/send-bn-received:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_send_bn_received.yaml
+  /esk/visiting-manager-onboarding-short/send-zok-plus-minus:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_send_zok_plus_minus.yaml
+  /esk/visiting-manager-onboarding-short/send-zok-plus-plus:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_send_zok_plus_plus.yaml
+  /esk/visiting-manager-onboarding-short/set-params:
+    $ref: ./paths/visiting-manager-onboarding-short/esk_visiting_manager_onboarding_short_set_params.yaml
+  /esk/visiting-manager-onboarding/get-params:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_get_params.yaml
+  /esk/visiting-manager-onboarding/return-default-params:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_return_default_params.yaml
+  /esk/visiting-manager-onboarding/send-bn-correction:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_send_bn_correction.yaml
+  /esk/visiting-manager-onboarding/send-bn-received:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_send_bn_received.yaml
+  /esk/visiting-manager-onboarding/send-zok-plus-minus:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_send_zok_plus_minus.yaml
+  /esk/visiting-manager-onboarding/send-zok-plus-plus:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_send_zok_plus_plus.yaml
+  /esk/visiting-manager-onboarding/set-params:
+    $ref: ./paths/visiting-manager-onboarding/esk_visiting_manager_onboarding_set_params.yaml
+  /f1-acc-doc/updating/create:
+    $ref: ./paths/updating/f1_acc_doc_updating_create.yaml
+  /f1-acc-doc/updating/delete/{id}:
+    $ref: ./paths/updating/f1_acc_doc_updating_delete_id.yaml
+  /f1-acc-doc/updating/list:
+    $ref: ./paths/updating/f1_acc_doc_updating_list.yaml
+  /f1-account-to-close/create:
+    $ref: ./paths/create/f1_account_to_close_create.yaml
+  /f1-account-to-close/delete/{id}:
+    $ref: ./paths/delete/f1_account_to_close_delete_id.yaml
+  /f1-account-to-close/list:
+    $ref: ./paths/list/f1_account_to_close_list.yaml
+  /f1-account-to-close/list/possibilityToClose:
+    $ref: ./paths/list/f1_account_to_close_list_possibilityToClose.yaml
+  /f1-account/updating/create:
+    $ref: ./paths/updating/f1_account_updating_create.yaml
+  /f1-account/updating/delete/{id}:
+    $ref: ./paths/updating/f1_account_updating_delete_id.yaml
+  /f1-account/updating/list:
+    $ref: ./paths/updating/f1_account_updating_list.yaml
+  /f1-balance/create:
+    $ref: ./paths/create/f1_balance_create.yaml
+  /f1-balance/delete/{id}:
+    $ref: ./paths/delete/f1_balance_delete_id.yaml
+  /f1-balance/list:
+    $ref: ./paths/list/f1_balance_list.yaml
+  /f1-corp-card/updating/create:
+    $ref: ./paths/updating/f1_corp_card_updating_create.yaml
+  /f1-corp-card/updating/delete/{id}:
+    $ref: ./paths/updating/f1_corp_card_updating_delete_id.yaml
+  /f1-corp-card/updating/list:
+    $ref: ./paths/updating/f1_corp_card_updating_list.yaml
+  /f1-local-card:
+    $ref: ./paths/f1-local-card/f1_local_card.yaml
+  /f1-local-card/create:
+    $ref: ./paths/create/f1_local_card_create.yaml
+  /f1-local-card/create-update-all:
+    $ref: ./paths/create-update-all/f1_local_card_create_update_all.yaml
+  /f1-local-card/delete/{id}:
+    $ref: ./paths/delete/f1_local_card_delete_id.yaml
+  /f1-local-card/list:
+    $ref: ./paths/list/f1_local_card_list.yaml
+  /f1-local-card/{id}:
+    $ref: ./paths/{id}/f1_local_card_id.yaml
+  /f1-local-transaction:
+    $ref: ./paths/f1-local-transaction/f1_local_transaction.yaml
+  /f1-local-transaction/create:
+    $ref: ./paths/create/f1_local_transaction_create.yaml
+  /f1-local-transaction/create-update-all:
+    $ref: ./paths/create-update-all/f1_local_transaction_create_update_all.yaml
+  /f1-local-transaction/delete/{id}:
+    $ref: ./paths/delete/f1_local_transaction_delete_id.yaml
+  /f1-local-transaction/list:
+    $ref: ./paths/list/f1_local_transaction_list.yaml
+  /f1-local-transaction/{id}:
+    $ref: ./paths/{id}/f1_local_transaction_id.yaml
+  /f1-plat-new/updating/create:
+    $ref: ./paths/updating/f1_plat_new_updating_create.yaml
+  /f1-plat-new/updating/delete/{id}:
+    $ref: ./paths/updating/f1_plat_new_updating_delete_id.yaml
+  /f1-plat-new/updating/list:
+    $ref: ./paths/updating/f1_plat_new_updating_list.yaml
+  /f1-run-msg/updating/create:
+    $ref: ./paths/updating/f1_run_msg_updating_create.yaml
+  /f1-run-msg/updating/delete/{id}:
+    $ref: ./paths/updating/f1_run_msg_updating_delete_id.yaml
+  /f1-run-msg/updating/list:
+    $ref: ./paths/updating/f1_run_msg_updating_list.yaml
+  /f1-signatory/create:
+    $ref: ./paths/create/f1_signatory_create.yaml
+  /f1-signatory/delete:
+    $ref: ./paths/delete/f1_signatory_delete.yaml
+  /f1-signatory/get-page:
+    $ref: ./paths/get-page/f1_signatory_get_page.yaml
+  /f1/account-block/send:
+    $ref: ./paths/account-block/f1_account_block_send.yaml
+  /f1/collection-order/incoming/receipt:
+    $ref: ./paths/collection-order/f1_collection_order_incoming_receipt.yaml
+  /f1/collection-order/incoming/send:
+    $ref: ./paths/collection-order/f1_collection_order_incoming_send.yaml
+  /f1/collection-order/outgoing/receipt:
+    $ref: ./paths/collection-order/f1_collection_order_outgoing_receipt.yaml
+  /f1/currency-rates/create:
+    $ref: ./paths/currency-rates/f1_currency_rates_create.yaml
+  /f1/document-status/response:
+    $ref: ./paths/document-status/f1_document_status_response.yaml
+  /f1/inquiry-commission/add-pok:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_add_pok.yaml
+  /f1/inquiry-commission/add-zok-minus:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_add_zok_minus.yaml
+  /f1/inquiry-commission/clear-stubs:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_clear_stubs.yaml
+  /f1/inquiry-commission/delete-stub/{commissionAccountNumber}:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_delete_stub_commissionAccountNumber.yaml
+  /f1/inquiry-commission/get-stub/{commissionAccountNumber}:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_get_stub_commissionAccountNumber.yaml
+  /f1/inquiry-commission/list:
+    $ref: ./paths/inquiry-commission/f1_inquiry_commission_list.yaml
+  /f1/payment-request/chargeback/receipt:
+    $ref: ./paths/payment-request/f1_payment_request_chargeback_receipt.yaml
+  /f1/payment-request/incoming/receipt:
+    $ref: ./paths/payment-request/f1_payment_request_incoming_receipt.yaml
+  /f1/payment-request/incoming/send:
+    $ref: ./paths/payment-request/f1_payment_request_incoming_send.yaml
+  /f1/payment-request/outgoing/receipt:
+    $ref: ./paths/payment-request/f1_payment_request_outgoing_receipt.yaml
+  /f1/v2/execute:
+    $ref: ./paths/v2/f1_v2_execute.yaml
+  /f1/v2/execute/{methodName}:
+    $ref: ./paths/v2/f1_v2_execute_methodName.yaml
+  /file-sharing/create:
+    $ref: ./paths/create/file_sharing_create.yaml
+  /file-sharing/delete:
+    $ref: ./paths/delete/file_sharing_delete.yaml
+  /file-sharing/download:
+    $ref: ./paths/download/file_sharing_download.yaml
+  /file-sharing/list:
+    $ref: ./paths/list/file_sharing_list.yaml
+  /file-sharing/upload:
+    $ref: ./paths/upload/file_sharing_upload.yaml
+  /fkdo/api/fkdo.pl:
+    $ref: ./paths/api/fkdo_api_fkdo_pl.yaml
+  /fns-stub:
+    $ref: ./paths/fns-stub/fns_stub.yaml
+  /fns-stub/clear:
+    $ref: ./paths/clear/fns_stub_clear.yaml
+  /gpb-api/file-service/v1/ext-files/download:
+    $ref: ./paths/file-service/gpb_api_file_service_v1_ext_files_download.yaml
+  /gpb-api/file-service/v1/files:
+    $ref: ./paths/file-service/gpb_api_file_service_v1_files.yaml
+  /gpb-api/file-service/v1/files/{id}:
+    $ref: ./paths/file-service/gpb_api_file_service_v1_files_id.yaml
+  /gpb-api/file-service/v1/files/{id}/delete:
+    $ref: ./paths/file-service/gpb_api_file_service_v1_files_id_delete.yaml
+  /gpb-api/file-service/v1/files/{id}/status:
+    $ref: ./paths/file-service/gpb_api_file_service_v1_files_id_status.yaml
+  /gpb-api/fns/config/acc-list:
+    $ref: ./paths/fns/gpb_api_fns_config_acc_list.yaml
+  /gpb-api/fns/config/acc-unfinished-requests-list:
+    $ref: ./paths/fns/gpb_api_fns_config_acc_unfinished_requests_list.yaml
+  /gpb-api/fns/config/auth-token:
+    $ref: ./paths/fns/gpb_api_fns_config_auth_token.yaml
+  /gpb-api/fns/config/ext-files:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files.yaml
+  /gpb-api/fns/config/ext-files/download:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files_download.yaml
+  /gpb-api/fns/config/ext-files/{id}:
+    $ref: ./paths/fns/gpb_api_fns_config_ext_files_id.yaml
+  /gpb-api/fns/config/send-additional-products-status:
+    $ref: ./paths/fns/gpb_api_fns_config_send_additional_products_status.yaml
+  /gpb-api/fns/config/send-onb-request-status:
+    $ref: ./paths/fns/gpb_api_fns_config_send_onb_request_status.yaml
+  /gpb-api/fns/config/sign-in:
+    $ref: ./paths/fns/gpb_api_fns_config_sign_in.yaml
+  /gpb-api/fns/ext-files/download:
+    $ref: ./paths/fns/gpb_api_fns_ext_files_download.yaml
+  /gpb-api/fns/rs/acc:
+    $ref: ./paths/fns/gpb_api_fns_rs_acc.yaml
+  /gpb-api/fns/rs/acc/prev:
+    $ref: ./paths/fns/gpb_api_fns_rs_acc_prev.yaml
+  /gpb-api/fns/rs/acc/{id}:
+    $ref: ./paths/fns/gpb_api_fns_rs_acc_id.yaml
+  /gpb-api/fns/rs/auth/signin:
+    $ref: ./paths/fns/gpb_api_fns_rs_auth_signin.yaml
+  /gpb-api/fns/rs/auth/token:
+    $ref: ./paths/fns/gpb_api_fns_rs_auth_token.yaml
+  /gpb-api/fns/rs/edo-ofd/{id}:
+    $ref: ./paths/fns/gpb_api_fns_rs_edo_ofd_id.yaml
+  /gpb-api/leasing/v1/api/external/calc:
+    $ref: ./paths/leasing/gpb_api_leasing_v1_api_external_calc.yaml
+  /gpb-api/leasing/v1/api/external/leads:
+    $ref: ./paths/leasing/gpb_api_leasing_v1_api_external_leads.yaml
+  /gpb-api/pak-ebs/authenticate:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_authenticate.yaml
+  /gpb-api/pak-ebs/create-session:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_create_session.yaml
+  /gpb-api/pak-ebs/default-params:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_default_params.yaml
+  /gpb-api/pak-ebs/failure-auth-result:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_failure_auth_result.yaml
+  /gpb-api/pak-ebs/params:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_params.yaml
+  /gpb-api/pak-ebs/reset-params:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_reset_params.yaml
+  /gpb-api/pak-ebs/success-auth-result:
+    $ref: ./paths/pak-ebs/gpb_api_pak_ebs_success_auth_result.yaml
+  /gpb-api/skb/v1/api/internal/agent/briefReportSummary:
+    $ref: ./paths/skb/gpb_api_skb_v1_api_internal_agent_briefReportSummary.yaml
+  /gpb-api/skb/v1/api/internal/agent/briefSummaryDetails:
+    $ref: ./paths/skb/gpb_api_skb_v1_api_internal_agent_briefSummaryDetails.yaml
+  /gpb-leasing/api/manager/v3/leads:
+    $ref: ./paths/api/gpb_leasing_api_manager_v3_leads.yaml
+  /gpi:
+    $ref: ./paths/gpi/gpi.yaml
+  /http-stub/any/**:
+    $ref: ./paths/any/http_stub_any.yaml
+  /http-stub/check-external-services:
+    $ref: ./paths/check-external-services/http_stub_check_external_services.yaml
+  /ims/clear:
+    $ref: ./paths/clear/ims_clear.yaml
+  /ioclient/generate/event/{onbRequestId}:
+    $ref: ./paths/generate/ioclient_generate_event_onbRequestId.yaml
+  /lbp/set_change_status_dto:
+    $ref: ./paths/set_change_status_dto/lbp_set_change_status_dto.yaml
+  /lbp/set_default_response:
+    $ref: ./paths/set_default_response/lbp_set_default_response.yaml
+  /lbp/set_delivery_failure_dto:
+    $ref: ./paths/set_delivery_failure_dto/lbp_set_delivery_failure_dto.yaml
+  /lbp/set_error_dto:
+    $ref: ./paths/set_error_dto/lbp_set_error_dto.yaml
+  /lbp/set_feature_gbo130262:
+    $ref: ./paths/set_feature_gbo130262/lbp_set_feature_gbo130262.yaml
+  /lbp/set_is_received_doc_info_response:
+    $ref: ./paths/set_is_received_doc_info_response/lbp_set_is_received_doc_info_response.yaml
+  /lbp/set_is_rejection_response:
+    $ref: ./paths/set_is_rejection_response/lbp_set_is_rejection_response.yaml
+  /lbp/set_notification_type:
+    $ref: ./paths/set_notification_type/lbp_set_notification_type.yaml
+  /lbp/set_received_doc_info_response:
+    $ref: ./paths/set_received_doc_info_response/lbp_set_received_doc_info_response.yaml
+  /lbp/set_rejection_response:
+    $ref: ./paths/set_rejection_response/lbp_set_rejection_response.yaml
+  /naumen-stub/task:
+    $ref: ./paths/task/naumen_stub_task.yaml
+  /naumen-stub/task/list:
+    $ref: ./paths/task/naumen_stub_task_list.yaml
+  /naumen-stub/task/{id}:
+    $ref: ./paths/task/naumen_stub_task_id.yaml
+  /naumen-stub/time-slot:
+    $ref: ./paths/time-slot/naumen_stub_time_slot.yaml
+  /naumen-stub/time-slot/list:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_list.yaml
+  /naumen-stub/time-slot/send-update:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_send_update.yaml
+  /naumen-stub/time-slot/{id}:
+    $ref: ./paths/time-slot/naumen_stub_time_slot_id.yaml
+  /ods-sync:
+    $ref: ./paths/ods-sync/ods_sync.yaml
+  /one-window/vc3/default:
+    $ref: ./paths/vc3/one_window_vc3_default.yaml
+  /one-window/vc3/send:
+    $ref: ./paths/vc3/one_window_vc3_send.yaml
+  /one-window/vc6/send:
+    $ref: ./paths/vc6/one_window_vc6_send.yaml
+  /payment-dictionary:
+    $ref: ./paths/payment-dictionary/payment_dictionary.yaml
+  /pkp-stub/send-to-autoquoting:
+    $ref: ./paths/send-to-autoquoting/pkp_stub_send_to_autoquoting.yaml
+  /pp-sip:
+    $ref: ./paths/pp-sip/pp_sip.yaml
+  /pp-sip/kafka/send:
+    $ref: ./paths/kafka/pp_sip_kafka_send.yaml
+  /pp-sip/order:
+    $ref: ./paths/order/pp_sip_order.yaml
+  /pp-sip/register-order-response/{agreementId}:
+    $ref: ./paths/register-order-response/pp_sip_register_order_response_agreementId.yaml
+  /product-offer/generate:
+    $ref: ./paths/generate/product_offer_generate.yaml
+  /product-offer/offer:
+    $ref: ./paths/offer/product_offer_offer.yaml
+  /product-offer/send-dataset:
+    $ref: ./paths/send-dataset/product_offer_send_dataset.yaml
+  /product-offer/send-order-status:
+    $ref: ./paths/send-order-status/product_offer_send_order_status.yaml
+  /ruble-payment-processing:
+    $ref: ./paths/ruble-payment-processing/ruble_payment_processing.yaml
+  /ruble-payment-processing-chargeback:
+    $ref: ./paths/ruble-payment-processing-chargeback/ruble_payment_processing_chargeback.yaml
+  /ruble-payment-processing/generate:
+    $ref: ./paths/generate/ruble_payment_processing_generate.yaml
+  /ruble-payment-processing/kp-retail-status:
+    $ref: ./paths/kp-retail-status/ruble_payment_processing_kp_retail_status.yaml
+  /sip/adm/poc/get-page:
+    $ref: ./paths/adm/sip_adm_poc_get_page.yaml
+  /sip/adm/poc/remove:
+    $ref: ./paths/adm/sip_adm_poc_remove.yaml
+  /sip/internal/b2c/send/transfer/confirm:
+    $ref: ./paths/internal/sip_internal_b2c_send_transfer_confirm.yaml
+  /sip/internal/b2c/send/transfer/execute:
+    $ref: ./paths/internal/sip_internal_b2c_send_transfer_execute.yaml
+  /sip/internal/merchant/v21/auth:
+    $ref: ./paths/internal/sip_internal_merchant_v21_auth.yaml
+  /sip/internal/merchant/v21/b2b/operation-history:
+    $ref: ./paths/internal/sip_internal_merchant_v21_b2b_operation_history.yaml
+  /sip/internal/merchant/v21/merchant:
+    $ref: ./paths/internal/sip_internal_merchant_v21_merchant.yaml
+  /sip/internal/merchant/v21/permissions:
+    $ref: ./paths/internal/sip_internal_merchant_v21_permissions.yaml
+  /sip/internal/operation/info:
+    $ref: ./paths/internal/sip_internal_operation_info.yaml
+  /sip/internal/v1/agent/get-agent-list:
+    $ref: ./paths/internal/sip_internal_v1_agent_get_agent_list.yaml
+  /sip/internal/v1/legal-entity/agent/get-active-agents:
+    $ref: ./paths/internal/sip_internal_v1_legal_entity_agent_get_active_agents.yaml
+  /sip/internal/v1/legal-entity/agent/set-transfer-permission:
+    $ref: ./paths/internal/sip_internal_v1_legal_entity_agent_set_transfer_permission.yaml
+  /sip/merchant/transfer/v2/b2b/execute:
+    $ref: ./paths/merchant/sip_merchant_transfer_v2_b2b_execute.yaml
+  /sip/merchant/v1/legal-account:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_account.yaml
+  /sip/merchant/v1/legal-entity:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_entity.yaml
+  /sip/merchant/v1/legal-entity/registration:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_entity_registration.yaml
+  /sip/merchant/v1/merchant:
+    $ref: ./paths/merchant/sip_merchant_v1_merchant.yaml
+  /sip/merchant/v1/operation-history:
+    $ref: ./paths/merchant/sip_merchant_v1_operation_history.yaml
+  /sip/merchant/v1/operation-history/v2:
+    $ref: ./paths/merchant/sip_merchant_v1_operation_history_v2.yaml
+  /sip/merchant/v1/operation-history/v3:
+    $ref: ./paths/merchant/sip_merchant_v1_operation_history_v3.yaml
+  /sip/merchant/v1/payment/subscription:
+    $ref: ./paths/merchant/sip_merchant_v1_payment_subscription.yaml
+  /sip/merchant/v1/qr-image:
+    $ref: ./paths/merchant/sip_merchant_v1_qr_image.yaml
+  /sip/merchant/v1/qrc-block:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_block.yaml
+  /sip/merchant/v1/qrc-data:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_data.yaml
+  /sip/merchant/v1/qrc-status:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_status.yaml
+  /sip/merchant/v1/stoplist/signer-check:
+    $ref: ./paths/merchant/sip_merchant_v1_stoplist_signer_check.yaml
+  /sip/merchant/v1/transfer/banks:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_banks.yaml
+  /sip/merchant/v1/transfer/return/confirm:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_return_confirm.yaml
+  /sip/merchant/v1/transfer/return/execute:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_return_execute.yaml
+  /sip/naumen/create-task:
+    $ref: ./paths/naumen/sip_naumen_create_task.yaml
+  /sip/naumen/get-available-time-slots:
+    $ref: ./paths/naumen/sip_naumen_get_available_time_slots.yaml
+  /sip/naumen/get-task:
+    $ref: ./paths/naumen/sip_naumen_get_task.yaml
+  /sip/naumen/get-task-list:
+    $ref: ./paths/naumen/sip_naumen_get_task_list.yaml
+  /sip/naumen/set-task:
+    $ref: ./paths/naumen/sip_naumen_set_task.yaml
+  /sip/svfe/card-block-oper:
+    $ref: ./paths/svfe/sip_svfe_card_block_oper.yaml
+  /sip/svfe/card-info-get:
+    $ref: ./paths/svfe/sip_svfe_card_info_get.yaml
+  /sip/svfe/card-limit-list-get:
+    $ref: ./paths/svfe/sip_svfe_card_limit_list_get.yaml
+  /sip/svfe/card-limit-set:
+    $ref: ./paths/svfe/sip_svfe_card_limit_set.yaml
+  /sip/svfe/change-sip-svfe-response-mode:
+    $ref: ./paths/svfe/sip_svfe_change_sip_svfe_response_mode.yaml
+  /sip/v2/b2b/merchant/getQR:
+    $ref: ./paths/v2/sip_v2_b2b_merchant_getQR.yaml
+  /sip/v2/merchant/regB2BLink1:
+    $ref: ./paths/v2/sip_v2_merchant_regB2BLink1.yaml
+  /sip/v2/merchant/regB2BLinkReusable:
+    $ref: ./paths/v2/sip_v2_merchant_regB2BLinkReusable.yaml
+  /sirius/ca.txt:
+    $ref: ./paths/ca.txt/sirius_ca_txt.yaml
+  /spark/integration/response:
+    $ref: ./paths/integration/spark_integration_response.yaml
+  /spark/integration/response/{id}:
+    $ref: ./paths/integration/spark_integration_response_id.yaml
+  /stop-list/check-passport:
+    $ref: ./paths/check-passport/stop_list_check_passport.yaml
+  /suggestion/address:
+    $ref: ./paths/address/suggestion_address.yaml
+  /suggestion/party:
+    $ref: ./paths/party/suggestion_party.yaml
+  /test-cgi-bin/serg/0/6/9/reports/1032/api_cl_org_check.pl:
+    $ref: ./paths/serg/test_cgi_bin_serg_0_6_9_reports_1032_api_cl_org_check_pl.yaml
+  /test-cgi-bin/serg/0/6/9/reports/1032/api_cl_org_search_create.pl:
+    $ref: ./paths/serg/test_cgi_bin_serg_0_6_9_reports_1032_api_cl_org_search_create_pl.yaml
+  /test-cgi-bin/serg/0/6/9/reports/1032/api_get_customer_ESK.pl:
+    $ref: ./paths/serg/test_cgi_bin_serg_0_6_9_reports_1032_api_get_customer_ESK_pl.yaml
+  /test-cgi-bin/serg/0/6/9/reports/1032/api_web_portal_eco.pl:
+    $ref: ./paths/serg/test_cgi_bin_serg_0_6_9_reports_1032_api_web_portal_eco_pl.yaml
+components: {}

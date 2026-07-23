@@ -1,0 +1,35 @@
+type: object
+description: Массовая рассылка из банка. ДТО истории документа
+properties:
+  changedIn:
+    type: string
+    format: date-time
+    description: Дата и время происхождения события.
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа массовой рассылка.
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор записи
+  infoForBank:
+    type: string
+    description: Информация для Банка
+  status:
+    type: string
+    description: Статус документа.
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя инициатора события
+  userName:
+    type: string
+    description: Имя пользователя инициатора события.
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL

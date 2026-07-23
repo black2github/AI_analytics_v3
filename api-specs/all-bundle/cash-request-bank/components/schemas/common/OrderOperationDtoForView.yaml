@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ордера
+    format: uuid
+  creationDate:
+    type: string
+    description: Дата создания ордера
+    format: date-time
+  updateDate:
+    type: string
+    description: Дата последнего обновления ордера
+    format: date-time
+  number:
+    type: integer
+    description: Номер ордера
+    format: int64
+  status:
+    $ref: ./DictionaryDto.yaml
+  needAgreement:
+    type: boolean
+    description: Необходимость договора инкассации
+  accessibility:
+    type: boolean
+description: Дополнительные данные по операции просмотра

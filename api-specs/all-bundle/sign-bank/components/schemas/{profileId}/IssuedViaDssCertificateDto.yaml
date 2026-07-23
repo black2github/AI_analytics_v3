@@ -1,0 +1,10 @@
+type: object
+properties:
+  body:
+    type: string
+    description: Тело сертификата в Base64
+  dssCertificateId:
+    type: integer
+    description: ID сертификата в ДСС
+    format: int64
+description: Данные о выпущенном сертификате через ДСС

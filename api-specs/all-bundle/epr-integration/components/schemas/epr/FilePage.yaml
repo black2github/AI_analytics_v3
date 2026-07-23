@@ -1,0 +1,11 @@
+type: object
+properties:
+  fileId:
+    type: string
+    description: Идентификатор файла в ЕПР, в котором находится страница
+    format: uuid
+  index:
+    type: integer
+    description: Индекс страницы в файле
+    format: int32
+description: Страница файла

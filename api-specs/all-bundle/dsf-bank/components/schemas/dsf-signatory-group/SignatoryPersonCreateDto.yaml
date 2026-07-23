@@ -1,0 +1,11 @@
+type: object
+description: Подписант
+properties:
+  order:
+    type: integer
+    format: int32
+    description: Очередность подписанта в группе.
+  userId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор подписанта.

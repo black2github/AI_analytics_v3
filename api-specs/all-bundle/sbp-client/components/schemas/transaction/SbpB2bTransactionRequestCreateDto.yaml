@@ -1,0 +1,35 @@
+type: object
+description: Заявка на платеж B2B СБП
+properties:
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  qrcId:
+    type: string
+    description: Идентификатор входящего QR кода в СБП
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность Клиент Банка
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  totalVatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС в копейках
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета Плательщика в ЭКО
+  merchantId:
+    type: string
+    description: Идентификатор Точки продаж Плательщика
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+required:
+- clientId
+- qrcId

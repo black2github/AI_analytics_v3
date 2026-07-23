@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  startDate:
+    type: string
+    description: Начальная дата
+    format: date
+  endDate:
+    type: string
+    description: Конечная дата
+    format: date

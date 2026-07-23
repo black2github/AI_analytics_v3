@@ -1,0 +1,97 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID заявки
+    format: uuid
+    readOnly: true
+  requestNumberSystem:
+    type: integer
+    description: Номер заявки общий
+    format: int64
+    readOnly: true
+  requestNumberUser:
+    type: integer
+    description: Номер заявки пользователя
+    format: int64
+    readOnly: true
+  timeOfDelivery:
+    type: string
+    description: Дата и время отправки заявки
+    format: date-time
+    readOnly: true
+  certInfo:
+    $ref: ./CertInfoDto.yaml
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+    readOnly: true
+  bankComment:
+    type: string
+    description: Комментарий банка
+    readOnly: true
+  clientComment:
+    type: string
+    description: Комментарий для клиента
+    readOnly: true
+  status:
+    type: string
+    description: Статус заявки
+    readOnly: true
+  applicationKind:
+    type: string
+    description: Форма подачи заявки
+    readOnly: true
+    enum:
+    - ONLINE
+    - PAPER
+    - ONLINE_EPGU_CONFIRMATION
+  requestType:
+    type: string
+    description: Тип запроса
+    readOnly: true
+    enum:
+    - ISSUE
+    - REISSUE
+  signature:
+    $ref: ./SignatureDto.yaml
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+    readOnly: true
+  eskId:
+    type: string
+    description: ID ESK пользователя
+    readOnly: true
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+    readOnly: true
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+    readOnly: true
+  clientRnk:
+    type: string
+    description: РНК клиента
+    readOnly: true
+  clientEskGuid:
+    type: string
+    description: ID ESK пользователя
+    format: uuid
+    readOnly: true
+  certInfoChanged:
+    type: boolean
+    description: Данные в перевыпускаемом сертификате неактуальны
+    readOnly: true
+  dssVersion:
+    type: string
+    description: Версия мобильного приложения DSS
+    readOnly: true
+    enum:
+    - V1
+    - V2
+description: Данные для банковского скроллера ГЭП заявки

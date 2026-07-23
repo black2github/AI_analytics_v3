@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Клиентский API для работы с подписью документов ДИО
+  summary: Сформировать дайджест из подписываемых полей заявки
+  description: 'Привилегии: DIO_CLIENT_SIGN_CHECK'
+  operationId: generateDigest
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/signature/DigestRequest.yaml
+    required: true
+  responses:
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

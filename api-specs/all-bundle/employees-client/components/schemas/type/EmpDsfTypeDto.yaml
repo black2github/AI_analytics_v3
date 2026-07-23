@@ -1,0 +1,27 @@
+required:
+- documentCode
+- id
+- letterCategory
+- nameInEnglish
+- nameInRussian
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  nameInRussian:
+    type: string
+    description: Наименование (RU)
+  nameInEnglish:
+    type: string
+    description: Наименование (EN)
+  letterCategory:
+    $ref: ./LetterCategory.yaml
+  documentCode:
+    type: string
+    description: Код документа типа ДСФ
+    enum:
+    - DSF_IN
+    - DSF_OUT
+description: Данные типа ДСФ

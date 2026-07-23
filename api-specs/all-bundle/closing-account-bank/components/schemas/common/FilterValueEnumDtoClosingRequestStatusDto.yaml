@@ -1,0 +1,93 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REQUEST_TO_F1
+    - REQUEST_SENT_TO_F1
+    - REQUEST_TO_F1_ERROR
+    - REQUEST_EXPORTED_TO_F1
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - SIGNED_OR_REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - REQUEST_TO_F1
+      - REQUEST_SENT_TO_F1
+      - REQUEST_TO_F1_ERROR
+      - REQUEST_EXPORTED_TO_F1
+      - EXECUTED
+      - REJECTED
+      - SIGN_VALID_OR_REJECTED
+      - DETAILS_VALID_OR_REJECTED
+      - SIGNED_OR_REJECTED
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REQUEST_TO_F1
+    - REQUEST_SENT_TO_F1
+    - REQUEST_TO_F1_ERROR
+    - REQUEST_EXPORTED_TO_F1
+    - EXECUTED
+    - REJECTED
+    - SIGN_VALID_OR_REJECTED
+    - DETAILS_VALID_OR_REJECTED
+    - SIGNED_OR_REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - REQUEST_TO_F1
+      - REQUEST_SENT_TO_F1
+      - REQUEST_TO_F1_ERROR
+      - REQUEST_EXPORTED_TO_F1
+      - EXECUTED
+      - REJECTED
+      - SIGN_VALID_OR_REJECTED
+      - DETAILS_VALID_OR_REJECTED
+      - SIGNED_OR_REJECTED
+description: Статус (EQ, NOTEQ, IN)

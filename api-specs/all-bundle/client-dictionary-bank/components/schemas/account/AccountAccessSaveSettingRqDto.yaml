@@ -1,0 +1,36 @@
+required:
+- accountAccessRestriction
+- authorizedPersonId
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: УЛ id
+    format: uuid
+  userId:
+    type: string
+    description: ID Пользователя
+    format: uuid
+  legalizationId:
+    type: string
+    description: ID заявки на легализацию
+    format: uuid
+  accountAccessRestriction:
+    type: string
+    description: Признак ограничение доступа к счету
+    enum:
+    - ALL_ACCOUNTS
+    - SPECIFIED_ACCOUNTS
+  accountAccessSettings:
+    type: array
+    description: Настройки базового доступа к счетам
+    items:
+      $ref: ./AccountAccessSettingDto.yaml
+  creationProcessType:
+    type: string
+    description: Тип процесса создания записи
+    enum:
+    - UNKNOWN
+    - MANUALLY
+    - AUTOMATICALLY
+description: Функция сохранения настроек доступов к счетам. Входящие параметры функции

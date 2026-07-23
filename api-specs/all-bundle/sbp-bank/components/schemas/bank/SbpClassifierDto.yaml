@@ -1,0 +1,9 @@
+type: object
+description: Запись классификатора
+properties:
+  code:
+    type: string
+    description: Код параметра
+  description:
+    type: string
+    description: Описание параметра

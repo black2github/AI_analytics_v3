@@ -1,0 +1,18 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Отрисовываемый параметр
+  value:
+    type: string
+    description: Значение отрисовываемого элемента (ключ сущности)
+  labelCustomParams:
+    type: array
+    description: Дополнительные абстрактные поля справочника
+    items:
+      type: string
+      description: Дополнительные абстрактные поля справочника
+  numValue:
+    type: number
+    description: Передаваемый счётный параметр справочника
+description: Расширенный справочник

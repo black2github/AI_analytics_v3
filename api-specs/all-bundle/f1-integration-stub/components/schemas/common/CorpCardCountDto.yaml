@@ -1,0 +1,33 @@
+type: object
+description: Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС)
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор
+  clientGuid:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  source:
+    type: string
+    description: Тип заявки
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  cardCount:
+    type: integer
+    format: int32
+    description: Количество корпоративных карт
+  errorCode:
+    type: integer
+    format: int32
+    description: Код ошибки
+  errorText:
+    type: string
+    description: Текст ошибки
+  serverErrorInfo:
+    type: string
+    description: Текст технической ошибки

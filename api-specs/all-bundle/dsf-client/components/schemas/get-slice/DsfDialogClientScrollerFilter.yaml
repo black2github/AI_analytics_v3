@@ -1,0 +1,9 @@
+type: object
+properties:
+  aml:
+    $ref: ./AmlDialogClientScrollerFilter.yaml
+  dialogId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  documentDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+description: Диалоги. Фильтр скроллера. Клиентская часть.

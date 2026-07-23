@@ -1,0 +1,20 @@
+type: object
+properties:
+  actionType:
+    type: string
+    description: Тип действия над документом
+    enum:
+    - UNKNOWN
+    - ACTION_CLIENT_USER_SIGN
+    - ACTION_CLIENT_USER_VIEW
+    - ACTION_CLIENT_USER_PRINT
+    - ACTION_CLIENT_USER_LISTVIEW
+    - ACTION_CLIENT_USER_EDIT
+    - ACTION_CLIENT_USER_CREATE
+    - ACTION_CLIENT_USER_IMPORT
+    - ACTION_CLIENT_USER_STATEMENT_CREATE
+    - ACTION_CLIENT_USER_SIGN_CLICK
+  accessible:
+    type: boolean
+    description: Признак доступа
+description: Доступы к счету для платежных документов

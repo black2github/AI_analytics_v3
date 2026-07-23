@@ -1,0 +1,18 @@
+type: object
+properties:
+  format:
+    type: string
+    description: Формат документа
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+description: Запрос на экспорт документов

@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория статуса объединенных заявок сотрудников
+    enum:
+    - ALL
+    - WAITING_FOR_SIGN
+    - IN_PROCESSING
+    - FINISHED
+  status:
+    $ref: ./FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoInstant.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  types:
+    $ref: ./FilterValueDtoString.yaml
+  classifier:
+    $ref: ./FilterValueEnumDtoDocTypeClassifierDto.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientInn:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientFullName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  employeeId:
+    $ref: ./FilterValueDtoUUID.yaml
+  employeeFio:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр объединенных заявок сотрудников

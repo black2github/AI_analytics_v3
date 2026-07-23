@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  organizationId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  periodType:
+    $ref: ./StatementRequestPeriodTypeFilter.yaml
+  periodDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./StatementRequestStatusFilter.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  signed:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  subdivisionId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statementStatus:
+    $ref: ./FilterValueEnumDtoStatementStatusDto.yaml
+  statementType:
+    $ref: ./FilterValueEnumDtoStatementTypeDto.yaml
+  operationTypes:
+    $ref: ./FilterValueDtoListStatementOperationDto.yaml
+  statementFormats:
+    $ref: ./FilterValueDtoListStatementFormatDto.yaml
+  statementRequestCategory:
+    $ref: ./StatementRequestCategoryFilter.yaml
+  canceled:
+    $ref: ../common/FilterValueDtoBoolean.yaml

@@ -1,0 +1,29 @@
+required:
+- userId
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID организации
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  allowedDstKinds:
+    uniqueItems: true
+    type: array
+    description: Разрешенные для подписи виды СЭП
+    items:
+      type: string
+      description: Разрешенные для подписи виды СЭП
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+description: Запрос поиска СЭП

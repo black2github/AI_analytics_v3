@@ -1,0 +1,18 @@
+required:
+- templateName
+type: object
+properties:
+  templateName:
+    type: string
+    description: Наименование шаблона
+  bankClientInfo:
+    $ref: ./BankClientTemplateInfoClientDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessTemplateInfoClientDto.yaml
+  paymentInfo:
+    $ref: ./PaymentTemplateInfoClientDto.yaml
+  payerInfo:
+    $ref: ./PayerTemplateInfoClientDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverTemplateInfoClientDto.yaml
+description: Дто Создания шаблона Исходящего Платежного требования

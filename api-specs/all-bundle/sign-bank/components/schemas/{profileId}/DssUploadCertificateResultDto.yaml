@@ -1,0 +1,7 @@
+type: object
+properties:
+  dssCertificateId:
+    type: integer
+    description: ID сертификата в КриптоПРО DSS
+    format: int64
+description: Результат загрузки сертификата в КриптоПРО DSS

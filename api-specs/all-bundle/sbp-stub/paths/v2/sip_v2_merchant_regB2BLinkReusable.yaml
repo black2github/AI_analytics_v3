@@ -1,0 +1,19 @@
+post:
+  summary: Запрос на регистрацию многоразового QR для B2B
+  tags:
+  - СИП. Сервис b2b API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v2/B2bQrcDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/v2/B2bQrcResultDto.yaml
+    '400':
+      description: Bad Request

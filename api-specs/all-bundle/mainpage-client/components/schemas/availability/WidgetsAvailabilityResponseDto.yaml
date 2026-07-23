@@ -1,0 +1,8 @@
+type: object
+properties:
+  availabilityData:
+    type: object
+    additionalProperties:
+      $ref: ./WidgetDataDto.yaml
+    description: 'Карта: имя виджета -> данные о доступности виджета'
+description: Ответ на запрос доступности виджетов

@@ -1,0 +1,50 @@
+type: object
+description: Данные типа ДСФ
+properties:
+  availableForEdit:
+    type: boolean
+    description: Доступно для редактирования в заявлении2
+  code:
+    type: string
+    description: Код типа письма
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  isAuthPersonRestricted:
+    type: boolean
+    description: Указано в ограничении для УЛ (Тип письма)
+  name:
+    type: string
+    description: Наименование типа письма
+  products:
+    type: array
+    description: Продукты
+    items:
+      type: string
+      description: Классификатор - Типы продуктов в соответствии с ЦРМ
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+  relatedTypeCode:
+    type: string
+    description: Код связанного типа письма
+  relatedTypeCodeReply:
+    type: string
+    description: Код связанного типа письма(ответное)
+  typeClass:
+    type: string
+    description: Направление
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+    - REPLY_MAIL_TO_BANK

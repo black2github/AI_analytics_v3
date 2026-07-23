@@ -1,0 +1,31 @@
+maxLength: 255
+pattern: ^[0-9A-zА-яЁё\u0020\u0021\u0028\u0029\u002B\u002C\u002D\u003A\u005F]{1,255}$
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+  notEq:
+    type: string
+  in:
+    type: array
+    items:
+      type: string
+  notIn:
+    type: array
+    items:
+      type: string
+  isNull:
+    type: boolean
+  gt:
+    type: string
+  ge:
+    type: string
+  lt:
+    type: string
+  le:
+    type: string
+description: Код продукта партнёра

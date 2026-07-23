@@ -1,0 +1,12 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус
+  statusForBank:
+    type: string
+    description: Статус для банка
+  statusForClient:
+    type: string
+    description: Статус для клиента
+description: Категория заявки с статусами

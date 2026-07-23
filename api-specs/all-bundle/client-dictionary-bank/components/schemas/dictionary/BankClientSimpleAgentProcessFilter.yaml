@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoBankClientSimpleAgentProcessStatusDto.yaml
+description: Фильтр записей процесса актуализации простого клиента банка

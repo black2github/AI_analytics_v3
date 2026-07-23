@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор счёта
+  number:
+    type: string
+    description: Номер счёта
+  type:
+    type: string
+    description: Тип счёта
+  typeContrAccount:
+    type: string
+    description: Код вида счета
+  serviceBranchCode:
+    type: string
+    description: Код филиала обслуживания
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания
+  currencyCode:
+    type: string
+    description: Буквенный код валюты
+  clientId:
+    type: string
+    description: Код РНК клиента
+  balance:
+    type: number
+    description: Остаток по счету
+description: Данные о счёте клиента в сервисе корпоративных карт

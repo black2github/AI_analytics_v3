@@ -1,0 +1,61 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус заявки посадочной страницы
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXECUTED
+    - REJECTED
+    - DETAILS_VALID_OR_REJECTED
+  notEq:
+    type: string
+    description: Статус заявки посадочной страницы
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXECUTED
+    - REJECTED
+    - DETAILS_VALID_OR_REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус заявки посадочной страницы
+      enum:
+      - NONE
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - EXECUTED
+      - REJECTED
+      - DETAILS_VALID_OR_REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус заявки посадочной страницы
+      enum:
+      - NONE
+      - NEW
+      - DELIVERED
+      - DETAILS_VALID
+      - RECEIVED
+      - EXECUTED
+      - REJECTED
+      - DETAILS_VALID_OR_REJECTED
+  isNull:
+    type: boolean
+description: Статус заявки

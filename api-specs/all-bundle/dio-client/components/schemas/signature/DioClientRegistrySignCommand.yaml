@@ -1,0 +1,13 @@
+required:
+- documentId
+- signature
+type: object
+properties:
+  documentId:
+    type: string
+    description: Id документа
+    format: uuid
+  signature:
+    type: string
+    description: Подпись клиента
+description: Данные о клиентской подписи

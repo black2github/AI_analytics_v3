@@ -1,0 +1,11 @@
+type: object
+description: ДТО для ответа на запрос выгрузки откреплений в виде архива.
+properties:
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа
+  requestId:
+    type: string
+    format: uuid
+    description: Идентификатор запроса на выгрузку

@@ -1,0 +1,85 @@
+type: object
+properties:
+  footprint:
+    type: string
+    description: Отпечаток
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    type: string
+    description: 'Значение поля SUBJECT CN из сертификата '
+  subjectSurname:
+    type: string
+    description: 'Значение поля SUBJECT SN из сертификата '
+  subjectGivenName:
+    type: string
+    description: 'Значение поля SUBJECT G из сертификата '
+  subjectLocality:
+    type: string
+    description: 'Значение поля SUBJECT L из сертификата '
+  subjectState:
+    type: string
+    description: 'Значение поля SUBJECT ST из сертификата '
+  subjectStreet:
+    type: string
+    description: 'Значение поля SUBJECT STREET из сертификата '
+  subjectCountry:
+    type: string
+    description: 'Значение поля SUBJECT C из сертификата '
+  subjectEmail:
+    type: string
+    description: 'Значение поля SUBJECT E из сертификата '
+  subjectOrganizationalUnit:
+    type: string
+    description: 'Значение поля SUBJECT OU из сертификата '
+  subjectOrganization:
+    type: string
+    description: Наименование организации
+  subjectInn:
+    type: string
+    description: ИНН организации
+  subjectOgrn:
+    type: string
+    description: ОГРН организации
+  subjectOgrnIp:
+    type: string
+    description: ОГРНИП организации
+  subjectTitle:
+    type: string
+    description: Должность
+  subjectSNILS:
+    type: string
+    description: СНИЛС
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  authorityKeyId:
+    type: string
+    description: Идентификатор ключа центра сертификации (Издателя)
+  authorityCertificateSerial:
+    type: string
+    description: Cерийный номер сертификата центра сертификации (Издателя)
+  authorityName:
+    type: string
+    description: Наименование центра сертификации (Издателя)
+  keyUsage:
+    type: array
+    description: Предназначение ключа
+    items:
+      type: boolean
+      description: Предназначение ключа
+  signTool:
+    type: string
+    description: Средство подписи сертификата
+  legalInn:
+    type: string
+    description: ИНН юридического лица
+  individualInn:
+    type: string
+    description: ИНН ИП или физ лица

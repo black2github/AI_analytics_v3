@@ -1,0 +1,12 @@
+required:
+- code
+- url
+type: object
+properties:
+  code:
+    type: string
+    description: Код ссылки
+  url:
+    type: string
+    description: Url - адрес
+description: Ответ на запрос создания короткой ссылки

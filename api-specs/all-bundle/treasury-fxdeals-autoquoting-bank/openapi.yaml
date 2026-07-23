@@ -1,0 +1,349 @@
+openapi: 3.0.1
+info:
+  title: Сервис формирования сделок конверсии автокотирования. Банковская часть.
+  version: 1.68.1
+servers:
+- url: /treasury-fxdeals-autoquoting-bank
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /watch/integration-message-log/get-page:
+    $ref: ./paths/integration-message-log/watch_integration_message_log_get_page.yaml
+  /integration-message-log/get-page:
+    $ref: ./paths/get-page/integration_message_log_get_page.yaml
+  /info/user/v2/by-clients:
+    $ref: ./paths/user/info_user_v2_by_clients.yaml
+  /info/user/by-clients:
+    $ref: ./paths/user/info_user_by_clients.yaml
+  /fx-deal/resend-to-ask:
+    $ref: ./paths/resend-to-ask/fx_deal_resend_to_ask.yaml
+  /fx-deal/print-reportclient:
+    $ref: ./paths/print-reportclient/fx_deal_print_reportclient.yaml
+  /fx-deal/print-reportbank:
+    $ref: ./paths/print-reportbank/fx_deal_print_reportbank.yaml
+  /fx-deal/manual/resign-bank-signature:
+    $ref: ./paths/manual/fx_deal_manual_resign_bank_signature.yaml
+  /fx-deal/get-page:
+    $ref: ./paths/get-page/fx_deal_get_page.yaml
+  /fx-deal/get-data-for-print:
+    $ref: ./paths/get-data-for-print/fx_deal_get_data_for_print.yaml
+  /fx-deal/get-count:
+    $ref: ./paths/get-count/fx_deal_get_count.yaml
+  /fx-deal/doc-statuses-by-filter:
+    $ref: ./paths/doc-statuses-by-filter/fx_deal_doc_statuses_by_filter.yaml
+  /fx-deal/currency-pairs-by-filter:
+    $ref: ./paths/currency-pairs-by-filter/fx_deal_currency_pairs_by_filter.yaml
+  /client-profile-static/get-page:
+    $ref: ./paths/get-page/client_profile_static_get_page.yaml
+  /client-profile-dynamic/get-page:
+    $ref: ./paths/get-page/client_profile_dynamic_get_page.yaml
+  /autoquoting-settings/get-page:
+    $ref: ./paths/get-page/autoquoting_settings_get_page.yaml
+  /watch/integration-message-log/{id}:
+    $ref: ./paths/integration-message-log/watch_integration_message_log_id.yaml
+  /watch/integration-message-log/response-body/{id}:
+    $ref: ./paths/integration-message-log/watch_integration_message_log_response_body_id.yaml
+  /watch/integration-message-log/request-body/{id}:
+    $ref: ./paths/integration-message-log/watch_integration_message_log_request_body_id.yaml
+  /watch/fx-autoquoting/send-doc-metric/{code}:
+    $ref: ./paths/fx-autoquoting/watch_fx_autoquoting_send_doc_metric_code.yaml
+  /watch/fx-autoquoting/req-metrics:
+    $ref: ./paths/fx-autoquoting/watch_fx_autoquoting_req_metrics.yaml
+  /watch/fx-autoquoting/get-metric-excel/{code}:
+    $ref: ./paths/fx-autoquoting/watch_fx_autoquoting_get_metric_excel_code.yaml
+  /report/sign-availability-errors-report:
+    $ref: ./paths/sign-availability-errors-report/report_sign_availability_errors_report.yaml
+  /report/integration/errors:
+    $ref: ./paths/integration/report_integration_errors.yaml
+  /report/duty/info:
+    $ref: ./paths/duty/report_duty_info.yaml
+  /report/deals/general:
+    $ref: ./paths/deals/report_deals_general.yaml
+  /report/deals/control:
+    $ref: ./paths/deals/report_deals_control.yaml
+  /report/attachments:
+    $ref: ./paths/attachments/report_attachments.yaml
+  /integration-message-log/{id}:
+    $ref: ./paths/{id}/integration_message_log_id.yaml
+  /integration-message-log/response-body/{id}:
+    $ref: ./paths/response-body/integration_message_log_response_body_id.yaml
+  /integration-message-log/request-body/{id}:
+    $ref: ./paths/request-body/integration_message_log_request_body_id.yaml
+  /info/user/{userId}:
+    $ref: ./paths/user/info_user_userId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /fx-deal/{id}:
+    $ref: ./paths/{id}/fx_deal_id.yaml
+  /fx-deal/history/{id}:
+    $ref: ./paths/history/fx_deal_history_id.yaml
+  /fx-deal/get-by-ask-id/{id}:
+    $ref: ./paths/get-by-ask-id/fx_deal_get_by_ask_id_id.yaml
+  /fx-deal/full/{id}:
+    $ref: ./paths/full/fx_deal_full_id.yaml
+  /fx-deal/doc-statuses:
+    $ref: ./paths/doc-statuses/fx_deal_doc_statuses.yaml
+  /fx-deal/currency-pairs:
+    $ref: ./paths/currency-pairs/fx_deal_currency_pairs.yaml
+  /client-profile-static/{clientWebDealingId}:
+    $ref: ./paths/{clientWebDealingId}/client_profile_static_clientWebDealingId.yaml
+  /client-profile-dynamic/{clientWebDealingId}:
+    $ref: ./paths/{clientWebDealingId}/client_profile_dynamic_clientWebDealingId.yaml
+  /autoquoting-settings/{id}:
+    $ref: ./paths/{id}/autoquoting_settings_id.yaml
+  /autoquoting-settings/get-actual:
+    $ref: ./paths/get-actual/autoquoting_settings_get_actual.yaml
+  /caches/clear:
+    $ref: ./paths/clear/caches_clear.yaml
+components:
+  schemas:
+    SingleResponseObject:
+      $ref: ./components/schemas/common/SingleResponseObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandIntegrationMessageLogFilter:
+      $ref: ./components/schemas/common/GetPageCommandIntegrationMessageLogFilter.yaml
+    IntegrationMessageLogDirectionFilter:
+      $ref: ./components/schemas/common/IntegrationMessageLogDirectionFilter.yaml
+    IntegrationMessageLogExternalSystemFilter:
+      $ref: ./components/schemas/common/IntegrationMessageLogExternalSystemFilter.yaml
+    IntegrationMessageLogFilter:
+      $ref: ./components/schemas/common/IntegrationMessageLogFilter.yaml
+    PageParamsIntegrationMessageLogFilter:
+      $ref: ./components/schemas/common/PageParamsIntegrationMessageLogFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataPageDataIntegrationMessageLogDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPageDataIntegrationMessageLogDto.yaml
+    IntegrationMessageLogDto:
+      $ref: ./components/schemas/common/IntegrationMessageLogDto.yaml
+    PageDataIntegrationMessageLogDto:
+      $ref: ./components/schemas/common/PageDataIntegrationMessageLogDto.yaml
+    UserInformationByClientBaseDto:
+      $ref: ./components/schemas/user/UserInformationByClientBaseDto.yaml
+    UserInformationByClientsRequestDto:
+      $ref: ./components/schemas/user/UserInformationByClientsRequestDto.yaml
+    DealBaseRateVariantsDto:
+      $ref: ./components/schemas/user/DealBaseRateVariantsDto.yaml
+    DealRateTypeDto:
+      $ref: ./components/schemas/user/DealRateTypeDto.yaml
+    GenericResponseErrorDataUserInformationV2ByServiceDto:
+      $ref: ./components/schemas/user/GenericResponseErrorDataUserInformationV2ByServiceDto.yaml
+    UserInformationByClientByServiceDto:
+      $ref: ./components/schemas/user/UserInformationByClientByServiceDto.yaml
+    UserInformationByDealTypeDto:
+      $ref: ./components/schemas/user/UserInformationByDealTypeDto.yaml
+    UserInformationV2ByServiceDto:
+      $ref: ./components/schemas/user/UserInformationV2ByServiceDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/resend-to-ask/GenericCommandUUID.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    DealDocAccountBuyDto:
+      $ref: ./components/schemas/common/DealDocAccountBuyDto.yaml
+    DealDocAccountDto:
+      $ref: ./components/schemas/common/DealDocAccountDto.yaml
+    DealDocAccountSupplyDto:
+      $ref: ./components/schemas/common/DealDocAccountSupplyDto.yaml
+    DealDocFxInstrumentDto:
+      $ref: ./components/schemas/common/DealDocFxInstrumentDto.yaml
+    DealDocGeneralAgreementDto:
+      $ref: ./components/schemas/common/DealDocGeneralAgreementDto.yaml
+    DealDocManagementFundDto:
+      $ref: ./components/schemas/common/DealDocManagementFundDto.yaml
+    FxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocDto.yaml
+    FxDealDocUserActionInfoDto:
+      $ref: ./components/schemas/common/FxDealDocUserActionInfoDto.yaml
+    GenericResponseErrorDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataFxDealAutoQuotingDocDto.yaml
+    SignatureDataDto:
+      $ref: ./components/schemas/common/SignatureDataDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/common/SignatureDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/common/UserInfoDto.yaml
+    GenericCommandPrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestDtoWdUUID.yaml
+    PrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoWdUUID.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/common/PrintResponseTreasury.yaml
+    GenericCommandManualActionRequestDto:
+      $ref: ./components/schemas/manual/GenericCommandManualActionRequestDto.yaml
+    ManualActionRequestDto:
+      $ref: ./components/schemas/manual/ManualActionRequestDto.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocBankFilter.yaml
+    FxDealAutoQuotingDocDealStatusFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocDealStatusFilter.yaml
+    FxDealAutoQuotingDocDealTypeFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocDealTypeFilter.yaml
+    FxDealAutoQuotingDocDocStatusFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocDocStatusFilter.yaml
+    FxDealAutoQuotingDocDocTypeFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocDocTypeFilter.yaml
+    FxDealAutoQuotingDocTradingStatusFilter:
+      $ref: ./components/schemas/common/FxDealAutoQuotingDocTradingStatusFilter.yaml
+    GetPageCommandFxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandFxDealAutoQuotingDocBankFilter.yaml
+    PageParamsFxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/common/PageParamsFxDealAutoQuotingDocBankFilter.yaml
+    GenericResponseErrorDataPageDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataFxDealAutoQuotingDocDto.yaml
+    PageDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/get-page/PageDataFxDealAutoQuotingDocDto.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/get-data-for-print/GenericCommandPrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocBankFilter.yaml
+    PrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/get-data-for-print/PrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocBankFilter.yaml
+    DataDto:
+      $ref: ./components/schemas/get-data-for-print/DataDto.yaml
+    GenericResponseErrorDataMapUUIDDataDto:
+      $ref: ./components/schemas/get-data-for-print/GenericResponseErrorDataMapUUIDDataDto.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/get-count/GenericResponseErrorDataLong.yaml
+    GenericCommandFxDealAutoQuotingDocBankFilter:
+      $ref: ./components/schemas/common/GenericCommandFxDealAutoQuotingDocBankFilter.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/common/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListEnumObjectDto.yaml
+    GenericResponseErrorDataListString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListString.yaml
+    ClientProfileStaticFilter:
+      $ref: ./components/schemas/get-page/ClientProfileStaticFilter.yaml
+    FilterValueEnumDtoClientProfileStatusDto:
+      $ref: ./components/schemas/get-page/FilterValueEnumDtoClientProfileStatusDto.yaml
+    GetPageCommandClientProfileStaticFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandClientProfileStaticFilter.yaml
+    PageParamsClientProfileStaticFilter:
+      $ref: ./components/schemas/get-page/PageParamsClientProfileStaticFilter.yaml
+    ClientProfileStaticDto:
+      $ref: ./components/schemas/common/ClientProfileStaticDto.yaml
+    GenericResponseErrorDataPageDataClientProfileStaticDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataClientProfileStaticDto.yaml
+    InstrumentDto:
+      $ref: ./components/schemas/common/InstrumentDto.yaml
+    LimitsDto:
+      $ref: ./components/schemas/common/LimitsDto.yaml
+    LocalTime:
+      $ref: ./components/schemas/common/LocalTime.yaml
+    PageDataClientProfileStaticDto:
+      $ref: ./components/schemas/get-page/PageDataClientProfileStaticDto.yaml
+    TradingIntervalDto:
+      $ref: ./components/schemas/common/TradingIntervalDto.yaml
+    TradingIntervalsDto:
+      $ref: ./components/schemas/common/TradingIntervalsDto.yaml
+    ClientProfileDynamicFilter:
+      $ref: ./components/schemas/get-page/ClientProfileDynamicFilter.yaml
+    GetPageCommandClientProfileDynamicFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandClientProfileDynamicFilter.yaml
+    PageParamsClientProfileDynamicFilter:
+      $ref: ./components/schemas/get-page/PageParamsClientProfileDynamicFilter.yaml
+    ClientProfileDynamicDto:
+      $ref: ./components/schemas/common/ClientProfileDynamicDto.yaml
+    GenericResponseErrorDataPageDataClientProfileDynamicDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataClientProfileDynamicDto.yaml
+    InstrumentLimitsUsageDto:
+      $ref: ./components/schemas/common/InstrumentLimitsUsageDto.yaml
+    LimitsUsageDto:
+      $ref: ./components/schemas/common/LimitsUsageDto.yaml
+    PageDataClientProfileDynamicDto:
+      $ref: ./components/schemas/get-page/PageDataClientProfileDynamicDto.yaml
+    AutoQuotingSettingsFilter:
+      $ref: ./components/schemas/get-page/AutoQuotingSettingsFilter.yaml
+    GetPageCommandAutoQuotingSettingsFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandAutoQuotingSettingsFilter.yaml
+    PageParamsAutoQuotingSettingsFilter:
+      $ref: ./components/schemas/get-page/PageParamsAutoQuotingSettingsFilter.yaml
+    AutoQuotingSettingsDto:
+      $ref: ./components/schemas/common/AutoQuotingSettingsDto.yaml
+    CBRateDto:
+      $ref: ./components/schemas/common/CBRateDto.yaml
+    GenericResponseErrorDataPageDataAutoQuotingSettingsDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataAutoQuotingSettingsDto.yaml
+    PageDataAutoQuotingSettingsDto:
+      $ref: ./components/schemas/get-page/PageDataAutoQuotingSettingsDto.yaml
+    GenericResponseErrorDataIntegrationMessageLogDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataIntegrationMessageLogDto.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    DealInfoDto:
+      $ref: ./components/schemas/fx-autoquoting/DealInfoDto.yaml
+    GenericResponseErrorDataMetricsDto:
+      $ref: ./components/schemas/fx-autoquoting/GenericResponseErrorDataMetricsDto.yaml
+    MetricsDto:
+      $ref: ./components/schemas/fx-autoquoting/MetricsDto.yaml
+    GenericResponseErrorDataListMetricsDto:
+      $ref: ./components/schemas/fx-autoquoting/GenericResponseErrorDataListMetricsDto.yaml
+    GenericResponseErrorDataPrintResponseTreasury:
+      $ref: ./components/schemas/fx-autoquoting/GenericResponseErrorDataPrintResponseTreasury.yaml
+    GenericResponseErrorDataListSignAvailabilityErrorDto:
+      $ref: ./components/schemas/sign-availability-errors-report/GenericResponseErrorDataListSignAvailabilityErrorDto.yaml
+    SignAvailabilityErrorDto:
+      $ref: ./components/schemas/sign-availability-errors-report/SignAvailabilityErrorDto.yaml
+    GenericResponseErrorDataTableDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataTableDto.yaml
+    TableDto:
+      $ref: ./components/schemas/common/TableDto.yaml
+    TableRowDto:
+      $ref: ./components/schemas/common/TableRowDto.yaml
+    GenericResponseErrorDataPersonOfDutyDto:
+      $ref: ./components/schemas/duty/GenericResponseErrorDataPersonOfDutyDto.yaml
+    PersonOfDutyDto:
+      $ref: ./components/schemas/duty/PersonOfDutyDto.yaml
+    DealsReportDto:
+      $ref: ./components/schemas/deals/DealsReportDto.yaml
+    GenericResponseErrorDataDealsReportDto:
+      $ref: ./components/schemas/deals/GenericResponseErrorDataDealsReportDto.yaml
+    Record:
+      $ref: ./components/schemas/deals/Record.yaml
+    GenericResponseErrorDataListUserInformationByClientDto:
+      $ref: ./components/schemas/user/GenericResponseErrorDataListUserInformationByClientDto.yaml
+    UserInformationByClientDto:
+      $ref: ./components/schemas/user/UserInformationByClientDto.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/{locale}/GenericResponseErrorDataMapStringString.yaml
+    FxDealDocHistoryDto:
+      $ref: ./components/schemas/history/FxDealDocHistoryDto.yaml
+    GenericResponseErrorDataListFxDealDocHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseErrorDataListFxDealDocHistoryDto.yaml
+    GenericResponseErrorDataClientProfileStaticDto:
+      $ref: ./components/schemas/{clientWebDealingId}/GenericResponseErrorDataClientProfileStaticDto.yaml
+    GenericResponseErrorDataClientProfileDynamicDto:
+      $ref: ./components/schemas/{clientWebDealingId}/GenericResponseErrorDataClientProfileDynamicDto.yaml
+    GenericResponseErrorDataAutoQuotingSettingsDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAutoQuotingSettingsDto.yaml

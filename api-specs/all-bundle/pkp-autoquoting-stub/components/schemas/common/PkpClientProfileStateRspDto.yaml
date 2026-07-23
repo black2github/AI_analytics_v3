@@ -1,0 +1,8 @@
+type: string
+enum:
+- OK
+- CREATING
+- NOT_AVAILABLE
+- ORDER_LIMIT
+- QUOTING_DISABLED
+- EOD

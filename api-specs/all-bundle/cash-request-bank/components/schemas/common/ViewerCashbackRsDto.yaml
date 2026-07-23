@@ -1,0 +1,48 @@
+required:
+- id
+- number
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки на отзыв
+    format: uuid
+  rkoStatusAssignedAt:
+    type: string
+    description: Дата и время присвоения статуса РКО Ф1
+    format: date-time
+  receiptAt:
+    type: string
+    description: Дата приема документа в Экосистеме
+    format: date-time
+  reason:
+    type: string
+    description: Причина отзыва заявки
+  creationDate:
+    type: string
+    description: Дата создания запроса на отзыв
+    format: date-time
+  number:
+    type: integer
+    description: Номер запроса на отзыв
+    format: int32
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  status:
+    $ref: ./DictionaryDto.yaml
+  userFio:
+    type: string
+    description: ФИО пользователя, отправившего запрос
+  signatures:
+    type: array
+    description: Информация о подписи запроса на отзыв
+    items:
+      $ref: ./CashbackSignatureDto.yaml
+  creationInfo:
+    $ref: ./CreationInfoRsDto.yaml
+description: Запрос на отзыв заявки.

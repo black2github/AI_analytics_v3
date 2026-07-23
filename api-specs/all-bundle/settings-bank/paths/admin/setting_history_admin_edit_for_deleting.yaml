@@ -1,0 +1,21 @@
+put:
+  tags:
+  - АПИ Банка для работы с историей настроек
+  summary: Указать доступность для автоматического удаления записей истории настройки
+  description: 'Привилегии: SETTING_HISTORY_EDIT'
+  operationId: editForDeleting
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties:
+            type: boolean
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml

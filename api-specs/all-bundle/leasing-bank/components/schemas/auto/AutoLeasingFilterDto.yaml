@@ -1,0 +1,8 @@
+type: object
+properties:
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  type:
+    $ref: ./FilterValueEnumDtoLeasingTypeDto.yaml
+  status:
+    $ref: ./FilterValueEnumDtoLeasingStatusDto.yaml

@@ -1,0 +1,19 @@
+type: object
+required:
+- qrcId
+- memberId
+- subscriptionToken
+description: Запрос на оплату по идентификатору привязки счета
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированной платежной ссылки СБП
+  memberId:
+    type: string
+    description: Идентификатор банка плательщика
+  subscriptionToken:
+    type: string
+    description: Идентификатор привязки счета
+  sign:
+    type: string
+    description: Подпись сообщения

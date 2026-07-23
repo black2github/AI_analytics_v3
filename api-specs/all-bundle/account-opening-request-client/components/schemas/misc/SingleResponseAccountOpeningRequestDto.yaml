@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    $ref: ./AccountOpeningRequestDto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

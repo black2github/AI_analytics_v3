@@ -1,0 +1,19 @@
+type: object
+properties:
+  orderIds:
+    type: array
+    description: Идентификаторы заявки
+    items:
+      type: string
+      description: Идентификаторы заявки
+      format: uuid
+  newStatus:
+    type: string
+    description: Новый статус для заявки
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Запрос на смену статуса одной или нескольких заявок

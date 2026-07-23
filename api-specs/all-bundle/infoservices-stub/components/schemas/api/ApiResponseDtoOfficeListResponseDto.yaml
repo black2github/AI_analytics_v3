@@ -1,0 +1,9 @@
+type: object
+properties:
+  status:
+    type: string
+  actualTimestamp:
+    type: integer
+    format: int64
+  data:
+    $ref: ./OfficeListResponseDto.yaml

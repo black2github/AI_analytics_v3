@@ -1,0 +1,31 @@
+required:
+- bankClientId
+- bankClientName
+- documentCount
+- fileStorageId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  fileStorageId:
+    type: string
+    description: Идентификатор файла в файловом сервисе
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла
+  bankClientId:
+    type: string
+    description: Идентификатор клиента визария
+    format: uuid
+  bankClientName:
+    type: string
+    description: Наименование клиента визария
+  documentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+description: Файл массовой подписи визируемых документов

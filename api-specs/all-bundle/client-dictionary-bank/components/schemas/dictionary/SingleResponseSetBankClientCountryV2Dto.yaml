@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ./BankClientCountryV2Dto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

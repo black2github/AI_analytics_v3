@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    type: object
+    description: Данные
+  errorInfo:
+    $ref: ./ErrorInfo.yaml

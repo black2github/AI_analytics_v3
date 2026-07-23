@@ -1,0 +1,45 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  organizationFullNameOrShortNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  organizationId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./StatusFilterValueDto.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  f1DocId:
+    $ref: ../common/FilterValueDtoString.yaml
+  orgName:
+    $ref: ../common/FilterValueDtoString.yaml
+  orgInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockReason:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockDocType:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockType:
+    $ref: ./FilterValueEnumDtoBlockTypeDto.yaml
+  blockNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  blockAccountCurrencyAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  accountCurrency:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  blockCurrency:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyConversionDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  fullBlock:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр скроллера Блокировок. Банковская часть.

@@ -1,0 +1,37 @@
+openapi: 3.0.1
+info:
+  title: Сервис "СФЗУ". Банковская часть.
+  version: 1.7.0
+servers:
+- url: /product-notification-bank
+security:
+- bearerAuth: []
+paths:
+  /product-notification/scheduler-records:
+    $ref: ./paths/scheduler-records/product_notification_scheduler_records.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    GenericResponseSimpleErrorDataListShedlockRecordDto:
+      $ref: ./components/schemas/scheduler-records/GenericResponseSimpleErrorDataListShedlockRecordDto.yaml
+    ShedlockRecordDto:
+      $ref: ./components/schemas/scheduler-records/ShedlockRecordDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/scheduler-records/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

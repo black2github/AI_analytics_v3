@@ -1,0 +1,7 @@
+type: string
+enum:
+- DEFAULT
+- CUSTOM
+- EMPTY
+- FAKE
+- ERROR

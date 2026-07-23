@@ -1,0 +1,19 @@
+put:
+  tags:
+  - АПИ Банка для работы с историей настроек
+  summary: Обновить запись истории настройки
+  description: 'Привилегии: SETTING_HISTORY_EDIT'
+  operationId: update_2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/UpdateCommandОбновление Истории НастройкиUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataИстория Настройки.yaml

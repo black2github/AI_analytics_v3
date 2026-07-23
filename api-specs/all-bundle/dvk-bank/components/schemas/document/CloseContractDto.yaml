@@ -1,0 +1,28 @@
+type: object
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    branchName:
+      type: string
+      description: Наименование филиала
+    applicationDate:
+      type: string
+      description: Дата заявления
+      format: date
+    clientName:
+      type: string
+      description: Наименование инициатора ПС
+    lkuvedFullName:
+      type: string
+      description: Исполнитель
+    contact:
+      type: string
+      description: Телефон
+    newOwner:
+      $ref: ./NewOwnerDto.yaml
+    dealPassportsExt:
+      type: array
+      description: Паспорта сделок
+      items:
+        $ref: ./DealPassportExtDto.yaml

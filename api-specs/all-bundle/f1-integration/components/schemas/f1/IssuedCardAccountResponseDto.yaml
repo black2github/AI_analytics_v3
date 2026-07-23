@@ -1,0 +1,22 @@
+required:
+- clientRegNum
+type: object
+properties:
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int32
+  errorMessage:
+    type: string
+    description: Описание ошибки
+  clientRegNum:
+    type: string
+    description: Регистрационный номер клиента, присвоенный в РКО Ф1
+  cardProduct:
+    $ref: ./IssuedCardProductDto.yaml
+  accountItemList:
+    type: array
+    description: Список счетов
+    items:
+      $ref: ./IssuedCardAccountDto.yaml
+description: Список счетов доступных для выпуска карт.

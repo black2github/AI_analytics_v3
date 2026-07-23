@@ -1,0 +1,4 @@
+type: object
+properties:
+  application:
+    $ref: ./ApplicationRefuseDto.yaml

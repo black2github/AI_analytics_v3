@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  type:
+    type: string
+    description: Тип
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  firstName:
+    type: string
+    description: Имя
+  lastName:
+    type: string
+    description: Фамилия
+  patronymic:
+    type: string
+    description: Отчество
+description: Данные пользователя

@@ -1,0 +1,12 @@
+required:
+- multiSort
+type: object
+properties:
+  filter:
+    $ref: ../common/CurrencyFilter.yaml
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+description: ДТО запроса на экспорт справочника валют

@@ -1,0 +1,104 @@
+info:
+  version: 1.54.0
+  title: Сервис услуг РКО. Клиентская часть.
+tags:
+- name: API для получения информации из СПАРК.
+  description: Spark Client Controller
+- name: API для получения списка счетов, доступных для подключения услуг РКО.
+  description: F 1 Controller
+- name: API локализации
+  description: I 18n Controller
+- name: open-api-web-mvc-resource
+  description: Open Api Web Mvc Resource
+- name: prior-acceptance-mandate-client-controller
+  description: Prior Acceptance Mandate Client Controller
+- name: prior-acceptance-mandate-client-print-controller
+  description: Prior Acceptance Mandate Client Print Controller
+- name: prior-acceptance-mandate-client-sign-controller
+  description: Prior Acceptance Mandate Client Sign Controller
+- name: prior-acceptance-mandate-suggestion-client-controller
+  description: Prior Acceptance Mandate Suggestion Client Controller
+- name: swagger-config-resource
+  description: Swagger Config Resource
+- name: swagger-welcome-web-mvc
+  description: Swagger Welcome Web Mvc
+- name: Распоряжение на периодический перевод денежных средств. Базовые операции.
+  description: Periodic Transfer Order Client Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции печати.
+  description: Periodic Transfer Order Client Print Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции подписи.
+  description: Periodic Transfer Order Client Sign Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции скроллера.
+  description: Periodic Transfer Order Client Scroller Controller
+paths:
+  /common/service-accounts:
+    $ref: ./paths/misc/common_service_accounts.yaml
+  /common/spark/org-info-by-inn:
+    $ref: ./paths/misc/common_spark_org_info_by_inn.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /periodic-money-transfer:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer.yaml
+  /periodic-money-transfer/category:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_category.yaml
+  /periodic-money-transfer/create-draft:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_create_draft.yaml
+  /periodic-money-transfer/delete:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_delete.yaml
+  /periodic-money-transfer/generate-digest/version:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_generate_digest_version.yaml
+  /periodic-money-transfer/generate-sign-data:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_generate_sign_data.yaml
+  /periodic-money-transfer/get-page:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_get_page.yaml
+  /periodic-money-transfer/print:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_print.yaml
+  /periodic-money-transfer/send:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_send.yaml
+  /periodic-money-transfer/sign:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_sign.yaml
+  /periodic-money-transfer/update-draft:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_update_draft.yaml
+  /periodic-money-transfer/v2.1/generate-sign-data:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_v2_1_generate_sign_data.yaml
+  /periodic-money-transfer/validate-sign:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_validate_sign.yaml
+  /periodic-money-transfer/{id}:
+    $ref: ./paths/periodic-money-transfer/periodic_money_transfer_id.yaml
+  /prior-acceptance-mandate/action-check:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_action_check.yaml
+  /prior-acceptance-mandate/cancellation:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_cancellation.yaml
+  /prior-acceptance-mandate/category:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_category.yaml
+  /prior-acceptance-mandate/get-page:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_get_page.yaml
+  /prior-acceptance-mandate/initiation:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_initiation.yaml
+  /prior-acceptance-mandate/print:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_print.yaml
+  /prior-acceptance-mandate/print-registry:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_print_registry.yaml
+  /prior-acceptance-mandate/send:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_send.yaml
+  /prior-acceptance-mandate/sign/sign:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_sign_sign.yaml
+  /prior-acceptance-mandate/sign/v2.1/generate-sign-data:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_sign_v2_1_generate_sign_data.yaml
+  /prior-acceptance-mandate/suggestion/accounts:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_suggestion_accounts.yaml
+  /prior-acceptance-mandate/suggestion/organizations:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_suggestion_organizations.yaml
+  /prior-acceptance-mandate/{id}:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_id.yaml
+  /prior-acceptance-mandate/{id}/signatures:
+    $ref: ./paths/prior-acceptance-mandate/prior_acceptance_mandate_id_signatures.yaml
+  /swagger-ui.html:
+    $ref: ./paths/misc/swagger_ui_html.yaml
+  /v3/api-docs:
+    $ref: ./paths/misc/v3_api_docs.yaml
+  /v3/api-docs.yaml:
+    $ref: ./paths/misc/v3_api_docs_yaml.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/misc/v3_api_docs_swagger_config.yaml
+components: {}

@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Банковские категории статусов объединенной заявки на выпуск/регистрацию ЭП
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  notEq:
+    type: string
+    description: Банковские категории статусов объединенной заявки на выпуск/регистрацию ЭП
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  in:
+    type: array
+    items:
+      type: string
+      description: Банковские категории статусов объединенной заявки на выпуск/регистрацию ЭП
+      enum:
+      - ALL
+      - IN_PROCESSING
+      - PROCESSING_ERROR
+      - FINISHED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Банковские категории статусов объединенной заявки на выпуск/регистрацию ЭП
+      enum:
+      - ALL
+      - IN_PROCESSING
+      - PROCESSING_ERROR
+      - FINISHED
+  isNull:
+    type: boolean
+description: Фильтр по банковской категории статусов объединенной заявки на выпуск/регистрацию ЭП

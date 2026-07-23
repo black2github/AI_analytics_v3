@@ -1,0 +1,49 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientRnkId:
+    type: string
+    description: РНК Клиента
+  clientWebDealingId:
+    type: string
+    description: ID Клиента ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientShortName:
+    type: string
+    description: Краткое наименование Клиента
+  clientInnKio:
+    type: string
+    description: ИНН/КИО Клиента
+  date:
+    type: string
+    description: Дата на которую актуален профиль
+    format: date
+  limitsUsage:
+    $ref: ./LimitsUsageDto.yaml
+  lastOrderDateTime:
+    type: string
+    description: Дата и время последней заявки Клиента
+    format: date-time
+  status:
+    type: string
+    description: Статус
+    enum:
+    - CURRENT
+    - ARCHIVED
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения
+    format: date-time
+  actual:
+    type: boolean
+    description: Признак актуальности профиля
+description: Страница с данными

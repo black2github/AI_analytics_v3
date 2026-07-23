@@ -1,0 +1,44 @@
+type: object
+description: Реквизиты электронной подписи заявки
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  ownerId:
+    type: string
+    format: uuid
+    description: Идентификатор владельца
+  typeId:
+    type: string
+    format: uuid
+    description: Идентификатор типа подписи
+  value:
+    $ref: ./SignatureValueDto.yaml
+    description: Значение подписи
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+    description: Данные сертификата
+  signedAt:
+    type: string
+    format: date-time
+    description: Дата подписания
+  signatureLevel:
+    type: string
+    description: Уровень подписи заявления на платеж СБП
+    enum:
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+    - C_R_NO_KOPOP
+    - NO_SIGNATURE
+  userId:
+    type: string
+    description: Идентификатор пользователя, подписавшего документ
+  userName:
+    type: string
+    description: ФИО Пользователя подписавшего заявку
+  sppVersion:
+    type: integer
+    format: int32
+    description: Версия СПП

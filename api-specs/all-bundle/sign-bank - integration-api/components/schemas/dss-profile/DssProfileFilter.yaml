@@ -1,0 +1,9 @@
+type: object
+properties:
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  blocked:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  deleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр профиля пользователя DSS

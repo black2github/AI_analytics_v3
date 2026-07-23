@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API получения счетов из банка-партнера. Интеграционная часть.
+  summary: Получить счета пользователя из банка-партнера
+  description: 'Привилегии: MB_ADAPTER.INTEGRATION.API_USE'
+  operationId: getAccounts
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/accounts/AccountsRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/accounts/GenericResponseSimpleErrorDataAccountsResponseDto.yaml

@@ -1,0 +1,13 @@
+required:
+- statusCategory
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории фильтрации фоновых процессов. Клиентская часть
+    enum:
+    - ALL
+    - ACTIVE
+    - COMPLETED
+    - UNKNOWN
+description: Фильтр фоновых задач. Клиентская часть

@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+  changedIn:
+    type: string
+    description: Дата и время установки статуса
+    format: date-time
+  status:
+    type: string
+    description: Код статуса
+  userName:
+    type: string
+    description: ФИО Пользователя, который произвел операцию
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Объект "история" запроса брокера

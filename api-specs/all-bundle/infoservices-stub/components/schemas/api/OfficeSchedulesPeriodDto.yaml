@@ -1,0 +1,23 @@
+type: object
+properties:
+  base:
+    type: boolean
+  dateFrom:
+    $ref: ./LocalDate.yaml
+  dateTo:
+    $ref: ./LocalDate.yaml
+  idSort:
+    type: integer
+    format: int32
+  timeSlots:
+    type: array
+    items:
+      $ref: ./OfficeSchedulesPeriodTimeSlotDto.yaml
+  type:
+    $ref: ./OfficeSchedulesPeriodWeekDayDto.yaml
+  weekDay:
+    $ref: ./OfficeSchedulesPeriodWeekDayDto.yaml
+  weekDayFrom:
+    $ref: ./OfficeSchedulesPeriodWeekDayDto.yaml
+  weekDayTo:
+    $ref: ./OfficeSchedulesPeriodWeekDayDto.yaml

@@ -1,0 +1,33 @@
+type: object
+description: Счет
+properties:
+  mainVId:
+    type: string
+    description: Номер счета
+  accountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета в Ф1
+  curShort:
+    type: string
+    pattern: '[0-9][0-9][0-9]'
+    description: Валюта
+  saldo:
+    type: number
+    description: Остаток денежных средств
+    minimum: 0
+  debt:
+    type: number
+    description: Текущая задолженность по комиссии перед Банком
+    minimum: 0.01
+  typeBankAcc:
+    type: string
+    description: Тип счета
+  rkoTypeName:
+    type: string
+    description: Назначение счета
+  restrictions:
+    type: array
+    items:
+      type: string
+    description: Список ограничений

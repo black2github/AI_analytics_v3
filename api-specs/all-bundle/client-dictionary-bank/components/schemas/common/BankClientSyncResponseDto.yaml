@@ -1,0 +1,23 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Результат выполнения операции
+  allClientOfficials:
+    uniqueItems: true
+    type: array
+    description: Все представители клиента
+    items:
+      $ref: ./ClientOfficialDto.yaml
+  dboClientOfficials:
+    uniqueItems: true
+    type: array
+    description: Представители клиента из ДБО БСС
+    items:
+      $ref: ./ClientOfficialDto.yaml
+  clientUserComments:
+    type: array
+    description: Комментарии к внешним пользователям - клиентам банка
+    items:
+      $ref: ./ClientUserCommentWrapperDto.yaml
+description: Ответ синхронизации клиентов Банка с ДБО

@@ -1,0 +1,20 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Код типа субъекта из 'Типы субъектов обновления сведений'
+    enum:
+    - CLIENT_AND_USERS
+    - CLIENT
+    - USER
+  subjectId:
+    type: string
+    description: Ссылка на сотрудника клиента, в случае если заявка создана по конкретному сотруднику
+    format: uuid
+  subjectEskId:
+    type: string
+    description: Ид. сотрудника клиента в ЕСК по которому создана заявка
+  subjectFio:
+    type: string
+    description: ФИО сотрудника по которому создана заявка
+description: Субъект обновления сведений

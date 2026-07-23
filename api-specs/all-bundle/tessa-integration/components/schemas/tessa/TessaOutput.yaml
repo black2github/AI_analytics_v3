@@ -1,0 +1,12 @@
+type: object
+properties:
+  dossier:
+    $ref: ./DossierResponse.yaml
+  documents:
+    type: array
+    items:
+      $ref: ./DocumentUploadResult.yaml
+  tasks:
+    type: array
+    items:
+      $ref: ./FinishResult.yaml

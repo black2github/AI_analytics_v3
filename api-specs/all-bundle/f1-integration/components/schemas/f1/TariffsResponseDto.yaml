@@ -1,0 +1,7 @@
+type: object
+properties:
+  accountTariffs:
+    type: array
+    items:
+      $ref: ./AccountTariff.yaml
+description: Ответ для запроса по тарифам дял списка счетов

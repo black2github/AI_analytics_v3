@@ -1,0 +1,11 @@
+type: object
+properties:
+  country:
+    $ref: ../common/FilterValueDtoString.yaml
+  countryPhoneCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  countryNameEng:
+    $ref: ../common/FilterValueDtoString.yaml
+  textCompoundFilter:
+    $ref: ./TextCompoundFilterForCountryCallingCodeFilter.yaml
+description: Фильтр по справочнику "Телефонные коды стран"

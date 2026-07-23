@@ -1,0 +1,6 @@
+type: object
+properties:
+  search:
+    type: string
+    description: Поиск по тексту номера
+description: Транспортное представление банковского DTO быстрого фильтра для поиска по подсктроке

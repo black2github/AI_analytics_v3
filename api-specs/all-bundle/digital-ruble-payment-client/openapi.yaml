@@ -1,0 +1,364 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Платежи. Клиентская часть.
+  description: Сервис Цифровой рубль.
+  version: 3.4.0
+servers:
+- url: /digital-ruble-payment-client
+security:
+- bearerAuth: []
+paths:
+  /request/wallet-withdraw:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw.yaml
+  /request/wallet-withdraw/sign:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_sign.yaml
+  /request/wallet-deposit:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit.yaml
+  /request/wallet-deposit/sign:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_sign.yaml
+  /request/wallet-balance:
+    $ref: ./paths/wallet-balance/request_wallet_balance.yaml
+  /request/wallet-balance/sign:
+    $ref: ./paths/wallet-balance/request_wallet_balance_sign.yaml
+  /request/payment/page:
+    $ref: ./paths/payment/request_payment_page.yaml
+  /request/operation-refund:
+    $ref: ./paths/operation-refund/request_operation_refund.yaml
+  /request/operation-refund/sign:
+    $ref: ./paths/operation-refund/request_operation_refund_sign.yaml
+  /request/operation-history:
+    $ref: ./paths/operation-history/request_operation_history.yaml
+  /request/operation-history/sign:
+    $ref: ./paths/operation-history/request_operation_history_sign.yaml
+  /request/operation-history/export:
+    $ref: ./paths/operation-history/request_operation_history_export.yaml
+  /request/export:
+    $ref: ./paths/export/request_export.yaml
+  /request/business-transfer:
+    $ref: ./paths/business-transfer/request_business_transfer.yaml
+  /request/business-transfer/sign:
+    $ref: ./paths/business-transfer/request_business_transfer_sign.yaml
+  /request-msg/wallet-withdraw/msg2/sign:
+    $ref: ./paths/wallet-withdraw/request_msg_wallet_withdraw_msg2_sign.yaml
+  /request-msg/wallet-withdraw/msg1/sign:
+    $ref: ./paths/wallet-withdraw/request_msg_wallet_withdraw_msg1_sign.yaml
+  /request-msg/wallet-withdraw/decrypt:
+    $ref: ./paths/wallet-withdraw/request_msg_wallet_withdraw_decrypt.yaml
+  /request-msg/wallet-deposit/decrypt:
+    $ref: ./paths/wallet-deposit/request_msg_wallet_deposit_decrypt.yaml
+  /request-msg/wallet-balance/sign:
+    $ref: ./paths/wallet-balance/request_msg_wallet_balance_sign.yaml
+  /request-msg/wallet-balance/decrypt:
+    $ref: ./paths/wallet-balance/request_msg_wallet_balance_decrypt.yaml
+  /request-msg/operation-refund/msg2/sign:
+    $ref: ./paths/operation-refund/request_msg_operation_refund_msg2_sign.yaml
+  /request-msg/operation-refund/msg1/sign:
+    $ref: ./paths/operation-refund/request_msg_operation_refund_msg1_sign.yaml
+  /request-msg/operation-refund/decrypt:
+    $ref: ./paths/operation-refund/request_msg_operation_refund_decrypt.yaml
+  /request-msg/operation-history/sign:
+    $ref: ./paths/operation-history/request_msg_operation_history_sign.yaml
+  /request-msg/operation-history/decrypt:
+    $ref: ./paths/operation-history/request_msg_operation_history_decrypt.yaml
+  /request-msg/business-transfer/msg2/sign:
+    $ref: ./paths/business-transfer/request_msg_business_transfer_msg2_sign.yaml
+  /request-msg/business-transfer/msg1/sign:
+    $ref: ./paths/business-transfer/request_msg_business_transfer_msg1_sign.yaml
+  /request-msg/business-transfer/decrypt:
+    $ref: ./paths/business-transfer/request_msg_business_transfer_decrypt.yaml
+  /request-digest/wallet-withdraw:
+    $ref: ./paths/wallet-withdraw/request_digest_wallet_withdraw.yaml
+  /request-digest/wallet-deposit:
+    $ref: ./paths/wallet-deposit/request_digest_wallet_deposit.yaml
+  /request-digest/wallet-balance:
+    $ref: ./paths/wallet-balance/request_digest_wallet_balance.yaml
+  /request-digest/operation-refund:
+    $ref: ./paths/operation-refund/request_digest_operation_refund.yaml
+  /request-digest/operation-history:
+    $ref: ./paths/operation-history/request_digest_operation_history.yaml
+  /request-digest/business-transfer:
+    $ref: ./paths/business-transfer/request_digest_business_transfer.yaml
+  /operation/page:
+    $ref: ./paths/page/operation_page.yaml
+  /operation/notification/page:
+    $ref: ./paths/notification/operation_notification_page.yaml
+  /operation/export:
+    $ref: ./paths/export/operation_export.yaml
+  /client-account/available:
+    $ref: ./paths/available/client_account_available.yaml
+  /walletbalance/pcrParticipantWallet/{pcrParticipantWalletId}:
+    $ref: ./paths/pcrParticipantWallet/walletbalance_pcrParticipantWallet_pcrParticipantWalletId.yaml
+  /request/wallet-withdraw/{id}:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_id.yaml
+  /request/wallet-withdraw/history/{id}:
+    $ref: ./paths/wallet-withdraw/request_wallet_withdraw_history_id.yaml
+  /request/wallet-deposit/{id}:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_id.yaml
+  /request/wallet-deposit/history/{id}:
+    $ref: ./paths/wallet-deposit/request_wallet_deposit_history_id.yaml
+  /request/wallet-balance/{id}:
+    $ref: ./paths/wallet-balance/request_wallet_balance_id.yaml
+  /request/wallet-balance/history/{id}:
+    $ref: ./paths/wallet-balance/request_wallet_balance_history_id.yaml
+  /request/operation-refund/{id}:
+    $ref: ./paths/operation-refund/request_operation_refund_id.yaml
+  /request/operation-refund/history/{id}:
+    $ref: ./paths/operation-refund/request_operation_refund_history_id.yaml
+  /request/operation-history/{id}:
+    $ref: ./paths/operation-history/request_operation_history_id.yaml
+  /request/operation-history/history/{id}:
+    $ref: ./paths/operation-history/request_operation_history_history_id.yaml
+  /request/business-transfer/{id}:
+    $ref: ./paths/business-transfer/request_business_transfer_id.yaml
+  /request/business-transfer/history/{id}:
+    $ref: ./paths/business-transfer/request_business_transfer_history_id.yaml
+  /request-msg/wallet-withdraw/{msgType}/{requestId}:
+    $ref: ./paths/wallet-withdraw/request_msg_wallet_withdraw_msgType_requestId.yaml
+  /request-msg/wallet-deposit/{msgType}/{requestId}:
+    $ref: ./paths/wallet-deposit/request_msg_wallet_deposit_msgType_requestId.yaml
+  /request-msg/wallet-balance/{msgType}/{requestId}:
+    $ref: ./paths/wallet-balance/request_msg_wallet_balance_msgType_requestId.yaml
+  /request-msg/operation-refund/{msgType}/{requestId}:
+    $ref: ./paths/operation-refund/request_msg_operation_refund_msgType_requestId.yaml
+  /request-msg/operation-history/{msgType}/{requestId}:
+    $ref: ./paths/operation-history/request_msg_operation_history_msgType_requestId.yaml
+  /request-msg/business-transfer/{msgType}/{requestId}:
+    $ref: ./paths/business-transfer/request_msg_business_transfer_msgType_requestId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ClientAccountDto:
+      $ref: ./components/schemas/common/ClientAccountDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    PaymentDetailsDto:
+      $ref: ./components/schemas/common/PaymentDetailsDto.yaml
+    WalletWithdrawRequestCreateDto:
+      $ref: ./components/schemas/wallet-withdraw/WalletWithdrawRequestCreateDto.yaml
+    DigitalRubleError:
+      $ref: ./components/schemas/common/DigitalRubleError.yaml
+    GenericResponseDigitalRubleErrorRequestInfoDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorRequestInfoDto.yaml
+    RequestInfoDto:
+      $ref: ./components/schemas/common/RequestInfoDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    GenericResponseDigitalRubleErrorVoid:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorVoid.yaml
+    WalletDepositRequestCreateDto:
+      $ref: ./components/schemas/wallet-deposit/WalletDepositRequestCreateDto.yaml
+    SignCommandWithDeviceInfo:
+      $ref: ./components/schemas/wallet-deposit/SignCommandWithDeviceInfo.yaml
+    UserDeviceInfo:
+      $ref: ./components/schemas/common/UserDeviceInfo.yaml
+    WalletBalanceRequestCreateDto:
+      $ref: ./components/schemas/wallet-balance/WalletBalanceRequestCreateDto.yaml
+    DigitalRublePaymentRequestTypeClassifierFilter:
+      $ref: ./components/schemas/payment/DigitalRublePaymentRequestTypeClassifierFilter.yaml
+    DigitalRubleRequestStatusFilter:
+      $ref: ./components/schemas/payment/DigitalRubleRequestStatusFilter.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/payment/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/payment/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/payment/FilterValueDtoUUID.yaml
+    GetPageCommandRequestFilterClientDto:
+      $ref: ./components/schemas/payment/GetPageCommandRequestFilterClientDto.yaml
+    PageParamsRequestFilterClientDto:
+      $ref: ./components/schemas/payment/PageParamsRequestFilterClientDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestFilterClientDto:
+      $ref: ./components/schemas/payment/RequestFilterClientDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponseDigitalRubleErrorPageDataRequestScrollerClientDto:
+      $ref: ./components/schemas/payment/GenericResponseDigitalRubleErrorPageDataRequestScrollerClientDto.yaml
+    PageDataRequestScrollerClientDto:
+      $ref: ./components/schemas/payment/PageDataRequestScrollerClientDto.yaml
+    RequestScrollerClientDto:
+      $ref: ./components/schemas/payment/RequestScrollerClientDto.yaml
+    OperationRefundRequestCreateDto:
+      $ref: ./components/schemas/operation-refund/OperationRefundRequestCreateDto.yaml
+    OperationHistoryRequestCreateDto:
+      $ref: ./components/schemas/operation-history/OperationHistoryRequestCreateDto.yaml
+    OperationHistoryExportRqDto:
+      $ref: ./components/schemas/operation-history/OperationHistoryExportRqDto.yaml
+    GenericResponseDigitalRubleErrorPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    RequestExportRqDto:
+      $ref: ./components/schemas/export/RequestExportRqDto.yaml
+    BusinessTransferReceiverDto:
+      $ref: ./components/schemas/business-transfer/BusinessTransferReceiverDto.yaml
+    BusinessTransferRequestCreateDto:
+      $ref: ./components/schemas/business-transfer/BusinessTransferRequestCreateDto.yaml
+    MsgSign:
+      $ref: ./components/schemas/common/MsgSign.yaml
+    MsgSignWithDeviceInfo:
+      $ref: ./components/schemas/common/MsgSignWithDeviceInfo.yaml
+    MsgSignatureDto:
+      $ref: ./components/schemas/common/MsgSignatureDto.yaml
+    SignMsgTypeDto:
+      $ref: ./components/schemas/common/SignMsgTypeDto.yaml
+    DecryptMsgTypeDto:
+      $ref: ./components/schemas/common/DecryptMsgTypeDto.yaml
+    DecryptRequestMsgDto:
+      $ref: ./components/schemas/common/DecryptRequestMsgDto.yaml
+    RequestIdDto:
+      $ref: ./components/schemas/common/RequestIdDto.yaml
+    GenericResponseDigitalRubleErrorUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    AmountFilter:
+      $ref: ./components/schemas/common/AmountFilter.yaml
+    CbrOperationIdFilter:
+      $ref: ./components/schemas/common/CbrOperationIdFilter.yaml
+    CbrParticipantWalletIdFilter:
+      $ref: ./components/schemas/common/CbrParticipantWalletIdFilter.yaml
+    ContractorAccountNumberFilter:
+      $ref: ./components/schemas/common/ContractorAccountNumberFilter.yaml
+    ContractorCbrAccountNumberFilter:
+      $ref: ./components/schemas/common/ContractorCbrAccountNumberFilter.yaml
+    ContractorCbrParticipantIdFilter:
+      $ref: ./components/schemas/common/ContractorCbrParticipantIdFilter.yaml
+    ContractorCbrParticipantWalletIdFilter:
+      $ref: ./components/schemas/common/ContractorCbrParticipantWalletIdFilter.yaml
+    ContractorNameFilter:
+      $ref: ./components/schemas/common/ContractorNameFilter.yaml
+    ContractorNameOrContractorFioFilter:
+      $ref: ./components/schemas/common/ContractorNameOrContractorFioFilter.yaml
+    ExecutionDatetimeFilter:
+      $ref: ./components/schemas/common/ExecutionDatetimeFilter.yaml
+    FiBicFilter:
+      $ref: ./components/schemas/common/FiBicFilter.yaml
+    FiBicOrFiNameFilter:
+      $ref: ./components/schemas/common/FiBicOrFiNameFilter.yaml
+    FiNameFilter:
+      $ref: ./components/schemas/common/FiNameFilter.yaml
+    GetPageCommandOperationViewFilterClientDto:
+      $ref: ./components/schemas/page/GetPageCommandOperationViewFilterClientDto.yaml
+    OperationViewFilterClientDto:
+      $ref: ./components/schemas/page/OperationViewFilterClientDto.yaml
+    OperationViewTypeFilter:
+      $ref: ./components/schemas/common/OperationViewTypeFilter.yaml
+    PageParamsOperationViewFilterClientDto:
+      $ref: ./components/schemas/page/PageParamsOperationViewFilterClientDto.yaml
+    PointOfSaleNameFilter:
+      $ref: ./components/schemas/common/PointOfSaleNameFilter.yaml
+    PurposeOfPaymentFilter:
+      $ref: ./components/schemas/common/PurposeOfPaymentFilter.yaml
+    TreasuryPersonalAccountFilter:
+      $ref: ./components/schemas/common/TreasuryPersonalAccountFilter.yaml
+    GenericResponseDigitalRubleErrorPageDataOperationScrollerViewClientDto:
+      $ref: ./components/schemas/page/GenericResponseDigitalRubleErrorPageDataOperationScrollerViewClientDto.yaml
+    OperationScrollerViewClientDto:
+      $ref: ./components/schemas/page/OperationScrollerViewClientDto.yaml
+    PageDataOperationScrollerViewClientDto:
+      $ref: ./components/schemas/page/PageDataOperationScrollerViewClientDto.yaml
+    ContractorFioFilter:
+      $ref: ./components/schemas/common/ContractorFioFilter.yaml
+    GetPageCommandNotificationViewFilterClientDto:
+      $ref: ./components/schemas/notification/GetPageCommandNotificationViewFilterClientDto.yaml
+    NotificationViewFilterClientDto:
+      $ref: ./components/schemas/notification/NotificationViewFilterClientDto.yaml
+    PageParamsNotificationViewFilterClientDto:
+      $ref: ./components/schemas/notification/PageParamsNotificationViewFilterClientDto.yaml
+    UipFilter:
+      $ref: ./components/schemas/notification/UipFilter.yaml
+    GenericResponseDigitalRubleErrorPageDataNotificationScrollerViewClientDto:
+      $ref: ./components/schemas/notification/GenericResponseDigitalRubleErrorPageDataNotificationScrollerViewClientDto.yaml
+    NotificationScrollerViewClientDto:
+      $ref: ./components/schemas/notification/NotificationScrollerViewClientDto.yaml
+    PageDataNotificationScrollerViewClientDto:
+      $ref: ./components/schemas/notification/PageDataNotificationScrollerViewClientDto.yaml
+    AccountNumberFilter:
+      $ref: ./components/schemas/export/AccountNumberFilter.yaml
+    ExportFilterDto:
+      $ref: ./components/schemas/export/ExportFilterDto.yaml
+    ExportedColumnDto:
+      $ref: ./components/schemas/export/ExportedColumnDto.yaml
+    GetPageCommandExportFilterDto:
+      $ref: ./components/schemas/export/GetPageCommandExportFilterDto.yaml
+    IdFilter:
+      $ref: ./components/schemas/export/IdFilter.yaml
+    OperationExportRqDto:
+      $ref: ./components/schemas/export/OperationExportRqDto.yaml
+    PageParamsExportFilterDto:
+      $ref: ./components/schemas/export/PageParamsExportFilterDto.yaml
+    AvailableAccountsRequestClientDto:
+      $ref: ./components/schemas/available/AvailableAccountsRequestClientDto.yaml
+    AvailableAccountResponseClientDto:
+      $ref: ./components/schemas/available/AvailableAccountResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorListAvailableAccountResponseClientDto:
+      $ref: ./components/schemas/available/GenericResponseDigitalRubleErrorListAvailableAccountResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorPcrParticipantWalletBalanceDto:
+      $ref: ./components/schemas/pcrParticipantWallet/GenericResponseDigitalRubleErrorPcrParticipantWalletBalanceDto.yaml
+    PcrParticipantWalletBalanceDto:
+      $ref: ./components/schemas/pcrParticipantWallet/PcrParticipantWalletBalanceDto.yaml
+    WalletBalanceDetailsDto:
+      $ref: ./components/schemas/common/WalletBalanceDetailsDto.yaml
+    GenericResponseDigitalRubleErrorWalletWithdrawRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-withdraw/GenericResponseDigitalRubleErrorWalletWithdrawRequestGetResponseClientDto.yaml
+    OperationBalanceDto:
+      $ref: ./components/schemas/common/OperationBalanceDto.yaml
+    WalletWithdrawRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-withdraw/WalletWithdrawRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorListRequestHistoryClientDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorListRequestHistoryClientDto.yaml
+    RequestHistoryClientDto:
+      $ref: ./components/schemas/common/RequestHistoryClientDto.yaml
+    GenericResponseDigitalRubleErrorWalletDepositRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-deposit/GenericResponseDigitalRubleErrorWalletDepositRequestGetResponseClientDto.yaml
+    WalletDepositRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-deposit/WalletDepositRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorWalletBalanceRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-balance/GenericResponseDigitalRubleErrorWalletBalanceRequestGetResponseClientDto.yaml
+    WalletBalanceRequestGetResponseClientDto:
+      $ref: ./components/schemas/wallet-balance/WalletBalanceRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorOperationRefundRequestGetResponseClientDto:
+      $ref: ./components/schemas/operation-refund/GenericResponseDigitalRubleErrorOperationRefundRequestGetResponseClientDto.yaml
+    OperationAmountDto:
+      $ref: ./components/schemas/operation-refund/OperationAmountDto.yaml
+    OperationRefundRequestGetResponseClientDto:
+      $ref: ./components/schemas/operation-refund/OperationRefundRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorOperationHistoryRequestGetResponseClientDto:
+      $ref: ./components/schemas/operation-history/GenericResponseDigitalRubleErrorOperationHistoryRequestGetResponseClientDto.yaml
+    OperationHistoryRequestGetResponseClientDto:
+      $ref: ./components/schemas/operation-history/OperationHistoryRequestGetResponseClientDto.yaml
+    PeriodBalanceDetailsDto:
+      $ref: ./components/schemas/operation-history/PeriodBalanceDetailsDto.yaml
+    BusinessTransferRequestGetResponseClientDto:
+      $ref: ./components/schemas/business-transfer/BusinessTransferRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorBusinessTransferRequestGetResponseClientDto:
+      $ref: ./components/schemas/business-transfer/GenericResponseDigitalRubleErrorBusinessTransferRequestGetResponseClientDto.yaml
+    GenericResponseDigitalRubleErrorRequestMsgDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorRequestMsgDto.yaml
+    RequestMsgDto:
+      $ref: ./components/schemas/common/RequestMsgDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

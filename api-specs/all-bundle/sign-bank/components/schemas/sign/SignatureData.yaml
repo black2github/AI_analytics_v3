@@ -1,0 +1,18 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: Локальный(в рамках бизнес систем) ИД подписи
+    format: uuid
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signData:
+    type: string
+    description: Подпись в base64
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя подписавшего документ
+    format: uuid
+description: Запрос для получения доп. данных о подписях из документов различных бизнес систем.

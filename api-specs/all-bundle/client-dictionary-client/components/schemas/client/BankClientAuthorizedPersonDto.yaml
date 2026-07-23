@@ -1,0 +1,75 @@
+required:
+- createdAt
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  sourceSystem:
+    type: string
+    description: Система источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  lastName:
+    type: string
+    description: Фамилия УЛ
+  firstName:
+    type: string
+    description: Имя УЛ
+  patronymic:
+    type: string
+    description: Отчество УЛ
+  email:
+    type: string
+    description: Адрес электронной почты УЛ
+  phoneNumber:
+    maxLength: 16
+    pattern: ^\+\d+$
+    type: string
+    description: Номер телефона УЛ
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  authorities:
+    uniqueItems: true
+    type: array
+    description: Полномочия УЛ
+    items:
+      $ref: ./AuthorizedPersonAuthorityDto.yaml
+  linkedByEmailAndPhone:
+    type: boolean
+    description: Это связанный пользователь
+  userAbsId:
+    type: string
+    description: ИД пользователя в РКО Ф1
+  comment:
+    type: string
+    description: Комментарий
+  manuallyCreated:
+    type: boolean
+    description: Признак создания УЛ вручную
+  digitalSignTools:
+    type: array
+    description: Способы ЭП
+    items:
+      $ref: ./DigitalSignToolDto.yaml
+  actual:
+    type: boolean
+    description: Актуальная запись
+  accountAccessRestriction:
+    type: boolean
+    description: Признак наличия ограничений по счетам
+description: УЛ Клиента Банка. ДТО

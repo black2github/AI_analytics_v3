@@ -1,0 +1,156 @@
+post:
+  tags:
+  - СИП. Сервис SVFE
+  summary: Операция установки или изменения лимита по карте в ПЦ SVFE
+  operationId: setCardLimitUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.data.acceptedTime
+    in: query
+    description: Момент времени (UNIX timestamp в мс), в который волеизъявление было принято к исполнению
+    required: false
+    type: integer
+    format: int64
+  - name: body.data.guid
+    in: query
+    description: Идентификатор клиента ЕСФЛ
+    required: true
+    type: string
+  - name: body.data.orderId
+    in: query
+    description: Идентификатор волеизъявления
+    required: true
+    type: string
+  - name: body.data.scenario.code
+    in: query
+    description: Код сценария
+    required: true
+    type: string
+  - name: body.data.scenario.systemExecute
+    in: query
+    description: Код системы, которая отвечает за исполнение волеизъявления
+    required: true
+    type: string
+  - name: body.data.svfe.amount
+    in: query
+    description: Новое значение суммы лимита
+    required: true
+    type: string
+  - name: body.data.svfe.currencyCharCode
+    in: query
+    description: Буквенный код валюты
+    required: true
+    type: string
+  - name: body.data.svfe.currencyNumCode
+    in: query
+    description: Цифровой код валюты
+    required: true
+    type: string
+  - name: body.data.svfe.pan
+    in: query
+    description: Полный номер карты
+    required: false
+    type: string
+  - name: body.data.svfe.periodCode
+    in: query
+    description: Код лимита
+    required: true
+    type: string
+  - name: body.data.svfe.periodName
+    in: query
+    description: Вид лимита
+    required: true
+    type: string
+  - name: body.data.svfe.reason
+    in: query
+    description: Причина установки лимита
+    required: true
+    type: string
+  - name: body.data.svfe.source
+    in: query
+    description: Источник для лимита
+    required: true
+    type: string
+  - name: body.data.svfe.stateReason
+    in: query
+    description: Комментарий при смене лимита
+    required: false
+    type: string
+  - name: body.data.svfe.type
+    in: query
+    description: 'Тип операции: execute – внести изменение в продукт'
+    required: false
+    type: string
+  - name: body.data.svfe.typeCode
+    in: query
+    description: Код лимита, для возможности управления им
+    required: true
+    type: string
+  - name: body.data.svfe.typeName
+    in: query
+    description: Наименование лимита
+    required: true
+    type: string
+  - name: body.data.svfe.userFullName
+    in: query
+    description: ФИО сотрудника ФО или КЦ
+    required: false
+    type: string
+  - name: body.data.svfe.userLogin
+    in: query
+    description: Логин сотрудника ФО и КЦ
+    required: false
+    type: string
+  - name: body.data.svfe.virtualNum
+    in: query
+    description: Виртуальный номер карты
+    required: true
+    type: string
+  - name: body.meta.channel
+    in: query
+    description: Код канала, из которого осуществляется запрос.
+    required: false
+    type: string
+  - name: body.meta.systemId
+    in: query
+    description: Код системы источника данных, из которой осуществляется запрос.
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SipSvfeCardLimitSetResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

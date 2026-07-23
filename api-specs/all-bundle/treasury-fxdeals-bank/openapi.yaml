@@ -1,0 +1,445 @@
+openapi: 3.0.1
+info:
+  title: Сервис формирования сделок конверсии подтверждения. Банковская часть.
+  version: 1.68.1
+servers:
+- url: /treasury-fxdeals-bank
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /watch/fx-document/get-page:
+    $ref: ./paths/fx-document/watch_fx_document_get_page.yaml
+  /watch/fx-document/get-page-unpaid-by-client:
+    $ref: ./paths/fx-document/watch_fx_document_get_page_unpaid_by_client.yaml
+  /watch/fx-document/get-page-not-done:
+    $ref: ./paths/fx-document/watch_fx_document_get_page_not_done.yaml
+  /watch/fx-document/get-page-incompleted:
+    $ref: ./paths/fx-document/watch_fx_document_get_page_incompleted.yaml
+  /watch/fx-document/get-page-group:
+    $ref: ./paths/fx-document/watch_fx_document_get_page_group.yaml
+  /watch/fx-document/get-count:
+    $ref: ./paths/fx-document/watch_fx_document_get_count.yaml
+  /watch/fx-document/get-count-by-client:
+    $ref: ./paths/fx-document/watch_fx_document_get_count_by_client.yaml
+  /watch/fx-document/export-reports:
+    $ref: ./paths/fx-document/watch_fx_document_export_reports.yaml
+  /watch/fx-document/export-list:
+    $ref: ./paths/fx-document/watch_fx_document_export_list.yaml
+  /watch/fx-document/export-list-async:
+    $ref: ./paths/fx-document/watch_fx_document_export_list_async.yaml
+  /watch/fx-document/doc-types-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_doc_types_by_filter.yaml
+  /watch/fx-document/doc-statuses-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_doc_statuses_by_filter.yaml
+  /watch/fx-document/deal-statuses-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_deal_statuses_by_filter.yaml
+  /watch/fx-document/deal-status-categories-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_deal_status_categories_by_filter.yaml
+  /watch/fx-document/currency-pairs-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_currency_pairs_by_filter.yaml
+  /watch/fx-document/branches-by-filter:
+    $ref: ./paths/fx-document/watch_fx_document_branches_by_filter.yaml
+  /watch/duty/set-person-of-duty:
+    $ref: ./paths/duty/watch_duty_set_person_of_duty.yaml
+  /watch/ask-message-log/get-page:
+    $ref: ./paths/ask-message-log/watch_ask_message_log_get_page.yaml
+  /report/get-deals-not-done-report:
+    $ref: ./paths/get-deals-not-done-report/report_get_deals_not_done_report.yaml
+  /info/user/v2/by-clients:
+    $ref: ./paths/user/info_user_v2_by_clients.yaml
+  /info/user/by-clients:
+    $ref: ./paths/user/info_user_by_clients.yaml
+  /fx-document:
+    $ref: ./paths/fx-document/fx_document.yaml
+  /fx-document/validate:
+    $ref: ./paths/validate/fx_document_validate.yaml
+  /fx-document/save-template:
+    $ref: ./paths/save-template/fx_document_save_template.yaml
+  /fx-document/resend-to-ask:
+    $ref: ./paths/resend-to-ask/fx_document_resend_to_ask.yaml
+  /fx-document/print-reportclient:
+    $ref: ./paths/print-reportclient/fx_document_print_reportclient.yaml
+  /fx-document/print-reportbank:
+    $ref: ./paths/print-reportbank/fx_document_print_reportbank.yaml
+  /fx-document/manual/resign-bank-signature:
+    $ref: ./paths/manual/fx_document_manual_resign_bank_signature.yaml
+  /fx-document/delete:
+    $ref: ./paths/delete/fx_document_delete.yaml
+  /fx-document/cancel-edit:
+    $ref: ./paths/cancel-edit/fx_document_cancel_edit.yaml
+  /fx-document-unify/get-page:
+    $ref: ./paths/get-page/fx_document_unify_get_page.yaml
+  /fx-document-unify/get-page-group:
+    $ref: ./paths/get-page-group/fx_document_unify_get_page_group.yaml
+  /fx-document-unify/get-count:
+    $ref: ./paths/get-count/fx_document_unify_get_count.yaml
+  /fx-document-unify/get-count-by-client:
+    $ref: ./paths/get-count-by-client/fx_document_unify_get_count_by_client.yaml
+  /fx-document-unify/export-reports:
+    $ref: ./paths/export-reports/fx_document_unify_export_reports.yaml
+  /fx-document-unify/export-list:
+    $ref: ./paths/export-list/fx_document_unify_export_list.yaml
+  /fx-document-unify/export-list-async:
+    $ref: ./paths/export-list-async/fx_document_unify_export_list_async.yaml
+  /fx-document-unify/doc-types-by-filter:
+    $ref: ./paths/doc-types-by-filter/fx_document_unify_doc_types_by_filter.yaml
+  /fx-document-unify/doc-statuses-by-filter:
+    $ref: ./paths/doc-statuses-by-filter/fx_document_unify_doc_statuses_by_filter.yaml
+  /fx-document-unify/deal-statuses-by-filter:
+    $ref: ./paths/deal-statuses-by-filter/fx_document_unify_deal_statuses_by_filter.yaml
+  /fx-document-unify/deal-status-categories-by-filter:
+    $ref: ./paths/deal-status-categories-by-filter/fx_document_unify_deal_status_categories_by_filter.yaml
+  /fx-document-unify/currency-pairs-by-filter:
+    $ref: ./paths/currency-pairs-by-filter/fx_document_unify_currency_pairs_by_filter.yaml
+  /fx-document-unify/branches-by-filter:
+    $ref: ./paths/branches-by-filter/fx_document_unify_branches_by_filter.yaml
+  /common-config:
+    $ref: ./paths/common-config/common_config.yaml
+  /common-config/get-page:
+    $ref: ./paths/get-page/common_config_get_page.yaml
+  /ask-message-log/get-page:
+    $ref: ./paths/get-page/ask_message_log_get_page.yaml
+  /watch/fx-document/types:
+    $ref: ./paths/fx-document/watch_fx_document_types.yaml
+  /watch/fx-document/send-doc-metric/{code}:
+    $ref: ./paths/fx-document/watch_fx_document_send_doc_metric_code.yaml
+  /watch/fx-document/get-metric-excel/{code}:
+    $ref: ./paths/fx-document/watch_fx_document_get_metric_excel_code.yaml
+  /watch/fx-document/filters:
+    $ref: ./paths/fx-document/watch_fx_document_filters.yaml
+  /watch/fx-document/export-list-async-result/{id}:
+    $ref: ./paths/fx-document/watch_fx_document_export_list_async_result_id.yaml
+  /watch/fx-document/doc-types:
+    $ref: ./paths/fx-document/watch_fx_document_doc_types.yaml
+  /watch/fx-document/doc-statuses:
+    $ref: ./paths/fx-document/watch_fx_document_doc_statuses.yaml
+  /watch/fx-document/doc-metrics:
+    $ref: ./paths/fx-document/watch_fx_document_doc_metrics.yaml
+  /watch/fx-document/deal-statuses:
+    $ref: ./paths/fx-document/watch_fx_document_deal_statuses.yaml
+  /watch/fx-document/deal-status-categories:
+    $ref: ./paths/fx-document/watch_fx_document_deal_status_categories.yaml
+  /watch/fx-document/currency-pairs:
+    $ref: ./paths/fx-document/watch_fx_document_currency_pairs.yaml
+  /watch/duty/get-person-of-duty:
+    $ref: ./paths/duty/watch_duty_get_person_of_duty.yaml
+  /watch/ask-message-log/{id}:
+    $ref: ./paths/ask-message-log/watch_ask_message_log_id.yaml
+  /watch/ask-message-log/response-body/{id}:
+    $ref: ./paths/ask-message-log/watch_ask_message_log_response_body_id.yaml
+  /watch/ask-message-log/request-body/{id}:
+    $ref: ./paths/ask-message-log/watch_ask_message_log_request_body_id.yaml
+  /sign-service/certificate:
+    $ref: ./paths/certificate/sign_service_certificate.yaml
+  /report/sign-availability-errors-report:
+    $ref: ./paths/sign-availability-errors-report/report_sign_availability_errors_report.yaml
+  /report/integration/errors:
+    $ref: ./paths/integration/report_integration_errors.yaml
+  /report/get-executed-deals:
+    $ref: ./paths/get-executed-deals/report_get_executed_deals.yaml
+  /report/get-deals-by-statuses:
+    $ref: ./paths/get-deals-by-statuses/report_get_deals_by_statuses.yaml
+  /report/get-ask-error-messages-report:
+    $ref: ./paths/get-ask-error-messages-report/report_get_ask_error_messages_report.yaml
+  /report/duty/info:
+    $ref: ./paths/duty/report_duty_info.yaml
+  /report/deals/general:
+    $ref: ./paths/deals/report_deals_general.yaml
+  /report/deals/control:
+    $ref: ./paths/deals/report_deals_control.yaml
+  /report/attachments:
+    $ref: ./paths/attachments/report_attachments.yaml
+  /info/user/{userId}:
+    $ref: ./paths/user/info_user_userId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /fx-document/{id}:
+    $ref: ./paths/{id}/fx_document_id.yaml
+  /fx-document/history/{id}:
+    $ref: ./paths/history/fx_document_history_id.yaml
+  /fx-document/get-for-edit/{id}:
+    $ref: ./paths/get-for-edit/fx_document_get_for_edit_id.yaml
+  /fx-document/get-by-ask-id/{id}:
+    $ref: ./paths/get-by-ask-id/fx_document_get_by_ask_id_id.yaml
+  /fx-document/get-by-ask-id-includes-deleted/{id}:
+    $ref: ./paths/get-by-ask-id-includes-deleted/fx_document_get_by_ask_id_includes_deleted_id.yaml
+  /fx-document/full/{id}:
+    $ref: ./paths/full/fx_document_full_id.yaml
+  /fx-document-unify/types:
+    $ref: ./paths/types/fx_document_unify_types.yaml
+  /fx-document-unify/filters:
+    $ref: ./paths/filters/fx_document_unify_filters.yaml
+  /fx-document-unify/export-list-async-result/{id}:
+    $ref: ./paths/export-list-async-result/fx_document_unify_export_list_async_result_id.yaml
+  /fx-document-unify/doc-types:
+    $ref: ./paths/doc-types/fx_document_unify_doc_types.yaml
+  /fx-document-unify/doc-statuses:
+    $ref: ./paths/doc-statuses/fx_document_unify_doc_statuses.yaml
+  /fx-document-unify/deal-statuses:
+    $ref: ./paths/deal-statuses/fx_document_unify_deal_statuses.yaml
+  /fx-document-unify/deal-status-categories:
+    $ref: ./paths/deal-status-categories/fx_document_unify_deal_status_categories.yaml
+  /fx-document-unify/currency-pairs:
+    $ref: ./paths/currency-pairs/fx_document_unify_currency_pairs.yaml
+  /common-config/{id}:
+    $ref: ./paths/{id}/common_config_id.yaml
+  /common-config/get-by-code/{code}:
+    $ref: ./paths/get-by-code/common_config_get_by_code_code.yaml
+  /ask-message-log/{id}:
+    $ref: ./paths/{id}/ask_message_log_id.yaml
+  /ask-message-log/response-body/{id}:
+    $ref: ./paths/response-body/ask_message_log_response_body_id.yaml
+  /ask-message-log/request-body/{id}:
+    $ref: ./paths/request-body/ask_message_log_request_body_id.yaml
+  /caches/clear:
+    $ref: ./paths/clear/caches_clear.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FxDealDocBankFilter:
+      $ref: ./components/schemas/common/FxDealDocBankFilter.yaml
+    FxDealDocCategoryFilter:
+      $ref: ./components/schemas/common/FxDealDocCategoryFilter.yaml
+    FxDealDocClientApplicationTypeFilter:
+      $ref: ./components/schemas/common/FxDealDocClientApplicationTypeFilter.yaml
+    FxDealDocDealStatusFilter:
+      $ref: ./components/schemas/common/FxDealDocDealStatusFilter.yaml
+    FxDealDocDealTypeFilter:
+      $ref: ./components/schemas/common/FxDealDocDealTypeFilter.yaml
+    FxDealDocDocStatusFilter:
+      $ref: ./components/schemas/common/FxDealDocDocStatusFilter.yaml
+    FxDealDocDocTypeFilter:
+      $ref: ./components/schemas/common/FxDealDocDocTypeFilter.yaml
+    GetPageCommandFxDealDocBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandFxDealDocBankFilter.yaml
+    PageParamsFxDealDocBankFilter:
+      $ref: ./components/schemas/common/PageParamsFxDealDocBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    DealDocAccountBuyDto:
+      $ref: ./components/schemas/common/DealDocAccountBuyDto.yaml
+    DealDocAccountDto:
+      $ref: ./components/schemas/common/DealDocAccountDto.yaml
+    DealDocAccountSupplyDto:
+      $ref: ./components/schemas/common/DealDocAccountSupplyDto.yaml
+    DealDocGeneralAgreementDto:
+      $ref: ./components/schemas/common/DealDocGeneralAgreementDto.yaml
+    DealDocManagementFundDto:
+      $ref: ./components/schemas/common/DealDocManagementFundDto.yaml
+    FxDealDocClientVisaInfoDto:
+      $ref: ./components/schemas/common/FxDealDocClientVisaInfoDto.yaml
+    FxDealDocDto:
+      $ref: ./components/schemas/common/FxDealDocDto.yaml
+    FxDealDocUserActionInfoDto:
+      $ref: ./components/schemas/common/FxDealDocUserActionInfoDto.yaml
+    FxDealDocVisaSignatureDto:
+      $ref: ./components/schemas/common/FxDealDocVisaSignatureDto.yaml
+    GenericResponseErrorDataPageDataFxDealDocDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPageDataFxDealDocDto.yaml
+    PageDataFxDealDocDto:
+      $ref: ./components/schemas/common/PageDataFxDealDocDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/common/SignatureDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/common/UserInfoDto.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/common/GenericResponseErrorDataLong.yaml
+    GenericCommandFxDealDocBankFilter:
+      $ref: ./components/schemas/common/GenericCommandFxDealDocBankFilter.yaml
+    FxDealCountByClientDto:
+      $ref: ./components/schemas/common/FxDealCountByClientDto.yaml
+    GenericResponseErrorDataListFxDealCountByClientDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListFxDealCountByClientDto.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDFxDealDocBankFilter:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestTypeDtoWdUUIDFxDealDocBankFilter.yaml
+    PrintRequestTypeDtoWdUUIDFxDealDocBankFilter:
+      $ref: ./components/schemas/common/PrintRequestTypeDtoWdUUIDFxDealDocBankFilter.yaml
+    GenericResponseErrorDataPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/common/PrintResponseTreasury.yaml
+    ColumnDefinitionDto:
+      $ref: ./components/schemas/common/ColumnDefinitionDto.yaml
+    GenericCommandListReportDtoFilterUUIDFxDealDocBankFilter:
+      $ref: ./components/schemas/common/GenericCommandListReportDtoFilterUUIDFxDealDocBankFilter.yaml
+    ListReportDtoFilterUUIDFxDealDocBankFilter:
+      $ref: ./components/schemas/common/ListReportDtoFilterUUIDFxDealDocBankFilter.yaml
+    GenericResponseErrorDataUUID:
+      $ref: ./components/schemas/common/GenericResponseErrorDataUUID.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/common/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListEnumObjectDto.yaml
+    GenericResponseErrorDataListString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListString.yaml
+    GenericResponseErrorDataListBranchDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListBranchDto.yaml
+    GenericResponseErrorDataPersonOfDutyDto:
+      $ref: ./components/schemas/duty/GenericResponseErrorDataPersonOfDutyDto.yaml
+    PersonOfDutyDto:
+      $ref: ./components/schemas/duty/PersonOfDutyDto.yaml
+    AskMessageLogFilter:
+      $ref: ./components/schemas/common/AskMessageLogFilter.yaml
+    FilterValueDtoAskMessageLogDirectionDto:
+      $ref: ./components/schemas/common/FilterValueDtoAskMessageLogDirectionDto.yaml
+    GetPageCommandAskMessageLogFilter:
+      $ref: ./components/schemas/common/GetPageCommandAskMessageLogFilter.yaml
+    PageParamsAskMessageLogFilter:
+      $ref: ./components/schemas/common/PageParamsAskMessageLogFilter.yaml
+    AskMessageLogDto:
+      $ref: ./components/schemas/common/AskMessageLogDto.yaml
+    GenericResponseErrorDataPageDataAskMessageLogDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPageDataAskMessageLogDto.yaml
+    PageDataAskMessageLogDto:
+      $ref: ./components/schemas/common/PageDataAskMessageLogDto.yaml
+    UserInformationByClientBaseDto:
+      $ref: ./components/schemas/user/UserInformationByClientBaseDto.yaml
+    UserInformationByClientsRequestDto:
+      $ref: ./components/schemas/user/UserInformationByClientsRequestDto.yaml
+    DealBaseRateVariantsDto:
+      $ref: ./components/schemas/user/DealBaseRateVariantsDto.yaml
+    DealRateTypeDto:
+      $ref: ./components/schemas/user/DealRateTypeDto.yaml
+    GenericResponseErrorDataUserInformationV2ByServiceDto:
+      $ref: ./components/schemas/user/GenericResponseErrorDataUserInformationV2ByServiceDto.yaml
+    UserInformationByClientByServiceDto:
+      $ref: ./components/schemas/user/UserInformationByClientByServiceDto.yaml
+    UserInformationByDealTypeDto:
+      $ref: ./components/schemas/user/UserInformationByDealTypeDto.yaml
+    UserInformationV2ByServiceDto:
+      $ref: ./components/schemas/user/UserInformationV2ByServiceDto.yaml
+    GenericCommandFxDealDocDto:
+      $ref: ./components/schemas/common/GenericCommandFxDealDocDto.yaml
+    CreateResponseFxDealDocDto:
+      $ref: ./components/schemas/common/CreateResponseFxDealDocDto.yaml
+    CreateCommandForceFxDealDocDto:
+      $ref: ./components/schemas/save-template/CreateCommandForceFxDealDocDto.yaml
+    GenericResponseErrorDataFxDealDocDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataFxDealDocDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericCommandPrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/GenericCommandPrintRequestDtoWdUUID.yaml
+    PrintRequestDtoWdUUID:
+      $ref: ./components/schemas/common/PrintRequestDtoWdUUID.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    GenericCommandManualActionRequestDto:
+      $ref: ./components/schemas/manual/GenericCommandManualActionRequestDto.yaml
+    ManualActionRequestDto:
+      $ref: ./components/schemas/manual/ManualActionRequestDto.yaml
+    CommonConfigDto:
+      $ref: ./components/schemas/common/CommonConfigDto.yaml
+    GenericCommandCommonConfigDto:
+      $ref: ./components/schemas/common-config/GenericCommandCommonConfigDto.yaml
+    GenericResponseErrorDataCommonConfigDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataCommonConfigDto.yaml
+    CommonConfigFilter:
+      $ref: ./components/schemas/get-page/CommonConfigFilter.yaml
+    GetPageCommandCommonConfigFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandCommonConfigFilter.yaml
+    PageParamsCommonConfigFilter:
+      $ref: ./components/schemas/get-page/PageParamsCommonConfigFilter.yaml
+    GenericResponseErrorDataPageDataCommonConfigDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataCommonConfigDto.yaml
+    PageDataCommonConfigDto:
+      $ref: ./components/schemas/get-page/PageDataCommonConfigDto.yaml
+    DealInfoDto:
+      $ref: ./components/schemas/fx-document/DealInfoDto.yaml
+    GenericResponseErrorDataMetricsDto:
+      $ref: ./components/schemas/fx-document/GenericResponseErrorDataMetricsDto.yaml
+    MetricsDto:
+      $ref: ./components/schemas/fx-document/MetricsDto.yaml
+    GenericResponseErrorDataListPredefinedFilterDtoFxDealDocBankFilter:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPredefinedFilterDtoFxDealDocBankFilter.yaml
+    PredefinedFilterDtoFxDealDocBankFilter:
+      $ref: ./components/schemas/common/PredefinedFilterDtoFxDealDocBankFilter.yaml
+    DownloadCommand:
+      $ref: ./components/schemas/common/DownloadCommand.yaml
+    GenericResponseErrorDataDownloadCommand:
+      $ref: ./components/schemas/common/GenericResponseErrorDataDownloadCommand.yaml
+    GenericResponseErrorDataListMetricsDto:
+      $ref: ./components/schemas/fx-document/GenericResponseErrorDataListMetricsDto.yaml
+    GenericResponseErrorDataAskMessageLogDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAskMessageLogDto.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    CertificateDto:
+      $ref: ./components/schemas/certificate/CertificateDto.yaml
+    GenericResponseErrorDataCertificateDto:
+      $ref: ./components/schemas/certificate/GenericResponseErrorDataCertificateDto.yaml
+    GenericResponseErrorDataListSignAvailabilityErrorDto:
+      $ref: ./components/schemas/sign-availability-errors-report/GenericResponseErrorDataListSignAvailabilityErrorDto.yaml
+    SignAvailabilityErrorDto:
+      $ref: ./components/schemas/sign-availability-errors-report/SignAvailabilityErrorDto.yaml
+    GenericResponseErrorDataTableDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataTableDto.yaml
+    TableDto:
+      $ref: ./components/schemas/common/TableDto.yaml
+    TableRowDto:
+      $ref: ./components/schemas/common/TableRowDto.yaml
+    GenericResponseErrorDataListRecord:
+      $ref: ./components/schemas/get-deals-by-statuses/GenericResponseErrorDataListRecord.yaml
+    Record:
+      $ref: ./components/schemas/common/Record.yaml
+    DealsReportDto:
+      $ref: ./components/schemas/deals/DealsReportDto.yaml
+    GenericResponseErrorDataDealsReportDto:
+      $ref: ./components/schemas/deals/GenericResponseErrorDataDealsReportDto.yaml
+    GenericResponseErrorDataListUserInformationByClientDto:
+      $ref: ./components/schemas/user/GenericResponseErrorDataListUserInformationByClientDto.yaml
+    UserInformationByClientDto:
+      $ref: ./components/schemas/user/UserInformationByClientDto.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/{locale}/GenericResponseErrorDataMapStringString.yaml
+    FxDealDocHistoryDto:
+      $ref: ./components/schemas/history/FxDealDocHistoryDto.yaml
+    GenericResponseErrorDataListFxDealDocHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseErrorDataListFxDealDocHistoryDto.yaml

@@ -1,0 +1,14 @@
+post:
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          $ref: ../../components/schemas/push/FileUploadRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/push/EventDataResponse.yaml

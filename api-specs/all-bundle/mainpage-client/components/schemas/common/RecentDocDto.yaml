@@ -1,0 +1,67 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  date:
+    type: string
+    description: Дата создания документа
+    format: date
+  number:
+    type: string
+    description: Номер документа
+  updatedAt:
+    type: string
+    description: Дата изменения документа
+    format: date-time
+  status:
+    type: string
+    description: Код статуса документа
+  type:
+    type: string
+    description: Тип документа
+  clientName:
+    type: string
+    description: Краткое или полное наименование клиента
+  document:
+    type: object
+    additionalProperties:
+      type: object
+      description: Контекст для добавления дополнительных данных при формировании карточки документа
+    description: Контекст для добавления дополнительных данных при формировании карточки документа
+  primaryCheckResult:
+    type: string
+    description: ' Результат первичных проверок'
+    deprecated: true
+    enum:
+    - POSITIVE
+    - NEGATIVE
+    - ERROR
+    - CONDITIONALLY_POSITIVE
+    - CONDITIONALLY_POSITIVE_BY_FNS
+    - CONDITIONALLY_POSITIVE_BY_FTS
+    - EMPTY
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    deprecated: true
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+    deprecated: true
+  userType:
+    type: string
+    description: Тип пользователя, который создал заявку
+    deprecated: true
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Недавно измененный документ

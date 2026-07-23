@@ -1,0 +1,32 @@
+required:
+- bankClientId
+- emplId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  emplId:
+    type: string
+    description: Ссылка на сущность "Сотрудники клиента"
+    format: uuid
+  products:
+    type: array
+    description: Коды продуктов (ЦРМ)
+    items:
+      type: string
+      description: Код продукта
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+description: Данные для получения

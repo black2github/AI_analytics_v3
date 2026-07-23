@@ -1,0 +1,9 @@
+type: object
+properties:
+  results:
+    uniqueItems: true
+    type: array
+    description: Результаты проверок по запрошенным сертификатам
+    items:
+      $ref: ./SignAuthorityCertificateResponseV2.yaml
+description: Ответ на запрос проверки полномочий V2

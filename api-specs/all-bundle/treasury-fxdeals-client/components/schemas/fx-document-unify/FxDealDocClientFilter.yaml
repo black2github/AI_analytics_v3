@@ -1,0 +1,53 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  receivedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  dealDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  dealDateTime:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  beginDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  docType:
+    $ref: ./FxDealDocDocTypeFilter.yaml
+  docStatus:
+    $ref: ./FxDealDocDocStatusFilter.yaml
+  dealStatus:
+    $ref: ./FxDealDocDealStatusFilter.yaml
+  statusCategory:
+    $ref: ./FxDealDocCategoryFilter.yaml
+  amountBuy:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  amountSell:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  currencyBuy:
+    $ref: ./FilterValueDtoString.yaml
+  currencySell:
+    $ref: ./FilterValueDtoString.yaml
+  currencyPair:
+    $ref: ./FilterValueDtoString.yaml
+  valueDateBuy:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  valueDateSell:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  docBankPreConfirmation:
+    $ref: ./FilterValueDtoBoolean.yaml
+  docClientFromBankConfirmation:
+    $ref: ./FilterValueDtoBoolean.yaml
+  dealType:
+    $ref: ./FxDealDocDealTypeFilter.yaml
+  clientAbsF1Id:
+    $ref: ./FilterValueDtoString.yaml
+  excludeDraftRequest:
+    type: boolean
+  checkClientPay:
+    type: boolean
+description: Фильтр

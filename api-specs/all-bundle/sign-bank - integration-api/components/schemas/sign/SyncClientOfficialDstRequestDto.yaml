@@ -1,0 +1,27 @@
+type: object
+properties:
+  destinationClientOfficialId:
+    type: string
+    description: ID представителя для которого происходит поиск СЭПов
+    format: uuid
+  destinationUserId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  sourceClientOfficialIds:
+    uniqueItems: true
+    type: array
+    description: Перечень ID представителей чьи СЭПы будут привязаны к представителю
+    items:
+      type: string
+      description: Перечень ID представителей чьи СЭПы будут привязаны к представителю
+      format: uuid
+  bankUserId:
+    type: string
+    description: UAA ID сотрудника банка
+    format: uuid
+description: Запрос на синхронизацию СЭПов физ. лица

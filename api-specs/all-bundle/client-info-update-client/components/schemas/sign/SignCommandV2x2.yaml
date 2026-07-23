@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  certificateId:
+    type: string
+    format: uuid
+  digest:
+    type: string
+  documentId:
+    type: string
+    format: uuid
+  signature:
+    type: string

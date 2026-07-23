@@ -1,0 +1,21 @@
+type: object
+description: Запрос изменения данных ТСП
+properties:
+  salesMode:
+    type: string
+    description: Способ приема оплаты ТСП
+  inn:
+    type: string
+    description: ИНН
+  url:
+    type: string
+    description: Веб-сайт ТСП
+  guid:
+    type: string
+    description: Идентификатор заявки
+  docType:
+    type: string
+    description: Тип заявки в экосистеме
+  callbackUrl:
+    type: string
+    description: Url для отправки уведомления ТСП

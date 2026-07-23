@@ -1,0 +1,14 @@
+required:
+- field
+type: object
+properties:
+  field:
+    type: string
+    enum:
+    - ACCOUNT_NUMBER
+    - OPERATION_DATE
+  direction:
+    type: string
+    enum:
+    - ASC
+    - DESC

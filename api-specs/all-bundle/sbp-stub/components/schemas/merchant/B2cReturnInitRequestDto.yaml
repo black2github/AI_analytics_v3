@@ -1,0 +1,37 @@
+type: object
+required:
+- transactionId
+- amount
+- currency
+- sender
+description: Запрос инициализации возврата.
+properties:
+  qrdocType:
+    type: string
+    description: Тип документа
+  transactionId:
+    type: string
+    description: ID операции, по которой делаем возврат в СБП
+  amount:
+    type: string
+    description: Сумма в копейках
+  currency:
+    type: string
+    description: Валюта операции
+  comment:
+    type: string
+    description: Комментарий
+  guid:
+    type: string
+    description: идентификатор BSS
+  recipient:
+    $ref: ./B2cReturnInitRecipientDto.yaml
+    type: object
+    description: Получатель перевода
+  sender:
+    $ref: ./B2cReturnInitSenderDto.yaml
+    type: object
+    description: Отправитель перевода
+  callbackMerchantNotifications:
+    type: string
+    description: URL системы для получения сообщения о статусе возврата

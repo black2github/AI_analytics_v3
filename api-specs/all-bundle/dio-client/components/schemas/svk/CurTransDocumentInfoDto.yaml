@@ -1,0 +1,54 @@
+type: object
+properties:
+  payerName:
+    type: string
+    description: Наименование плательщика
+  payerCountry:
+    type: string
+    description: Наименование страны плательщика
+  payerBankName:
+    type: string
+    description: Наименование банка плательщика
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  payerAccount:
+    type: string
+    description: Счет плательщика
+  beneficiaryAccount:
+    type: string
+    description: Счет получателя
+  payerBankBic:
+    type: string
+    description: БИК банка плательщика
+  payerBankCountry:
+    type: string
+    description: Страна банка плательщика
+  beneficiaryName:
+    type: string
+    description: Наименование получателя
+  beneficiaryBankBic:
+    type: string
+    description: БИК банка получателя
+  beneficiaryBankName:
+    type: string
+    description: Наименование банка получателя
+  beneficiaryBankCountry:
+    type: string
+    description: Страна банка получателя
+  intermediaryBankBic:
+    type: string
+    description: БИК банка-посредника
+  intermediaryBank:
+    type: string
+    description: Банк-посредник
+  intermediaryBankCountry:
+    type: string
+    description: Страна банка-посредника
+  numberCcf:
+    type: string
+    description: Номер ЦЦФ
+  docVersion:
+    type: string
+    description: Версия формата документа.
+description: Информация связанного документа ВП

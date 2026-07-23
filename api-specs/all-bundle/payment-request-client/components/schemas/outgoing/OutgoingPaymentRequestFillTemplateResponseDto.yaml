@@ -1,0 +1,11 @@
+required:
+- clientDto
+- templateName
+type: object
+properties:
+  templateName:
+    type: string
+    description: Наименование шаблона
+  clientDto:
+    $ref: ./OutgoingPaymentRequestClientDto.yaml
+description: ДТО Заполненного документа Исходящего Платежного требования по шаблону

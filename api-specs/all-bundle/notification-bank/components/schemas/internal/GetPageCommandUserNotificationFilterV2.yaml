@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUserNotificationFilterV2.yaml
+description: Запрос страницы

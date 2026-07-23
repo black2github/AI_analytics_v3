@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице brk_crm_response_stub
+  tags:
+  - Обновление заглушек brk_crm_response_stub
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/crm/BrkCrmResponseDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/crm/BrkCrmResponseDto.yaml
+    '400':
+      description: Bad Request

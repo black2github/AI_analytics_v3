@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Удаление документа
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_DELETE'
+  operationId: delete
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseClientInfoUpdateRequestDto.yaml

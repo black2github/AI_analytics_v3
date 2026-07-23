@@ -1,0 +1,89 @@
+type: object
+required:
+- clientAbsId
+- clientName
+- accountNumber
+- cardId
+- maskNum
+- operDate
+- operAmount
+- operCurrency
+- accountAmount
+- isReversal
+- cardholderName
+- paySystemCode
+description: Транзакция по локальной карте
+properties:
+  id:
+    type: integer
+    description: Внутренний ID транзакции в АБС Ф1
+  clientAbsId:
+    type: integer
+    format: int64
+    description: РНК клиента в РКО Ф1
+  clientName:
+    type: string
+    maxLength: 160
+    description: Наименование организации
+  accountNumber:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счета
+  cardId:
+    type: string
+    maxLength: 50
+    description: Виртуальный номер карты
+  maskNum:
+    type: string
+    maxLength: 16
+    description: Маскированный номер карты
+  operDate:
+    type: string
+    format: date-time
+    examples:
+    - '2022-03-10T12:15:50'
+    description: Местные дата и время совершения транзакции
+  accountDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата списания
+  authCode:
+    type: string
+    maxLength: 32
+    description: Код авторизации
+  operAmount:
+    type: number
+    description: Сумма транзакции в валюте операции
+  operCurrency:
+    type: string
+    maxLength: 3
+    description: Валюта транзакции
+  accountAmount:
+    type: number
+    description: Сумма транзакции в валюте счета
+  operPurpose:
+    type: string
+    description: Описание транзакции
+  merchantName:
+    type: string
+    maxLength: 255
+    description: Наименование торговой точки
+  mcc:
+    type: string
+    maxLength: 4
+    description: MCC код
+  isReversal:
+    type: string
+    maxLength: 1
+    description: Признак возврата
+  cardholderName:
+    type: string
+    maxLength: 160
+    description: Наименование держателя карты
+  paySystemCode:
+    type: string
+    maxLength: 65
+    description: Код технологического продукта

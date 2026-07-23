@@ -1,0 +1,47 @@
+required:
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы платежных требований для экспорта
+    items:
+      type: string
+      description: Идентификаторы платежных требований для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ./OutgoingPaymentRequestClientFilter.yaml
+  columns:
+    uniqueItems: true
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Отображаемые колонки
+      enum:
+      - NUMBER
+      - DATE
+      - ORG
+      - ORG_ACC
+      - ORG_NAME
+      - ORG_INN
+      - CNT
+      - CNT_NAME
+      - CNT_INN
+      - CNT_ACC
+      - CNT_BIC
+      - PURPOSE
+      - AMOUNT
+      - ACCEPT_TERM
+      - STATUS
+      - CREATION_WAY
+      - CREATION_SYSTEM
+  timeZone:
+    type: string
+    description: Часовой пояс
+description: Запрос экспорта реестра платежных требований исходящих

@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientId:
+    type: string
+    format: uuid
+  title:
+    type: string
+  contracts:
+    type: array
+    items:
+      $ref: ./RefClientContractDto.yaml

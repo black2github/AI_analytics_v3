@@ -1,0 +1,16 @@
+required:
+- fieldName
+type: object
+properties:
+  fieldName:
+    type: string
+    description: Наименование поля для поиска и возврата значения
+    enum:
+    - ABS_ID
+    - KPP
+    - OGRN_OGRIP
+    - REG_NUMBER
+  contains:
+    type: string
+    description: Подстрока для поиска
+description: Поиск подстроки в выбранном поле

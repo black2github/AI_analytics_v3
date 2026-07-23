@@ -1,0 +1,14 @@
+required:
+- name
+- value
+type: object
+properties:
+  name:
+    minLength: 1
+    type: string
+    description: Название доп. параметра
+  value:
+    minLength: 1
+    type: string
+    description: Значение доп. параметра
+description: Дополнительный параметр

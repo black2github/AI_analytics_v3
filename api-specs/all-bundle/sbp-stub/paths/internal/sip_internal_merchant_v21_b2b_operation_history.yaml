@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос истории операций СБП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/MerchantB2bTransactionsRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/ClientB2bTransactionsDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,11 @@
+type: object
+properties:
+  zoneDescription:
+    type: string
+    description: Текст описания зоны доступности
+  isAvailableInDocPack:
+    type: boolean
+    writeOnly: true
+  availableInDocPack:
+    type: boolean
+description: Справочник городов выездных менеджеров. ДТО.

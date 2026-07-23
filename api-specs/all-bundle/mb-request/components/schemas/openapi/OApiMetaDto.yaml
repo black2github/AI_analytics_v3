@@ -1,0 +1,7 @@
+type: object
+properties:
+  totalPages:
+    type: integer
+    description: Кол-во передаваемых страниц
+    format: int32
+description: Раздел метаданных

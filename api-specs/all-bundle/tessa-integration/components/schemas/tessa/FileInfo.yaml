@@ -1,0 +1,44 @@
+type: object
+properties:
+  RN:
+    type: integer
+    format: int32
+    writeOnly: true
+  ID:
+    type: string
+    format: uuid
+    writeOnly: true
+  categoryID:
+    type: string
+    description: ID категории файла
+    format: uuid
+  categoryCaption:
+    type: string
+    description: Категория файла
+  fileName:
+    type: string
+    description: Наименование файла
+  size:
+    type: integer
+    description: Размер последней версии файла в байтах
+    format: int32
+  link:
+    type: string
+    description: Ссылка на скачивание последней версии файла
+  signatures:
+    type: array
+    description: Подписи последней версии файла
+    items:
+      $ref: ./FileSignature.yaml
+  versions:
+    type: array
+    description: Версии файла
+    items:
+      $ref: ./FileVersion.yaml
+  id:
+    type: string
+    format: uuid
+  rn:
+    type: integer
+    format: int32
+description: Файлы в документе

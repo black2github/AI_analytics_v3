@@ -1,0 +1,66 @@
+type: object
+description: История изменений сертификатов для подписи писем автоматической рассылки.
+properties:
+  bankCertificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата пользователя банка.
+  branches:
+    type: array
+    description: Филиалы.
+    items:
+      $ref: ./BulkAttachmentCertificateBranchHistoryDto.yaml
+  bulkAttachmentCertificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата подписи писем автоматической рассылки.
+  certificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата ЭП.
+  changedIn:
+    type: string
+    format: date-time
+    description: Дата и время записи истории изменений сертификата
+  comment:
+    type: string
+    description: Комментарий.
+  dateEnd:
+    type: string
+    format: date
+    description: 'Период действия сертификата: по.'
+  dateStart:
+    type: string
+    format: date
+    description: 'Период действия сертификата: с.'
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор.
+  isBlocked:
+    type: boolean
+    description: Временная блокировка.
+  ownerFio:
+    type: string
+    description: Владелец сертификата.
+  ownerId:
+    type: string
+    format: uuid
+    description: Id владельца сертификата.
+  status:
+    type: string
+    description: Статус.
+    enum:
+    - ADDED
+    - UPDATED
+    - DELETED
+  userFio:
+    type: string
+    description: ФИО пользователя.
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Пользователь".
+  userLogin:
+    type: string
+    description: Логин пользователя.

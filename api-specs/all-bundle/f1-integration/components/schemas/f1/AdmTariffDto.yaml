@@ -1,0 +1,24 @@
+required:
+- city
+- maxDepositingFundsAmount
+- minDepositingFundsAmount
+- tariffMinAmount
+- tariffRate
+type: object
+properties:
+  tariffRate:
+    type: number
+    description: Ставка тарифа
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма
+  city:
+    type: string
+    description: Название города
+  minDepositingFundsAmount:
+    type: number
+    description: Объем внесения от
+  maxDepositingFundsAmount:
+    type: number
+    description: Объем внесения до
+description: Тариф АДМ

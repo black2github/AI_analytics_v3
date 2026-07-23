@@ -1,0 +1,97 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  requestNumber:
+    type: integer
+    description: Номер заявки, сквозная автоматическая нумерация в разрезе Клиента, по которому создается заявка и года создания заявки
+    format: int32
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+  clientUuid:
+    type: string
+    description: UUID клиента
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента/организации
+  shortName:
+    type: string
+    description: Краткое наименование клиента/организации
+  inn:
+    type: string
+    description: Идентификационный номер налогоплательщика (ИНН / КИО)
+  emailToBank:
+    type: array
+    description: Список email для обмена сообщениями с банком
+    items:
+      type: string
+      description: Список email для обмена сообщениями с банком
+  emailToReport:
+    type: array
+    description: Список email для получения отчётов брокера
+    items:
+      type: string
+      description: Список email для получения отчётов брокера
+  phone:
+    type: string
+    description: Контактный телефон
+  files:
+    type: array
+    description: Файлы
+    items:
+      $ref: ./BrkFileStorageDataDto.yaml
+  validationResult:
+    $ref: ./ValidationResult.yaml
+  listFloorCurrency:
+    type: array
+    description: Подключаемые площадки и валюты
+    items:
+      $ref: ./BrkOnbFloorViewDto.yaml
+  tariff:
+    type: string
+    description: Тариф
+  clientMessage:
+    type: string
+    description: Комментарий для клиента
+  boId:
+    type: string
+    description: ID договора БО UUID
+    format: uuid
+  boName:
+    type: string
+    description: Наименование договора БО
+  boNumber:
+    type: string
+    description: Номер договора БО
+  boDate:
+    type: string
+    description: Дата заключения договора БО
+    format: date-time
+  signedByUserFio:
+    type: string
+    description: Подписано пользователем
+  createdByUserId:
+    type: string
+    description: Ссылка на сущность, описывающую пользователя, создавшего заявку
+    format: uuid
+  termsAcquainted:
+    type: boolean
+    description: Признак ознакомления с условиями заявки
+  signature:
+    $ref: ./BrkOnbSignatureDto.yaml
+  signed:
+    type: boolean
+    description: Подписана
+description: Сведения о модели заявки

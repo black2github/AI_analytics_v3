@@ -1,0 +1,9 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID клиента банка
+    format: uuid
+description: Запрос на расчет аттрибутов CSR для клиента

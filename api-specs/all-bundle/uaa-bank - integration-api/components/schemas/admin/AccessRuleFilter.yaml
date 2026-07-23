@@ -1,0 +1,61 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории для скроллера правил
+    enum:
+    - ALL
+    - EXECUTED
+    - PENDING_EXECUTION
+    - CANCELED
+  removeClientOfficial:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  origin:
+    $ref: ./FilterValueEnumDtoOriginSystem.yaml
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  ruleType:
+    $ref: ./FilterValueEnumDtoRuleType.yaml
+  segment:
+    $ref: ./FilterValueEnumDtoSegmentCode.yaml
+  clientId:
+    $ref: ./FilterValueDtoLong.yaml
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  uaaRoles:
+    $ref: ../common/FilterValueDtoString.yaml
+  uaaSegments:
+    $ref: ../common/FilterValueDtoString.yaml
+  fullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  shortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrnOgrip:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstName:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdManually:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр

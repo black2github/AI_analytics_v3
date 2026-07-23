@@ -1,0 +1,20 @@
+required:
+- accruedTotal
+- debts
+- orgId
+- orgName
+type: object
+properties:
+  orgId:
+    type: string
+    format: uuid
+  orgName:
+    type: string
+  payTotal:
+    type: string
+  accruedTotal:
+    type: string
+  debts:
+    type: array
+    items:
+      $ref: ./DebtRowViewDto.yaml

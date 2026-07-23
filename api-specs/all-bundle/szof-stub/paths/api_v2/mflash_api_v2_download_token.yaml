@@ -1,0 +1,20 @@
+get:
+  parameters:
+  - name: token
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+post:
+  parameters:
+  - name: token
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK

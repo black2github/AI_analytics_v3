@@ -1,0 +1,14 @@
+type: object
+properties:
+  checkboxes:
+    $ref: ../common/OriginalDocumentCheckboxesDto.yaml
+  documents:
+    type: array
+    description: Список оригиналов документов
+    items:
+      $ref: ../common/OriginalDocumentDto.yaml
+  version:
+    type: integer
+    description: Версия короткой заявки на открытие первого счёта
+    format: int32
+description: Оригиналы документов для загрузки

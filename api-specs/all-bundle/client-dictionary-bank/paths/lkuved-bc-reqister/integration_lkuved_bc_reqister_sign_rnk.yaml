@@ -1,0 +1,61 @@
+get:
+  tags:
+  - ЛК УВЭД Техническое АПИ
+  summary: Получить признак "Возможность подписания в ГПБ БОЛ" по РНК клиента в Ф1
+  description: 'Привилегии: CLIENT_DICTIONARY.TECH.LKUVED_BC_REG_FIND_BY_RNK_F1'
+  operationId: canSignByRnkF1
+  parameters:
+  - name: rnk
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/lkuved-bc-reqister/GenericResponseSimpleErrorDataLkuvedBcRegisterTechFindRnkRspDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

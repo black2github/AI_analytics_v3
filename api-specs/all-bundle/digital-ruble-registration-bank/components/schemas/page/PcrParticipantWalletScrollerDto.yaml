@@ -1,0 +1,48 @@
+required:
+- bankClientId
+- cbrParticipantId
+- cbrParticipantWalletId
+- cbrParticipantWalletStatus
+- eskBankClientId
+- id
+- registrationDate
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  cbrAccountNumber:
+    type: string
+    description: Счет цифрового рубля
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации в ЦБ
+  eskBankClientId:
+    type: string
+    description: Идентификатор организации в ЕСК
+    format: uuid
+  cbrParticipantWalletStatus:
+    type: string
+    description: Статус кошелька в ЦБ
+  registrationDate:
+    type: string
+    description: Дата регистрации цифрового кошелька
+    format: date-time
+  name:
+    type: string
+    description: Наименование организации
+  inn:
+    type: string
+    description: ИНН
+  rnk:
+    type: string
+    description: РНК
+description: Счета цифрового рубля

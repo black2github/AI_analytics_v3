@@ -1,0 +1,78 @@
+get:
+  tags:
+  - API проверки возможности формирования справки
+  summary: Проверить возможность формирования справки
+  description: 'Привилегии: INQUIRY.CLIENT.CREATE,INQUIRY.CLIENT.UPDATE,INQUIRY_REQUEST.CREATE,INQUIRY_REQUEST.UPDATE'
+  operationId: checkInquiryForming
+  parameters:
+  - name: requestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+      example: null
+  - name: organizationId
+    in: header
+    required: false
+    schema:
+      type: string
+      format: uuid
+      example: null
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/{requestId}/GenericResponseSimpleErrorDataInquiryCheckFormingResponseDto.yaml
+          example: null

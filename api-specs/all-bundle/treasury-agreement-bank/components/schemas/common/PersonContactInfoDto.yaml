@@ -1,0 +1,15 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: Фамилия Имя Отчество контакта для связи
+  positionAndBranch:
+    type: string
+    description: Должность и подразделение контакта для связи
+  phone:
+    type: string
+    description: Номер телефона для связи
+  email:
+    type: string
+    description: Адрес электронной почты
+description: Данные контактного лица

@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Оферта"
+    format: uuid
+  printFormat:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - DOCX
+    - DOCX_TO_PDF
+    - PDF
+description: Тип формата печатной формы

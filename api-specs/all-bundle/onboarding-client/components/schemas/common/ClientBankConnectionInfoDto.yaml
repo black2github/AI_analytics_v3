@@ -1,0 +1,6 @@
+type: object
+properties:
+  connected:
+    type: boolean
+    description: Признак подключения системы Клиента-Банк
+description: Сведения о подключении к системе Клиент-Банк

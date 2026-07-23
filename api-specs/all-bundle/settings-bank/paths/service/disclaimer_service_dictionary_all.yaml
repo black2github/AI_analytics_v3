@@ -1,0 +1,16 @@
+get:
+  tags:
+  - АПИ Банка для работы со справочниками сервисов дисклеймеров
+  summary: Получить список записей
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_VIEW'
+  operationId: getDisclaimerServiceDictionaries
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              $ref: ../../components/schemas/service/DisclaimerServiceDictionaryDto.yaml

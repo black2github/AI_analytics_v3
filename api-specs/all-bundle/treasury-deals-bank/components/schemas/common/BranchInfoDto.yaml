@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  branchType:
+    type: string
+    description: Тип записи
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  parentBranch:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  knosisBranchId:
+    type: integer
+    description: Идентификатор филиала в Мастер-Системе (КНОСИС)
+    format: int64
+  absCode:
+    type: string
+    description: Код подразделения в АБС.
+    example: 099/1032
+  name:
+    type: string
+    description: Наименование подразделения
+  bic:
+    type: string
+    description: БИК подразделения
+  filialName:
+    type: string
+    description: Наименование филиала
+  swift:
+    type: string
+    description: SWIFT филиала
+  isDeleted:
+    type: boolean
+    description: Признак удаления
+description: Данные

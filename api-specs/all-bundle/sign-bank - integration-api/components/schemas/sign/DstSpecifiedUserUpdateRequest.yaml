@@ -1,0 +1,16 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  data:
+    $ref: ./DstUpdateDto.yaml
+description: Запрос изменения одного СЭП указанным пользователем

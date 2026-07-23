@@ -1,0 +1,31 @@
+required:
+- finalStatus
+- processStatus
+type: object
+properties:
+  processStatus:
+    type: string
+    description: Статус процесса импорта
+    enum:
+    - CREATED
+    - ANTIVIRUS_CHECK
+    - FILE_FORMAT_CHECK
+    - CONVERT_TO_UFEBS_FORMAT
+    - IMPORT_DOCUMENTS_FROM_FILE
+    - WAITING_FOR_USER_ACTION
+    - EXECUTING_USER_ACTION
+    - COMPLETED
+  finalStatus:
+    type: string
+    description: Итоговый статус фонового процесса импорта
+    enum:
+    - NOT_DEFINED
+    - COMPLETED
+    - ANTIVIRUS_CHECK_ERROR
+    - FORMAT_CHECK_ERROR
+    - IMPORT_FROM_FILE_ERROR
+    - TIMEOUT_ERROR
+  errorMessage:
+    type: string
+    description: Текст ошибки
+description: Состояние процесса

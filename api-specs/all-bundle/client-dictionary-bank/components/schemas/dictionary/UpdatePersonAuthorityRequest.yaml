@@ -1,0 +1,168 @@
+type: object
+properties:
+  sourceSystem:
+    type: string
+    description: Система источник записи.
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  authorizedPersonId:
+    type: string
+    description: Ссылка на сущность "УЛ Клиента".
+    format: uuid
+  agreementId:
+    type: string
+    description: Ссылка на сущность "Соглашения Клиента Банка".
+    format: uuid
+  expiredAt:
+    type: string
+    description: Дата и время завершения действия полномочия.
+    format: date-time
+  requestType:
+    type: string
+    description: Код типа заявки, являющейся источником записи.
+    enum:
+    - UNKNOWN
+    - ACC_CLOSE_REQ
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_SECOND_REQ
+    - ACC_RESERV_REQ
+    - ACC_RESERV_REQ_2
+    - OFFER_RKO_ACCEPTANCE_REQ
+    - OFFER_JOIN_GPB_BO1_REQ
+    - OFFER_JOIN_GPB_BO2_REQ
+    - OFFER_JOIN_CCERT
+    - FREE_FORMAT_DOC
+    - OFFER_JOIN_PO_UVED
+    - OFFER_BREAK_PO_UVED
+    - ADD_BLOCK_USER_UVED
+    - ACC_RKO_SERVICE_PMT_ADD
+    - OFFER_GEN_CERT
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - CAR_LEASING
+    - CORP_LEASING
+    - ADD_BLOCK_USER_GPBBO
+    - UPDATE_INFORM
+    - UPDATE_INFORM_RQMNT
+    - REQUEST_FOR_ACCOUNT_INFO
+    - PAY_DOC_RU
+    - PAY_REQ_RU_IN
+    - CHARGEBACK
+    - CURR_BUY
+    - CURR_SALE
+    - CURR_CONV
+    - CURR_SALE_MAND
+    - CURR_TRANS
+    - CURR_CONTR_MESS_IN
+    - CURR_CONTR_MESS_OUT
+    - REQUEST_BROKER_REPORTS
+    - REQUEST_STATEMENT
+    - CANCEL_REQUEST_STATEMENT
+    - MEETINGS_REQUEST
+    - BRK_OPEN_ACC
+    - BUY_SELL_CURR
+    - BUY_SELL_CURR_PURCHASE
+    - BUY_SELL_CURR_SALE
+    - PAY_DOC_CUR
+    - UNC_DOC_INF
+    - TRADE_ORDER
+    - LANDING_ORDER
+    - OFFER_USE_DIGITAL_SIGNATURE
+    - ADD_EDIT_USER
+    - BC_BLOCK_REQUEST
+    - BC_BLOCK_BATCH
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+    - REG_COWORKER_DATA
+    - ACC_OPEN_FIRST_REQ_2021
+    - OFFER_TMG
+    - STATEMENT_USER_ROLE_TMG
+    - OPEN_ADM_ACCOUNT
+    - ADD_ADM_POC
+    - REMOVE_ADM_POC
+    - REMOVE_ADM_ACCOUNT
+    - ADD_ADM_ACCOUNT
+    - CHANGE_ADM_ACCOUNT
+    - ADM_TERMINAL_BREAKDOWN
+    - ADM_CALLBACK_REQUEST
+    - CHANGE_COMM_PERIOD
+    - ENCASHMENT
+    - TREASURY_AGREEMENT_REQUEST_MNO
+    - TREASURY_AGREEMENT_REQUEST_DU_MNO
+    - TREASURY_AGREEMENT_REQUEST_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_DU_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_CONVERSION
+    - TREASURY_AGREEMENT_REQUEST_DU_CONVERSION
+    - TREASURY_DEALS_MNO
+    - TREASURY_DEALS_DEPOSIT
+    - TREASURY_DEALS_FX
+    - TREASURY_AGREEMENT_REQUEST_GSNO_PARENT
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_HEAD
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_FRIEND
+    - TREASURY_AGREEMENT_REQUEST_CHANGE_ACCOUNTS
+    - TREASURY_DEALS_GSNO
+    - TREASURY_ONBOARDING_ANKETA
+    - LOGIN
+    - REGISTRATION
+    - OTP
+    - PASSWORD
+    - CONFIRMATION
+    - STOP_RESTRICTION_ACC
+    - SBP_B2B_QRC_REQUEST
+    - SBP_REQUEST_TSP
+    - SBP_QRC_REQUEST
+    - SBP_QRC_BLOCK_REQUEST
+    - SBP_QRC_PAYMENT_REQUEST
+    - SBP_TSP_CHANGE_REQUEST
+    - SBP_QRC_SCHEDULE_REQUEST
+    - SBP_B2B_PAYMENT
+    - SBP_B2C_PAYMENT
+    - CONF_DOC_CERT
+    - REG_CONTRACT
+    - RENEW_CONTRACT
+    - REG_CRED_AGREEMENT
+    - RENEW_CRED_AGREEMENT
+    - CONTR_CLOSE
+    - ES_CERT
+    - ACC_COPY_DOC
+    - CARD_CHARGE_SET_LIMIT_REQUEST
+    - ECO_SBP_CONTRACT_REQUEST
+    - PAY_COLLECTION_IN
+    - PAY_COLLECTION_OUT
+    - PAY_REQ_RU_OUT
+    - PAY_REQ_RU_ACCEPT
+    - ACC_OPEN_FIRST_REQ_FNS
+    - DVK
+    - CASH_BACK
+    - CASH_IN
+    - CASH_OUT
+    - ACC_OPEN_FIRST_REQ_KZ
+    - CONS_AUTHORIZE_REQ
+    - SBP_DISCONNECT_AGENTS_REQUEST
+    - SFZU_SMS_CONNECTION
+    - SFZU_SMS_CHANGE
+    - SFZU_SMS_CANCEL
+    - ACC_RKO_SERVICE_PAI
+    - ACC_RKO_SERVICE_PAC
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  role:
+    type: string
+    description: Классификатор ролей пользователя в сервисе ЛК УВЭД
+    enum:
+    - PROCESS
+    - VIEW
+    - NO_ACCESS
+    - PROCESS_RESTR
+    - CLIENT_TMG_SUBSIDIARY
+    - CLIENT_TMG_TREASURER
+    - CLIENT_TMG_ACCESS
+description: Полномочия УЛ. ДТО.

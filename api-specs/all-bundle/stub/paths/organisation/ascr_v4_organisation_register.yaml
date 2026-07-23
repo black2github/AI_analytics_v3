@@ -1,0 +1,36 @@
+post:
+  tags:
+  - API заглушки АСЦР (КО ЮЛ) V4
+  summary: Запрос регистрации Клиента-ЮЛ на ПЦР
+  operationId: registerOrganisationUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: referenceId
+    in: header
+    description: referenceId
+    required: false
+    type: string
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/OrganisationRegistrationRequest'
+  responses:
+    '200':
+      description: ПЦР успешно ответил на запрос регистрации Клиента-ЮЛ
+      schema:
+        $ref: '#/definitions/AscrResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Ошибка в процессе обработки запроса
+    '404':
+      description: Неправильный путь запроса
+    '500':
+      description: Ошибка на платформе ФП

@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  userClientId:
+    type: string
+    description: Идентификатор клиентского пользователя в экосистеме
+    format: uuid
+  userUaaId:
+    type: string
+    description: Идентификатор пользователя в экосистеме (UAA)
+    format: uuid
+  name:
+    type: string
+    description: ФИО
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  additionalPhoneNumbers:
+    type: array
+    description: Дополнительные номера телефона
+    items:
+      type: string
+      description: Дополнительные номера телефона
+  phoneConfirmed:
+    type: boolean
+    description: Признак подтверждения номера телефона
+description: Добавленный в заявку на подключение сотрудник

@@ -1,0 +1,8 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Составной идентификатор счета
+    example: null
+description: Данные
+example: null

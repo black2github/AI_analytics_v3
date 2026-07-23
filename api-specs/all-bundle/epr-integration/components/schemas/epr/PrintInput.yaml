@@ -1,0 +1,8 @@
+type: object
+properties:
+  printFormCode:
+    type: string
+    description: Код печатной формы
+  printFormData:
+    $ref: ./PrintFormData.yaml
+description: Входные данные метода формирования печатной формы.

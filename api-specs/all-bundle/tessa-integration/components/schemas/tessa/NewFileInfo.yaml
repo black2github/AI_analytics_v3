@@ -1,0 +1,36 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Наименование файла
+  existingFileId:
+    type: string
+    description: ID существующего файла, который надо заменить
+    format: uuid
+  categoryID:
+    type: string
+    description: ID категории файла
+    format: uuid
+  categoryCaption:
+    type: string
+    description: Категория файла
+  expiration:
+    type: string
+    description: Дата и время удаления файла
+    format: date-time
+  id:
+    type: string
+    description: ИД версии файла
+    format: uuid
+  signature:
+    type: string
+    description: Подпись файла
+  size:
+    type: integer
+    description: Размер файла
+    format: int32
+  uploadedById:
+    type: string
+    description: ИД пользователя Тессы, который сохранил файл
+    format: uuid
+description: Массив новых файлов

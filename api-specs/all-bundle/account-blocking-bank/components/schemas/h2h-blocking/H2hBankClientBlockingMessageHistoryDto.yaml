@@ -1,0 +1,28 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  id:
+    type: string
+    format: uuid
+  documentId:
+    type: string
+    format: uuid
+  changedIn:
+    type: string
+    format: date-time
+  status:
+    type: string
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userId:
+    type: string
+    format: uuid
+  userName:
+    type: string
+description: История изменения заявки

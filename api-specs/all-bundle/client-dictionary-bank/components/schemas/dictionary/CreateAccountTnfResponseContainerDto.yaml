@@ -1,0 +1,25 @@
+required:
+- accountWorkMode
+- informerType
+type: object
+properties:
+  createdRecords:
+    type: array
+    description: Созданные записи
+    items:
+      $ref: ./CreateAccountTnfResponseDto.yaml
+  skippedRecords:
+    type: array
+    description: Пропущенные записи
+    items:
+      $ref: ./CreateAccountTnfResponseDto.yaml
+  accountWorkMode:
+    type: string
+    description: Режим работы счёта
+    enum:
+    - ACCEPT
+    - MONITORING
+  informerType:
+    type: string
+    description: Вид информера
+description: Контейнер ответа на запрос создания счета ТНФ

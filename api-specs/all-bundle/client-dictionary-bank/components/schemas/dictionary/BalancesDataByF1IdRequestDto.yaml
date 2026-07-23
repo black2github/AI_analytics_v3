@@ -1,0 +1,10 @@
+type: object
+properties:
+  f1AccountIds:
+    type: array
+    description: Список идентификаторов счетов клиента в РКО Ф1
+    items:
+      type: integer
+      description: Список идентификаторов счетов клиента в РКО Ф1
+      format: int64
+description: Запрос балансов счетов по идентификаторам счетов клиента в РКО Ф1.

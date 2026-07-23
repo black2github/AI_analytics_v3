@@ -1,0 +1,18 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат проверки
+    enum:
+    - VALID
+    - INVALID
+    - ERROR
+  comparisons:
+    type: array
+    description: Список сравнений реквизитов
+    items:
+      $ref: ../common/CertDataCompareDto.yaml
+  originalStatementExist:
+    type: boolean
+    description: Существует ли оригинальное заявление
+description: Ответ на запрос проверки доступности согласия 2 по заявке на выпуск/регистрацию НЭП

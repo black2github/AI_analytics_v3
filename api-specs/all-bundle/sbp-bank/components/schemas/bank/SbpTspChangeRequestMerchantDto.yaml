@@ -1,0 +1,29 @@
+type: object
+description: Реквизиты ТСП по заявке на изменение параметров ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор точки продаж в АС СБП
+  merchantName:
+    type: string
+    description: Название точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес точки продаж
+  merchantStatus:
+    type: string
+    description: Текущий статус ТСП
+    enum:
+    - ACTIVE
+    - BLOCKED
+  phoneNumber:
+    type: string
+    description: Телефон точки продаж
+  mccCode:
+    type: string
+    description: Код МСС
+  mccName:
+    type: string
+    description: Вид деятельности
+required:
+- merchantId

@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент"
+    format: uuid
+  clientName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: ' Краткое наименование клиента'
+  clientInn:
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента
+  clientAbsId:
+    type: string
+    description: Идентификатор АБС (РКО Ф1)
+  clientEskId:
+    type: string
+    description: Идентификатор ЕСК
+  fioSignatory:
+    type: string
+    description: ФИО подписанта
+description: Идентификация клиента и пользователя

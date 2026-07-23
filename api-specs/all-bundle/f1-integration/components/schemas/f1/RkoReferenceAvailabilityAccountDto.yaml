@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+  branchAbsCode:
+    type: string
+    description: Код подразделения в Ф1
+description: Сведения о счете по которому запрашивается справка

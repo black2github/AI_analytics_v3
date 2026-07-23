@@ -1,0 +1,20 @@
+type: object
+properties:
+  catalog:
+    type: string
+    enum:
+    - ECO
+    - BANK_LDAP
+    - BSS_DBO_320
+    - ETP_GPB
+    - ECO_DEMO
+  used:
+    type: boolean
+  activeByDefault:
+    type: boolean
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL

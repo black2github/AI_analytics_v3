@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  notEq:
+    type: string
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BRANCH
+      - SUBDIVISION
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BRANCH
+      - SUBDIVISION
+  isNull:
+    type: boolean
+description: Тип записи. Вхождение в список.

@@ -1,0 +1,135 @@
+type: object
+description: Журнал запросов на коммуникации
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор запроса на коммуникацию
+  requestNumber:
+    type: integer
+    format: int64
+    description: Номер запроса на коммуникацию
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания задачи на звонок
+  waitCallAt:
+    type: string
+    format: date-time
+    description: Дата и время задачи на звонок
+  ownerSystem:
+    $ref: ./EcoProfileType.yaml
+    description: Текущая система-владелец запроса на коммуникацию
+  callRequestStatus:
+    $ref: ./CallRequestStatus.yaml
+    description: Статус задачи на звонок
+  responsibleId:
+    type: string
+    format: uuid
+    description: Ответственный (идентификатор UAA)
+  responsibleFio:
+    type: string
+    description: Ответственный ФИО
+  responsibleLogin:
+    type: string
+    description: Ответственный Логин
+  clientContactRequired:
+    type: boolean
+    description: Признак необходимости совершения звонка
+  longTimeInStatus:
+    type: boolean
+    description: Заявка длительное время в определенном статусе
+  callReason:
+    type: string
+    description: Причина звонка
+  callReasonType:
+    $ref: ./CallReasonType.yaml
+    description: Тип причины звонка
+  callRescheduledAt:
+    type: string
+    format: date-time
+    description: Дата и время переноса звонка
+  scheduledCallTimeFrom:
+    type: string
+    format: date-time
+    description: Выбранная клиентом дата и время звонка "от"
+  scheduledCallTimeTo:
+    type: string
+    format: date-time
+    description: Выбранная клиентом дата и время звонка "до"
+  bcShortName:
+    type: string
+    description: Краткое наименование клиента
+  bcInn:
+    type: string
+    description: ИНН
+  bcOgrn:
+    type: string
+    description: ОГРН
+  fio:
+    type: string
+    description: ФИО заявителя
+  phoneNumber:
+    type: string
+    description: Телефон заявителя
+  serviceName:
+    type: string
+    description: Сервис
+  status:
+    $ref: ./CommonMergedStatus.yaml
+    description: Статус заявки
+  branchName:
+    type: string
+    description: Офис обслуживания
+  branchLocation:
+    type: string
+    description: Адрес офиса обслуживания
+  docType:
+    $ref: ./DocType.yaml
+    description: Тип заявки
+  requestId:
+    type: string
+    format: uuid
+    description: Идентификатор записи в журнале НСК
+  applicationId:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  applicantId:
+    type: string
+    format: uuid
+    description: Идентификатор заявителя
+  onRework:
+    type: boolean
+    description: Признак на доработке
+  applicationSourceCreatedAt:
+    type: string
+    format: date-time
+    description: Дата создания заявки (классическая или короткая) в системе-источнике
+  notifyCalls:
+    type: array
+    description: Информация по звонкам
+    items:
+      $ref: ./NotifyCallInfoReadRestResponseDto.yaml
+required:
+- applicantId
+- applicationId
+- bcInn
+- bcOgrn
+- bcShortName
+- branchLocation
+- branchName
+- callRequestStatus
+- clientContactRequired
+- createdAt
+- docType
+- fio
+- id
+- longTimeInStatus
+- notifyCalls
+- ownerSystem
+- phoneNumber
+- requestId
+- requestNumber
+- serviceName
+- status

@@ -1,0 +1,7 @@
+type: object
+properties:
+  accountKind:
+    $ref: ./FilterValueDtoString.yaml
+  contractType:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для получения сгруппированного списка счетов и остатков

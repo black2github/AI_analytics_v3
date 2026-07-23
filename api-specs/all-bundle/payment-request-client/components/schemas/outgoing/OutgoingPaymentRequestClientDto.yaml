@@ -1,0 +1,63 @@
+required:
+- currentEditorId
+- id
+- newOperationHistory
+- signPhaseDto
+- status
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  currentEditorId:
+    type: string
+    description: Текущий редактор (ID "Пользователь")
+    format: uuid
+  status:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  commentForClient:
+    maxLength: 255
+    type: string
+    description: Комментарий для клиента
+    nullable: true
+  bankClientInfo:
+    $ref: ./BankClientInfoClientDto.yaml
+  documentCreationInfo:
+    $ref: ./DocumentCreationInfoClientDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoClientDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoClientDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoClientDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoClientDto.yaml
+  payerBankInfo:
+    $ref: ./PayerBankInfoClientDto.yaml
+  operationHistory:
+    $ref: ./OutgoingPaymentRequestHistoryInfoClientDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  newOperationHistory:
+    type: boolean
+    description: Признак использования новой истории операций
+  importDetails:
+    $ref: ./ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BackgroundImportProcessClientScrollerDto.yaml
+  signPhaseDto:
+    $ref: ./OutgoingPaymentRequestSignPhaseDto.yaml
+  signatures:
+    type: array
+    description: Подписи исходящего платежного требования
+    items:
+      $ref: ./outgoingSignatureClientDto.yaml
+  chargebackRequest:
+    $ref: ./OutgoingPaymentChargebackRequestClientDto.yaml
+description: Платежное требование исходящее (данные для клиента)

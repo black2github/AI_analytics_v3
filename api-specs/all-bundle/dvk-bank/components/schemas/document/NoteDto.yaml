@@ -1,0 +1,10 @@
+type: object
+properties:
+  number:
+    type: integer
+    description: Номер строки
+    format: int32
+  content:
+    type: string
+    description: Содержание
+description: Примечание

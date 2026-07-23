@@ -1,0 +1,13 @@
+get:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Получить конфигурацию скроллера
+  description: 'Привилегии: FEATURE_VIEW'
+  operationId: config
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataFeatureScrollerConfigDto.yaml

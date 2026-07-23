@@ -1,0 +1,56 @@
+get:
+  tags:
+  - Апи сотрудника банка для работы с «Журнал запросов на коммуникации»
+  summary: Получить информацию о записи из «Журнал запросов на коммуникации» по идентификатору заявки
+  description: 'Привилегии: NSK.KZ.BANK.NOTIFY_REQUEST_READ, NSK.CLASSIC.BANK.NOTIFY_REQUEST_READ'
+  operationId: getNotifyRequest
+  parameters:
+  - name: requestId
+    in: query
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataNotifyRequestReadRestResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

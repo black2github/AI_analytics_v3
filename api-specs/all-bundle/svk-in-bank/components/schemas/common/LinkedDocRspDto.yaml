@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  number:
+    type: string
+    description: Номер документа
+  date:
+    type: string
+    description: Дата документа
+    format: date
+  documentType:
+    $ref: ./LinkedDocTypeDto.yaml
+  status:
+    type: string
+    description: Статус документа
+  documentInfo:
+    $ref: ./LinkedDocInfoDto.yaml
+description: ДТО связанного документа

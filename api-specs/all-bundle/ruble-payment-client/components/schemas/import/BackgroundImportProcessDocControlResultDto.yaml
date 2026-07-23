@@ -1,0 +1,11 @@
+type: object
+properties:
+  fieldName:
+    type: string
+    description: Наименование поля. (Ключ для локализации на фронте)
+  description:
+    type: string
+    description: Результат контроля. (Локализованное сообщение)
+  controlType:
+    $ref: ./BackgroundImportProcessControlResultTypeDto.yaml
+description: Данные для результата контролей

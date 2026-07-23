@@ -1,0 +1,7 @@
+type: string
+description: Статус выполнения фоновой задачи
+enum:
+- IDLE
+- IN_PROGRESS
+- COMPLETED
+- BROKEN

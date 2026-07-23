@@ -1,0 +1,59 @@
+type: object
+description: Фильтр скроллера обобщенной заявки сервисов банка
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса, in
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки, between
+  ecoClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID Клиента сервиса ЭКО, eq
+  clientShortNameOrInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование или ИНН Клиента сервиса ЭКО, contains
+  type:
+    $ref: ./SbpBankServiceRequestTypeFilterDto.yaml
+    description: Тип заявки, in
+  ecoServiceCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код ЭКО сервиса, eq
+  status:
+    $ref: ./SbpBankServiceCommonRequestStatusFilterDto.yaml
+    description: Текущий статус заявки, in
+  account:
+    $ref: ./FilterValueDtoString.yaml
+    description: Счет зачисления, contains
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR кода, contains
+  ecoDocTypeId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор типа заявки ЭКО, eq
+  docId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор заявки ЭКО, contains
+  paymentPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Назначение платежа, contains
+  paymentChannel:
+    $ref: ./SbpBankServiceCommonRequestPaymentChannelFilterDto.yaml
+    description: Канал оплаты, in, eq
+  tariff:
+    $ref: ./FilterValueDtoString.yaml
+    description: Тариф Банка, contains
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП, eq
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название ТСП, contains
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП, contains

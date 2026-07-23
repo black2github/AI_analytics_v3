@@ -1,0 +1,11 @@
+type: object
+properties:
+  ids:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы
+    items:
+      type: string
+      description: Идентификаторы
+      format: uuid
+description: Запрос списка сертификатов по идентификаторам

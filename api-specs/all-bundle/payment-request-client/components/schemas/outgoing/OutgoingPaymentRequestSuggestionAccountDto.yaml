@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountName:
+    type: string
+    description: Наименование счета
+description: Подсказки для фильтра счёт зачисления

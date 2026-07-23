@@ -1,0 +1,15 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  total:
+    type: integer
+    description: Общее количество документов
+    format: int64
+  processed:
+    type: integer
+    description: Общее количество обрабатываемых документов
+    format: int64
+description: DTO статистики по документам файла импорта

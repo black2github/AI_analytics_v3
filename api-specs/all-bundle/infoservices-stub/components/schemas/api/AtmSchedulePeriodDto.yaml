@@ -1,0 +1,20 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+  dateTo:
+    type: string
+  idSort:
+    type: string
+  timeSlots:
+    type: array
+    items:
+      $ref: ./AtmSchedulePeriodTimeSlotDto.yaml
+  type:
+    $ref: ./AtmSchedulePeriodWeekDayDto.yaml
+  weekDay:
+    $ref: ./AtmSchedulePeriodWeekDayDto.yaml
+  weekDayFrom:
+    $ref: ./AtmSchedulePeriodWeekDayDto.yaml
+  weekDayTo:
+    $ref: ./AtmSchedulePeriodWeekDayDto.yaml

@@ -1,0 +1,10 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы
+    items:
+      type: string
+      description: Идентификаторы
+      format: uuid
+description: Контейнер списка идентификаторов

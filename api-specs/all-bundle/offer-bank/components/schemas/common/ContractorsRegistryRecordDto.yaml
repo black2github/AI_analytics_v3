@@ -1,0 +1,34 @@
+type: object
+properties:
+  cooperationCode:
+    type: string
+    description: Код кооперации
+  contractorInn:
+    type: string
+    description: ИНН контрагента
+  contractorStatus:
+    type: string
+    description: Роль клиента в договоре
+    enum:
+    - PROVIDER
+    - CONTRACTOR
+  customerInn:
+    type: string
+    description: ИНН непосредственного заказчика/покупателя
+  customerName:
+    type: string
+    description: Наименование непосредственного заказчика/покупателя
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  contractAmount:
+    type: number
+    description: Сумма договора
+  contractSubject:
+    type: string
+    description: Предмет договора
+description: Запись реестра контрагентов

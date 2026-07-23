@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./SignatoryGroupCreateDto.yaml
+  id:
+    type: string
+    format: uuid

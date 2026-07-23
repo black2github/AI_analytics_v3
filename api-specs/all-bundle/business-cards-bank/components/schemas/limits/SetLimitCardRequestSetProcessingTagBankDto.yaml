@@ -1,0 +1,23 @@
+required:
+- id
+- processingTagDtos
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Информация для банка
+    nullable: true
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  processingTagDtos:
+    type: object
+    additionalProperties:
+      type: string
+      description: Лимиты для установки признака
+      enum:
+      - PERFORMED
+      - DENIED
+    description: Лимиты для установки признака
+description: Дто установки признака обработки

@@ -1,0 +1,11 @@
+type: object
+properties:
+  data:
+    type: object
+    additionalProperties:
+      $ref: ./CryptoModuleVerifySignDto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

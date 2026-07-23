@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API сущности Закрытый день
+  summary: Проверить существует ли запись о закрытом дне
+  description: 'Привилегии: ODS_CLOSED_DAY_VIEW'
+  operationId: isClosedDayPresentUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/ClosedDayPresenceCheckDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

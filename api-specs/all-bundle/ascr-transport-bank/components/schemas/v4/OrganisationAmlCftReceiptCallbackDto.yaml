@@ -1,0 +1,24 @@
+type: object
+description: Данные на получение документов (КА-конвертов) Клиента-ЮЛ ПлЦР.
+properties:
+  albumVersion:
+    type: string
+    description: Номер версии альбома ЭС ПлЦР, по которому отправляется callback (версия альбома в каждом ЭС согласно документации ЦБ)
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>)
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР из тега <MsgHdr/CreDt>
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры
+required:
+- albumVersion
+- correlationId
+- messageCreationDateTime
+- operationId

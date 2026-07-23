@@ -1,0 +1,35 @@
+openapi: 3.0.1
+info:
+  title: Сервис коротких ссылок. Клиентская часть.
+  description: Сервис коротких ссылок.
+  version: 1.32.0
+servers:
+- url: /invite-client
+security:
+- bearerAuth: []
+tags:
+- name: API коротких ссылок
+paths:
+  /public/sl/{code}:
+    $ref: ./paths/sl/public_sl_code.yaml
+  /params/{code}:
+    $ref: ./paths/{code}/params_code.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/{code}/GenericResponseSimpleErrorDataString.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/{code}/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

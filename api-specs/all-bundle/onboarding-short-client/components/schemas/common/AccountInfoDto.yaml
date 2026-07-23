@@ -1,0 +1,35 @@
+type: object
+properties:
+  isBsc:
+    type: boolean
+    description: Признак счета "В целях исполнения договора с условиями банковского сопровождения"
+  isGazpromContractor:
+    type: boolean
+    description: Признак счета "В целях исполнения обязательств по договорам Группы Газпром"
+  isKopopApprovedByBank:
+    type: boolean
+    description: Признак "КОПОП заверена Банком"
+  isKopopApprovedByNotary:
+    type: boolean
+    description: Признак "КОПОП заверена Нотариусом"
+  isKopopToBeRegistered:
+    type: boolean
+    description: Признак "Оформить КОПОП"
+  tariffCode:
+    type: string
+    description: Коды справочника тарифов на обслуживание счета
+    enum:
+    - STANDART
+    - NEEDFUL
+    - PROGRESS
+    - STABLE
+    - MAX
+    - FEA
+  tariffName:
+    type: string
+    description: Наименование тарифного плана
+  tariffPeriod:
+    type: integer
+    description: Оплачиваемый период
+    format: int32
+description: Сведения об открываемых счетах и тарифном плане

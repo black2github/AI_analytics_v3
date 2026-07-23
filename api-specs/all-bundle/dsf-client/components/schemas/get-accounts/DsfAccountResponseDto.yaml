@@ -1,0 +1,13 @@
+type: object
+properties:
+  rkoAccounts:
+    type: array
+    description: Список рублевых счетов.
+    items:
+      $ref: ./DsfAccountDto.yaml
+  vrkoAccounts:
+    type: array
+    description: Список валютных счетов.
+    items:
+      $ref: ./DsfAccountDto.yaml
+description: ДТО со списком счетов.

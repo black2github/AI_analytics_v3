@@ -1,0 +1,37 @@
+type: object
+properties:
+  payer:
+    $ref: ./RkoPayerInfo.yaml
+  receiver:
+    $ref: ./RkoReceiverInfo.yaml
+  paymentGround:
+    type: string
+    description: Назначение платежа
+  transferType:
+    type: string
+    description: Тип перевода
+    enum:
+    - AMOUNT
+    - BALANCE_GREATER_SPECIFIED_AMOUNT_AT_STARTING_CURRENT_DAY
+    - INCOMING_BALANCE_AT_STARTING_CURRENT_DAY
+    - INCOMING_BALANCE_AT_ENDING_CURRENT_DAY
+    - BALANCE_GREATER_SPECIFIED_AMOUNT_AT_ENDING_CURRENT_DAY
+  amount:
+    type: number
+    description: Сумма
+  periodicity:
+    type: string
+    description: Периодичность перевода
+    enum:
+    - EVERY_BUSINESS_DAY
+    - FIRST_BUSINESS_DAY_OF_THE_WEEK
+    - FIRST_BUSINESS_DAY_OF_THE_MONTH
+    - EVERY_CALENDAR_DAY
+  startServiceDate:
+    type: string
+    description: Дата начала предоставления услуги
+    format: date
+  check:
+    type: boolean
+    description: Флаг "Только проверка"
+description: Запрос создания доп. соглашения в РКО Ф1 по услуге "Периодический перевод денежных средств"

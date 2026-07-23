@@ -1,0 +1,11 @@
+required:
+- settingId
+type: object
+properties:
+  settingId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  valueOrName:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр истории настроек

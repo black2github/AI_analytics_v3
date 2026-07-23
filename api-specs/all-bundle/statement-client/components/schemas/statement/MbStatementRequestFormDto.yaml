@@ -1,0 +1,83 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  type:
+    type: string
+    enum:
+    - ONETIME
+    - HIDDEN_VIEW
+    - HIDDEN_PRINT_EXPORT_OSV
+    - TNF
+    - OPEN_API_CB
+    - ECO_OPEN_API_CB
+    - TA_FOR_MC
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  periodType:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  action:
+    type: string
+    enum:
+    - DOWNLOAD
+    - PRINT
+    - VIEW
+    - REQUEST_HISTORY
+    - EXPORT
+    - SEND_TO_EMAIL
+  creationType:
+    type: string
+    enum:
+    - NEW
+    - COPY
+  hideEmptyTurnovers:
+    type: boolean
+  separateAccountsFiles:
+    type: boolean
+description: Данные

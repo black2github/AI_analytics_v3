@@ -1,0 +1,25 @@
+type: object
+properties:
+  carCost:
+    type: number
+  leasingPeriod:
+    type: integer
+    format: int32
+  calculatorId:
+    type: integer
+    format: int64
+  bankClientShortName:
+    type: string
+  bankClientInn:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  advance:
+    type: number
+  comment:
+    type: string
+  bankClientId:
+    type: string
+    format: uuid

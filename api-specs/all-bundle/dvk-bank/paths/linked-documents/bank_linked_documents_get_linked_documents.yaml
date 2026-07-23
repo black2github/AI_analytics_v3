@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API Банка для работы со связанными документами.
+  summary: Журнал документов. Получить список СВК1, СВК2 документов по ДВК.id
+  description: 'Привилегии: DVK_BANK.VIEW'
+  operationId: getLinkedDocuments
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/linked-documents/GetPageCommandLinkedDocsScrollerFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/linked-documents/GenericResponseDocumentErrorPageDataDvkDocumentDto.yaml

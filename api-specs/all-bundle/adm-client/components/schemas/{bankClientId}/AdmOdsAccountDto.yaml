@@ -1,0 +1,42 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета получателя
+  bankBic:
+    type: string
+    description: БИК получателя
+  bankCorrAccountNumber:
+    type: string
+    description: Корр. счет получателя
+  bankName:
+    type: string
+    description: БАНК получателя
+  budgetInfo:
+    $ref: ../common/BudgetInfoDto.yaml
+  commissionAccountNumber:
+    type: string
+    description: Номер счёта списания комиссии
+  firmNumber:
+    type: string
+    description: Номер фирмы
+  id:
+    type: integer
+    description: Идентификатор
+    format: int64
+  inn:
+    type: string
+    description: ИНН получателя
+  isBudget:
+    type: boolean
+    description: Признак Бюджетные реквизиты
+  kpp:
+    type: string
+    description: КПП получателя
+  name:
+    type: string
+    description: Наименование получателя
+  ogrn:
+    type: string
+    description: ОГРН получателя
+description: Реквизиты счёта для зачисления

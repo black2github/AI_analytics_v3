@@ -1,0 +1,7 @@
+type: object
+properties:
+  finishCode:
+    type: integer
+    format: int32
+  errorMessage:
+    type: string

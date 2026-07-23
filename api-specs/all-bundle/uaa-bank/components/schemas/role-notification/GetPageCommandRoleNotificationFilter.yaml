@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRoleNotificationFilter.yaml
+description: Запрос страницы

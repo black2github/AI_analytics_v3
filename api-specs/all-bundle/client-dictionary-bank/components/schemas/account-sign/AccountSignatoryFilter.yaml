@@ -1,0 +1,15 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  authorityStatus:
+    $ref: ./FilterValueEnumDtoAuthorityStatusDto.yaml
+  archived:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userEskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  userF1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр поиска подписантов по счету

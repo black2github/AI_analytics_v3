@@ -1,0 +1,152 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер
+  accountName:
+    type: string
+    description: Наименование счета
+  ecoAccountName:
+    type: string
+    description: Название счета в Экосистеме
+  transitAccountNumber:
+    type: string
+    description: Транзитный номер
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  startDate:
+    type: string
+    description: Дата начала резервирования
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания резервирования
+    format: date
+  annulledDate:
+    type: string
+    description: Дата аннулирования
+    format: date
+  openDate:
+    type: string
+    description: Дата открытия
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  accountType:
+    $ref: ./AccountTypeDto.yaml
+  currency:
+    $ref: ./AccountCurrencyDto.yaml
+  gozContract:
+    $ref: ./GozContractDto.yaml
+  branch:
+    $ref: ./BranchDto.yaml
+  filialAbsNumber:
+    type: string
+    description: 'Код филиала в РКО Ф1 (Заполняется для сервиса Выписка). '
+  balanceBranch:
+    $ref: ./BranchDto.yaml
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  requestId:
+    type: string
+    description: Reservation request reference
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  openingRequestId:
+    type: string
+    description: Opening request id
+    format: uuid
+  openingContractRequestId:
+    type: string
+    description: Ссылка на заявку на открытие доп счета и заключение ДБС
+    format: uuid
+  documentPackageRequestId:
+    type: string
+    description: Ссылка на идентификатор ОНБ
+    format: uuid
+  accountingBalanceHeadUnit:
+    type: boolean
+    description: Признак учета на Балансе ГО
+  onbAutomaticReservation:
+    type: boolean
+    description: Признак Автоматического резервирования в ОНБ
+  sourceSystem:
+    type: string
+    description: Источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  hasContractWithDbo:
+    type: boolean
+    description: Признак подключения счета к договору ДБО
+  isDisconnectedFromRko:
+    type: boolean
+    writeOnly: true
+  accountRatioToRkoVrko:
+    type: integer
+    description: Отношение счета к РКО/ВРКО
+    format: int64
+  contractInfo:
+    $ref: ./ContractInfoDto.yaml
+  duplicate:
+    type: boolean
+    description: Признак дубликата счета
+  controlAcceptPayments:
+    type: boolean
+    description: Признак контроля и акцепта платежей
+  tmgAccountType:
+    type: string
+    description: Тип счёта в TMG
+  originalId:
+    type: string
+    description: ID оригинального счета, в случае, если счет - дубликат
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  accountBlockState:
+    type: string
+    description: Статус блокировки счета
+    enum:
+    - FULL
+    - PARTIAL
+  dfmStatus:
+    type: integer
+    description: Статус блокировки ДФМ
+    format: int32
+  dfmCreatedAt:
+    type: string
+    description: Дата создания блокировки ДФМ
+    format: date-time
+  dfmUpdatedAt:
+    type: string
+    description: Дата обновления блокировки ДФМ
+    format: date-time
+  disconnectedFromRko:
+    type: boolean

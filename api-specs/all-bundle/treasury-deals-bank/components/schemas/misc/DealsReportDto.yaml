@@ -1,0 +1,22 @@
+type: object
+properties:
+  body:
+    type: array
+    items:
+      $ref: ./Record.yaml
+  totalCount:
+    type: integer
+    format: int32
+  internalDealsCount:
+    type: integer
+    format: int32
+  msbDealsCount:
+    type: integer
+    format: int32
+  gpbDealingDealsCount:
+    type: integer
+    format: int32
+  externalDealsCount:
+    type: integer
+    format: int32
+description: Данные

@@ -1,0 +1,8 @@
+type: object
+properties:
+  roleTemplates:
+    type: array
+    description: Список найденных шаблонов ролей
+    items:
+      $ref: ./ApRoleTemplateDto.yaml
+description: Результат поиска шаблонов ролей

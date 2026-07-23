@@ -1,0 +1,27 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  digest:
+    type: string
+    description: Подписываемые данные
+  signature:
+    type: string
+    description: Подпись
+  calculatedHash:
+    type: boolean
+    description: Признак передачи вычисленных хешей
+  signTypeId:
+    type: string
+    description: ID типа подписи
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  documentTypeCode:
+    type: string
+    description: Код типа документа из справочника common-dictionaries
+description: Подписываемый документ batch-запроса

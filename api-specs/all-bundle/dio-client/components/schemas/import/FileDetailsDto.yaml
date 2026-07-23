@@ -1,0 +1,15 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  fileId:
+    type: string
+    description: Ссылка на файл в хранилище файлов
+    format: uuid
+  fileFormat:
+    type: string
+    description: Классификатор типов файлов платежных документов
+    enum:
+    - UNCDocInf
+description: Импортируемый файл

@@ -1,0 +1,40 @@
+post:
+  tags:
+  - Работа с аттачами
+  summary: Download файла
+  operationId: downloadByPostUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/DownloadCommand'
+  - name: firstPos
+    in: query
+    required: false
+    type: integer
+    format: int64
+  - name: lastPos
+    in: query
+    required: false
+    type: integer
+    format: int64
+  responses:
+    '200':
+      description: OK
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

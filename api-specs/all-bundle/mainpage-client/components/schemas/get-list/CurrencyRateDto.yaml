@@ -1,0 +1,12 @@
+required:
+- code
+- spotRate
+type: object
+properties:
+  code:
+    type: string
+    description: Буквенный код валюты
+  spotRate:
+    type: number
+    description: Значение курса валюты
+description: Данные сущности Курсы ЦБ по конкретной валюте.

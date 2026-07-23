@@ -1,0 +1,54 @@
+type: object
+properties:
+  admCards:
+    type: array
+    description: Карточки АДМ
+    items:
+      $ref: ./AdmCardDto.yaml
+  company:
+    type: string
+    description: Организация, осуществляющая инкассацию клиента
+    enum:
+    - GPB
+    - ROSINKAS
+    - SBERBANK
+    - VELES_EXPRESS
+    - BANK_SPB
+    - BANK_ACCEPT
+    - OTHER
+    - NONE
+  contactEmail:
+    type: string
+    description: Email контактного лица
+  contactFio:
+    type: string
+    description: Фамилия, имя и отчество контактного лица
+  contactPhone:
+    type: string
+    description: Мобильный телефон контактного лица
+  feeFrequency:
+    type: string
+    description: Оплата комиссии банку
+    enum:
+    - PER_TRANSACTION
+    - DAILY
+    - MONTHLY
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  onboardingShortRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета"
+    format: uuid
+  revenueBank:
+    type: string
+    description: Банк зачисления выручки
+    enum:
+    - GPB
+    - OTHER
+    - GPB_AND_OTHER
+  userSpecifiedCompany:
+    type: string
+    description: Укажите инкассатора
+description: Онлайн инкассация

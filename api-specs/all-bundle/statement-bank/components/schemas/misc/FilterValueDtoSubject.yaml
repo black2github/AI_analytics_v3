@@ -1,0 +1,28 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./Subject.yaml
+  notEq:
+    $ref: ./Subject.yaml
+  in:
+    type: array
+    items:
+      $ref: ./Subject.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./Subject.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./Subject.yaml
+  ge:
+    $ref: ./Subject.yaml
+  lt:
+    $ref: ./Subject.yaml
+  le:
+    $ref: ./Subject.yaml

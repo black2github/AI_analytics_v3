@@ -1,0 +1,66 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета плательщика
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета плательщика
+  accountName:
+    type: string
+    description: Наименование счета плательщика
+  accountCurrencyIsoCode:
+    type: string
+    description: ISO код валюты счета плательщика
+  accountCurrencyNumericCode:
+    type: string
+    description: Числовой код валюты счета плательщика
+  accountCurrencyName:
+    type: string
+    description: Наименование валюты счета плательщика
+  transitAcc:
+    type: boolean
+    description: Признак перевода с транз.счета
+  name:
+    type: string
+    description: Наименование плательщика
+  secondName:
+    type: string
+    description: Наименование плательщика 2
+  innKio:
+    type: string
+    description: ИНН/КИО плательщика
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  residenceCountry:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  address:
+    $ref: ./CurrencyTransferAddressDto.yaml
+  addressId:
+    type: string
+    description: Идентификатор адеса (ЭКО)
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  currencyCode:
+    type: string
+    description: Код валюты счета плательщика
+  bank:
+    $ref: ./CurrencyTransferPayerBankDto.yaml
+  bankInfo:
+    type: string
+    description: Информация для банка плательщика
+  branchId:
+    type: string
+    description: ID филиала обслуживания Филиал и подразделение Банка
+    format: uuid
+  useCcf:
+    type: boolean
+    description: Признак "Использование ЦЦФ"
+  numberCcf:
+    type: string
+    description: Номер ЦЦФ
+description: Реквизиты плательщика

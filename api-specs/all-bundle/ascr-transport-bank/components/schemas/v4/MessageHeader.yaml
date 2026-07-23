@@ -1,0 +1,23 @@
+type: object
+properties:
+  messageId:
+    type: string
+    description: Идентификатор сообщения на ПлЦР
+  creationDatetime:
+    type: string
+    description: Дата составления ЭС
+  from:
+    type: string
+    description: Идентификатор составителя ЭС на ПлЦР
+  to:
+    type: string
+    description: Идентификатор получателя ЭС на ПлЦР
+  operationId:
+    type: string
+    description: Идентификатор операции на ПлЦР
+required:
+- creationDatetime
+- from
+- messageId
+- operationId
+- to

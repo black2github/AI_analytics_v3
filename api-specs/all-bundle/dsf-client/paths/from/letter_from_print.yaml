@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: LETTER.FROM_BANK.LETTERS.PRINT'
+  operationId: printLettersById_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandListUUID.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataAttachmentAccessData.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Сохранить ПФ выбранных писем в одном pdf файле
+  tags:
+  - API документа свободного формата из Банка. Базовые операции.

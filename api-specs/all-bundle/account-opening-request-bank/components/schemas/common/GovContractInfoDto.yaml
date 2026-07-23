@@ -1,0 +1,16 @@
+type: object
+properties:
+  contractId:
+    type: string
+    description: Contract id - IGK
+  number:
+    type: string
+    description: Contract number
+  amount:
+    type: string
+    description: Amount
+  date:
+    type: string
+    description: Contract date
+    format: date
+description: Reserved account.

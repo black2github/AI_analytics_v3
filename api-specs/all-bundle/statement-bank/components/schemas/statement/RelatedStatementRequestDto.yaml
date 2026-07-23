@@ -1,0 +1,10 @@
+required:
+- statementRequestId
+type: object
+properties:
+  statementRequestId:
+    type: string
+    format: uuid
+  bankStatementRequestFilter:
+    $ref: ./BankStatementRequestFilter.yaml
+description: Фильтр

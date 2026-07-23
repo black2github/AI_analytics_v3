@@ -1,0 +1,10 @@
+type: object
+properties:
+  filter:
+    $ref: ./CurrencyRateFilter.yaml
+  paging:
+    $ref: ../common/Paging.yaml
+  sorting:
+    type: array
+    items:
+      $ref: ../common/SortingSortingField.yaml

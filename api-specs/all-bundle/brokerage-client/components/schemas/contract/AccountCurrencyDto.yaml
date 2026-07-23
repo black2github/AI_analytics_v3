@@ -1,0 +1,18 @@
+type: object
+properties:
+  ordinal:
+    type: integer
+    description: Порядковый индекс валютного счета в наборе
+    format: int32
+  currency:
+    type: string
+    description: Код валюты
+  account:
+    type: string
+    description: Счет (20 цифр)
+  blocks:
+    type: array
+    description: Список реквизитов
+    items:
+      $ref: ./BlockDto.yaml
+description: Валюта счета

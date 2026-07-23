@@ -1,0 +1,137 @@
+type: object
+properties:
+  ID:
+    type: integer
+    format: int64
+  SDOCREF:
+    type: integer
+    format: int64
+  NRECORDSIDBASE:
+    type: integer
+    format: int64
+  SOPERTYPEBASE:
+    type: string
+  SDOCUMENTNUMBERBASE:
+    type: string
+  DTDOCUMENTDATEBASE:
+    $ref: ./LocalDate.yaml
+  DTDOCSIGNDATEBASE:
+    $ref: ./LocalDateTime.yaml
+  NAMOUNTDTBASE:
+    type: number
+  NAMOUNTKTBASE:
+    type: number
+  SPAYERBASE:
+    type: string
+  SPAYERINNBASE:
+    type: string
+  SCURRCODEBASE:
+    type: string
+  SVD_NOTICE_DATE_BASE:
+    type: string
+  SVD_NOTICE_NUMBER_BASE:
+    type: string
+  SVD_ADDITION_INFORMATION_BASE:
+    type: string
+  SVD_AMOUNT_BASE:
+    type: number
+  SVD_TRANSIT_ACCOUNT_BASE:
+    type: string
+  SOHD_AMOUNT_BASE:
+    type: number
+  SOHD_ACCOUNT_BASE:
+    type: string
+  SOHD_SWIFT_BASE:
+    type: string
+  SVD_BANK_NAME_BASE:
+    type: string
+  SOHD_ADDRESS_BASE:
+    type: string
+  SOHD_AMOUNT_1_BASE:
+    type: number
+  SOHD_ACCOUNT_1_BASE:
+    type: string
+  SOHD_BIC_BASE:
+    type: string
+  SOHD_BANK_ACC_BASE:
+    type: string
+  SVD_PAYER_BANK_CITY_BASE:
+    type: string
+  SVD_PAYER_BANK_NAME_BASE:
+    type: string
+  SVD_BANK_ADDRESS_BASE:
+    type: string
+  SVD_FAX_BASE:
+    type: string
+  SVD_FIO_BASE:
+    type: string
+  SVD_OKPO_CODE_BASE:
+    type: string
+  SVD_PHONE_BASE:
+    type: string
+  SVD_PHONE1_BASE:
+    type: string
+  SVD_VALUTA_NAME_BASE:
+    type: string
+  SUNIQUECONTRACTNUMBER:
+    type: string
+  SOPERATIONTYPECODE:
+    type: string
+  STARIFFBASE:
+    type: string
+  SDEBTACCOUNTBASE:
+    type: string
+  SDEBTBANKNAMEBASE:
+    type: string
+  SDEBTBICBASE:
+    type: string
+  SCREDACCOUNTBASE:
+    type: string
+  SCREDBANKNAMEBASE:
+    type: string
+  SCREDBANKBICBASE:
+    type: string
+  SCREDBANKACCOUNTBASE:
+    type: string
+  SCREDEKSBASE:
+    type: string
+  SCREDBANKSWIFTBASE:
+    type: string
+  SCREDKBKBASE:
+    type: string
+  SINTERBANKNAMEBASE:
+    type: string
+  SINTERBANKSWIFTBASE:
+    type: string
+  SBANKCLEARCODEBASE:
+    type: string
+  NSELLAMMOUNTBASE:
+    type: number
+  SSELLVALBASE:
+    type: string
+  NBUYAMMOUNTBASE:
+    type: number
+  SBUYVALBASE:
+    type: string
+  NSELLMAXRATE:
+    type: number
+  NBUYMAXRATE:
+    type: number
+  S50:
+    type: string
+  S59:
+    type: string
+  S70:
+    type: string
+  S52:
+    type: string
+  S56:
+    type: string
+  S57:
+    type: string
+  S32A:
+    type: string
+  S71A:
+    type: string
+  S72:
+    type: string

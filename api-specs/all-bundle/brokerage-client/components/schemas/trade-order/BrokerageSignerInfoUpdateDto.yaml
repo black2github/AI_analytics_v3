@@ -1,0 +1,15 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  position:
+    type: string
+    description: Наименование должности пользователя подписавшего заявку
+  userDocument:
+    type: string
+    description: Документ на основании, которого пользователь может подписать поручение
+description: Данные

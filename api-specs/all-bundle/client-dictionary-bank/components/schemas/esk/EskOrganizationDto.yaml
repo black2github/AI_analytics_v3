@@ -1,0 +1,63 @@
+type: object
+properties:
+  companyGUID:
+    type: string
+    description: GUID организации
+    format: uuid
+  name:
+    type: string
+    description: Наименование организации
+  legalAddress:
+    type: string
+    description: Адрес регистрации
+  isAuthorizationSuccess:
+    type: boolean
+    description: Признак успеха авторизации
+  isPersonSuccess:
+    type: boolean
+    description: Признак успеха авторизации представителя
+  isPersonTopOfficial:
+    type: boolean
+    description: Признак руководителя представителя
+  isClientReject499:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 499-П
+  isClientReject115:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 115-ФЗ
+  validityTermDate:
+    type: string
+    description: Дата окончания действия полномочий
+    format: date
+  errors:
+    type: array
+    description: Ошибки авторизации
+    items:
+      $ref: ./ErrorAuthorizationJsonResponseDto.yaml
+  clientPrivEskId:
+    type: string
+    description: Local ID представителя в ЕСК
+  clientRegNum:
+    type: string
+    description: Регистрационный номер компании (РНК)
+  clientPosition:
+    type: string
+    description: Должность представителя
+  persons:
+    type: array
+    description: Информация о представителях
+    items:
+      $ref: ./PersonV2Dto.yaml
+  authorizingDocuments:
+    type: array
+    description: Список документов позволяющих подписать заявление
+    items:
+      $ref: ./AuthorizingDocumentDto.yaml
+  clientRelationships:
+    uniqueItems: true
+    type: array
+    description: Перечень характеров отношений с Клиентом
+    items:
+      type: string
+      description: Перечень характеров отношений с Клиентом
+description: Информация об организации из выписки ЕСК (формат 2)

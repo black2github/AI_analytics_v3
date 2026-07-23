@@ -1,0 +1,71 @@
+post:
+  tags:
+  - AbacRuleView
+  summary: Создать запись
+  description: 'Привилегии: UAA.BANK.ABAC_RULEVIEW_CREATE (publicAuthority = false)'
+  operationId: createAbacRuleView
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ruleview/GenericCommandAbacRuleViewRecordCreateDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '201':
+      description: Created
+      content:
+        application/json:
+          schema:
+            type: object
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security:
+  - Bearer: []

@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for account-opening-request-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/account-opening-contract",
+      "domain": "account-opening-contract"
+    },
+    {
+      "prefix": "/qrc-commission-payment",
+      "domain": "qrc-commission-payment"
+    }
+  ]
+}

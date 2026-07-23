@@ -1,0 +1,15 @@
+type: object
+properties:
+  data:
+    $ref: ./BalanceDataResponseDto.yaml
+  error:
+    type: string
+    description: Ошибка
+    enum:
+    - CLIENT_NOT_FOUND_ERROR
+    - VALID_ABS_ID_NOT_FOUND_ERROR
+    - F1_ERROR
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

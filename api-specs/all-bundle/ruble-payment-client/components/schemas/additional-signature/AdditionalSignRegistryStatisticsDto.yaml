@@ -1,0 +1,18 @@
+required:
+- clientsCount
+- documentsCount
+- documentsSum
+type: object
+properties:
+  documentsCount:
+    type: integer
+    description: Количество документов в реестре
+    format: int32
+  documentsSum:
+    type: number
+    description: Сумма документов в реестре
+  clientsCount:
+    type: integer
+    description: Количество организаций в реестре
+    format: int32
+description: Статистика реестра документов на дополнительную подпись

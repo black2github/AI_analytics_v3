@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    description: GUID клиента
+    format: uuid
+    example: 9bd809c2-f695-4631-a66d-07fa890b897f
+  productCode:
+    type: string
+    description: Код услуги
+    example: Periodic_money_transfer
+  accounts:
+    type: array
+    description: Список счетов
+    items:
+      $ref: ./Account.yaml
+  errorMessage:
+    type: string
+    description: Описание ошибки
+  responseCode:
+    type: string
+    description: Код ответа
+    example: '0'
+description: Список счетов доступных для подключения услуг РКО.

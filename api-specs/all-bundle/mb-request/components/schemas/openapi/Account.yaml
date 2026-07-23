@@ -1,0 +1,31 @@
+type: object
+properties:
+  accountId:
+    type: string
+  status:
+    type: string
+    enum:
+    - Enabled
+    - Disabled
+    - Deleted
+  statusUpdateDateTime:
+    type: string
+    format: date-time
+  currency:
+    type: string
+  accountType:
+    type: string
+    enum:
+    - Business
+    - Personal
+  accountDescription:
+    type: string
+  AccountDetails:
+    type: array
+    items:
+      $ref: ./CashAccount.yaml
+  Owner:
+    $ref: ./PartyIdentification.yaml
+  Servicer:
+    $ref: ./AccountServicer.yaml
+description: Счет

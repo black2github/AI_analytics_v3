@@ -1,0 +1,49 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountTypeCode:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardPaymentSystem:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractDateFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  contractDateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  fioCardNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+  letterCurrencyCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  openNewAccount:
+    $ref: ./FilterValueDtoBoolean.yaml
+  openNewMultiAccountContract:
+    $ref: ./FilterValueDtoBoolean.yaml
+  organization:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  reqDateFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  reqDateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  reqNum:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  signerUser:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoCardRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Категории статусов заявок для скроллера. Банковская часть
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  user:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера заявок на выпуск карт. Банковская часть

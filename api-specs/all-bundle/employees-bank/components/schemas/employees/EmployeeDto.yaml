@@ -1,0 +1,42 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сотрудника
+    format: uuid
+  firstName:
+    type: string
+    description: Имя
+  lastName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  phone:
+    type: string
+    description: Номер телефона ГПБ БО
+  phoneCountryCode:
+    type: string
+    description: Телефонный код страны
+  email:
+    type: string
+    description: Адрес электронной почты ГПБ БО
+  position:
+    type: string
+    description: Должность
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  identityDoc:
+    $ref: ./IdentityDocumentDto.yaml
+description: Информация о сотруднике

@@ -1,0 +1,7 @@
+type: string
+description: Результат списания комиссии.
+example: null
+enum:
+- DEDUCTED
+- FILE_CABINET
+- NOT_CHARGED

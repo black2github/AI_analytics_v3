@@ -1,0 +1,59 @@
+required:
+- activeProductWarranties
+- productWarranties
+type: object
+properties:
+  hasActiveWarranty:
+    type: boolean
+    description: Есть действующая продуктовая доверенность
+  activeWarrantyNumber:
+    type: string
+    description: Номер действующей продуктовой доверенности
+  activeWarrantyIssueDate:
+    type: string
+    description: Дата выдачи действующей продуктовой доверенности
+    format: date
+  activeWarrantyStartDate:
+    type: string
+    description: Дата начала действия действующей продуктовой доверенности
+    format: date
+  productWarrantyEndDate:
+    type: string
+    description: Дата окончания действия действующей продуктовой доверенности
+    format: date
+  productWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую продуктовую доверенность
+  activeProductWarranties:
+    type: array
+    description: Продукты, на которые распространяются действия действующей продуктовой доверенности
+    items:
+      $ref: ./ProductWarrantyRecordDto.yaml
+  grantNewProductWarranty:
+    type: boolean
+    description: Выдать новую продуктовую доверенность
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности
+    format: date
+  currentExpirationDate:
+    type: string
+    description: Текущая дата окончания действия
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности
+    format: date
+  productWarranties:
+    type: array
+    description: Продукты, на которые распространяются действия новой продуктовой доверенности
+    items:
+      $ref: ./ProductWarrantyRecordDto.yaml
+  credentialsText:
+    type: string
+    description: Текст предоставляемых полномочий
+description: Электронная продуктовая доверенность сотрудника

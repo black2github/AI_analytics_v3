@@ -1,0 +1,27 @@
+type: object
+properties:
+  recipientAccountNumber:
+    type: string
+    description: Номер счета получателя
+  recipientBankName:
+    type: string
+    description: Наименование Банка получателя
+  recipientBic:
+    type: string
+    description: БИК получателя
+  recipientCorrAccountNumber:
+    type: string
+    description: Корреспондентский счет получателя
+  recipientInn:
+    type: string
+    description: ИНН получателя
+  recipientKpp:
+    type: string
+    description: КПП получателя
+  recipientName:
+    type: string
+    description: Наименование получателя
+  totalTransferAmount:
+    type: number
+    description: Итоговая сумма перевода с точностью до минимальных единиц валюты
+description: Реквизиты для перевода ДС

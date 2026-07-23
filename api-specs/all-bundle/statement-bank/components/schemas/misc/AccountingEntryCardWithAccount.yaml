@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  amountByDebit:
+    type: number
+  amountByCredit:
+    type: number
+  entryDate:
+    type: string
+    format: date
+  documentNumber:
+    type: integer
+    format: int64
+  documentDate:
+    type: string
+    format: date
+  counterpartyAccountNumber:
+    type: string
+  counterpartyName:
+    type: string
+  paymentPurpose:
+    type: string
+  debitSign:
+    type: boolean
+  bankClientAccountNumber:
+    type: string
+  bankClientName:
+    type: string
+  deleted:
+    type: boolean
+  currencyByDebit:
+    $ref: ../common/CurrencyCard.yaml
+  currencyByCredit:
+    $ref: ../common/CurrencyCard.yaml
+  account:
+    $ref: ../common/AccountCard.yaml

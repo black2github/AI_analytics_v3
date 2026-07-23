@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  f1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+  uaaId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  roleId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  segmentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  roleCodeNotIn:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockedByAnyReason:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleNameCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  emailCaseInsensitive:
+    $ref: ../common/FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  registrationStage:
+    $ref: ./FilterValueEnumDtoClientUserRegistrationStageDto.yaml
+description: Интеграционный фильтр пользователей Клиентов Банка (работает только с пользователями не в статусе PREREGISTERED)

@@ -1,0 +1,16 @@
+type: object
+properties:
+  token:
+    type: string
+    description: ИД МФА токена.
+    format: uuid
+  chainName:
+    type: string
+    description: Имя выбранной цепочки
+  client_id:
+    type: string
+    description: ИД приложения OAuth2
+  user_environment:
+    type: string
+    description: Информация об окружении пользователя
+description: Запрос выбора доступных МФА цепочек

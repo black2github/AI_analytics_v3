@@ -1,0 +1,12 @@
+required:
+- account
+- department
+type: object
+properties:
+  account:
+    type: string
+    description: Номер счета списания комиссии
+  department:
+    type: string
+    description: Код подразделения счета списания комиссии
+description: Информацией о списании комиссии

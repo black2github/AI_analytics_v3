@@ -1,0 +1,11 @@
+type: object
+properties:
+  total:
+    type: integer
+    description: Всего документов к отправке
+    format: int64
+  sent:
+    type: integer
+    description: Отправлено документов в банк
+    format: int64
+description: Статистика по асинхронной отправке в банк

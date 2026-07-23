@@ -1,0 +1,21 @@
+type: object
+properties:
+  folderName:
+    type: string
+    description: Наименование папки
+  digest:
+    type: string
+    description: Дайджест
+  attachmentId:
+    type: string
+    description: ID вложения
+    format: uuid
+  cmsList:
+    type: array
+    description: Список записей, содержащих сертификат ЭП (id или тело сертификата), электронную подпись и наименование файла
+    items:
+      $ref: ./CmsItemV2.yaml
+  skipDigestExtension:
+    type: boolean
+    description: Игнорировать шаблон расширений файлов для имени дайджеста
+description: Данные запроса на пакетную выгрузку реквизитов ЭП для проверки

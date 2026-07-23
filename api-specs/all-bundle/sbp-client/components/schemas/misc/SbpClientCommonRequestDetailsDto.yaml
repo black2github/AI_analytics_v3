@@ -1,0 +1,30 @@
+type: object
+description: Детализированная информация по заявкам для клиента
+properties:
+  tspCreate:
+    $ref: ../common/SbpRequestTspV2Dto.yaml
+    description: Детали заявки на регистрацию ТСП
+  tspUpdate:
+    $ref: ./SbpTspChangeRequestDto.yaml
+    description: Детали заявки на изменение параметров ТСП
+  qrcCreate:
+    $ref: ../common/SbpClientQrcRequestV2Dto.yaml
+    description: Детали заявки на регистрацию QR-кода
+  qrcBlock:
+    $ref: ../common/SbpClientQrcBlockRequestDto.yaml
+    description: Детали заявки на блокировку QR-кода
+  qrcSchedule:
+    $ref: ../common/SbpClientQrcScheduleRequestDto.yaml
+    description: Детали заявки на изменение Графика платежей
+  qrcPayment:
+    $ref: ../common/SbpClientQrcPaymentRequestDto.yaml
+    description: Детали заявки на списание средств по подписке
+  b2bQrcCreate:
+    $ref: ../common/SbpClientB2bQrcRequestDto.yaml
+    description: Детали заявки на регистрацию QR-кода для B2B
+  disconnect:
+    $ref: ../common/SbpDisconnectAgentsRequestDto.yaml
+    description: Детали заявки на отключение агентов ТСП
+  tspBlock:
+    $ref: ./SbpTspBlockRequestDto.yaml
+    description: Детали заявки на блокировку или разблокировку ТСП

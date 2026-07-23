@@ -1,0 +1,71 @@
+required:
+- completionRate
+- description
+- id
+- name
+- serviceCode
+- state
+- status
+- taskId
+- type
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса
+    format: uuid
+  taskId:
+    type: string
+    description: Идентификатор процесса
+  serviceCode:
+    type: string
+    description: Код сервиса
+  type:
+    type: string
+    description: Тип процесса
+  name:
+    type: string
+    description: Имя процесса
+  description:
+    type: string
+    description: Описание процесса
+  errorType:
+    type: string
+    description: Тип ошибки процесса
+    enum:
+    - ERROR
+    - WARNING
+  errorDescription:
+    type: string
+    description: Описание ошибки
+  startedAt:
+    type: string
+    description: Время начала процесса
+    format: date-time
+  finishedAt:
+    type: string
+    description: Время окончания процесса
+    format: date-time
+  status:
+    type: string
+    description: Статус процесса
+    enum:
+    - ACTIVE
+    - FINISHED
+    - CANCELLED
+    - FAILED
+    - UNKNOWN
+  completionRate:
+    type: integer
+    description: Процент выполнения процесса
+    format: int32
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  state:
+    $ref: ./BackgroundTaskStateDto.yaml
+  extra:
+    $ref: ./BackgroundTaskExtraDto.yaml
+description: Фоновой процесс

@@ -1,0 +1,17 @@
+type: object
+properties:
+  stateFilter:
+    type: string
+    enum:
+    - OPENED
+    - CLOSED
+  currencyCodes:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  accountTypes:
+    uniqueItems: true
+    type: array
+    items:
+      type: string

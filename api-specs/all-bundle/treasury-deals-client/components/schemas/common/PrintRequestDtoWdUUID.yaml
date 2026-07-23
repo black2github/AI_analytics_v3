@@ -1,0 +1,21 @@
+type: object
+properties:
+  docIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  format:
+    type: string
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  splitReport:
+    type: boolean
+    description: Печать в один или множество файлов.
+description: Данные

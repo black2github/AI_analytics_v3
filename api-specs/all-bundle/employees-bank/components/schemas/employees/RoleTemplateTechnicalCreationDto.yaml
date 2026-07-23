@@ -1,0 +1,56 @@
+required:
+- accesses
+- commentary
+- creatorId
+- description
+- name
+- type
+type: object
+properties:
+  name:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Наименование
+  description:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Описание
+  code:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Код
+  type:
+    type: string
+    description: Тип шаблона роли
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  displayPriority:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+  creatorId:
+    type: string
+    description: Идентификатор пользователя создавшего запись
+    format: uuid
+  commentary:
+    maxLength: 500
+    minLength: 0
+    type: string
+    description: Комментарий
+  accesses:
+    uniqueItems: true
+    type: array
+    description: Список доступов для включения в шаблон
+    items:
+      $ref: ./Access.yaml
+description: Данные для создания

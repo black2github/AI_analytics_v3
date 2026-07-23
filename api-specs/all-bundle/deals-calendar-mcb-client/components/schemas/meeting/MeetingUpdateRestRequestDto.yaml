@@ -1,0 +1,38 @@
+required:
+- deliveryPoint
+- timeInterval
+type: object
+properties:
+  timeInterval:
+    $ref: ../common/TimeIntervalRestDto.yaml
+  deliveryPoint:
+    $ref: ../common/DeliveryPointRestDto.yaml
+  surname:
+    maxLength: 255
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Фамилия контактного лица
+  name:
+    maxLength: 255
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Имя контактного лица
+  patronymic:
+    maxLength: 255
+    pattern: ^[-А-ЯЁа-яё IV.,'()]+$
+    type: string
+    description: Отчество контактного лица
+  phone:
+    pattern: ^\+79[0-9]{9}$
+    type: string
+    description: Телефон контактного лица
+  email:
+    maxLength: 255
+    pattern: ^(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+(?:\.[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~]+)*|"(?:[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~](?:[A-Za-z0-9.!#$%&'*+\-/=?^_`{|}~]*[A-Za-z0-9!#$%&'*+\-/=?^_`{|}~])?)")@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$
+    type: string
+    description: E-mail контактного лица
+  onboardingId:
+    type: string
+    description: Идентификатор заявки на онбординг
+    format: uuid
+description: ДТО изменения встречи

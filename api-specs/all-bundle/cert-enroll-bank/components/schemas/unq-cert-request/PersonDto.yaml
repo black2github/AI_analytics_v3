@@ -1,0 +1,9 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО
+  jobTitle:
+    type: string
+    description: Должность
+description: Представитель организации

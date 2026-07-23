@@ -1,0 +1,17 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип действия
+    enum:
+    - EDIT
+    - PRINT_CLIENT_CONFIRMATION
+    - PRINT_BANK_CONFIRMATION
+    - RESEND_TO_ASK
+  enabled:
+    type: boolean
+    description: Действие активно
+  allowedForUser:
+    type: boolean
+    description: Действие активно для пользователя
+description: Список пользовательских действий

@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+description: Информация о подписи заявки на регистрацию сертификата

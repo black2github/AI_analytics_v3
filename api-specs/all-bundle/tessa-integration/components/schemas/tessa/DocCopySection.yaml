@@ -1,0 +1,11 @@
+type: object
+properties:
+  requestId:
+    type: string
+    format: uuid
+  docNumber:
+    type: integer
+    format: int32
+  requestCreatedAt:
+    type: string
+    format: date-time

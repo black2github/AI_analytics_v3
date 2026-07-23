@@ -1,0 +1,31 @@
+type: object
+description: Данные счета корпоративной карты Ф1
+properties:
+  accountnumber:
+    type: string
+    description: Номер лицевого счета
+  typebankass:
+    type: string
+    description: Вид банковского счета
+  ftmoneycodeiso:
+    type: string
+    description: Валюта (код ISO)
+  accountrest:
+    type: number
+    description: Остаток по счету
+  clientcode:
+    type: string
+    description: РНК организации
+  accountId:
+    type: integer
+    format: int64
+    description: ID лицевого счета
+  filialservice:
+    type: string
+    description: Филиал (Код)
+  podr:
+    type: string
+    description: Подразделение (Код)
+  typecodecontracc:
+    type: string
+    description: Тип договора РКО

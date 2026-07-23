@@ -1,0 +1,35 @@
+type: object
+properties:
+  signers:
+    type: array
+    description: Подписанты заявки
+    items:
+      $ref: ./OrderSignerDto.yaml
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  ecoClientRegNum:
+    type: string
+    description: Регистрационный номер организации ЕСК
+  ecoOrganizationId:
+    type: string
+    description: Идентификатор записи в ЭКО Клиента
+  userEcoId:
+    type: string
+    description: Идентификатор пользователя (Распорядителя)
+  userFio:
+    type: string
+    description: ФИО пользователя
+  orderEcoId:
+    type: string
+    description: ID заявки в Экосистеме
+  systemCode:
+    type: string
+    description: Система создания документа
+  wayCode:
+    type: string
+    description: Способ создания документа
+  pageCode:
+    type: string
+    description: Страница, с которой вызвано создание  документа
+description: Служебная информация.

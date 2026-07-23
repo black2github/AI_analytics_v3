@@ -1,0 +1,25 @@
+required:
+- paymentAmount
+- paymentAmountIncludeVat
+- paymentCurrency
+- vatCalculationMethod
+type: object
+properties:
+  paymentAmount:
+    type: string
+    description: Сумма
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма платежа с учетом НДС
+  paymentCurrency:
+    $ref: ./CurrencyTypeDto.yaml
+  vatCalculationMethod:
+    $ref: ./VatCalculationTypeDto.yaml
+  vatAmount:
+    type: string
+    description: Сумма НДС
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+description: Сумма платежа и НДС

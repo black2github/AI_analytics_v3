@@ -1,0 +1,28 @@
+type: object
+description: Ответ на запрос из Ф1
+properties:
+  outParameterValues:
+    type: array
+    items:
+      type: object
+      description: Выходные параметры
+      properties:
+        shortName:
+          type: string
+          description: Наименование параметра
+        classID:
+          type: string
+          description: Класс
+        referenceType:
+          type: string
+          description: Тип
+        direction:
+          type: string
+          description: Направление
+        value:
+          description: Значение
+    description: Параметры ответа
+  errorResult:
+    $ref: ./WebGateErrorRspDto.yaml
+    type: object
+    description: Ошибка

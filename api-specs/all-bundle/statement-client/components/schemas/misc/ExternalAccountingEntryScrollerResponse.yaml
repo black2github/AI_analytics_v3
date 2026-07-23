@@ -1,0 +1,8 @@
+type: object
+properties:
+  page:
+    $ref: ./PageDataStatementExternalAccountingEntryScrollerDto.yaml
+  totalCount:
+    type: integer
+    format: int64
+description: Данные

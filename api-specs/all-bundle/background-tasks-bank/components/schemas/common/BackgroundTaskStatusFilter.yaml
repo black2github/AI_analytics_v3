@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус процесса
+    enum:
+    - ACTIVE
+    - FINISHED
+    - CANCELLED
+    - FAILED
+    - UNKNOWN
+  notEq:
+    type: string
+    description: Статус процесса
+    enum:
+    - ACTIVE
+    - FINISHED
+    - CANCELLED
+    - FAILED
+    - UNKNOWN
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус процесса
+      enum:
+      - ACTIVE
+      - FINISHED
+      - CANCELLED
+      - FAILED
+      - UNKNOWN
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус процесса
+      enum:
+      - ACTIVE
+      - FINISHED
+      - CANCELLED
+      - FAILED
+      - UNKNOWN
+  isNull:
+    type: boolean
+description: Фильтрация по статусу процесса. Полное совпадение.

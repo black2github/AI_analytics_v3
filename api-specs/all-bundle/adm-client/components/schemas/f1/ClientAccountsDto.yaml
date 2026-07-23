@@ -1,0 +1,11 @@
+type: object
+properties:
+  commissionAccounts:
+    type: array
+    items:
+      $ref: ./AccountDetailsDto.yaml
+  enrollmentAccounts:
+    type: array
+    items:
+      $ref: ./AccountDetailsDto.yaml
+description: Данные

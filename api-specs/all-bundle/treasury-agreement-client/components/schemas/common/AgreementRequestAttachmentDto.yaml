@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор вложения.
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  fileName:
+    type: string
+    description: Наименование файла вложения.
+  contentType:
+    type: string
+    description: Тип файла.
+    example: application/pdf
+  extension:
+    type: string
+    description: Расширение файла.
+    example: pdf
+  author:
+    type: string
+    description: Автор вложения.
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  authorType:
+    type: string
+    description: Тип автора вложения
+    enum:
+    - CLIENT
+    - BANK
+  authorFio:
+    type: string
+    description: ФИО автора вложения.
+  clientSignature:
+    $ref: ./SignatureDto.yaml
+  bankSignature:
+    $ref: ./SignatureDto.yaml
+  malwareExists:
+    type: boolean
+    description: Результат проверки вложения на вирусы
+description: Вложения

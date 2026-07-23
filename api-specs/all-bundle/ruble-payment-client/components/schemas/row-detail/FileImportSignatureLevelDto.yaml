@@ -1,0 +1,6 @@
+type: string
+description: Уровень подписи
+enum:
+- SINGLE
+- LEVEL_1
+- LEVEL_2

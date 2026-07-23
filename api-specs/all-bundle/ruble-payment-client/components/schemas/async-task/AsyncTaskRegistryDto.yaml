@@ -1,0 +1,34 @@
+required:
+- errorCount
+- id
+- processedCount
+- status
+- totalCount
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фоновой задачи
+    format: uuid
+  groupId:
+    type: string
+    description: Идентификатор группы фоновых задач
+    format: uuid
+  status:
+    $ref: ./AsyncTaskStatusDto.yaml
+  type:
+    $ref: ./AsyncTaskTypeDto.yaml
+  totalCount:
+    type: integer
+    description: Всего документов
+    format: int32
+  processedCount:
+    type: integer
+    description: Успешно обработано документов
+    format: int32
+  errorCount:
+    type: integer
+    description: Обработано с ошибкой документов
+    format: int32
+description: Данные фоновой задачи

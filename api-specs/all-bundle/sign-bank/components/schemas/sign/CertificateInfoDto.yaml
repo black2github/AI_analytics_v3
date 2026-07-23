@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID сертификата
+    format: uuid
+  issuerName:
+    type: string
+    description: Наименование издателя
+  subjectName:
+    type: string
+    description: Наименование владельца сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер
+  absId:
+    type: string
+    description: Идентификатор ABS
+  data:
+    type: string
+    description: Сертификат
+  subjectOrganizationName:
+    type: string
+    description: Наименование организации
+  signParams:
+    type: string
+    description: Параметры подписи
+  validFrom:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  validTo:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  certType:
+    type: string
+    description: Тип сертификата
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+description: Информация о сертификате

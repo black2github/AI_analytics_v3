@@ -1,0 +1,8 @@
+required:
+- confirmOfAuthorityToSign
+type: object
+properties:
+  confirmOfAuthorityToSign:
+    type: boolean
+    description: Признак подтверждения полномочий УЛ на подписание и передачу ЭД
+description: Права уполномоченного лица сотрудника

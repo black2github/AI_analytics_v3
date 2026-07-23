@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус визирующего документа
+    enum:
+    - WAIT_APPROVE
+    - APPROVE_SIGNED
+    - COMPLETED
+    - REJECTED
+    - CANCELED
+  notEq:
+    type: string
+    description: Статус визирующего документа
+    enum:
+    - WAIT_APPROVE
+    - APPROVE_SIGNED
+    - COMPLETED
+    - REJECTED
+    - CANCELED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус визирующего документа
+      enum:
+      - WAIT_APPROVE
+      - APPROVE_SIGNED
+      - COMPLETED
+      - REJECTED
+      - CANCELED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус визирующего документа
+      enum:
+      - WAIT_APPROVE
+      - APPROVE_SIGNED
+      - COMPLETED
+      - REJECTED
+      - CANCELED
+  isNull:
+    type: boolean
+description: Фильтр по статусу документа

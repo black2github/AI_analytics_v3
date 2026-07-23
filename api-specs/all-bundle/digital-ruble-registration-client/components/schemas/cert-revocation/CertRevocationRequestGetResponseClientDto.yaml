@@ -1,0 +1,138 @@
+required:
+- cbrParticipantWalletId
+- date
+- fingerprint
+- number
+- organization
+- pcrParticipantCertificate
+- requestId
+- sppVersion
+- status
+- statusDateTime
+- userId
+type: object
+properties:
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    maxLength: 6
+    minLength: 0
+    type: string
+    description: Номер заявки
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  fingerprint:
+    type: string
+    description: Фингерпринт
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  userId:
+    type: string
+    description: Идентификатор Пользователя
+    format: uuid
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - CHECK_VALID
+    - REG_JSON_OK
+    - REQUEST_SENT_TO_ASCR
+    - REQUEST_EXPORT
+    - REQUEST_EXPORTED_TO_ASCR
+    - REQUEST_EXPORTED
+    - REQUEST_RESPONSE_RECEIVED
+    - REQUEST_DELAYED
+    - REQUEST_APPROVED
+    - REQUEST_ACCEPTED_IN_ASCR
+    - REQUEST_ACCEPTED
+    - REQUEST_EXPORT_ERROR_IN_ASCR
+    - REQUEST_EXPORT_ERROR
+    - EXECUTED
+    - REJECTED
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_EXPORT
+    - MSG1_EXPORTED
+    - MSG1_EXPORT_ERROR
+    - MSG1_RESPONSE_RECEIVED
+    - MSG1_CALLBACK_RECEIVED_FROM_ASCR
+    - MSG2_NEED_SIGN
+    - MSG2_SIGN_VALID
+    - MSG2_EXPORT
+    - MSG2_EXPORTED
+    - MSG2_EXPORT_ERROR
+    - MSG2_RESPONSE_RECEIVED
+    - EXECUTED_ENCRYPTED
+    - UPDATE_CLIENT_SENT_TO_ESK
+    - UPDATE_CLIENT_ERROR_IN_ESK
+    - UPDATE_CLIENT_ACCEPTED_IN_ESK
+    - UPDATE_CLIENT_EXPORTED_IN_TESSA
+    - UPDATE_CLIENT_ACCEPTED_IN_TESSA
+    - UPDATE_CLIENT_REJECTED_IN_ESK
+    - UPDATE_CLIENT_EXECUTED_IN_ESK
+    - MSG1_CALLBACK_RECEIVED_FROM_PAYMENT_HUB
+    - MSG1_NEED_SIGN_BLCK
+    - MSG1_SIGN_VALID_BLCK
+    - MSG1_EXPORT_BLCK
+    - MSG1_EXPORTED_BLCK
+    - MSG1_EXPORT_ERROR_BLCK
+    - MSG1_RESPONSE_RECEIVED_BLCK
+    - MSG1_CALLBACK_RECEIVED_FROM_ASCR_BLCK
+    - MSG2_NEED_SIGN_BLCK
+    - MSG2_SIGN_VALID_BLCK
+    - MSG2_EXPORT_BLCK
+    - MSG2_EXPORTED_BLCK
+    - MSG2_EXPORT_ERROR_BLCK
+    - MSG2_RESPONSE_RECEIVED_BLCK
+    - MSG2_CALLBACK_RECEIVED_BLCK
+    - MSG1_NEED_SIGN_CLSD
+    - MSG1_SIGN_VALID_CLSD
+    - MSG1_EXPORT_CLSD
+    - MSG1_EXPORTED_CLSD
+    - MSG1_EXPORT_ERROR_CLSD
+    - MSG1_RESPONSE_RECEIVED_CLSD
+    - MSG1_CALLBACK_RECEIVED_FROM_ASCR_CLSD
+    - MSG2_NEED_SIGN_CLSD
+    - MSG2_SIGN_VALID_CLSD
+    - MSG2_EXPORT_CLSD
+    - MSG2_EXPORTED_CLSD
+    - MSG2_EXPORT_ERROR_CLSD
+    - MSG2_RESPONSE_RECEIVED_CLSD
+  statusDateTime:
+    type: string
+    description: Дата и время установки текущего статуса
+    format: date-time
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для клиента или комментарий если отсутствует код ошибки
+  pcrParticipantCertificate:
+    $ref: ../common/PcrParticipantCertificateDto.yaml
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+  cbrAccountNumber:
+    type: string
+    description: Номер СЦР на ПлЦР
+  cbrAgreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента
+  cbrAgreementOpenDate:
+    type: string
+    description: Дата открытия договора СЦР
+    format: date
+description: DTO ответа на запрос получения заявки на отзыв сертификата.

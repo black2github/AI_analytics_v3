@@ -1,0 +1,66 @@
+post:
+  tags:
+  - Заявка на заключение генерального соглашения
+  - Заявка на заключение генерального соглашения ДУ
+  - API печатных форм заявок на соглашения
+  - Заявка на заключение генерального соглашения ДУ Депозит
+  - Банковский АPI работы с вложениями
+  - Заявка на заключение генерального соглашения - ДУ Конверсия (банк)
+  summary: Upload файла
+  operationId: uploadOld_6
+  parameters:
+  - name: agreementRequestId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseAgreementRequestAttachmentDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,29 @@
+type: object
+properties:
+  page:
+    $ref: ./PageDataAbstractOrderViewDto.yaml
+  all:
+    type: integer
+    description: Динамический count по категории «Все»
+    format: int64
+  processing:
+    type: integer
+    description: Динамический count по категории «В обработке»
+    format: int64
+  processingError:
+    type: integer
+    description: Динамический count по категории «Ошибка обработки»
+    format: int64
+  completed:
+    type: integer
+    description: Динамический count по категории «Завершенные»
+    format: int64
+  signed:
+    type: integer
+    description: Динамический count по категории «Подписанные»
+    format: int64
+  created:
+    type: integer
+    description: Динамический count по категории «Созданные»
+    format: int64
+description: Данные

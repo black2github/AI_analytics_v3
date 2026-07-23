@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Инициализация выплаты'
+  tags:
+  - СИП. Сервис b2c API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/B2cTransferInitRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/B2cTransferInitResultDto.yaml
+    '400':
+      description: Bad Request

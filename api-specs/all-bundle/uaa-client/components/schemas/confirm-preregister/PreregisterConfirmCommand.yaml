@@ -1,0 +1,10 @@
+type: object
+properties:
+  confirmationId:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+  code:
+    type: string
+    description: Код подтверждения
+description: Команда подтверждения регистрации с предзаполнением данных

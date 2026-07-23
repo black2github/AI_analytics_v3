@@ -1,0 +1,25 @@
+post:
+  summary: Вызвать указанный метод и получить результат
+  tags:
+  - Эмуляция шлюза в Ф1
+  parameters:
+  - name: methodName
+    in: path
+    required: true
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties: {}
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema: {}
+    '400':
+      description: Bad Request

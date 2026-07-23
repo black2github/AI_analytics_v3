@@ -1,0 +1,9 @@
+required:
+- dstId
+type: object
+properties:
+  dstId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./FilterValueEnumDtoRevokeCertRequestStatusDto.yaml
+description: Фильтр для клиентского скроллера

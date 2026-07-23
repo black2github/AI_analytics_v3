@@ -1,0 +1,23 @@
+required:
+- bankClientId
+- certificateData
+- userId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ИД организации пользователя
+    format: uuid
+  userId:
+    type: string
+    description: ИД пользователя для которого создается СЭП
+    format: uuid
+  dstId:
+    type: string
+    description: ИД СЭП в котором обновляется сертификат
+    format: uuid
+  certificateData:
+    minLength: 1
+    type: string
+    description: Сертификат в base64 формате
+description: Данные для создания/обновления СЭП из сертификата

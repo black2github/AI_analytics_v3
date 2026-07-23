@@ -1,0 +1,13 @@
+type: object
+required:
+- qrcIds
+description: Запрос статуса операции по QR кодам
+properties:
+  qrcIds:
+    type: array
+    items:
+      type: string
+    description: Массив qrcId по которым нужно получить статус операции
+  sign:
+    type: string
+    description: Подпись сообщения

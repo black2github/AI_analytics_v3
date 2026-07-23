@@ -1,0 +1,18 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Имя
+  enabled:
+    type: boolean
+    description: Функция включена (без учета стратегии активации)
+  activationStrategyId:
+    type: string
+    description: Идентификатор стратегии управления
+  activationStrategyParams:
+    type: object
+    additionalProperties:
+      type: string
+      description: Параметры стратегии управления
+    description: Параметры стратегии управления
+description: Функция

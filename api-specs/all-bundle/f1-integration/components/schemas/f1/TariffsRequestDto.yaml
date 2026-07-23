@@ -1,0 +1,16 @@
+type: object
+properties:
+  f1AccountIds:
+    type: array
+    description: Список счетов, по которым нужна тарифная сетка
+    items:
+      type: integer
+      description: Список счетов, по которым нужна тарифная сетка
+      format: int64
+  sourceType:
+    type: string
+    description: По какому компоненту нужна тарифная сетка - по справкам или по копиям
+    enum:
+    - REFERENCE
+    - COPY
+description: Запрос получения списка тарифов счетов

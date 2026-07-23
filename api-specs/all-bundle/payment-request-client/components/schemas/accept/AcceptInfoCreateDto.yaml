@@ -1,0 +1,11 @@
+type: object
+properties:
+  decision:
+    $ref: ../common/AcceptPaymentRequestDecisionDto.yaml
+  amount:
+    pattern: ^[+-]?[0-9]*\.?[0-9]*$
+    type: string
+    description: Сумма акцепта (строковое представление числа)
+    nullable: true
+description: Решение по акцепту (данные для создания Акцепта платежного требования)
+nullable: true

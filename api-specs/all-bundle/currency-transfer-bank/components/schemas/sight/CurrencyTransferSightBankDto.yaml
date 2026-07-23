@@ -1,0 +1,9 @@
+type: object
+properties:
+  sightDetails:
+    $ref: ../common/CurrencyTransferSightDetailsDto.yaml
+  signature:
+    $ref: ./CurrencyTransferSightSignatureBankDto.yaml
+  approvalPersonInfo:
+    $ref: ./ApprovalPersonInfoBankDto.yaml
+description: Информация о визируемом валютном поручении, данные для сотрудника банка

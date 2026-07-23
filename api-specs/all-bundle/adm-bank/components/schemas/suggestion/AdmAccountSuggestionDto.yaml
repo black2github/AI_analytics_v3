@@ -1,0 +1,9 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН получателя
+  name:
+    type: string
+    description: Наименование получателя
+description: 'Подсказки: Получатель'

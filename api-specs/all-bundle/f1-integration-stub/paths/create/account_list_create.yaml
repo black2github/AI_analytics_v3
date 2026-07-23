@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице GPS_ECO_LIST_ACCS
+  tags:
+  - Обновление заглушек GPS_ECO_LIST_ACCS (Счета клиента в Ф1)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/AccountListDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountListDto.yaml
+    '400':
+      description: Bad Request

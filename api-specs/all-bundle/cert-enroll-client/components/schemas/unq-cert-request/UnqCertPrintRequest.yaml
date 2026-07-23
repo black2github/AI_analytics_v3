@@ -1,0 +1,9 @@
+required:
+- printFormat
+type: object
+properties:
+  printFormat:
+    $ref: ../common/PrintFormatDto.yaml
+  passportData:
+    $ref: ../common/PassportDtoV2.yaml
+description: Запрос печати заявки на НЭП

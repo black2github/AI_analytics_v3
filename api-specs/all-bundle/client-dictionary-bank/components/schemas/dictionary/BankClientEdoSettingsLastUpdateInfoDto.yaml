@@ -1,0 +1,26 @@
+type: object
+properties:
+  comment:
+    type: string
+    description: Комментарий
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  createdByLogin:
+    type: string
+    description: Логин Пользователя, создавшего запись
+  createdByFio:
+    type: string
+    description: ФИО Пользователя, создавшего запись
+  updatedAt:
+    type: string
+    description: Дата последнего изменения
+    format: date-time
+  updatedByLogin:
+    type: string
+    description: Логин Пользователя, внёсшего последнее изменение
+  updatedByFio:
+    type: string
+    description: ФИО Пользователя, внёсшего последнее изменение
+description: Информация о последнем изменении настроек ЭДО клиента Банка

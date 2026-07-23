@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    $ref: ./SmsInfoF1ResponseDto.yaml
+  error:
+    $ref: ./SimpleErrorData.yaml
+  traceId:
+    type: string

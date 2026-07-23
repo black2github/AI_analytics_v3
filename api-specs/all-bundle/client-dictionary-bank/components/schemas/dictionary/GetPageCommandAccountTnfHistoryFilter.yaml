@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsAccountTnfHistoryFilter.yaml
+description: Запрос страницы

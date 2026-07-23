@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  bankruptcyCheck:
+    type: boolean
+    description: Не является ли организация банкротом
+  fl115Check:
+    type: boolean
+    description: Не ограничена ли по 115 ФЗ
+  constitutionCheck:
+    type: boolean
+    description: Не подписана ли конституция
+description: Общая информация по проверке организации

@@ -1,0 +1,70 @@
+required:
+- accDetailSettingsEnabled
+- addEmployeeWithoutWarranty
+- agreementTexts
+- biwWrntEndText
+- biwWrntGeneralText
+- biwWrntText
+- editUlContacts
+- globalWarrantyEndText
+- globalWarrantyGeneralText
+- globalWarrantyText
+- includeWrntNameForInfoText
+- linkInstructionEmployees
+- productWarrantyGeneralText
+- productWarrantyTexts
+- recallWarranty
+type: object
+properties:
+  addEmployeeWithoutWarranty:
+    type: boolean
+    description: Признак возможности добавления нового сотрудника без предоставления доверенности
+  accDetailSettingsEnabled:
+    type: boolean
+    description: Признак доступности детальной настройки доступов по счетам
+  editUlContacts:
+    type: boolean
+    description: Признак возможности редактирования контактных данных у УЛ
+  recallWarranty:
+    type: boolean
+    description: Признак возможности отзыва электронной мега/продуктовой доверенности
+  linkInstructionEmployees:
+    type: string
+    description: Ссылка на инструкцию для банера в заявках Сотрудниках
+  globalWarrantyGeneralText:
+    type: string
+    description: Общая часть текста мега/продуктовой доверенности
+  globalWarrantyEndText:
+    type: string
+    description: Общая часть текста мега/продуктовой доверенности
+  globalWarrantyText:
+    type: array
+    description: Текст мегадоверенности
+    items:
+      type: string
+      description: Текст мегадоверенности
+  biwWrntGeneralText:
+    type: string
+    description: Общая часть текста доверенности на получение информации
+  biwWrntEndText:
+    type: array
+    description: Последний абзац текста доверенности на получение информации
+    items:
+      type: string
+      description: Последний абзац текста доверенности на получение информации
+  biwWrntText:
+    type: array
+    description: Текст доверенности на получение информации
+    items:
+      type: string
+      description: Текст доверенности на получение информации
+  productWarrantyGeneralText:
+    type: string
+    description: Общая часть текста мега/продуктовой доверенности
+  productWarrantyTexts:
+    $ref: ./ProductWarrantyTexts.yaml
+  includeWrntNameForInfoText:
+    $ref: ./ProductsForIssuingWarrantyDto.yaml
+  agreementTexts:
+    $ref: ./AgreementTextsDto.yaml
+description: Настраиваемые параметры

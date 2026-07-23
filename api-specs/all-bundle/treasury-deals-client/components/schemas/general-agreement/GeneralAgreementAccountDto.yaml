@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор генерального соглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  accountAbsF1Id:
+    type: string
+    description: Идентификатор счета в АБС Ф1
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  accountNumber:
+    type: string
+    description: Номер счёта
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  status:
+    type: string
+    description: Статус счета генерального соглашения
+    enum:
+    - POTENTIAL
+    - ACTIVE
+    - REMOVED
+description: Допустимые счета

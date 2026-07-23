@@ -1,0 +1,6 @@
+type: object
+properties:
+  letterCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  rateDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml

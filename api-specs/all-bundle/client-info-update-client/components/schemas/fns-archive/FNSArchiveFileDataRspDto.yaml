@@ -1,0 +1,37 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID файла
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  contentType:
+    type: string
+    description: Тип контента
+  createTime:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  dataHash:
+    type: string
+    description: Хеш сумма
+  dataHashType:
+    type: string
+    description: Хеш функция
+  dataSize:
+    type: integer
+    description: Размер
+    format: int64
+  status:
+    type: string
+    description: Статус
+  statusTime:
+    type: string
+    description: Дата и время изменения статуса
+    format: date-time
+  documentType:
+    type: string
+    description: Тип документа в файле
+description: Данные загруженных из архива файлов

@@ -1,0 +1,75 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXECUTED_BY_F1
+    - EXPORT_TO_F1_ERROR
+    - GRANT_AUTHORITY
+    - AUTHORITY_GRANTED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  documentType:
+    type: string
+    description: Классификатор типов документов
+    enum:
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+  bankClient:
+    $ref: ./LkmpOfferBankClientInfoDto.yaml
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки
+    items:
+      $ref: ./LkmpOfferRequestSignatureDto.yaml
+  agreements:
+    $ref: ./AgreementsDto.yaml
+  registrationData:
+    $ref: ./RegistrationDataDto.yaml
+description: ДТО заявки на присоединение к соглашению о подключении к ЛК МП (Заявл 1)

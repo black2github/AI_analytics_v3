@@ -1,0 +1,9 @@
+type: object
+properties:
+  digest:
+    type: string
+    description: Дайджест
+  signature:
+    type: string
+    description: Подпись
+description: Значение подписи

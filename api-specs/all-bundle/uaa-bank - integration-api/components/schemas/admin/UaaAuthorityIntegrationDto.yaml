@@ -1,0 +1,18 @@
+required:
+- publicAuthority
+type: object
+properties:
+  id:
+    type: string
+    description: ID привилегии
+    format: uuid
+  code:
+    type: string
+    description: Код привилегии
+  description:
+    type: string
+    description: Описание
+  publicAuthority:
+    type: boolean
+    description: Признак общедоступной привилегии
+description: ДТО привилегии

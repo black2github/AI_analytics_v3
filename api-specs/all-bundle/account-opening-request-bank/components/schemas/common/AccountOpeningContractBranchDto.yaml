@@ -1,0 +1,23 @@
+required:
+- absCode
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка.
+    format: uuid
+  absCode:
+    pattern: '[\/\^\.\,\-\_\''\"\@\?\!\:\$a-zA-Z0-9()\[\]]{0,50}'
+    type: string
+    description: Код подразделения в АБС.
+  name:
+    type: string
+    description: Наименование подразделения.
+  number:
+    type: string
+    description: Номер подразделения.
+  bic:
+    pattern: '[0-9]{9}'
+    type: string
+    description: БИК филиала.
+description: Сведения о Подразделении в котором открывается счет и заключается ДБС.

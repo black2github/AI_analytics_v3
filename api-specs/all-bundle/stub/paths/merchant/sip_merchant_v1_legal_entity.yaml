@@ -1,0 +1,95 @@
+post:
+  tags:
+  - СИП. Сервис Merchant API
+  summary: 'Сервис: Регистрация юридического лица'
+  operationId: legalEntityUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.address
+    in: query
+    description: Юридический адрес
+    required: false
+    type: string
+  - name: body.city
+    in: query
+    description: Город
+    required: false
+    type: string
+  - name: body.countryCode
+    in: query
+    description: Код страны-регистрации юридического лица, в формате "ISO 3166, Alpha-2"
+    required: false
+    type: string
+  - name: body.countrySubDivisionCode
+    in: query
+    description: Код региона-регистрации юридического лица, первые две цифры кода ОКТМО
+    required: false
+    type: string
+  - name: body.inn
+    in: query
+    description: ИНН
+    required: false
+    type: string
+  - name: body.kpp
+    in: query
+    description: КПП
+    required: false
+    type: string
+  - name: body.name
+    in: query
+    description: Полное наименование юридического лица
+    required: false
+    type: string
+  - name: body.ogrn
+    in: query
+    description: ОГРН
+    required: false
+    type: string
+  - name: body.type
+    in: query
+    description: Организационно-правовая форма юридического лица
+    required: false
+    type: string
+  - name: body.zip
+    in: query
+    description: Индекс
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/LegalResultDto«LegalEntityResultDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

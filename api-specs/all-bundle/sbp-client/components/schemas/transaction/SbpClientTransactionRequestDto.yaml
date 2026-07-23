@@ -1,0 +1,119 @@
+type: object
+description: Заявка на регистрацию платежа в системе АС СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docType:
+    type: string
+    description: Тип документа
+    enum:
+    - TRANSFER
+    - RETURN
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - INIT_REQUEST_1
+    - INIT_ERROR_1
+    - INIT_COMPLETED_1
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - INIT_REQUEST_2
+    - INIT_ERROR_2
+    - INIT_COMPLETED_2
+    - RECEIVED
+    - CONFIRM_REQUEST
+    - CONFIRM_ERROR
+    - CONFIRM_DELIVERED
+    - ACCEPTED
+    - INFO_REQUEST
+    - INFO_ERROR
+    - FINAL_STATUS_RECEIVED
+    - CALLBACK_RECEIVED
+    - COMPLETED
+    - REJECTED
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка
+  clientRnk:
+    type: string
+    description: РНК Клиента
+  clientGuid:
+    type: string
+    description: 'GUID Клиента '
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на на сущность "Пользователь", создавшего заявления
+  userName:
+    type: string
+    description: ФИО пользователя, создавшего заявления
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  currency:
+    type: string
+    description: Код валюты платежа
+  data:
+    $ref: ./SbpTransactionRequestDataDto.yaml
+    description: Реквизиты заявления
+  bankClient:
+    $ref: ./SbpTransactionRequestBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  accountData:
+    $ref: ./SbpClientTransactionRequestAccountDataDto.yaml
+    description: Реквизиты счета Клиента Банка
+  merchantData:
+    $ref: ./SbpTransactionRequestMerchantDataDto.yaml
+    description: Реквизиты Точки продаж
+  recipientData:
+    $ref: ./SbpTransactionRecipientDataDto.yaml
+    description: Реквизиты получателя
+  operationData:
+    $ref: ./SbpTransactionOperationDataDto.yaml
+    description: Реквизиты входящей операции
+  commissionData:
+    $ref: ./SbpTransactionCommissionDataDto.yaml
+    description: Блок Комиссии
+  processData:
+    $ref: ./SbpTransactionProcessDataDto.yaml
+    description: Реквизиты, получаемые в процессе обработки заявления
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки
+    items:
+      $ref: ./SbpTransactionRequestSignatureDto.yaml
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+    description: Результат валидации заявки
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+required:
+- clientId
+- data
+- docType
+- id
+- status
+- userId
+- userName

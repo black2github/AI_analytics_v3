@@ -1,0 +1,28 @@
+required:
+- accountId
+- accountNumber
+- authorityStatus
+- signLevel1Required
+- signLevel2Required
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета клиента
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  authorityStatus:
+    $ref: ./SignerAuthorityStatusDto.yaml
+  signLevelNumber:
+    type: integer
+    description: Номер уровня подписи
+    format: int32
+  signLevel1Required:
+    type: boolean
+    description: Требуется подпись первого уровня
+  signLevel2Required:
+    type: boolean
+    description: Требуется подпись второго уровня
+description: Данные о полномочиях подписанта

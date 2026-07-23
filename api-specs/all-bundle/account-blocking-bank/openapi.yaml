@@ -1,0 +1,212 @@
+openapi: 3.0.1
+info:
+  title: Сервис блокировок. Банковская часть.
+  version: 1.51.0
+servers:
+- url: /account-blocking-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: Блокировки H2H. Технический апи.
+- name: Блокировки счетов. Технический апи.
+- name: Сервис блокировок. Банк. Базовые операции.
+- name: Блокировки ДФМ. Технический апи.
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /h2h-blocking/message/{id}/status:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_id_status.yaml
+  /h2h-blocking/message/{id}/repeat:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_id_repeat.yaml
+  /h2h-blocking/message/get-page:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_get_page.yaml
+  /h2h-blocking/block/get-page:
+    $ref: ./paths/h2h-blocking/h2h_blocking_block_get_page.yaml
+  /h2h-blocking/block/by-bank-client-ids:
+    $ref: ./paths/h2h-blocking/h2h_blocking_block_by_bank_client_ids.yaml
+  /dfm-block/get-suspended-client-rnk:
+    $ref: ./paths/misc/dfm_block_get_suspended_client_rnk.yaml
+  /dfm-block/get-by-f1-account-list:
+    $ref: ./paths/misc/dfm_block_get_by_f1_account_list.yaml
+  /account-blocking/suggestion/organization:
+    $ref: ./paths/account-blocking/account_blocking_suggestion_organization.yaml
+  /account-blocking/suggestion/block-doc-type:
+    $ref: ./paths/account-blocking/account_blocking_suggestion_block_doc_type.yaml
+  /account-blocking/suggestion/account-number:
+    $ref: ./paths/account-blocking/account_blocking_suggestion_account_number.yaml
+  /account-blocking/report:
+    $ref: ./paths/account-blocking/account_blocking_report.yaml
+  /account-blocking/get-page:
+    $ref: ./paths/account-blocking/account_blocking_get_page.yaml
+  /account-blocking/change-status:
+    $ref: ./paths/account-blocking/account_blocking_change_status.yaml
+  /account-blocking/by-user-account-ids:
+    $ref: ./paths/account-blocking/account_blocking_by_user_account_ids.yaml
+  /account-blocking/by-account-ids:
+    $ref: ./paths/account-blocking/account_blocking_by_account_ids.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /h2h-blocking/message/{id}/report:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_id_report.yaml
+  /h2h-blocking/message/{id}/history:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_id_history.yaml
+  /h2h-blocking/message/{id}/file:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_id_file.yaml
+  /h2h-blocking/message/filter/initiators:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_filter_initiators.yaml
+  /h2h-blocking/message/category:
+    $ref: ./paths/h2h-blocking/h2h_blocking_message_category.yaml
+  /h2h-blocking/block/filter/organizations:
+    $ref: ./paths/h2h-blocking/h2h_blocking_block_filter_organizations.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    GenericCommandH2hBankClientBlockingMessageChangeStatusCommand:
+      $ref: ./components/schemas/h2h-blocking/GenericCommandH2hBankClientBlockingMessageChangeStatusCommand.yaml
+    H2hBankClientBlockingMessageChangeStatusCommand:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockingMessageChangeStatusCommand.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/h2h-blocking/BankClientInfoDto.yaml
+    GenericResponseSimpleErrorDataH2hBankClientBlockingMessageDto:
+      $ref: ./components/schemas/h2h-blocking/GenericResponseSimpleErrorDataH2hBankClientBlockingMessageDto.yaml
+    H2hBankClientBlockingMessageDto:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockingMessageDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoH2hBlockMessageStatusDto:
+      $ref: ./components/schemas/h2h-blocking/FilterValueEnumDtoH2hBlockMessageStatusDto.yaml
+    GetPageCommandH2hBankClientBlockingMessageFilter:
+      $ref: ./components/schemas/h2h-blocking/GetPageCommandH2hBankClientBlockingMessageFilter.yaml
+    H2hBankClientBlockingMessageFilter:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockingMessageFilter.yaml
+    PageParamsH2hBankClientBlockingMessageFilter:
+      $ref: ./components/schemas/h2h-blocking/PageParamsH2hBankClientBlockingMessageFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    H2hBankClientBlockingMessageScrollerDto:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockingMessageScrollerDto.yaml
+    PageDataH2hBankClientBlockingMessageScrollerDto:
+      $ref: ./components/schemas/h2h-blocking/PageDataH2hBankClientBlockingMessageScrollerDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    GetPageCommandH2hBankClientBlockScrollerFilter:
+      $ref: ./components/schemas/h2h-blocking/GetPageCommandH2hBankClientBlockScrollerFilter.yaml
+    H2hBankClientBlockScrollerFilter:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockScrollerFilter.yaml
+    PageParamsH2hBankClientBlockScrollerFilter:
+      $ref: ./components/schemas/h2h-blocking/PageParamsH2hBankClientBlockScrollerFilter.yaml
+    H2hBankClientBlockScrollerDto:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockScrollerDto.yaml
+    PageDataH2hBankClientBlockScrollerDto:
+      $ref: ./components/schemas/h2h-blocking/PageDataH2hBankClientBlockScrollerDto.yaml
+    BankClientH2hBlockShortInfoTechDto:
+      $ref: ./components/schemas/h2h-blocking/BankClientH2hBlockShortInfoTechDto.yaml
+    GenericResponseSimpleErrorDataListBankClientH2hBlockShortInfoTechDto:
+      $ref: ./components/schemas/h2h-blocking/GenericResponseSimpleErrorDataListBankClientH2hBlockShortInfoTechDto.yaml
+    GenericResponseSimpleErrorDataListLong:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataListLong.yaml
+    DfmBlockTechDto:
+      $ref: ./components/schemas/misc/DfmBlockTechDto.yaml
+    GenericResponseSimpleErrorDataListDfmBlockTechDto:
+      $ref: ./components/schemas/misc/GenericResponseSimpleErrorDataListDfmBlockTechDto.yaml
+    AccountBlockingRequestBankScrollerFilter:
+      $ref: ./components/schemas/account-blocking/AccountBlockingRequestBankScrollerFilter.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/account-blocking/FilterValueDtoBigDecimal.yaml
+    FilterValueEnumDtoBlockTypeDto:
+      $ref: ./components/schemas/account-blocking/FilterValueEnumDtoBlockTypeDto.yaml
+    GetPageCommandAccountBlockingRequestBankScrollerFilter:
+      $ref: ./components/schemas/account-blocking/GetPageCommandAccountBlockingRequestBankScrollerFilter.yaml
+    PageParamsAccountBlockingRequestBankScrollerFilter:
+      $ref: ./components/schemas/account-blocking/PageParamsAccountBlockingRequestBankScrollerFilter.yaml
+    StatusFilterValueDto:
+      $ref: ./components/schemas/account-blocking/StatusFilterValueDto.yaml
+    GenericResponseSimpleErrorDataListOrganizationSuggestionDto:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataListOrganizationSuggestionDto.yaml
+    OrganizationSuggestionDto:
+      $ref: ./components/schemas/account-blocking/OrganizationSuggestionDto.yaml
+    BlockDocTypeSuggestionDto:
+      $ref: ./components/schemas/account-blocking/BlockDocTypeSuggestionDto.yaml
+    GenericResponseSimpleErrorDataListBlockDocTypeSuggestionDto:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataListBlockDocTypeSuggestionDto.yaml
+    AccountNumberSuggestionDto:
+      $ref: ./components/schemas/account-blocking/AccountNumberSuggestionDto.yaml
+    GenericResponseSimpleErrorDataListAccountNumberSuggestionDto:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataListAccountNumberSuggestionDto.yaml
+    ExportRegistryBankDto:
+      $ref: ./components/schemas/account-blocking/ExportRegistryBankDto.yaml
+    GenericCommandExportRegistryBankDto:
+      $ref: ./components/schemas/account-blocking/GenericCommandExportRegistryBankDto.yaml
+    ReportFormatDto:
+      $ref: ./components/schemas/account-blocking/ReportFormatDto.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/account-blocking/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    AccountBlockBankScrollerDto:
+      $ref: ./components/schemas/account-blocking/AccountBlockBankScrollerDto.yaml
+    GenericResponseSimpleErrorDataPageDataAccountBlockBankScrollerDto:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataPageDataAccountBlockBankScrollerDto.yaml
+    LockDetailsBankDto:
+      $ref: ./components/schemas/account-blocking/LockDetailsBankDto.yaml
+    OrgAndAccIdentBankDto:
+      $ref: ./components/schemas/account-blocking/OrgAndAccIdentBankDto.yaml
+    PageDataAccountBlockBankScrollerDto:
+      $ref: ./components/schemas/account-blocking/PageDataAccountBlockBankScrollerDto.yaml
+    ChangeStatusBankDto:
+      $ref: ./components/schemas/account-blocking/ChangeStatusBankDto.yaml
+    GenericCommandChangeStatusBankDto:
+      $ref: ./components/schemas/account-blocking/GenericCommandChangeStatusBankDto.yaml
+    GenericResponseSimpleErrorDataInteger:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataInteger.yaml
+    AccountBlockRequestDto:
+      $ref: ./components/schemas/account-blocking/AccountBlockRequestDto.yaml
+    AccountBlockAggregateDto:
+      $ref: ./components/schemas/account-blocking/AccountBlockAggregateDto.yaml
+    AccountBlockInfoDto:
+      $ref: ./components/schemas/account-blocking/AccountBlockInfoDto.yaml
+    GenericResponseSimpleErrorDataListAccountBlockAggregateDto:
+      $ref: ./components/schemas/account-blocking/GenericResponseSimpleErrorDataListAccountBlockAggregateDto.yaml
+    OrganInfoDto:
+      $ref: ./components/schemas/account-blocking/OrganInfoDto.yaml
+    GenericResponseSimpleErrorDataPrintReferenceResponse:
+      $ref: ./components/schemas/h2h-blocking/GenericResponseSimpleErrorDataPrintReferenceResponse.yaml
+    PrintReferenceResponse:
+      $ref: ./components/schemas/h2h-blocking/PrintReferenceResponse.yaml
+    GenericResponseSimpleErrorDataListH2hBankClientBlockingMessageHistoryDto:
+      $ref: ./components/schemas/h2h-blocking/GenericResponseSimpleErrorDataListH2hBankClientBlockingMessageHistoryDto.yaml
+    H2hBankClientBlockingMessageHistoryDto:
+      $ref: ./components/schemas/h2h-blocking/H2hBankClientBlockingMessageHistoryDto.yaml
+    GenericResponseSimpleErrorDataListH2hBlockBankClientFilterItemDto:
+      $ref: ./components/schemas/h2h-blocking/GenericResponseSimpleErrorDataListH2hBlockBankClientFilterItemDto.yaml
+    H2hBlockBankClientFilterItemDto:
+      $ref: ./components/schemas/h2h-blocking/H2hBlockBankClientFilterItemDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/h2h-blocking/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/h2h-blocking/CategoryResponse.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

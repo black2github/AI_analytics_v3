@@ -1,0 +1,8 @@
+type: string
+description: Категории документов платежное требование исходящее для журнала документов банка
+nullable: true
+enum:
+- ALL
+- COMPLETED
+- IN_PROCESSING
+- PROCESSING_ERROR

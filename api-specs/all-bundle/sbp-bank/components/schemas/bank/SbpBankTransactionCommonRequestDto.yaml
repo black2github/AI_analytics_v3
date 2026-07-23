@@ -1,0 +1,108 @@
+type: object
+description: Обобщенное заявление на платеж СБП для банка
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  type:
+    type: string
+    description: Тип заявления
+    enum:
+    - B2C_TRANSACTION
+    - B2B_TRANSACTION
+  status:
+    type: string
+    description: Статус обработки заявления
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - INIT_REQUEST_1
+    - INIT_ERROR_1
+    - INIT_COMPLETED_1
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - INIT_REQUEST_2
+    - INIT_ERROR_2
+    - INIT_COMPLETED_2
+    - RECEIVED
+    - CONFIRM_REQUEST
+    - CONFIRM_ERROR
+    - CONFIRM_DELIVERED
+    - ACCEPTED
+    - INFO_REQUEST
+    - INFO_ERROR
+    - FINAL_STATUS_RECEIVED
+    - CALLBACK_RECEIVED
+    - COMPLETED
+    - REJECTED
+    - SBP_B2B_GET_QR_REQUEST
+    - SBP_B2B_GET_QR_ERROR
+    - SBP_B2B_GET_QR_RECEIVED
+    - SBP_B2B_CONFIRM_REQUEST
+    - SBP_B2B_CONFIRM_ERROR
+    - SBP_B2B_CONFIRM_DELIVERED
+    - SBP_B2B_INFO_REQUEST
+    - SBP_B2B_INFO_ERROR
+    - SBP_B2B_FINAL_STATUS_RECEIVED
+    - SBP_B2B_AWATING_FINAL_STATUS
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  userId:
+    type: string
+    format: uuid
+    description: Ссылка на на сущность "Пользователь", создавшего заявления
+  userName:
+    type: string
+    description: Пользователь, создавший документ
+  commentForBank:
+    type: string
+    description: Информация для Банка
+  bankClient:
+    $ref: ./SbpBankTransactionCommonRequestBankClientDto.yaml
+    description: Информация о клиенте банка в обобщенном заявлении на платеж СБП
+  recipientData:
+    $ref: ./SbpBankTransactionCommonRequestRecipientDataDto.yaml
+    description: Информация о контрагенте в обобщенном заявлении на платеж СБП
+  data:
+    $ref: ./SbpBankTransactionCommonRequestDataDto.yaml
+    description: Реквизиты документа
+  commissionData:
+    $ref: ./SbpBankTransactionCommonRequestCommissionDataDto.yaml
+    description: Информация о комиссии в обобщенном платеже для банка
+  transactionId:
+    type: string
+    description: Идентификатор транзакции
+  b2b:
+    type: boolean
+    description: Признак заявки на платеж СБП для B2B
+  transactionTime:
+    type: string
+    format: date-time
+    description: Дата и время  инициации платежа
+required:
+- docDate
+- docNumber
+- id
+- status
+- type
+- userId

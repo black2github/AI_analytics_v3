@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API клиентского скроллера точек инкассации АДМ
+  summary: Получить страницу записей
+  description: 'Привилегии: ODS_ADM_POC_MASTER_VIEW'
+  operationId: getListUsingPOST_3
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«AdmPocMasterFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/Page«AdmPocMasterDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

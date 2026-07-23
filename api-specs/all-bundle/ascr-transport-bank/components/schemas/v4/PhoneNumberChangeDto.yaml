@@ -1,0 +1,9 @@
+type: object
+description: Изменение номера телефона Клиента-ЮЛ.
+properties:
+  oldPhone:
+    type: string
+    description: Замещенный номер (старый) телефона Клиента-ЮЛ.
+  newPhone:
+    type: string
+    description: Заместивший номер (новый) телефона Клиента-ЮЛ.

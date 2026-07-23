@@ -1,0 +1,9 @@
+type: object
+xml:
+  name: getEgrulInfoResponse
+properties:
+  company:
+    $ref: ./Response.yaml
+    type: object
+    xml:
+      name: Company

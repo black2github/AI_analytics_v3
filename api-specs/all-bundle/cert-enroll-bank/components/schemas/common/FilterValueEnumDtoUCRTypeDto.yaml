@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ISSUE
+    - REISSUE
+  notEq:
+    type: string
+    enum:
+    - ISSUE
+    - REISSUE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ISSUE
+      - REISSUE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ISSUE
+      - REISSUE
+  isNull:
+    type: boolean
+description: Тип заявки. Выбор из списка.

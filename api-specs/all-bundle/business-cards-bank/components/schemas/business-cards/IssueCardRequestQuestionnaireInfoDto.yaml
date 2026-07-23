@@ -1,0 +1,19 @@
+type: object
+properties:
+  branchName:
+    type: string
+    description: Офис выдачи карты
+  id:
+    type: string
+    description: Идентификатор карты в заявке на выпуск карты
+    format: uuid
+  issuedOrganization:
+    type: string
+    description: Наименование организации на карте
+  paymentSystem:
+    type: string
+    description: Платежная система
+  paymentSystemCode:
+    type: string
+    description: Код платежной системы
+description: Сведения анкеты заявки на выпуск карты для ЭФ

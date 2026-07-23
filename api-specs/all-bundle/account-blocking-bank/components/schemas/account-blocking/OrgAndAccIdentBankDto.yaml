@@ -1,0 +1,26 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: ID "Счет клиента"
+    format: uuid
+  clientId:
+    type: string
+    description: ID "Клиент Банка"
+    format: uuid
+  clientFullName:
+    type: string
+    description: 3.3/4.2 Полное наименование организации
+  clientShortName:
+    type: string
+    description: 3.3/4.2 Краткое наименование организации
+  clientInnKio:
+    type: string
+    description: 3.3 ИНН/КИО организации
+  clientRnk:
+    type: string
+    description: 3.3/4.20 РНК организации
+  accountCurrency:
+    type: string
+    description: 3.6 Код валюты счета
+description: Основные реквизиты документа

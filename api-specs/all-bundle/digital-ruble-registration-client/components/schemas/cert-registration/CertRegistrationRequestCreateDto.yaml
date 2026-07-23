@@ -1,0 +1,43 @@
+required:
+- bankClientId
+- certificateRequest
+- countryCode
+- fingerprint
+- locality
+- organization
+- pcrParticipantWalletId
+- subjectOfFederation
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  countryCode:
+    maxLength: 2
+    minLength: 0
+    type: string
+    description: Код страны
+  subjectOfFederation:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Субъект федерации регистрации юр. лица
+  locality:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Населенный пункт регистрации юр. лица
+  certificateRequest:
+    type: string
+    description: Данные запроса на создание сертификата (CSR)
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+description: DTO для запроса на создание заявки на регистрацию сертификата.

@@ -1,0 +1,21 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Ссылка на файл ЭП
+    format: uuid
+  signFileSourceId:
+    type: string
+    description: Ссылка на исходный файл (архив)
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла ЭП
+  fileSize:
+    type: integer
+    description: Размер файла ЭП
+    format: int32
+  fileHash:
+    type: string
+    description: Хеш ЭП
+description: Данные файла подписи

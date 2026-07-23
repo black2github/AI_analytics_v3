@@ -1,0 +1,57 @@
+post:
+  operationId: reRevokeAccessRights_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBulkReReissueReRevokeResponseDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Функция массового отзыва прав доступа и запроса на аннулирование инвайтов для потеницальных УЛ с ошибками
+  tags:
+  - Банковское API заявки на онбординг

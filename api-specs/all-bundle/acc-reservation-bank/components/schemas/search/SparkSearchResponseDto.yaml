@@ -1,0 +1,28 @@
+type: object
+properties:
+  sparkId:
+    type: integer
+    description: Идентификатор ИП в СПАРК
+    format: int32
+  okopfCode:
+    type: string
+    description: Организационно-правовая форма
+  okved:
+    type: string
+    description: ОКВЭД
+  okfs:
+    type: string
+    description: ОКФС
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  shortNameRus:
+    type: string
+    description: Краткое наименование
+  fullNameRus:
+    type: string
+    description: Полное наименование
+description: Ответ поискового запроса от СПАРК

@@ -1,0 +1,50 @@
+type: object
+properties:
+  acquiringInteractionEmail:
+    type: string
+    description: Электронная почта контакта для взаимодействия по договору эквайринга
+  acquiringInteractionFio:
+    type: string
+    description: Фамилия, имя и отчество контакта для взаимодействия по договору эквайринга
+  acquiringInteractionPhone:
+    type: string
+    description: Мобильный телефон контакта для взаимодействия по договору эквайринга
+  id:
+    type: string
+    description: Уникальный идентификатор
+    format: uuid
+  onboardingRequestId:
+    type: string
+    description: Ссылка на Заявка на открытие первого счета_2021
+    format: uuid
+  onlineAcquiring:
+    type: boolean
+    description: Интернет-эквайринг
+  personId:
+    type: string
+    description: Ссылка на Физические лица в заявке
+    format: uuid
+  refundAccountNumber:
+    type: string
+    description: Номер счета для зачисления возмещения
+  submittingReportEmail:
+    type: string
+    description: Электронная почта для предоставления отчётов
+  submittingReportPeriod:
+    type: string
+    description: Срок предоставления отчётов
+    enum:
+    - QUARTERLY
+    - MONTHLY
+    - WEEKLY
+    - DAILY
+  submittingReportWay:
+    type: string
+    description: Эквайринг
+    enum:
+    - GPB_BO
+    - EMAIL
+  tradeAcquiring:
+    type: boolean
+    description: Торговый эквайринг
+description: Эквайринг

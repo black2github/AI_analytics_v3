@@ -1,0 +1,19 @@
+type: object
+properties:
+  series:
+    type: string
+    description: Серия паспорта
+  number:
+    type: string
+    description: Номер паспорта
+  issuedBy:
+    type: string
+    description: Орган, выдавший паспорт гражданину РФ
+  authorityCode:
+    type: string
+    description: Код подразделения
+  issueDate:
+    type: string
+    description: Дата выдачи паспорта
+    format: date
+description: Паспортные данные гражданина РФ

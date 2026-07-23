@@ -1,0 +1,7 @@
+type: object
+properties:
+  payload:
+    $ref: ../common/OnboardingRequestDto.yaml
+  validationResult:
+    $ref: ./ValidationResult.yaml
+description: Данные

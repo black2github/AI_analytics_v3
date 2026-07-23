@@ -1,0 +1,80 @@
+info:
+  version: 1.50.0-SNAPSHOT
+  title: Сервис ЛК УВЭД. Клиентская часть.
+tags:
+- name: API заявки на предоставление доступа к ЛК УВЭД клиентом банка.
+  description: Lkuved Access Client Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API принятия заявки на присоединение к соглашению о подключении к ЛК УВЭД клиентом банка.
+  description: Lkuved Acceptance Client Controller
+- name: lkuved-client-settings-controller
+  description: Lkuved Client Settings Controller
+- name: open-api-web-mvc-resource
+  description: Open Api Web Mvc Resource
+- name: swagger-config-resource
+  description: Swagger Config Resource
+- name: swagger-welcome-web-mvc
+  description: Swagger Welcome Web Mvc
+- name: Подпись УВЭД.
+  description: Lkuved Sign Controller
+- name: Подпись заявки на предоставление доступа пользователям к ЛК УВЭД.
+  description: Lkuved Access Sign Controller
+paths:
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /lkuved:
+    $ref: ./paths/lkuved/lkuved.yaml
+  /lkuved/generate-digest:
+    $ref: ./paths/generate-digest/lkuved_generate_digest.yaml
+  /lkuved/generate-digest/version:
+    $ref: ./paths/generate-digest/lkuved_generate_digest_version.yaml
+  /lkuved/generate-sign-data:
+    $ref: ./paths/generate-sign-data/lkuved_generate_sign_data.yaml
+  /lkuved/generate-sign-data/v2.1:
+    $ref: ./paths/generate-sign-data/lkuved_generate_sign_data_v2_1.yaml
+  /lkuved/grant-access:
+    $ref: ./paths/grant-access/lkuved_grant_access.yaml
+  /lkuved/grant-access/authorized-persons-and-users/list:
+    $ref: ./paths/grant-access/lkuved_grant_access_authorized_persons_and_users_list.yaml
+  /lkuved/grant-access/generate-digest:
+    $ref: ./paths/grant-access/lkuved_grant_access_generate_digest.yaml
+  /lkuved/grant-access/generate-digest/version:
+    $ref: ./paths/grant-access/lkuved_grant_access_generate_digest_version.yaml
+  /lkuved/grant-access/generate-sign-data:
+    $ref: ./paths/grant-access/lkuved_grant_access_generate_sign_data.yaml
+  /lkuved/grant-access/generate-sign-data/v2.1:
+    $ref: ./paths/grant-access/lkuved_grant_access_generate_sign_data_v2_1.yaml
+  /lkuved/grant-access/print:
+    $ref: ./paths/grant-access/lkuved_grant_access_print.yaml
+  /lkuved/grant-access/print-v2:
+    $ref: ./paths/grant-access/lkuved_grant_access_print_v2.yaml
+  /lkuved/grant-access/send:
+    $ref: ./paths/grant-access/lkuved_grant_access_send.yaml
+  /lkuved/grant-access/sign:
+    $ref: ./paths/grant-access/lkuved_grant_access_sign.yaml
+  /lkuved/grant-access/{id}:
+    $ref: ./paths/grant-access/lkuved_grant_access_id.yaml
+  /lkuved/has-executed-for-bank-client:
+    $ref: ./paths/has-executed-for-bank-client/lkuved_has_executed_for_bank_client.yaml
+  /lkuved/print:
+    $ref: ./paths/print/lkuved_print.yaml
+  /lkuved/print-v2:
+    $ref: ./paths/print-v2/lkuved_print_v2.yaml
+  /lkuved/send:
+    $ref: ./paths/send/lkuved_send.yaml
+  /lkuved/settings:
+    $ref: ./paths/settings/lkuved_settings.yaml
+  /lkuved/sign:
+    $ref: ./paths/sign/lkuved_sign.yaml
+  /lkuved/{id}:
+    $ref: ./paths/{id}/lkuved_id.yaml
+  /swagger-ui.html:
+    $ref: ./paths/swagger-ui.html/swagger_ui_html.yaml
+  /v3/api-docs:
+    $ref: ./paths/api-docs/v3_api_docs.yaml
+  /v3/api-docs.yaml:
+    $ref: ./paths/api-docs.yaml/v3_api_docs_yaml.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components: {}

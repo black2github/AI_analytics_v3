@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  unitedSign:
+    type: boolean
+    description: Признак единой подписи
+description: Плоское представление СЭП представителя клиента

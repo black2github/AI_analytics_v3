@@ -1,0 +1,15 @@
+type: object
+description: Объект, содержащий дополнительную информацию от ПлЦР.
+properties:
+  agreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента-ЮЛ.
+  agreementDate:
+    type: string
+    description: Дата договора СЦР Клиента-ЮЛ.
+  agreementCloseDate:
+    type: string
+    description: Дата расторжения договора СЦР Клиента-ЮЛ.
+  organisationName:
+    type: string
+    description: Полное наименование юридического лица Клиента-ЮЛ.

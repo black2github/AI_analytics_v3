@@ -1,0 +1,92 @@
+type: object
+properties:
+  accountBank:
+    $ref: ./AdmAccountBankTypeDto.yaml
+  address:
+    type: string
+    description: Адрес АДМ
+  admTerminals:
+    type: array
+    description: Терминалы
+    items:
+      $ref: ./AdmTerminalDto.yaml
+  branchName:
+    type: string
+    description: Наименование подразделения
+  commentForService:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Комментарий для сервиса АДМ
+  demountingDate:
+    type: string
+    description: Дата демонтажа АДМ
+    format: date
+  demountingPerson:
+    maxLength: 255
+    minLength: 0
+    pattern: ^[А-яËё\s-]+$
+    type: string
+    description: ФИО контактного лица, ответственного за демонтаж АДМ
+  demountingPersonPhone:
+    maxLength: 255
+    minLength: 0
+    pattern: ^7\d{10}$
+    type: string
+    description: Телефон контактного лица, ответственного за демонтаж АДМ
+  deviceId:
+    type: string
+    description: ID CRM устройства
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  isAddressValid:
+    type: boolean
+    description: Результат проверки адресной информации
+  isDemountingRequired:
+    type: boolean
+    description: Требуется демонтаж АДМ
+  isPending:
+    type: boolean
+    description: Ожидает статус. Признак, определяющий переход АДМ в статус для заявок
+  isPilotTariff:
+    type: boolean
+    description: Пилотный тариф
+  isProvidedByBank:
+    type: boolean
+    description: Устройство предоставлено банком/клиентом
+  mainTID:
+    type: string
+    description: Мастер TID
+  pilotTariffMinAmount:
+    type: number
+    description: Минимальная сумма пилотного тарифа
+  pilotTariffPeriod:
+    type: integer
+    description: Срок действия пилотного тарифа в месяцах
+    format: int32
+  pilotTariffRate:
+    type: number
+    description: Ставка пилотного тарифа
+  removeDate:
+    type: string
+    description: Дата исключения
+    format: date
+  revenue:
+    maxLength: 10
+    type: integer
+    description: Наличная выручка в месяц
+    format: int64
+  tariff:
+    type: string
+    description: Тариф
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма
+  tariffRate:
+    type: number
+    description: Ставка тарифа
+  tariffType:
+    $ref: ./AdmTariffTypeDto.yaml
+description: Информация об АДМ

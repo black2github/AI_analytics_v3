@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  signDataList:
+    type: array
+    description: Набор подписываемых данных
+    items:
+      $ref: ./UniSignDataDto.yaml
+description: Подписываемый документ v2.1

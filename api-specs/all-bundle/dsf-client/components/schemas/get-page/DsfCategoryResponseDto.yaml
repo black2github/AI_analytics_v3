@@ -1,0 +1,42 @@
+required:
+- code
+- name
+type: object
+properties:
+  code:
+    type: string
+    description: Код категории
+  comment:
+    type: string
+    description: Пользовательский комментарий при изменении записи
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  creatorFio:
+    type: string
+    description: ФИО Пользователя, создавшего запись
+  creatorLogin:
+    type: string
+    description: Логин Пользователя, создавшего запись
+  id:
+    type: string
+    description: Идентификатор категории.
+    format: uuid
+  name:
+    type: string
+    description: Наименование категории
+  nameEn:
+    type: string
+    description: Наименование категории на английском
+  updatedAt:
+    type: string
+    description: Время последнего изменения
+    format: date-time
+  updaterFio:
+    type: string
+    description: ФИО Пользователя, внёсшего последнее изменение
+  updaterLogin:
+    type: string
+    description: Логин Пользователя, внёсшего последнее изменение
+description: Категория ДСФ. Возвращаемая ДТО

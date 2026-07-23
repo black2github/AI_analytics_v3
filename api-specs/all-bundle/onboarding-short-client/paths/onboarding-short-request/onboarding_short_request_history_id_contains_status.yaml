@@ -1,0 +1,105 @@
+get:
+  description: 'Привилегии: ONB_KZ.CLIENT.VIEW,ONB_KZ.BANK.VIEW,ONB_KZ.BANK.VIEW_RETAIL_DELIVERY'
+  operationId: checkStatusInHistory
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - in: query
+    name: status
+    required: true
+    schema:
+      type: string
+      description: Статус короткой заявки на открытие первого счета
+      enum:
+      - NONE
+      - DRAFT
+      - COMPLETED
+      - CLIENT_DOCS_UPLOAD
+      - DELETED
+      - DELIVERED
+      - MIDDLE_OFFICE_CONTROL
+      - WAITING_FOR_ESK_ACCOUNTS
+      - EXPORT_TO_TESSA
+      - EXPORT_PASSPORT_TO_TESSA_1070
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - REPLACING_DOCS
+      - APPROVED
+      - REFUSED
+      - REJECTED
+      - EXECUTED
+      - RECEIVED
+      - EXPORT_TO_ESK_1070
+      - EXPORT_TO_ESK_1099
+      - EXPORT_TO_ESK_115
+      - EXPORTED_TO_ESK_1070
+      - EXPORTED_TO_ESK_1099
+      - EXPORTED_TO_ESK_115
+      - TECH_EXPORT_TO_ESK_ERROR_1070
+      - TECH_EXPORT_TO_ESK_ERROR_1099
+      - EXPORT_TO_ESK_ERROR_115
+      - ACCEPTED_BY_ESK_115
+      - EXECUTED_BY_ESK_1070
+      - EXECUTED_BY_ESK_1099
+      - DOSSIER_APPROVED_BY_ESK_115
+      - DOSSIER_CREATED_BY_ESK_115
+      - DOSSIER_REPEATED_EXAMINATION_115
+      - EXPORT_TO_TESSA_115
+      - EXPORT_TO_TESSA_ERROR_115
+      - EXECUTED_BY_TESSA_115
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Проверить, переходила ли заявка по статусу
+  tags:
+  - Короткая заявка на открытие первого счета. История изменений.

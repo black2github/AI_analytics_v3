@@ -1,0 +1,27 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: ID "Счет клиента"
+    format: uuid
+  clientId:
+    type: string
+    description: ID "Клиент Банка"
+    format: uuid
+  branchId:
+    type: string
+    description: Филиал обслуживания (ID "Филиал и подразделение Банка")
+    format: uuid
+  accountCurrency:
+    type: string
+    description: Код валюты счета
+  accountTypeDescription:
+    type: string
+    description: Краткое наименование типа счета
+  clientShortName:
+    type: string
+    description: Краткое наименование организации
+  clientFullName:
+    type: string
+    description: Полное наименование организации
+description: Идентификация организации и счета

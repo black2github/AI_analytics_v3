@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+  contractNumber:
+    type: string
+  contractDate:
+    type: string
+    format: date

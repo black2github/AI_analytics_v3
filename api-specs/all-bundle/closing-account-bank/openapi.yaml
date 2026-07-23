@@ -1,0 +1,171 @@
+openapi: 3.0.1
+info:
+  title: Сервис закрытия счета. Банковская часть.
+  version: 1.22.0
+servers:
+- url: /closing-account-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API операций заявок на закрытие счета.
+- name: API операций по истории заявок на закрытие счета.
+- name: Заявка на закрытие счета. Операции для скроллера.
+- name: Заявка на закрытие счета. Банковский скроллер.
+- name: АПИ для функции экспорта реестра.
+- name: Заявка на закрытие счета. Банковское API.
+- name: Заявка на закрытие счета. Операции печати.
+paths:
+  /export:
+    $ref: ./paths/export/export.yaml
+  /history/{closingAccountRequestId}:
+    $ref: ./paths/{closingAccountRequestId}/history_closingAccountRequestId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /report/exportSignature/{closingAccountRequestId}:
+    $ref: ./paths/exportSignature/report_exportSignature_closingAccountRequestId.yaml
+  /report/upload/{closingAccountRequestId}:
+    $ref: ./paths/upload/report_upload_closingAccountRequestId.yaml
+  /request/generate-digest/version:
+    $ref: ./paths/generate-digest/request_generate_digest_version.yaml
+  /request/reject:
+    $ref: ./paths/reject/request_reject.yaml
+  /request/retry:
+    $ref: ./paths/retry/request_retry.yaml
+  /request/{id}:
+    $ref: ./paths/{id}/request_id.yaml
+  /request/{id}/retry:
+    $ref: ./paths/{id}/request_id_retry.yaml
+  /scroller/accounts/list:
+    $ref: ./paths/accounts/scroller_accounts_list.yaml
+  /scroller/category:
+    $ref: ./paths/category/scroller_category.yaml
+  /scroller/division/list:
+    $ref: ./paths/division/scroller_division_list.yaml
+  /scroller/get-page:
+    $ref: ./paths/get-page/scroller_get_page.yaml
+  /scroller/organization-name/list:
+    $ref: ./paths/organization-name/scroller_organization_name_list.yaml
+  /scroller/organizations:
+    $ref: ./paths/organizations/scroller_organizations.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AdditionalAgreementDto:
+      $ref: ./components/schemas/{id}/AdditionalAgreementDto.yaml
+    AgreementClosureAccountDto:
+      $ref: ./components/schemas/{id}/AgreementClosureAccountDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/{id}/CertificateInfoDto.yaml
+    ChangeStatusResponseDto:
+      $ref: ./components/schemas/common/ChangeStatusResponseDto.yaml
+    CheckBookDto:
+      $ref: ./components/schemas/{id}/CheckBookDto.yaml
+    ClientRequisitesDto:
+      $ref: ./components/schemas/{id}/ClientRequisitesDto.yaml
+    ClosingAccountParamsDto:
+      $ref: ./components/schemas/{id}/ClosingAccountParamsDto.yaml
+    ClosingAccountRequestHistoryDto:
+      $ref: ./components/schemas/{closingAccountRequestId}/ClosingAccountRequestHistoryDto.yaml
+    ClosingAccountRequestResponseBankDto:
+      $ref: ./components/schemas/{id}/ClosingAccountRequestResponseBankDto.yaml
+    ClosingAccountRequestSignatureDto:
+      $ref: ./components/schemas/{id}/ClosingAccountRequestSignatureDto.yaml
+    DetailsForTransferringDto:
+      $ref: ./components/schemas/{id}/DetailsForTransferringDto.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    DivisionDto:
+      $ref: ./components/schemas/division/DivisionDto.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoAccountAssignmentDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoAccountAssignmentDto.yaml
+    FilterValueEnumDtoClosingRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClosingRequestStatusDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/retry/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataClosingAccountRequestResponseBankDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataClosingAccountRequestResponseBankDto.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/generate-digest/GenericResponseSimpleErrorDataDigest.yaml
+    GenericResponseSimpleErrorDataListDivisionDto:
+      $ref: ./components/schemas/division/GenericResponseSimpleErrorDataListDivisionDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/organization-name/GenericResponseSimpleErrorDataListString.yaml
+    GenericResponseSimpleErrorDataSetChangeStatusResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataSetChangeStatusResponseDto.yaml
+    GetPageCommandOrganizationBankFilter:
+      $ref: ./components/schemas/organizations/GetPageCommandOrganizationBankFilter.yaml
+    GetPageCommandRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandRequestBankFilter.yaml
+    GetPageCommandRequestClientFilter:
+      $ref: ./components/schemas/accounts/GetPageCommandRequestClientFilter.yaml
+    OrganizationBankFilter:
+      $ref: ./components/schemas/organizations/OrganizationBankFilter.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/organizations/OrganizationDto.yaml
+    PageDataClosingAccountRequestHistoryDto:
+      $ref: ./components/schemas/{closingAccountRequestId}/PageDataClosingAccountRequestHistoryDto.yaml
+    PageDataOrganizationDto:
+      $ref: ./components/schemas/organizations/PageDataOrganizationDto.yaml
+    PageDataRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataRequestBankScrollerDto.yaml
+    PageDataString:
+      $ref: ./components/schemas/accounts/PageDataString.yaml
+    PageParamsOrganizationBankFilter:
+      $ref: ./components/schemas/organizations/PageParamsOrganizationBankFilter.yaml
+    PageParamsRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsRequestBankFilter.yaml
+    PageParamsRequestClientFilter:
+      $ref: ./components/schemas/accounts/PageParamsRequestClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RejectRequestDto:
+      $ref: ./components/schemas/reject/RejectRequestDto.yaml
+    RequestBankFilter:
+      $ref: ./components/schemas/common/RequestBankFilter.yaml
+    RequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/RequestBankScrollerDto.yaml
+    RequestClientFilter:
+      $ref: ./components/schemas/accounts/RequestClientFilter.yaml
+    RequestNotificationsDto:
+      $ref: ./components/schemas/{id}/RequestNotificationsDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/{id}/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    TessaUploadRequestRequisitesDto:
+      $ref: ./components/schemas/{id}/TessaUploadRequestRequisitesDto.yaml
+  securitySchemes:
+    bearer-key:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http

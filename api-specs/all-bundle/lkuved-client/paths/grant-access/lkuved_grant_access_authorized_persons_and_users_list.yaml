@@ -1,0 +1,29 @@
+get:
+  tags:
+  - API заявки на предоставление доступа к ЛК УВЭД клиентом банка.
+  summary: Список уполномоченных лиц и пользователей
+  description: 'Привилегии: LKUVED.ACCESS.CREATE, LKUVED.ACCESS.UPDATE'
+  operationId: authorizedPersonsAndUsersByOrganizationIdHeaderUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: This is a required header
+    required: true
+    type: string
+    x-example: 123e4567-e89b-12d3-a456-426614174000
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«EmployeeInfoItemDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

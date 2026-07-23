@@ -1,0 +1,46 @@
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1.
+    format: int64
+  accountNumber:
+    type: string
+    description: Номер счета.
+  department:
+    type: string
+    description: Код подразделения обслуживания счета.
+  accountBranch:
+    type: string
+    description: Филиал баланса счета.
+  currency:
+    type: string
+    description: Валюта счета.
+  status:
+    type: string
+    description: Статсус счета в F1.
+    enum:
+    - OPEN
+    - CLOSE
+  dateOpen:
+    type: string
+    description: Дата открытия счета.
+    format: date
+  dateClose:
+    type: string
+    description: Дата закрытия счета.
+    format: date
+  rkoNumber:
+    type: string
+    description: Номер договора РКО для счета.
+  dateOpenDBS:
+    type: string
+    description: Дата открытия договора банковского счета.
+    format: date
+  officeAddress:
+    type: string
+    description: Адрес подразделения обслуживания.
+  accountCommission:
+    type: boolean
+    description: Признак возможности списания комиссии.
+description: Упрощенная модель счета в F1. Вторая версия.

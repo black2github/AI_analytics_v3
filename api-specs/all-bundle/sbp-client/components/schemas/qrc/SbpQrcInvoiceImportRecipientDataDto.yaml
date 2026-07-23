@@ -1,0 +1,42 @@
+type: object
+description: Данные получателя в ДТО импорта входящего QR кода
+properties:
+  legalId:
+    type: string
+    description: Идентификатор Получателя в АС СБП
+  legalName:
+    type: string
+    description: Наименование Получателя
+  inn:
+    type: string
+    description: ИНН Получателя
+  account:
+    type: string
+    description: Счет Получателя
+  merchantId:
+    type: string
+    description: Идентификатор точки продаж
+  merchantName:
+    type: string
+    description: Наименование точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес точки продаж
+  mccCode:
+    type: string
+    description: Вид деятельности код MCC
+  mccName:
+    type: string
+    description: Наименование вида деятельности
+  memberId:
+    type: string
+    description: Идентификатор Банка Получателя
+  memberName:
+    type: string
+    description: Название Банка Получателя
+  memberNameRus:
+    type: string
+    description: Название Банка Получателя на русском языке
+  memberBic:
+    type: string
+    description: БИК Банка Получателя

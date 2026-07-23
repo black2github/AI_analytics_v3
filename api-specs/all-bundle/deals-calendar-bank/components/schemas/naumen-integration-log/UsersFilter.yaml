@@ -1,0 +1,5 @@
+type: object
+properties:
+  query:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр

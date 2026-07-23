@@ -1,0 +1,4 @@
+type: object
+properties:
+  document_id:
+    type: string

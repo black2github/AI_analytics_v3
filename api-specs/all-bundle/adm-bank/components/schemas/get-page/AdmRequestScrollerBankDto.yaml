@@ -1,0 +1,57 @@
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  admCount:
+    type: integer
+    description: Количество АДМ в заявке
+    format: int32
+  bankClient:
+    $ref: ../common/AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  initiator:
+    $ref: ./AdmInitiatorTypeDto.yaml
+  isSigned:
+    type: boolean
+    description: Признак наличия подписи в заявке
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  requestType:
+    $ref: ../common/AdmRequestTypeDto.yaml
+  status:
+    $ref: ../common/AdmRequestStatusDto.yaml
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка на открытие Договора АДМ

@@ -1,0 +1,61 @@
+get:
+  operationId: statusInfo
+  parameters:
+  - in: query
+    name: onboardingShortRequestId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/status-info/GenericResponseSimpleErrorDataESignRequestStatusResultDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Функция получения статусов заявок на ЭП
+  tags:
+  - Базовые операции для работы с заявкой на ЭП

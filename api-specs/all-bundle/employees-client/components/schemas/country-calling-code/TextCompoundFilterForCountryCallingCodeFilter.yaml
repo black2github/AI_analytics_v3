@@ -1,0 +1,15 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Текст
+  country:
+    type: boolean
+    description: Признак включения в поиск Страна
+  countryPhoneCode:
+    type: boolean
+    description: Признак включения в поиск Телефонный код страны
+  countryNameEng:
+    type: boolean
+    description: Признак включения в поиск Английское наименование страны
+description: Текстовый составной фильтр

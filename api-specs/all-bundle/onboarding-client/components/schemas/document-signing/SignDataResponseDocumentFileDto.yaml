@@ -1,0 +1,16 @@
+type: object
+properties:
+  digest:
+    type: string
+    description: Дайджест
+  dssLabel:
+    type: string
+    description: Наименование для отображения в myDSS
+  id:
+    type: string
+    description: Идентификатор объекта
+    format: uuid
+  label:
+    type: string
+    description: Наименование
+description: Подписываемые данные

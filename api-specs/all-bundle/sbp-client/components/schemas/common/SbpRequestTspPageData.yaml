@@ -1,0 +1,20 @@
+type: object
+description: Страничные данные
+properties:
+  page:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./TspEntityDto.yaml
+  size:
+    type: integer
+    format: int64
+    description: Размер страницы
+  registrationStatus:
+    type: string
+    description: Статус регистрации
+    enum:
+    - NEED_REGISTRATION
+    - SUCCESS
+    - WAIT
+    - WARNING

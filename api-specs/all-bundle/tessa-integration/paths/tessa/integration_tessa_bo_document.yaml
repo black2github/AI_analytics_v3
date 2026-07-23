@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Интеграция с АС ТЕССА (Брокерское обслуживание)
+  summary: Создает "документ", связывает его с "пакетом" и прикрепляет к нему ранее загруженные файлы
+  description: 'Привилегии: TESSA_INTEGRATION'
+  operationId: createDocument
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/tessa/DocumentRequest.yaml
+    required: true
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/SingleResponseObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/GenericResponseSimpleErrorDataDocumentResponse.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml

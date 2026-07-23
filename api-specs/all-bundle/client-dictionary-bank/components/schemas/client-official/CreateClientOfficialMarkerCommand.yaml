@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  code:
+    type: string
+    description: Код метки представителя клиента
+description: Данные для создания метки представителя клиента

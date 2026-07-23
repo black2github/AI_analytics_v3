@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    $ref: ./PageResponseString.yaml
+  errorInfo:
+    $ref: ../common/ErrorInfo.yaml

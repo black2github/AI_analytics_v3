@@ -1,0 +1,59 @@
+required:
+- foreignAddress
+type: object
+properties:
+  fullAddress:
+    maxLength: 400
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Адрес одной строкой
+  zipCode:
+    maxLength: 50
+    pattern: ^[A-Za-z\d]*$
+    type: string
+    description: Индекс
+  foreignAddress:
+    type: boolean
+    description: Иностранный адрес
+  country:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Страна
+    format: uuid
+  region:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Регион
+  district:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Район
+  cityOrLocality:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Город / населенный пункт
+  street:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Улица
+  building:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Номер дома
+  block:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Корпус/строение
+  apartment:
+    maxLength: 255
+    pattern: ^[A-Za-z\d\s!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№|ЁА-яё\d!"#\$%&'\(\)\*\+,-\.\/:;<=>?@\\\^_`{¦}~№]*$|^$
+    type: string
+    description: Квартира
+description: Данные для создания/обновления адреса сотрудника Клиента

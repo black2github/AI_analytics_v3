@@ -1,0 +1,16 @@
+type: object
+properties:
+  accessToken:
+    type: string
+    description: Токен доступа. Хранится в зашифрованном виде.
+  refreshToken:
+    type: string
+    description: Токен обновления. Хранится в зашифрованном виде.
+  idToken:
+    type: string
+    description: Токен идентификации. Хранится в зашифрованном виде.
+  expiredAt:
+    type: string
+    description: 'Таймстемп, когда токен доступа (i.e. {@link #accessToken}) протухает'
+    format: date-time
+description: Токен доступа

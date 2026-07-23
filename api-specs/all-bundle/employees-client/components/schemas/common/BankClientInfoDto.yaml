@@ -1,0 +1,51 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  type:
+    type: string
+    description: Тип Клиента
+    enum:
+    - UL
+    - IP
+    - FL
+  fullName:
+    maxLength: 800
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Полное наименование
+  shortName:
+    maxLength: 300
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Краткое наименование
+  inn:
+    maxLength: 12
+    pattern: ^\d*$
+    type: string
+    description: ИНН
+  kpp:
+    maxLength: 15
+    pattern: ^\d*$
+    type: string
+    description: КПП
+  ogrn:
+    maxLength: 50
+    pattern: ^\d*$
+    type: string
+    description: ОГРН
+  legalAddress:
+    type: string
+    description: Юридический адрес
+  extGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  absId:
+    type: string
+    description: Регистрационный номер клиента (РНК) в РКО Ф1
+description: Реквизиты клиента по заявке

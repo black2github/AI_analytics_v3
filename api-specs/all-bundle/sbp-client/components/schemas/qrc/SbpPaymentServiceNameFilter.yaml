@@ -1,0 +1,37 @@
+type: object
+description: Фильтр по платежному сервису
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Наименование платежного сервиса
+    enum:
+    - DR
+    - SBP
+  notEq:
+    type: string
+    description: Наименование платежного сервиса
+    enum:
+    - DR
+    - SBP
+  in:
+    type: array
+    items:
+      type: string
+      description: Наименование платежного сервиса
+      enum:
+      - DR
+      - SBP
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Наименование платежного сервиса
+      enum:
+      - DR
+      - SBP
+  isNull:
+    type: boolean

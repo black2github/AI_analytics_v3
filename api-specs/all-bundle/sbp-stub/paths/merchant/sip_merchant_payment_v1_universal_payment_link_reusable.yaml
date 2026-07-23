@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Регистрация многоразового QRC'
+  tags:
+  - СИП. Сервис Merchant API универсального QR кода
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/UniversalPaymentCodeMultipleCreateDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/UniversalPaymentCodeMultipleCreateResponseDto.yaml
+    '400':
+      description: Bad Request

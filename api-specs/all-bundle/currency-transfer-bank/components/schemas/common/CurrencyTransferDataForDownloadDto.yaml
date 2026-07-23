@@ -1,0 +1,10 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор файла в ФС
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен доступа к нему
+description: Данные для скачивания файла

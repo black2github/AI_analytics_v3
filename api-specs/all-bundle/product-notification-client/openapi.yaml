@@ -1,0 +1,101 @@
+openapi: 3.0.1
+info:
+  title: Сервис "СФЗУ". Клиентская часть.
+  version: 1.7.0
+servers:
+- url: /product-notification-client
+security:
+- bearerAuth: []
+paths:
+  /product-notification/event/settings:
+    $ref: ./paths/event/product_notification_event_settings.yaml
+  /product-notification/event/settings/sms:
+    $ref: ./paths/event/product_notification_event_settings_sms.yaml
+  /product-notification/event/settings/common:
+    $ref: ./paths/event/product_notification_event_settings_common.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /product-notification/event/settings/sms/get-for-request:
+    $ref: ./paths/event/product_notification_event_settings_sms_get_for_request.yaml
+  /product-notification/event/additional-contacts:
+    $ref: ./paths/event/product_notification_event_additional_contacts.yaml
+  /product-notification/event/groups:
+    $ref: ./paths/event/product_notification_event_groups.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto:
+      $ref: ./components/schemas/event/GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto.yaml
+    SubscriberEventSettingsAllDto:
+      $ref: ./components/schemas/event/SubscriberEventSettingsAllDto.yaml
+    UserEventSettingsUpdateDtoSubscriberEventSettingsAllDto:
+      $ref: ./components/schemas/event/UserEventSettingsUpdateDtoSubscriberEventSettingsAllDto.yaml
+    GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsAllDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/event/SimpleErrorData.yaml
+    GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto:
+      $ref: ./components/schemas/event/GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto.yaml
+    SubscriberEventSettingsSmsDto:
+      $ref: ./components/schemas/event/SubscriberEventSettingsSmsDto.yaml
+    UserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto:
+      $ref: ./components/schemas/event/UserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto.yaml
+    GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsSmsDto.yaml
+    GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto:
+      $ref: ./components/schemas/event/GenericCommandUserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto.yaml
+    SubscriberEventSettingsCommonDto:
+      $ref: ./components/schemas/event/SubscriberEventSettingsCommonDto.yaml
+    UserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto:
+      $ref: ./components/schemas/event/UserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto.yaml
+    GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsUpdateDtoSubscriberEventSettingsCommonDto.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericCommandRequestEventSettingsDto:
+      $ref: ./components/schemas/event/GenericCommandRequestEventSettingsDto.yaml
+    RequestEventSettingsDto:
+      $ref: ./components/schemas/event/RequestEventSettingsDto.yaml
+    BankClientEventSettingsDto:
+      $ref: ./components/schemas/event/BankClientEventSettingsDto.yaml
+    EventSettingsDto:
+      $ref: ./components/schemas/event/EventSettingsDto.yaml
+    GenericResponseSimpleErrorDataMapUUIDBankClientEventSettingsDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataMapUUIDBankClientEventSettingsDto.yaml
+    ServiceEventSettingsDto:
+      $ref: ./components/schemas/event/ServiceEventSettingsDto.yaml
+    AdditionalContactItemDto:
+      $ref: ./components/schemas/event/AdditionalContactItemDto.yaml
+    EditAdditionalContactsRequestDto:
+      $ref: ./components/schemas/event/EditAdditionalContactsRequestDto.yaml
+    GenericCommandEditAdditionalContactsRequestDto:
+      $ref: ./components/schemas/event/GenericCommandEditAdditionalContactsRequestDto.yaml
+    AdditionalEventContactDto:
+      $ref: ./components/schemas/event/AdditionalEventContactDto.yaml
+    GenericResponseSimpleErrorDataListAdditionalEventContactDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataListAdditionalEventContactDto.yaml
+    GenericResponseSimpleErrorDataUserEventSettingsDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataUserEventSettingsDto.yaml
+    UserEventSettingsDto:
+      $ref: ./components/schemas/event/UserEventSettingsDto.yaml
+    EventGroupDto:
+      $ref: ./components/schemas/event/EventGroupDto.yaml
+    GenericResponseSimpleErrorDataListEventGroupDto:
+      $ref: ./components/schemas/event/GenericResponseSimpleErrorDataListEventGroupDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

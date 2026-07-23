@@ -1,0 +1,29 @@
+get:
+  tags:
+  - API проводок
+  summary: Получить проводку
+  description: 'Привилегии: ODS_ACCOUNTING_ENTRY_VIEW'
+  operationId: getUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: integer
+    format: int64
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,AccountingEntryDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

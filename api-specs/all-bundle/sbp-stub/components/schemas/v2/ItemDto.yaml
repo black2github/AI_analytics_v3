@@ -1,0 +1,19 @@
+type: object
+description: Данные предмета расчета
+properties:
+  name:
+    type: string
+    description: Наименование предмета расчета
+  price:
+    type: string
+    description: Цена в копейках за единицу с учетом скидок и наценок
+  productCode:
+    type: string
+    description: Артикул
+  quantity:
+    type: integer
+    format: int32
+    description: Количество
+  sum:
+    type: number
+    description: Стоимость товара в копейках с учетом скидок и наценок

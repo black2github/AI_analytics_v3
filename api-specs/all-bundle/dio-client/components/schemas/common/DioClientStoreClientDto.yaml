@@ -1,0 +1,11 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  branch:
+    $ref: ./DioClientStoreBranchDto.yaml
+description: Описание клиента для сохранения

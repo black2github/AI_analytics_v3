@@ -1,0 +1,76 @@
+type: object
+properties:
+  createdAt:
+    type: string
+    description: Дата и время создания правила
+    format: date-time
+  origin:
+    type: string
+    description: Система источник
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  phoneNumber:
+    type: string
+    description: Номер телефона пользователя
+  email:
+    type: string
+    description: Электронная почта пользователя
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  ruleType:
+    type: string
+    description: Тип правила на предоставление/удаление доступа
+    enum:
+    - USER_ADD
+    - USER_CERT_ADD
+    - USER_BLOCK
+    - USER_BLOCK_IN_CLIENT
+    - USER_UNLOCK_IN_CLIENT
+  segment:
+    type: string
+    description: Код сегмента. Deprecated. Для привязки к роли используйте поля segmentCode и roleCode
+    deprecated: true
+    enum:
+    - CAS_ACC_OPEN_SECOND_REQ
+    - CAS_OFFER_RKO_ACCEPTANCE_REQ
+    - CAS_OFFER_JOIN_GPB_BO1_REQ
+    - CAS_OFFER_JOIN_GPB_BO2_REQ
+    - CAS_OFFER_JOIN_PO_UVED
+    - CAS_FREE_FORMAT_DOC
+    - CAS_DBO_BSS_FRAME
+    - CAS_SWITCHING_TO_DBO_BSS
+    - CAS_SWITCHING_TO_UVED_PROCESS
+    - CAS_SWITCHING_TO_UVED_LIMITED_ACCESS
+    - CAS_SWITCHING_TO_UVED_VIEW
+    - CAS_SWITCHING_TO_MP_PROCESS
+    - CAS_SWITCHING_TO_MP_VIEW
+    - CAS_FNS
+  segmentCode:
+    type: string
+    description: Код сегмента v2
+  roleCode:
+    type: string
+    description: Код роли
+  comments:
+    type: string
+    description: Комментарий
+  clientId:
+    type: string
+    description: Идентификатор клиента (организации)
+    format: uuid
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ Клиента банка
+    format: uuid
+  needBlockContactData:
+    type: boolean
+    description: Необходимость блокировки контактных данных
+  canBeRemoved:
+    type: boolean
+    description: Можно изменять при исполнении заявки на доступ (может быть создано правило на удаление роли)
+  removeClientOfficial:
+    type: boolean
+    description: Удалить представителя если после исполнения ПД не осталось ролей и сегментов
+description: Набор данных для создания Правила доступности сегмента

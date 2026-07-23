@@ -1,0 +1,9 @@
+type: object
+description: Данные регистрируемого банковского счета
+properties:
+  legalId:
+    type: string
+    description: Идентификатор юридического лица в СБП
+  account:
+    type: string
+    description: Счет юридического лица

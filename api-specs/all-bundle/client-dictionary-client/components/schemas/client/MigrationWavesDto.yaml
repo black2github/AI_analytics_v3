@@ -1,0 +1,34 @@
+type: object
+properties:
+  actual:
+    type: string
+    description: Состав организаций пользователя в актуальной волне миграции
+    enum:
+    - ALL
+    - NONE
+    - MIX
+    - EMPTY
+  outActiveWaveCounter:
+    type: integer
+    description: Количество организаций вне актуальной волны миграции
+    format: int32
+  firstOutActiveWaveClientName:
+    type: string
+    description: Имя первой по алфавиту организации вне актуальной волны миграции
+  clientIdsOutActiveWave:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов организации клиента вне актуальной волны
+    items:
+      type: string
+      description: Список идентификаторов организации клиента вне актуальной волны
+      format: uuid
+  clientIdsInActiveWave:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов организации клиента в актуальной волне
+    items:
+      type: string
+      description: Список идентификаторов организации клиента в актуальной волне
+      format: uuid
+description: Состояние организаций пользователя по волнам миграции

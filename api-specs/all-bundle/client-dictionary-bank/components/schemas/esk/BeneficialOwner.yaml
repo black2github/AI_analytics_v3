@@ -1,0 +1,9 @@
+type: object
+properties:
+  decision:
+    type: string
+    description: Решение кредитной огранизации
+  id:
+    type: string
+    description: Идентификация бенефициарного владельца
+description: Бенефициарный владелец

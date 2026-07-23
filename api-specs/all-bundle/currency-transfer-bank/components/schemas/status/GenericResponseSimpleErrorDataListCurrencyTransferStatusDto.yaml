@@ -1,0 +1,58 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Транспортное представление констант для передачи статуса
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - WAIT_FOR_SIGN
+      - SIGNED_1
+      - SIGNED_2
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - SIGN_VALID
+      - DETAILS_VALID
+      - ACCEPTED
+      - WAIT_DATE_COMPLETED
+      - CURRENCY_CONTROL
+      - ADDITIONAL_CONTROL
+      - ACCEPT_FOR_EXECUTION
+      - EXPORT_TO_ABS1
+      - EXPORT_TO_ABS2
+      - EXPORTED_TO_ABS1
+      - EXPORTED_TO_ABS2
+      - EXPORT_TO_ABS_ERROR1
+      - EXPORT_TO_ABS_ERROR2
+      - COMPLETED
+      - REJECTED
+      - CANCELED
+      - IMPORTED
+      - IMPORTED_DENY
+      - IMPORTED_CORRECT
+      - IMPORTED_ERROR
+      - IMPORTED_WARNING
+      - EXPORTED_TO_TMG
+      - EXPORT_TO_TMG_ERROR
+      - WAIT_ACCEPT_TMG
+      - WAIT_ACCEPT_TMG_NO_LIMIT
+      - COMPLETED_TMG
+      - DECLINE_TMG
+      - CANCELED_LKUVED
+      - SIGHTING_CHECK
+      - SIGHTING_CHECK_ERROR
+      - WAIT_SIGHTING
+      - SIGNED_SIGHTING
+      - SIGHTING_SIGN_VALID
+      - SIGHTING_DETAILS_VALID
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

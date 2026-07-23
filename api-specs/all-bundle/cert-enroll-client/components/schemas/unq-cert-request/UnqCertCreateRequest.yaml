@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientOfficialSignatureToolId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+  info:
+    $ref: ./CertInfoRequest.yaml
+  userAbsId:
+    type: string
+    description: ID пользователя в РКО Ф1
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Заявка на генерацию НЭП

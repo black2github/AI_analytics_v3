@@ -1,0 +1,45 @@
+type: object
+description: Правила нотификации для типа ДСФ. Возвращаемая ДТО
+properties:
+  address:
+    type: string
+    description: Группа рассылки(email)
+  branchId:
+    type: string
+    format: uuid
+    description: Идентификатор подразделения.
+  branchName:
+    type: string
+    description: Наименование подразделения.
+  branchStateType:
+    type: string
+    description: Идентификатор статуса подразделения
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED
+  code:
+    type: string
+    description: Код типа письма
+  eventType:
+    type: string
+    description: Тип события.
+    enum:
+    - ON_WAIT_PROCESSING
+    - ON_WAIT_BANK_SIGN
+    - REJECTED
+    - REVOKED
+    - CLIENT_SIGNED
+    - TO_SEND
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор правила нотификации.
+required:
+- address
+- branchId
+- code
+- eventType
+- id

@@ -1,0 +1,14 @@
+required:
+- reportData
+- signatures
+type: object
+properties:
+  signatures:
+    minItems: 1
+    type: array
+    description: Подписи
+    items:
+      $ref: ./SignDto.yaml
+  reportData:
+    $ref: ./SignCheckReportDataDto.yaml
+description: Набор подписанных данных

@@ -1,0 +1,44 @@
+required:
+- canRemoveSign
+- hasUserSignAuthority
+- notSignedLevels
+- signedLevels
+- userSendAbility
+type: object
+properties:
+  canRemoveSign:
+    type: boolean
+    description: Доступно ли пользователю снятие подписи
+  hasUserSignAuthority:
+    type: boolean
+    description: Доступно пользователю подписание или нет
+  userSendAbility:
+    type: string
+    description: Возможность отправить
+    enum:
+    - READY_TO_SEND
+    - CAN_BE_SENT
+    - UNABLE_TO_SEND
+  notSignedLevels:
+    type: array
+    description: Список пустых подписей
+    items:
+      type: string
+      description: Уровень подписи
+      enum:
+      - SINGLE
+      - LEVEL_1
+      - LEVEL_2
+      - SIGHTING
+  signedLevels:
+    type: array
+    description: Список заполненных подписей
+    items:
+      type: string
+      description: Уровень подписи
+      enum:
+      - SINGLE
+      - LEVEL_1
+      - LEVEL_2
+      - SIGHTING
+description: Фаза подписания документа

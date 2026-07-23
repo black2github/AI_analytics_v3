@@ -1,0 +1,54 @@
+type: object
+description: Черновик заявки на регистрацию QR-кода для B2B в системе АС СБП
+properties:
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  merchantId:
+    type: string
+    description: Идентификатор Торговой точки
+  qrcType:
+    type: string
+    description: Тип QR, allowableValues = STATIC, DYNAMIC
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках. Обязателен при значении параметра «qrcType» = «02»
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни Функциональной ссылки СБП в минутах
+  vatInPercent:
+    type: number
+    description: Ставка НДС, %
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  takeVat:
+    type: boolean
+    description: Информация о взимании НДС, false - не взимается
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+required:
+- clientId
+- qrcType
+- takeVat
+- userId

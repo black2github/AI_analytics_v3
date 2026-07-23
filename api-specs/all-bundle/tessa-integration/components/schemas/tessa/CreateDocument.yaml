@@ -1,0 +1,9 @@
+type: object
+properties:
+  document:
+    $ref: ./Document.yaml
+  dossierId:
+    type: string
+    format: uuid
+  fileInfo:
+    $ref: ./JSONObject.yaml

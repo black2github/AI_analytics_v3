@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for employees-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/employees",
+      "domain": "employees"
+    },
+    {
+      "prefix": "/employees-bc",
+      "domain": "employees-bc"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+required:
+- clientId
+- userId
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  createdByAccessRuleId:
+    type: string
+    description: Правило, которое установило связь.
+    format: uuid
+  otherUaaUserIds:
+    uniqueItems: true
+    type: array
+    description: Другие UAA ID представителей клиента физического лица
+    items:
+      type: string
+      description: Другие UAA ID представителей клиента физического лица
+      format: uuid
+description: Данные для создания представителя при исполнении ПД

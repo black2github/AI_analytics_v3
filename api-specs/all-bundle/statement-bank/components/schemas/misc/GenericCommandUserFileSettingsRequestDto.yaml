@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./UserFileSettingsRequestDto.yaml
+description: Запрос

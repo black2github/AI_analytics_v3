@@ -1,0 +1,33 @@
+type: object
+properties:
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  userEskId:
+    type: string
+    description: Идентификатор ЕСК пользователя подписавшего заявку
+  userFio:
+    type: string
+    description: Пользователь, подписавший запрос (ФИО)
+  value:
+    $ref: ./SignatureValueDto.yaml
+description: ДТО реквизиты электронной подписи заявки АДМ

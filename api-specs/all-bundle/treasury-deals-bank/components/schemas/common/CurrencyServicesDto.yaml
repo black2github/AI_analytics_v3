@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор области применения валюты
+    format: uuid
+  code:
+    type: string
+    description: Код области применения валюты
+  name:
+    type: string
+    description: Наименование области применения валюты
+description: Области применения валюты

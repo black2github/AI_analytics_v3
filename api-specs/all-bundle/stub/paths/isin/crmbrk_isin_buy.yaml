@@ -1,0 +1,31 @@
+post:
+  tags:
+  - isin-buy-controller
+  summary: Получение возможных для покупки ISIN
+  operationId: findUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: filter
+    description: filter
+    required: true
+    schema:
+      $ref: '#/definitions/IsinBuyFilterDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/IsinBuyDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,33 @@
+required:
+- bankClient
+- createdAt
+- creationMethod
+- id
+- supportServices
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+  creationMethod:
+    type: string
+    description: Способ создания
+    enum:
+    - MANUAL
+    - IMPORT
+  bankClient:
+    $ref: ./LkuvedBcRegisterBankClientModifyDto.yaml
+  supportServices:
+    type: integer
+    description: Признак перевода
+    format: int32
+description: ЛК УВЭД. Реестр организаций. Скроллер.

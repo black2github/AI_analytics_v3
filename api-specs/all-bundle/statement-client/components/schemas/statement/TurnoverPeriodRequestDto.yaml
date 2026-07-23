@@ -1,0 +1,12 @@
+type: object
+properties:
+  periodType:
+    type: string
+    enum:
+    - TODAY
+    - YESTERDAY
+    - LAST3DAYS
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+description: Данные

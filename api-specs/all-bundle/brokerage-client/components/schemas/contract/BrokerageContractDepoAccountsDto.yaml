@@ -1,0 +1,8 @@
+type: object
+properties:
+  depoAccounts:
+    type: array
+    description: Счета Депо
+    items:
+      $ref: ./BrokerageContractDepoAccountItemDto.yaml
+description: Данные для страницы Счетов Депо

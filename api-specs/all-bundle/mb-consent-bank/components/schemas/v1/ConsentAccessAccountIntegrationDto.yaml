@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета в ГПБ
+    format: uuid
+  available:
+    type: boolean
+    description: Признак доступности счета
+  unavailabilityReason:
+    type: string
+    description: Причина недоступности счета
+description: Информация о доступном счете пользователя

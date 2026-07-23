@@ -1,0 +1,24 @@
+type: object
+properties:
+  commissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия Банка в копейках
+  tariffId:
+    type: integer
+    format: int64
+    description: Идентификатор Тарифа
+  percentRate:
+    type: number
+    description: Комиссия Банка, %
+  tariffMin:
+    type: integer
+    format: int64
+    description: Минимальная комиссия банка за перевод в копейках
+  tariffMax:
+    type: integer
+    format: int64
+    description: Максимальная комиссия банка за перевод в копейках
+required:
+- commissionAmount
+- tariffId

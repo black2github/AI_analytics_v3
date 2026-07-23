@@ -1,0 +1,8 @@
+type: object
+properties:
+  operationDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoTurnoverReconciliationStatus.yaml

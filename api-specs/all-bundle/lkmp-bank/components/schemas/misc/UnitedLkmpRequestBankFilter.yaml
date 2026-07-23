@@ -1,0 +1,39 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории объединенной заявки ЛКМП для скроллера. Банковская часть
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  documentType:
+    $ref: ./UnitedDocumentTypeFilter.yaml
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestId:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  employeeSurname:
+    $ref: ./FilterValueDtoString.yaml
+  employeeForename:
+    $ref: ./FilterValueDtoString.yaml
+  employeePatronymic:
+    $ref: ./FilterValueDtoString.yaml
+  newRole:
+    $ref: ./LkmpAccessRoleFilter.yaml
+  status:
+    $ref: ./UnitedLkmpRequestStatusFilter.yaml
+description: Фильтр скроллера объединенной заявки ЛК МП. Банковская часть

@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код ответа метода на проверку возможности удалённого открытия счёта
+    enum:
+    - NOT_AVAILABLE
+    - AVAILABLE
+description: Ответ метода на проверку возможности удалённого открытия счёта

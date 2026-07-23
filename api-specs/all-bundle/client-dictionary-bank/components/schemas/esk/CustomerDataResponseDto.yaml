@@ -1,0 +1,10 @@
+type: object
+properties:
+  checks:
+    type: array
+    description: Выполненные проверки.
+    items:
+      $ref: ./CustomerCheckDto.yaml
+  extractedData:
+    $ref: ./ExtractedData.yaml
+description: Результат проверки данных клиента из АС ЕСК.

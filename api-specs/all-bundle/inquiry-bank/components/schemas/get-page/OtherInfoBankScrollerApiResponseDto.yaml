@@ -1,0 +1,14 @@
+required:
+- inquiryMethod
+type: object
+properties:
+  inquiryType:
+    $ref: ../common/InquiryTypeDto.yaml
+  inquiryMethod:
+    $ref: ../common/InquiryMethodDto.yaml
+  sendInquiryToEmail:
+    type: boolean
+    description: Отправить справку на e-mail
+    example: null
+description: Иные сведения
+example: null

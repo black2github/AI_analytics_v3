@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API справочника "Виды валютных операций"
+  summary: Получить страницу записей
+  description: 'Привилегии: CURRENCY_TRANSACTION_TYPE_GET_PAGE'
+  operationId: getPageUsingPOST_4
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: filter
+    description: filter
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«CurrencyTransactionTypeFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«CurrencyTransactionTypeDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

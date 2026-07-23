@@ -1,0 +1,19 @@
+required:
+- fromUserId
+- messageBody
+- serviceCode
+type: object
+properties:
+  messageBody:
+    type: string
+  messageType:
+    type: string
+  serviceCode:
+    type: string
+  fromUserId:
+    type: string
+  fromClientIp:
+    type: string
+  toUserId:
+    type: string
+    format: uuid

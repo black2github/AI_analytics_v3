@@ -1,0 +1,56 @@
+type: object
+required:
+- merchantId
+- templateVersion
+- qrcType
+description: Данные регистрации QR кода
+properties:
+  account:
+    type: string
+    description: Счет юридического лица.
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  templateVersion:
+    type: string
+    description: Версия payload QR кода
+  qrcType:
+    type: string
+    description: Тип QR кода
+  amount:
+    type: string
+    description: Сумма операции
+  currency:
+    type: string
+    description: Валюта операции
+  paymentPurpose:
+    type: string
+    description: Дополнительная информация от ТСП
+  subscriptionPurpose:
+    type: string
+    description: Информация от ТСП с деталями привязки счета.
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  callbackMerchantNotifications:
+    type: string
+    description: Url для получения сообщения
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни
+  fraudScore:
+    type: string
+    description: Индикатор Подозрительной Операции
+  sign:
+    type: string
+    description: Подпись сообщения
+  paymentDetails:
+    $ref: ./QrcDataPaymentDetailsDto.yaml
+    type: object
+    description: Расширенные данные платежа
+  additionalData:
+    type: array
+    items:
+      $ref: ./QrcDataAdditionalDataDto.yaml
+    description: Блок дополнительной информации

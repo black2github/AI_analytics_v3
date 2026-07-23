@@ -1,0 +1,75 @@
+required:
+- userId
+- userType
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя (равенство)
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя (равенство)
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+  approvalSearch:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountRatioToRkoVrko:
+    $ref: ../common/FilterValueDtoLong.yaml
+  accountTypeCode:
+    $ref: ../common/FilterValueDtoLong.yaml
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumberExt:
+    $ref: ./FilterValueExtDtoString.yaml
+  currencyCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyNumericCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyNumericCodeCorrect:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bssAccountActionType:
+    $ref: ./FilterValueEnumDtoAccountActionTypeDto.yaml
+  accountState:
+    $ref: ./FilterValueEnumDtoAccountStateDto.yaml
+  remoteSource:
+    $ref: ../common/RemoteSourceDtoFilter.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  hasContractWithDbo:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  f1AccountId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  isDisconnectedFromRko:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  productCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  productToAccountRelationship:
+    $ref: ../common/FilterValueDtoString.yaml
+  productContractCloseDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  currentBalance:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  contractTypeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  duplicate:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  documentPackageRequestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  reservationRequestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  balanceBranchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр выборки представлений счетов клиента внутреннего API

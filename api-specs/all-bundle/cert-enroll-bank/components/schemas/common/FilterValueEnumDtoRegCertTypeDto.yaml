@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+    - MOB_QUALIFIED_SIGN_FNS
+  notEq:
+    type: string
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+    - MOB_QUALIFIED_SIGN_FNS
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - QUALIFIED_SIGN
+      - UNQUALIFIED_SIGN
+      - MOB_QUALIFIED_SIGN_FNS
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - QUALIFIED_SIGN
+      - UNQUALIFIED_SIGN
+      - MOB_QUALIFIED_SIGN_FNS
+  isNull:
+    type: boolean
+description: Тип заявки (in)

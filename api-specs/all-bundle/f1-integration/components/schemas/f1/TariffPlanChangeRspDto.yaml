@@ -1,0 +1,6 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Результат смены тарифного плана
+description: Ответ на изменение тарифного плана в F1

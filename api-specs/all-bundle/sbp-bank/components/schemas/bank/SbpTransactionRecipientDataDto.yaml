@@ -1,0 +1,18 @@
+type: object
+description: ДТО с реквизитами получателя
+properties:
+  recipientId:
+    type: string
+    description: Телефон получателя
+  recipientPam:
+    type: string
+    description: PAM получателя - Имя, отчество и маскированная (по первой букве) фамилия владельца счета
+  memberId:
+    type: string
+    description: Идентификатор Банка Получателя
+  recipientBankName:
+    type: string
+    description: Наименование банка получателя
+  recipientBankBic:
+    type: string
+    description: БИК банка

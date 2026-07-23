@@ -1,0 +1,54 @@
+type: object
+description: Запись журнала самодиагностики
+properties:
+  login:
+    type: string
+    description: Логин пользователя
+  userId:
+    type: string
+    description: Идентификатор пользователя
+  checkDate:
+    type: string
+    format: date-time
+    description: Дата проверки
+  inns:
+    type: array
+    description: Идентификатор связки запрос-ответ
+    items:
+      $ref: ./InnDto.yaml
+  selfCheckId:
+    type: string
+    description: Тип документа
+  browserCheckResult:
+    $ref: ./CheckResultDto.yaml
+    description: Результат проверки браузера
+  osCheckResult:
+    $ref: ./CheckResultDto.yaml
+    description: Результат проверки ОС
+  cmCheckResult:
+    $ref: ./CMCheckResultDto.yaml
+    description: Результат проверки криптомодуля
+  gpbBolAgreements:
+    type: string
+    description: Соглашение о присоединении к ГПБ БОЛ
+    enum:
+    - SUCCESS
+    - WARNING
+    - ERROR
+    - SKIP
+  paymentServiceConnection:
+    type: string
+    description: Доступ к платежному сервису
+    enum:
+    - SUCCESS
+    - WARNING
+    - ERROR
+    - SKIP
+  siteAvailability:
+    type: string
+    description: Доступность адресов банка с рабочего места клиента
+    enum:
+    - SUCCESS
+    - WARNING
+    - ERROR
+    - SKIP

@@ -1,0 +1,39 @@
+type: object
+properties:
+  relevanceEndDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  typeCode:
+    $ref: ../common/UserNotificationCodeFilter.yaml
+  sourceSystem:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  body:
+    $ref: ../common/FilterValueDtoString.yaml
+  brief:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  readDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  status:
+    $ref: ../common/UserNotificationStatusFilter.yaml
+  executionStatus:
+    $ref: ../common/UserNotificationExecutionStatusFilter.yaml
+  executionDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  executionDeadline:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  postponedUntil:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  isCreatedByUser:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isRequiredRead:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isRequiredSing:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр списка уведомлений для администратора.

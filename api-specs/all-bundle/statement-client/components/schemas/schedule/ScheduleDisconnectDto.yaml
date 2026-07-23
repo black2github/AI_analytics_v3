@@ -1,0 +1,119 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum:
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - DISABLED
+    - REJECTED
+  period:
+    type: string
+    enum:
+    - CURRENT_DAY
+    - PREVIOUS_DAY
+    - PREVIOUS_WEEK
+    - PREVIOUS_MONTH
+    - PREVIOUS_QUARTER
+  times:
+    type: array
+    items:
+      type: string
+  accounts:
+    type: array
+    items:
+      $ref: ./ScheduleAccountDto.yaml
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  separateAccountsFiles:
+    type: boolean
+  signNeeded:
+    type: boolean
+  hideEmptyTurnovers:
+    type: boolean
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  packageOfDocuments:
+    type: boolean
+  separateDocumentsFiles:
+    type: boolean
+  includeDebitStatements:
+    type: boolean
+  includeDebitOrders:
+    type: boolean
+  includeCreditStatements:
+    type: boolean
+  includeCreditOrders:
+    type: boolean
+  emails:
+    type: array
+    items:
+      type: string
+  signatures:
+    type: array
+    items:
+      $ref: ./ScheduleDisconnectSignatureDto.yaml
+  createdAt:
+    type: string
+    format: date-time
+  withDataMT:
+    type: boolean
+  makeFileStatement:
+    type: boolean
+  reportType:
+    type: string
+    enum:
+    - STATEMENT_AND_DOCUMENTS
+    - DOCUMENTS
+  templateDocumentType:
+    type: string
+    enum:
+    - ONE_FILE
+    - SEPARATE_ACCOUNT_FILE
+    - SEPARATE_FILES
+description: Данные

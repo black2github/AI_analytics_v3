@@ -1,0 +1,9 @@
+type: object
+properties:
+  valueType:
+    type: string
+    enum:
+    - ACCOUNT_RF
+    - ACCOUNT_IBAN
+  value:
+    type: string

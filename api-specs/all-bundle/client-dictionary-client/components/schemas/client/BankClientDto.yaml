@@ -1,0 +1,450 @@
+required:
+- clientId
+- clientType
+- innKio
+- internationalName
+- isResident
+- kpp
+- ogrnOgrip
+- regNumber
+- status
+- tin
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  clientId:
+    type: integer
+    format: int64
+  isResident:
+    type: boolean
+  clientType:
+    type: string
+    description: 'UL - Юридическое лицо;
+
+      IP - Индивидуальный предприниматель;
+
+      FL - Физическое лицо, занимающееся частной практикой.'
+    enum:
+    - UL
+    - IP
+    - FL
+  fullName:
+    maxLength: 255
+    minLength: 0
+    type: string
+  shortName:
+    maxLength: 160
+    minLength: 0
+    type: string
+  abbreviationName:
+    type: string
+    description: Сокращенное наименование организации-Клиента Банка на русском языке для использования в сертификате НЭП
+  innKio:
+    maxLength: 12
+    minLength: 0
+    type: string
+  status:
+    type: string
+    description: 'ACTIVE - Активный;
+
+      POTENTIAL - Потенциальный.'
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  itpPriority:
+    type: string
+    description: Приоритет исполнения трансграничных переводов (ИТП)
+    enum:
+    - ITP1
+    - ITP2
+    - ITP3
+  additionalInfo:
+    type: string
+  blockState:
+    type: string
+    description: 'BLOCKED - Заблокирован;
+
+      UNBLOCKED - Незаблокирован.'
+    readOnly: true
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  okopf:
+    maxLength: 5
+    minLength: 0
+    type: string
+  okfs:
+    maxLength: 2
+    minLength: 0
+    type: string
+  activityType:
+    type: integer
+    description: '1 - Организация, находящаяся в федеральной собственности;
+
+      2 - Организация, находящаяся в государственной (кроме федеральной) собственности;
+
+      3 - Негосударственная организация;
+
+      4 - Индивидуальный предприниматель−исполнитель по государственному оборонному заказу.'
+    format: int32
+    enum:
+    - null
+  ogrnOgrip:
+    maxLength: 15
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true.
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true и clientType = UL.
+  regNumber:
+    maxLength: 30
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = false.
+  internationalName:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = false.
+  tin:
+    maxLength: 30
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = false.
+  country:
+    $ref: ./CountryDto.yaml
+  phone:
+    type: string
+    description: Контактный телефон
+  legalAddress:
+    type: string
+    description: Юридический адрес Клиента
+  postAddress:
+    type: string
+    description: Почтовый адрес Клиента
+  emails:
+    type: array
+    description: Адрес электронной почты (может быть несколько)
+    items:
+      type: string
+      description: Адрес электронной почты (может быть несколько)
+  isConnectedToDbo:
+    type: boolean
+    description: Признак подключения организации к ДБО
+  isDebitOperationsForbidden:
+    type: boolean
+    description: Информация о запрете дебетовых операций
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+  externalClientGuid:
+    type: string
+    description: Уникальный GUID клиента во внешней системе (Поле clientGUID в ответе F1)
+    format: uuid
+  bankClientCustomerIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиента в системах банка.
+    items:
+      $ref: ./BankClientCustomerIdDto.yaml
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  createdBySource:
+    type: string
+    description: Система создавшая запись
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  hasConstitution:
+    type: boolean
+    description: Признак подписания конституции
+  clientAgreements:
+    uniqueItems: true
+    type: array
+    description: Соглашения Клиент Банка
+    items:
+      $ref: ./BankClientAgreementResponseDto.yaml
+  requestType:
+    type: string
+    description: Тип документа, для которого создается или обновляется сущность
+    enum:
+    - UNKNOWN
+    - ACC_CLOSE_REQ
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_SECOND_REQ
+    - ACC_RESERV_REQ
+    - ACC_RESERV_REQ_2
+    - OFFER_RKO_ACCEPTANCE_REQ
+    - OFFER_JOIN_GPB_BO1_REQ
+    - OFFER_JOIN_GPB_BO2_REQ
+    - OFFER_JOIN_CCERT
+    - FREE_FORMAT_DOC
+    - OFFER_JOIN_PO_UVED
+    - OFFER_BREAK_PO_UVED
+    - ADD_BLOCK_USER_UVED
+    - ACC_RKO_SERVICE_PMT_ADD
+    - OFFER_GEN_CERT
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - CAR_LEASING
+    - CORP_LEASING
+    - ADD_BLOCK_USER_GPBBO
+    - UPDATE_INFORM
+    - UPDATE_INFORM_RQMNT
+    - REQUEST_FOR_ACCOUNT_INFO
+    - PAY_DOC_RU
+    - PAY_REQ_RU_IN
+    - CHARGEBACK
+    - CURR_BUY
+    - CURR_SALE
+    - CURR_CONV
+    - CURR_SALE_MAND
+    - CURR_TRANS
+    - CURR_CONTR_MESS_IN
+    - CURR_CONTR_MESS_OUT
+    - REQUEST_BROKER_REPORTS
+    - REQUEST_STATEMENT
+    - CANCEL_REQUEST_STATEMENT
+    - MEETINGS_REQUEST
+    - BRK_OPEN_ACC
+    - BUY_SELL_CURR
+    - BUY_SELL_CURR_PURCHASE
+    - BUY_SELL_CURR_SALE
+    - PAY_DOC_CUR
+    - UNC_DOC_INF
+    - TRADE_ORDER
+    - LANDING_ORDER
+    - OFFER_USE_DIGITAL_SIGNATURE
+    - ADD_EDIT_USER
+    - BC_BLOCK_REQUEST
+    - BC_BLOCK_BATCH
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+    - REG_COWORKER_DATA
+    - ACC_OPEN_FIRST_REQ_2021
+    - OFFER_TMG
+    - STATEMENT_USER_ROLE_TMG
+    - OPEN_ADM_ACCOUNT
+    - ADD_ADM_POC
+    - REMOVE_ADM_POC
+    - REMOVE_ADM_ACCOUNT
+    - ADD_ADM_ACCOUNT
+    - CHANGE_ADM_ACCOUNT
+    - ADM_TERMINAL_BREAKDOWN
+    - ADM_CALLBACK_REQUEST
+    - CHANGE_COMM_PERIOD
+    - ENCASHMENT
+    - TREASURY_AGREEMENT_REQUEST_MNO
+    - TREASURY_AGREEMENT_REQUEST_DU_MNO
+    - TREASURY_AGREEMENT_REQUEST_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_DU_DEPOSIT
+    - TREASURY_AGREEMENT_REQUEST_CONVERSION
+    - TREASURY_AGREEMENT_REQUEST_DU_CONVERSION
+    - TREASURY_DEALS_MNO
+    - TREASURY_DEALS_DEPOSIT
+    - TREASURY_DEALS_FX
+    - TREASURY_AGREEMENT_REQUEST_GSNO_PARENT
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_HEAD
+    - TREASURY_AGREEMENT_REQUEST_GSNO_CHILD_FRIEND
+    - TREASURY_AGREEMENT_REQUEST_CHANGE_ACCOUNTS
+    - TREASURY_DEALS_GSNO
+    - TREASURY_ONBOARDING_ANKETA
+    - LOGIN
+    - REGISTRATION
+    - OTP
+    - PASSWORD
+    - CONFIRMATION
+    - STOP_RESTRICTION_ACC
+    - SBP_B2B_QRC_REQUEST
+    - SBP_REQUEST_TSP
+    - SBP_QRC_REQUEST
+    - SBP_QRC_BLOCK_REQUEST
+    - SBP_QRC_PAYMENT_REQUEST
+    - SBP_TSP_CHANGE_REQUEST
+    - SBP_QRC_SCHEDULE_REQUEST
+    - SBP_B2B_PAYMENT
+    - SBP_B2C_PAYMENT
+    - CONF_DOC_CERT
+    - REG_CONTRACT
+    - RENEW_CONTRACT
+    - REG_CRED_AGREEMENT
+    - RENEW_CRED_AGREEMENT
+    - CONTR_CLOSE
+    - ES_CERT
+    - ACC_COPY_DOC
+    - CARD_CHARGE_SET_LIMIT_REQUEST
+    - ECO_SBP_CONTRACT_REQUEST
+    - PAY_COLLECTION_IN
+    - PAY_COLLECTION_OUT
+    - PAY_REQ_RU_OUT
+    - PAY_REQ_RU_ACCEPT
+    - ACC_OPEN_FIRST_REQ_FNS
+    - DVK
+    - CASH_BACK
+    - CASH_IN
+    - CASH_OUT
+    - ACC_OPEN_FIRST_REQ_KZ
+    - CONS_AUTHORIZE_REQ
+    - SBP_DISCONNECT_AGENTS_REQUEST
+    - SFZU_SMS_CONNECTION
+    - SFZU_SMS_CHANGE
+    - SFZU_SMS_CANCEL
+    - ACC_RKO_SERVICE_PAI
+    - ACC_RKO_SERVICE_PAC
+  marketingCampaign:
+    type: string
+    description: Маркетинговая кампания, в рамках которой был привлечен клиент
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  lawCountry:
+    type: string
+    description: Страна (Код страны)
+  lawState:
+    type: string
+    description: Субъект РФ (юридический адрес)
+  lawLocality:
+    type: string
+    description: Населенный пункт (юридический адрес)
+  branch:
+    $ref: ./BranchDtoV2.yaml
+  okpo:
+    type: string
+    description: Общероссийский классификатор предприятий и организаций (ОКПО) (только цифры 0-9)
+  okved:
+    maxLength: 8
+    minLength: 0
+    type: string
+    description: Основной код ОКВЭД (Общероссийский классификатор видов экономической деятельности)
+  approvalSign:
+    type: boolean
+    description: Признак "Визирующая организация"
+  riskLevel:
+    type: string
+    description: Уровень риска
+  tmgId:
+    type: string
+    description: Идентификатор организации в АС TMG
+  supplementaryOkveds:
+    type: array
+    description: Не основные коды ОКВЭД, только со значением enabled=true
+    items:
+      type: string
+      description: Не основные коды ОКВЭД, только со значением enabled=true
+  supplementaryOkvedItems:
+    type: array
+    description: Не основные коды ОКВЭД с признаком enabled
+    items:
+      $ref: ./BankClientSupplementaryOkvedDto.yaml
+  createNewAccountOpeningContract:
+    type: boolean
+    description: Признак "Создание новых договоров в сервисе "Открытие доп.счета"
+  stateRegistrationDate:
+    type: string
+    description: Дата гос. регистрации юр. лица
+    format: date
+  liquidationDate:
+    type: string
+    description: Дата и время ликвидации организации (из ЕСК)
+    format: date-time
+  accountsAreBlocked:
+    type: boolean
+    description: Статус блокировки всех счетов
+  kladrCityCode:
+    type: string
+    description: Код города по КЛАДР
+  kladrStreetCode:
+    type: string
+    description: Код улицы по КЛАДР
+  kladrHouseCode:
+    type: string
+    description: Код дома по КЛАДР
+  kladrRegionCode:
+    type: string
+    description: Код региона по КЛАДР
+  legalAddressCountryId:
+    type: string
+    description: Идентификатор страны юридического адреса
+    format: uuid
+  legalAddressCountryCode:
+    type: string
+    description: Код страны юридического адреса
+  exportCertificatesDbo17:
+    type: boolean
+    description: Признак необходимости выгрузки сертификатов данного клиента в ДБО 17
+  exportCertificatesH2h:
+    type: boolean
+    description: Признак необходимости выгрузки сертификатов данного клиента в H2H
+  migrationWave:
+    $ref: ./MigrationWaveDto.yaml
+  useCcf:
+    type: boolean
+    description: Признак 'Использование ЦЦФ'
+  useEncryption:
+    type: boolean
+    description: Признак 'Использование шифрования файлов'
+  blockedBy281fz:
+    type: boolean
+    description: Признак блокировки по 281-ФЗ
+  forceUseAddressForCsr:
+    type: boolean
+    description: Безусловно использовать адрес из карточки клиента при генерации CSR
+  csrLocality:
+    type: string
+    description: Населенный пункт для генерации CSR
+  csrState:
+    type: string
+    description: Субъект для генерации CSR
+  simplifiedIdentification:
+    type: boolean
+    description: Признак упрощенной идентификации
+  csrAlpha2Country:
+    type: string
+    description: Alpha2 код страны для CSR
+  simpleClient:
+    type: boolean
+    description: Признак простого клиента
+  customersCupCode:
+    type: string
+    description: Стакан клиента из CRM Infor
+  clientSegment:
+    type: string
+    description: Признак маршрутизации
+  simpleUpdateRequired:
+    type: boolean
+    description: Признак необходимости актуализации клиента
+  allowedUsePep:
+    type: boolean
+    description: Разрешено использовать ПЭП
+  mspSubjectCategory:
+    type: integer
+    description: Категория субъекта МСП
+    format: int32
+  excludeFromAusnExport:
+    type: boolean
+    description: Признак исключения из выгрузки в АУСН
+  ausnExportDate:
+    type: string
+    description: Дата выгрузки в АУСН
+    format: date
+  memberOfPriority:
+    type: boolean
+    description: Входит в группу обслуживания ГБП Приоритет
+  clientSegmentManualOnly:
+    type: boolean
+    description: Признак "Ручная установка маршрутизации клиента"
+description: Информация об организации

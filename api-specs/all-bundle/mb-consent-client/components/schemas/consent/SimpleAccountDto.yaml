@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID счета в БД
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+description: Информация о счете

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsFxDealDocClientFilter.yaml
+description: Запрос страницы

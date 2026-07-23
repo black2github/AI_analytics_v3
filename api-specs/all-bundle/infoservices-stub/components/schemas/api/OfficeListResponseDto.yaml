@@ -1,0 +1,6 @@
+type: object
+properties:
+  offices:
+    type: array
+    items:
+      $ref: ./OfficeDto.yaml

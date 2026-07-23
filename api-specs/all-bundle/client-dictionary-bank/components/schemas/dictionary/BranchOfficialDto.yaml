@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  position:
+    maxLength: 100
+    minLength: 0
+    type: string
+  branchId:
+    type: string
+    format: uuid
+  userId:
+    type: string
+    format: uuid

@@ -1,0 +1,5 @@
+type: string
+description: Положение заголовка
+enum:
+- LEFT
+- TOP

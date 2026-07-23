@@ -1,0 +1,29 @@
+required:
+- createdAt
+- number
+- requestId
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: string
+    description: Номер заявки
+  createdAt:
+    type: string
+    description: Дата
+    format: date-time
+  requestType:
+    type: string
+    description: Тип заявки
+  status:
+    type: string
+    description: Статус заявки
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Детализация причины отказа (Клиент).
+description: DTO заявки для скроллера Управление счетом

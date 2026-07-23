@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД способа ЭП
+    format: uuid
+  code:
+    type: string
+    description: Код способа ЭП
+    enum:
+    - CRYPTO_PRO
+  certificateId:
+    type: string
+    description: ИД сертификата
+    format: uuid
+  certificateOwner:
+    type: string
+    description: Владелец сертификата
+  certificateOrganizationName:
+    type: string
+    description: Название организации
+  certificateValidFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  certificateValidTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  certificateIssuerName:
+    type: string
+    description: Издатель
+  certificateSerialNumber:
+    type: string
+    description: Серийный номер
+description: ДТО способы ЭП

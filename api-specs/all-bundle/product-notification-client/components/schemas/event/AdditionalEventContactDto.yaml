@@ -1,0 +1,39 @@
+required:
+- deleted
+- id
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  deleted:
+    type: boolean
+    description: Признак удалённой записи
+  authorId:
+    type: string
+    description: Идентификатор автора записи
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  contact:
+    type: string
+    description: Телефон/Email
+  contactType:
+    type: string
+    description: Тип контактных данных получателя событий СФЗУ
+    enum:
+    - SMS
+    - EMAIL
+description: Дополнительный контакт получателя событий СФЗУ

@@ -1,0 +1,31 @@
+type: object
+properties:
+  signatureLevel:
+    type: integer
+    description: Уровень подписи
+    format: int32
+  userFio:
+    type: string
+    description: Пользователь, подписавший запрос на отзыв
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  userId:
+    type: string
+    description: Ссылка на сущность «Пользователь»
+    format: uuid
+  certificateEcoId:
+    type: string
+    description: ECO идентификатор для сертификата подписи
+    format: uuid
+  systemCode:
+    type: string
+    description: Система
+  pageCode:
+    type: string
+    description: Страница подписания
+  stableId:
+    type: string
+    description: Идентификационный номер сертификата
+description: Информация о подписи запроса на отзыв

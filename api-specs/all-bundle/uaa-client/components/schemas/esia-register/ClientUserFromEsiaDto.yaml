@@ -1,0 +1,9 @@
+required:
+- esiaUserDataId
+type: object
+properties:
+  esiaUserDataId:
+    type: string
+    description: ID данных пользователя из ЕСИА
+    format: uuid
+description: Данные для регистрации пользователя из ЕСИА

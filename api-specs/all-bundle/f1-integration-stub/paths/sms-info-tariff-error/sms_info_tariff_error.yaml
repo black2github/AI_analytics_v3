@@ -1,0 +1,19 @@
+put:
+  summary: Создание или обновление записи в таблице gps_eco_accs_smsinfo_err
+  tags:
+  - Обновление заглушек ошибок GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/AccountSmsInfoTariffErrorDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountSmsInfoTariffErrorDto.yaml
+    '400':
+      description: Bad Request

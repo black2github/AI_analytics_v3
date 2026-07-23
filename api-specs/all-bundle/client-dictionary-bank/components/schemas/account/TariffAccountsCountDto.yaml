@@ -1,0 +1,22 @@
+type: object
+properties:
+  clientAbsId:
+    type: integer
+    description: Идентификатор Клиента Банка
+    format: int64
+  branchId:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  branchDocsName:
+    type: string
+    description: Наименование подразделения для платежных документов
+  tariffPlanId:
+    type: integer
+    description: Идентификатор тарифного плана
+    format: int64
+  accountsAmount:
+    type: integer
+    description: Кол-во счетов
+    format: int32
+description: Данные

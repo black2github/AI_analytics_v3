@@ -1,0 +1,54 @@
+post:
+  tags:
+  - ВРКО Автоматическое котирование валют. Интеграционное API
+  summary: Получение объемов котировок
+  operationId: getQuoteVolumes
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v1/AutoquotingVolumeRqDto.yaml
+    required: true
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/GenericResponseSimpleErrorDataAutoquotingVolumeRspDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v1/ActionResultObject.yaml

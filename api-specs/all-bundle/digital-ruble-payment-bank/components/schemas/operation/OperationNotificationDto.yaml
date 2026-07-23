@@ -1,0 +1,23 @@
+required:
+- albumVersion
+- msgId
+- operationId
+- plainCbdc
+type: object
+properties:
+  msgId:
+    type: string
+    description: ID уведомления
+    format: uuid
+  operationId:
+    type: string
+    description: Идентификатор операции на ПлЦР
+    format: uuid
+  albumVersion:
+    type: string
+    description: Версия альбома
+  plainCbdc:
+    type: string
+    description: Расшифрованное CBDC-сообщение (XML-строка, Base64).
+    format: byte
+description: Расшифрованное уведомление об операции

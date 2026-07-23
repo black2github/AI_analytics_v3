@@ -1,0 +1,21 @@
+required:
+- commentsDto
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы сущности
+    items:
+      type: string
+      description: Идентификаторы сущности
+      format: uuid
+  commentsDto:
+    $ref: ./CommentsDto.yaml
+  status:
+    type: string
+    description: Транспортное представление возможных статусов для функции изменения статуса документов
+    enum:
+    - DECLINED
+    - COMPLETED
+description: Транспортное представление запроса ручной отмены документов

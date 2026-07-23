@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRevokedCertFilterDto.yaml
+description: Запрос страницы

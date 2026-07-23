@@ -1,0 +1,130 @@
+type: object
+properties:
+  activityType:
+    type: string
+    description: Род деятельности
+    enum:
+    - IP
+    - FARMER_CHIEF
+    - NOTARY
+    - LAWYER
+    - BANKRUPTCY_COMMISSIONER
+    - OTHER
+  agreementWithTerms:
+    type: boolean
+    description: Признак согласия с условиями резервирования счетов
+  beneficiariesNotDisclosed:
+    type: boolean
+    description: Запрет на раскрытие сведений о бенефициарах в соответствии с Указом №73
+  businessAddressId:
+    type: string
+    description: Адрес ведения деятельности ИП
+    format: uuid
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+  email:
+    type: string
+    description: Электронная почта
+  enterpriseType:
+    type: string
+    description: Вид предприятия
+    enum:
+    - COMMERCIAL_FEDERAL_PROPERTY_ORGANIZATION
+    - COMMERCIAL_NON_STATE_ORGANIZATION
+    - COMMERCIAL_STATE_PROPERTY_ORGANIZATION
+    - NON_COMMERCIAL_FEDERAL_PROPERTY_ORGANIZATION
+    - NON_COMMERCIAL_NON_STATE_ORGANIZATION
+    - NON_COMMERCIAL_STATE_PROPERTY_ORGANIZATION
+    - FINANCIAL_FEDERAL_PROPERTY_ORGANIZATION
+    - FEDERAL_TREASURY
+    - FINANCIAL_NON_STATE_ORGANIZATION
+    - FINANCIAL_AND_LOCAL_AUTHORITIES
+    - SOCIAL_SUPPORT_FUND
+    - FINANCIAL_STATE_PROPERTY_ORGANIZATION
+  inn:
+    pattern: ^(\d{5}|\d{10}|\d{12})$
+    type: string
+    description: ИНН клиента
+  internationalName:
+    type: string
+    description: Международное наименование
+  isBusinessAddressSameAsRegistration:
+    type: boolean
+    description: Признак совпадения адреса ведения деятельности с юридическим адресом регистрации
+  isPostalAddressSameAsRegistration:
+    type: boolean
+    description: Признак совпадения почтового адреса с юридическим
+  isResidenceAddressSameAsRegistration:
+    type: boolean
+    description: Признак совпадения фактического адреса с юридическим
+  kpp:
+    type: string
+    description: КПП клиента
+  marketingCampaignCode:
+    type: string
+    description: Классификатор маркетинговых кампаний
+    enum:
+    - STANDARD
+    - GPN_CRED
+  marketingCampaignOrganizationId:
+    type: string
+    description: GUID участника маркетинговой кампании
+    format: uuid
+  name:
+    type: string
+    description: Полное наименование клиента
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  okfs:
+    type: string
+    description: ОКФС
+  okopf:
+    type: string
+    description: ОКОПФ
+  okved:
+    type: string
+    description: ОКВЭД
+  phone:
+    type: string
+    description: Контактный телефон
+  phoneCode:
+    type: string
+    description: Код города/оператора контактного телефона
+  phoneNumber:
+    type: string
+    description: Номер контактного телефона без кода страны и кода города/оператора
+  postalAddressId:
+    type: string
+    description: Почтовый адрес
+    format: uuid
+  registrationAddressId:
+    type: string
+    description: Юридический адрес/Адрес регистрации ИП
+    format: uuid
+  reservationRequestId:
+    type: string
+    description: Идентификатор короткой заявки на резервирование счета
+    format: uuid
+  residenceAddressId:
+    type: string
+    description: Фактический адрес
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  shortenedName:
+    type: string
+    description: Сокращенное наименование клиента
+  website:
+    type: string
+    description: Сайт
+description: Реквизиты клиента по заявке

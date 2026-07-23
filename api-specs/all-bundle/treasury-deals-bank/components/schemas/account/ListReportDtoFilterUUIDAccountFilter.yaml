@@ -1,0 +1,16 @@
+type: object
+properties:
+  docIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  filter:
+    $ref: ./AccountFilter.yaml
+  sort:
+    $ref: ../common/Sort.yaml
+  columns:
+    type: array
+    items:
+      $ref: ../common/ColumnDefinitionDto.yaml
+description: Данные

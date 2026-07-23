@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор банка получателя
+    format: uuid
+  name:
+    type: string
+    description: Наименование банка получателя
+  bic:
+    type: string
+    description: BIC-код банка получателя
+  clearingSystem:
+    type: string
+    description: Код клиринговой системы
+  clearingCode:
+    type: string
+    description: Клиринговый код банка получателя
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  city:
+    type: string
+    description: Город банка получателя
+  street:
+    type: string
+    description: Улица банка получателя
+  houseNum:
+    type: string
+    description: Номер дома банка получателя
+  address:
+    type: string
+    description: Адрес банка получателя
+  zipCode:
+    type: string
+    description: Почтовый индекс банка получателя
+  accountType:
+    type: string
+    description: Транспортное представление для передачи тип счета
+    enum:
+    - IBAN
+    - OTHER
+  accountNumber:
+    type: string
+    description: Номер счета банка получателя (IBAN/прочий)
+description: Транспортное представление реквизитов банка получателя

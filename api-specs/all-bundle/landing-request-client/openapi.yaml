@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: Сервис для обработки заявок с посадочных страниц. Клиентская часть.
+  version: 1.1.0
+servers:
+- url: /landing-request-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API [Встраивания] [ЦАБ] "Хранение архивных документов"
+paths:
+  /archival-docs/create:
+    $ref: ./paths/create/archival_docs_create.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/create/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/create/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/create/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/create/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/create/ValidationResult.yaml
+    ArchivalDocumentCreateDto:
+      $ref: ./components/schemas/create/ArchivalDocumentCreateDto.yaml
+    ArchivalDocumentCreateResponseDto:
+      $ref: ./components/schemas/create/ArchivalDocumentCreateResponseDto.yaml
+    GenericResponseSimpleErrorDataArchivalDocumentCreateResponseDto:
+      $ref: ./components/schemas/create/GenericResponseSimpleErrorDataArchivalDocumentCreateResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/create/SimpleErrorData.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,38 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  dssCertificateId:
+    type: integer
+    description: ID сертификата в КриптоПРО DSS
+    format: int64
+  dssProfileId:
+    type: string
+    description: ID профиля пользователя в КриптоПРО DSS
+    format: uuid
+  bssProfileId:
+    type: integer
+    description: ID профиля ДБО БСС
+    format: int32
+  dstStatus:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  dstRequestNumber:
+    type: integer
+    description: Номер заявки на выпуск/регистрацию СЭП
+    format: int64
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: ДТО для обновления информации в СЭПе

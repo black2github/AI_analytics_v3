@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API выпуска сертификатов
+  summary: Выпустить сертификат УЦ
+  operationId: issueCaCert
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ca/GenericCommandCaCertRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataCertDto.yaml

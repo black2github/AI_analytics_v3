@@ -1,0 +1,17 @@
+type: object
+properties:
+  payerAccountDebitingDate:
+    type: string
+    description: Дата и время списания со счета плательщика
+    format: date-time
+  payerAccountReceiptDate:
+    type: string
+    description: Дата и время поступления в банк плательщика
+    format: date-time
+  externalSystemDocId:
+    type: string
+    description: Референс из сторонней системы (Идентификатор документа в сторонней системе)
+  bankEmployeeFio:
+    type: string
+    description: ФИО сотрудника Банка
+description: Реквизиты документа, заполняемые банком

@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: integer
+    format: int32
+  ge:
+    type: integer
+    format: int32
+  gt:
+    type: integer
+    format: int32
+  in:
+    type: array
+    items:
+      type: integer
+      format: int32
+  isNull:
+    type: boolean
+  le:
+    type: integer
+    format: int32
+  lt:
+    type: integer
+    format: int32
+  notContains:
+    type: string
+  notEq:
+    type: integer
+    format: int32
+  notIn:
+    type: array
+    items:
+      type: integer
+      format: int32
+description: Номер пакета (eq)

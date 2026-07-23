@@ -1,0 +1,12 @@
+type: object
+properties:
+  filter:
+    $ref: ./CorpCardFilter.yaml
+  sort:
+    $ref: ./Sort.yaml
+  multiSort:
+    type: array
+    items:
+      $ref: ./Sort.yaml
+  paging:
+    $ref: ./Paging.yaml

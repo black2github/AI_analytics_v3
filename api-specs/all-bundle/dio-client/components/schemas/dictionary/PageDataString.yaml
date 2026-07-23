@@ -1,0 +1,16 @@
+required:
+- page
+- size
+type: object
+properties:
+  page:
+    type: array
+    description: Страница с данными
+    items:
+      type: string
+      description: Страница с данными
+  size:
+    type: integer
+    description: Размер страницы
+    format: int64
+description: Страничные данные

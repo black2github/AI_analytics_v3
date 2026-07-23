@@ -1,0 +1,101 @@
+required:
+- clientId
+- clientName
+- contractNumber
+- createdAt
+- docDate
+- docNumber
+- documentType
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  docDate:
+    type: string
+    description: Дата заявки
+    format: date
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  clientInn:
+    type: string
+    description: ИНН клиента клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента клиента
+  clientCountry:
+    type: string
+    description: Страна клиента
+  clientRegion:
+    type: string
+    description: Субъект РФ клиента
+  clientCity:
+    type: string
+    description: Населенный пункт клиента
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  documentType:
+    type: string
+    description: Тип поручения
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  commentForClient:
+    type: string
+    description: Комментарий для пользователя
+  commentForBank:
+    type: string
+    description: Комментарий для сотрудника банка
+  market:
+    $ref: ./BrkCodeNameDto.yaml
+  service:
+    $ref: ./BrkCodeNameDto.yaml
+  fileInfo:
+    $ref: ../common/BrkFileInfo.yaml
+  currencies:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ./BrkCodeNameDto.yaml
+  signatures:
+    type: array
+    items:
+      $ref: ./SignatureDto.yaml
+description: Данные

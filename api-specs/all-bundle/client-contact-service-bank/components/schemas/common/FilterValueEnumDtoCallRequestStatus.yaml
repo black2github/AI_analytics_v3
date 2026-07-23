@@ -1,0 +1,20 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./CallRequestStatus.yaml
+  notEq:
+    $ref: ./CallRequestStatus.yaml
+  in:
+    type: array
+    items:
+      $ref: ./CallRequestStatus.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./CallRequestStatus.yaml
+  isNull:
+    type: boolean

@@ -1,0 +1,6 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Счет получателя
+description: 'Подсказки: Счет получателя'

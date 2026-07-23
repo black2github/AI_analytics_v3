@@ -1,0 +1,7 @@
+type: object
+properties:
+  type:
+    type: string
+  reference:
+    type: string
+description: Информация о референсах, предоставленная получателем денежных средств, позволяющая идентифицировать исходные документы.

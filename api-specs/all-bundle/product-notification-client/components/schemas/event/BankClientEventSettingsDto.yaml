@@ -1,0 +1,15 @@
+required:
+- clientId
+- services
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  services:
+    type: array
+    description: Список настроек в разрезе сервисов
+    items:
+      $ref: ./ServiceEventSettingsDto.yaml
+description: Настройки событий СФЗУ в разрезе клиентов

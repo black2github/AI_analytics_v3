@@ -1,0 +1,9 @@
+type: object
+properties:
+  certificate:
+    type: string
+    description: base64 представление сертификата
+  certificateOwner:
+    type: string
+    description: Владелец сертификата
+description: Запрос на загрузку сертификата в СПБ

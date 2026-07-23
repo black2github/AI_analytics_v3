@@ -1,0 +1,8 @@
+type: object
+properties:
+  creationResults:
+    type: object
+    additionalProperties:
+      $ref: ./BatchItemProcessingResultApRoleTemplateDto.yaml
+    description: Результаты обработки записей на создание шаблонов ролей
+description: Обертка для возвращаемого значения для массового создания шаблонов ролей

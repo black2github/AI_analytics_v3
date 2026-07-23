@@ -1,0 +1,53 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор генерального соглашения или заявления
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  documentId:
+    type: string
+    description: Идентификатор документа оферты
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientFullName:
+    type: string
+    description: Полное наименование Клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование Клиента
+  clientInnKio:
+    type: string
+    description: ИНН/КИО Клиента
+  number:
+    type: string
+    description: Номер генерального соглашения или заявления
+  date:
+    type: string
+    description: Дата генерального соглашения или заявления
+    format: date
+  startDate:
+    type: string
+    description: Дата начала действия генерального соглашения или заявления
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия генерального соглашения или заявления
+    format: date
+  status:
+    type: string
+    description: Статус генерального соглашения или заявления
+    enum:
+    - NONE
+    - AGREEMENT_ACTIVE
+    - AGREEMENT_ENDED
+    - AGREEMENT_BLOCKED
+    - AGREEMENT_DELETED
+    - REQUEST_IN_PROGRESS
+    - REQUEST_REJECTED
+    - REQUEST_REJECTED_BY_CLIENT
+    - REQUEST_ACCEPTED
+    - REQUEST_EXECUTED
+  statusDescription:
+    type: string
+description: Страница с данными

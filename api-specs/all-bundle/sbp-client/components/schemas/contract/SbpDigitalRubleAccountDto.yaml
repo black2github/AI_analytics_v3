@@ -1,0 +1,9 @@
+type: object
+description: Реквизиты счета Клиента в сервисе Цифровой рубль
+properties:
+  id:
+    type: string
+    description: Идентификатор счета Клиента в сервисе Цифровой рубль
+  number:
+    type: string
+    description: Номер счета Клиента в сервисе Цифровой рубль

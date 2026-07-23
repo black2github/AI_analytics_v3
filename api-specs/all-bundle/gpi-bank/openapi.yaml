@@ -1,0 +1,10 @@
+info:
+  version: 1.18.0
+  title: 'GPI :: Rest :: Bank :: Impl'
+tags:
+- name: Интеграционное API представлений GPI-строк
+  description: Gpi Row Tech Controller
+paths:
+  /integration/guid/{id}:
+    $ref: ./paths/guid/integration_guid_id.yaml
+components: {}

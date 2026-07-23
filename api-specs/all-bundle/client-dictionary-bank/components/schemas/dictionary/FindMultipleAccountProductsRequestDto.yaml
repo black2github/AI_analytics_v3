@@ -1,0 +1,19 @@
+required:
+- accountIds
+- productCodes
+type: object
+properties:
+  accountIds:
+    type: array
+    description: Список идентификаторов счетов
+    items:
+      type: integer
+      description: Список идентификаторов счетов
+      format: int64
+  productCodes:
+    type: array
+    description: Коды продуктов
+    items:
+      type: string
+      description: Коды продуктов
+description: Данные для запроса поиска записей продуктов по счету

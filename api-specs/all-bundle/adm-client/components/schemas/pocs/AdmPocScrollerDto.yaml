@@ -1,0 +1,71 @@
+type: object
+properties:
+  addingDate:
+    type: string
+    description: Дата добавления.
+    format: date
+  address:
+    type: string
+    description: Адрес
+  amountDiff:
+    type: number
+    description: Сумма расхождения
+  branchName:
+    type: string
+    description: Наименование подразделения
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  deliveryDate:
+    type: string
+    description: Дата доставки.
+    format: date
+  mainTid:
+    type: integer
+    description: Главный идентификатор
+    format: int32
+  owner:
+    type: string
+    description: В собственности
+  pilotTariffMinAmount:
+    type: number
+    description: Минимальная сумма пилотного тарифа
+  pilotTariffRate:
+    type: number
+    description: Ставка пилотного тарифа
+  plannedDeliveryDate:
+    type: string
+    description: Плановая дата доставки.
+    format: date
+  plannedSetupDate:
+    type: string
+    description: Плановая дата установки.
+    format: date
+  setupDate:
+    type: string
+    description: Дата установки (ПНР).
+    format: date
+  startDate:
+    type: string
+    description: Дата запуска.
+    format: date
+  status:
+    $ref: ./AdmPocStatusDto.yaml
+  tariff:
+    type: string
+    description: Тариф
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма
+  tariffRate:
+    type: number
+    description: Ставка тарифа
+  tariffType:
+    type: string
+    description: Тип тарифа
+  tid:
+    type: integer
+    description: Идентификатор
+    format: int32
+description: ДТО для скроллера АДМ (общий)

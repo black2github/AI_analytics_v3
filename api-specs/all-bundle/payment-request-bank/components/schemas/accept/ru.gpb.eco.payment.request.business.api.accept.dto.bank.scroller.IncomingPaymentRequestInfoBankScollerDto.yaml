@@ -1,0 +1,14 @@
+type: object
+properties:
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  acceptPeriodEnd:
+    type: string
+    description: Окончание срока акцепта
+    format: date
+    nullable: true
+description: Реквизиты из входящего платежного поручения, скроллер банка
+nullable: true

@@ -1,0 +1,24 @@
+get:
+  tags:
+  - API ДБО БСС для внешних систем
+  summary: Получить блокировки счетов пользователя
+  operationId: userAccountBlocksInfoV2UsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: remoteId
+    in: header
+    description: remoteId
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BssAccountBlockV2Response'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

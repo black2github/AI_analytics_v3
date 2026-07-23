@@ -1,0 +1,442 @@
+openapi: 3.0.1
+info:
+  title: Сервис аутентификации и авторизации. Интеграционная часть.
+  version: 3.8.0
+servers:
+- url: /uaa-internal
+security:
+- Bearer: []
+tags:
+- name: SessionIntegration
+  description: API для работы с сессиями
+- name: UvedMigrationIntegration
+  description: API миграции пользователей УВЭД
+- name: BankUserIntegration
+  description: API для работы с банковскими пользователями
+- name: Dbo320UserContextIntegration
+  description: API для работы с контекстом пользователей ДБО 320
+- name: UserLoginCrtIntegration
+  description: API для работы с сертификатами для входа
+- name: UaaUserIntegration
+  description: API для работы с пользователями
+- name: ConfirmationRequestIntegration
+  description: API для работы запросами на подтверждение
+- name: ApprovalIntegration
+  description: API для работы с запросами на одобрение OAuth2
+- name: ProfileIntegration
+  description: API для работы с профилем пользователя
+- name: UaaSegmentProductUserIntegration
+  description: API для работы с информацией о связях сегментов доступа с продуктами ГПБ БО для пользователя
+- name: AbacConditionFindV2Integration
+  description: Rest API для доступа по реквизиту V2. Поиск выражения.
+- name: RoleTemplateIntegration
+  description: API для работы с шаблонами ролей
+- name: AbacConditionFindIntegration
+  description: Rest API для доступа по реквизиту. Поиск выражения.
+- name: API интеграции для создания Правила блокировки / разблокировки доступности сегмента.
+  description: AccessRuleBlockingCreationIntegrationApi
+- name: RoleIntegration
+  description: API для работы с ролями
+- name: UaaUserClientOfficialIntegration
+  description: API для работы с пользователями как с представителями организаций
+- name: AbacGrantAccessRuleIntegration
+  description: API для работы с правилами предоставления доступа по реквизиту
+- name: ClientUserIntegration
+  description: API для работы с пользователями клиента
+- name: Direct1CIntegration
+  description: API для работы с 1С ДиректБанк
+- name: ClientUserCommentIntegration
+  description: API для работы с комментариями пользователей клиентов
+- name: UnstickingUser
+  description: API для работы с ролями пользователей
+- name: CommonUserInfoIntegration
+  description: API для работы с данными пользователей
+paths:
+  /integration/user/add-login-certificate:
+    $ref: ./paths/user/integration_user_add_login_certificate.yaml
+  /integration/role/template/{roleTemplateId}:
+    $ref: ./paths/role/integration_role_template_roleTemplateId.yaml
+  /integration/role/template/{roleTemplateId}/archival:
+    $ref: ./paths/role/integration_role_template_roleTemplateId_archival.yaml
+  /integration/admin/client-user:
+    $ref: ./paths/admin/integration_admin_client_user.yaml
+  /integration/admin/client-user/esk-id:
+    $ref: ./paths/admin/integration_admin_client_user_esk_id.yaml
+  /integration/user/{id}/temporary-block:
+    $ref: ./paths/user/integration_user_id_temporary_block.yaml
+  /integration/user/v2/user-authorities-fallback:
+    $ref: ./paths/user/integration_user_v2_user_authorities_fallback.yaml
+  /integration/user/user-authorities/check:
+    $ref: ./paths/user/integration_user_user_authorities_check.yaml
+  /integration/user/user-authorities/card/find:
+    $ref: ./paths/user/integration_user_user_authorities_card_find.yaml
+  /integration/user/unblock/{id}:
+    $ref: ./paths/user/integration_user_unblock_id.yaml
+  /integration/user/find-client-official-ids:
+    $ref: ./paths/user/integration_user_find_client_official_ids.yaml
+  /integration/user/delete-user-roles-by-officials:
+    $ref: ./paths/user/integration_user_delete_user_roles_by_officials.yaml
+  /integration/user/clientofficial/check-block-by-organization:
+    $ref: ./paths/user/integration_user_clientofficial_check_block_by_organization.yaml
+  /integration/user/client-official-roles-exist:
+    $ref: ./paths/user/integration_user_client_official_roles_exist.yaml
+  /integration/user/client-official-role-exist:
+    $ref: ./paths/user/integration_user_client_official_role_exist.yaml
+  /integration/user/block/{id}:
+    $ref: ./paths/user/integration_user_block_id.yaml
+  /integration/user-login-crt/certificate/filter:
+    $ref: ./paths/user-login-crt/integration_user_login_crt_certificate_filter.yaml
+  /integration/user-login-crt/certificate/contains-any:
+    $ref: ./paths/user-login-crt/integration_user_login_crt_certificate_contains_any.yaml
+  /integration/user-info/by-ids:
+    $ref: ./paths/user-info/integration_user_info_by_ids.yaml
+  /integration/user-info/by-ids-client-detailed:
+    $ref: ./paths/user-info/integration_user_info_by_ids_client_detailed.yaml
+  /integration/sessions/set-need-refresh-token-for-user-ids:
+    $ref: ./paths/sessions/integration_sessions_set_need_refresh_token_for_user_ids.yaml
+  /integration/role/template/search:
+    $ref: ./paths/role/integration_role_template_search.yaml
+  /integration/role/template/create:
+    $ref: ./paths/role/integration_role_template_create.yaml
+  /integration/role/search:
+    $ref: ./paths/role/integration_role_search.yaml
+  /integration/oauth/approvals/revoke:
+    $ref: ./paths/oauth/integration_oauth_approvals_revoke.yaml
+  /integration/migration/uved/task-2:
+    $ref: ./paths/migration/integration_migration_uved_task_2.yaml
+  /integration/migration/uved/task-1:
+    $ref: ./paths/migration/integration_migration_uved_task_1.yaml
+  /integration/migration/uved/find-confirmed-users-by-logins:
+    $ref: ./paths/migration/integration_migration_uved_find_confirmed_users_by_logins.yaml
+  /integration/migration/uved/find-client-users-uved-roles:
+    $ref: ./paths/migration/integration_migration_uved_find_client_users_uved_roles.yaml
+  /integration/confirmation-request:
+    $ref: ./paths/confirmation-request/integration_confirmation_request.yaml
+  /integration/confirmation-request/check:
+    $ref: ./paths/confirmation-request/integration_confirmation_request_check.yaml
+  /integration/client-user/{clientUserId}/comment:
+    $ref: ./paths/client-user/integration_client_user_clientUserId_comment.yaml
+  /integration/admin/client-user/{id}/revoke-roles:
+    $ref: ./paths/admin/integration_admin_client_user_id_revoke_roles.yaml
+  /integration/admin/client-user/{id}/assign-roles:
+    $ref: ./paths/admin/integration_admin_client_user_id_assign_roles.yaml
+  /integration/admin/client-user/{id}/assign-role:
+    $ref: ./paths/admin/integration_admin_client_user_id_assign_role.yaml
+  /integration/admin/client-user/personalized:
+    $ref: ./paths/admin/integration_admin_client_user_personalized.yaml
+  /integration/admin/client-user/light:
+    $ref: ./paths/admin/integration_admin_client_user_light.yaml
+  /integration/admin/client-user/interface/lang:
+    $ref: ./paths/admin/integration_admin_client_user_interface_lang.yaml
+  /integration/admin/client-user/get-slice:
+    $ref: ./paths/admin/integration_admin_client_user_get_slice.yaml
+  /integration/admin/client-user/get-page:
+    $ref: ./paths/admin/integration_admin_client_user_get_page.yaml
+  /integration/admin/client-user/find/light:
+    $ref: ./paths/admin/integration_admin_client_user_find_light.yaml
+  /integration/admin/client-user/find-by-uaa-id:
+    $ref: ./paths/admin/integration_admin_client_user_find_by_uaa_id.yaml
+  /integration/admin/client-user/find-all-by-uaa-id:
+    $ref: ./paths/admin/integration_admin_client_user_find_all_by_uaa_id.yaml
+  /integration/admin/client-user/find-all-by-f1-id:
+    $ref: ./paths/admin/integration_admin_client_user_find_all_by_f1_id.yaml
+  /integration/admin/client-user/find-all-by-esk-id:
+    $ref: ./paths/admin/integration_admin_client_user_find_all_by_esk_id.yaml
+  /integration/admin/client-user/access-group/assign:
+    $ref: ./paths/admin/integration_admin_client_user_access_group_assign.yaml
+  /integration/admin/bankuser/list:
+    $ref: ./paths/admin/integration_admin_bankuser_list.yaml
+  /integration/admin/access-rule/try-execute-for-client-user/{id}:
+    $ref: ./paths/admin/integration_admin_access_rule_try_execute_for_client_user_id.yaml
+  /integration/admin/access-rule/set-on-re-execution:
+    $ref: ./paths/admin/integration_admin_access_rule_set_on_re_execution.yaml
+  /integration/admin/access-rule/get-page:
+    $ref: ./paths/admin/integration_admin_access_rule_get_page.yaml
+  /integration/admin/access-rule/execute-for-client-user/{id}:
+    $ref: ./paths/admin/integration_admin_access_rule_execute_for_client_user_id.yaml
+  /integration/admin/abac-grant-access-rule:
+    $ref: ./paths/admin/integration_admin_abac_grant_access_rule.yaml
+  /integration/admin/abac-grant-access-rule/recreate:
+    $ref: ./paths/admin/integration_admin_abac_grant_access_rule_recreate.yaml
+  /integration/access-rule:
+    $ref: ./paths/access-rule/integration_access_rule.yaml
+  /integration/access-rule/v2:
+    $ref: ./paths/access-rule/integration_access_rule_v2.yaml
+  /integration/access-rule/restore:
+    $ref: ./paths/access-rule/integration_access_rule_restore.yaml
+  /integration/access-rule/block:
+    $ref: ./paths/access-rule/integration_access_rule_block.yaml
+  /integration/abac/condition/v2/find-struct:
+    $ref: ./paths/abac/integration_abac_condition_v2_find_struct.yaml
+  /integration/abac/condition/find-struct:
+    $ref: ./paths/abac/integration_abac_condition_find_struct.yaml
+  /integration/1c-direct/find-user-by-certificate:
+    $ref: ./paths/1c-direct/integration_1c_direct_find_user_by_certificate.yaml
+  /integration/user/{id}:
+    $ref: ./paths/user/integration_user_id.yaml
+  /integration/user/{id}/has-active-session:
+    $ref: ./paths/user/integration_user_id_has_active_session.yaml
+  /integration/user/{id}/block-status:
+    $ref: ./paths/user/integration_user_id_block_status.yaml
+  /integration/user/user-authorities/{id}:
+    $ref: ./paths/user/integration_user_user_authorities_id.yaml
+  /integration/user/dbo320/{id}:
+    $ref: ./paths/user/integration_user_dbo320_id.yaml
+  /integration/user/clientofficial/not-blocked-official-ids/{userId}:
+    $ref: ./paths/user/integration_user_clientofficial_not_blocked_official_ids_userId.yaml
+  /integration/user-info/{id}:
+    $ref: ./paths/user-info/integration_user_info_id.yaml
+  /integration/segment-product/{userId}:
+    $ref: ./paths/segment-product/integration_segment_product_userId.yaml
+  /integration/role/get-by-user/{uaaId}:
+    $ref: ./paths/role/integration_role_get_by_user_uaaId.yaml
+  /integration/role/get-all-infos:
+    $ref: ./paths/role/integration_role_get_all_infos.yaml
+  /integration/profile:
+    $ref: ./paths/profile/integration_profile.yaml
+  /integration/profile/{userId}:
+    $ref: ./paths/profile/integration_profile_userId.yaml
+  /integration/oauth/approvals/{id}:
+    $ref: ./paths/oauth/integration_oauth_approvals_id.yaml
+  /integration/confirmation-request/{requestId}:
+    $ref: ./paths/confirmation-request/integration_confirmation_request_requestId.yaml
+  /integration/admin/client-user/{uaaUserId}/all-uaa-ids:
+    $ref: ./paths/admin/integration_admin_client_user_uaaUserId_all_uaa_ids.yaml
+  /integration/admin/client-user/{id}:
+    $ref: ./paths/admin/integration_admin_client_user_id.yaml
+  /integration/admin/client-user/external-id/{id}:
+    $ref: ./paths/admin/integration_admin_client_user_external_id_id.yaml
+  /integration/admin/client-user/count-all-personalized:
+    $ref: ./paths/admin/integration_admin_client_user_count_all_personalized.yaml
+  /integration/admin/bankuser/{id}:
+    $ref: ./paths/admin/integration_admin_bankuser_id.yaml
+  /integration/admin/abac-grant-access-rule/{id}:
+    $ref: ./paths/admin/integration_admin_abac_grant_access_rule_id.yaml
+  /integration/admin/abac-grant-access-rule/get-active-rules/{authorizedPersonId}:
+    $ref: ./paths/admin/integration_admin_abac_grant_access_rule_get_active_rules_authorizedPersonId.yaml
+  /integration/user/delete-user-roles-by-official/{clientOfficialId}:
+    $ref: ./paths/user/integration_user_delete_user_roles_by_official_clientOfficialId.yaml
+  /integration/unsticking-user/user-roles:
+    $ref: ./paths/unsticking-user/integration_unsticking_user_user_roles.yaml
+  /integration/sessions/{sessionId}:
+    $ref: ./paths/sessions/integration_sessions_sessionId.yaml
+components:
+  schemas:
+    SingleResponseVoid:
+      $ref: ./components/schemas/common/SingleResponseVoid.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AddLoginCertificateRqIntegrationDto:
+      $ref: ./components/schemas/user/AddLoginCertificateRqIntegrationDto.yaml
+    UaaRoleTemplateUpdateDto:
+      $ref: ./components/schemas/role/UaaRoleTemplateUpdateDto.yaml
+    UaaRoleTemplateArchiveDto:
+      $ref: ./components/schemas/role/UaaRoleTemplateArchiveDto.yaml
+    AvailableSegmentIntegrationDto:
+      $ref: ./components/schemas/admin/AvailableSegmentIntegrationDto.yaml
+    ClientUserConsentIntegrationDto:
+      $ref: ./components/schemas/admin/ClientUserConsentIntegrationDto.yaml
+    ClientUserInfoIntegrationDto:
+      $ref: ./components/schemas/admin/ClientUserInfoIntegrationDto.yaml
+    UaaAuthorityIntegrationDto:
+      $ref: ./components/schemas/admin/UaaAuthorityIntegrationDto.yaml
+    UaaRoleAuthorityIntegrationDto:
+      $ref: ./components/schemas/admin/UaaRoleAuthorityIntegrationDto.yaml
+    UaaRoleIntegrationDto:
+      $ref: ./components/schemas/admin/UaaRoleIntegrationDto.yaml
+    UaaSegmentIntegrationDto:
+      $ref: ./components/schemas/admin/UaaSegmentIntegrationDto.yaml
+    UaaUserClientInfoIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserClientInfoIntegrationDto.yaml
+    UaaUserRoleBranchIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserRoleBranchIntegrationDto.yaml
+    UaaUserRoleIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserRoleIntegrationDto.yaml
+    UaaUserShortInfoIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserShortInfoIntegrationDto.yaml
+    UserIntegrationDto:
+      $ref: ./components/schemas/admin/UserIntegrationDto.yaml
+    ClientUserUpdateEskIdCommand:
+      $ref: ./components/schemas/admin/ClientUserUpdateEskIdCommand.yaml
+    GenericCommandClientUserUpdateEskIdCommand:
+      $ref: ./components/schemas/admin/GenericCommandClientUserUpdateEskIdCommand.yaml
+    GenericCommandTemporaryBlockRequestIntegrationDto:
+      $ref: ./components/schemas/user/GenericCommandTemporaryBlockRequestIntegrationDto.yaml
+    TemporaryBlockRequestIntegrationDto:
+      $ref: ./components/schemas/user/TemporaryBlockRequestIntegrationDto.yaml
+    UserAuthorityFallbackRequestIntegrationDto:
+      $ref: ./components/schemas/user/UserAuthorityFallbackRequestIntegrationDto.yaml
+    CheckUserAuthorityRequestIntegrationDto:
+      $ref: ./components/schemas/user/CheckUserAuthorityRequestIntegrationDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    UserAuthorityFilter:
+      $ref: ./components/schemas/user/UserAuthorityFilter.yaml
+    SegmentRolePairIntegrationDto:
+      $ref: ./components/schemas/user/SegmentRolePairIntegrationDto.yaml
+    UaaClientOfficialIdsFindRequestIntegrationDto:
+      $ref: ./components/schemas/user/UaaClientOfficialIdsFindRequestIntegrationDto.yaml
+    DeleteUserRolesByOfficialsRequest:
+      $ref: ./components/schemas/user/DeleteUserRolesByOfficialsRequest.yaml
+    UaaClientOfficialRoleIntegrationDto:
+      $ref: ./components/schemas/user/UaaClientOfficialRoleIntegrationDto.yaml
+    UaaClientOfficialRolesExistRequestIntegrationDto:
+      $ref: ./components/schemas/user/UaaClientOfficialRolesExistRequestIntegrationDto.yaml
+    UaaClientOfficialRoleExistCommandIntegrationDto:
+      $ref: ./components/schemas/user/UaaClientOfficialRoleExistCommandIntegrationDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/role/FilterValueDtoInteger.yaml
+    FilterValueDtoUaaRoleTemplateTypeDto:
+      $ref: ./components/schemas/role/FilterValueDtoUaaRoleTemplateTypeDto.yaml
+    GetPageCommandUaaRoleTemplatesFiltersListDto:
+      $ref: ./components/schemas/role/GetPageCommandUaaRoleTemplatesFiltersListDto.yaml
+    PageParamsUaaRoleTemplatesFiltersListDto:
+      $ref: ./components/schemas/role/PageParamsUaaRoleTemplatesFiltersListDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UaaRoleTemplatesFilterDto:
+      $ref: ./components/schemas/role/UaaRoleTemplatesFilterDto.yaml
+    UaaRoleTemplatesFiltersListDto:
+      $ref: ./components/schemas/role/UaaRoleTemplatesFiltersListDto.yaml
+    RoleTemplateAccessDto:
+      $ref: ./components/schemas/role/RoleTemplateAccessDto.yaml
+    UaaRoleTemplateCreationDto:
+      $ref: ./components/schemas/role/UaaRoleTemplateCreationDto.yaml
+    GetPageCommandUaaRoleFilterIntegrationDto:
+      $ref: ./components/schemas/role/GetPageCommandUaaRoleFilterIntegrationDto.yaml
+    PageParamsUaaRoleFilterIntegrationDto:
+      $ref: ./components/schemas/role/PageParamsUaaRoleFilterIntegrationDto.yaml
+    UaaRoleFilterIntegrationDto:
+      $ref: ./components/schemas/role/UaaRoleFilterIntegrationDto.yaml
+    ApprovalRevokeRequest:
+      $ref: ./components/schemas/oauth/ApprovalRevokeRequest.yaml
+    UvedMigrationSegmentIntegrationDto:
+      $ref: ./components/schemas/migration/UvedMigrationSegmentIntegrationDto.yaml
+    ConfirmationRequestCreateCommandIntegrationDto:
+      $ref: ./components/schemas/confirmation-request/ConfirmationRequestCreateCommandIntegrationDto.yaml
+    ConfirmationRequestCheckDataIntegrationDto:
+      $ref: ./components/schemas/confirmation-request/ConfirmationRequestCheckDataIntegrationDto.yaml
+    ClientUserCommentDto:
+      $ref: ./components/schemas/client-user/ClientUserCommentDto.yaml
+    AssignRoleIntegrationDto:
+      $ref: ./components/schemas/admin/AssignRoleIntegrationDto.yaml
+    UaaUserRolesAssignIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserRolesAssignIntegrationDto.yaml
+    ClientUserIntegrationFilter:
+      $ref: ./components/schemas/admin/ClientUserIntegrationFilter.yaml
+    FilterValueEnumDtoClientUserRegistrationStageDto:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoClientUserRegistrationStageDto.yaml
+    GetPageCommandClientUserIntegrationFilter:
+      $ref: ./components/schemas/admin/GetPageCommandClientUserIntegrationFilter.yaml
+    PageParamsClientUserIntegrationFilter:
+      $ref: ./components/schemas/admin/PageParamsClientUserIntegrationFilter.yaml
+    ClientUserFilterIntegrationDto:
+      $ref: ./components/schemas/admin/ClientUserFilterIntegrationDto.yaml
+    FilterValueDtoZonedDateTime:
+      $ref: ./components/schemas/admin/FilterValueDtoZonedDateTime.yaml
+    FilterValueEnumDtoUaaPartnerCompanyClassifierDto:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoUaaPartnerCompanyClassifierDto.yaml
+    GetPageCommandClientUserFilterIntegrationDto:
+      $ref: ./components/schemas/admin/GetPageCommandClientUserFilterIntegrationDto.yaml
+    PageParamsClientUserFilterIntegrationDto:
+      $ref: ./components/schemas/admin/PageParamsClientUserFilterIntegrationDto.yaml
+    GenericCommandUaaUserAccessGroupAssignBatchDto:
+      $ref: ./components/schemas/admin/GenericCommandUaaUserAccessGroupAssignBatchDto.yaml
+    UaaUserAccessGroupAssignBatchDto:
+      $ref: ./components/schemas/admin/UaaUserAccessGroupAssignBatchDto.yaml
+    UaaUserAccessGroupAssignIntegrationDto:
+      $ref: ./components/schemas/admin/UaaUserAccessGroupAssignIntegrationDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    AccessRulesReExecutionSettingDto:
+      $ref: ./components/schemas/admin/AccessRulesReExecutionSettingDto.yaml
+    AccessRuleFilter:
+      $ref: ./components/schemas/admin/AccessRuleFilter.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/admin/FilterValueDtoLong.yaml
+    FilterValueEnumDtoOriginSystem:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoOriginSystem.yaml
+    FilterValueEnumDtoRuleType:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoRuleType.yaml
+    FilterValueEnumDtoSegmentCode:
+      $ref: ./components/schemas/admin/FilterValueEnumDtoSegmentCode.yaml
+    GetPageCommandAccessRuleFilter:
+      $ref: ./components/schemas/admin/GetPageCommandAccessRuleFilter.yaml
+    PageParamsAccessRuleFilter:
+      $ref: ./components/schemas/admin/PageParamsAccessRuleFilter.yaml
+    AccessRuleDto:
+      $ref: ./components/schemas/common/AccessRuleDto.yaml
+    BankClientInfo:
+      $ref: ./components/schemas/common/BankClientInfo.yaml
+    GenericResponseSimpleErrorDataPageDataAccessRuleDto:
+      $ref: ./components/schemas/admin/GenericResponseSimpleErrorDataPageDataAccessRuleDto.yaml
+    PageDataAccessRuleDto:
+      $ref: ./components/schemas/admin/PageDataAccessRuleDto.yaml
+    UaaAuthorityDto:
+      $ref: ./components/schemas/common/UaaAuthorityDto.yaml
+    UaaRoleAuthorityDto:
+      $ref: ./components/schemas/common/UaaRoleAuthorityDto.yaml
+    UaaRoleDto:
+      $ref: ./components/schemas/common/UaaRoleDto.yaml
+    UaaSegmentDto:
+      $ref: ./components/schemas/common/UaaSegmentDto.yaml
+    AbacGrantAccessRuleEntityIntegrationDto:
+      $ref: ./components/schemas/admin/AbacGrantAccessRuleEntityIntegrationDto.yaml
+    AbacGrantAccessRuleRequestIntegrationDto:
+      $ref: ./components/schemas/admin/AbacGrantAccessRuleRequestIntegrationDto.yaml
+    GenericCommandAbacGrantAccessRuleRequestIntegrationDto:
+      $ref: ./components/schemas/admin/GenericCommandAbacGrantAccessRuleRequestIntegrationDto.yaml
+    AbacGrantAccessRuleRecreateRequestDto:
+      $ref: ./components/schemas/admin/AbacGrantAccessRuleRecreateRequestDto.yaml
+    GenericCommandAbacGrantAccessRuleRecreateRequestDto:
+      $ref: ./components/schemas/admin/GenericCommandAbacGrantAccessRuleRecreateRequestDto.yaml
+    AccessRuleCreationDto:
+      $ref: ./components/schemas/access-rule/AccessRuleCreationDto.yaml
+    GenericResponseSimpleErrorDataListAccessRuleDto:
+      $ref: ./components/schemas/access-rule/GenericResponseSimpleErrorDataListAccessRuleDto.yaml
+    AbacGrantAccessRuleEntityDto:
+      $ref: ./components/schemas/access-rule/AbacGrantAccessRuleEntityDto.yaml
+    AccessRuleDataDto:
+      $ref: ./components/schemas/access-rule/AccessRuleDataDto.yaml
+    ContactDataDto:
+      $ref: ./components/schemas/access-rule/ContactDataDto.yaml
+    CreateAccessRuleRequestDto:
+      $ref: ./components/schemas/access-rule/CreateAccessRuleRequestDto.yaml
+    EmployeeDataDto:
+      $ref: ./components/schemas/access-rule/EmployeeDataDto.yaml
+    CreateAccessRuleResultDto:
+      $ref: ./components/schemas/access-rule/CreateAccessRuleResultDto.yaml
+    GenericResponseSimpleErrorDataCreateAccessRuleResultDto:
+      $ref: ./components/schemas/access-rule/GenericResponseSimpleErrorDataCreateAccessRuleResultDto.yaml
+    ChangeAccessRuleCreationDto:
+      $ref: ./components/schemas/access-rule/ChangeAccessRuleCreationDto.yaml
+    FindConditionStructV2Request:
+      $ref: ./components/schemas/abac/FindConditionStructV2Request.yaml
+    FindConditionStructRequest:
+      $ref: ./components/schemas/abac/FindConditionStructRequest.yaml
+    FindUserByCertificateRequestDto:
+      $ref: ./components/schemas/1c-direct/FindUserByCertificateRequestDto.yaml
+    UaaUserRoleLightDto:
+      $ref: ./components/schemas/role/UaaUserRoleLightDto.yaml
+    AbacGrantAccessRuleResponseIntegrationDto:
+      $ref: ./components/schemas/admin/AbacGrantAccessRuleResponseIntegrationDto.yaml
+  securitySchemes:
+    Bearer:
+      type: http
+      name: Bearer
+      scheme: bearer
+      bearerFormat: JWT

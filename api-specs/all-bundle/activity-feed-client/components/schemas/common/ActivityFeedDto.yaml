@@ -1,0 +1,91 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  recipientName:
+    type: string
+    description: Наименование контрагента
+  clientName:
+    type: string
+    description: Наименование клиента
+  documentTypeCode:
+    type: string
+    description: Вид документ основание
+  documentName:
+    type: string
+    description: Наименование документа основания
+  statementTypeCode:
+    type: string
+    description: Вид документ выписки
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  documentNumber:
+    type: string
+    description: Номер документа
+  statementNumber:
+    type: string
+    description: Номер выписки
+  documentPurpose:
+    type: string
+    description: Назначение документа
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountName:
+    type: string
+    description: Имя счета
+  accountType:
+    type: string
+    description: Тип счета
+  documentTime:
+    type: string
+    description: Дата и время документа
+    format: date-time
+  documentDate:
+    type: string
+    description: Дата документа в UTC+3
+    format: date
+  operationAmount:
+    type: number
+    description: Сумма операции
+  outstandingAmount:
+    type: number
+    description: Сумма остатка платежа
+  operationStatus:
+    type: string
+    description: Статус операции
+  operationStatusKey:
+    type: string
+    description: Локализация статуса операции
+  creditDebit:
+    type: string
+    description: Поступление/списание
+  creditDebitKey:
+    type: string
+    description: Локализация для Поступление/списание
+  currency:
+    type: string
+    description: Валюта операции
+  entryId:
+    type: integer
+    description: Идентификатор проводки
+    format: int64
+  statementId:
+    type: integer
+    description: Идентификатор выписки
+    format: int64
+  contractType:
+    $ref: ./ContractTypeDtoV2.yaml
+description: Запись в ленте операции

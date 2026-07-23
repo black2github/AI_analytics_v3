@@ -1,0 +1,68 @@
+type: object
+properties:
+  fatcaClientControl:
+    type: boolean
+    description: Подлежит ли клиент контролю по FATCA?
+  fatcaClientNotProvideInfoAboutHimself:
+    type: boolean
+    description: Клиент при визите в банк не предоставил необходимые сведения о себе.
+  fatcaClientInPresenceOfObviousSignsOfUSTaxpayerDidNotRespond:
+    type: boolean
+    description: Клиент, при наличии явных признаков налогоплательщика США, не ответил.
+  fatcaClientInPresenceOfIndirectSignsOfUSTaxpayerDidNotRespond:
+    type: boolean
+    description: Клиент, при наличии косвенных признаков налогоплательщика США, не ответил.
+  fatcaClientInPresenceOfObviousOrIndirectSignsOfUSTaxpayerDidNotRespond:
+    type: boolean
+    description: Клиент, при наличии явных или косвенных признаков налогоплательщика США, не ответил.
+  fatcaClientAnsweredNoToQuestion1OrYesToQuestion9OfPart2:
+    type: boolean
+    description: Клиент ответил «Нет» на вопрос 1 формы самосертификации, либо «Да» на вопрос 9 Части 2 подробной формы самосертификации.
+  fatcaClientAnsweredNoToQuestion1OrNoToQuestion9OfPart2:
+    type: boolean
+    description: Клиент ответил «Да» на вопрос 1 формы самосертификации, либо «Нет» на вопрос 9 Части 2 подробной формы самосертификации.
+  fatcaClientNonUSTaxResident:
+    type: boolean
+    description: Клиент не является налоговым резидентом США.
+  fatcaClientStatus:
+    type: string
+    description: FATCA-cтатус клиента.
+    enum:
+    - US_TAX_RESIDENT
+    - NOT_US_TAX_RESIDENT
+    - NOT_PROVIDE_REQUIRED_INFO_ABOUT_HIMSELF
+    - WITHOUT_US_TAXPAYER_ATTRIBUTES
+    - US_TAXPAYER
+    - WITH_SIGNS_OF_US_TAXPAYER
+  fatcaEstablishingRelationsWithClient:
+    type: boolean
+    description: Возможность установления гражданско-правовых отношений с клиентом.
+  fatcaDecision:
+    type: boolean
+    description: Решение по результатам контроля ответственного по FATCA/CRS лица (FATCA-статус клиента).
+  crsNonReportablePerson:
+    type: boolean
+    description: Не является Подотчетным лицом.
+  crsClientStatus:
+    type: string
+    description: CRS-cтатус клиента.
+    enum:
+    - NOT_TAX_RESIDENT
+    - HAS_FOREIGN_TAX_RESIDENCY
+    - NOT_REPORTABLE_PERSON
+    - REFUSED_PROVIDE_INFO_ABOUT_HIMSELF
+    - HAS_SIGNS_OF_FOREIGN_TAX_RESIDENCY
+    - HAS_FOREIGN_RESIDENCY_INCLUDING_BY_INVESTMENT
+    - OBTAINED_FOREIGN_RESIDENCY_BY_INVESTMENT
+  taxResidencyCountries:
+    type: array
+    description: Страна/юрисдикция налогового резидентства.
+    items:
+      $ref: ./TaxResidencyCountryDto.yaml
+  crsEstablishingRelationsWithClient:
+    type: boolean
+    description: Возможность установления гражданско-правовых отношений с клиентом.
+  crsDecision:
+    type: boolean
+    description: Решение по результатам контроля ответственного по FATCA/CRS лица (CRS-статус клиента).
+description: FATCA+CRS для ИП.

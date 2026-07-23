@@ -1,0 +1,7 @@
+type: object
+properties:
+  documentCount:
+    type: integer
+    description: Количество документов
+    format: int64
+description: Количество документов для заданного фильтра

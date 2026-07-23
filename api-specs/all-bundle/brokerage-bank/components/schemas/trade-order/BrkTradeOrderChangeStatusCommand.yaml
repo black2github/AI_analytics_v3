@@ -1,0 +1,25 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Целевой статус перехода
+    enum:
+    - BANK_NEW
+    - BANK_SIGNED
+    - BANK_DELIVERED
+    - BANK_DETAILS_VALID
+    - BANK_SIGN_VALID
+    - BANK_RECEIVED
+    - BANK_WAIT_DETACH
+    - BANK_DETACH_EXECUTED
+    - BANK_DETACH_ERROR
+    - BANK_PROCESSED
+    - BANK_REJECTED
+    - BANK_DELETED
+    - BANK_PROCESSED
+    - BANK_REJECTED
+  commentForBank:
+    maxLength: 255
+    type: string
+    description: Комментарий для банка
+description: Данные

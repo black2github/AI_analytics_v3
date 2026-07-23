@@ -1,0 +1,12 @@
+required:
+- employeeInfo
+- version
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  employeeInfo:
+    $ref: ../common/WarrantyEmployeeInfoDto.yaml
+description: Данные для обновления заявки на вкладке "Доверенность"

@@ -1,0 +1,30 @@
+type: object
+properties:
+  sourceSystem:
+    type: string
+    description: Система создания документа
+    nullable: true
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  creationType:
+    $ref: ./DocumentCreationTypeDto.yaml
+  originDocumentId:
+    type: string
+    description: ID документа-основания
+    format: uuid
+    nullable: true
+description: Информация о создании документа (платежное требование исходящее данные для банка)
+nullable: true

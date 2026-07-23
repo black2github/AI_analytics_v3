@@ -1,0 +1,33 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - PROCESSING_ERROR
+    - COMPLETED
+  type:
+    $ref: ./LeasingTypeFilter.yaml
+  date:
+    $ref: ./FilterValueDtoInstant.yaml
+  id:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  firstName:
+    $ref: ./FilterValueDtoString.yaml
+  lastName:
+    $ref: ./FilterValueDtoString.yaml
+  middleName:
+    $ref: ./FilterValueDtoString.yaml
+  email:
+    $ref: ./FilterValueDtoString.yaml
+  phone:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientInn:
+    $ref: ./FilterValueDtoString.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml

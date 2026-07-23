@@ -1,0 +1,11 @@
+type: object
+description: Запрос на смену ответственного по заявкам
+properties:
+  ids:
+    type: array
+    description: Идентификаторы заявок в системе НСК
+    items:
+      type: string
+      format: uuid
+required:
+- ids

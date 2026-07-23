@@ -1,0 +1,29 @@
+put:
+  tags:
+  - lbp-response-configuration-controller
+  summary: Настройка ответа заглушки от АС ЛБП в случае отказа
+  operationId: setRejectionResponseUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: rejectionLbpDto
+    description: rejectionLbpDto
+    required: true
+    schema:
+      $ref: '#/definitions/RejectionLbpDtoReq'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/RejectionLbpDtoRes'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

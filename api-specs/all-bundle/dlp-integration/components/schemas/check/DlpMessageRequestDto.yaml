@@ -1,0 +1,20 @@
+type: object
+properties:
+  messageBody:
+    type: string
+  messageType:
+    type: string
+  serviceCode:
+    type: string
+    minLength: 1
+  fromUserId:
+    type: string
+  fromClientIp:
+    type: string
+  toUserId:
+    type: string
+    format: uuid
+required:
+- fromUserId
+- messageBody
+- serviceCode

@@ -1,0 +1,26 @@
+required:
+- firstName
+- id
+- lastName
+type: object
+properties:
+  id:
+    type: string
+    description: ID УЛ
+    format: uuid
+  lastName:
+    maxLength: 128
+    minLength: 0
+    type: string
+    description: Фамилия УЛ
+  firstName:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Имя УЛ
+  patronymic:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Отчество УЛ
+description: УЛ клиента. Банковская часть.

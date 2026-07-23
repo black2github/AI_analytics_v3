@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  keyId:
+    type: string
+    description: Идентификатор ключа УЦ.
+    format: uuid
+  changedAt:
+    type: string
+    description: Дата/время последней обработки/загрузки СОС
+    format: date-time
+  caName:
+    type: string
+    description: Наименование УЦ
+  orderNumber:
+    type: string
+    description: Порядковый номер СОС
+  deltaOrderNumber:
+    type: string
+    description: Порядковый номер СОС для дельты
+  thumbprint:
+    type: string
+    description: Отпечаток
+  validFrom:
+    type: string
+    description: Дата начала действия
+    format: date-time
+  nextUpdate:
+    type: string
+    description: Дата следующего обновления.
+    format: date-time
+  nextPublicationDate:
+    type: string
+    description: Дата следующей публикации СОС
+    format: date-time
+  certData:
+    type: string
+    description: Бинарный СОС
+description: СОС

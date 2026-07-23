@@ -1,0 +1,12 @@
+type: object
+properties:
+  label:
+    type: string
+    description: Отрисовываемый параметр
+  value:
+    type: string
+    description: Значение отрисовываемого элемента (ключ сущности)
+  refValue:
+    type: string
+    description: Передаваемое ссылочное значение на value другого справочника
+description: Расширенный ссылочный справочник

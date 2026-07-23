@@ -1,0 +1,21 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование клиента (организации)
+  inn:
+    type: string
+    description: ИНН/КИО
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  isResident:
+    type: boolean
+    description: Признак резидента
+  clientType:
+    type: string
+    description: Тип клиента
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+description: Информация по клиенту (для списка ролей на ЭФ редактирования пользователя)

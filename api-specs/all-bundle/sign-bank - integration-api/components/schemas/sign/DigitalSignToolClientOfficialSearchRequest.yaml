@@ -1,0 +1,14 @@
+required:
+- certId
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  certId:
+    type: string
+    description: ID сертификата
+    format: uuid
+description: Запрос поиска ID представителей клиентов по ID сертификата и ID пользователя

@@ -1,0 +1,33 @@
+required:
+- dn
+- keyAlgorithm
+- notAfter
+- notBefore
+- signAlgorithm
+type: object
+properties:
+  dn:
+    $ref: ../common/DnDto.yaml
+  notBefore:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  notAfter:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  keyAlgorithm:
+    type: string
+    description: Алгоритм ключа
+    enum:
+    - GOST_3410_12_512_PARAM_SET_A
+  signAlgorithm:
+    type: string
+    description: Алгоритм подписи
+    enum:
+    - GOST_3410_WITH_GOST_3411_2012_512
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+description: Запрос сертификата УЦ

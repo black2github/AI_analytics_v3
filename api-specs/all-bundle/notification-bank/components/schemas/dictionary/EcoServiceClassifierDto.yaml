@@ -1,0 +1,20 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код сервиса
+  isProductReady:
+    type: boolean
+    writeOnly: true
+  shortDescription:
+    type: string
+    description: Краткое наименование сервиса
+  fullDescription:
+    type: string
+    description: Полное наименование сервиса
+  microserviceCode:
+    type: string
+    description: Код микросервиса
+  productReady:
+    type: boolean
+description: Сервисы Экосистемы

@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Id сообщения
+    format: uuid
+  messageTopic:
+    type: string
+    description: Тема сообщения
+  messageText:
+    type: string
+    description: Текст сообщения
+  documentStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  skvoInfo:
+    $ref: ../common/SkvoClientInfoDto.yaml
+  organizationInfo:
+    $ref: ../common/OrganizationClientInfoDto.yaml
+  dioInfo:
+    $ref: ../common/LinkedDocClientInfoDto.yaml
+  documentSignature:
+    $ref: ./DocumentSignatureDto.yaml
+  attachmentsInfo:
+    type: array
+    description: Информация вложений
+    items:
+      $ref: ../common/AttachmentClientInfoDto.yaml
+  isFavorite:
+    type: boolean
+    description: Избранное
+description: DTO сообщения валютного контролера для просмотра карточки

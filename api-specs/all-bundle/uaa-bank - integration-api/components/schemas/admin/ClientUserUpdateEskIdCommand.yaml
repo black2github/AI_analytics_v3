@@ -1,0 +1,10 @@
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя в UAA
+    format: uuid
+  eskUserId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Команда обновления идентификатора физического лица в ЕСК

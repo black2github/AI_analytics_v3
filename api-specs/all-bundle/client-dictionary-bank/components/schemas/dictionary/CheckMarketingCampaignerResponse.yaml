@@ -1,0 +1,15 @@
+required:
+- checkResult
+type: object
+properties:
+  checkResult:
+    type: boolean
+    description: Принадлежность маркетинговой кампании
+  organizationId:
+    type: string
+    description: ID организации
+    format: uuid
+  inn:
+    type: string
+    description: ИНН организации
+description: Результат проверки на принадлежность справочнику организаций участников маркетинговых кампаний

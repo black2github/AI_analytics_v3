@@ -1,0 +1,9 @@
+required:
+- documentTypeId
+type: object
+properties:
+  documentTypeId:
+    type: string
+    description: Тип документа (Ссылка на справочник Тип документа)
+    format: uuid
+description: Информация о документе в заявке на выпуск карты для списочной формы

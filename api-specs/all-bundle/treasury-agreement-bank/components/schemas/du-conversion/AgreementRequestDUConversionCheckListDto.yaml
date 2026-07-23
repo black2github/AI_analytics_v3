@@ -1,0 +1,116 @@
+type: object
+properties:
+  validationResult:
+    type: string
+    description: Статус проверки чек-листа
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  isFilledUp:
+    type: boolean
+    description: Статус заполненности чек-листа
+  credentialsType:
+    type: string
+    description: Полномочия
+    enum:
+    - NONE
+    - EIO
+    - MEGA_LETTER_OF_ATTORNEY
+    - PRODUCT_LETTER_OF_ATTORNEY
+    - MEGA_OR_PRODUCT_LETTER_OF_ATTORNEY
+  credentialsTypeFillType:
+    type: string
+    description: Полномочия. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  credentialsConfirmed:
+    type: boolean
+    description: Полномочия подтверждены
+  credentialsConfirmedFillType:
+    type: string
+    description: Полномочия подтверждены. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  identityDocumentValid:
+    type: string
+    description: Валидность документа удостоверяющего личность (ДУЛ)
+    enum:
+    - VALID
+    - NOT_VALID
+  identityDocumentValidFillType:
+    type: string
+    description: Валидность документа удостоверяющего личность (ДУЛ). Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  patternOfRelationship:
+    type: string
+    description: Характер отношений.
+  patternOfRelationshipFillType:
+    type: string
+    description: Характер отношений. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  p499:
+    type: boolean
+    description: 499-П.
+  p499FillType:
+    type: string
+    description: 499-П. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  complianceCategory:
+    type: string
+    description: Комплаенс категория.
+    enum:
+    - CATEGORY_1
+    - CATEGORY_2
+    - CATEGORY_3
+  complianceCategoryFillType:
+    type: string
+    description: Комплаенс категория. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  notResident:
+    type: boolean
+    description: Нерезидент.
+  notResidentFillType:
+    type: string
+    description: Нерезидент. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  stopListOrganization:
+    type: boolean
+    description: Стоп-лист организация.
+  stopListOrganizationFillType:
+    type: string
+    description: Стоп-лист организация. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  stopListSigner:
+    type: boolean
+    description: Стоп-лист подписант.
+  stopListSignerFillType:
+    type: string
+    description: Стоп-лист подписант. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  stopListEIO:
+    type: boolean
+    description: Стоп-лист ЕИО.
+  stopListEIOFillType:
+    type: string
+    description: Стоп-лист ЕИО. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+description: Чек лист

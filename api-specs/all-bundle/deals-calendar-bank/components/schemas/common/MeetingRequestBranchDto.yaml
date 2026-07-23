@@ -1,0 +1,10 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  absCode:
+    type: string
+    description: Код подразделения в АБС
+description: Реквизиты подразделения по заявке на встречу

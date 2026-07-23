@@ -1,0 +1,20 @@
+required:
+- contact
+- contactType
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  contact:
+    type: string
+    description: Телефон/Email
+  contactType:
+    type: string
+    description: Тип контактных данных получателя событий СФЗУ
+    enum:
+    - SMS
+    - EMAIL
+description: Дополнительный контакт получателя событий СФЗУ

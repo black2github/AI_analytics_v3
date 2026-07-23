@@ -1,0 +1,27 @@
+required:
+- bankClientIds
+- otherUaaUserIds
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: UAA ID пользователя клиента для которого происходит синхронизация
+    format: uuid
+  otherUaaUserIds:
+    uniqueItems: true
+    type: array
+    description: Другие UAA ID пользователя клиента принадлежащие тому же физ. лицу
+    items:
+      type: string
+      description: Другие UAA ID пользователя клиента принадлежащие тому же физ. лицу
+      format: uuid
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Список ID клиентов по которым нужно синхронизировать СЭП представителей
+    items:
+      type: string
+      description: Список ID клиентов по которым нужно синхронизировать СЭП представителей
+      format: uuid
+description: Синхронизация СЭП представителей по всем клиентам физ. лица

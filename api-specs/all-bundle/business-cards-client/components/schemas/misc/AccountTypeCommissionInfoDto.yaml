@@ -1,0 +1,15 @@
+type: object
+properties:
+  accountTypeCode:
+    type: string
+    description: Код типа счета
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+    - CARD_ACCOUNT
+  commissionAccountRequired:
+    type: boolean
+    description: Необходимо указание счета списания комиссии
+description: Блок с информацией о необходимости списания комиссии для одного типа счета

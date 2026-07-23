@@ -1,0 +1,16 @@
+required:
+- clientEcoId
+type: object
+properties:
+  clientEcoId:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+  f1AccountIds:
+    type: array
+    description: Список идентификаторов счетой клиента в РКО Ф1
+    items:
+      type: integer
+      description: Список идентификаторов счетой клиента в РКО Ф1
+      format: int64
+description: Запрос балансов счетов.

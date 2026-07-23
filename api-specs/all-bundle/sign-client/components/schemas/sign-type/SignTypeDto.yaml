@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор.
+    format: uuid
+  code:
+    type: string
+    description: Код типа ЭП.
+  shortName:
+    type: string
+    description: Краткое наименование.
+  fullName:
+    type: string
+    description: Полное наименование.
+  signKind:
+    type: string
+    description: Вид ЭП
+    enum:
+    - UNKNOWN
+    - LOCAL
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+description: Тип электронной подписи

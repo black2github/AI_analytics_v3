@@ -1,0 +1,19 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  filter:
+    $ref: ./TurnoverFilter.yaml
+  format:
+    type: string
+    enum:
+    - PDF
+    - EXCEL
+  ids:
+    type: array
+    items:
+      $ref: ./TurnoverId.yaml

@@ -1,0 +1,12 @@
+required:
+- accountNumber
+- department
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+  department:
+    type: string
+    description: Код подразделения в Ф1
+description: Сведения о счете по которому запрашивается справка

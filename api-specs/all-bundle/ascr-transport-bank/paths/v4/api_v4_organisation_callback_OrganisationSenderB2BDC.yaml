@@ -1,0 +1,60 @@
+post:
+  tags:
+  - API обратных вызовов операций по регистрации организации
+  summary: Обратный вызов при исходящем переводе B2B
+  operationId: organisationSenderB2BDCCallback
+  parameters:
+  - name: referenceId
+    in: header
+    required: false
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v4/CbdcMessageCallbackDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/v4/GenericResponseSimpleErrorDataVoid.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml

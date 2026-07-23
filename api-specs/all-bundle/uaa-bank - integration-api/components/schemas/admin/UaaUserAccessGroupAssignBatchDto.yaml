@@ -1,0 +1,12 @@
+type: object
+properties:
+  uaaUserIds:
+    type: array
+    description: Список идентификаторов пользователей
+    items:
+      type: string
+      description: Список идентификаторов пользователей
+      format: uuid
+  assign:
+    $ref: ./UaaUserAccessGroupAssignIntegrationDto.yaml
+description: ДТО назначения группы доступа нескольким пользователям

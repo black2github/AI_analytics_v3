@@ -1,0 +1,10 @@
+type: object
+properties:
+  userF1Id:
+    type: string
+    description: Идентификатор ФЛ в РКО Ф1
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+description: Запрос поиска уровней подписи подписанта по счетам организации

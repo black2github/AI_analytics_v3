@@ -1,0 +1,17 @@
+type: object
+description: DTO состояния, которым обмениваются клиент и сервер во время выгрузки списка получателей массовой рассылки. Нужен для того, чтобы продолжать выгрузку
+properties:
+  attachmentIds:
+    type: array
+    description: Идентификаторы уже сформированных файлов
+    items:
+      type: string
+      format: uuid
+    uniqueItems: true
+  lastReceiverId:
+    type: string
+    format: uuid
+    description: Идентификатор последнего выгруженного получателя
+required:
+- attachmentIds
+- lastReceiverId

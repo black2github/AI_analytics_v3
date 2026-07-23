@@ -1,0 +1,11 @@
+type: object
+properties:
+  code:
+    type: string
+  message:
+    type: string
+  data:
+    type: array
+    items:
+      $ref: ../common/SimpleErrorData.yaml
+description: Ошибка

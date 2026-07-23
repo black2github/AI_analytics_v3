@@ -1,0 +1,9 @@
+required:
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID файла импорта
+    format: uuid
+description: '[Импорт ПЭД] Система: Система: Функция создания документов в документарном сервисе (метод). Входящие параметры'

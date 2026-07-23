@@ -1,0 +1,27 @@
+required:
+- bankClientId
+- customerId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  customerId:
+    type: string
+    description: Идентификатор клиента в сервисе DirectBank
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  documentKindCodes:
+    type: array
+    description: Коды видов электронных документов, которыми возможен обмен с банком
+    items:
+      type: string
+      description: Коды видов электронных документов, которыми возможен обмен с банком
+  blocked:
+    type: boolean
+    description: Признак блокировки
+description: Данные

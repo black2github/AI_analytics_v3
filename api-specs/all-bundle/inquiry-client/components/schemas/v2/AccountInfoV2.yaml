@@ -1,0 +1,42 @@
+type: object
+properties:
+  branchAbsCode:
+    type: string
+    description: Код подразделения в АБС
+    example: null
+  filialAbsNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+    example: null
+  accountNumber:
+    type: string
+    description: Номер счета
+    example: null
+  name:
+    type: string
+    description: Наименование счета
+    example: null
+  currencyIsoCode:
+    type: string
+    description: 'Валюта счета. Строковый ISO код валюты. Например: RUR'
+    example: null
+  status:
+    $ref: ./F1AccountStatusDto.yaml
+  closeDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+    example: null
+  rkoNumber:
+    type: string
+    description: Номер договора РКО для счета
+    example: null
+  officeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+    example: null
+  id:
+    type: string
+    example: null
+description: Блок информации о счете клиента
+example: null

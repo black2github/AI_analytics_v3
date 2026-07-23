@@ -1,0 +1,41 @@
+type: object
+description: Данные из ЭС cbdc.777.001.04.B2CRefundAuthBusinessNotification_2026.01 "Извещение Клиента-ЮЛ об исполнении возврата ЦР (B2C с согласием)"
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма операции
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции
+  customerPam:
+    type: string
+    description: PAM-фраза получателя возврата B2C
+  businessWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента-ЮЛ отправителя на ПлЦР
+  businessBalanceInfo:
+    $ref: ./BalanceInfo.yaml
+    description: Текущий баланс СЦР на ПлЦР
+  purpose:
+    type: string
+    description: Назначение платежа
+  settlementDateTime:
+    type: string
+    description: Дата и время исполнения распоряжения
+  authorizationId:
+    type: string
+    description: Идентификатор согласия
+  referenceType:
+    type: string
+    description: Тип референса
+  reference:
+    type: string
+    description: Идентификатор платежа в системе Клиента-ЮЛ
+required:
+- authorizationId
+- businessBalanceInfo
+- businessWalletId
+- customerPam
+- settlementDateTime
+- totalAmount
+- totalAmountCcy

@@ -1,0 +1,16 @@
+type: object
+required:
+- code
+- message
+description: Ответ на запрос изображения QR кода
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  data:
+    $ref: ./QrcImageResultDataDto.yaml
+    type: object
+    description: Изображение QR кода

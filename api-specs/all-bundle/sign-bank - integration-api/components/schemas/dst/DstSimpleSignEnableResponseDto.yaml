@@ -1,0 +1,7 @@
+type: object
+properties:
+  dstId:
+    type: string
+    description: Идентификатор СЭП
+    format: uuid
+description: Ответ на запрос включения СЭП ПЭП

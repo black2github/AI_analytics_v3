@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+  code:
+    type: string
+  isValid:
+    type: boolean
+  name:
+    type: string
+  conditions:
+    type: array
+    items:
+      $ref: ./CheckResult.yaml
+  controls:
+    type: array
+    items:
+      $ref: ./ControlResult.yaml

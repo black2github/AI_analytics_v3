@@ -1,0 +1,32 @@
+required:
+- accountId
+- authorityStatus
+- signLevel1Required
+- signLevel2Required
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета клиента
+    format: uuid
+  authorityStatus:
+    type: string
+    description: Статус полномочия
+    enum:
+    - ACTIVE
+    - INACTIVE
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  signLevelNumber:
+    type: integer
+    description: Номер уровня подписи
+    format: int32
+  signLevel1Required:
+    type: boolean
+    description: Номер уровня подписи
+  signLevel2Required:
+    type: boolean
+    description: Номер уровня подписи
+description: Данные о полномочиях подписанта

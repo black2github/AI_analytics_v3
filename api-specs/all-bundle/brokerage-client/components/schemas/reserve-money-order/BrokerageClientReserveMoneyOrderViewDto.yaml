@@ -1,0 +1,108 @@
+required:
+- amount
+- clientId
+- clientName
+- contractClientName
+- contractId
+- contractNumber
+- createdAt
+- creditCurrency
+- creditTradingFloor
+- debitCurrency
+- debitTradingFloor
+- docDate
+- docNumber
+- id
+- orderType
+- status
+- transferRate
+- updatedAt
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  docDate:
+    type: string
+    description: Дата заявки (поручения)
+    format: date
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  orderType:
+    type: string
+    description: Тип поручения
+  cancelDescription:
+    type: string
+    description: Причина отмены поручения
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  contractClientName:
+    type: string
+    description: Наименование клиента по договору
+  creditTradingFloor:
+    type: string
+    description: Торговая площадка списания
+  creditCurrency:
+    type: string
+    description: Код валюты списания
+  amount:
+    type: string
+    description: Сумма резервирования
+  debitTradingFloor:
+    type: string
+    description: Торговая площадка зачисления
+  debitCurrency:
+    type: string
+    description: Код валюты зачисления
+  transferRate:
+    type: string
+    description: Курс перевода
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки.
+    items:
+      $ref: ../common/BrokerageNonTradeOrderSignatureDto.yaml
+  linkedOrders:
+    type: array
+    description: Связанные поручения
+    items:
+      $ref: ../common/BrokerageClientNonTradeOrderItemDto.yaml
+description: Транспортная сущность для просмотра неторгового поручения на резервирование денежных средств

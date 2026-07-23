@@ -1,0 +1,13 @@
+required:
+- attachmentId
+- token
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: ID файла в ФС
+    format: uuid
+  token:
+    type: string
+    description: Токен доступа к файлу
+description: Идентификатор файла в ФС и токен доступа к нему.

@@ -1,0 +1,8 @@
+required:
+- uploadToEsk
+type: object
+properties:
+  uploadToEsk:
+    type: boolean
+    description: Выгружать заявку в ЕСК
+description: Дополнительные реквизиты заявки

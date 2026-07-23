@@ -1,0 +1,23 @@
+required:
+- data
+- userFio
+type: object
+properties:
+  userFio:
+    minLength: 1
+    type: string
+    description: ФИО пользователя сформировавшего протокол
+  language:
+    type: string
+    description: Локаль в которой требуется сгенерировать отчет проверки ЭП
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  data:
+    minItems: 1
+    type: array
+    description: Набор подписанных данных
+    items:
+      $ref: ./SignedDataSetDto.yaml
+description: Входящие параметры функции формирования протокола проверки ЭП

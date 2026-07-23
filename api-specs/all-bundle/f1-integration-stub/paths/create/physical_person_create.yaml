@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи о связи физического лица
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CL_PRIV_ESK_ECO (Данные о связи АБС ИД и ЕСК ИД физ.лица)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/PhysicalPersonEskLinkDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/PhysicalPersonEskLinkDto.yaml
+    '400':
+      description: Bad Request

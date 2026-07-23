@@ -1,0 +1,21 @@
+type: object
+properties:
+  amountByCredit:
+    type: number
+  amountByDebit:
+    type: number
+  outgoingCount:
+    type: integer
+    format: int32
+  incomingCount:
+    type: integer
+    format: int32
+  currency:
+    $ref: ../common/CurrencyCard.yaml
+  accounts:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ../common/AccountCard.yaml
+  balance:
+    $ref: ../common/BalanceCard.yaml

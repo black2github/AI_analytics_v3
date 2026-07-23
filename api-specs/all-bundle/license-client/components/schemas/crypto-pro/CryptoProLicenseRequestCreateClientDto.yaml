@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+    example: 625b8d61-e34f-46d1-a15d-fab0a6f4e038
+  requestType:
+    type: string
+    enum:
+    - RESERVATION
+    - VIEW
+description: ДТО создания запроса лицензии КриптоПро пользователем Клиента

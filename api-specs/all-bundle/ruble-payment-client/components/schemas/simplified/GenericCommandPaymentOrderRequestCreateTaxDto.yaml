@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./PaymentOrderRequestCreateTaxDto.yaml
+description: Запрос

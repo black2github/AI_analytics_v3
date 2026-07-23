@@ -1,0 +1,32 @@
+type: object
+description: Реквизиты клиента по заявке
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  f1Rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  externalClientGuid:
+    type: string
+    format: uuid
+    description: Уникальный GUID клиента во внешней системе (Поле clientGUID в ответе F1)
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП
+  address:
+    type: string
+    description: 'Юридический адрес '

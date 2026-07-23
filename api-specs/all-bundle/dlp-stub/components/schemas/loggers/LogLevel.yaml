@@ -1,0 +1,8 @@
+type: object
+properties:
+  effectiveLevel:
+    type: string
+  configuredLevel:
+    type:
+    - string
+    - 'null'

@@ -1,0 +1,48 @@
+type: object
+properties:
+  all:
+    type: array
+    description: Все статусы
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  created:
+    type: array
+    description: Статусы только что созданных ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  awaited:
+    type: array
+    description: Статусы ожидающих ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  sent:
+    type: array
+    description: Статусы отправленных ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  processing:
+    type: array
+    description: Статусы обрабатываемых ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  queued:
+    type: array
+    description: Статусы помещенных в очередь ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  rejected:
+    type: array
+    description: Статусы отклоненных ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  completed:
+    type: array
+    description: Статусы исполненных ордеров
+    items:
+      $ref: ../common/DictionaryDto.yaml
+  statusCategoryCount:
+    type: array
+    description: Счётчик заявок по категориям статусов
+    items:
+      $ref: ../common/DictionaryDto.yaml
+description: Агрегатор всех статусов существования ордера на выдачу или внесение наличных

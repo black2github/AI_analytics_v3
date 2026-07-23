@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице brk_crm_response_stub
+  tags:
+  - Обновление заглушек brk_crm_response_stub
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/crm/UUID.yaml
+  responses:
+    '204':
+      description: No Content

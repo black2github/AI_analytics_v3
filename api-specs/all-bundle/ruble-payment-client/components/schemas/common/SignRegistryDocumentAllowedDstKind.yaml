@@ -1,0 +1,7 @@
+type: string
+description: Виды СЭП, которыми можно подписывать документы реестра
+enum:
+- CLOUD_SIGN
+- NOT_QUALIFIED_SIGN
+- QUALIFIED_SIGN
+- SIMPLE_SIGN

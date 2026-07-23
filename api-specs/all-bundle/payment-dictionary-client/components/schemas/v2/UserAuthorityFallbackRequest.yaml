@@ -1,0 +1,18 @@
+type: object
+properties:
+  sessionId:
+    type: string
+    description: ID сессии
+    format: uuid
+  clientId:
+    type: string
+    description: ID OAuth2 клиента
+    format: uuid
+  scopeNames:
+    uniqueItems: true
+    type: array
+    description: Наименования scope
+    items:
+      type: string
+      description: Наименования scope
+description: Запрос привилегий пользователя с последующей выгрузкой в кэш

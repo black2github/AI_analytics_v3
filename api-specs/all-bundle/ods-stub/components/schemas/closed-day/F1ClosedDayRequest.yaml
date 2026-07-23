@@ -1,0 +1,8 @@
+type: object
+properties:
+  branchCode:
+    type: string
+  closedDate:
+    $ref: ../common/LocalDate.yaml
+  phase:
+    type: string

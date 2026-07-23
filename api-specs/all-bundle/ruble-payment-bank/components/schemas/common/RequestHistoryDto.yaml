@@ -1,0 +1,23 @@
+type: object
+properties:
+  docId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  bankClientName:
+    type: string
+    description: Краткое или полное наименование клиента Банка
+  historyEntries:
+    type: array
+    description: Записи историй изменений документа.
+    items:
+      $ref: ./RequestHistoryEntryDto.yaml
+description: История изменений документа

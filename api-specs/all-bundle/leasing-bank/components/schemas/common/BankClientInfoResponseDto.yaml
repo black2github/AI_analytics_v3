@@ -1,0 +1,6 @@
+type: object
+properties:
+  shortName:
+    type: string
+  inn:
+    type: string

@@ -1,0 +1,321 @@
+openapi: 3.0.1
+info:
+  title: Сервис общей информации. Клиентская часть.
+  version: 1.68.1
+servers:
+- url: /treasury-common-client
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /work-calendar/days:
+    $ref: ./paths/days/work_calendar_days.yaml
+  /parts-gsno-report/create:
+    $ref: ./paths/create/parts_gsno_report_create.yaml
+  /parts-gsno-report/create-list:
+    $ref: ./paths/create-list/parts_gsno_report_create_list.yaml
+  /i18n/by-services:
+    $ref: ./paths/by-services/i18n_by_services.yaml
+  /deposit-statement/create:
+    $ref: ./paths/create/deposit_statement_create.yaml
+  /deposit-statement/create-list:
+    $ref: ./paths/create-list/deposit_statement_create_list.yaml
+  /dashboard/violated-or-denied-events:
+    $ref: ./paths/violated-or-denied-events/dashboard_violated_or_denied_events.yaml
+  /dashboard/request/get-page:
+    $ref: ./paths/request/dashboard_request_get_page.yaml
+  /dashboard/request/create:
+    $ref: ./paths/request/dashboard_request_create.yaml
+  /dashboard/request/create-instant:
+    $ref: ./paths/request/dashboard_request_create_instant.yaml
+  /dashboard/get-printed-reports:
+    $ref: ./paths/get-printed-reports/dashboard_get_printed_reports.yaml
+  /dashboard/get-page:
+    $ref: ./paths/get-page/dashboard_get_page.yaml
+  /dashboard/get-deposit-accounts:
+    $ref: ./paths/get-deposit-accounts/dashboard_get_deposit_accounts.yaml
+  /dashboard/events:
+    $ref: ./paths/events/dashboard_events.yaml
+  /dashboard/events/report/send:
+    $ref: ./paths/events/dashboard_events_report_send.yaml
+  /dashboard/events/report/print:
+    $ref: ./paths/events/dashboard_events_report_print.yaml
+  /dashboard/events/report/export:
+    $ref: ./paths/events/dashboard_events_report_export.yaml
+  /dashboard/calendar-deal-markers:
+    $ref: ./paths/calendar-deal-markers/dashboard_calendar_deal_markers.yaml
+  /dashboard/calendar-deal-events:
+    $ref: ./paths/calendar-deal-events/dashboard_calendar_deal_events.yaml
+  /callback-request/create:
+    $ref: ./paths/create/callback_request_create.yaml
+  /user-info/union:
+    $ref: ./paths/union/user_info_union.yaml
+  /parts-gsno-report/{id}:
+    $ref: ./paths/{id}/parts_gsno_report_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /deposit-statement/{id}:
+    $ref: ./paths/{id}/deposit_statement_id.yaml
+  /dashboard/request/{id}:
+    $ref: ./paths/request/dashboard_request_id.yaml
+  /dashboard/request/disable/{requestId}:
+    $ref: ./paths/request/dashboard_request_disable_requestId.yaml
+  /dashboard/get-printed-parts-gsno-report/{id}:
+    $ref: ./paths/get-printed-parts-gsno-report/dashboard_get_printed_parts_gsno_report_id.yaml
+  /dashboard/get-printed-deposit-statement/{id}:
+    $ref: ./paths/get-printed-deposit-statement/dashboard_get_printed_deposit_statement_id.yaml
+  /dashboard/get-printed-deal-status-report/{id}:
+    $ref: ./paths/get-printed-deal-status-report/dashboard_get_printed_deal_status_report_id.yaml
+  /dashboard/get-pool-members/{gsnoParentAgreementId}:
+    $ref: ./paths/get-pool-members/dashboard_get_pool_members_gsnoParentAgreementId.yaml
+  /dashboard/get-migration-deposit-accounts-dialog-enabled:
+    $ref: ./paths/get-migration-deposit-accounts-dialog-enabled/dashboard_get_migration_deposit_accounts_dialog_enabled.yaml
+  /dashboard/get-gsno-agreement-list-for-nh132/{ecoClientId}:
+    $ref: ./paths/get-gsno-agreement-list-for-nh132/dashboard_get_gsno_agreement_list_for_nh132_ecoClientId.yaml
+  /dashboard/get-gsno-agreement-list-for-nh131/{ecoClientId}:
+    $ref: ./paths/get-gsno-agreement-list-for-nh131/dashboard_get_gsno_agreement_list_for_nh131_ecoClientId.yaml
+  /dashboard/get-client-list-for-nh132:
+    $ref: ./paths/get-client-list-for-nh132/dashboard_get_client_list_for_nh132.yaml
+  /dashboard/get-client-list-for-nh131:
+    $ref: ./paths/get-client-list-for-nh131/dashboard_get_client_list_for_nh131.yaml
+  /dashboard/get-available-report-types:
+    $ref: ./paths/get-available-report-types/dashboard_get_available_report_types.yaml
+  /dashboard/get-1c-txt-deposit-statement/{id}:
+    $ref: ./paths/get-1c-txt-deposit-statement/dashboard_get_1c_txt_deposit_statement_id.yaml
+  /callback-request/get-last:
+    $ref: ./paths/get-last/callback_request_get_last.yaml
+  /callback-request/get-default-branch/{clientId}:
+    $ref: ./paths/get-default-branch/callback_request_get_default_branch_clientId.yaml
+  /callback-request/get-all-clients:
+    $ref: ./paths/get-all-clients/callback_request_get_all_clients.yaml
+  /callback-request/get-all-branches:
+    $ref: ./paths/get-all-branches/callback_request_get_all_branches.yaml
+  /caches/clear:
+    $ref: ./paths/clear/caches_clear.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/create/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/create/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/create/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/create/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/create/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericCommandWorkCalendarRangeDto:
+      $ref: ./components/schemas/days/GenericCommandWorkCalendarRangeDto.yaml
+    WorkCalendarRangeDto:
+      $ref: ./components/schemas/days/WorkCalendarRangeDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataWorkCalendarPeriodDto:
+      $ref: ./components/schemas/days/GenericResponseErrorDataWorkCalendarPeriodDto.yaml
+    WorkCalendarDayDto:
+      $ref: ./components/schemas/days/WorkCalendarDayDto.yaml
+    WorkCalendarPeriodDto:
+      $ref: ./components/schemas/days/WorkCalendarPeriodDto.yaml
+    ClientWebDealingDto:
+      $ref: ./components/schemas/common/ClientWebDealingDto.yaml
+    GeneralAgreementInfoDto:
+      $ref: ./components/schemas/common/GeneralAgreementInfoDto.yaml
+    GenericCommandPartsGsnoReportDto:
+      $ref: ./components/schemas/create/GenericCommandPartsGsnoReportDto.yaml
+    PartsGsnoReportDto:
+      $ref: ./components/schemas/common/PartsGsnoReportDto.yaml
+    PoolMemberDto:
+      $ref: ./components/schemas/common/PoolMemberDto.yaml
+    GenericResponseErrorDataPartsGsnoReportDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataPartsGsnoReportDto.yaml
+    GenericCommandListPartsGsnoReportDto:
+      $ref: ./components/schemas/create-list/GenericCommandListPartsGsnoReportDto.yaml
+    GenericResponseErrorDataListPartsGsnoReportDto:
+      $ref: ./components/schemas/create-list/GenericResponseErrorDataListPartsGsnoReportDto.yaml
+    I18nRequestDto:
+      $ref: ./components/schemas/by-services/I18nRequestDto.yaml
+    GenericResponseErrorDataMapStringMapStringString:
+      $ref: ./components/schemas/by-services/GenericResponseErrorDataMapStringMapStringString.yaml
+    DepositAccountInfoDto:
+      $ref: ./components/schemas/common/DepositAccountInfoDto.yaml
+    DepositStatementDto:
+      $ref: ./components/schemas/common/DepositStatementDto.yaml
+    GenericCommandDepositStatementDto:
+      $ref: ./components/schemas/create/GenericCommandDepositStatementDto.yaml
+    GenericResponseErrorDataDepositStatementDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataDepositStatementDto.yaml
+    GenericCommandListDepositStatementDto:
+      $ref: ./components/schemas/create-list/GenericCommandListDepositStatementDto.yaml
+    GenericResponseErrorDataListDepositStatementDto:
+      $ref: ./components/schemas/create-list/GenericResponseErrorDataListDepositStatementDto.yaml
+    DashboardViolatedOrDeniedEventsFilter:
+      $ref: ./components/schemas/violated-or-denied-events/DashboardViolatedOrDeniedEventsFilter.yaml
+    DashboardViolatedOrDeniedEventDto:
+      $ref: ./components/schemas/violated-or-denied-events/DashboardViolatedOrDeniedEventDto.yaml
+    GenericResponseErrorDataListDashboardViolatedOrDeniedEventDto:
+      $ref: ./components/schemas/violated-or-denied-events/GenericResponseErrorDataListDashboardViolatedOrDeniedEventDto.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/request/FilterValueDtoInteger.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandReportRequestFilter:
+      $ref: ./components/schemas/request/GetPageCommandReportRequestFilter.yaml
+    PageParamsReportRequestFilter:
+      $ref: ./components/schemas/request/PageParamsReportRequestFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    ReportRequestFilter:
+      $ref: ./components/schemas/request/ReportRequestFilter.yaml
+    ReportRequestStatusFilter:
+      $ref: ./components/schemas/request/ReportRequestStatusFilter.yaml
+    ReportRequestTypeFilter:
+      $ref: ./components/schemas/request/ReportRequestTypeFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponseErrorDataPageDataReportRequestDto:
+      $ref: ./components/schemas/request/GenericResponseErrorDataPageDataReportRequestDto.yaml
+    PageDataReportRequestDto:
+      $ref: ./components/schemas/request/PageDataReportRequestDto.yaml
+    ReportRequestDto:
+      $ref: ./components/schemas/request/ReportRequestDto.yaml
+    GenericCommandReportRequestDto:
+      $ref: ./components/schemas/request/GenericCommandReportRequestDto.yaml
+    GenericResponseErrorDataReportRequestDto:
+      $ref: ./components/schemas/request/GenericResponseErrorDataReportRequestDto.yaml
+    GenericCommandReportRequestInstantDto:
+      $ref: ./components/schemas/request/GenericCommandReportRequestInstantDto.yaml
+    ReportRequestInstantDto:
+      $ref: ./components/schemas/request/ReportRequestInstantDto.yaml
+    GenericResponseErrorDataReportRequestInstantDto:
+      $ref: ./components/schemas/request/GenericResponseErrorDataReportRequestInstantDto.yaml
+    DashboardReportFilter:
+      $ref: ./components/schemas/common/DashboardReportFilter.yaml
+    DashboardReportStatusFilter:
+      $ref: ./components/schemas/common/DashboardReportStatusFilter.yaml
+    DashboardReportTypeFilter:
+      $ref: ./components/schemas/common/DashboardReportTypeFilter.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    GenericCommandDashboardReportFilter:
+      $ref: ./components/schemas/get-printed-reports/GenericCommandDashboardReportFilter.yaml
+    DownloadCommand:
+      $ref: ./components/schemas/common/DownloadCommand.yaml
+    GenericResponseErrorDataDownloadCommand:
+      $ref: ./components/schemas/common/GenericResponseErrorDataDownloadCommand.yaml
+    GetPageCommandDashboardReportFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandDashboardReportFilter.yaml
+    PageParamsDashboardReportFilter:
+      $ref: ./components/schemas/get-page/PageParamsDashboardReportFilter.yaml
+    DashboardReportDto:
+      $ref: ./components/schemas/get-page/DashboardReportDto.yaml
+    GenericResponseErrorDataPageDataDashboardReportDto:
+      $ref: ./components/schemas/get-page/GenericResponseErrorDataPageDataDashboardReportDto.yaml
+    PageDataDashboardReportDto:
+      $ref: ./components/schemas/get-page/PageDataDashboardReportDto.yaml
+    GetDepositAccountsCommand:
+      $ref: ./components/schemas/get-deposit-accounts/GetDepositAccountsCommand.yaml
+    GenericResponseErrorDataListDepositAccountInfoDto:
+      $ref: ./components/schemas/get-deposit-accounts/GenericResponseErrorDataListDepositAccountInfoDto.yaml
+    GetPageCommandObject:
+      $ref: ./components/schemas/events/GetPageCommandObject.yaml
+    PageParamsObject:
+      $ref: ./components/schemas/events/PageParamsObject.yaml
+    DashboardEventDto:
+      $ref: ./components/schemas/events/DashboardEventDto.yaml
+    GenericResponseErrorDataPageDataDashboardEventDto:
+      $ref: ./components/schemas/events/GenericResponseErrorDataPageDataDashboardEventDto.yaml
+    PageDataDashboardEventDto:
+      $ref: ./components/schemas/events/PageDataDashboardEventDto.yaml
+    DashboardEventsReportSendCommand:
+      $ref: ./components/schemas/events/DashboardEventsReportSendCommand.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    DashboardEventsReportCommand:
+      $ref: ./components/schemas/events/DashboardEventsReportCommand.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/events/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/events/PrintResponseTreasury.yaml
+    GenericResponseErrorDataPrintResponseTreasury:
+      $ref: ./components/schemas/events/GenericResponseErrorDataPrintResponseTreasury.yaml
+    DashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/common/DashboardCalendarDealEventsFilter.yaml
+    DealEventDealTypeFilter:
+      $ref: ./components/schemas/common/DealEventDealTypeFilter.yaml
+    DealEventTypeFilter:
+      $ref: ./components/schemas/common/DealEventTypeFilter.yaml
+    GetPageCommandDashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/common/GetPageCommandDashboardCalendarDealEventsFilter.yaml
+    PageParamsDashboardCalendarDealEventsFilter:
+      $ref: ./components/schemas/common/PageParamsDashboardCalendarDealEventsFilter.yaml
+    DashboardDealMarkerPeriodDto:
+      $ref: ./components/schemas/calendar-deal-markers/DashboardDealMarkerPeriodDto.yaml
+    DealEventMarkerDto:
+      $ref: ./components/schemas/common/DealEventMarkerDto.yaml
+    GenericResponseErrorDataListDashboardDealMarkerPeriodDto:
+      $ref: ./components/schemas/calendar-deal-markers/GenericResponseErrorDataListDashboardDealMarkerPeriodDto.yaml
+    DashboardDealEventDto:
+      $ref: ./components/schemas/calendar-deal-events/DashboardDealEventDto.yaml
+    PageDataDashboardDealEventDto:
+      $ref: ./components/schemas/calendar-deal-events/PageDataDashboardDealEventDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    CallbackRequestDto:
+      $ref: ./components/schemas/common/CallbackRequestDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/common/ClientInfoDto.yaml
+    GenericCommandCallbackRequestDto:
+      $ref: ./components/schemas/create/GenericCommandCallbackRequestDto.yaml
+    CreateResponseCallbackRequestDto:
+      $ref: ./components/schemas/create/CreateResponseCallbackRequestDto.yaml
+    DealBaseRateVariantsDto:
+      $ref: ./components/schemas/union/DealBaseRateVariantsDto.yaml
+    DealRateTypeDto:
+      $ref: ./components/schemas/union/DealRateTypeDto.yaml
+    GenericResponseErrorDataUserInformationV2SortedDto:
+      $ref: ./components/schemas/union/GenericResponseErrorDataUserInformationV2SortedDto.yaml
+    UserInfoSummaryDto:
+      $ref: ./components/schemas/union/UserInfoSummaryDto.yaml
+    UserInformationByClientDto:
+      $ref: ./components/schemas/union/UserInformationByClientDto.yaml
+    UserInformationByDealTypeDto:
+      $ref: ./components/schemas/union/UserInformationByDealTypeDto.yaml
+    UserInformationV2SortedDto:
+      $ref: ./components/schemas/union/UserInformationV2SortedDto.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/{locale}/GenericResponseErrorDataMapStringString.yaml
+    ClientVisaInfoDto:
+      $ref: ./components/schemas/common/ClientVisaInfoDto.yaml
+    GeneralAgreementDto:
+      $ref: ./components/schemas/common/GeneralAgreementDto.yaml
+    GeneralAgreementUserActionInfoDto:
+      $ref: ./components/schemas/common/GeneralAgreementUserActionInfoDto.yaml
+    GenericResponseErrorDataListGeneralAgreementDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListGeneralAgreementDto.yaml
+    GenericResponseErrorDataBoolean:
+      $ref: ./components/schemas/get-migration-deposit-accounts-dialog-enabled/GenericResponseErrorDataBoolean.yaml
+    GenericResponseErrorDataListClientWebDealingDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListClientWebDealingDto.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/get-available-report-types/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/get-available-report-types/GenericResponseErrorDataListEnumObjectDto.yaml
+    GenericResponseErrorDataCallbackRequestDto:
+      $ref: ./components/schemas/get-last/GenericResponseErrorDataCallbackRequestDto.yaml
+    GenericResponseErrorDataBranchInfoDto:
+      $ref: ./components/schemas/get-default-branch/GenericResponseErrorDataBranchInfoDto.yaml
+    GenericResponseErrorDataListClientInfoDto:
+      $ref: ./components/schemas/get-all-clients/GenericResponseErrorDataListClientInfoDto.yaml
+    GenericResponseErrorDataListBranchInfoDto:
+      $ref: ./components/schemas/get-all-branches/GenericResponseErrorDataListBranchInfoDto.yaml

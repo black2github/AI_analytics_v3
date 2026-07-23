@@ -1,0 +1,66 @@
+required:
+- expiredAt
+- fullUrl
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ссылки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата/время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата/время изменения
+    format: date-time
+  shortUrlCode:
+    type: string
+    description: Уникальный код
+  fullUrl:
+    type: string
+    description: Полная ссылка
+  expiredAt:
+    type: string
+    description: Дата/время истечения ссылки
+    format: date-time
+  shortUrlParams:
+    type: string
+    description: Передаваемые параметры
+  service:
+    type: string
+    description: Сервис, инициировавший запрос
+  comment:
+    type: string
+    description: Комментарий
+  status:
+    type: string
+    description: Статус инвайта
+    enum:
+    - ACTIVE
+    - USED
+    - CANCELED
+  usageStatus:
+    type: string
+    description: Статус использования ссылки
+    enum:
+    - UNKNOWN
+    - USED
+    - NOT_USED
+  name:
+    type: string
+    description: Имя представителя
+  surname:
+    type: string
+    description: Фамилия представителя
+  patronymic:
+    type: string
+    description: Отчество представителя
+  phone:
+    type: string
+    description: Номер телефона представителя
+  email:
+    type: string
+    description: Адрес электронной почты представителя
+description: Инвайт

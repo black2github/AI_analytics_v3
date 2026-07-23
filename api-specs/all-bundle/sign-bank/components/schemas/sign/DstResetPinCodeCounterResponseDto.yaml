@@ -1,0 +1,8 @@
+required:
+- resultCode
+type: object
+properties:
+  resultCode:
+    type: string
+    description: Код результата
+description: Ответ на сброс счетчика неуспешных попыток ввода пин-кода

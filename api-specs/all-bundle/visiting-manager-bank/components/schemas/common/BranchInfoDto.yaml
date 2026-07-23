@@ -1,0 +1,13 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на Подразделение, в который подается пакет документов
+    format: uuid
+  name:
+    type: string
+    description: Наименование Подразделения банка, в котором открываются счета.
+  absCode:
+    type: string
+    description: АБС Код подразделения.
+description: Информация о подразделении.

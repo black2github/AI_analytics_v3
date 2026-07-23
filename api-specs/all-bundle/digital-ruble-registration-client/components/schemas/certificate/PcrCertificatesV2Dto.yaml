@@ -1,0 +1,44 @@
+type: object
+properties:
+  rcdOfBankOfRussia:
+    type: array
+    description: Справочник отозванных сертификатов Банка России
+    items:
+      type: string
+      description: Справочник отозванных сертификатов Банка России
+  rcdOfFi:
+    type: array
+    description: Справочник отозванных сертификатов Финансового посредника
+    items:
+      type: string
+      description: Справочник отозванных сертификатов Финансового посредника
+  certificateOfBankOfRussiaCertificationCenter:
+    type: array
+    description: Сертификат ключа Удостоверяющего Центра Банка России
+    items:
+      type: string
+      description: Сертификат ключа Удостоверяющего Центра Банка России
+  certificateOfFiCertificationCenter:
+    type: string
+    description: Сертификат ключа Удостоверяющего Центра Финансового посредника
+  openCertificateFiKo:
+    type: array
+    description: Открытый сертификат Финансового Посредника КО (Контур Обработки
+    items:
+      $ref: ./PcrOpenCertificateInfoDto.yaml
+  openCertificateFiKk:
+    type: array
+    description: Открытый сертификат Финансового Посредника КК (Контур Контроля)
+    items:
+      $ref: ./PcrOpenCertificateInfoDto.yaml
+  openCertificateRord:
+    type: array
+    description: Открытый сертификат РОРД (Регистрационный, Операционный и Расчетный Депозитарий)
+    items:
+      $ref: ./PcrOpenCertificateInfoDto.yaml
+  openCertificateKkPcr:
+    type: array
+    description: Открытый сертификат КК (Контур Контроля) ПлЦР
+    items:
+      $ref: ./PcrOpenCertificateInfoDto.yaml
+description: Платформенные сертификаты ПлЦР

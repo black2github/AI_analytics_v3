@@ -1,0 +1,24 @@
+type: object
+properties:
+  accountNumberCommission:
+    type: string
+    description: Счет списания комиссии за открытие счета
+  accountNumberOpOp:
+    type: string
+    description: Использовать КОПОП, ранее предоставленную к счету
+  accountType:
+    type: string
+    description: Тип счета
+  branchName:
+    type: string
+    description: Офис обслуживания
+  contract:
+    type: string
+    description: Договор банковского счета
+  hasOpenNewAccount:
+    type: boolean
+    description: Признак открытия нового счета
+  limitSchemeName:
+    type: string
+    description: Лимит расходования средств на картах
+description: Открываемый счет заявки на выпуск карты для ЭФ

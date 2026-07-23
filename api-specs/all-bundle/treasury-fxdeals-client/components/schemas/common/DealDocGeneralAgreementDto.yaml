@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  contractId:
+    type: integer
+    format: int64
+  contractType:
+    type: string
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  date:
+    type: string
+    format: date
+  number:
+    type: string

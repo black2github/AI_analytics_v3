@@ -1,0 +1,69 @@
+post:
+  tags:
+  - API обратных вызовов операций по регистрации организации
+  summary: Callback на получение квитанций на извещения по ПОД/ФТ
+  operationId: organisationAmlCftReceiptCallback
+  parameters:
+  - name: referenceId
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: amlCftReceiptType
+    in: path
+    required: true
+    schema:
+      type: string
+      enum:
+      - ORGANISATION_DELAY_RECEIPT
+      - ORGANISATION_REJECTION_RECEIPT
+      - ORGANISATION_AML_CFT_RECEIPT
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v4/OrganisationAmlCftReceiptCallbackDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/v4/GenericResponseSimpleErrorDataVoid.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/v4/ActionResultObject.yaml

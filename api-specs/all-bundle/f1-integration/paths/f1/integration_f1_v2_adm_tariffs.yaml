@@ -1,0 +1,49 @@
+get:
+  tags:
+  - Сервис интеграции с АБС Ф1 для получения тарифов АДМ из АБС Ф1
+  summary: Получить тарифы АДМ с типом тарифа и типом принадлежности устройства
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'')'
+  operationId: getTariffsV2
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/GenericResponseSimpleErrorDataAdmTariffV2ResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml

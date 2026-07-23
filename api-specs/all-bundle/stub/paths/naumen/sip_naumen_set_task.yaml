@@ -1,0 +1,171 @@
+post:
+  tags:
+  - СИП. Сервис Naumen
+  summary: Сервис редактирования/изменения и отмены активности
+  operationId: setTaskUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.data.task.channel
+    in: query
+    description: Канал
+    required: false
+    type: string
+    enum:
+    - CALL_CENTER
+    - CLIENT
+    - DO
+  - name: body.data.task.city
+    in: query
+    description: Город встречи
+    required: false
+    type: string
+  - name: body.data.task.comment
+    in: query
+    description: Комментарий КОС
+    required: false
+    type: string
+  - name: body.data.task.commType
+    in: query
+    description: Тип активности
+    required: false
+    type: string
+    enum:
+    - APPOINTMENT
+    - CALL
+    - VISITING
+  - name: body.data.task.company.contact
+    in: query
+    description: ФИО контактного лица в компании
+    required: false
+    type: string
+  - name: body.data.task.company.contactEmail
+    in: query
+    description: E-mail компании
+    required: false
+    type: string
+  - name: body.data.task.company.contactPhone
+    in: query
+    description: Телефон контактного лица
+    required: false
+    type: string
+  - name: body.data.task.company.guid
+    in: query
+    description: Идентификатор компании
+    required: false
+    type: string
+    format: uuid
+  - name: body.data.task.company.inn
+    in: query
+    description: ИНН
+    required: false
+    type: string
+  - name: body.data.task.company.kpp
+    in: query
+    description: КПП
+    required: false
+    type: string
+  - name: body.data.task.company.title
+    in: query
+    description: Наименование компании
+    required: false
+    type: string
+  - name: body.data.task.dopOffice
+    in: query
+    description: Дополнительный офис
+    required: false
+    type: string
+  - name: body.data.task.grad
+    in: query
+    description: Оценка КОС
+    required: false
+    type: string
+  - name: body.data.task.operationType
+    in: query
+    description: Тип операции
+    required: false
+    type: string
+    enum:
+    - UL_CHANGE_DATA
+    - UL_OPEN_ACCOUNT
+    - UL_OPEN_GOZ_ACCOUNT
+    - UL_OPEN_VS_ACCOUNT
+  - name: body.data.task.placeComment
+    in: query
+    description: Комментарий к адресу встречи
+    required: false
+    type: string
+  - name: body.data.task.placeMeeting
+    in: query
+    description: Место встречи с сотрудником выездного сервиса
+    required: false
+    type: string
+  - name: body.data.task.planDate
+    in: query
+    description: Дата, время активности
+    required: false
+    type: string
+    format: date-time
+  - name: body.data.task.state
+    in: query
+    description: Статус
+    required: false
+    type: string
+    enum:
+    - APPOINTMENT
+    - CALL
+    - CANCEL
+    - CONFIRMED
+    - CONSULTATION
+    - HOLDED
+    - RESCHEDULED
+  - name: body.data.task.taskId
+    in: query
+    description: Идентификатор активности
+    required: false
+    type: integer
+    format: int64
+  - name: body.meta.channel
+    in: query
+    description: Канал
+    required: false
+    type: string
+    enum:
+    - ECO
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/NaumenSetTaskResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

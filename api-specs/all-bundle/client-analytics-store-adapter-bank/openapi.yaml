@@ -1,0 +1,14 @@
+info:
+  version: 1.31.0
+  title: Сервис аудита. Банковская часть.
+tags:
+- name: API журнала входов пользователей. Банк.
+  description: User Login Journal Bank Controller
+paths:
+  /user-login-report/export:
+    $ref: ./paths/export/user_login_report_export.yaml
+  /user-login-report/get-page:
+    $ref: ./paths/get-page/user_login_report_get_page.yaml
+  /user-login-report/third-party-report:
+    $ref: ./paths/third-party-report/user_login_report_third_party_report.yaml
+components: {}

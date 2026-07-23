@@ -1,0 +1,19 @@
+type: object
+description: Оповещаемый пользователь
+properties:
+  active:
+    type: boolean
+    description: Индикатор валидности оповещаемого.
+  email:
+    type: string
+    description: Email оповещаемого.
+  fullName:
+    type: string
+    description: ФИО оповещаемого.
+  login:
+    type: string
+    description: Логин оповещаемого.
+  userId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор оповещаемого.

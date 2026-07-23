@@ -1,0 +1,14 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Данные
+    enum:
+    - ALREADY_IN_PROCESS
+    - STARTED
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

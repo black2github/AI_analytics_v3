@@ -1,0 +1,11 @@
+type: object
+properties:
+  certIds:
+    uniqueItems: true
+    type: array
+    description: Список ИД обновляемых сертификатов
+    items:
+      type: string
+      description: Список ИД обновляемых сертификатов
+      format: uuid
+description: Ответ API получения обновляемых сертификатов

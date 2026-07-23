@@ -1,0 +1,11 @@
+type: object
+properties:
+  onlineCashRegisterConnectionStatusCode:
+    type: integer
+    description: Код статуса подключения доп. продукта Онлайн-касса
+    format: int32
+  edoConnectionStatusCode:
+    type: integer
+    description: Код статуса подключения доп. продукта ЭДО
+    format: int32
+description: Статусы подключения дополнительных продуктов

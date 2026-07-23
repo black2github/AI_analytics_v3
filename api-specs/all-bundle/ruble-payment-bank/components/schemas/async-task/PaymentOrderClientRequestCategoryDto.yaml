@@ -1,0 +1,9 @@
+type: string
+description: Категории для скроллера
+enum:
+- ALL
+- DRAFT
+- SIGNING
+- REJECTED
+- COMPLETED
+- TO_CHARGEBACK

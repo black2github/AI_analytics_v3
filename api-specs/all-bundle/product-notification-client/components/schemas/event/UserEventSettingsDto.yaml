@@ -1,0 +1,15 @@
+required:
+- clients
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clients:
+    type: array
+    description: Список настроек в разрезе организаций где пользователь является представителем
+    items:
+      $ref: ./BankClientEventSettingsDto.yaml
+description: Пользовательские настройки событий СФЗУ

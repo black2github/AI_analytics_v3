@@ -1,0 +1,7 @@
+type: string
+description: Категории для скроллера
+enum:
+- PROCESSING_ERROR
+- IN_PROCESSING
+- COMPLETED
+- ALL

@@ -1,0 +1,10 @@
+required:
+- checkablePersons
+type: object
+properties:
+  checkablePersons:
+    type: array
+    description: Список проверяемых УЛ
+    items:
+      $ref: ./CheckableAuthorizedPerson.yaml
+description: Данные для проверки блокировки уполномоченных лиц по организации

@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    $ref: ./IdFilter.yaml
+  executionDatetime:
+    $ref: ../common/ExecutionDatetimeFilter.yaml
+  operationType:
+    $ref: ../common/OperationViewTypeFilter.yaml
+  amount:
+    $ref: ../common/AmountFilter.yaml
+  accountNumber:
+    $ref: ./AccountNumberFilter.yaml
+  fiName:
+    $ref: ../common/FiNameFilter.yaml
+  fiBic:
+    $ref: ../common/FiBicFilter.yaml
+  purposeOfPayment:
+    $ref: ../common/PurposeOfPaymentFilter.yaml
+  contractorAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorCbrAccountNumber:
+    $ref: ../common/ContractorCbrAccountNumberFilter.yaml
+  contractorName:
+    $ref: ../common/ContractorNameFilter.yaml
+  contractorFio:
+    $ref: ../common/ContractorFioFilter.yaml
+  contractorNameOrContractorFio:
+    $ref: ../common/ContractorNameOrContractorFioFilter.yaml
+  contractorCbrParticipantId:
+    $ref: ../common/ContractorCbrParticipantIdFilter.yaml
+  contractorCbrParticipantWalletId:
+    $ref: ../common/ContractorCbrParticipantWalletIdFilter.yaml
+  pointOfSaleName:
+    $ref: ../common/PointOfSaleNameFilter.yaml
+  cbrOperationId:
+    $ref: ../common/CbrOperationIdFilter.yaml
+  cbrParticipantWalletId:
+    $ref: ../common/CbrParticipantWalletIdFilter.yaml
+description: Фильтр для операций

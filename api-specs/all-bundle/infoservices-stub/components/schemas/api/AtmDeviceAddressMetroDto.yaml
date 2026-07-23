@@ -1,0 +1,10 @@
+type: object
+properties:
+  distance:
+    type: string
+  icon:
+    $ref: ./AtmDeviceAddressMetroIconDto.yaml
+  line:
+    $ref: ./AtmDeviceAddressMetroLineDto.yaml
+  name:
+    type: string

@@ -1,0 +1,32 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: Идентификатор представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  segment:
+    type: string
+    enum:
+    - CAS_ACC_OPEN_SECOND_REQ
+    - CAS_OFFER_RKO_ACCEPTANCE_REQ
+    - CAS_OFFER_JOIN_GPB_BO1_REQ
+    - CAS_OFFER_JOIN_GPB_BO2_REQ
+    - CAS_OFFER_JOIN_PO_UVED
+    - CAS_FREE_FORMAT_DOC
+    - CAS_DBO_BSS_FRAME
+    - CAS_SWITCHING_TO_DBO_BSS
+    - CAS_SWITCHING_TO_UVED_PROCESS
+    - CAS_SWITCHING_TO_UVED_LIMITED_ACCESS
+    - CAS_SWITCHING_TO_UVED_VIEW
+    - CAS_SWITCHING_TO_MP_PROCESS
+    - CAS_SWITCHING_TO_MP_VIEW
+    - CAS_FNS
+description: DTO для процесса миграции пользователей УВЭД с ролей на сегменты.

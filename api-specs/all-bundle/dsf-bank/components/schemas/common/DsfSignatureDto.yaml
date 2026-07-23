@@ -1,0 +1,31 @@
+type: object
+description: Подпись ДСФ
+properties:
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+    description: Информация о сертификате
+  extOwnerId:
+    type: string
+    description: Идентификатор ЕСК владельца подписи
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор подписи
+  ownerFio:
+    type: string
+    description: ФИО подписанта
+  ownerId:
+    type: string
+    format: uuid
+    description: Идентификатор владельца подписи
+  signedAt:
+    type: string
+    format: date-time
+    description: Дата подписи документа
+  typeId:
+    type: string
+    format: uuid
+    description: Тип подписи
+  value:
+    $ref: ./SignatureValueDto.yaml
+    description: Данные о подписи

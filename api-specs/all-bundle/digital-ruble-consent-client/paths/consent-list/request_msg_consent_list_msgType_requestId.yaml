@@ -1,0 +1,73 @@
+get:
+  tags:
+  - ConsentRequestMsgClient
+  summary: Получение электронного сообщения заявки на получение перечня согласий
+  operationId: getConsentListRequestMsg
+  parameters:
+  - name: msgType
+    in: path
+    description: Тип сообщения
+    required: true
+    schema:
+      type: string
+      enum:
+      - MSG1_OUT
+      - MSG1_IN
+  - name: requestId
+    in: path
+    description: Идентификатор заявки
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security:
+  - Bearer: []

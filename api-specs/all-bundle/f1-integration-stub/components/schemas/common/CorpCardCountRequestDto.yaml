@@ -1,0 +1,27 @@
+type: object
+required:
+- clientGUID
+- accountsNumber
+- arrayOfStatus
+- source
+description: Запрос на получение числа действующих карт
+properties:
+  clientGUID:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  accountsNumber:
+    type: array
+    items:
+      type: string
+    description: Номера счетов клиента
+  arrayOfStatus:
+    type: array
+    items:
+      $ref: ./CorpCardCountStatusFilterDto.yaml
+    description: Параметры фильтрации карт в АБС Ф1 по статусам и состояниям
+  source:
+    $ref: ./SourceType.yaml
+    type: string
+    description: Тип заявки

@@ -1,0 +1,11 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  filter:
+    $ref: ./ApprovalPersonFilterDto.yaml
+description: Запрос данных о визирующих лицах

@@ -1,0 +1,17 @@
+required:
+- dateFrom
+- dateTo
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date-time
+  dateTo:
+    type: string
+    format: date-time
+  maintenanceTypeDto:
+    type: string
+    enum:
+    - MAINTENANCE_START
+    - MAINTENANCE_END
+description: Фильтр

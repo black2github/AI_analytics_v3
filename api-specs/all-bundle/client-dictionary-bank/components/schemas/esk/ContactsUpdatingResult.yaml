@@ -1,0 +1,12 @@
+type: object
+properties:
+  personEskId:
+    type: string
+    description: Идентификатор физ лица
+  successful:
+    type: boolean
+    description: Флаг - операция выполнена успешно
+  errorDescription:
+    type: string
+    description: Описание ошибки в случае неуспеха
+description: Результаты обновления

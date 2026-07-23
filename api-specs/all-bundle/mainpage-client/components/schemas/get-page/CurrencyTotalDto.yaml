@@ -1,0 +1,21 @@
+type: object
+properties:
+  currencyCode:
+    type: string
+    description: Код валюты
+  currencyName:
+    type: string
+    description: Название валюты
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  outgoingBalance:
+    type: number
+    description: Исходящий остаток
+  income:
+    type: number
+    description: Приход
+  outcome:
+    type: number
+    description: Расход
+description: Совокупные остатки и обороты в конкретной валюте

@@ -1,0 +1,66 @@
+post:
+  tags:
+  - API заявки на добавление/изменение данных и полномочий сотрудника клиента. Базовые операции.
+  summary: Создать заявку на предоставление доступа в ГПБ Бизнес-Онлайн
+  description: 'Привилегии: CONSTITUTION_ACCESS.CREATE_USER_ADD'
+  operationId: createUserAddUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«ConstitutionAccessRequestUpdateDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CreateResponse«ConstitutionAccessRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - API заявки на добавление/изменение данных и полномочий сотрудника клиента. Базовые операции.
+  summary: Обновить заявку на выдачу доверенности
+  description: 'Привилегии: CONSTITUTION_ACCESS.UPDATE_USER_ADD'
+  operationId: updateUserAddUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«ConstitutionAccessRequestUpdateDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CompositeResponse«ConstitutionAccessRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,29 @@
+type: object
+properties:
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaCardTypeId:
+    type: string
+    description: Идентификатор типа карточки документа в ТЕССА
+    format: uuid
+  tessaDossierId:
+    type: string
+    description: Идентификатор досье в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+  tessaFileTypeId:
+    type: string
+    description: Идентификатор типа файла в ТЕССА
+    format: uuid
+  tessaFileVersionId:
+    type: string
+    description: Идентификатор версии файла в ТЕССА
+  tessaPrintFormFilename:
+    type: string
+    description: Название загружаемого файла ПФ
+description: Реквизиты заявки для выгрузки документов в ТЕССА

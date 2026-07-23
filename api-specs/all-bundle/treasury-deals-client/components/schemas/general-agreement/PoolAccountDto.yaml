@@ -1,0 +1,45 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  shortName:
+    type: string
+    description: Краткое наименование Клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  accountNumber:
+    type: string
+    description: Номер счёта
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  absId:
+    type: string
+    description: Идентификатор в АБС
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  status:
+    type: string
+    description: Статус счета в Пуле счетов
+    enum:
+    - ACTIVE
+    - REMOVED
+    - APPROVED_FOR_ADD
+    - APPROVED_FOR_REMOVE
+    - REQUEST_FOR_ADD
+    - REQUEST_FOR_REMOVE
+    - REFUSED_FOR_ADD
+    - REFUSED_FOR_REMOVE
+description: Страница с данными

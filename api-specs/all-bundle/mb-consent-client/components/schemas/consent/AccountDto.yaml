@@ -1,0 +1,28 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета в openApi
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  status:
+    type: string
+    description: Статус счета
+    enum:
+    - ENABLED
+    - DISABLED
+    - DELETED
+  statusUpdatedAt:
+    type: string
+    description: Дата и время обновления статуса счета
+    format: date-time
+  balance:
+    type: number
+    description: Остаток счета
+  balanceUpdatedAt:
+    type: string
+    description: Время последнего обновления остатка
+    format: date-time
+description: Данные о счете

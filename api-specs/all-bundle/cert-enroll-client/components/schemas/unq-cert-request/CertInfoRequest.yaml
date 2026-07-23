@@ -1,0 +1,46 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  orgName:
+    type: string
+    description: Наименование организации
+  orgFullName:
+    type: string
+    description: Полное наименование организации
+  orgShortName:
+    type: string
+    description: Краткое наименование организации
+  locality:
+    type: string
+    description: Населенный пункт
+  country:
+    type: string
+    description: Страна
+  region:
+    type: string
+    description: Субъект РФ
+  position:
+    type: string
+    description: Должность
+  branchName:
+    type: string
+    description: Подразделение
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  okopf:
+    type: string
+    description: ОКОПФ
+  clientRnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+description: Атрибуты сертификата

@@ -1,0 +1,14 @@
+required:
+- operationId
+- userId
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции подписи
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Запрос поиска результатов операции подписи

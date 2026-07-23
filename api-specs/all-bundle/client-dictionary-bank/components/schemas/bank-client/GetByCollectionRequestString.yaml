@@ -1,0 +1,11 @@
+type: object
+properties:
+  values:
+    maxItems: 1000
+    minItems: 1
+    type: array
+    description: Коллекция значений
+    items:
+      type: string
+      description: Коллекция значений
+description: Запрос получения сущностей по коллекции значений

@@ -1,0 +1,39 @@
+type: object
+properties:
+  absId:
+    type: string
+    description: РНК клиента в РКО Ф1.
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  externalClientGuid:
+    type: string
+    description: GUID клиента в ЕСК.
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента.
+  id:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  innKio:
+    type: string
+    description: ИНН клиента.
+  internationalName:
+    type: string
+    description: Международное наименование клиента.
+  kpp:
+    type: string
+    description: КПП клиента.
+  ogrnOgrip:
+    type: string
+    description: ОГРН клиента.
+  shortName:
+    type: string
+    description: Краткое наименование клиента.
+description: Информация о клиенте банка

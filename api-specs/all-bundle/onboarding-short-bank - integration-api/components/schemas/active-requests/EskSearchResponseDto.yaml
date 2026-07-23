@@ -1,0 +1,18 @@
+type: object
+properties:
+  fnsRequestAvailability:
+    type: integer
+    description: Доступность отзыва заявки ФНС
+    format: int32
+  fnsRequestExistenceCheck:
+    type: boolean
+    description: 'Признак наличия заявки ФНС. Необязательное поле. Возможные значения: true, false или null.'
+  searchResult:
+    type: integer
+    description: 'Код ответа. Возможные значения: 0 или 1.'
+    format: int32
+  sessionLeader:
+    type: string
+    description: Идентификатор запроса, «породившего» заявку.
+    format: uuid
+description: Результат поиска заявок 115

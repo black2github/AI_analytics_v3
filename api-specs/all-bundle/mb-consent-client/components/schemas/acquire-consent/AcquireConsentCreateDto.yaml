@@ -1,0 +1,27 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  bank:
+    type: string
+    description: Код банка-партнера
+    enum:
+    - GPB
+    - VTB
+    - SBR
+  availableActions:
+    type: array
+    description: Доступные операции
+    items:
+      type: string
+      description: Доступные операции
+      enum:
+      - BASE
+      - TRANSACTIONS
+  agreementDate:
+    type: string
+    description: Срок действия согласия
+    format: date-time
+description: ДТО формы запроса согласия

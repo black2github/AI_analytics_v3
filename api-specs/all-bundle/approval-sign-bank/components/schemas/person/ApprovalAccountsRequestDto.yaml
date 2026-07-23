@@ -1,0 +1,17 @@
+type: object
+properties:
+  approvalPersonKind:
+    type: string
+    description: Тип визирующего лица
+    enum:
+    - F1
+    - TNF
+  clientId:
+    type: string
+    description: Идентификатор визирующей организации
+    format: uuid
+  personId:
+    type: string
+    description: Идентификатор визирующего лица
+    format: uuid
+description: Запрос данных о визируемых счетах

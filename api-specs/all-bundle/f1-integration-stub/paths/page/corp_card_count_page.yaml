@@ -1,0 +1,19 @@
+post:
+  summary: Постраничное получение записей из таблицы gps_eco_accs_card_count по фильтрам
+  tags:
+  - Обновление заглушек GPS_ECO_CNT_CCARD_ACCL (Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС))
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/page/CorpCardCountFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/page/PageDataCorpCardCountDto.yaml
+    '400':
+      description: Bad Request

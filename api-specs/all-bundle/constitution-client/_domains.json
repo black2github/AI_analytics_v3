@@ -1,0 +1,18 @@
+{
+  "_comment": "Auto domain map for constitution-client (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/constitution/access",
+      "domain": "access"
+    },
+    {
+      "prefix": "/constitution/registration",
+      "domain": "registration"
+    },
+    {
+      "prefix": "/constitution",
+      "domain": "misc"
+    }
+  ]
+}

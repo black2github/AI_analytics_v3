@@ -1,0 +1,15 @@
+type: object
+properties:
+  extConsentId:
+    type: string
+    description: Внешний идентификатор согласия
+    format: uuid
+  approvalReqConsentId:
+    type: string
+    description: Идентификатор запроса на подтверждение согласия
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+description: Запрос на привязку пользователя и организации к согласию

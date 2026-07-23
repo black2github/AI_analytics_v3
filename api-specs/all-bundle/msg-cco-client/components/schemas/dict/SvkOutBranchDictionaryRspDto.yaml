@@ -1,0 +1,12 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Id филиала
+    format: uuid
+  name:
+    type: string
+    description: Наименование филиала
+description: Информация о филиале

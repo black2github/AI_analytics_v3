@@ -1,0 +1,53 @@
+type: object
+properties:
+  footprint:
+    type: string
+  serialNumber:
+    type: string
+  subject:
+    type: string
+  subjectSurname:
+    type: string
+  subjectGivenName:
+    type: string
+  subjectLocality:
+    type: string
+  subjectState:
+    type: string
+  subjectStreet:
+    type: string
+  subjectCountry:
+    type: string
+  subjectEmail:
+    type: string
+  subjectOrganizationalUnit:
+    type: string
+  subjectOrganization:
+    type: string
+  subjectInn:
+    type: string
+  subjectOgrn:
+    type: string
+  subjectOgrnIp:
+    type: string
+  subjectTitle:
+    type: string
+  validFrom:
+    type: string
+    format: date-time
+  validTo:
+    type: string
+    format: date-time
+  authorityKeyId:
+    type: string
+  authorityCertificateSerial:
+    type: string
+  authorityName:
+    type: string
+  keyUsage:
+    type: array
+    items:
+      type: boolean
+  signTool:
+    type: string
+description: Информация о сертификате

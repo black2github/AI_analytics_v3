@@ -1,0 +1,36 @@
+required:
+- bankClientIds
+- comment
+- roleTemplateCode
+type: object
+properties:
+  roleTemplateCode:
+    type: string
+    description: Код выдаваемого шаблона роли
+  incompatibleRoleTemplateCodes:
+    uniqueItems: true
+    type: array
+    description: Список кодов несовместимых шаблонов ролей
+    items:
+      type: string
+      description: Список кодов несовместимых шаблонов ролей
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиента банка для выдачи
+    items:
+      type: string
+      description: Идентификаторы клиента банка для выдачи
+      format: uuid
+  comment:
+    type: string
+    description: Комментарий
+  checkEmployeesRequests:
+    type: boolean
+    description: Проверять заявки сервиса Сотрудники
+  processMarker:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Метка процесса, создающего правило
+description: Команда для выдачи УЛ и ЕИО клиента банка шаблона ролей.

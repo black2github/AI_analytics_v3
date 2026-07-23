@@ -1,0 +1,42 @@
+required:
+- firstName
+- lastName
+type: object
+properties:
+  lastName:
+    maxLength: 50
+    minLength: 1
+    pattern: ^(?!.*(\-\-|\-\s|\s\-))([A-Za-z'\-\s]*[A-Za-z\s])$|^(?!.*(\-\-|\-\s|\s\-))([ЁА-яё'\-\s]*[ЁА-яё\s])$|^$
+    type: string
+    description: Фамилия
+  firstName:
+    maxLength: 50
+    minLength: 1
+    pattern: ^(?!.*(\-\-|\-\s|\s-))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Имя
+  middleName:
+    maxLength: 50
+    minLength: 0
+    pattern: ^(?!.*(\-\-|\-\s|\s-))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Отчество
+  phone:
+    maxLength: 16
+    minLength: 0
+    pattern: ^\+(79\d{9}|(?!79)\d{7,15})$
+    type: string
+    description: Номер телефона ГПБ БО
+  email:
+    maxLength: 100
+    minLength: 0
+    pattern: ^(?!"\.|\.)(?!.*(\."|\.)@)(?!.*\.\.)("*[\w!#$%&'*+\-\/=?^`{|}~\.]+"*)@(?!.*\.\.)([\da-z][\da-z\-\.]*\.[\da-z]+?)$|^$
+    type: string
+    description: Адрес электронной почты ГПБ БО
+  eskId:
+    maxLength: 255
+    minLength: 0
+    pattern: ^\d*$
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+description: Данные сотрудника

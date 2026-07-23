@@ -1,0 +1,182 @@
+type: object
+properties:
+  aml:
+    $ref: ./AmlDocumentFromBankResponseDto.yaml
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./DsfAttachmentFromBankDto.yaml
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  contactId:
+    type: string
+    description: Идентификатор пользователя контактного лица.
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания заявки.
+    format: date-time
+  date:
+    type: string
+    description: Дата создания заявки.
+    format: date
+  dialog:
+    $ref: ../common/DsfDialogClientResponseDto.yaml
+  dialogId:
+    type: string
+    description: ID группы связанных писем
+  dsfType:
+    $ref: ../common/DsfTypeResponseDto.yaml
+  email:
+    type: string
+    description: Адрес электронной почты.
+  externalId:
+    type: string
+    description: ID письма в АС инициатор
+  externalSystem:
+    type: string
+    description: Внешние системы, с которыми взаимодействует ДСФ в рамках создания писем из банка и в банк
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  fio:
+    type: string
+    description: ФИО контактного лица клиента.
+  id:
+    type: string
+    description: Идентификатор документа в банк.
+    format: uuid
+  isFavorite:
+    type: boolean
+    description: Признак добавления документа в "Избранные"
+  isNotifyByPhone:
+    type: boolean
+    description: Уведомить меня об исполнении по номеру телефона.
+  massDocumentId:
+    type: string
+    description: Идентификатор массовой рассылки.
+    format: uuid
+  mchdAttachments:
+    type: array
+    description: Список МЧД.
+    items:
+      $ref: ./DsfAttachmentFromBankDto.yaml
+  message:
+    type: string
+    description: Текст письма.
+  number:
+    type: integer
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+    format: int32
+  phone:
+    type: string
+    description: Номер мобильного телефона.
+  receivedAt:
+    type: string
+    description: Дата и время получения (дата и время отправки в Банк) заявки.
+    format: date-time
+  responsibleBankUserFio:
+    type: string
+    description: ФИО ответственного операциониста
+  responsibleBankUserId:
+    type: string
+    description: Идентификатор ответственного операциониста
+    format: uuid
+  responsibleSignerFio:
+    type: string
+    description: ФИО пользователя ответственного за подписание документа
+  responsibleSignerId:
+    type: string
+    description: Идентификатор пользователя ответственного за подписание документа
+    format: uuid
+  signCheckAt:
+    type: string
+    description: Дата проверки подписи
+    format: date-time
+  signatures:
+    type: array
+    description: Подписи документа.
+    items:
+      $ref: ./DsfSignatureFromBankDto.yaml
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - TO_SEND
+    - TO_SEND_START_PROCESSING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - DENIED
+    - EXECUTED
+    - READ
+    - READ_START_PROCESSING
+    - SIGN_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_NEED_CHECK
+    - SIGN_VALID_OR_DENIED
+    - DRAFT_OR_NEW
+    - WAIT_CLIENT_SIGN
+    - WAIT_BANK_SIGN
+    - CLIENT_SIGNED
+    - REVOKED
+    - REJECTED
+    - REPLY_LETTER_CREATED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - EXPORT_H2H_XML_DONE
+    - EXPORT_H2H_XML_REQUIRED_OR_NOT
+    - DETACH_REQUIRED_OR_NOT
+    - AUTOSIGN_ERROR
+  subject:
+    type: string
+    description: Тема письма.
+  toBankId:
+    type: string
+    description: Ссылка на ответный документ в банк.
+    format: uuid
+  typeBankSignRequired:
+    type: boolean
+    description: Двустороннее подписание.
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeLetterClassifier:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки.
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку.
+    format: uuid
+  version:
+    type: integer
+    description: Текущая версия документа в банк.
+    format: int32
+description: Документ из банка. Возвращаемое ДТО.

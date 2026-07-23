@@ -1,0 +1,15 @@
+required:
+- innkio
+- kpp
+type: object
+properties:
+  innkio:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  tmgId:
+    type: string
+    description: Идентификатор в TMG
+description: ДТО для обновления идентификатора TMG клиента банка

@@ -1,0 +1,7 @@
+type: object
+properties:
+  templateNameOrReceiverNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAccountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр скроллера шаблонов платежного поручения. Клиентская часть.

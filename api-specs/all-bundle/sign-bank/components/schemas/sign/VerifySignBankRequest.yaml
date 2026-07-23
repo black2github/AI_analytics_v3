@@ -1,0 +1,30 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  signature:
+    type: string
+    description: Подпись
+  data:
+    type: string
+    description: Подписываемые данные
+  ownerId:
+    type: string
+    description: Подписант
+    format: uuid
+  validators:
+    uniqueItems: true
+    type: array
+    description: Опции проверки подписи
+    items:
+      type: string
+      description: Опции проверки подписи
+      enum:
+      - CERTIFICATE_EXISTS_CHECK
+      - SIGN_CRYPTO_CHECK
+  calculatedHash:
+    type: boolean
+    description: Признак передачи вычисленных хешей
+description: Запрос на проверку подписи на стороне Банка

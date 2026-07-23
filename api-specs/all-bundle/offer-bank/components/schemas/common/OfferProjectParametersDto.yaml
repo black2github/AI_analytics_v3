@@ -1,0 +1,38 @@
+type: object
+properties:
+  isGazpromContractor:
+    type: boolean
+    description: Признак контрагента Газпром
+  rkaMode:
+    type: integer
+    description: Режим РКА
+    format: int32
+  clientRole:
+    type: string
+    description: Роль клиента в договоре
+    enum:
+    - PROVIDER
+    - CONTRACTOR
+  clientName:
+    type: string
+    description: Наименование заказчика/покупателя
+  clientInn:
+    type: string
+    description: ИНН заказчика/покупателя
+  contractNumber:
+    type: string
+    description: Номер договора заказчика/покупателя
+  contractDate:
+    type: string
+    description: Дата договора заказчика/покупателя
+    format: date
+  contractAmount:
+    type: string
+    description: Сумма договора заказчика/покупателя
+  cooperationCode:
+    type: string
+    description: Код кооперации
+  contractSubject:
+    type: string
+    description: предмет договора
+description: Параметры проекта

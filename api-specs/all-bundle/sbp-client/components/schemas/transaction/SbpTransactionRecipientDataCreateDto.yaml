@@ -1,0 +1,9 @@
+type: object
+description: ДТО с реквизитами получателя
+properties:
+  recipientId:
+    type: string
+    description: Телефон получателя
+  memberId:
+    type: string
+    description: Идентификатор Банка Получателя

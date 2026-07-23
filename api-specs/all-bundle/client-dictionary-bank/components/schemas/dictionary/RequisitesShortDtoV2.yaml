@@ -1,0 +1,22 @@
+required:
+- bic
+- correspondentAccount
+- location
+type: object
+properties:
+  location:
+    maxLength: 512
+    minLength: 0
+    type: string
+    description: Населенный пункт
+  bic:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: БИК филиала
+  correspondentAccount:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Корсчет филиала
+description: Реквизиты подразделения банка

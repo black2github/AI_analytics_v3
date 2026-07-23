@@ -1,0 +1,8 @@
+type: object
+description: Счет, доступный для списания комиссии
+properties:
+  accountCommission:
+    type: array
+    items:
+      $ref: ./SmsInfoTariffAccountCommissionDto.yaml
+    description: Блоки с информацией о счете и тарифе

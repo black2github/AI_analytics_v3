@@ -1,0 +1,22 @@
+type: object
+properties:
+  batchNumber:
+    type: integer
+    description: Номер пакета заявок
+    format: int32
+  id:
+    type: string
+    description: Идентификатор пакета заявок на блокировку карт
+    format: uuid
+  reqDate:
+    type: string
+    description: Дата и время создания пакета
+    format: date-time
+  reqType:
+    type: string
+    description: Тип включенных заявок
+    enum:
+    - BC_BLOCK_REQUEST
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+description: Dto с общими полями для пакета заявок

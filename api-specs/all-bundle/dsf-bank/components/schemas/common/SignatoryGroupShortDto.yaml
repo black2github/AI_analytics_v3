@@ -1,0 +1,13 @@
+type: object
+description: Группа подписантов (краткое описание).
+properties:
+  code:
+    type: string
+    description: Уникальный код группы.
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор группы.
+  name:
+    type: string
+    description: Уникальное имя группы.

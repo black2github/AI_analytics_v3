@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API скроллера объединенной заявки ЛК МП. Банковская часть
+  summary: Получить страницу заявок
+  description: 'Привилегии: LKMP.OFFER.BANK.VIEW_LIST, LKMP.ACCESS.BANK.VIEW_LIST'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/misc/GetPageCommandUnitedLkmpRequestBankFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/misc/PageDataUnitedLkmpRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

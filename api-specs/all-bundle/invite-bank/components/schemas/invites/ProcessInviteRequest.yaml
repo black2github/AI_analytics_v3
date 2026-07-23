@@ -1,0 +1,14 @@
+required:
+- actionType
+- targetPerson
+type: object
+properties:
+  actionType:
+    type: string
+    description: Тип действия с инвайтом
+    enum:
+    - DEACTIVATE
+    - UPDATE_TARGET_PERSON
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+description: ДТО для обработки инвайтов

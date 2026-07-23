@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Банковский API ДВК для получения параметров из документов
+  summary: Получение клиентов банка из заявок
+  description: 'Привилегии: DVK_BANK.VIEW'
+  operationId: findUniqueBankClients
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GetPageCommandDocumentBankInnerClientSearchFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorPageDataDocumentBankOrganizationInfo.yaml

@@ -1,0 +1,23 @@
+type: object
+properties:
+  owner:
+    type: string
+    description: Владелец ЭП
+  organization:
+    type: string
+    description: Наименование организации
+  number:
+    type: string
+    description: Серийный номер
+  creator:
+    type: string
+    description: Издатель
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+description: Данные сертификата

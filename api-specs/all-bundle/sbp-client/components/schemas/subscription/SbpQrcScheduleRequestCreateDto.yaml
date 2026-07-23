@@ -1,0 +1,19 @@
+type: object
+description: Заявка на изменение графика платежей
+properties:
+  subscriptionId:
+    type: string
+    description: Идентификатор QR подписки в АС СБП
+  actionType:
+    type: string
+    description: Тип действия
+    enum:
+    - CREATE
+    - DELETE
+  subscriptionData:
+    $ref: ./SbpQrcScheduleSubscriptionDataCreateDto.yaml
+    description: Реквизиты подписки
+required:
+- actionType
+- subscriptionData
+- subscriptionId

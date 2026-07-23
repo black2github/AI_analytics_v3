@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./SvkOutSignatureDataRspDto.yaml
+  statistics:
+    $ref: ./SvkOutSignatureStatDataRspDto.yaml
+description: Подписи ПЭД

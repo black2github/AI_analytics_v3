@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountOpeningFree:
+    type: boolean
+    description: Открытие счета бесплатно по акции
+  appliedPromo:
+    $ref: ./TariffPromoDto.yaml
+  availablePromos:
+    type: array
+    description: Доступные акции
+    items:
+      $ref: ./TariffPromoDto.yaml
+description: Доступные акции и примененная акция

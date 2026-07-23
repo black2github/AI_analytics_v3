@@ -1,0 +1,12 @@
+type: object
+description: Ответ от Ф1 с данными по лимитам клиентов банка
+properties:
+  error:
+    $ref: ./F1ErrorV2Dto.yaml
+    type: object
+    description: Информация об ошибке
+  tariffs:
+    type: array
+    items:
+      $ref: ./TariffPlanDto.yaml
+    description: Данные тарифов

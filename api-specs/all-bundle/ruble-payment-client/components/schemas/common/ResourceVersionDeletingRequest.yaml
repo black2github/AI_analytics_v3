@@ -1,0 +1,14 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ресурса
+    format: uuid
+  version:
+    type: integer
+    description: Версия ресурса
+    format: int32
+description: Запрос на удаление ресурса с учётом его версии

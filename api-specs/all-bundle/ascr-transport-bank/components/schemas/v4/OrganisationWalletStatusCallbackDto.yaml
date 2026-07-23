@@ -1,0 +1,78 @@
+type: object
+description: Данные обратного вызова запроса на изменение статуса кошелька.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в Банке.
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  organisationStatus:
+    type: string
+    description: 'Код запроса управления статусом кошелька. '
+    enum:
+    - Active
+    - Processed
+  walletStatus:
+    type: string
+    description: 'Код запроса управления статусом кошелька. '
+    enum:
+    - Active
+    - Blocked
+    - Closed
+    - Processed
+  oldWalletStatus:
+    type: string
+    description: 'Код запроса управления статусом кошелька. '
+    enum:
+    - Active
+    - Blocked
+    - Closed
+    - Processed
+  agreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента, присвоенный платформой.
+  agreementCloseDate:
+    type: string
+    description: Дата расторжения договора СЦР.
+  intermediaryName:
+    type: string
+    description: Наименование ФП.
+  reasonChangeStatus:
+    type: string
+    description: 'Причина изменения статуса кошелька Клиента-ЮЛ. '
+    enum:
+    - InitialClient
+    - InitialOperWishClient
+    - InitialOper
+    - InitialFI
+    - InitialOperTerminatedContract
+    - InitialOperCourtDecision
+    - InitialOperFraudMonitoring
+  closedSETInformation:
+    type: string
+    description: Информация о закрытых СиС.
+  additionalDataKv:
+    type: array
+    description: Дополнительные данные от ПЦР.
+    items:
+      $ref: ./PropsDto.yaml
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- oldWalletStatus
+- operationId
+- organisationId
+- organisationStatus
+- participantId
+- participantWalletId
+- reasonChangeStatus
+- walletStatus

@@ -1,0 +1,31 @@
+type: object
+properties:
+  permissions:
+    type: array
+    items:
+      type: string
+      enum:
+      - ReadAccountsBasic
+      - ReadAccountsDetail
+      - ReadBalances
+      - ReadParty
+      - ReadProducts
+      - ReadStandingOrdersBasic
+      - ReadStandingOrdersDetail
+      - ReadStatementsBasic
+      - ReadStatementsDetail
+      - ReadTransactionsBasic
+      - ReadTransactionsCredits
+      - ReadTransactionsDebits
+      - ReadTransactionsDetail
+      - ReadPaymentCards
+  expirationDateTime:
+    type: string
+    format: date-time
+  transactionFromDateTime:
+    type: string
+    format: date-time
+  transactionToDateTime:
+    type: string
+    format: date-time
+description: Согласие на доступ к счету

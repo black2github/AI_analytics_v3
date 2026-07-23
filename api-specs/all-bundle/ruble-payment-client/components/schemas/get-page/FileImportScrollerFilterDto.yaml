@@ -1,0 +1,11 @@
+type: object
+properties:
+  createdAtRange:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  fileImportId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  importStatus:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  signStatus:
+    $ref: ./FilterValueDtoFileImportSignStatusDto.yaml
+description: Фильтр скроллера журнала загруженных файлов

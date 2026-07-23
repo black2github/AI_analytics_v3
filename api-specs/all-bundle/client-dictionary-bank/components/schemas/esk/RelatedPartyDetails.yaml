@@ -1,0 +1,18 @@
+type: object
+properties:
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  gender:
+    type: string
+    description: Пол
+  email:
+    type: string
+    description: Адрес электронной почты
+description: ФИО СЛ-ФЛ

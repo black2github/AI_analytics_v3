@@ -1,0 +1,25 @@
+type: object
+properties:
+  identityDocumentCode:
+    type: string
+    description: Код типа документа, удостоверяющего личность
+  identityDocumentType:
+    type: string
+    description: Тип документа, удостоверяющего личность (ДУЛ)
+  identityDocumentSeries:
+    type: string
+    description: Серия ДУЛ
+  identityDocumentNumber:
+    type: string
+    description: Номер ДУЛ
+  codeOfAuthority:
+    type: string
+    description: Код подразделения ДУЛ
+  authority:
+    type: string
+    description: Кем выдан ДУЛ
+  identityDocumentDate:
+    type: string
+    description: Дата выдачи ДУЛ
+    format: date
+description: Документ, удостоверяющий личность

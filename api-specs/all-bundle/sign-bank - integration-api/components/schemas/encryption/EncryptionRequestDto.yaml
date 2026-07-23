@@ -1,0 +1,14 @@
+type: object
+properties:
+  encryptionMethod:
+    type: string
+    description: Метод шифрования
+    enum:
+    - GOST28147_PKS7
+  certData:
+    type: string
+    description: Данные сертификата в кодировке base64
+  data:
+    type: string
+    description: Данные для шифрования в кодировке base64
+description: Запрос шифрования данных

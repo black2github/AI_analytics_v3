@@ -1,0 +1,12 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип проверки
+    enum:
+    - CERTIFICATE_EXISTS_CHECK
+    - SIGN_CRYPTO_CHECK
+  result:
+    type: boolean
+    description: Результат проверки
+description: Результат проверки подписи банковского сотрудника

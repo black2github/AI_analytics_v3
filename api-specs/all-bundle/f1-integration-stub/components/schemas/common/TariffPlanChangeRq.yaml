@@ -1,0 +1,18 @@
+type: object
+description: Запрос на изменение тарифного плана в Ф1
+properties:
+  clientAbsId:
+    type: string
+    description: Идентификатор клиента
+  clientInn:
+    type: string
+    description: ИНН
+  branchCode:
+    type: string
+    description: Код филиала
+  tariffCode:
+    type: string
+    description: Код тарифа
+  period:
+    type: string
+    description: Период

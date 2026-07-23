@@ -1,0 +1,9 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер счета
+  params:
+    type: string
+    description: Параметры счета
+description: Информация о счёте

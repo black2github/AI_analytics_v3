@@ -1,0 +1,12 @@
+type: object
+description: DTO запроса на выгрузку списка получателей массовой рассылки
+properties:
+  massDocumentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа массовой рассылки
+  state:
+    $ref: ./MassDocumentExportReceiversStateDto.yaml
+    description: Объект-состояние, который был получен от сервера в результате предыдущего запроса. Если это первый запрос, то нужно передать null. Если это не первый запрос, то необходимо передать значение, взятое из ответа сервера.
+required:
+- massDocumentId

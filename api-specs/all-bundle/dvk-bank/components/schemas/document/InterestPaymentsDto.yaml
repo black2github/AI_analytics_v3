@@ -1,0 +1,15 @@
+type: object
+properties:
+  fixedRate:
+    type: string
+    description: Фиксированный размер процентной ставки.
+  liborRateCode:
+    type: string
+    description: Код ставки ЛИБОР для конкретной валюты.
+  otherRate:
+    type: string
+    description: Другие методы определения процентной ставки.
+  interestIncrementValue:
+    type: string
+    description: Размер процентной надбавки к базовой процентной ставке.
+description: Процентные платежи, предусмотренные кредитным договором

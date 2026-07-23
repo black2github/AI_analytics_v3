@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Ссылка на документ ДИ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docDate:
+    type: string
+    description: Дата досрочного истребования
+    format: date
+  docNumber:
+    type: integer
+    description: Номер досрочного истребования
+    format: int32
+  docSignerName:
+    type: string
+    description: Подписант
+  source:
+    type: string
+    description: Инициатор
+    enum:
+    - CLIENT
+    - THIRD_PERSON
+description: Информация о досрочном истребовании

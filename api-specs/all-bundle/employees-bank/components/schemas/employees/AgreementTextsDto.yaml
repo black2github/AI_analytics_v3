@@ -1,0 +1,74 @@
+required:
+- accountNotRestricted
+- approveProcessPersonalData
+- biwWrntProduct
+- blockAuthPerson
+- changeContactsAuthPerson
+- confirmAuthPersonAuthorities
+- confirmData
+- dsfNotRestricted
+- globalWrntProduct
+- makeAuthPerson
+type: object
+properties:
+  makeAuthPerson:
+    type: array
+    description: Назначить УЛ
+    items:
+      type: string
+      description: Назначить УЛ
+  blockAuthPerson:
+    type: array
+    description: Заблокировать УЛ
+    items:
+      type: string
+      description: Заблокировать УЛ
+  changeContactsAuthPerson:
+    type: array
+    description: Изменить контактные данные УЛ
+    items:
+      type: string
+      description: Изменить контактные данные УЛ
+  approveProcessPersonalData:
+    type: array
+    description: Согласие на обработку персональных данных
+    items:
+      type: string
+      description: Согласие на обработку персональных данных
+  confirmData:
+    type: array
+    description: Подтверждение введенных данных
+    items:
+      type: string
+      description: Подтверждение введенных данных
+  confirmAuthPersonAuthorities:
+    type: array
+    description: Подтверждение Клиентом полномочий УЛ
+    items:
+      type: string
+      description: Подтверждение Клиентом полномочий УЛ
+  accountNotRestricted:
+    type: array
+    description: Доступ к счетам не ограничен
+    items:
+      type: string
+      description: Доступ к счетам не ограничен
+  dsfNotRestricted:
+    type: array
+    description: Доступ к ДСФ не ограничен
+    items:
+      type: string
+      description: Доступ к ДСФ не ограничен
+  globalWrntProduct:
+    type: array
+    description: Продукты для глобальной доверенности
+    items:
+      type: string
+      description: Продукты для глобальной доверенности
+  biwWrntProduct:
+    type: array
+    description: Доверенность на получение информации
+    items:
+      type: string
+      description: Доверенность на получение информации
+description: Настраиваемые параметры продуктовых доверенностей

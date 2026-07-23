@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Банка для управления дисклеймерами
+  summary: Создать запись
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_EDIT'
+  operationId: create_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandDisclaimerRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataDisclaimerDto.yaml

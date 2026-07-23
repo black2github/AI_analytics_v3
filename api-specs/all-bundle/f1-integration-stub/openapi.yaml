@@ -1,0 +1,379 @@
+openapi: 3.1.0
+info:
+  title: Стаб сервис для Онлайн-адаптер РКО Ф1
+  version: 3.6.0
+  description: Сервис
+servers:
+- url: /f1-integration-stub
+tags:
+- name: Обновление данных для процедуры RUN_MSG онлайн-адаптера Ф1
+- name: Обновление данных заглушек в таблице f1_client_tariff_plan (Тарифный план Клиента Банка в Ф1)
+- name: Обновление данных заглушек в таблице f1_client_tariff_plan_limit (Лимиты тарифных планов Клиента Банка в Ф1)
+- name: Обновление заглушек GPS_ECO_CNT_CCARD_ACCL (Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС))
+- name: Обновление заглушек GPS_ECO_LIST_ACCS (Счета клиента в Ф1)
+- name: Обновление заглушек GPS_ECO_LIST_ACCS_ERR (Ошибочные ответы для счета клиента в Ф1)
+- name: Обновление заглушек GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+- name: Обновление заглушек VW_RPT_GPB_ECO_CLOSE_ACC (счета для закрытия в Ф1)
+- name: Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO (баланс счета в Ф1)
+- name: Обновление заглушек VW_RPT_GPB_KXD_RST_PLN_ECO_ERR (эмуляции ошибок на запрос об остатках на счетах)
+- name: Обновление заглушек VW_RPT_GPS_CARDS_ECO (Данные о корпоративной карте)
+- name: Обновление заглушек VW_RPT_GPS_CARDS_IRAO_ECO (Данные о локальной карте питания карте)
+- name: Обновление заглушек VW_RPT_GPS_CARD_ACCOUNTS_ECO (Данные о счетах корпоративных карт)
+- name: Обновление заглушек VW_RPT_GPS_CARD_ACC_DOCS_ECO (Данные об операции по счету корпоративной карты)
+- name: Обновление заглушек VW_RPT_GPS_CARD_DOCS_ECO (Данные об операции по корпоративной карте)
+- name: Обновление заглушек VW_RPT_GPS_CARD_DOCS_IRAO_ECO (Данные о транзакциях по локальной карте питания)
+- name: Обновление заглушек VW_RPT_GPS_CL_PRIV_ESK_ECO (Данные о связи АБС ИД и ЕСК ИД физ.лица)
+- name: Обновление заглушек gps_eco_accs_det (Информация о тарифах по счету в Ф1)
+- name: Обновление заглушек gps_eco_accs_det_err (Ошибочные ответы для тарифа по счету в Ф1)
+- name: Обновление заглушек gps_eco_doc_issue_check (Проверка возможности получения справки)
+- name: Обновление заглушек gps_eco_doc_issue_check_err (Ошибки проверки возможности получения справки)
+- name: Обновление заглушек ошибок GPS_ECO_CNT_CCARD_ACCL (Блок с информацией о числе действующих карт или ошибке обработки для конкретного счета (ГС))
+- name: Обновление заглушек ошибок GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+- name: Эмуляция шлюза в Ф1
+paths:
+  /account-list-error/create:
+    $ref: ./paths/create/account_list_error_create.yaml
+  /account-list-error/delete/{id}:
+    $ref: ./paths/delete/account_list_error_delete_id.yaml
+  /account-list-error/page:
+    $ref: ./paths/page/account_list_error_page.yaml
+  /account-list/create:
+    $ref: ./paths/create/account_list_create.yaml
+  /account-list/delete/{id}:
+    $ref: ./paths/delete/account_list_delete_id.yaml
+  /account-list/page:
+    $ref: ./paths/page/account_list_page.yaml
+  /account-tariff-error/create:
+    $ref: ./paths/create/account_tariff_error_create.yaml
+  /account-tariff-error/delete/{id}:
+    $ref: ./paths/delete/account_tariff_error_delete_id.yaml
+  /account-tariff-error/page:
+    $ref: ./paths/page/account_tariff_error_page.yaml
+  /account-tariff/create:
+    $ref: ./paths/create/account_tariff_create.yaml
+  /account-tariff/delete/{id}:
+    $ref: ./paths/delete/account_tariff_delete_id.yaml
+  /account-tariff/page:
+    $ref: ./paths/page/account_tariff_page.yaml
+  /account-tariff/{accountTariffId}/reference/create:
+    $ref: ./paths/{accountTariffId}/account_tariff_accountTariffId_reference_create.yaml
+  /account-tariff/{accountTariffId}/reference/delete/{id}:
+    $ref: ./paths/{accountTariffId}/account_tariff_accountTariffId_reference_delete_id.yaml
+  /account-tariff/{accountTariffId}/reference/list:
+    $ref: ./paths/{accountTariffId}/account_tariff_accountTariffId_reference_list.yaml
+  /account-to-close/create:
+    $ref: ./paths/create/account_to_close_create.yaml
+  /account-to-close/delete/{id}:
+    $ref: ./paths/delete/account_to_close_delete_id.yaml
+  /account-to-close/page:
+    $ref: ./paths/page/account_to_close_page.yaml
+  /account-to-close/page/possibilityToClose:
+    $ref: ./paths/page/account_to_close_page_possibilityToClose.yaml
+  /balance-error/create:
+    $ref: ./paths/create/balance_error_create.yaml
+  /balance-error/delete/{id}:
+    $ref: ./paths/delete/balance_error_delete_id.yaml
+  /balance-error/page:
+    $ref: ./paths/page/balance_error_page.yaml
+  /balance/create:
+    $ref: ./paths/create/balance_create.yaml
+  /balance/delete/{id}:
+    $ref: ./paths/delete/balance_delete_id.yaml
+  /balance/page:
+    $ref: ./paths/page/balance_page.yaml
+  /business-card-account-operation/create:
+    $ref: ./paths/create/business_card_account_operation_create.yaml
+  /business-card-account-operation/delete/{id}:
+    $ref: ./paths/delete/business_card_account_operation_delete_id.yaml
+  /business-card-account-operation/page:
+    $ref: ./paths/page/business_card_account_operation_page.yaml
+  /business-card-account/create:
+    $ref: ./paths/create/business_card_account_create.yaml
+  /business-card-account/delete/{id}:
+    $ref: ./paths/delete/business_card_account_delete_id.yaml
+  /business-card-account/page:
+    $ref: ./paths/page/business_card_account_page.yaml
+  /business-card-operation/create:
+    $ref: ./paths/create/business_card_operation_create.yaml
+  /business-card-operation/delete/{id}:
+    $ref: ./paths/delete/business_card_operation_delete_id.yaml
+  /business-card-operation/page:
+    $ref: ./paths/page/business_card_operation_page.yaml
+  /business-card/create:
+    $ref: ./paths/create/business_card_create.yaml
+  /business-card/delete/{id}:
+    $ref: ./paths/delete/business_card_delete_id.yaml
+  /business-card/page:
+    $ref: ./paths/page/business_card_page.yaml
+  /client-tariff-plan-limit/create:
+    $ref: ./paths/create/client_tariff_plan_limit_create.yaml
+  /client-tariff-plan-limit/delete/{id}:
+    $ref: ./paths/delete/client_tariff_plan_limit_delete_id.yaml
+  /client-tariff-plan-limit/page:
+    $ref: ./paths/page/client_tariff_plan_limit_page.yaml
+  /client-tariff-plan/create:
+    $ref: ./paths/create/client_tariff_plan_create.yaml
+  /client-tariff-plan/delete/{id}:
+    $ref: ./paths/delete/client_tariff_plan_delete_id.yaml
+  /client-tariff-plan/page:
+    $ref: ./paths/page/client_tariff_plan_page.yaml
+  /corp-card-count-error/create:
+    $ref: ./paths/create/corp_card_count_error_create.yaml
+  /corp-card-count-error/delete/{id}:
+    $ref: ./paths/delete/corp_card_count_error_delete_id.yaml
+  /corp-card-count-error/page:
+    $ref: ./paths/page/corp_card_count_error_page.yaml
+  /corp-card-count-error/{id}:
+    $ref: ./paths/{id}/corp_card_count_error_id.yaml
+  /corp-card-count/create:
+    $ref: ./paths/create/corp_card_count_create.yaml
+  /corp-card-count/delete/{id}:
+    $ref: ./paths/delete/corp_card_count_delete_id.yaml
+  /corp-card-count/page:
+    $ref: ./paths/page/corp_card_count_page.yaml
+  /corp-card-count/{id}:
+    $ref: ./paths/{id}/corp_card_count_id.yaml
+  /local-card-transaction/create:
+    $ref: ./paths/create/local_card_transaction_create.yaml
+  /local-card-transaction/delete/{id}:
+    $ref: ./paths/delete/local_card_transaction_delete_id.yaml
+  /local-card-transaction/page:
+    $ref: ./paths/page/local_card_transaction_page.yaml
+  /local-card/create:
+    $ref: ./paths/create/local_card_create.yaml
+  /local-card/delete/{id}:
+    $ref: ./paths/delete/local_card_delete_id.yaml
+  /local-card/page:
+    $ref: ./paths/page/local_card_page.yaml
+  /physical-person/create:
+    $ref: ./paths/create/physical_person_create.yaml
+  /physical-person/delete/{id}:
+    $ref: ./paths/delete/physical_person_delete_id.yaml
+  /physical-person/page:
+    $ref: ./paths/page/physical_person_page.yaml
+  /rko-reference-availability-error/create:
+    $ref: ./paths/create/rko_reference_availability_error_create.yaml
+  /rko-reference-availability-error/delete/{id}:
+    $ref: ./paths/delete/rko_reference_availability_error_delete_id.yaml
+  /rko-reference-availability-error/page:
+    $ref: ./paths/page/rko_reference_availability_error_page.yaml
+  /rko-reference-availability-response/create:
+    $ref: ./paths/create/rko_reference_availability_response_create.yaml
+  /rko-reference-availability-response/delete/{id}:
+    $ref: ./paths/delete/rko_reference_availability_response_delete_id.yaml
+  /rko-reference-availability-response/page:
+    $ref: ./paths/page/rko_reference_availability_response_page.yaml
+  /run-msg/create:
+    $ref: ./paths/create/run_msg_create.yaml
+  /run-msg/delete/{id}:
+    $ref: ./paths/delete/run_msg_delete_id.yaml
+  /run-msg/page:
+    $ref: ./paths/page/run_msg_page.yaml
+  /sms-info-tariff-error:
+    $ref: ./paths/sms-info-tariff-error/sms_info_tariff_error.yaml
+  /sms-info-tariff-error/integration-key:
+    $ref: ./paths/integration-key/sms_info_tariff_error_integration_key.yaml
+  /sms-info-tariff-error/{id}:
+    $ref: ./paths/{id}/sms_info_tariff_error_id.yaml
+  /sms-info-tariff/create:
+    $ref: ./paths/create/sms_info_tariff_create.yaml
+  /sms-info-tariff/delete/{id}:
+    $ref: ./paths/delete/sms_info_tariff_delete_id.yaml
+  /sms-info-tariff/integration-key:
+    $ref: ./paths/integration-key/sms_info_tariff_integration_key.yaml
+  /sms-info-tariff/page:
+    $ref: ./paths/page/sms_info_tariff_page.yaml
+  /sms-info-tariff/{id}:
+    $ref: ./paths/{id}/sms_info_tariff_id.yaml
+  /web-gate/execute:
+    $ref: ./paths/execute/web_gate_execute.yaml
+  /web-gate/execute/{methodName}:
+    $ref: ./paths/execute/web_gate_execute_methodName.yaml
+components:
+  schemas:
+    AccountElem:
+      $ref: ./components/schemas/common/AccountElem.yaml
+    AccountElem1:
+      $ref: ./components/schemas/common/AccountElem1.yaml
+    AccountItem:
+      $ref: ./components/schemas/common/AccountItem.yaml
+    AccountListDto:
+      $ref: ./components/schemas/common/AccountListDto.yaml
+    AccountListErrorDto:
+      $ref: ./components/schemas/common/AccountListErrorDto.yaml
+    AccountListRspDto:
+      $ref: ./components/schemas/common/AccountListRspDto.yaml
+    AccountSmsInfoTariffDto:
+      $ref: ./components/schemas/common/AccountSmsInfoTariffDto.yaml
+    AccountSmsInfoTariffErrorDto:
+      $ref: ./components/schemas/common/AccountSmsInfoTariffErrorDto.yaml
+    AccountTariffDto:
+      $ref: ./components/schemas/common/AccountTariffDto.yaml
+    AccountTariffErrorDto:
+      $ref: ./components/schemas/common/AccountTariffErrorDto.yaml
+    AccountTariffReferenceRateDto:
+      $ref: ./components/schemas/{accountTariffId}/AccountTariffReferenceRateDto.yaml
+    AccountTariffRspDto:
+      $ref: ./components/schemas/common/AccountTariffRspDto.yaml
+    AccountToCloseDto:
+      $ref: ./components/schemas/common/AccountToCloseDto.yaml
+    AccountToClosePossibilityRqDto:
+      $ref: ./components/schemas/page/AccountToClosePossibilityRqDto.yaml
+    AccountToClosePossibilityRspDto:
+      $ref: ./components/schemas/page/AccountToClosePossibilityRspDto.yaml
+    AccountToCloseRspDto:
+      $ref: ./components/schemas/common/AccountToCloseRspDto.yaml
+    BalanceDto:
+      $ref: ./components/schemas/common/BalanceDto.yaml
+    BalanceErrorDto:
+      $ref: ./components/schemas/common/BalanceErrorDto.yaml
+    BusinessCardAccountDto:
+      $ref: ./components/schemas/common/BusinessCardAccountDto.yaml
+    BusinessCardAccountF1Rsp:
+      $ref: ./components/schemas/common/BusinessCardAccountF1Rsp.yaml
+    BusinessCardAccountOperationDto:
+      $ref: ./components/schemas/common/BusinessCardAccountOperationDto.yaml
+    BusinessCardDto:
+      $ref: ./components/schemas/common/BusinessCardDto.yaml
+    BusinessCardOperationDto:
+      $ref: ./components/schemas/common/BusinessCardOperationDto.yaml
+    ClientTariffPlanDto:
+      $ref: ./components/schemas/common/ClientTariffPlanDto.yaml
+    ClientTariffPlanLimitDto:
+      $ref: ./components/schemas/common/ClientTariffPlanLimitDto.yaml
+    CommissionAccountInfo:
+      $ref: ./components/schemas/common/CommissionAccountInfo.yaml
+    CorpCardAccountDto:
+      $ref: ./components/schemas/common/CorpCardAccountDto.yaml
+    CorpCardCountDto:
+      $ref: ./components/schemas/common/CorpCardCountDto.yaml
+    CorpCardCountErrorDto:
+      $ref: ./components/schemas/common/CorpCardCountErrorDto.yaml
+    CorpCardCountFilterDto:
+      $ref: ./components/schemas/page/CorpCardCountFilterDto.yaml
+    CorpCardCountRequestDto:
+      $ref: ./components/schemas/common/CorpCardCountRequestDto.yaml
+    CorpCardCountResponseDto:
+      $ref: ./components/schemas/common/CorpCardCountResponseDto.yaml
+    CorpCardCountStatusFilterDto:
+      $ref: ./components/schemas/common/CorpCardCountStatusFilterDto.yaml
+    CorpCardState:
+      $ref: ./components/schemas/common/CorpCardState.yaml
+    CorpCardStatus:
+      $ref: ./components/schemas/common/CorpCardStatus.yaml
+    ErrorDto:
+      $ref: ./components/schemas/common/ErrorDto.yaml
+    F1ErrorV2Dto:
+      $ref: ./components/schemas/common/F1ErrorV2Dto.yaml
+    F1ResponseV2Dto:
+      $ref: ./components/schemas/common/F1ResponseV2Dto.yaml
+    LimitValueCurrency:
+      $ref: ./components/schemas/common/LimitValueCurrency.yaml
+    LocalCardDto:
+      $ref: ./components/schemas/common/LocalCardDto.yaml
+    LocalCardTransactionDto:
+      $ref: ./components/schemas/common/LocalCardTransactionDto.yaml
+    OperationTypeDto:
+      $ref: ./components/schemas/common/OperationTypeDto.yaml
+    OutParameterRspDto:
+      $ref: ./components/schemas/common/OutParameterRspDto.yaml
+    PageData:
+      $ref: ./components/schemas/common/PageData.yaml
+    PageDataAccountListDto:
+      $ref: ./components/schemas/page/PageDataAccountListDto.yaml
+    PageDataAccountListErrorDto:
+      $ref: ./components/schemas/page/PageDataAccountListErrorDto.yaml
+    PageDataAccountSmsInfoTariffDto:
+      $ref: ./components/schemas/page/PageDataAccountSmsInfoTariffDto.yaml
+    PageDataAccountTariffDto:
+      $ref: ./components/schemas/page/PageDataAccountTariffDto.yaml
+    PageDataAccountTariffErrorDto:
+      $ref: ./components/schemas/page/PageDataAccountTariffErrorDto.yaml
+    PageDataAccountToCloseDto:
+      $ref: ./components/schemas/page/PageDataAccountToCloseDto.yaml
+    PageDataAccountToClosePossibilityRspDto:
+      $ref: ./components/schemas/page/PageDataAccountToClosePossibilityRspDto.yaml
+    PageDataBalanceDto:
+      $ref: ./components/schemas/page/PageDataBalanceDto.yaml
+    PageDataBalanceErrorDto:
+      $ref: ./components/schemas/page/PageDataBalanceErrorDto.yaml
+    PageDataBusinessCardAccountDto:
+      $ref: ./components/schemas/page/PageDataBusinessCardAccountDto.yaml
+    PageDataBusinessCardAccountOperationDto:
+      $ref: ./components/schemas/page/PageDataBusinessCardAccountOperationDto.yaml
+    PageDataBusinessCardDto:
+      $ref: ./components/schemas/page/PageDataBusinessCardDto.yaml
+    PageDataBusinessCardOperationDto:
+      $ref: ./components/schemas/page/PageDataBusinessCardOperationDto.yaml
+    PageDataClientTariffPlanDto:
+      $ref: ./components/schemas/page/PageDataClientTariffPlanDto.yaml
+    PageDataClientTariffPlanLimitDto:
+      $ref: ./components/schemas/page/PageDataClientTariffPlanLimitDto.yaml
+    PageDataCorpCardCountDto:
+      $ref: ./components/schemas/page/PageDataCorpCardCountDto.yaml
+    PageDataCorpCardCountErrorDto:
+      $ref: ./components/schemas/page/PageDataCorpCardCountErrorDto.yaml
+    PageDataLocalCardDto:
+      $ref: ./components/schemas/page/PageDataLocalCardDto.yaml
+    PageDataLocalCardTransactionDto:
+      $ref: ./components/schemas/page/PageDataLocalCardTransactionDto.yaml
+    PageDataPhysicalPersonEskLinkDto:
+      $ref: ./components/schemas/page/PageDataPhysicalPersonEskLinkDto.yaml
+    PageDataRkoReferenceAvailabilityErrorDto:
+      $ref: ./components/schemas/page/PageDataRkoReferenceAvailabilityErrorDto.yaml
+    PageDataRkoReferenceAvailabilityResponseDto:
+      $ref: ./components/schemas/page/PageDataRkoReferenceAvailabilityResponseDto.yaml
+    PageDataRunMsgDto:
+      $ref: ./components/schemas/page/PageDataRunMsgDto.yaml
+    Paging:
+      $ref: ./components/schemas/page/Paging.yaml
+    PhysicalPersonEskLinkDto:
+      $ref: ./components/schemas/common/PhysicalPersonEskLinkDto.yaml
+    ReferenceRate:
+      $ref: ./components/schemas/common/ReferenceRate.yaml
+    RkoReferenceAvailabilityErrorDto:
+      $ref: ./components/schemas/common/RkoReferenceAvailabilityErrorDto.yaml
+    RkoReferenceAvailabilityJsonResponseDto:
+      $ref: ./components/schemas/common/RkoReferenceAvailabilityJsonResponseDto.yaml
+    RkoReferenceAvailabilityResponseDto:
+      $ref: ./components/schemas/common/RkoReferenceAvailabilityResponseDto.yaml
+    RunMsgDto:
+      $ref: ./components/schemas/common/RunMsgDto.yaml
+    SmsInfoTariffAccountCommissionDto:
+      $ref: ./components/schemas/common/SmsInfoTariffAccountCommissionDto.yaml
+    SmsInfoTariffAccountDto:
+      $ref: ./components/schemas/common/SmsInfoTariffAccountDto.yaml
+    SmsInfoTariffRespDto:
+      $ref: ./components/schemas/common/SmsInfoTariffRespDto.yaml
+    SourceType:
+      $ref: ./components/schemas/common/SourceType.yaml
+    SummaryReferenceRates:
+      $ref: ./components/schemas/common/SummaryReferenceRates.yaml
+    SummaryReferenceRatesDto:
+      $ref: ./components/schemas/common/SummaryReferenceRatesDto.yaml
+    TariffInfo:
+      $ref: ./components/schemas/common/TariffInfo.yaml
+    TariffInfoDto:
+      $ref: ./components/schemas/common/TariffInfoDto.yaml
+    TariffLimitsF1RspDto:
+      $ref: ./components/schemas/common/TariffLimitsF1RspDto.yaml
+    TariffPlanChangeF1RspDto:
+      $ref: ./components/schemas/common/TariffPlanChangeF1RspDto.yaml
+    TariffPlanChangeRq:
+      $ref: ./components/schemas/common/TariffPlanChangeRq.yaml
+    TariffPlanDto:
+      $ref: ./components/schemas/common/TariffPlanDto.yaml
+    TariffRegistrationInfoF1RspDto:
+      $ref: ./components/schemas/common/TariffRegistrationInfoF1RspDto.yaml
+    TariffServiceDto:
+      $ref: ./components/schemas/common/TariffServiceDto.yaml
+    UUID:
+      $ref: ./components/schemas/common/UUID.yaml
+    WebGateErrorDto:
+      $ref: ./components/schemas/common/WebGateErrorDto.yaml
+    WebGateErrorRspDto:
+      $ref: ./components/schemas/execute/WebGateErrorRspDto.yaml
+    WebGateRqDto:
+      $ref: ./components/schemas/execute/WebGateRqDto.yaml
+    WebGateRspDto:
+      $ref: ./components/schemas/execute/WebGateRspDto.yaml

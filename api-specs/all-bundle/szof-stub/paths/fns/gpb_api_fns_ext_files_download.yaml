@@ -1,0 +1,12 @@
+get:
+  parameters:
+  - name: filename
+    in: query
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+  summary: Get External Fs Archive File Id
+  tags:
+  - Gpb Api Fns Stub Controller

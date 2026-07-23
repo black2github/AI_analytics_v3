@@ -1,0 +1,6 @@
+type: object
+properties:
+  certificateData:
+    type: string
+    description: Сертификат в формате Base64
+description: Добавление сертификата в ручном режиме через АРМ Администратора

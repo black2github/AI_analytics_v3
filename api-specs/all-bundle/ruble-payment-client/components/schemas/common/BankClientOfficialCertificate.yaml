@@ -1,0 +1,31 @@
+required:
+- certificateData
+- certificateId
+- certificateName
+- certificateOwnerName
+- dstId
+type: object
+properties:
+  dstId:
+    type: string
+    description: Идентификатор СЭП
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  certificateData:
+    type: string
+    description: Base64 представление сертификата
+  certificateOwnerName:
+    type: string
+    description: Владелец сертификата
+  certificateName:
+    type: string
+    description: Наименование сертификата
+  kind:
+    $ref: ./DigitalSignatureKindDto.yaml
+  containerNameLocation:
+    type: string
+    description: Имя и расположение контейнера
+description: Сертификат представителя организации

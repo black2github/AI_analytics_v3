@@ -1,0 +1,116 @@
+required:
+- cbrParticipantWalletId
+- clientAccount
+- date
+- fingerprint
+- number
+- organization
+- paymentDetails
+- purposeOfPayment
+- requestId
+- sppVersion
+- status
+- statusDateTime
+- userId
+type: object
+properties:
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  cbrAccountNumber:
+    type: string
+    description: Номер СЦР на ПлЦР
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    maxLength: 6
+    minLength: 0
+    type: string
+    description: Номер заявки
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  fingerprint:
+    type: string
+    description: Фингерпринт
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  userId:
+    type: string
+    description: Идентификатор Пользователя
+    format: uuid
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - SIGN_VALID
+    - REQUEST_EXPORT
+    - REQUEST_EXPORTED
+    - REQUEST_RESPONSE_RECEIVED
+    - REQUEST_DELAYED
+    - REQUEST_APPROVED
+    - REQUEST_ACCEPTED
+    - REQUEST_EXPORT_ERROR
+    - EXECUTED
+    - REJECTED
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_EXPORT
+    - MSG1_EXPORTED
+    - MSG1_EXPORT_ERROR
+    - MSG1_RESPONSE_RECEIVED
+    - MSG2_NEED_SIGN
+    - MSG2_SIGN_VALID
+    - MSG2_EXPORT
+    - MSG2_EXPORTED
+    - MSG2_EXPORT_ERROR
+    - MSG2_RESPONSE_RECEIVED
+    - EXECUTED_ENCRYPTED
+  statusDateTime:
+    type: string
+    description: Дата и время установки текущего статуса
+    format: date-time
+  clientRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для клиента или комментарий если отсутствует код ошибки
+  paymentDetails:
+    $ref: ../common/PaymentDetailsDto.yaml
+  purposeOfPayment:
+    type: string
+    description: Назначение платежа
+  clientAccount:
+    $ref: ../common/ClientAccountDto.yaml
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+  operationDateTime:
+    type: string
+    description: Дата и время операции
+    format: date-time
+  operationBalance:
+    $ref: ../common/OperationBalanceDto.yaml
+  cbrOperationId:
+    type: string
+    description: Идентификатор операции в ПлЦР
+    format: uuid
+  amount:
+    type: string
+    description: Сумма операции
+  bankRejectionReasonOrComment:
+    maxLength: 4000
+    minLength: 0
+    type: string
+    description: Описание причины отказа для банка или комментарий если отсутствует код ошибки
+  bankClientId:
+    type: string
+    description: Идентификатор организации в Экосистеме
+    format: uuid
+description: DTO ответа для запроса на создание заявки на продажу ЦР.

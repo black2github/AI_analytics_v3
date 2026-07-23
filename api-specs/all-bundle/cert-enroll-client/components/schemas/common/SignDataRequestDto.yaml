@@ -1,0 +1,26 @@
+required:
+- certificateId
+- documentId
+- signedData
+type: object
+properties:
+  documentId:
+    type: string
+    description: ID Заявки
+    format: uuid
+  certificateId:
+    type: string
+    description: ID Сертификата
+    format: uuid
+  signTypeId:
+    type: string
+    description: ID Типа подписи
+    format: uuid
+  signedData:
+    maxItems: 2
+    minItems: 2
+    type: array
+    description: Подписанные данные
+    items:
+      $ref: ./SignedDataDto.yaml
+description: Запрос подписи заявки ГЭП

@@ -1,0 +1,21 @@
+type: object
+properties:
+  requestsIds:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+  format:
+    type: string
+    description: Формат документа
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+description: Параметры экспорта списка заявок

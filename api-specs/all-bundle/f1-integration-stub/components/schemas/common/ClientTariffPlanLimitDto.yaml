@@ -1,0 +1,41 @@
+type: object
+required:
+- tariffPlanId
+- f1OperationCode
+- limitValue
+- currency
+description: Лимит тарифного план Клиента в Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  tariffPlanId:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор тарифного плана
+  f1OperationCode:
+    type: string
+    description: Код операции (услуги) в Ф1
+  f1OperationName:
+    type: string
+    description: Название операции (услуги) в Ф1
+  limitValue:
+    type: integer
+    format: int64
+    description: Значение лимита
+  currency:
+    $ref: ./LimitValueCurrency.yaml
+    type: string
+    description: Размерность значения лимита
+  limitPeriod:
+    type: string
+    description: Период действия лимита
+  limitRefreshDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата обновления лимита

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDashboardCalendarDealEventsFilter.yaml
+description: Запрос страницы

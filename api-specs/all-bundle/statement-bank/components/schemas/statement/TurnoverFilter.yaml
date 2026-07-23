@@ -1,0 +1,18 @@
+type: object
+properties:
+  turnoverDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  balanceBranchCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  openingBalance:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  turnoverDebit:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  turnoverCredit:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  closingBalance:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml

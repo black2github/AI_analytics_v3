@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRequestSignRegistryFilter.yaml
+description: Запрос страницы

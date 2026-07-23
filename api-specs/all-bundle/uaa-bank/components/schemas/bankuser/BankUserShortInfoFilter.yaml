@@ -1,0 +1,17 @@
+type: object
+properties:
+  ids:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  fio:
+    $ref: ../common/FilterValueDtoString.yaml
+  fioOrLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstName:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр краткой информации о пользователях Банка

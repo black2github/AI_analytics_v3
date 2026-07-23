@@ -1,0 +1,19 @@
+required:
+- fileId
+- hashAmount
+- hashFunction
+type: object
+properties:
+  fileId:
+    type: string
+    description: ID файла
+    format: uuid
+  hashAmount:
+    maxLength: 1024
+    type: string
+    description: Хеш сумма
+  hashFunction:
+    maxLength: 46
+    type: string
+    description: Хеш функция
+description: '[Импорт ПЭД] Система: Функция проверки файла импорта на дубли. Входящие параметры.'

@@ -1,0 +1,28 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: boolean
+  notEq:
+    type: boolean
+  in:
+    type: array
+    items:
+      type: boolean
+  notIn:
+    type: array
+    items:
+      type: boolean
+  isNull:
+    type: boolean
+  gt:
+    type: boolean
+  ge:
+    type: boolean
+  lt:
+    type: boolean
+  le:
+    type: boolean

@@ -1,0 +1,45 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardCommonInfoFilter:
+    $ref: ../common/FilterValueDtoString.yaml
+  cardGuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardId:
+    $ref: ../common/FilterValueDtoString.yaml
+  cardholderName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  currencyCodes:
+    $ref: ../common/FilterValueDtoString.yaml
+  deliveryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  expiredDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  expiredType:
+    $ref: ../common/FilterValueEnumDtoExpiredType.yaml
+  maskNum:
+    $ref: ../common/FilterValueDtoString.yaml
+  operationType:
+    $ref: ./FilterValueDtoOperationType.yaml
+  paySystemCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  period:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  productName:
+    $ref: ../common/FilterValueEnumDtoCardProductTypeDto.yaml
+  reportType:
+    $ref: ./FilterValueDtoReportType.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoCardStatus.yaml
+description: Отчет "Список карт"

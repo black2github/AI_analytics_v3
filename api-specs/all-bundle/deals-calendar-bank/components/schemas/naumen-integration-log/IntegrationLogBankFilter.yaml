@@ -1,0 +1,25 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  uaaUserId:
+    $ref: ./FilterValueDtoUUID.yaml
+  type:
+    $ref: ./FilterValueEnumDtoRequestTypeDto.yaml
+  errorCode:
+    $ref: ./FilterValueEnumDtoIntegrationLogErrorCodeDto.yaml
+  errorText:
+    $ref: ./FilterValueDtoString.yaml
+  taskId:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoProcessingStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Банковская категория для журнала запросов Календаря Сделок
+    enum:
+    - ALL
+    - FAILURE
+  lbpDeliveryId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр для банковского скроллера

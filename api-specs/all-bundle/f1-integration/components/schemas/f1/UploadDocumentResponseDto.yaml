@@ -1,0 +1,18 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат выполнения операции
+    example: SUCCESS
+    enum:
+    - SUCCESS
+    - ERROR
+    - UNDEFINED
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+  resultCode:
+    type: string
+    description: Код ответа
+description: Ответ на запрос загрузки документов

@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientServiceCode:
+    type: string
+    description: Код группы услуг. Группа услуг - объединение однотипных бизнес-операций, участвующих в расчете одного лимита.
+    example: tranfer_to_org_other_bank
+  clientServiceName:
+    type: string
+    description: Используется для отображения клиенту в ЭКО.
+    example: Переводы на счета в другие банки
+  limitValue:
+    type: integer
+    description: Лимит, значение
+    format: int64
+    example: 50000
+  limitValueCurrency:
+    type: string
+    description: Лимит, валюта
+    enum:
+    - NUMBER
+    - RUB
+  limitPeriod:
+    type: string
+    description: Лимит, период
+    example: 1D
+  limitsRefreshDate:
+    type: string
+    description: Дата обновления лимита
+    format: date
+    example: '2027-02-03'
+description: Услуга тарифа

@@ -1,0 +1,41 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  clientAbsId:
+    type: string
+    description: РНК клиента
+  shortClientName:
+    type: string
+    description: Короткое имя клиента банка
+  clientName:
+    type: string
+    description: Полное имя клиента банка
+  clientInn:
+    type: string
+    description: ИНН клиента банка
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountKindName:
+    type: string
+    description: Тип счета
+  contractTypeName:
+    type: string
+    description: Название типа контракта
+  contractTypeCode:
+    type: string
+    description: Код типа контракта
+  accountPayerName:
+    type: string
+    description: Название плательщика
+  deleted:
+    type: boolean
+    description: Признак удаления
+description: Информация о визируемом счете

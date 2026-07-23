@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус уведомления
+    enum:
+    - NEW
+    - READ
+    - REVOKED
+  notEq:
+    type: string
+    description: Статус уведомления
+    enum:
+    - NEW
+    - READ
+    - REVOKED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус уведомления
+      enum:
+      - NEW
+      - READ
+      - REVOKED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус уведомления
+      enum:
+      - NEW
+      - READ
+      - REVOKED
+  isNull:
+    type: boolean
+description: Фильтр по статусу прочтения. Полное совпадение

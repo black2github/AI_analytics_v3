@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  title: Сервис биометрического подтверждения операций. Клиентская часть.
+  description: Сервис биометрического подтверждения операций.
+  version: 3.1.0
+servers:
+- url: /biometric-confirmation-request-client
+security:
+- bearerAuth: []
+paths:
+  /biometric-confirmation-request/client/create-session:
+    $ref: ./paths/client/biometric_confirmation_request_client_create_session.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/client/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/client/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/client/ActionResultObject.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataString.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/client/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

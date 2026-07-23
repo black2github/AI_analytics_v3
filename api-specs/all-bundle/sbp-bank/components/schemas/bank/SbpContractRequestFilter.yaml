@@ -1,0 +1,56 @@
+type: object
+description: Фильтр скроллера заявки СБП.
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  fullNameClient:
+    $ref: ./FilterValueDtoString.yaml
+    description: Наименование клиента(организации)
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки
+  contractDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата договора
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП клиента
+  ogrnOgrnip:
+    $ref: ./FilterValueDtoString.yaml
+    description: ОГРН/ОГРНИП.
+  legalId:
+    $ref: ./FilterValueDtoString.yaml
+    description: LegalID. Идентификатор Клиента в АС СБП
+  status:
+    $ref: ./SbpContractRequestStatusFilter.yaml
+    description: Статус заявки
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер заявки
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор заявки
+  dppProductCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код идентификации продукта в Сервисе ДПП
+  dppServiceCode:
+    $ref: ./DppServiceCodeFilter.yaml
+    description: Код продуктового сервиса в Справочнике сервисов экосистемы
+  sourcePage:
+    $ref: ./FilterValueDtoString.yaml
+    description: Страница источник баннера
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка"
+  systemInitiatedRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак создания сервисом банка, eq

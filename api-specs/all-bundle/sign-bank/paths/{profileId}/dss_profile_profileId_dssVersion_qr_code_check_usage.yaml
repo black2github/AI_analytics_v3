@@ -1,0 +1,65 @@
+get:
+  tags:
+  - API для работы с профилем пользователя КриптоПРО DSS
+  summary: Проверка что QR код был применен на мобильном устройстве
+  description: 'Привилегии: DSS_CHECK_USAGE_QR_CODE'
+  operationId: isQRCodeUsed
+  parameters:
+  - name: profileId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: dssVersion
+    in: path
+    description: "* V1: \n* V2: "
+    required: true
+    schema:
+      type: string
+      enum:
+      - V1
+      - V2
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

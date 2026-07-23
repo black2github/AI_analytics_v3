@@ -1,0 +1,21 @@
+type: object
+properties:
+  accessToken:
+    type: string
+    description: Токен доступа вложения
+  attachmentId:
+    type: string
+    description: Ссылка на файл оригинала документа
+    format: uuid
+  dataHash:
+    type: string
+    description: Хеш вложения
+  dataSize:
+    type: integer
+    description: Размер вложения
+    format: int64
+  importDate:
+    type: string
+    description: Дата и время, когда файл был приложен к заявке
+    format: date-time
+description: Вложение в документах в заявке на выпуск карты

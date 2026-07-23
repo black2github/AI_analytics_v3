@@ -1,0 +1,276 @@
+type: object
+description: Тип ДСФ. ДТО на создание или обновление
+properties:
+  archived:
+    type: boolean
+    description: Признак архивный тип письма.
+  attachmentTypes:
+    type: array
+    description: Доступные типы вложений
+    items:
+      type: string
+  attachmentsNumberOptional:
+    type: string
+    format: byte
+    description: Количество документов, которые может приложить пользователь
+  attachmentsNumberRequired:
+    type: string
+    format: byte
+    description: Количество обязательных документов, которые должен приложить пользователь
+  attachmentsToNotification:
+    type: boolean
+    description: Признак необходимости добавлять вложения в нотификацию.
+  autoExecuted:
+    type: boolean
+    description: Автоматическое исполнение.
+  autoRevokeFromBank:
+    type: boolean
+    description: Автоматический отзыв писем из Банка
+  autoSignFromBank:
+    type: boolean
+    description: Автоподписание агентом писем из Банка
+  bankDetachRequired:
+    type: boolean
+    description: Автооткрепление документов, подписанных Банком.
+  bankExecuteStatusDescription:
+    type: string
+    description: Название финального успешного статуса обработки документа для банка.
+  bankSignRequired:
+    type: boolean
+    description: Двустороннее подписание.
+  bulkAttachmentCatalog:
+    $ref: ../common/BulkAttachmentCatalogDto.yaml
+    description: Настройки для массовой рассылки ДСФ из банка для определенного каталога.
+  charterCheckNeeded:
+    type: boolean
+    description: Проверка на устав
+  clientDetachRequired:
+    type: boolean
+    description: Автооткрепление документов, подписанных Клиентом.
+  clientExecuteStatusDescription:
+    type: string
+    description: Название финального успешного статуса обработки документа для клиента.
+  clientReplyRequired:
+    type: boolean
+    description: Ответ клиента обязателен
+  code:
+    type: string
+    description: Код типа письма
+  comment:
+    type: string
+    description: Пользовательский комментарий при добавлении/редактировании записи.
+  contactEmail:
+    type: string
+    description: E-mail группы обработки.
+  contactPhone:
+    type: string
+    description: Телефон группы обработки.
+  contactViewMode:
+    type: string
+    description: Режим отображения контактных данных сотрудника.
+    enum:
+    - PERSONHIDE
+    - GROUPSHOW
+    - GROUPHIDE
+  createReplyOnly:
+    type: boolean
+    description: Создание только через кнопку "Ответить".
+  designRequirement:
+    type: string
+    description: Требования к оформлению
+  detachFromBank:
+    type: boolean
+    description: Автооткрепление вложений для писем из Банка
+  edit:
+    type: boolean
+    description: Текст письма доступен для редактирования.
+  eioCheckNeeded:
+    type: boolean
+    description: Признак необходимости проверки на ЕИО.
+  eskMonitoring:
+    type: boolean
+    description: Отправлять статусы писем в ЕСК
+  executeAfterSigning:
+    type: boolean
+    description: Исполнение документа после подписания.
+  externalSystemInitReceive:
+    type: string
+    description: АС Инициатор/Получатель.
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  filialGoReceiver:
+    type: boolean
+    description: Получатель филиал ГО
+  finalizeByExtSystem:
+    type: boolean
+    description: Финализация статуса по запросу из АС Инициатора/Получателя.
+  hideSignDateStamp:
+    type: boolean
+    description: Признак отсутствия даты и времени в штампе. true - Дата и время в штампе отсутствуют
+  letterType:
+    type: string
+    description: Тип письма.
+  linkRequirement:
+    type: string
+    description: Требования к оформлению - ссылка.
+  massMailing:
+    type: boolean
+    description: Признак использования для массовой рассылки.
+  maxAttachmentFileSize:
+    type: integer
+    format: int32
+    description: Суммарный максимальный размер вложения в мегабайтах для данного типа письма
+  message:
+    type: string
+    description: Текст письма.
+  messageRequired:
+    type: boolean
+    description: Необходим текст письма.
+  notificationType:
+    type: string
+    description: Код типа уведомления
+  notifyPeriodically:
+    type: boolean
+    description: Направлять уведомления периодически.
+  productCode:
+    type: string
+    description: Код продукта ЕСК.
+  products:
+    type: array
+    description: Коды продукта (ЦРМ)
+    items:
+      type: string
+      description: Классификатор - Типы продуктов в соответствии с ЦРМ
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+  publicLetterType:
+    type: boolean
+    description: Общедоступный тип письма
+  redirectOnly:
+    type: boolean
+    description: Создание только из других сервисов
+  relatedTypeCode:
+    type: string
+    description: Код связанного типа письма
+  replyCode:
+    type: string
+    description: Код ответного типа ДСФ.
+  requiredToDisplay:
+    type: boolean
+    description: Обязательно к отображению
+  sendEmailFromBank:
+    type: boolean
+    description: Отправлять Email для писем из Банка
+  sendSmsFromBank:
+    type: boolean
+    description: Отправлять SMS для писем из Банка
+  signByKopop:
+    type: boolean
+    description: Подпись по КОПОП
+  signMode:
+    type: string
+    description: Режим подписи.
+    enum:
+    - NONE
+    - WITH_ATTACH_SIGN_AT_ONCE
+    - WITH_SEPARATE_ATTACH_SIGN_AT_ONCE
+    - WITH_SEPARATE_ATTACH_SIGN
+  signPriority:
+    type: string
+    description: Очередность двустороннего подписания.
+    enum:
+    - CLIENT_BANK
+    - BANK_CLIENT
+  signTypes:
+    type: array
+    description: Типы ЭП.
+    items:
+      type: string
+  signWithMchd:
+    type: boolean
+    description: Подпись с МЧД
+  signWithTimestamp:
+    type: boolean
+    description: Подпись с меткой времени
+  signatoryGroupId:
+    type: string
+    format: uuid
+    description: Идентификатор группы подписантов.
+  signedConstitutionNeeded:
+    type: boolean
+    description: Признак необходимости подписанной конституции.
+  signerNeeded:
+    type: boolean
+    description: Признак необходимости назначения подписанта. TRUE - Требуется назначение подписанта
+  signsPerAttachment:
+    type: string
+    format: byte
+    description: Количество подписей на вложения.
+  signsPerDsf:
+    type: string
+    format: byte
+    description: Количество подписей на документ.
+  subjectRequired:
+    type: boolean
+    description: Необходима тема письма.
+  subjectTemplate:
+    type: string
+    description: Шаблон темы письма.
+  templates:
+    type: array
+    description: Список шаблонов
+    items:
+      $ref: ./DsfTypeTemplateChangeDto.yaml
+  tessaDocumentType:
+    type: string
+    description: Тип документа в ТЕССА.
+  tessaDocumentTypeId:
+    type: string
+    format: uuid
+    description: Идентификатор типа документа в ТЕССА.
+  typeClass:
+    type: string
+    description: Класс типа письма
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+    - REPLY_MAIL_TO_BANK
+  typeName:
+    type: string
+    description: Наименование типа
+  typeNameEn:
+    type: string
+    description: Наименование типа на английском
+  useCheckingAccount:
+    type: boolean
+    description: Использовать параметр расчетный счет
+required:
+- attachmentsNumberOptional
+- attachmentsNumberRequired
+- autoRevokeFromBank
+- autoSignFromBank
+- charterCheckNeeded
+- code
+- createReplyOnly
+- detachFromBank
+- eskMonitoring
+- filialGoReceiver
+- notifyPeriodically
+- sendEmailFromBank
+- sendSmsFromBank
+- signMode
+- signWithTimestamp
+- typeClass
+- typeName

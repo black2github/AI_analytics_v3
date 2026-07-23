@@ -1,0 +1,11 @@
+type: object
+properties:
+  intervalStatusDays:
+    type: integer
+    description: Количество дней для поиска документов в промежуточных статусах
+    format: int32
+  finalStatusDays:
+    type: integer
+    description: Количество дней для поиска документов в финальных статусах
+    format: int32
+description: Дто для запроса экспорта статусов документов валютного контроля в файл

@@ -1,0 +1,11 @@
+type: object
+properties:
+  docDateFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  docDateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  documentType:
+    $ref: ./FilterValueDtoBrkEngageDocumentType.yaml
+  requestStatus:
+    $ref: ./FilterValueDtoBrkContractEngageClientStatus.yaml
+description: Фильтр для скроллера заявок на подключение услуг к брокерскому договору

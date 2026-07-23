@@ -1,0 +1,9 @@
+type: object
+properties:
+  dateOperation:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docType:
+    $ref: ./FilterValueEnumDtoPaymentDocumentStatisticDocTypeFilter.yaml
+description: Фильтр получения агрегированой статистики

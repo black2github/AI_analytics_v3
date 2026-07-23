@@ -1,0 +1,36 @@
+type: object
+description: Реквизиты получателя по входящему QR коду
+properties:
+  legalId:
+    type: string
+    description: Идентификатор Получателя в АС СБП
+  legalName:
+    type: string
+    description: Наименование Получателя
+  inn:
+    type: string
+    description: ИНН Получателя
+  account:
+    type: string
+    description: Счет Получателя
+  memberName:
+    type: string
+    description: Наименование банка Получателя
+  memberBic:
+    type: string
+    description: БИК банка Получателя
+  merchantName:
+    type: string
+    description: Наименование точки продаж
+  merchantAddress:
+    type: string
+    description: Адрес точки продаж
+  mccCode:
+    type: string
+    description: Вид деятельности код MCC
+  mccName:
+    type: string
+    description: Наименование вида деятельности
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП

@@ -1,0 +1,9 @@
+type: object
+properties:
+  incomeType:
+    maxLength: 210
+    type: string
+    description: Назначение
+    nullable: true
+description: Реквизиты исходящего платежного требования (скроллер админа)
+nullable: true

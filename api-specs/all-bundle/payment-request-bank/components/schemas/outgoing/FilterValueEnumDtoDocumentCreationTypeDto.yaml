@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./DocumentCreationTypeDto.yaml
+  notEq:
+    $ref: ./DocumentCreationTypeDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./DocumentCreationTypeDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./DocumentCreationTypeDto.yaml
+  isNull:
+    type: boolean
+description: Способ создания (равенство, содержится в списке)
+nullable: true

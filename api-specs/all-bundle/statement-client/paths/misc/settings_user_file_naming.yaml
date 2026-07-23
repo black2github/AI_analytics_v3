@@ -1,0 +1,127 @@
+get:
+  tags:
+  - user-file-settings-controller
+  description: 'Привилегии: SETTING_NAMING_FILE_VIEW'
+  operationId: get
+  parameters:
+  - name: statementFormat
+    in: query
+    description: "* C1: \n* C1_02: \n* TXT: \n* TXT_WITHOUT_AMOUNTS: \n* PDF: \n* PDF_IMPERSONAL: \n* EXCEL: \n* RTF: \n* DOCX: \n* MT940: \n* C1_SPECIAL: \n* C1_SPECIAL_2: \n* CAMT053: \n* MULTICASH: \n* EXCEL_XLSX: \n* PDF_MULTIBANKING: \n* EXCEL_MULTIBANKING: "
+    required: true
+    schema:
+      type: string
+      enum:
+      - C1
+      - C1_02
+      - TXT
+      - TXT_WITHOUT_AMOUNTS
+      - PDF
+      - PDF_IMPERSONAL
+      - EXCEL
+      - RTF
+      - DOCX
+      - MT940
+      - C1_SPECIAL
+      - C1_SPECIAL_2
+      - CAMT053
+      - MULTICASH
+      - EXCEL_XLSX
+      - PDF_MULTIBANKING
+      - EXCEL_MULTIBANKING
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/misc/GenericResponseStatementErrorListFileSettingsDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+post:
+  tags:
+  - user-file-settings-controller
+  description: 'Привилегии: SETTING_NAMING_FILE_SAVE'
+  operationId: save
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/misc/GenericCommandUserFileSettingsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseStatementErrorUUID.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml

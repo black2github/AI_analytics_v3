@@ -1,0 +1,62 @@
+post:
+  tags:
+  - Технический контроллер шаблона роли УЛ
+  - Технический API шаблона роли УЛ
+  summary: Получение шаблонов ролей по набору фильтров
+  description: 'Привилегии: AUTHORIZED_PERSON_ROLE_TEMPLATE_SEARCH'
+  operationId: searchByFilter
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ap/SearchRoleTemplateFilter.yaml
+    required: true
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/ap/GenericResponseSimpleErrorDataApRoleTemplateSearchResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

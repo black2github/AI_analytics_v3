@@ -1,0 +1,54 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип события
+    enum:
+    - DEAL_DEPOSIT
+    - DEAL_MNO
+    - DEAL_GSNO
+    - DEAL_FX
+    - AGREEMENT_GSNO_PARENT
+    - AGREEMENT_GSNO_CHILD_HEAD
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - NEW
+    - VIOLATED
+    - DENIED
+  source:
+    type: string
+    description: Источник события
+    enum:
+    - DEALS
+    - FX_DEALS
+    - AGREEMENTS
+  description:
+    type: string
+    description: Описание события
+  priority:
+    type: integer
+    description: Приоритет события
+    format: int32
+  eventDateTime:
+    type: string
+    description: Дата и время события
+    format: date-time
+  objectId:
+    type: string
+    description: Идентификатор объекта, связанного с событием
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientId:
+    type: string
+    description: Идентификатор Клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientName:
+    type: string
+    description: Наименование Клиента
+  clientInn:
+    type: string
+    description: ИНН Клиента
+description: Страница с данными

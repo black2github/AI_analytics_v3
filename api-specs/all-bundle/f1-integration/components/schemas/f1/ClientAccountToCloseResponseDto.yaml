@@ -1,0 +1,8 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Массив счетов, доступных для закрытия
+    items:
+      $ref: ./AccountToCloseDto.yaml
+description: Ответ на запрос счетов клиента, доступных для закрытия

@@ -1,0 +1,8 @@
+required:
+- code
+type: object
+properties:
+  code:
+    $ref: ../common/InquiryTypeCodeDto.yaml
+description: Справка, запрашиваемая по запросу для ЮЛ
+example: null

@@ -1,0 +1,19 @@
+type: object
+properties:
+  acceptPeriodEnd:
+    type: string
+    description: Окончание срока акцепта
+    format: date
+    nullable: true
+  debitingDate:
+    type: string
+    description: Дата списания со счёта плательщика
+    format: date
+    nullable: true
+  receiptDate:
+    type: string
+    description: Дата поступления в банк плательщика
+    format: date
+    nullable: true
+description: Информация от банка плательщика (платежное требование исходящее, данные для клиента)
+nullable: true

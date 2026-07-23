@@ -1,0 +1,31 @@
+required:
+- createdAt
+- id
+- number
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+    - NEW_USER_ADD
+    - USER_ESK_EDIT
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+description: Ответ создания заявки на легализацию прав сотрудника

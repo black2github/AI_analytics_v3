@@ -1,0 +1,38 @@
+type: object
+properties:
+  departmentCode:
+    type: string
+    description: Код подразделения, выдавшего документ
+  departmentName:
+    type: string
+    description: Наименование подразделения, выдавшего документ
+  documentType:
+    type: string
+    description: Тип документа лица, фигурирующего в заявке
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN
+    - PASSPORT_FOREIGN_COUNTRY
+    - PASSPORT_SEAMAN
+    - MILITARY_CARD
+    - TEMPORARY_ID_CARD
+    - OTHER
+  number:
+    type: string
+    description: Номер паспорта РФ или иностранного гражданина
+  recognitions:
+    type: array
+    description: Результаты распознавания документа
+    items:
+      $ref: ./PassportRecognitionDto.yaml
+  releaseDate:
+    type: string
+    description: Дата выдачи паспорта
+    format: date
+  series:
+    type: string
+    description: Серия паспорта РФ. Для иностранного гражданина произвольная строка
+  uploaded:
+    type: boolean
+    description: Признак загрузки файла ДУЛ для распознавания
+description: Сведения о ДУЛ

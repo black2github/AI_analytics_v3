@@ -1,0 +1,20 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Счета
+    items:
+      $ref: ./SignStatisticsAccountDto.yaml
+  authorizedPersons:
+    type: array
+    description: УЛ
+    items:
+      $ref: ./SignStatisticsAuthorizedPersonDto.yaml
+  documents:
+    type: array
+    description: Документы
+    items:
+      $ref: ./SignStatisticsDocumentFileDto.yaml
+  organization:
+    $ref: ./SignStatisticsOrganizationDto.yaml
+description: Ответ на запрос на получение статистики

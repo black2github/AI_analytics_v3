@@ -1,0 +1,18 @@
+post:
+  tags:
+  - dvk-bank-tech-controller
+  summary: Запрос экспорта статусов документов ДВК в файл
+  operationId: getDocumentsByDayInterval
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-documents/GetPageCommandDvkStatusExportRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-documents/GenericResponseSimpleErrorDataSliceDataDvkStatusExportDto.yaml

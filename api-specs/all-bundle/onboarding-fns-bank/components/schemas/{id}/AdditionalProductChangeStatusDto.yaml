@@ -1,0 +1,15 @@
+type: object
+properties:
+  productType:
+    type: string
+    description: Тип дополнительного продукта
+    enum:
+    - ONLINE_CASH_REGISTER
+    - EDO
+  actionType:
+    type: string
+    description: Тип действия
+    enum:
+    - PROVIDE
+    - REJECT
+description: Данные

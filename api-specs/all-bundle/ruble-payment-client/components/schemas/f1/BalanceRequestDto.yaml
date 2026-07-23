@@ -1,0 +1,10 @@
+type: object
+properties:
+  ecoAccountIds:
+    type: array
+    description: Список идентификаторов счетов клиента в Экосистеме
+    items:
+      type: string
+      description: Список идентификаторов счетов клиента в Экосистеме
+      format: uuid
+description: Запрос счетов с балансом.

@@ -1,0 +1,5 @@
+type: object
+properties:
+  bankDeadlineDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+description: АМЛ. Диалоги. Фильтр скроллера. Клиентская часть.

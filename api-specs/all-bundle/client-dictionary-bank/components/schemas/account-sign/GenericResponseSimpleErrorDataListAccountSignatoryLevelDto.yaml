@@ -1,0 +1,17 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      enum:
+      - LEVEL_1
+      - LEVEL_2
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

@@ -1,0 +1,15 @@
+put:
+  tags:
+  - АПИ Банка для работы с Consul
+  summary: Зарегистрировать сервис
+  description: 'Привилегии: CONSUL_ACCESS'
+  operationId: register
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/register/ConsulRegisterServiceDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK

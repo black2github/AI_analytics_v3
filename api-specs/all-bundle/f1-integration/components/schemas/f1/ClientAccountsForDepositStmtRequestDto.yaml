@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientRnkId:
+    type: integer
+    description: РНК ид клиента
+    example: 12345
+  dateStart:
+    type: string
+    description: Начальная дата
+    format: date
+    example: '2023-03-20'
+  dateEnd:
+    type: string
+    description: Конечная дата
+    format: date
+    example: '2023-03-20'
+description: Запрос счетов клиента для использования в модуле Казначейские продукты для заказа депозитной выписки

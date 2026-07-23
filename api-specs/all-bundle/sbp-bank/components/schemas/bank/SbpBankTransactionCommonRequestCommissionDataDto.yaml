@@ -1,0 +1,22 @@
+type: object
+description: Информация о комиссии в обобщенном платеже для банка
+properties:
+  percentRate:
+    type: number
+    description: Тариф Банка
+  commissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия Банка в копейках
+  tariffId:
+    type: integer
+    format: int64
+    description: Идентификатор Тарифа
+  tariffMin:
+    type: integer
+    format: int64
+    description: Минимальная комиссия банка за перевод в копейках
+  tariffMax:
+    type: integer
+    format: int64
+    description: Максимальная комиссия банка за перевод в копейках

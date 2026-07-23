@@ -1,0 +1,15 @@
+type: object
+properties:
+  count:
+    type: integer
+    description: Количество документов
+    format: int64
+  organisationStat:
+    type: object
+    additionalProperties:
+      type: array
+      description: Сумма в разрезе валюты и организации
+      items:
+        $ref: ./PaymentDocumentStatisticSumRspDto.yaml
+    description: Сумма в разрезе валюты и организации
+description: Агрегированная статистика платежных документов в категории

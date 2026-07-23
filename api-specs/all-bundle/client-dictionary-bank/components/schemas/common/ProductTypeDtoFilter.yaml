@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  notEq:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  in:
+    type: array
+    items:
+      type: string
+      description: Продукты ГПБ БО
+      enum:
+      - CONSTITUTION
+      - LK_UVED
+      - LK_MP
+      - TMG
+      - GPB_BO
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Продукты ГПБ БО
+      enum:
+      - CONSTITUTION
+      - LK_UVED
+      - LK_MP
+      - TMG
+      - GPB_BO
+  isNull:
+    type: boolean
+description: Тип продукта ГПБ БО. Фильтр по равенству значения.

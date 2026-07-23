@@ -1,0 +1,9 @@
+type: object
+properties:
+  lastName:
+    type: string
+  firstName:
+    type: string
+  middleName:
+    type: string
+description: Информация о представителе

@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  rkoId:
+    type: string
+    description: Идентификатор договора банковского счета в АБС
+  commissionAccount:
+    type: string
+    description: Номер счета для списания комиссии
+description: Данные

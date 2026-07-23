@@ -1,0 +1,35 @@
+type: object
+properties:
+  structureId:
+    type: string
+    description: Идентификатор структуры
+    format: uuid
+  structureTmgId:
+    maxLength: 20
+    type: string
+    description: Идентификатор структуры в TMG
+  structureName:
+    type: string
+    description: Наименование структуры
+  responsibilityCenterId:
+    type: string
+    description: Идентификатор центра ответственности
+    format: uuid
+  responsibilityCenterTmgId:
+    maxLength: 20
+    type: string
+    description: Идентификатор центра ответственности в TMG
+  responsibilityCenterName:
+    type: string
+    description: Наименование центра ответственности
+  analyticalClassifierId:
+    type: string
+    description: Идентификатор аналитического классификатора
+    format: uuid
+  analyticalClassifierCode:
+    type: string
+    description: Код аналитического классификатора
+  analyticalClassifierName:
+    type: string
+    description: Наименование аналитического классификатора
+description: Поля аналитика, заполняемые клиентом

@@ -1,0 +1,15 @@
+type: object
+properties:
+  kpp:
+    type: string
+    description: КПП клиента
+  isMain:
+    type: boolean
+    writeOnly: true
+  bankClientId:
+    type: string
+    description: Идентификатор клиента обладателя КПП
+    format: uuid
+  main:
+    type: boolean
+description: КПП с указанием клиента

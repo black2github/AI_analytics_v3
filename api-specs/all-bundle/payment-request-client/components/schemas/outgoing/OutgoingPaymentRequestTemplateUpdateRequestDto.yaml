@@ -1,0 +1,23 @@
+required:
+- id
+- templateName
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    type: string
+    description: Наименование шаблона
+  bankClientInfo:
+    $ref: ./BankClientTemplateInfoClientDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessTemplateInfoClientDto.yaml
+  paymentInfo:
+    $ref: ./PaymentTemplateInfoClientDto.yaml
+  payerInfo:
+    $ref: ./PayerTemplateInfoClientDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverTemplateInfoClientDto.yaml
+description: Обновление шаблона Исходящего Платежного требования

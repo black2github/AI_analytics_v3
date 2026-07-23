@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UNKNOWN
+    - USED
+    - NOT_USED
+  notEq:
+    type: string
+    enum:
+    - UNKNOWN
+    - USED
+    - NOT_USED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - USED
+      - NOT_USED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - USED
+      - NOT_USED
+  isNull:
+    type: boolean
+description: Статус использования короткой ссылки

@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./UserNotificationCreateV2Dto.yaml
+description: Запрос

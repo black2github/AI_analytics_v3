@@ -1,0 +1,53 @@
+post:
+  tags:
+  - СИП. Сервис Internal Merchant API
+  summary: 'Сервис: Запрос списка доступных для подключения Агентов ТСП'
+  operationId: getAgentsTspFromSbpUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.docType
+    in: query
+    required: false
+    type: string
+  - name: body.guid
+    in: query
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/AgentTspResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

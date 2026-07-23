@@ -1,0 +1,26 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер контракта (договора)
+  date:
+    type: string
+    description: Дата контракта (договора)
+    format: date
+  currencyCode:
+    type: string
+    description: Код валюты цены (цифровой)
+  currencyName:
+    type: string
+    description: Наименование валюты цены
+  amount:
+    type: string
+    description: Сумма контракта (договора)
+  endingDate:
+    type: string
+    description: Дата завершения исполнения обязательств по контракту (договору)
+    format: date
+  isTransferable:
+    type: boolean
+    description: Признак перевода контракта из другого банка
+description: Сведения о контракте

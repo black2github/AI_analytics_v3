@@ -1,0 +1,9 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат проверки подписи Мульти-Банк (Openapi)
+    enum:
+    - VALID
+    - INVALID
+description: Ответ на запрос проверки подписи Мульти-Банк (openapi)

@@ -1,0 +1,5 @@
+type: object
+properties:
+  ogrnOgrip:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр организаций по ОГРН

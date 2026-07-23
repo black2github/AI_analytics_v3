@@ -1,0 +1,16 @@
+type: object
+properties:
+  docType:
+    type: string
+    description: Тип документа
+  docSubType:
+    type: string
+    description: Подтип документа
+  docStatus:
+    type: string
+    description: Статус документа
+  count:
+    type: integer
+    description: Количество документов в группе
+    format: int64
+description: Данные

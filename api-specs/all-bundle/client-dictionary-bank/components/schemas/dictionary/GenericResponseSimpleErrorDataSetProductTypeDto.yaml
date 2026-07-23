@@ -1,0 +1,21 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Продукты ГПБ БО
+      enum:
+      - CONSTITUTION
+      - LK_UVED
+      - LK_MP
+      - TMG
+      - GPB_BO
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

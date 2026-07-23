@@ -1,0 +1,106 @@
+required:
+- bankClientId
+type: object
+properties:
+  documentDetails:
+    $ref: ./DocumentDetailsClientDto.yaml
+  signatures:
+    type: array
+    description: Подписи платежного поручения
+    deprecated: true
+    items:
+      $ref: ./SignatureClientDto.yaml
+  signPhaseDto:
+    $ref: ./SignPhaseShortDto.yaml
+  chargebackRequest:
+    $ref: ./ChargebackRequestClientDto.yaml
+  backgroundImportProcess:
+    $ref: ./BackgroundImportProcessDto.yaml
+  bscControlDetails:
+    $ref: ./BscControlDetailsClientDto.yaml
+  templateName:
+    type: string
+    description: Наименование шаблона
+  sightDetails:
+    $ref: ./SightDetailsClientDto.yaml
+  canCreateDio:
+    type: boolean
+    description: Возможность создания ДИО
+  controlAndAcceptance:
+    $ref: ./ControlAndAcceptanceDto.yaml
+  docSourceSystem:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  archive:
+    type: boolean
+    description: Архивный документ
+  screenFormType:
+    $ref: ./ScreenFormTypeDto.yaml
+  id:
+    type: string
+    description: Идентификатор заявки "Платежное поручение"
+    format: uuid
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  status:
+    $ref: ./PaymentOrderRequestStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  acceptForExecutionAt:
+    type: string
+    description: Дата приема документа в Экосистеме
+    format: date-time
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientRnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  eskClientId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  docCreationType:
+    $ref: ./DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    type: string
+    description: Страница с которой вызвано создание документа
+  sampleDocId:
+    type: string
+    description: Идентификатор документа на основе которого создан документ
+  paymentInfo:
+    $ref: ./PaymentInfoDto.yaml
+  paymentAmount:
+    $ref: ./PaymentAmountDto.yaml
+  payerDetails:
+    $ref: ./PayerDetailsDto.yaml
+  recipientDetails:
+    $ref: ./RecipientDetailsDto.yaml
+  budgetInfo:
+    $ref: ./BudgetInfoDto.yaml
+  importDetails:
+    $ref: ./ImportDetailsDto.yaml
+  technicalDetails:
+    $ref: ./TechnicalDetailsDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  createdAt:
+    type: string
+    description: Дата и время создания документа
+    format: date-time
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+description: Платежное поручение, данные для клиента

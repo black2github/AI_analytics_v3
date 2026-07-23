@@ -1,0 +1,43 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestSubtype:
+    $ref: ./FilterValueDtoBrokerageTradeOrderRequestSubtypeDto.yaml
+  requestKind:
+    $ref: ./FilterValueDtoBrokerageTradeOrderRequestKindDto.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  requestFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  requestTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  tradingFloorName:
+    $ref: ../common/FilterValueDtoString.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория экранной формы
+    enum:
+    - ALL
+    - INPROCESSING
+    - ERROR
+    - EXECUTED
+  linkedOnly:
+    $ref: ./FilterValueDtoBoolean.yaml
+  status:
+    $ref: ./FilterValueDtoBrokerageBankTradeOrderRequestStatusDto.yaml
+  amountFrom:
+    $ref: ../common/FilterValueDtoString.yaml
+  amountTo:
+    $ref: ../common/FilterValueDtoString.yaml
+  withDeleted:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр для скроллера торговых поручений (банковская сторона)

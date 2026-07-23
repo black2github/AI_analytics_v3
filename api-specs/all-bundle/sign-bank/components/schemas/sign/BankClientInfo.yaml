@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID клиента
+    format: uuid
+  shortName:
+    type: string
+    description: Короткое имя клиента
+  innKio:
+    type: string
+    description: ИНН/КИО
+  ogrnOgrip:
+    type: string
+    description: ОРГН/ОГРНИП
+  kpp:
+    type: string
+    description: КПП
+  absId:
+    type: string
+    description: РНК клиента в РКО Ф1
+description: Информация о клиенте

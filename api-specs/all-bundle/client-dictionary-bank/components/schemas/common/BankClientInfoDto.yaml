@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Клиент Банка"
+    format: uuid
+  clientId:
+    type: integer
+    description: Идентификатор клиента
+    format: int64
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+  kpp:
+    type: string
+    description: КПП
+  absId:
+    type: string
+    description: 'РНК клиента в РКО Ф1 '
+  externalClientGuid:
+    type: string
+    description: 'GUID клиента в ЕСК '
+    format: uuid
+description: Подмножество полей сущности "Клиент Банка"

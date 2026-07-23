@@ -1,0 +1,66 @@
+get:
+  tags:
+  - API для документов на размещение денежных средств. Базовые операции.
+  - API для отчетов документов на размещение денежных средств
+  - API для документов на размещение денежных средств.
+  - API для подписи документов на размещение денежных средств
+  - API для депозитных сделок
+  summary: Получить заявку по АСК идентификатору
+  description: 'Привилегии: (#eco.userTypeIs(''BANK'') OR #eco.userTypeIs(''TECHNICAL'')) AND hasAuthority(''TREASURY_DEALS_INVEST_DOC_VIEW'')'
+  operationId: getByAskId_3
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+      format: int64
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataDepositDocDto.yaml
+    '409':
+      description: Conflict
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponse.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

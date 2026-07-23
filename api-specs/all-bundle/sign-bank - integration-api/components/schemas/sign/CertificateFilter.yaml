@@ -1,0 +1,53 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям. Обязательный параметр. (=)
+    enum:
+    - CA_CERTIFICATE
+    - USER_CERTIFICATE
+  text:
+    $ref: ../common/FilterValueDtoString.yaml
+  deleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userName:
+    $ref: ../common/FilterValueDtoString.yaml
+  organizationName:
+    $ref: ../common/FilterValueDtoString.yaml
+  data:
+    $ref: ../common/FilterValueDtoString.yaml
+  origin:
+    $ref: ./FilterValueEnumDtoCertificateOriginDto.yaml
+  absId:
+    $ref: ../common/FilterValueDtoString.yaml
+  signParams:
+    $ref: ../common/FilterValueDtoString.yaml
+  footprint:
+    $ref: ../common/FilterValueDtoString.yaml
+  keyId:
+    $ref: ./FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  whomIssued:
+    $ref: ../common/FilterValueDtoString.yaml
+  validFrom:
+    $ref: ./FilterValueDtoInstant.yaml
+  validTo:
+    $ref: ./FilterValueDtoInstant.yaml
+  authorityCertificate:
+    $ref: ./FilterValueDtoUUID.yaml
+  authorityCertKeyId:
+    $ref: ../common/FilterValueDtoString.yaml
+  caName:
+    $ref: ../common/FilterValueDtoString.yaml
+  authorityCertSerialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  renewalForbidden:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  renewalForbiddenDate:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр для сертификатов

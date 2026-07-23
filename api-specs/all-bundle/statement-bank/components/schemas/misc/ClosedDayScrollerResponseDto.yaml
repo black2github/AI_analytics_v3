@@ -1,0 +1,22 @@
+type: object
+properties:
+  secondPhaseMessageId:
+    type: string
+    format: uuid
+  secondPhaseClosingTime:
+    type: string
+    format: date-time
+  thirdPhaseMessageId:
+    type: string
+    format: uuid
+  thirdPhaseClosingTime:
+    type: string
+    format: date-time
+  operationDate:
+    type: string
+    format: date
+  branchCode:
+    type: string
+  branchName:
+    type: string
+description: Страница с данными

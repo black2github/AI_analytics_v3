@@ -1,0 +1,8 @@
+required:
+- paymentAmountIncludeVat
+type: object
+properties:
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма платежа с учетом НДС
+description: Сумма платежа и НДС

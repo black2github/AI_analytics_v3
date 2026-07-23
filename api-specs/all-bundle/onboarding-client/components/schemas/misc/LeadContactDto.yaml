@@ -1,0 +1,15 @@
+type: object
+properties:
+  firstName:
+    type: string
+    description: Имя
+  lastName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+  phone:
+    type: string
+    description: Номер телефона контактного лица
+description: Сведения о контактном лице

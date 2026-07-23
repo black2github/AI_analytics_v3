@@ -1,0 +1,18 @@
+required:
+- attachmentId
+- fileName
+- fileSize
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор файла в хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+description: Данные

@@ -1,0 +1,12 @@
+type: object
+properties:
+  consentType:
+    type: string
+    description: Тип согласия
+    enum:
+    - CONSENT_OF_PERSONAL_DATA
+  consentVersion:
+    type: integer
+    description: Версия согласия
+    format: int32
+description: Запрос на добавление согласия пользователю

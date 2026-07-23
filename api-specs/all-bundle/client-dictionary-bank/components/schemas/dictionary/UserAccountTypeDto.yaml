@@ -1,0 +1,12 @@
+type: object
+properties:
+  contractTypeCode:
+    type: string
+    description: Тип договора
+  accountKindCode:
+    type: string
+    description: Вид счета
+  name:
+    type: string
+    description: Наименование типа счета
+description: Тип счета

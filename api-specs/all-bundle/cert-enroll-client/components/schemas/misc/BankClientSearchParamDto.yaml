@@ -1,0 +1,17 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН организации клиента
+  ogrn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  userAbsId:
+    type: string
+    description: ИД РКО Ф1 пользователя
+  organization:
+    $ref: ./OrganizationNameFilterParamDto.yaml
+description: Параметры поиска заявок по аттрибутам клиента

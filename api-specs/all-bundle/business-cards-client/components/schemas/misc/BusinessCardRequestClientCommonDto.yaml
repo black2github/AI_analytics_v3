@@ -1,0 +1,97 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  accountNum:
+    type: string
+    description: Номер счета карты
+  accountRestAmount:
+    type: string
+    description: Остаток на счете карты
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  cardholderEmboss:
+    type: string
+    description: Эмбоссированное имя
+  cardholderFirstName:
+    type: string
+    description: Имя держателя
+  cardholderLastName:
+    type: string
+    description: Фамилия держателя
+  cardholderMiddleName:
+    type: string
+    description: Отчество держателя
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  createdDate:
+    type: string
+    description: Дата выпуска карты
+    format: date
+  currencyCode:
+    type: string
+    description: Валюта карты
+  deliveryDate:
+    type: string
+    description: Дата получения карты
+    format: date
+  expirationDateIn:
+    type: string
+    description: Срок уведомления об окончании срока действия карты, строковое значение
+  expireNotifyDate:
+    type: string
+    description: Срок уведомления об окончании срока действия карты
+    format: date
+  expiredDate:
+    type: string
+    description: Срок действия
+    format: date
+  id:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  isCardHolder:
+    type: boolean
+    description: Признак держателя
+  maskedNum:
+    type: string
+    description: Маскированный номер карты
+  paySystemCode:
+    type: string
+    description: Код платежной системы
+  paySystemName:
+    type: string
+    description: Платежная система
+  productName:
+    type: string
+    description: Карточный продукт
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  serviceBranchCode:
+    type: string
+    description: Код филиала обслуживания карты
+  serviceOfficeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания карты
+  status:
+    type: string
+    description: Статус карты
+  statusDetail:
+    type: string
+    description: Описание статуса карты
+description: Запрос для корпоративных карт

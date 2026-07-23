@@ -1,0 +1,18 @@
+required:
+- id
+- reportFormat
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  reportFormat:
+    type: string
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF

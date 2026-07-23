@@ -1,0 +1,18 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  fullName:
+    type: string
+    description: Полное имя
+  shortName:
+    type: string
+    description: Короткое имя
+description: Филиал организации КНОСИС

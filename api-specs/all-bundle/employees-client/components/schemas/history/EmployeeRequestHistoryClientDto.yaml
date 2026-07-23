@@ -1,0 +1,18 @@
+required:
+- localizationForClient
+- operations
+- status
+type: object
+properties:
+  status:
+    type: string
+    description: Статус заявки
+  localizationForClient:
+    type: string
+    description: Локализация для клиента
+  operations:
+    type: array
+    description: Операции
+    items:
+      $ref: ./EmployeeRequestOperationHistoryClientDto.yaml
+description: История изменений заявки

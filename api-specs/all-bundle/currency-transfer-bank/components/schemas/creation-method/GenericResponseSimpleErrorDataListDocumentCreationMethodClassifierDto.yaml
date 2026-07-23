@@ -1,0 +1,32 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      enum:
+      - UNKNOWN
+      - NEW
+      - COPY
+      - IMPORT_FILE
+      - IMPORT
+      - DIRECT_1C
+      - TEMPLATE
+      - SALARY
+      - STATEMENT
+      - TAX_NOTICE
+      - F1_INSERT
+      - SKVO_INSERT
+      - LK_UVED_INSERT
+      - IMPORT_TNF
+      - OPEN_API_CB
+      - CSV_INSERT
+      - EBG_COMISSION
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

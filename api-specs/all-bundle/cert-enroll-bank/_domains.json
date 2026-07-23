@@ -1,0 +1,22 @@
+{
+  "_comment": "Auto domain map for cert-enroll-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/unq-cert-request",
+      "domain": "unq-cert-request"
+    },
+    {
+      "prefix": "/revoke-cert-request",
+      "domain": "revoke-cert-request"
+    },
+    {
+      "prefix": "/reg-cert-request",
+      "domain": "reg-cert-request"
+    },
+    {
+      "prefix": "/dst-request",
+      "domain": "dst-request"
+    }
+  ]
+}

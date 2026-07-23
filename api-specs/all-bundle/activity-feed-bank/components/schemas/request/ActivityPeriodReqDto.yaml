@@ -1,0 +1,53 @@
+required:
+- endDate
+- resourceCodes
+- startDate
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса
+    format: uuid
+    readOnly: true
+  resourceCodes:
+    minItems: 1
+    type: array
+    description: Источники данных
+    items:
+      type: string
+      description: Источники данных
+      enum:
+      - STATEMENT
+      - PAY_DOC_RU
+      - PAY_REQ_ACCEPT
+      - PAY_COLLECTION_IN
+      - PAY_COLLECTION_OUT
+      - PAY_REQ_RU_IN
+      - PAY_REQ_RU_OUT
+      - PAY_DOC_CUR
+      - CURR_SALE_MAND
+      - BUY_SELL_CURR
+  needUpdate:
+    type: boolean
+    description: Признак ремонта
+  startDate:
+    type: string
+    description: Период выгрузки данных (с)
+    format: date
+  endDate:
+    type: string
+    description: Период выгрузки данных (по)
+    format: date
+  accountList:
+    type: array
+    description: Массив счетов
+    items:
+      $ref: ./AccountDto.yaml
+  clientList:
+    type: array
+    description: Организации
+    items:
+      type: string
+      description: Организации
+      format: uuid
+description: Запрос на получения данных за период

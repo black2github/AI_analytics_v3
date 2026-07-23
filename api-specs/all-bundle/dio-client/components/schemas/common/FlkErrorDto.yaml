@@ -1,0 +1,18 @@
+required:
+- errorMessage
+- path
+type: object
+properties:
+  path:
+    type: string
+    description: Наименование поля
+  row:
+    type: string
+    description: Номер строки
+  errorMessage:
+    type: string
+    description: Текст ошибки
+  value:
+    type: string
+    description: Значение поля
+description: Ошибки контроля ФЛК

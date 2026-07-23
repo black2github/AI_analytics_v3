@@ -1,0 +1,22 @@
+get:
+  tags:
+  - API для управления подпиской
+  summary: Определение наличия активной подписки у какой-либо организации пользователя
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.VIEW_ORGANIZATIONS'
+  operationId: hasSubscriptionUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,UserSubscriptionAvailabilityDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,131 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  createdAt:
+    type: string
+    format: date-time
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  accountNumbers:
+    type: array
+    items:
+      type: string
+  period:
+    type: string
+    enum:
+    - CURRENT_DAY
+    - PREVIOUS_DAY
+    - PREVIOUS_WEEK
+    - PREVIOUS_MONTH
+    - PREVIOUS_QUARTER
+  times:
+    type: array
+    items:
+      type: string
+  statementFormat:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  lastGenerationDate:
+    type: string
+    format: date-time
+  source:
+    type: string
+    enum:
+    - EMAIL
+    - REQUEST_HISTORY
+  userId:
+    type: string
+    format: uuid
+  userFio:
+    type: string
+  status:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DELETED
+    - RECEIVED
+    - REJECTED
+    - EXECUTED
+    - DISABLED
+  connectStatus:
+    type: string
+    enum:
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  disconnectStatus:
+    type: string
+    enum:
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - DISABLED
+    - REJECTED
+  operations:
+    type: string
+    enum:
+    - ALL
+    - INCOME
+    - WRITE_OFF
+  branchNames:
+    type: array
+    items:
+      type: string
+  organizations:
+    type: array
+    items:
+      $ref: ../common/BankClientCard.yaml
+  disconnectReason:
+    type: string
+    enum:
+    - USER_REQUEST
+    - ACCOUNT_CLOSED
+    - MANUALLY_DISABLED
+  commentForBank:
+    type: string
+description: Страница с данными

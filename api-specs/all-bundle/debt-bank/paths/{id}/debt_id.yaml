@@ -1,0 +1,19 @@
+get:
+  tags:
+  - debt-bank-controller
+  description: 'Привилегии: DEBT.BANK.VIEW'
+  operationId: getById
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/{id}/SingleResponseDebtDto.yaml

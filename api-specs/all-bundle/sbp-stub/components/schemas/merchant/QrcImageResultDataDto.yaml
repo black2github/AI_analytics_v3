@@ -1,0 +1,7 @@
+type: object
+description: Изображение QR кода
+properties:
+  image:
+    $ref: ./QrcImageDto.yaml
+    type: object
+    description: Данные изображения QR кода

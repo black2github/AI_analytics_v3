@@ -1,0 +1,356 @@
+openapi: 3.1.0
+info:
+  title: Стаб сервис для СБП
+  version: 1.5.0
+  description: Сервис
+servers:
+- url: /sbp-stub
+tags:
+- name: СИП. Сервис Internal Merchant API
+- name: СИП. Сервис Internal Operation API
+- name: СИП. Сервис Merchant API
+- name: СИП. Сервис Merchant API - QRC
+- name: СИП. Сервис Merchant API универсального QR кода
+- name: СИП. Сервис b2b API
+- name: СИП. Сервис b2c API
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /sip/internal/b2c/send/transfer/confirm:
+    $ref: ./paths/internal/sip_internal_b2c_send_transfer_confirm.yaml
+  /sip/internal/b2c/send/transfer/execute:
+    $ref: ./paths/internal/sip_internal_b2c_send_transfer_execute.yaml
+  /sip/internal/merchant/legalId-request:
+    $ref: ./paths/internal/sip_internal_merchant_legalId_request.yaml
+  /sip/internal/merchant/v21/auth:
+    $ref: ./paths/internal/sip_internal_merchant_v21_auth.yaml
+  /sip/internal/merchant/v21/b2b/operation-history:
+    $ref: ./paths/internal/sip_internal_merchant_v21_b2b_operation_history.yaml
+  /sip/internal/merchant/v21/merchant:
+    $ref: ./paths/internal/sip_internal_merchant_v21_merchant.yaml
+  /sip/internal/merchant/v21/permissions:
+    $ref: ./paths/internal/sip_internal_merchant_v21_permissions.yaml
+  /sip/internal/operation/info:
+    $ref: ./paths/internal/sip_internal_operation_info.yaml
+  /sip/internal/v1/agent/get-agent-list:
+    $ref: ./paths/internal/sip_internal_v1_agent_get_agent_list.yaml
+  /sip/internal/v1/block-entity:
+    $ref: ./paths/internal/sip_internal_v1_block_entity.yaml
+  /sip/internal/v1/legal-entity/agent/get-active-agents:
+    $ref: ./paths/internal/sip_internal_v1_legal_entity_agent_get_active_agents.yaml
+  /sip/internal/v1/legal-entity/agent/set-transfer-permission:
+    $ref: ./paths/internal/sip_internal_v1_legal_entity_agent_set_transfer_permission.yaml
+  /sip/internal/v2/merchant:
+    $ref: ./paths/internal/sip_internal_v2_merchant.yaml
+  /sip/merchant/payment/v1/universal-payment-link/one-time-use:
+    $ref: ./paths/merchant/sip_merchant_payment_v1_universal_payment_link_one_time_use.yaml
+  /sip/merchant/payment/v1/universal-payment-link/reusable:
+    $ref: ./paths/merchant/sip_merchant_payment_v1_universal_payment_link_reusable.yaml
+  /sip/merchant/transfer/v2/b2b/execute:
+    $ref: ./paths/merchant/sip_merchant_transfer_v2_b2b_execute.yaml
+  /sip/merchant/v1/legal-account:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_account.yaml
+  /sip/merchant/v1/legal-entity:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_entity.yaml
+  /sip/merchant/v1/legal-entity/registration:
+    $ref: ./paths/merchant/sip_merchant_v1_legal_entity_registration.yaml
+  /sip/merchant/v1/merchant:
+    $ref: ./paths/merchant/sip_merchant_v1_merchant.yaml
+  /sip/merchant/v1/operation-history/v3:
+    $ref: ./paths/merchant/sip_merchant_v1_operation_history_v3.yaml
+  /sip/merchant/v1/payment/subscription:
+    $ref: ./paths/merchant/sip_merchant_v1_payment_subscription.yaml
+  /sip/merchant/v1/qr-image:
+    $ref: ./paths/merchant/sip_merchant_v1_qr_image.yaml
+  /sip/merchant/v1/qrc-block:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_block.yaml
+  /sip/merchant/v1/qrc-data:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_data.yaml
+  /sip/merchant/v1/qrc-status:
+    $ref: ./paths/merchant/sip_merchant_v1_qrc_status.yaml
+  /sip/merchant/v1/regLegalEntityForeign:
+    $ref: ./paths/merchant/sip_merchant_v1_regLegalEntityForeign.yaml
+  /sip/merchant/v1/stoplist/signer-check:
+    $ref: ./paths/merchant/sip_merchant_v1_stoplist_signer_check.yaml
+  /sip/merchant/v1/transfer/banks:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_banks.yaml
+  /sip/merchant/v1/transfer/return/confirm:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_return_confirm.yaml
+  /sip/merchant/v1/transfer/return/execute:
+    $ref: ./paths/merchant/sip_merchant_v1_transfer_return_execute.yaml
+  /sip/merchant/v3/merchant:
+    $ref: ./paths/merchant/sip_merchant_v3_merchant.yaml
+  /sip/v2/b2b/merchant/getQR:
+    $ref: ./paths/v2/sip_v2_b2b_merchant_getQR.yaml
+  /sip/v2/merchant/regB2BLink1:
+    $ref: ./paths/v2/sip_v2_merchant_regB2BLink1.yaml
+  /sip/v2/merchant/regB2BLinkReusable:
+    $ref: ./paths/v2/sip_v2_merchant_regB2BLinkReusable.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    AdditionalData:
+      $ref: ./components/schemas/merchant/AdditionalData.yaml
+    AgentSetTransferPermissionRequestDto:
+      $ref: ./components/schemas/internal/AgentSetTransferPermissionRequestDto.yaml
+    AgentSetTransferPermissionResponseDto:
+      $ref: ./components/schemas/internal/AgentSetTransferPermissionResponseDto.yaml
+    AgentSetTransferPermissionStateDto:
+      $ref: ./components/schemas/internal/AgentSetTransferPermissionStateDto.yaml
+    AgentTspRequestDto:
+      $ref: ./components/schemas/internal/AgentTspRequestDto.yaml
+    AgentTspResponseDataDto:
+      $ref: ./components/schemas/internal/AgentTspResponseDataDto.yaml
+    AgentTspResponseDto:
+      $ref: ./components/schemas/internal/AgentTspResponseDto.yaml
+    AgentTspResponseMemberDto:
+      $ref: ./components/schemas/internal/AgentTspResponseMemberDto.yaml
+    AuthDataDto:
+      $ref: ./components/schemas/internal/AuthDataDto.yaml
+    B2bQrcDataPaymentDetailsDto:
+      $ref: ./components/schemas/v2/B2bQrcDataPaymentDetailsDto.yaml
+    B2bQrcDto:
+      $ref: ./components/schemas/v2/B2bQrcDto.yaml
+    B2bQrcImageDto:
+      $ref: ./components/schemas/v2/B2bQrcImageDto.yaml
+    B2bQrcResultDataDto:
+      $ref: ./components/schemas/v2/B2bQrcResultDataDto.yaml
+    B2bQrcResultDto:
+      $ref: ./components/schemas/v2/B2bQrcResultDto.yaml
+    B2bTransferConfirmDto:
+      $ref: ./components/schemas/merchant/B2bTransferConfirmDto.yaml
+    B2bTransferConfirmResultDto:
+      $ref: ./components/schemas/merchant/B2bTransferConfirmResultDto.yaml
+    B2cOperationCallbackDataDto:
+      $ref: ./components/schemas/common/B2cOperationCallbackDataDto.yaml
+    B2cOperationInfoRequestDto:
+      $ref: ./components/schemas/internal/B2cOperationInfoRequestDto.yaml
+    B2cOperationInfoResultDto:
+      $ref: ./components/schemas/internal/B2cOperationInfoResultDto.yaml
+    B2cReturnConfirmRequestDto:
+      $ref: ./components/schemas/merchant/B2cReturnConfirmRequestDto.yaml
+    B2cReturnConfirmResultDto:
+      $ref: ./components/schemas/merchant/B2cReturnConfirmResultDto.yaml
+    B2cReturnInitRecipientDto:
+      $ref: ./components/schemas/merchant/B2cReturnInitRecipientDto.yaml
+    B2cReturnInitRequestDto:
+      $ref: ./components/schemas/merchant/B2cReturnInitRequestDto.yaml
+    B2cReturnInitResultDto:
+      $ref: ./components/schemas/merchant/B2cReturnInitResultDto.yaml
+    B2cReturnInitSenderDto:
+      $ref: ./components/schemas/merchant/B2cReturnInitSenderDto.yaml
+    B2cTransferConfirmRequestDto:
+      $ref: ./components/schemas/internal/B2cTransferConfirmRequestDto.yaml
+    B2cTransferConfirmResultDto:
+      $ref: ./components/schemas/internal/B2cTransferConfirmResultDto.yaml
+    B2cTransferInitRecipientDto:
+      $ref: ./components/schemas/internal/B2cTransferInitRecipientDto.yaml
+    B2cTransferInitRequestDto:
+      $ref: ./components/schemas/internal/B2cTransferInitRequestDto.yaml
+    B2cTransferInitResultDto:
+      $ref: ./components/schemas/internal/B2cTransferInitResultDto.yaml
+    B2cTransferInitSenderDto:
+      $ref: ./components/schemas/internal/B2cTransferInitSenderDto.yaml
+    BankCreateDto:
+      $ref: ./components/schemas/merchant/BankCreateDto.yaml
+    BankDto:
+      $ref: ./components/schemas/merchant/BankDto.yaml
+    BankResultDto:
+      $ref: ./components/schemas/merchant/BankResultDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    ClientAgentsTspRequestDto:
+      $ref: ./components/schemas/internal/ClientAgentsTspRequestDto.yaml
+    ClientAgentsTspResponseDto:
+      $ref: ./components/schemas/internal/ClientAgentsTspResponseDto.yaml
+    ClientB2bTransactionsDto:
+      $ref: ./components/schemas/internal/ClientB2bTransactionsDto.yaml
+    ClientTransactionsDto:
+      $ref: ./components/schemas/common/ClientTransactionsDto.yaml
+    ClientTransactionsV2Dto:
+      $ref: ./components/schemas/merchant/ClientTransactionsV2Dto.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    InnerMerchantDto:
+      $ref: ./components/schemas/common/InnerMerchantDto.yaml
+    Instant:
+      $ref: ./components/schemas/common/Instant.yaml
+    InvoiceQrcDataDto:
+      $ref: ./components/schemas/v2/InvoiceQrcDataDto.yaml
+    InvoiceQrcDto:
+      $ref: ./components/schemas/v2/InvoiceQrcDto.yaml
+    ItemDto:
+      $ref: ./components/schemas/v2/ItemDto.yaml
+    LegalAccountDto:
+      $ref: ./components/schemas/merchant/LegalAccountDto.yaml
+    LegalAccountResultDto:
+      $ref: ./components/schemas/merchant/LegalAccountResultDto.yaml
+    LegalEntityDto:
+      $ref: ./components/schemas/merchant/LegalEntityDto.yaml
+    LegalEntityForeignDto:
+      $ref: ./components/schemas/merchant/LegalEntityForeignDto.yaml
+    LegalEntityResultDto:
+      $ref: ./components/schemas/merchant/LegalEntityResultDto.yaml
+    LegalEntityTicketRequestDto:
+      $ref: ./components/schemas/merchant/LegalEntityTicketRequestDto.yaml
+    LegalIdRequestDto:
+      $ref: ./components/schemas/internal/LegalIdRequestDto.yaml
+    LegalIdResponseDto:
+      $ref: ./components/schemas/internal/LegalIdResponseDto.yaml
+    LegalResultDto:
+      $ref: ./components/schemas/common/LegalResultDto.yaml
+    LegalResultDtoLegalAccountResultDto:
+      $ref: ./components/schemas/merchant/LegalResultDtoLegalAccountResultDto.yaml
+    LegalResultDtoLegalEntityResultDto:
+      $ref: ./components/schemas/merchant/LegalResultDtoLegalEntityResultDto.yaml
+    LegalResultDtoLegalTicketResultDto:
+      $ref: ./components/schemas/merchant/LegalResultDtoLegalTicketResultDto.yaml
+    LegalResultDtoMerchantResultDto:
+      $ref: ./components/schemas/merchant/LegalResultDtoMerchantResultDto.yaml
+    LegalResultStatusDto:
+      $ref: ./components/schemas/merchant/LegalResultStatusDto.yaml
+    LegalTicketResultDto:
+      $ref: ./components/schemas/merchant/LegalTicketResultDto.yaml
+    LocalDate:
+      $ref: ./components/schemas/merchant/LocalDate.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    MerchantAuthDto:
+      $ref: ./components/schemas/internal/MerchantAuthDto.yaml
+    MerchantAuthResultDto:
+      $ref: ./components/schemas/internal/MerchantAuthResultDto.yaml
+    MerchantB2bTransactionDto:
+      $ref: ./components/schemas/internal/MerchantB2bTransactionDto.yaml
+    MerchantB2bTransactionsDto:
+      $ref: ./components/schemas/internal/MerchantB2bTransactionsDto.yaml
+    MerchantB2bTransactionsRequestDto:
+      $ref: ./components/schemas/internal/MerchantB2bTransactionsRequestDto.yaml
+    MerchantBlockDto:
+      $ref: ./components/schemas/internal/MerchantBlockDto.yaml
+    MerchantBlockResultDataDto:
+      $ref: ./components/schemas/internal/MerchantBlockResultDataDto.yaml
+    MerchantBlockResultDto:
+      $ref: ./components/schemas/internal/MerchantBlockResultDto.yaml
+    MerchantBlockResultLegalDataDto:
+      $ref: ./components/schemas/internal/MerchantBlockResultLegalDataDto.yaml
+    MerchantDto:
+      $ref: ./components/schemas/merchant/MerchantDto.yaml
+    MerchantPermissionsDto:
+      $ref: ./components/schemas/internal/MerchantPermissionsDto.yaml
+    MerchantPermissionsResultDto:
+      $ref: ./components/schemas/internal/MerchantPermissionsResultDto.yaml
+    MerchantResultDto:
+      $ref: ./components/schemas/merchant/MerchantResultDto.yaml
+    MerchantTransactionDto:
+      $ref: ./components/schemas/common/MerchantTransactionDto.yaml
+    MerchantTransactionV2Dto:
+      $ref: ./components/schemas/merchant/MerchantTransactionV2Dto.yaml
+    MerchantTransactionsDto:
+      $ref: ./components/schemas/common/MerchantTransactionsDto.yaml
+    MerchantTransactionsRequestDtoV3Request:
+      $ref: ./components/schemas/merchant/MerchantTransactionsRequestDtoV3Request.yaml
+    MerchantTransactionsV2Dto:
+      $ref: ./components/schemas/merchant/MerchantTransactionsV2Dto.yaml
+    MerchantTspDto:
+      $ref: ./components/schemas/internal/MerchantTspDto.yaml
+    MerchantTspEntityDto:
+      $ref: ./components/schemas/internal/MerchantTspEntityDto.yaml
+    MerchantTspListResultDto:
+      $ref: ./components/schemas/internal/MerchantTspListResultDto.yaml
+    MerchantTspOperationPermitionDto:
+      $ref: ./components/schemas/internal/MerchantTspOperationPermitionDto.yaml
+    MerchantTspPermissionsDto:
+      $ref: ./components/schemas/internal/MerchantTspPermissionsDto.yaml
+    MerchantTspSignPermitionDto:
+      $ref: ./components/schemas/internal/MerchantTspSignPermitionDto.yaml
+    MerchantV3Dto:
+      $ref: ./components/schemas/merchant/MerchantV3Dto.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    OperationPermitionDto:
+      $ref: ./components/schemas/internal/OperationPermitionDto.yaml
+    PaymentMethodData:
+      $ref: ./components/schemas/merchant/PaymentMethodData.yaml
+    PaymentResultDataDto:
+      $ref: ./components/schemas/merchant/PaymentResultDataDto.yaml
+    PaymentResultDto:
+      $ref: ./components/schemas/merchant/PaymentResultDto.yaml
+    PermissionsDto:
+      $ref: ./components/schemas/internal/PermissionsDto.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    QrcBlockResultDto:
+      $ref: ./components/schemas/merchant/QrcBlockResultDto.yaml
+    QrcDataAdditionalDataDto:
+      $ref: ./components/schemas/merchant/QrcDataAdditionalDataDto.yaml
+    QrcDataDto:
+      $ref: ./components/schemas/merchant/QrcDataDto.yaml
+    QrcDataPaymentDetailsDto:
+      $ref: ./components/schemas/merchant/QrcDataPaymentDetailsDto.yaml
+    QrcDataResultDataDto:
+      $ref: ./components/schemas/merchant/QrcDataResultDataDto.yaml
+    QrcDataResultDto:
+      $ref: ./components/schemas/merchant/QrcDataResultDto.yaml
+    QrcIdRequestDto:
+      $ref: ./components/schemas/common/QrcIdRequestDto.yaml
+    QrcImageDto:
+      $ref: ./components/schemas/merchant/QrcImageDto.yaml
+    QrcImageResultDataDto:
+      $ref: ./components/schemas/merchant/QrcImageResultDataDto.yaml
+    QrcImageResultDto:
+      $ref: ./components/schemas/merchant/QrcImageResultDto.yaml
+    QrcOperationStatusDataDto:
+      $ref: ./components/schemas/merchant/QrcOperationStatusDataDto.yaml
+    QrcOperationStatusDto:
+      $ref: ./components/schemas/merchant/QrcOperationStatusDto.yaml
+    QrcOperationStatusRequestDto:
+      $ref: ./components/schemas/merchant/QrcOperationStatusRequestDto.yaml
+    QrcOperationStatusResultDto:
+      $ref: ./components/schemas/merchant/QrcOperationStatusResultDto.yaml
+    SbpTransactionStatusDto:
+      $ref: ./components/schemas/merchant/SbpTransactionStatusDto.yaml
+    SignPermitionDto:
+      $ref: ./components/schemas/internal/SignPermitionDto.yaml
+    SubscribedPaymentRequestDto:
+      $ref: ./components/schemas/merchant/SubscribedPaymentRequestDto.yaml
+    TspChangeDataRequestDto:
+      $ref: ./components/schemas/internal/TspChangeDataRequestDto.yaml
+    TspChangeDataResponseDto:
+      $ref: ./components/schemas/internal/TspChangeDataResponseDto.yaml
+    UUID:
+      $ref: ./components/schemas/v2/UUID.yaml
+    UniversalPaymentCodeData:
+      $ref: ./components/schemas/merchant/UniversalPaymentCodeData.yaml
+    UniversalPaymentCodeMultipleCreateDto:
+      $ref: ./components/schemas/merchant/UniversalPaymentCodeMultipleCreateDto.yaml
+    UniversalPaymentCodeMultipleCreateResponseDto:
+      $ref: ./components/schemas/merchant/UniversalPaymentCodeMultipleCreateResponseDto.yaml
+    UniversalPaymentCodeSingleCreateDto:
+      $ref: ./components/schemas/merchant/UniversalPaymentCodeSingleCreateDto.yaml
+    UniversalPaymentCodeSingleCreateResponseDto:
+      $ref: ./components/schemas/merchant/UniversalPaymentCodeSingleCreateResponseDto.yaml

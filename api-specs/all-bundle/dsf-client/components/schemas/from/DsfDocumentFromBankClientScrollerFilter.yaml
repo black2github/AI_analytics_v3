@@ -1,0 +1,36 @@
+type: object
+properties:
+  bankClientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  category:
+    type: string
+    description: Категории для скроллера ДСФ из банка на стороне клиента
+    enum:
+    - ALL
+    - NEW
+    - WATCHED
+    - WAIT_SIGN
+    - FAVORITE
+  clientUuid:
+    $ref: ../common/FilterValueDtoString.yaml
+  crmProductType:
+    $ref: ../common/DsfTypeProductTypeFilter.yaml
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  dialogId:
+    $ref: ../common/FilterValueDtoString.yaml
+  externalSystem:
+    $ref: ../common/DsfExternalSystemFilter.yaml
+  filialName:
+    $ref: ../common/FilterValueDtoString.yaml
+  letterType:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  status:
+    $ref: ./DsfDocumentFromBankStatusFilter.yaml
+  subject:
+    $ref: ../common/FilterValueDtoString.yaml
+  typeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера документов из Банка. Клиентская часть.

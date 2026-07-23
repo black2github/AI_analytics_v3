@@ -1,0 +1,6 @@
+type: object
+properties:
+  _links:
+    type: object
+    additionalProperties:
+      $ref: ./EndpointReference.yaml

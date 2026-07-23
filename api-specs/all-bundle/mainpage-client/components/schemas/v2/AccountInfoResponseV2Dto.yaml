@@ -1,0 +1,37 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип баланса
+    enum:
+    - PLANE
+    - CURRENT
+    - ALL
+  layout:
+    type: string
+    description: Тип представления
+    enum:
+    - COLUMN
+    - TILE
+  tariffNames:
+    type: boolean
+    description: Отображать названия тарифов
+  compactView:
+    type: boolean
+    description: Отображать компактный вид
+  accounts:
+    type: array
+    description: Сгруппированные данные по счетам и организациям
+    items:
+      $ref: ./AccountOrgInfoGroup.yaml
+  total:
+    type: array
+    description: Общие данные по счетам
+    items:
+      $ref: ./ClientAccountTotalDto.yaml
+  currencies:
+    type: array
+    description: Список валют по всем счетам
+    items:
+      $ref: ./CurrencyDto.yaml
+description: Данные клиента по счетам

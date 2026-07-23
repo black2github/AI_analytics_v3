@@ -1,0 +1,33 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+  okopf:
+    type: string
+    description: ОКОПФ
+  kpp:
+    type: string
+    description: КПП
+  locality:
+    type: string
+    description: Населенный пункт
+  region:
+    type: string
+    description: Субъект РФ
+  country:
+    type: string
+    description: Страна
+  fullName:
+    type: string
+    description: Полное наименование организации
+  shortName:
+    type: string
+    description: Краткое наименование организации
+  filial:
+    type: boolean
+    description: Признак филиала
+description: Информация об организации, полученная из выписки ФНС

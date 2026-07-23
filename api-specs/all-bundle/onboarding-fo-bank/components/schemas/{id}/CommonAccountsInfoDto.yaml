@@ -1,0 +1,6 @@
+type: object
+properties:
+  gazpromContractor:
+    type: boolean
+    description: В целях исполнения обязательств по договорам Группы Газпром
+description: Общие сведения для открываемых счетов

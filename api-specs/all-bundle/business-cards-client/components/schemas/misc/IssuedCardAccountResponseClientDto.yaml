@@ -1,0 +1,54 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    type: integer
+    description: Код типа счета
+    format: int32
+  balance:
+    type: number
+    description: Остаток на счете
+  bic:
+    type: string
+    description: БИК филиала обслуживания
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  currencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  isAddAgrmtExist:
+    type: boolean
+    description: Признак наличия/ отсутствия доп.соглашения Корпоративная карта на Р/С
+  rkoContract:
+    $ref: ./RkoContractClientDto.yaml
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  serviceBranchCodeF1:
+    type: string
+    description: Код филиала обслуживания (РКО Ф1)
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания (КНОСИС)
+  serviceOfficeCodeF1:
+    type: string
+    description: Код подразделения обслуживания (РКО Ф1)
+description: Список счетов доступных для выпуска карт

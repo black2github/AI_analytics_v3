@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сообщения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userFullName:
+    type: string
+    description: Ф.И.О пользователя
+  userType:
+    type: string
+    description: Тип пользователя
+  urlPath:
+    type: string
+    description: Адрес страницы
+  message:
+    type: string
+    description: Сообщение пользователя

@@ -1,0 +1,25 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории для скроллера на стороне клиента
+    enum:
+    - ALL
+    - WAITING_FOR_SIGN
+    - IN_PROCESSING
+    - FINISHED
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  subjectEskId:
+    $ref: ./FilterValueDtoString.yaml
+  subjectType:
+    $ref: ./ClientInfoUpdSubjectTypeFilter.yaml
+  status:
+    $ref: ./ClientInfoUpdRequestStatusFilter.yaml
+  type:
+    $ref: ./ClientInfoUpdRequestTypeFilter.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр для клиентского скроллера

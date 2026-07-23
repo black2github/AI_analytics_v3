@@ -1,0 +1,35 @@
+post:
+  tags:
+  - API справочника ABAC. Работа со схемой.
+  summary: Получить список схем по коллекции связок, состоящих из имени микросервиса и имени бизнес сущности
+  description: 'Привилегии: ABAC_REQUISITE_VIEW, ABAC_SCHEMA_VIEW'
+  operationId: findFullSchemasUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: abacRequisitesCollectionRequest
+    description: abacRequisitesCollectionRequest
+    required: true
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/FindAbacRequisiteRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«AbacSchemaVerboseDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,21 @@
+type: object
+properties:
+  format:
+    type: string
+    description: Формат документа
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  requestIds:
+    type: array
+    description: Идентификаторы заявок
+    items:
+      type: string
+      description: Идентификаторы заявок
+      format: uuid
+description: Запрос на экспорт скроллера заявок

@@ -1,0 +1,6 @@
+type: object
+properties:
+  GrpHdr:
+    $ref: ./GrpHdr.yaml
+  VypEcoInf:
+    $ref: ../common/VypEcoInf.yaml

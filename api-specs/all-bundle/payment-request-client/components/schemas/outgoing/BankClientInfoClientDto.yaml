@@ -1,0 +1,14 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+    nullable: true
+  clientAccountId:
+    type: string
+    description: ID "Счет клиента"
+    format: uuid
+    nullable: true
+description: Идентификация организации (платежное требование исходящее данные для клиента)
+nullable: true

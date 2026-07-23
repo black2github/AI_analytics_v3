@@ -1,0 +1,6 @@
+type: object
+description: Запрос информации о счетах клиента для регистрации в системе АС СБП
+properties:
+  needAdditionalAccount:
+    type: boolean
+    description: Признак необходимости собрать информацию о счете цифрового рубля

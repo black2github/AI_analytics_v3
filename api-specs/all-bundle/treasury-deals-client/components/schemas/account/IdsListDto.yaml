@@ -1,0 +1,14 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

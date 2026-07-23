@@ -1,0 +1,15 @@
+required:
+- fileName
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  attachmentId:
+    type: string
+    description: Идентификатор файла в ФС
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен доступа к файлу
+description: Данные реестра для скачивания

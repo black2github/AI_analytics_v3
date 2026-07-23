@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID для физ.лица
+    format: uuid
+  personExternalSystemsRequisites:
+    $ref: ./PersonExternalSystemsRequisitesDto.yaml
+description: Реквизиты, получаемые в процессе обработки короткой заявки из смежных систем (для ФЛ). Для возврата в админку.

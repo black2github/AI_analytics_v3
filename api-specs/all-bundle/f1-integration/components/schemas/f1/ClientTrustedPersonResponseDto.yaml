@@ -1,0 +1,14 @@
+type: object
+properties:
+  rc:
+    type: integer
+    description: Код ответа
+  error:
+    type: string
+    description: Описание ошибки
+  clientList:
+    type: array
+    description: Список клиентов, доступных распорядителю счета
+    items:
+      $ref: ./ClientDto.yaml
+description: Ответ на запрос списка получателей или вносителей денежных средств

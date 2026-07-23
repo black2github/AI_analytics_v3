@@ -1,0 +1,40 @@
+type: object
+properties:
+  hasBeneficiaries10:
+    type: boolean
+    description: Признак качественного состава бенефициаров (более 10% УК)
+  hasBeneficiaries25:
+    type: boolean
+    description: Признак качественного состава бенефициаров (более 25% УК)
+  hasInternalControlRules:
+    type: boolean
+    description: Утверждены правила внутреннего контроля
+  hasSpecialOfficer:
+    type: boolean
+    description: Назначено специальное должностное лицо
+  isCompanyMfo:
+    type: boolean
+    description: Является ли компания МФО
+  isFactoringCompany:
+    type: boolean
+    description: Признак факторинговой компании
+  isFinancial:
+    type: boolean
+    description: Признак что Клиент является финансовой организацией
+  isForeignTaxResident:
+    type: boolean
+    description: Признак налогового резидента иностранного государства
+  isLeasingCompany:
+    type: boolean
+    description: Признак лизинговой компании
+  isNonPassiveNonFinancial:
+    type: boolean
+    description: Признак что Клиент обладает признаком пассивной нефинансовой организации
+  isOperations223Fz44Fz:
+    type: boolean
+    description: Признак участия в работах по 223-ФЗ или 44-ФЗ
+  rulesAcceptDate:
+    type: string
+    description: Дата утверждения правил
+    format: date
+description: Сведения из опросника для ЮЛ

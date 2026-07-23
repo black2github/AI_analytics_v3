@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./OrderJournalRqDto.yaml
+description: Тело запроса модели журнала заявок на внесение или выдачу наличных денежных средств

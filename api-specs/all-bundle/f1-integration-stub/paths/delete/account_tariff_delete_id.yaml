@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице gps_eco_accs_det
+  tags:
+  - Обновление заглушек gps_eco_accs_det (Информация о тарифах по счету в Ф1)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

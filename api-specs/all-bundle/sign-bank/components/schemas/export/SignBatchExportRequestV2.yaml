@@ -1,0 +1,8 @@
+type: object
+properties:
+  content:
+    type: array
+    description: Данные запроса на пакетную выгрузку реквизитов ЭП для проверки
+    items:
+      $ref: ./SignExportContentV2.yaml
+description: Запрос на пакетную выгрузку реквизитов ЭП для проверки

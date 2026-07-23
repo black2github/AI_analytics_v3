@@ -1,0 +1,31 @@
+post:
+  tags:
+  - bsk-controller
+  summary: 'Проверка корректности реквизитов ГОЗ. Basic authorization! Login: ''username'', password: ''password'''
+  operationId: checkAttributesUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: requests
+    description: requests
+    required: true
+    schema:
+      type: object
+      additionalProperties:
+        $ref: '#/definitions/RequestAttributeGOZ'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/BSKResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

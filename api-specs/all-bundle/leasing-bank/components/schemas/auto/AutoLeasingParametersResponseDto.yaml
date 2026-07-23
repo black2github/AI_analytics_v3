@@ -1,0 +1,17 @@
+type: object
+properties:
+  leasingPeriod:
+    type: integer
+    format: int32
+  carCost:
+    type: number
+  calculatorId:
+    type: integer
+    format: int64
+  leasingRequestId:
+    type: string
+    format: uuid
+  advance:
+    type: number
+  comment:
+    type: string

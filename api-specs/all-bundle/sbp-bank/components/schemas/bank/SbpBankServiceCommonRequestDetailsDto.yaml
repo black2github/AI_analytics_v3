@@ -1,0 +1,9 @@
+type: object
+description: Детализированная информация по заявкам сервисов банка
+properties:
+  qrcCreate:
+    $ref: ./SbpQrcRequestBankSideServiceDto.yaml
+    description: Детали заявки на регистрацию QR-кода для сервисов банка
+  blockRequestDto:
+    $ref: ./SbpEcoQrcBlockRequestDto.yaml
+    description: Детали заявки на блокировку QR-кода для сервисов банка

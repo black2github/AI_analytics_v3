@@ -1,0 +1,37 @@
+type: object
+description: Фильтр по типу документа
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип операции в заявке на платеж
+    enum:
+    - TRANSFER
+    - RETURN
+  notEq:
+    type: string
+    description: Тип операции в заявке на платеж
+    enum:
+    - TRANSFER
+    - RETURN
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип операции в заявке на платеж
+      enum:
+      - TRANSFER
+      - RETURN
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип операции в заявке на платеж
+      enum:
+      - TRANSFER
+      - RETURN
+  isNull:
+    type: boolean

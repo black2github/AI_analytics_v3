@@ -1,0 +1,9 @@
+type: object
+properties:
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+    description: Информация о подразделении.
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор.

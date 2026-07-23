@@ -1,0 +1,25 @@
+get:
+  tags:
+  - АПИ клиента для работы с дисклеймерами
+  summary: Получить список активных записей
+  description: 'Привилегии: SETTINGS.CLIENT.DISCLAIMER_VIEW'
+  operationId: getActive
+  parameters:
+  - name: Locale-code
+    in: header
+    required: true
+    schema:
+      type: string
+      enum:
+      - UNKNOWN
+      - RU
+      - EN
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: array
+            items:
+              $ref: ../../components/schemas/common/DisclaimerClientDto.yaml

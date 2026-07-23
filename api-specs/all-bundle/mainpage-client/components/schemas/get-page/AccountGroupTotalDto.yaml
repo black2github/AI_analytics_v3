@@ -1,0 +1,59 @@
+type: object
+properties:
+  groupingType:
+    type: string
+    description: Тип группировки счетов, по которым рассчитываются остатки и обороты
+    enum:
+    - NONE
+    - ORG_AND_CURRENCY
+    - CURRENCY_AND_BRANCH_AND_ORG
+    - CURRENCY_AND_ORG_AND_BRANCH
+    - CURRENCY_AND_ORG
+    - ORG
+    - CURRENCY
+    - BRANCH
+    - ACCOUNT_TYPE
+  accountType:
+    type: string
+    description: Тип счета
+  currencyCode:
+    type: string
+    description: Код валюты
+  innKio:
+    type: string
+    description: ИНН
+  currencyName:
+    type: string
+    description: Наименование валюты
+  organizationName:
+    type: string
+    description: Наименование организации
+  organizationId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  branchName:
+    type: string
+    description: Наименование филиала
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  outgoingBalance:
+    type: number
+    description: Исходящий остаток
+  income:
+    type: number
+    description: Приход
+  outcome:
+    type: number
+    description: Расход
+  accountSource:
+    type: string
+    description: Система источник информации по счету
+    enum:
+    - ECO
+    - BSS_DBO_320
+    - RKO_F1
+    - ESK
+    - TESSA
+description: Совокупные остатки и обороты в группе

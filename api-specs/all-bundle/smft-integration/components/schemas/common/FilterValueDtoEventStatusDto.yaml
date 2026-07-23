@@ -1,0 +1,60 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  notEq:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  in:
+    type: array
+    items:
+      type: string
+      description: ДТО состояния события
+      enum:
+      - UPLOADED
+      - UPLOADED_ERROR
+  notIn:
+    type: array
+    items:
+      type: string
+      description: ДТО состояния события
+      enum:
+      - UPLOADED
+      - UPLOADED_ERROR
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  ge:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  lt:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR
+  le:
+    type: string
+    description: ДТО состояния события
+    enum:
+    - UPLOADED
+    - UPLOADED_ERROR

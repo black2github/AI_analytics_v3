@@ -1,0 +1,9 @@
+type: object
+description: Категория письма
+properties:
+  code:
+    type: string
+    description: Код
+  description:
+    type: string
+    description: Описание

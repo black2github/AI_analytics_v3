@@ -1,0 +1,6 @@
+type: object
+properties:
+  comment:
+    type: string
+    description: Комментарий, введенный пользователем на ЭФ подтверждения удаления
+description: Данные для удаления представителя клиента

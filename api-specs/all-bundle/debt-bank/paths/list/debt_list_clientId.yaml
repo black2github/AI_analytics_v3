@@ -1,0 +1,19 @@
+get:
+  tags:
+  - debt-bank-controller
+  description: 'Привилегии: DEBT.BANK.LIST_VIEW'
+  operationId: getList
+  parameters:
+  - name: clientId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/list/DataListResponseDebtListViewDto.yaml

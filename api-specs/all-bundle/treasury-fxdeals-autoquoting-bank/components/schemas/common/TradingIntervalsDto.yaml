@@ -1,0 +1,13 @@
+type: object
+properties:
+  buy:
+    type: array
+    description: Интервалы торговых сессий по покупке
+    items:
+      $ref: ./TradingIntervalDto.yaml
+  sell:
+    type: array
+    description: Интервалы торговых сессий по продаже
+    items:
+      $ref: ./TradingIntervalDto.yaml
+description: Интервалы торговых сессий

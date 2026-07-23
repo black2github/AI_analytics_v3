@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для работы со счетами
+  summary: Получение счетов УЛ для настройки доступа по счету. V2
+  description: 'Привилегии: EMPLOYEES.RQ_VIEW, EMPLOYEES.RQ_EDIT'
+  operationId: receiveAccountsToSetUpAccessV2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/authorized-person/AuthorizedPersonAccountsToSetUpAccessReceivingDtoV2.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/authorized-person/GenericResponseErrorDataAuthorizedPersonAccountsToSetUpAccessDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

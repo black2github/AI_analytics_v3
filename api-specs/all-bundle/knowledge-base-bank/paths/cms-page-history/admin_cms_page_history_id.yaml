@@ -1,0 +1,130 @@
+get:
+  description: 'Привилегии: KDB.BANK.CMS_PAGE_VIEW'
+  operationId: getCmsPageHistoryById
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+      description: OK
+    '400':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Access Denied
+    '405':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unexpected system error
+  summary: Получить версию CMS страницы по id
+  tags:
+  - CmsPageHistory
+patch:
+  description: 'Привилегии: KDB.BANK.CMS_PAGE_UPDATE'
+  operationId: patchCmsPageHistory
+  parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/cms-page-history/GenericCommandCmsPageHistoryPartialUpdateBankDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+      description: OK
+    '400':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Access Denied
+    '405':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unexpected system error
+  summary: Изменить версию страницы
+  tags:
+  - CmsPageHistory

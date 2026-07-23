@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  innKio:
+    type: string
+    description: ИНН плательщика
+  clientRnk:
+    type: string
+    description: РНК клиента
+description: 'Подсказки Акцепта: Плательщик акцепта'

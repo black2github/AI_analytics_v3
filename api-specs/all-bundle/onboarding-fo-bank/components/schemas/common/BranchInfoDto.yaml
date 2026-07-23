@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+  absCode:
+    type: string
+    description: Код подразделения в АБС. Составная нотация (например '099/1017')
+  name:
+    type: string
+    description: Наименование подразделения
+description: Сведения о Подразделении, в котором открывается счет и заключается ДБС

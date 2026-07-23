@@ -1,0 +1,10 @@
+type: string
+description: Категории заявки на запрос справок для ЮЛ. Банковская часть
+example: null
+enum:
+- ALL
+- IN_PROCESSING
+- PROCESSING_ERROR
+- FINISHED
+- DIGITAL
+- OFFICE

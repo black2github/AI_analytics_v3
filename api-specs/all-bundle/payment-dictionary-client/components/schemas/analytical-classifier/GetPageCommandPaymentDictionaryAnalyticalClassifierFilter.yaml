@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsPaymentDictionaryAnalyticalClassifierFilter.yaml
+description: Запрос страницы

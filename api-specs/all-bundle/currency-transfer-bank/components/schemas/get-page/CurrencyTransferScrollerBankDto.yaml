@@ -1,0 +1,11 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование банка
+  bic:
+    type: string
+    description: BIC-код
+  country:
+    $ref: ../common/CurrencyTransferCountryDto.yaml
+description: Транспортное представление атрибутов банка

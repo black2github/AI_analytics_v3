@@ -1,0 +1,21 @@
+required:
+- accountNumber
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер
+  balanceBranchBic:
+    type: string
+    description: БИК филиала баланса
+  sourceSystem:
+    type: string
+    description: Источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+description: Естественный ключ сущности "Счет клиента"

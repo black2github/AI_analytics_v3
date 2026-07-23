@@ -1,0 +1,17 @@
+type: object
+description: Ответ на запрос получения документа из ЛК УВЭД
+properties:
+  objType:
+    type: string
+    description: Тип документа
+  eventType:
+    type: string
+    description: Тип события
+  locId:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Локальный идентификатор ИО в Компоненте
+  objBody:
+    type: string
+    description: Тег "ObjectBody" XML-объекта

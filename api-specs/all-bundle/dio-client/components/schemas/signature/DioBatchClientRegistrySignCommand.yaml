@@ -1,0 +1,18 @@
+required:
+- certificateId
+type: object
+properties:
+  clientSignCommands:
+    uniqueItems: true
+    type: array
+    description: Множество данных для клиентских подписей
+    items:
+      $ref: ./DioClientRegistrySignCommand.yaml
+  certificateId:
+    type: string
+    description: Идентификатор сертификат клиента
+    format: uuid
+  docSignPage:
+    type: string
+    description: Страница, с которой осуществляется подпись
+description: Содержит список данных для клиентских подписей

@@ -1,0 +1,13 @@
+type: object
+properties:
+  signature:
+    type: string
+    description: Подпись
+  digest:
+    type: string
+    description: Дайджест
+  digestVersion:
+    type: integer
+    description: Версия дайджеста
+    format: int32
+description: Подпись

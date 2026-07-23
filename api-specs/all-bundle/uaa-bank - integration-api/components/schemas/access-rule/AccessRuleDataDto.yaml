@@ -1,0 +1,74 @@
+required:
+- actionType
+- comment
+- employeeData
+type: object
+properties:
+  employeeData:
+    $ref: ./EmployeeDataDto.yaml
+  roleIds:
+    maxItems: 1000
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Список ролей
+    items:
+      type: string
+      description: Список ролей
+      format: uuid
+  roleTemplateCodes:
+    maxItems: 1000
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Список шаблонов ролей
+    items:
+      type: string
+      description: Список шаблонов ролей
+  actionType:
+    type: string
+    description: Тип действия
+    enum:
+    - ABAC_GRANT
+    - USER_ADD
+    - USER_BLOCK
+    - CHANGE_CONTACT
+    - MAKE_TO_SAMPLE
+    - ROLE_TEMPLATE_ACTUALIZATION
+    - USER_ADD_WITHOUT_CLIENT
+    - USER_BLOCK_WITHOUT_CLIENT
+  comment:
+    minLength: 1
+    type: string
+    description: Комментарий
+  changeAllowedByRequestOnAccess:
+    type: boolean
+    description: Можно изменять при исполнении заявки на доступ
+  removeClientOfficial:
+    type: boolean
+    description: Удалить представителя если после исполнения ПД не осталось ролей и сегментов на нем
+  abacEntities:
+    maxItems: 1000
+    minItems: 0
+    type: array
+    description: Значения для модели "Правила предоставления доступа по реквизиту"
+    items:
+      $ref: ./AbacGrantAccessRuleEntityDto.yaml
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  processMarker:
+    type: string
+    description: Метка процесса, создающего правила
+  roleIdFromTechnicalTemplateType:
+    maxItems: 1000
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Набор идентификаторов ролей из шаблонов ролей с типом "TECHNICAL" (обязательно при actionType = ROLE_TEMPLATE_ACTUALIZATION)
+    items:
+      type: string
+      description: Набор идентификаторов ролей из шаблонов ролей с типом "TECHNICAL" (обязательно при actionType = ROLE_TEMPLATE_ACTUALIZATION)
+      format: uuid
+description: Данные сотрудника и параметры ПД

@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API интеграции с DLP
+  summary: Проверить файл
+  operationId: checkAttachmentFile
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/check/DlpAttachmentFileRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/check/GenericResponseSimpleErrorDataBoolean.yaml

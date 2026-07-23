@@ -1,0 +1,6 @@
+type: object
+properties:
+  ogrn:
+    type: string
+  clientId:
+    type: string

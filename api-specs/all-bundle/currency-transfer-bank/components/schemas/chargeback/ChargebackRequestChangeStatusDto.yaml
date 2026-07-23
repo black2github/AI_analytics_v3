@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  commentForBank:
+    type: string
+  commentForClient:
+    type: string

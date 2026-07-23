@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./DsfDocumentToBankCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда создания

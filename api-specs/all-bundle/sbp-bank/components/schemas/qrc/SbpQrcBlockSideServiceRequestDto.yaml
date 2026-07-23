@@ -1,0 +1,29 @@
+type: object
+description: Запрос создания заявки на блокировку QR-кода от сервиса Банка
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор QR кода в СБП
+  traceId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор запроса
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса
+  ecoDocTypeId:
+    type: string
+    description: Идентификатор типа заявки
+  docId:
+    type: string
+    description: Идентификатор заявки
+  docUrl:
+    type: string
+    description: Ссылка на заявку ЭКО сервиса
+required:
+- docId
+- docUrl
+- ecoDocTypeId
+- ecoServiceCode
+- qrcId
+- traceId

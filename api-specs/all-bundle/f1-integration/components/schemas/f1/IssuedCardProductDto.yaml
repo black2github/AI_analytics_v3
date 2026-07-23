@@ -1,0 +1,11 @@
+required:
+- corpCardProductType
+type: object
+properties:
+  corpCardProductType:
+    type: string
+    description: Код карточного продукта
+  limitsScheme:
+    type: string
+    description: Код вида схемы лимитов
+description: Карточный продукт

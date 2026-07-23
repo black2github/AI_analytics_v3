@@ -1,0 +1,10 @@
+type: object
+properties:
+  visible:
+    type: boolean
+    description: Признак отображения счета
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+description: Обновление настроек списка счетов

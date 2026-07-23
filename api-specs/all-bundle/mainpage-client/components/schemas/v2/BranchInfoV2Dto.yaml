@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID филиала или подразделения банка
+    format: uuid
+  filialName:
+    type: string
+    description: Название филиала
+description: Филиал или подразделения банка

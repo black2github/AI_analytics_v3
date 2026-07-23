@@ -1,0 +1,45 @@
+type: object
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  certificateOwnerName:
+    $ref: ../common/FilterValueDtoString.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  dstStatus:
+    $ref: ./FilterValueEnumDtoDigitalSignatureToolStatusDto.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  kind:
+    $ref: ./FilterValueEnumDtoDigitalSignatureKindDto.yaml
+  userEskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOfficialId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificateValidFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  certificateValidTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  dssSecondaryAuthMethod:
+    $ref: ./FilterValueEnumDtoSecondaryAuthMethodDto.yaml
+  enabled:
+    $ref: ./FilterValueDtoBoolean.yaml
+  loginEnabled:
+    $ref: ./FilterValueDtoBoolean.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  dssLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории СЭП
+    enum:
+    - ALL
+    - ACTIVE
+    - NOT_ACTIVE
+    - DELETED
+description: Фильтр СЭП

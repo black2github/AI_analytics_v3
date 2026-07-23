@@ -1,0 +1,89 @@
+type: object
+description: Фильтр скроллера заявки ТСП.
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса.
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка"
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор заявки
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер заявки
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки
+  status:
+    $ref: ./SbpRequestTspStatusFilter.yaml
+    description: Текущий статус обработки заявки
+  userId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Идентификатор пользователя
+  tradeName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  fullAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Полный адрес
+  houseFiasId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор дома ФИАС
+  postalCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Индекс
+  oktmo:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код ОКТМО
+  city:
+    $ref: ./FilterValueDtoString.yaml
+    description: Город
+  countryCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код страны
+  capabilities:
+    $ref: ./FilterValueDtoString.yaml
+    description: Возможности ТСП по взаимодействию с покупателем страны
+  phoneNumber:
+    $ref: ./FilterValueDtoString.yaml
+    description: Телефон
+  isReturned:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Возможен возврат платежа
+  passwordOfReturning:
+    $ref: ./FilterValueDtoString.yaml
+    description: Пароль возврата
+  fullName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Полное наименование клиента
+  shortName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Краткое наименование клиента
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП клиента
+  ogrnOgrnip:
+    $ref: ./FilterValueDtoString.yaml
+    description: ОГРН/ОГРНИП.
+  f1Rnk:
+    $ref: ./FilterValueDtoString.yaml
+    description: РНК клиента в РКО Ф1
+  legalId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор Клиента в АС СБП.
+  mccCode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Код МСС

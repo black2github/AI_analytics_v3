@@ -1,0 +1,16 @@
+type: object
+properties:
+  departmentName:
+    type: string
+    description: Наименование подразделения, выдавшего документ
+  number:
+    type: string
+    description: Номер паспорта РФ или иностранного гражданина
+  releaseDate:
+    type: string
+    description: Дата выдачи паспорта
+    format: date
+  series:
+    type: string
+    description: Серия паспорта РФ. Для иностранного гражданина произвольная строка
+description: Паспортные данные физического лица-подписанта по счёту/ЕИО (ПУЛ)

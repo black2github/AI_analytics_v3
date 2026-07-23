@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД клиента банка
+    format: uuid
+  shortName:
+    type: string
+    description: Короткое наименование клиента (организации)
+  fullName:
+    type: string
+    description: Полное наименование клиента (организации)
+  innKio:
+    type: string
+    description: ИНН/КИО
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+description: Информация по клиенту

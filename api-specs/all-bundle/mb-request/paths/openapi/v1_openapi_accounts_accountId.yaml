@@ -1,0 +1,37 @@
+get:
+  tags:
+  - API для Openapi запросов Мультибанкинга. Операции с счетами
+  operationId: getAccount
+  parameters:
+  - name: Authorization
+    in: header
+    required: true
+    schema:
+      type: string
+  - name: x-fapi-auth-date
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: x-fapi-customer-ip-address
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: x-customer-user-agent
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: accountId
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/openapi/AccountsOApiDto.yaml

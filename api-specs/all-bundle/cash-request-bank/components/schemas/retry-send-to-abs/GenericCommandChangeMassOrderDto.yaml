@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./ChangeMassOrderDto.yaml
+description: Запрос

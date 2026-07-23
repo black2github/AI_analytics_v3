@@ -1,0 +1,7 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID загружаемого сертификата
+    format: uuid
+description: Данные о загружаемом сертификате в КриптоПРО DSS

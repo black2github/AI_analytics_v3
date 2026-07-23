@@ -1,0 +1,120 @@
+type: object
+properties:
+  validationResult:
+    type: string
+    description: Статус проверки чек-листа
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  isFilledUp:
+    type: boolean
+    description: Статус заполненности чек-листа
+  credentialsType:
+    type: string
+    description: Полномочия
+    enum:
+    - NONE
+    - EIO
+    - MEGA_LETTER_OF_ATTORNEY
+    - PRODUCT_LETTER_OF_ATTORNEY
+    - MEGA_OR_PRODUCT_LETTER_OF_ATTORNEY
+  credentialsTypeFillType:
+    type: string
+    description: Полномочия. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  credentialsConfirmed:
+    type: boolean
+    description: Полномочия подтверждены
+  credentialsConfirmedFillType:
+    type: string
+    description: Полномочия подтверждены. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  identityDocumentValid:
+    type: string
+    description: Валидность документа удостоверяющего личность (ДУЛ)
+    enum:
+    - VALID
+    - NOT_VALID
+  identityDocumentValidFillType:
+    type: string
+    description: Валидность документа удостоверяющего личность (ДУЛ). Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  p499:
+    type: boolean
+    description: 499-П
+  p499FillType:
+    type: string
+    description: 499-П. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  complianceCategory:
+    type: string
+    description: Комплаенс категория
+    enum:
+    - CATEGORY_1
+    - CATEGORY_2
+    - CATEGORY_3
+  complianceCategoryFillType:
+    type: string
+    description: Комплаенс категория. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  notResident:
+    type: boolean
+    description: Нерезидент
+  notResidentFillType:
+    type: string
+    description: Нерезидент. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  patternOfRelationshipFriend:
+    type: string
+    description: Характер отношений Друга
+  patternOfRelationshipFriendFillType:
+    type: string
+    description: Характер отношений Друга. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  p499Friend:
+    type: boolean
+    description: 499-П. Друг.
+  p499FriendFillType:
+    type: string
+    description: 499-П. Друг. Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  complianceCategoryFriend:
+    type: string
+    description: Комплаенс категория (Друг)
+    enum:
+    - CATEGORY_1
+    - CATEGORY_2
+    - CATEGORY_3
+  complianceCategoryFriendFillType:
+    type: string
+    description: Комплаенс категория (Друг). Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+  notResidentFriend:
+    type: boolean
+    description: Нерезидент (Друг)
+  notResidentFriendFillType:
+    type: string
+    description: Нерезидент (Друг). Тип заполнения поля.
+    enum:
+    - AUTO
+    - MANUAL
+description: Чек лист

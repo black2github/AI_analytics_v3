@@ -1,0 +1,29 @@
+required:
+- columns
+- ids
+- multiSort
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы платежных поручений для экспорта
+    items:
+      type: string
+      description: Идентификаторы платежных поручений для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/PaymentOrderRequestClientScrollerFilter.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      $ref: ./PaymentOrderScrollerColumnDto.yaml
+  timeZone:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра платежных поручений

@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Важность уведомления
+    enum:
+    - HIGH
+    - NORMAL
+    - LOW
+  notEq:
+    type: string
+    description: Важность уведомления
+    enum:
+    - HIGH
+    - NORMAL
+    - LOW
+  in:
+    type: array
+    items:
+      type: string
+      description: Важность уведомления
+      enum:
+      - HIGH
+      - NORMAL
+      - LOW
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Важность уведомления
+      enum:
+      - HIGH
+      - NORMAL
+      - LOW
+  isNull:
+    type: boolean
+description: Фильтр по важности уведомления. Полное совпадение

@@ -1,0 +1,12 @@
+type: object
+properties:
+  docId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  historyEntries:
+    type: array
+    description: Записи историй изменений документа.
+    items:
+      $ref: ./OutgoingPaymentRequestHistoryEntryDto.yaml
+description: История изменений документа

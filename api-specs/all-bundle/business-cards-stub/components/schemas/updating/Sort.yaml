@@ -1,0 +1,8 @@
+type: object
+properties:
+  field:
+    type: string
+  direction:
+    $ref: ./Direction.yaml
+  nullHandling:
+    $ref: ./NullHandling.yaml

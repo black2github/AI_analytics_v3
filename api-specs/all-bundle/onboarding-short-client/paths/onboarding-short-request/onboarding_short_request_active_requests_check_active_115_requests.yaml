@@ -1,0 +1,63 @@
+get:
+  description: 'Привилегии: ONB_KZ.CLIENT.VIEW,ONB_KZ.BANK.VIEW'
+  operationId: checkActive115Requests
+  parameters:
+  - description: идентификатор заявки на открытие первого счета
+    in: query
+    name: onboardingShortRequestId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/onboarding-short-request/GenericResponseSimpleErrorDataInteger.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Проверить в ЕСК отсутствие заявок 115 в не финальных статусах.
+  tags:
+  - API короткой заявки на формирование пакета документов. Контроли наличия активных заявок.

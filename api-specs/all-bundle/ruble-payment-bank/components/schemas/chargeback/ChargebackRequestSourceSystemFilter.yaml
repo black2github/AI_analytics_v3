@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+  notEq:
+    $ref: ../common/DocumentSystemClassifierDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ../common/DocumentSystemClassifierDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ../common/DocumentSystemClassifierDto.yaml
+  isNull:
+    type: boolean
+description: Система создания. Поиск по Запрос на отзыв.<Система создания документа> . Равенство, содержится в списке

@@ -1,0 +1,9 @@
+type: object
+properties:
+  ids:
+    maxItems: 1000
+    minItems: 0
+    type: array
+    items:
+      type: string
+      format: uuid

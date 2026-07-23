@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: dlp-stub API
+  version: 1.1.0
+servers:
+- url: /dlp-stub
+paths:
+  /actuator:
+    $ref: ./paths/actuator/actuator.yaml
+  /actuator/env:
+    $ref: ./paths/env/actuator_env.yaml
+  /actuator/info:
+    $ref: ./paths/info/actuator_info.yaml
+  /actuator/loggers:
+    $ref: ./paths/loggers/actuator_loggers.yaml
+  /actuator/loggers/{loggerName}:
+    $ref: ./paths/loggers/actuator_loggers_loggerName.yaml
+  /icap-stub:
+    $ref: ./paths/icap-stub/icap_stub.yaml
+  /icap-stub/delete-all:
+    $ref: ./paths/delete-all/icap_stub_delete_all.yaml
+  /icap-stub/delete/{message}:
+    $ref: ./paths/delete/icap_stub_delete_message.yaml
+  /icap-stub/get-all:
+    $ref: ./paths/get-all/icap_stub_get_all.yaml
+  /icap-stub/get-mode:
+    $ref: ./paths/get-mode/icap_stub_get_mode.yaml
+  /icap-stub/set-mode:
+    $ref: ./paths/set-mode/icap_stub_set_mode.yaml
+  /icap-stub/{message}:
+    $ref: ./paths/{message}/icap_stub_message.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+  /xapi/event/verdict:
+    $ref: ./paths/event/xapi_event_verdict.yaml
+  /xapi/push/event:
+    $ref: ./paths/push/xapi_push_event.yaml
+  /xapi/stub/add-stub:
+    $ref: ./paths/stub/xapi_stub_add_stub.yaml
+  /xapi/stub/delete-all:
+    $ref: ./paths/stub/xapi_stub_delete_all.yaml
+  /xapi/stub/delete/{message}:
+    $ref: ./paths/stub/xapi_stub_delete_message.yaml
+  /xapi/stub/get-all:
+    $ref: ./paths/stub/xapi_stub_get_all.yaml
+  /xapi/stub/get-mode:
+    $ref: ./paths/stub/xapi_stub_get_mode.yaml
+  /xapi/stub/set-mode:
+    $ref: ./paths/stub/xapi_stub_set_mode.yaml
+  /xapi/stub/{message}:
+    $ref: ./paths/stub/xapi_stub_message.yaml
+components:
+  schemas:
+    ActuatorEndpointsDto:
+      $ref: ./components/schemas/actuator/ActuatorEndpointsDto.yaml
+    ActuatorEnvDto:
+      $ref: ./components/schemas/env/ActuatorEnvDto.yaml
+    ActuatorInfoDto:
+      $ref: ./components/schemas/info/ActuatorInfoDto.yaml
+    ActuatorLoggersDto:
+      $ref: ./components/schemas/loggers/ActuatorLoggersDto.yaml
+    Build:
+      $ref: ./components/schemas/info/Build.yaml
+    DlpChangeModeRequest:
+      $ref: ./components/schemas/stub/DlpChangeModeRequest.yaml
+    DlpStubRequest:
+      $ref: ./components/schemas/stub/DlpStubRequest.yaml
+    EndpointReference:
+      $ref: ./components/schemas/actuator/EndpointReference.yaml
+    EnvPropertySourceDto:
+      $ref: ./components/schemas/env/EnvPropertySourceDto.yaml
+    EventDataResponse:
+      $ref: ./components/schemas/push/EventDataResponse.yaml
+    FileUploadRequest:
+      $ref: ./components/schemas/push/FileUploadRequest.yaml
+    Git:
+      $ref: ./components/schemas/info/Git.yaml
+    GitCommit:
+      $ref: ./components/schemas/info/GitCommit.yaml
+    GroupedLoggers:
+      $ref: ./components/schemas/loggers/GroupedLoggers.yaml
+    IcapChangeModeRequest:
+      $ref: ./components/schemas/set-mode/IcapChangeModeRequest.yaml
+    IcapCreateStubRequest:
+      $ref: ./components/schemas/icap-stub/IcapCreateStubRequest.yaml
+    LocalDate:
+      $ref: ./components/schemas/event/LocalDate.yaml
+    LogLevel:
+      $ref: ./components/schemas/loggers/LogLevel.yaml
+    OffsetDateTime:
+      $ref: ./components/schemas/info/OffsetDateTime.yaml
+    PropertyValue:
+      $ref: ./components/schemas/env/PropertyValue.yaml
+    ResponseData:
+      $ref: ./components/schemas/push/ResponseData.yaml
+    VerdictEnum:
+      $ref: ./components/schemas/common/VerdictEnum.yaml
+    VerdictInfo:
+      $ref: ./components/schemas/event/VerdictInfo.yaml
+    VerdictResponse:
+      $ref: ./components/schemas/event/VerdictResponse.yaml

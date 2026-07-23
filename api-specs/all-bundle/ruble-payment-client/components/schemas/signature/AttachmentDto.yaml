@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор вложения
+    format: uuid
+  attachmentId:
+    type: string
+    description: Уникальный идентификатор вложения в Системе
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла вложения
+  fileSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int64
+  fileHash:
+    type: string
+    description: Хеш файла
+  owner:
+    type: string
+    description: Владелец вложения
+    format: uuid
+  attachedAt:
+    type: string
+    description: Дата и время вложения
+    format: date-time
+description: Данные аттачмента

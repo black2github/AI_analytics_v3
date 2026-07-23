@@ -1,0 +1,62 @@
+get:
+  tags:
+  - API для работы с сертификатами организаций.
+  summary: Получение информации о сертификате клиента-ЮЛ по идентификатору цифрового кошелька
+  description: 'Привилегии: DRUB.CLIENT.CERTIFICATE_DOWNLOAD'
+  operationId: getParticipantCertificateByWalletId
+  parameters:
+  - name: walletId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: lastActive
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/certificate/GenericResponseDigitalRubleErrorPcrParticipantCertificateDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

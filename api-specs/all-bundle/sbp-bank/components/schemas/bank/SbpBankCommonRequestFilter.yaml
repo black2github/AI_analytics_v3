@@ -1,0 +1,74 @@
+type: object
+description: Фильтр скроллера обобщенной заявки клиентов сервиса СБП
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка"
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН Клиента
+  clientKpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП Клиента
+  clientShortName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Краткое наименование клиента
+  status:
+    $ref: ./SbpCommonRequestStatusFilterDto.yaml
+    description: Текущий статус заявки
+  type:
+    $ref: ./SbpRequestTypeFilterDto.yaml
+    description: Тип заявки
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер заявки
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата заявки
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название ТСП
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП
+  account:
+    $ref: ./FilterValueDtoString.yaml
+    description: Счет зачисления
+  subscriptionPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Цель подписки
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR кода
+  paymentPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Назначение платежа
+  payer:
+    $ref: ./FilterValueDtoString.yaml
+    description: Плательщик
+  clientRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак создания клиентом, eq
+  b2bRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак B2B, eq
+  b2bOnboarding:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак онбординга B2B, eq
+  resident:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак резидента B2B, eq
+  drAccountId:
+    $ref: ./FilterValueDtoString.yaml
+    description: ID счета цифрового рубля, eq

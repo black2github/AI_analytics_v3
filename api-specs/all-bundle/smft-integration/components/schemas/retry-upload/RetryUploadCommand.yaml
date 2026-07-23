@@ -1,0 +1,12 @@
+type: object
+description: Команда на выгрузку событий в СМФТ
+properties:
+  eventIds:
+    type: array
+    description: Список ИД событий для выгрузки в СМФТ
+    items:
+      type: string
+      format: uuid
+    uniqueItems: true
+required:
+- eventIds

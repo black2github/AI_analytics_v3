@@ -1,0 +1,39 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  payerNameOrInnKioOrClientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./OutgoingPaymentRequestStatusEnumDto.yaml
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  payerBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverNameOrInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverBankBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    $ref: ./OutgoingPaymentRequestBankCategoryDto.yaml
+  hasChargebackRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+  chargebackStatuses:
+    $ref: ./FilterValueEnumDtoOutgoingPaymentChargebackRequestStatusBankDto.yaml
+  chargebackId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  sourceSystem:
+    $ref: ./FilterValueEnumDtoDocumentSourceSystemDto.yaml
+  creationType:
+    $ref: ./FilterValueEnumDtoDocumentCreationTypeDto.yaml
+description: Банковский фильтр для журнал документов платежное требование исходящее

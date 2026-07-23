@@ -1,0 +1,16 @@
+required:
+- documentIds
+type: object
+properties:
+  documentIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы документов
+    items:
+      type: string
+      description: Идентификаторы документов
+      format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для банковского сотрудника
+description: Команда для перевода документов в статус "Ошибка выгрузки в АБС"

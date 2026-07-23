@@ -1,0 +1,12 @@
+required:
+- clientId
+- ogrn
+type: object
+properties:
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП юридического лица/предпринимателя
+  clientId:
+    type: string
+    description: Уникальный идентификатор организации - клиента Банка
+description: Данные для формирования ссылки на детализированный отчет

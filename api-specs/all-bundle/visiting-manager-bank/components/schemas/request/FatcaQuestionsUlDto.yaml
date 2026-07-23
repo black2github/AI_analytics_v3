@@ -1,0 +1,36 @@
+type: object
+properties:
+  fatcaClientControl:
+    type: boolean
+    description: Подлежит ли клиент контролю по FATCA?
+  fatcaClientInformationNotProvided:
+    type: boolean
+    description: Клиент не представил информацию.
+  fatcaSelfCertificationForm:
+    type: boolean
+    description: Необходимо направить форму самосертификации.
+  fatcaDetailedSelfCertificationForm:
+    type: boolean
+    description: Организации передается для заполнения подробная форма самосертификации.
+  fatcaNonUSTaxResident:
+    type: boolean
+    description: Не является налоговым резидентом США.
+  crsClientReportingPerson:
+    type: boolean
+    description: Имеет ли Клиент признаки Подотчетного лица по CRS?
+  crsSelfCertificationForm1:
+    type: boolean
+    description: Форма самосертификации (флажок 1).
+  crsSelfCertificationForm2:
+    type: boolean
+    description: Форма самосертификации (флажок 2).
+  crsDetailedSelfCertificationForm:
+    type: boolean
+    description: Подробная форма самосертификации.
+  crsNonReportablePerson1:
+    type: boolean
+    description: Не является подотчетным лицом (флажок 1).
+  crsNonReportablePerson2:
+    type: boolean
+    description: Не является подотчетным лицом (флажок 2).
+description: FATCA+CRS для ЮЛ.

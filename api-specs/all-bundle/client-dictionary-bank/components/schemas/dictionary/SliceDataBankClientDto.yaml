@@ -1,0 +1,12 @@
+type: object
+properties:
+  content:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ../common/BankClientDto.yaml
+  previous:
+    type: boolean
+  next:
+    type: boolean
+description: Страничные данные

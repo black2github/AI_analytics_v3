@@ -1,0 +1,7 @@
+type: object
+properties:
+  floor:
+    type: string
+  currency:
+    type: string
+description: Подключаемые площадки и валюты

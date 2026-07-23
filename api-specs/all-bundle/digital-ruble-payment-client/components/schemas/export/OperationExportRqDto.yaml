@@ -1,0 +1,32 @@
+required:
+- pcrParticipantWalletId
+- reportFormat
+- timezone
+type: object
+properties:
+  getPageCommand:
+    $ref: ./GetPageCommandExportFilterDto.yaml
+  exportedColumns:
+    type: array
+    description: Массив столбцов Excel
+    items:
+      $ref: ./ExportedColumnDto.yaml
+  reportFormat:
+    type: string
+    description: Формат печатной формы
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового счета
+    format: uuid
+  timezone:
+    type: string
+    description: Часовой пояс
+description: Экспорт операций цифрового кошелька

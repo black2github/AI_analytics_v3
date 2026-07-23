@@ -1,0 +1,20 @@
+type: object
+properties:
+  contractTypeCodes:
+    uniqueItems: true
+    type: array
+    description: Типы договоров
+    items:
+      type: string
+      description: Типы договоров
+  accountKindCodes:
+    uniqueItems: true
+    type: array
+    description: Виды счетов
+    items:
+      type: string
+      description: Виды счетов
+  name:
+    type: string
+    description: Наименование типа счета
+description: Тип счета

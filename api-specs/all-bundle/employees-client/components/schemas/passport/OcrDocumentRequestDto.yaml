@@ -1,0 +1,16 @@
+required:
+- fileIds
+type: object
+properties:
+  fileIds:
+    type: array
+    description: Ссылка на файлы документа
+    items:
+      type: string
+      description: Ссылка на файлы документа
+      format: uuid
+  timer:
+    type: integer
+    description: Таймер операции в секундах (необязательный)
+    format: int64
+description: Запрос распознавания паспорта

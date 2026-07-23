@@ -1,0 +1,7 @@
+type: string
+description: Фильтрация по категориям. Полное совпадение.
+enum:
+- PROCESSING_ERROR
+- IN_PROCESSING
+- COMPLETED
+- ALL

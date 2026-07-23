@@ -1,0 +1,9 @@
+type: object
+properties:
+  usedInOnboarding:
+    $ref: ./FilterValueDtoBoolean.yaml
+  documentClass:
+    $ref: ./DocumentClassFilter.yaml
+  documentTypeCode:
+    $ref: ./DocumentTypeCodeFilter.yaml
+description: Фильтр

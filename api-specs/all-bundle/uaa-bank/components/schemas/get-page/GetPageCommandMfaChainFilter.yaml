@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsMfaChainFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Категории запросов выписки
+    enum:
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - COMPLETED
+    - ALL
+  notEq:
+    type: string
+    description: Категории запросов выписки
+    enum:
+    - PROCESSING_ERROR
+    - IN_PROCESSING
+    - COMPLETED
+    - ALL
+  in:
+    type: array
+    items:
+      type: string
+      description: Категории запросов выписки
+      enum:
+      - PROCESSING_ERROR
+      - IN_PROCESSING
+      - COMPLETED
+      - ALL
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Категории запросов выписки
+      enum:
+      - PROCESSING_ERROR
+      - IN_PROCESSING
+      - COMPLETED
+      - ALL
+  isNull:
+    type: boolean
+description: Данные

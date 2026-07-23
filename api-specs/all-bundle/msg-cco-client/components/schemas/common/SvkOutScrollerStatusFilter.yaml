@@ -1,0 +1,89 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPTED
+    - COMPLETED
+    - REJECTED
+    - DECLINED
+    - CANCELED_LKUVED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPTED
+    - COMPLETED
+    - REJECTED
+    - DECLINED
+    - CANCELED_LKUVED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - SIGN_VALID
+      - DETAILS_VALID
+      - EXPORT_TO_ABS
+      - EXPORTED_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - ACCEPTED
+      - COMPLETED
+      - REJECTED
+      - DECLINED
+      - CANCELED_LKUVED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - SIGN_VALID
+      - DETAILS_VALID
+      - EXPORT_TO_ABS
+      - EXPORTED_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - ACCEPTED
+      - COMPLETED
+      - REJECTED
+      - DECLINED
+      - CANCELED_LKUVED
+  isNull:
+    type: boolean
+description: Фильтрация по статусу. Полное совпадение

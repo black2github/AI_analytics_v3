@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Фильтр по значению "Решение по документу"
+    enum:
+    - ACCEPT
+    - DECLINE
+    - PROCESSED
+    - UNPROCESSED
+  notEq:
+    type: string
+    description: Фильтр по значению "Решение по документу"
+    enum:
+    - ACCEPT
+    - DECLINE
+    - PROCESSED
+    - UNPROCESSED
+  in:
+    type: array
+    items:
+      type: string
+      description: Фильтр по значению "Решение по документу"
+      enum:
+      - ACCEPT
+      - DECLINE
+      - PROCESSED
+      - UNPROCESSED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Фильтр по значению "Решение по документу"
+      enum:
+      - ACCEPT
+      - DECLINE
+      - PROCESSED
+      - UNPROCESSED
+  isNull:
+    type: boolean
+description: Решение

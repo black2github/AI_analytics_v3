@@ -1,0 +1,20 @@
+type: object
+properties:
+  documentStartLineNumber:
+    type: integer
+    description: Позиция (Порядковый номер строки в файле импорта, с которой начинается документ)
+    format: int64
+  importResult:
+    type: string
+    description: Результат импорта
+  importCompleted:
+    type: boolean
+    description: Импорт зваершен
+  controlsResults:
+    type: array
+    description: Результат контролей
+    items:
+      $ref: ./FileImportDocControlResultDto.yaml
+  importPreparationStatus:
+    $ref: ./ImportPreparationStatusDto.yaml
+description: Данные протокола файлового импорта, результат по документу

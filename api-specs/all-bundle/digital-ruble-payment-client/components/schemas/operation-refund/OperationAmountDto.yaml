@@ -1,0 +1,9 @@
+type: object
+properties:
+  amount:
+    type: number
+    description: Сумма операции
+  currency:
+    type: string
+    description: Валюта операции
+description: Сумма операции

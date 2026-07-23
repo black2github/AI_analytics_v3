@@ -1,0 +1,22 @@
+type: object
+description: Реквизиты клиента по заявке на блокировку/разблокировку ТСП.
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  inn:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП

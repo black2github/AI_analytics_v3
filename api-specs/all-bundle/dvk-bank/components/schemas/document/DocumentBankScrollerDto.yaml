@@ -1,0 +1,93 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  documentNumber:
+    type: string
+    description: Номер документа
+  documentDate:
+    type: string
+    description: Дата документа
+    format: date
+  client:
+    $ref: ./DocumentBankClientDto.yaml
+  documentType:
+    type: string
+    description: Тип документа
+    enum:
+    - CONF_DOC_CERT
+    - REG_CONTRACT
+    - RENEW_CONTRACT
+    - REG_CRED_AGREEMENT
+    - RENEW_CRED_AGREEMENT
+    - CONTR_CLOSE
+  filialName:
+    type: string
+    description: Наименование подразделения
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - WAITING
+    - COMPLETED
+    - REJECTED
+    - PARTIALLY_COMPLETED
+    - ACCEPTED
+    - CANCELED_LKUVED
+    - DECLINED
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+  clientNumbers:
+    type: array
+    description: УНК
+    items:
+      type: string
+      description: УНК
+  inn:
+    type: string
+    description: ИНН
+  relatedDocumentsCount:
+    type: integer
+    description: Количество связанных документов
+    format: int32
+  bankAnswer:
+    type: boolean
+    description: Получен ответ банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ./AttachmentDto.yaml
+  userInfo:
+    $ref: ./DocumentBankUserInfo.yaml
+  creationInfo:
+    $ref: ./DocumentCreationInfoBankDto.yaml
+  extendedInfo:
+    $ref: ./ExtendedInfoDto.yaml
+  signatures:
+    type: array
+    description: Подписи документа
+    items:
+      $ref: ./DocumentSignatureRspDto.yaml
+description: Документа валютного контроля для банковского скроллера

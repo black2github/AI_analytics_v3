@@ -1,0 +1,12 @@
+type: object
+properties:
+  totalCount:
+    type: integer
+    format: int64
+  addCount:
+    type: integer
+    format: int64
+  errorCount:
+    type: integer
+    format: int64
+description: Статистика по результату импорта реестра клиентов

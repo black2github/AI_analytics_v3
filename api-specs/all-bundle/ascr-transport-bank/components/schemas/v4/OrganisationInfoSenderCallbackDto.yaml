@@ -1,0 +1,47 @@
+type: object
+description: Данные на получение информации по Клиенту-ЮЛ отправителю для проведения процедур пост-контроля по ПОД/ФТ операции.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПлЦР
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПлЦР
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК
+  albumVersion:
+    type: string
+    description: Номер версии альбома ЭС ПлЦР
+  clientNotificationType:
+    type: string
+    description: Тип эталона ЭС
+  clientNotification:
+    type: string
+    description: Незашифрованный эталон ЭС
+  clientNotificationData:
+    $ref: ./ClientNotificationData.yaml
+    description: Данные из ЭС, преобразованные в формате JSON
+  additionalInfo:
+    $ref: ./AdditionalInfo.yaml
+    description: Данные для контроля ПОД/ФТ
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры
+required:
+- albumVersion
+- messageCreationDateTime
+- operationId
+- organisationId
+- participantId
+- participantWalletId

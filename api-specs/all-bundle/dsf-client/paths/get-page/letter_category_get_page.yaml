@@ -1,0 +1,55 @@
+post:
+  description: 'Привилегии: DSF_CATEGORY.SCROLLER_VIEW,DSF_DOC.CLIENT.SHOW_HISTORY'
+  operationId: getPage_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandDsfCategoryScrollerFilter.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataDsfCategoryResponseDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Получить страницу категорий ДСФ
+  tags:
+  - API справочника категорий ДСФ. Скроллер.

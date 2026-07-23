@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    $ref: ./UUID.yaml
+  clientGuid:
+    $ref: ./UUID.yaml
+  code:
+    type: integer
+    format: int32
+  comment:
+    type: string
+  status:
+    $ref: ./SmsInfoF1ExportApplicationStatus.yaml

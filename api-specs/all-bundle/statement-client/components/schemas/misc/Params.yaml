@@ -1,0 +1,4 @@
+type: object
+properties:
+  paging:
+    $ref: ../common/Paging.yaml

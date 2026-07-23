@@ -1,0 +1,13 @@
+required:
+- clientUuid
+type: object
+properties:
+  clientUuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  state:
+    $ref: ../common/AccountStateFilter.yaml
+description: Запрос получения списка расчетных счетов

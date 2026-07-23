@@ -1,0 +1,184 @@
+type: object
+properties:
+  accountInfo:
+    $ref: ./AccountInfoScrollerDto.yaml
+  accountTypeCode:
+    type: integer
+    description: Тип открываемого счёта
+    format: int64
+  bankClient:
+    $ref: ./BankClientInfoBankScrollerDto.yaml
+  branch:
+    $ref: ../common/BranchScrollerDto.yaml
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  contractNumber:
+    type: string
+    description: Номер договора
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  date:
+    type: string
+    description: Дата заявки
+    format: date
+  hasAccessGrantedInviteSentError:
+    type: boolean
+    description: Признак того, что в заявке есть физические лица имеющие статус выдачи прав доступа и отправки инвайта "Ошибка выдачи прав и запроса на отправку инвайта"
+  hasAccessRevokeError:
+    type: boolean
+    description: Признак того, что в заявке есть физические лица имеющие статус выдачи прав доступа и отправки инвайта "Ошибка отзыва прав и запроса на аннулирование инвайта"
+  hasSimpleInviteSentError:
+    type: boolean
+    description: Признак того, что в заявке есть физические лица имеющие статус выдачи прав доступа и отправки инвайта "Ошибка запроса на отправку инвайта"
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  isAfterRework:
+    type: boolean
+    description: Признак того что заявка после доработки данных или замены документов
+  isRequestEditing:
+    type: boolean
+    description: Флаг редактирования заявки
+  lastClientCall:
+    $ref: ./ClientCallHistoryScrollerDto.yaml
+  lastFoRequest:
+    $ref: ../common/FrontOfficeRequestDto.yaml
+  lastManagerVisit:
+    $ref: ./ManagerVisitHistoryScrollerDto.yaml
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  onRework:
+    type: boolean
+    description: На доработке
+  partnerSite:
+    type: string
+    description: Сайт партнёра
+  remoteAccountOpening:
+    $ref: ./RemoteAccountOpeningScrollerDto.yaml
+  responsibleBankUserFio:
+    type: string
+    description: Ответственный операционист. ФИО пользователя банка, соответствующее полю "Ответственный за заявку"
+  responsibleBankUserId:
+    type: string
+    description: Ответственный операционист. UAA id пользователя-операциониста, ответственного сотрудника банка, который последним редактировал заявку
+    format: uuid
+  signPlace:
+    type: string
+    description: Место подписания договора с банком
+    enum:
+    - BANK_OFFICE
+    - DEPARTURE_OF_BANK_EMPLOYEE
+  signingDate:
+    type: string
+    description: Дата подписания
+    format: date
+  source:
+    type: string
+    description: Источник создания заявки
+    enum:
+    - LANDING_PAGE
+    - CRM_INFOR
+    - ONBOARDING
+  status:
+    type: string
+    description: Статус заявки на открытие первого счета
+    enum:
+    - NONE
+    - PREDRAFT
+    - CREATED
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - FORMED
+    - DELETED
+    - DATA_ERROR
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - WAITING_FOR_ESK_DECISION
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - EDITING
+    - EDITING_DRAFT
+    - EDITING_REPLACING_DOCS
+    - EDITING_COMPLETED
+    - EDITING_DOCS_LOAD
+    - DELIVERED
+    - RECEIVED
+    - PROCESSING_TESSA_COMMENTS
+    - DETAILS_ERROR
+    - WAITING_RESTRICTION
+    - TECH_REQ
+    - ARCHIVING
+    - ARCHIVED
+    - RECALL_IN_ESK
+    - RECALLED_IN_ESK
+    - RECALL_IN_ESK_ERROR
+    - RECALL_IN_TESSA
+    - RECALLED_IN_TESSA
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED
+    - RECALL_IN_TESSA_ERROR
+    - SIGN_VALID
+    - SIGN_NOT_VALID
+    - NEED_RESIGN
+    - SIGN_CANCELLED
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+    - RECALL_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+    - RECALLED_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_ERROR_REFUSING
+  userFio:
+    type: string
+    description: ФИО пользователя
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userLogin:
+    type: string
+    description: Логин пользователя
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+description: Заявка на открытие первого счета на банковском скроллере

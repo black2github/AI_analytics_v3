@@ -1,0 +1,33 @@
+type: object
+properties:
+  innOrOgrn:
+    type: string
+    description: ИНН / ОГРН
+  bankClientId:
+    type: string
+    description: Идентификатор организации (в ЭКО)
+    format: uuid
+  clientName:
+    type: string
+    description: Полное наименование при заведении нерезидента
+  representativeName:
+    maxLength: 255
+    pattern: ^([А-Яа-яЁёA-Za-z\s\'\-](?!.*\-$)(?!.*[-]{2}))+$
+    type: string
+    description: Представитель (ФИО)
+  representativePhone:
+    maxLength: 15
+    pattern: ^[+0-9]+$
+    type: string
+    description: Представитель (номер телефона)
+  representativeEmail:
+    maxLength: 110
+    pattern: ^[0-9A-Za-z\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Представитель (электронная почта)
+  officeCity:
+    maxLength: 110
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Населенный пункт
+description: Представление заявки на открытие брокерского счета

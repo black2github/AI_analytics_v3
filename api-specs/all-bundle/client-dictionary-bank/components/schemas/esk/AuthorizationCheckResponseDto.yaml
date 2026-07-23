@@ -1,0 +1,90 @@
+type: object
+properties:
+  messageId:
+    type: string
+    description: Идентификатор сообщения запроса
+    format: uuid
+  correlationId:
+    type: string
+    description: GUID исходного сообщения с RequestQueryList
+    format: uuid
+  processGUID:
+    type: string
+    description: Исходный GUID процесса / ID сессии пользователя
+    format: uuid
+  eventState:
+    type: string
+    description: Статус процесса
+    enum:
+    - EventStateTypeDto.NONE(state=None, description=нет (статуса))
+    - EventStateTypeDto.READY(state=Ready, description=готов)
+    - EventStateTypeDto.ACTIVE(state=Active, description=действующий (активен))
+    - EventStateTypeDto.CANCELLED(state=Cancelled, description=отменен)
+    - EventStateTypeDto.ABORTING(state=Aborting, description=в стадии прерывания (прекращения))
+    - EventStateTypeDto.ABORTED(state=Aborted, description=прерван)
+    - EventStateTypeDto.COMPLETING(state=Completing, description=в стадии завершения)
+    - EventStateTypeDto.COMPLETED(state=Completed, description=завершен)
+    - EventStateTypeDto.SUSPENDED(state=Suspended, description=приостановлен)
+    - EventStateTypeDto.RESUMED(state=Resumed, description=возобновлен)
+    - EventStateTypeDto.RECOMPLETED(state=Recompleted, description=(резерв))
+  eventDescription:
+    type: string
+    description: Описание процесса
+  receiptFlag:
+    type: string
+    description: Флаг выписки
+    enum:
+    - ReceiptFlagTypeDto.SUCCESS(flagId=0, description=успех)
+    - ReceiptFlagTypeDto.ERROR(flagId=1, description=ошибка)
+    - ReceiptFlagTypeDto.IB(flagId=2, description=событие ИБ)
+  receiptState:
+    type: string
+    description: Статус выписки
+    enum:
+    - ReceiptStateTypeDto.CONFIRM(state=Confirm, description=создание первого экземпляра ИО или исполнение действующего)
+    - ReceiptStateTypeDto.REJECT(state=Reject, description=отрицательный результат при попытке создать экземпляр ИО или отказ от исполнения действующего экземпляра)
+    - ReceiptStateTypeDto.UPDATE(state=Update, description=исполнение действующего экземпляра ИО с изменением значений реквизитов ИО)
+    - ReceiptStateTypeDto.REPLACE(state=Replace, description=создание экземпляра ИО и присвоение ему локального идентификатора, отличного от лок.идентификатора из сообщения, или исполнение действующего экземпляра ИО с его заменой на новый(-ые) экземпляр(-ы))
+  receiptDescription:
+    type: string
+    description: Описание выписки
+  isReceiptFinal:
+    type: boolean
+    description: Признак конечного статуса выписки
+  companyGUID:
+    type: string
+    description: GUID организации
+    format: uuid
+  isAuthorizationSuccess:
+    type: boolean
+    description: Признак успеха авторизации
+  isPersonTopOfficial:
+    type: boolean
+    description: Признак руководителя представителя
+    deprecated: true
+  isPersonSuccess:
+    type: boolean
+    description: Признак успеха авторизации представителя
+  isClientReject499:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 499-П
+  isClientReject115:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 115-ФЗ
+  validityTermDate:
+    type: string
+    description: Дата окончания действия полномочий
+    format: date
+  errors:
+    type: array
+    description: Ошибки авторизации
+    items:
+      $ref: ./ErrorAuthorizationJsonResponseDto.yaml
+  clientLocalEskId:
+    type: string
+    description: Local ID представителя в ЕСК
+  person:
+    $ref: ./PersonDto.yaml
+  identityCard:
+    $ref: ../common/IdentityCardDto.yaml
+description: Ответ ЕСК

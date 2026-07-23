@@ -1,0 +1,9 @@
+type: object
+properties:
+  series:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  type:
+    $ref: ./FilterValueEnumDtoIdentityCardTypeDto.yaml
+description: Фильтр ДУЛ по заданным параметрам внутреннего API

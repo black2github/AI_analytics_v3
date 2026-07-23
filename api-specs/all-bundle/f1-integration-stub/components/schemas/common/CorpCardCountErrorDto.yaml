@@ -1,0 +1,26 @@
+type: object
+description: Блок с информацией об ошибке запроса на получение числа действующих карт (ГС)
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор
+  clientGuid:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: GUID клиента в ЕСК
+  source:
+    type: string
+    description: Тип заявки
+  code:
+    type: integer
+    format: int32
+    description: Код ошибки
+  text:
+    type: string
+    description: Текст ошибки
+  serverErrorInfo:
+    type: string
+    description: Текст технической ошибки

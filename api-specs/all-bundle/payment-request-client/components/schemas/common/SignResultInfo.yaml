@@ -1,0 +1,15 @@
+type: object
+properties:
+  error:
+    type: string
+    description: Текст ошибки
+  info:
+    type: string
+    description: Информационный текст
+  certificateSelect:
+    type: boolean
+    description: Выбор сертификата
+  showSignDialogBox:
+    type: boolean
+    description: Показ диалога подписи
+description: Результат подготовки данных ЭП

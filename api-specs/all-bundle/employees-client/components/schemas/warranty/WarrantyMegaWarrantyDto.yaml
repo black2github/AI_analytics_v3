@@ -1,0 +1,18 @@
+type: object
+properties:
+  grantNewWarranty:
+    type: boolean
+    description: Выдать новую мегадоверенность
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности
+    format: date
+description: Данные для создания/обновления электронной мегадоверенности сотрудника

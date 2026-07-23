@@ -1,0 +1,35 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  fileImportName:
+    type: string
+    description: Имя файла импорта
+  completedAt:
+    type: string
+    description: Дата и время завершения импорта
+  fileSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int64
+  waitingSignDocCount:
+    type: integer
+    description: Количество документов ожидающих подписи
+    format: int64
+  waitingSignDocsAmount:
+    type: number
+    description: Сумма по всем документам ожидающим подписи
+  signedDocCount:
+    type: integer
+    description: Количество корректных подписанных документов
+    format: int64
+  signedDocsAmount:
+    type: number
+    description: Сумма по всем подписанным документам
+  errorDocs:
+    type: integer
+    description: Ошибочных документов
+    format: int64
+description: Информация об импорте документа

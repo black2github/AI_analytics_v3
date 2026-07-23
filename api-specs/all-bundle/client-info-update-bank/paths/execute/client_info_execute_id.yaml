@@ -1,0 +1,26 @@
+post:
+  tags:
+  - client-info-update-request-bank-processing-controller
+  summary: Перевести заявку в статус "Исполнен"
+  description: 'Привилегии: CLIENT_INFO_UPD.BANK.CHANGE_REQUEST_STATUS'
+  operationId: execute
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandCommentDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseClientInfoUpdateRequestDto.yaml

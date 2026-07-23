@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  type:
+    $ref: ../common/UserNotificationTypeV2Dto.yaml
+  body:
+    type: string
+    description: Текст уведомления
+  executionDeadline:
+    type: string
+    description: Выполнить до
+    format: date
+  brief:
+    type: string
+    description: Короткий текст уведомления
+description: Уведомление, краткая информация

@@ -1,0 +1,27 @@
+required:
+- category
+- categoryName
+- documentCode
+- name
+- typeCode
+type: object
+properties:
+  typeCode:
+    type: string
+    description: Код типа письма
+  name:
+    type: string
+    description: Наименование ДСФ
+  category:
+    type: string
+    description: Категория ДСФ
+  categoryName:
+    type: string
+    description: Наименование категории ДСФ
+  documentCode:
+    type: string
+    description: Код документа типа ДСФ
+    enum:
+    - DSF_IN
+    - DSF_OUT
+description: Данные типа ДСФ

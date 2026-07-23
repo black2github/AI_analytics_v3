@@ -1,0 +1,39 @@
+required:
+- letterCurrencyCode
+- openNew
+- productType
+- typeCode
+- typeShortName
+type: object
+properties:
+  addAgrmtExist:
+    type: boolean
+    description: Признак наличия ДС на РС
+  bic:
+    type: string
+    description: БИК счета
+  letterCurrencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  number:
+    type: string
+    description: Номер счета
+  openDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  openNew:
+    type: boolean
+    description: Признак открытия нового счета
+  productType:
+    type: string
+    description: Код карточного продукта
+  typeCode:
+    type: integer
+    description: Код типа счета
+    format: int32
+  typeShortName:
+    maxLength: 50
+    type: string
+    description: Краткое наименование типа счета
+description: Информация по открытию счёта в заявке на выпуск карты

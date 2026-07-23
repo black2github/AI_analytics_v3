@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Файл импорта"
+    format: uuid
+  createDocumentCount:
+    type: integer
+    description: Количество созданных документов
+    format: int32
+  importDocumentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+  importDocumentType:
+    type: string
+    description: Тип документов
+    enum:
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_CONVERSION
+    - VRKO_TRANSIT
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+  signatures:
+    type: array
+    description: Данные подписей
+    items:
+      $ref: ./FileImportSignatureDto.yaml
+description: Данные

@@ -1,0 +1,15 @@
+type: object
+properties:
+  organizationId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  marketingCampaignCode:
+    $ref: ./FilterValueDtoMarketingCampaignClassifierDto.yaml
+  marketingCampaignMember:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Справочника организаций участников маркетинговых кампаний

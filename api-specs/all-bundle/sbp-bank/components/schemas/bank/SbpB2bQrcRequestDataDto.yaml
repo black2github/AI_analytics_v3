@@ -1,0 +1,33 @@
+type: object
+description: Реквизиты QR-кода в заявке на создание QR-кода для B2B
+properties:
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках. Обязателен при значении параметра «qrcType» = «02»
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  currency:
+    type: string
+    description: Валюта платежа
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни Функциональной ссылки СБП в минутах
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках
+  takeVat:
+    type: boolean
+    description: Информация о взимании НДС, false - не взимается
+required:
+- takeVat

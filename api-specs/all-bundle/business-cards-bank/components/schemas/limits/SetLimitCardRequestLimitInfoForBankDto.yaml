@@ -1,0 +1,9 @@
+type: object
+properties:
+  value:
+    type: string
+    description: Значение
+  warningMessage:
+    type: string
+    description: Предупреждение
+description: Информация о лимите лимит для заявки на установку лимитов по корпоративной карте

@@ -1,0 +1,26 @@
+type: object
+properties:
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса документу
+    format: date-time
+  status:
+    type: string
+    description: Статус документа
+  userType:
+    type: string
+    description: Тип пользователя
+  userId:
+    type: string
+    description: Идентификатор пользователя-инициатора события
+    format: uuid
+  userFullName:
+    type: string
+    description: ФИО пользователя
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+description: Запись истории изменений документа

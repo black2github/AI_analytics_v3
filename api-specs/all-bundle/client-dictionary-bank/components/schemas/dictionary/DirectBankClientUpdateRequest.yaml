@@ -1,0 +1,9 @@
+type: object
+properties:
+  documentKindCodes:
+    type: array
+    items:
+      type: string
+  blocked:
+    type: boolean
+description: Данные

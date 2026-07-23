@@ -1,0 +1,12 @@
+type: object
+properties:
+  result:
+    type: string
+    enum:
+    - VALID
+    - WARNING
+    - CRITICAL
+  controlGroups:
+    type: array
+    items:
+      $ref: ./ControlGroupResult.yaml

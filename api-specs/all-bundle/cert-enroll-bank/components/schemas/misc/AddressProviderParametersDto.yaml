@@ -1,0 +1,15 @@
+type: object
+properties:
+  providerName:
+    type: string
+    description: Имя провайдера
+  locality:
+    type: string
+    description: Населенный пункт
+  region:
+    type: string
+    description: Субъект РФ
+  country:
+    type: string
+    description: ISO Код страны ALPHA2
+description: Параметры адреса

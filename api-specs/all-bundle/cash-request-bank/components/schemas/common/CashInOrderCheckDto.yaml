@@ -1,0 +1,15 @@
+type: object
+properties:
+  emailNotification:
+    type: boolean
+    description: Нужно ли уведомление по e-mail
+  withoutCitizenship:
+    type: boolean
+    description: Опция без гражданства
+  publicPerson:
+    type: boolean
+    description: Опция публичного лица
+  coinAcceptance:
+    type: boolean
+    description: Активация монетоприемника
+description: Набор дополнительных check-опций для ордера на внесение наличных денег

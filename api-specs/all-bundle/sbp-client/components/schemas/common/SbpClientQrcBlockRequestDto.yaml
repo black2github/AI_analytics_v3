@@ -1,0 +1,80 @@
+type: object
+description: Заявка на блокировку QR-кода в системе АС СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - BLOCK_ERROR
+    - BLOCK_REQUEST
+    - REQUEST_EXECUTED
+    - QR_BLOCKED
+    - SUBS_BLOCKED
+    - REJECTED
+    - EXECUTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  userName:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  bankClient:
+    $ref: ./SbpQrcBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  qrcId:
+    type: string
+    description: Идентификатор QR кода в СБП
+  clientRequest:
+    type: boolean
+    description: Признак создания заявки клиентом банка
+  b2bRequest:
+    type: boolean
+    description: Признак создания заявки для B2B
+  data:
+    $ref: ./SbpClientQrcBlockRequestDataDto.yaml
+    description: Реквизиты QR-кода по заявке
+  b2bData:
+    $ref: ./SbpQrcB2bDataDto.yaml
+    description: Реквизиты QR-кода для B2B
+  sideServiceData:
+    $ref: ./SbpQrcSideServiceDataDto.yaml
+    description: Реквизиты сервиса инициатора заявки
+  subscriptionData:
+    $ref: ./SbpQrcBlockRequestSubscriptionDataDto.yaml
+    description: Реквизиты подписки
+required:
+- docDate
+- docNumber
+- id
+- qrcId
+- status
+- userId
+- userName

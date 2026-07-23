@@ -1,0 +1,155 @@
+openapi: 3.0.1
+info:
+  title: Сервис визирования ПЭД. Клиентская часть.
+  version: 3.2.0
+servers:
+- url: /approval-sign-client
+paths:
+  /approval-sign/import-decision/start:
+    $ref: ./paths/import-decision/approval_sign_import_decision_start.yaml
+  /approval-sign/import-decision/confirm:
+    $ref: ./paths/import-decision/approval_sign_import_decision_confirm.yaml
+  /approval-sign/dictionary/bank-clients:
+    $ref: ./paths/dictionary/approval_sign_dictionary_bank_clients.yaml
+  /approval-sign/bulk-visa/total:
+    $ref: ./paths/bulk-visa/approval_sign_bulk_visa_total.yaml
+  /approval-sign/bulk-visa/sign:
+    $ref: ./paths/bulk-visa/approval_sign_bulk_visa_sign.yaml
+  /approval-sign/approval-sign-document/get-page:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_get_page.yaml
+  /approval-sign/approval-sign-document/export-request-excel:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_export_request_excel.yaml
+  /approval-sign/approval-sign-document/export-request-excel-fs:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_export_request_excel_fs.yaml
+  /approval-sign/approval-sign-document/export-all-requests-excel-fs:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_export_all_requests_excel_fs.yaml
+  /approval-sign/approval-sign-document/count-docs:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_count_docs.yaml
+  /approval-sign/approval-sign-document/category:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_category.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /approval-sign/import-decision/status/{processId}:
+    $ref: ./paths/import-decision/approval_sign_import_decision_status_processId.yaml
+  /approval-sign/import-decision/protocol/{processId}:
+    $ref: ./paths/import-decision/approval_sign_import_decision_protocol_processId.yaml
+  /approval-sign/data-filter/data:
+    $ref: ./paths/data-filter/approval_sign_data_filter_data.yaml
+  /approval-sign/clients/get-list/{id}:
+    $ref: ./paths/clients/approval_sign_clients_get_list_id.yaml
+  /approval-sign/client-id/{id}:
+    $ref: ./paths/client-id/approval_sign_client_id_id.yaml
+  /approval-sign/bulk-visa/state/{requestId}:
+    $ref: ./paths/bulk-visa/approval_sign_bulk_visa_state_requestId.yaml
+  /approval-sign/approval-sign-document/export-all-requests-excel-fs/{exportId}:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_export_all_requests_excel_fs_exportId.yaml
+  /approval-sign/approval-sign-document/count-docs-for-approve:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_count_docs_for_approve.yaml
+components:
+  schemas:
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SdImportRequestDto:
+      $ref: ./components/schemas/import-decision/SdImportRequestDto.yaml
+    GenericResponseSimpleErrorDataSdImportResponseDto:
+      $ref: ./components/schemas/import-decision/GenericResponseSimpleErrorDataSdImportResponseDto.yaml
+    SdImportResponseDto:
+      $ref: ./components/schemas/import-decision/SdImportResponseDto.yaml
+    SdImportConfirmRequestDto:
+      $ref: ./components/schemas/import-decision/SdImportConfirmRequestDto.yaml
+    ApprovalSignDocumentStatusFilterDto:
+      $ref: ./components/schemas/common/ApprovalSignDocumentStatusFilterDto.yaml
+    ApprovalSignScrollerFilterDto:
+      $ref: ./components/schemas/common/ApprovalSignScrollerFilterDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoVisaDecisionFilterDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoVisaDecisionFilterDto.yaml
+    GetPageCommandApprovalSignScrollerFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandApprovalSignScrollerFilterDto.yaml
+    PageParamsApprovalSignScrollerFilterDto:
+      $ref: ./components/schemas/common/PageParamsApprovalSignScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestClassifierFilterDto:
+      $ref: ./components/schemas/common/RequestClassifierFilterDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BankClientFilterDto:
+      $ref: ./components/schemas/dictionary/BankClientFilterDto.yaml
+    GenericResponseSimpleErrorDataListBankClientFilterDto:
+      $ref: ./components/schemas/dictionary/GenericResponseSimpleErrorDataListBankClientFilterDto.yaml
+    GenericCommandApprovalSignScrollerFilterDto:
+      $ref: ./components/schemas/bulk-visa/GenericCommandApprovalSignScrollerFilterDto.yaml
+    DocTypeTotalDto:
+      $ref: ./components/schemas/bulk-visa/DocTypeTotalDto.yaml
+    GenericResponseSimpleErrorDataListDocTypeTotalDto:
+      $ref: ./components/schemas/bulk-visa/GenericResponseSimpleErrorDataListDocTypeTotalDto.yaml
+    BulkSignCommand:
+      $ref: ./components/schemas/bulk-visa/BulkSignCommand.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUUID.yaml
+    ApprovalSignDocumentDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignDocumentDto.yaml
+    ApprovalSignMainDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignMainDetailsDto.yaml
+    ApprovalSignOrganizationInfoDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignOrganizationInfoDto.yaml
+    ApprovalSignRecipientDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignRecipientDetailsDto.yaml
+    ApprovalSignSenderDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignSenderDetailsDto.yaml
+    ApprovalSignSignatureDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignSignatureDetailsDto.yaml
+    PageDataApprovalSignDocumentDto:
+      $ref: ./components/schemas/approval-sign-document/PageDataApprovalSignDocumentDto.yaml
+    RegisterApprovalSignDocumentDto:
+      $ref: ./components/schemas/approval-sign-document/RegisterApprovalSignDocumentDto.yaml
+    DocumentInfoDto:
+      $ref: ./components/schemas/approval-sign-document/DocumentInfoDto.yaml
+    GenericResponseSimpleErrorDataDocumentInfoDto:
+      $ref: ./components/schemas/approval-sign-document/GenericResponseSimpleErrorDataDocumentInfoDto.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/common/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    RegisterAllApprovalSignDocumentsDto:
+      $ref: ./components/schemas/approval-sign-document/RegisterAllApprovalSignDocumentsDto.yaml
+    GenericResponseSimpleErrorDataLong:
+      $ref: ./components/schemas/approval-sign-document/GenericResponseSimpleErrorDataLong.yaml
+    CategoryCount:
+      $ref: ./components/schemas/approval-sign-document/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/approval-sign-document/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataSdImportStatusResponseDto:
+      $ref: ./components/schemas/import-decision/GenericResponseSimpleErrorDataSdImportStatusResponseDto.yaml
+    SdImportStatusResponseDto:
+      $ref: ./components/schemas/import-decision/SdImportStatusResponseDto.yaml
+    CurrencyInfoFilterDto:
+      $ref: ./components/schemas/data-filter/CurrencyInfoFilterDto.yaml
+    DocForApprovalFilterDataDto:
+      $ref: ./components/schemas/data-filter/DocForApprovalFilterDataDto.yaml
+    GenericResponseSimpleErrorDataDocForApprovalFilterDataDto:
+      $ref: ./components/schemas/data-filter/GenericResponseSimpleErrorDataDocForApprovalFilterDataDto.yaml
+    GenericResponseSimpleErrorDataListUUID:
+      $ref: ./components/schemas/clients/GenericResponseSimpleErrorDataListUUID.yaml
+    BulkSignRequestStateDto:
+      $ref: ./components/schemas/bulk-visa/BulkSignRequestStateDto.yaml
+    GenericResponseSimpleErrorDataBulkSignRequestStateDto:
+      $ref: ./components/schemas/bulk-visa/GenericResponseSimpleErrorDataBulkSignRequestStateDto.yaml
+    GenericResponseSimpleErrorDataRegisterAllApprovalSignDocumentsResponseDto:
+      $ref: ./components/schemas/approval-sign-document/GenericResponseSimpleErrorDataRegisterAllApprovalSignDocumentsResponseDto.yaml
+    RegisterAllApprovalSignDocumentsResponseDto:
+      $ref: ./components/schemas/approval-sign-document/RegisterAllApprovalSignDocumentsResponseDto.yaml

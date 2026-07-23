@@ -1,0 +1,23 @@
+type: object
+required:
+- qrcId
+- code
+- message
+description: Данные полученные от СБП на запрос статуса операции по QR кодам
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  status:
+    $ref: ./QrcOperationStatusDto.yaml
+    type: string
+    description: Статус операции, инициированной QR кодом
+  trxId:
+    type: string
+    description: Идентификатор операции, инициированной QR кодом

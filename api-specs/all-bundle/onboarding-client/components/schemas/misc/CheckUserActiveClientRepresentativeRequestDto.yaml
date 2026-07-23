@@ -1,0 +1,18 @@
+type: object
+properties:
+  inn:
+    pattern: ^(\d{5}|\d{10}|\d{12})$
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  shortName:
+    maxLength: 400
+    pattern: '[ёЁа-яА-Яa-zA-Z0-9 "«»/\\№&$#:=\-+*^.,()!;]*'
+    type: string
+    description: Краткое наименование
+description: Запрос на проверку наличия действующей организации, представителем которой является пользователь

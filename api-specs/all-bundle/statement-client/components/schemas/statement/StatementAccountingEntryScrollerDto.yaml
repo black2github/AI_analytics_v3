@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  organizationId:
+    type: string
+    format: uuid
+  operationDate:
+    type: string
+    format: date
+  documentNumber:
+    type: string
+  documentDate:
+    type: string
+    format: date
+  counterpartyName:
+    type: string
+  counterpartyAccountNumber:
+    type: string
+  counterpartyInn:
+    type: string
+  outcome:
+    type: number
+  income:
+    type: number
+  outcomeNatCurr:
+    type: number
+  incomeNatCurr:
+    type: number
+  purpose:
+    type: string
+  currencyCode:
+    type: string
+  documentTypeCode:
+    type: string
+  orderTypeCode:
+    type: string
+  payerAccountNumber:
+    type: string
+  payeeAccountNumber:
+    type: string
+  payerAccountData:
+    $ref: ../common/StatementAccountingEntryAccountData.yaml
+  payeeAccountData:
+    $ref: ../common/StatementAccountingEntryAccountData.yaml
+  accessRepeatPayment:
+    type: boolean
+  accessReversePayment:
+    type: boolean
+  debit:
+    type: boolean

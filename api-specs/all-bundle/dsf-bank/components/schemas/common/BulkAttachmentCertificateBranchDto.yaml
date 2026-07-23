@@ -1,0 +1,14 @@
+type: object
+description: Ссылка на сущность "Филиал Банка" для Сертификатов автоматического подписания.
+properties:
+  branchId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Филиал Банка".
+  branchName:
+    type: string
+    description: Наименование Филиала.
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор.

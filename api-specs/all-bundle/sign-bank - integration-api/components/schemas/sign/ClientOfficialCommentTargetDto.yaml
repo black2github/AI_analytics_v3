@@ -1,0 +1,14 @@
+required:
+- bankClientId
+- userId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+description: Идентификаторы клиента и пользователя для добавления комментариев

@@ -1,0 +1,13 @@
+type: object
+properties:
+  cancelMode:
+    type: string
+    description: Режим отмены подписи ПФ
+    enum:
+    - FINAL
+    - FOR_RESIGN
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+description: Запрос на отмену подписи ПФ

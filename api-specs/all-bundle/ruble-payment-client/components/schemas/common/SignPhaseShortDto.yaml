@@ -1,0 +1,14 @@
+required:
+- canRemoveSign
+- signedLevels
+type: object
+properties:
+  canRemoveSign:
+    type: boolean
+    description: Доступно ли пользователю снятие подписи
+  signedLevels:
+    type: array
+    description: Список заполненных подписей
+    items:
+      $ref: ./SignatureLevelClassifierDto.yaml
+description: Фаза подписания документа

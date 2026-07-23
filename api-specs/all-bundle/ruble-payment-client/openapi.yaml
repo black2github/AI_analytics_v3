@@ -1,0 +1,1263 @@
+openapi: 3.0.1
+info:
+  title: Сервис рублевое РКО.
+  version: 3.8.0
+servers:
+- url: /ruble-payment-client
+security:
+- bearerAuth: []
+paths:
+  /ruble-payment:
+    $ref: ./paths/ruble-payment/ruble_payment.yaml
+  /ruble-payment/template:
+    $ref: ./paths/template/ruble_payment_template.yaml
+  /ruble-payment/simplified/tax:
+    $ref: ./paths/simplified/ruble_payment_simplified_tax.yaml
+  /ruble-payment/simplified/brokerage:
+    $ref: ./paths/simplified/ruble_payment_simplified_brokerage.yaml
+  /ruble-payment/chargeback:
+    $ref: ./paths/chargeback/ruble_payment_chargeback.yaml
+  /ruble-payment/traffic-light/indicators:
+    $ref: ./paths/traffic-light/ruble_payment_traffic_light_indicators.yaml
+  /ruble-payment/traffic-light/detailed-report-url:
+    $ref: ./paths/traffic-light/ruble_payment_traffic_light_detailed_report_url.yaml
+  /ruble-payment/template/get-page:
+    $ref: ./paths/template/ruble_payment_template_get_page.yaml
+  /ruble-payment/template/by-payment/{id}:
+    $ref: ./paths/template/ruble_payment_template_by_payment_id.yaml
+  /ruble-payment/signature/v2.1/generate-sign-data:
+    $ref: ./paths/signature/ruble_payment_signature_v2_1_generate_sign_data.yaml
+  /ruble-payment/signature/sign:
+    $ref: ./paths/signature/ruble_payment_signature_sign.yaml
+  /ruble-payment/signature/sign/check:
+    $ref: ./paths/signature/ruble_payment_signature_sign_check.yaml
+  /ruble-payment/signature/sign-registry:
+    $ref: ./paths/signature/ruble_payment_signature_sign_registry.yaml
+  /ruble-payment/signature/remove-sign:
+    $ref: ./paths/signature/ruble_payment_signature_remove_sign.yaml
+  /ruble-payment/signature/remove-document-version-sign:
+    $ref: ./paths/signature/ruble_payment_signature_remove_document_version_sign.yaml
+  /ruble-payment/signature/generate-sign-data:
+    $ref: ./paths/signature/ruble_payment_signature_generate_sign_data.yaml
+  /ruble-payment/signature/generate-digest:
+    $ref: ./paths/signature/ruble_payment_signature_generate_digest.yaml
+  /ruble-payment/signature/bulk/v2.1/generate-sign-data:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_v2_1_generate_sign_data.yaml
+  /ruble-payment/signature/bulk/statistic:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_statistic.yaml
+  /ruble-payment/signature/bulk/sign:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_sign.yaml
+  /ruble-payment/signature/bulk/sign-registry:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_sign_registry.yaml
+  /ruble-payment/signature/bulk/generate-sign-file:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_generate_sign_file.yaml
+  /ruble-payment/signature/bulk/generate-attachment-digest-hash:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_generate_attachment_digest_hash.yaml
+  /ruble-payment/signature/bulk/can-sign:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_can_sign.yaml
+  /ruble-payment/send:
+    $ref: ./paths/send/ruble_payment_send.yaml
+  /ruble-payment/send/check:
+    $ref: ./paths/send/ruble_payment_send_check.yaml
+  /ruble-payment/send-async:
+    $ref: ./paths/send-async/ruble_payment_send_async.yaml
+  /ruble-payment/print:
+    $ref: ./paths/print/ruble_payment_print.yaml
+  /ruble-payment/import:
+    $ref: ./paths/import/ruble_payment_import.yaml
+  /ruble-payment/import/report:
+    $ref: ./paths/import/ruble_payment_import_report.yaml
+  /ruble-payment/import/report/v2:
+    $ref: ./paths/import/ruble_payment_import_report_v2.yaml
+  /ruble-payment/import/reject:
+    $ref: ./paths/import/ruble_payment_import_reject.yaml
+  /ruble-payment/import/get-protocol:
+    $ref: ./paths/import/ruble_payment_import_get_protocol.yaml
+  /ruble-payment/import/complete:
+    $ref: ./paths/import/ruble_payment_import_complete.yaml
+  /ruble-payment/import/as-background:
+    $ref: ./paths/import/ruble_payment_import_as_background.yaml
+  /ruble-payment/get-sum:
+    $ref: ./paths/get-sum/ruble_payment_get_sum.yaml
+  /ruble-payment/get-sum-all:
+    $ref: ./paths/get-sum-all/ruble_payment_get_sum_all.yaml
+  /ruble-payment/get-page:
+    $ref: ./paths/get-page/ruble_payment_get_page.yaml
+  /ruble-payment/get-accounts-for-edit:
+    $ref: ./paths/get-accounts-for-edit/ruble_payment_get_accounts_for_edit.yaml
+  /ruble-payment/f1/account-balance:
+    $ref: ./paths/f1/ruble_payment_f1_account_balance.yaml
+  /ruble-payment/export-task:
+    $ref: ./paths/export-task/ruble_payment_export_task.yaml
+  /ruble-payment/export-registry:
+    $ref: ./paths/export-registry/ruble_payment_export_registry.yaml
+  /ruble-payment/dio/create:
+    $ref: ./paths/dio/ruble_payment_dio_create.yaml
+  /ruble-payment/create-from-external:
+    $ref: ./paths/create-from-external/ruble_payment_create_from_external.yaml
+  /ruble-payment/chargeback/signature/v2.1/generate-sign-data:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_v2_1_generate_sign_data.yaml
+  /ruble-payment/chargeback/signature/sign:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_sign.yaml
+  /ruble-payment/chargeback/signature/sign-registry:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_sign_registry.yaml
+  /ruble-payment/chargeback/signature/remove-sign:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_remove_sign.yaml
+  /ruble-payment/chargeback/signature/remove-document-version-sign:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_remove_document_version_sign.yaml
+  /ruble-payment/chargeback/signature/generate-sign-data:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_generate_sign_data.yaml
+  /ruble-payment/chargeback/signature/generate-digest:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_generate_digest.yaml
+  /ruble-payment/chargeback/send:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_send.yaml
+  /ruble-payment/chargeback/batch-delete-versions:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_batch_delete_versions.yaml
+  /ruble-payment/category:
+    $ref: ./paths/category/ruble_payment_category.yaml
+  /ruble-payment/bulk/send:
+    $ref: ./paths/bulk/ruble_payment_bulk_send.yaml
+  /ruble-payment/bulk/send-by-filter:
+    $ref: ./paths/bulk/ruble_payment_bulk_send_by_filter.yaml
+  /ruble-payment/bulk/can-send:
+    $ref: ./paths/bulk/ruble_payment_bulk_can_send.yaml
+  /ruble-payment/bulk-visa/v2.1/generate-sign-data:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_v2_1_generate_sign_data.yaml
+  /ruble-payment/bulk-visa/sign:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_sign.yaml
+  /ruble-payment/bulk-visa/sign-registry:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_sign_registry.yaml
+  /ruble-payment/bulk-visa/generate-attachment-digest-hash:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_generate_attachment_digest_hash.yaml
+  /ruble-payment/batch-delete-versions:
+    $ref: ./paths/batch-delete-versions/ruble_payment_batch_delete_versions.yaml
+  /ruble-payment/async-task/remove-sign:
+    $ref: ./paths/async-task/ruble_payment_async_task_remove_sign.yaml
+  /ruble-payment/async-task/document-count:
+    $ref: ./paths/async-task/ruble_payment_async_task_document_count.yaml
+  /ruble-payment/async-task/delete:
+    $ref: ./paths/async-task/ruble_payment_async_task_delete.yaml
+  /ruble-payment/assist/vat-amount:
+    $ref: ./paths/assist/ruble_payment_assist_vat_amount.yaml
+  /ruble-payment/assist/sum-total-amount-include-vat:
+    $ref: ./paths/assist/ruble_payment_assist_sum_total_amount_include_vat.yaml
+  /ruble-payment/assist/payment-purpose:
+    $ref: ./paths/assist/ruble_payment_assist_payment_purpose.yaml
+  /ruble-payment/approval-document-api/v2.1/generate-sign-data:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_v2_1_generate_sign_data.yaml
+  /ruble-payment/approval-document-api/sign:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_sign.yaml
+  /ruble-payment/approval-document-api/print:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_print.yaml
+  /ruble-payment/approval-document-api/print-list:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_print_list.yaml
+  /ruble-payment/approval-document-api/print-list-fs:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_print_list_fs.yaml
+  /ruble-payment/approval-document-api/print-fs:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_print_fs.yaml
+  /ruble-payment/approval-document-api/generate-digest:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_generate_digest.yaml
+  /ruble-payment/approval-document-api/generate-digest/version:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_generate_digest_version.yaml
+  /ruble-payment/approval-document-api/generate-digest/list:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_generate_digest_list.yaml
+  /ruble-payment/approval-document-api/export-docs-for-approval:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_export_docs_for_approval.yaml
+  /ruble-payment/approval-document-api/export-docs-for-approval/v2:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_export_docs_for_approval_v2.yaml
+  /ruble-payment/additional-signature/sign:
+    $ref: ./paths/additional-signature/ruble_payment_additional_signature_sign.yaml
+  /ruble-payment/additional-signature/sign-registry:
+    $ref: ./paths/additional-signature/ruble_payment_additional_signature_sign_registry.yaml
+  /ruble-payment/additional-signature/generate-sign-data:
+    $ref: ./paths/additional-signature/ruble_payment_additional_signature_generate_sign_data.yaml
+  /file-import/verify-duplicate:
+    $ref: ./paths/verify-duplicate/file_import_verify_duplicate.yaml
+  /file-import/suggestion/file:
+    $ref: ./paths/suggestion/file_import_suggestion_file.yaml
+  /file-import/signature/v2.1/generate-sign-data:
+    $ref: ./paths/signature/file_import_signature_v2_1_generate_sign_data.yaml
+  /file-import/signature/sign:
+    $ref: ./paths/signature/file_import_signature_sign.yaml
+  /file-import/signature/sign-registry:
+    $ref: ./paths/signature/file_import_signature_sign_registry.yaml
+  /file-import/signature/remove-sign:
+    $ref: ./paths/signature/file_import_signature_remove_sign.yaml
+  /file-import/signature/generate-attachment-digest-hash:
+    $ref: ./paths/signature/file_import_signature_generate_attachment_digest_hash.yaml
+  /file-import/print/print-protocol:
+    $ref: ./paths/print/file_import_print_print_protocol.yaml
+  /file-import/print/get-protocol:
+    $ref: ./paths/print/file_import_print_get_protocol.yaml
+  /file-import/get-page:
+    $ref: ./paths/get-page/file_import_get_page.yaml
+  /file-import/get-file-import-info:
+    $ref: ./paths/get-file-import-info/file_import_get_file_import_info.yaml
+  /file-import/create-file-import:
+    $ref: ./paths/create-file-import/file_import_create_file_import.yaml
+  /file-import/create-documents-in-doc-service:
+    $ref: ./paths/create-documents-in-doc-service/file_import_create_documents_in_doc_service.yaml
+  /ruble-payment/{id}:
+    $ref: ./paths/{id}/ruble_payment_id.yaml
+  /ruble-payment/{id}/signatures:
+    $ref: ./paths/{id}/ruble_payment_id_signatures.yaml
+  /ruble-payment/{id}/copy:
+    $ref: ./paths/{id}/ruble_payment_id_copy.yaml
+  /ruble-payment/use-ccf-by-accounts:
+    $ref: ./paths/use-ccf-by-accounts/ruble_payment_use_ccf_by_accounts.yaml
+  /ruble-payment/traffic-light/is-available:
+    $ref: ./paths/traffic-light/ruble_payment_traffic_light_is_available.yaml
+  /ruble-payment/template/{id}:
+    $ref: ./paths/template/ruble_payment_template_id.yaml
+  /ruble-payment/template/fill/{id}:
+    $ref: ./paths/template/ruble_payment_template_fill_id.yaml
+  /ruble-payment/template/assist/frequently-used:
+    $ref: ./paths/template/ruble_payment_template_assist_frequently_used.yaml
+  /ruble-payment/suggestion/import:
+    $ref: ./paths/suggestion/ruble_payment_suggestion_import.yaml
+  /ruble-payment/suggestion/import/{id}:
+    $ref: ./paths/suggestion/ruble_payment_suggestion_import_id.yaml
+  /ruble-payment/source-system/list:
+    $ref: ./paths/source-system/ruble_payment_source_system_list.yaml
+  /ruble-payment/simplified/tax/{paymentOrderRequestId}:
+    $ref: ./paths/simplified/ruble_payment_simplified_tax_paymentOrderRequestId.yaml
+  /ruble-payment/simplified/brokerage/{paymentOrderRequestId}:
+    $ref: ./paths/simplified/ruble_payment_simplified_brokerage_paymentOrderRequestId.yaml
+  /ruble-payment/simplified/brokerage/agreements/{accountId}:
+    $ref: ./paths/simplified/ruble_payment_simplified_brokerage_agreements_accountId.yaml
+  /ruble-payment/signature/v2/check/{paymentOrderRequestId}:
+    $ref: ./paths/signature/ruble_payment_signature_v2_check_paymentOrderRequestId.yaml
+  /ruble-payment/signature/check/{paymentOrderRequestId}:
+    $ref: ./paths/signature/ruble_payment_signature_check_paymentOrderRequestId.yaml
+  /ruble-payment/signature/bulk/generated/{asyncTaskId}:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_generated_asyncTaskId.yaml
+  /ruble-payment/signature/bulk/file-access-token/{bulkSignatureFileId}:
+    $ref: ./paths/signature/ruble_payment_signature_bulk_file_access_token_bulkSignatureFileId.yaml
+  /ruble-payment/signature/authority:
+    $ref: ./paths/signature/ruble_payment_signature_authority.yaml
+  /ruble-payment/send-statistic/{asyncTaskId}:
+    $ref: ./paths/send-statistic/ruble_payment_send_statistic_asyncTaskId.yaml
+  /ruble-payment/import/{id}:
+    $ref: ./paths/import/ruble_payment_import_id.yaml
+  /ruble-payment/history/{id}:
+    $ref: ./paths/history/ruble_payment_history_id.yaml
+  /ruble-payment/export-task/{taskId}:
+    $ref: ./paths/export-task/ruble_payment_export_task_taskId.yaml
+  /ruble-payment/export-task/{taskId}/attachment:
+    $ref: ./paths/export-task/ruble_payment_export_task_taskId_attachment.yaml
+  /ruble-payment/chargeback/{id}:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_id.yaml
+  /ruble-payment/chargeback/signature/check/{chargebackRequestId}:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_check_chargebackRequestId.yaml
+  /ruble-payment/chargeback/signature/authority:
+    $ref: ./paths/chargeback/ruble_payment_chargeback_signature_authority.yaml
+  /ruble-payment/bulk-visa/generated/{asyncTaskId}:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_generated_asyncTaskId.yaml
+  /ruble-payment/bulk-visa/file-access-token/{fileId}:
+    $ref: ./paths/bulk-visa/ruble_payment_bulk_visa_file_access_token_fileId.yaml
+  /ruble-payment/available-accounts:
+    $ref: ./paths/available-accounts/ruble_payment_available_accounts.yaml
+  /ruble-payment/async-task/{id}:
+    $ref: ./paths/async-task/ruble_payment_async_task_id.yaml
+  /ruble-payment/archive/intervals:
+    $ref: ./paths/archive/ruble_payment_archive_intervals.yaml
+  /ruble-payment/approval-document-api/signature-info/{id}:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_signature_info_id.yaml
+  /ruble-payment/approval-document-api/signature-check/{id}:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_signature_check_id.yaml
+  /ruble-payment/approval-document-api/additional-info/{id}:
+    $ref: ./paths/approval-document-api/ruble_payment_approval_document_api_additional_info_id.yaml
+  /ruble-payment/activity-feed-api/document-info/{id}:
+    $ref: ./paths/activity-feed-api/ruble_payment_activity_feed_api_document_info_id.yaml
+  /ruble-payment/account-access:
+    $ref: ./paths/account-access/ruble_payment_account_access.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /file-import/{id}:
+    $ref: ./paths/{id}/file_import_id.yaml
+  /file-import/statistic/create-documents/{id}:
+    $ref: ./paths/statistic/file_import_statistic_create_documents_id.yaml
+  /file-import/statistic/complete-process/{id}:
+    $ref: ./paths/statistic/file_import_statistic_complete_process_id.yaml
+  /file-import/signature/file-import-sign/{id}:
+    $ref: ./paths/signature/file_import_signature_file_import_sign_id.yaml
+  /file-import/signature/check/{fileImportId}:
+    $ref: ./paths/signature/file_import_signature_check_fileImportId.yaml
+  /file-import/signature/can-sign/{id}:
+    $ref: ./paths/signature/file_import_signature_can_sign_id.yaml
+  /file-import/signature/attachment/{fileImportId}:
+    $ref: ./paths/signature/file_import_signature_attachment_fileImportId.yaml
+  /file-import/row-detail/{id}:
+    $ref: ./paths/row-detail/file_import_row_detail_id.yaml
+  /file-import/processing-options/{id}:
+    $ref: ./paths/processing-options/file_import_processing_options_id.yaml
+  /file-import/delete-file-import/{id}:
+    $ref: ./paths/delete-file-import/file_import_delete_file_import_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    CheckResultType:
+      $ref: ./components/schemas/common/CheckResultType.yaml
+    ControlLevel:
+      $ref: ./components/schemas/common/ControlLevel.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/common/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CreateBudgetInfoDto:
+      $ref: ./components/schemas/common/CreateBudgetInfoDto.yaml
+    CreateControlAndAcceptanceDto:
+      $ref: ./components/schemas/common/CreateControlAndAcceptanceDto.yaml
+    CreatePayerDetailsDto:
+      $ref: ./components/schemas/ruble-payment/CreatePayerDetailsDto.yaml
+    CreatePaymentAmountDto:
+      $ref: ./components/schemas/common/CreatePaymentAmountDto.yaml
+    CreateRecipientDetailsDto:
+      $ref: ./components/schemas/common/CreateRecipientDetailsDto.yaml
+    DocumentCreationMethodClassifierDto:
+      $ref: ./components/schemas/common/DocumentCreationMethodClassifierDto.yaml
+    UpdatePaymentInfoDto:
+      $ref: ./components/schemas/ruble-payment/UpdatePaymentInfoDto.yaml
+    UpdatePaymentOrderRequestDto:
+      $ref: ./components/schemas/ruble-payment/UpdatePaymentOrderRequestDto.yaml
+    UpdateWithDeviceCommandUpdatePaymentOrderRequestDtoUUID:
+      $ref: ./components/schemas/ruble-payment/UpdateWithDeviceCommandUpdatePaymentOrderRequestDtoUUID.yaml
+    UserDeviceInfoDto:
+      $ref: ./components/schemas/common/UserDeviceInfoDto.yaml
+    VatCalculationTypeDto:
+      $ref: ./components/schemas/common/VatCalculationTypeDto.yaml
+    ApprovalSignTypeDto:
+      $ref: ./components/schemas/common/ApprovalSignTypeDto.yaml
+    ApprovalSignatureInfoDto:
+      $ref: ./components/schemas/common/ApprovalSignatureInfoDto.yaml
+    BackgroundImportProcessDto:
+      $ref: ./components/schemas/common/BackgroundImportProcessDto.yaml
+    BackgroundProcessFinalStatusTypeDto:
+      $ref: ./components/schemas/common/BackgroundProcessFinalStatusTypeDto.yaml
+    BackgroundProcessStatusTypeDto:
+      $ref: ./components/schemas/common/BackgroundProcessStatusTypeDto.yaml
+    BackgroundProcessTypeDto:
+      $ref: ./components/schemas/common/BackgroundProcessTypeDto.yaml
+    BackgroundTaskStatusDto:
+      $ref: ./components/schemas/common/BackgroundTaskStatusDto.yaml
+    BscCheckDetailsDto:
+      $ref: ./components/schemas/common/BscCheckDetailsDto.yaml
+    BscControlDetailsClientDto:
+      $ref: ./components/schemas/common/BscControlDetailsClientDto.yaml
+    BudgetInfoDto:
+      $ref: ./components/schemas/common/BudgetInfoDto.yaml
+    CertificateInfoResponseDto:
+      $ref: ./components/schemas/common/CertificateInfoResponseDto.yaml
+    ChargebackBaseDetailsClientDto:
+      $ref: ./components/schemas/common/ChargebackBaseDetailsClientDto.yaml
+    ChargebackDocumentDetailsDto:
+      $ref: ./components/schemas/common/ChargebackDocumentDetailsDto.yaml
+    ChargebackRequestClientDto:
+      $ref: ./components/schemas/common/ChargebackRequestClientDto.yaml
+    ChargebackRequestStatusDto:
+      $ref: ./components/schemas/common/ChargebackRequestStatusDto.yaml
+    ControlAndAcceptanceDto:
+      $ref: ./components/schemas/common/ControlAndAcceptanceDto.yaml
+    CreateResponsePaymentOrderRequestDto:
+      $ref: ./components/schemas/ruble-payment/CreateResponsePaymentOrderRequestDto.yaml
+    CurrencyTypeDto:
+      $ref: ./components/schemas/common/CurrencyTypeDto.yaml
+    DigitalSignatureClassifierDto:
+      $ref: ./components/schemas/common/DigitalSignatureClassifierDto.yaml
+    DocumentDetailsClientDto:
+      $ref: ./components/schemas/common/DocumentDetailsClientDto.yaml
+    DocumentSystemClassifierDto:
+      $ref: ./components/schemas/common/DocumentSystemClassifierDto.yaml
+    FileDetailsDto:
+      $ref: ./components/schemas/common/FileDetailsDto.yaml
+    FileDocumentDetailsDto:
+      $ref: ./components/schemas/common/FileDocumentDetailsDto.yaml
+    FileFormatTypeDto:
+      $ref: ./components/schemas/common/FileFormatTypeDto.yaml
+    FileOrganizationDetailsDto:
+      $ref: ./components/schemas/common/FileOrganizationDetailsDto.yaml
+    ImportActionTypeDto:
+      $ref: ./components/schemas/common/ImportActionTypeDto.yaml
+    ImportDetailsDto:
+      $ref: ./components/schemas/common/ImportDetailsDto.yaml
+    ImportParametersDto:
+      $ref: ./components/schemas/common/ImportParametersDto.yaml
+    ImportSignatureDataDto:
+      $ref: ./components/schemas/common/ImportSignatureDataDto.yaml
+    ImportedDocumentDetailsDto:
+      $ref: ./components/schemas/common/ImportedDocumentDetailsDto.yaml
+    KpRetailStatusDto:
+      $ref: ./components/schemas/common/KpRetailStatusDto.yaml
+    PayerDetailsDto:
+      $ref: ./components/schemas/common/PayerDetailsDto.yaml
+    PaymentAmountDto:
+      $ref: ./components/schemas/common/PaymentAmountDto.yaml
+    PaymentInfoDto:
+      $ref: ./components/schemas/common/PaymentInfoDto.yaml
+    PaymentOrderRequestDto:
+      $ref: ./components/schemas/common/PaymentOrderRequestDto.yaml
+    PaymentOrderRequestStatusDto:
+      $ref: ./components/schemas/common/PaymentOrderRequestStatusDto.yaml
+    ProcessDetailsDto:
+      $ref: ./components/schemas/common/ProcessDetailsDto.yaml
+    RecipientDetailsDto:
+      $ref: ./components/schemas/common/RecipientDetailsDto.yaml
+    ScreenFormTypeDto:
+      $ref: ./components/schemas/common/ScreenFormTypeDto.yaml
+    SendAbility:
+      $ref: ./components/schemas/common/SendAbility.yaml
+    SightDetailsClientDto:
+      $ref: ./components/schemas/common/SightDetailsClientDto.yaml
+    SignPhaseDto:
+      $ref: ./components/schemas/common/SignPhaseDto.yaml
+    SignPhaseShortDto:
+      $ref: ./components/schemas/common/SignPhaseShortDto.yaml
+    SignatureClientDto:
+      $ref: ./components/schemas/common/SignatureClientDto.yaml
+    SignatureDataDto:
+      $ref: ./components/schemas/common/SignatureDataDto.yaml
+    SignatureLevelClassifierDto:
+      $ref: ./components/schemas/common/SignatureLevelClassifierDto.yaml
+    SignatureTypeDto:
+      $ref: ./components/schemas/common/SignatureTypeDto.yaml
+    TechnicalDetailsDto:
+      $ref: ./components/schemas/common/TechnicalDetailsDto.yaml
+    CreatePayerDetailsTemplateDto:
+      $ref: ./components/schemas/template/CreatePayerDetailsTemplateDto.yaml
+    CreatePaymentInfoDto:
+      $ref: ./components/schemas/common/CreatePaymentInfoDto.yaml
+    GenericCommandUpdatePaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/GenericCommandUpdatePaymentOrderTemplateDto.yaml
+    UpdatePaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/UpdatePaymentOrderTemplateDto.yaml
+    GenericResponseRublePaymentErrorPaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/GenericResponseRublePaymentErrorPaymentOrderTemplateDto.yaml
+    PaymentInfoTemplateDto:
+      $ref: ./components/schemas/template/PaymentInfoTemplateDto.yaml
+    PaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/PaymentOrderTemplateDto.yaml
+    RublePaymentError:
+      $ref: ./components/schemas/common/RublePaymentError.yaml
+    GenericCommandPaymentOrderRequestUpdateTaxDto:
+      $ref: ./components/schemas/simplified/GenericCommandPaymentOrderRequestUpdateTaxDto.yaml
+    PayerDetailsSimplifiedTaxDto:
+      $ref: ./components/schemas/simplified/PayerDetailsSimplifiedTaxDto.yaml
+    PaymentAmountSimplifiedDto:
+      $ref: ./components/schemas/simplified/PaymentAmountSimplifiedDto.yaml
+    PaymentInfoSimplifiedDto:
+      $ref: ./components/schemas/simplified/PaymentInfoSimplifiedDto.yaml
+    PaymentOrderRequestUpdateTaxDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestUpdateTaxDto.yaml
+    CreateResponsePaymentOrderRequestResponseTaxDto:
+      $ref: ./components/schemas/simplified/CreateResponsePaymentOrderRequestResponseTaxDto.yaml
+    PayerDetailsSimplifiedResponseDto:
+      $ref: ./components/schemas/simplified/PayerDetailsSimplifiedResponseDto.yaml
+    PaymentOrderRequestResponseTaxDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestResponseTaxDto.yaml
+    GenericCommandPaymentOrderRequestUpdateBrokerageDto:
+      $ref: ./components/schemas/simplified/GenericCommandPaymentOrderRequestUpdateBrokerageDto.yaml
+    PayerDetailsSimplifiedBrokerageDto:
+      $ref: ./components/schemas/simplified/PayerDetailsSimplifiedBrokerageDto.yaml
+    PaymentOrderRequestAdditionalFieldsReq:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestAdditionalFieldsReq.yaml
+    PaymentOrderRequestUpdateBrokerageDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestUpdateBrokerageDto.yaml
+    RecipientDetailsSimplifiedDto:
+      $ref: ./components/schemas/simplified/RecipientDetailsSimplifiedDto.yaml
+    TradingFloorDto:
+      $ref: ./components/schemas/simplified/TradingFloorDto.yaml
+    CreateResponsePaymentOrderRequestResponseBrokerageDto:
+      $ref: ./components/schemas/simplified/CreateResponsePaymentOrderRequestResponseBrokerageDto.yaml
+    PaymentOrderRequestAdditionalFieldsRsp:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestAdditionalFieldsRsp.yaml
+    PaymentOrderRequestRecipientDetailsRsp:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestRecipientDetailsRsp.yaml
+    PaymentOrderRequestResponseBrokerageDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestResponseBrokerageDto.yaml
+    ChargebackRequestUpdateDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestUpdateDto.yaml
+    UpdateWithDeviceChargebackCommandChargebackRequestUpdateDtoUUID:
+      $ref: ./components/schemas/chargeback/UpdateWithDeviceChargebackCommandChargebackRequestUpdateDtoUUID.yaml
+    CreateResponseChargebackRequestClientDto:
+      $ref: ./components/schemas/chargeback/CreateResponseChargebackRequestClientDto.yaml
+    CreatePaymentOrderRequestDto:
+      $ref: ./components/schemas/ruble-payment/CreatePaymentOrderRequestDto.yaml
+    CreateWithDeviceCommandCreatePaymentOrderRequestDto:
+      $ref: ./components/schemas/ruble-payment/CreateWithDeviceCommandCreatePaymentOrderRequestDto.yaml
+    IndicatorsRequestDto:
+      $ref: ./components/schemas/traffic-light/IndicatorsRequestDto.yaml
+    SingleCommandIndicatorsRequestDto:
+      $ref: ./components/schemas/traffic-light/SingleCommandIndicatorsRequestDto.yaml
+    GenericResponseRublePaymentErrorListIndicatorDto:
+      $ref: ./components/schemas/traffic-light/GenericResponseRublePaymentErrorListIndicatorDto.yaml
+    IndicatorDto:
+      $ref: ./components/schemas/traffic-light/IndicatorDto.yaml
+    DetailedReportUrlRequestDto:
+      $ref: ./components/schemas/traffic-light/DetailedReportUrlRequestDto.yaml
+    SingleCommandDetailedReportUrlRequestDto:
+      $ref: ./components/schemas/traffic-light/SingleCommandDetailedReportUrlRequestDto.yaml
+    GenericResponseRublePaymentErrorString:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorString.yaml
+    CreatePaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/CreatePaymentOrderTemplateDto.yaml
+    GenericCommandCreatePaymentOrderTemplateDto:
+      $ref: ./components/schemas/template/GenericCommandCreatePaymentOrderTemplateDto.yaml
+    Direction:
+      $ref: ./components/schemas/common/Direction.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandPaymentOrderTemplateClientScrollerFilter:
+      $ref: ./components/schemas/template/GetPageCommandPaymentOrderTemplateClientScrollerFilter.yaml
+    NullHandling:
+      $ref: ./components/schemas/common/NullHandling.yaml
+    PageParamsPaymentOrderTemplateClientScrollerFilter:
+      $ref: ./components/schemas/template/PageParamsPaymentOrderTemplateClientScrollerFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    PaymentOrderTemplateClientScrollerFilter:
+      $ref: ./components/schemas/template/PaymentOrderTemplateClientScrollerFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericPageRublePaymentErrorPaymentOrderTemplateScrollerDto:
+      $ref: ./components/schemas/template/GenericPageRublePaymentErrorPaymentOrderTemplateScrollerDto.yaml
+    PaymentOrderTemplateScrollerDto:
+      $ref: ./components/schemas/template/PaymentOrderTemplateScrollerDto.yaml
+    GenericCommandString:
+      $ref: ./components/schemas/template/GenericCommandString.yaml
+    GenericCommandPaymentOrderRequestCreateTaxDto:
+      $ref: ./components/schemas/simplified/GenericCommandPaymentOrderRequestCreateTaxDto.yaml
+    PaymentOrderRequestCreateTaxDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestCreateTaxDto.yaml
+    GenericCommandPaymentOrderRequestCreateBrokerageDto:
+      $ref: ./components/schemas/simplified/GenericCommandPaymentOrderRequestCreateBrokerageDto.yaml
+    PaymentOrderRequestCreateBrokerageDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestCreateBrokerageDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericResponseRublePaymentErrorUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataTypeDto:
+      $ref: ./components/schemas/common/UniSignDataTypeDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    BatchClientSignCommand:
+      $ref: ./components/schemas/common/BatchClientSignCommand.yaml
+    ClientSignCommand:
+      $ref: ./components/schemas/common/ClientSignCommand.yaml
+    GenericResponseRublePaymentErrorListPaymentOrderRequestDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorListPaymentOrderRequestDto.yaml
+    GenericCommandListPermissionProcessRequestDto:
+      $ref: ./components/schemas/common/GenericCommandListPermissionProcessRequestDto.yaml
+    PermissionProcessRequestDto:
+      $ref: ./components/schemas/common/PermissionProcessRequestDto.yaml
+    GenericResponseRublePaymentErrorPermissionProcessResponseDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorPermissionProcessResponseDto.yaml
+    PermissionProcessDenyDto:
+      $ref: ./components/schemas/common/PermissionProcessDenyDto.yaml
+    PermissionProcessResponseDto:
+      $ref: ./components/schemas/common/PermissionProcessResponseDto.yaml
+    GenericResponseRublePaymentErrorSignRegistryDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorSignRegistryDto.yaml
+    SignRegistryClientDocumentsDto:
+      $ref: ./components/schemas/common/SignRegistryClientDocumentsDto.yaml
+    SignRegistryDocumentAllowedDstKind:
+      $ref: ./components/schemas/common/SignRegistryDocumentAllowedDstKind.yaml
+    SignRegistryDocumentDto:
+      $ref: ./components/schemas/common/SignRegistryDocumentDto.yaml
+    SignRegistryDto:
+      $ref: ./components/schemas/common/SignRegistryDto.yaml
+    SignRegistryStatisticsByClientDto:
+      $ref: ./components/schemas/common/SignRegistryStatisticsByClientDto.yaml
+    SignRegistryStatisticsDto:
+      $ref: ./components/schemas/common/SignRegistryStatisticsDto.yaml
+    BatchClientRemoveSignCommand:
+      $ref: ./components/schemas/signature/BatchClientRemoveSignCommand.yaml
+    BatchClientDocumentVersionRemoveSignCommand:
+      $ref: ./components/schemas/signature/BatchClientDocumentVersionRemoveSignCommand.yaml
+    SimpleDocumentVersionOperationCommand:
+      $ref: ./components/schemas/common/SimpleDocumentVersionOperationCommand.yaml
+    BatchDocumentOperationResponse:
+      $ref: ./components/schemas/common/BatchDocumentOperationResponse.yaml
+    BatchDocumentOperationResultStatusDto:
+      $ref: ./components/schemas/common/BatchDocumentOperationResultStatusDto.yaml
+    GenericResponseRublePaymentErrorBatchDocumentOperationResponse:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorBatchDocumentOperationResponse.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/common/ListCommandUUID.yaml
+    BankClientOfficialCertificate:
+      $ref: ./components/schemas/common/BankClientOfficialCertificate.yaml
+    BankClientSigner:
+      $ref: ./components/schemas/common/BankClientSigner.yaml
+    DigitalSignatureKindDto:
+      $ref: ./components/schemas/common/DigitalSignatureKindDto.yaml
+    DocumentsAmountSignInfo:
+      $ref: ./components/schemas/common/DocumentsAmountSignInfo.yaml
+    GenericResponseRublePaymentErrorSignData:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorSignData.yaml
+    OrderRequestPaymentAmount:
+      $ref: ./components/schemas/common/OrderRequestPaymentAmount.yaml
+    SignAbility:
+      $ref: ./components/schemas/common/SignAbility.yaml
+    SignData:
+      $ref: ./components/schemas/common/SignData.yaml
+    SignResultInfo:
+      $ref: ./components/schemas/common/SignResultInfo.yaml
+    SignatureInfo:
+      $ref: ./components/schemas/common/SignatureInfo.yaml
+    DigestRequest:
+      $ref: ./components/schemas/common/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    GenericResponseRublePaymentErrorDigest:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorDigest.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    AsyncTaskStatisticDto:
+      $ref: ./components/schemas/signature/AsyncTaskStatisticDto.yaml
+    GenericResponseRublePaymentErrorAsyncTaskStatisticDto:
+      $ref: ./components/schemas/signature/GenericResponseRublePaymentErrorAsyncTaskStatisticDto.yaml
+    BulkSignClientDto:
+      $ref: ./components/schemas/signature/BulkSignClientDto.yaml
+    GenericCommandBulkSignClientDto:
+      $ref: ./components/schemas/signature/GenericCommandBulkSignClientDto.yaml
+    BulkSignResponseDto:
+      $ref: ./components/schemas/common/BulkSignResponseDto.yaml
+    GenericResponseRublePaymentErrorBulkSignResponseDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorBulkSignResponseDto.yaml
+    BankSupportingFilterStatusDto:
+      $ref: ./components/schemas/common/BankSupportingFilterStatusDto.yaml
+    BscStatusFilter:
+      $ref: ./components/schemas/common/BscStatusFilter.yaml
+    ChargebackRequestStatusFilter:
+      $ref: ./components/schemas/common/ChargebackRequestStatusFilter.yaml
+    FilterPaymentOrderRequestClientStatus:
+      $ref: ./components/schemas/common/FilterPaymentOrderRequestClientStatus.yaml
+    FilterPaymentOrderRequestSourceSystem:
+      $ref: ./components/schemas/common/FilterPaymentOrderRequestSourceSystem.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    GenericCommandPaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/GenericCommandPaymentOrderRequestClientScrollerFilter.yaml
+    PaymentOrderClientRequestCategoryDto:
+      $ref: ./components/schemas/common/PaymentOrderClientRequestCategoryDto.yaml
+    PaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/PaymentOrderRequestClientScrollerFilter.yaml
+    PaymentOrderRequestClientStatusDto:
+      $ref: ./components/schemas/common/PaymentOrderRequestClientStatusDto.yaml
+    GenerateSignFileResponseDto:
+      $ref: ./components/schemas/signature/GenerateSignFileResponseDto.yaml
+    GenericResponseRublePaymentErrorGenerateSignFileResponseDto:
+      $ref: ./components/schemas/signature/GenericResponseRublePaymentErrorGenerateSignFileResponseDto.yaml
+    AttachmentDigestHashRequest:
+      $ref: ./components/schemas/signature/AttachmentDigestHashRequest.yaml
+    GenericResponseRublePaymentErrorBoolean:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorBoolean.yaml
+    SendListCommandUUID:
+      $ref: ./components/schemas/common/SendListCommandUUID.yaml
+    GenericResponseRublePaymentErrorPaymentOrderRequestDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorPaymentOrderRequestDto.yaml
+    ListResponseGenericResponseRublePaymentErrorPaymentOrderRequestDto:
+      $ref: ./components/schemas/send/ListResponseGenericResponseRublePaymentErrorPaymentOrderRequestDto.yaml
+    GenericResponseRublePaymentErrorUUID:
+      $ref: ./components/schemas/send-async/GenericResponseRublePaymentErrorUUID.yaml
+    PrintFormatPaymentOrders:
+      $ref: ./components/schemas/print/PrintFormatPaymentOrders.yaml
+    ReportFormat:
+      $ref: ./components/schemas/print/ReportFormat.yaml
+    SingleCommandPrintFormatPaymentOrders:
+      $ref: ./components/schemas/print/SingleCommandPrintFormatPaymentOrders.yaml
+    GenericResponseRublePaymentErrorPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    BackgroundImportProcessWsDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessWsDto.yaml
+    ImportFileRqDto:
+      $ref: ./components/schemas/import/ImportFileRqDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/import/SingleCommandUUID.yaml
+    PrintReportRq:
+      $ref: ./components/schemas/import/PrintReportRq.yaml
+    GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.background.process.api.dto.FileStorageAccessData:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.background.process.api.dto.FileStorageAccessData.yaml
+    ru.gpb.eco.ruble.payment.background.process.api.dto.FileStorageAccessData:
+      $ref: ./components/schemas/common/ru.gpb.eco.ruble.payment.background.process.api.dto.FileStorageAccessData.yaml
+    GenericResponseRublePaymentErrorBackgroundImportProcessDto:
+      $ref: ./components/schemas/import/GenericResponseRublePaymentErrorBackgroundImportProcessDto.yaml
+    BackgroundImportPreparationStatusDto:
+      $ref: ./components/schemas/import/BackgroundImportPreparationStatusDto.yaml
+    BackgroundImportProcessControlResultTypeDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessControlResultTypeDto.yaml
+    BackgroundImportProcessDocControlResultDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessDocControlResultDto.yaml
+    BackgroundImportProcessDocumentGroupProcessingResultDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessDocumentGroupProcessingResultDto.yaml
+    BackgroundImportProcessDocumentProcessingResultDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessDocumentProcessingResultDto.yaml
+    BackgroundImportProcessDocumentProcessingStatusDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessDocumentProcessingStatusDto.yaml
+    BackgroundImportProcessProtocolDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessProtocolDto.yaml
+    GenericResponseRublePaymentErrorBackgroundImportProcessProtocolDto:
+      $ref: ./components/schemas/import/GenericResponseRublePaymentErrorBackgroundImportProcessProtocolDto.yaml
+    CompleteImportDto:
+      $ref: ./components/schemas/import/CompleteImportDto.yaml
+    CreateWithDeviceCommandCompleteImportDto:
+      $ref: ./components/schemas/import/CreateWithDeviceCommandCompleteImportDto.yaml
+    BackgroundTaskOperationResult:
+      $ref: ./components/schemas/import/BackgroundTaskOperationResult.yaml
+    GenericResponseRublePaymentErrorBackgroundTaskOperationResult:
+      $ref: ./components/schemas/import/GenericResponseRublePaymentErrorBackgroundTaskOperationResult.yaml
+    GetPageCommandPaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/GetPageCommandPaymentOrderRequestClientScrollerFilter.yaml
+    PageParamsPaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/common/PageParamsPaymentOrderRequestClientScrollerFilter.yaml
+    GenericResponseRublePaymentErrorPaymentOrderIdsAndPaymentAmountDto:
+      $ref: ./components/schemas/get-sum/GenericResponseRublePaymentErrorPaymentOrderIdsAndPaymentAmountDto.yaml
+    PaymentOrderIdsAndPaymentAmountDto:
+      $ref: ./components/schemas/get-sum/PaymentOrderIdsAndPaymentAmountDto.yaml
+    GenericResponseRublePaymentErrorPaymentOrderPaymentAmountDto:
+      $ref: ./components/schemas/get-sum-all/GenericResponseRublePaymentErrorPaymentOrderPaymentAmountDto.yaml
+    PaymentOrderPaymentAmountDto:
+      $ref: ./components/schemas/get-sum-all/PaymentOrderPaymentAmountDto.yaml
+    BackgroundImportProcessClientScrollerDto:
+      $ref: ./components/schemas/get-page/BackgroundImportProcessClientScrollerDto.yaml
+    ChargebackRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/ChargebackRequestClientScrollerDto.yaml
+    DocumentDetailsClientScrollerDto:
+      $ref: ./components/schemas/get-page/DocumentDetailsClientScrollerDto.yaml
+    GenericPageRublePaymentErrorPaymentOrderRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/GenericPageRublePaymentErrorPaymentOrderRequestClientScrollerDto.yaml
+    PayerDetailsClientScrollerDto:
+      $ref: ./components/schemas/get-page/PayerDetailsClientScrollerDto.yaml
+    PaymentAmountClientScrollerDto:
+      $ref: ./components/schemas/get-page/PaymentAmountClientScrollerDto.yaml
+    PaymentInfoClientScrollerDto:
+      $ref: ./components/schemas/get-page/PaymentInfoClientScrollerDto.yaml
+    PaymentOrderRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/PaymentOrderRequestClientScrollerDto.yaml
+    RecipientDetailsClientScrollerDto:
+      $ref: ./components/schemas/get-page/RecipientDetailsClientScrollerDto.yaml
+    TechnicalDetailsClientScrollerDto:
+      $ref: ./components/schemas/get-page/TechnicalDetailsClientScrollerDto.yaml
+    AccountCategoryDto:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountCategoryDto.yaml
+    AccountFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountFilter.yaml
+    AccountSourceSystemCategoryDto:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountSourceSystemCategoryDto.yaml
+    AccountStateDto:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountStateDto.yaml
+    AccountStateFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountStateFilter.yaml
+    BankClientStatusDto:
+      $ref: ./components/schemas/get-accounts-for-edit/BankClientStatusDto.yaml
+    BranchTypeDto:
+      $ref: ./components/schemas/get-accounts-for-edit/BranchTypeDto.yaml
+    BranchTypeFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/BranchTypeFilter.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/get-accounts-for-edit/FilterValueDtoLong.yaml
+    FilterValueEnumDtoBankClientStatusDto:
+      $ref: ./components/schemas/get-accounts-for-edit/FilterValueEnumDtoBankClientStatusDto.yaml
+    GetPageCommandAccountFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/GetPageCommandAccountFilter.yaml
+    PageParamsAccountFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/PageParamsAccountFilter.yaml
+    RemoteSourceDto:
+      $ref: ./components/schemas/get-accounts-for-edit/RemoteSourceDto.yaml
+    RemoteSourceDtoFilter:
+      $ref: ./components/schemas/get-accounts-for-edit/RemoteSourceDtoFilter.yaml
+    AccountForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/AccountForEditDto.yaml
+    BankClientForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/BankClientForEditDto.yaml
+    BranchForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/BranchForEditDto.yaml
+    ContractInfoForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/ContractInfoForEditDto.yaml
+    ContractTypeDto:
+      $ref: ./components/schemas/get-accounts-for-edit/ContractTypeDto.yaml
+    ContractTypeDtoV2:
+      $ref: ./components/schemas/get-accounts-for-edit/ContractTypeDtoV2.yaml
+    GenericPageRublePaymentErrorAccountForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/GenericPageRublePaymentErrorAccountForEditDto.yaml
+    RequisitesForEditDto:
+      $ref: ./components/schemas/get-accounts-for-edit/RequisitesForEditDto.yaml
+    BalanceRequestDto:
+      $ref: ./components/schemas/f1/BalanceRequestDto.yaml
+    SingleCommandBalanceRequestDto:
+      $ref: ./components/schemas/f1/SingleCommandBalanceRequestDto.yaml
+    AccountBalanceDto:
+      $ref: ./components/schemas/f1/AccountBalanceDto.yaml
+    BalanceDto:
+      $ref: ./components/schemas/f1/BalanceDto.yaml
+    GenericResponseRublePaymentErrorListAccountBalanceDto:
+      $ref: ./components/schemas/f1/GenericResponseRublePaymentErrorListAccountBalanceDto.yaml
+    ExportRegistryRequestDtoPaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/export-task/ExportRegistryRequestDtoPaymentOrderRequestClientScrollerFilter.yaml
+    ExportError:
+      $ref: ./components/schemas/export-task/ExportError.yaml
+    ExportTaskStatusDto:
+      $ref: ./components/schemas/export-task/ExportTaskStatusDto.yaml
+    GenericResponseExportErrorShortExportTaskDto:
+      $ref: ./components/schemas/export-task/GenericResponseExportErrorShortExportTaskDto.yaml
+    ShortExportTaskDto:
+      $ref: ./components/schemas/export-task/ShortExportTaskDto.yaml
+    ExportRegistryDto:
+      $ref: ./components/schemas/export-registry/ExportRegistryDto.yaml
+    PaymentOrderScrollerColumnDto:
+      $ref: ./components/schemas/export-registry/PaymentOrderScrollerColumnDto.yaml
+    SingleCommandExportRegistryDto:
+      $ref: ./components/schemas/export-registry/SingleCommandExportRegistryDto.yaml
+    CreateDioRequestDto:
+      $ref: ./components/schemas/dio/CreateDioRequestDto.yaml
+    GenericCommandCreateDioRequestDto:
+      $ref: ./components/schemas/dio/GenericCommandCreateDioRequestDto.yaml
+    DioDto:
+      $ref: ./components/schemas/dio/DioDto.yaml
+    DioStatusDto:
+      $ref: ./components/schemas/dio/DioStatusDto.yaml
+    GenericResponseRublePaymentErrorListDioDto:
+      $ref: ./components/schemas/dio/GenericResponseRublePaymentErrorListDioDto.yaml
+    PaymentOrderRequestCreateFromExternalSystemDto:
+      $ref: ./components/schemas/create-from-external/PaymentOrderRequestCreateFromExternalSystemDto.yaml
+    ChargebackRequestCreateDto:
+      $ref: ./components/schemas/chargeback/ChargebackRequestCreateDto.yaml
+    CreateWithDeviceChargebackCommandChargebackRequestCreateDto:
+      $ref: ./components/schemas/chargeback/CreateWithDeviceChargebackCommandChargebackRequestCreateDto.yaml
+    ListResponseCreateResponseChargebackRequestClientDto:
+      $ref: ./components/schemas/chargeback/ListResponseCreateResponseChargebackRequestClientDto.yaml
+    BatchClientSignChargebackCommand:
+      $ref: ./components/schemas/chargeback/BatchClientSignChargebackCommand.yaml
+    GenericResponseRublePaymentErrorListChargebackRequestClientDto:
+      $ref: ./components/schemas/chargeback/GenericResponseRublePaymentErrorListChargebackRequestClientDto.yaml
+    BatchClientRemoveSignChargebackCommand:
+      $ref: ./components/schemas/chargeback/BatchClientRemoveSignChargebackCommand.yaml
+    BatchClientDocumentVersionRemoveSignChargebackCommand:
+      $ref: ./components/schemas/chargeback/BatchClientDocumentVersionRemoveSignChargebackCommand.yaml
+    GenericResponseRublePaymentErrorChargebackRequestClientDto:
+      $ref: ./components/schemas/chargeback/GenericResponseRublePaymentErrorChargebackRequestClientDto.yaml
+    ListResponseGenericResponseRublePaymentErrorChargebackRequestClientDto:
+      $ref: ./components/schemas/chargeback/ListResponseGenericResponseRublePaymentErrorChargebackRequestClientDto.yaml
+    GenericCommandSetResourceVersionDeletingRequest:
+      $ref: ./components/schemas/common/GenericCommandSetResourceVersionDeletingRequest.yaml
+    ResourceVersionDeletingRequest:
+      $ref: ./components/schemas/common/ResourceVersionDeletingRequest.yaml
+    GenericResponseRublePaymentErrorLocalizedDocumentBatchDeletingResultStatusDto:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorLocalizedDocumentBatchDeletingResultStatusDto.yaml
+    LocalizedDocumentBatchDeletingResultStatusDto:
+      $ref: ./components/schemas/common/LocalizedDocumentBatchDeletingResultStatusDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    BulkSendClientDto:
+      $ref: ./components/schemas/bulk/BulkSendClientDto.yaml
+    BulkSignFileFilter:
+      $ref: ./components/schemas/bulk/BulkSignFileFilter.yaml
+    GenericCommandBulkSendClientDto:
+      $ref: ./components/schemas/bulk/GenericCommandBulkSendClientDto.yaml
+    GenericCommandSendByClientScrollerFilterDto:
+      $ref: ./components/schemas/bulk/GenericCommandSendByClientScrollerFilterDto.yaml
+    SendByClientScrollerFilterDto:
+      $ref: ./components/schemas/bulk/SendByClientScrollerFilterDto.yaml
+    GenericResponseRublePaymentErrorSendByClientFilterResponseDto:
+      $ref: ./components/schemas/bulk/GenericResponseRublePaymentErrorSendByClientFilterResponseDto.yaml
+    SendByClientFilterResponseDto:
+      $ref: ./components/schemas/bulk/SendByClientFilterResponseDto.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ApprovalSignBulkCommand:
+      $ref: ./components/schemas/bulk-visa/ApprovalSignBulkCommand.yaml
+    FileSignInfoDto:
+      $ref: ./components/schemas/bulk-visa/FileSignInfoDto.yaml
+    ApprovalSignBulkResultDto:
+      $ref: ./components/schemas/bulk-visa/ApprovalSignBulkResultDto.yaml
+    GenericResponseSimpleErrorDataApprovalSignBulkResultDto:
+      $ref: ./components/schemas/bulk-visa/GenericResponseSimpleErrorDataApprovalSignBulkResultDto.yaml
+    GenericResponseSimpleErrorDataSignRegistryDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataSignRegistryDto.yaml
+    ApprovalSignFileHashRequestDto:
+      $ref: ./components/schemas/bulk-visa/ApprovalSignFileHashRequestDto.yaml
+    GenericCommandApprovalSignFileHashRequestDto:
+      $ref: ./components/schemas/bulk-visa/GenericCommandApprovalSignFileHashRequestDto.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataString.yaml
+    AsyncTaskRegistryDto:
+      $ref: ./components/schemas/async-task/AsyncTaskRegistryDto.yaml
+    AsyncTaskStatusDto:
+      $ref: ./components/schemas/async-task/AsyncTaskStatusDto.yaml
+    AsyncTaskTypeDto:
+      $ref: ./components/schemas/async-task/AsyncTaskTypeDto.yaml
+    GenericResponseRublePaymentErrorAsyncTaskRegistryDto:
+      $ref: ./components/schemas/async-task/GenericResponseRublePaymentErrorAsyncTaskRegistryDto.yaml
+    AsyncTaskRequestDtoPaymentOrderRequestClientScrollerFilter:
+      $ref: ./components/schemas/async-task/AsyncTaskRequestDtoPaymentOrderRequestClientScrollerFilter.yaml
+    AsyncTaskDocumentCountDto:
+      $ref: ./components/schemas/async-task/AsyncTaskDocumentCountDto.yaml
+    GenericResponseRublePaymentErrorAsyncTaskDocumentCountDto:
+      $ref: ./components/schemas/async-task/GenericResponseRublePaymentErrorAsyncTaskDocumentCountDto.yaml
+    SingleCommandVatAmountRequestDto:
+      $ref: ./components/schemas/assist/SingleCommandVatAmountRequestDto.yaml
+    VatAmountRequestDto:
+      $ref: ./components/schemas/assist/VatAmountRequestDto.yaml
+    GenericResponseRublePaymentErrorVatAmountResponseDto:
+      $ref: ./components/schemas/assist/GenericResponseRublePaymentErrorVatAmountResponseDto.yaml
+    VatAmountResponseDto:
+      $ref: ./components/schemas/assist/VatAmountResponseDto.yaml
+    PaymentPurposeRequestDto:
+      $ref: ./components/schemas/assist/PaymentPurposeRequestDto.yaml
+    SingleCommandPaymentPurposeRequestDto:
+      $ref: ./components/schemas/assist/SingleCommandPaymentPurposeRequestDto.yaml
+    UpdatedFieldDto:
+      $ref: ./components/schemas/assist/UpdatedFieldDto.yaml
+    ApprovalSignDataRequest:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignDataRequest.yaml
+    ApprovalSignType:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignType.yaml
+    GenericCommandApprovalSignDataRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignDataRequest.yaml
+    ApprovalSignCommand:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignCommand.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    ApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignPrintRequest.yaml
+    GenericCommandApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignPrintRequest.yaml
+    PrintFormType:
+      $ref: ./components/schemas/approval-document-api/PrintFormType.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataPrintResponse.yaml
+    GenericCommandListApprovalSignPrintRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandListApprovalSignPrintRequest.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/common/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataListAttachmentAccessData:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataListAttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    ApprovalSignDigestRequest:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignDigestRequest.yaml
+    GenericCommandApprovalSignDigestRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignDigestRequest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataDigest.yaml
+    ApprovalSignDigestVersionRequest:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignDigestVersionRequest.yaml
+    GenericCommandApprovalSignDigestVersionRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignDigestVersionRequest.yaml
+    GenericCommandListApprovalSignDigestRequest:
+      $ref: ./components/schemas/approval-document-api/GenericCommandListApprovalSignDigestRequest.yaml
+    DigestResponse:
+      $ref: ./components/schemas/approval-document-api/DigestResponse.yaml
+    GenericResponseSimpleErrorDataListDigestResponse:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataListDigestResponse.yaml
+    ApprovalSignRegistryTypeDto:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignRegistryTypeDto.yaml
+    GenericCommandApprovalSignRegistryTypeDto:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignRegistryTypeDto.yaml
+    ApprovalSignRegistryFilterDto:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignRegistryFilterDto.yaml
+    ApprovalSignRegistryFilterWithTypeDto:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignRegistryFilterWithTypeDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    GenericCommandApprovalSignRegistryFilterWithTypeDto:
+      $ref: ./components/schemas/approval-document-api/GenericCommandApprovalSignRegistryFilterWithTypeDto.yaml
+    AdditionalSignRegistryClientDocumentDto:
+      $ref: ./components/schemas/additional-signature/AdditionalSignRegistryClientDocumentDto.yaml
+    AdditionalSignRegistryDocumentDto:
+      $ref: ./components/schemas/additional-signature/AdditionalSignRegistryDocumentDto.yaml
+    AdditionalSignRegistryDto:
+      $ref: ./components/schemas/additional-signature/AdditionalSignRegistryDto.yaml
+    AdditionalSignRegistryStatisticsDto:
+      $ref: ./components/schemas/additional-signature/AdditionalSignRegistryStatisticsDto.yaml
+    GenericResponseRublePaymentErrorAdditionalSignRegistryDto:
+      $ref: ./components/schemas/additional-signature/GenericResponseRublePaymentErrorAdditionalSignRegistryDto.yaml
+    VerifyDuplicateFileImportRqDto:
+      $ref: ./components/schemas/verify-duplicate/VerifyDuplicateFileImportRqDto.yaml
+    GenericResponseSimpleErrorDataVerifyDuplicateFileImportRsDto:
+      $ref: ./components/schemas/verify-duplicate/GenericResponseSimpleErrorDataVerifyDuplicateFileImportRsDto.yaml
+    VerifyDuplicateFileImportRsDto:
+      $ref: ./components/schemas/verify-duplicate/VerifyDuplicateFileImportRsDto.yaml
+    FileImportSuggestionFileFilter:
+      $ref: ./components/schemas/suggestion/FileImportSuggestionFileFilter.yaml
+    GetPageCommandFileImportSuggestionFileFilter:
+      $ref: ./components/schemas/suggestion/GetPageCommandFileImportSuggestionFileFilter.yaml
+    PageParamsFileImportSuggestionFileFilter:
+      $ref: ./components/schemas/suggestion/PageParamsFileImportSuggestionFileFilter.yaml
+    FileImportFileSuggestionDto:
+      $ref: ./components/schemas/suggestion/FileImportFileSuggestionDto.yaml
+    GenericResponseSimpleErrorDataListFileImportFileSuggestionDto:
+      $ref: ./components/schemas/suggestion/GenericResponseSimpleErrorDataListFileImportFileSuggestionDto.yaml
+    FileImportDto:
+      $ref: ./components/schemas/common/FileImportDto.yaml
+    FileImportStatusDto:
+      $ref: ./components/schemas/common/FileImportStatusDto.yaml
+    GenericResponseSimpleErrorDataFileImportDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataFileImportDto.yaml
+    FileImportRemoveSignRequest:
+      $ref: ./components/schemas/signature/FileImportRemoveSignRequest.yaml
+    EcoFileImportOperationClassifierDto:
+      $ref: ./components/schemas/common/EcoFileImportOperationClassifierDto.yaml
+    FileImportRemoveSignResponse:
+      $ref: ./components/schemas/signature/FileImportRemoveSignResponse.yaml
+    GenericResponseSimpleErrorDataFileImportRemoveSignResponse:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataFileImportRemoveSignResponse.yaml
+    AttachmentGenerateDigestHashCommand:
+      $ref: ./components/schemas/signature/AttachmentGenerateDigestHashCommand.yaml
+    FileImportPrintRequestDto:
+      $ref: ./components/schemas/print/FileImportPrintRequestDto.yaml
+    GenericCommandFileImportPrintRequestDto:
+      $ref: ./components/schemas/print/GenericCommandFileImportPrintRequestDto.yaml
+    FileStorageAccessData:
+      $ref: ./components/schemas/print/FileStorageAccessData.yaml
+    GenericResponseSimpleErrorDataFileStorageAccessData:
+      $ref: ./components/schemas/print/GenericResponseSimpleErrorDataFileStorageAccessData.yaml
+    FileImportControlResultTypeDto:
+      $ref: ./components/schemas/print/FileImportControlResultTypeDto.yaml
+    FileImportDocControlResultDto:
+      $ref: ./components/schemas/print/FileImportDocControlResultDto.yaml
+    FileImportDocResultDto:
+      $ref: ./components/schemas/print/FileImportDocResultDto.yaml
+    FileImportGroupByStatusAndCurrencyResultDto:
+      $ref: ./components/schemas/print/FileImportGroupByStatusAndCurrencyResultDto.yaml
+    FileImportProtocolDto:
+      $ref: ./components/schemas/print/FileImportProtocolDto.yaml
+    FileImportResultStatusDto:
+      $ref: ./components/schemas/print/FileImportResultStatusDto.yaml
+    GenericResponseSimpleErrorDataFileImportProtocolDto:
+      $ref: ./components/schemas/print/GenericResponseSimpleErrorDataFileImportProtocolDto.yaml
+    ImportPreparationStatusDto:
+      $ref: ./components/schemas/print/ImportPreparationStatusDto.yaml
+    FileImportScrollerFilterDto:
+      $ref: ./components/schemas/get-page/FileImportScrollerFilterDto.yaml
+    FileImportSignStatusDto:
+      $ref: ./components/schemas/get-page/FileImportSignStatusDto.yaml
+    FilterValueDtoFileImportSignStatusDto:
+      $ref: ./components/schemas/get-page/FilterValueDtoFileImportSignStatusDto.yaml
+    GetPageCommandFileImportScrollerFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandFileImportScrollerFilterDto.yaml
+    PageParamsFileImportScrollerFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsFileImportScrollerFilterDto.yaml
+    FileImportClientScrollerDto:
+      $ref: ./components/schemas/get-page/FileImportClientScrollerDto.yaml
+    GenericResponseSimpleErrorDataPageDataFileImportClientScrollerDto:
+      $ref: ./components/schemas/get-page/GenericResponseSimpleErrorDataPageDataFileImportClientScrollerDto.yaml
+    PageDataFileImportClientScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataFileImportClientScrollerDto.yaml
+    FileImportInfoDto:
+      $ref: ./components/schemas/get-file-import-info/FileImportInfoDto.yaml
+    GenericResponseSimpleErrorDataFileImportInfoDto:
+      $ref: ./components/schemas/get-file-import-info/GenericResponseSimpleErrorDataFileImportInfoDto.yaml
+    AccessDocumentPaymentTypeClassifierDto:
+      $ref: ./components/schemas/common/AccessDocumentPaymentTypeClassifierDto.yaml
+    CreateFileImportRqDto:
+      $ref: ./components/schemas/create-file-import/CreateFileImportRqDto.yaml
+    CreateFileImportRsDto:
+      $ref: ./components/schemas/create-file-import/CreateFileImportRsDto.yaml
+    GenericResponseSimpleErrorDataCreateFileImportRsDto:
+      $ref: ./components/schemas/create-file-import/GenericResponseSimpleErrorDataCreateFileImportRsDto.yaml
+    FileImportCreateDocsRqDto:
+      $ref: ./components/schemas/create-documents-in-doc-service/FileImportCreateDocsRqDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/create-documents-in-doc-service/GenericResponseSimpleErrorDataVoid.yaml
+    GenericResponseRublePaymentErrorListSignatureClientDto:
+      $ref: ./components/schemas/{id}/GenericResponseRublePaymentErrorListSignatureClientDto.yaml
+    GenericResponseRublePaymentErrorListPaymentOrderTemplateFrequentlyUsedDto:
+      $ref: ./components/schemas/template/GenericResponseRublePaymentErrorListPaymentOrderTemplateFrequentlyUsedDto.yaml
+    PaymentOrderTemplateFrequentlyUsedDto:
+      $ref: ./components/schemas/template/PaymentOrderTemplateFrequentlyUsedDto.yaml
+    GenericResponseRublePaymentErrorListImportSuggestionDto:
+      $ref: ./components/schemas/suggestion/GenericResponseRublePaymentErrorListImportSuggestionDto.yaml
+    ImportSuggestionDto:
+      $ref: ./components/schemas/suggestion/ImportSuggestionDto.yaml
+    GenericResponseRublePaymentErrorImportSuggestionDto:
+      $ref: ./components/schemas/suggestion/GenericResponseRublePaymentErrorImportSuggestionDto.yaml
+    GenericResponseRublePaymentErrorListDocumentSystemClassifierDto:
+      $ref: ./components/schemas/source-system/GenericResponseRublePaymentErrorListDocumentSystemClassifierDto.yaml
+    GenericResponseRublePaymentErrorPaymentOrderRequestResponseTaxDto:
+      $ref: ./components/schemas/simplified/GenericResponseRublePaymentErrorPaymentOrderRequestResponseTaxDto.yaml
+    GenericResponseRublePaymentErrorPaymentOrderRequestResponseBrokerageDto:
+      $ref: ./components/schemas/simplified/GenericResponseRublePaymentErrorPaymentOrderRequestResponseBrokerageDto.yaml
+    GenericResponseRublePaymentErrorListPaymentOrderRequestCrmBrkAgreementRspDto:
+      $ref: ./components/schemas/simplified/GenericResponseRublePaymentErrorListPaymentOrderRequestCrmBrkAgreementRspDto.yaml
+    PaymentOrderRequestCrmBrkAgreementRspDto:
+      $ref: ./components/schemas/simplified/PaymentOrderRequestCrmBrkAgreementRspDto.yaml
+    CheckCertificateDataDto:
+      $ref: ./components/schemas/common/CheckCertificateDataDto.yaml
+    CommonSignatureCheckResultDataDto:
+      $ref: ./components/schemas/signature/CommonSignatureCheckResultDataDto.yaml
+    GenericResponseRublePaymentErrorListCommonSignatureCheckResultDataDto:
+      $ref: ./components/schemas/signature/GenericResponseRublePaymentErrorListCommonSignatureCheckResultDataDto.yaml
+    SignatureLevelClassifier:
+      $ref: ./components/schemas/common/SignatureLevelClassifier.yaml
+    GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckSignByImportFileDto:
+      $ref: ./components/schemas/signature/GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckSignByImportFileDto.yaml
+    ru.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckSignByImportFileDto:
+      $ref: ./components/schemas/signature/ru.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckSignByImportFileDto.yaml
+    BulkSignFileDescriptionDto:
+      $ref: ./components/schemas/signature/BulkSignFileDescriptionDto.yaml
+    BulkSignFileDto:
+      $ref: ./components/schemas/signature/BulkSignFileDto.yaml
+    GenericResponseRublePaymentErrorBulkSignFileDescriptionDto:
+      $ref: ./components/schemas/signature/GenericResponseRublePaymentErrorBulkSignFileDescriptionDto.yaml
+    GenericResponseRublePaymentErrorSetSignerAuthorityInfo:
+      $ref: ./components/schemas/common/GenericResponseRublePaymentErrorSetSignerAuthorityInfo.yaml
+    SignerAuthorityInfo:
+      $ref: ./components/schemas/common/SignerAuthorityInfo.yaml
+    SignerAuthorityStatusDto:
+      $ref: ./components/schemas/common/SignerAuthorityStatusDto.yaml
+    GenericResponseRublePaymentErrorSendToBankStatisticDto:
+      $ref: ./components/schemas/send-statistic/GenericResponseRublePaymentErrorSendToBankStatisticDto.yaml
+    SendToBankStatisticDto:
+      $ref: ./components/schemas/send-statistic/SendToBankStatisticDto.yaml
+    GenericResponseSimpleErrorDataListHistoryGroupDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListHistoryGroupDto.yaml
+    HistoryGroupDto:
+      $ref: ./components/schemas/history/HistoryGroupDto.yaml
+    HistoryGroupEntryDto:
+      $ref: ./components/schemas/history/HistoryGroupEntryDto.yaml
+    OperationCodeClassifierDto:
+      $ref: ./components/schemas/history/OperationCodeClassifierDto.yaml
+    ExportReportDto:
+      $ref: ./components/schemas/export-task/ExportReportDto.yaml
+    GenericResponseExportErrorExportReportDto:
+      $ref: ./components/schemas/export-task/GenericResponseExportErrorExportReportDto.yaml
+    GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckChargebackSignDto:
+      $ref: ./components/schemas/chargeback/GenericResponseRublePaymentErrorRu.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckChargebackSignDto.yaml
+    ru.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckChargebackSignDto:
+      $ref: ./components/schemas/chargeback/ru.gpb.eco.ruble.payment.business.api.dto.sign.check.CheckChargebackSignDto.yaml
+    ApprovalSignBulkFileDto:
+      $ref: ./components/schemas/bulk-visa/ApprovalSignBulkFileDto.yaml
+    GenericResponseSimpleErrorDataListApprovalSignBulkFileDto:
+      $ref: ./components/schemas/bulk-visa/GenericResponseSimpleErrorDataListApprovalSignBulkFileDto.yaml
+    AvailableAccountDto:
+      $ref: ./components/schemas/available-accounts/AvailableAccountDto.yaml
+    GenericResponseRublePaymentErrorAvailableAccountDto:
+      $ref: ./components/schemas/available-accounts/GenericResponseRublePaymentErrorAvailableAccountDto.yaml
+    ArchiveIntervalDto:
+      $ref: ./components/schemas/archive/ArchiveIntervalDto.yaml
+    GenericResponseRublePaymentErrorListArchiveIntervalDto:
+      $ref: ./components/schemas/archive/GenericResponseRublePaymentErrorListArchiveIntervalDto.yaml
+    ApprovalSignSignatureModeDto:
+      $ref: ./components/schemas/approval-document-api/ApprovalSignSignatureModeDto.yaml
+    DocumentSignatureCertificateInfoDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureCertificateInfoDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureDto.yaml
+    DocumentSignatureInfoDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureInfoDto.yaml
+    DocumentSignatureValueDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureValueDto.yaml
+    GenericResponseSimpleErrorDataDocumentSignatureInfoDto:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataDocumentSignatureInfoDto.yaml
+    DocumentSignatureCheckDataDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureCheckDataDto.yaml
+    DocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/approval-document-api/DocumentSignatureCheckResultDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataListDocumentSignatureCheckResultDto.yaml
+    DocumentAdditionalInfoDto:
+      $ref: ./components/schemas/approval-document-api/DocumentAdditionalInfoDto.yaml
+    DocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/approval-document-api/DocumentAdditionalInfoResponseDto.yaml
+    FieldValueDto:
+      $ref: ./components/schemas/common/FieldValueDto.yaml
+    FieldValueReferenceType:
+      $ref: ./components/schemas/common/FieldValueReferenceType.yaml
+    FieldValueType:
+      $ref: ./components/schemas/common/FieldValueType.yaml
+    GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto:
+      $ref: ./components/schemas/approval-document-api/GenericResponseSimpleErrorDataDocumentAdditionalInfoResponseDto.yaml
+    TextColor:
+      $ref: ./components/schemas/common/TextColor.yaml
+    ActivityFeedDocFieldInfoDto:
+      $ref: ./components/schemas/activity-feed-api/ActivityFeedDocFieldInfoDto.yaml
+    ActivityFeedDocInfoDto:
+      $ref: ./components/schemas/activity-feed-api/ActivityFeedDocInfoDto.yaml
+    GenericResponseSimpleErrorDataActivityFeedDocInfoDto:
+      $ref: ./components/schemas/activity-feed-api/GenericResponseSimpleErrorDataActivityFeedDocInfoDto.yaml
+    HeaderPosition:
+      $ref: ./components/schemas/activity-feed-api/HeaderPosition.yaml
+    AccountAccessDto:
+      $ref: ./components/schemas/account-access/AccountAccessDto.yaml
+    DocumentActionDto:
+      $ref: ./components/schemas/account-access/DocumentActionDto.yaml
+    GenericResponseRublePaymentErrorListAccountAccessDto:
+      $ref: ./components/schemas/account-access/GenericResponseRublePaymentErrorListAccountAccessDto.yaml
+    FileImportDocumentsStatisticDto:
+      $ref: ./components/schemas/statistic/FileImportDocumentsStatisticDto.yaml
+    GenericResponseSimpleErrorDataFileImportDocumentsStatisticDto:
+      $ref: ./components/schemas/statistic/GenericResponseSimpleErrorDataFileImportDocumentsStatisticDto.yaml
+    FileImportCompleteProcessStatisticDto:
+      $ref: ./components/schemas/statistic/FileImportCompleteProcessStatisticDto.yaml
+    GenericResponseSimpleErrorDataFileImportCompleteProcessStatisticDto:
+      $ref: ./components/schemas/statistic/GenericResponseSimpleErrorDataFileImportCompleteProcessStatisticDto.yaml
+    GenericResponseSimpleErrorDataListSignatureDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataListSignatureDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/signature/SignatureDto.yaml
+    GenericResponseSimpleErrorDataRu.gpb.eco.fileimport.business.api.dto.sign.CheckSignByImportFileDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataRu.gpb.eco.fileimport.business.api.dto.sign.CheckSignByImportFileDto.yaml
+    ru.gpb.eco.fileimport.business.api.dto.sign.CheckSignByImportFileDto:
+      $ref: ./components/schemas/signature/ru.gpb.eco.fileimport.business.api.dto.sign.CheckSignByImportFileDto.yaml
+    AttachmentDto:
+      $ref: ./components/schemas/signature/AttachmentDto.yaml
+    GenericResponseSimpleErrorDataAttachmentDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataAttachmentDto.yaml
+    FileImportClientScrollerRowDetailDto:
+      $ref: ./components/schemas/row-detail/FileImportClientScrollerRowDetailDto.yaml
+    FileImportSignatureDto:
+      $ref: ./components/schemas/row-detail/FileImportSignatureDto.yaml
+    FileImportSignatureLevelDto:
+      $ref: ./components/schemas/row-detail/FileImportSignatureLevelDto.yaml
+    GenericResponseSimpleErrorDataFileImportClientScrollerRowDetailDto:
+      $ref: ./components/schemas/row-detail/GenericResponseSimpleErrorDataFileImportClientScrollerRowDetailDto.yaml
+    EcoFileImportFormatClassifierDto:
+      $ref: ./components/schemas/processing-options/EcoFileImportFormatClassifierDto.yaml
+    FileImportProcessingOptionRsDto:
+      $ref: ./components/schemas/processing-options/FileImportProcessingOptionRsDto.yaml
+    GenericResponseSimpleErrorDataFileImportProcessingOptionRsDto:
+      $ref: ./components/schemas/processing-options/GenericResponseSimpleErrorDataFileImportProcessingOptionRsDto.yaml
+    FileImportDeleteRsDto:
+      $ref: ./components/schemas/delete-file-import/FileImportDeleteRsDto.yaml
+    GenericResponseSimpleErrorDataFileImportDeleteRsDto:
+      $ref: ./components/schemas/delete-file-import/GenericResponseSimpleErrorDataFileImportDeleteRsDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,5 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр документа для скроллера

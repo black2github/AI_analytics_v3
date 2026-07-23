@@ -1,0 +1,14 @@
+type: object
+properties:
+  signId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signTime:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signType:
+    type: string
+    description: Тип подписи
+description: Данные проверки подписи

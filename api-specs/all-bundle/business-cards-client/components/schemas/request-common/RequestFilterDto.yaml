@@ -1,0 +1,19 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  batchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardCommonInfoFilter:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  reqDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  reqIds:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  reqType:
+    $ref: ../common/FilterValueEnumDtoDocumentTypeDto.yaml
+  status:
+    $ref: ../common/FilterValueEnumDtoCardRequestStatusDto.yaml
+description: Фильтр для запроса заявок по картам

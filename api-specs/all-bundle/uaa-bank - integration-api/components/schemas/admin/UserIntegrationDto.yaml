@@ -1,0 +1,49 @@
+required:
+- availableSegments
+- blocked
+- uaaRoles
+type: object
+properties:
+  id:
+    type: string
+    description: ID пользователя
+    format: uuid
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  blocked:
+    type: boolean
+    description: Признак блокировки
+  temporaryBlockedUntil:
+    type: string
+    description: Признак временной блокировки
+    format: date-time
+  uaaRoles:
+    uniqueItems: true
+    type: array
+    description: Коллекция ролей v2
+    items:
+      $ref: ./UaaUserRoleIntegrationDto.yaml
+  effectiveUaaPrivileges:
+    uniqueItems: true
+    type: array
+    description: Список привилегий v2
+    items:
+      type: string
+      description: Список привилегий v2
+  effectiveUaaAuthorities:
+    uniqueItems: true
+    type: array
+    description: Список объектов привилегий v2
+    items:
+      $ref: ./UaaAuthorityIntegrationDto.yaml
+  availableSegments:
+    uniqueItems: true
+    type: array
+    description: Список доступных продуктов в разрезе организации
+    items:
+      $ref: ./AvailableSegmentIntegrationDto.yaml
+description: UAA пользователь

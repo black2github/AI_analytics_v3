@@ -1,0 +1,13 @@
+type: object
+required:
+- errorCode
+- errorText
+description: Ошибка по этому тарифу счета
+properties:
+  errorCode:
+    type: integer
+    format: int32
+    description: Числовой код бизнес ошибки
+  errorText:
+    type: string
+    description: Текстовое описание бизнес ошибки

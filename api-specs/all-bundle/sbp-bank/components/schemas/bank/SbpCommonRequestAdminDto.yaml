@@ -1,0 +1,15 @@
+type: object
+description: Результат выполнения массовых функций повторной выгрузки и смены статуса заявок
+properties:
+  successful:
+    type: array
+    description: Список идентификаторов успешно обработанных заявок
+    items:
+      type: string
+      format: uuid
+  failed:
+    type: array
+    description: Список идентификаторов неуспешно обработанных заявок
+    items:
+      type: string
+      format: uuid

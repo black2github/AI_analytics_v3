@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientCall:
+    type: array
+    description: Таблица "История звонков"
+    items:
+      $ref: ../common/ClientCallHistoryDto.yaml
+  needsClientInteractionResult:
+    $ref: ./NeedsClientInteractionResultDto.yaml
+description: ДТО для вкладки история звонков клиенту

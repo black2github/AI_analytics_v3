@@ -1,0 +1,84 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес одной строкой
+  zip:
+    type: string
+    description: Индекс
+  countryId:
+    type: string
+    description: Страна(ссылка на справочник)
+    format: uuid
+  countryCode:
+    type: string
+    description: Код страны
+  isForeignAddress:
+    type: boolean
+    description: Признак иностранного адреса
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  regionFias:
+    type: string
+    description: Регион ФИАС код
+  district:
+    type: string
+    description: Район
+  districtFias:
+    type: string
+    description: Район ФИАС код
+  city:
+    type: string
+    description: Город
+  cityFias:
+    type: string
+    description: Город ФИАС код
+  settlement:
+    type: string
+    description: Нас. Пункт
+  settlementFias:
+    type: string
+    description: Нас. Пункт ФИАС код
+  street:
+    type: string
+    description: Улица
+  streetFias:
+    type: string
+    description: Улица ФИАС код
+  building:
+    type: string
+    description: Дом
+  buildingFias:
+    type: string
+    description: Дом ФИАС код
+  isBuildingEmpty:
+    type: boolean
+    description: Отсутствует дом
+  block:
+    type: string
+    description: Корпус/строение
+  flat:
+    type: string
+    description: Квартира
+  isFlatEmpty:
+    type: boolean
+    description: Отсутствует квартира
+  fiasGuid:
+    type: string
+    description: ФИАС GUID
+    format: uuid
+  fiasLevel:
+    type: integer
+    description: Уровень кода
+    format: int32
+  foreignAddress:
+    type: boolean
+  flatEmpty:
+    type: boolean
+  buildingEmpty:
+    type: boolean
+description: Адрес в заявке на обновление сведений о клиенте

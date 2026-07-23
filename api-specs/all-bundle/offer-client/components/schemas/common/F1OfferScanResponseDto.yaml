@@ -1,0 +1,9 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Признак успешного выполнения запроса
+  error:
+    type: string
+    description: Описание ошибки
+description: Ответ на запрос получения скана оферты из РКО Ф1

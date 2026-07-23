@@ -1,0 +1,26 @@
+post:
+  tags:
+  - API загрузки файла. Вторая версия.
+  summary: Загрузка вложения c проверкой в антивирусной системе
+  description: 'Привилегии: #eco.userTypeIs(''BANK'')'
+  operationId: checkedUploadUsingPOST
+  consumes:
+  - multipart/form-data
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,InternalAttachmentDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - FX
+  notEq:
+    type: string
+    enum:
+    - FX
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - FX
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - FX
+  isNull:
+    type: boolean
+description: Тип сделки

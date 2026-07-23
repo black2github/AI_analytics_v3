@@ -1,0 +1,74 @@
+type: object
+properties:
+  businessActivityObjective:
+    type: string
+    description: Цель финансово-хозяйственной деятельности
+    enum:
+    - SETTLEMENTS_CONTRACTS
+    - PLANNED_OPERATIONS_INFORMATION
+    - CONTRACTORS
+  capitalFullPaid:
+    type: boolean
+    description: Признак "Капитал оплачен полностью"
+  contragentTransferAmount:
+    type: string
+    description: Сумма операций по переводам контрагентам
+  documents:
+    uniqueItems: true
+    type: array
+    description: Виды договоров
+    items:
+      type: string
+      description: Виды договоров
+      enum:
+      - COMMERCIAL_CONTRACT
+      - AGENCY_CONTRACT
+      - RENT_CONTRACT
+      - COMMISSION_CONTRACT
+      - SECURITIES_SALE_CONTRACT
+      - SERVICE_CONTRACT
+      - INSURANCE_CONTRACT
+      - CREDIT_CONTRACT
+      - OTHER_CONTRACT
+  foreignTransferAmount:
+    type: string
+    description: Сумма по переводам в рамках внешнеторговой деятельности
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  moneySources:
+    uniqueItems: true
+    type: array
+    description: Источники происхождения денежных средств
+    items:
+      type: string
+      description: Источники происхождения денежных средств
+      enum:
+      - BUSINESS_ACTIVITY
+      - OWN_FUNDS
+      - BORROWED_FUNDS
+      - OTHER_FUNDS
+  otherContractType:
+    type: string
+    description: Вид иного договора
+  otherMoneySource:
+    type: string
+    description: Иной источник происхождения денежных средств
+  paidCapitalAmount:
+    pattern: ^[0-9]{1,18}(?:\.[0-9]{1,2})?$
+    type: string
+    description: Сумма оплаченного капитала
+  questionnaireCommon:
+    $ref: ./QuestionnaireCommonDto.yaml
+  questionnaireIp:
+    $ref: ./QuestionnaireIpDto.yaml
+  questionnaireUl:
+    $ref: ./QuestionnaireUlDto.yaml
+  registeredCapitalAmount:
+    type: string
+    description: Сумма зарегистрированного капитала
+  withdrawalAmount:
+    type: string
+    description: Сумма операций по снятию наличных
+description: Финансовая информация и опросник

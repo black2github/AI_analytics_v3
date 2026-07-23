@@ -1,0 +1,8 @@
+type: object
+properties:
+  results:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ./CertificateDuplicatesDto.yaml
+description: Ответ на запрос поиска дубликатов сертификатов

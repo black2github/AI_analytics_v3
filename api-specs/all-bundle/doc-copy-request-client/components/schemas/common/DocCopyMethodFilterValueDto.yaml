@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - DIGITAL
+    - OFFICE
+  notEq:
+    type: string
+    enum:
+    - DIGITAL
+    - OFFICE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - DIGITAL
+      - OFFICE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - DIGITAL
+      - OFFICE
+  isNull:
+    type: boolean
+description: Способ получения документов заявки. Полное совпадение()

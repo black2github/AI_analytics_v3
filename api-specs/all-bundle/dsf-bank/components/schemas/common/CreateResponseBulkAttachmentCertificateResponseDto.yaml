@@ -1,0 +1,11 @@
+type: object
+properties:
+  code:
+    type: integer
+    format: int32
+  data:
+    $ref: ./BulkAttachmentCertificateResponseDto.yaml
+  message:
+    type: string
+  validationResult:
+    $ref: ./ValidationResult.yaml

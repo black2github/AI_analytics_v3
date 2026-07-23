@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи/счета
+    format: uuid
+  bank:
+    type: string
+    description: Код банка
+    enum:
+    - GPB
+    - VTB
+    - SBR
+  bankClient:
+    $ref: ./BankClientInfoScrollerDto.yaml
+  account:
+    $ref: ./AccountDto.yaml
+description: Ответ скроллера счетов согласий

@@ -1,0 +1,7 @@
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции подписи ФНС
+    format: uuid
+description: Ответ на запрос создания операции подписи в мобильном приложении Моя подпись ФНС

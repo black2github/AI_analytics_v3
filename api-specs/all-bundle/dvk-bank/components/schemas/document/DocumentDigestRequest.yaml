@@ -1,0 +1,13 @@
+required:
+- documentId
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия СПП (или последняя версия если не передана)
+    format: int32
+description: Запрос на формирование дайджеста документа

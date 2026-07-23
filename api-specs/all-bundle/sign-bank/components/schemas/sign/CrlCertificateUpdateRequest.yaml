@@ -1,0 +1,16 @@
+type: object
+properties:
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  dateRevoked:
+    type: string
+    description: Дата и время отзыва сертификата
+    format: date-time
+  dateBlocked:
+    type: string
+    description: Дата и время блокировки сертификата в системе
+    format: date-time
+  reason:
+    $ref: ./CrlReasonDto.yaml
+description: DTO для редактирования сущности Отозванный сертификат

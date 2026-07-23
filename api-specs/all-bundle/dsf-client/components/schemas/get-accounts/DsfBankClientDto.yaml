@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+description: ДТО организации

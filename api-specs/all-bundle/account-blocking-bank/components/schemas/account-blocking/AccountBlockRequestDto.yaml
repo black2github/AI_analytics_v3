@@ -1,0 +1,14 @@
+type: object
+properties:
+  accountIds:
+    type: array
+    description: Идентификаторы счетов
+    items:
+      type: string
+      description: Идентификаторы счетов
+      format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Данные для получения блокировок пользователя

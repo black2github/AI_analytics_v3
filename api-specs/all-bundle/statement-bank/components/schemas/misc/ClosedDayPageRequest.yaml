@@ -1,0 +1,14 @@
+required:
+- dateFrom
+- dateTo
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  branchCode:
+    type: string
+description: Фильтр

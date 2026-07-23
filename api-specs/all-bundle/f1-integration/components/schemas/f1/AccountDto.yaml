@@ -1,0 +1,15 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер счета
+    example: '40702810700150001449'
+  bic:
+    type: string
+    description: БИК
+    example: 044525823
+  branchAbsNumber:
+    type: string
+    description: Номер филиала в РКО Ф1
+    example: '001'
+description: Счет

@@ -1,0 +1,56 @@
+type: object
+properties:
+  accountName:
+    type: string
+    description: Наименование счета
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    $ref: ./DsfAccountTypeDto.yaml
+  balanceBranch:
+    $ref: ./DsfBranchDto.yaml
+  bankClient:
+    $ref: ./DsfBankClientDto.yaml
+  branch:
+    $ref: ./DsfBranchDto.yaml
+  currency:
+    $ref: ./DsfCurrencyDto.yaml
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  filial:
+    $ref: ./DsfBranchDto.yaml
+  id:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  sourceSystem:
+    type: string
+    description: Источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  transitAccountNumber:
+    type: string
+    description: Транзитный номер
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: ДТО счета

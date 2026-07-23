@@ -1,0 +1,17 @@
+type: object
+properties:
+  taskTypeId:
+    type: string
+    description: Идентификатор типа задания
+    format: uuid
+  ecoFilesIds:
+    type: array
+    description: Идентификаторы файлов для распознавания
+    items:
+      type: string
+      description: Идентификаторы файлов для распознавания
+      format: uuid
+  recognitionTimeout:
+    type: string
+    description: Таймаут выполнения задания на распознавание
+description: Входные данные методов распознавания документов

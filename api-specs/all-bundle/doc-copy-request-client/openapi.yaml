@@ -1,0 +1,221 @@
+openapi: 3.0.1
+info:
+  title: Сервис копии документов. Клиентская часть.
+  version: 3.2.0
+servers:
+- url: /doc-copy-request-client
+paths:
+  /doc-copy:
+    $ref: ./paths/doc-copy/doc_copy.yaml
+  /helper/clients:
+    $ref: ./paths/clients/helper_clients.yaml
+  /doc-copy/validate/validity-check:
+    $ref: ./paths/validate/doc_copy_validate_validity_check.yaml
+  /doc-copy/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/doc_copy_v2_1_generate_sign_data.yaml
+  /doc-copy/sign:
+    $ref: ./paths/sign/doc_copy_sign.yaml
+  /doc-copy/get-page:
+    $ref: ./paths/get-page/doc_copy_get_page.yaml
+  /doc-copy/generate-digest/version:
+    $ref: ./paths/generate-digest/doc_copy_generate_digest_version.yaml
+  /doc-copy/category:
+    $ref: ./paths/category/doc_copy_category.yaml
+  /doc-copy/accounting:
+    $ref: ./paths/accounting/doc_copy_accounting.yaml
+  /accounts/v2/tariff/{clientId}:
+    $ref: ./paths/v2/accounts_v2_tariff_clientId.yaml
+  /accounts/v2/commission-accounts:
+    $ref: ./paths/v2/accounts_v2_commission_accounts.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /doc-copy/{id}:
+    $ref: ./paths/{id}/doc_copy_id.yaml
+  /doc-copy/download-file/{id}:
+    $ref: ./paths/download-file/doc_copy_download_file_id.yaml
+  /doc-copy-info/accounts:
+    $ref: ./paths/accounts/doc_copy_info_accounts.yaml
+  /authorized-person-email/v1/{bankClientId}:
+    $ref: ./paths/v1/authorized_person_email_v1_bankClientId.yaml
+  /accounts/{bankClientId}:
+    $ref: ./paths/{bankClientId}/accounts_bankClientId.yaml
+  /accounts/v2/{bankClientId}:
+    $ref: ./paths/v2/accounts_v2_bankClientId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    DocCopyContractDescriptorDto:
+      $ref: ./components/schemas/doc-copy/DocCopyContractDescriptorDto.yaml
+    DocCopyRequestUpdateDto:
+      $ref: ./components/schemas/doc-copy/DocCopyRequestUpdateDto.yaml
+    UpdateCommandDocCopyRequestUpdateDtoUUID:
+      $ref: ./components/schemas/doc-copy/UpdateCommandDocCopyRequestUpdateDtoUUID.yaml
+    BankClientDto:
+      $ref: ./components/schemas/common/BankClientDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CommissionAccountDto:
+      $ref: ./components/schemas/common/CommissionAccountDto.yaml
+    CreatorDto:
+      $ref: ./components/schemas/common/CreatorDto.yaml
+    DocCopyContractDto:
+      $ref: ./components/schemas/common/DocCopyContractDto.yaml
+    DocCopyPaymentDto:
+      $ref: ./components/schemas/common/DocCopyPaymentDto.yaml
+    DocCopyRequestDto:
+      $ref: ./components/schemas/common/DocCopyRequestDto.yaml
+    DocCopyRequestSignatureDto:
+      $ref: ./components/schemas/common/DocCopyRequestSignatureDto.yaml
+    GenericResponseSimpleErrorDataDocCopyRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDocCopyRequestDto.yaml
+    PriceInfoDto:
+      $ref: ./components/schemas/common/PriceInfoDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    BankClientFilter:
+      $ref: ./components/schemas/clients/BankClientFilter.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandBankClientFilter:
+      $ref: ./components/schemas/clients/GetPageCommandBankClientFilter.yaml
+    PageParamsBankClientFilter:
+      $ref: ./components/schemas/clients/PageParamsBankClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageDataBankClientDto:
+      $ref: ./components/schemas/clients/PageDataBankClientDto.yaml
+    CreateCommandDocCopyRequestCreateDto:
+      $ref: ./components/schemas/doc-copy/CreateCommandDocCopyRequestCreateDto.yaml
+    DocCopyRequestCreateDto:
+      $ref: ./components/schemas/doc-copy/DocCopyRequestCreateDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/validate/GenericResponseSimpleErrorDataVoid.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/v2.1/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/v2.1/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/v2.1/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/v2.1/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignV2x1Dto.yaml
+    SignCommand:
+      $ref: ./components/schemas/sign/SignCommand.yaml
+    DocCopyMethodFilterValueDto:
+      $ref: ./components/schemas/common/DocCopyMethodFilterValueDto.yaml
+    DocCopyRequestClientFilter:
+      $ref: ./components/schemas/common/DocCopyRequestClientFilter.yaml
+    DocCopyTypeCodeFilterValueDto:
+      $ref: ./components/schemas/common/DocCopyTypeCodeFilterValueDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandDocCopyRequestClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandDocCopyRequestClientFilter.yaml
+    PageParamsDocCopyRequestClientFilter:
+      $ref: ./components/schemas/common/PageParamsDocCopyRequestClientFilter.yaml
+    DocCopyContractScrollerDto:
+      $ref: ./components/schemas/get-page/DocCopyContractScrollerDto.yaml
+    DocCopyPaymentScrollerDto:
+      $ref: ./components/schemas/get-page/DocCopyPaymentScrollerDto.yaml
+    DocCopyRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/DocCopyRequestClientScrollerDto.yaml
+    PageDataDocCopyRequestClientScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataDocCopyRequestClientScrollerDto.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/generate-digest/GenericResponseSimpleErrorDataDigest.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    DocCopyAccountingEntryFilterDto:
+      $ref: ./components/schemas/accounting/DocCopyAccountingEntryFilterDto.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/accounting/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/accounting/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/accounting/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/accounting/FilterValueDtoLong.yaml
+    GetPageCommandDocCopyAccountingEntryFilterDto:
+      $ref: ./components/schemas/accounting/GetPageCommandDocCopyAccountingEntryFilterDto.yaml
+    PageParamsDocCopyAccountingEntryFilterDto:
+      $ref: ./components/schemas/accounting/PageParamsDocCopyAccountingEntryFilterDto.yaml
+    DocCopyShortAccountingEntryDto:
+      $ref: ./components/schemas/accounting/DocCopyShortAccountingEntryDto.yaml
+    GenericResponseSimpleErrorDataListDocCopyShortAccountingEntryDto:
+      $ref: ./components/schemas/accounting/GenericResponseSimpleErrorDataListDocCopyShortAccountingEntryDto.yaml
+    GenericCommandTariffDto:
+      $ref: ./components/schemas/v2/GenericCommandTariffDto.yaml
+    TariffDto:
+      $ref: ./components/schemas/v2/TariffDto.yaml
+    GenericResponseSimpleErrorDataTariffInfoDto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataTariffInfoDto.yaml
+    TariffInfoDto:
+      $ref: ./components/schemas/common/TariffInfoDto.yaml
+    DocCopyCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/DocCopyCommissionAccountsClientFilter.yaml
+    GetPageCommandDocCopyCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/GetPageCommandDocCopyCommissionAccountsClientFilter.yaml
+    PageParamsDocCopyCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/PageParamsDocCopyCommissionAccountsClientFilter.yaml
+    AccountCommissionDto:
+      $ref: ./components/schemas/v2/AccountCommissionDto.yaml
+    PageDataAccountCommissionDto:
+      $ref: ./components/schemas/v2/PageDataAccountCommissionDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/download-file/AttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/download-file/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataListSimpleAccountDto:
+      $ref: ./components/schemas/accounts/GenericResponseSimpleErrorDataListSimpleAccountDto.yaml
+    SimpleAccountDto:
+      $ref: ./components/schemas/accounts/SimpleAccountDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataListString.yaml
+    AccountDto:
+      $ref: ./components/schemas/{bankClientId}/AccountDto.yaml
+    DocumentDto:
+      $ref: ./components/schemas/common/DocumentDto.yaml
+    GenericResponseSimpleErrorDataListAccountDto:
+      $ref: ./components/schemas/{bankClientId}/GenericResponseSimpleErrorDataListAccountDto.yaml
+    AccountDtoV2:
+      $ref: ./components/schemas/v2/AccountDtoV2.yaml
+    ClientAccountsDtoV2:
+      $ref: ./components/schemas/v2/ClientAccountsDtoV2.yaml
+    GenericResponseSimpleErrorDataClientAccountsDtoV2:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataClientAccountsDtoV2.yaml

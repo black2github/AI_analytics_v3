@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    type: string
+    description: Наименование шаблона
+  usedAt:
+    type: string
+    description: Дата использования шаблона
+    format: date-time
+  payerAccountId:
+    type: string
+    description: Идентификатор счета плательщика
+    format: uuid
+  payerAccountNumber:
+    type: string
+    description: Счет плательщика
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма платежа с учетом НДС
+  recipientName:
+    type: string
+    description: Наименование получателя
+  accountExists:
+    type: boolean
+    description: Признак доступности счета
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Дто скроллера шаблонов платежного поручения

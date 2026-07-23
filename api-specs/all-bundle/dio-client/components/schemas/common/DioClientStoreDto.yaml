@@ -1,0 +1,42 @@
+required:
+- sourceSystemInfo
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  client:
+    $ref: ./DioClientStoreClientDto.yaml
+  isCorrect:
+    type: boolean
+    description: Признак корректировки
+  comment:
+    type: string
+    description: Коментарий
+  operations:
+    type: array
+    description: Информация о валютных операциях
+    items:
+      $ref: ./DioClientStoreCurrencyOperationDto.yaml
+  attachments:
+    type: array
+    description: Набор идентификаторов вложений
+    items:
+      $ref: ./DioClientStoreAttachmentDto.yaml
+  sourceSystemInfo:
+    $ref: ./DioClientSourceSystemInfoUpdDto.yaml
+description: Транспортное описание ДИО на сохранение / обновление

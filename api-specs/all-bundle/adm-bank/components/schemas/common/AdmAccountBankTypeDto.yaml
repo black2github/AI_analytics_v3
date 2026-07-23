@@ -1,0 +1,6 @@
+type: string
+description: Банк зачисления выручки
+enum:
+- GPB
+- OTHER
+- GPB_AND_OTHER

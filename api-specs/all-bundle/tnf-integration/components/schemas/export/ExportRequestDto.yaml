@@ -1,0 +1,23 @@
+type: object
+description: Запрос на экспорт журнала сообщений ТНФ
+properties:
+  format:
+    type: string
+    description: Тип экспорта сообщений
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  ids:
+    type: array
+    description: Идентификаторы записей в Журнале
+    items:
+      type: string
+      format: uuid
+required:
+- format
+- ids

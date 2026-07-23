@@ -1,0 +1,18 @@
+type: object
+description: Эмуляции ошибок на запрос тарифов по счетам
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  f1AccountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета списания комиссии в Ф1
+  source:
+    type: string
+    description: Тип заявки
+  responseJson:
+    type: string
+    description: Сырой JSON ответ

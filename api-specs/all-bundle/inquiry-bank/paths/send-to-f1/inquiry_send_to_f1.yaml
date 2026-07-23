@@ -1,0 +1,70 @@
+post:
+  tags:
+  - API операций заявок на справку. Банковская часть.
+  summary: Повтор выгрузки в Ф1
+  description: 'Привилегии: INQUIRY.BANK.RESEND_TO_ABS,INQUIRY_REQUEST.RESEND_TO_ABS'
+  operationId: sendToF1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandUUID.yaml
+        example: null
+    required: true
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+          example: null
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataInquiryRequestBankApiResponseDto.yaml
+          example: null
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+          example: null

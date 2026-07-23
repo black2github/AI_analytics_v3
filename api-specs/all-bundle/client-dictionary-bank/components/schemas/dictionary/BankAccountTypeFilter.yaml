@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./AccountType.yaml
+  notEq:
+    $ref: ./AccountType.yaml
+  in:
+    type: array
+    items:
+      $ref: ./AccountType.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./AccountType.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./AccountType.yaml
+  ge:
+    $ref: ./AccountType.yaml
+  lt:
+    $ref: ./AccountType.yaml
+  le:
+    $ref: ./AccountType.yaml
+description: Тип счета. (in)

@@ -1,0 +1,8 @@
+type: object
+properties:
+  status:
+    type: string
+    enum:
+    - ACTUAL
+    - OUTDATED
+description: Данные

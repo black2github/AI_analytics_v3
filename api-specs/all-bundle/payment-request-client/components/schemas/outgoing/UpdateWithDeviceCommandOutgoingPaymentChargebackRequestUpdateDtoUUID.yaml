@@ -1,0 +1,15 @@
+required:
+- data
+- id
+- userDeviceInfo
+type: object
+properties:
+  data:
+    $ref: ./OutgoingPaymentChargebackRequestUpdateDto.yaml
+  id:
+    type: string
+    description: Идентификтор документа
+    format: uuid
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда обновления

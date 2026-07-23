@@ -1,0 +1,39 @@
+type: object
+description: Запрос смены статуса заявки на регистрацию QR-кода для B2B
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+    - SBP_B2B_REGISTRATION_REQUEST
+    - SBP_B2B_REGISTRATION_ERROR
+    - SBP_B2B_REGISTERED
+    - QR_CREATED
+    - REJECTED
+    - EXECUTED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id
+- nextStatus

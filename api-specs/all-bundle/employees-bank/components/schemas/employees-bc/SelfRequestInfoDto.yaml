@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: integer
+    format: int32
+  date:
+    type: string
+    format: date-time
+  commentForClient:
+    type: string
+  type:
+    type: string
+description: Краткое описание списка заявок на создание нового или обновление текущего

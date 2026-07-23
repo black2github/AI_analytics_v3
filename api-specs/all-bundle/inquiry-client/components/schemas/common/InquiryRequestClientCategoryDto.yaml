@@ -1,0 +1,11 @@
+type: string
+description: Категории заявки на запрос справок для ЮЛ. Клиентская часть
+example: null
+enum:
+- ALL
+- FOR_SIGN_AND_SEND
+- ACCEPTED_FOR_PROCESSING
+- REJECTED
+- EXECUTED
+- DIGITAL
+- OFFICE

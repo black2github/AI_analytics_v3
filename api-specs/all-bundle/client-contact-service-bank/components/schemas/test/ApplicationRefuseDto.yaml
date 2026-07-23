@@ -1,0 +1,10 @@
+type: object
+properties:
+  applicationId:
+    type: string
+    format: uuid
+  nskId:
+    type: string
+    format: uuid
+  applicationStatus:
+    type: string

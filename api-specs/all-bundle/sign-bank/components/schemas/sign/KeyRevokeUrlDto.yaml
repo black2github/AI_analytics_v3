@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  revokeUrl:
+    type: string
+    description: URL-адрес списка отзывов
+description: URL-адрес из списка отзывов ключей УЦ.

@@ -1,0 +1,70 @@
+type: object
+description: Фильтр скроллера обобщенной заявки клиентов сервиса СБП
+properties:
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка"
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН Клиента
+  clientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Краткое наименование клиента
+  status:
+    $ref: ./SbpCommonRequestStatusFilterDto.yaml
+    description: Текущий статус заявки
+  type:
+    $ref: ./SbpRequestTypeFilterDto.yaml
+    description: Тип заявки
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Номер заявки
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата заявки
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Торговое название ТСП
+  merchantAddress:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Адрес ТСП
+  account:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Счет зачисления
+  subscriptionPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Цель подписки
+  qrcId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор QR кода
+  paymentPurpose:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Назначение платежа
+  payer:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Плательщик
+  clientRequest:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Признак создания клиентом, eq
+  b2bRequest:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: Признак B2B, eq
+  clientKpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  b2bOnboarding:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  drAccountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  resident:
+    $ref: ../common/FilterValueDtoBoolean.yaml

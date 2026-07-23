@@ -1,0 +1,15 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО
+  phone:
+    type: string
+    description: Мобильный телефон
+  clientData:
+    type: string
+    description: Название организации или ИНН
+  email:
+    type: string
+    description: Адрес электронной почты
+description: Создание заявки на хранение архивных документов. Входное ДТО

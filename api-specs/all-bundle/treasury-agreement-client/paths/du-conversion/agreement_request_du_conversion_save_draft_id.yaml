@@ -1,0 +1,66 @@
+put:
+  tags:
+  - Клиентский АPI работы с вложениями
+  - Заявка на заключение генерального соглашения
+  - Заявка на заключение генерального соглашения ДУ
+  - API печатных форм заявок на соглашения
+  - Заявка на заключение генерального соглашения ДУ Депозит
+  - Заявка на заключение генерального соглашения - ДУ Конверсия (клиент)
+  summary: Сохранение черновика
+  operationId: saveDraft_6
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/du-conversion/GenericCommandAgreementRequestDUConversionDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/du-conversion/CreateResponseAgreementRequestDUConversionDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API принятия конституции клиентом банка.
+  summary: Проверка полномочий представителя ЕСК, true - есть полномочия, false - полномочий нет или клиент не найден
+  description: 'Привилегии: CONSTITUTION_ACCEPTANCE.CREATE'
+  operationId: reprAuthCheckUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: cmd
+    description: cmd
+    required: true
+    schema:
+      $ref: '#/definitions/SingleCommand«uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,10 @@
+type: object
+properties:
+  branchCode:
+    type: string
+  code:
+    type: string
+  department:
+    $ref: ./AtmBankDepartmentDto.yaml
+  fullName:
+    type: string

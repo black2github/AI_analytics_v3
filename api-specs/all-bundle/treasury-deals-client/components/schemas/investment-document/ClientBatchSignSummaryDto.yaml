@@ -1,0 +1,26 @@
+type: object
+properties:
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  clientWebDealingId:
+    type: string
+    description: Идентификатор клиента в Веб-Диллинг
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента в ECO
+    format: uuid
+  docsToBeSign:
+    type: array
+    description: ' Документы с доступными инструментами подписи'
+    items:
+      $ref: ./DocSigningOptionsDto.yaml
+  docsToSignCount:
+    type: integer
+    description: Количество документов, для которых возможна подпись
+    format: int32
+description: Количество подписываемых документов по клиентам

@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Id пользователя
+    format: uuid
+  fio:
+    type: string
+    description: ФИО пользователя
+description: Транспортное представление пользователя

@@ -1,0 +1,42 @@
+type: object
+description: Данные из ЭС cbdc.777.001.04.OpTransferToDCASenderNotification_2024.03 "Извещение Клиента - отправителя о переводе ЦР Оператором"
+properties:
+  totalAmount:
+    type: number
+    description: Общая сумма операции
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции
+  recipientWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента-получателя на ПлЦР
+  recipientFullName:
+    $ref: ./FullName.yaml
+    description: ФИО ФЛ
+  recipientLegalEntityName:
+    type: string
+    description: Наименование ЮЛ-получателя
+  senderWalletId:
+    type: string
+    description: Идентификатор СЦР Клиента-ЮЛ-отправителя на ПлЦР
+  senderBalanceInfo:
+    $ref: ./BalanceInfo.yaml
+    description: Текущий баланс СЦР на ПлЦР
+  purpose:
+    type: string
+    description: Назначение платежа
+  settlementDateTime:
+    type: string
+    description: Дата и время исполнения распоряжения
+  operationInfoKv:
+    type: array
+    description: Дополнительные данные от ПлЦР
+    items:
+      $ref: ./OperationInfoKv.yaml
+required:
+- recipientWalletId
+- senderBalanceInfo
+- senderWalletId
+- settlementDateTime
+- totalAmount
+- totalAmountCcy

@@ -1,0 +1,21 @@
+type: object
+properties:
+  sourceSystem:
+    type: string
+    description: Система создания документа
+  creationType:
+    type: string
+    description: Способ создания документа
+  srcDocumentId:
+    type: string
+    description: Идентификатор документа на основе которого создан документ
+    format: uuid
+  srcMessageId:
+    type: string
+    description: Идентификатор сообщения на основе которого создан документ
+    format: uuid
+  srcSkvoDocId:
+    type: string
+    description: Идентификатор документа в СКВО
+    format: uuid
+description: Информация о создании документа

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API feature toggle
+  summary: Сохранить фича-флаги
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'')'
+  operationId: saveUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: content
+    description: content
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,Void»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

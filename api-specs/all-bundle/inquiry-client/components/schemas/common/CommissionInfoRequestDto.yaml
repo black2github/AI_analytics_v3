@@ -1,0 +1,14 @@
+type: object
+properties:
+  accountNumberWriting:
+    type: string
+    description: Номер счета для списания комиссии
+    example: null
+  departmentCode:
+    maxLength: 255
+    pattern: ^[0-9\s\/]+$
+    type: string
+    description: Подразделения счета списания комиссии
+    example: null
+description: Сведения о комиссии
+example: null

@@ -1,0 +1,34 @@
+required:
+- manual
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность Клиент Банка
+    format: uuid
+  comment:
+    type: string
+    description: Комментарий
+  manual:
+    type: boolean
+    description: Комментарий создан вручную
+  authorId:
+    type: string
+    description: Пользователь Банка, добавивший комментарий
+    format: uuid
+  originService:
+    type: string
+    description: Сервис экосистемы источник комментария
+  functionality:
+    type: string
+    enum:
+    - UNSTICK_USER
+    - USER_EDIT
+    - DELETE_CIRCULATION_AGENT
+    - CLIENT_OFFICIAL_EDIT
+    - ABAC_ACCESS_RULE
+    - USER_ROLES
+    - TOGGLE_BLOCK_USER
+    - MASS_TOGGLE_BLOCK_USER
+    - CHANGING_INTERFACE
+description: Комментарий к внешнему пользователю - клиенту банка

@@ -1,0 +1,13 @@
+type: object
+properties:
+  eventStatus:
+    type: string
+    enum:
+    - NEW
+    - VIOLATED
+    - DENIED
+  clientId:
+    type: array
+    items:
+      type: string
+      format: uuid

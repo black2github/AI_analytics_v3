@@ -1,0 +1,23 @@
+type: object
+description: Информация об агенте ТСП из АС СБП
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  guid:
+    type: string
+    description: GUID, идентификатор BSS
+  docType:
+    type: string
+    description: Тип документа
+  transactionId:
+    type: string
+    description: Идентификатор нефинансовой операции
+  ext_agents:
+    type: array
+    items:
+      $ref: ./AgentTspResponseDataDto.yaml
+    description: Полученные данные по агентам от АС СБП, обязательное, если код ответа - 000

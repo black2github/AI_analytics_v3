@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор вопроса.
+    format: uuid
+  question:
+    type: string
+    description: Суть вопроса.
+  order:
+    type: integer
+    description: Порядковый номер вопроса в группе.
+    format: int32
+  answer:
+    type: boolean
+    description: Ответ.
+description: Вопрос опросника.

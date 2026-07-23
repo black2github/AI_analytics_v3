@@ -1,0 +1,12 @@
+type: object
+properties:
+  alias:
+    type: string
+    description: Псевдоним
+  externalKeyId:
+    type: string
+    description: Идентификатор ключа
+  checkCrlRelevance:
+    type: boolean
+    description: Проверять актуальность CRL
+description: DTO для редактирования записи справочника ключей УЦ

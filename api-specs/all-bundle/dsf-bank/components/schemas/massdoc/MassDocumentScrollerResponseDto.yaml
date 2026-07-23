@@ -1,0 +1,79 @@
+type: object
+description: Массовая рассылка. Возвращаемое ДТО для скроллера.
+properties:
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./MassDocumentAttachmentDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+    description: Информация о подразделении.
+  certificateInfo:
+    $ref: ../common/CertificateInfoDto.yaml
+    description: Информация о сертификате.
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания заявки.
+  date:
+    type: string
+    format: date
+    description: Дата создания заявки.
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор массовой рассылки.
+  number:
+    type: integer
+    format: int32
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+  numberOfReceivers:
+    type: integer
+    format: int32
+    description: Количество получателей.
+  receivedAt:
+    type: string
+    format: date-time
+    description: Дата и время завершения отправки массовой рассылки.
+  receiverProcessingState:
+    type: string
+    description: Статус добавления получателей.
+    enum:
+    - EMPTY
+    - PROCESSING
+    - READY
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - PAUSE
+    - REJECTED
+    - DETAILS_VALID
+    - TO_SEND
+    - IN_PROCESS
+    - DELETED
+    - SENT
+    - SENT_PART
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_REQUIRED_OR_NOT
+    - SIGN_CHECK_VALID_OR_DENIED
+    - SIGN_CHECK_VALID
+    - DRAFT_OR_NEW
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления заявки.
+  version:
+    type: integer
+    format: int32
+    description: Текущая версия документа в банк.

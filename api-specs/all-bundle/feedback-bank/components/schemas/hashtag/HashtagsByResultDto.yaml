@@ -1,0 +1,8 @@
+type: object
+properties:
+  hashtagGroups:
+    type: array
+    description: Список групп хештегов по оценкам (1-5 звезд)
+    items:
+      $ref: ./HashtagGroupDto.yaml
+description: DTO с хештегами, сгруппированными по оценкам

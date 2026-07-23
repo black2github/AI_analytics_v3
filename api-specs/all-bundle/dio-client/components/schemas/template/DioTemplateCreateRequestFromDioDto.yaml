@@ -1,0 +1,14 @@
+required:
+- dioId
+- templateName
+type: object
+properties:
+  templateName:
+    maxLength: 255
+    type: string
+    description: Наименование шаблона
+  dioId:
+    type: string
+    description: Идентификатор ДИО
+    format: uuid
+description: ДТО создания шаблона из ДИО

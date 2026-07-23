@@ -1,0 +1,40 @@
+required:
+- exportedColumns
+- exportedIds
+- scrollerReportType
+type: object
+properties:
+  scrollerReportType:
+    type: string
+    description: Тип печатного документа
+    enum:
+    - XLSX
+    - DOCX
+    - PDF
+  exportedIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы экспортируемых записей
+    items:
+      type: string
+      description: Идентификаторы экспортируемых записей
+      format: uuid
+  exportedColumns:
+    type: array
+    description: Экспортируемые поля
+    items:
+      type: string
+      description: Экспортируемые поля
+      enum:
+      - CREATED_AT
+      - UPDATED_AT
+      - EXPIRED_AT
+      - SHORT_URL_PARAMS
+      - SERVICE
+      - SHORT_URL_CODE
+      - EMAIL
+      - USER_FIO
+      - PHONE
+      - FULL_URL
+      - STATUS
+description: Запрос на экспорт скроллера инвайтов

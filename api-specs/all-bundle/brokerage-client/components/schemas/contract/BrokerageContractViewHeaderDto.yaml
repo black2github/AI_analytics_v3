@@ -1,0 +1,55 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  number:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  primaryClientId:
+    type: string
+    description: Идентификатор клиента (РНК)
+  fortsClientId:
+    type: string
+    description: Идентификатор клиента срочного рынка
+  clientName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Наименование клиента в договоре
+  shortClientName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Краткое наименование клиента
+  fullClientName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Полное наименование клиента
+  clientCode:
+    type: string
+    description: Наименование кода клиента
+  brief:
+    type: string
+    description: Краткое наименование договора
+  status:
+    type: string
+    description: Статус контракта
+    enum:
+    - OPENED
+    - CLOSED
+  specDepository:
+    type: boolean
+    description: Признак обслуживания в спец.депозитарии
+description: Данные для страницы договора общая часть

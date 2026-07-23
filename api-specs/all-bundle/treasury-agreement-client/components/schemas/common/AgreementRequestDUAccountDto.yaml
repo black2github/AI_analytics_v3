@@ -1,0 +1,27 @@
+type: object
+properties:
+  absId:
+    type: string
+    description: Идентификатор счета в СУВ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  absLongId:
+    type: integer
+    description: Идентификатор счета АБС Ф1
+    format: int64
+  currency:
+    type: string
+    description: Валюта
+  accountNumber:
+    type: string
+    description: Номер счета
+  bankCode:
+    type: string
+    description: Код банка
+  accountNameExtended:
+    type: string
+    description: Название счета
+  duOrganizationName:
+    type: string
+    description: Наименование организации ДУ
+description: Счёт ДУ

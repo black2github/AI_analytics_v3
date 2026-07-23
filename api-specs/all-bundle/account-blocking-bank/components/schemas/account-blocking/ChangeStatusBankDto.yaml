@@ -1,0 +1,24 @@
+required:
+- accountBlockIds
+- informationForBank
+- newStatus
+type: object
+properties:
+  accountBlockIds:
+    type: array
+    description: Блокировки. Список идентификаторов
+    items:
+      type: string
+      description: Блокировки. Список идентификаторов
+      format: uuid
+  newStatus:
+    type: string
+    description: Статус блокировки документа
+    enum:
+    - IMPORT_ERROR
+    - ACTIVE
+    - INACTIVE
+  informationForBank:
+    type: string
+    description: Информация для банка
+description: Запрос функции изменения статуса блокировки по счёту

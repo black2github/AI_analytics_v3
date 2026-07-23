@@ -1,0 +1,31 @@
+required:
+- authorId
+- id
+- settingId
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи истории настройки
+    format: uuid
+  settingId:
+    type: string
+    description: Идентификатор настройки
+    format: uuid
+  userId:
+    type: string
+    description: Какому пользователю предназначена настройка
+    format: uuid
+  authorId:
+    type: string
+    description: Автор изменения настройки
+    format: uuid
+  login:
+    type: string
+    description: Логин автора изменения настройки
+  createdAt:
+    type: string
+    description: Дата внесения изменения
+    format: date-time
+description: История настройки

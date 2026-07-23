@@ -1,0 +1,17 @@
+required:
+- accountAccessMode
+- accounts
+type: object
+properties:
+  accountAccessMode:
+    type: string
+    description: Режим доступа к счетам
+    enum:
+    - ALL_ACCOUNTS
+    - SPECIFIED_ACCOUNTS
+  accounts:
+    type: array
+    description: Список счетов
+    items:
+      $ref: ../common/AccountToSetUpAccessDto.yaml
+description: Данные по счетам УЛ для настройки доступа по счету

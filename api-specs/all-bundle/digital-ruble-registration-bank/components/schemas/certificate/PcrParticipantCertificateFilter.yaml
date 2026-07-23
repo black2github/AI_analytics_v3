@@ -1,0 +1,23 @@
+type: object
+properties:
+  privateKeyStartDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  privateKeyEndDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificateStatus:
+    $ref: ./CertificateStatusFilter.yaml
+  bankClientOfficialId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  pcrParticipantWalletId:
+    $ref: ../common/FilterValueDtoString.yaml
+  cbrParticipantWalletId:
+    $ref: ../common/FilterValueDtoString.yaml
+  certificateType:
+    $ref: ./CertificateTypeFilter.yaml
+description: Фильтр сертификата цифрового рубля

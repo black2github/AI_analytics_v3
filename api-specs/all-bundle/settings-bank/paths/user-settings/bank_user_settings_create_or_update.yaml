@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Банка для управления пользовательскими настройками
+  summary: Создать или обновить
+  description: 'Привилегии: SETTINGS.BANK.USER_SETTINGS_CREATE_OR_UPDATE'
+  operationId: createOrUpdate_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/UserSettingsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml

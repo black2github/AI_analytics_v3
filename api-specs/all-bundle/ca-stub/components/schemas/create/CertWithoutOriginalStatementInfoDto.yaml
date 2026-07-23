@@ -1,0 +1,13 @@
+required:
+- daysAfterRelease
+- serialNumber
+type: object
+properties:
+  serialNumber:
+    type: string
+    description: Серийный номер
+  daysAfterRelease:
+    type: integer
+    description: Количество дней после выпуска сертификата
+    format: int32
+description: Фильтр сертификатов

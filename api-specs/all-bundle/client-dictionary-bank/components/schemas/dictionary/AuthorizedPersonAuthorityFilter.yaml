@@ -1,0 +1,23 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  sourceSystem:
+    $ref: ./FilterValueEnumDtoRemoteSourceDto.yaml
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  agreementId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  expiredAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./FilterValueEnumDtoRequestClassifierDto.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  role:
+    $ref: ./FilterValueEnumDtoRoleTypeDto.yaml
+  product:
+    $ref: ../common/FilterValueEnumDtoProductTypeDto.yaml
+description: Фильтр полномочий УЛ

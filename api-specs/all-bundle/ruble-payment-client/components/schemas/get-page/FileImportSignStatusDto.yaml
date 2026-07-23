@@ -1,0 +1,6 @@
+type: string
+enum:
+- NOT_SIGNED
+- SIGNED_1
+- SIGNED_2
+- SIGNED

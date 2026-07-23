@@ -1,0 +1,23 @@
+type: object
+properties:
+  clientEskGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  obtainMethod:
+    type: string
+    description: Метод получения справки
+    enum:
+    - DIGITAL
+    - OFFICE
+  office:
+    type: string
+    description: Код подразделения
+  commissionAccount:
+    $ref: ./RkoReferenceAvailabilityCommissionAccountDto.yaml
+  referenceKinds:
+    type: array
+    description: Виды справок
+    items:
+      $ref: ./RkoReferenceAvailabilityKindDto.yaml
+description: Запрос возможности получения справки

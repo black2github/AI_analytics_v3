@@ -1,0 +1,49 @@
+type: object
+description: Заявка на регистрацию ЮЛ в системе АС СБП для клиента
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор в БД
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  f1AccountId:
+    type: integer
+    format: int64
+    description: ID счета в Ф1
+  sbpAccountId:
+    type: integer
+    format: int32
+    description: ID счета в СБП
+  accountNumber:
+    type: string
+    description: Номер счета
+  date:
+    type: string
+    format: date-time
+    description: Дата заявки
+  isReturn:
+    type: boolean
+    description: Признак счета для возврата
+  isCommission:
+    type: boolean
+    description: Признак счета для списания комиссии
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - REGISTRATION
+    - ERROR
+    - EXECUTED
+    - DELETED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента

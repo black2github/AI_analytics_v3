@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  firstName:
+    type: string
+  familyName:
+    type: string
+  middleName:
+    type: string
+  type:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL

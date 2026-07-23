@@ -1,0 +1,22 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  employeeInfo:
+    $ref: ../common/WarrantyEmployeeInfoDto.yaml
+  employeeMegaWarranty:
+    $ref: ./WarrantyMegaWarrantyDto.yaml
+  employeeProductWarranty:
+    $ref: ./WarrantyProductWarrantyDto.yaml
+  employeeBankInfoWarranty:
+    $ref: ./WarrantyBankInfoWarrantyDto.yaml
+description: Заявка на добавление нового сотрудника. Доверенность

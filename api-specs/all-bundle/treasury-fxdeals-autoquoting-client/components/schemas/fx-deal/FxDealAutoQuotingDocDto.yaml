@@ -1,0 +1,393 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docSource:
+    type: string
+    description: Источник документа
+    enum:
+    - ASK
+    - WEB_DEALING
+    - GPB_DEALING
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  dealCanceledDate:
+    type: string
+    description: Дата отмены сделки
+    format: date
+  client:
+    $ref: ./ClientInfoDto.yaml
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента в Веб-Дилинге
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  creator:
+    $ref: ./UserInfoDto.yaml
+  editor:
+    $ref: ./UserInfoDto.yaml
+  dealer:
+    type: string
+    description: Дилер
+  docType:
+    type: string
+    description: Тип документа
+    enum:
+    - REQUEST
+    - CONFIRMATION
+  dealAskId:
+    type: integer
+    description: Идентификатор сделки в АСК
+    format: int64
+  dealNumber:
+    type: string
+    description: Номер сделки
+  dealType:
+    type: string
+    description: Тип сделки
+    enum:
+    - FX
+  dealSubType:
+    type: string
+    description: Тип заявки
+    enum:
+    - INDIVIDUAL
+    - COMMON
+  generalAgreement:
+    $ref: ./DealDocGeneralAgreementDto.yaml
+  generalAgreementIsFixed:
+    type: boolean
+    description: Генеральное соглашение фиксировано
+  instrument:
+    $ref: ./DealDocFxInstrumentDto.yaml
+  currencyPair:
+    type: string
+    description: Валютная пара
+  direction:
+    type: string
+    description: Направление сделки
+    enum:
+    - BUY
+    - SELL
+  rate:
+    type: string
+    description: Ставка
+  ratePrecision:
+    type: integer
+    description: Точность отображения ставки, количество значащих цифр после запятой
+    format: int32
+  currencySell:
+    type: string
+    description: Валюта продажи
+  amountSell:
+    type: string
+    description: Сумма продажи
+  dealTerminateDate:
+    type: string
+    description: Дата завершения сделки
+    format: date
+  accountSell:
+    $ref: ./DealDocAccountDto.yaml
+  amountSellFact:
+    type: string
+    description: Фактическая сумма продажи
+  currencyBuy:
+    type: string
+    description: Валюта покупки
+  amountBuy:
+    type: string
+    description: Сумма покупки
+  amountBuyFact:
+    type: string
+    description: Фактическая сумма покупки
+  isBaseCurr:
+    type: boolean
+    description: Признак базовой валюты объема заявки
+  accountBuy:
+    $ref: ./DealDocAccountBuyDto.yaml
+  accountSupply:
+    $ref: ./DealDocAccountSupplyDto.yaml
+  docBankPreConfirmation:
+    type: boolean
+    description: Сделка предварительно подтверждена банком.
+  docUpdatedFromBank:
+    type: boolean
+    description: Сделка была изменена банком
+  docUpdatedFromBankAt:
+    type: string
+    description: Дата и время изменения сделки банком
+    format: date-time
+  clientPay:
+    type: boolean
+    description: Платеж Клиента получен банком
+  bankPay:
+    type: boolean
+    description: Банк перечислил ден. средства по сделке
+  receivedAt:
+    type: string
+    description: Дата и время получения заявки
+    format: date-time
+  signCheckAt:
+    type: string
+    description: Дата и время проверки подписи
+    format: date-time
+  docStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_QUOTED
+    - DRAFT_OR_NEW
+    - DRAFT_OR_NEW_OR_BLOCK
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - SIGNED
+    - BLOCKED_FROM_BANK
+    - DELIVERED
+    - CANCELED_FROM_BANK
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - RECEIVED
+    - DETAILS_INVALID
+    - SENT_TO_ASK_OR_ERROR
+    - SENT_TO_ASK
+    - SENT_TO_ASK_FAIL
+    - SENT_TO_ASK_SUCCESS_OR_CONFIRMED
+    - SENT_TO_ASK_SUCCESS
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - EXECUTED_RECEIVED
+    - EXECUTED_SENT_TO_ASK_OR_ERROR
+    - EXECUTED_SENT_TO_ASK
+    - EXECUTED_SENT_TO_ASK_FAIL
+    - EXECUTED_SENT_TO_ASK_SUCCESS
+    - SENT_TO_PKP_OR_ERROR
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - PKP_PROCESSED
+    - PKP_PROCESSED_CLIENT_CANCEL
+    - SENT_TO_ASK_OR_ERROR_OR_DENIED
+  dealStatus:
+    type: string
+    description: Статус сделки
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - DELIVERED
+    - CANCELED
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_REJECTED
+  dealStatusPrev:
+    type: string
+    description: Предыдущие значение статуса сделки
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - DELIVERED
+    - CANCELED
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_REJECTED
+  dealStatusDetails:
+    type: string
+    description: Детализация статуса сделки
+  valueDateBuy:
+    type: string
+    description: Дата валютирования покупки план
+    format: date
+  valueDateSell:
+    type: string
+    description: Дата валютирования продажи план
+    format: date
+  valueDateFactBuy:
+    type: string
+    description: Дата валютирования покупки факт
+    format: date
+  valueDateFactSell:
+    type: string
+    description: Дата валютирования продажи план
+    format: date
+  dealDateTime:
+    type: string
+    description: Дата и время заключения сделки
+    format: date-time
+  dealDate:
+    type: string
+    description: Дата сделки
+    format: date
+  beginDate:
+    type: string
+    description: Начало действия сделки
+    format: date
+  clientSignature:
+    $ref: ./SignatureDto.yaml
+  clientSignerFio:
+    type: string
+    description: Подписант Клиента
+  bankSignature:
+    $ref: ./SignatureDto.yaml
+  docBankComment:
+    type: string
+    description: Комментарий Банка
+  docErrorText:
+    type: string
+    description: Текст ошибки
+  branch:
+    $ref: ./BranchDto.yaml
+  clientFullNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Полное наименование
+  clientShortNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Краткое наименование
+  managementFund:
+    $ref: ./DealDocManagementFundDto.yaml
+  managementFundIsFixed:
+    type: boolean
+    description: Идентификатор фиксированного фонда ДУ
+  tradingStatus:
+    type: string
+    description: Торговый статус заявки
+    enum:
+    - NONE
+    - PROCESSED
+    - REJECTED
+    - CANCELED
+    - PARTIALLY_EXECUTED
+    - EXECUTED
+  hidden:
+    type: boolean
+    description: Скрытый документ
+  baseTemplateId:
+    type: string
+    description: Идентификатор базового шаблона
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  editVersion:
+    type: integer
+    description: Версия редактирования
+    format: int64
+  baseEditVersion:
+    type: integer
+    description: Версия редактирования базового шаблона
+    format: int64
+  userActions:
+    type: array
+    description: Список пользовательских действий
+    items:
+      $ref: ./FxDealDocUserActionInfoDto.yaml
+  clientSubscribeId:
+    type: string
+    description: Идентификатор подписки Клиента
+  orderPkpId:
+    type: string
+    description: Идентификатор заявки в АС ПКП
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения
+    format: date-time
+  docHiddenInTradingPanel:
+    type: boolean
+    description: Признак скрытия заявки в торговой панели
+  isManualRate:
+    type: boolean
+    description: Признак ручного ввода ставки пользователем
+  docEngineVersion:
+    type: string
+    description: Версия движка документа
+    enum:
+    - V1
+    - V2
+  executionType:
+    type: string
+    description: Тип исполнения сделки
+    enum:
+    - FOK
+    - IOC
+    - ORDER
+    - ORDER_PF
+  index:
+    type: integer
+    description: Индекс
+    format: int32
+  canceledByClient:
+    type: boolean
+    description: Признак отмены ордерной заявки
+  clientCancelAt:
+    type: string
+    description: Время отмены ордерной заявки
+    format: date-time
+  clientCancelUserId:
+    type: string
+    description: ИД пользователя отменившего ордерную заявку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientCancelUserLogin:
+    type: string
+    description: Логин пользователя отменившего ордерную заявку
+  clientCancelUserFio:
+    type: string
+    description: ФИО пользователя отменившего ордерную заявку
+  clientApplicationType:
+    type: string
+    description: 'Тип клиентского приложения: браузер или мобильное'
+    enum:
+    - WEB_APP_ECO
+    - WEB_APP_MSB
+    - WEB_APP_MSB_WDL
+    - MOBILE_APP_MSB
+    - UNDEFINED
+  sortOrder:
+    type: integer
+    description: Порядок сортировки
+    format: int64
+  dealStatusDescription:
+    type: string
+    description: Статус сделки, название
+  docStatusDescription:
+    type: string
+    description: Статус, название
+description: Данные

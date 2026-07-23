@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  bankClientId:
+    type: string
+    description: ID клиента банка
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+description: Представитель Клиента. ДТО

@@ -1,0 +1,32 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер договора ДБС
+  date:
+    type: string
+    description: Дата договора ДБС
+    format: date
+  subdivisionAbsCode:
+    type: string
+    description: Код подразделения в АБС
+  subdivisionInfo:
+    $ref: ./BranchShortDtoV2.yaml
+  rkoId:
+    type: string
+    description: ID договора РКО в АБС
+  accountTypeCode:
+    type: string
+    description: Код типа счета
+    enum:
+    - PAYMENT
+    - EXECUTOR_GOZ
+    - HEAD_EXECUTOR_GOZ
+    - SPECIAL_PURCHASE_ACCOUNT
+  allowOpenAdditionalAccounts:
+    type: boolean
+    description: Признак возможности открывать доп счета
+  commissionAccountRequired:
+    type: boolean
+    description: Необходимо указание счета списания комиссии
+description: Блок с информацией об одном ДБС

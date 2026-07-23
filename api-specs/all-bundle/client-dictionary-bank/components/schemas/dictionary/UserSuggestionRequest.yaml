@@ -1,0 +1,6 @@
+type: object
+properties:
+  fullNameOrUserIdOrLogin:
+    type: string
+    description: Поиск по ФИО ИЛИ ID пользователя ИЛИ логину
+description: Поиск для наполнения фильтра Пользователь

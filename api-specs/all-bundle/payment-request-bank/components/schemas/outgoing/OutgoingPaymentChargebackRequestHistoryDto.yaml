@@ -1,0 +1,23 @@
+type: object
+properties:
+  docId:
+    type: string
+    description: Идентификатор отзыва ПТИ
+    format: uuid
+  docNumber:
+    type: integer
+    description: Номер отзыва ПТИ
+    format: int64
+  docDate:
+    type: string
+    description: Дата отзыва ПТИ
+    format: date
+  bankClientName:
+    type: string
+    description: Краткое или полное наименование клиента Банка
+  historyEntries:
+    type: array
+    description: Записи историй изменений отзыва ПТИ.
+    items:
+      $ref: ./OutgoingPaymentChargebackRequestHistoryEntryDto.yaml
+description: История изменений отзыва ПТИ

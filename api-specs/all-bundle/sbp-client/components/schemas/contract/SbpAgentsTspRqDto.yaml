@@ -1,0 +1,15 @@
+type: object
+description: Запрос списка агентов ТСП
+properties:
+  clientId:
+    type: string
+    format: uuid
+    description: Идентификатор клиента
+  status:
+    type: string
+    description: Статус подключения Агентов ТСП
+    enum:
+    - CONNECTED
+    - AVAILABLE
+required:
+- clientId

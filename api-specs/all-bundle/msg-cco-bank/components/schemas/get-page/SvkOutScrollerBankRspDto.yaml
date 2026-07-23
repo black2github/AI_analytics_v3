@@ -1,0 +1,133 @@
+required:
+- attachments
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор поручения
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docNumber:
+    type: integer
+    description: №
+    format: int64
+  signDate:
+    type: string
+    description: Дата подписания
+    format: date-time
+  createdAt:
+    type: string
+    description: Дата создания документа
+    format: date-time
+  docAcceptedAt:
+    type: string
+    description: Дата и время принятия документа банком
+    format: date-time
+  requestStatus:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - EXPORT_TO_ABS
+    - EXPORTED_TO_ABS
+    - EXPORT_TO_ABS_ERROR
+    - ACCEPTED
+    - COMPLETED
+    - REJECTED
+    - DECLINED
+    - CANCELED_LKUVED
+  bankClientInfo:
+    $ref: ../common/SvkOutBankClientInfoRspDto.yaml
+  branchInfo:
+    $ref: ../common/SvkOutBankBranchInfoRspDto.yaml
+  message:
+    $ref: ../common/SvkOutBankMessageInfoRspDto.yaml
+  attachmentDetails:
+    $ref: ../common/SvkOutBankAttachmentDetailsRspDto.yaml
+  linkedDocumentInfo:
+    $ref: ../common/SvkOutBankLinkedDocumentInfoRspDto.yaml
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  attachments:
+    type: array
+    description: Файловые вложения документа
+    items:
+      $ref: ./SvkOutAttachmentInfoRspDto.yaml
+  signature:
+    $ref: ../common/SvkOutSignatureRspDto.yaml
+  canSign:
+    type: boolean
+    description: Признак возможности подписания документа
+  commentForClient:
+    type: string
+    description: Комментарий к статусу для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к статусу для банка
+  commentDate:
+    type: string
+    description: Дата комментария к статусу
+    format: date-time
+  docSourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docCreationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  sourceSystemInfo:
+    $ref: ./SvkOutSourceSystemInfoRspDto.yaml
+  skvoId:
+    type: string
+    description: Идентификатор СКВО
+    format: uuid
+description: Скроллер документов. Банковская часть

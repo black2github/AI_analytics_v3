@@ -1,0 +1,13 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата и время операции
+    format: date-time
+  fio:
+    type: string
+    description: ФИО Пользователя, который произвел операцию
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+description: Операции статуса

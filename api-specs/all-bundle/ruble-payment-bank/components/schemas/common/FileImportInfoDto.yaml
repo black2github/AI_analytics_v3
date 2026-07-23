@@ -1,0 +1,7 @@
+type: object
+properties:
+  createOrCompleteAt:
+    type: string
+    description: Файл импорта.<Дата и время создания записи> или Сеанс импорта платежных документов.<Дата и время завершения>
+    format: date-time
+description: Дополнительные сведения импорта из файла

@@ -1,0 +1,15 @@
+required:
+- roles
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  roles:
+    uniqueItems: true
+    type: array
+    description: Набор соответствий роль / сегмент
+    items:
+      $ref: ./AssignRoleDto.yaml
+description: Транспортное представление установления связи между пользователем и ролью сегмента

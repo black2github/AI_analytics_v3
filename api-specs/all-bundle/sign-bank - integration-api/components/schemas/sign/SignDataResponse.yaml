@@ -1,0 +1,9 @@
+type: object
+properties:
+  signedData:
+    type: array
+    description: Массив данных для подписи в кодировке base64
+    items:
+      type: string
+      description: Массив данных для подписи в кодировке base64
+description: Ответ результата операции подписи данных.

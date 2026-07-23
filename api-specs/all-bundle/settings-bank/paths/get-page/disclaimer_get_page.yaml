@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ Банка для управления дисклеймерами
+  summary: Получить страницу записей
+  description: 'Привилегии: SETTINGS.BANK.DISCLAIMER_VIEW'
+  operationId: getPage_5
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandDisclaimerFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataDisclaimerDto.yaml

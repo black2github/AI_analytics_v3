@@ -1,0 +1,26 @@
+type: object
+properties:
+  dateOperation:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  creditDebit:
+    $ref: ./FilterValueEnumDtoActivityFeedClientFilterCreditDebit.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ./FilterValueDtoUUID.yaml
+  typeCode:
+    $ref: ./FilterValueEnumDtoActivityFeedClientFilterTypeCode.yaml
+  operationStatus:
+    $ref: ./FilterValueEnumDtoActivityFeedClientFilterOperationStatus.yaml
+  recipientInn:
+    $ref: ./FilterValueDtoString.yaml
+  category:
+    $ref: ./FilterValueEnumDtoActivityFeedClientFilterOperationCategory.yaml
+  currency:
+    $ref: ./FilterValueDtoString.yaml
+  amount:
+    $ref: ./FilterValueDtoString.yaml
+  textQuery:
+    type: string
+    description: Фильтр по "Номер документа, назначение, контрагент, ИНН" (содержится в строке)
+description: Фильтр скроллеров ленты операции

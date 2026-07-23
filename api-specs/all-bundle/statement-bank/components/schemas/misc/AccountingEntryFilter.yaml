@@ -1,0 +1,26 @@
+type: object
+properties:
+  textSearch:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  documentNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  documentDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  entryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  entryType:
+    $ref: ./FilterValueDtoStatementOperationDto.yaml
+  counterparty:
+    $ref: ./FilterValueDtoSubject.yaml
+  counterpartyAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  deleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  modifiedAccountingEntry:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  f1AccountId:
+    $ref: ../common/FilterValueDtoLong.yaml

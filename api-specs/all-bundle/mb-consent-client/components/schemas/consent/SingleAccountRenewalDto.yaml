@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета (суррогатный)
+  resultCode:
+    type: integer
+    description: Код результата (0 - неудача при обновлении, 1 - успех)
+    format: int32

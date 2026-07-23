@@ -1,0 +1,9 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Транспортное представление запроса получения следующего номера документа

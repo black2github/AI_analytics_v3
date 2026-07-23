@@ -1,0 +1,240 @@
+get:
+  tags:
+  - Authorization
+  summary: authorizeGet
+  operationId: authorizeGet
+  parameters:
+  - name: client_id
+    in: query
+    description: Client ID
+    required: true
+    schema:
+      type: string
+  - name: response_type
+    in: query
+    description: Response type
+    required: true
+    schema:
+      type: string
+  - name: response_mode
+    in: query
+    description: Response mode
+    required: false
+    schema:
+      type: string
+  - name: scope
+    in: query
+    description: Application scope
+    required: false
+    schema:
+      type: string
+  - name: state
+    in: query
+    description: State
+    required: false
+    schema:
+      type: string
+  - name: nonce
+    in: query
+    description: Nonce
+    required: false
+    schema:
+      type: string
+  - name: redirect_uri
+    in: query
+    description: Redirect URI
+    required: false
+    schema:
+      type: string
+  - name: from_uri
+    in: query
+    description: Request URI
+    required: false
+    schema:
+      type: string
+  - name: login_uri
+    in: query
+    description: Login URI
+    required: false
+    schema:
+      type: string
+  - name: code_challenge
+    in: query
+    description: Code challenge
+    required: false
+    schema:
+      type: string
+  - name: code_challenge_method
+    in: query
+    description: Code challenge method
+    required: false
+    schema:
+      type: string
+  - name: request
+    in: query
+    description: Authorization request JWT
+    required: false
+    schema:
+      type: string
+  responses:
+    '400':
+      description: Authentication needed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/OAuth2Error.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '301':
+      description: Redirect to redirect_uri
+      content:
+        application/json:
+          schema:
+            type: object
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    default:
+      description: Redirect to redirect_uri
+      content:
+        application/json:
+          schema:
+            type: object
+post:
+  tags:
+  - Authorization
+  summary: authorizePost
+  operationId: authorizePost
+  requestBody:
+    content:
+      application/x-www-form-urlencoded:
+        schema:
+          required:
+          - client_id
+          - response_type
+          type: object
+          properties:
+            client_id:
+              type: string
+              description: Client ID
+            response_type:
+              type: string
+              description: Response type
+            response_mode:
+              type: string
+              description: Response mode
+            scope:
+              type: string
+              description: Application scope
+            state:
+              type: string
+              description: State
+            nonce:
+              type: string
+              description: Nonce
+            redirect_uri:
+              type: string
+              description: Redirect URI
+            from_uri:
+              type: string
+              description: Request URI
+            login_uri:
+              type: string
+              description: Login URI
+            code_challenge:
+              type: string
+              description: Code challenge
+            code_challenge_method:
+              type: string
+              description: Code challenge method
+            request:
+              type: string
+              description: Authorization request JWT
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/OAuth2Error.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

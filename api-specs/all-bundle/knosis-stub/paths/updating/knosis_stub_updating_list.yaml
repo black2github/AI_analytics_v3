@@ -1,0 +1,13 @@
+get:
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../../components/schemas/updating/KnosisEntity.yaml
+  summary: List
+  tags:
+  - Knosis Update Controller

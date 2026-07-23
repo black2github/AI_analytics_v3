@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: История заявки на отзыв сертификата

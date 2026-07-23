@@ -1,0 +1,118 @@
+post:
+  description: 'Привилегии: BULK_ATTACH_CERT.CREATE'
+  operationId: createDeputy
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/deputy/CreateCommandBulkAttachmentCertificateDeputyDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+      description: OK
+    '201':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/CreateResponseBulkAttachmentCertificateResponseDto.yaml
+      description: Created
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Создать Сертификат автоприкрепления заместителя
+  tags:
+  - API сертификатов автоприкрепления. Базовые операции.
+put:
+  description: 'Привилегии: BULK_ATTACH_CERT.EDIT'
+  operationId: updateDeputy
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/deputy/UpdateCommandBulkAttachmentCertificateDeputyDtoUUID.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseBulkAttachmentCertificateResponseDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Обновление Сертификат автоприкрепления заместителя
+  tags:
+  - API сертификатов автоприкрепления. Базовые операции.

@@ -1,0 +1,43 @@
+required:
+- externalId
+- forceFl
+- priority
+- subject
+- text
+type: object
+properties:
+  externalId:
+    type: string
+    description: Уникальный ИД сообщения
+  priority:
+    type: string
+    description: Приоритет сообщения
+    enum:
+    - '0'
+    - '2'
+    - '3'
+    - '1'
+  subject:
+    type: string
+    description: Тема сообщения
+  text:
+    type: string
+    description: Тест сообщения
+  typeCode:
+    type: string
+    description: Канал отправки сообщения
+    enum:
+    - sms
+    - email
+  forceFl:
+    type: string
+    description: Признак форсированной доставки
+    enum:
+    - Y
+    - N
+  address:
+    type: string
+    description: Телефон получателя
+  params:
+    $ref: ./DssParamsDto.yaml
+description: Данные запроса

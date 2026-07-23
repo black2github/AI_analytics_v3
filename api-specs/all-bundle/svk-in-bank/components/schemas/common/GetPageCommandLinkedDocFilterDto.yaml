@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsLinkedDocFilterDto.yaml
+description: Запрос страницы

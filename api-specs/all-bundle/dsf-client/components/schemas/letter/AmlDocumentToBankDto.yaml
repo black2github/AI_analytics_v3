@@ -1,0 +1,45 @@
+type: object
+properties:
+  amlAttachments:
+    type: array
+    description: Дополнительные AML-поля вложений письма в банк.
+    items:
+      $ref: ./AmlAttachmentToBankDto.yaml
+  clientDeadlineAt:
+    type: string
+    description: Срок предоставления ответа от клиента.
+    format: date-time
+  clientDelayReason:
+    type: string
+    description: Причина необходимости отсрочки.
+  clientDelayRequired:
+    type: boolean
+    description: Требуется отсрочка предоставления документов.
+  clientMissingDocActivityDetailsComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Пояснения по деятельности/операции'
+  clientMissingDocActivityInfoComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы компании по деятельности'
+  clientMissingDocFinPositionComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения о финансовом положении. Налоговая отчетность (декларации)'
+  clientMissingDocMaterialResInfoComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения о материально-ресурсной базе компании'
+  clientMissingDocMetalCollectComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения по компаниям ломозаготовителям'
+  clientMissingDocStaffInfoComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения о штате/сотрудниках компании'
+  clientMissingDocTransElectronicServComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения по транзакциям, проводимым через электронные сервисы (СБП, эквайринг)'
+  clientMissingDocTransactionsInfoComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Документы и сведения по операциям с контрагентами'
+  clientMissingOtherDocumentsComment:
+    type: string
+    description: Комментарий по отсутствующему документу 'Иные документы'
+description: ДТО на заполнение дополнительных AML-полей письма в банк

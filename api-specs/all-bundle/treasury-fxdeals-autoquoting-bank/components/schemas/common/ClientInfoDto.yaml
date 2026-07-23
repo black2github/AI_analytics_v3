@@ -1,0 +1,21 @@
+type: object
+properties:
+  innKio:
+    type: string
+    description: ИНН или КИО
+  kpp:
+    type: string
+    description: КПП
+  ogrn:
+    type: string
+    description: ОГРН
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  absF1Id:
+    type: string
+    description: РНК клиента в РКО Ф1 (ABS_ID)
+description: Клиент

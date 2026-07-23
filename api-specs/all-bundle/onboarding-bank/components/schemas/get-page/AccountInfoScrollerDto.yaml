@@ -1,0 +1,9 @@
+type: object
+properties:
+  isBsc:
+    type: boolean
+    description: Признак счета "В целях исполнения договора с условиями банковского сопровождения"
+  isGazpromContractor:
+    type: boolean
+    description: Признак счета "В целях исполнения обязательств по договорам Группы Газпром"
+description: Сведения об открываемых счетах и тарифном плане на скроллере

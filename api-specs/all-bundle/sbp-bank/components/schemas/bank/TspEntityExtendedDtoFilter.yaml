@@ -1,0 +1,39 @@
+type: object
+description: Расширенный фильтр для запроса списка ТСП
+properties:
+  regDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата регистрации (ge, le)
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификаторы ТСП в АС СБП
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП
+  contactPhoneNumber:
+    $ref: ./FilterValueDtoString.yaml
+    description: Контактный номер телефона ТСП (contains)
+  isReturnPermitted:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Возможен возврат платежа
+  salesMode:
+    $ref: ./FilterValueDtoString.yaml
+    description: Способ приема оплаты ТСП (eq)
+  url:
+    $ref: ./FilterValueDtoString.yaml
+    description: Веб-сайт ТСП (contains)
+  merchantStatus:
+    $ref: ./FilterValueDtoString.yaml
+    description: Текущий статус ТСП (eq)
+  updateStatusDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата последнего изменения статуса ТСП(ge, le)
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка" (eq)
+  ogrn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ОГРН (eq)

@@ -1,0 +1,11 @@
+type: object
+properties:
+  svk2Ids:
+    uniqueItems: true
+    type: array
+    description: Список СВК2.id
+    items:
+      type: string
+      description: Список СВК2.id
+      format: uuid
+description: Запрос повторной выгрузки в ТЕССА

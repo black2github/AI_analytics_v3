@@ -1,0 +1,83 @@
+required:
+- archival
+- id
+- name
+- roleIds
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  archival:
+    type: boolean
+    description: Признак архивной записи
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  code:
+    type: string
+    description: Код
+  name:
+    type: string
+    description: Наименование
+  description:
+    type: string
+    description: Описание
+  type:
+    type: string
+    description: Тип шаблона роли
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка (организации)
+    format: uuid
+  displayPriority:
+    type: integer
+    description: Приоритет отображения
+    format: int32
+  creatorId:
+    type: string
+    description: Идентификатор пользователя создавшего запись
+    format: uuid
+  commentary:
+    type: string
+    description: Комментарий
+  roleIds:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов ролей
+    items:
+      type: string
+      description: Список идентификаторов ролей
+      format: uuid
+  dsfTypeCodes:
+    uniqueItems: true
+    type: array
+    description: Типы ДСФ
+    items:
+      type: string
+      description: Типы ДСФ
+  relativeProducts:
+    uniqueItems: true
+    type: array
+    description: Список продуктов, к которым относится документ
+    items:
+      type: string
+      description: Список продуктов, к которым относится документ
+  accountsRequired:
+    type: boolean
+    description: Признак необходимости выбрать счета
+  docSignRequired:
+    type: boolean
+    description: Сотрудник должен быть подписантом
+  dsfAccessRequired:
+    type: boolean
+    description: Необходимо предоставить доступ к ДСФ
+description: Данные шаблона роли

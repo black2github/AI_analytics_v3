@@ -1,0 +1,142 @@
+type: object
+properties:
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./DsfAttachmentDto.yaml
+  bankClientInfo:
+    $ref: ./BankClientInfoDto.yaml
+  branchInfo:
+    $ref: ./BranchInfoDto.yaml
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  createdAt:
+    type: string
+    description: Дата и время создания заявки.
+    format: date-time
+  date:
+    type: string
+    description: Дата создания заявки.
+    format: date
+  executeAfterSigning:
+    type: boolean
+    description: Признак исполнения документа после подписания.
+  fromBankId:
+    type: string
+    description: Ссылка на документ из банка.
+    format: uuid
+  id:
+    type: string
+    description: Идентификатор документа в банк.
+    format: uuid
+  messagePreview:
+    type: string
+    description: Первые 200 символов из тела письма.
+  number:
+    type: integer
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+    format: int32
+  receivedAt:
+    type: string
+    description: Дата и время получения (дата и время отправки в Банк) заявки.
+    format: date-time
+  responsibleBankUserId:
+    type: string
+    description: Идентификатор ответственного операциониста
+    format: uuid
+  sendUserPhoneWhenNotify:
+    type: string
+    description: Номер мобильного телефона пользователя отправителя письма (если выбрано "Уведомить об исполнении по номеру телефона".
+  signCheckAt:
+    type: string
+    description: Дата проверки подписи
+    format: date-time
+  signatures:
+    type: array
+    description: Подписи документа.
+    items:
+      $ref: ./DsfSignatureDto.yaml
+  signedConstitutionNeeded:
+    type: boolean
+    description: Признак необходимости подписанной конституции (Заполняется только на стороне Клиента).
+  signerAuthority:
+    $ref: ./SignerAccountAuthoritySrvRsp.yaml
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - NO_DETACH
+    - DETACH_ERROR
+    - WAIT_PUBLISH
+    - PUBLISH_ERROR
+    - PUBLISH_EXECUTED
+    - WAIT_PROCESSING
+    - WAIT_VERIFICATE
+    - WAIT_BANK_SIGN
+    - BANK_SIGNED
+    - DENIED
+    - EXECUTED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - WAIT_POSTPONED
+    - DRAFT_OR_NEW
+    - WAIT_BANK_SIGN_OR_WAIT_PROCESSING
+    - WAIT_BANK_SIGN_OR_DETACH_ERROR
+    - SIGN_VALID_OR_DENIED
+    - AUTO_EXECUTE_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGNED_OR_SIGNED_1_OR_SIGNED_2
+    - CLIENT_AUTO_DETACH_REQUIRED_OR_NOT
+    - PUBLISH_REQUIRED_OR_NOT
+    - WAIT_FINALIZE_REQUIRED_OR_NOT
+  subject:
+    type: string
+    description: Тема письма.
+  typeBankSignRequired:
+    type: boolean
+    description: Двустороннее подписание.
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeLetterClassifier:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки.
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку.
+    format: uuid
+  version:
+    type: integer
+    description: Текущая версия документа в банк.
+    format: int32
+description: Документ в банк. Возвращаемое ДТО для приложения клиента.

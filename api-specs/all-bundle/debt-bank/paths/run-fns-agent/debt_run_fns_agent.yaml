@@ -1,0 +1,8 @@
+get:
+  tags:
+  - debt-system-controller
+  description: 'Привилегии: hasAuthority(''DEBT.RUN_FNS_AGENT'')'
+  operationId: runAgent
+  responses:
+    '200':
+      description: OK

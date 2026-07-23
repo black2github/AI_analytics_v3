@@ -1,0 +1,38 @@
+post:
+  tags:
+  - API для работы с отчетами
+  summary: Сформировать бесплатный отчет
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.GET_FREE_REPORT'
+  operationId: generateFreeReportUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: Client id
+    required: true
+    type: string
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/GenerateReportRequestDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,ReportResponseDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

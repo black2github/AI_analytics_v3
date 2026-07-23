@@ -1,0 +1,49 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./DigitalRubleRequestTypeClassifierFilter.yaml
+  organization:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./DigitalRubleRequestStatusFilter.yaml
+  statusCategory:
+    $ref: ./StatusCategoryFilter.yaml
+  number:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  pcrParticipantWalletId:
+    $ref: ./FilterValueDtoUUID.yaml
+  cbrParticipantWalletId:
+    $ref: ./FilterValueDtoString.yaml
+  purposeOfPayment:
+    $ref: ./FilterValueDtoString.yaml
+  operationId:
+    $ref: ./FilterValueDtoUUID.yaml
+  organizationName:
+    $ref: ./FilterValueDtoString.yaml
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+  ogrn:
+    $ref: ./FilterValueDtoString.yaml
+  contractorCbrParticipantId:
+    $ref: ./FilterValueDtoString.yaml
+  contractorPam:
+    $ref: ./FilterValueDtoString.yaml
+  contractorName:
+    $ref: ./FilterValueDtoString.yaml
+  contractorCbrWalletId:
+    $ref: ./FilterValueDtoString.yaml
+  contractorAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  organizationNameOrInnOrOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  paymentAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+description: Фильтр для заявок

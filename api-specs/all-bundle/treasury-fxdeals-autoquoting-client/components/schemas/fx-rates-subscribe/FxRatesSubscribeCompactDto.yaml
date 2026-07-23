@@ -1,0 +1,18 @@
+type: object
+properties:
+  clientSubscribeId:
+    type: string
+    description: ID подписки Клиента
+  instrument:
+    type: string
+    description: Инструмент
+  status:
+    type: string
+    description: Статус исполнения
+    enum:
+    - CREATED
+    - ENABLED
+    - DISABLED
+    - REJECTED
+    - CANCELED
+description: Данные

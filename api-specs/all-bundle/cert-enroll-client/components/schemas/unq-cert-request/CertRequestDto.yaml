@@ -1,0 +1,13 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  certRequestData:
+    type: string
+    description: Содержимое файла, сгенерированного криптоплагином
+  cryptoPluginParam:
+    type: string
+    description: Параметры вызова криптоплагина
+description: Данные сгенерированного криптоплагином запроса

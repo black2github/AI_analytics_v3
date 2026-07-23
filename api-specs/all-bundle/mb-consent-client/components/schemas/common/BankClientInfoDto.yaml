@@ -1,0 +1,25 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  inn:
+    type: string
+    description: ИНН организации
+  kpp:
+    type: string
+    description: КПП организации
+  ogrn:
+    type: string
+    description: ОГРН организации
+  rnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+description: Информация об организации

@@ -1,0 +1,10 @@
+type: object
+properties:
+  accountType:
+    type: integer
+    format: int32
+    enum:
+    - 1
+    - 4
+  currency:
+    type: string

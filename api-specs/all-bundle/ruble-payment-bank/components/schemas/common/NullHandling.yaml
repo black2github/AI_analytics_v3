@@ -1,0 +1,5 @@
+type: string
+description: Стратегия сортировки пустых (null) значений
+enum:
+- NULLS_FIRST
+- NULLS_LAST

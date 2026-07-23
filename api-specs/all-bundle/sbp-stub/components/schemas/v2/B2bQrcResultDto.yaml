@@ -1,0 +1,23 @@
+type: object
+required:
+- code
+- message
+description: Ответ на операцию регистрации многоразового QR-кода для B2
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБП
+  traceId:
+    $ref: ./UUID.yaml
+    type: string
+    description: Идентификатор документа
+  data:
+    $ref: ./B2bQrcResultDataDto.yaml
+    type: object
+    description: Полученные данные от СБП, блок обязателен, если code = 000

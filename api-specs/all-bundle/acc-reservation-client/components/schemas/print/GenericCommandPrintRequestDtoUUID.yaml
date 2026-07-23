@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./PrintRequestDtoUUID.yaml
+description: Запрос

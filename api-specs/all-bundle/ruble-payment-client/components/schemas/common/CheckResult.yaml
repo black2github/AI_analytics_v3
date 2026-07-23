@@ -1,0 +1,8 @@
+type: object
+properties:
+  fieldName:
+    type: string
+  result:
+    $ref: ./CheckResultType.yaml
+  message:
+    $ref: ./CheckMessage.yaml

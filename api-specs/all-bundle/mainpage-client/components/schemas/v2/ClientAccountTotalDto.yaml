@@ -1,0 +1,21 @@
+type: object
+properties:
+  currencyCode:
+    type: string
+    description: Код валюты
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  currentBalanceNat:
+    type: number
+    description: Текущий остаток в нац валюте
+  planeBalanceNat:
+    type: number
+    description: Плановый остаток в нац валюте
+  turnoverDebitNat:
+    type: number
+    description: Обороты по дебету в нац валюте
+  turnoverCreditNat:
+    type: number
+    description: Обороты о кредиту в нац валюте
+description: Общие данные по счетам клиента в разрезе валют

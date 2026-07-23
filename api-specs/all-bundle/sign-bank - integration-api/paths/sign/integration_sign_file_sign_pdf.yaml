@@ -1,0 +1,56 @@
+post:
+  tags:
+  - Работа с подписями PDF файлов
+  summary: Подписать PDF документ
+  description: 'Привилегии: INTEGRATION_SIGN_REPORT'
+  operationId: signPdf
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/sign/SignPdfRequestV2.yaml
+    required: true
+  responses:
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign/GenericResponseSimpleErrorDataUUID.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security: []

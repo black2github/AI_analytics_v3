@@ -1,0 +1,49 @@
+required:
+- authEnabled
+- catalogType
+- name
+- systemId
+- trusted
+type: object
+properties:
+  systemId:
+    type: string
+    description: Идентификатор системы
+  issuerToken:
+    type: string
+    description: Идентификатор издателя токена
+  name:
+    type: string
+    description: Наименование
+  description:
+    type: string
+    description: Описание
+  scopes:
+    type: array
+    description: Список скоупов
+    items:
+      $ref: ./ScopeDto.yaml
+  redirectUri:
+    type: array
+    description: Список URI для перенаправления
+    items:
+      type: string
+      description: Список URI для перенаправления
+  catalogType:
+    type: string
+    enum:
+    - ECO
+    - BANK_LDAP
+    - BSS_DBO_320
+    - ETP_GPB
+    - ECO_DEMO
+  changeSecret:
+    type: boolean
+    description: Признак необходимости смены пароля приложения
+  trusted:
+    type: boolean
+    description: Признак доверенного приложения
+  authEnabled:
+    type: boolean
+    description: Признак возможности аутентификации
+description: Запрос создания или изменения приложения OAuth2

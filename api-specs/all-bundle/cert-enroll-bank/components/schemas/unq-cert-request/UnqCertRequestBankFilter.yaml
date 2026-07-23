@@ -1,0 +1,49 @@
+required:
+- statusCategory
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./UnqCertRequestStatusFilter.yaml
+  type:
+    $ref: ./CsrDataFormatFilter.yaml
+  date:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  orgName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  fio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOfficialDstId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestNumberSystem:
+    $ref: ../common/FilterValueDtoLong.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  certPublicKey:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории для скроллера на стороне банка
+    enum:
+    - ALL
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - FINISHED
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  applicationKind:
+    $ref: ../common/FilterValueEnumDtoRequestApplicationKindDto.yaml
+  clientEskGuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestType:
+    $ref: ../common/FilterValueEnumDtoUCRTypeDto.yaml
+description: Фильтр для банковского скроллера

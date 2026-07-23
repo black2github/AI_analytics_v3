@@ -1,0 +1,14 @@
+{
+  "_comment": "Auto domain map for treasury-fxdeals-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/fx-document",
+      "domain": "fx-document"
+    },
+    {
+      "prefix": "/fx-document-unify",
+      "domain": "fx-document-unify"
+    }
+  ]
+}

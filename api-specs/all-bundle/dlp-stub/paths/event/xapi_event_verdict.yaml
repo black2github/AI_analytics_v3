@@ -1,0 +1,17 @@
+get:
+  parameters:
+  - name: date
+    in: query
+    schema:
+      $ref: ../../components/schemas/event/LocalDate.yaml
+  - name: documentId
+    in: query
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/event/VerdictResponse.yaml

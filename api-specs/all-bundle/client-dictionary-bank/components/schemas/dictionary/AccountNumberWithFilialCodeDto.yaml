@@ -1,0 +1,16 @@
+required:
+- accountNumber
+- bankClientId
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  absNumber:
+    type: string
+    description: Код филиала баланса в РКО Ф1
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Информация о номере счета клиента

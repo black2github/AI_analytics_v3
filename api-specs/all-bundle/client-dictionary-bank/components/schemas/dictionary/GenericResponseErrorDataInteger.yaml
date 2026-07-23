@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    type: integer
+    description: Данные
+    format: int32
+  error:
+    $ref: ../common/ErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

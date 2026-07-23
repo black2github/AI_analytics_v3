@@ -1,0 +1,18 @@
+{
+  "_comment": "Auto domain map for onboarding-client (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/document-signing",
+      "domain": "document-signing"
+    },
+    {
+      "prefix": "/onboarding-request",
+      "domain": "onboarding-request"
+    },
+    {
+      "prefix": "/qrc-commission-payment",
+      "domain": "qrc-commission-payment"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+type: object
+properties:
+  systemType:
+    type: string
+    enum:
+    - GPB_FACTORING_TRANSPORT
+    - GPB_LEASING_TRANSPORT
+description: Запрос транспортного токена

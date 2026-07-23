@@ -1,0 +1,25 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Владелец сертификата
+    format: uuid
+  data:
+    type: string
+    description: Base64 данные сертификата
+  origin:
+    type: string
+    description: Источник сертификата
+    enum:
+    - DBO
+    - CA
+    - ECO
+  absId:
+    type: string
+    description: Идентификатор ABS
+  certificateId:
+    type: string
+    description: ИД сертификата, привязанного ранее (опционально)
+    format: uuid
+    deprecated: true
+description: Запрос на получение сертификата по base64

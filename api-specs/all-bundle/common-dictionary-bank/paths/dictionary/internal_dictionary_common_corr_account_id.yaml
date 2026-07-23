@@ -1,0 +1,56 @@
+get:
+  tags:
+  - API справочника "Корреспондентские счета Банков РФ"
+  summary: Получить по идентификатору
+  operationId: getByIdUsingGET_1
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«CorrespondentAccountDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+delete:
+  tags:
+  - API справочника "Корреспондентские счета Банков РФ"
+  summary: Удалить запись
+  operationId: deleteUsingDELETE_1
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«CorrespondentAccountDto»'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+  security:
+  - Bearer: []
+  deprecated: false

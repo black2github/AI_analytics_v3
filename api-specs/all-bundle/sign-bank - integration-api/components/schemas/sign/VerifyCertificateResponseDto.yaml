@@ -1,0 +1,13 @@
+type: object
+properties:
+  valid:
+    type: boolean
+    description: Результат проверки сертификата
+  status:
+    type: string
+    description: Статус сертификата
+  revokedDate:
+    type: string
+    description: Дата и время отзыва сертификат
+    format: date-time
+description: Ответ на запрос проверки сертификата

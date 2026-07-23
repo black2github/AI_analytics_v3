@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор опроса
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  result:
+    maxProperties: 5
+    minProperties: 1
+    type: integer
+    description: Результат опроса
+    format: int32
+  comment:
+    maxLength: 300
+    type: string
+    description: Комментарий
+  refusePollTime:
+    type: string
+    description: Время отказа от оценки
+    format: date-time
+  createdAt:
+    type: string
+    description: Время создания результата опроса
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время изменения результата
+    format: date-time
+  pollParameter:
+    $ref: ./PollParameterDto.yaml
+  needPoll:
+    type: boolean
+    description: Возвращает признак необходимости проведения опроса
+description: DTO с результатами создания опроса

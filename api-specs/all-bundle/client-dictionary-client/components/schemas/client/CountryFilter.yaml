@@ -1,0 +1,11 @@
+type: object
+properties:
+  code:
+    $ref: ./FilterValueDtoString.yaml
+  name:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoCountryStatusDto.yaml
+  isDateToGtNow:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр выборки стран

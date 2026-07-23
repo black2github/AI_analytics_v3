@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Имя инициировавшего блокировку
+  lockUntil:
+    type: string
+    description: Дата/время снятия блокировки
+    format: date-time
+  lockedAt:
+    type: string
+    description: Дата/время установления блокировки
+    format: date-time
+  lockedBy:
+    type: string
+    description: Наименование клиента, инициировавшего блокировку
+description: DTO для проверки работоспособности сервиса

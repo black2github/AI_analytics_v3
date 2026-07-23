@@ -1,0 +1,64 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат выполнения операции
+    example: SUCCSESS
+    enum:
+    - SUCCESS
+    - ERR_AGGREMENT_NOT_FOUND_BY_ACCOUNT
+    - ERR_AGGREMENT_NOT_FOUND_BY_ISD
+    - ERR_BAD_BRANCH
+    - ERR_BAD_ACCOUNT
+    - ERR_AGGREMENT_ALREADY_EXIST_BY_ISD
+    - ERR_TECH
+    - ERR_TECH_CREATE_AGREEMENT
+    - ERR_TECH_CREATE_ADDITIONAL_AGREEMENT
+    - ERR_EMAIL_NOT_SPECIFIED
+    - ERR_PHONE_NUMBER_AND_EMAIL_NOT_SPECIFIED
+    - ERR_PHONE_NUMBER_WRONG_FORMAT
+    - ERR_EMAIL_WRONG_FORMAT
+    - ERR_PHONE_NUMBER_AND_EMAIL_WRONG_FORMAT
+    - ERR_CLIENT_ROLE_NOT_SPECIFIED
+    - ERR_CUSTOMER_NAME_NOT_SPECIFIED
+    - ERR_CUSTOMER_INN_NOT_SPECIFIED
+    - ERR_CUSTOMER_CONTACT_NUMBER_NOT_SPECIFIED
+    - ERR_CUSTOMER_CONTACT_DATE_NOT_SPECIFIED
+    - ERR_CUSTOMER_CONTACT_AMOUNT_NOT_SPECIFIED
+    - ERR_CUSTOMER_CONTACT_INN_WRONG_VALUE
+    - ERR_ACCOUNT_FOR_CONTRACT_ALREADY_OPENED
+    - ERR_CONTRACT_NOT_IN_REGISTRY
+    - ERR_ACCOUNT_COMMISSION_ALREADY_USED
+    - UNDEFINED
+  errorCode:
+    type: integer
+    description: Код ошибки если есть
+    format: int32
+    example: 101
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+  id:
+    type: string
+    description: ID договора
+    example: '123456'
+  number:
+    type: string
+    description: Номер договора
+    example: '1222222'
+  date:
+    type: string
+    description: Дата договора
+    format: date
+    example: '2008-01-28'
+  contractNumber:
+    type: string
+    description: Номер контракта
+    example: 1234-6789
+  contractDate:
+    type: string
+    description: Дата контракта
+    format: date
+    example: '2014-01-16'
+description: Результат запроса создания доп. договора

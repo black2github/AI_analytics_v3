@@ -1,0 +1,19 @@
+type: object
+properties:
+  innKio:
+    type: string
+    description: ИНН/КИО
+  shortName:
+    type: string
+    description: Краткое наименование
+  fullName:
+    type: string
+    description: Полное наименование
+  ids:
+    type: array
+    description: Список id клиентов банка
+    items:
+      type: string
+      description: Список id клиентов банка
+      format: uuid
+description: Запись процесса актуализации простого клиента банка

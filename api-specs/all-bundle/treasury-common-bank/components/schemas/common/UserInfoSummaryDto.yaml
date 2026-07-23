@@ -1,0 +1,121 @@
+type: object
+properties:
+  signer:
+    type: boolean
+    description: Пользователь является подписантом
+  signerSimple:
+    type: boolean
+    description: Пользователь является подписантом с ПЭП
+  systemAgreementExist:
+    type: boolean
+    description: Наличие глобальных соглашений
+  generalAgreementsExist:
+    type: boolean
+    description: Наличие ген. соглашений на заключение сделок
+  generalAgreementsDUExist:
+    type: boolean
+    description: Наличие ген. соглашений ДУ на заключение сделок
+  generalAgreementsBlockedExist:
+    type: boolean
+    description: Наличие неактивных ген. соглашений
+  generalAgreementsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по генеральным соглашениям
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  accountsExist:
+    type: boolean
+    description: Наличие счетов
+  accountsInternalExist:
+    type: boolean
+    description: Наличие внутренних счетов
+  accountsInternalForGenAgrMNOExist:
+    type: boolean
+    description: Наличие внутренних счетов для заключения генсоглашений МНО
+  accountsExternalExist:
+    type: boolean
+    description: Наличие внешних счетов
+  accountsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по счетов
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  dealsExist:
+    type: boolean
+    description: Наличие сделок
+  dealsPrivilegeLevel:
+    type: string
+    description: Общий уровень доступа по сделкам
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  userInformationByDealType:
+    type: array
+    description: Агрегированная информация по типам сделок
+    items:
+      $ref: ./UserInformationByDealTypeDto.yaml
+  gsnoReportsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по отчетам ГСНО
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  depositReportsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по отчетам по депозитам
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  agrReqGsnoChildHeadPrivilegeLevel:
+    type: string
+    description: Уровень доступа по ГСНО оферте
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  addReqChangeAccountsPrivilegeLevel:
+    type: string
+    description: Уровень доступа по ГСНО изменение списка счетов
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  deniedNotificationsPrivilegeLevel:
+    type: string
+    description: Уровень доступа на создание заявок по отмененным сделкам
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  violatedNotificationsPrivilegeLevel:
+    type: string
+    description: Уровень доступа на создание заявок по нарушенным сделкам
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+  summaryPrivilegeLevel:
+    type: string
+    description: Общий уровень доступа по всем объектам
+    enum:
+    - NONE
+    - VIEW
+    - EDIT
+    - SIGN
+description: Агрегированная информация о пользователе по клиентам

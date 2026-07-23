@@ -1,0 +1,10 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    type: string
+    description: Данные
+  error:
+    $ref: ./SimpleErrorData.yaml
+    type: object
+    description: Ошибка

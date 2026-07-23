@@ -1,0 +1,7 @@
+required:
+- pcrWalletCertificate
+type: object
+properties:
+  pcrWalletCertificate:
+    $ref: ./PcrWalletCertificateIntegrationDto.yaml
+description: Ответ на запрос сертификата для доступа к цифровому счёту ПлЦР

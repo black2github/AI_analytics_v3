@@ -1,0 +1,11 @@
+type: object
+properties:
+  rerunExecutedCount:
+    type: integer
+    description: Количество перезапущенных заявок
+    format: int64
+  totalCount:
+    type: integer
+    description: Количество заявок на перезапуск
+    format: int64
+description: Ответ на перезапуск ошибочных статусов

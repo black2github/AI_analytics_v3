@@ -1,0 +1,20 @@
+info:
+  version: 1.31.0
+  title: Сервис интеграции со "Светофором"
+tags:
+- name: API для проверки контагента
+  description: Partner Check Adapter Controller
+- name: API интеграции со "Светофором"
+  description: Traffic Light Adapter Controller
+- name: Журнал взаимодействия с сервисом "Светофор"
+  description: Skb Journal Controller
+paths:
+  /integration/pdf-report/generate-report:
+    $ref: ./paths/pdf-report/integration_pdf_report_generate_report.yaml
+  /integration/traffic-light/detailed-report-url:
+    $ref: ./paths/traffic-light/integration_traffic_light_detailed_report_url.yaml
+  /integration/traffic-light/indicators:
+    $ref: ./paths/traffic-light/integration_traffic_light_indicators.yaml
+  /journal/page:
+    $ref: ./paths/page/journal_page.yaml
+components: {}

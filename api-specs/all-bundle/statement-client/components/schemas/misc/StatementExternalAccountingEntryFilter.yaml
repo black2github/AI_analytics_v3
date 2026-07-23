@@ -1,0 +1,19 @@
+type: object
+properties:
+  queryString:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoBigDecimal.yaml
+  documentNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  entryDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  documentDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  transactionType:
+    $ref: ../common/StatementOperationFilter.yaml
+  counterparties:
+    $ref: ../common/FilterValueDtoCounterpartyResponseDto.yaml
+  documentTypeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

@@ -1,0 +1,411 @@
+openapi: 3.0.1
+info:
+  title: Сервис Онлайн-инкассация. Клиентская часть
+  version: 1.88.0
+servers:
+- url: /adm-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API Заявки о неисправности АДМ. Базовые операции
+- name: API Заявки на открытие Договора АДМ и добавление АДМ. Импорт из файла
+- name: API Проверки адреса
+- name: API Клиентского скроллера АДМ
+- name: API Заявки на инкассацию и размен. Базовые операции
+- name: API Заявки на обратную связь. Базовые операции
+- name: API Заявки на исключение АДМ. Базовые операции
+- name: API Заявки на изменение периодичности оплаты комиссии. Базовые операции
+- name: API получения информации по Договору АДМ
+- name: Подпись заявки
+- name: API Клиентского скроллера Заявок АДМ
+- name: API Заявки на открытие Договора АДМ и добавление АДМ. Базовые операции
+- name: API Заявки на открытие Договора АДМ и добавление АДМ. Экспорт в файл
+- name: API Получения счетов клиента из АБС Ф1
+- name: API Заявки на исключение реквизитов. Базовые операции
+- name: API Заявки на добавление реквизитов. Базовые операции
+- name: API Проверки клиента по стоп-листам
+paths:
+  /adm-agreement/export-registry-poc-to-file-storage:
+    $ref: ./paths/export-registry-poc-to-file-storage/adm_agreement_export_registry_poc_to_file_storage.yaml
+  /adm-agreement/export-report-cash-to-file-storage:
+    $ref: ./paths/export-report-cash-to-file-storage/adm_agreement_export_report_cash_to_file_storage.yaml
+  /adm-agreement/export-report-commission-to-file-storage:
+    $ref: ./paths/export-report-commission-to-file-storage/adm_agreement_export_report_commission_to_file_storage.yaml
+  /adm-agreement/export-report-surplus-to-file-storage:
+    $ref: ./paths/export-report-surplus-to-file-storage/adm_agreement_export_report_surplus_to_file_storage.yaml
+  /adm-agreement/export-report-transfer-to-file-storage:
+    $ref: ./paths/export-report-transfer-to-file-storage/adm_agreement_export_report_transfer_to_file_storage.yaml
+  /adm-agreement/export-report-write-off-to-file-storage:
+    $ref: ./paths/export-report-write-off-to-file-storage/adm_agreement_export_report_write_off_to_file_storage.yaml
+  /adm-agreement/pocs/get-page:
+    $ref: ./paths/pocs/adm_agreement_pocs_get_page.yaml
+  /adm-agreement/{bankClientId}:
+    $ref: ./paths/{bankClientId}/adm_agreement_bankClientId.yaml
+  /adm-agreement/{bankClientId}/pocs/{mainTid}:
+    $ref: ./paths/{bankClientId}/adm_agreement_bankClientId_pocs_mainTid.yaml
+  /adm-agreement/{bankClientId}/requisites:
+    $ref: ./paths/{bankClientId}/adm_agreement_bankClientId_requisites.yaml
+  /adm-requests:
+    $ref: ./paths/adm-requests/adm_requests.yaml
+  /adm-requests/add-adm-account:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account.yaml
+  /adm-requests/add-adm-account/copy/{id}:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_copy_id.yaml
+  /adm-requests/add-adm-account/export-doc-to-file-storage:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_export_doc_to_file_storage.yaml
+  /adm-requests/add-adm-account/send:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_send.yaml
+  /adm-requests/add-adm-account/sign:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_sign.yaml
+  /adm-requests/add-adm-account/v2.1/generate-sign-data:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_v2_1_generate_sign_data.yaml
+  /adm-requests/add-adm-account/{id}:
+    $ref: ./paths/add-adm-account/adm_requests_add_adm_account_id.yaml
+  /adm-requests/adm-callback:
+    $ref: ./paths/adm-callback/adm_requests_adm_callback.yaml
+  /adm-requests/adm-callback/send:
+    $ref: ./paths/adm-callback/adm_requests_adm_callback_send.yaml
+  /adm-requests/adm-callback/{id}:
+    $ref: ./paths/adm-callback/adm_requests_adm_callback_id.yaml
+  /adm-requests/adm-terminal-breakdown:
+    $ref: ./paths/adm-terminal-breakdown/adm_requests_adm_terminal_breakdown.yaml
+  /adm-requests/adm-terminal-breakdown/send:
+    $ref: ./paths/adm-terminal-breakdown/adm_requests_adm_terminal_breakdown_send.yaml
+  /adm-requests/adm-terminal-breakdown/{id}:
+    $ref: ./paths/adm-terminal-breakdown/adm_requests_adm_terminal_breakdown_id.yaml
+  /adm-requests/callback:
+    $ref: ./paths/callback/adm_requests_callback.yaml
+  /adm-requests/change-comm-period:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period.yaml
+  /adm-requests/change-comm-period/export-doc-to-file-storage:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period_export_doc_to_file_storage.yaml
+  /adm-requests/change-comm-period/send:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period_send.yaml
+  /adm-requests/change-comm-period/sign:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period_sign.yaml
+  /adm-requests/change-comm-period/v2.1/generate-sign-data:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period_v2_1_generate_sign_data.yaml
+  /adm-requests/change-comm-period/{id}:
+    $ref: ./paths/change-comm-period/adm_requests_change_comm_period_id.yaml
+  /adm-requests/copy/{id}:
+    $ref: ./paths/copy/adm_requests_copy_id.yaml
+  /adm-requests/export-doc-to-file-storage:
+    $ref: ./paths/export-doc-to-file-storage/adm_requests_export_doc_to_file_storage.yaml
+  /adm-requests/export-registry-request:
+    $ref: ./paths/export-registry-request/adm_requests_export_registry_request.yaml
+  /adm-requests/export-registry-request-to-file-storage:
+    $ref: ./paths/export-registry-request-to-file-storage/adm_requests_export_registry_request_to_file_storage.yaml
+  /adm-requests/get-page:
+    $ref: ./paths/get-page/adm_requests_get_page.yaml
+  /adm-requests/remove-adm:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm.yaml
+  /adm-requests/remove-adm-account:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account.yaml
+  /adm-requests/remove-adm-account/copy/{id}:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_copy_id.yaml
+  /adm-requests/remove-adm-account/export-doc-to-file-storage:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_export_doc_to_file_storage.yaml
+  /adm-requests/remove-adm-account/send:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_send.yaml
+  /adm-requests/remove-adm-account/sign:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_sign.yaml
+  /adm-requests/remove-adm-account/v2.1/generate-sign-data:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_v2_1_generate_sign_data.yaml
+  /adm-requests/remove-adm-account/{id}:
+    $ref: ./paths/remove-adm-account/adm_requests_remove_adm_account_id.yaml
+  /adm-requests/remove-adm/copy/{id}:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_copy_id.yaml
+  /adm-requests/remove-adm/export-doc-to-file-storage:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_export_doc_to_file_storage.yaml
+  /adm-requests/remove-adm/send:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_send.yaml
+  /adm-requests/remove-adm/sign:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_sign.yaml
+  /adm-requests/remove-adm/v2.1/generate-sign-data:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_v2_1_generate_sign_data.yaml
+  /adm-requests/remove-adm/{id}:
+    $ref: ./paths/remove-adm/adm_requests_remove_adm_id.yaml
+  /adm-requests/send:
+    $ref: ./paths/send/adm_requests_send.yaml
+  /adm-requests/send-to-process-validate:
+    $ref: ./paths/send-to-process-validate/adm_requests_send_to_process_validate.yaml
+  /adm-requests/send-to-sign:
+    $ref: ./paths/send-to-sign/adm_requests_send_to_sign.yaml
+  /adm-requests/sign:
+    $ref: ./paths/sign/adm_requests_sign.yaml
+  /adm-requests/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/adm_requests_v2_1_generate_sign_data.yaml
+  /adm-requests/{id}:
+    $ref: ./paths/{id}/adm_requests_id.yaml
+  /adm-requests/{id}/export:
+    $ref: ./paths/{id}/adm_requests_id_export.yaml
+  /adm-requests/{id}/export-template:
+    $ref: ./paths/{id}/adm_requests_id_export_template.yaml
+  /adm-requests/{id}/import:
+    $ref: ./paths/{id}/adm_requests_id_import.yaml
+  /encashment:
+    $ref: ./paths/encashment/encashment.yaml
+  /encashment/copy/{id}:
+    $ref: ./paths/copy/encashment_copy_id.yaml
+  /encashment/export-doc-to-file-storage:
+    $ref: ./paths/export-doc-to-file-storage/encashment_export_doc_to_file_storage.yaml
+  /encashment/send:
+    $ref: ./paths/send/encashment_send.yaml
+  /encashment/send-to-process-validate:
+    $ref: ./paths/send-to-process-validate/encashment_send_to_process_validate.yaml
+  /encashment/send-to-sign:
+    $ref: ./paths/send-to-sign/encashment_send_to_sign.yaml
+  /encashment/sign:
+    $ref: ./paths/sign/encashment_sign.yaml
+  /encashment/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/encashment_v2_1_generate_sign_data.yaml
+  /encashment/{id}:
+    $ref: ./paths/{id}/encashment_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /integration/f1/{bankClientId}/accounts:
+    $ref: ./paths/f1/integration_f1_bankClientId_accounts.yaml
+  /integration/mdm/check-address:
+    $ref: ./paths/mdm/integration_mdm_check_address.yaml
+  /stop-list/check-client:
+    $ref: ./paths/check-client/stop_list_check_client.yaml
+components:
+  schemas:
+    AccountDetailsDto:
+      $ref: ./components/schemas/f1/AccountDetailsDto.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AddAdmAccountDto:
+      $ref: ./components/schemas/add-adm-account/AddAdmAccountDto.yaml
+    AddAdmAccountRequestDto:
+      $ref: ./components/schemas/add-adm-account/AddAdmAccountRequestDto.yaml
+    AdmAccountBankTypeDto:
+      $ref: ./components/schemas/common/AdmAccountBankTypeDto.yaml
+    AdmAccountDto:
+      $ref: ./components/schemas/common/AdmAccountDto.yaml
+    AdmAgreementDto:
+      $ref: ./components/schemas/{bankClientId}/AdmAgreementDto.yaml
+    AdmAgreementStatusDto:
+      $ref: ./components/schemas/{bankClientId}/AdmAgreementStatusDto.yaml
+    AdmBankClientDto:
+      $ref: ./components/schemas/common/AdmBankClientDto.yaml
+    AdmCallbackRequestDto:
+      $ref: ./components/schemas/adm-callback/AdmCallbackRequestDto.yaml
+    AdmCommissionTypeDto:
+      $ref: ./components/schemas/common/AdmCommissionTypeDto.yaml
+    AdmContractTypeDto:
+      $ref: ./components/schemas/common/AdmContractTypeDto.yaml
+    AdmFileDto:
+      $ref: ./components/schemas/common/AdmFileDto.yaml
+    AdmIndustryTypeDto:
+      $ref: ./components/schemas/common/AdmIndustryTypeDto.yaml
+    AdmOdsAccountDto:
+      $ref: ./components/schemas/{bankClientId}/AdmOdsAccountDto.yaml
+    AdmPocCallbackDto:
+      $ref: ./components/schemas/adm-callback/AdmPocCallbackDto.yaml
+    AdmPocClientFilter:
+      $ref: ./components/schemas/common/AdmPocClientFilter.yaml
+    AdmPocDto:
+      $ref: ./components/schemas/common/AdmPocDto.yaml
+    AdmPocMasterDto:
+      $ref: ./components/schemas/{bankClientId}/AdmPocMasterDto.yaml
+    AdmPocRequisiteDto:
+      $ref: ./components/schemas/{bankClientId}/AdmPocRequisiteDto.yaml
+    AdmPocScrollerDto:
+      $ref: ./components/schemas/pocs/AdmPocScrollerDto.yaml
+    AdmPocStatusDto:
+      $ref: ./components/schemas/pocs/AdmPocStatusDto.yaml
+    AdmPocStatusFilter:
+      $ref: ./components/schemas/common/AdmPocStatusFilter.yaml
+    AdmReportFilter:
+      $ref: ./components/schemas/common/AdmReportFilter.yaml
+    AdmReportFormat:
+      $ref: ./components/schemas/common/AdmReportFormat.yaml
+    AdmReportRequestDto:
+      $ref: ./components/schemas/common/AdmReportRequestDto.yaml
+    AdmRequestClientFilter:
+      $ref: ./components/schemas/common/AdmRequestClientFilter.yaml
+    AdmRequestDto:
+      $ref: ./components/schemas/common/AdmRequestDto.yaml
+    AdmRequestScrollerClientDto:
+      $ref: ./components/schemas/get-page/AdmRequestScrollerClientDto.yaml
+    AdmRequestStatusDto:
+      $ref: ./components/schemas/common/AdmRequestStatusDto.yaml
+    AdmRequestStatusFilter:
+      $ref: ./components/schemas/common/AdmRequestStatusFilter.yaml
+    AdmRequestTypeDto:
+      $ref: ./components/schemas/common/AdmRequestTypeDto.yaml
+    AdmRequestTypeFilter:
+      $ref: ./components/schemas/common/AdmRequestTypeFilter.yaml
+    AdmSignatureDto:
+      $ref: ./components/schemas/common/AdmSignatureDto.yaml
+    AdmTariffTypeDto:
+      $ref: ./components/schemas/common/AdmTariffTypeDto.yaml
+    AdmTerminalBreakdownRequestDto:
+      $ref: ./components/schemas/adm-terminal-breakdown/AdmTerminalBreakdownRequestDto.yaml
+    AdmTerminalDto:
+      $ref: ./components/schemas/common/AdmTerminalDto.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/common/AgreementsDto.yaml
+    BudgetInfoDto:
+      $ref: ./components/schemas/common/BudgetInfoDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    ChangeCommPeriodRequestDto:
+      $ref: ./components/schemas/change-comm-period/ChangeCommPeriodRequestDto.yaml
+    CheckAddressDto:
+      $ref: ./components/schemas/mdm/CheckAddressDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ClientAccountsDto:
+      $ref: ./components/schemas/f1/ClientAccountsDto.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    EncashmentAccountDto:
+      $ref: ./components/schemas/common/EncashmentAccountDto.yaml
+    EncashmentPosDto:
+      $ref: ./components/schemas/common/EncashmentPosDto.yaml
+    EncashmentRefundTypeDto:
+      $ref: ./components/schemas/common/EncashmentRefundTypeDto.yaml
+    EncashmentRequestDto:
+      $ref: ./components/schemas/common/EncashmentRequestDto.yaml
+    EncashmentRequestTypeDto:
+      $ref: ./components/schemas/common/EncashmentRequestTypeDto.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/common/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GenericCommandAddAdmAccountRequestDto:
+      $ref: ./components/schemas/add-adm-account/GenericCommandAddAdmAccountRequestDto.yaml
+    GenericCommandAdmCallbackRequestDto:
+      $ref: ./components/schemas/adm-callback/GenericCommandAdmCallbackRequestDto.yaml
+    GenericCommandAdmReportRequestDto:
+      $ref: ./components/schemas/common/GenericCommandAdmReportRequestDto.yaml
+    GenericCommandAdmRequestDto:
+      $ref: ./components/schemas/common/GenericCommandAdmRequestDto.yaml
+    GenericCommandAdmTerminalBreakdownRequestDto:
+      $ref: ./components/schemas/adm-terminal-breakdown/GenericCommandAdmTerminalBreakdownRequestDto.yaml
+    GenericCommandChangeCommPeriodRequestDto:
+      $ref: ./components/schemas/change-comm-period/GenericCommandChangeCommPeriodRequestDto.yaml
+    GenericCommandEncashmentRequestDto:
+      $ref: ./components/schemas/common/GenericCommandEncashmentRequestDto.yaml
+    GenericCommandRegistryPocDto:
+      $ref: ./components/schemas/export-registry-poc-to-file-storage/GenericCommandRegistryPocDto.yaml
+    GenericCommandRegistryRequestDto:
+      $ref: ./components/schemas/common/GenericCommandRegistryRequestDto.yaml
+    GenericCommandRemoveAdmAccountRequestDto:
+      $ref: ./components/schemas/remove-adm-account/GenericCommandRemoveAdmAccountRequestDto.yaml
+    GenericCommandSignCommand:
+      $ref: ./components/schemas/common/GenericCommandSignCommand.yaml
+    GenericCommandString:
+      $ref: ./components/schemas/mdm/GenericCommandString.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataAddAdmAccountRequestDto:
+      $ref: ./components/schemas/add-adm-account/GenericResponseSimpleErrorDataAddAdmAccountRequestDto.yaml
+    GenericResponseSimpleErrorDataAdmAgreementDto:
+      $ref: ./components/schemas/{bankClientId}/GenericResponseSimpleErrorDataAdmAgreementDto.yaml
+    GenericResponseSimpleErrorDataAdmCallbackRequestDto:
+      $ref: ./components/schemas/adm-callback/GenericResponseSimpleErrorDataAdmCallbackRequestDto.yaml
+    GenericResponseSimpleErrorDataAdmFileDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAdmFileDto.yaml
+    GenericResponseSimpleErrorDataAdmPocMasterDto:
+      $ref: ./components/schemas/{bankClientId}/GenericResponseSimpleErrorDataAdmPocMasterDto.yaml
+    GenericResponseSimpleErrorDataAdmRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAdmRequestDto.yaml
+    GenericResponseSimpleErrorDataAdmTerminalBreakdownRequestDto:
+      $ref: ./components/schemas/adm-terminal-breakdown/GenericResponseSimpleErrorDataAdmTerminalBreakdownRequestDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/check-client/GenericResponseSimpleErrorDataBoolean.yaml
+    GenericResponseSimpleErrorDataChangeCommPeriodRequestDto:
+      $ref: ./components/schemas/change-comm-period/GenericResponseSimpleErrorDataChangeCommPeriodRequestDto.yaml
+    GenericResponseSimpleErrorDataCheckAddressDto:
+      $ref: ./components/schemas/mdm/GenericResponseSimpleErrorDataCheckAddressDto.yaml
+    GenericResponseSimpleErrorDataClientAccountsDto:
+      $ref: ./components/schemas/f1/GenericResponseSimpleErrorDataClientAccountsDto.yaml
+    GenericResponseSimpleErrorDataEncashmentRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataEncashmentRequestDto.yaml
+    GenericResponseSimpleErrorDataPageDataAdmOdsAccountDto:
+      $ref: ./components/schemas/{bankClientId}/GenericResponseSimpleErrorDataPageDataAdmOdsAccountDto.yaml
+    GenericResponseSimpleErrorDataPageDataAdmPocScrollerDto:
+      $ref: ./components/schemas/pocs/GenericResponseSimpleErrorDataPageDataAdmPocScrollerDto.yaml
+    GenericResponseSimpleErrorDataRemoveAdmAccountRequestDto:
+      $ref: ./components/schemas/remove-adm-account/GenericResponseSimpleErrorDataRemoveAdmAccountRequestDto.yaml
+    GenericResponseSimpleErrorDataRemoveAdmRequestDto:
+      $ref: ./components/schemas/remove-adm/GenericResponseSimpleErrorDataRemoveAdmRequestDto.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    GetPageCommandAdmPocClientFilter:
+      $ref: ./components/schemas/pocs/GetPageCommandAdmPocClientFilter.yaml
+    GetPageCommandAdmRequestClientFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandAdmRequestClientFilter.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    PageDataAdmOdsAccountDto:
+      $ref: ./components/schemas/{bankClientId}/PageDataAdmOdsAccountDto.yaml
+    PageDataAdmPocScrollerDto:
+      $ref: ./components/schemas/pocs/PageDataAdmPocScrollerDto.yaml
+    PageDataAdmRequestScrollerClientDto:
+      $ref: ./components/schemas/get-page/PageDataAdmRequestScrollerClientDto.yaml
+    PageParamsAdmPocClientFilter:
+      $ref: ./components/schemas/pocs/PageParamsAdmPocClientFilter.yaml
+    PageParamsAdmRequestClientFilter:
+      $ref: ./components/schemas/get-page/PageParamsAdmRequestClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RegistryPocDto:
+      $ref: ./components/schemas/export-registry-poc-to-file-storage/RegistryPocDto.yaml
+    RegistryRequestDto:
+      $ref: ./components/schemas/common/RegistryRequestDto.yaml
+    RemoveAdmAccountDto:
+      $ref: ./components/schemas/remove-adm-account/RemoveAdmAccountDto.yaml
+    RemoveAdmAccountRequestDto:
+      $ref: ./components/schemas/remove-adm-account/RemoveAdmAccountRequestDto.yaml
+    RemoveAdmRequestDto:
+      $ref: ./components/schemas/remove-adm/RemoveAdmRequestDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    ValidatedGenericCommandRemoveAdmRequestDto:
+      $ref: ./components/schemas/remove-adm/ValidatedGenericCommandRemoveAdmRequestDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+  securitySchemes:
+    bearer-key:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http

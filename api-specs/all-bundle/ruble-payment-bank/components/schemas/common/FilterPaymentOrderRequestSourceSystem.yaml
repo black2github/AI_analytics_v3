@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  notEq:
+    $ref: ./DocumentSystemClassifierDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./DocumentSystemClassifierDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./DocumentSystemClassifierDto.yaml
+  isNull:
+    type: boolean
+description: Система создания. Поиск по <Система создания документа>. Равенство, содержится в списке

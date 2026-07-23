@@ -1,0 +1,13 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+  isSelectedByUser:
+    type: boolean
+    description: Признак "Пользователь выбрал офис обслуживания"
+  name:
+    type: string
+    description: Наименование подразделения
+description: Сведения о Подразделении, в котором открывается счет и заключается ДБС, на скроллере

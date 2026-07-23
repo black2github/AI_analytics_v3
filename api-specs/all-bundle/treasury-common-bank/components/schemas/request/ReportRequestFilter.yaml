@@ -1,0 +1,17 @@
+type: object
+properties:
+  reportType:
+    $ref: ./ReportRequestTypeFilter.yaml
+  status:
+    $ref: ./ReportRequestStatusFilter.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+description: Фильтр

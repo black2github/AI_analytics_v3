@@ -1,0 +1,74 @@
+type: object
+description: Данные b2b транзакции ТСП
+properties:
+  amount:
+    type: integer
+    format: int64
+    description: Сумма операции
+  recipientId:
+    type: string
+    description: Идентификатор получателя
+  recipientAccount:
+    type: string
+    description: Счет получателя
+  recipientInn:
+    type: string
+    description: ИНН получателя
+  recipientName:
+    type: string
+    description: Наименование получателя
+  fpMessageId:
+    type: string
+    description: Идентификатор операции СБП
+  qrcId:
+    type: string
+    description: Идентификатор QR-кода
+  status:
+    type: string
+    description: Статус операции
+  transactionTime:
+    $ref: ../common/Instant.yaml
+    type: string
+    description: Дата и время операции
+  transactionType:
+    type: string
+    description: Тип операции ("Входящий платеж" или "Выплата от ТСП")
+  transactionId:
+    type: string
+    description: Идентификатор транзакции
+  totalTaxAmount:
+    type: string
+    description: Сумма НДС в копейках
+  takeTax:
+    type: boolean
+    description: Признак взимания НДС
+  uip:
+    type: string
+    description: Уникальный Идентификатор Платежа, назначаемый Получателем
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  qrcType:
+    type: string
+    description: Тип QR кода (01 или 02)
+  senderBankId:
+    type: string
+    description: Идентификатор банка Плательщика
+  senderAccount:
+    type: string
+    description: Номер счета Плательщика (в маскированном виде)
+  senderInn:
+    type: string
+    description: Идентификационный номер налогоплательщика Отправителя
+  senderName:
+    type: string
+    description: Наименование Юридического Лица Плательщика
+  origTransactionId:
+    type: string
+    description: Идентификатор оригинальной транзакции
+  comment:
+    type: string
+    description: Комментарий
+  incomeCode:
+    type: string
+    description: Код вида дохода

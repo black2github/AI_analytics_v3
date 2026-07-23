@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета списания
+  bic:
+    type: string
+    description: БИК филиала банка по счету списания
+description: Реквизиты отправителя

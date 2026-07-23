@@ -1,0 +1,9 @@
+type: object
+properties:
+  carCost:
+    type: number
+  advance:
+    type: number
+  leasingPeriod:
+    type: integer
+    format: int32

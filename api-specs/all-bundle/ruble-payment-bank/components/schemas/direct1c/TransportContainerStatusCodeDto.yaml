@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор элемента справочника
+    format: uuid
+  statusCode:
+    type: string
+    description: Код статуса
+  statusName:
+    type: string
+    description: Название статуса
+  description:
+    type: string
+    description: Описание
+description: Справочник кодов статусов ТК

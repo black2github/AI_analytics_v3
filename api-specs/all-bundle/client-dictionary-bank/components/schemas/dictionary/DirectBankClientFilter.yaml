@@ -1,0 +1,21 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  bankClientShortNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientShortNameOrInnId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  customerId:
+    $ref: ../common/FilterValueDtoString.yaml
+  blocked:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  docKind:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

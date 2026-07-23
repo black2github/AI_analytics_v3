@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование Банка плательщика
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка плательщика
+description: Подсказки для фильтра банк плательщика

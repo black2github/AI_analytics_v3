@@ -1,0 +1,11 @@
+type: object
+properties:
+  totalCount:
+    type: integer
+    description: Количество документов на перезапуск
+    format: int64
+  rerunExecutedCount:
+    type: integer
+    description: Количество перезапущенных документов
+    format: int64
+description: Ответ на перезапуск ошибочных статусов.

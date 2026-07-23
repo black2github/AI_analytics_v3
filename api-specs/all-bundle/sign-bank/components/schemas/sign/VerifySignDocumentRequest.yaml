@@ -1,0 +1,18 @@
+required:
+- documentsSignatures
+type: object
+properties:
+  documentsSignatures:
+    minItems: 1
+    type: array
+    description: Список подписанных документов
+    items:
+      $ref: ./DocumentSignDataDto.yaml
+  locale:
+    type: string
+    description: Локаль в которой требуется выдать ответ
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+description: Запрос на проверку подписи документов

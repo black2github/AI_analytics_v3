@@ -1,0 +1,33 @@
+required:
+- authorizedPersonId
+type: object
+properties:
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  fullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+  organization:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+  remoteSource:
+    $ref: ../common/RemoteSourceDtoFilter.yaml
+  actual:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  manuallyCreated:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  userEditorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountAccessRestriction:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  userAbsId:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр истории изменений УЛ

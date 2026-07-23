@@ -1,0 +1,10 @@
+type: object
+properties:
+  documentId:
+    type: string
+    format: uuid
+  operation:
+    type: string
+    enum:
+    - ADD
+    - REMOVE

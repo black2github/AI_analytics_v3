@@ -1,0 +1,6 @@
+type: object
+properties:
+  certificate:
+    type: string
+  digest:
+    type: string

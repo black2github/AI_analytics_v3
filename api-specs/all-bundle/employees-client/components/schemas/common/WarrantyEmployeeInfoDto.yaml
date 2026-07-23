@@ -1,0 +1,24 @@
+type: object
+properties:
+  employee:
+    $ref: ./WarrantyEmployeeDto.yaml
+  registrationAddress:
+    $ref: ./EmployeeAddressUpdateDto.yaml
+  actualAddress:
+    $ref: ./EmployeeAddressUpdateDto.yaml
+  addressesMatches:
+    type: boolean
+    description: Признак "Адрес регистрации совпадает с фактическим адресом"
+  inn:
+    pattern: ^\d{12}$|^$
+    type: string
+    description: ИНН
+  publicOfficialStatus:
+    type: boolean
+    description: Статус ПДЛ
+  publicOfficialInfo:
+    maxLength: 128
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Информация ПДЛ
+description: Данные для создания сотрудника из заявки

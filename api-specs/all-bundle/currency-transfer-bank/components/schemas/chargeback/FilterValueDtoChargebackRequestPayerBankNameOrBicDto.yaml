@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  notEq:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  ge:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  lt:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+  le:
+    $ref: ./ChargebackRequestPayerBankNameOrBicDto.yaml
+description: Банк плательщика. Поиск по <Наименование Банка плательщика>, <БИК банка плательщика>. Вхождение в множество

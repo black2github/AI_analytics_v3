@@ -1,0 +1,111 @@
+info:
+  title: Конституция. Банковская часть.
+tags:
+- name: API акцепта конституции оператора банка.
+  description: Constitution Acceptance Bank Controller
+- name: API заявки на добавление/изменение данных и полномочий сотрудника клиента. Банковские операции.
+  description: Constitution Access Bank Controller
+- name: API заявки на регистрацию данных сотрудника. Банковские операции.
+  description: Constitution Registration Bank Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API обработки заявок на принятие конституции. Банковская часть.
+  description: Constitution Acceptance Bank Processing Controller
+- name: API операций подписи заявок на принятие конституции. Банковская часть.
+  description: Constitution Acceptance Bank Sign Controller
+- name: API печати объединенной заявки Конституции. Банковская часть
+  description: United Constitution Bank Print Controller
+- name: API скроллера заявок на принятие конституции. Банковская часть.
+  description: Constitution Acceptance Bank Scroller Controller
+- name: API скроллера объединенной заявки Конституции. Банковская часть
+  description: United Constitution Bank Scroller Controller
+- name: privilege-registration-controller
+  description: Privilege Registration Controller
+paths:
+  /constitution/access/execute/{id}:
+    $ref: ./paths/access/constitution_access_execute_id.yaml
+  /constitution/access/export-sign:
+    $ref: ./paths/access/constitution_access_export_sign.yaml
+  /constitution/access/export-sign-v2:
+    $ref: ./paths/access/constitution_access_export_sign_v2.yaml
+  /constitution/access/history/{id}:
+    $ref: ./paths/access/constitution_access_history_id.yaml
+  /constitution/access/print:
+    $ref: ./paths/access/constitution_access_print.yaml
+  /constitution/access/print-v2:
+    $ref: ./paths/access/constitution_access_print_v2.yaml
+  /constitution/access/reject/{id}:
+    $ref: ./paths/access/constitution_access_reject_id.yaml
+  /constitution/access/send-to-esk:
+    $ref: ./paths/access/constitution_access_send_to_esk.yaml
+  /constitution/access/send-to-tessa:
+    $ref: ./paths/access/constitution_access_send_to_tessa.yaml
+  /constitution/access/to-executed-by-tessa/{id}:
+    $ref: ./paths/access/constitution_access_to_executed_by_tessa_id.yaml
+  /constitution/access/{id}:
+    $ref: ./paths/access/constitution_access_id.yaml
+  /constitution/category:
+    $ref: ./paths/misc/constitution_category.yaml
+  /constitution/execute/{id}:
+    $ref: ./paths/misc/constitution_execute_id.yaml
+  /constitution/export-sign:
+    $ref: ./paths/misc/constitution_export_sign.yaml
+  /constitution/export-sign-v2:
+    $ref: ./paths/misc/constitution_export_sign_v2.yaml
+  /constitution/generate-digest/version:
+    $ref: ./paths/misc/constitution_generate_digest_version.yaml
+  /constitution/get-page:
+    $ref: ./paths/misc/constitution_get_page.yaml
+  /constitution/history/{id}:
+    $ref: ./paths/misc/constitution_history_id.yaml
+  /constitution/print:
+    $ref: ./paths/misc/constitution_print.yaml
+  /constitution/print-v2:
+    $ref: ./paths/misc/constitution_print_v2.yaml
+  /constitution/registration/execute/{id}:
+    $ref: ./paths/registration/constitution_registration_execute_id.yaml
+  /constitution/registration/export-sign:
+    $ref: ./paths/registration/constitution_registration_export_sign.yaml
+  /constitution/registration/export-sign-v2:
+    $ref: ./paths/registration/constitution_registration_export_sign_v2.yaml
+  /constitution/registration/find-by:
+    $ref: ./paths/registration/constitution_registration_find_by.yaml
+  /constitution/registration/history/{id}:
+    $ref: ./paths/registration/constitution_registration_history_id.yaml
+  /constitution/registration/print:
+    $ref: ./paths/registration/constitution_registration_print.yaml
+  /constitution/registration/print-v2:
+    $ref: ./paths/registration/constitution_registration_print_v2.yaml
+  /constitution/registration/reject/{id}:
+    $ref: ./paths/registration/constitution_registration_reject_id.yaml
+  /constitution/registration/send-to-esk:
+    $ref: ./paths/registration/constitution_registration_send_to_esk.yaml
+  /constitution/registration/send-to-tessa:
+    $ref: ./paths/registration/constitution_registration_send_to_tessa.yaml
+  /constitution/registration/to-executed-by-tessa/{id}:
+    $ref: ./paths/registration/constitution_registration_to_executed_by_tessa_id.yaml
+  /constitution/registration/{id}:
+    $ref: ./paths/registration/constitution_registration_id.yaml
+  /constitution/reject/{id}:
+    $ref: ./paths/misc/constitution_reject_id.yaml
+  /constitution/send-to-esk:
+    $ref: ./paths/misc/constitution_send_to_esk.yaml
+  /constitution/send-to-tessa:
+    $ref: ./paths/misc/constitution_send_to_tessa.yaml
+  /constitution/to-executed-by-tessa/{id}:
+    $ref: ./paths/misc/constitution_to_executed_by_tessa_id.yaml
+  /constitution/{id}:
+    $ref: ./paths/misc/constitution_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /united-constitution-request/category:
+    $ref: ./paths/misc/united_constitution_request_category.yaml
+  /united-constitution-request/export-list:
+    $ref: ./paths/misc/united_constitution_request_export_list.yaml
+  /united-constitution-request/export-list-v2:
+    $ref: ./paths/misc/united_constitution_request_export_list_v2.yaml
+  /united-constitution-request/get-page:
+    $ref: ./paths/misc/united_constitution_request_get_page.yaml
+components: {}

@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Отправить документ в банк
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_EDIT'
+  operationId: send
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseClientInfoUpdateRequestViewResponseDto.yaml

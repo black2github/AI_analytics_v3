@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  status:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - EXECUTED
+    - REJECTED
+  clientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+  subject:
+    $ref: ../common/SubjectDto.yaml
+  updatedData:
+    type: array
+    description: Обновляемые сведения Заявки
+    items:
+      $ref: ./ClientInfoUpdRequestClientScrollerUpdateDataDto.yaml
+description: Заявка на обновление сведений на клиентском скроллере

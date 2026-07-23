@@ -1,0 +1,33 @@
+type: object
+properties:
+  statusCode:
+    type: string
+    description: Код статуса
+  statusName:
+    type: string
+    description: Наименование статуса
+  statusColor:
+    type: string
+    description: Цвет текста
+    enum:
+    - GREY
+    - YELLOW
+    - RED
+    - GREEN
+  clientStatusName:
+    type: string
+    description: Статус для клиента
+  clientStatusColor:
+    type: string
+    description: Цвет текста
+    enum:
+    - GREY
+    - YELLOW
+    - RED
+    - GREEN
+  operations:
+    type: array
+    description: Операции
+    items:
+      $ref: ./DocumentOperationHistoryBankDto.yaml
+description: Значение поля

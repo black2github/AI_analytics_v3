@@ -1,0 +1,15 @@
+required:
+- code
+- value
+type: object
+properties:
+  code:
+    type: array
+    description: Коды типов заявки
+    items:
+      type: string
+      description: Коды типов заявки
+  value:
+    type: string
+    description: Наименование заявки
+description: Типы заявок для скроллера объединенных заявок

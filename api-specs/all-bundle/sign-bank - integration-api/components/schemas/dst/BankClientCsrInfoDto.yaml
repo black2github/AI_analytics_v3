@@ -1,0 +1,40 @@
+required:
+- addressProvider
+- clientAbsId
+- clientId
+- country
+- externalClientGuid
+- locality
+- orgName
+- region
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  orgName:
+    minLength: 1
+    type: string
+    description: Имя клиента
+  externalClientGuid:
+    type: string
+    description: GUID клиента
+    format: uuid
+  clientAbsId:
+    type: string
+    description: РНК в Ф1
+  country:
+    type: string
+    description: Alpha 2 код страны
+  region:
+    type: string
+    description: Район
+  locality:
+    type: string
+    description: Населенный пункт
+  addressProvider:
+    minLength: 1
+    type: string
+    description: Название провайдера адреса
+description: Данные о клиенте и CSR информации из источников ЭКО

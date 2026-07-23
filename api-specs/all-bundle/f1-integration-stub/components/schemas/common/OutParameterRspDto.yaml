@@ -1,0 +1,17 @@
+type: object
+description: Выходные параметры
+properties:
+  shortName:
+    type: string
+    description: Наименование параметра
+  classID:
+    type: string
+    description: Класс
+  referenceType:
+    type: string
+    description: Тип
+  direction:
+    type: string
+    description: Направление
+  value:
+    description: Значение

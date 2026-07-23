@@ -1,0 +1,601 @@
+type: object
+properties:
+  acceptTerm:
+    type: string
+  acceptTermEndDate:
+    type: string
+  accountBranchCode:
+    type: string
+  accountId:
+    type: integer
+    format: int64
+  accountNumber:
+    type: string
+  admissionDate:
+    $ref: ../common/LocalDate.yaml
+  amount:
+    type: number
+  amountCredit:
+    type: number
+  amountCreditStr:
+    type: string
+  amountDebit:
+    type: number
+  amountDebitStr:
+    type: string
+  amountNatCurr:
+    type: number
+  astrEntryDateTime:
+    $ref: ./Instant.yaml
+  baileeName:
+    type: string
+  baileePhone:
+    type: string
+  bankNote:
+    type: string
+  bcCode:
+    type: string
+  cardIndexPlacementDate:
+    $ref: ../common/LocalDate.yaml
+  chargeOffDate:
+    $ref: ../common/LocalDate.yaml
+  closingBalance:
+    type: number
+  closingBalanceNatCurr:
+    type: number
+  conversionAmountToEnroll:
+    type: number
+  conversionCurrencyAccountNumber:
+    type: string
+  conversionCurrencyEnrollBankMail:
+    type: string
+  conversionCurrencyEnrollBankName:
+    type: string
+  conversionCurrencyEnrollBankSwiftCode:
+    type: string
+  conversionCurrencyEnrollNoticeDate:
+    type: string
+  conversionCurrencyEnrollNoticeNumber:
+    type: string
+  conversionCurrencyName:
+    type: string
+  conversionFax:
+    type: string
+  conversionOkpoCode:
+    type: string
+  conversionOrderId:
+    type: integer
+    format: int64
+  conversionOrgAddress:
+    type: string
+  conversionOrgPhone:
+    type: string
+  conversionPhone:
+    type: string
+  conversionSellAmount:
+    type: number
+  conversionTotalChargeOffAmount:
+    type: number
+  conversionTradeAccountBankBic:
+    type: string
+  conversionTradeAccountBankCity:
+    type: string
+  conversionTradeAccountBankName:
+    type: string
+  conversionTradeAccountCorrAccountNumber:
+    type: string
+  conversionTradeAccountNumber:
+    type: string
+  conversionTransitAccountNumber:
+    type: string
+  corrAccountNumber:
+    type: string
+  counterpartyName:
+    type: string
+  createdAt:
+    $ref: ./Instant.yaml
+  creditAccountNumber:
+    type: string
+  creditCurrencyCode:
+    type: string
+  debit:
+    type: boolean
+  debitAccountNumber:
+    type: string
+  debitCurrencyCode:
+    type: string
+  deleted:
+    type: boolean
+  documentBranchCode:
+    type: string
+  documentDate:
+    $ref: ../common/LocalDate.yaml
+  documentId:
+    type: integer
+    format: int64
+  documentNumber:
+    type: integer
+    format: int64
+  documentTypeCode:
+    type: string
+  entryDate:
+    $ref: ../common/LocalDate.yaml
+  entryDateTime:
+    $ref: ./Instant.yaml
+  exchangeAdvanceRefundTerm:
+    type: string
+  exchangeAgentAddress:
+    type: string
+  exchangeAgentCity:
+    type: string
+  exchangeAgentCountryCode:
+    type: string
+  exchangeAgentName:
+    type: string
+  exchangeAgentSwiftCode:
+    type: string
+  exchangeBaileeName:
+    type: string
+  exchangeBaileePhone:
+    type: string
+  exchangeBeneficiaryAccountNumber:
+    type: string
+  exchangeBeneficiaryAddress:
+    type: string
+  exchangeBeneficiaryBankAccountNumber:
+    type: string
+  exchangeBeneficiaryBankAddress:
+    type: string
+  exchangeBeneficiaryBankCity:
+    type: string
+  exchangeBeneficiaryBankCountryCode:
+    type: string
+  exchangeBeneficiaryBankName:
+    type: string
+  exchangeBeneficiaryBankNote:
+    type: string
+  exchangeBeneficiaryBankSwiftCode:
+    type: string
+  exchangeBeneficiaryCity:
+    type: string
+  exchangeBeneficiaryCountryCode:
+    type: string
+  exchangeBeneficiaryName:
+    type: string
+  exchangeContractNumber:
+    type: string
+  exchangeDetails:
+    type: string
+  exchangeExpectedTerm:
+    type: string
+  exchangeFeeAccountNumber:
+    type: string
+  exchangeFeePayment:
+    type: string
+  exchangeFeeType:
+    type: string
+  exchangeFeeType2:
+    type: string
+  exchangeOrderId:
+    type: integer
+    format: int64
+  exchangePayeeBankNote:
+    type: string
+  exchangePayerAddress:
+    type: string
+  exchangePayerBankAddress:
+    type: string
+  exchangePayerBankSwiftCode:
+    type: string
+  exchangePayerCity:
+    type: string
+  exchangePayerCountryCode:
+    type: string
+  exchangeTypeCode:
+    type: string
+  exchangeValuationDate:
+    $ref: ../common/LocalDate.yaml
+  externalId:
+    $ref: ../common/UUID.yaml
+  id:
+    type: integer
+    format: int64
+  mxOrderAddInformation:
+    type: string
+  mxOrderAddInstructions:
+    type: string
+  mxOrderAddPaymentInstructions:
+    type: string
+  mxOrderAdvanceRefundTerm:
+    type: string
+  mxOrderAmount:
+    type: number
+  mxOrderClearingSystemCode:
+    type: string
+  mxOrderCommissionType:
+    type: string
+  mxOrderContractNumber:
+    type: string
+  mxOrderCorrespondentBankAccountNumber:
+    type: string
+  mxOrderCorrespondentBankAccountType:
+    type: boolean
+  mxOrderCorrespondentBankBic:
+    type: string
+  mxOrderCorrespondentBankName:
+    type: string
+  mxOrderCurrencyCode:
+    type: string
+  mxOrderDocumentDate:
+    $ref: ../common/LocalDate.yaml
+  mxOrderExpectedTerm:
+    type: string
+  mxOrderIntermediaryBankAccountNumber:
+    type: string
+  mxOrderIntermediaryBankAccountType:
+    type: boolean
+  mxOrderIntermediaryBankBic:
+    type: string
+  mxOrderIntermediaryBankName:
+    type: string
+  mxOrderNotificationDate:
+    $ref: ../common/LocalDate.yaml
+  mxOrderNotificationNumber:
+    type: string
+  mxOrderNumber:
+    type: integer
+    format: int64
+  mxOrderOperationTypeCode:
+    type: string
+  mxOrderPayeeAccountNumber:
+    type: string
+  mxOrderPayeeAccountType:
+    type: boolean
+  mxOrderPayeeBankAccountNumber:
+    type: string
+  mxOrderPayeeBankAccountType:
+    type: boolean
+  mxOrderPayeeBankBic:
+    type: string
+  mxOrderPayeeBankCity:
+    type: string
+  mxOrderPayeeBankCountry:
+    type: string
+  mxOrderPayeeBankHouseNumber:
+    type: string
+  mxOrderPayeeBankId:
+    type: string
+  mxOrderPayeeBankName:
+    type: string
+  mxOrderPayeeBankPostalCode:
+    type: string
+  mxOrderPayeeBankStreet:
+    type: string
+  mxOrderPayeeBuildingName:
+    type: string
+  mxOrderPayeeCity:
+    type: string
+  mxOrderPayeeCountry:
+    type: string
+  mxOrderPayeeDistrict:
+    type: string
+  mxOrderPayeeEmail:
+    type: string
+  mxOrderPayeeFloor:
+    type: string
+  mxOrderPayeeFullName:
+    type: string
+  mxOrderPayeeHouseNumber:
+    type: string
+  mxOrderPayeeInn:
+    type: string
+  mxOrderPayeeName:
+    type: string
+  mxOrderPayeeOfficeNumber:
+    type: string
+  mxOrderPayeePhoneNumber:
+    type: string
+  mxOrderPayeePoBox:
+    type: string
+  mxOrderPayeePostalCode:
+    type: string
+  mxOrderPayeeRegion:
+    type: string
+  mxOrderPayeeResidency:
+    type: string
+  mxOrderPayeeStreet:
+    type: string
+  mxOrderPayerAccountNumber:
+    type: string
+  mxOrderPayerAccountType:
+    type: boolean
+  mxOrderPayerBuildingName:
+    type: string
+  mxOrderPayerCity:
+    type: string
+  mxOrderPayerContactPersonName:
+    type: string
+  mxOrderPayerContactPersonPhoneNumber:
+    type: string
+  mxOrderPayerCountry:
+    type: string
+  mxOrderPayerDistrict:
+    type: string
+  mxOrderPayerFloor:
+    type: string
+  mxOrderPayerHouseNumber:
+    type: string
+  mxOrderPayerInn:
+    type: string
+  mxOrderPayerName:
+    type: string
+  mxOrderPayerOfficeNumber:
+    type: string
+  mxOrderPayerPoBox:
+    type: string
+  mxOrderPayerPostalCode:
+    type: string
+  mxOrderPayerRegion:
+    type: string
+  mxOrderPayerResidency:
+    type: string
+  mxOrderPayerStreet:
+    type: string
+  mxOrderPaymentDetails:
+    type: string
+  mxOrderRegulatoryInformation:
+    type: string
+  mxOrderUltimatePayeeCity:
+    type: string
+  mxOrderUltimatePayeeCountry:
+    type: string
+  mxOrderUltimatePayeeIdentification:
+    type: string
+  mxOrderUltimatePayeeName:
+    type: string
+  mxOrderValueDate:
+    $ref: ../common/LocalDate.yaml
+  oktmoCode:
+    type: string
+  openingBalance:
+    type: number
+  openingBalanceNatCurr:
+    type: number
+  orderAmount:
+    type: number
+  orderBankNote:
+    type: string
+  orderBaseCashSymbols:
+    type: string
+  orderBaseCounterparty:
+    type: string
+  orderBaseFirstSignatory:
+    type: string
+  orderBasePayerBankNameDetail:
+    type: string
+  orderBasePresentedDocument:
+    type: string
+  orderBaseSecondSignatory:
+    type: string
+  orderBaseSum:
+    type: string
+  orderBaseThirdSignatory:
+    type: string
+  orderCashSymbols:
+    type: string
+  orderCounterparty:
+    type: string
+  orderCreationDate:
+    $ref: ../common/LocalDate.yaml
+  orderCurrencyCode:
+    type: string
+  orderFirstSignatory:
+    type: string
+  orderNumber:
+    type: string
+  orderPaidDocumentCipher:
+    type: string
+  orderPaidDocumentDate:
+    $ref: ../common/LocalDate.yaml
+  orderPaidDocumentNumber:
+    type: string
+  orderPartialPaymentNumber:
+    type: integer
+    format: int32
+  orderPayeeAccountNumber:
+    type: string
+  orderPayeeBankBic:
+    type: string
+  orderPayeeBankCity:
+    type: string
+  orderPayeeBankName:
+    type: string
+  orderPayeeCorrAccountNumber:
+    type: string
+  orderPayeeInn:
+    type: string
+  orderPayeeKpp:
+    type: string
+  orderPayeeName:
+    type: string
+  orderPayerAccountNumber:
+    type: string
+  orderPayerBankBic:
+    type: string
+  orderPayerBankCity:
+    type: string
+  orderPayerBankName:
+    type: string
+  orderPayerBankNameDetail:
+    type: string
+  orderPayerCorrAccountNumber:
+    type: string
+  orderPayerInn:
+    type: string
+  orderPayerKpp:
+    type: string
+  orderPayerName:
+    type: string
+  orderPresentedDocument:
+    type: string
+  orderPriority:
+    type: string
+  orderPurpose:
+    type: string
+  orderPurposeCode:
+    type: string
+  orderRestAmount:
+    type: number
+  orderSecondSignatory:
+    type: string
+  orderSendType:
+    type: string
+  orderSum:
+    type: string
+  orderThirdSignatory:
+    type: string
+  orderTypeCode:
+    type: string
+  paidDocumentCipher:
+    type: string
+  paidDocumentDate:
+    $ref: ../common/LocalDate.yaml
+  paidDocumentNumber:
+    type: string
+  partialPaymentNumber:
+    type: integer
+    format: int32
+  payCondition:
+    type: string
+  paySheetDrawerStatus:
+    type: string
+  payTerm:
+    $ref: ../common/LocalDate.yaml
+  payeeAccountNumber:
+    type: string
+  payeeAccountNumberVirtual:
+    type: string
+  payeeBankBic:
+    type: string
+  payeeBankCity:
+    type: string
+  payeeBankName:
+    type: string
+  payeeCorrAccountNumber:
+    type: string
+  payeeInn:
+    type: string
+  payeeKpp:
+    type: string
+  payeeName:
+    type: string
+  payerAccountNumber:
+    type: string
+  payerBankBic:
+    type: string
+  payerBankCity:
+    type: string
+  payerBankName:
+    type: string
+  payerCorrAccountNumber:
+    type: string
+  payerInn:
+    type: string
+  payerKpp:
+    type: string
+  payerName:
+    type: string
+  paymentCode:
+    type: string
+  paymentPriority:
+    type: integer
+    format: int16
+  paymentPurpose:
+    type: string
+  paymentPurposeCode:
+    type: string
+  paymentType:
+    type: string
+  removalDate:
+    $ref: ../common/LocalDate.yaml
+  restAmount:
+    type: number
+  revaluationType:
+    $ref: ./RevaluationTypeDto.yaml
+  rubleOrderId:
+    type: integer
+    format: int64
+  swiftAgentBank:
+    type: string
+  swiftBeneficiary:
+    type: string
+  swiftBeneficiaryBank:
+    type: string
+  swiftDateAmountCurrency:
+    type: string
+  swiftFeePayment:
+    type: string
+  swiftNote:
+    type: string
+  swiftPayeeNote:
+    type: string
+  swiftPayer:
+    type: string
+  swiftPayerBank:
+    type: string
+  taxDocumentDate:
+    type: string
+  taxDocumentNumber:
+    type: string
+  taxPaymentPurpose:
+    type: string
+  taxPaymentType:
+    type: string
+  taxPeriod:
+    type: string
+  transitChargeOffAccountNumber:
+    type: string
+  transitChargeOffBankBic:
+    type: string
+  transitChargeOffBankName:
+    type: string
+  transitEnrollmentAccountNumber:
+    type: string
+  transitEnrollmentBankBic:
+    type: string
+  transitEnrollmentBrokerBankName:
+    type: string
+  transitEnrollmentBrokerBankSwiftCode:
+    type: string
+  transitEnrollmentBudgetaryClassificationCode:
+    type: string
+  transitEnrollmentCorrAccountNumber:
+    type: string
+  transitEnrollmentPayeeBankName:
+    type: string
+  transitEnrollmentPayeeBankSwiftCode:
+    type: string
+  transitEnrollmentPayeeCorrAccountNumberInBrokerBank:
+    type: string
+  transitEnrollmentTreasuryAccountNumber:
+    type: string
+  transitMaxRate:
+    type: number
+  transitMinRate:
+    type: number
+  transitPurchaseAmount:
+    type: number
+  transitPurchaseCurrency:
+    type: string
+  transitSaleAmount:
+    type: number
+  transitSaleCurrency:
+    type: string
+  transitSignDate:
+    $ref: ../common/LocalDate.yaml
+  transitTariff:
+    type: string
+  updatedAt:
+    $ref: ./Instant.yaml
+  upno:
+    type: string

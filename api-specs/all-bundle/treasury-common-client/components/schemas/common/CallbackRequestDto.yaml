@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientInfo:
+    $ref: ./ClientInfoDto.yaml
+  branchInfo:
+    $ref: ./BranchInfoDto.yaml
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  personName:
+    type: string
+    description: ФИО
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  question:
+    type: string
+    description: Вопрос
+description: Данные

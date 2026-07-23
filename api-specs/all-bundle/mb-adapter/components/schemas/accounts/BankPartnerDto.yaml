@@ -1,0 +1,15 @@
+type: object
+properties:
+  bankName:
+    type: string
+    description: Наименование банка
+  bankBic:
+    type: string
+    description: БИК банка
+  departmentAddress:
+    type: string
+    description: Адрес отделения, обслуживающего счет
+  accountNumber:
+    type: string
+    description: Номер корреспондентского счета
+description: Информация об обслуживающем финансовом учреждении

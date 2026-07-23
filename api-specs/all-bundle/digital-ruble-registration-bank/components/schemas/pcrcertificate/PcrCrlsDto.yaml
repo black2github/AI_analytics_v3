@@ -1,0 +1,17 @@
+type: object
+properties:
+  rcdsOfBankOfRussia:
+    uniqueItems: true
+    type: array
+    description: Справочники отозванных сертификатов Банка России
+    items:
+      type: string
+      description: Справочники отозванных сертификатов Банка России
+  rcdsOfFi:
+    uniqueItems: true
+    type: array
+    description: Справочники отозванных сертификатов Финансового посредника
+    items:
+      type: string
+      description: Справочники отозванных сертификатов Финансового посредника
+description: САСы ПлЦР

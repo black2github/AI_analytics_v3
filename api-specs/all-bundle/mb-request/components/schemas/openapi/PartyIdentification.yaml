@@ -1,0 +1,24 @@
+type: object
+properties:
+  name:
+    type: string
+  mobileNumber:
+    type: string
+  countryOfResidence:
+    type: string
+  countryOfBirth:
+    type: string
+  provinceOfBirth:
+    type: string
+  cityOfBirth:
+    type: string
+  birthDate:
+    type: string
+    format: date-time
+  Identification:
+    type: array
+    items:
+      $ref: ./IdentificationType.yaml
+  PostalAddress:
+    $ref: ./PostalAddress.yaml
+description: Информация об участнике, используемая для идентификации юридического или физического лица

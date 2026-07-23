@@ -1,0 +1,41 @@
+type: object
+description: Callback на расторжение договора СЦР Клиента-ФЛ/ЮЛ Оператором ПлЦР по требованиям 115-ФЗ.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  dcAccountNumber:
+    type: string
+    description: Номер счета ЦР Клиента-ЮЛ на ПлЦР.
+  shortMessage:
+    type: string
+    description: Краткое сообщение.
+  detailedMessage:
+    type: string
+    description: Подробное сообщение.
+  albumVersion:
+    type: string
+    description: Номер версии альбома ЭС ПлЦР, по которому отправляется callback.
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР.
+  additionalData:
+    $ref: ./AdditionalDataDto.yaml
+    description: Объект, содержащий дополнительную информацию от ПлЦР.
+  additionalDataKv:
+    type: array
+    description: Дополнительные данные от ПЦР.
+    items:
+      $ref: ./PropsDto.yaml
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- albumVersion
+- messageCreationDateTime
+- operationId
+- participantId

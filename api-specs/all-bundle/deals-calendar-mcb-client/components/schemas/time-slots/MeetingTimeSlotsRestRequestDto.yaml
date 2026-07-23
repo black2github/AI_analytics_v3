@@ -1,0 +1,31 @@
+required:
+- address
+- date
+- fiasCode
+- lat
+- lng
+type: object
+properties:
+  date:
+    type: string
+    description: Дата
+  address:
+    type: string
+    description: Адрес
+  deliveryId:
+    type: string
+    description: ID доставки
+  fiasCode:
+    type: string
+    description: ФИАС-код города
+  lat:
+    type: number
+    description: Широта адреса доставки
+  lng:
+    type: number
+    description: Долгота адреса доставки
+  onboardingId:
+    type: string
+    description: Идентификатор заявки на онбординг
+    format: uuid
+description: Запрос получения доступных временных слотов по заявке на встречу

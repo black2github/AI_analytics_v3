@@ -1,0 +1,17 @@
+type: object
+properties:
+  contractNumber:
+    maxLength: 10
+    pattern: ^[0-9]*$
+    type: string
+    description: Код брокерского договора
+  tradingFloor:
+    $ref: ./TradingFloorDto.yaml
+  brief:
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+description: Входящие параметры дополнительных полей для создания перевода на брокерский счёт

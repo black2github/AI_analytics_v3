@@ -1,0 +1,16 @@
+required:
+- certificate
+type: object
+properties:
+  certificate:
+    minLength: 1
+    type: string
+    description: Сертификат в Base64
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  dboRequest:
+    type: boolean
+    description: Поиск для ДБО каталога
+description: Запрос проверки наличия СЭП для сертификата

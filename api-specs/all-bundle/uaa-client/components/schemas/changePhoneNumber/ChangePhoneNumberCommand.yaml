@@ -1,0 +1,6 @@
+required:
+- phoneNumber
+type: object
+properties:
+  phoneNumber:
+    type: string

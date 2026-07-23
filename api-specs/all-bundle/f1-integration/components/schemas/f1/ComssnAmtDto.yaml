@@ -1,0 +1,17 @@
+type: object
+properties:
+  acctFrstOpn:
+    type: number
+    description: Сумма комиссии за открытие первого счета (тариф)
+  acctScndOpn:
+    type: number
+    description: Сумма комиссии за второй и последующие счета (тариф)
+  acctFrstOpnGOZSUZ:
+    type: number
+    description: Сумма комиссии за открытие первого счета (ГОЗ/СУЗ)
+  acctScndOpnGOZSUZ:
+    type: number
+    description: Сумма комиссии за второй и последующие счета (ГОЗ/СУЗ)
+  sbcptFeeDto:
+    $ref: ./SbcptFeeDto.yaml
+description: Блок с комиссиями

@@ -1,0 +1,7 @@
+type: object
+properties:
+  docId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+description: Связанные документы

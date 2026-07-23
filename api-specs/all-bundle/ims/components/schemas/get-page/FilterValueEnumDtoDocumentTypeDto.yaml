@@ -1,0 +1,153 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Классификатор типов документов.
+    enum:
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_SECOND_REQ
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+    - ACC_RESERV_REQ
+    - OFFER_RKO_ACCEPTANCE_REQ
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+    - REG_COWORKER_DATA
+    - OFFER_JOIN_CCERT
+    - FREE_FORMAT_DOC
+    - OFFER_JOIN_PO_UVED
+    - OFFER_BREAK_PO_UVED
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - REQUEST_FOR_ACCOUNT_INFO
+    - UPDATE_INFORM
+    - UPDATE_INFORM_RQMNT
+    - ACC_OPEN_FIRST_REQ_2021
+    - OFFER_TMG
+    - STATEMENT_USER_ROLE_TMG
+    - VM_REQUEST_DOC
+    - ACC_OPEN_FIRST_REQ_OB
+    - UNCDOCINF
+    - ADD_EDIT_USER
+    - BUSINESS_CARD_ISSUE_REQUEST
+    - ACC_OPEN_FIRST_REQ_FNS
+    - IDENTIFICATION_RESULT_REQUEST_FNS
+    - ACC_OPEN_FIRST_REQ_KZ
+    - ACC_OPEN_FIRST_REQ_REM
+    - BRK_ONBOARD
+    - DW_WALLET_IDENTIFY
+  notEq:
+    type: string
+    description: Классификатор типов документов.
+    enum:
+    - ACC_OPEN_FIRST_REQ
+    - ACC_OPEN_SECOND_REQ
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+    - ACC_RESERV_REQ
+    - OFFER_RKO_ACCEPTANCE_REQ
+    - OFFER_JOIN_GPB_BO1_REQ
+    - ADD_BLOCK_USER_GPBBO
+    - REG_COWORKER_DATA
+    - OFFER_JOIN_CCERT
+    - FREE_FORMAT_DOC
+    - OFFER_JOIN_PO_UVED
+    - OFFER_BREAK_PO_UVED
+    - OFFER_JOIN_PO_MP
+    - ADD_BLOCK_USER_MP
+    - REQUEST_FOR_ACCOUNT_INFO
+    - UPDATE_INFORM
+    - UPDATE_INFORM_RQMNT
+    - ACC_OPEN_FIRST_REQ_2021
+    - OFFER_TMG
+    - STATEMENT_USER_ROLE_TMG
+    - VM_REQUEST_DOC
+    - ACC_OPEN_FIRST_REQ_OB
+    - UNCDOCINF
+    - ADD_EDIT_USER
+    - BUSINESS_CARD_ISSUE_REQUEST
+    - ACC_OPEN_FIRST_REQ_FNS
+    - IDENTIFICATION_RESULT_REQUEST_FNS
+    - ACC_OPEN_FIRST_REQ_KZ
+    - ACC_OPEN_FIRST_REQ_REM
+    - BRK_ONBOARD
+    - DW_WALLET_IDENTIFY
+  in:
+    type: array
+    items:
+      type: string
+      description: Классификатор типов документов.
+      enum:
+      - ACC_OPEN_FIRST_REQ
+      - ACC_OPEN_SECOND_REQ
+      - ACC_OPEN_SECOND_CONTRACT_REQ
+      - ACC_RESERV_REQ
+      - OFFER_RKO_ACCEPTANCE_REQ
+      - OFFER_JOIN_GPB_BO1_REQ
+      - ADD_BLOCK_USER_GPBBO
+      - REG_COWORKER_DATA
+      - OFFER_JOIN_CCERT
+      - FREE_FORMAT_DOC
+      - OFFER_JOIN_PO_UVED
+      - OFFER_BREAK_PO_UVED
+      - OFFER_JOIN_PO_MP
+      - ADD_BLOCK_USER_MP
+      - REQUEST_FOR_ACCOUNT_INFO
+      - UPDATE_INFORM
+      - UPDATE_INFORM_RQMNT
+      - ACC_OPEN_FIRST_REQ_2021
+      - OFFER_TMG
+      - STATEMENT_USER_ROLE_TMG
+      - VM_REQUEST_DOC
+      - ACC_OPEN_FIRST_REQ_OB
+      - UNCDOCINF
+      - ADD_EDIT_USER
+      - BUSINESS_CARD_ISSUE_REQUEST
+      - ACC_OPEN_FIRST_REQ_FNS
+      - IDENTIFICATION_RESULT_REQUEST_FNS
+      - ACC_OPEN_FIRST_REQ_KZ
+      - ACC_OPEN_FIRST_REQ_REM
+      - BRK_ONBOARD
+      - DW_WALLET_IDENTIFY
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Классификатор типов документов.
+      enum:
+      - ACC_OPEN_FIRST_REQ
+      - ACC_OPEN_SECOND_REQ
+      - ACC_OPEN_SECOND_CONTRACT_REQ
+      - ACC_RESERV_REQ
+      - OFFER_RKO_ACCEPTANCE_REQ
+      - OFFER_JOIN_GPB_BO1_REQ
+      - ADD_BLOCK_USER_GPBBO
+      - REG_COWORKER_DATA
+      - OFFER_JOIN_CCERT
+      - FREE_FORMAT_DOC
+      - OFFER_JOIN_PO_UVED
+      - OFFER_BREAK_PO_UVED
+      - OFFER_JOIN_PO_MP
+      - ADD_BLOCK_USER_MP
+      - REQUEST_FOR_ACCOUNT_INFO
+      - UPDATE_INFORM
+      - UPDATE_INFORM_RQMNT
+      - ACC_OPEN_FIRST_REQ_2021
+      - OFFER_TMG
+      - STATEMENT_USER_ROLE_TMG
+      - VM_REQUEST_DOC
+      - ACC_OPEN_FIRST_REQ_OB
+      - UNCDOCINF
+      - ADD_EDIT_USER
+      - BUSINESS_CARD_ISSUE_REQUEST
+      - ACC_OPEN_FIRST_REQ_FNS
+      - IDENTIFICATION_RESULT_REQUEST_FNS
+      - ACC_OPEN_FIRST_REQ_KZ
+      - ACC_OPEN_FIRST_REQ_REM
+      - BRK_ONBOARD
+      - DW_WALLET_IDENTIFY
+  isNull:
+    type: boolean
+description: Фильтр по типу заявки

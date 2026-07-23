@@ -1,0 +1,191 @@
+openapi: 3.0.1
+info:
+  title: Сервис визирования ПЭД. Банковская часть.
+  version: 3.2.0
+servers:
+- url: /approval-sign-bank
+paths:
+  /approval-sign/tnf/approval-status:
+    $ref: ./paths/tnf/approval_sign_tnf_approval_status.yaml
+  /integration/approval-sign/document/approval-sign-doc-before-list:
+    $ref: ./paths/approval-sign/integration_approval_sign_document_approval_sign_doc_before_list.yaml
+  /integration/approval-sign/document/approval-sign-doc-after-list:
+    $ref: ./paths/approval-sign/integration_approval_sign_document_approval_sign_doc_after_list.yaml
+  /integration/approval-sign/docs-for-approve-ids:
+    $ref: ./paths/approval-sign/integration_approval_sign_docs_for_approve_ids.yaml
+  /integration/approval-sign/docs-for-approve-filter-ids:
+    $ref: ./paths/approval-sign/integration_approval_sign_docs_for_approve_filter_ids.yaml
+  /integration/approval-sign/approval-sign-person/by-uaa-id-and-client-id:
+    $ref: ./paths/approval-sign/integration_approval_sign_approval_sign_person_by_uaa_id_and_client_id.yaml
+  /approval-sign/tnf:
+    $ref: ./paths/tnf/approval_sign_tnf.yaml
+  /approval-sign/tnf/person/by-bank-client:
+    $ref: ./paths/tnf/approval_sign_tnf_person_by_bank_client.yaml
+  /approval-sign/person/get-page:
+    $ref: ./paths/person/approval_sign_person_get_page.yaml
+  /approval-sign/person/count-category:
+    $ref: ./paths/person/approval_sign_person_count_category.yaml
+  /approval-sign/person/accounts:
+    $ref: ./paths/person/approval_sign_person_accounts.yaml
+  /approval-sign/person/accounts/get-page:
+    $ref: ./paths/person/approval_sign_person_accounts_get_page.yaml
+  /approval-sign/person/accounts/export:
+    $ref: ./paths/person/approval_sign_person_accounts_export.yaml
+  /approval-sign/approval-sign-document/get-page:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_get_page.yaml
+  /approval-sign/approval-sign-document/export-request-excel:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_export_request_excel.yaml
+  /approval-sign/approval-sign-document/category:
+    $ref: ./paths/approval-sign-document/approval_sign_approval_sign_document_category.yaml
+  /integration/approval-sign/clients/get-list/{id}:
+    $ref: ./paths/approval-sign/integration_approval_sign_clients_get_list_id.yaml
+  /integration/approval-sign/client-id/{id}:
+    $ref: ./paths/approval-sign/integration_approval_sign_client_id_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /approval-sign/tnf/{id}:
+    $ref: ./paths/tnf/approval_sign_tnf_id.yaml
+  /approval-sign/tnf/person/findByAccountId/{accountId}:
+    $ref: ./paths/tnf/approval_sign_tnf_person_findByAccountId_accountId.yaml
+  /approval-sign/f1/{id}:
+    $ref: ./paths/f1/approval_sign_f1_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    TnfApprovalStatusUpdateDto:
+      $ref: ./components/schemas/tnf/TnfApprovalStatusUpdateDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/tnf/ErrorData.yaml
+    GenericResponseErrorDataListUUID:
+      $ref: ./components/schemas/tnf/GenericResponseErrorDataListUUID.yaml
+    DocumentForApprovalCountFilterDto:
+      $ref: ./components/schemas/approval-sign/DocumentForApprovalCountFilterDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GenericCommandDocumentForApprovalCountFilterDto:
+      $ref: ./components/schemas/approval-sign/GenericCommandDocumentForApprovalCountFilterDto.yaml
+    ApprovalSignDocumentAllBeforeDto:
+      $ref: ./components/schemas/approval-sign/ApprovalSignDocumentAllBeforeDto.yaml
+    ApprovalSignDocumentBeforeDto:
+      $ref: ./components/schemas/approval-sign/ApprovalSignDocumentBeforeDto.yaml
+    GenericResponseSimpleErrorDataApprovalSignDocumentAllBeforeDto:
+      $ref: ./components/schemas/approval-sign/GenericResponseSimpleErrorDataApprovalSignDocumentAllBeforeDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ApprovalSignDocumentAfterDto:
+      $ref: ./components/schemas/approval-sign/ApprovalSignDocumentAfterDto.yaml
+    GenericResponseSimpleErrorDataApprovalSignDocumentAfterDto:
+      $ref: ./components/schemas/approval-sign/GenericResponseSimpleErrorDataApprovalSignDocumentAfterDto.yaml
+    ApprovalSignDocumentStatusFilterDto:
+      $ref: ./components/schemas/common/ApprovalSignDocumentStatusFilterDto.yaml
+    ApprovalSignScrollerFilterDto:
+      $ref: ./components/schemas/approval-sign/ApprovalSignScrollerFilterDto.yaml
+    DocsForApprovalRequestDto:
+      $ref: ./components/schemas/approval-sign/DocsForApprovalRequestDto.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueEnumDtoVisaDecisionFilterDto:
+      $ref: ./components/schemas/approval-sign/FilterValueEnumDtoVisaDecisionFilterDto.yaml
+    RequestClassifierFilterDto:
+      $ref: ./components/schemas/common/RequestClassifierFilterDto.yaml
+    GenericResponseSimpleErrorDataListUUID:
+      $ref: ./components/schemas/approval-sign/GenericResponseSimpleErrorDataListUUID.yaml
+    FindApprovalPersonBankDto:
+      $ref: ./components/schemas/approval-sign/FindApprovalPersonBankDto.yaml
+    ApprovalPersonInfoDto:
+      $ref: ./components/schemas/common/ApprovalPersonInfoDto.yaml
+    GenericResponseSimpleErrorDataApprovalPersonInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataApprovalPersonInfoDto.yaml
+    TnfApprovalAccountCreateDto:
+      $ref: ./components/schemas/tnf/TnfApprovalAccountCreateDto.yaml
+    TnfApprovalCreateDto:
+      $ref: ./components/schemas/tnf/TnfApprovalCreateDto.yaml
+    TnfApprovalOrgData:
+      $ref: ./components/schemas/tnf/TnfApprovalOrgData.yaml
+    TnfApprovalPersonCreateData:
+      $ref: ./components/schemas/tnf/TnfApprovalPersonCreateData.yaml
+    GenericResponseSimpleErrorDataListApprovalPersonInfoDto:
+      $ref: ./components/schemas/tnf/GenericResponseSimpleErrorDataListApprovalPersonInfoDto.yaml
+    ApprovalPersonFilterDto:
+      $ref: ./components/schemas/tnf/ApprovalPersonFilterDto.yaml
+    ApprovalPersonRequestDto:
+      $ref: ./components/schemas/tnf/ApprovalPersonRequestDto.yaml
+    ApprovalPersonCandidateDto:
+      $ref: ./components/schemas/tnf/ApprovalPersonCandidateDto.yaml
+    GenericResponseSimpleErrorDataListApprovalPersonCandidateDto:
+      $ref: ./components/schemas/tnf/GenericResponseSimpleErrorDataListApprovalPersonCandidateDto.yaml
+    ApprovalScrollerFilterDto:
+      $ref: ./components/schemas/person/ApprovalScrollerFilterDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/person/FilterValueDtoBoolean.yaml
+    GetPageCommandApprovalScrollerFilterDto:
+      $ref: ./components/schemas/person/GetPageCommandApprovalScrollerFilterDto.yaml
+    PageParamsApprovalScrollerFilterDto:
+      $ref: ./components/schemas/person/PageParamsApprovalScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageApprovalPersonInfoDto:
+      $ref: ./components/schemas/person/PageApprovalPersonInfoDto.yaml
+    ApprovalPersonKindData:
+      $ref: ./components/schemas/person/ApprovalPersonKindData.yaml
+    ApprovalAccountsRequestDto:
+      $ref: ./components/schemas/person/ApprovalAccountsRequestDto.yaml
+    ApprovalAccountInfoDto:
+      $ref: ./components/schemas/person/ApprovalAccountInfoDto.yaml
+    GenericResponseSimpleErrorDataListApprovalAccountInfoDto:
+      $ref: ./components/schemas/person/GenericResponseSimpleErrorDataListApprovalAccountInfoDto.yaml
+    ApprovalAccountsFilterDto:
+      $ref: ./components/schemas/person/ApprovalAccountsFilterDto.yaml
+    GetPageCommandApprovalAccountsFilterDto:
+      $ref: ./components/schemas/person/GetPageCommandApprovalAccountsFilterDto.yaml
+    PageParamsApprovalAccountsFilterDto:
+      $ref: ./components/schemas/person/PageParamsApprovalAccountsFilterDto.yaml
+    PageApprovalAccountInfoDto:
+      $ref: ./components/schemas/person/PageApprovalAccountInfoDto.yaml
+    ApprovalAccountsExportRequestDto:
+      $ref: ./components/schemas/person/ApprovalAccountsExportRequestDto.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/common/AttachmentAccessData.yaml
+    GenericResponseSimpleErrorDataAttachmentAccessData:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentAccessData.yaml
+    ApprovalSignBankScrollerFilterDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankScrollerFilterDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/approval-sign-document/FilterValueDtoLocalDate.yaml
+    GetPageCommandApprovalSignBankScrollerFilterDto:
+      $ref: ./components/schemas/approval-sign-document/GetPageCommandApprovalSignBankScrollerFilterDto.yaml
+    PageParamsApprovalSignBankScrollerFilterDto:
+      $ref: ./components/schemas/approval-sign-document/PageParamsApprovalSignBankScrollerFilterDto.yaml
+    VisaTypeFilterDto:
+      $ref: ./components/schemas/approval-sign-document/VisaTypeFilterDto.yaml
+    ApprovalSignBankDocumentDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankDocumentDto.yaml
+    ApprovalSignBankMainDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankMainDetailsDto.yaml
+    ApprovalSignBankOrganizationInfoDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankOrganizationInfoDto.yaml
+    ApprovalSignBankRecipientDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankRecipientDetailsDto.yaml
+    ApprovalSignBankSenderDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankSenderDetailsDto.yaml
+    ApprovalSignBankSignatureDetailsDto:
+      $ref: ./components/schemas/approval-sign-document/ApprovalSignBankSignatureDetailsDto.yaml
+    PageDataApprovalSignBankDocumentDto:
+      $ref: ./components/schemas/approval-sign-document/PageDataApprovalSignBankDocumentDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/approval-sign-document/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/approval-sign-document/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUUID.yaml

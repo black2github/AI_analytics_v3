@@ -1,0 +1,14 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  signId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signData:
+    type: string
+    description: Подпись в base64
+description: Данные для получения сертификатов УЦ и СОС на дату

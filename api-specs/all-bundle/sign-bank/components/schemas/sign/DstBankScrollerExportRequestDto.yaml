@@ -1,0 +1,10 @@
+type: object
+properties:
+  dstIds:
+    type: array
+    description: Список идентификаторов СЭП
+    items:
+      type: string
+      description: Список идентификаторов СЭП
+      format: uuid
+description: Запрос на экспорт СЭП в файл

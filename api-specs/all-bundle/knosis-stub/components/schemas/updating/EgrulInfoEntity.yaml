@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    $ref: ./UUID.yaml
+  inn:
+    type: string
+  ogrn:
+    type: string
+  response:
+    type: string

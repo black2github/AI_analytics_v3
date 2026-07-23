@@ -1,0 +1,310 @@
+openapi: 3.0.1
+info:
+  title: СВК 1. Клиентская часть.
+  description: Сервис сообщений валютному контролеру.
+  version: 3.8.0
+servers:
+- url: /msg-cco-client
+security:
+- bearerAuth: []
+paths:
+  /svk-out:
+    $ref: ./paths/svk-out/svk_out.yaml
+  /svk-out/signature/v2.1/generate-sign-data:
+    $ref: ./paths/signature/svk_out_signature_v2_1_generate_sign_data.yaml
+  /svk-out/signature/registry/sign:
+    $ref: ./paths/signature/svk_out_signature_registry_sign.yaml
+  /svk-out/signature/registry/sign-registry:
+    $ref: ./paths/signature/svk_out_signature_registry_sign_registry.yaml
+  /svk-out/signature/registry/send:
+    $ref: ./paths/signature/svk_out_signature_registry_send.yaml
+  /svk-out/signature/generate-digest:
+    $ref: ./paths/signature/svk_out_signature_generate_digest.yaml
+  /svk-out/print:
+    $ref: ./paths/print/svk_out_print.yaml
+  /svk-out/print/batch:
+    $ref: ./paths/print/svk_out_print_batch.yaml
+  /svk-out/get-page:
+    $ref: ./paths/get-page/svk_out_get_page.yaml
+  /svk-out/get-linked-documents:
+    $ref: ./paths/get-linked-documents/svk_out_get_linked_documents.yaml
+  /svk-out/export-task:
+    $ref: ./paths/export-task/svk_out_export_task.yaml
+  /svk-out/export-registry:
+    $ref: ./paths/export-registry/svk_out_export_registry.yaml
+  /svk-out/dict/org:
+    $ref: ./paths/dict/svk_out_dict_org.yaml
+  /svk-out/dict/branches-by-user:
+    $ref: ./paths/dict/svk_out_dict_branches_by_user.yaml
+  /svk-out/dict/branch:
+    $ref: ./paths/dict/svk_out_dict_branch.yaml
+  /svk-out/delete/batch:
+    $ref: ./paths/delete/svk_out_delete_batch.yaml
+  /svk-out/copying:
+    $ref: ./paths/copying/svk_out_copying.yaml
+  /svk-out/attach/zip-access-token:
+    $ref: ./paths/attach/svk_out_attach_zip_access_token.yaml
+  /svk-out/{id}:
+    $ref: ./paths/{id}/svk_out_id.yaml
+  /svk-out/{id}/attach/{attachId}/token:
+    $ref: ./paths/{id}/svk_out_id_attach_attachId_token.yaml
+  /svk-out/subject:
+    $ref: ./paths/subject/svk_out_subject.yaml
+  /svk-out/subject/{linkedDocType}/{linkedDocumentId}:
+    $ref: ./paths/subject/svk_out_subject_linkedDocType_linkedDocumentId.yaml
+  /svk-out/subject/v2:
+    $ref: ./paths/subject/svk_out_subject_v2.yaml
+  /svk-out/subject/topics:
+    $ref: ./paths/subject/svk_out_subject_topics.yaml
+  /svk-out/source-system/list:
+    $ref: ./paths/source-system/svk_out_source_system_list.yaml
+  /svk-out/next-doc-number/{clientId}:
+    $ref: ./paths/next-doc-number/svk_out_next_doc_number_clientId.yaml
+  /svk-out/history/{id}:
+    $ref: ./paths/history/svk_out_history_id.yaml
+  /svk-out/export-task/{taskId}:
+    $ref: ./paths/export-task/svk_out_export_task_taskId.yaml
+  /svk-out/export-task/{taskId}/attachment:
+    $ref: ./paths/export-task/svk_out_export_task_taskId_attachment.yaml
+  /svk-out/category:
+    $ref: ./paths/category/svk_out_category.yaml
+  /svk-out/account-access:
+    $ref: ./paths/account-access/svk_out_account_access.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    GenericCommandSvkOutUpdateRqDto:
+      $ref: ./components/schemas/svk-out/GenericCommandSvkOutUpdateRqDto.yaml
+    SvkOutAttachmentInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutAttachmentInfoRqDto.yaml
+    SvkOutBankClientInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutBankClientInfoRqDto.yaml
+    SvkOutBranchInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutBranchInfoRqDto.yaml
+    SvkOutLinkedDocumentInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutLinkedDocumentInfoRqDto.yaml
+    SvkOutMessageInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutMessageInfoRqDto.yaml
+    SvkOutUpdateRqDto:
+      $ref: ./components/schemas/svk-out/SvkOutUpdateRqDto.yaml
+    CreateResponseSvkOutViewRspDto:
+      $ref: ./components/schemas/common/CreateResponseSvkOutViewRspDto.yaml
+    SvkOutAttachmentDetailsRspDto:
+      $ref: ./components/schemas/common/SvkOutAttachmentDetailsRspDto.yaml
+    SvkOutAttachmentInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutAttachmentInfoRspDto.yaml
+    SvkOutBankClientInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutBankClientInfoRspDto.yaml
+    SvkOutBranchInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutBranchInfoRspDto.yaml
+    SvkOutCertificateInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutCertificateInfoRspDto.yaml
+    SvkOutLinkedDocumentInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutLinkedDocumentInfoRspDto.yaml
+    SvkOutMessageInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutMessageInfoRspDto.yaml
+    SvkOutSignatureDataRspDto:
+      $ref: ./components/schemas/common/SvkOutSignatureDataRspDto.yaml
+    SvkOutSignatureRspDto:
+      $ref: ./components/schemas/common/SvkOutSignatureRspDto.yaml
+    SvkOutSignatureStatDataRspDto:
+      $ref: ./components/schemas/common/SvkOutSignatureStatDataRspDto.yaml
+    SvkOutSourceSystemInfoRspDto:
+      $ref: ./components/schemas/common/SvkOutSourceSystemInfoRspDto.yaml
+    SvkOutViewRspDto:
+      $ref: ./components/schemas/common/SvkOutViewRspDto.yaml
+    GenericCommandSvkOutCreateRqDto:
+      $ref: ./components/schemas/common/GenericCommandSvkOutCreateRqDto.yaml
+    SvkOutCreateRqDto:
+      $ref: ./components/schemas/common/SvkOutCreateRqDto.yaml
+    SvkOutSourceSystemInfoRqDto:
+      $ref: ./components/schemas/common/SvkOutSourceSystemInfoRqDto.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/common/GenericCommandSetUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/signature/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/signature/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/signature/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignV2x1Dto.yaml
+    SvkOutBatchRegistrySignRqDto:
+      $ref: ./components/schemas/signature/SvkOutBatchRegistrySignRqDto.yaml
+    SvkOutClientRegistrySignRqDto:
+      $ref: ./components/schemas/signature/SvkOutClientRegistrySignRqDto.yaml
+    GenericResponseSimpleErrorDataListSvkOutViewRspDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataListSvkOutViewRspDto.yaml
+    GenericCommandListSvkOutSignRegistryDocumentRqDto:
+      $ref: ./components/schemas/signature/GenericCommandListSvkOutSignRegistryDocumentRqDto.yaml
+    SvkOutSignRegistryDocumentRqDto:
+      $ref: ./components/schemas/signature/SvkOutSignRegistryDocumentRqDto.yaml
+    GenericResponseSimpleErrorDataSignRegistryDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataSignRegistryDto.yaml
+    SignRegistryClientDocumentsDto:
+      $ref: ./components/schemas/signature/SignRegistryClientDocumentsDto.yaml
+    SignRegistryDocumentDto:
+      $ref: ./components/schemas/signature/SignRegistryDocumentDto.yaml
+    SignRegistryDto:
+      $ref: ./components/schemas/signature/SignRegistryDto.yaml
+    SignRegistryStatisticsByClientDto:
+      $ref: ./components/schemas/signature/SignRegistryStatisticsByClientDto.yaml
+    SignRegistryStatisticsDto:
+      $ref: ./components/schemas/signature/SignRegistryStatisticsDto.yaml
+    SvkOutSendSignRegistryRqDtoSetUUID:
+      $ref: ./components/schemas/signature/SvkOutSendSignRegistryRqDtoSetUUID.yaml
+    SvkOutUserDeviceInfoRqDto:
+      $ref: ./components/schemas/signature/SvkOutUserDeviceInfoRqDto.yaml
+    GenericResponseSimpleErrorDataSetUUID:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataSetUUID.yaml
+    DigestRequest:
+      $ref: ./components/schemas/signature/DigestRequest.yaml
+    GenericCommandDigestRequest:
+      $ref: ./components/schemas/signature/GenericCommandDigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/signature/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataSvkOutFileDataForDownloadRspDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataSvkOutFileDataForDownloadRspDto.yaml
+    SvkOutFileDataForDownloadRspDto:
+      $ref: ./components/schemas/common/SvkOutFileDataForDownloadRspDto.yaml
+    GenericCommandSvkOutPrintRqDto:
+      $ref: ./components/schemas/print/GenericCommandSvkOutPrintRqDto.yaml
+    SvkOutPrintRqDto:
+      $ref: ./components/schemas/print/SvkOutPrintRqDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandSvkOutScrollerClientFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandSvkOutScrollerClientFilter.yaml
+    PageParamsSvkOutScrollerClientFilter:
+      $ref: ./components/schemas/get-page/PageParamsSvkOutScrollerClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    SvkOutScrollerClientFilter:
+      $ref: ./components/schemas/common/SvkOutScrollerClientFilter.yaml
+    SvkOutScrollerStatusFilter:
+      $ref: ./components/schemas/common/SvkOutScrollerStatusFilter.yaml
+    SvkOutSourceSystemFilter:
+      $ref: ./components/schemas/common/SvkOutSourceSystemFilter.yaml
+    PageDataSvkOutScrollerClientRspDto:
+      $ref: ./components/schemas/get-page/PageDataSvkOutScrollerClientRspDto.yaml
+    SvkOutScrollerClientRspDto:
+      $ref: ./components/schemas/get-page/SvkOutScrollerClientRspDto.yaml
+    GenericCommandSvkOutLinkedDocumentRequestDto:
+      $ref: ./components/schemas/get-linked-documents/GenericCommandSvkOutLinkedDocumentRequestDto.yaml
+    SvkOutLinkedDocumentRequestDto:
+      $ref: ./components/schemas/get-linked-documents/SvkOutLinkedDocumentRequestDto.yaml
+    AttachmentLinkedDocumentInfoDto:
+      $ref: ./components/schemas/get-linked-documents/AttachmentLinkedDocumentInfoDto.yaml
+    GenericResponseSimpleErrorDataLinkedDocumentScrollerDto:
+      $ref: ./components/schemas/get-linked-documents/GenericResponseSimpleErrorDataLinkedDocumentScrollerDto.yaml
+    LinkedDocumentCommentDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocumentCommentDto.yaml
+    LinkedDocumentInfoDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocumentInfoDto.yaml
+    LinkedDocumentScrollerDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocumentScrollerDto.yaml
+    LinkedDocumentTypeScrollerDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocumentTypeScrollerDto.yaml
+    ExportRegistryRequestDtoSvkOutScrollerClientFilterSvkOutScrollerColumnDto:
+      $ref: ./components/schemas/export-task/ExportRegistryRequestDtoSvkOutScrollerClientFilterSvkOutScrollerColumnDto.yaml
+    ExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/ExportRegistryTaskStubRspDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto.yaml
+    GenericCommandSvkOutExportRegistryRqDto:
+      $ref: ./components/schemas/export-registry/GenericCommandSvkOutExportRegistryRqDto.yaml
+    SvkOutExportRegistryRqDto:
+      $ref: ./components/schemas/export-registry/SvkOutExportRegistryRqDto.yaml
+    GenericCommandSvkOutOrgDictionaryFindRqDto:
+      $ref: ./components/schemas/dict/GenericCommandSvkOutOrgDictionaryFindRqDto.yaml
+    SvkOutOrgDictionaryFindRqDto:
+      $ref: ./components/schemas/dict/SvkOutOrgDictionaryFindRqDto.yaml
+    GenericResponseSimpleErrorDataCollectionSvkOutOrgDictionaryRspDto:
+      $ref: ./components/schemas/dict/GenericResponseSimpleErrorDataCollectionSvkOutOrgDictionaryRspDto.yaml
+    SvkOutOrgDictionaryRspDto:
+      $ref: ./components/schemas/dict/SvkOutOrgDictionaryRspDto.yaml
+    GenericResponseSimpleErrorDataCollectionSvkOutBranchDictionaryRspDto:
+      $ref: ./components/schemas/dict/GenericResponseSimpleErrorDataCollectionSvkOutBranchDictionaryRspDto.yaml
+    SvkOutBranchDictionaryRspDto:
+      $ref: ./components/schemas/dict/SvkOutBranchDictionaryRspDto.yaml
+    GenericCommandSvkOutBranchDictionaryFindRqDto:
+      $ref: ./components/schemas/dict/GenericCommandSvkOutBranchDictionaryFindRqDto.yaml
+    SvkOutBranchDictionaryFindRqDto:
+      $ref: ./components/schemas/dict/SvkOutBranchDictionaryFindRqDto.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataString.yaml
+    GenericResponseSimpleErrorDataCollectionSvkOutSubjectDataRspDto:
+      $ref: ./components/schemas/subject/GenericResponseSimpleErrorDataCollectionSvkOutSubjectDataRspDto.yaml
+    SvkOutSubjectDataRspDto:
+      $ref: ./components/schemas/subject/SvkOutSubjectDataRspDto.yaml
+    GenericResponseSimpleErrorDataSvkOutSubjectDataRspDto:
+      $ref: ./components/schemas/subject/GenericResponseSimpleErrorDataSvkOutSubjectDataRspDto.yaml
+    GenericResponseSimpleErrorDataCollectionSvkOutTopicRspDto:
+      $ref: ./components/schemas/subject/GenericResponseSimpleErrorDataCollectionSvkOutTopicRspDto.yaml
+    SvkOutTopicRspDto:
+      $ref: ./components/schemas/subject/SvkOutTopicRspDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSystemClassifierDto:
+      $ref: ./components/schemas/source-system/GenericResponseSimpleErrorDataListDocumentSystemClassifierDto.yaml
+    GenericResponseSimpleErrorDataListSvkOutClientHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListSvkOutClientHistoryDto.yaml
+    SvkOutClientHistoryDto:
+      $ref: ./components/schemas/history/SvkOutClientHistoryDto.yaml
+    SvkOutClientOperationHistoryDto:
+      $ref: ./components/schemas/history/SvkOutClientOperationHistoryDto.yaml
+    ExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/ExportRegistryAttachmentDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryAttachmentDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    GenericResponseSimpleErrorDataListSvkOutAccountAccessDto:
+      $ref: ./components/schemas/account-access/GenericResponseSimpleErrorDataListSvkOutAccountAccessDto.yaml
+    SvkOutAccountAccessDto:
+      $ref: ./components/schemas/account-access/SvkOutAccountAccessDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

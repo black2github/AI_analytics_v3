@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API заявки на регистрацию данных сотрудника. Банковские операции.
+  summary: Поиск списка заявок на регистрацию данных сотрудника по параметрам
+  description: 'Привилегии: CONSTITUTION_REGISTRATION.BANK.VIEW'
+  operationId: findByUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: findDto
+    description: findDto
+    required: true
+    schema:
+      $ref: '#/definitions/FindConstitutionRegistrationDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«ErrorData,List«ConstitutionRegistrationRequestDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

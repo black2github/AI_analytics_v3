@@ -1,0 +1,15 @@
+type: object
+description: Фильтр запроса списка счетов. Банковская часть.
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Фильтрация по id счета. Полное совпадение. Возможен выбор нескольких значений.
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по номеру счета. Частичное совпадение.
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Фильтрация по id клиента банка. Полное совпадение. Возможен выбор нескольких значений.
+  state:
+    $ref: ./FilterValueEnumDtoDsfAccountStateDto.yaml
+    description: Фильтрация по статусу счета. Возможен выбор нескольких значений.

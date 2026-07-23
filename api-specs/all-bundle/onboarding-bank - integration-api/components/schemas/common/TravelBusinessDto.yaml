@@ -1,0 +1,33 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Электронная почта представителя клиента по программе лояльности
+  forename:
+    type: string
+    description: Имя представителя клиента по программе лояльности
+  id:
+    type: string
+    description: Уникальный идентификатор
+    format: uuid
+  mobilePhone:
+    type: string
+    description: Мобильный телефон представителя клиента по программе лояльности
+  onboardingRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета"
+    format: uuid
+  patronymic:
+    type: string
+    description: Отчество представителя клиента по программе лояльности
+  personId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  position:
+    type: string
+    description: Должность представителя клиента для присоединения к программе лояльности
+  surname:
+    type: string
+    description: Фамилия представителя клиента по программе лояльности
+description: Информация о программе лояльности Банка ГПБ (АО) «Газпромбанк – Travel business».

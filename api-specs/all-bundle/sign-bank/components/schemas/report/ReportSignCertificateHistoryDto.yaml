@@ -1,0 +1,59 @@
+required:
+- bankCertificateId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  ownerId:
+    type: string
+    description: 'Владелец сертификата: идентификатор'
+    format: uuid
+  ownerFio:
+    type: string
+    description: 'Владелец сертификата: ФИО'
+  bankCertificateId:
+    type: string
+    description: Ссылка на сущность "СПБ для подписи"
+    format: uuid
+  certificateId:
+    type: string
+    description: Ссылка на сущность "Сертификаты ЭП"
+    format: uuid
+  dateStart:
+    type: string
+    description: 'Период действия сертификата: с'
+    format: date
+  dateEnd:
+    type: string
+    description: 'Период действия сертификата: по'
+    format: date
+  status:
+    type: string
+    description: Статус сертификата для подписания отчетов
+    enum:
+    - ADDED
+    - UPDATED
+    - DELETED
+  userId:
+    type: string
+    description: 'Пользователь: идентификатор'
+    format: uuid
+  userFio:
+    type: string
+    description: 'Пользователь: ФИО'
+  userLogin:
+    type: string
+    description: 'Пользователь: логин'
+  comment:
+    type: string
+    description: Комментарий
+  blocked:
+    type: boolean
+    description: Временная блокировка
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+description: Запись истории изменений статусов сертификата для подписи отчетов

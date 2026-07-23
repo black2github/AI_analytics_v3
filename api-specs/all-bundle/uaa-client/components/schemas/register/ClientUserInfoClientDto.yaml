@@ -1,0 +1,17 @@
+type: object
+properties:
+  firstName:
+    type: string
+  familyName:
+    type: string
+  middleName:
+    type: string
+  phoneNumber:
+    type: string
+  email:
+    type: string
+  login:
+    type: string
+  password:
+    type: string
+description: Информация о пользователе.

@@ -1,0 +1,26 @@
+type: object
+properties:
+  orderMaxAmountLimit:
+    type: string
+    description: Максимально допустимая сумма заявки
+  orderMinAmountLimit:
+    type: string
+    description: Минимально допустимая сумма заявки
+  ordersTotalAmountLimit:
+    type: string
+    description: Максимально допустимая сумма по заявкам за день
+  ordersCountLimit:
+    type: integer
+    description: Максимально допустимое количество заявок за день
+    format: int32
+  requestMinInterval:
+    type: integer
+    description: Минимально допустимый интервал времени между заявками
+    format: int32
+  ordersTotalBuyPositionLimit:
+    type: string
+    description: Максимально допустимая сумма позиции за день (Покупка)
+  ordersTotalSellPositionLimit:
+    type: string
+    description: Максимально допустимая сумма позиции за день (Продажа)
+description: Текущие ограничения Клиента

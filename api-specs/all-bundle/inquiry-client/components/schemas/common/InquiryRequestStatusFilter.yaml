@@ -1,0 +1,147 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    example: null
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_ABS
+    - EXPORT_REQUEST_TO_ABS_ERROR
+    - REQUEST_EXECUTED_BY_ABS
+    - COMMISSION_REQUEST_TO_ABS
+    - COMMISSION_REQUEST_EXPORTED_TO_ABS
+    - COMMISSION_REQUEST_TO_ABS_ERROR
+    - COMMISSION_EXECUTED_BY_ABS
+    - FILE_REQUEST_TO_ABS
+    - FILE_REQUEST_EXPORTED_TO_ABS
+    - FILE_REQUEST_TO_ABS_ERROR
+    - FILE_EXECUTED_BY_ABS
+    - PROCESSING_EXPORT_TO_TESSA
+    - PROCESSING_EXPORT_TO_TESSA_ERROR
+    - DOC_READY_TO_TESSA
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    example: null
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_ABS
+    - EXPORT_REQUEST_TO_ABS_ERROR
+    - REQUEST_EXECUTED_BY_ABS
+    - COMMISSION_REQUEST_TO_ABS
+    - COMMISSION_REQUEST_EXPORTED_TO_ABS
+    - COMMISSION_REQUEST_TO_ABS_ERROR
+    - COMMISSION_EXECUTED_BY_ABS
+    - FILE_REQUEST_TO_ABS
+    - FILE_REQUEST_EXPORTED_TO_ABS
+    - FILE_REQUEST_TO_ABS_ERROR
+    - FILE_EXECUTED_BY_ABS
+    - PROCESSING_EXPORT_TO_TESSA
+    - PROCESSING_EXPORT_TO_TESSA_ERROR
+    - DOC_READY_TO_TESSA
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Статус ЖЦ запроса справок для ЮЛ.
+      example: null
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_REQUEST_TO_ABS
+      - EXPORT_REQUEST_TO_ABS_ERROR
+      - REQUEST_EXECUTED_BY_ABS
+      - COMMISSION_REQUEST_TO_ABS
+      - COMMISSION_REQUEST_EXPORTED_TO_ABS
+      - COMMISSION_REQUEST_TO_ABS_ERROR
+      - COMMISSION_EXECUTED_BY_ABS
+      - FILE_REQUEST_TO_ABS
+      - FILE_REQUEST_EXPORTED_TO_ABS
+      - FILE_REQUEST_TO_ABS_ERROR
+      - FILE_EXECUTED_BY_ABS
+      - PROCESSING_EXPORT_TO_TESSA
+      - PROCESSING_EXPORT_TO_TESSA_ERROR
+      - DOC_READY_TO_TESSA
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Статус ЖЦ запроса справок для ЮЛ.
+      example: null
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_REQUEST_TO_ABS
+      - EXPORT_REQUEST_TO_ABS_ERROR
+      - REQUEST_EXECUTED_BY_ABS
+      - COMMISSION_REQUEST_TO_ABS
+      - COMMISSION_REQUEST_EXPORTED_TO_ABS
+      - COMMISSION_REQUEST_TO_ABS_ERROR
+      - COMMISSION_EXECUTED_BY_ABS
+      - FILE_REQUEST_TO_ABS
+      - FILE_REQUEST_EXPORTED_TO_ABS
+      - FILE_REQUEST_TO_ABS_ERROR
+      - FILE_EXECUTED_BY_ABS
+      - PROCESSING_EXPORT_TO_TESSA
+      - PROCESSING_EXPORT_TO_TESSA_ERROR
+      - DOC_READY_TO_TESSA
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+    example: null
+description: Фильтр по статусу заявки на запрос справок для ЮЛ
+example: null

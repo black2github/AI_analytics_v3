@@ -1,0 +1,11 @@
+type: object
+properties:
+  requisitesCheck:
+    type: boolean
+    description: Проверка бизнес реквизитов
+  checkCertificate:
+    type: array
+    description: Проверка сертификата подписей
+    items:
+      $ref: ./CheckCertificateDataDto.yaml
+description: Проверка подписанного файла импорта

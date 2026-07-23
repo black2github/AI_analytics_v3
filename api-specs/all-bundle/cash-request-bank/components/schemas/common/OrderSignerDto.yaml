@@ -1,0 +1,30 @@
+type: object
+properties:
+  signatureLevel:
+    type: string
+    description: Уровень подписи
+  signerFio:
+    type: string
+    description: ФИО подписанта
+  signerId:
+    type: string
+    description: Идентификатор пользователя, подписавшего документ
+  stableId:
+    type: string
+    description: UID сертификата (серийный номер)
+  certificateData:
+    type: string
+    description: Сертификат ЭП
+  signatureHashValue:
+    type: string
+    description: Электронная подпись
+  signedAt:
+    type: string
+    description: Дата и время подписи
+  systemSourceCode:
+    type: string
+    description: Код системы
+  systemPageCode:
+    type: string
+    description: Код страницы подписания
+description: Подписанты заявки

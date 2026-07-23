@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Файл импорта"
+    format: uuid
+  createDocumentCount:
+    type: integer
+    description: Количество созданных документов
+    format: int32
+  importDocumentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+  importDocumentType:
+    $ref: ../common/AccessDocumentPaymentTypeClassifierDto.yaml
+  signatures:
+    type: array
+    description: Данные подписей
+    items:
+      $ref: ./FileImportSignatureDto.yaml
+description: Данные

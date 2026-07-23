@@ -1,0 +1,129 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - SIGN_VALID
+    - REQUEST_EXPORT
+    - REQUEST_EXPORTED
+    - REQUEST_RESPONSE_RECEIVED
+    - REQUEST_DELAYED
+    - REQUEST_APPROVED
+    - REQUEST_ACCEPTED
+    - REQUEST_EXPORT_ERROR
+    - EXECUTED
+    - REJECTED
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_EXPORT
+    - MSG1_EXPORTED
+    - MSG1_EXPORT_ERROR
+    - MSG1_RESPONSE_RECEIVED
+    - MSG2_NEED_SIGN
+    - MSG2_SIGN_VALID
+    - MSG2_EXPORT
+    - MSG2_EXPORTED
+    - MSG2_EXPORT_ERROR
+    - MSG2_RESPONSE_RECEIVED
+    - EXECUTED_ENCRYPTED
+  notEq:
+    type: string
+    description: Статус заявки
+    enum:
+    - NONE
+    - NEW
+    - SIGN_VALID
+    - REQUEST_EXPORT
+    - REQUEST_EXPORTED
+    - REQUEST_RESPONSE_RECEIVED
+    - REQUEST_DELAYED
+    - REQUEST_APPROVED
+    - REQUEST_ACCEPTED
+    - REQUEST_EXPORT_ERROR
+    - EXECUTED
+    - REJECTED
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_EXPORT
+    - MSG1_EXPORTED
+    - MSG1_EXPORT_ERROR
+    - MSG1_RESPONSE_RECEIVED
+    - MSG2_NEED_SIGN
+    - MSG2_SIGN_VALID
+    - MSG2_EXPORT
+    - MSG2_EXPORTED
+    - MSG2_EXPORT_ERROR
+    - MSG2_RESPONSE_RECEIVED
+    - EXECUTED_ENCRYPTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус заявки
+      enum:
+      - NONE
+      - NEW
+      - SIGN_VALID
+      - REQUEST_EXPORT
+      - REQUEST_EXPORTED
+      - REQUEST_RESPONSE_RECEIVED
+      - REQUEST_DELAYED
+      - REQUEST_APPROVED
+      - REQUEST_ACCEPTED
+      - REQUEST_EXPORT_ERROR
+      - EXECUTED
+      - REJECTED
+      - MSG1_NEED_SIGN
+      - MSG1_SIGN_VALID
+      - MSG1_EXPORT
+      - MSG1_EXPORTED
+      - MSG1_EXPORT_ERROR
+      - MSG1_RESPONSE_RECEIVED
+      - MSG2_NEED_SIGN
+      - MSG2_SIGN_VALID
+      - MSG2_EXPORT
+      - MSG2_EXPORTED
+      - MSG2_EXPORT_ERROR
+      - MSG2_RESPONSE_RECEIVED
+      - EXECUTED_ENCRYPTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус заявки
+      enum:
+      - NONE
+      - NEW
+      - SIGN_VALID
+      - REQUEST_EXPORT
+      - REQUEST_EXPORTED
+      - REQUEST_RESPONSE_RECEIVED
+      - REQUEST_DELAYED
+      - REQUEST_APPROVED
+      - REQUEST_ACCEPTED
+      - REQUEST_EXPORT_ERROR
+      - EXECUTED
+      - REJECTED
+      - MSG1_NEED_SIGN
+      - MSG1_SIGN_VALID
+      - MSG1_EXPORT
+      - MSG1_EXPORTED
+      - MSG1_EXPORT_ERROR
+      - MSG1_RESPONSE_RECEIVED
+      - MSG2_NEED_SIGN
+      - MSG2_SIGN_VALID
+      - MSG2_EXPORT
+      - MSG2_EXPORTED
+      - MSG2_EXPORT_ERROR
+      - MSG2_RESPONSE_RECEIVED
+      - EXECUTED_ENCRYPTED
+  isNull:
+    type: boolean
+description: Статус заявки (in).

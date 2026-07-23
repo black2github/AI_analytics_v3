@@ -1,0 +1,40 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Id вложения
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  fileStorageId:
+    type: string
+    description: ID файла в файловом хранилище
+    format: uuid
+  orderNumber:
+    type: integer
+    description: Порядковый номер вложения.
+    format: int32
+  fileName:
+    type: string
+    description: Название файла вложения.
+  format:
+    type: string
+    description: Формат файла вложения.
+  hash:
+    type: string
+    description: Хеш-сумма файла.
+  size:
+    type: integer
+    description: Размер файла.
+    format: int64
+  uploadDateTime:
+    type: string
+    description: Дата и время загрузки
+    format: date-time
+description: Информация о вложении

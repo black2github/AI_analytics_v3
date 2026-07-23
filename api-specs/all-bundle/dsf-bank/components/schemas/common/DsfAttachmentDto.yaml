@@ -1,0 +1,67 @@
+type: object
+description: Вложение письма в банк
+properties:
+  aml:
+    $ref: ./AmlAttachmentToBankResponseDto.yaml
+    description: Дополнительные AML-поля вложений писем в банк
+  attachedAt:
+    type: string
+    format: date-time
+    description: Дата и время вложения.
+  attachmentId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор вложения в Системе.
+  author:
+    type: string
+    format: uuid
+    description: Автор вложения.
+  authorFio:
+    type: string
+    description: ФИО автора вложения.
+  contentType:
+    type: string
+    description: Тип файла.
+    example: application/pdf
+  extension:
+    type: string
+    description: Расширение файла.
+    example: pdf
+  fileHash:
+    type: string
+    description: Хеш файла.
+  fileName:
+    type: string
+    description: Наименование файла вложения.
+  fileSize:
+    type: integer
+    format: int64
+    description: Размер файла, байты.
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор вложения.
+  owner:
+    type: string
+    format: uuid
+    description: Владелец вложения.
+  readOnly:
+    type: boolean
+    description: Возможность редактирования
+  side:
+    type: string
+    description: Сторона вложения.
+    enum:
+    - CLIENT
+    - BANK
+  signatures:
+    type: array
+    description: Подписи вложения.
+    items:
+      $ref: ./DsfAttachmentSignatureDto.yaml
+  type:
+    type: string
+    description: Тип вложения.
+    enum:
+    - REGULAR
+    - MCHD

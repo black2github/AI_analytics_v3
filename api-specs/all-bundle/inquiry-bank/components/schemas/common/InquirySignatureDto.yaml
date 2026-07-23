@@ -1,0 +1,41 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: null
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+    example: null
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+    example: null
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+    example: null
+  userFio:
+    type: string
+    description: Пользователь, подписавший запрос (ФИО)
+    example: null
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+    example: null
+  userEskId:
+    type: string
+    description: Идентификатор ЕСК пользователя подписавшего заявку
+    example: null
+description: ДТО реквизиты электронной подписи запроса ЮЛ.
+example: null

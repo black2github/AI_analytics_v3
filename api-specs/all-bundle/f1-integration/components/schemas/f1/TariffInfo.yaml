@@ -1,0 +1,15 @@
+type: object
+properties:
+  paymentDocPriceDigital:
+    type: number
+  paymentDocPriceOnPaper:
+    type: number
+  contractDocPriceDigital:
+    type: number
+  contractDocPriceDigitalNds:
+    type: number
+  contractDocPriceOffice:
+    type: number
+  contractDocPriceOfficeNds:
+    type: number
+description: Общая тарифная информация

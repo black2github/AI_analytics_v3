@@ -1,0 +1,17 @@
+required:
+- documentId
+- signData
+type: object
+properties:
+  documentId:
+    type: string
+    description: ID документа на подпись
+    format: uuid
+  signData:
+    minLength: 1
+    type: string
+    description: Подписываемые данные в base64
+  fileName:
+    type: string
+    description: Наименование файла
+description: Документ на подпись

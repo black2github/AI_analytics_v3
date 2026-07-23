@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  commissionAccountInfo:
+    $ref: ./CommissionAccountInfo.yaml
+  error:
+    $ref: ./RkoReferenceAvailabilityErrorDto.yaml
+description: Ответ на запрос получения справки

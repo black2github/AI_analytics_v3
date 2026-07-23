@@ -1,0 +1,35 @@
+required:
+- authorizedPersonId
+- bankClientId
+- email
+- eskId
+- phone
+type: object
+properties:
+  name:
+    type: string
+    description: Имя представителя
+  surname:
+    type: string
+    description: Фамилия представителя
+  patronymic:
+    type: string
+    description: Отчество представителя
+  phone:
+    type: string
+    description: Номер телефона представителя
+  email:
+    type: string
+    description: Адрес электронной почты представителя
+  eskId:
+    type: string
+    description: Идентификатор представителя в ЕСК
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: ДТО представителя клиента, которому должен быть отправлен инвайт

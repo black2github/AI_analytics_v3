@@ -1,0 +1,10 @@
+type: object
+properties:
+  f1AccountIds:
+    type: array
+    description: Список идентификаторов аккаунтов в АБС Ф1
+    items:
+      type: integer
+      description: Список идентификаторов аккаунтов в АБС Ф1
+      format: int64
+description: Запрос баланса счетов клиента по реквизитам аккаунтов

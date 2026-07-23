@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  askId:
+    $ref: ./FilterValueDtoLong.yaml
+  clientOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  endDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./GeneralAgreementStatusFilter.yaml
+  usage:
+    $ref: ./GeneralAgreementUsageFilter.yaml
+  subUsage:
+    $ref: ./GeneralAgreementSubUsageFilter.yaml
+  contractType:
+    $ref: ./GeneralAgreementContractTypeFilter.yaml
+  fundName:
+    $ref: ../common/FilterValueDtoString.yaml

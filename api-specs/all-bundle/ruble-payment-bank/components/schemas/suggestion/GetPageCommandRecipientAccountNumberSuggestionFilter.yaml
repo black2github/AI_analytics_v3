@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRecipientAccountNumberSuggestionFilter.yaml
+description: Запрос страницы

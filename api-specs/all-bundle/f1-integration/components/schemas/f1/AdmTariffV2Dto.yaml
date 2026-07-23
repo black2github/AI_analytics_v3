@@ -1,0 +1,32 @@
+required:
+- city
+- deviceType
+- maxDepositingFundsAmount
+- minDepositingFundsAmount
+- tariffMinAmount
+- tariffRate
+- tariffType
+type: object
+properties:
+  tariffRate:
+    type: number
+    description: Ставка тарифа
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма
+  city:
+    type: string
+    description: Название города
+  minDepositingFundsAmount:
+    type: number
+    description: Объем внесения от
+  maxDepositingFundsAmount:
+    type: number
+    description: Объем внесения до
+  deviceType:
+    type: string
+    description: Тип принадлежности устройства
+  tariffType:
+    type: string
+    description: Тип тарифа
+description: Тариф АДМ V2

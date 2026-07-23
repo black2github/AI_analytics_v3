@@ -1,0 +1,6 @@
+type: object
+properties:
+  contractNumber:
+    type: string
+    description: Уникальный номер контракта
+description: Транспортное представление валютной операции на просмотр в скорллере

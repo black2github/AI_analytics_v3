@@ -1,0 +1,11 @@
+type: object
+properties:
+  certificateIds:
+    uniqueItems: true
+    type: array
+    description: ID сертификата
+    items:
+      type: string
+      description: ID сертификата
+      format: uuid
+description: Запрос поиска дубликатов сертификатов

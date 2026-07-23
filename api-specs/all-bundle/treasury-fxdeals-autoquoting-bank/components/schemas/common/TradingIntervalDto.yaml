@@ -1,0 +1,7 @@
+type: object
+properties:
+  timeFrom:
+    $ref: ./LocalTime.yaml
+  timeTo:
+    $ref: ./LocalTime.yaml
+description: Интервалы торговых сессий по продаже

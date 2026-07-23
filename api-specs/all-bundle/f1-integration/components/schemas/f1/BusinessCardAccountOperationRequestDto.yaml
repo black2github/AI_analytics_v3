@@ -1,0 +1,17 @@
+type: object
+properties:
+  absClientId:
+    type: integer
+    description: Идентификатор клиента АБС
+  accountId:
+    type: integer
+    description: Идентификатор счета
+  reportDateFrom:
+    type: string
+    description: Начало периода для формирования отчета
+    format: date
+  reportDateTo:
+    type: string
+    description: Конец периода для формирования отчета
+    format: date
+description: Данные запроса для получения списка операций по карточному счёту

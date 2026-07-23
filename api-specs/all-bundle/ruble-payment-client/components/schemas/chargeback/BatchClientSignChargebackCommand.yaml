@@ -1,0 +1,13 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  clientSignCommands:
+    uniqueItems: true
+    type: array
+    description: Множество данных для клиентских подписей
+    items:
+      $ref: ../common/ClientSignCommand.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Содержит список данных для клиентских подписей

@@ -1,0 +1,9 @@
+type: object
+properties:
+  depositDealsExist:
+    type: boolean
+    description: Наличие депозитных сделок
+  gsnoParentExists:
+    type: boolean
+    description: Наличие генсоглашений ГСНО ГО
+description: Данные

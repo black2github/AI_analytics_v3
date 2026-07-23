@@ -1,0 +1,72 @@
+get:
+  description: 'Привилегии: ACCOUNT_CLOSING.BANK.REGISTRY_EXPORT'
+  operationId: getExport
+  parameters:
+  - in: query
+    name: ids
+    required: true
+    schema:
+      uniqueItems: true
+      type: array
+      items:
+        type: string
+  - in: query
+    name: format
+    required: true
+    schema:
+      type: string
+      enum:
+      - PDF
+      - XLS
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Получить выгрузку реестра заявок.
+  tags:
+  - АПИ для функции экспорта реестра.

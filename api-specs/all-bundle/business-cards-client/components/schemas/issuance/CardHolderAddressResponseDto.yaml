@@ -1,0 +1,52 @@
+type: object
+properties:
+  addr:
+    type: string
+    description: Адрес одной строкой
+  addressType:
+    type: string
+    description: Тип адреса
+    enum:
+    - LEGAL
+    - POST
+    - ACTUAL
+    - BIRTH_PLACE
+    - TEMPORARY_REG
+  area:
+    $ref: ./AreaDto.yaml
+  city:
+    $ref: ./CityDto.yaml
+  country:
+    type: integer
+    description: Страна
+    format: int32
+  district:
+    $ref: ./DistrictDto.yaml
+  endDate:
+    type: string
+    description: Конечная дата действия
+    format: date
+  house:
+    $ref: ./HouseDto.yaml
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  postCode:
+    type: string
+    description: Почтовый индекс
+  region:
+    $ref: ./RegionDto.yaml
+  settlement:
+    $ref: ./SettlementDto.yaml
+  startDate:
+    type: string
+    description: Начальная дата действия
+    format: date
+  stateProv:
+    $ref: ./StateProvinceDto.yaml
+  street:
+    $ref: ./StreetDto.yaml
+  unit:
+    $ref: ./UnitDto.yaml
+description: Адрес держателя карты

@@ -1,0 +1,7 @@
+type: object
+properties:
+  Agent:
+    $ref: ./BranchAndFinancialInstitutionInformation.yaml
+  Party:
+    $ref: ./PartyIdentification.yaml
+description: Информация об участнике, используемая для идентификации юридического, физического лица или финансовой организации

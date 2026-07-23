@@ -1,0 +1,15 @@
+required:
+- certificateData
+- clientInfo
+- userId
+type: object
+properties:
+  clientInfo:
+    $ref: ./OrgOfficialClientInfoDto.yaml
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  certificateData:
+    type: string
+    description: Сертификат в base64 формате

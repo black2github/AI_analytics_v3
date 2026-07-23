@@ -1,0 +1,44 @@
+post:
+  tags:
+  - Обновление заглушек процедуры RUN_MSG онлайн-адаптера Ф1
+  summary: Создание заглушки
+  operationId: createStubUsingPOST_6
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: response
+    description: response
+    required: true
+    schema:
+      type: string
+  - name: rootTagName
+    in: query
+    description: Имя корневого тега запроса
+    required: true
+    type: string
+  - name: tagName
+    in: query
+    description: Тег ответа
+    required: false
+    type: string
+  - name: tagValue
+    in: query
+    description: Значение тега ответа
+    required: false
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/F1RunMsgEntity'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

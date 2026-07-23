@@ -1,0 +1,50 @@
+type: object
+properties:
+  bankStatus:
+    type: string
+    description: Статус банка
+  changedIn:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+  clientStatus:
+    type: string
+    description: Статус клиента, подавшего заявку
+  closingAccountRequestId:
+    type: string
+    description: ID Заявки на закрытие счета
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для банка.
+  commentForClient:
+    type: string
+  id:
+    type: string
+    description: ID записи в истории изменения заявки
+    format: uuid
+  sequenceNumber:
+    type: integer
+    description: Порядковый номер записи в истории
+    format: int64
+  status:
+    type: string
+    description: Статус заявки на закрытие счета
+  userFio:
+    type: string
+    description: ФИО пользователя, спровоцировавшего создание записи в истории
+  userId:
+    type: string
+    description: ID Пользователя, выполнившего смену статуса
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя, выполнившего смену статуса
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userTypeName:
+    type: string
+    description: Наименование типа пользователя, выполнившего смену статуса
+description: Запись из истории заявки на закрытие счета

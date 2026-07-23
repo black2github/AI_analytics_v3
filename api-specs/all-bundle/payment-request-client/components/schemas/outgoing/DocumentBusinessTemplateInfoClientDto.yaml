@@ -1,0 +1,28 @@
+type: object
+properties:
+  amount:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма
+    nullable: true
+  amountIncludeVat:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма с учетом НДС
+    nullable: true
+  vatCalculationMethod:
+    $ref: ./VatCalculationTypeDto.yaml
+  vatPercentRate:
+    maximum: 100
+    minimum: 0
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+    nullable: true
+  vatAmount:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма НДС
+    nullable: true
+description: Шаблон Основные реквизиты документа платежное требование исходящее (данные для клиента)
+nullable: true

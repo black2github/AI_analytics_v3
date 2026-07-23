@@ -1,0 +1,14 @@
+type: object
+properties:
+  levels:
+    type: array
+    items:
+      type: string
+  loggers:
+    type: object
+    additionalProperties:
+      $ref: ./LogLevel.yaml
+  groups:
+    type: object
+    additionalProperties:
+      $ref: ./GroupedLoggers.yaml

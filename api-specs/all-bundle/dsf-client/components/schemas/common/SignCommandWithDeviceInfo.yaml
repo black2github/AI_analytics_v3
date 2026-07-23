@@ -1,0 +1,18 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    format: uuid
+  digest:
+    type: string
+  documentId:
+    type: string
+    format: uuid
+  signTypeId:
+    type: string
+    format: uuid
+  signature:
+    type: string
+  userDeviceInfo:
+    $ref: ./UserDeviceInfoDto.yaml
+description: Команда подписания

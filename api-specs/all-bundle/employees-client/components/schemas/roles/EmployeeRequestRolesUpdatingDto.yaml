@@ -1,0 +1,41 @@
+required:
+- accountAccesses
+- id
+- roleTemplates
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  roleTemplates:
+    type: array
+    description: Данные шаблонов ролей
+    items:
+      $ref: ./RoleTemplate.yaml
+  accountAccessMode:
+    type: string
+    description: Режим доступа к счетам
+    enum:
+    - ALL_ACCOUNTS
+    - SPECIFIED_ACCOUNTS
+  accountAccesses:
+    type: array
+    description: Данные доступов к счетам
+    items:
+      $ref: ./AccessToAccount.yaml
+  additionalDetails:
+    $ref: ./AdditionalRequestDetails.yaml
+  dsfTypeCodes:
+    uniqueItems: true
+    type: array
+    description: Список кодов типов ДСФ
+    items:
+      type: string
+      description: Список кодов типов ДСФ
+description: Данные для обновления

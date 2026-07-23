@@ -1,0 +1,27 @@
+openapi: 3.0.1
+info:
+  title: Сервис очереди РКО. Банковская часть.
+  version: 1.1.0
+servers:
+- url: /pending-payments-bank
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/force-update/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/force-update/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/force-update/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

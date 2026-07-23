@@ -1,0 +1,17 @@
+type: object
+description: 'Ответ на запрос списка банков в АС СБП '
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБП
+  members:
+    type: array
+    items:
+      $ref: ./BankDto.yaml
+    description: Список участников СПБ

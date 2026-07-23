@@ -1,0 +1,30 @@
+type: object
+properties:
+  addressType:
+    type: string
+    enum:
+    - Business
+    - Correspondence
+    - DeliveryTo
+    - MailTo
+    - POBox
+    - Postal
+    - Residential
+    - Statement
+  addressLine:
+    type: array
+    items:
+      type: string
+  streetName:
+    type: string
+  buildingNumber:
+    type: string
+  postCode:
+    type: string
+  townName:
+    type: string
+  countrySubDivision:
+    type: string
+  country:
+    type: string
+description: Почтовый адрес

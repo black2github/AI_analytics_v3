@@ -1,0 +1,14 @@
+required:
+- asyncTaskId
+- groupId
+type: object
+properties:
+  asyncTaskId:
+    type: string
+    description: Идентификатор фоновой задачи
+    format: uuid
+  groupId:
+    type: string
+    description: Идентификатор группы задач
+    format: uuid
+description: Данные фоновой задачи для формирования файлов подписи

@@ -1,0 +1,27 @@
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения в АБС
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  branchId:
+    type: string
+    description: Ссылка на сущность Подразделение Банка
+    format: uuid
+  isSelectedByUser:
+    type: boolean
+    description: Признак "Пользователь выбрал офис обслуживания"
+  name:
+    type: string
+    description: Наименование подразделения
+  parentBranch:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  settlementFiasId:
+    type: string
+    description: Идентификатор ФИАС города или нас пункта
+    format: uuid
+description: Сведения о Подразделении, в котором открывается счет и заключается ДБС

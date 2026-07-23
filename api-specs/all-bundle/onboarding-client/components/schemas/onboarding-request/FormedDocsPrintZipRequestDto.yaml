@@ -1,0 +1,18 @@
+type: object
+properties:
+  format:
+    type: string
+    description: Формат отчетов для сервиса открытия заявки на открытие первого счета.
+    enum:
+    - DOCX_TO_PDF
+    - DOCX
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  templatesData:
+    type: array
+    description: Список шаблонов с параметрами
+    items:
+      $ref: ./TemplateDataDto.yaml
+description: Запрос на печать сформированных документов в zip-архив

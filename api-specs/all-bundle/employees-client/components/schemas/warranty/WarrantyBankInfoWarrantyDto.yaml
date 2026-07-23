@@ -1,0 +1,18 @@
+type: object
+properties:
+  grantNewWarranty:
+    type: boolean
+    description: Выдать новую доверенность на получение банковской информации
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности на получение банковской информации
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности на получение банковской информации
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности на получение банковской информации
+    format: date
+description: Данные для создания/обновления электронной доверенности сотрудника на получение банковской информации

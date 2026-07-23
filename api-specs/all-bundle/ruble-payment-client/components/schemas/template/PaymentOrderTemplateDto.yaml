@@ -1,0 +1,51 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    type: string
+    description: Наименование шаблона
+  usedAt:
+    type: string
+    description: Дата использования шаблона
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  clientRnk:
+    type: string
+    description: РНК клиента в РКО Ф1
+  eskClientId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  paymentInfo:
+    $ref: ./PaymentInfoTemplateDto.yaml
+  paymentAmount:
+    $ref: ../common/PaymentAmountDto.yaml
+  payerDetails:
+    $ref: ../common/PayerDetailsDto.yaml
+  recipientDetails:
+    $ref: ../common/RecipientDetailsDto.yaml
+  budgetInfo:
+    $ref: ../common/BudgetInfoDto.yaml
+  controlAndAcceptance:
+    $ref: ../common/ControlAndAcceptanceDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  accountExists:
+    type: boolean
+    description: Признак доступности счета
+description: Дто шаблона платежного поручения

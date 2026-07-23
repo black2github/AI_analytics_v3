@@ -1,0 +1,12 @@
+type: object
+properties:
+  CSCManagement:
+    type: string
+    enum:
+    - CSCPresent
+    - CSCByPass
+    - CSCUnread
+    - NoCSC
+  CSCValue:
+    type: string
+description: Код безопасности карты (CSC), связанный с выполнением операции по карте

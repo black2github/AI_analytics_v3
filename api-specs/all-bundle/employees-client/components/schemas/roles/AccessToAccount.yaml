@@ -1,0 +1,17 @@
+required:
+- accessCreateUpdate
+- accessView
+- accountId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accessView:
+    type: boolean
+    description: Доступ на просмотр
+  accessCreateUpdate:
+    type: boolean
+    description: Доступ на создание и редактирование
+description: Данные доступа к счету

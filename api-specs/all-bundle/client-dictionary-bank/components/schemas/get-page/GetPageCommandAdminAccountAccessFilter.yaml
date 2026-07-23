@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsAdminAccountAccessFilter.yaml
+description: Запрос страницы

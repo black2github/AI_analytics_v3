@@ -1,0 +1,20 @@
+required:
+- decision
+- filter
+type: object
+properties:
+  decision:
+    type: string
+    description: Решение по акцепту
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  decisionComment:
+    maxLength: 255
+    minLength: 0
+    pattern: ^[\d !"'(),-.:;?A-Za-z{}ЁА-яё]*$
+    type: string
+    description: Комментарий к решению
+  filter:
+    $ref: ../common/ApprovalSignScrollerFilterDto.yaml
+description: Команда для массовой подписи документов

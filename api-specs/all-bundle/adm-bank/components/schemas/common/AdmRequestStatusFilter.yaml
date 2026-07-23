@@ -1,0 +1,217 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Статус ЖЦ заявки на открытие договора АДМ
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - DELIVERED_1
+    - DETAILS_VALID
+    - DETAILS_VALID_1
+    - RECEIVED
+    - RECEIVED_1
+    - WAIT_PROCESSING
+    - WAIT_PROCESSING_1
+    - WAIT_VERIFICATION
+    - WAIT_APPROVAL
+    - WAIT_REQUISITES
+    - WAIT_SIGN
+    - SIGNED
+    - DELIVERED_2
+    - DETAILS_VALID_2
+    - SIGN_VALID
+    - RECEIVED_2
+    - WAIT_PROCESSING_2
+    - EXPORT_REQUEST_TO_ASADM
+    - EXPORT_REQUEST_TO_ASADM_ERROR
+    - REQUEST_EXPORTED_TO_ASADM
+    - ADM_READY
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXPORTED_TO_F1
+    - CONTRACT_READY
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXPORT_LINK_PDF_TO_F1
+    - EXPORT_LINK_PDF_TO_F1_ERROR
+    - LINK_PDF_EXPORTED_TO_F1
+    - EXECUTED
+    - REJECTED
+    - REFUSED
+    - SEND_TO_DLP
+    - REFUSED_BY_DLP
+    - EXPORT_REQUEST_TO_ADM
+    - EXPORT_REQUEST_TO_ADM_ERROR
+    - EXECUTED_BY_ADM
+    - IN_PROGRESS
+    - REQUISITES_ADDED
+    - PERIOD_CHANGED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус ЖЦ заявки на открытие договора АДМ
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - DELIVERED
+      - DELIVERED_1
+      - DETAILS_VALID
+      - DETAILS_VALID_1
+      - RECEIVED
+      - RECEIVED_1
+      - WAIT_PROCESSING
+      - WAIT_PROCESSING_1
+      - WAIT_VERIFICATION
+      - WAIT_APPROVAL
+      - WAIT_REQUISITES
+      - WAIT_SIGN
+      - SIGNED
+      - DELIVERED_2
+      - DETAILS_VALID_2
+      - SIGN_VALID
+      - RECEIVED_2
+      - WAIT_PROCESSING_2
+      - EXPORT_REQUEST_TO_ASADM
+      - EXPORT_REQUEST_TO_ASADM_ERROR
+      - REQUEST_EXPORTED_TO_ASADM
+      - ADM_READY
+      - EXPORT_REQUEST_TO_F1
+      - EXPORT_REQUEST_TO_F1_ERROR
+      - REQUEST_EXPORTED_TO_F1
+      - CONTRACT_READY
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXPORT_LINK_PDF_TO_F1
+      - EXPORT_LINK_PDF_TO_F1_ERROR
+      - LINK_PDF_EXPORTED_TO_F1
+      - EXECUTED
+      - REJECTED
+      - REFUSED
+      - SEND_TO_DLP
+      - REFUSED_BY_DLP
+      - EXPORT_REQUEST_TO_ADM
+      - EXPORT_REQUEST_TO_ADM_ERROR
+      - EXECUTED_BY_ADM
+      - IN_PROGRESS
+      - REQUISITES_ADDED
+      - PERIOD_CHANGED
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Статус ЖЦ заявки на открытие договора АДМ
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - DELIVERED_1
+    - DETAILS_VALID
+    - DETAILS_VALID_1
+    - RECEIVED
+    - RECEIVED_1
+    - WAIT_PROCESSING
+    - WAIT_PROCESSING_1
+    - WAIT_VERIFICATION
+    - WAIT_APPROVAL
+    - WAIT_REQUISITES
+    - WAIT_SIGN
+    - SIGNED
+    - DELIVERED_2
+    - DETAILS_VALID_2
+    - SIGN_VALID
+    - RECEIVED_2
+    - WAIT_PROCESSING_2
+    - EXPORT_REQUEST_TO_ASADM
+    - EXPORT_REQUEST_TO_ASADM_ERROR
+    - REQUEST_EXPORTED_TO_ASADM
+    - ADM_READY
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXPORTED_TO_F1
+    - CONTRACT_READY
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXPORT_LINK_PDF_TO_F1
+    - EXPORT_LINK_PDF_TO_F1_ERROR
+    - LINK_PDF_EXPORTED_TO_F1
+    - EXECUTED
+    - REJECTED
+    - REFUSED
+    - SEND_TO_DLP
+    - REFUSED_BY_DLP
+    - EXPORT_REQUEST_TO_ADM
+    - EXPORT_REQUEST_TO_ADM_ERROR
+    - EXECUTED_BY_ADM
+    - IN_PROGRESS
+    - REQUISITES_ADDED
+    - PERIOD_CHANGED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус ЖЦ заявки на открытие договора АДМ
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - DELETED
+      - DELIVERED
+      - DELIVERED_1
+      - DETAILS_VALID
+      - DETAILS_VALID_1
+      - RECEIVED
+      - RECEIVED_1
+      - WAIT_PROCESSING
+      - WAIT_PROCESSING_1
+      - WAIT_VERIFICATION
+      - WAIT_APPROVAL
+      - WAIT_REQUISITES
+      - WAIT_SIGN
+      - SIGNED
+      - DELIVERED_2
+      - DETAILS_VALID_2
+      - SIGN_VALID
+      - RECEIVED_2
+      - WAIT_PROCESSING_2
+      - EXPORT_REQUEST_TO_ASADM
+      - EXPORT_REQUEST_TO_ASADM_ERROR
+      - REQUEST_EXPORTED_TO_ASADM
+      - ADM_READY
+      - EXPORT_REQUEST_TO_F1
+      - EXPORT_REQUEST_TO_F1_ERROR
+      - REQUEST_EXPORTED_TO_F1
+      - CONTRACT_READY
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXPORT_LINK_PDF_TO_F1
+      - EXPORT_LINK_PDF_TO_F1_ERROR
+      - LINK_PDF_EXPORTED_TO_F1
+      - EXECUTED
+      - REJECTED
+      - REFUSED
+      - SEND_TO_DLP
+      - REFUSED_BY_DLP
+      - EXPORT_REQUEST_TO_ADM
+      - EXPORT_REQUEST_TO_ADM_ERROR
+      - EXECUTED_BY_ADM
+      - IN_PROGRESS
+      - REQUISITES_ADDED
+      - PERIOD_CHANGED
+description: Фильтр по статусу заявок

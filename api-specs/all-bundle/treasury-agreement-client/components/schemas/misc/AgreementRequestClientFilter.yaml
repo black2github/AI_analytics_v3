@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docType:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  agrNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./AgreementRequestStatusFilter.yaml
+  type:
+    $ref: ./AgreementRequestTypeFilter.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категории статусов для Клиента
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_PROCESSING
+    - FINISHED
+description: Фильтр

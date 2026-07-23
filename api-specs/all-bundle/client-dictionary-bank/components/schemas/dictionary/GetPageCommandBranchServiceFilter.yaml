@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBranchServiceFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: Сервис лицензий. Клиентская часть.
+  version: 3.2.0
+servers:
+- url: /license-client
+security:
+- bearerAuth: []
+tags:
+- name: CryptoProLicenseClient
+  description: API лицензий КриптоПро. Клиентская часть.
+paths:
+  /license/crypto-pro/request:
+    $ref: ./paths/crypto-pro/license_crypto_pro_request.yaml
+  /license/crypto-pro/request/{id}:
+    $ref: ./paths/crypto-pro/license_crypto_pro_request_id.yaml
+  /license/crypto-pro/has-license/client/{clientId}:
+    $ref: ./paths/crypto-pro/license_crypto_pro_has_license_client_clientId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/{locale}/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CryptoProLicenseRequestCreateClientDto:
+      $ref: ./components/schemas/crypto-pro/CryptoProLicenseRequestCreateClientDto.yaml
+    GenericCommandCryptoProLicenseRequestCreateClientDto:
+      $ref: ./components/schemas/crypto-pro/GenericCommandCryptoProLicenseRequestCreateClientDto.yaml
+    CryptoProLicenseRequestClientDto:
+      $ref: ./components/schemas/crypto-pro/CryptoProLicenseRequestClientDto.yaml
+    GenericResponseSimpleErrorDataCryptoProLicenseRequestClientDto:
+      $ref: ./components/schemas/crypto-pro/GenericResponseSimpleErrorDataCryptoProLicenseRequestClientDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/crypto-pro/SimpleErrorData.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/crypto-pro/GenericResponseSimpleErrorDataBoolean.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

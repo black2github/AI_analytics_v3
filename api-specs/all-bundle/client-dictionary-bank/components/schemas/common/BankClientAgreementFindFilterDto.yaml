@@ -1,0 +1,36 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиент банка. Имеет первый приоритет при поиске.
+    format: uuid
+  clientExternalClientGuid:
+    type: string
+    description: Внешний идентификатор клиент банка. Имеет второй приоритет при поиске.
+    format: uuid
+  clientAbsId:
+    type: string
+    description: Идентификатор АБС клиент банка. Имеет третий приоритет при поиске.
+  clientStatus:
+    type: string
+    description: Статус клиент банка.
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  status:
+    type: string
+    description: фильтр по статусу соглашения
+    enum:
+    - ACTIVE
+    - CANCELED
+description: 'Фильтр для поиска '

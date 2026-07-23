@@ -1,0 +1,10 @@
+type: object
+properties:
+  phoneNumber:
+    type: string
+    description: Номер телефона на который будет отправлено уведомление
+  qrcPaymentId:
+    type: string
+    description: Ссылка на "Информация об оплате комиссии по QRC"
+    format: uuid
+description: Данные об оплате

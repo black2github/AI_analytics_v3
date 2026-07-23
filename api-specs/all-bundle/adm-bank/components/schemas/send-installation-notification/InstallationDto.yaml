@@ -1,0 +1,15 @@
+type: object
+properties:
+  appealReason:
+    type: string
+    description: Причина обращения
+  contactPerson:
+    type: string
+    description: Контактное лицо (ФИО)
+  mainTID:
+    type: string
+    description: Мастер TID
+  phone:
+    type: string
+    description: Телефон
+description: Данные для монтажа

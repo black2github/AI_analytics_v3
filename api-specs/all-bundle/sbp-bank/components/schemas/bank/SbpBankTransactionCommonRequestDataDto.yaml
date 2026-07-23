@@ -1,0 +1,41 @@
+type: object
+description: Детали обобщенного платежа для банка
+properties:
+  docType:
+    type: string
+    description: Тип операции в обобщенном заявлении на платеж СБП
+    enum:
+    - TRANSFER
+    - RETURN
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  currency:
+    type: string
+    description: Код валюты платежа
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  incomeCode:
+    type: string
+    description: Код вида дохода
+  operationTransactionId:
+    type: string
+    description: Идентификатор входящей транзакции
+  vat:
+    type: boolean
+    description: Информация о взимании НДС
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках
+  qrcId:
+    type: string
+    description: Идентификатор  QR- кода в АС СБП
+  qrcInvoiceId:
+    type: string
+    format: uuid
+    description: Идентификатор входящего QR- код в Экосистеме
+required:
+- docType

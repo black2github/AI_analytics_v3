@@ -1,0 +1,17 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  requestIds:
+    uniqueItems: true
+    type: array
+    description: Id заявок
+    items:
+      type: string
+      description: Id заявок
+      format: uuid
+description: Перевод заявок в статус REJECTED

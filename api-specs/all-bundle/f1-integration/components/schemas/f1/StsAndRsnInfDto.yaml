@@ -1,0 +1,18 @@
+type: object
+properties:
+  stsCd:
+    type: string
+    description: Код обработки сообщения
+    enum:
+    - DONE
+    - RJCT
+  stsRsnCd:
+    type: string
+    description: Код причины отказа
+  rsnAnnttn:
+    type: string
+    description: Описание причины
+  stsDtTm:
+    type: string
+    description: Дата и время ответа
+description: Блок со статусом и/или причиной отказа

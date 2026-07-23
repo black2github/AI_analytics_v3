@@ -1,0 +1,7 @@
+type: object
+properties:
+  processId:
+    type: string
+    description: Идентификатор процесса импорта
+    format: uuid
+description: Данные о процессе импорта обработанного реестра платёжных поручений

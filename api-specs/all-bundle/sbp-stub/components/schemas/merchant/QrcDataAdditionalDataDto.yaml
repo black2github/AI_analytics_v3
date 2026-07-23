@@ -1,0 +1,13 @@
+type: object
+description: Блок дополнительной информации
+properties:
+  acc:
+    type: string
+    description: Номер счета для распределения платежа
+  sum:
+    type: integer
+    format: int64
+    description: Распределенная сумма в копейках
+  purp:
+    type: string
+    description: Назначение распределяемого платежа

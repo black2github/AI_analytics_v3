@@ -1,0 +1,13 @@
+type: object
+properties:
+  description:
+    type: string
+    description: Описание ошибки
+  status:
+    type: string
+    description: Результат взаимодействия с файловым хранилищем
+    enum:
+    - NEW
+    - CONSUME_ERROR
+    - CONSUME_SUCCESS
+description: Информация по взаимодействию с файловым хранилищем

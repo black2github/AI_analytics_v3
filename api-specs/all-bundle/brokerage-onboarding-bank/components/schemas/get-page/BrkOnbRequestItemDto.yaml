@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  requestNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  status:
+    type: string
+    description: Статус заявки
+  clientUuid:
+    type: string
+    description: Идентификатор клиента/организации (UUID)
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование клиента/организации
+  shortName:
+    type: string
+    description: Краткое наименование клиента/организации
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  inn:
+    type: string
+    description: Идентификационный номер налогоплательщика (ИНН)
+  createdByUserId:
+    type: string
+    description: Ссылка на сущность, описывающую пользователя, создавшего заявку
+    format: uuid
+  signed:
+    type: boolean
+    description: Подписана
+description: Транспортная сущность для просмотра записи о заявке в скроллере

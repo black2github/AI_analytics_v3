@@ -1,0 +1,117 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Действия с СЭП
+    enum:
+    - ADD
+    - DELETE
+    - STATUS
+    - CERT_ADD
+    - CERT_DELETE
+    - BLOCK
+    - UNBLOCK
+    - UNITED_SIGN_FOR_CLIENT_ADD
+    - UNITED_SIGN_FOR_CLIENT_DELETE
+    - CLOUD_DST_BLOCKED_INVALID_PIN_CODE
+    - CLOUD_DST_UNBLOCKED_BY_ADMIN
+    - CLOUD_DST_PIN_CODE_SET
+    - CLOUD_DST_PIN_CODE_UPDATED
+    - CLOUD_DST_PIN_CODE_UNSET
+    - DST_BIND_MIGRATION
+    - DST_BIND
+    - DST_UNBIND
+    - DST_UNBIND_MIGRATION
+    - SIGNING_FORBIDDANCE
+    - SIGNING_ALLOWANCE
+    - USING_TO_LOGIN_FORBIDDANCE
+    - USING_TO_LOGIN_ALLOWANCE
+  notEq:
+    type: string
+    description: Действия с СЭП
+    enum:
+    - ADD
+    - DELETE
+    - STATUS
+    - CERT_ADD
+    - CERT_DELETE
+    - BLOCK
+    - UNBLOCK
+    - UNITED_SIGN_FOR_CLIENT_ADD
+    - UNITED_SIGN_FOR_CLIENT_DELETE
+    - CLOUD_DST_BLOCKED_INVALID_PIN_CODE
+    - CLOUD_DST_UNBLOCKED_BY_ADMIN
+    - CLOUD_DST_PIN_CODE_SET
+    - CLOUD_DST_PIN_CODE_UPDATED
+    - CLOUD_DST_PIN_CODE_UNSET
+    - DST_BIND_MIGRATION
+    - DST_BIND
+    - DST_UNBIND
+    - DST_UNBIND_MIGRATION
+    - SIGNING_FORBIDDANCE
+    - SIGNING_ALLOWANCE
+    - USING_TO_LOGIN_FORBIDDANCE
+    - USING_TO_LOGIN_ALLOWANCE
+  in:
+    type: array
+    items:
+      type: string
+      description: Действия с СЭП
+      enum:
+      - ADD
+      - DELETE
+      - STATUS
+      - CERT_ADD
+      - CERT_DELETE
+      - BLOCK
+      - UNBLOCK
+      - UNITED_SIGN_FOR_CLIENT_ADD
+      - UNITED_SIGN_FOR_CLIENT_DELETE
+      - CLOUD_DST_BLOCKED_INVALID_PIN_CODE
+      - CLOUD_DST_UNBLOCKED_BY_ADMIN
+      - CLOUD_DST_PIN_CODE_SET
+      - CLOUD_DST_PIN_CODE_UPDATED
+      - CLOUD_DST_PIN_CODE_UNSET
+      - DST_BIND_MIGRATION
+      - DST_BIND
+      - DST_UNBIND
+      - DST_UNBIND_MIGRATION
+      - SIGNING_FORBIDDANCE
+      - SIGNING_ALLOWANCE
+      - USING_TO_LOGIN_FORBIDDANCE
+      - USING_TO_LOGIN_ALLOWANCE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Действия с СЭП
+      enum:
+      - ADD
+      - DELETE
+      - STATUS
+      - CERT_ADD
+      - CERT_DELETE
+      - BLOCK
+      - UNBLOCK
+      - UNITED_SIGN_FOR_CLIENT_ADD
+      - UNITED_SIGN_FOR_CLIENT_DELETE
+      - CLOUD_DST_BLOCKED_INVALID_PIN_CODE
+      - CLOUD_DST_UNBLOCKED_BY_ADMIN
+      - CLOUD_DST_PIN_CODE_SET
+      - CLOUD_DST_PIN_CODE_UPDATED
+      - CLOUD_DST_PIN_CODE_UNSET
+      - DST_BIND_MIGRATION
+      - DST_BIND
+      - DST_UNBIND
+      - DST_UNBIND_MIGRATION
+      - SIGNING_FORBIDDANCE
+      - SIGNING_ALLOWANCE
+      - USING_TO_LOGIN_FORBIDDANCE
+      - USING_TO_LOGIN_ALLOWANCE
+  isNull:
+    type: boolean
+description: Фильтр по событию

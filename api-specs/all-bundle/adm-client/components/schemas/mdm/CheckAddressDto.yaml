@@ -1,0 +1,13 @@
+type: object
+properties:
+  fullAddress:
+    type: string
+  rawAddress:
+    type: string
+  result:
+    type: boolean
+  validationStatus:
+    type: string
+  validationValue:
+    type: string
+description: Данные

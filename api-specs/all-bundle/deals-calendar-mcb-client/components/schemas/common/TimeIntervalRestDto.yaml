@@ -1,0 +1,21 @@
+required:
+- date
+- fromTime
+- toTime
+type: object
+properties:
+  fromTime:
+    pattern: ^(?:[01][0-9]|2[0-3]):[0-5][0-9]$
+    type: string
+    description: Начало интервала в формате "чч:мм"
+    format: time
+  toTime:
+    pattern: ^(?:[01][0-9]|2[0-3]):[0-5][0-9]$
+    type: string
+    description: Конец интервала в формате "чч:мм"
+    format: time
+  date:
+    type: string
+    description: Дата встречи
+    format: date
+description: Временной интервал

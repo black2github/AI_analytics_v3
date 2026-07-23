@@ -1,0 +1,5 @@
+type: string
+description: Формат
+enum:
+- PDF
+- XLS

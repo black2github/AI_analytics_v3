@@ -1,0 +1,28 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат выполнения операции
+    example: SUCCESS
+    enum:
+    - SUCCESS
+    - CLIENT_NOT_FOUND_ERROR
+    - DUPLICATE_CLIENT_ERROR
+    - ACCOUNT_NOT_FOUND_ERROR
+    - ACOUNT_FOR_CLIENT_NOT_FOUND_ERROR
+    - UNDEFINED
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+  id:
+    type: string
+    description: GUID клиента в АС РКО-ГО
+    format: uuid
+    example: a29c714d-bf4b-48d2-a1fd-6c42bc2961ef
+  accounts:
+    type: array
+    description: Массив счетов клиента
+    items:
+      $ref: ./AccountDto.yaml
+description: Ответ на запрос счетов клиента для использования в платежных инструкциях при заключении сделок МНО и депозит

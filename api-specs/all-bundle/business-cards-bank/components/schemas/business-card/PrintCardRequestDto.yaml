@@ -1,0 +1,30 @@
+type: object
+properties:
+  columns:
+    type: array
+    description: Список колонок нужных для отображения
+    items:
+      type: string
+      description: Список колонок нужных для отображения
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  ids:
+    type: array
+    description: Список заявок
+    items:
+      type: string
+      description: Список заявок
+      format: uuid
+  splitReport:
+    type: boolean
+    description: Если false отчеты будут объединены в один документ
+description: Запрос печати карты заявки

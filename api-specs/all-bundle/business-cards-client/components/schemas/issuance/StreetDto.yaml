@@ -1,0 +1,12 @@
+type: object
+properties:
+  fiasStreetCode:
+    type: string
+    description: Код улицы (ФИАС)
+  street:
+    type: string
+    description: Название улицы
+  streetCode:
+    type: string
+    description: Код улицы (КЛАДР)
+description: Улица

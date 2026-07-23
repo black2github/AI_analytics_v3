@@ -1,0 +1,18 @@
+get:
+  tags:
+  - АПИ для работы с настройками пользователей
+  summary: Получение настройки по коду
+  operationId: getOne
+  parameters:
+  - name: code
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseSettingDto.yaml

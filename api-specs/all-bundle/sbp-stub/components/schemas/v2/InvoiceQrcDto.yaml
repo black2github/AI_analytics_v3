@@ -1,0 +1,19 @@
+type: object
+required:
+- code
+- message
+description: Данные входящего QR-кода
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  data:
+    $ref: ./InvoiceQrcDataDto.yaml
+    type: object
+    description: Данные входящего QR-кода
+  transactionId:
+    type: string
+    description: ИД транзакции

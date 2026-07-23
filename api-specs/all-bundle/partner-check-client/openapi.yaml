@@ -1,0 +1,76 @@
+info:
+  version: 1.63.0
+  title: Сервис проверки контрагентов. Клиентская часть
+tags:
+- name: API для работы с отчетами
+  description: Report Controller
+- name: API для управления подпиской
+  description: Subscription Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API методы для работы с заявками на подключение/отключение подписки на сервис
+  description: Subscription Request Controller
+- name: API методы сервиса Светофор.
+  description: Traffic Light Controller
+- name: API организаций пользователя
+  description: Organization Controller
+- name: Подпись заявки на подключение/отключение подписки на сервис (УФП 2.1)
+  description: Signature Oep Controller
+- name: Подпись заявки на подключение/отключение подписки на сервис проверки контрагентов
+  description: Signature Controller
+paths:
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /organization:
+    $ref: ./paths/organization/organization.yaml
+  /report:
+    $ref: ./paths/report/report.yaml
+  /report/free/is-available:
+    $ref: ./paths/free/report_free_is_available.yaml
+  /report/generate:
+    $ref: ./paths/generate/report_generate.yaml
+  /report/generate-free:
+    $ref: ./paths/generate-free/report_generate_free.yaml
+  /report/generate/by-inn:
+    $ref: ./paths/generate/report_generate_by_inn.yaml
+  /report/generate/by-inn-free:
+    $ref: ./paths/generate/report_generate_by_inn_free.yaml
+  /report/generate/by-ogrn:
+    $ref: ./paths/generate/report_generate_by_ogrn.yaml
+  /report/generate/by-ogrn-free:
+    $ref: ./paths/generate/report_generate_by_ogrn_free.yaml
+  /report/token:
+    $ref: ./paths/token/report_token.yaml
+  /sign/append:
+    $ref: ./paths/append/sign_append.yaml
+  /sign/check-sign-authority:
+    $ref: ./paths/check-sign-authority/sign_check_sign_authority.yaml
+  /sign/generate-digest/version:
+    $ref: ./paths/generate-digest/sign_generate_digest_version.yaml
+  /sign/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/sign_v2_1_generate_sign_data.yaml
+  /subscription:
+    $ref: ./paths/subscription/subscription.yaml
+  /subscription-request/print:
+    $ref: ./paths/print/subscription_request_print.yaml
+  /subscription-request/{id}:
+    $ref: ./paths/{id}/subscription_request_id.yaml
+  /subscription/create-subscribe-request:
+    $ref: ./paths/create-subscribe-request/subscription_create_subscribe_request.yaml
+  /subscription/create-unsubscribe-request:
+    $ref: ./paths/create-unsubscribe-request/subscription_create_unsubscribe_request.yaml
+  /subscription/document/get/{subscriptionDocumentId}:
+    $ref: ./paths/document/subscription_document_get_subscriptionDocumentId.yaml
+  /subscription/document/request/{subscriptionDocumentId}:
+    $ref: ./paths/document/subscription_document_request_subscriptionDocumentId.yaml
+  /subscription/has-subscription:
+    $ref: ./paths/has-subscription/subscription_has_subscription.yaml
+  /subscription/terms:
+    $ref: ./paths/terms/subscription_terms.yaml
+  /subscription/token:
+    $ref: ./paths/token/subscription_token.yaml
+  /subscription/{clientId}:
+    $ref: ./paths/{clientId}/subscription_clientId.yaml
+  /traffic-light/indicators:
+    $ref: ./paths/indicators/traffic_light_indicators.yaml
+components: {}

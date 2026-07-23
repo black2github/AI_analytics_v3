@@ -1,0 +1,16 @@
+type: object
+properties:
+  operationDate:
+    type: string
+    format: date
+  outgoingBalance:
+    type: number
+  incomingBalance:
+    type: number
+  currency:
+    type: string
+  accountingEntries:
+    type: array
+    items:
+      $ref: ./StatementAccountingEntryScrollerDto.yaml
+description: Страница с данными

@@ -1,0 +1,48 @@
+post:
+  tags:
+  - dbo-320-payment-order-controller
+  summary: catalogImport
+  operationId: catalogImportUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: attachmentid
+    in: query
+    description: attachmentid
+    required: true
+    type: string
+  - name: attachmentmode
+    in: query
+    description: attachmentmode
+    required: true
+    type: string
+  - name: Authorization
+    in: header
+    description: Authorization
+    required: true
+    type: string
+  - name: formatid
+    in: query
+    description: formatid
+    required: true
+    type: string
+  - name: remoteid
+    in: header
+    description: remoteid
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

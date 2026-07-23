@@ -1,0 +1,14 @@
+required:
+- banners
+- location
+type: object
+properties:
+  location:
+    type: string
+    description: Код местоположения на странице
+  banners:
+    type: array
+    description: Тип баннера для отображения
+    items:
+      $ref: ./LocationBannerDto.yaml
+description: Ответ для локации

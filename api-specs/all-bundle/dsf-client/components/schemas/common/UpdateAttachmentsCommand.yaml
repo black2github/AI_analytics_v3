@@ -1,0 +1,15 @@
+required:
+- documentId
+type: object
+properties:
+  attachmentIds:
+    type: array
+    description: Идентификаторы вложений
+    items:
+      type: string
+      description: Идентификаторы вложений
+      format: uuid
+  documentId:
+    type: string
+    description: Идентификатор ДСФ
+    format: uuid

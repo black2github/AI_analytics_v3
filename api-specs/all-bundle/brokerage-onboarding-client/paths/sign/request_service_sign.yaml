@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Подписать заявку
+  description: 'Привилегии: BRK_ONBOARDING.CLIENT.REQUEST.SIGN'
+  operationId: sign
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/sign/GenericCommandBrkSignCommandDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBrkOnbRequestViewDto.yaml

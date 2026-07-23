@@ -1,0 +1,7 @@
+type: object
+description: Тип формата печатной формы
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сущности.

@@ -1,0 +1,103 @@
+openapi: 3.0.1
+info:
+  title: Сервис ленты операции. Клиентская часть.
+  version: 3.4.0
+servers:
+- url: /activity-feed-client
+security:
+- bearerAuth: []
+paths:
+  /aggregation-statistic:
+    $ref: ./paths/aggregation-statistic/aggregation_statistic.yaml
+  /activity-feed/summary:
+    $ref: ./paths/summary/activity_feed_summary.yaml
+  /activity-feed/get-page:
+    $ref: ./paths/get-page/activity_feed_get_page.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /activity-feed/{id}:
+    $ref: ./paths/{id}/activity_feed_id.yaml
+  /activity-feed/document-info/{id}:
+    $ref: ./paths/document-info/activity_feed_document_info_id.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoPaymentDocumentStatisticDocTypeFilter:
+      $ref: ./components/schemas/aggregation-statistic/FilterValueEnumDtoPaymentDocumentStatisticDocTypeFilter.yaml
+    GetPageCommandPaymentDocumentStatisticFilterDto:
+      $ref: ./components/schemas/aggregation-statistic/GetPageCommandPaymentDocumentStatisticFilterDto.yaml
+    PageParamsPaymentDocumentStatisticFilterDto:
+      $ref: ./components/schemas/aggregation-statistic/PageParamsPaymentDocumentStatisticFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    PaymentDocumentStatisticFilterDto:
+      $ref: ./components/schemas/aggregation-statistic/PaymentDocumentStatisticFilterDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponseSimpleErrorDataPaymentDocumentStatisticRspDto:
+      $ref: ./components/schemas/aggregation-statistic/GenericResponseSimpleErrorDataPaymentDocumentStatisticRspDto.yaml
+    PaymentDocumentStatisticCategoryRspDto:
+      $ref: ./components/schemas/aggregation-statistic/PaymentDocumentStatisticCategoryRspDto.yaml
+    PaymentDocumentStatisticRspDto:
+      $ref: ./components/schemas/aggregation-statistic/PaymentDocumentStatisticRspDto.yaml
+    PaymentDocumentStatisticSumRspDto:
+      $ref: ./components/schemas/aggregation-statistic/PaymentDocumentStatisticSumRspDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ActivityFeedClientFilterDto:
+      $ref: ./components/schemas/common/ActivityFeedClientFilterDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueEnumDtoActivityFeedClientFilterCreditDebit:
+      $ref: ./components/schemas/common/FilterValueEnumDtoActivityFeedClientFilterCreditDebit.yaml
+    FilterValueEnumDtoActivityFeedClientFilterOperationCategory:
+      $ref: ./components/schemas/common/FilterValueEnumDtoActivityFeedClientFilterOperationCategory.yaml
+    FilterValueEnumDtoActivityFeedClientFilterOperationStatus:
+      $ref: ./components/schemas/common/FilterValueEnumDtoActivityFeedClientFilterOperationStatus.yaml
+    FilterValueEnumDtoActivityFeedClientFilterTypeCode:
+      $ref: ./components/schemas/common/FilterValueEnumDtoActivityFeedClientFilterTypeCode.yaml
+    GetPageCommandActivityFeedClientFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandActivityFeedClientFilterDto.yaml
+    PageParamsActivityFeedClientFilterDto:
+      $ref: ./components/schemas/common/PageParamsActivityFeedClientFilterDto.yaml
+    ActivityFeedDayTotalDto:
+      $ref: ./components/schemas/common/ActivityFeedDayTotalDto.yaml
+    ActivityFeedTotalDto:
+      $ref: ./components/schemas/common/ActivityFeedTotalDto.yaml
+    GenericResponseSimpleErrorDataActivityFeedTotalDto:
+      $ref: ./components/schemas/summary/GenericResponseSimpleErrorDataActivityFeedTotalDto.yaml
+    ActivityFeedDto:
+      $ref: ./components/schemas/common/ActivityFeedDto.yaml
+    ContractTypeDtoV2:
+      $ref: ./components/schemas/common/ContractTypeDtoV2.yaml
+    PageDataTotalActivityFeedDtoActivityFeedTotalDto:
+      $ref: ./components/schemas/get-page/PageDataTotalActivityFeedDtoActivityFeedTotalDto.yaml
+    GenericResponseSimpleErrorDataActivityFeedDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataActivityFeedDto.yaml
+    ActivityFeedDocFieldInfoDto:
+      $ref: ./components/schemas/document-info/ActivityFeedDocFieldInfoDto.yaml
+    ActivityFeedDocInfoDto:
+      $ref: ./components/schemas/document-info/ActivityFeedDocInfoDto.yaml
+    FieldValueDto:
+      $ref: ./components/schemas/document-info/FieldValueDto.yaml
+    GenericResponseSimpleErrorDataActivityFeedDocInfoDto:
+      $ref: ./components/schemas/document-info/GenericResponseSimpleErrorDataActivityFeedDocInfoDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

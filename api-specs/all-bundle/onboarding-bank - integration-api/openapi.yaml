@@ -1,0 +1,910 @@
+openapi: 3.0.1
+info:
+  title: Сервис онбординга. Интеграционная часть.
+  version: 3.0.0
+servers:
+- url: /onboarding-bank
+security:
+- Bearer: []
+paths:
+  /async-task/{id}:
+    $ref: ./paths/{id}/async_task_id.yaml
+  /checks/active-org-representative:
+    $ref: ./paths/active-org-representative/checks_active_org_representative.yaml
+  /client-call-history/add:
+    $ref: ./paths/add/client_call_history_add.yaml
+  /client-call-history/request/{id}:
+    $ref: ./paths/request/client_call_history_request_id.yaml
+  /dictionary/partner-sites/all:
+    $ref: ./paths/partner-sites/dictionary_partner_sites_all.yaml
+  /dictionary/tariff/all:
+    $ref: ./paths/tariff/dictionary_tariff_all.yaml
+  /dictionary/tariff/by-promo-codes:
+    $ref: ./paths/tariff/dictionary_tariff_by_promo_codes.yaml
+  /document-signing/cancel-sign:
+    $ref: ./paths/cancel-sign/document_signing_cancel_sign.yaml
+  /documents-ocr/passport:
+    $ref: ./paths/passport/documents_ocr_passport.yaml
+  /esign-request/status-info:
+    $ref: ./paths/status-info/esign_request_status_info.yaml
+  /hidden/service/onboarding-request/create-fo-request/{id}:
+    $ref: ./paths/service/hidden_service_onboarding_request_create_fo_request_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /integration/dictionary/tariff-promo/applied:
+    $ref: ./paths/dictionary/integration_dictionary_tariff_promo_applied.yaml
+  /integration/dictionary/tariff-promo/{requestId}:
+    $ref: ./paths/dictionary/integration_dictionary_tariff_promo_requestId.yaml
+  /integration/onboarding-remote-request/export-print-forms:
+    $ref: ./paths/onboarding-remote-request/integration_onboarding_remote_request_export_print_forms.yaml
+  /integration/onboarding-request/bank-client/{id}:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_bank_client_id.yaml
+  /integration/onboarding-request/banners/user/{userId}:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_banners_user_userId.yaml
+  /integration/onboarding-request/cancel-sign:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_cancel_sign.yaml
+  /integration/onboarding-request/check-request-presence:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_check_request_presence.yaml
+  /integration/onboarding-request/get-by-ids:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_get_by_ids.yaml
+  /integration/onboarding-request/get-for-main-page:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_get_for_main_page.yaml
+  /integration/onboarding-request/get-page:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_get_page.yaml
+  /integration/onboarding-request/get-status-last-onb-request:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_get_status_last_onb_request.yaml
+  /integration/onboarding-request/meeting:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_meeting.yaml
+  /integration/onboarding-request/meeting/client/{clientId}:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_meeting_client_clientId.yaml
+  /integration/onboarding-request/person/update-zkbo-signer-flag:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_person_update_zkbo_signer_flag.yaml
+  /integration/onboarding-request/report-data/vm-daily:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_report_data_vm_daily.yaml
+  /integration/onboarding-request/{id}:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_id.yaml
+  /integration/onboarding-request/{id}/commission-required:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_id_commission_required.yaml
+  /integration/onboarding-request/{id}/export-fo-print-forms:
+    $ref: ./paths/onboarding-request/integration_onboarding_request_id_export_fo_print_forms.yaml
+  /local/branches/update:
+    $ref: ./paths/branches/local_branches_update.yaml
+  /local/define-revoked-suffered-persons:
+    $ref: ./paths/define-revoked-suffered-persons/local_define_revoked_suffered_persons.yaml
+  /manager-visit-history/add:
+    $ref: ./paths/add/manager_visit_history_add.yaml
+  /manager-visit-history/request/{id}:
+    $ref: ./paths/request/manager_visit_history_request_id.yaml
+  /onboarding-request:
+    $ref: ./paths/onboarding-request/onboarding_request.yaml
+  /onboarding-request-archive/get-page:
+    $ref: ./paths/get-page/onboarding_request_archive_get_page.yaml
+  /onboarding-request-archive/history/{id}:
+    $ref: ./paths/history/onboarding_request_archive_history_id.yaml
+  /onboarding-request-archive/request/{id}:
+    $ref: ./paths/request/onboarding_request_archive_request_id.yaml
+  /onboarding-request/access-rights-invite-history/{id}:
+    $ref: ./paths/access-rights-invite-history/onboarding_request_access_rights_invite_history_id.yaml
+  /onboarding-request/active-requests/check-active-115-fns-requests:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_active_115_fns_requests.yaml
+  /onboarding-request/active-requests/check-active-115-requests:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_active_115_requests.yaml
+  /onboarding-request/active-requests/check-create:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_create.yaml
+  /onboarding-request/active-requests/check-open-account:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_open_account.yaml
+  /onboarding-request/active-requests/check-send-bank:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_send_bank.yaml
+  /onboarding-request/active-requests/check-send-user:
+    $ref: ./paths/active-requests/onboarding_request_active_requests_check_send_user.yaml
+  /onboarding-request/approve/{id}:
+    $ref: ./paths/approve/onboarding_request_approve_id.yaml
+  /onboarding-request/assign-responsible/{id}:
+    $ref: ./paths/assign-responsible/onboarding_request_assign_responsible_id.yaml
+  /onboarding-request/bank-edit/{id}:
+    $ref: ./paths/bank-edit/onboarding_request_bank_edit_id.yaml
+  /onboarding-request/category:
+    $ref: ./paths/category/onboarding_request_category.yaml
+  /onboarding-request/change-products:
+    $ref: ./paths/change-products/onboarding_request_change_products.yaml
+  /onboarding-request/change-status/{id}:
+    $ref: ./paths/change-status/onboarding_request_change_status_id.yaml
+  /onboarding-request/check-request-presence:
+    $ref: ./paths/check-request-presence/onboarding_request_check_request_presence.yaml
+  /onboarding-request/delete:
+    $ref: ./paths/delete/onboarding_request_delete.yaml
+  /onboarding-request/delete-predraft:
+    $ref: ./paths/delete-predraft/onboarding_request_delete_predraft.yaml
+  /onboarding-request/edit/{id}:
+    $ref: ./paths/edit/onboarding_request_edit_id.yaml
+  /onboarding-request/execute/{id}:
+    $ref: ./paths/execute/onboarding_request_execute_id.yaml
+  /onboarding-request/export-all:
+    $ref: ./paths/export-all/onboarding_request_export_all.yaml
+  /onboarding-request/export-all/export:
+    $ref: ./paths/export-all/onboarding_request_export_all_export.yaml
+  /onboarding-request/export-applications:
+    $ref: ./paths/export-applications/onboarding_request_export_applications.yaml
+  /onboarding-request/export-by-ids:
+    $ref: ./paths/export-by-ids/onboarding_request_export_by_ids.yaml
+  /onboarding-request/export-by-ids/export:
+    $ref: ./paths/export-by-ids/onboarding_request_export_by_ids_export.yaml
+  /onboarding-request/export-final-docs-for-ip-oper-acc:
+    $ref: ./paths/export-final-docs-for-ip-oper-acc/onboarding_request_export_final_docs_for_ip_oper_acc.yaml
+  /onboarding-request/export-list:
+    $ref: ./paths/export-list/onboarding_request_export_list.yaml
+  /onboarding-request/export-list-as-file:
+    $ref: ./paths/export-list-as-file/onboarding_request_export_list_as_file.yaml
+  /onboarding-request/export-preview-docs-for-ip-oper-acc:
+    $ref: ./paths/export-preview-docs-for-ip-oper-acc/onboarding_request_export_preview_docs_for_ip_oper_acc.yaml
+  /onboarding-request/export-print-forms:
+    $ref: ./paths/export-print-forms/onboarding_request_export_print_forms.yaml
+  /onboarding-request/export-print-report:
+    $ref: ./paths/export-print-report/onboarding_request_export_print_report.yaml
+  /onboarding-request/export-report-to-zip:
+    $ref: ./paths/export-report-to-zip/onboarding_request_export_report_to_zip.yaml
+  /onboarding-request/export-signed-docs:
+    $ref: ./paths/export-signed-docs/onboarding_request_export_signed_docs.yaml
+  /onboarding-request/export-to-esk:
+    $ref: ./paths/export-to-esk/onboarding_request_export_to_esk.yaml
+  /onboarding-request/export-to-esk-115/{id}:
+    $ref: ./paths/export-to-esk-115/onboarding_request_export_to_esk_115_id.yaml
+  /onboarding-request/find-onboarding-requests:
+    $ref: ./paths/find-onboarding-requests/onboarding_request_find_onboarding_requests.yaml
+  /onboarding-request/get-page:
+    $ref: ./paths/get-page/onboarding_request_get_page.yaml
+  /onboarding-request/history/{id}:
+    $ref: ./paths/history/onboarding_request_history_id.yaml
+  /onboarding-request/history/{id}/contains-status:
+    $ref: ./paths/history/onboarding_request_history_id_contains_status.yaml
+  /onboarding-request/manual-data-error/{id}:
+    $ref: ./paths/manual-data-error/onboarding_request_manual_data_error_id.yaml
+  /onboarding-request/manual-executed-by-tessa-115/{id}:
+    $ref: ./paths/manual-executed-by-tessa-115/onboarding_request_manual_executed_by_tessa_115_id.yaml
+  /onboarding-request/manual-executed-by-tessa/{id}:
+    $ref: ./paths/manual-executed-by-tessa/onboarding_request_manual_executed_by_tessa_id.yaml
+  /onboarding-request/manual-remote-account-openning-unavailable/{id}:
+    $ref: ./paths/manual-remote-account-openning-unavailable/onboarding_request_manual_remote_account_openning_unavailable_id.yaml
+  /onboarding-request/manual-replacing-docs/{id}:
+    $ref: ./paths/manual-replacing-docs/onboarding_request_manual_replacing_docs_id.yaml
+  /onboarding-request/manual-tessa-finish-task:
+    $ref: ./paths/manual-tessa-finish-task/onboarding_request_manual_tessa_finish_task.yaml
+  /onboarding-request/new:
+    $ref: ./paths/new/onboarding_request_new.yaml
+  /onboarding-request/new/async:
+    $ref: ./paths/new/onboarding_request_new_async.yaml
+  /onboarding-request/organization/check-acting:
+    $ref: ./paths/organization/onboarding_request_organization_check_acting.yaml
+  /onboarding-request/original-documents:
+    $ref: ./paths/original-documents/onboarding_request_original_documents.yaml
+  /onboarding-request/original-documents/add:
+    $ref: ./paths/original-documents/onboarding_request_original_documents_add.yaml
+  /onboarding-request/original-documents/form-dynamic-originals:
+    $ref: ./paths/original-documents/onboarding_request_original_documents_form_dynamic_originals.yaml
+  /onboarding-request/original-documents/generate-dynamic-documents:
+    $ref: ./paths/original-documents/onboarding_request_original_documents_generate_dynamic_documents.yaml
+  /onboarding-request/original-documents/parse-fns-zip:
+    $ref: ./paths/original-documents/onboarding_request_original_documents_parse_fns_zip.yaml
+  /onboarding-request/original-documents/replace:
+    $ref: ./paths/original-documents/onboarding_request_original_documents_replace.yaml
+  /onboarding-request/persons/authorized-persons:
+    $ref: ./paths/persons/onboarding_request_persons_authorized_persons.yaml
+  /onboarding-request/persons/external-systems-requisites/{requestId}:
+    $ref: ./paths/persons/onboarding_request_persons_external_systems_requisites_requestId.yaml
+  /onboarding-request/persons/update/{requestId}:
+    $ref: ./paths/persons/onboarding_request_persons_update_requestId.yaml
+  /onboarding-request/print-acc-res-conditions:
+    $ref: ./paths/print-acc-res-conditions/onboarding_request_print_acc_res_conditions.yaml
+  /onboarding-request/print-acc-res-conditions/export:
+    $ref: ./paths/print-acc-res-conditions/onboarding_request_print_acc_res_conditions_export.yaml
+  /onboarding-request/print-list:
+    $ref: ./paths/print-list/onboarding_request_print_list.yaml
+  /onboarding-request/print-report:
+    $ref: ./paths/print-report/onboarding_request_print_report.yaml
+  /onboarding-request/process-tessa-comments/check/{id}:
+    $ref: ./paths/process-tessa-comments/onboarding_request_process_tessa_comments_check_id.yaml
+  /onboarding-request/process-tessa-comments/{id}:
+    $ref: ./paths/process-tessa-comments/onboarding_request_process_tessa_comments_id.yaml
+  /onboarding-request/re-archive:
+    $ref: ./paths/re-archive/onboarding_request_re_archive.yaml
+  /onboarding-request/re-export:
+    $ref: ./paths/re-export/onboarding_request_re_export.yaml
+  /onboarding-request/re-export-115:
+    $ref: ./paths/re-export-115/onboarding_request_re_export_115.yaml
+  /onboarding-request/re-issue-access-rights/bulk:
+    $ref: ./paths/re-issue-access-rights/onboarding_request_re_issue_access_rights_bulk.yaml
+  /onboarding-request/re-issue-access-rights/{id}:
+    $ref: ./paths/re-issue-access-rights/onboarding_request_re_issue_access_rights_id.yaml
+  /onboarding-request/re-recall-in-tessa:
+    $ref: ./paths/re-recall-in-tessa/onboarding_request_re_recall_in_tessa.yaml
+  /onboarding-request/re-recall-in-tessa/{id}:
+    $ref: ./paths/re-recall-in-tessa/onboarding_request_re_recall_in_tessa_id.yaml
+  /onboarding-request/re-revoke-access-rights/bulk:
+    $ref: ./paths/re-revoke-access-rights/onboarding_request_re_revoke_access_rights_bulk.yaml
+  /onboarding-request/re-revoke-access-rights/{id}:
+    $ref: ./paths/re-revoke-access-rights/onboarding_request_re_revoke_access_rights_id.yaml
+  /onboarding-request/re-send-invites/{id}:
+    $ref: ./paths/re-send-invites/onboarding_request_re_send_invites_id.yaml
+  /onboarding-request/reform:
+    $ref: ./paths/reform/onboarding_request_reform.yaml
+  /onboarding-request/refuse:
+    $ref: ./paths/refuse/onboarding_request_refuse.yaml
+  /onboarding-request/reject/{id}:
+    $ref: ./paths/reject/onboarding_request_reject_id.yaml
+  /onboarding-request/resend-to-tessa:
+    $ref: ./paths/resend-to-tessa/onboarding_request_resend_to_tessa.yaml
+  /onboarding-request/resend-to-tessa-115/{id}:
+    $ref: ./paths/resend-to-tessa-115/onboarding_request_resend_to_tessa_115_id.yaml
+  /onboarding-request/reverse/{id}:
+    $ref: ./paths/reverse/onboarding_request_reverse_id.yaml
+  /onboarding-request/revert-status/{id}:
+    $ref: ./paths/revert-status/onboarding_request_revert_status_id.yaml
+  /onboarding-request/save-after-bank-edit:
+    $ref: ./paths/save-after-bank-edit/onboarding_request_save_after_bank_edit.yaml
+  /onboarding-request/send:
+    $ref: ./paths/send/onboarding_request_send.yaml
+  /onboarding-request/send-tech-req:
+    $ref: ./paths/send-tech-req/onboarding_request_send_tech_req.yaml
+  /onboarding-request/set-editing/{id}:
+    $ref: ./paths/set-editing/onboarding_request_set_editing_id.yaml
+  /onboarding-request/settings/pf-for-115-enabled:
+    $ref: ./paths/settings/onboarding_request_settings_pf_for_115_enabled.yaml
+  /onboarding-request/sign-info/{requestId}:
+    $ref: ./paths/sign-info/onboarding_request_sign_info_requestId.yaml
+  /onboarding-request/take:
+    $ref: ./paths/take/onboarding_request_take.yaml
+  /onboarding-request/validate-certificates/{requestId}:
+    $ref: ./paths/validate-certificates/onboarding_request_validate_certificates_requestId.yaml
+  /onboarding-request/{id}:
+    $ref: ./paths/{id}/onboarding_request_id.yaml
+  /qrc-commission-payment/all-by-onboarding-request-id/{onboardingRequestId}:
+    $ref: ./paths/all-by-onboarding-request-id/qrc_commission_payment_all_by_onboarding_request_id_onboardingRequestId.yaml
+  /qrc-commission-payment/all-by-onboarding-request-ids-and-statuses:
+    $ref: ./paths/all-by-onboarding-request-ids-and-statuses/qrc_commission_payment_all_by_onboarding_request_ids_and_statuses.yaml
+  /qrc-commission-payment/change-tariff:
+    $ref: ./paths/change-tariff/qrc_commission_payment_change_tariff.yaml
+  /qrc-commission-payment/last/{onboardingId}:
+    $ref: ./paths/last/qrc_commission_payment_last_onboardingId.yaml
+  /qrc-commission-payment/notify:
+    $ref: ./paths/notify/qrc_commission_payment_notify.yaml
+  /qrc-commission-payment/pay:
+    $ref: ./paths/pay/qrc_commission_payment_pay.yaml
+  /qrc-commission-payment/payment-commission-qrc/download/{onboardingRequestId}:
+    $ref: ./paths/payment-commission-qrc/qrc_commission_payment_payment_commission_qrc_download_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-commission-qrc/export/{onboardingRequestId}:
+    $ref: ./paths/payment-commission-qrc/qrc_commission_payment_payment_commission_qrc_export_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-details/download/{onboardingRequestId}:
+    $ref: ./paths/payment-details/qrc_commission_payment_payment_details_download_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-details/export/{onboardingRequestId}:
+    $ref: ./paths/payment-details/qrc_commission_payment_payment_details_export_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-receipt/download/{onboardingRequestId}:
+    $ref: ./paths/payment-receipt/qrc_commission_payment_payment_receipt_download_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-receipt/export/{onboardingRequestId}:
+    $ref: ./paths/payment-receipt/qrc_commission_payment_payment_receipt_export_onboardingRequestId.yaml
+  /qrc-commission-payment/payment-receipt/upload/{onboardingRequestId}:
+    $ref: ./paths/payment-receipt/qrc_commission_payment_payment_receipt_upload_onboardingRequestId.yaml
+  /qrc-commission-payment/set-individual-amount:
+    $ref: ./paths/set-individual-amount/qrc_commission_payment_set_individual_amount.yaml
+  /tariff-promo/{requestId}:
+    $ref: ./paths/{requestId}/tariff_promo_requestId.yaml
+components:
+  schemas:
+    AccessRightsAndInviteHistoryDto:
+      $ref: ./components/schemas/access-rights-invite-history/AccessRightsAndInviteHistoryDto.yaml
+    AccountInfoDto:
+      $ref: ./components/schemas/common/AccountInfoDto.yaml
+    AccountInfoScrollerDto:
+      $ref: ./components/schemas/get-page/AccountInfoScrollerDto.yaml
+    AcquiringDto:
+      $ref: ./components/schemas/common/AcquiringDto.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/active-requests/ActiveAccountsCheckParamsDto.yaml
+    ActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/active-requests/ActiveAccountsCheckResultDto.yaml
+    ActiveRequestsCheckParamsDto:
+      $ref: ./components/schemas/active-requests/ActiveRequestsCheckParamsDto.yaml
+    ActiveRequestsValidationResultDto:
+      $ref: ./components/schemas/active-requests/ActiveRequestsValidationResultDto.yaml
+    AddOriginalDocumentDto:
+      $ref: ./components/schemas/original-documents/AddOriginalDocumentDto.yaml
+    AdditionalDocsGenFlagsDto:
+      $ref: ./components/schemas/common/AdditionalDocsGenFlagsDto.yaml
+    AdditionalParamsMainPageDto:
+      $ref: ./components/schemas/onboarding-request/AdditionalParamsMainPageDto.yaml
+    AdmCardDto:
+      $ref: ./components/schemas/common/AdmCardDto.yaml
+    AsyncTaskDto:
+      $ref: ./components/schemas/common/AsyncTaskDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    AuthorizedPersonDto:
+      $ref: ./components/schemas/persons/AuthorizedPersonDto.yaml
+    AvailableAndAppliedPromosDto:
+      $ref: ./components/schemas/common/AvailableAndAppliedPromosDto.yaml
+    BankClientInfoBankScrollerDto:
+      $ref: ./components/schemas/get-page/BankClientInfoBankScrollerDto.yaml
+    BankClientInfoClientScrollerDto:
+      $ref: ./components/schemas/onboarding-request/BankClientInfoClientScrollerDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    BankClientInfoMainPageDto:
+      $ref: ./components/schemas/onboarding-request/BankClientInfoMainPageDto.yaml
+    BranchAbsCodesUpdateDto:
+      $ref: ./components/schemas/branches/BranchAbsCodesUpdateDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/common/BranchDto.yaml
+    BranchMainPageDto:
+      $ref: ./components/schemas/onboarding-request/BranchMainPageDto.yaml
+    BranchScrollerDto:
+      $ref: ./components/schemas/common/BranchScrollerDto.yaml
+    BranchUpdateStatisticsDto:
+      $ref: ./components/schemas/branches/BranchUpdateStatisticsDto.yaml
+    BranchesUpdateMassRequestDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassRequestDto.yaml
+    BranchesUpdateMassResponseDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassResponseDto.yaml
+    BulkReReissueReRevokeResponseDto:
+      $ref: ./components/schemas/common/BulkReReissueReRevokeResponseDto.yaml
+    BusinessActivityDto:
+      $ref: ./components/schemas/common/BusinessActivityDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    ChangeStatusDto:
+      $ref: ./components/schemas/change-status/ChangeStatusDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    CheckUserActiveClientRepresentativeRequestDto:
+      $ref: ./components/schemas/active-org-representative/CheckUserActiveClientRepresentativeRequestDto.yaml
+    ClientBankConnectionInfoDto:
+      $ref: ./components/schemas/common/ClientBankConnectionInfoDto.yaml
+    ClientCallHistoryDto:
+      $ref: ./components/schemas/common/ClientCallHistoryDto.yaml
+    ClientCallHistoryListDto:
+      $ref: ./components/schemas/request/ClientCallHistoryListDto.yaml
+    ClientCallHistoryScrollerDto:
+      $ref: ./components/schemas/get-page/ClientCallHistoryScrollerDto.yaml
+    CommentDto:
+      $ref: ./components/schemas/common/CommentDto.yaml
+    ConstituentDocumentChangesDto:
+      $ref: ./components/schemas/common/ConstituentDocumentChangesDto.yaml
+    ContactInfoDto:
+      $ref: ./components/schemas/common/ContactInfoDto.yaml
+    ContractSignerDocumentDto:
+      $ref: ./components/schemas/common/ContractSignerDocumentDto.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CorporateCardIssuingDataDto:
+      $ref: ./components/schemas/common/CorporateCardIssuingDataDto.yaml
+    CreateCommandClientCallHistoryDto:
+      $ref: ./components/schemas/add/CreateCommandClientCallHistoryDto.yaml
+    CreateCommandCreateNewOnboardingRequestDto:
+      $ref: ./components/schemas/new/CreateCommandCreateNewOnboardingRequestDto.yaml
+    CreateCommandManagerVisitHistoryDto:
+      $ref: ./components/schemas/add/CreateCommandManagerVisitHistoryDto.yaml
+    CreateNewOnboardingRequestDto:
+      $ref: ./components/schemas/new/CreateNewOnboardingRequestDto.yaml
+    CreateResponseOnboardingRequestDto:
+      $ref: ./components/schemas/common/CreateResponseOnboardingRequestDto.yaml
+    DocsExportByIdsDto:
+      $ref: ./components/schemas/export-by-ids/DocsExportByIdsDto.yaml
+    DocsExportDto:
+      $ref: ./components/schemas/common/DocsExportDto.yaml
+    DocumentLinkDto:
+      $ref: ./components/schemas/common/DocumentLinkDto.yaml
+    DocumentOcrRequestDto:
+      $ref: ./components/schemas/passport/DocumentOcrRequestDto.yaml
+    DocumentOcrResponseDto:
+      $ref: ./components/schemas/passport/DocumentOcrResponseDto.yaml
+    ESignRequestPersonStatusesDto:
+      $ref: ./components/schemas/status-info/ESignRequestPersonStatusesDto.yaml
+    ESignRequestStatusDto:
+      $ref: ./components/schemas/status-info/ESignRequestStatusDto.yaml
+    ESignRequestStatusResultDto:
+      $ref: ./components/schemas/status-info/ESignRequestStatusResultDto.yaml
+    EioInfoDto:
+      $ref: ./components/schemas/common/EioInfoDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    EskSearchRequestDto:
+      $ref: ./components/schemas/active-requests/EskSearchRequestDto.yaml
+    EskSearchResponseDto:
+      $ref: ./components/schemas/active-requests/EskSearchResponseDto.yaml
+    EskSearchSparkEnrichmentDto:
+      $ref: ./components/schemas/active-requests/EskSearchSparkEnrichmentDto.yaml
+    EvaluationClientIpBeneficialOwnersSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIpBeneficialOwnersSheetDto.yaml
+    EvaluationClientIpCrsStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIpCrsStatusSheetDto.yaml
+    EvaluationClientIpFatcaStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientIpFatcaStatusSheetDto.yaml
+    EvaluationClientSignSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientSignSheetDto.yaml
+    EvaluationClientUlBeneficialOwnersSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientUlBeneficialOwnersSheetDto.yaml
+    EvaluationClientUlCrsStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientUlCrsStatusSheetDto.yaml
+    EvaluationClientUlFatcaStatusSheetDto:
+      $ref: ./components/schemas/common/EvaluationClientUlFatcaStatusSheetDto.yaml
+    ExtendedFileStorageStatusDto:
+      $ref: ./components/schemas/common/ExtendedFileStorageStatusDto.yaml
+    ExternalSystemsRequisitesDto:
+      $ref: ./components/schemas/common/ExternalSystemsRequisitesDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoAccessRightGrantingStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoAccessRightGrantingStatusDto.yaml
+    FilterValueEnumDtoBankClientTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoBankClientTypeDto.yaml
+    FilterValueEnumDtoDboConnectionTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoDboConnectionTypeDto.yaml
+    FilterValueEnumDtoMarketingCampaignTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoMarketingCampaignTypeDto.yaml
+    FilterValueEnumDtoMeetingPointScrollerDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoMeetingPointScrollerDto.yaml
+    FilterValueEnumDtoOnboardingRequestArchiveStatusDto:
+      $ref: ./components/schemas/get-page/FilterValueEnumDtoOnboardingRequestArchiveStatusDto.yaml
+    FilterValueEnumDtoOnboardingRequestBankFilterBusinessFeature:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOnboardingRequestBankFilterBusinessFeature.yaml
+    FilterValueEnumDtoOnboardingRequestBankFilterTechFeature:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOnboardingRequestBankFilterTechFeature.yaml
+    FilterValueEnumDtoOnboardingRequestSourceDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOnboardingRequestSourceDto.yaml
+    FilterValueEnumDtoOnboardingRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoOnboardingRequestStatusDto.yaml
+    FilterValueEnumDtoOnboardingRequestStatusDtoForClientFilter:
+      $ref: ./components/schemas/onboarding-request/FilterValueEnumDtoOnboardingRequestStatusDtoForClientFilter.yaml
+    FilterValueEnumDtoPrimaryCheckResultDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoPrimaryCheckResultDto.yaml
+    FilterValueEnumDtoSignPlaceDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSignPlaceDto.yaml
+    FilterValueEnumDtoSigningStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSigningStatusDto.yaml
+    FilterValueEnumDtoUserTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoUserTypeDto.yaml
+    FinancialInfoDto:
+      $ref: ./components/schemas/common/FinancialInfoDto.yaml
+    FnsZipResponseDto:
+      $ref: ./components/schemas/original-documents/FnsZipResponseDto.yaml
+    FormedDocsPrintRequestDto:
+      $ref: ./components/schemas/common/FormedDocsPrintRequestDto.yaml
+    FormedDocsPrintZipRequestDto:
+      $ref: ./components/schemas/common/FormedDocsPrintZipRequestDto.yaml
+    FormedDocumentDto:
+      $ref: ./components/schemas/common/FormedDocumentDto.yaml
+    FormedDocumentSignatureDto:
+      $ref: ./components/schemas/common/FormedDocumentSignatureDto.yaml
+    FrontOfficePrintFormDto:
+      $ref: ./components/schemas/onboarding-request/FrontOfficePrintFormDto.yaml
+    FrontOfficePrintFormsDto:
+      $ref: ./components/schemas/onboarding-request/FrontOfficePrintFormsDto.yaml
+    FrontOfficeRequestDto:
+      $ref: ./components/schemas/common/FrontOfficeRequestDto.yaml
+    GenericCommandActiveAccountsCheckParamsDto:
+      $ref: ./components/schemas/active-requests/GenericCommandActiveAccountsCheckParamsDto.yaml
+    GenericCommandBoolean:
+      $ref: ./components/schemas/set-editing/GenericCommandBoolean.yaml
+    GenericCommandChangeStatusDto:
+      $ref: ./components/schemas/change-status/GenericCommandChangeStatusDto.yaml
+    GenericCommandCheckUserActiveClientRepresentativeRequestDto:
+      $ref: ./components/schemas/active-org-representative/GenericCommandCheckUserActiveClientRepresentativeRequestDto.yaml
+    GenericCommandCreateNewOnboardingRequestDto:
+      $ref: ./components/schemas/new/GenericCommandCreateNewOnboardingRequestDto.yaml
+    GenericCommandDocsExportByIdsDto:
+      $ref: ./components/schemas/export-by-ids/GenericCommandDocsExportByIdsDto.yaml
+    GenericCommandDocsExportDto:
+      $ref: ./components/schemas/common/GenericCommandDocsExportDto.yaml
+    GenericCommandDocumentOcrRequestDto:
+      $ref: ./components/schemas/passport/GenericCommandDocumentOcrRequestDto.yaml
+    GenericCommandEskSearchRequestDto:
+      $ref: ./components/schemas/active-requests/GenericCommandEskSearchRequestDto.yaml
+    GenericCommandFormedDocsPrintRequestDto:
+      $ref: ./components/schemas/export-print-report/GenericCommandFormedDocsPrintRequestDto.yaml
+    GenericCommandFormedDocsPrintZipRequestDto:
+      $ref: ./components/schemas/export-print-forms/GenericCommandFormedDocsPrintZipRequestDto.yaml
+    GenericCommandListString:
+      $ref: ./components/schemas/tariff/GenericCommandListString.yaml
+    GenericCommandOnboardingRequestReExportDto:
+      $ref: ./components/schemas/re-export-115/GenericCommandOnboardingRequestReExportDto.yaml
+    GenericCommandOnboardingRequestSearchParams:
+      $ref: ./components/schemas/find-onboarding-requests/GenericCommandOnboardingRequestSearchParams.yaml
+    GenericCommandPersonFioEskIdDto:
+      $ref: ./components/schemas/persons/GenericCommandPersonFioEskIdDto.yaml
+    GenericCommandProductChangeRequestDto:
+      $ref: ./components/schemas/change-products/GenericCommandProductChangeRequestDto.yaml
+    GenericCommandQrcChangeTariffDto:
+      $ref: ./components/schemas/change-tariff/GenericCommandQrcChangeTariffDto.yaml
+    GenericCommandQrcCommissionPaymentRequestDto:
+      $ref: ./components/schemas/all-by-onboarding-request-ids-and-statuses/GenericCommandQrcCommissionPaymentRequestDto.yaml
+    GenericCommandQrcIndividualCommissionAmountRequestDto:
+      $ref: ./components/schemas/set-individual-amount/GenericCommandQrcIndividualCommissionAmountRequestDto.yaml
+    GenericCommandQrcNotificationDto:
+      $ref: ./components/schemas/notify/GenericCommandQrcNotificationDto.yaml
+    GenericCommandQrcPaymentDto:
+      $ref: ./components/schemas/pay/GenericCommandQrcPaymentDto.yaml
+    GenericCommandRearchivingRequestDto:
+      $ref: ./components/schemas/re-archive/GenericCommandRearchivingRequestDto.yaml
+    GenericCommandRecallingRequestDto:
+      $ref: ./components/schemas/re-recall-in-tessa/GenericCommandRecallingRequestDto.yaml
+    GenericCommandRequestExportDto:
+      $ref: ./components/schemas/export-list-as-file/GenericCommandRequestExportDto.yaml
+    GenericCommandSignCancelRequestDto:
+      $ref: ./components/schemas/common/GenericCommandSignCancelRequestDto.yaml
+    GenericCommandSignedDocumentsExportDto:
+      $ref: ./components/schemas/export-signed-docs/GenericCommandSignedDocumentsExportDto.yaml
+    GenericCommandString:
+      $ref: ./components/schemas/organization/GenericCommandString.yaml
+    GenericCommandZkboSignerFlagUpdateDto:
+      $ref: ./components/schemas/onboarding-request/GenericCommandZkboSignerFlagUpdateDto.yaml
+    GenericResponseErrorDataAvailableAndAppliedPromosDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataAvailableAndAppliedPromosDto.yaml
+    GenericResponseErrorDataListTariffDto:
+      $ref: ./components/schemas/tariff/GenericResponseErrorDataListTariffDto.yaml
+    GenericResponseErrorDataTariffPromoDto:
+      $ref: ./components/schemas/dictionary/GenericResponseErrorDataTariffPromoDto.yaml
+    GenericResponseSimpleErrorDataActiveAccountsCheckResultDto:
+      $ref: ./components/schemas/active-requests/GenericResponseSimpleErrorDataActiveAccountsCheckResultDto.yaml
+    GenericResponseSimpleErrorDataAsyncTaskDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAsyncTaskDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    GenericResponseSimpleErrorDataBulkReReissueReRevokeResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBulkReReissueReRevokeResponseDto.yaml
+    GenericResponseSimpleErrorDataCertificateValidationResult:
+      $ref: ./components/schemas/validate-certificates/GenericResponseSimpleErrorDataCertificateValidationResult.yaml
+    GenericResponseSimpleErrorDataDocumentOcrResponseDto:
+      $ref: ./components/schemas/passport/GenericResponseSimpleErrorDataDocumentOcrResponseDto.yaml
+    GenericResponseSimpleErrorDataESignRequestStatusResultDto:
+      $ref: ./components/schemas/status-info/GenericResponseSimpleErrorDataESignRequestStatusResultDto.yaml
+    GenericResponseSimpleErrorDataEskSearchResponseDto:
+      $ref: ./components/schemas/active-requests/GenericResponseSimpleErrorDataEskSearchResponseDto.yaml
+    GenericResponseSimpleErrorDataFnsZipResponseDto:
+      $ref: ./components/schemas/original-documents/GenericResponseSimpleErrorDataFnsZipResponseDto.yaml
+    GenericResponseSimpleErrorDataFrontOfficePrintFormsDto:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataFrontOfficePrintFormsDto.yaml
+    GenericResponseSimpleErrorDataInteger:
+      $ref: ./components/schemas/active-requests/GenericResponseSimpleErrorDataInteger.yaml
+    GenericResponseSimpleErrorDataListAccessRightsAndInviteHistoryDto:
+      $ref: ./components/schemas/access-rights-invite-history/GenericResponseSimpleErrorDataListAccessRightsAndInviteHistoryDto.yaml
+    GenericResponseSimpleErrorDataListAuthorizedPersonDto:
+      $ref: ./components/schemas/persons/GenericResponseSimpleErrorDataListAuthorizedPersonDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingBannerDto:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataListOnboardingBannerDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingRequestArchiveHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListOnboardingRequestArchiveHistoryDto.yaml
+    GenericResponseSimpleErrorDataListOnboardingRequestDto:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataListOnboardingRequestDto.yaml
+    GenericResponseSimpleErrorDataListOriginalDocumentDto:
+      $ref: ./components/schemas/original-documents/GenericResponseSimpleErrorDataListOriginalDocumentDto.yaml
+    GenericResponseSimpleErrorDataListPersonExternalSystemsRequisitesBankDto:
+      $ref: ./components/schemas/persons/GenericResponseSimpleErrorDataListPersonExternalSystemsRequisitesBankDto.yaml
+    GenericResponseSimpleErrorDataListQrcCommissionPaymentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListQrcCommissionPaymentDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/partner-sites/GenericResponseSimpleErrorDataListString.yaml
+    GenericResponseSimpleErrorDataOnboardingMeetingDto:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataOnboardingMeetingDto.yaml
+    GenericResponseSimpleErrorDataOnboardingRemoteRequestPrintFormsDto:
+      $ref: ./components/schemas/onboarding-remote-request/GenericResponseSimpleErrorDataOnboardingRemoteRequestPrintFormsDto.yaml
+    GenericResponseSimpleErrorDataOnboardingRequestArchiveDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataOnboardingRequestArchiveDto.yaml
+    GenericResponseSimpleErrorDataOnboardingRequestDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataOnboardingRequestDto.yaml
+    GenericResponseSimpleErrorDataOnboardingRequestPresenceResultDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataOnboardingRequestPresenceResultDto.yaml
+    GenericResponseSimpleErrorDataPageDataOnboardingRequestArchiveDto:
+      $ref: ./components/schemas/get-page/GenericResponseSimpleErrorDataPageDataOnboardingRequestArchiveDto.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/print-acc-res-conditions/GenericResponseSimpleErrorDataPrintResponse.yaml
+    GenericResponseSimpleErrorDataQrcCommissionPaymentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataQrcCommissionPaymentDto.yaml
+    GenericResponseSimpleErrorDataQrcDocumentDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataQrcDocumentDto.yaml
+    GenericResponseSimpleErrorDataRearchivingResponseDto:
+      $ref: ./components/schemas/re-archive/GenericResponseSimpleErrorDataRearchivingResponseDto.yaml
+    GenericResponseSimpleErrorDataRequestInfoForSigning:
+      $ref: ./components/schemas/sign-info/GenericResponseSimpleErrorDataRequestInfoForSigning.yaml
+    GenericResponseSimpleErrorDataSetUUID:
+      $ref: ./components/schemas/find-onboarding-requests/GenericResponseSimpleErrorDataSetUUID.yaml
+    GenericResponseSimpleErrorDataSignCancelResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataSignCancelResponseDto.yaml
+    GenericResponseSimpleErrorDataStatusLastOnbRequestResponseDto:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataStatusLastOnbRequestResponseDto.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/onboarding-request/GenericResponseSimpleErrorDataUUID.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    GetPageCommandOnboardingRequestArchiveBankFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandOnboardingRequestArchiveBankFilter.yaml
+    GetPageCommandOnboardingRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandOnboardingRequestBankFilter.yaml
+    GetPageCommandOnboardingRequestClientFilter:
+      $ref: ./components/schemas/onboarding-request/GetPageCommandOnboardingRequestClientFilter.yaml
+    GetPageCommandOnboardingRequestIntegrationFilter:
+      $ref: ./components/schemas/onboarding-request/GetPageCommandOnboardingRequestIntegrationFilter.yaml
+    GovernanceBodyDto:
+      $ref: ./components/schemas/common/GovernanceBodyDto.yaml
+    GovernanceBodyMemberDto:
+      $ref: ./components/schemas/common/GovernanceBodyMemberDto.yaml
+    GozAccountDto:
+      $ref: ./components/schemas/common/GozAccountDto.yaml
+    GozContractorDto:
+      $ref: ./components/schemas/common/GozContractorDto.yaml
+    GpbBoConnectionInfoDto:
+      $ref: ./components/schemas/common/GpbBoConnectionInfoDto.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    IdsListDto:
+      $ref: ./components/schemas/onboarding-request/IdsListDto.yaml
+    LicenseDto:
+      $ref: ./components/schemas/common/LicenseDto.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/onboarding-request/ListCommandUUID.yaml
+    ListResponseOnboardingVmDailyReportRowDto:
+      $ref: ./components/schemas/onboarding-request/ListResponseOnboardingVmDailyReportRowDto.yaml
+    ManagementCompanyDocumentDto:
+      $ref: ./components/schemas/common/ManagementCompanyDocumentDto.yaml
+    ManagerVisitHistoryDto:
+      $ref: ./components/schemas/common/ManagerVisitHistoryDto.yaml
+    ManagerVisitHistoryListDto:
+      $ref: ./components/schemas/request/ManagerVisitHistoryListDto.yaml
+    ManagerVisitHistoryScrollerDto:
+      $ref: ./components/schemas/get-page/ManagerVisitHistoryScrollerDto.yaml
+    NeedsClientInteractionResultDto:
+      $ref: ./components/schemas/request/NeedsClientInteractionResultDto.yaml
+    OnbRequestStatusInfoDto:
+      $ref: ./components/schemas/onboarding-request/OnbRequestStatusInfoDto.yaml
+    OnboardingBannerDto:
+      $ref: ./components/schemas/onboarding-request/OnboardingBannerDto.yaml
+    OnboardingMeetingDto:
+      $ref: ./components/schemas/onboarding-request/OnboardingMeetingDto.yaml
+    OnboardingRemoteRequestPrintFormDto:
+      $ref: ./components/schemas/onboarding-remote-request/OnboardingRemoteRequestPrintFormDto.yaml
+    OnboardingRemoteRequestPrintFormFileDto:
+      $ref: ./components/schemas/onboarding-remote-request/OnboardingRemoteRequestPrintFormFileDto.yaml
+    OnboardingRemoteRequestPrintFormsDto:
+      $ref: ./components/schemas/onboarding-remote-request/OnboardingRemoteRequestPrintFormsDto.yaml
+    OnboardingRequestArchiveBankFilter:
+      $ref: ./components/schemas/get-page/OnboardingRequestArchiveBankFilter.yaml
+    OnboardingRequestArchiveDto:
+      $ref: ./components/schemas/common/OnboardingRequestArchiveDto.yaml
+    OnboardingRequestArchiveHistoryDto:
+      $ref: ./components/schemas/history/OnboardingRequestArchiveHistoryDto.yaml
+    OnboardingRequestBankFilter:
+      $ref: ./components/schemas/common/OnboardingRequestBankFilter.yaml
+    OnboardingRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/OnboardingRequestBankScrollerDto.yaml
+    OnboardingRequestClientFilter:
+      $ref: ./components/schemas/onboarding-request/OnboardingRequestClientFilter.yaml
+    OnboardingRequestClientScrollerDto:
+      $ref: ./components/schemas/onboarding-request/OnboardingRequestClientScrollerDto.yaml
+    OnboardingRequestDto:
+      $ref: ./components/schemas/common/OnboardingRequestDto.yaml
+    OnboardingRequestHistoryDto:
+      $ref: ./components/schemas/history/OnboardingRequestHistoryDto.yaml
+    OnboardingRequestIntegrationFilter:
+      $ref: ./components/schemas/onboarding-request/OnboardingRequestIntegrationFilter.yaml
+    OnboardingRequestMainPageDto:
+      $ref: ./components/schemas/onboarding-request/OnboardingRequestMainPageDto.yaml
+    OnboardingRequestPresenceResultDto:
+      $ref: ./components/schemas/common/OnboardingRequestPresenceResultDto.yaml
+    OnboardingRequestReExportDto:
+      $ref: ./components/schemas/common/OnboardingRequestReExportDto.yaml
+    OnboardingRequestSearchParams:
+      $ref: ./components/schemas/common/OnboardingRequestSearchParams.yaml
+    OnboardingVmDailyReportRowDto:
+      $ref: ./components/schemas/onboarding-request/OnboardingVmDailyReportRowDto.yaml
+    OnlineCashCollectionDto:
+      $ref: ./components/schemas/common/OnlineCashCollectionDto.yaml
+    OpeningAccountDto:
+      $ref: ./components/schemas/common/OpeningAccountDto.yaml
+    OpeningAccountMainPageDto:
+      $ref: ./components/schemas/onboarding-request/OpeningAccountMainPageDto.yaml
+    OpeningAccountScrollerDto:
+      $ref: ./components/schemas/onboarding-request/OpeningAccountScrollerDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    OriginalDocumentCheckboxesDto:
+      $ref: ./components/schemas/common/OriginalDocumentCheckboxesDto.yaml
+    OriginalDocumentDto:
+      $ref: ./components/schemas/common/OriginalDocumentDto.yaml
+    OriginalDocumentFileDto:
+      $ref: ./components/schemas/common/OriginalDocumentFileDto.yaml
+    OriginalDocumentSignatureFileDto:
+      $ref: ./components/schemas/common/OriginalDocumentSignatureFileDto.yaml
+    PageDataOnboardingRequestArchiveDto:
+      $ref: ./components/schemas/get-page/PageDataOnboardingRequestArchiveDto.yaml
+    PageDataOnboardingRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataOnboardingRequestBankScrollerDto.yaml
+    PageDataOnboardingRequestClientScrollerDto:
+      $ref: ./components/schemas/onboarding-request/PageDataOnboardingRequestClientScrollerDto.yaml
+    PageDataOnboardingRequestMainPageDto:
+      $ref: ./components/schemas/onboarding-request/PageDataOnboardingRequestMainPageDto.yaml
+    PageParamsOnboardingRequestArchiveBankFilter:
+      $ref: ./components/schemas/get-page/PageParamsOnboardingRequestArchiveBankFilter.yaml
+    PageParamsOnboardingRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsOnboardingRequestBankFilter.yaml
+    PageParamsOnboardingRequestClientFilter:
+      $ref: ./components/schemas/onboarding-request/PageParamsOnboardingRequestClientFilter.yaml
+    PageParamsOnboardingRequestIntegrationFilter:
+      $ref: ./components/schemas/onboarding-request/PageParamsOnboardingRequestIntegrationFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    ParticularBranchUpdateResultDto:
+      $ref: ./components/schemas/branches/ParticularBranchUpdateResultDto.yaml
+    PassportRecognitionDto:
+      $ref: ./components/schemas/common/PassportRecognitionDto.yaml
+    PersonDocumentDto:
+      $ref: ./components/schemas/common/PersonDocumentDto.yaml
+    PersonDto:
+      $ref: ./components/schemas/common/PersonDto.yaml
+    PersonExternalSystemsRequisitesBankDto:
+      $ref: ./components/schemas/persons/PersonExternalSystemsRequisitesBankDto.yaml
+    PersonExternalSystemsRequisitesDto:
+      $ref: ./components/schemas/common/PersonExternalSystemsRequisitesDto.yaml
+    PersonFioEskIdDto:
+      $ref: ./components/schemas/persons/PersonFioEskIdDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    ProductChangePersonDto:
+      $ref: ./components/schemas/change-products/ProductChangePersonDto.yaml
+    ProductChangeRequestDto:
+      $ref: ./components/schemas/change-products/ProductChangeRequestDto.yaml
+    QrcChangeTariffDto:
+      $ref: ./components/schemas/change-tariff/QrcChangeTariffDto.yaml
+    QrcCommissionPaymentDto:
+      $ref: ./components/schemas/common/QrcCommissionPaymentDto.yaml
+    QrcCommissionPaymentRequestDto:
+      $ref: ./components/schemas/all-by-onboarding-request-ids-and-statuses/QrcCommissionPaymentRequestDto.yaml
+    QrcDocumentDto:
+      $ref: ./components/schemas/common/QrcDocumentDto.yaml
+    QrcIndividualCommissionAmountRequestDto:
+      $ref: ./components/schemas/set-individual-amount/QrcIndividualCommissionAmountRequestDto.yaml
+    QrcNotificationDto:
+      $ref: ./components/schemas/notify/QrcNotificationDto.yaml
+    QrcPaymentDto:
+      $ref: ./components/schemas/pay/QrcPaymentDto.yaml
+    QuestionnaireCommonDto:
+      $ref: ./components/schemas/common/QuestionnaireCommonDto.yaml
+    QuestionnaireIpDto:
+      $ref: ./components/schemas/common/QuestionnaireIpDto.yaml
+    QuestionnaireOfficialFormsIpDto:
+      $ref: ./components/schemas/common/QuestionnaireOfficialFormsIpDto.yaml
+    QuestionnaireOfficialFormsUlDto:
+      $ref: ./components/schemas/common/QuestionnaireOfficialFormsUlDto.yaml
+    QuestionnaireUlDto:
+      $ref: ./components/schemas/common/QuestionnaireUlDto.yaml
+    RearchivingRequestDto:
+      $ref: ./components/schemas/re-archive/RearchivingRequestDto.yaml
+    RearchivingResponseDto:
+      $ref: ./components/schemas/re-archive/RearchivingResponseDto.yaml
+    RecallingRequestDto:
+      $ref: ./components/schemas/re-recall-in-tessa/RecallingRequestDto.yaml
+    RegistrationRequisitesDto:
+      $ref: ./components/schemas/common/RegistrationRequisitesDto.yaml
+    RemoteAccountOpeningDto:
+      $ref: ./components/schemas/common/RemoteAccountOpeningDto.yaml
+    RemoteAccountOpeningScrollerDto:
+      $ref: ./components/schemas/get-page/RemoteAccountOpeningScrollerDto.yaml
+    RequestAddressDto:
+      $ref: ./components/schemas/common/RequestAddressDto.yaml
+    RequestExportDto:
+      $ref: ./components/schemas/common/RequestExportDto.yaml
+    RequestInfoForSigning:
+      $ref: ./components/schemas/sign-info/RequestInfoForSigning.yaml
+    ResidenceDocumentDto:
+      $ref: ./components/schemas/common/ResidenceDocumentDto.yaml
+    RevokeSufferedPersonDto:
+      $ref: ./components/schemas/define-revoked-suffered-persons/RevokeSufferedPersonDto.yaml
+    RevokeSufferedResponse:
+      $ref: ./components/schemas/define-revoked-suffered-persons/RevokeSufferedResponse.yaml
+    SalaryProjectInfoDto:
+      $ref: ./components/schemas/common/SalaryProjectInfoDto.yaml
+    SignCancelRequestDto:
+      $ref: ./components/schemas/common/SignCancelRequestDto.yaml
+    SignCancelResponseDto:
+      $ref: ./components/schemas/common/SignCancelResponseDto.yaml
+    SignedDocumentsExportDto:
+      $ref: ./components/schemas/export-signed-docs/SignedDocumentsExportDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/common/SignerInfoDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SingleCommandActiveRequestsCheckParamsDto:
+      $ref: ./components/schemas/active-requests/SingleCommandActiveRequestsCheckParamsDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/common/SingleCommandCommentDto.yaml
+    SingleCommandDocsExportByIdsDto:
+      $ref: ./components/schemas/export-by-ids/SingleCommandDocsExportByIdsDto.yaml
+    SingleCommandDocsExportDto:
+      $ref: ./components/schemas/export-all/SingleCommandDocsExportDto.yaml
+    SingleCommandFormedDocsPrintRequestDto:
+      $ref: ./components/schemas/print-report/SingleCommandFormedDocsPrintRequestDto.yaml
+    SingleCommandFormedDocsPrintZipRequestDto:
+      $ref: ./components/schemas/export-report-to-zip/SingleCommandFormedDocsPrintZipRequestDto.yaml
+    SingleCommandOnboardingMeetingDto:
+      $ref: ./components/schemas/onboarding-request/SingleCommandOnboardingMeetingDto.yaml
+    SingleCommandOnboardingRequestReExportDto:
+      $ref: ./components/schemas/re-export/SingleCommandOnboardingRequestReExportDto.yaml
+    SingleCommandRequestExportDto:
+      $ref: ./components/schemas/common/SingleCommandRequestExportDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    SingleResponseActiveRequestsValidationResultDto:
+      $ref: ./components/schemas/active-requests/SingleResponseActiveRequestsValidationResultDto.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/common/SingleResponseBoolean.yaml
+    SingleResponseClientCallHistoryListDto:
+      $ref: ./components/schemas/request/SingleResponseClientCallHistoryListDto.yaml
+    SingleResponseListOnboardingRequestHistoryDto:
+      $ref: ./components/schemas/history/SingleResponseListOnboardingRequestHistoryDto.yaml
+    SingleResponseListOriginalDocumentDto:
+      $ref: ./components/schemas/original-documents/SingleResponseListOriginalDocumentDto.yaml
+    SingleResponseListPrintResponse:
+      $ref: ./components/schemas/print-report/SingleResponseListPrintResponse.yaml
+    SingleResponseManagerVisitHistoryListDto:
+      $ref: ./components/schemas/request/SingleResponseManagerVisitHistoryListDto.yaml
+    SingleResponseOnboardingRequestDto:
+      $ref: ./components/schemas/common/SingleResponseOnboardingRequestDto.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/print-list/SingleResponsePrintResponse.yaml
+    SingleResponseVoid:
+      $ref: ./components/schemas/re-export/SingleResponseVoid.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    StatusLastOnbRequestResponseDto:
+      $ref: ./components/schemas/onboarding-request/StatusLastOnbRequestResponseDto.yaml
+    TariffDto:
+      $ref: ./components/schemas/tariff/TariffDto.yaml
+    TariffPromoDto:
+      $ref: ./components/schemas/common/TariffPromoDto.yaml
+    TaxResidentJurisdictionDto:
+      $ref: ./components/schemas/common/TaxResidentJurisdictionDto.yaml
+    TemplateDataDto:
+      $ref: ./components/schemas/common/TemplateDataDto.yaml
+    TessaDocumentDto:
+      $ref: ./components/schemas/common/TessaDocumentDto.yaml
+    TessaDocumentFileDto:
+      $ref: ./components/schemas/common/TessaDocumentFileDto.yaml
+    TravelBusinessDto:
+      $ref: ./components/schemas/common/TravelBusinessDto.yaml
+    UpdateCommandAddOriginalDocumentDtoUUID:
+      $ref: ./components/schemas/original-documents/UpdateCommandAddOriginalDocumentDtoUUID.yaml
+    UpdateCommandOnboardingRequestDtoUUID:
+      $ref: ./components/schemas/common/UpdateCommandOnboardingRequestDtoUUID.yaml
+    UpdateCommandUploadOriginalDocumentsDtoUUID:
+      $ref: ./components/schemas/original-documents/UpdateCommandUploadOriginalDocumentsDtoUUID.yaml
+    UploadOriginalDocumentsDto:
+      $ref: ./components/schemas/original-documents/UploadOriginalDocumentsDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/common/UserInfoDto.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ZkboSignerFlagUpdateDto:
+      $ref: ./components/schemas/onboarding-request/ZkboSignerFlagUpdateDto.yaml
+  securitySchemes:
+    Bearer:
+      in: header
+      name: Authorization
+      type: apiKey

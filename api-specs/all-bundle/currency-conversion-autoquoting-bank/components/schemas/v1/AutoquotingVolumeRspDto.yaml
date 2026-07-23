@@ -1,0 +1,33 @@
+type: object
+description: Ответ с объемами котировок
+properties:
+  bankClientId:
+    type: string
+    format: uuid
+    description: Идентификатор организации
+  minOrderVolumeBase:
+    type: integer
+    format: int64
+    description: Минимальный объем по заявке в базовой валюте
+  maxOrderVolumeBase:
+    type: integer
+    format: int64
+    description: Максимальный объем по заявке в базовой валюте
+  minOrderVolumeQuote:
+    type: number
+    description: Минимальный объем по заявке в котируемой валюте
+  maxOrderVolumeQuote:
+    type: number
+    description: Максимальный объем по заявке в котируемой валюте
+  maxQuoteVolume:
+    type: integer
+    format: int32
+    description: Максимальный объем котировок (по максимальному объему из записей за объем)
+  purchaseVolume:
+    type: number
+    description: Объем (покупка) для максимального объем
+  saleVolume:
+    type: number
+    description: Объем (продажа) для максимального объем
+required:
+- bankClientId

@@ -1,0 +1,32 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип значения поля
+    enum:
+    - TEXT
+    - REFERENCE
+    - FILE_IN_FILE_STORAGE
+    - FILE_IN_INNER_STORAGE
+  value:
+    type: object
+    description: Значение
+  fileId:
+    type: string
+    description: Идентификатор файла
+    format: uuid
+  token:
+    type: string
+    description: Токен доступа к файлу
+  referenceId:
+    type: string
+    description: Идентификатор сущности для построения ссылки
+  referenceType:
+    type: string
+    description: Тип сущности
+    enum:
+    - NONE
+    - BANK_CLIENT
+    - CLIENT_USER
+    - ACCOUNT
+description: Значение поля

@@ -1,0 +1,21 @@
+post:
+  tags:
+  - API файлов сертификатов
+  summary: Создать в директорию файл с сертификатами без оригинала цепочки
+  operationId: createCertificatesWithoutOriginalStatementFile
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/create/GenericCommandCaCreateCertWithoutOriginalStatementFileDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: array
+            items:
+              type: string
+              format: byte

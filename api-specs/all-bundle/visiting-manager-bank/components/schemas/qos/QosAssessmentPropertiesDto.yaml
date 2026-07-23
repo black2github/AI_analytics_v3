@@ -1,0 +1,43 @@
+type: object
+properties:
+  maxDownloadDuration:
+    type: integer
+    description: Максимальная продолжительность оценки качества приема (мс)
+    format: int64
+  maxDownloadFilesCount:
+    type: integer
+    description: Максимальное количество файлов, принимаемых при оценке качества связи
+    format: int32
+  maxUploadDuration:
+    type: integer
+    description: Максимальная продолжительность оценки качества отправки (мс)
+    format: int64
+  maxUploadFilesCount:
+    type: integer
+    description: Максимальное количество файлов, отправляемых при оценке качества связи
+    format: int32
+  documentPageSize:
+    type: integer
+    description: Размер условной страницы документа
+    format: int64
+  normalDownloadSpeedThreshold:
+    type: integer
+    description: Нижняя граница скорости приема, оцениваемой как "нормальная" (байт/с)
+    format: int64
+  goodDownloadSpeedThreshold:
+    type: integer
+    description: Нижняя граница скорости приема, оцениваемой как "хорошая" (байт/с)
+    format: int64
+  normalUploadSpeedThreshold:
+    type: integer
+    description: Нижняя граница скорости отправки, оцениваемой как "нормальная" (байт/с)
+    format: int64
+  goodUploadSpeedThreshold:
+    type: integer
+    description: Нижняя граница скорости отправки, оцениваемой как "хорошая" (байт/с)
+    format: int64
+  maxAcceptablePageTransmissionDuration:
+    type: integer
+    description: Максимально допустимая продолжительность приема/отправки условной страницы (мс)
+    format: int64
+description: Настройки оценки качества связи

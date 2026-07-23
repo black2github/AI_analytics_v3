@@ -1,0 +1,49 @@
+type: object
+properties:
+  digestFileHash:
+    type: string
+    description: Хеш файла для подписания УКЭП
+  fileFormat:
+    type: string
+    description: Формат файла
+  fileHash:
+    type: string
+    description: Хэш файла
+  fileId:
+    type: string
+    description: Ссылка на файл в хранилище
+    format: uuid
+  fileKind:
+    type: string
+    description: Источник файла документа ТЕССА
+    enum:
+    - ORIGINAL_DOC_USUAL
+    - PRINTED_DOC_USUAL
+    - PRINTED_DOC_JSON
+    - PRINTED_DOC_ES
+  fileName:
+    type: string
+    description: Название файла
+  id:
+    type: string
+    description: Идентификатор файла ТЕССА документа
+    format: uuid
+  signatureBody:
+    type: string
+    description: Значение ЭП
+  signatureFileHash:
+    type: string
+    description: Хэш файла электронной подписи
+  signatureFileId:
+    type: string
+    description: Ссылка на файл электронной подписи
+    format: uuid
+  tessaDocumentId:
+    type: string
+    description: Ссылка на ТЕССА документ
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла на стороне ТЕССА
+    format: uuid
+description: Оригиналы документов

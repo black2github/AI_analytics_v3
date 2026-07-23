@@ -1,0 +1,29 @@
+type: object
+properties:
+  endDateOfStay:
+    type: string
+    description: Дата окончания срока пребывания.
+    format: date
+  id:
+    type: string
+    description: Идентификатор записи.
+    format: uuid
+  number:
+    type: string
+    description: Номер документа.
+  series:
+    type: string
+    description: Серия документа.
+  startDateOfStay:
+    type: string
+    description: Дата начала срока пребывания.
+    format: date
+  type:
+    type: string
+    description: Тип документа, подтверждающего право пребывания физического лица в РФ
+    enum:
+    - VISA
+    - MIGRATION_CARD
+    - RESIDENCE_PERMIT
+    - TEMPORARY_RESIDENCE_PERMIT
+description: Документ, подтверждающий право пребывания физического лица в РФ.

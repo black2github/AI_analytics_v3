@@ -1,0 +1,19 @@
+type: object
+properties:
+  keyId:
+    $ref: ../common/FilterValueDtoString.yaml
+  keySet:
+    $ref: ./FilterValueEnumDtoKeySetDto.yaml
+  keyType:
+    $ref: ./FilterValueEnumDtoKeyTypeDto.yaml
+  keyAlgorithm:
+    $ref: ./FilterValueEnumDtoKeyAlgorithmDto.yaml
+  certificateThumbprint:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoKeyStatusDto.yaml
+  validFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  validTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр ключа для подписи JWT

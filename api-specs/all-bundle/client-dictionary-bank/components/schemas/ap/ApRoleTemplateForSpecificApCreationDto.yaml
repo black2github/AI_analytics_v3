@@ -1,0 +1,18 @@
+required:
+- authorizedPersonId
+- roleTemplateId
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  roleTemplateId:
+    type: string
+    description: Идентификатор шаблона роли
+    format: uuid
+  comment:
+    type: string
+    description: Комментарий
+    nullable: true
+description: Данные для создания шаблона роли УЛ (в рамках выдачи конкретному УЛ)

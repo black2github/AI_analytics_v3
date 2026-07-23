@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  code:
+    type: string
+    description: Код
+  name:
+    type: string
+    description: Наименование
+  commentary:
+    type: string
+    description: Комментарий
+description: Классификатор услуг подразделения

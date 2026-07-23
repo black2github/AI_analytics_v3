@@ -1,0 +1,482 @@
+openapi: 3.0.1
+info:
+  title: ДИО. Клиентская часть
+  description: 'Сервис '
+  version: 3.6.0
+servers:
+- url: /dio-client
+security:
+- bearerAuth: []
+paths:
+  /dio/template:
+    $ref: ./paths/template/dio_template.yaml
+  /dio/template/update-by-document:
+    $ref: ./paths/template/dio_template_update_by_document.yaml
+  /dio/template/get-page:
+    $ref: ./paths/template/dio_template_get_page.yaml
+  /dio/template/create-by-document:
+    $ref: ./paths/template/dio_template_create_by_document.yaml
+  /dio/svk/get-linked-documents:
+    $ref: ./paths/svk/dio_svk_get_linked_documents.yaml
+  /dio/store:
+    $ref: ./paths/store/dio_store.yaml
+  /dio/store-by-template:
+    $ref: ./paths/store-by-template/dio_store_by_template.yaml
+  /dio/signature/v2.1/generate-sign-data:
+    $ref: ./paths/signature/dio_signature_v2_1_generate_sign_data.yaml
+  /dio/signature/registry/sign:
+    $ref: ./paths/signature/dio_signature_registry_sign.yaml
+  /dio/signature/registry/sign-registry:
+    $ref: ./paths/signature/dio_signature_registry_sign_registry.yaml
+  /dio/signature/generate-sign-data-new:
+    $ref: ./paths/signature/dio_signature_generate_sign_data_new.yaml
+  /dio/signature/generate-digest:
+    $ref: ./paths/signature/dio_signature_generate_digest.yaml
+  /dio/send:
+    $ref: ./paths/send/dio_send.yaml
+  /dio/print:
+    $ref: ./paths/print/dio_print.yaml
+  /dio/print-fs:
+    $ref: ./paths/print-fs/dio_print_fs.yaml
+  /dio/next-doc-number:
+    $ref: ./paths/next-doc-number/dio_next_doc_number.yaml
+  /dio/import:
+    $ref: ./paths/import/dio_import.yaml
+  /dio/import/report:
+    $ref: ./paths/import/dio_import_report.yaml
+  /dio/import/reject:
+    $ref: ./paths/import/dio_import_reject.yaml
+  /dio/import/error:
+    $ref: ./paths/import/dio_import_error.yaml
+  /dio/import/complete:
+    $ref: ./paths/import/dio_import_complete.yaml
+  /dio/get-page:
+    $ref: ./paths/get-page/dio_get_page.yaml
+  /dio/export-task:
+    $ref: ./paths/export-task/dio_export_task.yaml
+  /dio/dictionary/currency-operation/currency/get-page:
+    $ref: ./paths/dictionary/dio_dictionary_currency_operation_currency_get_page.yaml
+  /dio/dictionary/currency-operation/currency/get-page-cd:
+    $ref: ./paths/dictionary/dio_dictionary_currency_operation_currency_get_page_cd.yaml
+  /dio/dictionary/client-official/get-page:
+    $ref: ./paths/dictionary/dio_dictionary_client_official_get_page.yaml
+  /dio/dictionary/branches:
+    $ref: ./paths/dictionary/dio_dictionary_branches.yaml
+  /dio/delete:
+    $ref: ./paths/delete/dio_delete.yaml
+  /dio/copying:
+    $ref: ./paths/copying/dio_copying.yaml
+  /dio/client-branch/get-page:
+    $ref: ./paths/client-branch/dio_client_branch_get_page.yaml
+  /dio/category:
+    $ref: ./paths/category/dio_category.yaml
+  /dio/attach/zip-access-token:
+    $ref: ./paths/attach/dio_attach_zip_access_token.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /dio/{id}:
+    $ref: ./paths/{id}/dio_id.yaml
+  /dio/{id}/attach/{attachId}/token:
+    $ref: ./paths/{id}/dio_id_attach_attachId_token.yaml
+  /dio/template/{id}:
+    $ref: ./paths/template/dio_template_id.yaml
+  /dio/template/fill/{id}:
+    $ref: ./paths/template/dio_template_fill_id.yaml
+  /dio/template/compare-by-document/{id}:
+    $ref: ./paths/template/dio_template_compare_by_document_id.yaml
+  /dio/status:
+    $ref: ./paths/status/dio_status.yaml
+  /dio/source-system/list:
+    $ref: ./paths/source-system/dio_source_system_list.yaml
+  /dio/signature/authority:
+    $ref: ./paths/signature/dio_signature_authority.yaml
+  /dio/import/{id}:
+    $ref: ./paths/import/dio_import_id.yaml
+  /dio/import/get-protocol/{id}:
+    $ref: ./paths/import/dio_import_get_protocol_id.yaml
+  /dio/import/get-imports:
+    $ref: ./paths/import/dio_import_get_imports.yaml
+  /dio/history/{id}:
+    $ref: ./paths/history/dio_history_id.yaml
+  /dio/export-task/{taskId}:
+    $ref: ./paths/export-task/dio_export_task_taskId.yaml
+  /dio/export-task/{taskId}/attachment:
+    $ref: ./paths/export-task/dio_export_task_taskId_attachment.yaml
+  /dio/client:
+    $ref: ./paths/client/dio_client.yaml
+  /dio/account-access:
+    $ref: ./paths/account-access/dio_account_access.yaml
+components:
+  schemas:
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    DioTemplateBusinessInfoDto:
+      $ref: ./components/schemas/template/DioTemplateBusinessInfoDto.yaml
+    DioTemplateClientRequestDto:
+      $ref: ./components/schemas/template/DioTemplateClientRequestDto.yaml
+    DioTemplateCurrencyOperationDto:
+      $ref: ./components/schemas/template/DioTemplateCurrencyOperationDto.yaml
+    DioTemplateUpdateRequestDto:
+      $ref: ./components/schemas/template/DioTemplateUpdateRequestDto.yaml
+    GenericCommandDioTemplateUpdateRequestDto:
+      $ref: ./components/schemas/template/GenericCommandDioTemplateUpdateRequestDto.yaml
+    DioTemplateClientResponseDto:
+      $ref: ./components/schemas/template/DioTemplateClientResponseDto.yaml
+    DioTemplateResponseDto:
+      $ref: ./components/schemas/template/DioTemplateResponseDto.yaml
+    GenericResponseSimpleErrorDataDioTemplateResponseDto:
+      $ref: ./components/schemas/template/GenericResponseSimpleErrorDataDioTemplateResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    DioTemplateCreateRequestDto:
+      $ref: ./components/schemas/template/DioTemplateCreateRequestDto.yaml
+    GenericCommandDioTemplateCreateRequestDto:
+      $ref: ./components/schemas/template/GenericCommandDioTemplateCreateRequestDto.yaml
+    DioTemplateUpdateByDocumentRequestDto:
+      $ref: ./components/schemas/template/DioTemplateUpdateByDocumentRequestDto.yaml
+    GenericCommandDioTemplateUpdateByDocumentRequestDto:
+      $ref: ./components/schemas/template/GenericCommandDioTemplateUpdateByDocumentRequestDto.yaml
+    DioTemplateScrollerFilterDto:
+      $ref: ./components/schemas/template/DioTemplateScrollerFilterDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandDioTemplateScrollerFilterDto:
+      $ref: ./components/schemas/template/GetPageCommandDioTemplateScrollerFilterDto.yaml
+    PageParamsDioTemplateScrollerFilterDto:
+      $ref: ./components/schemas/template/PageParamsDioTemplateScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    DioTemplateScrollerResponseDto:
+      $ref: ./components/schemas/template/DioTemplateScrollerResponseDto.yaml
+    GenericResponseSimpleErrorDataPageDioTemplateScrollerResponseDto:
+      $ref: ./components/schemas/template/GenericResponseSimpleErrorDataPageDioTemplateScrollerResponseDto.yaml
+    PageDioTemplateScrollerResponseDto:
+      $ref: ./components/schemas/template/PageDioTemplateScrollerResponseDto.yaml
+    DioTemplateCreateRequestFromDioDto:
+      $ref: ./components/schemas/template/DioTemplateCreateRequestFromDioDto.yaml
+    GenericCommandDioTemplateCreateRequestFromDioDto:
+      $ref: ./components/schemas/template/GenericCommandDioTemplateCreateRequestFromDioDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandLinkedDocsScrollerFilter:
+      $ref: ./components/schemas/svk/GetPageCommandLinkedDocsScrollerFilter.yaml
+    LinkedDocsScrollerFilter:
+      $ref: ./components/schemas/svk/LinkedDocsScrollerFilter.yaml
+    PageParamsLinkedDocsScrollerFilter:
+      $ref: ./components/schemas/svk/PageParamsLinkedDocsScrollerFilter.yaml
+    AttachmentLinkedDocumentInfoDto:
+      $ref: ./components/schemas/svk/AttachmentLinkedDocumentInfoDto.yaml
+    CurTransDocumentInfoDto:
+      $ref: ./components/schemas/svk/CurTransDocumentInfoDto.yaml
+    DocumentInfoDto:
+      $ref: ./components/schemas/svk/DocumentInfoDto.yaml
+    LinkedDocsScrollerInfoDto:
+      $ref: ./components/schemas/svk/LinkedDocsScrollerInfoDto.yaml
+    PageLinkedDocsScrollerInfoDto:
+      $ref: ./components/schemas/svk/PageLinkedDocsScrollerInfoDto.yaml
+    Svk1DocumentInfoDto:
+      $ref: ./components/schemas/svk/Svk1DocumentInfoDto.yaml
+    Svk2DocumentInfoDto:
+      $ref: ./components/schemas/svk/Svk2DocumentInfoDto.yaml
+    TadDocumentInfoDto:
+      $ref: ./components/schemas/svk/TadDocumentInfoDto.yaml
+    DioClientSourceSystemInfoUpdDto:
+      $ref: ./components/schemas/common/DioClientSourceSystemInfoUpdDto.yaml
+    DioClientStoreAttachmentDto:
+      $ref: ./components/schemas/common/DioClientStoreAttachmentDto.yaml
+    DioClientStoreBranchDto:
+      $ref: ./components/schemas/common/DioClientStoreBranchDto.yaml
+    DioClientStoreClientDto:
+      $ref: ./components/schemas/common/DioClientStoreClientDto.yaml
+    DioClientStoreCurrencyOperationDto:
+      $ref: ./components/schemas/common/DioClientStoreCurrencyOperationDto.yaml
+    DioClientStoreDto:
+      $ref: ./components/schemas/common/DioClientStoreDto.yaml
+    DioAttachmentDto:
+      $ref: ./components/schemas/common/DioAttachmentDto.yaml
+    DioCertificateInfoResponseDto:
+      $ref: ./components/schemas/common/DioCertificateInfoResponseDto.yaml
+    DioClientViewBranchDto:
+      $ref: ./components/schemas/common/DioClientViewBranchDto.yaml
+    DioClientViewClientDto:
+      $ref: ./components/schemas/common/DioClientViewClientDto.yaml
+    DioClientViewCurrencyOperationDto:
+      $ref: ./components/schemas/common/DioClientViewCurrencyOperationDto.yaml
+    DioClientViewDto:
+      $ref: ./components/schemas/common/DioClientViewDto.yaml
+    DioClientViewInformationCommentDto:
+      $ref: ./components/schemas/common/DioClientViewInformationCommentDto.yaml
+    DioSignatureDataDto:
+      $ref: ./components/schemas/common/DioSignatureDataDto.yaml
+    DioSignatureDto:
+      $ref: ./components/schemas/common/DioSignatureDto.yaml
+    GenericResponseSimpleErrorDataDioClientViewDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDioClientViewDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/signature/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/signature/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/signature/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignV2x1Dto.yaml
+    DioBatchClientRegistrySignCommand:
+      $ref: ./components/schemas/signature/DioBatchClientRegistrySignCommand.yaml
+    DioClientRegistrySignCommand:
+      $ref: ./components/schemas/signature/DioClientRegistrySignCommand.yaml
+    GenericResponseSimpleErrorDataListDioClientViewDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataListDioClientViewDto.yaml
+    DioSignRegistryRq:
+      $ref: ./components/schemas/signature/DioSignRegistryRq.yaml
+    GenericCommandListDioSignRegistryRq:
+      $ref: ./components/schemas/signature/GenericCommandListDioSignRegistryRq.yaml
+    GenericResponseSimpleErrorDataSignRegistryDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataSignRegistryDto.yaml
+    SignRegistryClientDocumentsDto:
+      $ref: ./components/schemas/signature/SignRegistryClientDocumentsDto.yaml
+    SignRegistryDocumentDto:
+      $ref: ./components/schemas/signature/SignRegistryDocumentDto.yaml
+    SignRegistryDto:
+      $ref: ./components/schemas/signature/SignRegistryDto.yaml
+    SignRegistryStatisticsByClientDto:
+      $ref: ./components/schemas/signature/SignRegistryStatisticsByClientDto.yaml
+    SignRegistryStatisticsDto:
+      $ref: ./components/schemas/signature/SignRegistryStatisticsDto.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/signature/ListCommandUUID.yaml
+    DioBankClientOfficialCertificateDto:
+      $ref: ./components/schemas/signature/DioBankClientOfficialCertificateDto.yaml
+    DioBankClientSignerDto:
+      $ref: ./components/schemas/signature/DioBankClientSignerDto.yaml
+    DioDocumentsAmountSignInfoDto:
+      $ref: ./components/schemas/signature/DioDocumentsAmountSignInfoDto.yaml
+    DioRequestPaymentAmountDto:
+      $ref: ./components/schemas/signature/DioRequestPaymentAmountDto.yaml
+    DioSignDataDto:
+      $ref: ./components/schemas/signature/DioSignDataDto.yaml
+    DioSignResultInfoDto:
+      $ref: ./components/schemas/signature/DioSignResultInfoDto.yaml
+    DioSignatureInfoDto:
+      $ref: ./components/schemas/signature/DioSignatureInfoDto.yaml
+    GenericResponseSimpleErrorDataDioSignDataDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDioSignDataDto.yaml
+    DigestRequest:
+      $ref: ./components/schemas/signature/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/signature/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    DioUserDeviceInfoDto:
+      $ref: ./components/schemas/common/DioUserDeviceInfoDto.yaml
+    UserDeviceInfoGenericCommandSetUUID:
+      $ref: ./components/schemas/send/UserDeviceInfoGenericCommandSetUUID.yaml
+    GenericResponseSimpleErrorDataSetUUID:
+      $ref: ./components/schemas/send/GenericResponseSimpleErrorDataSetUUID.yaml
+    DioPrintRequestDto:
+      $ref: ./components/schemas/common/DioPrintRequestDto.yaml
+    GenericCommandDioPrintRequestDto:
+      $ref: ./components/schemas/common/GenericCommandDioPrintRequestDto.yaml
+    GenericResponseSimpleErrorDataPrintResponse:
+      $ref: ./components/schemas/print/GenericResponseSimpleErrorDataPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/print/PrintResponse.yaml
+    DioFileDataForDownloadDto:
+      $ref: ./components/schemas/common/DioFileDataForDownloadDto.yaml
+    GenericResponseSimpleErrorDataDioFileDataForDownloadDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataDioFileDataForDownloadDto.yaml
+    DioFindDocumentNumberDto:
+      $ref: ./components/schemas/next-doc-number/DioFindDocumentNumberDto.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataString.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    AmountBackgroundFileDetailsDto:
+      $ref: ./components/schemas/import/AmountBackgroundFileDetailsDto.yaml
+    AmountBackgroundImportDetailsDto:
+      $ref: ./components/schemas/import/AmountBackgroundImportDetailsDto.yaml
+    BackgroundImportDocumentDto:
+      $ref: ./components/schemas/import/BackgroundImportDocumentDto.yaml
+    BackgroundImportProcessDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessDto.yaml
+    FileDetailsDto:
+      $ref: ./components/schemas/import/FileDetailsDto.yaml
+    FileDocumentDetailsDto:
+      $ref: ./components/schemas/import/FileDocumentDetailsDto.yaml
+    FlkErrorDto:
+      $ref: ./components/schemas/common/FlkErrorDto.yaml
+    GenericResponseSimpleErrorDataBackgroundImportProcessDto:
+      $ref: ./components/schemas/import/GenericResponseSimpleErrorDataBackgroundImportProcessDto.yaml
+    ImportParametersDto:
+      $ref: ./components/schemas/import/ImportParametersDto.yaml
+    ImportedDocumentDetailsDto:
+      $ref: ./components/schemas/import/ImportedDocumentDetailsDto.yaml
+    ProcessDetailsDto:
+      $ref: ./components/schemas/import/ProcessDetailsDto.yaml
+    BackgroundImportProcessErrorRqDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessErrorRqDto.yaml
+    CompleteImportDto:
+      $ref: ./components/schemas/import/CompleteImportDto.yaml
+    UserDeviceInfoGenericCommandCompleteImportDto:
+      $ref: ./components/schemas/import/UserDeviceInfoGenericCommandCompleteImportDto.yaml
+    DioClientDocumentSystemClassifierFilterValueDto:
+      $ref: ./components/schemas/common/DioClientDocumentSystemClassifierFilterValueDto.yaml
+    DioClientFilterDto:
+      $ref: ./components/schemas/common/DioClientFilterDto.yaml
+    DioClientStatusFilterValueDto:
+      $ref: ./components/schemas/common/DioClientStatusFilterValueDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    GetPageCommandDioClientFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandDioClientFilterDto.yaml
+    PageParamsDioClientFilterDto:
+      $ref: ./components/schemas/common/PageParamsDioClientFilterDto.yaml
+    BackgroundImportDocumentLightDto:
+      $ref: ./components/schemas/common/BackgroundImportDocumentLightDto.yaml
+    DioClientScrollerBranchDto:
+      $ref: ./components/schemas/get-page/DioClientScrollerBranchDto.yaml
+    DioClientScrollerClientDto:
+      $ref: ./components/schemas/get-page/DioClientScrollerClientDto.yaml
+    DioClientScrollerCommentDto:
+      $ref: ./components/schemas/get-page/DioClientScrollerCommentDto.yaml
+    DioClientScrollerCurrencyOperationDto:
+      $ref: ./components/schemas/get-page/DioClientScrollerCurrencyOperationDto.yaml
+    DioClientScrollerDto:
+      $ref: ./components/schemas/get-page/DioClientScrollerDto.yaml
+    DioImportDetailsRspDto:
+      $ref: ./components/schemas/get-page/DioImportDetailsRspDto.yaml
+    PageDataDioClientScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataDioClientScrollerDto.yaml
+    ExportRegistryRequestDtoDioClientFilterDtoDioScrollerClientColumnDto:
+      $ref: ./components/schemas/export-task/ExportRegistryRequestDtoDioClientFilterDtoDioScrollerClientColumnDto.yaml
+    ExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/ExportRegistryTaskStubRspDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto.yaml
+    DioSearchFilterDto:
+      $ref: ./components/schemas/common/DioSearchFilterDto.yaml
+    GetPageCommandDioSearchFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandDioSearchFilterDto.yaml
+    PageParamsDioSearchFilterDto:
+      $ref: ./components/schemas/common/PageParamsDioSearchFilterDto.yaml
+    PageDataString:
+      $ref: ./components/schemas/dictionary/PageDataString.yaml
+    CurrencyFilter:
+      $ref: ./components/schemas/dictionary/CurrencyFilter.yaml
+    FilterValueEnumDtoCurrencyDtoStatus:
+      $ref: ./components/schemas/dictionary/FilterValueEnumDtoCurrencyDtoStatus.yaml
+    GetPageCommandCurrencyFilter:
+      $ref: ./components/schemas/dictionary/GetPageCommandCurrencyFilter.yaml
+    PageParamsCurrencyFilter:
+      $ref: ./components/schemas/dictionary/PageParamsCurrencyFilter.yaml
+    CurrencyDtoV2:
+      $ref: ./components/schemas/dictionary/CurrencyDtoV2.yaml
+    CurrencyServicesDto:
+      $ref: ./components/schemas/dictionary/CurrencyServicesDto.yaml
+    GenericResponseSimpleErrorDataListCurrencyDtoV2:
+      $ref: ./components/schemas/dictionary/GenericResponseSimpleErrorDataListCurrencyDtoV2.yaml
+    DioClientOfficialFilterDto:
+      $ref: ./components/schemas/dictionary/DioClientOfficialFilterDto.yaml
+    GetPageCommandDioClientOfficialFilterDto:
+      $ref: ./components/schemas/dictionary/GetPageCommandDioClientOfficialFilterDto.yaml
+    PageParamsDioClientOfficialFilterDto:
+      $ref: ./components/schemas/dictionary/PageParamsDioClientOfficialFilterDto.yaml
+    DioClientOfficialDto:
+      $ref: ./components/schemas/dictionary/DioClientOfficialDto.yaml
+    PageDataDioClientOfficialDto:
+      $ref: ./components/schemas/dictionary/PageDataDioClientOfficialDto.yaml
+    DioClientDictionaryBranchFindDto:
+      $ref: ./components/schemas/dictionary/DioClientDictionaryBranchFindDto.yaml
+    GenericCommandDioClientDictionaryBranchFindDto:
+      $ref: ./components/schemas/dictionary/GenericCommandDioClientDictionaryBranchFindDto.yaml
+    DioClientDictionaryBranchRspDto:
+      $ref: ./components/schemas/dictionary/DioClientDictionaryBranchRspDto.yaml
+    GenericResponseSimpleErrorDataListDioClientDictionaryBranchRspDto:
+      $ref: ./components/schemas/dictionary/GenericResponseSimpleErrorDataListDioClientDictionaryBranchRspDto.yaml
+    DioClientDeleteResponseDto:
+      $ref: ./components/schemas/delete/DioClientDeleteResponseDto.yaml
+    GenericResponseSimpleErrorDataDioClientDeleteResponseDto:
+      $ref: ./components/schemas/delete/GenericResponseSimpleErrorDataDioClientDeleteResponseDto.yaml
+    GenericCommandDioClientStoreDto:
+      $ref: ./components/schemas/copying/GenericCommandDioClientStoreDto.yaml
+    DioDictionaryClientBranchDto:
+      $ref: ./components/schemas/client-branch/DioDictionaryClientBranchDto.yaml
+    PageDataDioDictionaryClientBranchDto:
+      $ref: ./components/schemas/client-branch/PageDataDioDictionaryClientBranchDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    GenericResponseSimpleErrorDataListCategoryCount:
+      $ref: ./components/schemas/category/GenericResponseSimpleErrorDataListCategoryCount.yaml
+    DioTemplateComparisonFieldDto:
+      $ref: ./components/schemas/template/DioTemplateComparisonFieldDto.yaml
+    DioTemplateComparisonResponseDto:
+      $ref: ./components/schemas/template/DioTemplateComparisonResponseDto.yaml
+    GenericResponseSimpleErrorDataDioTemplateComparisonResponseDto:
+      $ref: ./components/schemas/template/GenericResponseSimpleErrorDataDioTemplateComparisonResponseDto.yaml
+    GenericResponseSimpleErrorDataListDioClientStatusDto:
+      $ref: ./components/schemas/status/GenericResponseSimpleErrorDataListDioClientStatusDto.yaml
+    GenericResponseSimpleErrorDataListDocumentSystemClassifierDto:
+      $ref: ./components/schemas/source-system/GenericResponseSimpleErrorDataListDocumentSystemClassifierDto.yaml
+    DioSignerAuthorityInfoDto:
+      $ref: ./components/schemas/signature/DioSignerAuthorityInfoDto.yaml
+    GenericResponseSimpleErrorDataSetDioSignerAuthorityInfoDto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataSetDioSignerAuthorityInfoDto.yaml
+    BackgroundImportProtocolDto:
+      $ref: ./components/schemas/import/BackgroundImportProtocolDto.yaml
+    GenericResponseSimpleErrorDataBackgroundImportProtocolDto:
+      $ref: ./components/schemas/import/GenericResponseSimpleErrorDataBackgroundImportProtocolDto.yaml
+    ImportedDocumentProtocolDetailsDto:
+      $ref: ./components/schemas/import/ImportedDocumentProtocolDetailsDto.yaml
+    BackgroundImportProcessLightDto:
+      $ref: ./components/schemas/import/BackgroundImportProcessLightDto.yaml
+    GenericResponseSimpleErrorDataListBackgroundImportProcessLightDto:
+      $ref: ./components/schemas/import/GenericResponseSimpleErrorDataListBackgroundImportProcessLightDto.yaml
+    DioClientHistoryDto:
+      $ref: ./components/schemas/history/DioClientHistoryDto.yaml
+    DioClientOperationHistoryDto:
+      $ref: ./components/schemas/history/DioClientOperationHistoryDto.yaml
+    GenericResponseSimpleErrorDataListDioClientHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListDioClientHistoryDto.yaml
+    ExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/ExportRegistryAttachmentDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryAttachmentDto.yaml
+    DioDictionaryClientDto:
+      $ref: ./components/schemas/client/DioDictionaryClientDto.yaml
+    GenericResponseSimpleErrorDataListDioDictionaryClientDto:
+      $ref: ./components/schemas/client/GenericResponseSimpleErrorDataListDioDictionaryClientDto.yaml
+    DioAccountAccessDto:
+      $ref: ./components/schemas/account-access/DioAccountAccessDto.yaml
+    GenericResponseSimpleErrorDataListDioAccountAccessDto:
+      $ref: ./components/schemas/account-access/GenericResponseSimpleErrorDataListDioAccountAccessDto.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/template/GenericResponseSimpleErrorDataUUID.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

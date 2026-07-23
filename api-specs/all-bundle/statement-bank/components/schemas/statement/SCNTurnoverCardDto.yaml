@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  accountId:
+    type: integer
+    format: int64
+  accountNumber:
+    type: string
+  balanceBranchCode:
+    type: string
+  operationDate:
+    type: string
+    format: date
+  eventType:
+    type: string
+    enum:
+    - OPENING_DAY_ADJUSTMENT
+    - CLOSING_DAY_ADJUSTMENT
+    - DAY_CLOSING
+    - END_TO_END_BALANCE_UPDATE
+  incomingBalance:
+    type: number
+  turnoverDebit:
+    type: number
+  turnoverCredit:
+    type: number
+  currentBalance:
+    type: number
+  lastAccountingEntryId:
+    type: integer
+    format: int64
+  createdAt:
+    type: string
+    format: date-time
+  eventId:
+    type: integer
+    format: int64
+  currentBalanceNatCurr:
+    type: number
+  incomingBalanceNatCurr:
+    type: number
+  turnoverDebitNatCurr:
+    type: number
+  turnoverCreditNatCurr:
+    type: number
+  debitEntriesCount:
+    type: integer
+    format: int32
+  creditEntriesCount:
+    type: integer
+    format: int32
+description: Данные

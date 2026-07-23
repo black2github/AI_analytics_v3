@@ -1,0 +1,30 @@
+required:
+- account
+- bankBic
+- bankClientId
+- name
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка".
+    format: uuid
+  name:
+    type: string
+    description: Наименование контрагента.
+  inn:
+    type: string
+    description: ИНН контрагента.
+  kpp:
+    type: string
+    description: КПП контрагента.
+  account:
+    type: string
+    description: Счёт контрагента.
+  bankBic:
+    type: string
+    description: БИК банка контрагента.
+  correspondentBankAccount:
+    type: string
+    description: Корр. счёт банка контрагента.
+description: Контрагент. Дто создания

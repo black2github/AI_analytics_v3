@@ -1,0 +1,7 @@
+type: object
+properties:
+  periodName:
+    $ref: ../common/FilterValueDtoString.yaml
+  isLowerPeriods:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр справочника Плановый период для "Отчета о движении средств"

@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Отчеты для дашборда
+  summary: Получить страницу записей
+  description: 'Привилегии: (#eco.userTypeIs(''CLIENT'') AND hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_REPORTS_COMMON'')) OR ((#eco.userTypeIs(''BANK'') OR #eco.userTypeIs(''TECHNICAL'')) AND hasAuthority(''TREASURY_COMMON_REPORTS_VIEW''))'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/request/GetPageCommandReportRequestFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/request/GenericResponseErrorDataPageDataReportRequestDto.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

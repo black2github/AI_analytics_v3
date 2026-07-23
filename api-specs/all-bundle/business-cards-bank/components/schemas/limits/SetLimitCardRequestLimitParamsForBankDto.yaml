@@ -1,0 +1,22 @@
+type: object
+properties:
+  changeType:
+    type: string
+    description: Тип изменения
+    enum:
+    - NO_CHANGE
+    - CHANGE
+    - DELETE
+  currency:
+    type: string
+    description: Буквенный код валюты
+  duration:
+    type: integer
+    description: Длительность лимитного периода
+    format: int32
+  info:
+    $ref: ./SetLimitCardRequestLimitInfoForBankDto.yaml
+  value:
+    type: number
+    description: Значение суммы лимита
+description: Параметры лимита для заявки на установку лимитов по корпоративной карте

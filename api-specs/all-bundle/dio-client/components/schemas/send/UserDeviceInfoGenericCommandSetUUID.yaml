@@ -1,0 +1,13 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      format: uuid
+  userDeviceInfo:
+    $ref: ../common/DioUserDeviceInfoDto.yaml
+description: Универсальная обертка запроса с данными устройства пользователя

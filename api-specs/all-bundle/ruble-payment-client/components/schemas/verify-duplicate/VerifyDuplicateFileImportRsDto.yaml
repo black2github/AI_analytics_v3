@@ -1,0 +1,24 @@
+required:
+- duplicate
+- fileId
+type: object
+properties:
+  fileId:
+    type: string
+    description: ID файла
+    format: uuid
+  duplicate:
+    type: boolean
+    description: Наличие дубля
+  duplicateFileName:
+    type: string
+    description: Наименование файла дубля
+  duplicateFileDate:
+    type: string
+    description: Дата файла дубля
+    format: date-time
+  duplicateFileSize:
+    type: integer
+    description: Размер найденного файла
+    format: int64
+description: '[Импорт ПЭД] Система: Функция проверки файла импорта на дубли. Исходящие параметры.'

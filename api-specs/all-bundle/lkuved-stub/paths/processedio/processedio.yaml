@@ -1,0 +1,19 @@
+post:
+  summary: Сохранить документ ЛК УВЭД в буферную таблицу PROCESSEDIO
+  tags:
+  - API заглушек документов, полученных из ЛК УВЭД
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/processedio/LkUvedProcessedioRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataLkUvedProcessedioRspDto.yaml
+    '400':
+      description: Bad Request

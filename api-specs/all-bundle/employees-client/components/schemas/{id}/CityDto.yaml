@@ -1,0 +1,12 @@
+type: object
+properties:
+  city:
+    type: string
+    description: Город
+  cityCode:
+    type: string
+    description: Код города
+  fiasCityCode:
+    type: string
+    description: ФИАС код города
+description: Город. Интеграционное ДТО

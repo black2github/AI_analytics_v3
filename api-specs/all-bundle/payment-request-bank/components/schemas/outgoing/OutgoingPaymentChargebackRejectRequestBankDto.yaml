@@ -1,0 +1,12 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Список идентификаторов сущности "Заявка на отзыв"
+    items:
+      type: string
+      description: Список идентификаторов сущности "Заявка на отзыв"
+      format: uuid
+  comment:
+    $ref: ./CommentDto.yaml
+description: Запрос на отклонение заявки на отзыв ПТИ

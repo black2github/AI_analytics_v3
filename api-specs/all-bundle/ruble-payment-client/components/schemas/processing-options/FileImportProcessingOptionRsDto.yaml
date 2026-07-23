@@ -1,0 +1,23 @@
+required:
+- canCreateDocuments
+- canSignDocuments
+- documentType
+- fileFormat
+- fileImportId
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  canCreateDocuments:
+    type: boolean
+    description: Создать документы
+  canSignDocuments:
+    type: boolean
+    description: Подписать файл
+  fileFormat:
+    $ref: ./EcoFileImportFormatClassifierDto.yaml
+  documentType:
+    $ref: ../common/AccessDocumentPaymentTypeClassifierDto.yaml
+description: Данные

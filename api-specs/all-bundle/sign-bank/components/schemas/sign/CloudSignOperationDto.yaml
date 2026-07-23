@@ -1,0 +1,21 @@
+type: object
+properties:
+  operationId:
+    type: string
+    description: ИД операции подписи
+    format: uuid
+  state:
+    type: string
+    description: Состояние операции подписи
+    enum:
+    - WAITING_CONFIRMATION
+    - CONFIRMED
+    - DECLINED
+    - NOT_CONFIRMED_MAX_ATTEMPTS_REACHED
+    - NOT_CONFIRMED_OPERATION_EXPIRED
+    - COMPLETED
+  expiresIn:
+    type: string
+    description: Дата истечения операции подписи
+    format: date-time
+description: Операция облачной подписи

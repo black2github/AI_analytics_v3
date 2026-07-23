@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+description: 'Подсказки: Организация'

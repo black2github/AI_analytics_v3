@@ -1,0 +1,18 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID фичи
+    format: uuid
+  featureType:
+    type: string
+    description: Тип фичи
+    enum:
+    - EXAMPLE
+  featureState:
+    type: boolean
+    description: Состояние фичи
+  useStrategy:
+    type: boolean
+    description: Признак использования стратегии
+description: ДТО фичи для скроллера

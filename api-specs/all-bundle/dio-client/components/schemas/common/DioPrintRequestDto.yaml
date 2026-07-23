@@ -1,0 +1,20 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы сущности "Дио"
+    items:
+      type: string
+      description: Идентификаторы сущности "Дио"
+      format: uuid
+  reportFormat:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - XSL
+    - PDF
+    - RTF
+  archive:
+    type: boolean
+    description: Необходимость архивировать файлы
+description: Запрос на формирование печатной формы

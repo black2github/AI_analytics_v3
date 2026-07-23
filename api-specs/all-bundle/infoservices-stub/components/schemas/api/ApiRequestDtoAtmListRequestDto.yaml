@@ -1,0 +1,6 @@
+type: object
+properties:
+  meta:
+    $ref: ./ApiRequestMetaDto.yaml
+  data:
+    $ref: ./AtmListRequestDto.yaml

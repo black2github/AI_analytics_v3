@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsMarketingCampaignerFilter.yaml
+description: Запрос страницы

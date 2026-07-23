@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./TurnoverPeriodRequestDto.yaml
+description: Запрос

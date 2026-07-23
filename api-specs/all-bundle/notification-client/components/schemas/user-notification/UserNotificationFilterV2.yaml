@@ -1,0 +1,57 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории для скроллера уведомлений
+    enum:
+    - ALL
+    - UNREAD
+    - IMPORTANT
+    - REQUIRING_EXECUTION
+    - REQUIRED_READING
+    - FAVORITES
+  isRead:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ../common/UserNotificationStatusFilter.yaml
+  importance:
+    $ref: ../common/UserNotificationImportanceFilter.yaml
+  executionStatus:
+    $ref: ../common/UserNotificationExecutionStatusFilter.yaml
+  postponedUntil:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  typeCode:
+    $ref: ../common/UserNotificationCodeFilter.yaml
+  relevanceEndDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+  serviceEco:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClient:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  isRequiredRead:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isRequiredSing:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  fileId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  messageId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  blockService:
+    $ref: ./FilterValueEnumDtoBlockServiceDto.yaml
+  isBanner:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  displayPageCodes:
+    $ref: ../common/FilterValueDtoString.yaml
+  notificationHeader:
+    $ref: ../common/FilterValueDtoString.yaml
+  isRequiredAttachments:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр списка уведомлений.

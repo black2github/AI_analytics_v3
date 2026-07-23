@@ -1,0 +1,13 @@
+type: object
+properties:
+  issuer:
+    type: string
+    description: Имя издателя сертификата
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Запрос поиска сертификатов по издателю и серийному номеру для клиента банка

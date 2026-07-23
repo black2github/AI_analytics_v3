@@ -1,0 +1,8 @@
+required:
+- simpleInterface
+type: object
+properties:
+  simpleInterface:
+    type: boolean
+    description: Компактный тип интерфейса
+description: ДТО запроса на изменение типа интерфейса

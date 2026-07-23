@@ -1,0 +1,73 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета.
+    format: uuid
+  accountNumber:
+    type: string
+    description: Расчетный счет.
+  aml:
+    $ref: ./AmlDocumentToBankDto.yaml
+  attachmentIds:
+    type: array
+    description: Список вложений
+    items:
+      type: string
+      description: Список вложений
+      format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор информации о клиенте банка.
+    format: uuid
+  branchId:
+    type: string
+    description: Идентификатор подразделения.
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  contactId:
+    type: string
+    description: Идентификатор пользователя контактного лица.
+    format: uuid
+  email:
+    type: string
+    description: Адрес электронной почты.
+  fio:
+    type: string
+    description: ФИО контактного лица клиента.
+  fromBankId:
+    type: string
+    description: Ссылка на документ из банка, на основании которого создается текущий документ.
+    format: uuid
+  isNotifyByPhone:
+    type: boolean
+    description: Уведомить меня об исполнении по номеру телефона.
+  mchdAttachmentIds:
+    type: array
+    description: Список идентификаторов МЧД вложений.
+    items:
+      type: string
+      description: Список идентификаторов МЧД вложений.
+      format: uuid
+  message:
+    type: string
+    description: Текст письма.
+  phone:
+    type: string
+    description: Номер мобильного телефона.
+  subject:
+    type: string
+    description: Тема письма.
+  typeCode:
+    type: string
+    description: Код типа письма.
+  version:
+    type: integer
+    description: Текущая версия документа в банк.
+    format: int32
+description: Документ в банк. ДТО на обновление

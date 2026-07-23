@@ -1,0 +1,57 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор блокировки
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  orgName:
+    type: string
+    description: Наименование органа
+  orgInn:
+    type: string
+    description: ИНН органа
+  orgType:
+    type: string
+    description: Тип органа
+    enum:
+    - FSSP
+    - FTS
+    - FNS
+    - OEP
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docType:
+    type: string
+    description: Вид документа
+  docName:
+    type: string
+    description: Наименование документа
+  blockReason:
+    type: string
+    description: Причина блокировки
+  blockAmount:
+    type: string
+    description: Сумма документа блокировки
+  blockCurrencyCode:
+    type: string
+    description: Валюта документа блокировки
+  accountBlockAmount:
+    type: string
+    description: Сумма блокировки в валюте счета
+  blockReceiptDate:
+    type: string
+    description: Дата поступления блокировки
+    format: date
+  blockConvertDate:
+    type: string
+    description: Дата конвертации
+    format: date
+description: Данные блокировки

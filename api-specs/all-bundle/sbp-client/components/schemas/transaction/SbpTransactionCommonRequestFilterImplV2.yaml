@@ -1,0 +1,50 @@
+type: object
+description: Фильтр скроллера списка обобщенных заявок на платеж СБП для версии 2
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка" (eq)
+  status:
+    $ref: ./SbpTransactionCommonRequestStatusFilter.yaml
+    description: Статус (eq, in)
+  docType:
+    $ref: ./SbpTransactionCommonRequestTypeFilter.yaml
+    description: Тип операции (eq)
+  docNumberInteger:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Номер операции (eq), число
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Дата (ge, le)
+  docDateWithTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+    description: Дата и время (ge, le) в формате UTC
+  amount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма операции в копейках (ge, le)
+  recipient:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Контрагент (contains)
+  recipientId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Телефон контрагента (eq)
+  recipientBankName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Наименование или БИК банка получателя (contains)
+  recipientMemberId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор Банка Получателя (eq)
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор Точки продаж (eq)
+  merchantName:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Точка продаж (contains)
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ИНН (eq)
+  qrcId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор QR код для оплаты (contains)
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml

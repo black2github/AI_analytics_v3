@@ -1,0 +1,11 @@
+type: object
+description: ДТО ответа для запроса типов писем из сервиса "Сотрудники"
+properties:
+  categories:
+    type: array
+    description: Список данных по категориям
+    items:
+      $ref: ./DsfLetterCategoryDto.yaml
+  isAuthPersonRestricted:
+    type: boolean
+    description: Флаг наличия ограничений по письмам для УЛ

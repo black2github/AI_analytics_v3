@@ -1,0 +1,9 @@
+type: object
+properties:
+  numberOfEntries:
+    type: string
+  sum:
+    type: string
+  currency:
+    type: string
+description: Набор элементов, обеспечивающих общую сумму записей

@@ -1,0 +1,28 @@
+required:
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  status:
+    $ref: ../common/AcceptPaymentRequestStatusDto.yaml
+  decision:
+    $ref: ../common/AcceptPaymentRequestDecisionDto.yaml
+  amount:
+    type: string
+    description: Сумма акцепта
+    nullable: true
+  signatures:
+    type: array
+    description: Подписи акцепта платежного требования
+    items:
+      $ref: ../common/acceptSignatureClientDto.yaml
+  canDelete:
+    type: boolean
+    description: Признак возможности удаления акцепта
+  signPhaseDto:
+    $ref: ../common/AcceptPaymentRequestSignPhaseDto.yaml
+description: Акцепт платежного требования данные для платежного требования (входящее)

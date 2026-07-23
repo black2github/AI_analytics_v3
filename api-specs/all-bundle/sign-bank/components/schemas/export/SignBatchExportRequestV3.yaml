@@ -1,0 +1,15 @@
+type: object
+properties:
+  archiveName:
+    type: string
+    description: Наименование архива
+  userId:
+    type: string
+    description: ID пользователя. Обязателен при формировании архива на стороне FS
+    format: uuid
+  content:
+    type: array
+    description: Данные запроса на пакетную выгрузку реквизитов ЭП для проверки
+    items:
+      $ref: ./SignExportContentV2.yaml
+description: Запрос на пакетную выгрузку реквизитов ЭП для проверки (v.3)

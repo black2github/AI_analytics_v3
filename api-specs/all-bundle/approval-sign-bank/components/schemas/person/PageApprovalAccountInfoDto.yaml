@@ -1,0 +1,9 @@
+type: object
+properties:
+  list:
+    type: array
+    items:
+      $ref: ./ApprovalAccountInfoDto.yaml
+  total:
+    type: integer
+    format: int64

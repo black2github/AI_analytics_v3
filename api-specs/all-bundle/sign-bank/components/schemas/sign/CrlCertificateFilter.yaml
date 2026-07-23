@@ -1,0 +1,13 @@
+type: object
+properties:
+  keyId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  dateRevoked:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  dateBlocked:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  reasonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр

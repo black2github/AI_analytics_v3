@@ -1,0 +1,24 @@
+required:
+- service
+- targetPerson
+type: object
+properties:
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+  service:
+    type: string
+    description: Сервис
+  topic:
+    type: string
+    description: Тема приглашения
+  message:
+    type: string
+    description: Текст приглашения
+  expiredAt:
+    type: string
+    description: Дата/время истечения инвайта
+    format: date-time
+  sendInviteToAuthPerson:
+    type: boolean
+    description: Отправить инвайт УЛ Клиента
+description: ДТО создания инвайта

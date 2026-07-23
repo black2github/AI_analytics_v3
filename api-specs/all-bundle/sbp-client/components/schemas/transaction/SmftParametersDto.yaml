@@ -1,0 +1,21 @@
+type: object
+description: Данные устройства пользователя
+properties:
+  channel:
+    type: string
+    description: Канал
+    enum:
+    - WEB
+    - MOBILE
+  subChannel:
+    type: string
+    description: Подканал
+    enum:
+    - BROWSER
+    - MOBILE
+  devicePrint:
+    type: string
+    description: Информация о браузере и устройстве. Обязательно для канала WEB
+  mobileSdkData:
+    type: string
+    description: Обязательно для канала MOBILE. При отсутствии данных передавать пустой тег

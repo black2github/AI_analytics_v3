@@ -1,0 +1,12 @@
+type: object
+properties:
+  includeDebitStatements:
+    type: boolean
+  includeDebitOrders:
+    type: boolean
+  includeCreditStatements:
+    type: boolean
+  includeCreditOrders:
+    type: boolean
+  separateDocumentsFiles:
+    type: boolean

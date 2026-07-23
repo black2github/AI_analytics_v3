@@ -1,0 +1,14 @@
+type: object
+properties:
+  taskId:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum:
+    - NEW
+    - PROCESSING
+    - FILE_CREATED
+    - EXECUTED
+    - FAILED
+description: Данные

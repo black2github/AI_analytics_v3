@@ -1,0 +1,20 @@
+type: object
+description: Данные о полномочиях подписанта
+properties:
+  accountId:
+    type: string
+    format: uuid
+    description: Идентификатор счета клиента
+  authorityStatus:
+    type: string
+    description: Статус полномочия
+    enum:
+    - ACTIVE
+    - INACTIVE
+  signLevelNumber:
+    type: integer
+    format: int32
+    description: Номер уровня подписи
+required:
+- accountId
+- authorityStatus

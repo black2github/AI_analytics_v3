@@ -1,0 +1,30 @@
+required:
+- validators
+type: object
+properties:
+  certificateData:
+    type: string
+    description: Данные сертификата
+  date:
+    type: string
+    description: Дата, на которую осуществляется проверка
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя (владельца сертификата)
+    format: uuid
+  validators:
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Типы проверок сертификата
+    items:
+      type: string
+      description: Тип проверки сертификата
+      enum:
+      - REVOKE_CERTIFICATE
+      - SIGNER_CERTIFICATE
+      - CA_FNS
+      - VALIDITY_PERIOD
+      - CA_CHECK
+description: Запрос проверки сертификата

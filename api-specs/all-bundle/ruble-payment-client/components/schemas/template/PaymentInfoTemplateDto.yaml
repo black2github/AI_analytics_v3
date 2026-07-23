@@ -1,0 +1,44 @@
+required:
+- paymentPurpose
+- paymentType
+- paymentTypeName
+type: object
+properties:
+  paymentTypeName:
+    type: string
+    description: Вид платежа (Наименование вида платежа)
+  paymentType:
+    type: string
+    description: Код вида платежа
+  incomeType:
+    type: string
+    description: Код вида дохода (назначение платежа)
+  paymentCode:
+    type: string
+    description: Код платежа
+  operationType:
+    type: string
+    description: Вид операции
+  paymentPriority:
+    type: string
+    description: Очередность платежа
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  currencyTransactionCode:
+    type: string
+    description: Код валютной операции
+  payoutCode:
+    type: string
+    description: Код выплат
+  paymentDate:
+    type: string
+    description: Срок платежа
+    format: date
+  transferConditions:
+    type: string
+    description: Резервное поле (Указывается признак условий перевода, в том числе в виде кода)
+  purchaseCode:
+    type: string
+    description: Код закупки
+description: Базовые реквизиты документа в шаблоне платежного поручения

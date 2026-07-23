@@ -1,0 +1,21 @@
+required:
+- digest
+- dstId
+- tokenId
+type: object
+properties:
+  tokenId:
+    type: string
+    description: ID МФА токена
+    format: uuid
+  dstId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  digest:
+    type: string
+    description: Дайджест
+  pinCode:
+    type: string
+    description: Пин-код для доступа к закрытому ключу сертификата
+description: Запрос облачной подписи для логина

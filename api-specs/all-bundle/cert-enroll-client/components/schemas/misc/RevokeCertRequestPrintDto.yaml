@@ -1,0 +1,14 @@
+required:
+- certId
+- clientOfficialSignatureToolId
+type: object
+properties:
+  clientOfficialSignatureToolId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+  certId:
+    type: string
+    description: ID сертификата ЭП
+    format: uuid
+description: Запрос печати заявления на отзыв сертификата.

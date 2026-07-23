@@ -1,0 +1,13 @@
+required:
+- accountId
+- uaaUserId
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  accountId:
+    type: string
+    description: Идентификатор счета в OpenAPI
+description: DTO Запрос согласия. Интеграционная часть.

@@ -1,0 +1,19 @@
+required:
+- code
+- confirmationRequestId
+type: object
+properties:
+  confirmationRequestId:
+    type: string
+    description: Идентификатор запроса на подтверждение
+    format: uuid
+  code:
+    type: string
+    description: Код подтверждения введенный пользователем
+  mobileSdkData:
+    type: string
+    description: Данные, полученные с мобильного устройства
+  userEnvironment:
+    type: string
+    description: Информация об окружении пользователя
+description: Запрос на завершение восстановления логина по коду подтверждения

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUnqCertRequestBankFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,19 @@
+post:
+  summary: Запустить поток профилей от ПКП
+  tags:
+  - АС ПКП. API заглушек подписки профилей автокотирования для поручения на покупку/продажу валюты.
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/subscription/PkpStartSubscriptionRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/subscription/GenericResponseSimpleErrorDataPkpStartSubscriptionRspDto.yaml
+    '400':
+      description: Bad Request

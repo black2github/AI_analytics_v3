@@ -1,0 +1,14 @@
+type: object
+properties:
+  docCount:
+    type: integer
+    description: Количество документов
+    format: int64
+  type:
+    type: string
+    description: Статус
+    enum:
+    - IMPORTED
+    - NEW
+    - DRAFT
+description: Данные об импортированных документах для протокола

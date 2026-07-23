@@ -1,0 +1,55 @@
+required:
+- clientOfficialId
+- email
+- phone
+- secondaryAuthMethod
+- userCatalog
+- userId
+type: object
+properties:
+  dssProfileId:
+    type: string
+    description: ID обновляемого ДСС профиля
+    format: uuid
+  email:
+    type: string
+    description: Email используемый в профиле DSS
+  phone:
+    type: string
+    description: Телефон используемый в профиле DSS
+  userCatalog:
+    type: string
+    description: Каталог пользователя клиента
+  remoteId:
+    type: integer
+    description: ID УЗ ДБО
+    format: int32
+  remoteProfileId:
+    type: integer
+    description: ID профиля ДБО
+    format: int32
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  userAbsId:
+    type: string
+    description: ID пользователя в F1
+  distinguishedNames:
+    $ref: ./DssProfileDistinguishedNamesDto.yaml
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  potentialClient:
+    type: boolean
+    description: Признак ПУЛ
+  secondaryAuthMethod:
+    type: string
+    description: Устанавливаемый метод вторичной аутентификации
+    enum:
+    - UNKNOWN
+    - MOBILE
+    - MY_DSS
+    - OTP_VIA_SMS
+description: Запрос на создание ДСС профиля

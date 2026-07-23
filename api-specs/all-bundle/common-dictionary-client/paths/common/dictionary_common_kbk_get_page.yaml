@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API справочника КБК
+  summary: Получить страницу записей
+  description: 'Привилегии: hasAuthority(''KBK_GET_PAGE'')'
+  operationId: getPageUsingPOST_6
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: filter
+    description: filter
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«KbkFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«KbkDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

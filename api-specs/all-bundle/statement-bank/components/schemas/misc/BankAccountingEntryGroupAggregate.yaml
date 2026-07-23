@@ -1,0 +1,17 @@
+type: object
+properties:
+  account:
+    $ref: ../common/AccountCard.yaml
+  amountByDebit:
+    type: number
+  amountByCredit:
+    type: number
+  outgoingCount:
+    type: integer
+    format: int32
+  incomingCount:
+    type: integer
+    format: int32
+  totalCount:
+    type: integer
+    format: int32

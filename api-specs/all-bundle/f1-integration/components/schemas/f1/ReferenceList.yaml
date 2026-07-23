@@ -1,0 +1,38 @@
+type: object
+properties:
+  referenceNoInputParam:
+    type: array
+    description: Справки без входных параметров
+    items:
+      $ref: ./ReferenceNoInputParam.yaml
+  referenceOnDate:
+    type: array
+    description: Справки с параметром дата
+    items:
+      $ref: ./ReferenceOnDate.yaml
+  referenceForPeriod:
+    type: array
+    description: Справки с периодом дат
+    items:
+      $ref: ./ReferenceForPeriod.yaml
+  referenceForPeriodWithAccounts:
+    type: array
+    description: Справки с периодом дат и счетами
+    items:
+      $ref: ./ReferenceForPeriodWithAccounts.yaml
+  referenceForDateWithAccounts:
+    type: array
+    description: Справки с датой и счетами
+    items:
+      $ref: ./ReferenceForDateWithAccounts.yaml
+  referenceForPeriodWithRKO:
+    type: array
+    description: Справки с периодом дат и номером договора РКО
+    items:
+      $ref: ./ReferenceForPeriodWithRko.yaml
+  referenceForPeriodOrOnDate:
+    type: array
+    description: Справки с периодом дат или датой
+    items:
+      $ref: ./ReferenceForPeriodOrOnDate.yaml
+description: Виды справок

@@ -1,0 +1,19 @@
+required:
+- name
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Наименование подразделения
+  address:
+    maxLength: 100
+    minLength: 0
+    type: string
+    description: Адрес подразделения
+description: Подразделение банка

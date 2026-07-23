@@ -1,0 +1,21 @@
+type: object
+required:
+- clGuid
+- clRegnum
+- clInn
+- mainVId
+description: Запрос на получение счетов для закрытия
+properties:
+  clGuid:
+    type: string
+    description: GUID клиента
+  clRegnum:
+    type: integer
+    format: int64
+    description: Регистрационный номер клиента (РНК)
+  clInn:
+    type: string
+    description: ИНН клиента
+  mainVId:
+    type: string
+    description: Номер счета

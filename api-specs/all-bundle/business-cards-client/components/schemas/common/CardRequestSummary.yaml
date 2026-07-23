@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор заявки в Экосистеме
+    format: uuid
+description: Заявка для работы с картами с минимальным количеством полей

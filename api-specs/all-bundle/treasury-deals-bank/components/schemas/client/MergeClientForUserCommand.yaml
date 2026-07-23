@@ -1,0 +1,13 @@
+type: object
+properties:
+  ecoClientId:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientUserId:
+    type: string
+    description: Идентификатор пользователя клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

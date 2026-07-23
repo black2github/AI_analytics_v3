@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для получения списка счетов для списания комиссии и действующих тарифов (СМС-информирование)
+  summary: Получение списка счетов для списания комиссии и действующих тарифов
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'')'
+  operationId: getChargeAccounts
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/f1/SmsInfoTariffRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/GenericResponseSimpleErrorDataSmsInfoTariffResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml

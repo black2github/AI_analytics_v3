@@ -1,0 +1,45 @@
+required:
+- attachments
+type: object
+properties:
+  attachments:
+    type: array
+    description: Распознанные файлы
+    items:
+      $ref: ./DocumentAttachmentDto.yaml
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  passportSeries:
+    type: string
+    description: Серия паспорта
+  passportNumber:
+    type: string
+    description: Номер паспорта
+  passportIssuer:
+    type: string
+    description: Кем выдан паспорт
+  passportIssuedDate:
+    type: string
+    description: Когда выдан паспорт
+    format: date
+  divisionCode:
+    type: string
+    description: Код подразделения, выдавшего паспорт
+  registrationAddress:
+    type: string
+    description: Адрес регистрации
+description: Запрос распознавания паспорта

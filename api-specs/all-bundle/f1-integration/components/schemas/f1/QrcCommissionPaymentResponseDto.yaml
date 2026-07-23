@@ -1,0 +1,20 @@
+type: object
+properties:
+  msgHdrDto:
+    $ref: ./MsgHdrDto.yaml
+  stsAndRsnInfDto:
+    $ref: ./StsAndRsnInfDto.yaml
+  comssnAmtDto:
+    $ref: ./ComssnAmtDto.yaml
+  acctNb:
+    type: string
+    description: Номер счета для оплаты комиссии (тариф)
+  acctNbSbcptFee:
+    type: string
+    description: Номер счета для абонентской платы
+  individualTariff:
+    type: boolean
+    description: Наличие у клиента индивидуального тарифа
+  rltdMsgHdr:
+    $ref: ./MsgHdrDto.yaml
+description: Запрос комиссий за услуги банка

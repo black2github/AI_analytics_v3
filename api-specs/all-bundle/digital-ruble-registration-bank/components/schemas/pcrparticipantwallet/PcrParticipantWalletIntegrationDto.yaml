@@ -1,0 +1,42 @@
+required:
+- bankClientId
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  bankClientExternalGuid:
+    type: string
+    description: Идентификатор организации в ЕСК
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации в ЦБ
+  walletStatus:
+    type: string
+    description: Статус кошелька в ЦБ
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации в ЦБ
+  organizationStatus:
+    type: string
+    description: Статус организации(клиента) в ЦБ
+  walletRegistrationDate:
+    type: string
+    description: Дата регистрации цифрового кошелька
+    format: date-time
+  certificateRegistered:
+    type: boolean
+    description: Завершена регистрация сертификата
+  cbrAccountNumber:
+    type: string
+    description: Номер СЦР на ПлЦР
+  bankClientOfficialId:
+    type: string
+    format: uuid
+description: Кошелек ЦР на ПлЦР

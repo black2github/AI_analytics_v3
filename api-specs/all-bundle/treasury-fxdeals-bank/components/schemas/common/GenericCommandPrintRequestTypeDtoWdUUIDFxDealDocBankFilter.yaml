@@ -1,0 +1,7 @@
+required:
+- data
+type: object
+properties:
+  data:
+    $ref: ./PrintRequestTypeDtoWdUUIDFxDealDocBankFilter.yaml
+description: Запрос

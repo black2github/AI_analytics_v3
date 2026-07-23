@@ -1,0 +1,34 @@
+get:
+  summary: Список всех записей в таблице f1_run_msg_stub
+  tags:
+  - Обновление данных для процедуры RUN_MSG онлайн-адаптера Ф1
+  parameters:
+  - name: limit
+    in: query
+    schema:
+      type: object
+      description: Количество записей
+      default: 100
+      minimum: 1
+    required: false
+  - name: offset
+    in: query
+    schema:
+      type: object
+      description: Смещение
+      default: 0
+      minimum: 0
+    required: false
+  - name: rootTagName
+    in: query
+    schema:
+      type: object
+      description: Имя корневого тега запроса
+    required: false
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/page/PageDataRunMsgDto.yaml

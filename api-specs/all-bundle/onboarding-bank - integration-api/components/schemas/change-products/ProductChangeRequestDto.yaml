@@ -1,0 +1,33 @@
+type: object
+properties:
+  acquiring:
+    $ref: ../common/AcquiringDto.yaml
+  clientBankConnectionInfo:
+    $ref: ../common/ClientBankConnectionInfoDto.yaml
+  gpbBoConnectionInfo:
+    $ref: ../common/GpbBoConnectionInfoDto.yaml
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  onlineCashCollection:
+    $ref: ../common/OnlineCashCollectionDto.yaml
+  persons:
+    type: array
+    description: Список физических лиц
+    items:
+      $ref: ./ProductChangePersonDto.yaml
+  salaryProjectInfo:
+    $ref: ../common/SalaryProjectInfoDto.yaml
+  sbpAccountNumber:
+    type: string
+    description: Номер счета для СБП
+  sbpConnected:
+    type: boolean
+    description: Признак подключения к СБП (Система быстрых платежей)
+  sbpOkved:
+    type: string
+    description: ОКВЭД (СБП)
+  travelBusiness:
+    $ref: ../common/TravelBusinessDto.yaml
+description: Запрос корректировки дополнительных продуктов

@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+    example: null
+  value:
+    type: string
+    description: Base64 представление сертификата
+    example: null
+  subject:
+    type: string
+    description: Кому выдан сертификат
+    example: null
+  serialNumber:
+    type: string
+    description: Серийный номер
+    example: null
+  validFrom:
+    type: string
+    description: Период действия с
+    format: date-time
+    example: null
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+    example: null
+description: Данные сертификата
+example: null

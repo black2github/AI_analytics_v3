@@ -1,0 +1,73 @@
+required:
+- bankClientId
+- classifier
+- date
+- id
+- number
+- status
+- types
+- userFio
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  classifier:
+    type: string
+    description: Классификатор типа документа
+    enum:
+    - UPDATE_INFORM
+    - ADD_EDIT_USER
+  types:
+    type: string
+    description: Типы заявки (через ';')
+  status:
+    type: string
+    description: Статус
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  userId:
+    type: string
+    description: Идентификатор пользователя создавшего заявку
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя создавшего заявку
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  bankClientFullName:
+    type: string
+    description: Полное наименование клиента банка
+  bankClientShortName:
+    type: string
+    description: Краткое наименование клиента банка
+  bankClientInn:
+    type: string
+    description: ИНН клиента банка
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника
+    format: uuid
+  employeeEskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  employeeFio:
+    type: string
+    description: ФИО сотрудника
+description: Данные объединенных заявок сотрудников

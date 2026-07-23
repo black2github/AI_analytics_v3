@@ -1,0 +1,22 @@
+type: object
+properties:
+  rc:
+    type: integer
+    description: Результат выполнения
+    format: int64
+    example: 0
+  commission:
+    type: array
+    description: Список коммиссий
+    items:
+      $ref: ./CommissionDto.yaml
+  clientGUID:
+    type: string
+    description: GUID клиента
+    format: uuid
+    example: a29c714d-bf4b-48d2-a1fd-6c42bc2961ef
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+description: Ответ на запрос комиссии по счету

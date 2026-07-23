@@ -1,0 +1,12 @@
+required:
+- canDelete
+- hasAuthorizedPerson
+type: object
+properties:
+  canDelete:
+    type: boolean
+    description: Можно удалить
+  hasAuthorizedPerson:
+    type: boolean
+    description: Есть УЛ с указанным шаблоном роли
+description: Результат проверки возможности удаления шаблона роли

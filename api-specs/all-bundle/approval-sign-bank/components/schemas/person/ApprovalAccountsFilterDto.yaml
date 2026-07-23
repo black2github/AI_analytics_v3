@@ -1,0 +1,11 @@
+type: object
+properties:
+  approvalPersonKind:
+    type: string
+    description: Тип визирующего лица
+    enum:
+    - F1
+    - TNF
+  personId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр данных о визируемых счетах

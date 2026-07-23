@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент"
+    format: uuid
+  fioSignatory:
+    type: string
+    description: ФИО подписанта
+description: Идентификация клиента и пользователя

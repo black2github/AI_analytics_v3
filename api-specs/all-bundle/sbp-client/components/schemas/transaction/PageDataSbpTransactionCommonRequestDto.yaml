@@ -1,0 +1,15 @@
+type: object
+description: Страничные данные
+properties:
+  page:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./SbpTransactionCommonRequestDto.yaml
+  size:
+    type: integer
+    format: int64
+    description: Размер страницы
+required:
+- page
+- size

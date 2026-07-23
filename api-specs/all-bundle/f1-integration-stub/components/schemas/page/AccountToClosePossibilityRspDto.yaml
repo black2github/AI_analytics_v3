@@ -1,0 +1,19 @@
+type: object
+required:
+- clientGuid
+- saldo
+- debt
+description: Доступный счет для закрытия
+properties:
+  clientGuid:
+    type: string
+    description: GUID клиента
+  saldo:
+    type: number
+    description: Остаток денежных средств
+  debt:
+    type: number
+    description: Текущая задолженность по комиссии перед Банком
+  restrictions:
+    type: string
+    description: Список ограничений

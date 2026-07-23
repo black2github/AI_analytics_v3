@@ -1,0 +1,26 @@
+type: object
+properties:
+  taskId:
+    type: string
+    description: Идентификатор задачи
+    format: uuid
+  status:
+    type: string
+    description: Статус обработки задачи
+    enum:
+    - IN_PROGRESS
+    - CANCELED
+    - DONE
+    - ERROR
+  archiveParsed:
+    type: boolean
+    description: Признак Архив распарсен
+  error:
+    type: string
+    description: Ошибка парсинга архива
+  data:
+    type: array
+    description: Список успешно загруженных файлов из архива
+    items:
+      $ref: ./FNSArchiveDocumentDataRspDto.yaml
+description: Результат распаковки архива ФНС

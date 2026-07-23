@@ -1,0 +1,41 @@
+type: object
+properties:
+  fileId:
+    type: string
+    format: uuid
+  tessaFileId:
+    type: string
+    format: uuid
+  filename:
+    type: string
+  uploadedById:
+    type: string
+    format: uuid
+  fileSize:
+    type: integer
+    format: int32
+  expiration:
+    type: string
+    format: date-time
+  signature:
+    type: string
+  fileSignatureUploaded:
+    type: boolean
+  fileSignatureId:
+    type: string
+    format: uuid
+  isTemporaryStorageUsed:
+    type: boolean
+    writeOnly: true
+  attachmentCategory:
+    type: string
+    enum:
+    - DOCUMENT
+    - PHOTO
+    - JSON
+    - FNS_ARCHIVE
+    - STAMPED_DOCUMENT
+  ukepSignature:
+    type: string
+  temporaryStorageUsed:
+    type: boolean

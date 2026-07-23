@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  status:
+    type: string
+    description: Статус заявки на получение Согласия
+    enum:
+    - NONE
+    - DETAILS_VALID
+    - CONS_CREATE_REQUEST
+    - CONS_CREATE_ERROR
+    - CONS_CREATED
+    - CONS_AUTHORIZED
+    - ACCOUNT_INFO_REQUEST
+    - ACCOUNT_INFO_ERROR
+    - ACCOUNT_INFO_RESPONSE
+    - EXECUTED
+    - REJECTED
+  consentId:
+    type: string
+    description: Внутренний идентификатор Согласия
+    format: uuid
+  bank:
+    $ref: ./BankInfoDto.yaml
+  bankClient:
+    $ref: ../common/BankClientInfoDto.yaml
+  availableActions:
+    type: array
+    description: Доступные операции
+    items:
+      type: string
+      description: Доступные операции
+      enum:
+      - BASE
+      - TRANSACTIONS
+  agreementDate:
+    type: string
+    description: Срок действия согласия
+    format: date-time
+  validationResult:
+    $ref: ../common/ValidationResultDto.yaml
+description: Ответ на запрос согласия

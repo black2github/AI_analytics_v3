@@ -1,0 +1,29 @@
+required:
+- certificateBody
+- endDate
+- publisherName
+- serialNumber
+- startDate
+type: object
+properties:
+  serialNumber:
+    minLength: 1
+    type: string
+    description: Серийный номер сертификата
+  startDate:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  endDate:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  publisherName:
+    minLength: 1
+    type: string
+    description: Наименование УЦ-издателя
+  certificateBody:
+    minLength: 1
+    type: string
+    description: Тело сертификата
+description: Сертификат ПлЦР

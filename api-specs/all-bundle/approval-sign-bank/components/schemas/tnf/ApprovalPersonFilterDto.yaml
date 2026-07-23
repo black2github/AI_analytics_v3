@@ -1,0 +1,6 @@
+type: object
+properties:
+  textQuery:
+    type: string
+    description: 'Общая строка поиска. Частичное вхождение по: ФИО, ID РКО Ф1 визирующего лица, ID ЕСК визирующего лица'
+description: Фильтр для получения визирующих лиц

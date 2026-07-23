@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  messageId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockActive:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  blockedDocs:
+    $ref: ../common/FilterValueDtoString.yaml
+  blockedActions:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Запись журнала сообщений о блокировках H2H

@@ -1,0 +1,15 @@
+type: object
+required:
+- inn
+- status
+- periods
+properties:
+  inn:
+    type: string
+    pattern: \S
+  status:
+    $ref: ./AusnClientStatusDto.yaml
+  periods:
+    type: array
+    items:
+      $ref: ./AusnPeriodDto.yaml

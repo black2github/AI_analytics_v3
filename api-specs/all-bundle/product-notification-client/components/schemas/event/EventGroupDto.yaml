@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор группы событий
+    format: uuid
+  code:
+    type: string
+    description: Код группы событий
+  name:
+    type: string
+    description: Наименование события
+  localizationKey:
+    type: string
+    description: Индекс локализации
+  order:
+    type: integer
+    description: Порядок вывода на ЭФ
+    format: int32
+  configureAmount:
+    type: boolean
+    description: Настраивать сумму
+description: Группа событий СФЗУ

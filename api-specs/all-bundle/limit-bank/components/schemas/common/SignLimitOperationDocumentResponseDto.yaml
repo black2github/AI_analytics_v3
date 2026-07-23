@@ -1,0 +1,17 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  processingResult:
+    type: string
+    description: Результат обработки по документу
+    enum:
+    - SUCCESS
+    - FAILED
+  processingMessage:
+    type: string
+    description: Описание результата обработки операции
+    nullable: true
+description: Данные документов

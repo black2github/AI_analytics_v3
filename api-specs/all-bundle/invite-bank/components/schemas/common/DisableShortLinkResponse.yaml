@@ -1,0 +1,15 @@
+required:
+- isSuccess
+- link
+type: object
+properties:
+  link:
+    type: string
+    description: Код короткой ссылки
+  isSuccess:
+    type: boolean
+    description: Признак успешного выполнения деактивации
+  error:
+    type: string
+    description: Текстовое описание ошибки
+description: ДТО ответа на деактивацию короткой ссылки

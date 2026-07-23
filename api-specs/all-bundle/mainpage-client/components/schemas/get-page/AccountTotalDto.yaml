@@ -1,0 +1,68 @@
+type: object
+properties:
+  organizationName:
+    type: string
+    description: Наименование организации
+  organizationId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  innKio:
+    type: string
+    description: ИНН
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountType:
+    type: string
+    description: Тип счета
+  branchName:
+    type: string
+    description: Филиал
+  income:
+    type: number
+    description: Приход
+  outcome:
+    type: number
+    description: Расход
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  outgoingBalance:
+    type: number
+    description: Исходящий остаток
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  currencyCode:
+    type: string
+    description: Код валюты
+  currencyName:
+    type: string
+    description: Наименование валюты
+  accountName:
+    type: string
+    description: Название счета
+  dateOfLastEntry:
+    type: string
+    description: Дата последней проводки
+    format: date-time
+  currentOverdraft:
+    type: number
+    description: Сумма неиспользованного овердрафта
+  accountSource:
+    type: string
+    description: Система источник информации по счету
+    enum:
+    - ECO
+    - BSS_DBO_320
+    - RKO_F1
+    - ESK
+    - TESSA
+  balance:
+    $ref: ./BalanceInfoDto.yaml
+description: Остатки и обороты по счету

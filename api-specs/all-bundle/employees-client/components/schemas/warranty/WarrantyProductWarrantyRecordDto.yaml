@@ -1,0 +1,53 @@
+required:
+- productCode
+- productName
+- warrantyTypes
+type: object
+properties:
+  productCode:
+    type: string
+    description: Код продукта
+    enum:
+    - LK_UVED
+    - LK_MP
+    - GPB_BO
+    - CORP_CARDS
+    - SALARY_PROJECT
+    - TREASURY_DEPOSIT
+    - TREASURY_FX
+    - TREASURY_GSNO
+    - TREASURY_NESNIZ
+    - UNI_BUH_OF_SALARY_GPBBO
+    - ENCASHMENT
+    - ENCASHMENT_EX
+    - SBP
+  productName:
+    type: string
+    description: Наименование продукта (игнорируемый параметр)
+  warrantyTypes:
+    type: array
+    description: Виды доверенностей
+    items:
+      type: string
+      description: Виды доверенностей
+      enum:
+      - UNKNOWN
+      - GLOBAL_WRNT
+      - ACCOUNTING
+      - ATHRT_DELEGATION
+      - EGRUL_EGRIP_EXTRT
+      - JOB_ASSIGNMENT
+      - LABOUR_CONTRACT
+      - MNG_BODY_DCSN
+      - ORDER
+      - OTHER
+      - PAYM_MNGM_WRNT
+      - PROD_AGR_WRNT
+      - PROD_EXEC_WRNT
+      - REPR_GPB_BO_REG
+      - SIGN_RIGHT
+      - STATE_AGNC_DCSN
+      - WARRANT
+      - MRPA_WRNT
+      - OBTN_BANKINFO_WRNT
+description: Продукт, на который распространяются действия продуктовой доверенности

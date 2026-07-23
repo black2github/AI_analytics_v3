@@ -1,0 +1,6 @@
+type: object
+properties:
+  search:
+    type: string
+    description: Строка поиска
+description: Запрос на поиск организаций пользователя

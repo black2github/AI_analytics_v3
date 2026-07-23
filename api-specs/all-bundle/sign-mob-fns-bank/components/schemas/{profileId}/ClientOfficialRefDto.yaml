@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+description: Ссылка на представителя в ЭКО

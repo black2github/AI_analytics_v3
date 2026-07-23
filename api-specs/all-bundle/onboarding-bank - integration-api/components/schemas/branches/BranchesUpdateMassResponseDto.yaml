@@ -1,0 +1,8 @@
+type: object
+properties:
+  results:
+    type: array
+    description: Список результатов обновления информации о филиалах
+    items:
+      $ref: ./ParticularBranchUpdateResultDto.yaml
+description: Список кодов для обновления информации о филиалах

@@ -1,0 +1,15 @@
+required:
+- inn
+- name
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование клиента
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  inn:
+    type: string
+    description: ИНН/КИО клиента
+description: ДТО Реквизиты отправителя

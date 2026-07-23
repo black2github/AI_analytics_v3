@@ -1,0 +1,7 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+description: Запрос включения ПЭП

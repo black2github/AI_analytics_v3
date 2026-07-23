@@ -1,0 +1,5 @@
+type: string
+description: Тип электронного сообщения
+enum:
+- MSG1_OUT
+- MSG2_OUT

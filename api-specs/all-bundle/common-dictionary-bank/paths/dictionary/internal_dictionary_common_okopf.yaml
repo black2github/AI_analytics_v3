@@ -1,0 +1,66 @@
+post:
+  tags:
+  - Справочник ОКОПФ
+  summary: Создать запись
+  description: 'Привилегии: hasAuthority(''OKOPF_CREATE'')'
+  operationId: createUsingPOST_8
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«OkopfDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«OkopfDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - Справочник ОКОПФ
+  summary: Обновить запись
+  description: 'Привилегии: hasAuthority(''OKOPF_UPDATE'')'
+  operationId: updateUsingPUT_8
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«OkopfDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«OkopfDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

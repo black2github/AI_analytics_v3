@@ -1,0 +1,83 @@
+type: object
+properties:
+  bankDeadlineAt:
+    type: string
+    description: Срок предоставления ответа, установленный банком.
+    format: date-time
+  bankDeadlineType:
+    type: string
+    description: Тип срока предоставления ответа на запрос документов
+    enum:
+    - URGENT
+    - STANDARD
+    - INDIVIDUAL
+  bankDelayDecision:
+    type: string
+    description: Решение банка по запросу отсрочки предоставления документов
+    enum:
+    - ACCEPT
+    - DECLINE
+  bankDocActivityDetailsComment:
+    type: array
+    description: Комментарии банка к Пояснения по деятельности/операции.
+    items:
+      type: string
+      description: Комментарии банка к Пояснения по деятельности/операции.
+  bankDocActivityInfoComment:
+    type: array
+    description: Комментарии банка к Документы компании по деятельности.
+    items:
+      type: string
+      description: Комментарии банка к Документы компании по деятельности.
+  bankDocFinPositionComment:
+    type: array
+    description: Комментарии банка к Документы и сведения о финансовом положении. Налоговая отчетность (декларации).
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения о финансовом положении. Налоговая отчетность (декларации).
+  bankDocMaterialResInfoComment:
+    type: array
+    description: Комментарии банка к Документы и сведения о материально-ресурсной базе компании.
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения о материально-ресурсной базе компании.
+  bankDocMetalCollectComment:
+    type: array
+    description: Комментарии банка к Документы и сведения по компаниям ломозаготовителям.
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения по компаниям ломозаготовителям.
+  bankDocStaffInfoComment:
+    type: array
+    description: Комментарии банка к Документы и сведения о штате/сотрудниках компании.
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения о штате/сотрудниках компании.
+  bankDocTransElectronicServComment:
+    type: array
+    description: Комментарии банка к Документы и сведения по транзакциям, проводимым через электронные сервисы (СБП, эквайринг).
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения по транзакциям, проводимым через электронные сервисы (СБП, эквайринг).
+  bankDocTransactionsInfoComment:
+    type: array
+    description: Комментарии банка к Документы и сведения по операциям с контрагентами.
+    items:
+      type: string
+      description: Комментарии банка к Документы и сведения по операциям с контрагентами.
+  bankOtherDocumentsComment:
+    type: array
+    description: Комментарии банка к Иные документы.
+    items:
+      type: string
+      description: Комментарии банка к Иные документы.
+  bankPurposeType:
+    type: string
+    description: Назначение письма
+    enum:
+    - INITIAL_REQUEST
+    - DUTY_REQUEST
+    - DUTY_REQUEST_FINAL
+    - DEFERMENT_DECISION
+    - FINAL
+description: Дополнительные AML-поля 'Письма из банка'

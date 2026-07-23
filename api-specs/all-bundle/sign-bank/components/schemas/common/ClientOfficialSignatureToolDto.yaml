@@ -1,0 +1,40 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  originalId:
+    type: string
+    description: ID оригинальной записи, заполняется механизмом распространения сертификатов между УЗ клиента одного физ лица
+    format: uuid
+  digitalSignatureTool:
+    $ref: ./DigitalSignatureToolDto.yaml
+  unitedSign:
+    type: boolean
+    description: Признак единой подписи
+  ownerClientName:
+    type: string
+    description: Название организации владельца СЭП
+  ownerClientInn:
+    type: string
+    description: ИНН организации владельца СЭП
+  ownerClientKpp:
+    type: string
+    description: КПП организации владельца СЭП
+  ownerClientOgrn:
+    type: string
+    description: ОГРН/ОГРНИП организации владельца СЭП
+description: СЭП представителя клиента

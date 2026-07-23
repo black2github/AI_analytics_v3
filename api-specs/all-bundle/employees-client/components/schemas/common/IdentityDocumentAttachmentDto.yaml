@@ -1,0 +1,9 @@
+required:
+- attachmentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения в файловом сервисе
+    format: uuid
+description: Данные вложения документа удостоверяющего личность

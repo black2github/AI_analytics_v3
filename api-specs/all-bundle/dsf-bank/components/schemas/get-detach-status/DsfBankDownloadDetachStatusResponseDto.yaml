@@ -1,0 +1,25 @@
+type: object
+description: ДТО для ответа на запрос статуса выгрузки откреплений в виде архива.
+properties:
+  attachmentId:
+    type: string
+    format: uuid
+    description: Идентификатор архива автооткреплений на файл сторадже
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа
+  error:
+    type: string
+    description: Текст ошибки выгрузки автооткрепления в виде архива
+  requestId:
+    type: string
+    format: uuid
+    description: Идентификатор запроса на выгрузку
+  status:
+    type: string
+    description: Статус выгрузки автооткрепления в виде архива
+    enum:
+    - IN_PROGRESS
+    - DONE
+    - ERROR

@@ -1,0 +1,21 @@
+required:
+- isLast
+- order
+- type
+- value
+type: object
+properties:
+  isLast:
+    type: boolean
+    description: Признак последнего порога
+  order:
+    type: integer
+    description: 'Порядковый номер порога. Возможные значения: -1, 1, 2, 3, ... ; -1 — не используется'
+    format: int32
+  type:
+    type: string
+    description: 'Тип счётчика. Возможные значения: moneyCounter, quantitativeCounter'
+  value:
+    type: string
+    description: Верхнее граничное значение интервала данного уровня. Для последнего порога — 9999999999.99
+description: Порог ограничения

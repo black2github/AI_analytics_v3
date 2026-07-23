@@ -1,0 +1,51 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: integer
+    format: int32
+    example: null
+  notEq:
+    type: integer
+    format: int32
+    example: null
+  in:
+    type: array
+    example: null
+    items:
+      type: integer
+      format: int32
+      example: null
+  notIn:
+    type: array
+    example: null
+    items:
+      type: integer
+      format: int32
+      example: null
+  isNull:
+    type: boolean
+    example: null
+  gt:
+    type: integer
+    format: int32
+    example: null
+  ge:
+    type: integer
+    format: int32
+    example: null
+  lt:
+    type: integer
+    format: int32
+    example: null
+  le:
+    type: integer
+    format: int32
+    example: null
+description: Номер заявки. Полное совпадение.
+example: null

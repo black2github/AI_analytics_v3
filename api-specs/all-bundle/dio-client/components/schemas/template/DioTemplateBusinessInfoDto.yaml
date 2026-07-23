@@ -1,0 +1,22 @@
+type: object
+properties:
+  clientName:
+    type: string
+    description: Наименование организации
+  clientInn:
+    type: string
+    description: ИНН организации
+  clientBicId:
+    type: string
+    description: Филиал обслуживания
+    format: uuid
+  clientBranchName:
+    type: string
+    description: Подразделение банка
+  comment:
+    type: string
+    description: Комментарий
+  isCorrect:
+    type: boolean
+    description: Признак корректировки
+description: Бизнес реквизиты документа

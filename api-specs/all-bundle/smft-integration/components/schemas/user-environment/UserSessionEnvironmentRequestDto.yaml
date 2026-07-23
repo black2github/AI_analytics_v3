@@ -1,0 +1,13 @@
+type: object
+description: Запрос для получения данных об устройстве пользователя, производившего вход в экосистему из событий СМФТ
+properties:
+  login:
+    type: string
+    description: Логин пользователя
+  eventDate:
+    type: string
+    format: date-time
+    description: Дата события
+required:
+- eventDate
+- login

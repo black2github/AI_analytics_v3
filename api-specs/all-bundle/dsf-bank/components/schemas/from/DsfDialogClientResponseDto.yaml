@@ -1,0 +1,44 @@
+type: object
+description: Диалог. Возвращаемое ДТО для приложения клиента.
+properties:
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата создания диалога
+  dialogIsOpen:
+    type: boolean
+    description: Признак открытого диалога
+  dialogNameEn:
+    type: string
+    description: Название диалога на английском языке
+  dialogNameRu:
+    type: string
+    description: Название диалога на русском языке
+  dialogStatus:
+    type: string
+    description: Статус диалога
+    enum:
+    - OPEN
+    - REVOKED_BY_BANK
+    - SENT_TO_BANK
+    - ACCEPTED_FOR_CONSIDERATION
+    - COMPLETED
+    - REJECTED
+  externalId:
+    type: string
+    description: Внешний идентификатор диалога
+  externalSystem:
+    type: string
+    description: АС инициатор/получатель письма
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор диалога
+  lastDocumentAt:
+    type: string
+    format: date-time
+    description: Дата и время получения последнего письма в диалоге

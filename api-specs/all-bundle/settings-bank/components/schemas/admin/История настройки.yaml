@@ -1,0 +1,50 @@
+required:
+- authorId
+- id
+- settingId
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи истории настройки
+    format: uuid
+  settingId:
+    type: string
+    description: Идентификатор настройки
+    format: uuid
+  userId:
+    type: string
+    description: Какому пользователю предназначена настройка
+    format: uuid
+  authorId:
+    type: string
+    description: Автор изменения настройки
+    format: uuid
+  login:
+    type: string
+    description: Логин автора изменения настройки
+  valueStr:
+    type: string
+    description: Строковое содержимое настройки
+  valueLong:
+    type: integer
+    description: Числовое содержимое настройки
+    format: int64
+  valueBool:
+    type: boolean
+    description: Булево содержимое настройки
+  valueCurrency:
+    type: number
+    description: Денежное содержимое настройки
+  comments:
+    type: string
+    description: Комментарий автора изменений
+  createdAt:
+    type: string
+    description: Дата внесения изменения
+    format: date-time
+  locked:
+    type: boolean
+    description: Запись защищена от автоматического удаления
+description: Данные

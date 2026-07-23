@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBrokerageClientSecuritiesSearchFilterDto.yaml
+description: Запрос страницы

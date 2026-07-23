@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API методы Админки
+  summary: Перевести несколько заявок в статус
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.CHANGE_REQUEST_STATUS'
+  operationId: setMultipleCheckRequestStatusUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: param
+    description: param
+    required: true
+    schema:
+      $ref: '#/definitions/ChangeMultipleStatusDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

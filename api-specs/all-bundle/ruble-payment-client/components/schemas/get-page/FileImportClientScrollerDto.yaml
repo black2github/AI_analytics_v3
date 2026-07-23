@@ -1,0 +1,43 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Файл импорта"
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  fileName:
+    type: string
+    description: Наименование файла
+  dataSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int64
+  status:
+    $ref: ../common/FileImportStatusDto.yaml
+  importDocumentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+  documentsTotalAmount:
+    type: number
+    description: Общая сумма документов
+  totalAmounts:
+    type: array
+    description: Общая сумма для каждой валюты
+    items:
+      type: string
+      description: Общая сумма для каждой валюты
+  signStatus:
+    $ref: ./FileImportSignStatusDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  fileStorageId:
+    type: string
+    description: Идентификатор файла в файловом сервисе
+    format: uuid
+description: Страница с данными

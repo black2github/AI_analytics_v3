@@ -1,0 +1,10 @@
+required:
+- clientScrollerFilter
+- userDeviceInfo
+type: object
+properties:
+  clientScrollerFilter:
+    $ref: ../common/PaymentOrderRequestClientScrollerFilter.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Данные для массовой отправки документов по фильтру скроллера клиента через асинхронную задачу

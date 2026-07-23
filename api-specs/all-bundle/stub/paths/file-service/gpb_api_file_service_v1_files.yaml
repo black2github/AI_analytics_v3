@@ -1,0 +1,30 @@
+post:
+  tags:
+  - GPB API. Файловый сервис.
+  summary: Загрузить файл
+  operationId: uploadUsingPOST
+  consumes:
+  - multipart/form-data
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: body
+    description: body
+    required: true
+    schema:
+      type: string
+      format: binary
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/UploadFileResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

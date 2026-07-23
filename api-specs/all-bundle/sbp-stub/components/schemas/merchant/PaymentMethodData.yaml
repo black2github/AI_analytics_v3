@@ -1,0 +1,8 @@
+type: object
+properties:
+  paymentServiceId:
+    type: string
+  version:
+    type: string
+  additionalData:
+    $ref: ./AdditionalData.yaml

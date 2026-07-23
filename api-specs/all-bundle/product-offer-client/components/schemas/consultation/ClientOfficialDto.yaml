@@ -1,0 +1,12 @@
+required:
+- userFio
+- userPhone
+type: object
+properties:
+  userFio:
+    type: string
+    description: ФИО клиента
+  userPhone:
+    type: string
+    description: Телефон представителя
+description: Данные представителя клиента

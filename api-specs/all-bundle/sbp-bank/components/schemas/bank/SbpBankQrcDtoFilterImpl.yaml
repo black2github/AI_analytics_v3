@@ -1,0 +1,85 @@
+type: object
+description: Фильтр по Qr-кодам для клиента
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата создания, between
+  expiresAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата окончания действия, between
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер документа, between
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка", eq
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП, eq
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название, contains
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП, contains
+  account:
+    $ref: ./FilterValueDtoString.yaml
+    description: Счет зачисления, contains
+  amount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма платежа в копейках, between
+  ecoAccountId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: ID счета зачисления в ЭКО, eq, in
+  paymentPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Назначение платежа, contains
+  status:
+    $ref: ./SbpQrcStatusFilter.yaml
+    description: Текущий статус QR-кода, eq
+  qrcType:
+    $ref: ./SbpQrcTypeFilter.yaml
+    description: Тип QR, eq
+  subscriptionStatus:
+    $ref: ./SbpQrcSubscriptionStatusFilter.yaml
+    description: Статус подписки, eq, in
+  subscriptionPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Цель подписки, contains
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента, eq
+  b2bPayer:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Плательщик ЮЛ, eq
+  qrcId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор QR кода, contains, eq.
+  paymentService:
+    $ref: ./SbpPaymentServiceNameFilter.yaml
+    description: Платежный сервис, in.
+  accountId:
+    $ref: ./FilterValueDtoLong.yaml
+    description: ID счета зачисления в Ф1, eq, in
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП клиента, eq
+  drAccountId:
+    $ref: ./FilterValueDtoString.yaml
+    description: ID счета цифрового рубля, eq
+  ecoDocId:
+    $ref: ./FilterValueDtoString.yaml
+  tariffName:
+    $ref: ./FilterValueDtoString.yaml
+  ecoDocTypeId:
+    $ref: ./FilterValueDtoString.yaml
+  ecoClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  ecoServiceCode:
+    $ref: ./FilterValueDtoString.yaml
+  paymentChannel:
+    $ref: ./SbpBankServiceCommonRequestPaymentChannelFilterDto.yaml
+  ecoClientName:
+    $ref: ./FilterValueDtoString.yaml
+  ecoClientInn:
+    $ref: ./FilterValueDtoString.yaml

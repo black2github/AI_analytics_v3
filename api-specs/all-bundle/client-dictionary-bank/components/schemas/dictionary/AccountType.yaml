@@ -1,0 +1,19 @@
+required:
+- contractTypeCodes
+type: object
+properties:
+  contractTypeCodes:
+    uniqueItems: true
+    type: array
+    description: Тип договора
+    items:
+      type: string
+      description: Тип договора
+  accountKindCodes:
+    uniqueItems: true
+    type: array
+    description: Вид счета
+    items:
+      type: string
+      description: Вид счета
+description: Тип счета

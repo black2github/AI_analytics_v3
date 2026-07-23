@@ -1,0 +1,14 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+description: Подписываемый документ в реестре доп. подписи

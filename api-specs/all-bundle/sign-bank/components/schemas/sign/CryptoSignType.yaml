@@ -1,0 +1,23 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код формата подписи, возвращаемый криптомодулем
+    enum:
+    - PLAIN
+    - SFT
+    - CMS
+    - CAdES_BES
+    - CAdES_T
+    - CAdES_X_Long_Type_1
+    - CAdES_A
+    - PDF_PKCS7_CMS
+    - PDF_PKCS7_CADES
+    - XMLDSIG
+    - XADES_BES
+    - XADES_T
+    - XADES_X_L
+  name:
+    type: string
+    description: Наименование формата подписи
+description: Информация о формате подписи

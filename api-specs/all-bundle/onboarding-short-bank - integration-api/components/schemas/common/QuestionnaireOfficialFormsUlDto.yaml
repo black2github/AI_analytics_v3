@@ -1,0 +1,22 @@
+type: object
+properties:
+  evaluationClientSignSheet:
+    $ref: ./EvaluationClientSignSheetDto.yaml
+  evaluationClientULBeneficialOwnersSheet:
+    $ref: ./EvaluationClientULBeneficialOwnersSheetDto.yaml
+  evaluationClientULCSRStatusSheet:
+    $ref: ./EvaluationClientULCRSStatusSheetDto.yaml
+  evaluationClientULFatcaStatusSheet:
+    $ref: ./EvaluationClientULFatcaStatusSheetDto.yaml
+  id:
+    type: string
+    description: Уникальный идентификатор записи.
+    format: uuid
+  onboardingShortRequestId:
+    type: string
+    description: Ссылка на "Короткая заявка на открытие первого счета".
+    format: uuid
+  question_15:
+    type: string
+    description: Комментарии работника банка.
+description: Опросник для формирования cлужебных форм ЮЛ

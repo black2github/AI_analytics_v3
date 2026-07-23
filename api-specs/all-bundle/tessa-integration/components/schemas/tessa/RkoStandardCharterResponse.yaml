@@ -1,0 +1,7 @@
+type: object
+properties:
+  rows:
+    type: array
+    items:
+      $ref: ./RkoStandardCharterRow.yaml
+description: Данные

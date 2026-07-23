@@ -1,0 +1,13 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  mainTid:
+    $ref: ./FilterValueDtoLong.yaml
+  subAgreementId:
+    $ref: ./FilterValueDtoLong.yaml
+description: Фильтр отчетов АДМ

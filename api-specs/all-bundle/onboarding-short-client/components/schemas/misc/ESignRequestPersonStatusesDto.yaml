@@ -1,0 +1,11 @@
+type: object
+properties:
+  personFio:
+    type: string
+    description: ФИО физического лица
+  statuses:
+    type: array
+    description: Статусы
+    items:
+      $ref: ./ESignRequestStatusDto.yaml
+description: Статусы заявки на ЭП для ФЛ

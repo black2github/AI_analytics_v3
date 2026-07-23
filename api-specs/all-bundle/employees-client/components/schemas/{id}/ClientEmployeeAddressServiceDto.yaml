@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  addressType:
+    type: string
+    description: Тип адреса
+    enum:
+    - LEGAL
+    - POST
+    - ACTUAL
+    - BIRTH_PLACE
+    - TEMPORARY_REG
+  addr:
+    type: string
+    description: Адрес одной строкой
+  street:
+    $ref: ./StreetDto.yaml
+  house:
+    $ref: ./HouseDto.yaml
+  unit:
+    $ref: ./UnitDto.yaml
+  settlement:
+    $ref: ./SettlementDto.yaml
+  area:
+    $ref: ./AreaDto.yaml
+  district:
+    $ref: ./DistrictDto.yaml
+  city:
+    $ref: ./CityDto.yaml
+  region:
+    $ref: ./RegionDto.yaml
+  stateProv:
+    $ref: ./StateProvinceDto.yaml
+  postCode:
+    type: string
+    description: Почтовый индекс
+  country:
+    type: integer
+    description: Страна
+    format: int32
+  startDate:
+    type: string
+    description: Начальная дата действия
+    format: date
+  endDate:
+    type: string
+    description: Конечная дата действия
+    format: date
+description: Адрес сотрудника клиента. Интеграционное ДТО

@@ -1,0 +1,42 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Суррогатный идентификатор счета, присвоенный в сервисе OpenAPI Согласие
+    format: uuid
+  openApiAccountId:
+    type: string
+    description: Идентификатор счета, полученный от БП
+  accountNumber:
+    type: string
+    description: Номер счета
+  status:
+    type: string
+    description: Статус счета
+    enum:
+    - ENABLED
+    - DISABLED
+    - DELETED
+  accountDescription:
+    type: string
+    description: Назначение счета
+  currencyIsoCode:
+    type: string
+    description: ISO код валюты
+  currencyNumericCode:
+    type: string
+    description: Цифровой код валюты
+  currencyName:
+    type: string
+    description: Наименование валюты
+  statusUpdatedAt:
+    type: string
+    description: Дата и время обновления статуса счета
+    format: date-time
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  bankPartner:
+    $ref: ./BankPartnerDto.yaml
+description: Данные о счете

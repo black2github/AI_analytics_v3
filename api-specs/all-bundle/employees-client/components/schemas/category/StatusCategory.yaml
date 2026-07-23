@@ -1,0 +1,22 @@
+required:
+- count
+- desc
+- name
+type: object
+properties:
+  name:
+    type: string
+    description: Категория статуса объединенных заявок сотрудников
+    enum:
+    - ALL
+    - WAITING_FOR_SIGN
+    - IN_PROCESSING
+    - FINISHED
+  desc:
+    type: string
+    description: Описание
+  count:
+    type: integer
+    description: Количество заявок
+    format: int64
+description: Категория статуса

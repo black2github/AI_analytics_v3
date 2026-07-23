@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientInfo:
+    $ref: ../common/ClientInfoDto.yaml
+  accountsAdd:
+    type: array
+    description: Список счетов для добавления
+    items:
+      $ref: ./ChangeAccountsRequestAccountDto.yaml
+  accountsRemove:
+    type: array
+    description: Список счетов для удаления
+    items:
+      $ref: ./ChangeAccountsRequestAccountDto.yaml
+description: Список Клиентов

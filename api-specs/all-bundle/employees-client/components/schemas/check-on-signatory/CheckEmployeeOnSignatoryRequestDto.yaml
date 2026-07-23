@@ -1,0 +1,13 @@
+required:
+- bankClientId
+- eskId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Данные для проверки

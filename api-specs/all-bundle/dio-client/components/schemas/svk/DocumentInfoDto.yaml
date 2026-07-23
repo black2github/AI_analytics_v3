@@ -1,0 +1,7 @@
+type: object
+description: Информация о документе
+oneOf:
+- $ref: ./Svk1DocumentInfoDto.yaml
+- $ref: ./Svk2DocumentInfoDto.yaml
+- $ref: ./CurTransDocumentInfoDto.yaml
+- $ref: ./TadDocumentInfoDto.yaml

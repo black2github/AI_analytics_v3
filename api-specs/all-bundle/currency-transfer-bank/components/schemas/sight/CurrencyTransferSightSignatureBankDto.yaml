@@ -1,0 +1,49 @@
+type: object
+properties:
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signerId:
+    type: string
+    description: Пользователь, подписавший документ
+    format: uuid
+  level:
+    type: string
+    description: Уровень подписи
+    enum:
+    - UNKNOWN
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+    - SIGHTING
+  certificateId:
+    type: string
+    description: UID сертификата
+  docSourceSystem:
+    type: string
+    description: Система подписи документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docSignPage:
+    type: string
+    description: Страница, с которой вызвана подпись документа
+  updatedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  approvalSignatureInfo:
+    $ref: ../common/ApprovalSignatureInfoDto.yaml
+description: Подпись визируемого поручения на перевод валюты, данные для сотрудника банка

@@ -1,0 +1,33 @@
+required:
+- userId
+type: object
+properties:
+  backgroundProcessId:
+    type: string
+    description: Ссылка на сущность Фоновый процесс импорта
+    format: uuid
+  backgroundCompleteAt:
+    type: string
+    description: Дата и время завершения
+    format: date-time
+  launchAt:
+    type: string
+    description: Дата и время запуска
+    format: date-time
+  fileName:
+    type: string
+    description: Имя файла
+  fileId:
+    type: string
+    description: Ссылка на файл в хранилище файлов
+    format: uuid
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  backgroundImportDocuments:
+    type: array
+    description: Документы сеанса импорта
+    items:
+      $ref: ../common/BackgroundImportDocumentLightDto.yaml
+description: Реквизиты импорта

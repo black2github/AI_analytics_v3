@@ -1,0 +1,55 @@
+type: object
+description: Список ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  brandName:
+    type: string
+    description: Название ТСП (имя по вывеске)
+  MCC:
+    type: string
+    description: MCC код
+  countryCode:
+    type: string
+    description: Код страны-регистрации юридического лица
+  countrySubDivisionCode:
+    type: string
+    description: Код региона-регистрации юридического лица
+  city:
+    type: string
+    description: Город
+  zip:
+    type: string
+    description: Индекс
+  address:
+    type: string
+    description: Юридический адрес
+  contactPhoneNumber:
+    type: string
+    description: Контактный номер телефона ТСП
+  capabilities:
+    type: string
+    description: Возможности ТСП по взаимодействию с покупателем
+  regDate:
+    type: string
+    description: Дата регистрации в формате "yyyy-mm-dd hh24:mi:ss"
+  permissions:
+    $ref: ./MerchantTspPermissionsDto.yaml
+    type: object
+    description: Объект разрешений
+  salesMode:
+    type: string
+    description: Способ приема оплаты ТСП
+  url:
+    type: string
+    description: Веб-сайт ТСП
+  inn:
+    type: string
+    description: Государственный идентификатор налогоплательщика ТСП. Для РФ - ИНН
+  status:
+    type: string
+    description: Текущий статус ТСП
+  updatedTimestamp:
+    type: string
+    description: Дата последнего изменения статуса ТСП в формате yyyy-mm-dd hh24:mi:ss

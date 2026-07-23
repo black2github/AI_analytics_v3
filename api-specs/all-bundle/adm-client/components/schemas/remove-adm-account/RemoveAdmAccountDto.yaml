@@ -1,0 +1,48 @@
+required:
+- accountNumber
+- bankBic
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Номер счета получателя
+  bankBic:
+    type: string
+    description: БИК получателя
+  bankCorrAccountNumber:
+    type: string
+    description: Корр. счет получателя
+  bankName:
+    type: string
+    description: БАНК получателя
+  budgetInfo:
+    $ref: ../common/BudgetInfoDto.yaml
+  forAllAdms:
+    type: boolean
+    description: Реквизиты для всех АДМ
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  inn:
+    type: string
+    description: ИНН получателя
+  isBudget:
+    type: boolean
+    description: Признак Бюджетные реквизиты
+  kpp:
+    type: string
+    description: КПП получателя
+  name:
+    type: string
+    description: Наименование получателя
+  ogrn:
+    type: string
+    description: ОГРН получателя
+  removeDate:
+    type: string
+    description: Дата исключения реквизитов
+    format: date
+description: Реквизиты счёта для зачисления (заявка на исключение реквизитов)

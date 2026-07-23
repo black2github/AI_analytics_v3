@@ -1,0 +1,17 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  numericCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyServicesCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  currencyServicesName:
+    $ref: ../common/FilterValueDtoString.yaml
+  search:
+    $ref: ../common/FilterValueDtoString.yaml
+  dateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./FilterValueEnumDtoCurrencyDtoStatus.yaml
+description: Фильтр для справочника валют

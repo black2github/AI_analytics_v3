@@ -1,0 +1,24 @@
+type: object
+properties:
+  fio:
+    type: string
+    description: ФИО
+  country:
+    type: string
+    description: Страна
+  region:
+    type: string
+    description: Субъект
+  locality:
+    type: string
+    description: Населенный пункт
+  orgName:
+    type: string
+    description: Название организации
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+description: Информация используемая при выпуске сертификата

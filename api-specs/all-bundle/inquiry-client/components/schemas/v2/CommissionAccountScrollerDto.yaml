@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Составной уникальный идентификатор счета во внутреннем хранилище {accountNumber}-{accountBranch}
+    example: null
+  branchAbsCode:
+    type: string
+    description: Код подразделения в АБС
+    example: null
+  accountNumber:
+    type: string
+    description: Номер счета
+    example: null
+  name:
+    type: string
+    description: Наименование счета
+    example: null
+  amount:
+    type: number
+    description: Сумма остатка на счете для списания комиссии (без овердрафта)
+    example: null
+  overdraft:
+    type: number
+    description: Лимит овердрафта на счете
+    example: null
+description: Блок данных о счете доступном для списания комиссии
+example: null

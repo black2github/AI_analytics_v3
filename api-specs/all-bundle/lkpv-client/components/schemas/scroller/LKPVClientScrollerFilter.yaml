@@ -1,0 +1,55 @@
+required:
+- clientId
+- source
+- status
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  source:
+    type: string
+    description: Источник данных ЛК_ПВ
+    enum:
+    - ADM
+    - TRADE_ACQUIRING
+    - INTERNET_ACQUIRING
+  status:
+    type: string
+    description: Доступные значения фильтра статуса операции ЛК_ПВ
+    enum:
+    - ALL
+    - EXECUTED
+    - CANCELLED
+  types:
+    type: array
+    description: Типы операции
+    items:
+      type: string
+      description: Типы операции
+  startDate:
+    type: string
+    description: Дата с
+    format: date
+  endDate:
+    type: string
+    description: Дата по
+    format: date
+  minAmount:
+    type: number
+    description: Сумма операции с
+  maxAmount:
+    type: number
+    description: Сумма операции по
+  textQuery:
+    type: string
+    description: Поле поиска
+  acquiringLastOperation:
+    type: string
+    description: Последний отображенный тип операций эквайринга
+  acquiringLastTransactionTime:
+    type: integer
+    description: Последняя отображенная временная точка операции эквайринга
+    format: int64
+description: Фильтр

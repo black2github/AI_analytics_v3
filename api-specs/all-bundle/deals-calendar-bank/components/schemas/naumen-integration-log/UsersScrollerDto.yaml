@@ -1,0 +1,10 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя, uaaUserId
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя
+description: Страница с данными

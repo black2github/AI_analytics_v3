@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  actionType:
+    type: string
+    description: Тип действия со счетом - добавление, удаление
+    enum:
+    - ADD
+    - REMOVE
+  accountNumber:
+    type: string
+    description: Номер счета
+  bic:
+    type: string
+    description: БИК счета
+  currency:
+    type: string
+    description: Валюта счета
+  absF1Id:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  bankDecision:
+    type: string
+    description: Решение банковского сотрудника по счёту
+    enum:
+    - APPROVED
+    - REFUSED
+description: Данные

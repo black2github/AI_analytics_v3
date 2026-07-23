@@ -1,0 +1,17 @@
+type: object
+description: Данные b2b транзакций ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  merchantName:
+    type: string
+    description: Наименование ТСП
+  inn:
+    type: string
+    description: ИНН ЮЛ
+  transactions:
+    type: array
+    items:
+      $ref: ./MerchantTransactionV2Dto.yaml
+    description: Список транзакций

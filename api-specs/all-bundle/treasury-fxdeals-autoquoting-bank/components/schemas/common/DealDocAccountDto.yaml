@@ -1,0 +1,61 @@
+type: object
+properties:
+  businessId:
+    type: string
+    description: Бизнес id
+  accountType:
+    type: string
+    description: Тип счёта
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  accountName:
+    type: string
+    description: Название счёта
+  accountNameExtended:
+    type: string
+    description: Расширенное название счета
+  currency:
+    type: string
+    description: Валюта
+  accountNumber:
+    type: string
+    description: Номер счета
+  kbk:
+    type: string
+    description: КБК владельца счёта
+  bankName:
+    type: string
+    description: Название банка
+  bankCode:
+    type: string
+    description: Код банка
+  bankKS:
+    type: string
+    description: К/C банка
+  corrBankName:
+    type: string
+    description: Название банка корреспондента
+  corrBankCode:
+    type: string
+    description: Код банка корреспондента
+  absId:
+    type: string
+    description: Идентификатор в АБС РКО Ф1
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  defaultUsage:
+    uniqueItems: true
+    type: array
+    description: Назначение счёта по умолчанию
+    items:
+      type: string
+      description: Назначение счёта по умолчанию
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+description: Счет продажи

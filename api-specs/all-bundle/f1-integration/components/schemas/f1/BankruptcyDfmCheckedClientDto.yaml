@@ -1,0 +1,18 @@
+type: object
+properties:
+  rc1:
+    type: integer
+    description: Код ответа по конкретному клиенту
+  error1:
+    type: string
+    description: Описание ошибки по конкретному клиенту
+  clientRegNum:
+    type: integer
+    description: РНК (Регистрационный номер клиента ЕСК)
+  bankrupt:
+    type: integer
+    description: Признак банкротства
+  dfm115FZ:
+    type: integer
+    description: Признак контроля ДФМ по 115 ФЗ
+description: Результат проверки клиента на банкротство и контроль ДФМ

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsAbacBusinessEntityScrollerFilter.yaml
+description: Запрос страницы

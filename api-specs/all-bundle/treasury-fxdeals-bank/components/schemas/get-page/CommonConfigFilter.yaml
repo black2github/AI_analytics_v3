@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  description:
+    $ref: ../common/FilterValueDtoString.yaml
+  valueType:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

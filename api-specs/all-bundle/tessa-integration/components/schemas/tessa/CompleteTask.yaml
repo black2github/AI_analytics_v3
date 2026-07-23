@@ -1,0 +1,18 @@
+type: object
+properties:
+  finishTasks:
+    type: array
+    items:
+      $ref: ./TaskToFinish.yaml
+  cardId:
+    type: string
+    format: uuid
+  storedState:
+    type: integer
+    format: int32
+  state:
+    type: integer
+    format: int32
+  action:
+    type: integer
+    format: int32

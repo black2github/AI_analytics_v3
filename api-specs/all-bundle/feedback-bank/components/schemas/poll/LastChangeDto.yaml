@@ -1,0 +1,23 @@
+type: object
+properties:
+  dateTime:
+    type: string
+    description: Дата и время последнего изменения
+    format: date-time
+  userLastName:
+    type: string
+    description: Фамилия пользователя
+  userFirstName:
+    type: string
+    description: Имя пользователя
+  userMiddleName:
+    type: string
+    description: Отчество пользователя
+  userType:
+    type: string
+    description: Тип пользователя
+  profileUuid:
+    type: string
+    description: UUID профиля пользователя
+    format: uuid
+description: Последнее изменение

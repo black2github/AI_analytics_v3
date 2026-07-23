@@ -1,0 +1,9 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestType:
+    $ref: ../common/FilterValueEnumDtoDocumentTypeDto.yaml
+description: Фильтр для запроса пакетных заявок

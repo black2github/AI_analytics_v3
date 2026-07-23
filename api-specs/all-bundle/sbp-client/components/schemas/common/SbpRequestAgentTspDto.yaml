@@ -1,0 +1,12 @@
+type: object
+description: Агент ТСП, привязанный к заявке
+properties:
+  agentId:
+    type: string
+    description: Идентификатор агента
+  name:
+    type: string
+    description: Наименование агента
+  bic:
+    type: string
+    description: БИК Агента ТСП

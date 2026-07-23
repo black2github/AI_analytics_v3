@@ -1,0 +1,15 @@
+required:
+- bankClient
+- supportServices
+type: object
+properties:
+  bankClient:
+    $ref: ./LkuvedBcRegisterBankClientModifyDto.yaml
+  supportServices:
+    type: integer
+    description: Признак перевода
+    format: int32
+    enum:
+    - 1
+    - 2
+description: ЛК УВЭД. Реестр организаций. Создание.

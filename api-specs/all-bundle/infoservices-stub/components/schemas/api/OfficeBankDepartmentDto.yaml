@@ -1,0 +1,14 @@
+type: object
+properties:
+  code:
+    type: string
+  fullName:
+    type: string
+  marketingName:
+    type: string
+  shortName:
+    type: string
+  type:
+    $ref: ./OfficeBankDepartmentTypeDto.yaml
+  userName:
+    type: string

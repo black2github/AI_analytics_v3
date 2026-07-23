@@ -1,0 +1,38 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории для скроллера
+    enum:
+    - ALL
+  accountId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  orgType:
+    $ref: ./OrgTypeFilterValueDto.yaml
+  docDateRange:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  beginDateRange:
+    $ref: ./FilterValueDtoInstant.yaml
+  currencyCode:
+    $ref: ./FilterValueDtoString.yaml
+  sumInAccountCurrency:
+    $ref: ./FilterValueDtoString.yaml
+  docCurrency:
+    $ref: ./FilterValueDtoString.yaml
+  blockOrgName:
+    $ref: ./FilterValueDtoString.yaml
+  blockType:
+    $ref: ./FilterValueEnumDtoBlockTypeDto.yaml
+  blockNumber:
+    $ref: ./FilterValueDtoString.yaml
+  docBlockType:
+    $ref: ./FilterValueDtoString.yaml
+  docAmountSum:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр скроллера Блокировок. Клиентская часть.

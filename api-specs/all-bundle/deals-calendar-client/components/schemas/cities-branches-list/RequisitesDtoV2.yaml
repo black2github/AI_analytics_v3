@@ -1,0 +1,62 @@
+required:
+- bic
+- correspondentAccount
+- inn
+- kpp
+- location
+- ogrn
+- okpo
+- oktmo
+type: object
+properties:
+  location:
+    maxLength: 512
+    minLength: 0
+    type: string
+    description: Населенный пункт
+  locationType:
+    maxLength: 5
+    minLength: 0
+    type: string
+    description: Тип населенного пункта
+  locationWithoutType:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Населенный пункт без типа
+  bic:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: БИК филиала
+  correspondentAccount:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Корсчет филиала
+  inn:
+    maxLength: 10
+    minLength: 0
+    type: string
+    description: ИНН филиала
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: КПП филиала
+  ogrn:
+    maxLength: 15
+    minLength: 0
+    type: string
+    description: ОГРН филиала
+  okpo:
+    maxLength: 10
+    minLength: 0
+    type: string
+    description: ОКПО филиала
+  oktmo:
+    maxLength: 11
+    minLength: 0
+    type: string
+    description: ОКТМО филиала
+description: Реквизиты подразделения банка

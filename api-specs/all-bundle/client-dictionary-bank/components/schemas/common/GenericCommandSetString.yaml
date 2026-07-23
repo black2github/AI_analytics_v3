@@ -1,0 +1,12 @@
+required:
+- data
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+description: Запрос

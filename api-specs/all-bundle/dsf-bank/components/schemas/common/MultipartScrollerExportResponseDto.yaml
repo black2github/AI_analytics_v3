@@ -1,0 +1,9 @@
+type: object
+description: DTO ответа на запрос на многофайловую выгрузку документов из скроллера
+properties:
+  attachmentAccessData:
+    $ref: ./AttachmentAccessData.yaml
+    description: Информация для скачивания сформированного XLS-файла или ZIP-архива. Если это поле не пустое, значит выгрузка документов завершена (выгружены все данные).
+  state:
+    $ref: ./MultipartScrollerExportStateDto.yaml
+    description: Объект-состояние, который необходимо передать 'как есть' в следующем запросе в случае необходимости продолжения выгрузки

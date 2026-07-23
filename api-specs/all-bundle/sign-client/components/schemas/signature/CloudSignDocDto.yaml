@@ -1,0 +1,18 @@
+required:
+- data
+- id
+- name
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  name:
+    minLength: 1
+    type: string
+    description: Название документа
+  data:
+    type: string
+    description: Подписываемые данные
+description: Документ подписываемый облачной подписью

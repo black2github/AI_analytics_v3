@@ -1,0 +1,30 @@
+required:
+- baseDoc
+- certificate
+- certificateId
+- documentId
+- signature
+- userPosition
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  signature:
+    type: string
+    description: Подпись
+  userPosition:
+    type: string
+    description: Должность пользователя, подписавшего заявку
+  baseDoc:
+    type: string
+    description: Документ, на основании которого пользователь подписал заявку
+description: Команда на подпись заявки

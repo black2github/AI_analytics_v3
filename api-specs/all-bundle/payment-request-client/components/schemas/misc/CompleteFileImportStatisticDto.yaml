@@ -1,0 +1,16 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификатор файла импорта
+    format: uuid
+  total:
+    type: integer
+    description: Общее количество документов
+    format: int64
+  statisticByStatuses:
+    type: array
+    description: Статистика по документам в разрезе статусов
+    items:
+      $ref: ./FileImportStatisticByStatusDto.yaml
+description: DTO статистики по документам файла импорта

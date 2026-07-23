@@ -1,0 +1,32 @@
+type: object
+properties:
+  statusCategory:
+    $ref: ./InquiryRequestBankCategoryDto.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestId:
+    $ref: ./FilterValueDtoUUID.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  inquiryType:
+    $ref: ./InquiryTypeFilter.yaml
+  inquiryTypeCode:
+    $ref: ./InquiryTypeCodeFilter.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  userLogin:
+    $ref: ./FilterValueDtoString.yaml
+  sendInquiryToEmail:
+    $ref: ./FilterValueDtoBoolean.yaml
+  status:
+    $ref: ./InquiryRequestStatusFilter.yaml
+  commissionPaymentResult:
+    $ref: ./CommissionPaymentResultFilter.yaml
+description: Фильтр скроллера заявок на справку. Банковская часть
+example: null

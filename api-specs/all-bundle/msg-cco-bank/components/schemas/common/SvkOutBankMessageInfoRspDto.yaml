@@ -1,0 +1,13 @@
+type: object
+properties:
+  topicId:
+    type: string
+    description: ID темы сообщения
+    format: uuid
+  topic:
+    type: string
+    description: Тема сообщения
+  text:
+    type: string
+    description: Текст сообщения
+description: Сообщение

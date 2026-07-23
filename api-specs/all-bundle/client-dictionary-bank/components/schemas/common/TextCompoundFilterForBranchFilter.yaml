@@ -1,0 +1,15 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Текст
+  filialName:
+    type: boolean
+    description: Признак включения опции поиска Наименование филиала
+  absNumber:
+    type: boolean
+    description: Признак включения опции поиска Код филиала в РКО Ф1
+  filialEskCode:
+    type: boolean
+    description: Признак включения опции поиска Код филиала
+description: Текстовый составной фильтр

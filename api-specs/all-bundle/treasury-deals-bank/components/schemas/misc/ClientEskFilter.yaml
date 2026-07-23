@@ -1,0 +1,15 @@
+type: object
+properties:
+  rnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр

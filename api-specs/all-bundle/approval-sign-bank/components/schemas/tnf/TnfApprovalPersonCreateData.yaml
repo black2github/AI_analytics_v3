@@ -1,0 +1,36 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор визирующего лица
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор UAA пользователя клиента
+    format: uuid
+  clientUserId:
+    type: string
+    description: Клиентский идентификатор пользователя клиента
+    format: uuid
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника клиента
+    format: uuid
+  f1Id:
+    type: integer
+    description: Идентификатор визирующего лица в РКО Ф1
+    format: int64
+  eskId:
+    type: integer
+    description: Идентификатор визирующего лица в ЕСК
+    format: int64
+  status:
+    type: boolean
+    description: Статус полномочия визирования
+  fio:
+    type: string
+    description: ФИО визирующего лица
+  updateRules:
+    type: boolean
+    description: Признак обновления правил обновления привилегий
+description: Модель данных создания новой записи о визирующем лице

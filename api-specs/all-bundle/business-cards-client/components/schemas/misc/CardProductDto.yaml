@@ -1,0 +1,38 @@
+type: object
+properties:
+  accountTypes:
+    uniqueItems: true
+    type: array
+    description: Массив типов счетов, доступных для этого карточного продукта
+    items:
+      type: integer
+      description: Массив типов счетов, доступных для этого карточного продукта
+      format: int32
+  code:
+    type: string
+    description: Код карточного продукта
+    enum:
+    - CORP
+    - UNIVERSAL
+    - AVTOINKASS
+  currencies:
+    uniqueItems: true
+    type: array
+    description: Массив буквенных кодов валют, доступных для данного карточного продукта
+    items:
+      type: string
+      description: Массив буквенных кодов валют, доступных для данного карточного продукта
+  description:
+    type: string
+    description: Описание карточного продукта
+  id:
+    type: string
+    description: Уникальный идентификатор карточного продукта
+    format: uuid
+  limit:
+    type: string
+    description: Тип лимита для карточного продукта
+  name:
+    type: string
+    description: Наименование карточного продукта
+description: Карточный продукт с ограничениями для карточных продуктов

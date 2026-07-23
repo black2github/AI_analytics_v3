@@ -1,0 +1,11 @@
+required:
+- certInfo
+type: object
+properties:
+  certInfo:
+    uniqueItems: true
+    type: array
+    description: Информация о сертификатах
+    items:
+      $ref: ./CertWithoutOriginalStatementInfoDto.yaml
+description: Запрос на создание файла с сертификатами без оригинала цепочки

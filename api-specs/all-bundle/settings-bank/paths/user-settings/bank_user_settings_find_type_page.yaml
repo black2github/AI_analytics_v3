@@ -1,0 +1,24 @@
+get:
+  tags:
+  - АПИ Банка для управления пользовательскими настройками
+  summary: Найти настройку по параметрам
+  description: 'Привилегии: SETTINGS.BANK.USER_SETTINGS_FIND'
+  operationId: getByType
+  parameters:
+  - name: type
+    in: path
+    required: true
+    schema:
+      type: string
+  - name: page
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml

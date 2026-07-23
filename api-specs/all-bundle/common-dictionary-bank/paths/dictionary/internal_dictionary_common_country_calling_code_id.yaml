@@ -1,0 +1,95 @@
+get:
+  tags:
+  - API справочника "Телефонные коды стран"
+  summary: Получить запись по ID
+  description: 'Привилегии: COUNTRY_CALLING_CODE_GET_BY_ID'
+  operationId: getByIdUsingGET_2
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,CountryCallingCodeDto»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - API справочника "Телефонные коды стран"
+  summary: Обновить запись в справочнике
+  description: 'Привилегии: COUNTRY_CALLING_CODE_UPDATE'
+  operationId: updateUsingPUT_2
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: data
+    description: data
+    required: true
+    schema:
+      $ref: '#/definitions/CountryCallingCodeDataDto'
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,CountryCallingCodeDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+delete:
+  tags:
+  - API справочника "Телефонные коды стран"
+  summary: Удалить запись
+  description: 'Привилегии: COUNTRY_CALLING_CODE_DELETE'
+  operationId: deleteUsingDELETE_2
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+  security:
+  - Bearer: []
+  deprecated: false

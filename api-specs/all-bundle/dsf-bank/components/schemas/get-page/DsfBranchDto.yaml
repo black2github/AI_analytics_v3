@@ -1,0 +1,44 @@
+type: object
+description: ДТО подразделения
+properties:
+  absCode:
+    type: string
+    description: АБС Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  branchType:
+    type: string
+    description: Тип записи
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  filialName:
+    type: string
+    description: Название филиала
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  name:
+    type: string
+    description: Наименование подразделения
+  number:
+    type: string
+    description: Номер подразделения
+  parentBranch:
+    type: string
+    format: uuid
+    description: Идентификатор филиала
+  requisites:
+    $ref: ./DsfRequisitesDto.yaml
+    description: Реквизиты
+  stateType:
+    type: string
+    description: Идентификатор статуса подразделения
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED

@@ -1,0 +1,18 @@
+type: object
+properties:
+  branch:
+    type: string
+    description: Офис обслуживания
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+  name:
+    type: string
+    description: Наименование
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+description: Информация об организации

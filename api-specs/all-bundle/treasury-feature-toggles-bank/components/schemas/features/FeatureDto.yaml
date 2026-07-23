@@ -1,0 +1,26 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Имя
+  description:
+    type: string
+    description: Описание
+  group:
+    type: string
+    description: Группа
+  active:
+    type: boolean
+    description: Активность (после применения стратегии активации)
+  enabled:
+    type: boolean
+    description: Функция включена (без учета стратегии активации)
+  activationStrategy:
+    $ref: ../common/ActivationStrategyDto.yaml
+  activationStrategyParams:
+    type: object
+    additionalProperties:
+      type: string
+      description: Параметры стратегии управления
+    description: Параметры стратегии управления
+description: Функция

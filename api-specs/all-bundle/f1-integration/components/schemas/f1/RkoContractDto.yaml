@@ -1,0 +1,17 @@
+required:
+- contractDate
+- contractId
+- contractNumber
+type: object
+properties:
+  contractNumber:
+    type: string
+    description: Номер договора РКО
+  contractDate:
+    type: string
+    description: Дата заключения договора РКО
+    format: date
+  contractId:
+    type: string
+    description: ID договора РКО
+description: Данные контракта РКО

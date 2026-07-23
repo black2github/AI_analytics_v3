@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор
+    format: uuid
+  docType:
+    type: string
+    description: Тип документа
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NEW
+    - CANCELED_WITH_REMARKS
+    - CANCELED_HASH_COINCIDENCE
+    - ESK_ERROR
+    - SENT_ERROR
+    - SENT
+    - EXPORTED
+    - ASCR_ERROR
+    - ASCR_RECEIVED
+    - EXECUTED
+    - REJECTED
+    - SENT_TO_ESK
+    - ESK_ACCEPTED
+    - SENT_OR_SENT_ERROR
+    - SENT_TO_ESK_OR_SENT_ERROR
+  statusCategory:
+    $ref: ../common/StatusCategoryFilter.yaml
+  bankClientExternalGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  organizationName:
+    type: string
+    description: Наименование организации
+  statusErrorCode:
+    type: string
+    description: Код причины отказа
+  statusErrorMessage:
+    type: string
+    description: Сообщение ошибки
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  hasRequestJson:
+    type: boolean
+    description: Признак наличия JSON с данными запроса Журнала формирования данных для регистрации/обновления сведений СЦР
+  hasRemarks:
+    type: boolean
+    description: Признак наличия замечаний в журнале формирования данных для регистрации/обновления сведений СЦР
+description: DTO заявки для скроллера журнала сообщений сервиса ЦР

@@ -1,0 +1,47 @@
+get:
+  tags:
+  - АПИ для работы с заглушкой СПАРК
+  summary: Получить список ответов СПАРК
+  operationId: getResponsesUsingGET_1
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ListResponse«ДТО ответа заглушки СПАРК»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+post:
+  tags:
+  - АПИ для работы с заглушкой СПАРК
+  summary: Создать ответ СПАРК
+  operationId: createUsingPOST_9
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: data
+    description: data
+    required: true
+    schema:
+      $ref: '#/definitions/ДТО ответа заглушки СПАРК'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«ДТО ответа заглушки СПАРК»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

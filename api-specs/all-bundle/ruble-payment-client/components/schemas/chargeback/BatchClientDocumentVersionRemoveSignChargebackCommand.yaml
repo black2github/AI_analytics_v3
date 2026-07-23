@@ -1,0 +1,13 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Перечень данных для массового снятия подписи
+    items:
+      $ref: ../common/SimpleDocumentVersionOperationCommand.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда для массового снятия подписи платёжных документов с учётом их версии

@@ -1,0 +1,44 @@
+required:
+- bankBic
+- bankCorrespondentAccountNumber
+- bankLocalityName
+- bankLocalityType
+- bankName
+- innKio
+- payerAddress
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет списания (Счет контрагента)
+    nullable: true
+  name:
+    maxLength: 160
+    type: string
+    description: Плательщик (Наименование контрагента)
+    nullable: true
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН плательщика (ИНН/КИО контрагента)
+  bankName:
+    type: string
+    description: Наименование Банка контрагента
+  bankBic:
+    type: string
+    description: БИК банка контрагента
+  bankCorrespondentAccountNumber:
+    type: string
+    description: Корсчет банка контрагента
+  payerAddress:
+    type: string
+    description: Адрес контрагента
+  bankLocalityName:
+    type: string
+    description: Название населенного пункта банка
+  bankLocalityType:
+    type: string
+    description: Название типа населенного пункта
+description: Реквизиты контрагента (плательщика) (форма просмотра сотрудника банка платежное требование исходящее)
+nullable: true

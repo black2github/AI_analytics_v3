@@ -1,0 +1,7 @@
+type: object
+properties:
+  file:
+    $ref: ./FNSArchiveFileDataRspDto.yaml
+  fileSign:
+    $ref: ./FNSArchiveFileDataRspDto.yaml
+description: Данные загруженных из архива документов

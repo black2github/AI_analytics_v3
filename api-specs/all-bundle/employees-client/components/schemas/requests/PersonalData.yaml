@@ -1,0 +1,27 @@
+type: object
+properties:
+  firstName:
+    maxLength: 50
+    pattern: ^(?!.*(\-\-|\-\s|\s-))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Имя
+  lastName:
+    maxLength: 50
+    pattern: ^(?!.*(\-\-|\-\s|\s\-))([A-Za-z'\-\s]*[A-Za-z\s])$|^(?!.*(\-\-|\-\s|\s\-))([ЁА-яё'\-\s]*[ЁА-яё\s])$|^$
+    type: string
+    description: Фамилия
+  middleName:
+    maxLength: 50
+    pattern: ^(?!.*(\-\-|\-\s|\s-))([A-Za-z'\-\s\.]*[A-Za-z\s\.])$|^(?!.*(\-\-|\-\s|\s-))([ЁА-яё'\-\s\.]*[ЁА-яё\s\.])$|^$
+    type: string
+    description: Отчество
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  birthPlace:
+    type: string
+    description: Место рождения
+  identityDoc:
+    $ref: ./IdentityDocument.yaml
+description: Личные данные

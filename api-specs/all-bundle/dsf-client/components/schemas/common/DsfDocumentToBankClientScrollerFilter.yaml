@@ -1,0 +1,35 @@
+type: object
+properties:
+  bankClientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  category:
+    type: string
+    description: Категории для скроллера ДСФ в Банк на стороне клиента
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_PROCESSING
+    - FINISHED
+  clientUuid:
+    $ref: ./FilterValueDtoString.yaml
+  crmProductType:
+    $ref: ./DsfTypeProductTypeFilter.yaml
+  date:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dialogId:
+    $ref: ./FilterValueDtoString.yaml
+  externalSystem:
+    $ref: ./DsfExternalSystemFilter.yaml
+  filialName:
+    $ref: ./FilterValueDtoString.yaml
+  letterType:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueDtoString.yaml
+  subject:
+    $ref: ./FilterValueDtoString.yaml
+  typeCode:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр скроллера. Клиентская часть.

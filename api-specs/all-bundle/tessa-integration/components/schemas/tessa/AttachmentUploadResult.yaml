@@ -1,0 +1,10 @@
+type: object
+properties:
+  uploaded:
+    type: boolean
+  tessaFileId:
+    type: string
+    format: uuid
+  fileStorageId:
+    type: string
+    format: uuid

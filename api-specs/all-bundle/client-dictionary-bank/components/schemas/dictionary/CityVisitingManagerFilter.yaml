@@ -1,0 +1,15 @@
+type: object
+properties:
+  citiesNames:
+    $ref: ../common/FilterValueDtoString.yaml
+  cityFiasId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  marketingCampaignType:
+    $ref: ./FilterValueEnumDtoMarketingCampaignClassifierDto.yaml
+  isAvailableInDocPack:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isRetailDelivery:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isStandardDelivery:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр

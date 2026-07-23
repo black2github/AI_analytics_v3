@@ -1,0 +1,23 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  innKio:
+    type: string
+    description: ИНН/КИО плательщика
+  kpp:
+    type: string
+    description: КПП плательщика
+  accountNumber:
+    type: string
+    description: Счет плательщика
+  thirdPartyPayment:
+    type: boolean
+    description: Признак "Платеж за третье лицо"
+  numberCcf:
+    maxLength: 40
+    pattern: ^[A-Za-z0-9]*$
+    type: string
+    description: Номер ЦЦФ
+description: Реквизиты плательщика в шаблоне платежного поручения, заполняемые при создании

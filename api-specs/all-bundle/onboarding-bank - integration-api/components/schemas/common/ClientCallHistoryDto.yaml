@@ -1,0 +1,114 @@
+type: object
+properties:
+  callDateTime:
+    type: string
+    description: Дата и время звонка
+    format: date-time
+  callResult:
+    type: string
+    description: Результат звонка
+    enum:
+    - POSTPONED
+    - CALL_MISSED
+    - CALL_UNAVAILABLE
+    - REFUSED
+    - PROMISED_TO_DO
+    - ACCOUNT_OPENED
+    - PARTNER_REQUEST
+    - ACCOUNT_REJECTED
+    - CLIENT_HAS_NOT_DECIDED
+    - TRANSFERRED_TO_CM
+    - PETITION_SENT_TO_LD
+    - OTHER
+  nextCallDateTime:
+    type: string
+    description: Дата и время следующего звонка
+    format: date-time
+  onboardingRequestId:
+    type: string
+    description: Ссылка на "Заявка на открытие первого счета"
+    format: uuid
+  operationistComment:
+    type: string
+    description: Комментарий операциониста
+  problem:
+    type: string
+    description: Причины затруднений клиента
+    enum:
+    - COLLECTING_DOCUMENTS
+    - DATA_TO_FILL_UNAVAILABLE
+    - TOO_MUCH_DATA_TO_FILL
+    - CANT_DO_WHAT_IS_REQUIRED_BY_BANK
+    - HAS_NO_IDEA_OF_WHAT_IS_REQUIRED_BY_BANK
+    - OBSTACLES_IN_USAGE
+    - OPENED_ACCOUNT_AT_OTHER_BANK
+    - NO_TIME_TO_FILL_A_REQUEST
+    - NOT_SATISFIED_WITH_BANKS_RATES
+    - CANNOT_PROVIDE_INFORMATION_REQUESTED_BY_BANK
+  status:
+    type: string
+    description: Статус заявки на открытие первого счета
+    enum:
+    - NONE
+    - PREDRAFT
+    - CREATED
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - FORMED
+    - DELETED
+    - DATA_ERROR
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - WAITING_FOR_ESK_DECISION
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - EDITING
+    - EDITING_DRAFT
+    - EDITING_REPLACING_DOCS
+    - EDITING_COMPLETED
+    - EDITING_DOCS_LOAD
+    - DELIVERED
+    - RECEIVED
+    - PROCESSING_TESSA_COMMENTS
+    - DETAILS_ERROR
+    - WAITING_RESTRICTION
+    - TECH_REQ
+    - ARCHIVING
+    - ARCHIVED
+    - RECALL_IN_ESK
+    - RECALLED_IN_ESK
+    - RECALL_IN_ESK_ERROR
+    - RECALL_IN_TESSA
+    - RECALLED_IN_TESSA
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED
+    - RECALL_IN_TESSA_ERROR
+    - SIGN_VALID
+    - SIGN_NOT_VALID
+    - NEED_RESIGN
+    - SIGN_CANCELLED
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+    - RECALL_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+    - RECALLED_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_ERROR_REFUSING
+  userInfo:
+    $ref: ./UserInfoDto.yaml
+description: История звонков клиенту по заявке на открытие первого счета

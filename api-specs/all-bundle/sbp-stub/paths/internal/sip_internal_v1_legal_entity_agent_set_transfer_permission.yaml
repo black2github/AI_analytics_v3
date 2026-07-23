@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос на подключение/отключение агентов ТСП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/AgentSetTransferPermissionRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/AgentSetTransferPermissionResponseDto.yaml
+    '400':
+      description: Bad Request

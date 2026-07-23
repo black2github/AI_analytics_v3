@@ -1,0 +1,9 @@
+type: object
+properties:
+  currencyCode:
+    type: string
+    description: Код валюты суммы
+  currencyName:
+    type: string
+    description: Название валюты
+description: Валюта

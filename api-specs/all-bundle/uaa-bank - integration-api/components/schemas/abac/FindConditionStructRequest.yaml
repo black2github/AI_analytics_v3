@@ -1,0 +1,24 @@
+required:
+- holder
+- name
+- userId
+- userType
+type: object
+properties:
+  holder:
+    type: string
+    description: Наименование микросервиса-владельца
+  name:
+    type: string
+    description: Наименование бизнес-сущности
+  userType:
+    type: string
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userId:
+    type: string
+    description: Идентификатор пользователя, для которого создана ABAC сущность
+    format: uuid
+description: Запрос поиска выражения из ABAC сущности

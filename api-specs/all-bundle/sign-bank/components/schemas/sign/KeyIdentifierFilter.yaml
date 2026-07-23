@@ -1,0 +1,19 @@
+type: object
+properties:
+  alias:
+    $ref: ../common/FilterValueDtoString.yaml
+  externalKeyId:
+    $ref: ../common/FilterValueDtoString.yaml
+  caId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  caName:
+    $ref: ../common/FilterValueDtoString.yaml
+  caTrusted:
+    $ref: ./FilterValueDtoBoolean.yaml
+  caAccredited:
+    $ref: ./FilterValueDtoBoolean.yaml
+  caStatus:
+    $ref: ./FilterValueEnumDtoActionStatusDto.yaml
+  keyId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для ключей УЦ.

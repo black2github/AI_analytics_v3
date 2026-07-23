@@ -1,0 +1,10 @@
+type: object
+properties:
+  onboardingRequestIds:
+    type: array
+    description: Идентификаторы связанных заявок на открытие первого счёта
+    items:
+      type: string
+      description: Идентификаторы связанных заявок на открытие первого счёта
+      format: uuid
+description: Запрос на поиск связанных заявок на выезд менеджера, доступных для отмены подписания ПФ

@@ -1,0 +1,26 @@
+required:
+- accessibleDocuments
+- accountBlocking
+- accountInfo
+- user
+type: object
+properties:
+  user:
+    $ref: ./UserInfoDto.yaml
+  accountInfo:
+    $ref: ./AccountInfoDto.yaml
+  accountBlocking:
+    $ref: ./AccountBlockingDto.yaml
+  signatoryInfo:
+    $ref: ./AccountSignatoryInfoDto.yaml
+  isAccountAccessible:
+    type: boolean
+    writeOnly: true
+  accessibleDocuments:
+    type: array
+    description: Массив доступов к счету
+    items:
+      $ref: ./UserAccountAccessInfo.yaml
+  accountAccessible:
+    type: boolean
+description: Дто счета пользователя для скроллера админки.

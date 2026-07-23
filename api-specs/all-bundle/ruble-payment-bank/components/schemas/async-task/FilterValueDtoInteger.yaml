@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: integer
+    format: int32
+  notEq:
+    type: integer
+    format: int32
+  in:
+    type: array
+    items:
+      type: integer
+      format: int32
+  notIn:
+    type: array
+    items:
+      type: integer
+      format: int32
+  isNull:
+    type: boolean
+  gt:
+    type: integer
+    format: int32
+  ge:
+    type: integer
+    format: int32
+  lt:
+    type: integer
+    format: int32
+  le:
+    type: integer
+    format: int32
+description: Фильтр по году создания документа. Равенство

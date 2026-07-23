@@ -1,0 +1,14 @@
+required:
+- id
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Id документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия документа
+    format: int32
+description: Запрос на получение реестра подписи

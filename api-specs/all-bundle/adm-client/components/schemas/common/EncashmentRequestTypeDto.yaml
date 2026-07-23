@@ -1,0 +1,5 @@
+type: string
+description: Вид заявки
+enum:
+- ENCASHMENT_AGREEMENT
+- ENCASHMENT_ADDITIONAL_AGREEMENT

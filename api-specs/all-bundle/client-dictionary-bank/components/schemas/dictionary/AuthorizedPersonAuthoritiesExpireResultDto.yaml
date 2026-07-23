@@ -1,0 +1,7 @@
+type: object
+properties:
+  authorizedPerson:
+    $ref: ../common/BankClientAuthorizedPersonDto.yaml
+  expiredAuthority:
+    $ref: ../common/AuthorizedPersonAuthorityDto.yaml
+description: Результат завершения действия полномочий на продукт УЛ Клиента Банка

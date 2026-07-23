@@ -1,0 +1,14 @@
+type: object
+properties:
+  importId:
+    type: string
+    description: Идентификатор импорта
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  completeAt:
+    type: string
+    description: Дата импорта
+    format: date-time
+description: Подсказки для фильтра сеансы импорта

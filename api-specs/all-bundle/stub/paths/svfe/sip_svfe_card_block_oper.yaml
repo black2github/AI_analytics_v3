@@ -1,0 +1,100 @@
+post:
+  tags:
+  - СИП. Сервис SVFE
+  summary: Сервис блокирования карты ПЦ SVFE
+  operationId: blockCardUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.data.acceptedTime
+    in: query
+    description: Момент времени, в который волеизъявление было принято к исполнению
+    required: false
+    type: string
+  - name: body.data.guid
+    in: query
+    description: Идентификатор клиента ЕСФЛ
+    required: false
+    type: string
+  - name: body.data.orderId
+    in: query
+    description: Идентификатор волеизъявления
+    required: false
+    type: string
+  - name: body.data.scenario.code
+    in: query
+    description: Код сценария
+    required: false
+    type: string
+  - name: body.data.scenario.systemExecute
+    in: query
+    description: 'Код системы из справочника '
+    required: false
+    type: string
+  - name: body.data.svfe.stateReason
+    in: query
+    description: Комментарий при смене статуса для ПЦ
+    required: false
+    type: string
+  - name: body.data.svfe.svsStateCode
+    in: query
+    description: Статус карты в Процессинге
+    required: false
+    type: string
+  - name: body.data.svfe.type
+    in: query
+    description: Тип операции
+    required: false
+    type: string
+  - name: body.data.svfe.virtualNum
+    in: query
+    description: Виртуальный номер карты
+    required: false
+    type: string
+  - name: body.meta.channel
+    in: query
+    description: Код канала, из которого осуществляется запрос
+    required: true
+    type: string
+  - name: body.meta.systemId
+    in: query
+    description: Код системы источника данных, из которой осуществляется запрос
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SipSvfeCardBlockingResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

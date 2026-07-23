@@ -1,0 +1,20 @@
+type: object
+properties:
+  dbsNumber:
+    type: string
+    description: Номер ДБС
+  dbsDate:
+    type: string
+    description: Дата ДБС
+    format: date
+  dsNumber:
+    type: string
+    description: Номер ДС
+  dsDate:
+    type: string
+    description: Дата ДС
+    format: date
+  agreementId:
+    type: string
+    description: Идентфикатор ДС в РКО Ф1
+description: Реквизиты доп. соглашения к Договору банковского счета

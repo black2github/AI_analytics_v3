@@ -1,0 +1,58 @@
+info:
+  version: 1.54.0
+  title: Сервис услуг РКО. Банковская часть.
+tags:
+- name: API локализации
+  description: I 18n Controller
+- name: open-api-web-mvc-resource
+  description: Open Api Web Mvc Resource
+- name: swagger-config-resource
+  description: Swagger Config Resource
+- name: swagger-welcome-web-mvc
+  description: Swagger Welcome Web Mvc
+- name: Распоряжение на периодический перевод денежных средств. Базовые операции.
+  description: Periodic Transfer Order Bank Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции печати и экспорта.
+  description: Periodic Transfer Order Bank Print Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции подписи.
+  description: Periodic Transfer Order Bank Sign Controller
+- name: Распоряжение на периодический перевод денежных средств. Операции скроллера.
+  description: Periodic Transfer Order Bank Scroller Controller
+- name: Распоряжение на периодический перевод денежных средств. Процессинг документа.
+  description: Periodic Transfer Order Bank Processing Controller
+paths:
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /periodic-money-transfer/category:
+    $ref: ./paths/category/periodic_money_transfer_category.yaml
+  /periodic-money-transfer/execute/{id}:
+    $ref: ./paths/execute/periodic_money_transfer_execute_id.yaml
+  /periodic-money-transfer/executed-by-tessa/{id}:
+    $ref: ./paths/executed-by-tessa/periodic_money_transfer_executed_by_tessa_id.yaml
+  /periodic-money-transfer/export-list:
+    $ref: ./paths/export-list/periodic_money_transfer_export_list.yaml
+  /periodic-money-transfer/export-sign:
+    $ref: ./paths/export-sign/periodic_money_transfer_export_sign.yaml
+  /periodic-money-transfer/generate-digest/version:
+    $ref: ./paths/generate-digest/periodic_money_transfer_generate_digest_version.yaml
+  /periodic-money-transfer/get-page:
+    $ref: ./paths/get-page/periodic_money_transfer_get_page.yaml
+  /periodic-money-transfer/history/{id}:
+    $ref: ./paths/history/periodic_money_transfer_history_id.yaml
+  /periodic-money-transfer/print:
+    $ref: ./paths/print/periodic_money_transfer_print.yaml
+  /periodic-money-transfer/reject/{id}:
+    $ref: ./paths/reject/periodic_money_transfer_reject_id.yaml
+  /periodic-money-transfer/repeat-export-to-abs:
+    $ref: ./paths/repeat-export-to-abs/periodic_money_transfer_repeat_export_to_abs.yaml
+  /periodic-money-transfer/{id}:
+    $ref: ./paths/{id}/periodic_money_transfer_id.yaml
+  /swagger-ui.html:
+    $ref: ./paths/swagger-ui.html/swagger_ui_html.yaml
+  /v3/api-docs:
+    $ref: ./paths/api-docs/v3_api_docs.yaml
+  /v3/api-docs.yaml:
+    $ref: ./paths/api-docs.yaml/v3_api_docs_yaml.yaml
+  /v3/api-docs/swagger-config:
+    $ref: ./paths/api-docs/v3_api_docs_swagger_config.yaml
+components: {}

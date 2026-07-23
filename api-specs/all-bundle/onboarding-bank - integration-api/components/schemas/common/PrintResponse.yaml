@@ -1,0 +1,10 @@
+type: object
+properties:
+  content:
+    type: string
+    description: Содержимое файла
+    format: byte
+  fileName:
+    type: string
+    description: Наименование файла
+description: Ответ печати

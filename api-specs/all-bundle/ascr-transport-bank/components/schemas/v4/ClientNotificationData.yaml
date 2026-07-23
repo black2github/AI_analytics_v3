@@ -1,0 +1,22 @@
+type: object
+description: Данные из ЭС, преобразованные в формате JSON
+properties:
+  messageHeader:
+    $ref: ./MessageHeader.yaml
+    description: Заголовок ЭС
+  transferB2CRefundBusiness:
+    $ref: ./TransferB2CRefundBusiness.yaml
+    description: Данные из ЭС cbdc.777.001.04.B2CRefundBusinessNotification_2024.03 "Извещение Клиента - плательщика об исполнении возврата ЦР (B2C)"
+  transferB2CRefundAuthBusiness:
+    $ref: ./TransferB2CRefundAuthBusiness.yaml
+    description: Данные из ЭС cbdc.777.001.04.B2CRefundAuthBusinessNotification_2026.01 "Извещение Клиента-ЮЛ об исполнении возврата ЦР (B2C с согласием)"
+  opTransferToDcaSender:
+    $ref: ./OpTransferToDcaSender.yaml
+    description: Данные из ЭС cbdc.777.001.04.OpTransferToDCASenderNotification_2024.03 "Извещение Клиента - отправителя о переводе ЦР Оператором"
+  opTransferToBankSender:
+    $ref: ./OpTransferToBankSender.yaml
+    description: 'Данные из ЭС cbdc.777.001.04.OpTransferToBankSenderNotification_2024.03 "Извещение Клиента - отправителя о переводе ЦР Оператором"
+
+      '
+required:
+- messageHeader

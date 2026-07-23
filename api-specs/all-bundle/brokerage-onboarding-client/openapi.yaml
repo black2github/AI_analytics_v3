@@ -1,0 +1,116 @@
+openapi: 3.0.1
+info:
+  title: БРК. Onboarding. Клиентская часть.
+  version: 3.0.0
+servers:
+- url: /brokerage-onboarding-client
+security:
+- bearer-key: []
+paths:
+  /request-service/sign:
+    $ref: ./paths/sign/request_service_sign.yaml
+  /request-service/send:
+    $ref: ./paths/send/request_service_send.yaml
+  /request-service/get-page:
+    $ref: ./paths/get-page/request_service_get_page.yaml
+  /request-service/generate-sign-data:
+    $ref: ./paths/generate-sign-data/request_service_generate_sign_data.yaml
+  /request-service/create:
+    $ref: ./paths/create/request_service_create.yaml
+  /request-service/{requestId}:
+    $ref: ./paths/{requestId}/request_service_requestId.yaml
+  /request-service/get-status:
+    $ref: ./paths/get-status/request_service_get_status.yaml
+  /file-storage/{attachmentId}/access-token:
+    $ref: ./paths/{attachmentId}/file_storage_attachmentId_access_token.yaml
+components:
+  schemas:
+    BrkSignCommandDto:
+      $ref: ./components/schemas/sign/BrkSignCommandDto.yaml
+    GenericCommandBrkSignCommandDto:
+      $ref: ./components/schemas/sign/GenericCommandBrkSignCommandDto.yaml
+    UserDeviceInfoDto:
+      $ref: ./components/schemas/sign/UserDeviceInfoDto.yaml
+    BrkFileStorageDataDto:
+      $ref: ./components/schemas/common/BrkFileStorageDataDto.yaml
+    BrkOnbFloorViewDto:
+      $ref: ./components/schemas/common/BrkOnbFloorViewDto.yaml
+    BrkOnbRequestViewDto:
+      $ref: ./components/schemas/common/BrkOnbRequestViewDto.yaml
+    BrkOnbSignatureDto:
+      $ref: ./components/schemas/common/BrkOnbSignatureDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GenericResponseSimpleErrorDataBrkOnbRequestViewDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBrkOnbRequestViewDto.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    BrkOnbClientRequestRequestFilterDto:
+      $ref: ./components/schemas/get-page/BrkOnbClientRequestRequestFilterDto.yaml
+    FilterValueDtoBrkOnbClientRequestRequestStatusDto:
+      $ref: ./components/schemas/get-page/FilterValueDtoBrkOnbClientRequestRequestStatusDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/get-page/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/get-page/FilterValueDtoUUID.yaml
+    GetPageCommandBrkOnbClientRequestRequestFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandBrkOnbClientRequestRequestFilterDto.yaml
+    PageParamsBrkOnbClientRequestRequestFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsBrkOnbClientRequestRequestFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    BrkOnbRequestItemDto:
+      $ref: ./components/schemas/get-page/BrkOnbRequestItemDto.yaml
+    PageDataBrkOnbRequestItemDto:
+      $ref: ./components/schemas/get-page/PageDataBrkOnbRequestItemDto.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignV2x1Dto.yaml
+    BrkOnbRequestReqDto:
+      $ref: ./components/schemas/create/BrkOnbRequestReqDto.yaml
+    GenericCommandBrkOnbRequestReqDto:
+      $ref: ./components/schemas/create/GenericCommandBrkOnbRequestReqDto.yaml
+    BrkOnbRequestRespDto:
+      $ref: ./components/schemas/create/BrkOnbRequestRespDto.yaml
+    GenericResponseSimpleErrorDataBrkOnbRequestRespDto:
+      $ref: ./components/schemas/create/GenericResponseSimpleErrorDataBrkOnbRequestRespDto.yaml
+    BrkOnbClientStatusDto:
+      $ref: ./components/schemas/get-status/BrkOnbClientStatusDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataListBrkOnbClientStatusDto:
+      $ref: ./components/schemas/get-status/GenericResponseErrorDataListBrkOnbClientStatusDto.yaml
+    FileAccessTokenResponseDto:
+      $ref: ./components/schemas/{attachmentId}/FileAccessTokenResponseDto.yaml
+    GenericResponseErrorDataFileAccessTokenResponseDto:
+      $ref: ./components/schemas/{attachmentId}/GenericResponseErrorDataFileAccessTokenResponseDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

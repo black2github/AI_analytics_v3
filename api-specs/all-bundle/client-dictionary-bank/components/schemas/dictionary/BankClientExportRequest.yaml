@@ -1,0 +1,14 @@
+required:
+- filter
+- includeFields
+type: object
+properties:
+  filter:
+    $ref: ../common/BankClientFilter.yaml
+  includeFields:
+    type: array
+    description: Список возвращаемых полей
+    items:
+      type: string
+      description: Список возвращаемых полей
+description: Запрос экспорта клиентов банка

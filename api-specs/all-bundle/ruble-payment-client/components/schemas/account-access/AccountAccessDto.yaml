@@ -1,0 +1,24 @@
+required:
+- accountBlocked
+- accountId
+- actions
+- bankClientId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  accountBlocked:
+    type: boolean
+    description: Признак блокировки счета ДФМ
+  actions:
+    type: array
+    description: Список доступных действий над документом с данным счетом
+    items:
+      $ref: ./DocumentActionDto.yaml
+description: Доступные счета

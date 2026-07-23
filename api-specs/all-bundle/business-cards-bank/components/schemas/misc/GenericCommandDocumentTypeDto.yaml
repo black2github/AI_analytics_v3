@@ -1,0 +1,10 @@
+type: object
+properties:
+  data:
+    type: string
+    description: Данные
+    enum:
+    - BC_BLOCK_REQUEST
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+description: Запрос

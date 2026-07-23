@@ -1,0 +1,13 @@
+type: object
+properties:
+  sum:
+    type: number
+    description: Сумма
+  count:
+    type: integer
+    description: Количество документов
+    format: int64
+  currencyCode:
+    type: string
+    description: Код валюты
+description: Агрегированная статистика платежных документов сумма в разрезе валюты

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API объединенного списка сотрудников
+  summary: Получить список сотрудников для экспорта
+  description: 'Привилегии: ODS_EMPLOYEE_UNITED_VIEW'
+  operationId: findEmployeesForExportUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: pageable
+    description: pageable
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«EmployeeUnitedScrollerFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,PageData«EmployeeUnitedExportDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

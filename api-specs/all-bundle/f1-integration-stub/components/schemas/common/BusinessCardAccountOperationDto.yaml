@@ -1,0 +1,47 @@
+type: object
+required:
+- accountNumber
+description: Данные об операции по счету корпоративной карты
+properties:
+  id:
+    type: integer
+    description: Первичный ключ
+  accountNumber:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счета
+  operationDate:
+    type: string
+    format: date-time
+    examples:
+    - '2022-03-10T12:15:50'
+    description: Дата и время совершения операции
+  purpose:
+    type: string
+    maxLength: 255
+    description: Назначение платежа
+  debet:
+    type: number
+    description: Сумма по дебету
+  credit:
+    type: number
+    description: Сумма по кредиту
+  clientCode:
+    type: integer
+    description: Код клиента (РНК)
+  clientName:
+    type: string
+    maxLength: 255
+    description: Наименование организации
+  accountId:
+    type: integer
+    description: ID счета
+  filialService:
+    type: string
+    maxLength: 3
+    description: Филиал (код)
+  podr:
+    type: string
+    maxLength: 11
+    description: Подразделение (Код)

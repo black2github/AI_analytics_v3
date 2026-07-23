@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  bankClient:
+    $ref: ./BankClientShortInfoDto.yaml
+  lastName:
+    type: string
+    description: Фамилия УЛ.
+  firstName:
+    type: string
+    description: Имя УЛ.
+  patronymic:
+    type: string
+    description: Отчество УЛ.
+  email:
+    type: string
+    description: Адрес электронной почты УЛ.
+description: УЛ Клиента Банка. Облегченная ДТО

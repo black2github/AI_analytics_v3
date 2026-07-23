@@ -1,0 +1,24 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  keyId:
+    type: string
+    description: Идентификатор ключа УЦ
+    format: uuid
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  dateRevoked:
+    type: string
+    description: Дата и время отзыва сертификата
+    format: date-time
+  dateBlocked:
+    type: string
+    description: Дата и время блокировки сертификата в системе
+    format: date-time
+  reason:
+    $ref: ./CrlReasonDto.yaml
+description: Отозванный сертификат

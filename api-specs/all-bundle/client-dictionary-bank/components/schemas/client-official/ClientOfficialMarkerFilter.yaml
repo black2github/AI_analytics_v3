@@ -1,0 +1,14 @@
+type: object
+properties:
+  notProcessedMarker:
+    uniqueItems: true
+    type: array
+    description: Маркеры представителя Клиента Банка, который не обработаны.
+    items:
+      type: string
+      description: Маркеры представителя Клиента Банка, который не обработаны.
+  markerCoolingTimeout:
+    type: string
+    description: Лаг времени создания/обновления метки, чтобы избегать race condition
+    format: date-time
+description: Фильтр представителя Клиента Банка по маркерам

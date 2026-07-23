@@ -1,0 +1,131 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docType:
+    type: string
+    description: Тип заявления
+  userId:
+    type: string
+    description: Идентификатор пользователя, редактирующего заявку
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userFullName:
+    type: string
+    description: Ф.И.О. пользователя, редактирующего заявку
+  clientInfo:
+    $ref: ../common/ClientInfoDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+  docNumber:
+    type: integer
+    description: Номер заявки
+    format: int32
+  docDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  errText:
+    type: string
+    description: Текст ошибки в ЭКО или ошибки, полученной из ПКП. Поле для отображения сотрудникам банка.
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED
+    - ASSIGNED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+  viewStatus:
+    type: string
+    description: Статус документа - для визуализации
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED
+    - ASSIGNED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+  agreementInfo:
+    $ref: ../common/DealDocGeneralAgreementDto.yaml
+  executorId:
+    type: string
+    description: Иcполнитель по заявке
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  executorFullName:
+    type: string
+    description: Ф.И.О. иcполнителя по заявке
+  additionalDataIsFulledUp:
+    type: boolean
+    description: Дополнительные данные полностью заполнены
+  additionalDataIsValid:
+    type: boolean
+    description: Дополнительные данные корректны
+  clientSignature:
+    $ref: ../common/SignatureDto.yaml
+  executedDate:
+    type: string
+    description: Дата исполнения заявки. Официальная дата начала действия указанных в заявке изменений к соглашению.
+    format: date
+  executedAt:
+    type: string
+    description: Дата и время исполнения заявки.
+    format: date-time
+  receivedAt:
+    type: string
+    description: Дата и время получения заявки на стороне Банка
+    format: date-time
+  signCheckAt:
+    type: string
+    description: Дата и время проверки подписи
+    format: date-time
+  clients:
+    type: array
+    description: Список Клиентов
+    items:
+      $ref: ./ChangeAccountsRequestClientDto.yaml
+description: Данные

@@ -1,0 +1,12 @@
+type: object
+properties:
+  field:
+    type: string
+    description: Наименование поля
+  newValue:
+    type: object
+    description: Новое значение поля
+  oldValue:
+    type: object
+    description: Старое значение поля
+description: Объект отражающий изменение значения поля

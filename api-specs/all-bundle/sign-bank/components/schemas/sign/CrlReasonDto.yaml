@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  code:
+    type: integer
+    description: Код
+    format: int32
+  reason:
+    type: string
+    description: Причина отзыва
+description: Причина отзыва

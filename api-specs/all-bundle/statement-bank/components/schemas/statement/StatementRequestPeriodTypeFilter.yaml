@@ -1,0 +1,56 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  notEq:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - SELECTPERIOD
+      - YESTERDAY
+      - TODAY
+      - LAST3DAYS
+      - PREVWEEK
+      - CURMONTH
+      - LASTMONTH
+      - PREVQUARTER
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - SELECTPERIOD
+      - YESTERDAY
+      - TODAY
+      - LAST3DAYS
+      - PREVWEEK
+      - CURMONTH
+      - LASTMONTH
+      - PREVQUARTER
+  isNull:
+    type: boolean

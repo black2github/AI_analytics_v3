@@ -1,0 +1,22 @@
+post:
+  tags:
+  - client-info-change-requirement-controller
+  summary: Получить актуальный список требований, сгруппированных по идентификаторам клиентов
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.CHANGE_REQUIREMENT_LIST_VIEW'
+  operationId: getMapActualByBankClientIds
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/client/GenericResponseSimpleErrorDataMapUUIDListClientInfoActualChangeRequirementDto.yaml

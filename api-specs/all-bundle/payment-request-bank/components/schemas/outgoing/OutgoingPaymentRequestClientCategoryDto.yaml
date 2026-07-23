@@ -1,0 +1,9 @@
+type: string
+description: Категории документов платежное требование исходящее для журнала документов клиента
+nullable: true
+enum:
+- ALL
+- DRAFT
+- SIGN_AND_SEND
+- REJECTED
+- COMPLETED

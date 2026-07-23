@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  attachmentId:
+    type: string
+    description: Идентификатор вложения FS
+    format: uuid
+  name:
+    type: string
+    description: Имя вложения
+  size:
+    type: integer
+    description: Размер файла (байт)
+    format: int64
+  hash:
+    type: string
+    description: Хэш файла
+  type:
+    type: string
+    description: Тип вложения
+  uploadDateTime:
+    type: string
+    description: Дата и время загрузки
+    format: date-time
+description: Транспортное представление вложения для отображения

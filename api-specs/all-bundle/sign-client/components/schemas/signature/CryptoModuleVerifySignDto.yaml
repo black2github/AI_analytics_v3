@@ -1,0 +1,13 @@
+type: object
+properties:
+  caCertificates:
+    type: array
+    items:
+      type: string
+  crls:
+    type: array
+    items:
+      type: string
+  keysSize:
+    type: integer
+    format: int32

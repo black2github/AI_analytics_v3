@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  fio:
+    type: string
+    description: ФИО
+  login:
+    type: string
+    description: Логин
+  email:
+    type: string
+    description: Email
+  phone:
+    type: string
+    description: Телефон
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+description: Информация о пользователе, создавшем заявку

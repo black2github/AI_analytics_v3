@@ -1,0 +1,42 @@
+type: object
+properties:
+  rc:
+    type: integer
+    description: Код ответа
+    format: int32
+  error:
+    type: string
+    description: Описание ошибки
+  clientGUID:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  clientRegNum:
+    type: integer
+    description: РНК (Регистрационный номер клиента ЕСК)
+  accountExist:
+    type: boolean
+    description: Признак существования действующего счета
+  debt:
+    type: boolean
+    description: Признак задолженности по Сервису
+  tarifContr:
+    type: number
+    description: Значение индивидуального тарифа для сервиса "Проверка контрагентов"
+  tarifContrStartDate:
+    type: string
+    description: Дата начала действия индивидуального тарифа для сервиса "Проверка контрагентов"
+    format: date
+  tarifContrEndDate:
+    type: string
+    description: Дата окончания действия индивидуального тарифа для сервиса "Проверка контрагентов"
+    format: date
+  tarifContrCommon:
+    type: number
+    description: Значение общего тарифа для сервиса "Проверка контрагентов"
+  accountCommissionList:
+    type: array
+    description: Список счетов, доступных для списания комиссии
+    items:
+      $ref: ./AccountCommissionDto.yaml
+description: Информация о счетах клиента из Ф1

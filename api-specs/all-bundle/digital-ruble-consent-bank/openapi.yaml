@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Согласия. Банковская часть.
+  description: Сервис Цифровой рубль. Согласия.
+  version: 3.0.0
+servers:
+- url: /digital-ruble-consent-bank
+security:
+- bearerAuth: []
+tags:
+- name: ConsentRequestBank
+  description: API для работы с заявками.
+paths:
+  /request/consent-management/reject-status:
+    $ref: ./paths/consent-management/request_consent_management_reject_status.yaml
+  /request/consent-list/reject-status:
+    $ref: ./paths/consent-list/request_consent_list_reject_status.yaml
+  /request/summary:
+    $ref: ./paths/summary/request_summary.yaml
+  /request/page:
+    $ref: ./paths/page/request_page.yaml
+  /request/consent-management/{id}:
+    $ref: ./paths/consent-management/request_consent_management_id.yaml
+  /request/consent-management/history/{id}:
+    $ref: ./paths/consent-management/request_consent_management_history_id.yaml
+  /request/consent-list/{id}:
+    $ref: ./paths/consent-list/request_consent_list_id.yaml
+  /request/consent-list/history/{id}:
+    $ref: ./paths/consent-list/request_consent_list_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/{locale}/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    RequestStatusCommentDto:
+      $ref: ./components/schemas/common/RequestStatusCommentDto.yaml
+    ConsentRequestFilterBankDto:
+      $ref: ./components/schemas/common/ConsentRequestFilterBankDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoConsentRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoConsentRequestStatusDto.yaml
+    FilterValueEnumDtoConsentRequestTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoConsentRequestTypeDto.yaml
+    GetPageCommandConsentRequestFilterBankDto:
+      $ref: ./components/schemas/common/GetPageCommandConsentRequestFilterBankDto.yaml
+    PageParamsConsentRequestFilterBankDto:
+      $ref: ./components/schemas/common/PageParamsConsentRequestFilterBankDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

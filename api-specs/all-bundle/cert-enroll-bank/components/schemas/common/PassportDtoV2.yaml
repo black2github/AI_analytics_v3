@@ -1,0 +1,24 @@
+required:
+- issueDate
+- issuedBy
+- number
+- series
+type: object
+properties:
+  series:
+    minLength: 1
+    type: string
+    description: Серия паспорта
+  number:
+    minLength: 1
+    type: string
+    description: Номер паспорта
+  issueDate:
+    type: string
+    description: Дата выдачи паспорта
+    format: date
+  issuedBy:
+    minLength: 1
+    type: string
+    description: Кем выдан паспорт
+description: Паспорт

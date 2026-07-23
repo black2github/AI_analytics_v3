@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Запрос на поиск УЛ с данными сотрудника

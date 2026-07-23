@@ -1,0 +1,9 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./DigitalRubleRequestTypeClientClassifierFilter.yaml
+  status:
+    $ref: ./DigitalRubleRequestStatusFilter.yaml
+description: Фильтр для заявок

@@ -1,0 +1,10 @@
+required:
+- data
+type: object
+properties:
+  data:
+    type: array
+    description: Список категорий статусов
+    items:
+      $ref: ./StatusCategory.yaml
+description: Данные объединенных заявок сотрудников сгруппированных по категориям статусов

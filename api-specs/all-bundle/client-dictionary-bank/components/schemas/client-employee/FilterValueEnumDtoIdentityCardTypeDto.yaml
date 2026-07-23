@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Типы документов удостоверяющих личность
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN_COUNTRY
+    - RESIDENCE_CARD
+    - OTHER
+  notEq:
+    type: string
+    description: Типы документов удостоверяющих личность
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN_COUNTRY
+    - RESIDENCE_CARD
+    - OTHER
+  in:
+    type: array
+    items:
+      type: string
+      description: Типы документов удостоверяющих личность
+      enum:
+      - PASSPORT_RUSSIA
+      - PASSPORT_FOREIGN_COUNTRY
+      - RESIDENCE_CARD
+      - OTHER
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Типы документов удостоверяющих личность
+      enum:
+      - PASSPORT_RUSSIA
+      - PASSPORT_FOREIGN_COUNTRY
+      - RESIDENCE_CARD
+      - OTHER
+  isNull:
+    type: boolean
+description: Тип ДУЛ (eq)

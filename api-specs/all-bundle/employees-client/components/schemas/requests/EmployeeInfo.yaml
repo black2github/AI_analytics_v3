@@ -1,0 +1,22 @@
+required:
+- employee
+- employeeDataConfirm
+- personalDataConsent
+type: object
+properties:
+  employee:
+    $ref: ./PersonalData.yaml
+  personalDataConsent:
+    type: boolean
+    description: Согласие на обработку персональных данных
+  employeeDataConfirm:
+    type: boolean
+    description: Подтверждение корректности введенных данных
+  registrationAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  actualAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  addressesMatches:
+    type: boolean
+    description: Признак "Адрес регистрации совпадает с фактическим адресом"
+description: Реквизиты сотрудника

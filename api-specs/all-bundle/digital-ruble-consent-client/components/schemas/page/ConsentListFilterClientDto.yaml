@@ -1,0 +1,11 @@
+type: object
+properties:
+  financialIntermediaryName:
+    $ref: ./FilterValueDtoString.yaml
+  consentType:
+    $ref: ./FilterValueEnumDtoConsentType.yaml
+  providedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  actual:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр для текущего перечня согласий организации.

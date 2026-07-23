@@ -1,0 +1,18 @@
+required:
+- code
+- confirmationType
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор запроса подтверждения
+    format: uuid
+  code:
+    type: string
+    description: Код подтверждения
+  confirmationType:
+    type: string
+    enum:
+    - DSS_ACCOUNT_PHONE_CHANGE
+description: Информация для проверки кода подтверждения

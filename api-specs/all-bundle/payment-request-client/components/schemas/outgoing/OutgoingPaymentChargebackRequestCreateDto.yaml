@@ -1,0 +1,21 @@
+required:
+- docCreationPage
+- paymentRequestsIds
+type: object
+properties:
+  paymentRequestsIds:
+    type: array
+    description: Список идентификаторов отзываемых Исходящих платежных требований
+    items:
+      type: string
+      description: Список идентификаторов отзываемых Исходящих платежных требований
+      format: uuid
+  chargebackReason:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9\s'"\-!?.,:;]*$
+    type: string
+    description: Причина отзыва
+  docCreationPage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+description: Создание заявки платежное требование исходящее

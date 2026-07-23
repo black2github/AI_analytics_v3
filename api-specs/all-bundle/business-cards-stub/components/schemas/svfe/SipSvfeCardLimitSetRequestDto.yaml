@@ -1,0 +1,6 @@
+type: object
+properties:
+  meta:
+    $ref: ./MetaRequestDto.yaml
+  data:
+    $ref: ./DataRequestDto.yaml

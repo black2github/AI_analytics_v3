@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор вложения в ЭКО
+    format: uuid
+  uploadTime:
+    type: string
+    description: Время выгрузки вложения
+    format: date-time
+  fsId:
+    type: string
+    description: Идентификатор вложения в File-Storage (ЭКО)
+    format: uuid
+  type:
+    type: string
+    description: Тип вложения
+  name:
+    type: string
+    description: Имя вложения
+  size:
+    type: integer
+    description: Размер (байт)
+    format: int64
+  hash:
+    type: string
+    description: Хэш вложения
+description: Информация о вложении документа, связанного с валютным переводом

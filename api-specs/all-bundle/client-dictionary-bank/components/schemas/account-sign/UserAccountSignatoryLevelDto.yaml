@@ -1,0 +1,31 @@
+required:
+- accountNumber
+- signLevel
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: Идентификатор представителя клиента
+    format: uuid
+  userEskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  userF1Id:
+    type: string
+    description: Идентификатор физического лица в РКО Ф1
+  signLevel:
+    type: string
+    description: Номер уровня подписи
+    enum:
+    - LEVEL_1
+    - LEVEL_2
+  accountNumber:
+    type: string
+    description: Номер счета
+  authorityStatus:
+    type: string
+    description: Статус полномочия
+    enum:
+    - ACTIVE
+    - INACTIVE
+description: Уровни подписи подписанта по счетам организации

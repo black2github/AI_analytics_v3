@@ -1,0 +1,19 @@
+put:
+  tags:
+  - dvk-update-bank-answer-tech-controller
+  summary: Обновление поля "Ответ от банка" для документа по DVK.id
+  operationId: updateBankAnswer
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml

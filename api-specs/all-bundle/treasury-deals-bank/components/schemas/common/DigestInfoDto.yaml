@@ -1,0 +1,14 @@
+type: object
+properties:
+  title:
+    type: string
+    description: Заголовок
+  description:
+    type: string
+    description: Описание
+  fields:
+    type: array
+    description: Список полей
+    items:
+      $ref: ./DigestInfoFieldDto.yaml
+description: Информация о дайджесте

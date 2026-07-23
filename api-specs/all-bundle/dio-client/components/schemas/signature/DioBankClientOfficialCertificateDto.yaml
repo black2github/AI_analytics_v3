@@ -1,0 +1,37 @@
+required:
+- certificateData
+- certificateId
+- certificateName
+- certificateOwnerName
+type: object
+properties:
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  certificateData:
+    type: string
+    description: Base64 представление сертификата
+  certificateOwnerName:
+    type: string
+    description: Владелец сертификата
+  certificateName:
+    type: string
+    description: Наименование сертификата
+  bcOfficialCertId:
+    type: string
+    description: Идентификатор СПО
+    format: uuid
+  kind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  containerNameLocation:
+    type: string
+    description: Имя и расположение ключевого контейнера
+description: Сертификат представителя организации

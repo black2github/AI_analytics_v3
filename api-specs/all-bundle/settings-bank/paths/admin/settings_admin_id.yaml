@@ -1,0 +1,40 @@
+get:
+  tags:
+  - АПИ Банка для управления настройками
+  summary: Получить запись по идентификатору
+  description: 'Привилегии: SETTINGS_VIEW'
+  operationId: getById_1
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataSettingAdminDto.yaml
+delete:
+  tags:
+  - АПИ Банка для управления настройками
+  summary: Удалить запись
+  description: 'Привилегии: SETTINGS_DELETE'
+  operationId: delete_1
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataSettingAdminDto.yaml

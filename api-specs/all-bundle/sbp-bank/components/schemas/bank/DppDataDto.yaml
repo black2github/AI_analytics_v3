@@ -1,0 +1,14 @@
+type: object
+description: Данные баннера (заявка создана в результате перехода с рекламного баннера)
+properties:
+  dppProductCode:
+    type: string
+    description: Код идентификации продукта в Сервисе ДПП
+  dppServiceCode:
+    type: string
+    description: Код продуктового сервиса в Справочнике сервисов экосистемы
+    enum:
+    - SBP
+  sourcePage:
+    type: string
+    description: Страница источник баннера

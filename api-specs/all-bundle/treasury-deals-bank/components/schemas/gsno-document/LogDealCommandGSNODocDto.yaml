@@ -1,0 +1,14 @@
+type: object
+properties:
+  event:
+    type: string
+    enum:
+    - ENTER
+    - GENERATE_DIGEST
+    - CALCULATOR_GET_RATE
+    - NEW_AGREEMENT_DEPOSIT_FROM_CALCULATOR
+    - DEAL_CALCULATOR_INIT
+    - DEAL_BEST_RATE_INIT
+    - DEAL_BEST_RATE_SIGN
+  document:
+    $ref: ../common/GSNODocDto.yaml

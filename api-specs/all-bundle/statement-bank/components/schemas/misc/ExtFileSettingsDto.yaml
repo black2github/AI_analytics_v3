@@ -1,0 +1,92 @@
+type: object
+properties:
+  statementFormat:
+    type: string
+    enum:
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - MULTICASH
+    - EXCEL_XLSX
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  settingsType:
+    type: string
+    enum:
+    - STATEMENT_ONE
+    - STATEMENT_GENERAL
+    - DOCUMENT
+    - DOCUMENT_GENERAL
+    - TBS_VIEW_PRINT_FORM
+    - STATEMENT_FILE_ARCHIVE_NAME
+  tags:
+    type: array
+    items:
+      $ref: ./FileNamingTagDto.yaml
+  defaultTags:
+    type: array
+    items:
+      $ref: ./FileNamingTagDto.yaml
+  pageOrientation:
+    type: string
+    enum:
+    - PORTRAIT
+    - LANDSCAPE
+  accountingEntrySortType:
+    type: string
+    enum:
+    - AMOUNT_ASC
+    - AMOUNT_DESC
+    - AMOUNT_ASC_DATE_DESC
+    - AMOUNT_DESC_DATE_ASC
+    - DOCUMENT_NUMBER_ASC
+    - DOCUMENT_NUMBER_DESC
+  osvFormType:
+    type: string
+    enum:
+    - WITHOUT_SPLIT
+    - WITH_SPLIT
+    - BALANCE_REPORT
+  transliterationType:
+    type: string
+    enum:
+    - WITH_TRANSLIT
+    - WITHOUT_TRANSLIT
+  font:
+    type: string
+    enum:
+    - WITHOUT_FONT
+    - EMBEDDED_FONT
+  osvStamp:
+    type: string
+    enum:
+    - PRINTED
+    - NOT_PRINTED
+  statementByFolders:
+    type: string
+    enum:
+    - DIVIDED
+    - NOT_DIVIDED
+  updatedAt:
+    type: string
+    format: date-time
+  upnoDisplayMode:
+    type: string
+    enum:
+    - WITH_UPNO
+    - WITHOUT_UPNO
+  changedFields:
+    type: array
+    items:
+      type: string
+description: Данные

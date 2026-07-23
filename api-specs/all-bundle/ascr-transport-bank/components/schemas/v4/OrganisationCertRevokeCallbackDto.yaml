@@ -1,0 +1,31 @@
+type: object
+description: Данные обратного вызова для заявки на отзыв сертификата.
+properties:
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  deviceId:
+    type: string
+    description: Уникальный идентификатор устройства в Банке.
+  certificateSerialNumber:
+    type: string
+    description: Серийный номер отозванного сертификата.
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- certificateSerialNumber
+- correlationId
+- deviceId
+- participantId
+- participantWalletId

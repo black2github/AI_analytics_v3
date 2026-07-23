@@ -1,0 +1,33 @@
+type: object
+properties:
+  bic:
+    type: string
+    description: БИК филиала
+  correspondentAccount:
+    type: string
+    description: Корсчет филиала
+  inn:
+    type: string
+    description: ИНН филиала
+  kpp:
+    type: string
+    description: КПП филиала
+  location:
+    type: string
+    description: Населенный пункт
+  locationType:
+    type: string
+    description: Тип населенного пункта
+  locationWithoutType:
+    type: string
+    description: Населенный пункт без типа
+  ogrn:
+    type: string
+    description: ОГРН филиала
+  okpo:
+    type: string
+    description: ОКПО филиала
+  oktmo:
+    type: string
+    description: ОКТМО филиала
+description: Реквизиты подразделения банка

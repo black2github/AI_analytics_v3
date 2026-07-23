@@ -1,0 +1,10 @@
+type: object
+properties:
+  client:
+    $ref: ./ClientDataDto.yaml
+  managers:
+    type: array
+    description: Список клиентских менеджеров
+    items:
+      $ref: ./ClientManagerDto.yaml
+description: Информация о менеджерах клиента

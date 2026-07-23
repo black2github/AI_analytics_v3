@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - BC_BLOCK_REQUEST
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - BC_BLOCK_REQUEST
+      - BC_CARD_ISSUE_REQUEST
+      - BC_SET_LIMIT_REQUEST
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    enum:
+    - BC_BLOCK_REQUEST
+    - BC_CARD_ISSUE_REQUEST
+    - BC_SET_LIMIT_REQUEST
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - BC_BLOCK_REQUEST
+      - BC_CARD_ISSUE_REQUEST
+      - BC_SET_LIMIT_REQUEST
+description: Код типа документов из Классификатора Типы документов (eq|in)

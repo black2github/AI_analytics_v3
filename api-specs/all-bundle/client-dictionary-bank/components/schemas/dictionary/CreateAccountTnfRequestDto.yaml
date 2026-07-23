@@ -1,0 +1,14 @@
+required:
+- accountId
+- f1AccountId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счёта в ЭКО
+    format: uuid
+  f1AccountId:
+    type: integer
+    description: Идентификатор счёта в Ф1
+    format: int64
+description: Данные по счету ТНФ в запросе на создание счета ТНФ

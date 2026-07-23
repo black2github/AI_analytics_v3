@@ -1,0 +1,12 @@
+required:
+- employeeId
+type: object
+properties:
+  employeeId:
+    type: array
+    description: Идентификаторы сотрудников
+    items:
+      type: string
+      description: Идентификаторы сотрудников
+      format: uuid
+description: ДТО с информацией об удаляемых сотрудниках

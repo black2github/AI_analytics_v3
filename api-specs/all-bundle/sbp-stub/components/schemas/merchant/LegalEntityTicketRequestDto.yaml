@@ -1,0 +1,6 @@
+type: object
+description: Запрос получения статуса регистрации ЮЛ
+properties:
+  ticketId:
+    type: string
+    description: Временный регистрационный номер

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBrokerageBankRequestOpenAccountFilterDto.yaml
+description: Запрос страницы

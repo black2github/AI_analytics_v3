@@ -1,0 +1,13 @@
+type: object
+description: ДТО публикации статуса письма. Возвращаемое ДТО.
+properties:
+  docStatus:
+    type: string
+    description: Статус письма.
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  typeCode:
+    type: string
+    description: Код типа письма

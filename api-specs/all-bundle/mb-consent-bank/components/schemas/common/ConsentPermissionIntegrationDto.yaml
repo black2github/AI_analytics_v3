@@ -1,0 +1,29 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  type:
+    type: string
+    description: Тип разрешения в согласии
+    enum:
+    - READ_ACCOUNTS_BASIC
+    - READ_ACCOUNTS_DETAIL
+    - READ_BALANCES
+    - READ_PARTY
+    - READ_PRODUCTS
+    - READ_STANDING_ORDERS_BASIC
+    - READ_STANDING_ORDERS_DETAIL
+    - READ_STATEMENTS_BASIC
+    - READ_STATEMENTS_DETAIL
+    - READ_TRANSACTIONS_BASIC
+    - READ_TRANSACTIONS_CREDITS
+    - READ_TRANSACTIONS_DEBITS
+    - READ_TRANSACTIONS_DETAIL
+    - READ_PAYMENT_CARDS
+description: Разрешения в Согласии

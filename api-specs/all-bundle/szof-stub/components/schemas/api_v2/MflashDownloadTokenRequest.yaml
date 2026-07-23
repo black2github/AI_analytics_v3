@@ -1,0 +1,6 @@
+type: object
+properties:
+  type:
+    type: string
+  file:
+    type: string

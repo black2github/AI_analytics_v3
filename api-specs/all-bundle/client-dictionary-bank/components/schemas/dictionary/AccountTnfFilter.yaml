@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для ЭФ "Список счетов ТНФ".

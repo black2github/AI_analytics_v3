@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Клиент Банка"
+    format: uuid
+  externalClientGuid:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+description: Подмножество полей сущности "Клиент Банка"

@@ -1,0 +1,71 @@
+type: object
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  accountState:
+    $ref: ./AccountStateFilter.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  parentBranch:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  locality:
+    $ref: ./FilterValueDtoString.yaml
+  locationWithoutType:
+    $ref: ./FilterValueDtoString.yaml
+  name:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoString.yaml
+  canOpenAccounts:
+    $ref: ./FilterValueDtoBoolean.yaml
+  canOpenGozAccounts:
+    $ref: ./FilterValueDtoBoolean.yaml
+  bic:
+    $ref: ./FilterValueDtoString.yaml
+  schedule:
+    $ref: ./FilterValueDtoString.yaml
+  branchType:
+    $ref: ./BranchTypeFilter.yaml
+  nlb:
+    $ref: ./FilterValueDtoString.yaml
+  filialName:
+    $ref: ./FilterValueDtoString.yaml
+  absNumber:
+    $ref: ./FilterValueDtoString.yaml
+  filialEskCode:
+    $ref: ./FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  isDeleted:
+    $ref: ./FilterValueDtoBoolean.yaml
+  absCode:
+    $ref: ./FilterValueDtoString.yaml
+  address:
+    $ref: ./FilterValueDtoString.yaml
+  branchServices:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категории для сущности 'Филиал и подразделение Банка'
+    enum:
+    - ALL
+    - BRANCH
+    - SUBDIVISION
+  transferredBalanceHeadUnit:
+    $ref: ./FilterValueDtoBoolean.yaml
+  textQuery:
+    type: string
+    description: 'Общая строка поиска. Частичное вхождение по: населенному пункту, наименованию подразделения, номеру подразделения, филиал подразделения, код филиала в РКО Ф1, БИК'
+  textCompoundFilter:
+    $ref: ./TextCompoundFilterForBranchFilter.yaml
+  stateType:
+    $ref: ./FilterValueEnumDtoBranchStateTypeDto.yaml
+  officeState:
+    $ref: ./FilterValueDtoString.yaml
+  client:
+    type: boolean
+  bank:
+    type: boolean
+description: Фильтр

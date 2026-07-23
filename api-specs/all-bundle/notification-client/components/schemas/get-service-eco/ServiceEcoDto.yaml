@@ -1,0 +1,14 @@
+type: object
+properties:
+  codeServiceEco:
+    type: string
+    description: Код сервисов ЭКО
+  nameServiceEco:
+    type: string
+    description: Имя сервисов ЭКО
+  headers:
+    type: array
+    description: Список заголовков уведомлений
+    items:
+      $ref: ./HeaderDto.yaml
+description: Список сервисов ЭКО

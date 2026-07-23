@@ -1,0 +1,10 @@
+type: object
+properties:
+  groupInfo:
+    $ref: ./AccountGroupTotalDto.yaml
+  groupedAccounts:
+    type: array
+    description: Список счетов (остатки и обороты по ним), принадлежащих группе
+    items:
+      $ref: ./AccountTotalDto.yaml
+description: Группа счетов, содержащая совокупные остатки и обороты по этим счетам

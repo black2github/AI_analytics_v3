@@ -1,0 +1,13 @@
+required:
+- finalStatus
+- processStatus
+type: object
+properties:
+  processStatus:
+    $ref: ./BackgroundProcessStatusTypeDto.yaml
+  finalStatus:
+    $ref: ./BackgroundProcessFinalStatusTypeDto.yaml
+  errorMessage:
+    type: string
+    description: Текст ошибки
+description: Состояние процесса

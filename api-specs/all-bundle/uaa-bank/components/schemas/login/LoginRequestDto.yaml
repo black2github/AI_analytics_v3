@@ -1,0 +1,100 @@
+required:
+- client_id
+- grant_type
+type: object
+properties:
+  username:
+    type: string
+    description: '[grant_type=password] Имя пользователя'
+  password:
+    type: string
+    description: '[grant_type=password|webauthn_password] Пароль'
+  pin:
+    type: string
+    description: '[grant_type=pin] PIN код'
+  signature:
+    type: string
+    description: '[grant_type=pin|biometric] Электронная цифровая подпись'
+  requestAt:
+    type: string
+    description: Дата и время создания запроса
+    format: date-time
+  userChannel:
+    type: string
+    enum:
+    - BANK_WEB
+    - MOBILE_IRON
+  grant_type:
+    type: string
+    description: Тип гранта
+  mfa_token:
+    type: string
+    description: '[grant_type=mfa_certificate|mfa_otp|mfa_totp|webauthn_password] МФА токен'
+  mfa_certificate:
+    type: string
+    description: '[grant_type=mfa_certificate] МФА сертификат'
+  mfa_signed_data:
+    type: string
+    description: '[grant_type=mfa_certificate] Подпись'
+  mfa_password:
+    type: string
+    description: '[grant_type=mfa_otp|mfa_totp] OTP пароль'
+  redirect_uri:
+    type: string
+    description: URI для перенаправления
+  crypto_plugin:
+    type: string
+    enum:
+    - BSS
+    - SFT
+  crypto_plugin_version:
+    type: string
+    description: Версия криптоплагина
+  user_environment:
+    type: string
+    description: Информация об окружении пользователя
+  promo_info:
+    $ref: ./PromoInfoDto.yaml
+  device_id:
+    type: string
+    description: '[grant_type=pin|biometric] Уникальный идентификатор устройства'
+  client_id:
+    type: string
+    description: Уникальный идентификатор приложения
+  biometric_authentication_result:
+    type: string
+    description: '[grant_type=biometric] Значение константы успеха биометрической аутентификации'
+  idp_user_id:
+    type: string
+    description: '[grant_type=pin|biometric] Идентификатор пользователя'
+    format: uuid
+  mobile_app_version:
+    type: string
+    description: Версия мобильного приложения
+  phone_model:
+    type: string
+    description: Название модели мобильного устройства
+  mobile_sdk_data:
+    type: string
+    description: Информация о мобильном устройстве
+  auth_code:
+    type: string
+    description: '[grant_type=esia] Код аутентификации'
+  esia_user_data_id:
+    type: string
+    description: '[grant_type=password] ИД данных из ЕСИА'
+    format: uuid
+  locale_code:
+    type: string
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+  passkey_setup_possible:
+    type: boolean
+    description: Возможность регистрации ключа доступа
+  webauthn_user_credential_id:
+    type: string
+    description: Идентификатор ключа доступа
+    format: uuid
+description: Запрос логина

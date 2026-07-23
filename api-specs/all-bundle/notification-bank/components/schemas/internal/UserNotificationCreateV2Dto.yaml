@@ -1,0 +1,112 @@
+required:
+- notificationId
+- notificationType
+- systemId
+- text
+type: object
+properties:
+  notificationId:
+    type: string
+    description: Идентификатор уведомления в системе - источнике
+  systemId:
+    title: Идентификатор системы - источника уведомления
+    type: string
+    enum:
+    - ECO
+    - F1
+    - TMG
+    - CC
+    - FACTORING
+    - AUTOLIZING
+  resourceName:
+    type: string
+    description: Сервис-источник уведомления
+  userId:
+    type: string
+    description: Идентификатор пользователя в ЭКО
+    format: uuid
+  userIds:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов пользователей в ЭКО
+    items:
+      type: string
+      description: Список идентификаторов пользователей в ЭКО
+      format: uuid
+  eskUserId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  eskClientIds:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов ЕСК организации
+    items:
+      type: string
+      description: Список идентификаторов ЕСК организации
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов организаций
+    items:
+      type: string
+      description: Список идентификаторов организаций
+      format: uuid
+  notificationType:
+    title: Тип уведомления
+    type: string
+    description: Код типа уведомления из справочника типов уведомлений
+  endDate:
+    type: string
+    description: Дата окончания актуальности уведомления
+    format: date
+  text:
+    type: string
+    description: Текст уведомления
+  shortText:
+    type: string
+    description: Короткий текст уведомления
+  doBeforeDate:
+    type: string
+    description: Дата, до которой необходимо выполнить какое-либо действие по уведомлению
+    format: date
+  actionLink:
+    type: string
+    description: Адрес формы исполнения. Ссылка на место исполнения какого-либо действия
+  linkedObjectId:
+    type: string
+    description: Идентификатор, связанного с уведомлением объекта
+  status:
+    type: string
+    description: Статус уведомления
+    enum:
+    - NEW
+    - READ
+    - REVOKED
+  executionStatus:
+    type: string
+    description: Статус выполнения
+    enum:
+    - NOT_EXECUTED
+    - POSTPONED
+    - EXECUTED
+    - CANCELED
+    - INFORMATIONAL
+  attachmentIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы в FS на файлы вложений
+    items:
+      type: string
+      description: Идентификаторы в FS на файлы вложений
+      format: uuid
+  settings:
+    type: object
+    additionalProperties:
+      type: string
+      description: Дополнительные настройки для типов NEWS и ALERT_UNIVERSAL
+    description: Дополнительные настройки для типов NEWS и ALERT_UNIVERSAL
+description: Уведомление. ДТО на создание

@@ -1,0 +1,33 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestIdOrNumber:
+    $ref: ./FilterValueDtoString.yaml
+  orgNameOrInnOrOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoAccReservationRequestStatusDto.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userType:
+    $ref: ./FilterValueEnumDtoUserType.yaml
+  userFioOrLoginOrId:
+    $ref: ./FilterValueDtoString.yaml
+  isOnboardingRequestIdNull:
+    $ref: ./FilterValueDtoUUID.yaml
+  currencyCode:
+    $ref: ./FilterValueDtoString.yaml
+  isManualReservation:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountExternalId:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Статус категории заявок на резервирование
+    enum:
+    - ERROR
+    - IN_PROGRESS
+    - FINISHED
+    - ALL
+description: Фильтр для поиска заявок на резервирование счёта для скроллера.

@@ -1,0 +1,55 @@
+post:
+  operationId: exportByIds
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/export-by-ids/SingleCommandDocsExportByIdsDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            type: string
+            format: byte
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Выгрузить оригинальные документы и печатные формы заявки по идентификаторам
+  tags:
+  - API для экспорта документов банком

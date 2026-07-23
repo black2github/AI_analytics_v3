@@ -1,0 +1,26 @@
+required:
+- firstName
+- id
+- phoneNumber
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  firstName:
+    type: string
+    description: Имя
+  familyName:
+    type: string
+    description: Фамилия
+  middleName:
+    type: string
+    description: Отчество
+  email:
+    type: string
+    description: Email
+  phoneNumber:
+    type: string
+    description: Номер телефона
+description: Информация о пользователе

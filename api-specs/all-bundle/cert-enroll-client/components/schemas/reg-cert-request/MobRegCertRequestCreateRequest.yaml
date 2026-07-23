@@ -1,0 +1,16 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID Клиента
+    format: uuid
+  clientOfficialDstId:
+    type: string
+    description: ID СЭП представителя
+    format: uuid
+  backUrl:
+    type: string
+    description: URL перехода при завершении процесса регистрации
+description: Запрос создания заявки на регистрацию сертификата мобильной подписи ФНС

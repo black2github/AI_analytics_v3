@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ../common/BrokerageClientCancelOrderCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfo.yaml
+description: Запрос

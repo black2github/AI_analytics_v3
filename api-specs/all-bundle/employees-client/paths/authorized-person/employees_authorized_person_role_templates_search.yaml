@@ -1,0 +1,56 @@
+post:
+  tags:
+  - API для работы с УЛ
+  summary: Поиск шаблонов ролей УЛ
+  description: 'Привилегии: EMPLOYEES.RQ_EDIT'
+  operationId: searchRoleTemplates
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/authorized-person/SearchRoleTemplateFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/authorized-person/GenericResponseErrorDataApRoleTemplateSearchResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  deprecated: true

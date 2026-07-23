@@ -1,0 +1,71 @@
+required:
+- clientId
+- clientName
+- contractNumber
+- createdAt
+- docNumber
+- documentType
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  clientId:
+    type: string
+    description: Идентификатор клиента
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  documentType:
+    type: string
+    description: Тип поручения
+    enum:
+    - JOIN_MARKET
+    - JOIN_CURRENCY
+    - BRK_SERVICE_ADD
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  market:
+    $ref: ./BrkCodeNameDto.yaml
+  service:
+    $ref: ./BrkCodeNameDto.yaml
+  fileInfo:
+    $ref: ../common/BrkFileInfo.yaml
+  currencies:
+    uniqueItems: true
+    type: array
+    items:
+      $ref: ./BrkCodeNameDto.yaml
+  signatures:
+    type: array
+    items:
+      $ref: ./SignatureDto.yaml
+description: Страница с данными

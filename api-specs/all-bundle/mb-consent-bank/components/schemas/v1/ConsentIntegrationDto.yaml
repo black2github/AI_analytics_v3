@@ -1,0 +1,77 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор согласия
+    format: uuid
+  status:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  createdAt:
+    type: string
+    description: Время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время последнего обновления заявки
+    format: date-time
+  extConsentId:
+    type: string
+    description: Внешний идентификатор согласия
+    format: uuid
+  consentOwnerBank:
+    type: string
+    description: Банк-владелец согласия
+    enum:
+    - GPB
+    - VTB
+    - SBR
+  consentInitBank:
+    type: string
+    description: Банк-инициатор запроса на создание согласие
+    enum:
+    - GPB
+    - VTB
+    - SBR
+  consentCreatedAt:
+    type: string
+    description: Дата и время создания согласия
+    format: date-time
+  permitsExpiration:
+    type: string
+    description: Дата и время истечения разрешений
+    format: date-time
+  operationsRequestStart:
+    type: string
+    description: Дата и время начала запроса операций по счету
+    format: date-time
+  operationsRequestStop:
+    type: string
+    description: Дата и время окончания запроса операций по счету
+    format: date-time
+  statusUpdatedAt:
+    type: string
+    description: Время последнего изменения статуса
+    format: date-time
+  user:
+    $ref: ./UserIntegrationDto.yaml
+  bankClient:
+    $ref: ../common/BankClientInfoDto.yaml
+  operations:
+    type: array
+    description: Операции в Согласии
+    items:
+      $ref: ./ConsentOperationIntegrationDto.yaml
+  permissions:
+    type: array
+    description: Разрешения в Согласии
+    items:
+      $ref: ../common/ConsentPermissionIntegrationDto.yaml
+  userToken:
+    $ref: ./ConsentUserTokenIntegrationDto.yaml
+description: Согласие

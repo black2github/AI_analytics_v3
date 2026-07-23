@@ -1,0 +1,22 @@
+type: object
+properties:
+  commonResult:
+    type: boolean
+    description: Общий результат проверки
+  level:
+    type: string
+    description: Уровень подписи
+    enum:
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+    - SIGHTING
+  results:
+    type: object
+    additionalProperties:
+      type: boolean
+      description: Результаты выполненных проверок
+    description: Результаты выполненных проверок
+  checkCertificatesData:
+    $ref: ./RkoCheckCertificateDataDto.yaml
+description: Проверка подписей для платежного документа

@@ -1,0 +1,10 @@
+type: object
+properties:
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.BICFI
+    - RU.CBR.BIC
+  identification:
+    type: string
+description: Идентификация финансового учреждения

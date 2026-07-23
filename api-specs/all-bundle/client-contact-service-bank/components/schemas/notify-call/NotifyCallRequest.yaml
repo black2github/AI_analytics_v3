@@ -1,0 +1,39 @@
+type: object
+description: Запрос на сохранение результата звонка
+properties:
+  callResult:
+    $ref: ../common/CallResult.yaml
+    description: Текстовый идентификатор результата звонка
+    maxLength: 100
+  clientProblemReason:
+    $ref: ../common/ClientProblemReason.yaml
+    description: Причина затруднений клиента
+    maxLength: 100
+  employeeComment:
+    type: string
+    description: Комментарий сотрудника в свободной форме
+  callDateTime:
+    type: string
+    format: date-time
+    description: Дата и время звонка
+  applicationStatus:
+    $ref: ../common/CommonMergedStatus.yaml
+    description: Статус заявки
+  nextCallDateTime:
+    type: string
+    format: date-time
+    description: Дата и время следующего звонка
+  callRequired:
+    type: boolean
+    description: Звонок не требуется
+  requestId:
+    type: string
+    format: uuid
+    description: Идентификатор записи в журнале НСК
+required:
+- applicationStatus
+- callDateTime
+- callRequired
+- callResult
+- nextCallDateTime
+- requestId

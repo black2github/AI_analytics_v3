@@ -1,0 +1,21 @@
+required:
+- limit
+- sort
+- statementId
+type: object
+properties:
+  statementId:
+    type: string
+    description: ИД выписки
+    format: uuid
+  dateFrom:
+    type: string
+    description: Дата от
+    format: date
+  sort:
+    $ref: ../common/Sort.yaml
+  limit:
+    minimum: 1
+    type: integer
+    description: Количество записей
+    format: int32

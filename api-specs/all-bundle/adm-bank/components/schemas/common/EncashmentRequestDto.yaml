@@ -1,0 +1,90 @@
+required:
+- pointsOfSale
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  bankClient:
+    $ref: ./AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  contactEmail:
+    type: string
+    description: Email
+  contactPerson:
+    type: string
+    description: Контактное лицо (ФИО)
+  contactPersonPhone:
+    type: string
+    description: Контактное лицо (телефон)
+  currencyExchangeRequired:
+    type: boolean
+    description: Наличие запроса на предоставление услуги размена
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  encashmentCommissionAccount:
+    $ref: ./EncashmentAccountDto.yaml
+  encashmentRefundExchangeAccount:
+    $ref: ./EncashmentAccountDto.yaml
+  encashmentRefundType:
+    $ref: ./EncashmentRefundTypeDto.yaml
+  encashmentRequestType:
+    $ref: ./EncashmentRequestTypeDto.yaml
+  encashmentRevenueTransferAccount:
+    $ref: ./EncashmentAccountDto.yaml
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  nonCashRefund:
+    type: boolean
+    description: Возможность безналичного возмещения за размен
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+  pointsOfSale:
+    type: array
+    description: Торговые точки
+    items:
+      $ref: ./EncashmentPosDto.yaml
+  requestType:
+    $ref: ./AdmRequestTypeDto.yaml
+  signature:
+    $ref: ./AdmSignatureDto.yaml
+  status:
+    $ref: ./AdmRequestStatusDto.yaml
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  validationResult:
+    $ref: ./ValidationResult.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка на добавление реквизитов

@@ -1,0 +1,400 @@
+openapi: 3.0.1
+info:
+  title: Сервис аутентификации и авторизации. Клиентская часть.
+  version: 3.8.0
+servers:
+- url: /uaa
+security:
+- Bearer: []
+tags:
+- name: MfaCloudLoginSign
+  description: API облачной подписи используемое при MFA аутентификации
+- name: SmartCaptcha
+  description: API смарт-капчи
+- name: TransportToken
+  description: API для получения транспортного токена
+- name: Approval
+  description: API для работы с одобрениями OAuth 2.0
+- name: Profile
+  description: АПИ по работе с профилем
+- name: ProfileV2
+  description: API для работы с информацией о профиле пользователя
+- name: Discovery
+  description: OpenID Connect discovery API
+- name: LkUvedUserController
+  description: Информация по пользователю для ЛК УВЭД
+- name: Token
+  description: API получения токена OAuth 2.0
+- name: CommonUserInfo
+  description: Информация о пользователях
+- name: UserInfo
+  description: OpenID Connect userinfo API
+- name: UnauthorizedTokenV2
+  description: API токена в неавторизованной зоне V2
+- name: MfaChainClient
+  description: АПИ для цепочек дополнительных авторизаций
+- name: ExternalToken
+  description: API для получения токена внешней системы
+- name: Application
+  description: API для работы с приложениями OAuth 2.0
+- name: EsiaAuthorization
+  description: API авторизации через ЕСИА
+- name: MfaChallenge
+  description: API многофакторной аутентификации (MFA)
+- name: WebAuthn
+  description: API для работы с WebAuthn(passkey)
+- name: UnauthorizedToken
+  description: API токена в неавторизованной зоне
+- name: ClientUserContext
+  description: API контекста пользователя клиента
+- name: Consent
+  description: АПИ для работы с согласиями
+- name: UserMobile
+  description: API пользователей для мобильного приложения
+- name: Logout
+  description: API для завершения сессии пользователя
+- name: ClientUser
+  description: Регистрация пользователей типа CLIENT
+- name: Login
+  description: API для аутентификации пользователя
+- name: Authorization
+  description: API авторизации OAuth 2.0
+- name: DiscoveryV2
+  description: OpenID Connect discovery API V2
+paths:
+  /login/change/password/eco/{userId}:
+    $ref: ./paths/change/login_change_password_eco_userId.yaml
+  /clientuser/set-password:
+    $ref: ./paths/set-password/clientuser_set_password.yaml
+  /webauthn/user/update-settings:
+    $ref: ./paths/user/webauthn_user_update_settings.yaml
+  /webauthn/user/show-setup-next-time:
+    $ref: ./paths/user/webauthn_user_show_setup_next_time.yaml
+  /webauthn/register-authn-response:
+    $ref: ./paths/register-authn-response/webauthn_register_authn_response.yaml
+  /webauthn/register-authn-request:
+    $ref: ./paths/register-authn-request/webauthn_register_authn_request.yaml
+  /webauthn/authn-response:
+    $ref: ./paths/authn-response/webauthn_authn_response.yaml
+  /webauthn/authn-request:
+    $ref: ./paths/authn-request/webauthn_authn_request.yaml
+  /v2/unauthorized-token:
+    $ref: ./paths/unauthorized-token/v2_unauthorized_token.yaml
+  /unauthorized/oauth/token:
+    $ref: ./paths/oauth/unauthorized_oauth_token.yaml
+  /transport/oauth/token:
+    $ref: ./paths/oauth/transport_oauth_token.yaml
+  /smart-captcha:
+    $ref: ./paths/smart-captcha/smart_captcha.yaml
+  /profile/esia-bind:
+    $ref: ./paths/esia-bind/profile_esia_bind.yaml
+  /oauth/token:
+    $ref: ./paths/token/oauth_token.yaml
+  /oauth/token/reset-refresh-flag:
+    $ref: ./paths/token/oauth_token_reset_refresh_flag.yaml
+  /oauth/token/introspect:
+    $ref: ./paths/token/oauth_token_introspect.yaml
+  /oauth/mfa/cloud-sign/sign:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_sign.yaml
+  /oauth/mfa/cloud-sign/search-operation:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_search_operation.yaml
+  /oauth/mfa/cloud-sign/search-operation-in-dss:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_search_operation_in_dss.yaml
+  /oauth/mfa/challenge/totp:
+    $ref: ./paths/mfa/oauth_mfa_challenge_totp.yaml
+  /oauth/mfa/challenge/select:
+    $ref: ./paths/mfa/oauth_mfa_challenge_select.yaml
+  /oauth/mfa/challenge/otp:
+    $ref: ./paths/mfa/oauth_mfa_challenge_otp.yaml
+  /oauth/mfa/challenge/list:
+    $ref: ./paths/mfa/oauth_mfa_challenge_list.yaml
+  /oauth/mfa/challenge/certificate:
+    $ref: ./paths/mfa/oauth_mfa_challenge_certificate.yaml
+  /oauth/authorize:
+    $ref: ./paths/authorize/oauth_authorize.yaml
+  /oauth/approvals/{id}/deny:
+    $ref: ./paths/approvals/oauth_approvals_id_deny.yaml
+  /oauth/approvals/{id}/approve:
+    $ref: ./paths/approvals/oauth_approvals_id_approve.yaml
+  /oauth/applications:
+    $ref: ./paths/applications/oauth_applications.yaml
+  /mobile/user-login-mobile-devices:
+    $ref: ./paths/user-login-mobile-devices/mobile_user_login_mobile_devices.yaml
+  /mobile/register-bio-pin:
+    $ref: ./paths/register-bio-pin/mobile_register_bio_pin.yaml
+  /mobile/external-disable-bio-pin:
+    $ref: ./paths/external-disable-bio-pin/mobile_external_disable_bio_pin.yaml
+  /mobile/disable-bio-pin:
+    $ref: ./paths/disable-bio-pin/mobile_disable_bio_pin.yaml
+  /mobile/check-pin:
+    $ref: ./paths/check-pin/mobile_check_pin.yaml
+  /mobile/change-pin:
+    $ref: ./paths/change-pin/mobile_change_pin.yaml
+  /mfachain/user/select/{chainName}:
+    $ref: ./paths/user/mfachain_user_select_chainName.yaml
+  /logout:
+    $ref: ./paths/logout/logout.yaml
+  /logout/v2:
+    $ref: ./paths/v2/logout_v2.yaml
+  /login:
+    $ref: ./paths/login/login.yaml
+  /lkuved-user-service/set-user-id-cookie:
+    $ref: ./paths/set-user-id-cookie/lkuved_user_service_set_user_id_cookie.yaml
+  /external/oauth/token:
+    $ref: ./paths/oauth/external_oauth_token.yaml
+  /consent/add:
+    $ref: ./paths/add/consent_add.yaml
+  /clientuser/update:
+    $ref: ./paths/update/clientuser_update.yaml
+  /clientuser/restorePassword:
+    $ref: ./paths/restorePassword/clientuser_restorePassword.yaml
+  /clientuser/restore-login:
+    $ref: ./paths/restore-login/clientuser_restore_login.yaml
+  /clientuser/restore-login-send-email/{restoreLoginRequestId}:
+    $ref: ./paths/restore-login-send-email/clientuser_restore_login_send_email_restoreLoginRequestId.yaml
+  /clientuser/renewConfirm:
+    $ref: ./paths/renewConfirm/clientuser_renewConfirm.yaml
+  /clientuser/renew-preregister-confirm:
+    $ref: ./paths/renew-preregister-confirm/clientuser_renew_preregister_confirm.yaml
+  /clientuser/register:
+    $ref: ./paths/register/clientuser_register.yaml
+  /clientuser/preregister:
+    $ref: ./paths/preregister/clientuser_preregister.yaml
+  /clientuser/hideNotification:
+    $ref: ./paths/hideNotification/clientuser_hideNotification.yaml
+  /clientuser/generate-password:
+    $ref: ./paths/generate-password/clientuser_generate_password.yaml
+  /clientuser/esia-register:
+    $ref: ./paths/esia-register/clientuser_esia_register.yaml
+  /clientuser/confirm-preregister:
+    $ref: ./paths/confirm-preregister/clientuser_confirm_preregister.yaml
+  /clientuser/confirm-email:
+    $ref: ./paths/confirm-email/clientuser_confirm_email.yaml
+  /clientuser/confirm-and-complete-register:
+    $ref: ./paths/confirm-and-complete-register/clientuser_confirm_and_complete_register.yaml
+  /clientuser/completeRestorePassword:
+    $ref: ./paths/completeRestorePassword/clientuser_completeRestorePassword.yaml
+  /clientuser/completeRegister:
+    $ref: ./paths/completeRegister/clientuser_completeRegister.yaml
+  /clientuser/completePhoneChange:
+    $ref: ./paths/completePhoneChange/clientuser_completePhoneChange.yaml
+  /clientuser/completeEmailChange:
+    $ref: ./paths/completeEmailChange/clientuser_completeEmailChange.yaml
+  /clientuser/complete-restore-login:
+    $ref: ./paths/complete-restore-login/clientuser_complete_restore_login.yaml
+  /clientuser/changePhoneNumber:
+    $ref: ./paths/changePhoneNumber/clientuser_changePhoneNumber.yaml
+  /clientuser/changePassword:
+    $ref: ./paths/changePassword/clientuser_changePassword.yaml
+  /clientuser/changeEmail:
+    $ref: ./paths/changeEmail/clientuser_changeEmail.yaml
+  /clientuser/change-user-interface-type:
+    $ref: ./paths/change-user-interface-type/clientuser_change_user_interface_type.yaml
+  /captcha:
+    $ref: ./paths/captcha/captcha.yaml
+  /webauthn/user/settings:
+    $ref: ./paths/user/webauthn_user_settings.yaml
+  /webauthn/check-device:
+    $ref: ./paths/check-device/webauthn_check_device.yaml
+  /v2/profile:
+    $ref: ./paths/profile/v2_profile.yaml
+  /v2/.well-known/openid-configuration:
+    $ref: ./paths/.well-known/v2_well_known_openid_configuration.yaml
+  /v2/.well-known/jwks.json:
+    $ref: ./paths/.well-known/v2_well_known_jwks_json.yaml
+  /user-info:
+    $ref: ./paths/user-info/user_info.yaml
+  /user-info/user-authorities:
+    $ref: ./paths/user-authorities/user_info_user_authorities.yaml
+  /profile:
+    $ref: ./paths/profile/profile.yaml
+  /oauth/open-id/userinfo:
+    $ref: ./paths/open-id/oauth_open_id_userinfo.yaml
+  /oauth/esia/authorize:
+    $ref: ./paths/esia/oauth_esia_authorize.yaml
+  /oauth/esia/authorize-for-bind:
+    $ref: ./paths/esia/oauth_esia_authorize_for_bind.yaml
+  /oauth/approvals/{id}:
+    $ref: ./paths/approvals/oauth_approvals_id.yaml
+  /mfachain/user/default:
+    $ref: ./paths/user/mfachain_user_default.yaml
+  /mfachain/user/available:
+    $ref: ./paths/user/mfachain_user_available.yaml
+  /login/complete/registration/eco/{userId}/form-state:
+    $ref: ./paths/complete/login_complete_registration_eco_userId_form_state.yaml
+  /login/change/password/eco/{userId}/form-state:
+    $ref: ./paths/change/login_change_password_eco_userId_form_state.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /consent/has/{consentType}/{consentVersion}:
+    $ref: ./paths/has/consent_has_consentType_consentVersion.yaml
+  /clientuser/uid/{id}:
+    $ref: ./paths/uid/clientuser_uid_id.yaml
+  /clientuser/login:
+    $ref: ./paths/login/clientuser_login.yaml
+  /clientuser/getDetails:
+    $ref: ./paths/getDetails/clientuser_getDetails.yaml
+  /clientuser/context:
+    $ref: ./paths/context/clientuser_context.yaml
+  /captcha/validate:
+    $ref: ./paths/validate/captcha_validate.yaml
+  /.well-known/openid-configuration:
+    $ref: ./paths/openid-configuration/well_known_openid_configuration.yaml
+  /.well-known/jwks.json:
+    $ref: ./paths/jwks.json/well_known_jwks_json.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataVoid:
+      $ref: ./components/schemas/common/GenericResponseErrorDataVoid.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/common/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ChangePasswordLoginCommand:
+      $ref: ./components/schemas/change/ChangePasswordLoginCommand.yaml
+    SetPasswordCommand:
+      $ref: ./components/schemas/set-password/SetPasswordCommand.yaml
+    WebAuthnSettingsSaveDto:
+      $ref: ./components/schemas/user/WebAuthnSettingsSaveDto.yaml
+    ShowPasskeySetupRequestDto:
+      $ref: ./components/schemas/user/ShowPasskeySetupRequestDto.yaml
+    PublicKeyCredentialDto:
+      $ref: ./components/schemas/register-authn-response/PublicKeyCredentialDto.yaml
+    CompleteAuthnResponseDto:
+      $ref: ./components/schemas/authn-response/CompleteAuthnResponseDto.yaml
+    UnauthorizedTokenRequestDto:
+      $ref: ./components/schemas/common/UnauthorizedTokenRequestDto.yaml
+    TransportTokenRq:
+      $ref: ./components/schemas/oauth/TransportTokenRq.yaml
+    CreateCaptchaRequest:
+      $ref: ./components/schemas/smart-captcha/CreateCaptchaRequest.yaml
+    EsiaUserBindData:
+      $ref: ./components/schemas/esia-bind/EsiaUserBindData.yaml
+    OAuth2Error:
+      $ref: ./components/schemas/common/OAuth2Error.yaml
+    TokenIntrospectionResponse:
+      $ref: ./components/schemas/token/TokenIntrospectionResponse.yaml
+    MfaCloudSignLoginRequest:
+      $ref: ./components/schemas/mfa/MfaCloudSignLoginRequest.yaml
+    MfaCloudSignOperationSearchRequest:
+      $ref: ./components/schemas/mfa/MfaCloudSignOperationSearchRequest.yaml
+    MfaChallengeCreateRequest:
+      $ref: ./components/schemas/mfa/MfaChallengeCreateRequest.yaml
+    MfaChainSelectRequest:
+      $ref: ./components/schemas/mfa/MfaChainSelectRequest.yaml
+    MfaChainListRequest:
+      $ref: ./components/schemas/mfa/MfaChainListRequest.yaml
+    OAuth2ApplicationOauthDto:
+      $ref: ./components/schemas/applications/OAuth2ApplicationOauthDto.yaml
+    ScopeDto:
+      $ref: ./components/schemas/applications/ScopeDto.yaml
+    ScopeNameDto:
+      $ref: ./components/schemas/applications/ScopeNameDto.yaml
+    OAuth2ApplicationModifyRequestOauthDto:
+      $ref: ./components/schemas/applications/OAuth2ApplicationModifyRequestOauthDto.yaml
+    RegisterBioPinRq:
+      $ref: ./components/schemas/register-bio-pin/RegisterBioPinRq.yaml
+    DisableBioPinExternalRq:
+      $ref: ./components/schemas/external-disable-bio-pin/DisableBioPinExternalRq.yaml
+    DisableBioPinClientRq:
+      $ref: ./components/schemas/disable-bio-pin/DisableBioPinClientRq.yaml
+    CheckPinRq:
+      $ref: ./components/schemas/check-pin/CheckPinRq.yaml
+    ChangePinRq:
+      $ref: ./components/schemas/change-pin/ChangePinRq.yaml
+    LoginRequestDto:
+      $ref: ./components/schemas/login/LoginRequestDto.yaml
+    PromoInfoDto:
+      $ref: ./components/schemas/login/PromoInfoDto.yaml
+    ExternalTokenRqDto:
+      $ref: ./components/schemas/oauth/ExternalTokenRqDto.yaml
+    AddConsentRq:
+      $ref: ./components/schemas/common/AddConsentRq.yaml
+    ClientUserInfoUpdateDto:
+      $ref: ./components/schemas/update/ClientUserInfoUpdateDto.yaml
+    RequestCaptchaDataDto:
+      $ref: ./components/schemas/common/RequestCaptchaDataDto.yaml
+    RestorePasswordCommandClientDto:
+      $ref: ./components/schemas/restorePassword/RestorePasswordCommandClientDto.yaml
+    RestoreLoginRequestClientDto:
+      $ref: ./components/schemas/restore-login/RestoreLoginRequestClientDto.yaml
+    RenewConfirmationCommandDto:
+      $ref: ./components/schemas/renewConfirm/RenewConfirmationCommandDto.yaml
+    GenericCommandPreregisterRenewConfirmCommand:
+      $ref: ./components/schemas/renew-preregister-confirm/GenericCommandPreregisterRenewConfirmCommand.yaml
+    PreregisterRenewConfirmCommand:
+      $ref: ./components/schemas/renew-preregister-confirm/PreregisterRenewConfirmCommand.yaml
+    ClientUserInfoClientDto:
+      $ref: ./components/schemas/register/ClientUserInfoClientDto.yaml
+    RegisterCommandClientDto:
+      $ref: ./components/schemas/register/RegisterCommandClientDto.yaml
+    GenericCommandPreregisterCommand:
+      $ref: ./components/schemas/preregister/GenericCommandPreregisterCommand.yaml
+    PreregisterCommand:
+      $ref: ./components/schemas/preregister/PreregisterCommand.yaml
+    ClientUserFromEsiaDto:
+      $ref: ./components/schemas/esia-register/ClientUserFromEsiaDto.yaml
+    GenericCommandPreregisterConfirmCommand:
+      $ref: ./components/schemas/confirm-preregister/GenericCommandPreregisterConfirmCommand.yaml
+    PreregisterConfirmCommand:
+      $ref: ./components/schemas/confirm-preregister/PreregisterConfirmCommand.yaml
+    ConfirmAndCompleteRegisterCommand:
+      $ref: ./components/schemas/confirm-and-complete-register/ConfirmAndCompleteRegisterCommand.yaml
+    GenericCommandConfirmAndCompleteRegisterCommand:
+      $ref: ./components/schemas/confirm-and-complete-register/GenericCommandConfirmAndCompleteRegisterCommand.yaml
+    CheckSmsCodeCommandClientDto:
+      $ref: ./components/schemas/common/CheckSmsCodeCommandClientDto.yaml
+    CheckEmailCodeCommand:
+      $ref: ./components/schemas/completeEmailChange/CheckEmailCodeCommand.yaml
+    CompleteRestoreLoginRequestDto:
+      $ref: ./components/schemas/complete-restore-login/CompleteRestoreLoginRequestDto.yaml
+    ChangePhoneNumberCommand:
+      $ref: ./components/schemas/changePhoneNumber/ChangePhoneNumberCommand.yaml
+    ChangePasswordCommand:
+      $ref: ./components/schemas/changePassword/ChangePasswordCommand.yaml
+    ChangeEmailCommand:
+      $ref: ./components/schemas/changeEmail/ChangeEmailCommand.yaml
+    ChangeUserInterfaceTypeRequest:
+      $ref: ./components/schemas/change-user-interface-type/ChangeUserInterfaceTypeRequest.yaml
+    ActionResultSingleResponseUUID:
+      $ref: ./components/schemas/captcha/ActionResultSingleResponseUUID.yaml
+    SingleResponseUUID:
+      $ref: ./components/schemas/captcha/SingleResponseUUID.yaml
+    ProviderMetadataInfo:
+      $ref: ./components/schemas/common/ProviderMetadataInfo.yaml
+    JwkInfo:
+      $ref: ./components/schemas/common/JwkInfo.yaml
+    JwksInfo:
+      $ref: ./components/schemas/common/JwksInfo.yaml
+    ChangePasswordFormState:
+      $ref: ./components/schemas/common/ChangePasswordFormState.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/validate/SingleResponseBoolean.yaml
+    tokenRequestSchema:
+      $ref: ./components/schemas/common/tokenRequestSchema.yaml
+    authorizeRequestSchema:
+      $ref: ./components/schemas/common/authorizeRequestSchema.yaml
+    introspectSchema:
+      $ref: ./components/schemas/common/introspectSchema.yaml
+  securitySchemes:
+    Bearer:
+      type: http
+      name: Bearer
+      scheme: bearer
+      bearerFormat: JWT

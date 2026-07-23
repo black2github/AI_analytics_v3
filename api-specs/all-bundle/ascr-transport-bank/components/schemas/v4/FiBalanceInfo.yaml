@@ -1,0 +1,14 @@
+type: object
+description: Информация о балансе СЦР ФП.
+properties:
+  totalAmount:
+    type: number
+    description: Доступный остаток с учетом заблокированных средств.
+  totalBlockedAmount:
+    type: number
+    description: Сумма заблокированных средств.
+  currentBalance:
+    type: number
+    description: Текущий баланс СЦР.
+required:
+- totalAmount

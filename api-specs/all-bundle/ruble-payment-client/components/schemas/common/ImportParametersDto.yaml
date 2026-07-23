@@ -1,0 +1,16 @@
+required:
+- importAction
+type: object
+properties:
+  importAction:
+    $ref: ./ImportActionTypeDto.yaml
+  importValid:
+    type: boolean
+    description: 'Выбранные документы: Корректные'
+  importError:
+    type: boolean
+    description: 'Выбранные документы: С ошибками'
+  importWarning:
+    type: boolean
+    description: 'Выбранные документы: С предупреждениями'
+description: Параметры импорта

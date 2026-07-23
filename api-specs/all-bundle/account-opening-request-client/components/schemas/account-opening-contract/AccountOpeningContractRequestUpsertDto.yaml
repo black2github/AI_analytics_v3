@@ -1,0 +1,145 @@
+required:
+- account
+- bankClientId
+- branchId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Текущая версия для блокировки
+    format: int32
+  number:
+    type: integer
+    description: Номер заявки.
+    format: int32
+  date:
+    type: string
+    description: Дата заявки.
+    format: date-time
+  status:
+    type: string
+    description: Текущий статус обработки заявки.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_KNOSIS
+    - EXECUTED_IN_KNOSIS
+    - EXPORT_TO_KNOSIS_ERROR
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_FILES_TO_F1
+    - FILES_EXPORTED_TO_F1
+    - EXPORT_FILES_TO_F1_ERROR
+    - WAITING_FOR_ESK_ACCOUNT
+    - ACCOUNT_OPENED_IN_F1
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+    - COMMISSION_ACCOUNT_CHECK
+    - QRC_WAITING_FOR_COMMISSION_PAYMENT
+    - QRC_SHOW_COMMISSION
+    - QRC_COMMISSION_PAID
+    - QRC_REGISTER
+    - QRC_REQUEST
+    - QRC_ANALYZE
+    - QRC_COMMISSION_PAYMENT_ERROR
+    - QRC_COMMISSION_PAYMENT_SUCCESS
+  step:
+    type: string
+    description: Шаг заявки.
+    enum:
+    - OPENING_ACCOUNT
+    - QR_CODE
+    - GOZ_REQUISITES
+    - CONFIRMATION
+    - CHECK_AUTHORITY
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь").
+    format: uuid
+  requestType:
+    type: string
+    description: Классификатор типов документов.
+    enum:
+    - ACC_OPEN_SECOND_REQ
+    - ACC_OPEN_SECOND_CONTRACT_REQ
+  filialId:
+    type: string
+    description: Идентификатор Филиала из ответа РКО Ф1.
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента по заявке.
+    format: uuid
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки.
+    items:
+      $ref: ./AccountOpeningContractRequestSignatureDto.yaml
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  multiAccountContract:
+    $ref: ./MultiAccountContractUpsertDto.yaml
+  bankAccountContract:
+    $ref: ./BankAccountContractDto.yaml
+  account:
+    $ref: ./AccountDto.yaml
+  openedAccount:
+    $ref: ./AccountOpeningContractOpenedAccountDto.yaml
+  branchId:
+    type: string
+    description: Идентификатор подразделения в котором открывается счет и заключается ДБС.
+    format: uuid
+  agreements:
+    $ref: ./AgreementsDto.yaml
+  commission:
+    $ref: ./CommissionDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+  gozContract:
+    $ref: ./GozContractDto.yaml
+  gozContractCustomer:
+    $ref: ./GozContractCustomerDto.yaml
+  requestExecutionData:
+    $ref: ./RequestExecutionDataDto.yaml
+  documents:
+    type: array
+    description: Документы и вложения Заявки на открытие доп счета и ДБС.
+    items:
+      $ref: ./AccountOpeningContractRequestDocumentDto.yaml
+  requestVersion:
+    type: integer
+    description: Версионность документа.
+    format: int32
+  marketingCampaign:
+    type: string
+    description: Маркетинговая кампания
+  executedAt:
+    type: string
+    description: Дата исполнения заявки.
+    format: date-time
+  qrcCommissionPayment:
+    $ref: ../common/QrcCommissionPaymentDto.yaml
+description: ДТО создания/обновления заявки на открытие доп счета и заключение ДБС.

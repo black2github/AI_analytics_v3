@@ -1,0 +1,16 @@
+type: object
+description: Данные фактического плательщика
+properties:
+  name:
+    type: string
+    description: Наименование фактического плательщика
+  inn:
+    type: string
+    description: ИНН фактического плательщика
+  kpp:
+    type: string
+    description: КПП фактического плательщика
+required:
+- inn
+- kpp
+- name

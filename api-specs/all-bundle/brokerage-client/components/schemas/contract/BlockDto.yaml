@@ -1,0 +1,12 @@
+type: object
+properties:
+  ordinal:
+    type: integer
+    description: Порядковый индекс блока в наборе
+    format: int32
+  requisites:
+    type: array
+    description: Список реквизитов
+    items:
+      $ref: ./RequisiteDto.yaml
+description: Блок реквизитов валютного счета

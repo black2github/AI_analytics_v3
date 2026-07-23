@@ -1,0 +1,9 @@
+type: object
+properties:
+  currency:
+    type: string
+    description: Код Валюты
+  rate:
+    type: string
+    description: Курс ЦБ
+description: Курсы валют ЦБ

@@ -1,0 +1,17 @@
+type: object
+description: Данные из эталона ЭС, преобразованные в формате json для удобства
+properties:
+  messageHeader:
+    $ref: ./MessageHeader.yaml
+    description: Заголовок ЭС
+  transferB2B:
+    $ref: ./TransferB2B.yaml
+    description: Данные из эталона ЭС cbdc.006.001.01 B2B_2024.03 "Распоряжение Клиента на перевод ЦР (B2B)"
+  transferB2G:
+    $ref: ./TransferB2G.yaml
+    description: '"Данные из эталона ЭС cbdc.060.001.01.X2G_2026.07 "Распоряжение Клиента на перевод ЦР (X2G)"'
+  transferDcSelling:
+    $ref: ./TransferDcSelling.yaml
+    description: Данные из эталона ЭС cbdc.002.001.04 OrganisationDCSellingRequest_2024.03 "Распоряжение на вывод средств с СЦР Клиента-ЮЛ"
+required:
+- messageHeader

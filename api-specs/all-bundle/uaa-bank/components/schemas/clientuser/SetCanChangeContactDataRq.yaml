@@ -1,0 +1,13 @@
+required:
+- canChangeContactData
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  canChangeContactData:
+    type: boolean
+    description: Возможность изменения контактных данных
+description: ДТО установки возможности изменения контактных данных

@@ -1,0 +1,20 @@
+title: Информация о городе
+type: object
+properties:
+  cityName:
+    title: Наименование города
+    type: string
+  cityFullName:
+    title: Наименование города (полное)
+    type: string
+  cityId:
+    title: GUID города
+    type: string
+    format: uuid
+  cityType:
+    title: Тип города
+    type: string
+  cityTypeCode:
+    title: Код типа города
+    type: string
+description: Данные об адресе клиента в ФИАС

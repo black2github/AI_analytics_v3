@@ -1,0 +1,16 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка.
+    format: uuid
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+description: Клиентский фильтр Соглашений Клиента Банка

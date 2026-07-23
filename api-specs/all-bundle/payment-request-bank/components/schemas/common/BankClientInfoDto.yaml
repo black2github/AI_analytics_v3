@@ -1,0 +1,12 @@
+type: object
+properties:
+  clientAccountId:
+    type: string
+    description: Идентификатор счёта клиента
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Идентификация организации
+nullable: true

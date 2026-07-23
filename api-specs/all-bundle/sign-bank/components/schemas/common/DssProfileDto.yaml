@@ -1,0 +1,97 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID профиля КриптоПРО DSS
+    format: uuid
+  login:
+    type: string
+    description: Логин пользователя в КриптоПРО DSS
+  dssUserId:
+    type: string
+    description: ID пользователя в КриптоПРО DSS
+    format: uuid
+  qrCode:
+    type: string
+    description: QR код
+  qrCodeExpires:
+    type: string
+    description: Время жизни QR кода
+    format: date-time
+  createdAt:
+    type: string
+    description: Создан
+    format: date-time
+  updatedAt:
+    type: string
+    description: Обновлен
+    format: date-time
+  phoneNumber:
+    type: string
+    description: Телефон
+  email:
+    type: string
+    description: Email
+  changePhoneAvailable:
+    type: boolean
+    description: Признак того, что допускается смена номера телефона клиентом
+  secondaryAuthMethod:
+    type: string
+    description: Метод вторичной аутентификации
+    enum:
+    - UNKNOWN
+    - MOBILE
+    - MY_DSS
+    - OTP_VIA_SMS
+  maxSignDataSize:
+    type: integer
+    description: Максимальный размер подписываемых данных
+    format: int64
+  keyGenerationMode:
+    type: string
+    description: Режим генерации новых ключей
+    enum:
+    - UNKNOWN
+    - NO_CODE
+    - SMS_CODE
+    - EMAIL_CODE
+  keyGenerationModeChange:
+    type: string
+    description: Возможность смены режима генерации ключей
+    enum:
+    - UNKNOWN
+    - NOT_ALLOWED
+    - ALLOWED
+  blocked:
+    type: boolean
+    description: Признак блокировки
+  deleted:
+    type: boolean
+    description: Признак удаления
+  remoteId:
+    type: integer
+    description: Идентификатор учетной записи в системе источнике
+    format: int32
+  remoteProfileId:
+    type: integer
+    description: Идентификатор криптопрофиля в системе источнике
+    format: int32
+  userId:
+    type: string
+    description: UAA ID пользователя
+    format: uuid
+  userAbsId:
+    type: string
+    description: F1 ID пользователя
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  status:
+    type: string
+    description: Статус DSS профиля
+    enum:
+    - CREATED
+    - CONFIGURED
+    - READY_TO_USE
+description: DSS профиль пользователя

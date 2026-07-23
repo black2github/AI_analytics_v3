@@ -1,0 +1,34 @@
+post:
+  tags:
+  - API принятия конституции клиентом банка.
+  summary: Печать конституции
+  description: 'Привилегии: CONSTITUTION_ACCEPTANCE.PRINT'
+  operationId: printConstitutionUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/SingleCommand«ConstitutionPrintFormatDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,21 @@
+required:
+- docCreationPage
+- paymentOrderIds
+type: object
+properties:
+  paymentOrderIds:
+    type: array
+    description: Список идентификаторов отзываемых Рублевых платежных поручений
+    items:
+      type: string
+      description: Список идентификаторов отзываемых Рублевых платежных поручений
+      format: uuid
+  chargebackReason:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9_\s!?.,:;<=>@^%&#@№^~'`/|\\"\$\(\)\*\+\-\[\]\{\}]*$
+    type: string
+    description: Причина отзыва
+  docCreationPage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+description: Создание сущности "Запрос на отзыв"

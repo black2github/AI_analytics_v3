@@ -1,0 +1,31 @@
+required:
+- bankClientId
+- eskId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор ЕСК уполномоченного лица
+  products:
+    type: array
+    description: Коды продуктов (ЦРМ)
+    items:
+      type: string
+      description: Код продукта
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+description: Данные для получения

@@ -1,0 +1,153 @@
+type: object
+properties:
+  bankAttachmentAnalysisStatus:
+    type: string
+    description: Статус анализа вложения в Банке
+    enum:
+    - NOT_ANALYSED
+    - CORRECT
+    - INCORRECT
+  description:
+    type: string
+    description: Описание оригинала документа
+  docOrder:
+    type: integer
+    description: Номер по порядку при добавлении документов
+    format: int32
+  docUpdatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  documentChanged:
+    type: boolean
+    description: Признак замены документа клиентом
+  documentDate:
+    type: string
+    description: Дата документа
+    format: date
+  documentNumber:
+    type: string
+    description: Номер документа
+  documentSource:
+    type: string
+    description: Источник добавления документа
+    enum:
+    - TECHNICAL_USER
+    - CLIENT_USER
+    - BANK_USER
+    - TESSA_BN
+  documentTypeCode:
+    type: string
+    description: Код типа документа
+    enum:
+    - IDENTITY_DOCUMENT
+    - MIGRATION_CARD
+    - GOZ
+    - CONSTITUENT_DOCUMENT
+    - CONSTITUENT_DOCUMENT_CHANGES
+    - CONSTITUENT_DOCUMENT_EIO
+    - CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - LICENSE
+    - HEAD_APPOINTMENT
+    - RIGHT_SIGN_DOCUMENT
+    - WARRANT_SIGNERS
+    - WARRANT_SIGNER_PERSON
+    - OTHER_DOCUMENTS
+    - ANOTHER_DOCUMENT
+    - MAKE_MC_HEAD
+    - CONTRACT_MC
+    - MC_CONSTITUENT_DOCUMENT
+    - MC_CONSTITUENT_DOCUMENT_CHANGES
+    - MC_CONSTITUENT_DOCUMENT_EIO
+    - MC_CONSTITUENT_DOCUMENT_EIO_CHANGES
+    - MC_HEAD_APPOINTMENT
+    - MAKE_OUTSRS_ACCOUNTING
+    - CONTRACT_OUTSRS_ACCOUNTING
+    - FATCA_UL
+    - FATCA_IP
+    - CM_111
+    - CM_112
+    - CM_114
+    - CM_115
+    - CM_1113
+    - CM_IP111
+    - CM_UL113
+    - CM_IP112
+    - CM_IP1124
+    - CM_UL1123
+    - CM_IP1122
+    - CM_UL1121
+    - CM_1111
+    - CM_UL111
+    - CM_IP113
+    - CM_UL112
+    - CM_IP114
+    - CM_122
+    - CM_123
+    - CM_113
+    - CM_119
+    - CM_1114
+    - CM_1115
+    - CM_121
+    - CM_1110
+    - CM_1112
+    - CM_1116
+    - CM_1117
+    - CM_1118
+    - CM_1119
+    - CM_1120
+    - CM_1125
+    - CM_1126
+    - EGRUL
+    - SNILS
+    - EAES
+    - PURCHASE_PROCEDURE
+    - APPLICATION_SUPPORT_GK
+    - EGRUL_UK
+    - WARRANT_ACCOUNTING_OR_TAX
+    - CM_1124
+    - CM_117
+    - CM_1123
+    - PERMISSION_TO_STAY_IN_RUSSIA
+  documentTypeId:
+    type: string
+    description: Идентификатор типа документа
+    format: uuid
+  files:
+    type: array
+    description: Список файлов оригинала документа
+    items:
+      $ref: ./OriginalDocumentFileDto.yaml
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  modelRegulationId:
+    type: string
+    description: Идентификатор типового устава
+    format: uuid
+  needSign:
+    type: boolean
+    description: Загрузка ЭП
+  needUpload:
+    type: boolean
+    description: Загружать документ в заявку
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  personId:
+    type: string
+    description: Идентификатор физ. лица
+    format: uuid
+  regulationType:
+    type: string
+    description: Тип устава
+    enum:
+    - MODEL
+    - INDIVIDUAL
+    - UNKNOWN
+  requiredReplace:
+    type: boolean
+    description: Необходимо заменить
+description: Оригиналы документов

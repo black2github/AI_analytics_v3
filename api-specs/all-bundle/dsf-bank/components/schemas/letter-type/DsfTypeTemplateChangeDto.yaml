@@ -1,0 +1,13 @@
+type: object
+description: Шаблон ДСФ. ДТО на изменение.
+properties:
+  isVisible:
+    type: boolean
+    description: Отображать в тексте
+  templateDataId:
+    type: string
+    format: uuid
+    description: Ссылка на загруженный файл шаблона
+  templateType:
+    type: string
+    description: Вид вложения

@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование организации
+  documents:
+    type: array
+    description: Документы
+    items:
+      $ref: ./SignRegistryDocumentDto.yaml
+description: Реестр документов клиента банка на подпись

@@ -1,0 +1,29 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  fullBlock:
+    type: boolean
+    description: Признак полной блокировки
+  activeBlock:
+    type: boolean
+    description: Признак блокировки
+  totalBlockAmount:
+    type: string
+    description: Общая сумма блокировки по счету
+  accountCurrencyCode:
+    type: string
+    description: Буквенный код валюты счета
+  organInfos:
+    type: array
+    description: Группировка признаков блокировки по типу органа
+    items:
+      $ref: ./OrganInfoDto.yaml
+  accountBlocks:
+    type: array
+    description: Блокировка
+    items:
+      $ref: ./AccountBlockInfoDto.yaml
+description: Исходящие параметры функции получения блокировок по счету

@@ -1,0 +1,52 @@
+type: object
+properties:
+  supplyMode:
+    type: string
+    description: Способ оформления доверенности
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+  hasActiveWarranty:
+    type: boolean
+    description: Есть действующая доверенность на получение информации
+  activeWarrantyNumber:
+    type: string
+    description: Номер действующей доверенности на получение информации
+  activeWarrantyIssueDate:
+    type: string
+    description: Дата выдачи действующей доверенности на получение информации
+    format: date
+  activeWarrantyStartDate:
+    type: string
+    description: Дата начала действия действующей доверенности на получение информации
+    format: date
+  activeWarrantyCurrentEndDate:
+    type: string
+    description: Текущая дата окончания действия действующей доверенности на получение информации
+    format: date
+  activeWarrantyNewEndDate:
+    type: string
+    description: Новая дата окончания действия действующей доверенности на получение информации
+    format: date
+  activeWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую доверенность на получение информации
+  grantNewWarranty:
+    type: boolean
+    description: Выдать новую доверенность на получение информации
+  newWarrantyIssueDate:
+    type: string
+    description: Дата выдачи новой доверенности на получение информации
+    format: date
+  newWarrantyStartDate:
+    type: string
+    description: Дата начала действия новой доверенности на получение информации
+    format: date
+  newWarrantyEndDate:
+    type: string
+    description: Дата окончания действия новой доверенности на получение информации
+    format: date
+description: Данные для создания/обновления электронной доверенности сотрудника на получение банковской информации

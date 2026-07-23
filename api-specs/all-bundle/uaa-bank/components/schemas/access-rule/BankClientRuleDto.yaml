@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID клиента банка
+    format: uuid
+  shortName:
+    type: string
+    description: Короткое наименование
+  fullName:
+    type: string
+    description: Полное наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+  absId:
+    type: string
+    description: РНК клиента в РКО Ф1
+  kpp:
+    type: string
+    description: КПП
+description: Данные об организации для правил предоставления доступа. ДТО

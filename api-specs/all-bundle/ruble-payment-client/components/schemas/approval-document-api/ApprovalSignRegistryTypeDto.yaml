@@ -1,0 +1,6 @@
+type: string
+description: Тип реестра визируемых документов
+enum:
+- PAYMENT_ORDER_CSV
+- PAYMENT_ORDER_CSV_TAXES
+- PAYMENT_ORDER_1C

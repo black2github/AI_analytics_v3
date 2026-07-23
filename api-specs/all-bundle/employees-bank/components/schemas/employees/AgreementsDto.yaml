@@ -1,0 +1,6 @@
+type: object
+properties:
+  confirmOfAuthorityToSign:
+    type: boolean
+    description: Признак подтверждения полномочий УЛ на подписание и передачу ЭД
+description: Согласия клиентов

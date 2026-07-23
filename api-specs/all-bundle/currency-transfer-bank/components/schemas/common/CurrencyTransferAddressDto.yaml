@@ -1,0 +1,36 @@
+type: object
+properties:
+  zipCode:
+    type: string
+    description: Почтовый индекс
+  region:
+    type: string
+    description: Регион
+  city:
+    type: string
+    description: Город
+  district:
+    type: string
+    description: Район
+  street:
+    type: string
+    description: Улица
+  houseNum:
+    type: string
+    description: Номер дома
+  building:
+    type: string
+    description: Наименование здания
+  floor:
+    type: string
+    description: Этаж
+  apartment:
+    type: string
+    description: Квартира, офис
+  postOfficeBox:
+    type: string
+    description: Абонентский ящик
+  address:
+    type: string
+    description: Наименование улицы/промзоны/территории, номер дома, офиса
+description: Транспортное представление атрибутов адреса

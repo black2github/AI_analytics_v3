@@ -1,0 +1,187 @@
+type: object
+description: Документ из банка. Возвращаемое ДТО.
+properties:
+  aml:
+    $ref: ./AmlDocumentFromBankResponseDto.yaml
+    description: Дополнительные AML-поля
+  attachments:
+    type: array
+    description: Список вложений.
+    items:
+      $ref: ./DsfAttachmentFromBankDto.yaml
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+    description: Информация о клиенте банка.
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+    description: Информация о подразделении.
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента.
+  contactId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя контактного лица.
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания заявки.
+  date:
+    type: string
+    format: date
+    description: Дата создания заявки.
+  dialog:
+    $ref: ./DsfDialogClientResponseDto.yaml
+    description: Диалог, к которому относится письмо
+  dialogId:
+    type: string
+    description: ID группы связанных писем
+  dsfType:
+    $ref: ../common/DsfTypeResponseDto.yaml
+    description: Тип документа.
+  email:
+    type: string
+    description: Адрес электронной почты.
+  externalId:
+    type: string
+    description: ID письма в АС инициатор
+  externalSystem:
+    type: string
+    description: АС инициатор/получатель письма
+    enum:
+    - AML
+    - TESSA
+    - H2H
+  fio:
+    type: string
+    description: ФИО контактного лица клиента.
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор документа в банк.
+  isFavorite:
+    type: boolean
+    description: Признак добавления документа в "Избранные"
+  isNotifyByPhone:
+    type: boolean
+    description: Уведомить меня об исполнении по номеру телефона.
+  massDocumentId:
+    type: string
+    format: uuid
+    description: Идентификатор массовой рассылки.
+  mchdAttachments:
+    type: array
+    description: Список МЧД.
+    items:
+      $ref: ./DsfAttachmentFromBankDto.yaml
+  message:
+    type: string
+    description: Текст письма.
+  number:
+    type: integer
+    format: int32
+    description: Номер документа, сквозная автоматическая нумерация в разрезе организации.
+  phone:
+    type: string
+    description: Номер мобильного телефона.
+  receivedAt:
+    type: string
+    format: date-time
+    description: Дата и время получения (дата и время отправки в Банк) заявки.
+  responsibleBankUserFio:
+    type: string
+    description: ФИО ответственного операциониста
+  responsibleBankUserId:
+    type: string
+    format: uuid
+    description: Идентификатор ответственного операциониста
+  responsibleSignerFio:
+    type: string
+    description: ФИО пользователя ответственного за подписание документа
+  responsibleSignerId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя ответственного за подписание документа
+  signCheckAt:
+    type: string
+    format: date-time
+    description: Дата проверки подписи
+  signatures:
+    type: array
+    description: Подписи документа.
+    items:
+      $ref: ./DsfSignatureFromBankDto.yaml
+  sppVersion:
+    type: integer
+    format: int32
+    description: Версия СПП
+  status:
+    type: string
+    description: Статус документа.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - SIGNED
+    - TO_SEND
+    - TO_SEND_START_PROCESSING
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - DENIED
+    - EXECUTED
+    - READ
+    - READ_START_PROCESSING
+    - SIGN_REQUIRED_OR_NOT
+    - DETAILS_VALID_OR_DENIED
+    - SIGN_NEED_CHECK
+    - SIGN_VALID_OR_DENIED
+    - DRAFT_OR_NEW
+    - WAIT_CLIENT_SIGN
+    - WAIT_BANK_SIGN
+    - CLIENT_SIGNED
+    - REVOKED
+    - REJECTED
+    - REPLY_LETTER_CREATED
+    - WAIT_DETACH_FROM_BANK
+    - DETACH_FROM_BANK_ERROR
+    - DETACH_FROM_BANK_EXECUTED
+    - EXPORT_H2H_XML_DONE
+    - EXPORT_H2H_XML_REQUIRED_OR_NOT
+    - DETACH_REQUIRED_OR_NOT
+    - AUTOSIGN_ERROR
+  subject:
+    type: string
+    description: Тема письма.
+  toBankId:
+    type: string
+    format: uuid
+    description: Ссылка на ответный документ в банк.
+  typeBankSignRequired:
+    type: boolean
+    description: Двустороннее подписание.
+  typeCode:
+    type: string
+    description: Код типа документа.
+  typeLetterClassifier:
+    type: string
+    description: Категория письма.
+  typeName:
+    type: string
+    description: Наименование типа документа.
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления заявки.
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку.
+  version:
+    type: integer
+    format: int32
+    description: Текущая версия документа в банк.

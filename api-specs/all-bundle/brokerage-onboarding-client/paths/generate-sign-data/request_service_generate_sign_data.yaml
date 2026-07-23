@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Сформировать данные для функции подписи v2.1
+  description: 'Привилегии: BRK_ONBOARDING.CLIENT.REQUEST.SIGN'
+  operationId: generateSignDataV2x1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml

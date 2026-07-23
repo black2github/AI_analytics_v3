@@ -1,0 +1,63 @@
+post:
+  tags:
+  - API для отчета отмена сделки Депозита и МНО
+  - API для сделок МНО
+  - API для заявлений об отказе
+  summary: Сформировать список сертифкатов доступных для подписи
+  description: 'Привилегии: #eco.userTypeIs(''CLIENT'') AND hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_MNO_DEALS_COMMON'')'
+  operationId: getSignCertificates_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataListUniCertificateTreasuryDto.yaml
+    '409':
+      description: Conflict
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponse.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

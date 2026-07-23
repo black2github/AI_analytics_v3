@@ -1,0 +1,10 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата платежа
+    format: date
+  amount:
+    type: string
+    description: Сумма платежа
+description: Суммы платежей по датам их осуществления

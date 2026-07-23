@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сделки
+    format: uuid
+  docType:
+    type: string
+    description: Тип документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  allowedDstKind:
+    type: array
+    description: Доступные виды инструментов для подписи
+    items:
+      type: string
+      description: Доступные виды инструментов для подписи
+      enum:
+      - UNKNOWN
+      - LOCAL
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+description: Доступные инструменты для подписи по сделке

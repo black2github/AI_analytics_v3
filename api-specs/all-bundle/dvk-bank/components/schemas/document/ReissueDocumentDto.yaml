@@ -1,0 +1,13 @@
+type: object
+properties:
+  documentName:
+    type: string
+    description: Наименование документа, на основании которого вносятся изменения в ПС
+  documentNumber:
+    type: string
+    description: Номер документа, на основании которого вносятся изменения в ПС
+  documentDate:
+    type: string
+    description: Дата документа, на основании которого вносятся изменения в ПС
+    format: date
+description: Дто Основание для переоформления

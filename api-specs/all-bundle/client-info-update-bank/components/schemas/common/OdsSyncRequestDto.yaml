@@ -1,0 +1,31 @@
+type: object
+properties:
+  odsType:
+    type: string
+    enum:
+    - EMPL_EMPLOYEE_REQUEST
+    - UAA_CLIENT_USER
+    - UAA_USER
+    - CLIU_CLIENT_INFO_UPDATE_REQUEST
+    - CLIU_CLIENT_INFO_CHANGE_REQUIREMENT
+    - CLDC_CLIENT_OFFICIAL
+    - CLDC_CLIENT_EMPLOYEE
+    - UNITED_AGREEMENT_REQUEST
+    - DOC_FOR_APPROVAL
+    - RUB_PAYMENT_DOC
+    - INCOMING_PAYMENT_DOC
+    - CUR_PAYMENT_DOC
+    - VISIT_JOURNAL
+    - DIO
+    - SVK_IN
+    - SVK_OUT
+  odsDataProviderType:
+    type: string
+  dbBatchSize:
+    type: integer
+    format: int32
+  transportBatchSize:
+    type: integer
+    format: int32
+  filter:
+    $ref: ./OdsSyncRequestFilter.yaml

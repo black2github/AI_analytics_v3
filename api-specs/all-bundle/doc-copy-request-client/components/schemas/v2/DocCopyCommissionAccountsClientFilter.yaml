@@ -1,0 +1,7 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  query:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр списка счетов на списание комиссии. Клиентская часть

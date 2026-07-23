@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос на блокировку и разблокировку ТСП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/MerchantBlockDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/MerchantBlockResultDto.yaml
+    '400':
+      description: Bad Request

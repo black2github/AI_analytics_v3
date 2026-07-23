@@ -1,0 +1,18 @@
+required:
+- accountIds
+- endDate
+type: object
+properties:
+  accountIds:
+    minItems: 1
+    type: array
+    description: Список счетов
+    items:
+      type: string
+      description: Список счетов
+      format: uuid
+  endDate:
+    type: string
+    description: Дата окончания периода
+    format: date
+description: Запрос на получение оборотов по списку счетов

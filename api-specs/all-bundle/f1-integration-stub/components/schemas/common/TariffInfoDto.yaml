@@ -1,0 +1,21 @@
+type: object
+description: Блок с информацией о комиссионных тарифах для копий документов
+properties:
+  paymentDocPriceDigital:
+    type: number
+    description: Стоимость платежного документа в электронном виде
+  paymentDocPriceOnPaper:
+    type: number
+    description: Стоимость платежного документа в бумажном виде
+  contractDocPriceDigital:
+    type: number
+    description: Стоимость договорных документов в электронном виде
+  contractDocPriceDigitalNds:
+    type: number
+    description: Сумма включенного НДС для договорного документа в электронном виде
+  contractDocPriceOffice:
+    type: number
+    description: Стоимость договорных документов в бумажном виде
+  contractDocPriceOfficeNds:
+    type: number
+    description: Сумма включенного НДС для договорного документа в бумажном виде

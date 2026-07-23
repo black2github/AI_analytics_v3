@@ -1,0 +1,14 @@
+required:
+- requests
+- service
+type: object
+properties:
+  service:
+    type: string
+    description: Сервис-инициатор запроса
+  requests:
+    type: array
+    description: Список запросов для обработки
+    items:
+      $ref: ./ProcessInviteRequest.yaml
+description: ДТО аннулирования инвайта (batch)

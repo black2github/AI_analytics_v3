@@ -1,0 +1,26 @@
+type: object
+properties:
+  paymentAmount:
+    type: integer
+    format: int64
+    description: Сумма периодического платежа в копейках
+  paymentFrequency:
+    type: string
+    description: Периодичность платежа, обязательно если заполнена сумма
+    enum:
+    - DAILY
+    - WEEKLY
+    - MONTHLY
+    - QUARTERLY
+  paymentStart:
+    type: string
+    format: date
+    description: Дата старта подписки, обязательно если периодичность QUARTERLY
+  paymentsQuantity:
+    type: integer
+    format: int32
+    description: Количество платежей, без ограничений если null
+  paymentDay:
+    type: integer
+    format: int32
+    description: День списания, обязательно если периодичность WEEKLY или MONTHLY

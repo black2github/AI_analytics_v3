@@ -1,0 +1,58 @@
+get:
+  tags:
+  - CryptoProLicenseClient
+  summary: Получить запрос лицензии
+  description: 'Привилегии: LICENSE.CLIENT.CRYPTO_PRO_LICENSE_REQUEST'
+  operationId: getRequest
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/crypto-pro/GenericResponseSimpleErrorDataCryptoProLicenseRequestClientDto.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security:
+  - bearerAuth: []

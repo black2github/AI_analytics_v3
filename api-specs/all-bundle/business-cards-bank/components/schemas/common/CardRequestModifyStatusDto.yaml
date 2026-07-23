@@ -1,0 +1,26 @@
+type: object
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  currentStatus:
+    type: string
+    description: Статус заявки для изменения
+  requestIds:
+    type: array
+    description: Уникальный идентификатор документа
+    items:
+      type: string
+      description: Уникальный идентификатор документа
+      format: uuid
+  statusEditTypeDto:
+    type: string
+    description: Тип изменения заявки
+    enum:
+    - RETRY
+    - REJECT
+    - SUCCESS
+description: Запрос изменения статуса заявки

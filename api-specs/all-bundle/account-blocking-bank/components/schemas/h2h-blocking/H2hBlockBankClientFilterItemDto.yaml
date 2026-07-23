@@ -1,0 +1,15 @@
+required:
+- bankClientId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на Клиента Банка
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименовании Клиента банка
+  rnk:
+    type: string
+    description: РНК клиента
+description: Данные заблокированной организации или организации - инициатора для фильтрации блокировок

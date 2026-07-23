@@ -1,0 +1,7 @@
+type: object
+properties:
+  fio:
+    type: string
+  email:
+    type: string
+description: Данные

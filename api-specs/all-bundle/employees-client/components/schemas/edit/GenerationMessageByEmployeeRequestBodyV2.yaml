@@ -1,0 +1,18 @@
+required:
+- bankClientId
+- emplId
+- type
+type: object
+properties:
+  emplId:
+    type: string
+    format: uuid
+  bankClientId:
+    type: string
+    format: uuid
+  type:
+    type: string
+    enum:
+    - BY_EMPLOYEE
+    - BY_EMPLOYEE_V2
+    - BY_USER

@@ -1,0 +1,41 @@
+openapi: 3.0.1
+info:
+  title: Сервис переключения фич. Банковская часть.
+  version: 3.68.1
+servers:
+- url: /treasury-feature-toggles-internal
+security:
+- bearerAuth: []
+paths:
+  /feature-toggles/control:
+    $ref: ./paths/control/feature_toggles_control.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /feature-toggles/strategies:
+    $ref: ./paths/strategies/feature_toggles_strategies.yaml
+  /feature-toggles/features:
+    $ref: ./paths/features/feature_toggles_features.yaml
+  /feature-toggles/features/{name}:
+    $ref: ./paths/features/feature_toggles_features_name.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ControlFeatureDto:
+      $ref: ./components/schemas/control/ControlFeatureDto.yaml
+    ActivationStrategyDto:
+      $ref: ./components/schemas/common/ActivationStrategyDto.yaml
+    ActivationStrategyParameterDto:
+      $ref: ./components/schemas/common/ActivationStrategyParameterDto.yaml
+    FeatureDto:
+      $ref: ./components/schemas/features/FeatureDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

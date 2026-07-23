@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-request-client-controller
+  summary: Создание документа
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.REQUEST_CREATE'
+  operationId: createV2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/v2/CreateCommandClientInfoUpdCreateRequestDtoV2.yaml
+    required: true
+  responses:
+    '201':
+      description: Created
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/CreateResponseClientInfoUpdateRequestDto.yaml

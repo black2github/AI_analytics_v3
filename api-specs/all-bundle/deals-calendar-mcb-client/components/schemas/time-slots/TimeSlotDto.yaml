@@ -1,0 +1,8 @@
+type: object
+properties:
+  fromTime:
+    type: string
+    description: Начало интервала в формате "чч:мм"
+  toTime:
+    type: string
+    description: Конец интервала в формате "чч:мм"

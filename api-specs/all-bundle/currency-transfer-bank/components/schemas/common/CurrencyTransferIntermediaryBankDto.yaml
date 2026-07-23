@@ -1,0 +1,30 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор банка банка-посредника
+    format: uuid
+  bic:
+    type: string
+    description: BIC-код банка-посредника
+  name:
+    type: string
+    description: Наименование банка-посредника
+  city:
+    type: string
+    description: Город банка-посредника
+  address:
+    type: string
+    description: Адрес, клиринговый код
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  accountType:
+    type: string
+    description: Транспортное представление для передачи тип счета
+    enum:
+    - IBAN
+    - OTHER
+  accountNumber:
+    type: string
+    description: Номер счета банка-посредника (IBAN/прочий)
+description: Транспортное представление реквизитов банка-посредника

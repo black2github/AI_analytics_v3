@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  name:
+    type: string
+    description: Название клиента банка
+  clientRnk:
+    type: string
+    description: РНК клиента
+  externalClientId:
+    type: string
+    description: GUID клиента
+    format: uuid
+description: Дто организации для Банка

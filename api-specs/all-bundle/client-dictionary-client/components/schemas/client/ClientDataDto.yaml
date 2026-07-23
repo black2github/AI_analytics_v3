@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+  externalClientId:
+    type: string
+    description: Идентификатор клиента в ЕСК
+    format: uuid
+description: Данные клиента банка

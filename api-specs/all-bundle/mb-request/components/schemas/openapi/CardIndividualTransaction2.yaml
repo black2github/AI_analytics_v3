@@ -1,0 +1,15 @@
+type: object
+properties:
+  transactionCategory:
+    type: string
+  sequenceNumber:
+    type: string
+  TransactionIdentification:
+    $ref: ./TransactionIdentifier1.yaml
+  Product:
+    type: array
+    items:
+      $ref: ./Product2.yaml
+  authorizationCode:
+    type: string
+description: Сведения об отдельной операции по карте, записанные на POI-терминале (точке взаимодействия)

@@ -1,0 +1,13 @@
+type: object
+properties:
+  ordinal:
+    type: integer
+    description: Порядковый индекс реквизита в наборе
+    format: int32
+  name:
+    type: string
+    description: Название реквизита
+  value:
+    type: string
+    description: Значение реквизита
+description: Реквизиты биржи

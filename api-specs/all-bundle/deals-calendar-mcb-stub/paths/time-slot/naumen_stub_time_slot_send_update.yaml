@@ -1,0 +1,28 @@
+post:
+  tags:
+  - Naumen. API заглушек временных слотов
+  summary: Отправить строку в кафка топик по обновлению слотов календарей от Naumen
+  operationId: sendTimeSlotUpdateUsingPOST
+  consumes:
+  - application/json
+  - text/plain
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: rawData
+    description: rawData
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,11 @@
+type: object
+properties:
+  groupType:
+    type: string
+    description: Тип группировки счетов
+    enum:
+    - GROUPED_BY_BRANCH_AND_ORG
+    - GROUPED_BY_ORG_AND_BRANCH
+  filter:
+    $ref: ./AccountsInfoFilter.yaml
+description: Запрос на получение сгруппированного списка счетов и остатков

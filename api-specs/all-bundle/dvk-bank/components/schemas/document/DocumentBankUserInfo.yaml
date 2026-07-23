@@ -1,0 +1,10 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя, изменившего сущность. Может быть {@code null} для пользователя типа TECHNICAL
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+description: Дто информации о пользователе для Банка

@@ -1,0 +1,19 @@
+type: object
+properties:
+  fullName:
+    type: string
+    description: Полное наименование организации/ИП
+  inn:
+    pattern: ^(\d{5}|\d{10}|\d{12})$
+    type: string
+    description: ИНН организации/ИП
+  kpp:
+    type: string
+    description: КПП организации
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  shortName:
+    type: string
+    description: Краткое наименование организации/ИП
+description: Запрос на проверку наличия заявок 115 в нефинальных статусах и заявок ФНС.

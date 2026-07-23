@@ -1,0 +1,118 @@
+put:
+  tags:
+  - Рублевое платежное поручение. Базовые операции.
+  summary: Обновление документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.EDIT'
+  operationId: update
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ruble-payment/UpdateWithDeviceCommandUpdatePaymentOrderRequestDtoUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/ruble-payment/CreateResponsePaymentOrderRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+post:
+  tags:
+  - Рублевое платежное поручение. Базовые операции.
+  summary: Создание документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.CREATE'
+  operationId: create
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/ruble-payment/CreateWithDeviceCommandCreatePaymentOrderRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '201':
+      description: Created
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/ruble-payment/CreateResponsePaymentOrderRequestDto.yaml

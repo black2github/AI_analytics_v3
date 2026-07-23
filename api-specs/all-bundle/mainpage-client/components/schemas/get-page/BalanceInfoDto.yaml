@@ -1,0 +1,15 @@
+required:
+- currentBalance
+type: object
+properties:
+  actualTime:
+    type: string
+    description: Время актуализации
+    format: date-time
+  currentBalance:
+    type: number
+    description: Фактический свободный остаток
+  currentOverdraft:
+    type: number
+    description: Сумма неиспользованного овердрафта
+description: Информация по балансу из Ф1

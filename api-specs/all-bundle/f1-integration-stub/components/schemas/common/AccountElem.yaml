@@ -1,0 +1,49 @@
+type: object
+description: Информация по счету клиента
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  department:
+    type: string
+    description: Подразделение счета
+  accountBranch:
+    type: string
+    description: Региональный филиал счета
+  currency:
+    type: string
+    description: Валюта счета
+  status:
+    type: string
+    description: Статус счета
+  dateOpen:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата открытия счета в формате YYYY-MM-DD
+  dateClose:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата закрытия счета в формате YYYY-MM-DD (заполняется только когда status принимает значение false)
+  rkoNumber:
+    type: string
+    description: Номер договора банковского счета РКО
+  dateOpenDBS:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата открытия договора банковского счета в формате YYYY-MM-DD
+  officeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+  accountCommission:
+    type: boolean
+    description: true - Признак счета списания комиссии, false - запрет списания комиссии
+  f1AccountId:
+    type: integer
+    format: int64
+    description: id финансового счета в АБС Ф1 (AC_FIN)

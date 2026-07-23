@@ -1,0 +1,37 @@
+required:
+- digest
+- documentId
+- signature
+type: object
+properties:
+  documentId:
+    type: string
+    description: id документа
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат клиента (заполняется, если certificateId=null)
+    nullable: true
+  certificateId:
+    type: string
+    description: Идентификатор сертификат клиента (заполняется, если certificate=null)
+    format: uuid
+    nullable: true
+  signature:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]+$
+    type: string
+    description: Подпись клиента
+  digest:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]+$
+    type: string
+    description: Дайджест подписи
+  docSignPage:
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Страница, с которой осуществляется подпись
+    nullable: true
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Данные о клиентской подписи

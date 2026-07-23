@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API отзыва сертификата
+  summary: Отозвать сертификат
+  operationId: revoke
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/revoke/GenericCommandRevokeCertRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/revoke/GenericResponseSimpleErrorDataRevokedCertDto.yaml

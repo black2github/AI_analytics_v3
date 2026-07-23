@@ -1,0 +1,21 @@
+type: object
+properties:
+  agreementCloseAccountHash1:
+    type: string
+    description: Хеш текста Согласия №1 с условиями закрытия счета
+  agreementCloseAccountHash2:
+    type: string
+    description: Хеш текста Согласия №2 с условиями закрытия счета
+  agreementCloseAccountHash3:
+    type: string
+    description: Хеш текста Согласия №3 с условиями закрытия счета
+  agreementCloseAccountHash4:
+    type: string
+    description: Хеш текста Согласия №4 с условиями закрытия счета
+  agreementCloseAccountHash5:
+    type: string
+    description: Хеш текста Согласия №5 с условиями закрытия счета
+  agreementCloseAccountHash6:
+    type: string
+    description: Хеш текста Согласия №6 с условиями закрытия счета
+description: Хеши текста согласия

@@ -1,0 +1,34 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  clientPosition:
+    type: string
+    description: Должность представителя
+  authorizingDocument:
+    type: string
+    description: Документ позволяющий подписать заявление
+  clientEmployeeConfirmedByPODFT:
+    type: boolean
+    description: Сотрудник Клиента подтвержден по ПОД/ФТ
+  isPersonTopOfficial:
+    type: boolean
+    description: Признак руководителя представителя
+  isClientReject499:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 499-П
+  isClientReject115:
+    type: boolean
+    description: Признак отказа клиенту в выполнении операции по 115-ФЗ
+  result:
+    type: boolean
+    description: Результат проверки
+  validatorResults:
+    uniqueItems: true
+    type: array
+    description: Результаты проверок валидаторов
+    items:
+      $ref: ./AuthorityValidatorResultV2.yaml
+description: Ответ на запрос проверки полномочий для сертификата

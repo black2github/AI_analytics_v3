@@ -1,0 +1,8 @@
+type: string
+description: Категории для скроллера клиента
+nullable: true
+enum:
+- ALL
+- ACCEPT_REQUIRED
+- REJECTED
+- COMPLETED

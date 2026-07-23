@@ -1,0 +1,14 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла с расширением
+  content:
+    type: string
+    description: Содержимое файла
+    format: byte
+description: Файлы вложений для отправки с сообщением.

@@ -1,0 +1,14 @@
+required:
+- action
+- comment
+type: object
+properties:
+  action:
+    type: string
+    enum:
+    - BLOCK
+    - UNBLOCK
+  comment:
+    type: string
+    description: Комментарий к событию
+description: Переключатель блокировки банковского пользователя

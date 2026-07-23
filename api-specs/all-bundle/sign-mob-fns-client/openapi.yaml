@@ -1,0 +1,48 @@
+openapi: 3.0.1
+info:
+  title: Сервис Мобильная Подпись.ФНС. Клиентская часть.
+  version: 1.0.0
+servers:
+- url: /sign-mob-fns-client
+security:
+- bearerAuth: []
+paths:
+  /my-fns/sign-operation:
+    $ref: ./paths/sign-operation/my_fns_sign_operation.yaml
+  /my-fns/sign-operation/{operationId}/cancel:
+    $ref: ./paths/sign-operation/my_fns_sign_operation_operationId_cancel.yaml
+  /my-fns/sign-operation/{operationId}:
+    $ref: ./paths/sign-operation/my_fns_sign_operation_operationId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/sign-operation/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/sign-operation/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/sign-operation/ActionResultObject.yaml
+    CreateSignOperationRequestDto:
+      $ref: ./components/schemas/sign-operation/CreateSignOperationRequestDto.yaml
+    DocumentForSignDto:
+      $ref: ./components/schemas/sign-operation/DocumentForSignDto.yaml
+    CreateSignOperationResponseDto:
+      $ref: ./components/schemas/sign-operation/CreateSignOperationResponseDto.yaml
+    GenericResponseSimpleErrorDataCreateSignOperationResponseDto:
+      $ref: ./components/schemas/sign-operation/GenericResponseSimpleErrorDataCreateSignOperationResponseDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/sign-operation/SimpleErrorData.yaml
+    ClientShortSignOperationDto:
+      $ref: ./components/schemas/sign-operation/ClientShortSignOperationDto.yaml
+    GenericResponseSimpleErrorDataClientShortSignOperationDto:
+      $ref: ./components/schemas/sign-operation/GenericResponseSimpleErrorDataClientShortSignOperationDto.yaml
+    ClientSignOperationDto:
+      $ref: ./components/schemas/sign-operation/ClientSignOperationDto.yaml
+    ClientSignedDocumentDto:
+      $ref: ./components/schemas/sign-operation/ClientSignedDocumentDto.yaml
+    GenericResponseSimpleErrorDataClientSignOperationDto:
+      $ref: ./components/schemas/sign-operation/GenericResponseSimpleErrorDataClientSignOperationDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

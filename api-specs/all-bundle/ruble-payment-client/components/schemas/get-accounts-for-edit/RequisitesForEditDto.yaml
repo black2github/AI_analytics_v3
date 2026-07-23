@@ -1,0 +1,29 @@
+required:
+- bic
+- correspondentAccount
+- location
+- locationType
+- locationWithoutType
+type: object
+properties:
+  bic:
+    maxLength: 9
+    minLength: 0
+    type: string
+  location:
+    maxLength: 512
+    minLength: 0
+    type: string
+  locationType:
+    maxLength: 5
+    minLength: 0
+    type: string
+  locationWithoutType:
+    maxLength: 255
+    minLength: 0
+    type: string
+  correspondentAccount:
+    maxLength: 20
+    minLength: 20
+    type: string
+description: Реквизиты

@@ -1,0 +1,6 @@
+type: string
+description: Возможность отправить
+enum:
+- READY_TO_SEND
+- CAN_BE_SENT
+- UNABLE_TO_SEND

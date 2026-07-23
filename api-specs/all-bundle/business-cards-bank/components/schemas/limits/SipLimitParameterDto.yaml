@@ -1,0 +1,54 @@
+type: object
+properties:
+  amount:
+    type: number
+    description: Значение суммы лимита
+  categoryCode:
+    type: string
+    description: Категория лимита
+  categoryName:
+    type: string
+    description: Наименование категории
+  currency:
+    type: string
+    description: Буквенный код валюты
+  currencyCharCode:
+    type: string
+    description: Буквенный код валюты
+  duration:
+    type: integer
+    description: Число периодов
+    format: int32
+  id:
+    type: string
+    description: Уникальный идентификатор параметра
+    format: uuid
+  isChange:
+    type: boolean
+    description: Признак возможности изменения
+  processingDatetime:
+    type: string
+    description: Дата и время обработки
+    format: date-time
+  processingTag:
+    type: string
+    description: Признак обработки
+  reason:
+    type: string
+    description: Причина отказа или ошибки
+  restAmount:
+    type: number
+    description: Информация о значении использованного лимита. Сумма
+  subTypeCode:
+    type: string
+    description: Подтип лимита
+  typeCode:
+    type: string
+    description: Тип устанавливаемого лимита
+  typeName:
+    type: string
+    description: Наименование типа лимита
+  usedAmount:
+    type: number
+    description: Информация о значении использованного лимита. Сумма
+description: Параметры лимита из ПЦ

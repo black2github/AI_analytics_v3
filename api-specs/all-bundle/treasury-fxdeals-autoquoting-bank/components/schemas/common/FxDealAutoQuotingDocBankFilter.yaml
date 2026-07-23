@@ -1,0 +1,53 @@
+type: object
+properties:
+  docNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  receivedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  dealDateTime:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dealDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  beginDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  docType:
+    $ref: ./FxDealAutoQuotingDocDocTypeFilter.yaml
+  docStatus:
+    $ref: ./FxDealAutoQuotingDocDocStatusFilter.yaml
+  dealStatus:
+    $ref: ./FxDealAutoQuotingDocDealStatusFilter.yaml
+  amountBuy:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  amountSell:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  currencyBuy:
+    $ref: ./FilterValueDtoString.yaml
+  currencySell:
+    $ref: ./FilterValueDtoString.yaml
+  currencyPair:
+    $ref: ./FilterValueDtoString.yaml
+  valueDateBuy:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  valueDateSell:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  dealType:
+    $ref: ./FxDealAutoQuotingDocDealTypeFilter.yaml
+  tradingStatus:
+    $ref: ./FxDealAutoQuotingDocTradingStatusFilter.yaml
+  docHiddenInTradingPanel:
+    $ref: ./FilterValueDtoBoolean.yaml
+  clientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  clientOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  askId:
+    $ref: ./FilterValueDtoLong.yaml
+  branchId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр

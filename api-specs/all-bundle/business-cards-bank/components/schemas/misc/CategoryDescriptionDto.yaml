@@ -1,0 +1,14 @@
+type: object
+properties:
+  categoryList:
+    type: array
+    description: Категория
+    items:
+      $ref: ./CategoryStatusDto.yaml
+  description:
+    type: string
+    description: Описание категории
+  name:
+    type: string
+    description: Имя категории
+description: Категория заявки с описанием

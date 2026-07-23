@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  country:
+    type: string
+    description: Alpha 2 код страны
+  state:
+    type: string
+    description: Регион
+  locality:
+    type: string
+    description: Населенный пункт
+description: Данные об адресе из сертификата СЭП

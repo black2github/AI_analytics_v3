@@ -1,0 +1,8 @@
+type: string
+description: Результат обработки
+enum:
+- IMPORTED_ERROR
+- IMPORTED_CORRECT
+- IMPORTED_WARNING
+- IMPORTED_FLK_ERROR
+- IMPORTED_ACCESS_ERROR

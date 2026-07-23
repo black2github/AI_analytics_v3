@@ -1,0 +1,44 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID ревизии
+    format: uuid
+  revision:
+    type: integer
+    description: Номер ревизии
+    format: int64
+  code:
+    type: string
+    description: Код спецификации
+  name:
+    type: string
+    description: Наименование спецификации
+  data:
+    type: string
+    description: Данные
+  category:
+    type: string
+    description: Категория спецификации
+    enum:
+    - INPUT
+    - OUTPUT
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  externalUrl:
+    type: string
+    description: Url спецификации
+  appliedBy:
+    type: string
+    description: ID пользователя применившего спецификацию
+    format: uuid
+  appliedName:
+    type: string
+    description: Имя пользователя применившего спецификацию
+  appliedAt:
+    type: string
+    description: Время применения спецификации
+    format: date-time
+description: Ревизия спецификации OpenApi

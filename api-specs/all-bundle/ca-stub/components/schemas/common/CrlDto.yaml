@@ -1,0 +1,30 @@
+required:
+- authorityCertId
+- crlNumber
+- lastUpdate
+- nextUpdate
+type: object
+properties:
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+  lastUpdate:
+    type: string
+    description: Дата последнего обновления
+    format: date-time
+  nextUpdate:
+    type: string
+    description: Дата следующего обновления
+    format: date-time
+  crlNumber:
+    type: integer
+    description: Номер CRL
+    format: int64
+  authorityKeyId:
+    type: string
+    description: Идентификатор ключа издателя
+  authorityCertSerialNumber:
+    type: string
+    description: Серийный номер сертификата издателя
+description: Список отзыва сертификатов

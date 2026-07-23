@@ -1,0 +1,24 @@
+type: object
+properties:
+  onboardingRequestIds:
+    type: array
+    description: Ссылки на "Заявка на открытие первого счета"
+    items:
+      type: string
+      description: Ссылки на "Заявка на открытие первого счета"
+      format: uuid
+  statuses:
+    type: array
+    description: Статусы оплаты
+    items:
+      type: string
+      description: Статус оплаты qrc
+      enum:
+      - CREATED
+      - ACTIVE
+      - EXECUTED
+      - CANCELED
+      - TO_CANCEL
+      - FEE_FREE
+      - TO_PAY
+description: Информация об оплате комиссии по QRC

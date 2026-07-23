@@ -1,0 +1,17 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  exportDocType:
+    type: string
+    description: Тип экспортируемой ПФ
+    enum:
+    - NEW_DBS_CONTRACT
+    - OPEN_ACCOUNT_NEW_DBS_SPECIAL_PURCHASE_ACCOUNT_CONTRACT
+    - EXISTING_CONTRACT
+    - GOZ_CONTRACT
+    - NOTIFICATION
+    - EGRUL
+description: Дто для экспорта заявки О2+NEW в ПФ

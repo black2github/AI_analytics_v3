@@ -1,0 +1,23 @@
+required:
+- bankClientIds
+- productCode
+- sourcePage
+- user
+type: object
+properties:
+  bankClientIds:
+    type: array
+    description: Id организаций, для которых запрашивается консультация
+    items:
+      type: string
+      description: Id организаций, для которых запрашивается консультация
+      format: uuid
+  productCode:
+    type: string
+    description: Код продукта
+  user:
+    $ref: ./ClientOfficialDto.yaml
+  sourcePage:
+    type: string
+    description: Код страницы, на которой был расположен баннер при оформлении заявки
+description: Запрос на создание заявки на консультацию

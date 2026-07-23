@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  country:
+    type: string
+  isoCountryCode:
+    type: string
+  phoneMask:
+    type: string
+  comment:
+    type: string
+  isoCountryCodeAlpha3:
+    type: string
+  countryPhoneCode:
+    type: string
+  countryNameEng:
+    type: string
+description: Страница с данными

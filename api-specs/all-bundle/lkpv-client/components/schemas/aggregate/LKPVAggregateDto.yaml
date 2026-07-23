@@ -1,0 +1,13 @@
+type: object
+properties:
+  service:
+    type: string
+    description: Источник данных ЛК_ПВ
+    enum:
+    - ADM
+    - TRADE_ACQUIRING
+    - INTERNET_ACQUIRING
+  amount:
+    type: number
+    description: Сумма операций
+description: Данные инфографики ЛК_ПВ.

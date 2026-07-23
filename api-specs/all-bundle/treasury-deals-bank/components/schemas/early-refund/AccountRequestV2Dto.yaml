@@ -1,0 +1,29 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор Клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  agreementType:
+    type: string
+    description: Тип генерального соглашения
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  currency:
+    type: string
+    description: Буквенный код валюты счёта
+  loadBalanceEnabled:
+    type: boolean
+    description: Необходимость запроса остатка по счету
+  docId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+description: Данные

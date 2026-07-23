@@ -1,0 +1,131 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки на изменение реквизитов
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_NEW
+    - DRAFT
+    - DELETED
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - DETAILS_INVALID
+    - RECEIVED
+    - DENIED_OR_EXECUTED
+    - SENT_TO_ASK_OR_ERROR
+    - SENT_TO_ASK
+    - SENT_TO_ASK_SUCCESS
+    - SENT_TO_ASK_FAIL
+    - DENIED
+    - EXECUTED
+  docType:
+    type: string
+    description: Тип документа
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента из справочника Клиентов Веб-Дилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientFullNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Полное наименование
+  clientShortNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Краткое наименование
+  updatedDocId:
+    type: string
+    description: Идентификатор изменяемого документа
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  updatedDocNumber:
+    type: integer
+    description: Номер изменяемого документа
+    format: int32
+  updatedDocDate:
+    type: string
+    description: Дата изменяемого документа
+    format: date
+  dealDate:
+    type: string
+    description: Дата сделки
+    format: date
+  dealNumber:
+    type: string
+    description: Номер сделки
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта сделки
+  dealRateInfo:
+    $ref: ../common/InvestmentDocRateInfoDto.yaml
+  dateBegin:
+    type: string
+    description: Дата начала сделки
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания сделки
+    format: date
+  period:
+    type: integer
+    description: Период сделки
+    format: int32
+  clientOriginalInfo:
+    $ref: ../common/ClientDto.yaml
+  generalAgreement:
+    $ref: ../common/InvestmentDocGeneralAgreementDto.yaml
+  branch:
+    $ref: ../common/BranchDto.yaml
+  managementFund:
+    $ref: ../common/InvestmentDocManagementFundDto.yaml
+  docCreatorId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docCreatorFullName:
+    type: string
+    description: Ф.И.О пользователя
+  docBankComment:
+    type: string
+    description: Комментарий Банка
+  signature:
+    $ref: ../common/SignatureDto.yaml
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  receiveAt:
+    type: string
+    description: Дата и время получения документа
+    format: date-time
+  processedAt:
+    type: string
+    description: Дата и время обработки документа
+    format: date-time
+  dealRateTitle:
+    type: string
+    description: Значение ставки из печатной формы
+description: Страница с данными

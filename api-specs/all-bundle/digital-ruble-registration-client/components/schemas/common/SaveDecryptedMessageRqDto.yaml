@@ -1,0 +1,26 @@
+required:
+- cbdcMessage
+- msgId
+- msgType
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения заявки
+    format: uuid
+  msgType:
+    type: string
+    description: Тип сообщения
+    enum:
+    - MSG1_OUT
+    - MSG1_IN
+    - MSG2_OUT
+    - MSG2_IN
+    - MSG3_OUT
+    - MSG3_IN
+    - MSG4_OUT
+    - MSG4_IN
+  cbdcMessage:
+    type: string
+    description: Расшифрованное сообщения CBDC (Base64)
+description: Сохранение расшифрованных данных от ПлЦР.

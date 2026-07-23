@@ -1,0 +1,24 @@
+type: object
+properties:
+  zoneDescription:
+    type: string
+    description: Текст описания зоны доступности.
+  isAvailableInDocPack:
+    type: boolean
+    writeOnly: true
+  zoneBorder:
+    type: array
+    description: Границы зоны доступности. Набор полигонов. При этом полигон это набор точек.
+    items:
+      type: array
+      description: Границы зоны доступности. Набор полигонов. При этом полигон это набор точек.
+      items:
+        type: array
+        description: Границы зоны доступности. Набор полигонов. При этом полигон это набор точек.
+        items:
+          type: number
+          description: Границы зоны доступности. Набор полигонов. При этом полигон это набор точек.
+          format: double
+  availableInDocPack:
+    type: boolean
+description: Справочник городов выездных менеджеров для карты. ДТО.

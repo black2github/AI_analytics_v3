@@ -1,0 +1,40 @@
+type: object
+properties:
+  foRequestId:
+    type: string
+    description: Идентификатор технической заявки
+    format: uuid
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+  status:
+    type: string
+    description: Статус заявки фронт офиса на открытие первого счета.
+    enum:
+    - NONE
+    - NEW
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - REFUSED
+    - EXPORT_TO_ESK_OR_EXPORT_TO_ESK_ERROR
+    - EXPORT_TO_TESSA_OR_EXPORT_TO_TESSA_ERROR
+  statusDescription:
+    type: string
+    description: Текстовый комментарий к статусу
+  statusUpdatedAt:
+    type: string
+    description: Дата обновления статуса
+    format: date-time
+description: Метаданные технической заявки

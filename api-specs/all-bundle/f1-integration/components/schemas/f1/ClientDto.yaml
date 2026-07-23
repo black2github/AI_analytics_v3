@@ -1,0 +1,17 @@
+type: object
+properties:
+  rc1:
+    type: integer
+    description: Код ответа по конкретному клиенту
+  error1:
+    type: string
+    description: Описание ошибки по конкретному клиенту
+  clientRegNum:
+    type: integer
+    description: РНК клиента, доступного распорядителю счета
+  trustedPersonList:
+    type: array
+    description: Список получателей / вносителей д/с клиента
+    items:
+      $ref: ./TrustedPersonDto.yaml
+description: Клиент, доступный распорядителю счета

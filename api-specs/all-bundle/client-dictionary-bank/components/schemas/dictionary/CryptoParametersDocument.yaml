@@ -1,0 +1,12 @@
+type: object
+properties:
+  docKind:
+    type: string
+    description: Код вида ЭД
+  electronicDocumentTypeName:
+    type: string
+    description: Название вида ЭД
+  allowed:
+    type: boolean
+    description: Разрешен
+description: Разрешенные виды ЭД

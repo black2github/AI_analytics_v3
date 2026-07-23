@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientName:
+    type: string
+  clientINN:
+    type: string
+  clientOGRN:
+    type: string
+  clientKpp:
+    type: string
+  clientGUID:
+    type: string
+    format: uuid
+    example: a29c714d-bf4b-48d2-a1fd-6c42bc2961ef
+  clientRegNum:
+    type: string
+description: Поиск организации

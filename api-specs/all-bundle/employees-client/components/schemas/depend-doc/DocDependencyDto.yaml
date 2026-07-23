@@ -1,0 +1,32 @@
+required:
+- masterDoc
+- masterDocAction
+- slaveDoc
+- slaveDocAction
+type: object
+properties:
+  masterDoc:
+    type: string
+    description: Ссылка на управляющий документ
+    format: uuid
+  masterDocAction:
+    type: string
+    description: Тип действия с документом
+    enum:
+    - VIEW
+    - CREATE_AND_UPDATE
+    - SIGN_AND_SEND
+    - IMPORT
+  slaveDoc:
+    type: string
+    description: Ссылка на зависимый документ
+    format: uuid
+  slaveDocAction:
+    type: string
+    description: Тип действия с документом
+    enum:
+    - VIEW
+    - CREATE_AND_UPDATE
+    - SIGN_AND_SEND
+    - IMPORT
+description: Данные

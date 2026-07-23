@@ -1,0 +1,7 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+description: Бизнес реквизиты клиента

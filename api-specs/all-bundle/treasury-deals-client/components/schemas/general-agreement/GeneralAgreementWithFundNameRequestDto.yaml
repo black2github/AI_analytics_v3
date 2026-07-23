@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientWebDealingIds:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      format: uuid
+  textForSearch:
+    type: string
+  fundNames:
+    uniqueItems: true
+    type: array
+    items:
+      type: string

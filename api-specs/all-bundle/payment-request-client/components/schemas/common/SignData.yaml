@@ -1,0 +1,19 @@
+required:
+- bankClientSigners
+- documentsAmountSignInfo
+- paymentAmount
+- signResultInfo
+type: object
+properties:
+  bankClientSigners:
+    type: array
+    description: Организации (На текущий момент в списке может быть только одна организация)
+    items:
+      $ref: ./BankClientSigner.yaml
+  documentsAmountSignInfo:
+    $ref: ./DocumentsAmountSignInfo.yaml
+  paymentAmount:
+    $ref: ./PaymentRequestPaymentAmount.yaml
+  signResultInfo:
+    $ref: ./SignResultInfo.yaml
+description: Данные для подписи

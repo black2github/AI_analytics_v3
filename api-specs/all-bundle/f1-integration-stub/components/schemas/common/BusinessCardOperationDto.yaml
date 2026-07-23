@@ -1,0 +1,78 @@
+type: object
+required:
+- accountNumber
+description: Данные об операции по корпоративной карте
+properties:
+  id:
+    type: integer
+    description: Первичный ключ
+  accountNumber:
+    type: string
+    minLength: 20
+    maxLength: 20
+    description: Номер счета
+  clientName:
+    type: string
+    maxLength: 255
+    description: Наименование организации
+  clientCode:
+    type: integer
+    description: Код клиента
+  cardholderName:
+    type: string
+    maxLength: 255
+    description: Наименование держателя карты
+  maskNum:
+    type: string
+    maxLength: 16
+    description: PAN (маскированный)
+  operationDate:
+    type: string
+    format: date-time
+    examples:
+    - '2022-03-10T12:15:50'
+    description: Местные дата и время совершения транзакции
+  accountDate:
+    type: string
+    format: date
+    examples:
+    - '2022-03-10'
+    description: Дата и время списания
+  authorizationCode:
+    type: string
+    maxLength: 10
+    description: Код авторизации
+  operPurpose:
+    type: string
+    maxLength: 255
+    description: Описание транзакции
+  operAmount:
+    type: number
+    description: Сумма транзакции в валюте операции
+  operCurrencyCode:
+    type: string
+    maxLength: 3
+    description: Валюта транзакции
+  accountAmount:
+    type: number
+    description: Сумма транзакции в валюте счета
+  accountId:
+    type: integer
+    description: ID счета
+  cardId:
+    type: string
+    maxLength: 50
+    description: Виртуальный ID карты (VPAN)
+  merchantName:
+    type: string
+    maxLength: 255
+    description: Наименование торговой точки
+  cardGuid:
+    type: string
+    maxLength: 50
+    description: Внешний ID карты
+  operationType:
+    $ref: ./OperationTypeDto.yaml
+    type: string
+    maxLength: 1
+    description: Тип операции

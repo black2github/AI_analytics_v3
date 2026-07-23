@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код торговой площадки
+  name:
+    type: string
+    description: Наименование торговой площадки на кирилице
+description: Торговая площадка

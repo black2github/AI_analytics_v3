@@ -1,0 +1,33 @@
+type: object
+properties:
+  statusCategory:
+    $ref: ./IncomingPaymentRequestBankCategoryDto.yaml
+  createDocPeriod:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  payer:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./IncomingPaymentRequestStatusEnumDto.yaml
+  docPeriod:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  payerBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  amount:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  acceptPeriodEnd:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  filialName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр банковского скроллера платежного требования (входящего)

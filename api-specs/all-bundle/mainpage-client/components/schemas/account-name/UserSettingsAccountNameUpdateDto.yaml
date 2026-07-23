@@ -1,0 +1,17 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  name:
+    maxLength: 80
+    minLength: 1
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Имя счета
+description: Обновление имени счета

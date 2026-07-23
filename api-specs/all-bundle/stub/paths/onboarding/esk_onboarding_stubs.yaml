@@ -1,0 +1,36 @@
+get:
+  tags:
+  - esk-onboarding-controller
+  summary: getStubs
+  operationId: getStubsUsingGET_1
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+delete:
+  tags:
+  - esk-onboarding-controller
+  summary: deleteAllStub
+  operationId: deleteAllStubUsingDELETE_1
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

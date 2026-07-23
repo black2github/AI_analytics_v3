@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankName:
+    type: string
+    description: Наименование банка плательщика
+  bankBic:
+    type: string
+    description: БИК банка плательщика
+description: 'Подсказки: Банк плательщика акцепта'

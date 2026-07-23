@@ -1,0 +1,7 @@
+type: object
+properties:
+  branchCode:
+    type: string
+  branchName:
+    type: string
+description: Данные

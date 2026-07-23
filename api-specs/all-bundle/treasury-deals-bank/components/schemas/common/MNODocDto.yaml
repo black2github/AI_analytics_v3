@@ -1,0 +1,396 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docSource:
+    type: string
+    description: Источник документа
+    enum:
+    - ASK
+    - WEB_DEALING
+    - GPB_DEALING
+  efrOfferProductCode:
+    type: string
+    description: Идентификатор динамического продуктового предложения (ДПП)
+  efrOfferSourcePage:
+    type: string
+    description: Страница источник баннера ЕФР (Единое фронтальное решение)
+  clientApplicationType:
+    type: string
+    description: Клиентское приложение
+    enum:
+    - WEB_APP_ECO
+    - WEB_APP_MSB
+    - WEB_APP_MSB_WDL
+    - MOBILE_APP_MSB
+    - UNDEFINED
+  docType:
+    type: string
+    description: Тип документа
+  docSubType:
+    type: string
+    description: Подтип документа
+    enum:
+    - REQUEST
+    - CONFIRMATION
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docBankComment:
+    type: string
+    description: Комментарий Банка
+  docErrorText:
+    type: string
+    description: Текст ошибки
+  docCreatorId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docCreatorFullName:
+    type: string
+    description: Ф.И.О пользователя
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  docStatus:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_QUOTED
+    - DRAFT_OR_NEW
+    - DRAFT_OR_NEW_OR_BLOCK
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - SIGNED
+    - BLOCKED_FROM_BANK
+    - DELIVERED
+    - CANCELED_SENT_TO_ASK_OR_ERROR
+    - CANCELED_SENT_TO_ASK
+    - CANCELED_SENT_TO_ASK_FAIL
+    - CANCELED_SENT_TO_ASK_SUCCESS
+    - CANCELED_FROM_BANK
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - RECEIVED
+    - DETAILS_INVALID
+    - DELAYED
+    - SENT_TO_ASK_OR_ERROR
+    - SENT_TO_ASK
+    - SENT_TO_ASK_FAIL
+    - SENT_TO_ASK_SUCCESS_OR_CONFIRMED
+    - SENT_TO_ASK_SUCCESS
+    - DENIED
+    - DENIED_IN_REVERSE
+    - CONFIRMED_OR_DONE
+    - CONFIRMED
+    - DONE
+    - WITHDRAWN_SENT_TO_ASK
+    - WITHDRAWN_SENT_TO_ASK_FAIL
+    - WITHDRAWN_SENT_TO_ASK_SUCCESS
+    - VIOLATED
+    - EXECUTED
+    - WITHDRAWN_EXECUTED
+    - WITHDRAWN_IN_PROGRESS
+    - WAITING_FOR_VISA
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - PAYMENT_INFO_UPDATE
+  uuid:
+    type: integer
+    description: Уникальный идентификатор заявки в Системе. Может использоваться для быстрого поиска заявки в Системе на стороне Банка (например, при обращении в поддержку).
+    format: int64
+  version:
+    type: integer
+    description: Версия
+    format: int64
+  signature:
+    $ref: ./SignatureDto.yaml
+  clientSignerFio:
+    type: string
+    description: Подписант Клиента под документом
+  docBankPreConfirmation:
+    type: boolean
+    description: Сделка предварительно подтверждена банком.
+  docClientFromBankConfirmation:
+    type: boolean
+    description: Сделка была подтверждена клиентом из банка.
+  bankSignature:
+    $ref: ./SignatureDto.yaml
+  userActions:
+    type: array
+    description: Список пользовательских действий
+    items:
+      $ref: ./InvestmentDocUserActionInfoDto.yaml
+  cancelDocId:
+    type: string
+    description: Идентификатор документа отказа
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docUpdatedFromBank:
+    type: boolean
+    description: Сделка была изменена банком
+  docUpdatedFromBankAt:
+    type: string
+    description: Дата и время изменения сделки банком
+    format: date-time
+  dealAskId:
+    type: integer
+    description: Идентификатор сделки в АСК
+    format: int64
+  dealNumber:
+    type: string
+    description: Номер сделки
+  dealDate:
+    type: string
+    description: Дата сделки
+    format: date
+  dealDateTime:
+    type: string
+    description: Дата и время заключения сделки
+    format: date-time
+  cancelDateTime:
+    type: string
+    description: Дата и время до которого возможна отмена сделки
+    format: date-time
+  generalAgreement:
+    $ref: ./InvestmentDocGeneralAgreementDto.yaml
+  generalAgreementIsFixed:
+    type: boolean
+    description: Идентификатор фиксированного генерального соглашения
+  branch:
+    $ref: ./BranchDto.yaml
+  dateBegin:
+    type: string
+    description: Дата начала сделки
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания сделки
+    format: date
+  period:
+    type: integer
+    description: Срок сделки
+    format: int32
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента из справочника Клиентов Веб-Дилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientOriginalInfo:
+    $ref: ./ClientDto.yaml
+  clientFullNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Полное наименование
+  clientShortNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Краткое наименование
+  managementFund:
+    $ref: ./InvestmentDocManagementFundDto.yaml
+  managementFundIsFixed:
+    type: boolean
+    description: Идентификатор фиксированного фонда ДУ
+  dealStatus:
+    type: string
+    description: Статус сделки, код
+    enum:
+    - NONE
+    - DRAFT
+    - DELETED
+    - QUOTED
+    - NEW
+    - READY_TO_SIGN
+    - SIGNED
+    - DELIVERED
+    - CANCELED
+    - DENIED
+    - CONFIRMED
+    - DONE
+    - WITHDRAWN
+    - VIOLATED
+    - EXECUTED
+    - WITHDRAWN_EXECUTED
+    - WAITING_FOR_VISA
+    - VISA_REJECTED
+    - PAYMENT_INFO_UPDATE
+  dealStatusDetails:
+    type: string
+    description: Детализация статуса сделки
+  docUpdateFromBankDetails:
+    type: string
+    description: Комментарий к сделке из Банка
+  dealStatusUpdatedAt:
+    type: string
+    description: Дата и время статуса
+    format: date-time
+  dealTerminateDate:
+    type: string
+    description: Дата досрочного расторжения сделки
+    format: date
+  dealCanceledDate:
+    type: string
+    description: Дата отмены сделки
+    format: date
+  dealDoneDate:
+    type: string
+    description: Дата установки статуса Заключено
+    format: date-time
+  dealAccount:
+    type: string
+    description: Основной счёт по сделке
+  dealAccountId:
+    type: string
+    description: Идентификатор основного счёта по сделке
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  dealAccountLongId:
+    type: integer
+    description: Идентификатор основного счет по сделке в РКО F1
+    format: int64
+  dealAccountNameExtended:
+    type: string
+    description: Расширенное наименование основного счёта по сделке
+  dealRateType:
+    type: string
+    description: Тип ставки
+    enum:
+    - RATE_FIXED
+    - RATE_REFERENCE
+  dealRateBaseRateCode:
+    type: string
+    description: Тип базовой ставки для плавающих ставок
+  dealRateVariant:
+    type: string
+    description: Вариант ставок
+    enum:
+    - COEFFICIENT
+    - MARGIN
+  hidden:
+    type: boolean
+    description: Скрытый документ
+  tempRequest:
+    type: boolean
+    description: Временный документ
+  tempRequestTimeOut:
+    type: string
+    description: Таймаут временного документа
+    format: date-time
+  baseTemplateId:
+    type: string
+    description: Идентификатор базового шаблона
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  parentTemplateId:
+    type: string
+    description: Идентификатор родительского шаблона
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  newId:
+    type: string
+    description: Поле для хранения ИД для новой сделки
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  editVersion:
+    type: integer
+    description: Версия редактирования
+    format: int64
+  baseEditVersion:
+    type: integer
+    description: Версия редактирования базового шаблона
+    format: int64
+  visaNeeded:
+    type: boolean
+    description: Необходимо визирование
+  clientVisaInfo:
+    $ref: ./ClientVisaInfoDto.yaml
+  visaCanceled:
+    type: boolean
+    description: Визирование отменено (не редактируется клиентом).
+  visaSignature:
+    $ref: ./VisaSignatureDto.yaml
+  visaComment:
+    type: string
+    description: Комментарий визирующего для Клиента (только для отмены) (не редактируется клиентом).
+  visaType:
+    type: string
+    description: Тип наложенной визы.
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  visaServiceDocId:
+    type: string
+    description: Идентификатор документа для сервиса визирования
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  sendToVisaAt:
+    type: string
+    description: Отправлен на визирование (не редактируется клиентом).
+    format: date-time
+  visaCanceledAt:
+    type: string
+    description: Дата и время отмены визирования (не редактируется клиентом).
+    format: date-time
+  visaReceiveAt:
+    type: string
+    description: Дата и время получения результатов визирования (не редактируется клиентом).
+    format: date-time
+  clientTimezoneOffset:
+    type: integer
+    description: Смещение часового пояса Клиента относительно часового пояса UTC в минутах
+    format: int32
+  bankMiddleExecutor:
+    type: string
+    description: Исполнитель мидл.
+  updateDocInfo:
+    $ref: ./UpdateDocInfoDto.yaml
+  accountMNO:
+    $ref: ./InvestmentDocAccountDto.yaml
+  accountMNOFixed:
+    type: boolean
+    description: Счет МНО поступил из Банка и он фиксирован
+  accountInterestPay:
+    $ref: ./InvestmentDocAccountDto.yaml
+  dealRate:
+    $ref: ./MNODocRateDto.yaml
+  dealVisaCheckRate:
+    $ref: ./MNODocRateDto.yaml
+  dealStatusDescription:
+    type: string
+    description: Статус сделки, название
+  docStatusDescription:
+    type: string
+    description: Статус, название
+  cancelLifeTime:
+    type: integer
+    description: Период времени возможности отмены сделки в мс
+    format: int64
+description: Данные

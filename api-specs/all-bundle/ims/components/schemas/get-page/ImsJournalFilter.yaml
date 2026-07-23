@@ -1,0 +1,49 @@
+type: object
+properties:
+  objectType:
+    $ref: ./FilterValueDtoString.yaml
+  processDescription:
+    $ref: ./FilterValueDtoString.yaml
+  comment:
+    $ref: ./FilterValueDtoString.yaml
+  messageId:
+    $ref: ./FilterValueDtoString.yaml
+  source:
+    $ref: ./FilterValueDtoString.yaml
+  destination:
+    $ref: ./FilterValueDtoString.yaml
+  messageDateTime:
+    $ref: ./FilterValueDtoInstant.yaml
+  journalId:
+    $ref: ./FilterValueDtoUUID.yaml
+  xmlBody:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientInnKio:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientKpp:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientShortName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientFullName:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientOgrnOgrnIp:
+    $ref: ./FilterValueDtoString.yaml
+  organizationId:
+    $ref: ./FilterValueDtoUUID.yaml
+  requestType:
+    $ref: ./FilterValueEnumDtoDocumentTypeDto.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  requestDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  requestId:
+    $ref: ./FilterValueDtoUUID.yaml
+  messageSubtype:
+    $ref: ./FilterValueDtoMessageSubtypeDto.yaml
+  eskId:
+    $ref: ./FilterValueDtoString.yaml
+  objectName:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для сущности "Запись журнала сообщений СУВ"

@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: фильтр по статусу соглашения
+    enum:
+    - ACTIVE
+    - CANCELED
+  notEq:
+    type: string
+    description: фильтр по статусу соглашения
+    enum:
+    - ACTIVE
+    - CANCELED
+  in:
+    type: array
+    items:
+      type: string
+      description: фильтр по статусу соглашения
+      enum:
+      - ACTIVE
+      - CANCELED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: фильтр по статусу соглашения
+      enum:
+      - ACTIVE
+      - CANCELED
+  isNull:
+    type: boolean
+description: ДТО фильтра по статусу соглашения

@@ -1,0 +1,21 @@
+type: object
+properties:
+  certificateNotExpired:
+    type: boolean
+    description: Признак того, что текущая дата попадает в период действия действующего сертификата
+  privateKeyNotExpired:
+    type: boolean
+    description: Признак того, что текущая дата попадает в период действия закрытого ключа
+  status:
+    type: string
+    description: Статус сертификата
+    enum:
+    - INITIAL
+    - VERIFIED
+    - COMPLETED
+    - REJECTED
+    - REVOKE_IN_PROGRESS
+    - REVOKED
+    - REVOKE_ERROR
+    - EXPIRED
+description: Агрегированная информация по сертификату СЦР

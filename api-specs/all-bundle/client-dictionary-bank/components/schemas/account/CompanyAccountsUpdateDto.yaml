@@ -1,0 +1,22 @@
+required:
+- accountNumber
+- action
+- bic
+type: object
+properties:
+  action:
+    type: string
+    description: Действие над данными TMG по счету (изменение/удаление)
+    enum:
+    - CHANGE
+    - DELETE
+  accountNumber:
+    type: string
+    description: Номер счета, справочник Счет клиента
+  bic:
+    type: string
+    description: БИК филиала, Филиал и подразделение Банка, справочник Счет клиента
+  tmgAccountType:
+    type: string
+    description: Тип счёта в TMG, справочник Счет клиента
+description: ДТО для обновления признака контроля и акцепта платежей счетов клиентов

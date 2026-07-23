@@ -1,0 +1,5 @@
+type: object
+properties:
+  template:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Получение журнала шаблонов валютных переводов

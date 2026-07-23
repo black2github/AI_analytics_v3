@@ -1,0 +1,14 @@
+required:
+- attachmentId
+- documentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор ДСФ
+    format: uuid
+description: Запрос на получение вложения со штампом

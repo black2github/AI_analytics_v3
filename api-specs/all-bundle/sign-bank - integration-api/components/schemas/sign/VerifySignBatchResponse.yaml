@@ -1,0 +1,59 @@
+type: object
+properties:
+  batchErrors:
+    uniqueItems: true
+    type: array
+    description: Коды ошибок валидации batch-запроса
+    items:
+      type: string
+      description: Типы ошибок валидации batch-запроса
+      enum:
+      - NOT_FOUND
+      - ISSUER_CERTIFICATE_NOT_FOUND
+      - INVALID_SIGNATURE
+      - INVALID_DOCTYPE
+      - USER_NOT_EIO
+      - USER_NOT_OFFICIAL
+      - CERTIFICATE_NOT_VALID
+      - CM_INTEGRATION_ERROR
+      - NOT_FNS_CA
+  certificateErrors:
+    type: object
+    additionalProperties:
+      type: string
+      description: Типы ошибок валидации batch-запроса
+      enum:
+      - NOT_FOUND
+      - ISSUER_CERTIFICATE_NOT_FOUND
+      - INVALID_SIGNATURE
+      - INVALID_DOCTYPE
+      - USER_NOT_EIO
+      - USER_NOT_OFFICIAL
+      - CERTIFICATE_NOT_VALID
+      - CM_INTEGRATION_ERROR
+      - NOT_FNS_CA
+    description: Идентификатор сертификата и ошибки его валидации
+  signErrors:
+    type: object
+    additionalProperties:
+      type: string
+      description: Типы ошибок валидации batch-запроса
+      enum:
+      - NOT_FOUND
+      - ISSUER_CERTIFICATE_NOT_FOUND
+      - INVALID_SIGNATURE
+      - INVALID_DOCTYPE
+      - USER_NOT_EIO
+      - USER_NOT_OFFICIAL
+      - CERTIFICATE_NOT_VALID
+      - CM_INTEGRATION_ERROR
+      - NOT_FNS_CA
+    description: Идентификатор подписи и ошибки ее валидации
+  signatureVerifyResults:
+    type: array
+    description: Идентификатор подписи и данные ее валидации
+    items:
+      $ref: ./SignatureVerifyResultDto.yaml
+  valid:
+    type: boolean
+description: Результат проверки нескольких клиентских подписей (batch)

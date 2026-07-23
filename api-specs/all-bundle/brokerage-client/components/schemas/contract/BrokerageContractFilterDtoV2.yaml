@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  from:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  to:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  statusCategory:
+    type: string
+    description: Категории договоров на основании статуса (Открытые (OPENED) / Закрытые (CLOSED))
+description: Фильтр для нахождения договоров

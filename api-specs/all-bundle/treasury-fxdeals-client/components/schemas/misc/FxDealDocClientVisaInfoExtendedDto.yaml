@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientId:
+    type: string
+    format: uuid
+  fullName:
+    type: string
+  shortName:
+    type: string
+  innKio:
+    type: string
+  kpp:
+    type: string
+  ogrn:
+    type: string
+  defaultClient:
+    type: boolean

@@ -1,0 +1,21 @@
+type: object
+description: Информация о комиссионных тарифах по справкам
+properties:
+  referenceCode:
+    type: string
+    description: Код вида справки, от "1" до "15" по кол-ву видов справок, "1" соответствует "OPEN_ACCOUNT" и тд
+  referenceElectronicPrice:
+    type: number
+    description: Величина комиссии за электронную справку
+  referenceOnPaperPrice:
+    type: number
+    description: Величина комиссии за бумажную справку
+  comment:
+    type: string
+    description: Текстовая подсказка для пользователя, возможны значения "С НДС" и "Без НДС"
+  valueDigitalNds:
+    type: number
+    description: Величина включенного в стоимость правки НДС (только для справок с НДС) для электронной справки
+  valueOnPaperNds:
+    type: number
+    description: Величина включенного в стоимость правки НДС (только для справок с НДС) для справки в бумажном виде

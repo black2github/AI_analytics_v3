@@ -1,0 +1,16 @@
+type: object
+properties:
+  format:
+    type: string
+    description: Формат отчетов для сервиса открытия заявки на открытие первого счета.
+    enum:
+    - DOCX_TO_PDF
+    - DOCX
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  signaturesRequired:
+    type: boolean
+    description: Включить документы, подписанные с помощью УКЭП
+description: Запрос на экспорт документов для подписания

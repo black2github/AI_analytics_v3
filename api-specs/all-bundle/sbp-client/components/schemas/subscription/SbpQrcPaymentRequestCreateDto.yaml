@@ -1,0 +1,11 @@
+type: object
+description: Заявка на списание средств по подписке
+properties:
+  subscriptionId:
+    type: string
+    description: Идентификатор QR подписки в АС СБП
+  data:
+    $ref: ./SbpQrcPaymentRequestCreateDataDto.yaml
+    description: Реквизиты QR-кода
+required:
+- subscriptionId

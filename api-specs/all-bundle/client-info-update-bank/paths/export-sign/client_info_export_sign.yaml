@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-bank-sign-controller
+  summary: Выгрузка электронной подписи
+  description: 'Привилегии: CLIENT_INFO_UPD.BANK.EXPORT_SIGN'
+  operationId: exportSign
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/SingleCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/export-sign/SingleResponsePrintResponse.yaml

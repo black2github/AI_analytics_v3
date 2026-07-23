@@ -1,0 +1,14 @@
+type: object
+properties:
+  content:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./DvkStatusExportDto.yaml
+  hasPrevious:
+    type: boolean
+    description: Наличие предыдущей страницы
+  hasNext:
+    type: boolean
+    description: Наличие следующей страницы
+description: Страничные данные

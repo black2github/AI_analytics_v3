@@ -1,0 +1,9 @@
+type: object
+properties:
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банковского сотрудника
+description: Комментарии

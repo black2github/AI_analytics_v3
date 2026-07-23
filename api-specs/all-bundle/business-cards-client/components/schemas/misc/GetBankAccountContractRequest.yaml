@@ -1,0 +1,7 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор банковского клиента
+    format: uuid
+description: Запрос на получение списка ДБС для открытия доп счета

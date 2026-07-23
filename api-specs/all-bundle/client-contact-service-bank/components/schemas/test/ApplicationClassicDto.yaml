@@ -1,0 +1,108 @@
+type: object
+properties:
+  sourceCreatedAt:
+    type: string
+    format: date-time
+  sourceUpdatedAt:
+    type: string
+    format: date-time
+  sourceStatusUpdatedAt:
+    type: string
+    format: date-time
+  applicationStatus:
+    type: string
+  applicationStatusCode:
+    type: string
+    enum:
+    - PREDRAFT
+    - NONE
+    - CREATED
+    - EDITING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED
+    - EXPORT_TO_ESK_1091_UPD
+    - EXPORTED_TO_ESK_1091_UPD
+    - ACCEPTED_BY_ESK_1091_UPD
+    - WAITING_FROM_ESK_1091_UPD
+    - EXPORT_TO_ESK_ERROR_1091_UPD
+    - RECEIVED_BY_ESK_1091_UPD
+    - EDITING_DRAFT_115
+    - ONLINE_ONB_DISABLED
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - DELETED
+    - FORMED
+    - DATA_ERROR
+    - EDITING_DRAFT
+    - EDITING_COMPLETED
+    - EDITING_DOCS_LOAD
+    - REPLACING_DOCS
+    - EDITING_REPLACING_DOCS
+    - TECH_REQ
+    - DELIVERED
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - PROCESSING_TESSA_COMMENTS
+    - WAITING_RESTRICTION
+    - APPROVED
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXECUTED
+    - REJECTED
+    - DETAILS_ERROR
+    - REFUSED
+    - ARCHIVING
+    - ARCHIVED
+    - RECALL_IN_ESK
+    - RECALLED_IN_ESK
+    - RECALL_IN_ESK_ERROR
+    - RECALL_IN_TESSA
+    - RECALLED_IN_TESSA
+    - DOSSIER_CREATED_BY_ESK_115
+    - DOSSIER_REPEATED_EXAMINATION_115
+    - DOSSIER_APPROVED_BY_ESK_115
+    - RECALL_IN_TESSA_ERROR
+    - SIGN_VALID
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+    - SIGN_NOT_VALID
+    - NEED_RESIGN
+    - SIGN_CANCELLED
+    - DATA_ERROR_115
+    - RECALL_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+    - RECALLED_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_ERROR_REFUSING
+  sourceApplicationId:
+    type: string
+    format: uuid
+  nskApplicationId:
+    type: string
+    format: uuid
+  applicationLink:
+    type: string
+  applicationLinkClient:
+    type: string
+  visitingServiceType:
+    type: boolean
+  bankClient:
+    $ref: ./BankClientDto.yaml
+  person:
+    $ref: ./PersonDto.yaml
+  branch:
+    $ref: ./BranchDto.yaml
+  accountInfo:
+    $ref: ./AccountInfoDto.yaml

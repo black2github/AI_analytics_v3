@@ -1,0 +1,58 @@
+post:
+  tags:
+  - Клиентский АPI работы с вложениями
+  - Заявка на заключение генерального соглашения - ГСНО ГО (клиент)
+  - Заявка на заключение генерального соглашения
+  - API печатных форм заявок на соглашения
+  summary: Распечатать отчет по идентификатору офферты
+  description: 'Привилегии: hasAuthority(''TREASURY_COMMON'') AND hasAuthority(''TREASURY_AGREEMENT_REQUEST_GSNO_PARENT_VIEW'')'
+  operationId: printReportByGSNOChildHeadId
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

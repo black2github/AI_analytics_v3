@@ -1,0 +1,26 @@
+type: object
+properties:
+  batchDate:
+    type: string
+    description: Дата и время создания пакета
+    format: date-time
+  batchNumber:
+    type: integer
+    description: Номер пакета заявок. Выполняет нумерация по порядку в течение одного года в разрезе Клиента
+    format: int32
+  batchSize:
+    type: integer
+    description: Количество заявок, включенных в пакет
+    format: int32
+  id:
+    type: string
+    description: Идентификатор пакета заявок.Если передано пустое значение, то выполняется создание пакета и заявок, включенных в пакет. Иначе - сохранение
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя, создавшего пакет
+  userId:
+    type: string
+    description: Идентификатор пользователя, создавшего пакет
+    format: uuid
+description: Пакет заявок

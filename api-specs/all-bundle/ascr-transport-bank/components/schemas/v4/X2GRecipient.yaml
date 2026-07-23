@@ -1,0 +1,20 @@
+type: object
+description: Данные получателя перевода X2G
+properties:
+  participantId:
+    type: string
+    description: Идентификатор получателя средств
+  walletId:
+    type: string
+    description: Идентификатор счета получателя
+  dcAccountNumber:
+    type: string
+    description: Номер счета получателя
+  name:
+    type: string
+    description: Наименование получателя
+required:
+- dcAccountNumber
+- name
+- participantId
+- walletId

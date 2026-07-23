@@ -1,0 +1,63 @@
+post:
+  tags:
+  - Direct1CIntegration
+  summary: Получить данные пользователя по сертификату
+  description: 'Привилегии: UAA.TECH.DIRECT_1C_FIND_USER_BY_CERT (publicAuthority = false)'
+  operationId: findUserByCertificate
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/1c-direct/FindUserByCertificateRequestDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+  security:
+  - Bearer: []

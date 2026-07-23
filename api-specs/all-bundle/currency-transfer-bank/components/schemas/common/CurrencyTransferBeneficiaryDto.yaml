@@ -1,0 +1,72 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор получателя
+    format: uuid
+  type:
+    type: string
+    description: Транспортное представление для передачи типа получателя
+    enum:
+    - LEGAL
+    - PHYSICAL
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  residenceCountry:
+    $ref: ./CurrencyTransferCountryDto.yaml
+  address:
+    $ref: ./CurrencyTransferAddressDto.yaml
+  taxId:
+    type: string
+    description: Налоговый идентификатор получателя
+  idScheme:
+    type: string
+    description: Транспортное представление для передачи кода идентификационной схемы получателя
+    enum:
+    - TXID
+    - CCPT
+  accountId:
+    type: string
+    description: Идентификатор счета получателя
+    format: uuid
+  accountType:
+    type: string
+    description: Транспортное представление для передачи тип счета
+    enum:
+    - IBAN
+    - OTHER
+  accountNumber:
+    type: string
+    description: Номер счета получателя (IBAN/прочий)
+  currencyCode:
+    type: string
+    description: Код валюты счета получателя
+  clientName:
+    type: string
+    description: Наименование получателя
+  bankCorrAccountNumber:
+    type: string
+    description: Корр. счет банка получателя в банке-посреднике
+  contactExists:
+    type: boolean
+    description: 'Контактные данные получателя: признак'
+  contactDetails:
+    $ref: ./CreditorContactDetailsDto.yaml
+  bank:
+    $ref: ./CurrencyTransferCreditorBankDto.yaml
+  intermediaryBankExists:
+    type: boolean
+    description: 'Банк-посредник: признак'
+  intermediaryBank:
+    $ref: ./CurrencyTransferIntermediaryBankDto.yaml
+  correspondentBankExists:
+    type: boolean
+    description: 'Банк-корреспондент банка получателя: признак'
+  correspondentBank:
+    $ref: ./CurrencyTransferCorrespondentBankDto.yaml
+  ultimateCreditorExists:
+    type: boolean
+    description: 'Окончательный получатель: признак'
+  ultimateCreditor:
+    $ref: ./CurrencyTransferUltimateCreditorDto.yaml
+description: Реквизиты получателя

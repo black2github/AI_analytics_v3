@@ -1,0 +1,13 @@
+type: object
+properties:
+  page:
+    type: integer
+    description: Номер страницы (начинается с 0)
+    format: int32
+    default: 0
+  size:
+    type: integer
+    description: Размер страницы
+    format: int32
+    default: 70
+description: Фильтр для списка хештегов из справочника

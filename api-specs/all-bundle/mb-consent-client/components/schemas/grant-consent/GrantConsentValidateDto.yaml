@@ -1,0 +1,7 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+description: Запрос на валидацию при выдаче согласия

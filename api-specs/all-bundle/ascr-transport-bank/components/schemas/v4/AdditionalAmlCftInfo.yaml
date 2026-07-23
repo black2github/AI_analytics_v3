@@ -1,0 +1,12 @@
+type: object
+description: Данные получателя для контроля ПОД/ФТ
+properties:
+  recepient:
+    $ref: ./Recepient.yaml
+    description: Данные Клиента-получателя
+  sender:
+    $ref: ./Sender.yaml
+    description: Данные Клиента-отправителя
+required:
+- recepient
+- sender

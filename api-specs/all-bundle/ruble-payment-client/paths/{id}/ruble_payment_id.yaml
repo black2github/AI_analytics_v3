@@ -1,0 +1,132 @@
+get:
+  tags:
+  - Рублевое платежное поручение. Базовые операции.
+  summary: Получение документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.VIEW, APPROVAL_SIGN.DOCUMENT_VIEW'
+  operationId: get
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: service
+    in: query
+    description: Тип сервиса
+    required: false
+    allowEmptyValue: true
+    schema:
+      pattern: ^[RUBLE_PAYMENT|APPROVAL_SIGN]*$
+      type: string
+      nullable: true
+  - name: year
+    in: query
+    description: Архивный год
+    required: false
+    allowEmptyValue: true
+    schema:
+      maximum: 2999
+      minimum: 2022
+      pattern: ^\d{4}?$
+      type: string
+      nullable: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseRublePaymentErrorPaymentOrderRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+delete:
+  tags:
+  - Рублевое платежное поручение. Базовые операции.
+  summary: Удаление документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.DELETE'
+  operationId: delete
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseRublePaymentErrorPaymentOrderRequestDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml

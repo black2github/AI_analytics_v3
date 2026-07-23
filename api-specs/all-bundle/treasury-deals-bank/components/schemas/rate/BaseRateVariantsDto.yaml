@@ -1,0 +1,15 @@
+type: object
+properties:
+  baseRateCode:
+    type: string
+    description: Код базового индикатора
+  variants:
+    type: array
+    description: Список доступных вариантов ставок
+    items:
+      type: string
+      description: Список доступных вариантов ставок
+      enum:
+      - COEFFICIENT
+      - MARGIN
+description: Мапа кодов базовых индикаторов на список доступных вариантов ставок

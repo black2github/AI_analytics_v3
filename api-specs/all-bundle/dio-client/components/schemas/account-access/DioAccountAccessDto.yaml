@@ -1,0 +1,27 @@
+required:
+- bankClientId
+- operations
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  operations:
+    uniqueItems: true
+    type: array
+    description: Поддерживаемые операции
+    items:
+      type: string
+      description: Типы операций
+      enum:
+      - ACTION_CLIENT_USER_SIGN
+      - ACTION_CLIENT_USER_VIEW
+      - ACTION_CLIENT_USER_PRINT
+      - ACTION_CLIENT_USER_LISTVIEW
+      - ACTION_CLIENT_USER_EDIT
+      - ACTION_CLIENT_USER_CREATE
+      - ACTION_CLIENT_USER_STATEMENT_CREATE
+      - ACTION_CLIENT_USER_SIGN_CLICK
+      - ACTION_CLIENT_USER_IMPORT
+description: Доступы в разрезе организации

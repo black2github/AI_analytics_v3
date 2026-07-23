@@ -1,0 +1,10 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус повторного архивирования заявок
+    enum:
+    - DONE
+    - IN_PROGRESS
+    - ERROR
+description: Результат выполнения повторного архивирования заявок

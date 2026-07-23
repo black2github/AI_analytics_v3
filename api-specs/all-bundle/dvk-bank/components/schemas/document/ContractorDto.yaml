@@ -1,0 +1,19 @@
+type: object
+properties:
+  number:
+    type: string
+    description: Номер
+  name:
+    type: string
+    description: Наименование нерезидента
+  country:
+    $ref: ./CountryDto.yaml
+  amountInContractCurrency:
+    type: string
+    description: Предоставляемая сумма средств в единицах валюты цены кредитного договора
+  currency:
+    $ref: ./CurrencyDto.yaml
+  contractPricePart:
+    type: string
+    description: Доля в общей сумме кредита
+description: Информация о привлечении резидентом кредита, предоставленного нерезидентами на синдицированной основе

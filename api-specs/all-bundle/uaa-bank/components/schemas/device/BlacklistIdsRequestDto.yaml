@@ -1,0 +1,11 @@
+type: object
+properties:
+  blacklistItemIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы записей
+    items:
+      type: string
+      description: Идентификаторы записей
+      format: uuid
+description: Запрос нескольких записей чёрного списка мобильных устройств

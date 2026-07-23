@@ -1,0 +1,14 @@
+type: object
+properties:
+  systemID:
+    type: string
+  channel:
+    type: string
+  requestID:
+    type: string
+  traceID:
+    type: string
+  type:
+    type: string
+  virtualNum:
+    type: string

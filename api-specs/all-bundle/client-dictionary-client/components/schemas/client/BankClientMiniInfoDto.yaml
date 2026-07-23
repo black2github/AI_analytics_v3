@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Клиент Банка"
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование
+description: Подмножество полей сущности "Клиент Банка"

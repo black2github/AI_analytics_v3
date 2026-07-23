@@ -1,0 +1,39 @@
+required:
+- additionalDetails
+- bankClientId
+- email
+- emplId
+- phone
+- phoneCountryCode
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  emplId:
+    type: string
+    description: Идентификатор УЛ, атрибуты которого предполагается изменить
+    format: uuid
+  phone:
+    maxLength: 16
+    minLength: 0
+    pattern: ^\+(79\d{9}|(?!79)\d{7,15})$
+    type: string
+    description: Номер телефона УЛ
+  phoneCountryCode:
+    type: string
+    description: Телефонный код страны
+  email:
+    maxLength: 100
+    minLength: 0
+    pattern: ^(?!"\.|\.)(?!.*(\."|\.)@)(?!.*\.\.)("*[\w!#$%&'*+\-\/=?^`{|}~\.]+"*)@(?!.*\.\.)([\da-z][\da-z\-\.]*\.[\da-z]+?)$|^$
+    type: string
+    description: Адрес электронной почты
+  userUaaId:
+    type: string
+    description: Ссылка на сущность "Клиентский пользователь"
+    format: uuid
+  additionalDetails:
+    $ref: ../common/AdditionalRequestShortDetailsDto.yaml
+description: Транспортное представление атрибутов для создания запроса на редактирование данных УЛ

@@ -1,0 +1,7 @@
+type: string
+description: Цвет текста
+enum:
+- GREY
+- YELLOW
+- RED
+- GREEN

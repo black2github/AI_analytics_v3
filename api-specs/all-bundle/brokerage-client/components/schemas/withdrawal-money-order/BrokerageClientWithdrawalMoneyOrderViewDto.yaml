@@ -1,0 +1,136 @@
+required:
+- clientId
+- clientName
+- contractClientName
+- contractId
+- contractNumber
+- createdAt
+- docDate
+- docNumber
+- id
+- orderType
+- status
+- tradingFloor
+- updatedAt
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  docNumber:
+    type: integer
+    description: Номер заявки (поручения)
+    format: int32
+  docDate:
+    type: string
+    description: Дата заявки (поручения)
+    format: date
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  status:
+    type: string
+    description: Статус поручения
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - IN_PROCESS
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  clientName:
+    type: string
+    description: Наименование клиента (короткое / полное)
+  clientEngName:
+    type: string
+    description: Наименование клиента на английском языке
+  orderType:
+    type: string
+    description: Тип поручения
+  cancelDescription:
+    type: string
+    description: Причина отмены поручения
+  contractNumber:
+    type: string
+    description: Договор обслуживания
+  contractClientName:
+    type: string
+    description: Наименование клиента по договору
+  tradingFloor:
+    type: string
+    description: Наименование торговой площадки
+  recipientTaxCode:
+    type: string
+    description: ИНН получателя ДС
+  currency:
+    type: string
+    description: Валюта вывода дс
+  amount:
+    type: string
+    description: Сумма вывода
+  withdrawalAccount:
+    type: string
+    description: Номер расчетного счета клиента
+  bankName:
+    type: string
+    description: Наименование банка, где открыт счет для перечисления ДС
+  bankBic:
+    type: string
+    description: Бик банка, где открыт счет для перечисления ДС
+  bankSwift:
+    type: string
+    description: SWIFT код банка, где открыт счет для перечисления ДС
+  bankCity:
+    type: string
+    description: Город банка, где открыт счет для перечисления ДС
+  corrAccount:
+    type: string
+    description: Номер корреспондентского счета кредитной организации, открытый в подразделении Банка России
+  corrBankName:
+    type: string
+    description: Наименование банка посредника
+  corrBankBic:
+    type: string
+    description: Бик банка посредника
+  corrBankSwift:
+    type: string
+    description: SWIFT код банка посредника
+  corrBankCity:
+    type: string
+    description: Город банка посредника
+  countryEng:
+    type: string
+    description: Страна на английском
+  cityEng:
+    type: string
+    description: Город на английском
+  signatures:
+    type: array
+    description: Реквизиты электронной подписи заявки.
+    items:
+      $ref: ../common/BrokerageNonTradeOrderSignatureDto.yaml
+  linkedOrders:
+    type: array
+    description: Связанные поручения
+    items:
+      $ref: ../common/BrokerageClientNonTradeOrderItemDto.yaml
+description: Транспортная сущность для просмотра неторгового поручения на вывод денежных средств.

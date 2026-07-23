@@ -1,0 +1,37 @@
+required:
+- attachmentId
+- fileHash
+- fileHashType
+- fileName
+- fileSize
+- uploadTime
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  contentType:
+    type: string
+    description: Тип содержимого файла
+  fileName:
+    type: string
+    description: Наименование файла вложения
+  fileSize:
+    type: integer
+    description: Размер вложения
+    format: int64
+  fileHashType:
+    type: string
+    description: Тип хэша
+  fileHash:
+    type: string
+    description: Хеш вложения
+  uploadTime:
+    type: string
+    description: Дата и время загрузки вложения
+    format: date-time
+  accessToken:
+    type: string
+    description: Токен доступа к файлу на скачивание
+description: Вложения в заявку на создание нового/изменение данных и полномочий сотрудника Клиента

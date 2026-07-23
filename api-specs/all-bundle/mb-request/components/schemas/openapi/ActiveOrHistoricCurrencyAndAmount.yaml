@@ -1,0 +1,7 @@
+type: object
+properties:
+  amount:
+    type: string
+  currency:
+    type: string
+description: Сумма денежных средств и код валюты

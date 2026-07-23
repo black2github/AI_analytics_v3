@@ -1,0 +1,12 @@
+type: object
+properties:
+  street:
+    type: string
+    description: Название улицы
+  streetCode:
+    type: string
+    description: Код улицы (КЛАДР)
+  fiasStreetCode:
+    type: string
+    description: Код улицы (ФИАС)
+description: Улица. Интеграционное ДТО

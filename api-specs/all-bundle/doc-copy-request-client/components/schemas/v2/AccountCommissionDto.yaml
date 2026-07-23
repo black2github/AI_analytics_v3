@@ -1,0 +1,18 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Составной уникальный идентификатор счета во внутреннем хранилище {accountNumber-accountBranch}
+  accountNumber:
+    type: string
+    description: Номер счета
+  name:
+    type: string
+    description: Название счета
+  currentBalance:
+    type: number
+    description: Сумма остатка на счете для списания комиссии (без овердрафта)
+  overdraftLimit:
+    type: number
+    description: Лимит овердрафта на счете
+description: Данные о счете

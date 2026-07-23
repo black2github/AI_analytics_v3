@@ -1,0 +1,12 @@
+type: object
+properties:
+  bicCode:
+    type: string
+    description: БИК банка
+  institutionName:
+    type: string
+    description: Наименование банка
+  countryName:
+    type: string
+    description: Наименование страны банка
+description: Транспортное представление банка получателя

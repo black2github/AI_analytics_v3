@@ -1,0 +1,17 @@
+required:
+- bankClientId
+type: object
+properties:
+  fio:
+    $ref: ./FilterValueDtoString.yaml
+  authorizedPerson:
+    $ref: ./FilterValueDtoBoolean.yaml
+  authorizedPersonType:
+    $ref: ./FilterValueDtoAuthorizedPersonType.yaml
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  findRequest:
+    $ref: ./EmployeeFindRequestDto.yaml
+description: Фильтр списка сотрудников организации. Клиент

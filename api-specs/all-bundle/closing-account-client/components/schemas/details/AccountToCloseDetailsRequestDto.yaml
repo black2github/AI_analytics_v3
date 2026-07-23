@@ -1,0 +1,10 @@
+type: object
+properties:
+  accNumber:
+    type: string
+    description: Номер счета, по которому нужно получить детальную информацию
+  clientId:
+    type: string
+    description: Ссылка на сущность Клиент Банка
+    format: uuid
+description: Запрос на получение детальной информации по счету

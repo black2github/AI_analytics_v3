@@ -1,0 +1,7 @@
+type: object
+properties:
+  requisites:
+    type: array
+    items:
+      $ref: ./RefWithdrawalRequisite.yaml
+description: Данные

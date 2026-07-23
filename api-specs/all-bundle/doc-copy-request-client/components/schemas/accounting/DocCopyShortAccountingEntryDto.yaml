@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+  accountId:
+    type: integer
+    format: int64
+  documentId:
+    type: integer
+    format: int64
+  documentNumber:
+    type: integer
+    format: int64
+  entryDate:
+    type: string
+    format: date
+  accountNumber:
+    type: string
+  accountBranchCode:
+    type: string
+  debitAccountNumber:
+    type: string
+  creditAccountNumber:
+    type: string
+  documentTypeCode:
+    type: string
+  amount:
+    type: number
+  debit:
+    type: boolean
+  payeeName:
+    type: string
+  payeeInn:
+    type: string
+  payeeAccountNumber:
+    type: string
+  currencyCode:
+    type: string
+  paymentPurpose:
+    type: string
+description: Данные

@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID заявки
+    format: uuid
+  requestNumberSystem:
+    type: integer
+    description: Общесистемный номер заявки
+    format: int64
+  requestNumberUser:
+    type: integer
+    description: Номер заявки в разрезе пользователя
+    format: int64
+  fio:
+    type: string
+    description: ФИО заявителя
+  status:
+    type: string
+    description: Статус заявки
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+description: Короткое представление заявок используемое в Истории изменений СЭП

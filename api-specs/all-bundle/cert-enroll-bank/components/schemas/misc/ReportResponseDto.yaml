@@ -1,0 +1,10 @@
+type: object
+properties:
+  fileNames:
+    type: array
+    items:
+      type: string
+  content:
+    type: string
+    format: byte
+description: Данные

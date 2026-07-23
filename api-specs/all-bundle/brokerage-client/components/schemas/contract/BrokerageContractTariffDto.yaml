@@ -1,0 +1,9 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование тарифа
+  code:
+    type: string
+    description: Код тарифа
+description: Сведения о модели договора

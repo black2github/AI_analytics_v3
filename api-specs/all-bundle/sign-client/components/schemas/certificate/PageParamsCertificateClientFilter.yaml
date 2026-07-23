@@ -1,0 +1,14 @@
+type: object
+properties:
+  filter:
+    $ref: ./CertificateClientFilter.yaml
+  sort:
+    $ref: ../common/Sort.yaml
+  multiSort:
+    type: array
+    description: Сортировка по нескольким полям
+    items:
+      $ref: ../common/Sort.yaml
+  paging:
+    $ref: ../common/Paging.yaml
+description: Параметры

@@ -1,0 +1,20 @@
+required:
+- clientGUID
+- clientRegNum
+- source
+type: object
+properties:
+  source:
+    type: string
+    description: Тип заявки
+    enum:
+    - SMS_INFO_REQUEST
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  clientRegNum:
+    type: integer
+    description: Регистрационный номер клиента (РНК)
+    format: int64
+description: Запрос на получение списка счетов для списания комиссии и действующих тарифов

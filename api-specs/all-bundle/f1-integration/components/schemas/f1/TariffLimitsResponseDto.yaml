@@ -1,0 +1,8 @@
+type: object
+properties:
+  tariffs:
+    type: array
+    description: Тарифы
+    items:
+      $ref: ./TariffPlanDto.yaml
+description: Ответ с данными пои лимитам клиентов банка

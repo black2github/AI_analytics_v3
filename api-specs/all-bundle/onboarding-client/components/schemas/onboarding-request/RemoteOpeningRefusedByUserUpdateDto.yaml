@@ -1,0 +1,10 @@
+type: object
+properties:
+  onboardingRequestId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета
+    format: uuid
+  refusedByUser:
+    type: boolean
+    description: Признак отказа пользователя от УО счета
+description: Запрос на обновление признака отказа пользователя от УО счета

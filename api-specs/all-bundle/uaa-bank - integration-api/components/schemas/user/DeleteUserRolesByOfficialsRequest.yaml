@@ -1,0 +1,15 @@
+required:
+- clientOfficialIds
+type: object
+properties:
+  clientOfficialIds:
+    maxItems: 2147483647
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов представителей клиентов
+    items:
+      type: string
+      description: Список идентификаторов представителей клиентов
+      format: uuid
+description: Запрос на удаление ролей пользователей по идентификаторам представителей клиентов

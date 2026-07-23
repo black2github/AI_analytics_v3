@@ -1,0 +1,22 @@
+type: object
+properties:
+  documentType:
+    type: string
+    description: Тип документа
+  series:
+    type: string
+    description: Серия документа
+  number:
+    type: string
+    description: Номер документа
+  releaseDate:
+    type: string
+    description: Дата выдачи документа
+    format: date
+  departmentCode:
+    type: string
+    description: Код подразделения, выдавшего документ
+  departmentName:
+    type: string
+    description: Наименование подразделения, выдавшего документ
+description: Документ удостоверяющий личность уполномоченного лица

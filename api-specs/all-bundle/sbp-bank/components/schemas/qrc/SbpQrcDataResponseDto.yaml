@@ -1,0 +1,12 @@
+type: object
+description: Данные по ранее зарегистрированному QR-коду
+properties:
+  code:
+    type: string
+    description: Код ответа на запрос
+  message:
+    type: string
+    description: Описание кода ответа на запрос
+  data:
+    $ref: ./SbpQrcDetailsDto.yaml
+    description: Блок данных

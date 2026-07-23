@@ -1,0 +1,16 @@
+required:
+- code
+- text
+type: object
+properties:
+  code:
+    type: integer
+    description: Код ошибки
+    format: int32
+  text:
+    type: string
+    description: Текст ошибки
+  serverErrorInfo:
+    type: string
+    description: Текст технической ошибки
+description: Блок с телом ошибки

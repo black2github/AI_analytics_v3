@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  result:
+    type: string
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  level:
+    type: string
+    enum:
+    - WARNING
+    - CRITICAL
+  checkResults:
+    type: array
+    items:
+      $ref: ./CheckResult.yaml

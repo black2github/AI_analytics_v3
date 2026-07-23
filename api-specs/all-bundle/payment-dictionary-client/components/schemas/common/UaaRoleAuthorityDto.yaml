@@ -1,0 +1,9 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID привилегии роли
+    format: uuid
+  authority:
+    $ref: ./UaaAuthorityDto.yaml
+description: ДТО привилегии роли

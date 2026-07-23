@@ -1,0 +1,8 @@
+type: object
+description: Реквизиты ТСП по заявке на изменение параметров ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор точки продаж в АС СБП
+required:
+- merchantId

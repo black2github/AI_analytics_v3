@@ -1,0 +1,20 @@
+type: object
+properties:
+  passedEmployeeIds:
+    type: array
+    description: Идентификаторы сотрудников, прошедших проверку
+    items:
+      type: string
+      description: Идентификаторы сотрудников, прошедших проверку
+      format: uuid
+  failedEmployeeIds:
+    type: array
+    description: Идентификаторы сотрудников, не прошедших проверку
+    items:
+      type: string
+      description: Идентификаторы сотрудников, не прошедших проверку
+      format: uuid
+  allPassed:
+    type: boolean
+    description: Признак прохождения проверки всеми сотрудниками
+description: Результат проверки сотрудников на статус заблокированного УЛ по организации

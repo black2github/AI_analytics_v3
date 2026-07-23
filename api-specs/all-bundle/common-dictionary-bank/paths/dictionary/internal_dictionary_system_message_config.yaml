@@ -1,0 +1,107 @@
+get:
+  tags:
+  - Справочник текстов ошибок
+  summary: Получить сообщение системы по типу, методу и  коду
+  description: 'Привилегии: hasAuthority(''EXT_SYS_MESSAGE.VIEW'')'
+  operationId: getByTypeMethodAndCodeUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: code
+    in: query
+    description: Код ошибки
+    required: true
+    type: string
+    allowEmptyValue: false
+  - name: method
+    in: query
+    description: Метод, вызываемый во внешней системе
+    required: true
+    type: string
+    allowEmptyValue: false
+  - name: type
+    in: query
+    description: Тип документа/функционала
+    required: true
+    type: string
+    allowEmptyValue: false
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«Сообщение сторонней системы»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+post:
+  tags:
+  - Справочник текстов ошибок
+  summary: Создать запись
+  description: 'Привилегии: hasAuthority(''EXT_SYS_MESSAGE.CREATE'')'
+  operationId: createUsingPOST_4
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«Сообщение сторонней системы»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«Сообщение сторонней системы»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - Справочник текстов ошибок
+  summary: Обновить запись
+  description: 'Привилегии: hasAuthority(''EXT_SYS_MESSAGE.EDIT'')'
+  operationId: updateUsingPUT_4
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«Сообщение сторонней системы,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«Сообщение сторонней системы»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

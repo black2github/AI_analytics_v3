@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./DssMessageData.yaml
+  meta:
+    $ref: ./DssMetaDto.yaml
+description: Запрос отправки сообщения пользователю из ДСС по SMS

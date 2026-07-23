@@ -1,0 +1,25 @@
+required:
+- GUID клиента в ЕСК
+- cbrParticipantId
+- cbrParticipantWalletId
+- pcrParticipantWalletId
+- Идентификатор организации в Экосистеме
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор СЦР
+    format: uuid
+  Идентификатор организации в Экосистеме:
+    type: string
+    format: uuid
+  GUID клиента в ЕСК:
+    type: string
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька организации на ПлЦР
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации на ПлЦР
+description: Информация о идентификаторах СЦР

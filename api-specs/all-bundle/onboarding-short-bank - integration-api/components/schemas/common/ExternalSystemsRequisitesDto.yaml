@@ -1,0 +1,71 @@
+type: object
+properties:
+  deliveryId:
+    type: string
+    description: Идентификатор доставки в АС ЛБП
+    format: uuid
+  eskBankClientId:
+    type: string
+    description: Идентификатор клиента банка в ЕСК
+    format: uuid
+  eskProcessId:
+    type: string
+    description: Локальный идентификатор первичного запроса в ЕСК
+    format: uuid
+  eskRestrictionsDate:
+    type: string
+    description: Дата получения информации об ограничениях от ЕСК
+    format: date
+  eskSessionLeader:
+    type: string
+    description: Сквозной GUID процесса, присваивается в момент создания заявки 1070. далее используется в 1099 и 115
+    format: uuid
+  primaryCheckResult:
+    type: string
+    description: Результат первичных проверок
+    enum:
+    - POSITIVE
+    - NEGATIVE
+    - ERROR
+    - CONDITIONALLY_POSITIVE
+    - CONDITIONALLY_POSITIVE_BY_FNS
+    - CONDITIONALLY_POSITIVE_BY_FTS
+    - EMPTY
+  repeatPrimaryChecks:
+    type: boolean
+    description: Признак необходимости повторной проверки
+  sparkBeneficiaryInfoReceivingDateTime:
+    type: string
+    description: Дата и время получения информации по бенефициарам из СПАРК
+    format: date-time
+  sparkOrderId:
+    type: integer
+    description: Номер заказа для получения данных по бенефициарам (OrderID)
+  sparkOrderIdReceivingDateTime:
+    type: string
+    description: Дата и время получения номера заказа
+    format: date-time
+  sparkOrgId:
+    type: string
+    description: Идентификатор организации/ИП в СПАРК
+  stopListCodes:
+    type: string
+    description: Коды по первичной проверке по стоп-листам ДСФ
+  tessaDossierId:
+    type: string
+    description: ID досье в ТЕССА
+  tessaDossierId115:
+    type: string
+    description: ID досье 115 в ТЕССА
+  tessaProcessVersion:
+    type: integer
+    description: Номер версии процесса в ТЕССА
+    format: int32
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+description: Реквизиты, получаемые в процессе обработки заявки из смежных систем

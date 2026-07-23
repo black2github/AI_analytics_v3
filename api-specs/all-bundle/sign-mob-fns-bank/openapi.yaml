@@ -1,0 +1,32 @@
+openapi: 3.0.1
+info:
+  title: Сервис Мобильная Подпись.ФНС. Банковская часть.
+  version: 1.0.0
+servers:
+- url: /sign-mob-fns-bank
+security:
+- bearerAuth: []
+paths:
+  /my-fns-profile/{profileId}/dst-scroller:
+    $ref: ./paths/{profileId}/my_fns_profile_profileId_dst_scroller.yaml
+components:
+  schemas:
+    ActionResultObject:
+      $ref: ./components/schemas/{profileId}/ActionResultObject.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/{profileId}/ErrorInfo.yaml
+    ActionResult:
+      $ref: ./components/schemas/{profileId}/ActionResult.yaml
+    ClientOfficialRefDto:
+      $ref: ./components/schemas/{profileId}/ClientOfficialRefDto.yaml
+    GenericResponseSimpleErrorDataMyFnsProfileDstBankScrollerDto:
+      $ref: ./components/schemas/{profileId}/GenericResponseSimpleErrorDataMyFnsProfileDstBankScrollerDto.yaml
+    MyFnsProfileDstBankScrollerDto:
+      $ref: ./components/schemas/{profileId}/MyFnsProfileDstBankScrollerDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/{profileId}/SimpleErrorData.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

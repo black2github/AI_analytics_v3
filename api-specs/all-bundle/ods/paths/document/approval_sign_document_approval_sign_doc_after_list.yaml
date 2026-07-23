@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API статистики количества документов
+  summary: Получить количество завизированных документов по статусу
+  description: 'Привилегии: ODS_DOC_FOR_APPROVAL_VIEW'
+  operationId: getApprovalSignDocAfterUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«DocForApprovalCountFilterDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OdsError,ApprovalSignDocumentAfterDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

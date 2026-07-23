@@ -1,0 +1,11 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Список счетов, доступных для заказа справки
+    items:
+      $ref: ./AccountDtoV2.yaml
+  hasCommissionAccounts:
+    type: boolean
+    description: Флаг наличия счетов для списания комиссии
+description: Ответ на запрос списка счетов клиента для формирования справки ЮЛ

@@ -1,0 +1,20 @@
+required:
+- clientId
+- deviceId
+- pin
+- signature
+type: object
+properties:
+  deviceId:
+    type: string
+    description: Идентификатор мобильного устройства
+  clientId:
+    type: string
+    description: Идентификатор мобильного приложения
+  pin:
+    type: string
+    description: PIN-код
+  signature:
+    type: string
+    description: Подписанное значение PIN
+description: ДТО запроса на проверку PIN-кода.

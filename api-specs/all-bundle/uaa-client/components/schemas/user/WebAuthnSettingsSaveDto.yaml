@@ -1,0 +1,15 @@
+required:
+- webauthSetupEnabled
+type: object
+properties:
+  webauthSetupEnabled:
+    type: boolean
+    description: Признак возможности настройки
+  deletedUserCredentialIds:
+    uniqueItems: true
+    type: array
+    description: Ключи доступа пользователя на
+    items:
+      type: string
+      description: Ключи доступа пользователя на
+      format: uuid

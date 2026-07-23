@@ -1,0 +1,80 @@
+type: object
+properties:
+  addingDate:
+    type: string
+    description: Дата добавления.
+    format: date
+  address:
+    type: string
+    description: Адрес АДМ
+  amountDiff:
+    type: number
+    description: Сумма расхождения
+  branchName:
+    type: string
+    description: Наименование подразделения
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  deliveryDate:
+    type: string
+    description: Дата доставки.
+    format: date
+  mainTID:
+    type: string
+    description: Мастер TID
+  owner:
+    type: string
+    description: В собственности
+  pilotTariffMinAmount:
+    type: number
+    description: Минимальная сумма пилотного тарифа
+  pilotTariffRate:
+    type: number
+    description: Ставка пилотного тарифа
+  plannedDeliveryDate:
+    type: string
+    description: Плановая дата доставки.
+    format: date
+  plannedSetupDate:
+    type: string
+    description: Плановая дата установки.
+    format: date
+  requisites:
+    type: array
+    description: Список реквизитов
+    items:
+      $ref: ./AdmPocRequisiteDto.yaml
+  setupDate:
+    type: string
+    description: Дата установки (ПНР).
+    format: date
+  startDate:
+    type: string
+    description: Дата запуска.
+    format: date
+  status:
+    type: string
+    description: Статус АДМ
+    enum:
+    - NEW
+    - DELIVERING
+    - PREPARING
+    - READY_TO_WORK
+    - WORK
+    - BLOCKED
+    - WAIT_DEMOUNTING
+    - REMOVED
+    - AWAITING_SHIPMENT
+    - IN_TRANSIT
+  tariffMinAmount:
+    type: number
+    description: Минимальная сумма
+  tariffRate:
+    type: number
+    description: Ставка тарифа
+  tariffType:
+    type: string
+    description: Тип тарифа
+description: Информация по АДМ

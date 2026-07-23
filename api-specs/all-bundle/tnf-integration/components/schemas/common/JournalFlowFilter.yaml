@@ -1,0 +1,36 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Направление сообщения
+    enum:
+    - TO_GPBBOL
+    - TO_TNF
+  notEq:
+    type: string
+    description: Направление сообщения
+    enum:
+    - TO_GPBBOL
+    - TO_TNF
+  in:
+    type: array
+    items:
+      type: string
+      description: Направление сообщения
+      enum:
+      - TO_GPBBOL
+      - TO_TNF
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Направление сообщения
+      enum:
+      - TO_GPBBOL
+      - TO_TNF
+  isNull:
+    type: boolean

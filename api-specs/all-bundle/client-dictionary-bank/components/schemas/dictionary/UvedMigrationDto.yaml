@@ -1,0 +1,15 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат исполнения задачи миграции.
+    enum:
+    - SUCCESS
+    - ERROR
+  errorDescription:
+    type: string
+    description: Описание ошибки.
+  rowData:
+    type: string
+    description: Строка данных, на которой произошла ошибка.
+description: Результат выполнения задачи по миграции УВЭД пользователей.

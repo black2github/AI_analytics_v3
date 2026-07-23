@@ -1,0 +1,34 @@
+required:
+- updatedField
+type: object
+properties:
+  updatedField:
+    $ref: ./UpdatedFieldDto.yaml
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  currencyTransactionCode:
+    type: string
+    description: Код валютной операции
+  purchaseCode:
+    type: string
+    description: Код закупки
+  paymentAmount:
+    type: string
+    description: Сумма
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма с учетом НДС
+  vatCalculationMethod:
+    $ref: ../common/VatCalculationTypeDto.yaml
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+  vatAmount:
+    type: string
+    description: Сумма НДС
+  budgetPayment:
+    type: boolean
+    description: Признак платежа в бюджет РФ
+description: Запрос расчета назначения платежа

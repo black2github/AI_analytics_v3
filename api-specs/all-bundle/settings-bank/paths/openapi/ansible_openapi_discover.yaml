@@ -1,0 +1,16 @@
+get:
+  tags:
+  - АПИ для выполнения операций с OpenApi спецификациями через ansible-скрипты
+  summary: Автоматическое создание OpenApi спецификаций
+  description: 'Привилегии: ANSIBLE_ACCESS'
+  operationId: discover_1
+  parameters:
+  - name: forced
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: false
+  responses:
+    '200':
+      description: OK

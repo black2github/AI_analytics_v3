@@ -1,0 +1,9 @@
+type: object
+properties:
+  state:
+    type: integer
+    format: int32
+  kindRowId:
+    type: string
+  kindName:
+    type: string

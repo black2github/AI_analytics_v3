@@ -1,0 +1,22 @@
+get:
+  tags:
+  - Внутренний API переменных окружения пользователя
+  summary: Получить список доступных переменных окружения для пользователя клиента
+  description: 'Привилегии: CLIENT_USER_ENV_VIEW'
+  operationId: getAvailableClientUserEnvironmentUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«UserEnvironmentInfoDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

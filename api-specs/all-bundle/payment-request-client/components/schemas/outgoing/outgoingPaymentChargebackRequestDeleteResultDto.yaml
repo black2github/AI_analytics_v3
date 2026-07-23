@@ -1,0 +1,10 @@
+type: object
+properties:
+  deletedRequestIds:
+    type: array
+    description: Массив идентификаторов удаленных документов
+    items:
+      type: string
+      description: Массив идентификаторов удаленных документов
+      format: uuid
+description: Результат удаления отзыва ПТИ

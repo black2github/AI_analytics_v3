@@ -1,0 +1,93 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  notEq:
+    type: string
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - NEW
+      - COPY
+      - IMPORT_FILE
+      - IMPORT
+      - DIRECT_1C
+      - TEMPLATE
+      - SALARY
+      - STATEMENT
+      - TAX_NOTICE
+      - F1_INSERT
+      - SKVO_INSERT
+      - LK_UVED_INSERT
+      - IMPORT_TNF
+      - OPEN_API_CB
+      - CSV_INSERT
+      - EBG_COMISSION
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - UNKNOWN
+      - NEW
+      - COPY
+      - IMPORT_FILE
+      - IMPORT
+      - DIRECT_1C
+      - TEMPLATE
+      - SALARY
+      - STATEMENT
+      - TAX_NOTICE
+      - F1_INSERT
+      - SKVO_INSERT
+      - LK_UVED_INSERT
+      - IMPORT_TNF
+      - OPEN_API_CB
+      - CSV_INSERT
+      - EBG_COMISSION
+  isNull:
+    type: boolean
+description: Способы создания документов

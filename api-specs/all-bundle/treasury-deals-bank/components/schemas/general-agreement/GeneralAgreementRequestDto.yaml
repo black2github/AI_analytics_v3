@@ -1,0 +1,29 @@
+type: object
+properties:
+  clientWdIds:
+    type: array
+    description: Идентификаторы клиентов ВебДилинга
+    example:
+    - 15aa724f-3955-4846-93cc-500a042240aa
+    - 123e4567-e89b-12d3-a456-426614174000
+    items:
+      type: string
+      description: Идентификатор клиента ВебДилинга
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+  usage:
+    type: string
+    description: Назначение геносглашения
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  subUsage:
+    type: string
+    description: Вторичное назначение геносглашения
+    enum:
+    - NONE
+    - PARENT
+    - CHILD
+description: Данные

@@ -1,0 +1,21 @@
+required:
+- accountId
+- cashAcceptingLim
+- cashWithdrawalLim
+- controlDbsk
+type: object
+properties:
+  accountId:
+    type: integer
+    description: Идентификатор счёта
+    format: int64
+  controlDbsk:
+    type: boolean
+    description: Признак контроля ДБСК
+  cashWithdrawalLim:
+    type: boolean
+    description: Признак запрета выдачи наличных денежных средств
+  cashAcceptingLim:
+    type: boolean
+    description: Признак запрета приёма наличных денежных средств
+description: Функция получения ограничений по счетам. Исходящие параметры функции

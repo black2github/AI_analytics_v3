@@ -1,0 +1,26 @@
+type: object
+properties:
+  contentType:
+    type: string
+    description: Тип содержимого файла ЭП
+  dataSize:
+    type: integer
+    description: Размер файла ЭП
+    format: int64
+  fileHash:
+    type: string
+    description: Хэш сумма файла ЭП
+  fileId:
+    type: string
+    description: Идентификатор файла ЭП в хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла ЭП
+  fileUploadDate:
+    type: string
+    description: Дата и время загрузки файла ЭП
+    format: date-time
+  fsStatus:
+    $ref: ./ExtendedFileStorageStatusDto.yaml
+description: Файлы ЭП

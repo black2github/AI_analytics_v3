@@ -1,0 +1,9 @@
+type: object
+properties:
+  userPosition:
+    type: string
+    description: Должность пользователя подписавшего заявку.
+  userDocument:
+    type: string
+    description: Документ на основании которого пользователь подписал заявку.
+description: Информация о пользователе, подписавшем заявку.

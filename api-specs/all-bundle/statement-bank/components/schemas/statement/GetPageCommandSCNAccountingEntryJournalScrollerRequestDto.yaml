@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsSCNAccountingEntryJournalScrollerRequestDto.yaml
+description: Запрос страницы

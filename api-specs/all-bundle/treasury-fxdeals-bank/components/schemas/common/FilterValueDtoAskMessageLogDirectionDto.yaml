@@ -1,0 +1,53 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - IN
+    - OUT
+  notEq:
+    type: string
+    enum:
+    - IN
+    - OUT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - IN
+      - OUT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - IN
+      - OUT
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - IN
+    - OUT
+  ge:
+    type: string
+    enum:
+    - IN
+    - OUT
+  lt:
+    type: string
+    enum:
+    - IN
+    - OUT
+  le:
+    type: string
+    enum:
+    - IN
+    - OUT
+description: Тип сообщения

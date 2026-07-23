@@ -1,0 +1,6 @@
+type: object
+properties:
+  workload:
+    type: string
+  code:
+    type: string

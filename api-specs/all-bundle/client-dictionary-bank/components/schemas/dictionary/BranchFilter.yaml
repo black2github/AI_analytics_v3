@@ -1,0 +1,67 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  parentBranch:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  locality:
+    $ref: ../common/FilterValueDtoString.yaml
+  locationWithoutType:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  canOpenAccounts:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  canOpenGozAccounts:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  bic:
+    $ref: ../common/FilterValueDtoString.yaml
+  schedule:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchType:
+    $ref: ../common/BranchTypeFilter.yaml
+  nlb:
+    $ref: ../common/FilterValueDtoString.yaml
+  filialName:
+    $ref: ../common/FilterValueDtoString.yaml
+  absNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  filialEskCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  isDeleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  absCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  address:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchServices:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категории для сущности 'Филиал и подразделение Банка'
+    enum:
+    - ALL
+    - BRANCH
+    - SUBDIVISION
+  transferredBalanceHeadUnit:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  textQuery:
+    type: string
+    description: 'Общая строка поиска. Частичное вхождение по: населенному пункту, наименованию подразделения, номеру подразделения, филиал подразделения, код филиала в РКО Ф1, БИК'
+  textCompoundFilter:
+    $ref: ../common/TextCompoundFilterForBranchFilter.yaml
+  stateType:
+    $ref: ../common/FilterValueEnumDtoBranchStateTypeDto.yaml
+  officeState:
+    $ref: ../common/FilterValueDtoString.yaml
+  bank:
+    type: boolean
+  client:
+    type: boolean
+description: Фильтр

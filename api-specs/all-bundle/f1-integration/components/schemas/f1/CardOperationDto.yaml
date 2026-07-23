@@ -1,0 +1,35 @@
+type: object
+properties:
+  operationDayTime:
+    type: string
+    description: Дата и время операции
+    format: date-time
+  valueDayTime:
+    type: string
+    description: Дата расчета (дата списания). При отсутствии значения операция считается захолдированной
+    format: date
+  authCode:
+    type: string
+    description: Код авторизации
+  operationType:
+    type: string
+    description: Тип операции
+    enum:
+    - C
+    - D
+  operationContent:
+    type: string
+    description: Содержание операции
+  operSumOperCurrency:
+    type: number
+    description: Сумма операции в валюте операции
+  operCurrencyCode:
+    type: string
+    description: Валюта операции
+  operSumAccountCurrency:
+    type: number
+    description: Сумма операции в валюте счета
+  merchName:
+    type: string
+    description: Наименование торговой точки
+description: Данные операции по карте в сервисе корпоративных карт

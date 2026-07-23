@@ -1,0 +1,35 @@
+type: object
+properties:
+  currentBalance:
+    type: number
+    description: Текущий остаток
+  currentBalanceNat:
+    type: number
+    description: Текущий остаток в национальной валюте
+  incomingBalance:
+    type: number
+    description: Входящий остаток
+  incomingBalanceNat:
+    type: number
+    description: Входящий остаток в национальной валюте
+  turnoverDebit:
+    type: number
+    description: Обороты по дебету
+  turnoverCredit:
+    type: number
+    description: Обороты о кредиту
+  turnoverDebitNat:
+    type: number
+    description: Обороты по дебету в национальной валюте
+  turnoverCreditNat:
+    type: number
+    description: Обороты о кредиту в национальной валюте
+  turnoverUpdatedAt:
+    type: string
+    description: Дата последнего изменения остатка
+    format: date-time
+  operationDate:
+    type: string
+    description: Операционная дата
+    format: date
+description: Блок финансовой информации по счету

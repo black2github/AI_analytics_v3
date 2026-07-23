@@ -1,0 +1,9 @@
+type: object
+properties:
+  searchDate:
+    type: string
+    description: Интересующая дата
+    format: date-time
+  branchClientFilter:
+    $ref: ./PageParamsBranchClientFilter.yaml
+description: ДТО запроса подразделений с учетом проверки временного непредоставления услуги обслуживания(выдачи карты) ЮЛ отделением.

@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API ручной синхронизации данных в рамках сотрудников
+  summary: Выполнить синхронизацию данных
+  operationId: sync
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/data/EdsDataSyncRequestBody.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/data/GenericResponseErrorDataLong.yaml

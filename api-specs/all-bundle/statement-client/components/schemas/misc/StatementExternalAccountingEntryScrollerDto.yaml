@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  organizationId:
+    type: string
+    format: uuid
+  operationDate:
+    type: string
+    format: date
+  entryDateTime:
+    type: string
+    format: date-time
+  documentNumber:
+    type: string
+  documentDate:
+    type: string
+    format: date
+  counterpartyName:
+    type: string
+  counterpartyAccountNumber:
+    type: string
+  counterpartyInn:
+    type: string
+  outcome:
+    type: number
+  income:
+    type: number
+  purpose:
+    type: string
+  currencyCode:
+    type: string
+  documentTypeCode:
+    type: string
+  payerAccountNumber:
+    type: string
+  payeeAccountNumber:
+    type: string
+  debit:
+    type: boolean
+description: Страница с данными

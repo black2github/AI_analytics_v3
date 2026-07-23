@@ -1,0 +1,105 @@
+openapi: 3.1.0
+info:
+  title: СМФТ интеграция. Банковская часть.
+  version: 3.0.0
+servers:
+- url: /smft-integration
+security:
+- bearerAuth: []
+paths:
+  /event/user-environment:
+    $ref: ./paths/user-environment/event_user_environment.yaml
+  /event/retry-upload:
+    $ref: ./paths/retry-upload/event_retry_upload.yaml
+  /event/get-page:
+    $ref: ./paths/get-page/event_get_page.yaml
+  /event/get-page-sign-events:
+    $ref: ./paths/get-page-sign-events/event_get_page_sign_events.yaml
+  /event/category:
+    $ref: ./paths/category/event_category.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /event/{eventId}/xml:
+    $ref: ./paths/{eventId}/event_eventId_xml.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/{eventId}/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/{eventId}/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/{eventId}/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/{eventId}/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/{eventId}/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/{eventId}/ValidationResult.yaml
+    UserSessionEnvironmentRequestDto:
+      $ref: ./components/schemas/user-environment/UserSessionEnvironmentRequestDto.yaml
+    GenericResponseSimpleErrorDataUserSessionEnvironmentDto:
+      $ref: ./components/schemas/user-environment/GenericResponseSimpleErrorDataUserSessionEnvironmentDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UserSessionEnvironmentDto:
+      $ref: ./components/schemas/user-environment/UserSessionEnvironmentDto.yaml
+    RetryUploadCommand:
+      $ref: ./components/schemas/retry-upload/RetryUploadCommand.yaml
+    GenericResponseListOfSimpleErrorsVoid:
+      $ref: ./components/schemas/retry-upload/GenericResponseListOfSimpleErrorsVoid.yaml
+    ListOfSimpleErrors:
+      $ref: ./components/schemas/retry-upload/ListOfSimpleErrors.yaml
+    EventFilter:
+      $ref: ./components/schemas/common/EventFilter.yaml
+    FilterValueDtoEventStatusDto:
+      $ref: ./components/schemas/common/FilterValueDtoEventStatusDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoSmftEventType:
+      $ref: ./components/schemas/common/FilterValueDtoSmftEventType.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoClientDefinedEventTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClientDefinedEventTypeDto.yaml
+    FilterValueEnumDtoSmftClientDefinedActionType:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSmftClientDefinedActionType.yaml
+    FilterValueEnumDtoSmftLoginType:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSmftLoginType.yaml
+    FilterValueEnumDtoSmftPaymentActionType:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSmftPaymentActionType.yaml
+    FilterValueEnumDtoSmftUpdateUserTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoSmftUpdateUserTypeDto.yaml
+    GetPageCommandEventFilter:
+      $ref: ./components/schemas/common/GetPageCommandEventFilter.yaml
+    PageParamsEventFilter:
+      $ref: ./components/schemas/common/PageParamsEventFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    EventDto:
+      $ref: ./components/schemas/get-page/EventDto.yaml
+    PageDataEventDto:
+      $ref: ./components/schemas/get-page/PageDataEventDto.yaml
+    PageDataSignEventDto:
+      $ref: ./components/schemas/get-page-sign-events/PageDataSignEventDto.yaml
+    SignEventDto:
+      $ref: ./components/schemas/get-page-sign-events/SignEventDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

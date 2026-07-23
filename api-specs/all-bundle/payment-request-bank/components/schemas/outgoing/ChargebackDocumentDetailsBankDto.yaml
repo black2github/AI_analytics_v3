@@ -1,0 +1,13 @@
+type: object
+properties:
+  rkoDocumentId:
+    type: string
+    description: РКО Ф1_Идентификатор документа
+  rkoStatusAssignedAt:
+    type: string
+    description: РКО Ф1_Дата и время присвоения статуса
+    format: date-time
+  rkoBankEmployeeFio:
+    type: string
+    description: РКО Ф1_ФИО сотрудника банка
+description: Реквизиты документа заполняемые банком

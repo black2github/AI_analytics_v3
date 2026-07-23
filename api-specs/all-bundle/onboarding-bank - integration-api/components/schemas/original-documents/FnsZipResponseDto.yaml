@@ -1,0 +1,14 @@
+type: object
+properties:
+  extractedFiles:
+    type: array
+    description: Список загруженных файлов
+    items:
+      $ref: ../common/OriginalDocumentDto.yaml
+  parseResult:
+    type: string
+    description: Статус распарсивания архива ФНС
+    enum:
+    - ORIGINAL_ZIP
+    - EXTRACTED_FILES
+description: Данные

@@ -1,0 +1,20 @@
+get:
+  tags:
+  - Работа с заглушками локальных карт в Ф1 (VW_RPT_GPS_CARDS_IRAO_ECO)
+  summary: Список всех заглушек карт сервиса
+  operationId: listUsingGET_7
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/LocalCardDto'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

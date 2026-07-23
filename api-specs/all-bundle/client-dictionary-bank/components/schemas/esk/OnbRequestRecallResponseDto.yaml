@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код ответа
+    enum:
+    - SUCCESS
+    - ERROR
+description: Результат отзыва заявки

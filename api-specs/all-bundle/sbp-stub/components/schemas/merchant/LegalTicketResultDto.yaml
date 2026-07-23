@@ -1,0 +1,16 @@
+type: object
+description: Ответ на результат регистрации юридического лица
+properties:
+  legalId:
+    type: string
+    description: Идентификатор зарегистрированного юридического лица в СБП
+  status:
+    $ref: ./LegalResultStatusDto.yaml
+    type: string
+    description: Статус регистрации юридического лица
+  code:
+    type: string
+    description: Код ответа на результат регистрации юридического лица
+  message:
+    type: string
+    description: Описание кода ответа на результат регистрации юридического лица

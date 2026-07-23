@@ -1,0 +1,88 @@
+type: object
+properties:
+  companyShare:
+    type: string
+    description: Доля владения
+  constituentDocumentChanges:
+    $ref: ./ConstituentDocumentChangesDto.yaml
+  contactPhone:
+    type: string
+    description: Контактный телефон
+  contactPhoneCode:
+    type: string
+    description: Код города/оператора контактного телефона
+  contactPhoneNumber:
+    type: string
+    description: Номер контактного телефона без кода страны и кода города/оператора
+  email:
+    type: string
+    description: Электронная почта
+  fullName:
+    type: string
+    description: Полное наименование
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  internationalName:
+    type: string
+    description: Международное наименование
+  kpp:
+    type: string
+    description: КПП
+  managementCompanyDocument:
+    $ref: ./ManagementCompanyDocumentDto.yaml
+  notResident:
+    type: boolean
+    description: Признак "Компания нерезидент"
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  okato:
+    type: string
+    description: ОКАТО
+  okopf:
+    type: string
+    description: ОКОПФ. Организационно-правовая форма организации
+  okpo:
+    type: string
+    description: ОКПО
+  regAuthorityAddress:
+    type: string
+    description: Место гос.регистрации
+  regAuthorityName:
+    type: string
+    description: Наименование органа, выдавшего свидетельство о государственной регистрации
+  regCountryCode:
+    type: string
+    description: Страна регистрации
+  regDate:
+    type: string
+    description: Дата гос. регистрации
+    format: date
+  roles:
+    uniqueItems: true
+    type: array
+    description: Роли организаций в заявке
+    items:
+      type: string
+      description: Классификатор ролей организаций в заявке
+      enum:
+      - CLIENT
+      - MANAGEMENT_COMPANY
+      - MANAGING_IE
+      - SHAREHOLDER_COMPANY
+      - CONTRACTOR
+  shortName:
+    maxLength: 400
+    pattern: '[ёЁа-яА-Яa-zA-Z0-9 "«»/\\№&$#:=\-+*^.,()!;]*'
+    type: string
+    description: Краткое наименование
+  ulAddress:
+    type: string
+    description: Юридический адрес организации {@link ru.gpb.eco.onboarding.domain.model.request.address.RequestAddress}
+    format: uuid
+description: Организации, фигурирующие в заявке

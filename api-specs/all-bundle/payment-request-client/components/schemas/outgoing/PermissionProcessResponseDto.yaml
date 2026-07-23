@@ -1,0 +1,15 @@
+type: object
+properties:
+  permissionAcceptIds:
+    type: array
+    description: Список идентификаторов документов с доступом к подписи/отправки
+    items:
+      type: string
+      description: Список идентификаторов документов с доступом к подписи/отправки
+      format: uuid
+  permissionDenyMessages:
+    type: array
+    description: Список идентификаторов документов и кодов ошибок
+    items:
+      $ref: ./PermissionProcessDenyDto.yaml
+description: Ответ на запрос разрешений операций по документам

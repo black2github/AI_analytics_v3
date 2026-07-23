@@ -1,0 +1,115 @@
+get:
+  tags:
+  - API для работы с дополнительными контактами получателей событий СФЗУ. Клиент.
+  summary: Получить дополнительные контакты получателей событий СФЗУ пользователя
+  description: 'Привилегии: SFZU_SETTINGS_VIEW'
+  operationId: getUserAdditionalContacts
+  parameters:
+  - name: contactType
+    in: query
+    description: "* SMS: \n* EMAIL: "
+    required: true
+    schema:
+      type: string
+      description: Тип контактных данных получателя событий СФЗУ
+      enum:
+      - SMS
+      - EMAIL
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/event/GenericResponseSimpleErrorDataListAdditionalEventContactDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+post:
+  tags:
+  - API для работы с дополнительными контактами получателей событий СФЗУ. Клиент.
+  summary: Редактировать дополнительные контакты получателей событий СФЗУ
+  description: 'Привилегии: SFZU_SETTINGS_EDIT'
+  operationId: editAdditionalContacts
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/event/GenericCommandEditAdditionalContactsRequestDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/event/GenericResponseSimpleErrorDataListAdditionalEventContactDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,12 @@
+required:
+- version
+type: object
+properties:
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Обновление сущности "Запрос на отзыв"

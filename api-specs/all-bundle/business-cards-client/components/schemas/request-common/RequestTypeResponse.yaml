@@ -1,0 +1,13 @@
+type: object
+properties:
+  types:
+    type: array
+    description: Типы заявок
+    items:
+      type: string
+      description: Типы заявок
+      enum:
+      - BC_BLOCK_REQUEST
+      - BC_CARD_ISSUE_REQUEST
+      - BC_SET_LIMIT_REQUEST
+description: Ответ на запрос получения типов заявок по фильтру

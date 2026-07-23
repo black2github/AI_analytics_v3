@@ -1,0 +1,13 @@
+type: object
+properties:
+  search:
+    $ref: ./FilterValueDtoString.yaml
+  contract:
+    $ref: ./FilterValueDtoString.yaml
+  tradingFloor:
+    $ref: ./FilterValueDtoString.yaml
+  isinType:
+    $ref: ./FilterValueDtoSecuritiesType.yaml
+  isin:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр для получения данных ISIN

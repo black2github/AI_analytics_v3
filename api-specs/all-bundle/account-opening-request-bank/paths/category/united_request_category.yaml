@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API скроллера объединенной заявки. Банковская часть
+  summary: Получить количество заявок по категориям
+  description: 'Привилегии: hasAuthority(''ACCOUNT_OPENING_REQUEST.BANK.CONTRACT_VIEW_LIST'')or hasAuthority(''ACCOUNT_OPENING_REQUEST.TECH.CONTRACT_VIEW_LIST'')'
+  operationId: getCategory
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GetPageCommandUnitedRequestBankFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/category/CategoryResponse.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

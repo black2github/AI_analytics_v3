@@ -1,0 +1,75 @@
+post:
+  tags:
+  - Эмулятор ответов РКО Ф1 по платежным документам
+  summary: Эмуляция ответа РКО Ф1 со статусом документа
+  operationId: sendResponseUsingPOST_4
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: comments
+    description: comments
+    required: false
+    schema:
+      type: string
+  - name: docId
+    in: query
+    description: Идентификатор документа в Экосистеме
+    required: true
+    type: string
+    format: uuid
+  - name: docType
+    in: query
+    description: Код типа документа РКО Ф1
+    required: true
+    type: string
+    enum:
+    - CHARGEBACK
+    - RUBLE_PAYMENT_ORDER
+  - name: receiverOfficials
+    in: query
+    description: ФИО сотрудника Банка
+    required: false
+    type: string
+  - name: status
+    in: query
+    description: Код статуса РКО Ф1
+    required: true
+    type: string
+    enum:
+    - ACCEPTED
+    - ACCEPT_FOR_EXECUTION
+    - CANCELED
+    - COMPLETED
+    - COMPLETED_TMG
+    - DECLINE_TMG
+    - EXPORTED_TO_TMG
+    - EXPORT_TO_ABS_ERROR
+    - EXPORT_TO_TMG_ERROR
+    - INSERTED_TO_WAITING_LIST
+    - PARTLY_COMPLETED
+    - REJECTED
+    - WAIT_ACCEPT_TMG
+    - WAIT_ACCEPT_TMG_NO_LIMIT
+  - name: timestamp
+    in: query
+    description: Метка времени в формате ISO-8601
+    required: false
+    type: string
+    format: date-time
+    x-example: '2000-01-01T00:00:00Z'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,string»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

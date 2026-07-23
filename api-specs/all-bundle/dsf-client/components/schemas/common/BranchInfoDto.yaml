@@ -1,0 +1,32 @@
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения в АБС.
+    example: 099/1032
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  bic:
+    type: string
+    description: БИК подразделения
+  branchType:
+    type: string
+    description: Тип Филиал/Подразделение
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  filialName:
+    type: string
+    description: Наименование филиала
+  id:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения
+  number:
+    type: string
+    description: Номер подразделения
+description: Информация о подразделении

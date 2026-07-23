@@ -1,0 +1,61 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория записей
+    enum:
+    - ALL
+    - PROCESSING
+    - DONE
+    - ERROR_PROCESSING
+  payerName:
+    $ref: ./FilterValueDtoString.yaml
+  payerInn:
+    $ref: ./FilterValueDtoString.yaml
+  payerRnk:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./CurrencyTransferStatusFilterValueEnumDto.yaml
+  payerCurrency:
+    $ref: ./FilterValueDtoString.yaml
+  amount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  docNum:
+    $ref: ./FilterValueDtoLong.yaml
+  documentDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  payerBank:
+    $ref: ./FilterValueDtoString.yaml
+  payerAccount:
+    $ref: ./FilterValueDtoString.yaml
+  createSystem:
+    $ref: ./FilterValueEnumDtoDocumentSystemClassifierDto.yaml
+  creationMethod:
+    $ref: ./FilterValueEnumDtoDocumentCreationMethodClassifierDto.yaml
+  transactionTypeCode:
+    $ref: ./FilterValueDtoString.yaml
+  beneficiary:
+    $ref: ./FilterValueDtoString.yaml
+  beneficiaryBankBic:
+    $ref: ./FilterValueDtoString.yaml
+  beneficiaryAccount:
+    $ref: ./FilterValueDtoString.yaml
+  receiveDate:
+    $ref: ./FilterValueDtoInstant.yaml
+  gpiStatus:
+    $ref: ./CurrencyTransferClientGpiStatusFilterValueEnumDto.yaml
+  isChargebackRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+  numberCcf:
+    $ref: ./FilterValueDtoString.yaml
+  analyticalClassifier:
+    $ref: ./FilterValueDtoString.yaml
+  lkuvedDocId:
+    $ref: ./FilterValueDtoString.yaml
+  lkuvedMsgId:
+    $ref: ./FilterValueDtoString.yaml
+  docVersion:
+    $ref: ./FilterValueEnumDtoCurrencyTransferVersionDto.yaml
+description: Фильтр скроллера валютных переводов(банковская сторона)

@@ -1,0 +1,27 @@
+type: object
+description: Запрос подписи с данными устройства пользователя с сертификатом ЭП
+properties:
+  certificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата
+  signTypeId:
+    type: string
+    format: uuid
+    description: Идентификатор типа подписи
+  digest:
+    type: string
+    description: Дайджест
+  signature:
+    type: string
+    description: Подпись
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  smftParameters:
+    $ref: ./SmftParametersDto.yaml
+    description: Параметры СМФТ
+required:
+- documentId
+- smftParameters

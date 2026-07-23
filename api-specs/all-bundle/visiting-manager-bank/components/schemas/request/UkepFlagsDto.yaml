@@ -1,0 +1,9 @@
+type: object
+properties:
+  compromised:
+    type: boolean
+    description: Признак компрометации ЭП.
+  ukepFormedDocumentsReworkRequired:
+    type: boolean
+    description: Признак необходимости доработки ПФ, подписанных УКЭП.
+description: ДТО для транспортировки данных заявки относящихся к УКЭП.

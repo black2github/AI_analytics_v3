@@ -1,0 +1,13 @@
+type: object
+properties:
+  fileHash:
+    type: string
+  responseDelayInMillis:
+    type: integer
+    format: int64
+  responseAfterThisTime:
+    $ref: ./LocalDateTime.yaml
+  status:
+    type: boolean
+  isDeleted:
+    type: boolean

@@ -1,0 +1,52 @@
+type: object
+properties:
+  name:
+    maxLength: 160
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Наименование контрагента
+    nullable: true
+  innKio:
+    maxLength: 12
+    pattern: ^[0-9]*$
+    type: string
+    description: ИНН/КИО контрагента
+    nullable: true
+  accountNumber:
+    maxLength: 20
+    pattern: ^[0-9]*$
+    type: string
+    description: Счет контрагента
+    nullable: true
+  bankName:
+    maxLength: 160
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Наименование банка контрагента
+    nullable: true
+  bankBic:
+    maxLength: 9
+    pattern: ^[0-9]*$
+    type: string
+    description: БИК банка контрагента
+    nullable: true
+  bankCorrespondentAccountNumber:
+    maxLength: 20
+    pattern: ^[0-9]*$
+    type: string
+    description: Корсчет банка контрагента
+    nullable: true
+  bankLocalityName:
+    maxLength: 25
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Название населенного пункта банка контрагента
+    nullable: true
+  bankLocalityType:
+    maxLength: 5
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Краткое название типа населенного пункта банка контрагента
+    nullable: true
+description: Шаблон Реквизиты контрагента (плательщика) (платежное требование исходящее данные для клиента)
+nullable: true

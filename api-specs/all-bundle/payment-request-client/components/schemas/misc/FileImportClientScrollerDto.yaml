@@ -1,0 +1,64 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Файл импорта"
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  fileName:
+    type: string
+    description: Наименование файла
+  dataSize:
+    type: integer
+    description: Размер файла в байтах
+    format: int64
+  status:
+    type: string
+    description: Статус импорта
+    enum:
+    - DRAFT
+    - DELETED
+    - ERROR
+    - NOT_SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - IMPORT
+    - IMPORT_TO_CONFIRM
+    - IMPORT_CONFIRMED
+    - IMPORT_NOT_CONFIRMED
+    - IMPORTED
+    - IMPORTED_ERROR
+  importDocumentCount:
+    type: integer
+    description: Всего документов
+    format: int32
+  documentsTotalAmount:
+    type: number
+    description: Общая сумма документов
+  totalAmounts:
+    type: array
+    description: Общая сумма для каждой валюты
+    items:
+      type: string
+      description: Общая сумма для каждой валюты
+  signStatus:
+    type: string
+    description: Статус подписания файла
+    enum:
+    - NOT_SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  fileStorageId:
+    type: string
+    description: Идентификатор файла в файловом сервисе
+    format: uuid
+description: Страница с данными

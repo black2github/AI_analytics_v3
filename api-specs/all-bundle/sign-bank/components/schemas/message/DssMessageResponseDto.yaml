@@ -1,0 +1,17 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Статус ответа
+    enum:
+    - success
+    - error
+  actualTimestamp:
+    type: string
+    description: Дата время
+    format: date-time
+  data:
+    $ref: ./ResponsePayloadDto.yaml
+  error:
+    $ref: ./ResponseErrorDataDto.yaml
+description: Ответ на запрос отправки сообщения пользователю из ДСС по SMS

@@ -1,0 +1,30 @@
+type: object
+properties:
+  docIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  filter:
+    $ref: ./UniversalRequestBankFilter.yaml
+  sort:
+    $ref: ../common/Sort.yaml
+  format:
+    type: string
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  reportType:
+    type: string
+    enum:
+    - REPORT_CLIENT_CONFIRMATION
+    - REPORT_BANK_CONFIRMATION
+  splitReport:
+    type: boolean
+    description: Печать в один или множество файлов.
+description: Данные

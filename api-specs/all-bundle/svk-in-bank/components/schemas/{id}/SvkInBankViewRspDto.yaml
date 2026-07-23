@@ -1,0 +1,96 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Id сообщения
+    format: uuid
+  messageTopic:
+    type: string
+    description: Тема сообщения
+  messageText:
+    type: string
+    description: Текст сообщения
+  documentStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - IMPORTED
+    - SIGN_ERROR
+    - IMPORTED_FILE_ERROR
+    - SIGNED
+    - NEW
+    - READ
+    - CANCELED
+  skvoInfo:
+    $ref: ../common/SkvoBankInfoDto.yaml
+  organizationInfo:
+    $ref: ../common/OrganizationBankInfoDto.yaml
+  dioInfo:
+    $ref: ../common/LinkedDocumentBankInfoDto.yaml
+  documentSignature:
+    $ref: ./DocumentSignatureDto.yaml
+  attachmentsInfo:
+    type: array
+    description: Информация вложений
+    items:
+      $ref: ../common/AttachmentBankInfoDto.yaml
+  dateOfEcoReceipt:
+    type: string
+    description: Дата приема документа в Экосистеме
+    format: date-time
+  createdAt:
+    type: string
+    description: Дата создания документа
+    format: date-time
+  sourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  creationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  existenceAttachment:
+    type: boolean
+    description: Наличие вложений
+  uploadAttachment:
+    type: string
+    description: Все вложения выгружены в ТЕССА
+    enum:
+    - TESSA_FILES_UPLOADED
+    - TESSA_FILES_NOT_UPLOADED
+    - TESSA_FILES_FAILED_TO_UPLOAD
+  historyInfo:
+    $ref: ./SvkInHistoryInfo.yaml
+description: Банковский DTO сообщения валютного контролера для просмотра карточки

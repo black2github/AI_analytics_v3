@@ -1,0 +1,17 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          additionalProperties:
+            $ref: ../../components/schemas/svfe/SipSvfeResponseMode.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Change Sip Svfe Response Mode
+  tags:
+  - Sip Svfe Controller

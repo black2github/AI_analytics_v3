@@ -1,0 +1,59 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  dssProfile:
+    $ref: ../common/DssProfileDto.yaml
+  kind:
+    type: string
+    description: ДТО Классификатор видов электронной подписи
+    enum:
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+    - MOBILE_QUALIFIED_SIGN
+  status:
+    type: string
+    description: ДТО статусов СЭП
+    enum:
+    - ACTIVE
+    - EXPIRED
+    - DISABLED
+    - BLOCKED
+    - INACTIVE
+  certificateName:
+    type: string
+    description: Наименование владельца сертификата
+  certificateOwnerName:
+    type: string
+    description: ФИО владельца сертификата
+  certificate:
+    $ref: ./CertificateInfo.yaml
+  dssCertificateId:
+    type: integer
+    description: ID сертификата DSS
+    format: int64
+  enabled:
+    type: boolean
+    description: Разрешение на использование
+  loginEnabled:
+    type: boolean
+    description: Разрешение на использование для входа
+  deleted:
+    type: boolean
+    description: Признак удаления
+  clientOfficials:
+    type: array
+    description: Представители клиента использующие СЭП
+    items:
+      $ref: ./EnrichedClientOfficialDst.yaml
+  pinCodeEnabled:
+    type: boolean
+    description: Признак установленного пинкода для сертификата на стороне КритоПРО ДСС
+  blocked:
+    type: boolean
+    description: Признак блокировки ключа ОЭП на стороне КритоПРО ДСС
+description: ДТО Банковский скроллер СЭП

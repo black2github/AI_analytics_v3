@@ -1,0 +1,17 @@
+type: object
+description: Результат проверки
+properties:
+  name:
+    type: string
+    description: Название компонента
+  version:
+    type: string
+    description: Версия компонента
+  status:
+    type: string
+    description: Статус проверки компонента
+    enum:
+    - SUCCESS
+    - WARNING
+    - ERROR
+    - SKIP

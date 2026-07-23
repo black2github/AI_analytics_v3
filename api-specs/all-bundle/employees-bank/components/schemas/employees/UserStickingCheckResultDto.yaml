@@ -1,0 +1,71 @@
+required:
+- authorizedPersons
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор клиента пользователя
+    format: uuid
+  uaaUserId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userFullName:
+    type: string
+    description: ФИО пользователя
+  userPhoneNumber:
+    type: string
+    description: Телефон пользователя
+  userEmail:
+    type: string
+    description: Email пользователя
+  bankClientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  userLogin:
+    type: string
+    description: Логин
+  userEskId:
+    type: string
+    description: Идентификатор пользователя в ЕСК
+  bankClientInn:
+    type: string
+    description: ИНН организации
+  bankClientName:
+    type: string
+    description: Наименование организации
+  clientOfficialId:
+    type: string
+    description: Идентификатор связи
+    format: uuid
+  authorizedPerson:
+    type: boolean
+    description: Является УЛ
+  authorizedPersonLkUvedOnly:
+    type: boolean
+    description: Есть только ЛК УВЭД
+  authorizedPersons:
+    type: array
+    description: Данные по УЛ
+    items:
+      $ref: ./StickingAuthorizedPersonDto.yaml
+  rolesAreCorrect:
+    type: boolean
+    description: Доступы выданы корректно
+  needToDeleteRoles:
+    type: boolean
+    description: Необходимо удалить доступы пользователя по организации
+  hasRolesWithoutRule:
+    type: boolean
+    description: Есть роли не из правил
+  clientOfficialIsCorrect:
+    type: boolean
+    description: Связь корректна
+  hasClientOfficialAccount:
+    type: boolean
+    description: Есть счета
+  needToDeleteClientOfficial:
+    type: boolean
+    description: Необходимо удалить связь пользователя и организации
+description: Результат проверки склейки пользователей

@@ -1,0 +1,10 @@
+type: object
+description: Прикрепленный файл
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  fileContent:
+    type: string
+    format: binary
+    description: Содержимое файла. В JSON передается как base64-строка, на бэке будет в виде byte[].

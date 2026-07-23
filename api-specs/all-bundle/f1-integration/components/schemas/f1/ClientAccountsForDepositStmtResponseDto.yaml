@@ -1,0 +1,23 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат выполнения операции
+    example: SUCCESS
+    enum:
+    - SUCCESS
+    - ERROR
+  error:
+    type: string
+    description: Текст ошибки если есть
+    example: Some error text
+  clientRnkId:
+    type: integer
+    description: РНК ид клиента
+    example: 12345
+  accounts:
+    type: array
+    description: Список счетов клиента
+    items:
+      $ref: ./AccountDto.yaml
+description: Ответ на запрос счетов клиента для использования в модуле Казначейские продукты для заказа депозитной выписки

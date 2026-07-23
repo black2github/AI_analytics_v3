@@ -1,0 +1,34 @@
+type: object
+properties:
+  bankStatus:
+    type: string
+    description: Банковкий статус заявки
+  changedIn:
+    type: string
+    description: Дата и время изменения статуса заявки
+  clientStatus:
+    type: string
+    description: Клиентский статус заявки
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  status:
+    type: string
+    description: Статус
+  userFio:
+    type: string
+    description: ФИО пользователя
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+  userTypeName:
+    type: string
+    description: Наименование типа пользователя
+description: Историческая сущность заявки

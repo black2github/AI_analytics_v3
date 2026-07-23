@@ -1,0 +1,36 @@
+post:
+  summary: Создание записи в таблице f1_run_msg_stub
+  tags:
+  - Обновление данных для процедуры RUN_MSG онлайн-адаптера Ф1
+  parameters:
+  - name: rootTagName
+    in: query
+    schema:
+      type: string
+      description: Имя корневого тега запроса
+  - name: tagName
+    in: query
+    schema:
+      type: object
+      description: Тег ответа
+    required: false
+  - name: tagValue
+    in: query
+    schema:
+      type: object
+      description: Значение тега ответа
+    required: false
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          type: string
+          description: Имя корневого тега запроса
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/RunMsgDto.yaml

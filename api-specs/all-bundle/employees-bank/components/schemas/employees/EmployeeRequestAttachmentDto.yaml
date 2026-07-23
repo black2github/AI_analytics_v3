@@ -1,0 +1,38 @@
+required:
+- attachmentId
+- docType
+- fileHash
+- fileName
+- fileSize
+- id
+- uploadTime
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  attachmentId:
+    type: string
+    description: Идентификатор вложения в файловом сервисе
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла вложения
+  fileSize:
+    type: integer
+    description: Размер вложения
+    format: int64
+  fileHash:
+    type: string
+    description: Хеш вложения
+  uploadTime:
+    type: string
+    description: Дата и время загрузки вложения
+    format: date-time
+  docType:
+    $ref: ./DocTypeDto.yaml
+  accessToken:
+    type: string
+    description: Токен доступа к файлу на скачивание
+description: Вложения в заявку на создание нового/изменение данных и полномочий сотрудника Клиента

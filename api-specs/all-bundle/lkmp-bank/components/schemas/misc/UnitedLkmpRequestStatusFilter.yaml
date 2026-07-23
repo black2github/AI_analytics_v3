@@ -1,0 +1,109 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус объединенной заявки ЛК МП
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - GRANT_AUTHORITY
+    - AUTHORITY_GRANTED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXECUTED_BY_F1
+    - EXPORT_TO_F1_ERROR
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    description: Статус объединенной заявки ЛК МП
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - GRANT_AUTHORITY
+    - AUTHORITY_GRANTED
+    - EXPORT_TO_F1
+    - EXPORTED_TO_F1
+    - EXECUTED_BY_F1
+    - EXPORT_TO_F1_ERROR
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус объединенной заявки ЛК МП
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - GRANT_AUTHORITY
+      - AUTHORITY_GRANTED
+      - EXPORT_TO_F1
+      - EXPORTED_TO_F1
+      - EXECUTED_BY_F1
+      - EXPORT_TO_F1_ERROR
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус объединенной заявки ЛК МП
+      enum:
+      - NONE
+      - DRAFT
+      - NEW
+      - SIGNED
+      - DELETED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - GRANT_AUTHORITY
+      - AUTHORITY_GRANTED
+      - EXPORT_TO_F1
+      - EXPORTED_TO_F1
+      - EXECUTED_BY_F1
+      - EXPORT_TO_F1_ERROR
+      - EXPORT_TO_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - EXECUTED_BY_TESSA
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+description: Фильтр по статусу объединенной заявки ЛК МП

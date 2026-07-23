@@ -1,0 +1,28 @@
+get:
+  tags:
+  - API организаций пользователя
+  summary: Коллекция организаций
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.VIEW_ORGANIZATIONS'
+  operationId: getOrganizationsUsingGET
+  produces:
+  - '*/*'
+  parameters:
+  - name: hasActingSubscription
+    in: query
+    description: hasActingSubscription
+    required: true
+    type: boolean
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«OrganizationListError,List«OrganizationResponseDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

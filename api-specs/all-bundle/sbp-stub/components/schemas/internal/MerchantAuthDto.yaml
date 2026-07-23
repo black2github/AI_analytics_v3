@@ -1,0 +1,10 @@
+type: object
+description: Запрос на установку авторизационных данных ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  authData:
+    $ref: ./AuthDataDto.yaml
+    type: object
+    description: Авторизационные данные ТСП

@@ -1,0 +1,25 @@
+type: object
+properties:
+  bankClientId:
+    title: Идентификатор клиента банка
+    type: string
+    format: uuid
+  addressType:
+    title: Тип адреса
+    type: string
+    description: Тип адреса
+    enum:
+    - LEGAL
+    - POST
+    - ACTUAL
+    - BIRTH_PLACE
+    - TEMPORARY_REG
+  regionAndArea:
+    $ref: ./BankClientFiasAddressRegionAndAreaDto.yaml
+  city:
+    $ref: ./BankClientFiasAddressCityDto.yaml
+  settlement:
+    $ref: ./BankClientFiasAddressSettlementDto.yaml
+  planningStructure:
+    $ref: ./BankClientFiasAddressPlanningStructureDto.yaml
+description: Данные о городе клиента в ФИАС

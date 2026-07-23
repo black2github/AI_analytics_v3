@@ -1,0 +1,26 @@
+get:
+  tags:
+  - АПИ для выполнения операций с OpenApi спецификациями через ansible-скрипты
+  summary: Создание OpenApi спецификации для заданного сервиса
+  description: 'Привилегии: ANSIBLE_ACCESS'
+  operationId: discoverOne_1
+  parameters:
+  - name: serviceId
+    in: path
+    required: true
+    schema:
+      type: string
+  - name: url
+    in: query
+    required: false
+    schema:
+      type: string
+  - name: forced
+    in: query
+    required: false
+    schema:
+      type: boolean
+      default: false
+  responses:
+    '200':
+      description: OK

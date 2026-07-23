@@ -1,0 +1,43 @@
+required:
+- bankClientId
+- createdAt
+- customerId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID записи
+    format: uuid
+  createdAt:
+    type: string
+    description: Создан
+    format: date-time
+  updatedAt:
+    type: string
+    description: Изменён
+    format: date-time
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  bankClientShortName:
+    type: string
+    description: Организация. Краткое наименование
+  bankClientInn:
+    type: string
+    description: Организация. ИНН/КИО
+  bankClientRnk:
+    type: string
+    description: Организация. РНК
+  customerId:
+    type: string
+    description: ID клиента сервиса
+  rules:
+    type: integer
+    description: Правил
+    format: int32
+  blocked:
+    type: boolean
+    description: Признак блокировки
+description: Страница с данными

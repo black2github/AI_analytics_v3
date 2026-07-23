@@ -1,0 +1,5 @@
+type: object
+properties:
+  bankClientInnOrNameOrShortNameOrRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр подсказок Клиента банка

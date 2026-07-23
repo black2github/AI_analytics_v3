@@ -1,0 +1,48 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  notEq:
+    type: string
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACCESSION
+      - STANDART
+      - INDIVIDUAL
+      - ACCESSION_DU
+      - INDIVIDUAL_DU
+      - STANDART_DU
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACCESSION
+      - STANDART
+      - INDIVIDUAL
+      - ACCESSION_DU
+      - INDIVIDUAL_DU
+      - STANDART_DU
+  isNull:
+    type: boolean

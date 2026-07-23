@@ -1,0 +1,12 @@
+type: object
+properties:
+  verifySignFields:
+    type: array
+    description: Данные подписи
+    items:
+      $ref: ./VerifySignByDateFields.yaml
+  date:
+    type: string
+    description: Дата подписи
+    format: date-time
+description: Запрос для получения списков УЦ и СОС на дату

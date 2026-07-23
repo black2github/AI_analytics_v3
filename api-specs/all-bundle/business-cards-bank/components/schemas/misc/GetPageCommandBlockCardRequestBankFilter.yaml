@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBlockCardRequestBankFilter.yaml
+description: Запрос страницы

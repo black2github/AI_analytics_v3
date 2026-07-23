@@ -1,0 +1,13 @@
+type: object
+properties:
+  data:
+    type: array
+    items:
+      $ref: ./AccessRuleDto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string
+  validationResult:
+    $ref: ../common/ValidationResult.yaml

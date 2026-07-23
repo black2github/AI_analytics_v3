@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    format: uuid
+  notEq:
+    type: string
+    format: uuid
+  in:
+    type: array
+    items:
+      type: string
+      format: uuid
+  notIn:
+    type: array
+    items:
+      type: string
+      format: uuid
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    format: uuid
+  ge:
+    type: string
+    format: uuid
+  lt:
+    type: string
+    format: uuid
+  le:
+    type: string
+    format: uuid
+description: Идентификатор заявки.

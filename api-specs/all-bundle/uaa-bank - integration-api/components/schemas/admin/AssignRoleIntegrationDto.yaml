@@ -1,0 +1,14 @@
+required:
+- roleCode
+type: object
+properties:
+  roleCode:
+    type: string
+    description: Код роли
+  segmentCode:
+    type: string
+    description: Код сегмента
+  comment:
+    type: string
+    description: Комментарий к роли
+description: Набор соответствий роль / сегмент

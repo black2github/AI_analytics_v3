@@ -1,0 +1,10 @@
+type: object
+description: Запрос на получение данных из Ф1 через шлюз
+properties:
+  methodName:
+    type: string
+    description: Наименование метода запроса в Ф1
+  parameters:
+    type: object
+    additionalProperties: {}
+    description: Входные параметры

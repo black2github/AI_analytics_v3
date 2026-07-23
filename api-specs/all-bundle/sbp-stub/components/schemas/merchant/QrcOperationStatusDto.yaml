@@ -1,0 +1,7 @@
+type: string
+enum:
+- NOT_STARTED
+- RECEIVED
+- IN_PROGRESS
+- ACCEPTED
+- REJECTED

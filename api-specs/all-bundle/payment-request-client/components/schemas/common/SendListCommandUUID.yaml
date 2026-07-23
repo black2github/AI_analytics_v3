@@ -1,0 +1,22 @@
+required:
+- data
+- userDeviceInfo
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      format: uuid
+  userDeviceInfo:
+    $ref: ./UserDeviceInfoDto.yaml
+  list:
+    type: array
+    description: Список
+    items:
+      type: string
+      description: Список
+      format: uuid
+description: Команда отправки в банк списка заявок

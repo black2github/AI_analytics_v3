@@ -1,0 +1,34 @@
+required:
+- amount
+- clientId
+- contractId
+- creditTradingFloor
+- debitTradingFloor
+- securityId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор договора
+  creditTradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка списания
+  debitTradingFloor:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Торговая площадка зачисления
+  securityId:
+    type: string
+    description: Id ценной бумаги
+    format: uuid
+  amount:
+    type: string
+    description: Переводимое количество ЦБ
+description: Транспортная сущность для создания неторгового поручения на перевод ценных бумаг

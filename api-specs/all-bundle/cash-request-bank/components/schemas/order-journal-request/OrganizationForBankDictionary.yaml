@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование организации
+  ecoId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  ecoClientRegNum:
+    type: integer
+    description: РНК
+    format: int64
+  inn:
+    type: string
+    description: ИНН
+description: Организация

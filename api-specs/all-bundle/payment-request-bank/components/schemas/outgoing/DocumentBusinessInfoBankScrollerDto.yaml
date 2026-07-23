@@ -1,0 +1,22 @@
+type: object
+properties:
+  docNumber:
+    maxLength: 15
+    type: string
+    description: Номер документа
+    nullable: true
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  amount:
+    type: number
+    description: Сумма
+    nullable: true
+  amountIncludeVat:
+    type: number
+    description: Сумма с учётом НДС
+    nullable: true
+description: Основные реквизиты документа (скроллер админа платежное требование исходящее)
+nullable: true

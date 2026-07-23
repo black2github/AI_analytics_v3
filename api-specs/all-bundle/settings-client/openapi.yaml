@@ -1,0 +1,100 @@
+openapi: 3.0.1
+info:
+  title: Сервис настроек. Клиентская часть.
+  version: 2.28.0
+servers:
+- url: /settings-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: АПИ Клиента для управления пользовательскими настройками
+- name: АПИ Клиента для работы с системными настройками
+- name: АПИ для работы с настройками пользователей
+- name: API интеграции с DLP
+- name: АПИ публичного пользователя для работы с системными настройками
+- name: АПИ клиента для работы с дисклеймерами
+paths:
+  /user-settings/{id}:
+    $ref: ./paths/{id}/user_settings_id.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /user-settings:
+    $ref: ./paths/user-settings/user_settings.yaml
+  /user-settings/get-page:
+    $ref: ./paths/get-page/user_settings_get_page.yaml
+  /user-settings/create-or-update:
+    $ref: ./paths/create-or-update/user_settings_create_or_update.yaml
+  /dlp-integration/check/message:
+    $ref: ./paths/check/dlp_integration_check_message.yaml
+  /dlp-integration/check/attachment-file:
+    $ref: ./paths/check/dlp_integration_check_attachment_file.yaml
+  /user-settings/all:
+    $ref: ./paths/all/user_settings_all.yaml
+  /settings/user:
+    $ref: ./paths/user/settings_user.yaml
+  /settings/user/{code}:
+    $ref: ./paths/user/settings_user_code.yaml
+  /settings/system:
+    $ref: ./paths/system/settings_system.yaml
+  /settings/system/{code}:
+    $ref: ./paths/system/settings_system_code.yaml
+  /settings/public/system:
+    $ref: ./paths/public/settings_public_system.yaml
+  /settings/public/system/{code}:
+    $ref: ./paths/public/settings_public_system_code.yaml
+  /disclaimer/unauthorized-area:
+    $ref: ./paths/unauthorized-area/disclaimer_unauthorized_area.yaml
+  /disclaimer/active:
+    $ref: ./paths/active/disclaimer_active.yaml
+components:
+  schemas:
+    UserSettingsDto:
+      $ref: ./components/schemas/common/UserSettingsDto.yaml
+    GenericResponseSimpleErrorDataUserSettingsDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/get-page/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/get-page/FilterValueDtoUUID.yaml
+    GetPageCommandUserSettingsFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandUserSettingsFilter.yaml
+    PageParamsUserSettingsFilter:
+      $ref: ./components/schemas/get-page/PageParamsUserSettingsFilter.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    UserSettingsFilter:
+      $ref: ./components/schemas/get-page/UserSettingsFilter.yaml
+    PageDataUserSettingsDto:
+      $ref: ./components/schemas/get-page/PageDataUserSettingsDto.yaml
+    DlpMessageRequestDto:
+      $ref: ./components/schemas/check/DlpMessageRequestDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/check/GenericResponseSimpleErrorDataBoolean.yaml
+    DlpAttachmentFileRequestDto:
+      $ref: ./components/schemas/check/DlpAttachmentFileRequestDto.yaml
+    GenericResponseSimpleErrorDataListUserSettingsDto:
+      $ref: ./components/schemas/all/GenericResponseSimpleErrorDataListUserSettingsDto.yaml
+    SettingDto:
+      $ref: ./components/schemas/common/SettingDto.yaml
+    SingleResponseSettingDto:
+      $ref: ./components/schemas/common/SingleResponseSettingDto.yaml
+    DisclaimerClientDto:
+      $ref: ./components/schemas/common/DisclaimerClientDto.yaml
+    DisclaimerDynamicFieldDto:
+      $ref: ./components/schemas/common/DisclaimerDynamicFieldDto.yaml
+    DisclaimerTemplateDto:
+      $ref: ./components/schemas/common/DisclaimerTemplateDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

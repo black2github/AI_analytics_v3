@@ -1,0 +1,10 @@
+required:
+- roleTemplates
+type: object
+properties:
+  roleTemplates:
+    type: array
+    description: Список найденных шаблонов ролей
+    items:
+      $ref: ./AuthorizedPersonRoleTemplateDto.yaml
+description: Обертка для возвращаемого значения списка шаблонов ролей

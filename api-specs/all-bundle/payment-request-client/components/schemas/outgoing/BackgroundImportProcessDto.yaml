@@ -1,0 +1,39 @@
+required:
+- processType
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  processType:
+    type: string
+    description: Классификатор типов фоновых процессов
+    enum:
+    - IMPORT
+  launchAt:
+    type: string
+    description: Дата и время запуска
+    format: date-time
+  completeAt:
+    type: string
+    description: Дата и время завершения
+    format: date-time
+  fileDetails:
+    $ref: ./FileDetailsDto.yaml
+  processDetails:
+    $ref: ./ProcessDetailsDto.yaml
+  importParameters:
+    $ref: ./ImportParametersDto.yaml
+  fileDocumentDetails:
+    $ref: ./FileDocumentDetailsDto.yaml
+  importedDocumentDetails:
+    $ref: ./ImportedDocumentDetailsDto.yaml
+  fileOrganizationDetails:
+    $ref: ./FileOrganizationDetailsDto.yaml
+description: Фоновый процесс импорта

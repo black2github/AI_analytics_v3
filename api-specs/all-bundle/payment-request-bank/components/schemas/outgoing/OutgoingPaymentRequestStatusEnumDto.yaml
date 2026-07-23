@@ -1,0 +1,22 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  notEq:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  isNull:
+    type: boolean
+description: Фильтр по статусу документа платежное требование исходящее
+nullable: true

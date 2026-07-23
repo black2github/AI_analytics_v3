@@ -1,0 +1,7 @@
+type: object
+properties:
+  status:
+    type: string
+  humanName:
+    type: string
+description: Список клиентских статусов

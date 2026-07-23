@@ -1,0 +1,20 @@
+required:
+- clientId
+- settings
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: ID Пользователя
+    format: uuid
+  clientId:
+    type: string
+    description: ID Клиент Банка
+    format: uuid
+  settings:
+    type: array
+    description: Список настроек получателей событий СФЗУ
+    items:
+      $ref: ./SubscriberEventSettingsAllDto.yaml
+description: Пользовательские настройки событий СФЗУ

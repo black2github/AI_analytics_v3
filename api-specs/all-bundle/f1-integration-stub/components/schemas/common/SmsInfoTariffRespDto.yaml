@@ -1,0 +1,15 @@
+type: object
+description: Результат получения списка счетов для списания комиссии и действующих тарифов
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+  accounts:
+    type: array
+    items:
+      $ref: ./SmsInfoTariffAccountDto.yaml
+    description: Список счетов, доступных для списания комиссии
+  error:
+    $ref: ./WebGateErrorDto.yaml
+    type: object
+    description: Блок с телом ошибки

@@ -1,0 +1,140 @@
+required:
+- createdAt
+- id
+- requestNumberSystem
+- requestNumberUser
+- status
+- userId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+  requestNumberSystem:
+    type: integer
+    description: Общесистемный номер заявки
+    format: int64
+  requestNumberUser:
+    type: integer
+    description: Номер заявки в разрезе пользователя
+    format: int64
+  requestType:
+    type: string
+    description: Тип заявки
+    enum:
+    - ISSUE
+    - REISSUE
+  status:
+    type: string
+    description: Статус заявки на генерацию НЭП
+    enum:
+    - NONE
+    - NEW
+    - DRAFT
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - EXPORT_TO_UC
+    - EXPORT_TO_UC_ERROR
+    - EXPORTED_TO_UC
+    - EXECUTED_BY_UC
+    - REGISTER_CERT
+    - REGISTER_CERT_ERROR
+    - REGISTERED_CERT
+    - EXECUTED
+    - REJECTED
+    - AUTO_REJECTED
+    - CONFIRMATION_REQUEST
+    - CONFIRMATION_REQUESTED
+    - ACCEPTED_BY_EPGU
+    - CONFIRMED_BY_EPGU
+    - CONFIRMATION_ERROR
+    - NOTIFICATION_REQUEST
+    - NOTIFICATION_REQUESTED
+    - NOTIFICATION_ACCEPTED_BY_EPGU
+    - NOTIFICATION_CONFIRMED_BY_EPGU
+    - NOTIFICATION_ERROR
+    - REJECTING_REQUEST
+    - EXECUTING_REQUEST
+    - REFUSED_BY_UC
+    - RETRY_PROCESSING
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  type:
+    type: string
+    description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+    enum:
+    - PKCS7
+    - CMS
+  clientOfficialSignatureToolId:
+    type: string
+    description: Ссылка на сущность "СЭП представителя клиента"
+    format: uuid
+  certId:
+    type: string
+    description: Ссылка на сущность "Сертификаты ЭП".
+    format: uuid
+  agreementAccept1:
+    type: boolean
+    description: Согласие 1
+  agreementTextHash1:
+    type: string
+    description: Хеш текста согласия 1
+  agreementAccept2:
+    type: boolean
+    description: Согласие 2
+  agreementTextHash2:
+    type: string
+    description: Хеш текста согласия 2
+  info:
+    $ref: ./CertInfoDto.yaml
+  signatures:
+    type: array
+    description: Подпись заявки
+    items:
+      $ref: ./UnqCertRequestSignatureDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  epguInfo:
+    $ref: ./EpguInfoDto.yaml
+  applicationKind:
+    type: string
+    description: Форма подачи заявления
+    enum:
+    - ONLINE
+    - PAPER
+    - ONLINE_EPGU_CONFIRMATION
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Заявка на генерацию НЭП

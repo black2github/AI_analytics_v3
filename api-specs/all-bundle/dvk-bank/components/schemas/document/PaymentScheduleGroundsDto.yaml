@@ -1,0 +1,9 @@
+type: object
+properties:
+  contractInfoFlag:
+    type: boolean
+    description: Флаг сведения из кредитного договора
+  contractAssessment:
+    type: boolean
+    description: Флаг оценочные данные
+description: Основания для заполнения графика платежей

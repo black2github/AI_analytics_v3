@@ -1,0 +1,31 @@
+type: object
+properties:
+  receiptAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  status:
+    $ref: ../common/ChargebackRequestStatusFilter.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  sourceSystem:
+    $ref: ./ChargebackRequestSourceSystemFilter.yaml
+  creationType:
+    $ref: ./ChargebackRequestCreationTypeFilter.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  paymentAmountIncludeVat:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentCreatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  paymentDocNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerNameOrInnOrRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerBankNameOrBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    $ref: ./ChargebackRequestBankCategoryDto.yaml
+description: Фильтр скроллера заявки "Запрос на отзыв". Банковская часть.

@@ -1,0 +1,10 @@
+type: object
+description: Результат запроса на регистрацию ТСП
+properties:
+  merchantId:
+    type: string
+    description: Идентификатор зарегистрированного ТСП в СБП
+  status:
+    $ref: ./LegalResultStatusDto.yaml
+    type: string
+    description: Статус

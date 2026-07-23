@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsPcrParticipantWalletFilter.yaml
+description: Запрос страницы

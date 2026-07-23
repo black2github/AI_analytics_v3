@@ -1,0 +1,49 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    description: Статус подписания с помощью УКЭП
+    enum:
+    - UNSIGNED
+    - SIGNED
+    - ERROR
+    - REQUIRED
+    - CANCELLED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус подписания с помощью УКЭП
+      enum:
+      - UNSIGNED
+      - SIGNED
+      - ERROR
+      - REQUIRED
+      - CANCELLED
+  isNull:
+    type: boolean
+  notContains:
+    type: string
+  notEq:
+    type: string
+    description: Статус подписания с помощью УКЭП
+    enum:
+    - UNSIGNED
+    - SIGNED
+    - ERROR
+    - REQUIRED
+    - CANCELLED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус подписания с помощью УКЭП
+      enum:
+      - UNSIGNED
+      - SIGNED
+      - ERROR
+      - REQUIRED
+      - CANCELLED
+description: Статус подписания с помощью УКЭП. Полное совпадение (in)

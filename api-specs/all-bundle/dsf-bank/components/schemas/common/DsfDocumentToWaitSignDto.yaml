@@ -1,0 +1,10 @@
+type: object
+description: Данные для запроса 'Отправить на подпись'
+properties:
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  responsibleSignerId:
+    type: string
+    format: uuid
+    description: ID пользователя ответственного за подписание документа

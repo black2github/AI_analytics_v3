@@ -1,0 +1,10 @@
+required:
+- data
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+description: Команда передачи множества элементов.

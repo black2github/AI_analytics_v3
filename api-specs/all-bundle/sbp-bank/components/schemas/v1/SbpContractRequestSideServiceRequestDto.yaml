@@ -1,0 +1,48 @@
+type: object
+description: Запрос создания заявки на подключение к СБП от сервиса Банка
+properties:
+  traceId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор запроса
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса
+  ecoDocTypeId:
+    type: string
+    description: Идентификатор типа заявки
+  eskClientId:
+    type: string
+    format: uuid
+    description: ID Клиента в ЕСК
+  account:
+    type: string
+    description: Номер счета
+  f1AccountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета в РКО Ф1
+  tessaId:
+    type: string
+    format: uuid
+    description: ID досье «Открытие первого банковского счета» в АС Тесса
+  clientOkved:
+    type: string
+    description: ОКВЕД Клиента
+  userName:
+    type: string
+    description: ФИО Подписанта
+  eskUserId:
+    type: string
+    description: ID ФЛ АС ЕСК по Подписанту заявления КБО
+required:
+- account
+- clientOkved
+- ecoDocTypeId
+- ecoServiceCode
+- eskClientId
+- eskUserId
+- f1AccountId
+- tessaId
+- traceId
+- userName

@@ -1,0 +1,43 @@
+required:
+- code
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+    example: null
+  code:
+    $ref: ./InquiryTypeCodeDto.yaml
+  date:
+    type: string
+    description: Дата, на которую запрашивается справка
+    format: date
+    example: null
+  dateFrom:
+    type: string
+    description: Начальная дата периода за который запрашивается справка
+    format: date
+    example: null
+  dateTo:
+    type: string
+    description: Конечная дата периода за который запрашивается справка
+    format: date
+    example: null
+  splitByMonths:
+    type: boolean
+    description: Признак "Разбить по месяцам"
+    example: null
+  rkoOfferNumber:
+    pattern: ^[0-9A-zА-я\s\\\/\-\u2116\.\,]+$
+    type: string
+    description: Номер договора РКО
+    example: null
+  inquiryAccounts:
+    type: array
+    description: Сведения о счетах по которым запрашивается справка
+    example: null
+    items:
+      $ref: ./InquiryAccountDto.yaml
+description: Справка, запрашиваемая по запросу для ЮЛ
+example: null

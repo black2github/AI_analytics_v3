@@ -1,0 +1,33 @@
+type: object
+description: Фильтр по коду продуктового сервиса в Справочнике сервисов экосистемы.
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Коды продуктовых сервисов в Справочнике сервисов экосистемы
+    enum:
+    - SBP
+  notEq:
+    type: string
+    description: Коды продуктовых сервисов в Справочнике сервисов экосистемы
+    enum:
+    - SBP
+  in:
+    type: array
+    items:
+      type: string
+      description: Коды продуктовых сервисов в Справочнике сервисов экосистемы
+      enum:
+      - SBP
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Коды продуктовых сервисов в Справочнике сервисов экосистемы
+      enum:
+      - SBP
+  isNull:
+    type: boolean

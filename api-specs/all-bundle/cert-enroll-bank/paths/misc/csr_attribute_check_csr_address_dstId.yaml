@@ -1,0 +1,61 @@
+post:
+  tags:
+  - API аттрибутов входящих в CSR
+  summary: Функция проверки адреса для CSR
+  description: 'Привилегии: CERT_ENROLL.BANK.CSR_ADDRESS_CHECK'
+  operationId: csrAddressCheck
+  parameters:
+  - name: dstId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: ctx
+    in: query
+    required: true
+    schema:
+      $ref: ../../components/schemas/misc/UserContext.yaml
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/misc/GenericResponseSimpleErrorDataCsrAddressCheckResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

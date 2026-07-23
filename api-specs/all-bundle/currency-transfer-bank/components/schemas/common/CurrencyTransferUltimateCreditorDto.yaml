@@ -1,0 +1,26 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Транспортное представление для передачи типа получателя
+    enum:
+    - LEGAL
+    - PHYSICAL
+  name:
+    type: string
+    description: Наименование окончательного получателя
+  city:
+    type: string
+    description: Город окончательного получателя
+  taxId:
+    type: string
+    description: Идентификатор окончательного получателя
+  idScheme:
+    type: string
+    description: Транспортное представление для передачи кода идентификационной схемы получателя
+    enum:
+    - TXID
+    - CCPT
+  country:
+    $ref: ./CurrencyTransferCountryDto.yaml
+description: Реквизиты окончательного получателя

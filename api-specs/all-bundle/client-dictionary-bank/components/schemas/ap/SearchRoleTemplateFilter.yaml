@@ -1,0 +1,9 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  actualAuthorizedPerson:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр для поиска шаблонов ролей

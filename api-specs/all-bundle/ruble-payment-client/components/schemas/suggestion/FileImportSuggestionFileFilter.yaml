@@ -1,0 +1,7 @@
+type: object
+properties:
+  fileName:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAtRange:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр подсказок поля "Файл" скроллера журнала загруженных файлов

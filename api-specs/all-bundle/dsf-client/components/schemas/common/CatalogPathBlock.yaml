@@ -1,0 +1,12 @@
+type: object
+properties:
+  failCatalogPath:
+    type: string
+    description: Путь до каталога, содержащего файла после неуспешной обработки.
+  sourceCatalogPath:
+    type: string
+    description: Путь до каталога сканирования.
+  successCatalogPath:
+    type: string
+    description: Путь до каталога, содержащего файла после успешной обработки.
+description: Блок путей до каталогов авторассылки.

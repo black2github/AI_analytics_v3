@@ -1,0 +1,8 @@
+type: object
+properties:
+  email:
+    type: string
+  bankClientId:
+    type: string
+    format: uuid
+description: Данные

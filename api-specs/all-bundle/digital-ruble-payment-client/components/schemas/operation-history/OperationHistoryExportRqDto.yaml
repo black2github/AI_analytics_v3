@@ -1,0 +1,25 @@
+required:
+- format
+- pcrParticipantWalletId
+- requestId
+- timezone
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  format:
+    type: string
+    description: Формат файла
+    enum:
+    - XML
+    - Excel
+  timezone:
+    type: string
+    description: Часовой пояс клиента
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+description: Запрос на экспорт истории операций по исполненной заявке

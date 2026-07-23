@@ -1,0 +1,15 @@
+required:
+- documentCreationInfo
+type: object
+properties:
+  documentCreationInfo:
+    $ref: ./DocumentCreationInfoCreateDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoCreateDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoCreateDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoCreateDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoCreateDto.yaml
+description: Создание заявки платежное требование исходящее

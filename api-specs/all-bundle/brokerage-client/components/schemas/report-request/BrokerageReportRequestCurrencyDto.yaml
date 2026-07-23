@@ -1,0 +1,7 @@
+type: object
+properties:
+  symbolicCode:
+    type: string
+  label:
+    type: string
+description: Расширенное описание валюты

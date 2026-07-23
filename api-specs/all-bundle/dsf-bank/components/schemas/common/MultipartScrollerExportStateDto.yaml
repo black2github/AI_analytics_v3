@@ -1,0 +1,22 @@
+type: object
+description: DTO состояния, которым обмениваются клиент и сервер во время многофайловой выгрузки документов из скроллера. Нужен для того, чтобы продолжать выгрузку
+properties:
+  attachmentIds:
+    type: array
+    description: Идентификаторы уже сформированных файлов
+    items:
+      type: string
+      format: uuid
+    uniqueItems: true
+  offset:
+    type: integer
+    format: int32
+    description: Количество уже выгруженных документов
+  startTimestamp:
+    type: string
+    format: date-time
+    description: Время начала формирования выгрузки
+required:
+- attachmentIds
+- offset
+- startTimestamp

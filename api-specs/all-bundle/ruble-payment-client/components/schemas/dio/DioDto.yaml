@@ -1,0 +1,12 @@
+required:
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор ДИО
+    format: uuid
+  status:
+    $ref: ./DioStatusDto.yaml
+description: Данные ДИО

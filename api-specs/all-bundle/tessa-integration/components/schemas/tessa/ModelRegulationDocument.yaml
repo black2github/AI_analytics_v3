@@ -1,0 +1,13 @@
+type: object
+properties:
+  localId:
+    type: string
+    format: uuid
+  tessaDocumentId:
+    type: string
+    format: uuid
+  approvalDate:
+    type: string
+    format: date
+  number:
+    type: string

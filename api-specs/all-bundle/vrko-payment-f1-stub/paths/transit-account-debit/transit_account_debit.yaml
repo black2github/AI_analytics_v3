@@ -1,0 +1,17 @@
+post:
+  summary: Отослать ответный квиток на документ СТС
+  tags:
+  - Отправка ответа от Ф1 в сервис СТС
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataString.yaml

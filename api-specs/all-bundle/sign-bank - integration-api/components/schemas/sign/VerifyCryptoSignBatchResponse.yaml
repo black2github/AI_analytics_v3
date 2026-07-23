@@ -1,0 +1,8 @@
+type: object
+properties:
+  checkResults:
+    type: object
+    additionalProperties:
+      $ref: ./VerifyCryptoSignResponse.yaml
+    description: 'Результаты проверки подписей: ключ - подпись, значение - результат проверки'
+description: Результат пакетной проверки подписей крипто-модулем

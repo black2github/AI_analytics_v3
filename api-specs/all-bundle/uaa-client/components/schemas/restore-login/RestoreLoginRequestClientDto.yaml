@@ -1,0 +1,31 @@
+required:
+- captchaId
+- captchaText
+- emailAddress
+- firstName
+- lastName
+- phoneNumber
+type: object
+properties:
+  captchaId:
+    type: string
+    format: uuid
+  captchaText:
+    type: string
+  captchaData:
+    $ref: ../common/RequestCaptchaDataDto.yaml
+  lastName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  phoneNumber:
+    type: string
+    description: Номер телефона
+  emailAddress:
+    type: string
+    description: E-mail

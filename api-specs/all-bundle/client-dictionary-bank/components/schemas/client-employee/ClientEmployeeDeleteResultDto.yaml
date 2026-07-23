@@ -1,0 +1,13 @@
+type: object
+properties:
+  deletedClientOfficials:
+    type: array
+    description: Удаленные представители клиента
+    items:
+      $ref: ./DeletedClientOfficialResultDto.yaml
+  dstCommentTargets:
+    type: array
+    description: Результат удаления связей СЭП представителей клиента
+    items:
+      $ref: ./DstCommentTargetResultDto.yaml
+description: Результат удаления сотрудника клиента и связанных представителей клиента

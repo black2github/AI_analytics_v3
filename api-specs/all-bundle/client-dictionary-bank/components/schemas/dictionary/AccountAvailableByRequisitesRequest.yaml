@@ -1,0 +1,21 @@
+required:
+- accountNumber
+- userId
+- userType
+type: object
+properties:
+  userId:
+    type: string
+    description: Ид пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  accountNumber:
+    type: string
+    description: Номер счета
+description: Запрос на доступность счета по реквизитам.

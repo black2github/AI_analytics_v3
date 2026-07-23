@@ -1,0 +1,13 @@
+required:
+- accountNumber
+- bankClientId
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Номер счетов и идентификатор клиента банка

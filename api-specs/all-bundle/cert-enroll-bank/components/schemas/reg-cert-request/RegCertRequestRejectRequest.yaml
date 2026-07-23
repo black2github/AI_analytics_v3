@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID заявки
+    format: uuid
+  commentForClient:
+    type: string
+    description: Сообщение для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+description: Запрос отказа заявки на регистрацию сертификата

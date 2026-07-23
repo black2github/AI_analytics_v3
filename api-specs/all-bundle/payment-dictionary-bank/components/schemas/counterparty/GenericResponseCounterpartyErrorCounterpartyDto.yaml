@@ -1,0 +1,17 @@
+type: object
+properties:
+  data:
+    $ref: ./CounterpartyDto.yaml
+  error:
+    type: string
+    description: Ошибка
+    enum:
+    - BANK_CLIENT_NOT_FOUND
+    - COUNTERPARTY_NOT_FOUND
+    - COUNTERPARTY_CREATION_ERROR
+    - COUNTERPARTY_SUGGESTION_ERROR
+    - COUNTERPARTY_UPDATE_ERROR
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

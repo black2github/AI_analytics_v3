@@ -1,0 +1,6 @@
+type: object
+properties:
+  city:
+    type: string
+    description: Город заключения договора.
+description: Сведения о новом заключаемом ДБС.

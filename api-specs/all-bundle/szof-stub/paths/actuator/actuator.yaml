@@ -1,0 +1,11 @@
+get:
+  responses:
+    '200':
+      description: OK
+      content:
+        application/vnd.spring-boot.actuator.v2+json:
+          schema:
+            $ref: ../../components/schemas/actuator/ActuatorEndpointsDto.yaml
+  summary: Get Actuator Endpoints
+  tags:
+  - Actuator Controller

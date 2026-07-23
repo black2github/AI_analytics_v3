@@ -1,0 +1,10 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  clientVisible:
+    type: boolean
+    description: Признак сокрытия организации
+description: Обновление признака сокрытия организации

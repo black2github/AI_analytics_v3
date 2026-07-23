@@ -1,0 +1,13 @@
+type: object
+properties:
+  count:
+    type: integer
+    format: int64
+  status:
+    type: string
+    enum:
+    - ALL
+    - FAILURE
+    - NONE
+    - SUCCESS
+description: Данные

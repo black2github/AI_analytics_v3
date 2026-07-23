@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+    enum:
+    - PKCS7
+    - CMS
+  notEq:
+    type: string
+    description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+    enum:
+    - PKCS7
+    - CMS
+  in:
+    type: array
+    items:
+      type: string
+      description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+      enum:
+      - PKCS7
+      - CMS
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Запрос на сертификат в формате pkcs#7 и pkcs#10 (cms)
+      enum:
+      - PKCS7
+      - CMS
+  isNull:
+    type: boolean
+description: Формат запроса на сертификат ЭП. Полное совпадение. Мультивыбор.

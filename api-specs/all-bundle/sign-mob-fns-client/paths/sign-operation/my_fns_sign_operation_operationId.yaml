@@ -1,0 +1,55 @@
+get:
+  tags:
+  - Клиентское API операции подписи в мобильном приложении 'Моя подпись ФНС'
+  description: 'Привилегии: SIGN_MOB_FNS.CLIENT.SIGN'
+  operationId: getOperationById
+  parameters:
+  - name: operationId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/GenericResponseSimpleErrorDataClientSignOperationDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign-operation/ActionResultObject.yaml

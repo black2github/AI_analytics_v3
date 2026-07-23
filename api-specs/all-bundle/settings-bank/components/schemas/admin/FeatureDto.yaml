@@ -1,0 +1,72 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID фичи
+    format: uuid
+  featureType:
+    type: string
+    description: Тип фичи
+    enum:
+    - EXAMPLE
+  featureState:
+    type: boolean
+    description: Состояние фичи
+  useStrategy:
+    type: boolean
+    description: Признак использования стратегии
+  strategyOperator:
+    type: string
+    description: Оператор для объединения стратегий
+    enum:
+    - AND
+    - OR
+  strategies:
+    uniqueItems: true
+    type: array
+    description: Стратегии активации
+    items:
+      type: string
+      description: Стратегии активации
+      enum:
+      - USER
+      - BRANCH
+      - CLIENT
+      - REGION
+      - PERCENT
+  userIds:
+    uniqueItems: true
+    type: array
+    description: ID пользователей
+    items:
+      type: string
+      description: ID пользователей
+      format: uuid
+  branchIds:
+    uniqueItems: true
+    type: array
+    description: ID филиалов
+    items:
+      type: string
+      description: ID филиалов
+      format: uuid
+  clientIds:
+    uniqueItems: true
+    type: array
+    description: ID клиентов
+    items:
+      type: string
+      description: ID клиентов
+      format: uuid
+  regions:
+    uniqueItems: true
+    type: array
+    description: Регионы
+    items:
+      type: string
+      description: Регионы
+  userPercent:
+    type: integer
+    description: Процент пользователей
+    format: int32
+description: ДТО фичи

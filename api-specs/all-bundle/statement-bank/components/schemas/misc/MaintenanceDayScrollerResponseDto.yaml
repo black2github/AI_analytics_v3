@@ -1,0 +1,11 @@
+type: object
+properties:
+  maintenanceTypeDto:
+    type: string
+    enum:
+    - MAINTENANCE_START
+    - MAINTENANCE_END
+  creationTime:
+    type: string
+    format: date-time
+description: Страница с данными

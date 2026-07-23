@@ -1,0 +1,81 @@
+required:
+- isResident
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  absId:
+    type: string
+    description: ID клиентской организации в банке (АБС)
+  clientId:
+    type: integer
+    description: Числовой идентификатор клиента
+    format: int64
+  eskId:
+    type: string
+    description: ID клиента в ЕСК
+    format: uuid
+  legalAddress:
+    type: string
+    description: Юридический адрес Клиента
+  phone:
+    type: string
+    description: Контактный телефон
+  postAddress:
+    type: string
+    description: Почтовый адрес Клиента
+  isResident:
+    type: boolean
+    description: Признак резидента
+  clientType:
+    type: string
+    description: Тип клиента
+    enum:
+    - UL
+    - IP
+    - FL
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН
+  status:
+    type: string
+    description: Статус клиента
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  okopf:
+    type: string
+    description: ОКОПФ
+  okfs:
+    type: string
+    description: ОКФС
+  ogrnOgrip:
+    type: string
+    description: ОГРН или ОГРНИП
+  kpp:
+    type: string
+    description: КПП
+  nonResidentRegNumber:
+    type: string
+    description: Регистрационный номер нерезидента
+  internationalName:
+    type: string
+    description: Международное наименование
+  tin:
+    type: string
+    description: Налоговый идентификационный номер
+  country:
+    $ref: ../common/CountryDtoV2.yaml
+  simpleClient:
+    type: boolean
+    description: ' Признак простого клиента'
+description: Организация. ДТО для внешних систем

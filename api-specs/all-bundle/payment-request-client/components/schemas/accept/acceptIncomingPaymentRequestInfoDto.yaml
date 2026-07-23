@@ -1,0 +1,60 @@
+type: object
+properties:
+  paymentOrder:
+    maxLength: 1
+    type: string
+    description: Очерёдность платежа
+    nullable: true
+  paymentCode:
+    maxLength: 25
+    type: string
+    description: Код платежа
+    nullable: true
+  acceptPeriod:
+    type: integer
+    description: Срок для акцепта
+    format: int32
+    nullable: true
+  acceptPeriodEnd:
+    type: string
+    description: Окончание срока акцепта
+    format: date
+    nullable: true
+  sentDate:
+    type: string
+    description: Дата вручения
+    format: date
+    nullable: true
+  paymentTerms:
+    type: integer
+    description: Условие оплаты
+    format: int32
+    nullable: true
+  payerKpp:
+    maxLength: 9
+    type: string
+    description: КПП плательщика
+    nullable: true
+  receiverKpp:
+    maxLength: 9
+    type: string
+    description: КПП получателя
+    nullable: true
+  payerBankLocalityName:
+    type: string
+    description: Название населенного пункта банка плательщика
+    nullable: true
+  payerBankLocalityType:
+    type: string
+    description: Краткое название типа населенного пункта Банка плательщика
+    nullable: true
+  receiverBankLocalityName:
+    type: string
+    description: Название населенного пункта Банка получателя
+    nullable: true
+  receiverBankLocalityType:
+    type: string
+    description: Краткое название типа населенного пункта Банка получателя
+    nullable: true
+description: Реквизиты из входящего платежного поручения
+nullable: true

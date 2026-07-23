@@ -1,0 +1,24 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Ссылка на файл
+    format: uuid
+  attachmentToken:
+    type: string
+    description: Токен для скачивания
+  fileName:
+    type: string
+    description: Имя файла
+  contentType:
+    type: string
+    description: Тип контента
+  dataSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  createTime:
+    type: string
+    description: Время создания
+    format: date-time
+description: Вложение

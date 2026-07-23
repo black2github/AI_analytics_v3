@@ -1,0 +1,9 @@
+type: object
+description: Информация о доступных пользователю действиях с графиком платежей
+properties:
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  viewSubscription:
+    type: boolean
+    description: Признак возможности просмотра подписки

@@ -1,0 +1,7 @@
+type: object
+properties:
+  addressParameters:
+    $ref: ./AddressProviderParametersDto.yaml
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+description: Ответ провайдера адресов

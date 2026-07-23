@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Запрос статуса операций B2C'
+  tags:
+  - СИП. Сервис Internal Operation API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/B2cOperationInfoRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/B2cOperationInfoResultDto.yaml
+    '400':
+      description: Bad Request

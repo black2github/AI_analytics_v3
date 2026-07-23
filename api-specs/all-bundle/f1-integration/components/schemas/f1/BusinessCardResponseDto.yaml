@@ -1,0 +1,82 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Виртуальный номер карты
+  maskedNum:
+    type: string
+    description: Маскированный номер карты
+  expirationDate:
+    type: string
+    description: Срок действия карты
+    format: date
+  createdDate:
+    type: string
+    description: Дата выпуска карты
+    format: date
+  deliveryDate:
+    type: string
+    description: Дата выдачи карты
+    format: date
+  productName:
+    type: string
+    description: Имя карточного продукта
+  cardholderLastName:
+    type: string
+    description: Фамилия держателя карты
+  cardholderFirstName:
+    type: string
+    description: Имя держателя карты
+  cardholderMiddleName:
+    type: string
+    description: Отчество держателя карты
+  paySystemName:
+    type: string
+    description: Имя платежной системы
+  paySystemCode:
+    type: string
+    description: Код платежной системы
+  currencyCode:
+    type: string
+    description: Буквенный код валюты
+  cardholderEmboss:
+    type: string
+    description: Эмбоссированное имя
+  serviceBranchCode:
+    type: string
+    description: Код филиала обслуживания карты
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания карты
+  serviceOfficeAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+  expireNotifyDate:
+    type: string
+    description: Срок уведомления об окончании срока действия карты
+    format: date
+  accountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  clientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountNum:
+    type: string
+    description: Номер счета карты
+  statusCode:
+    type: string
+    description: Статус карты
+  stateCode:
+    type: string
+    description: Состояние карты
+  stateCodeNt5:
+    type: string
+    description: Код состояния карты в АБС Ф1
+  cardGuid:
+    type: string
+    description: Внешний ID карты
+  cardholderEskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Данные о корпоративной карте

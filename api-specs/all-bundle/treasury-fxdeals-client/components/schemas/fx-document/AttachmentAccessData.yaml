@@ -1,0 +1,13 @@
+required:
+- accessToken
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен доступа
+description: Данные для доступа к вложению

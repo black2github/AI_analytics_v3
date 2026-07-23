@@ -1,0 +1,24 @@
+required:
+- counters
+- pollingInterval
+- state
+type: object
+properties:
+  counters:
+    type: object
+    additionalProperties:
+      type: integer
+      description: Количество фоновых процессов по категориям
+      format: int64
+    description: Количество фоновых процессов по категориям
+  state:
+    type: object
+    additionalProperties:
+      type: boolean
+      description: Флаги состояний процессов пользователя
+    description: Флаги состояний процессов пользователя
+  pollingInterval:
+    type: integer
+    description: Интервал поллинга (сек.), если 0 - клиент должен использовать web-socket по пути /user/queue/background-tasks-state для обновления состояния
+    format: int32
+description: Информация о количестве фоновых процессов пользователя

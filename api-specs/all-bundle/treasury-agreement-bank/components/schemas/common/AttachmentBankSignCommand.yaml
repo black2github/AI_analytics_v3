@@ -1,0 +1,7 @@
+type: object
+properties:
+  agreementRequestId:
+    type: string
+    format: uuid
+  signCommand:
+    $ref: ./BankSignCommand.yaml

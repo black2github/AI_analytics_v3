@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientWebDealingId:
+    type: string
+    description: ИД клиента в Веб-Дилинге
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  shortName:
+    type: string
+    description: Короткое наименование клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  absF1Id:
+    type: string
+    description: РНК клиента в РКО Ф1 (ABS_ID)
+  eskId:
+    type: string
+    description: Идентификатор ЕСК
+description: Список участников пула

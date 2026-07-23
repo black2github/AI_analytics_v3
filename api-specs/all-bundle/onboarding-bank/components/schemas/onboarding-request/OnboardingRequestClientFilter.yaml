@@ -1,0 +1,24 @@
+type: object
+properties:
+  branches:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOnboardingRequestStatusDtoForClientFilter.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - FINISHED
+description: Фильтр для поиска заявок на открытие первого счёта для клиентского скроллера

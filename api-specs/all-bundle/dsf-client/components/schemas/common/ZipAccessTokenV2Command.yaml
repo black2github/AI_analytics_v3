@@ -1,0 +1,15 @@
+required:
+- data
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Список идентификаторов документов
+    items:
+      type: string
+      description: Список идентификаторов документов
+      format: uuid
+  withMchd:
+    type: boolean
+    description: Выгружать дополнительно вложения с МЧД

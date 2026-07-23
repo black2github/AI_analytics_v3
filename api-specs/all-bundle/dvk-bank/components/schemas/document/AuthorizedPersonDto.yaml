@@ -1,0 +1,11 @@
+type: object
+properties:
+  fullName:
+    type: string
+    description: ФИО уполномоченного лица в ЛК УВЭД
+  contacts:
+    type: array
+    description: Контактная информация
+    items:
+      $ref: ./ContactInfoDto.yaml
+description: Информация об уполномоченном лице

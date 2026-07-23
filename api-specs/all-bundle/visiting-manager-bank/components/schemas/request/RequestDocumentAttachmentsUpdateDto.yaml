@@ -1,0 +1,12 @@
+type: object
+properties:
+  version:
+    type: integer
+    description: Текущая версия документа.
+    format: int32
+  attachments:
+    type: array
+    description: Список отсканированных вложений.
+    items:
+      $ref: ./ScannedAttachmentUpdateDto.yaml
+description: Документ заявки на выезд менеджера. ДТО на обновление вложений.

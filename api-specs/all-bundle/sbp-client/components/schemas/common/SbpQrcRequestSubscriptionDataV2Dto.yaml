@@ -1,0 +1,42 @@
+type: object
+description: Реквизиты подписки
+properties:
+  subscriptionPurpose:
+    type: string
+    description: Цель подписки. Обязателен при значении параметра «qrcType» = SUBSCRIPTION
+  paymentAmount:
+    type: integer
+    format: int64
+    description: Сумма периодического платежа в копейках
+  paymentFrequency:
+    type: string
+    description: Периодичность платежа
+    enum:
+    - DAILY
+    - WEEKLY
+    - MONTHLY
+    - QUARTERLY
+  paymentStart:
+    type: string
+    format: date
+    description: Дата старта подписки
+  unlimited:
+    type: boolean
+    description: Вспомогательное поле, используется для сохранения состояния в черновике опции Неограниченное количество платежей
+  subscriptionType:
+    type: string
+    description: 'Вспомогательное поле, используется для сохранения состояния в черновике типа подписки: вручную/автоматически'
+    enum:
+    - MANUAL
+    - AUTOMATIC
+  paymentsQuantity:
+    type: integer
+    format: int32
+    description: Количество платежей
+  paymentDay:
+    type: integer
+    format: int32
+    description: День списания
+  payer:
+    type: string
+    description: Плательщик

@@ -1,0 +1,147 @@
+get:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingGET
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+head:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingHEAD
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+post:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+put:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+delete:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingDELETE
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+options:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingOPTIONS
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+patch:
+  tags:
+  - http-stub-controller
+  summary: any
+  operationId: anyUsingPATCH
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+        format: byte
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden

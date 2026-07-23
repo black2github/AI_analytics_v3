@@ -1,0 +1,34 @@
+type: object
+properties:
+  contragentCode:
+    type: string
+    description: Код кооперации
+  contragentInn:
+    type: string
+    description: ИНН контрагента
+  contragentStatus:
+    type: string
+    description: Статус контрагента
+    enum:
+    - SUPPLIER
+    - CONTRACTOR
+  buyerInn:
+    type: string
+    description: ИНН непосредственного заказчика/покупателя
+  buyerName:
+    type: string
+    description: Наименование непосредственного заказчика/покупателя
+  contractNum:
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date-time
+  contractAmount:
+    type: number
+    description: Сумма договора
+  contractSubj:
+    type: string
+    description: Предмет договора
+description: Контрагент

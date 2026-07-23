@@ -1,0 +1,11 @@
+type: object
+description: Ответ создания заявки на подключение к СБП от сервиса Банка
+properties:
+  traceId:
+    type: string
+    format: uuid
+    description: Идентификатор запроса
+  docId:
+    type: string
+    format: uuid
+    description: Идентификатор заявки СБП

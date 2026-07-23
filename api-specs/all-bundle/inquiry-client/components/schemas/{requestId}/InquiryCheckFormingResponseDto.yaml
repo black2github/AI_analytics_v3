@@ -1,0 +1,20 @@
+type: object
+properties:
+  responseCode:
+    type: integer
+    description: Код ответа
+    format: int64
+    example: null
+  error:
+    type: string
+    description: Описание ошибки
+    example: null
+  clientEskId:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+    example: null
+  commissionAccountInfo:
+    $ref: ./F1CommissionAccountInfo.yaml
+description: Ответ на запрос проверки возможности формирования справки
+example: null

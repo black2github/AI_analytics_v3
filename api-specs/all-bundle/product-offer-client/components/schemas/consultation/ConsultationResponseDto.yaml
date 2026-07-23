@@ -1,0 +1,17 @@
+required:
+- consultations
+- validation
+type: object
+properties:
+  validation:
+    type: string
+    description: Результат проверки контролей
+    enum:
+    - VALID
+    - INVALID
+  consultations:
+    type: array
+    description: Список заявок на обратную связь
+    items:
+      $ref: ./ConsultationDto.yaml
+description: Данные

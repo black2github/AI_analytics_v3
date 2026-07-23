@@ -1,0 +1,9 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя файла
+  content:
+    type: string
+    description: Base64 представление вложения
+description: Вложение

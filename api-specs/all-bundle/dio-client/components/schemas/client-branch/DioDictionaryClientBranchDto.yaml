@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентфикатор отделения клиента банка
+    format: uuid
+  name:
+    type: string
+    description: Наименование отделения клиента банка
+description: Транспортное справочное представление отделения клиента банка

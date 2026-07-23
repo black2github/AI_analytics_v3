@@ -1,0 +1,9 @@
+type: object
+properties:
+  documents:
+    type: array
+    items:
+      type: object
+      additionalProperties:
+        type: object
+description: Список найденных документов

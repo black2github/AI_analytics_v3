@@ -1,0 +1,16 @@
+type: object
+properties:
+  marketingCampaignTypeDto:
+    type: string
+    description: Тип маркетинговой кампании
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  citiesNames:
+    type: array
+    description: Список городов
+    items:
+      type: string
+      description: Список городов
+description: Города, участвующие в маркетинговой кампании

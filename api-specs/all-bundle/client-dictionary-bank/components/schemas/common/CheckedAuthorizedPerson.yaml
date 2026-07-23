@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  blockDate:
+    type: string
+    description: Дата блокировки
+    format: date-time
+description: Проверенное УЛ

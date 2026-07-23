@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование организации
+  shortName:
+    type: string
+    description: Краткое наименование организации
+  innKio:
+    type: string
+    description: ИНН/КИО организации
+  rnk:
+    type: string
+    description: РНК организации
+description: 'Подсказки: Организация'

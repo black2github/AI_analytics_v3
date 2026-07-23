@@ -1,0 +1,68 @@
+post:
+  tags:
+  - Миграция пользователей сервиса ЛК УВЭД с механизма ролей на механизм сегментов доступа
+  summary: 'Создаст соглашения о подключении к ЛК УВЭД для указанных клиентов,
+
+    Найдет всех пользователей, связанных с клиентами и заменит им роль по работе с ЛК УВЭД на сегмент по работе с ЛК УВЭД.'
+  description: 'Привилегии: CD_UVED_MIGRATION_TASK'
+  operationId: executeFirstTask
+  requestBody:
+    content:
+      application/json:
+        schema:
+          required:
+          - file
+          type: object
+          properties:
+            file:
+              type: string
+              format: binary
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/dictionary/ListResponseUvedMigrationDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

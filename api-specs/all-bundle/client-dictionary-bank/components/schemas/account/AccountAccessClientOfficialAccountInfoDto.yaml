@@ -1,0 +1,11 @@
+type: object
+properties:
+  accountActionType:
+    type: string
+    description: Тип действия над счетом
+    enum:
+    - BLOCK
+    - INFORM_ONLY
+    - OPEN
+    - RECEPTION_ONLY
+description: Счет представителя Клиента ДБО БСС

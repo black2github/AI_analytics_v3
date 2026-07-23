@@ -1,0 +1,6 @@
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН
+description: Запрос информации по организации из СПАРК

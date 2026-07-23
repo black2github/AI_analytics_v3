@@ -1,0 +1,23 @@
+required:
+- docDate
+- docNumber
+- paymentPurpose
+type: object
+properties:
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  paymentCode:
+    type: string
+    description: Код платежа
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  upnoOperationId:
+    type: string
+    description: Идентификатор операции (УПНО)
+description: Базовые реквизиты документа

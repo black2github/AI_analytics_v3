@@ -1,0 +1,12 @@
+type: object
+properties:
+  callbackUrl:
+    type: string
+  channel:
+    type: string
+  moduleId:
+    type: string
+  sessionId:
+    type: string
+  systemId:
+    type: string

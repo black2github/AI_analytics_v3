@@ -1,0 +1,6 @@
+type: object
+properties:
+  message:
+    type: string
+  verdict:
+    $ref: ../common/VerdictEnum.yaml

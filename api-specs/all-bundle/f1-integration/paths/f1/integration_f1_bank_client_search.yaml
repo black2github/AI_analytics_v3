@@ -1,0 +1,61 @@
+post:
+  tags:
+  - Сервис интеграции F1 с организациями - клиентами банка
+  summary: Найти организацию
+  description: 'Ищем по GUID (если указан)
+
+    Ищем по РНК (если указан и организация не найдена GUID)
+
+    Иначе ищем по одному или нескольким бизнес реквизитам [ИНН, ОГРН, КПП]
+
+    в режиме логического «И» и полного совпадения значений реквизита.'
+  operationId: searchBankClient
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/f1/ClientInformationRequestDto.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/SingleResponseCustomerResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/f1/ActionResultObject.yaml

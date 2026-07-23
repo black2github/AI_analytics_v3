@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-document-controller
+  summary: Начать распарсивание архива ФНС
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.ARCHIVE_PARSING'
+  operationId: parseFNSArchive
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/fns-archive/GenericCommandFNSArchiveProcessingRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/fns-archive/GenericResponseSimpleErrorDataFNSArchiveProcessingRspDto.yaml

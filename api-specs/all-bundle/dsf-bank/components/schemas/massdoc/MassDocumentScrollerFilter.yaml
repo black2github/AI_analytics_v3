@@ -1,0 +1,21 @@
+type: object
+description: Фильтр скроллера ДСФ для письма массовой рассылки.
+properties:
+  branchId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Фильтрация по идентификатору подразделения/филиала. Мультивыбор.
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по идентификатору документа. Полное совпадение.
+  letterType:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по категориям письма. Полное совпадение. Возможен выбор нескольких значений
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+    description: Фильтрация по номеру письма. Через задание периода с ... по ....
+  receivedAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+    description: Фильтрация по дате рассылки. Через задание периода с ... по ...
+  typeCode:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Фильтрация по типу письма. Мультивыбор.

@@ -1,0 +1,25 @@
+type: object
+properties:
+  kid:
+    type: string
+    description: Идентификатор мобильного приложения
+  error:
+    type: string
+    description: Описание ошибки
+  eventid:
+    type: string
+    description: Имя события
+  systemid:
+    type: string
+    description: Идентификатор системы
+  userid:
+    type: string
+    description: Идентификатор УЗ пользователя
+    format: uuid
+  requestid:
+    type: string
+    description: Идентификатор запроса на сертификат
+  requeststatus:
+    type: string
+    description: Статус запроса на сертификат
+description: Событие о инициализации мобильного приложения

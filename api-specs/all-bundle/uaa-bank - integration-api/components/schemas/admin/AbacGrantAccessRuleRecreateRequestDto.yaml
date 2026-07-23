@@ -1,0 +1,20 @@
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ Клиента Банка
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  phoneNumber:
+    type: string
+    description: Номер телефона представителя
+  email:
+    type: string
+    description: Адрес электронной почты
+description: Сведения о модели запроса для "Пересоздания правил доступа по реквизиту"

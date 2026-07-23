@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./BrokerageClientWithdrawalMoneyOrderCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfo.yaml
+description: Запрос

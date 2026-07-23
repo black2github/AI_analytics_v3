@@ -1,0 +1,6 @@
+type: string
+description: Способ получения справки
+example: null
+enum:
+- DIGITAL
+- OFFICE

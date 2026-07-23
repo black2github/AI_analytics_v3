@@ -1,0 +1,36 @@
+type: object
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      type: string
+      description: Данные
+      enum:
+      - DRAFT
+      - WAIT_FOR_SIGN
+      - SIGNED
+      - DELETED
+      - COMPLETED
+      - DELIVERED
+      - WAITING
+      - SIGN_VALID
+      - DETAILS_VALID
+      - EXPORT_TO_ABS
+      - EXPORTED_TO_ABS
+      - EXPORT_TO_ABS_ERROR
+      - REJECTED
+      - DECLINED
+      - EXPORT_TO_TESSA
+      - EXECUTED_BY_TESSA
+      - EXPORT_TO_TESSA_ERROR
+      - ACCEPTED
+      - IMPORTED
+      - IMPORTED_DENY
+      - CANCELED_LKUVED
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

@@ -1,0 +1,10 @@
+type: object
+properties:
+  filter:
+    $ref: ./OfficeListRequestFilterDto.yaml
+  mode:
+    type: string
+  searchValue:
+    type: string
+  typeLoad:
+    type: string

@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./UnitedFileImportSignStatusDto.yaml
+  notEq:
+    $ref: ./UnitedFileImportSignStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./UnitedFileImportSignStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./UnitedFileImportSignStatusDto.yaml
+  isNull:
+    type: boolean
+description: Подпись файла. Статус подписания файл импорта/фонового процесса импорта. Равенство, содержится в списке

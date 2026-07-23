@@ -1,0 +1,86 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  accountsIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  accountNumbers:
+    type: array
+    items:
+      type: string
+  organizationNames:
+    type: array
+    items:
+      type: string
+  periodType:
+    type: string
+    enum:
+    - SELECTPERIOD
+    - YESTERDAY
+    - TODAY
+    - LAST3DAYS
+    - PREVWEEK
+    - CURMONTH
+    - LASTMONTH
+    - PREVQUARTER
+  periodStart:
+    type: string
+    format: date
+  periodEnd:
+    type: string
+    format: date
+  statementFormat:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  status:
+    type: string
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - FILE
+    - VIEW
+    - WAIT_RESPONSE
+    - SNAPSHOT_REQUESTED
+    - FILE_REQUESTED
+    - EXECUTED
+    - DENIED
+    - CANCELED
+  createdAt:
+    type: string
+    format: date-time
+  actual:
+    type: boolean
+  forDownload:
+    type: boolean
+  forRepeat:
+    type: boolean
+description: Страница с данными

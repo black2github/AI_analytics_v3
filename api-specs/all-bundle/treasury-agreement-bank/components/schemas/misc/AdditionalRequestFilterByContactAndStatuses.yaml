@@ -1,0 +1,35 @@
+type: object
+properties:
+  agreementId:
+    type: string
+    description: Идентификатор генсоглашения
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  statusList:
+    type: array
+    description: Список статусов
+    items:
+      type: string
+      description: Список статусов
+      enum:
+      - NONE
+      - DRAFT
+      - DRAFT_BANK
+      - DRAFT_OR_NEW
+      - DRAFT_BANK_OR_NEW_BANK
+      - NEW
+      - NEW_BANK
+      - SIGNED_BY_CLIENT
+      - DELETED
+      - DELIVERED
+      - DETAILS_VALID
+      - CLIENT_SIGN_VALID_OR_REJECTED
+      - CLIENT_SIGN_VALID
+      - DETAILS_VALID_OR_DETAILS_REJECTED
+      - RECEIVED
+      - ASSIGNED
+      - EXECUTED
+      - REJECTED
+      - REJECTED_BY_CLIENT
+      - SIGN_INVALID
+description: Данные

@@ -1,0 +1,15 @@
+type: object
+properties:
+  status:
+    $ref: ./BackgroundImportProcessDocumentProcessingStatusDto.yaml
+  currencyIsoCode:
+    type: string
+    description: ISO код валюты
+  docCount:
+    type: integer
+    description: Количество документов
+    format: int32
+  totalAmount:
+    type: number
+    description: Сумма по всем документам
+description: Результат обработки группы документов фонового процесса импорта

@@ -1,0 +1,12 @@
+required:
+- attachmentId
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  certificate:
+    type: string
+    description: Сертификат
+description: Запрос на получение хэша файла массовой подписи

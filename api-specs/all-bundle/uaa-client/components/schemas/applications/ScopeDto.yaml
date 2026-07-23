@@ -1,0 +1,21 @@
+required:
+- name
+- needApprove
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  name:
+    $ref: ./ScopeNameDto.yaml
+  applicationId:
+    type: string
+    description: Идентификатор приложения OAuth2
+  needApprove:
+    type: boolean
+    description: Необходимость подверждения
+  approveUri:
+    type: string
+    description: URI для подтверждения
+description: ДТО скоупа OAuth2

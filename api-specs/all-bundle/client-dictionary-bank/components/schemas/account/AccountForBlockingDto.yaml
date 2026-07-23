@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  typeDescription:
+    type: string
+    description: Краткое наименование типа счета
+  currencyCode:
+    type: string
+    description: Код валюты счета
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  bankClientShortName:
+    type: string
+    description: Краткое наименование организации
+  bankClientFullName:
+    type: string
+    description: Полное наименование организации
+  branchId:
+    type: string
+    description: Идентификатор филиала обслуживания
+    format: uuid
+  bankClientInnKio:
+    type: string
+    description: ИНН/КИО организации
+  bankClientRnk:
+    type: string
+    description: РНК организации
+description: Счет для работы с блокировками

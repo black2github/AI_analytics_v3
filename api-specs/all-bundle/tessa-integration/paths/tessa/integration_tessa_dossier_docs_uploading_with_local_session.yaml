@@ -1,0 +1,61 @@
+post:
+  tags:
+  - Интеграция с АС ТЕССА
+  summary: Метод загрузки документов в досье с созданием сессии для пользователя
+  description: 'Привилегии: TESSA_INTEGRATION'
+  operationId: dossierDocsUploading_1
+  parameters:
+  - name: userName
+    in: query
+    required: true
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/tessa/SingleCommandTessaInput.yaml
+    required: true
+  responses:
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/SingleResponseObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/SingleResponseTessaOutput.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/tessa/ActionResultObject.yaml

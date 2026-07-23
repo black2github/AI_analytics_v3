@@ -1,0 +1,18 @@
+type: object
+properties:
+  searchResult:
+    type: integer
+    description: Код ответа
+    format: int32
+  fnsRequestExistenceCheck:
+    type: boolean
+    description: Признак наличия заявки ФНС
+  fnsRequestAvailability:
+    type: integer
+    description: Доступность отзыва заявки ФНС
+    format: int32
+  sessionLeader:
+    type: string
+    description: Идентификатор запроса, «породившего» заявку.
+    format: uuid
+description: Результат поиска заявок 115 или 1091

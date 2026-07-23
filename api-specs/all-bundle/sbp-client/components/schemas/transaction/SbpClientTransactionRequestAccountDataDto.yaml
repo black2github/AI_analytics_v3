@@ -1,0 +1,17 @@
+type: object
+description: Реквизиты счета Клиента Банка для клиента
+properties:
+  accountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета Плательщика
+  account:
+    type: string
+    description: Счет Плательщика
+  sbpAccountId:
+    type: string
+    description: ID счета в СБП
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО

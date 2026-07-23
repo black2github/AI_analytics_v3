@@ -1,0 +1,60 @@
+post:
+  description: 'Привилегии: KDB.BANK.CMS_PAGE_LIST'
+  operationId: getCmsPages
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/cms-page/GetPageCommandCmsPageFilterBankDto.yaml
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+      description: OK
+    '400':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Access Denied
+    '405':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unexpected system error
+  summary: Получить страницу CMS страниц
+  tags:
+  - CmsPage

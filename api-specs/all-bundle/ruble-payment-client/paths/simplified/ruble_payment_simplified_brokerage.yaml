@@ -1,0 +1,112 @@
+put:
+  tags:
+  - Универсальное API упрощенной формы создания платежа.
+  - Упрощенная форма создания перевода на брокерский счёт. Базовые операции.
+  summary: Обновление документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.EDIT'
+  operationId: update_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/simplified/GenericCommandPaymentOrderRequestUpdateBrokerageDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/simplified/CreateResponsePaymentOrderRequestResponseBrokerageDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+post:
+  tags:
+  - Универсальное API упрощенной формы создания платежа.
+  - Упрощенная форма создания перевода на брокерский счёт. Базовые операции.
+  summary: Создание документа
+  description: 'Привилегии: RUBLE_PAYMENT_ORDER.CREATE'
+  operationId: create_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/simplified/GenericCommandPaymentOrderRequestCreateBrokerageDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/simplified/CreateResponsePaymentOrderRequestResponseBrokerageDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml

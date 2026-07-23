@@ -1,0 +1,33 @@
+type: object
+properties:
+  question_29:
+    type: boolean
+    description: Присваивается CRS-статус «Не является Подотчетным лицом» (Non-reportable person).
+  question_30:
+    type: boolean
+    description: Решение по результатам контроля ответственного по FATCA/CRS лица (CRS-cтатус клиента).
+  question_31:
+    type: boolean
+    description: Клиент ответил на вопрос 1 части 1 подробной формы самосертификации «Нет, не имеет», чем подтвердил, что не обладает ни одним налоговым резидентством.
+  question_32:
+    type: boolean
+    description: Клиент подтвердил иностранное налоговое резидентство.
+  question_33:
+    type: boolean
+    description: Клиент является налоговым резидентом иностранных юрисдикций, включая те, что предоставляют его в обмен на инвестиции.
+  question_34:
+    type: boolean
+    description: Клиент приобрёл иностранное налоговое резидентство по программе «гражданство/резидентство в обмен на инвестиции».
+  question_35:
+    type: boolean
+    description: Не является подотчетным лицом.
+  question_36:
+    type: boolean
+    description: Отказался предоставить необходимые сведения о себе.
+  question_37:
+    type: boolean
+    description: У существующего клиента были отмечены признаки иностранного налогового резидентства.
+  question_38:
+    type: boolean
+    description: Возможность установления гражданско-правовых отношений с клиентом.
+description: CRS-статус.

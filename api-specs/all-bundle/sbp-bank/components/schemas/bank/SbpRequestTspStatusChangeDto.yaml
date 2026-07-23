@@ -1,0 +1,35 @@
+type: object
+description: Запрос смены статуса заявки ТСП.
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявку.
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - REGISTRATION_REQUEST
+    - REGISTRATION_ERROR
+    - REGISTERED
+    - REJECTED
+    - RECEIVED
+    - EXECUTED
+    - CLIENT_REGISTRATION_DELIVERED
+    - CLIENT_REGISTRATION_RECEIVED
+    - CLIENT_REGISTRATION_ERROR
+    - CLIENT_REGISTERED
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- id

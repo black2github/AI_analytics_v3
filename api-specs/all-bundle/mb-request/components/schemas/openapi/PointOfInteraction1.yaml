@@ -1,0 +1,13 @@
+type: object
+properties:
+  Identification:
+    $ref: ./GenericIdentification32.yaml
+  systemName:
+    type: string
+  groupIdentification:
+    type: string
+  Component:
+    type: array
+    items:
+      $ref: ./PointOfInteractionComponent1.yaml
+description: Точка взаимодействия, выполняющая транзакцию

@@ -1,0 +1,67 @@
+type: object
+description: Фильтр скроллера Подписок
+properties:
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка".
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Номер документа
+  subscriptionPurpose:
+    $ref: ./FilterValueDtoString.yaml
+    description: Цель подписки
+  createdAt:
+    $ref: ./FilterValueDtoLocalDate.yaml
+    description: Дата создания
+  dateStart:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время получения колбэка о привязке счета
+  status:
+    $ref: ./SbpQrcSubscriptionStatusFilter.yaml
+    description: Текущий статус
+  hidden:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак "Скрытые подписки" для прямой фильтрации in
+  paymentFrequency:
+    $ref: ./SbpQrcSubscriptionPaymentFrequencyFilter.yaml
+    description: Периодичность платежа по Подписке
+  paymentsQuantity:
+    $ref: ./FilterValueDtoInteger.yaml
+    description: Количество платежей
+  inn:
+    $ref: ./FilterValueDtoString.yaml
+    description: ИНН клиента
+  kpp:
+    $ref: ./FilterValueDtoString.yaml
+    description: КПП клиента
+  merchantId:
+    $ref: ./FilterValueDtoString.yaml
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    $ref: ./FilterValueDtoString.yaml
+    description: Торговое название
+  merchantAddress:
+    $ref: ./FilterValueDtoString.yaml
+    description: Адрес ТСП
+  paid:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма проведенных платежей в копейках
+  paymentsCount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Количество проведенных платежей
+  paymentsCountSchedule:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Количество платежей проведенных в текущем графике
+  paymentFailed:
+    $ref: ./FilterValueDtoBoolean.yaml
+    description: Признак "Последний платеж отклонен"
+  paymentAmount:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Сумма платежа по графику
+  payer:
+    $ref: ./FilterValueDtoString.yaml
+    description: Плательщик
+  showHidden:
+    $ref: ./FilterValueDtoBoolean.yaml
+    deprecated: true
+    description: Показать "Скрытые подписки" (Устарело. Не учитывается при фильтрации)

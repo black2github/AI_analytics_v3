@@ -1,0 +1,8 @@
+type: object
+properties:
+  signDocuments:
+    type: array
+    description: Набор подписанных документов
+    items:
+      $ref: ./SignedDocumentDto.yaml
+description: Ответ на запрос на сохранение подписей

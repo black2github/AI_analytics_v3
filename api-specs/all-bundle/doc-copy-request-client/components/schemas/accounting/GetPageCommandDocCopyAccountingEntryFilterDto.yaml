@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDocCopyAccountingEntryFilterDto.yaml
+description: Запрос страницы

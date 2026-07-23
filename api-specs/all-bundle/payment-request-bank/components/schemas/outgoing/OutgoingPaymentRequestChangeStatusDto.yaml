@@ -1,0 +1,4 @@
+type: string
+description: Статусы платежного требования исходящего при ручной смене
+enum:
+- REJECTED

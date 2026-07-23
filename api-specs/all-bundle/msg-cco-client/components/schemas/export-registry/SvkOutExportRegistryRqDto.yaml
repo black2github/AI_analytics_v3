@@ -1,0 +1,45 @@
+required:
+- columns
+- ids
+- multiSort
+- timeZone
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы документов для экспорта
+    items:
+      type: string
+      description: Идентификаторы документов для экспорта
+      format: uuid
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ../common/SvkOutScrollerClientFilter.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Отображаемые колонки
+      enum:
+      - DATE_AND_NUMBER
+      - DATE
+      - NUMBER
+      - ORG_NAME_AND_INN_AND_BANK_BRANCH
+      - TOPIC
+      - ATTACHMENT
+      - STATUS
+      - BANK_COMMENT
+      - ORG_NAME
+      - ORG_INN
+      - BANK_BRANCH
+      - DVK_DATE
+      - DVK_NUMBER
+  timeZone:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра

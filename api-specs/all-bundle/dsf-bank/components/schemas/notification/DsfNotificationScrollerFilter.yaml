@@ -1,0 +1,6 @@
+type: object
+description: Фильтр скроллера правил нотификации для типов ДСФ.
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Код типа ДСФ. Обязательный параметр. Полное совпадение.

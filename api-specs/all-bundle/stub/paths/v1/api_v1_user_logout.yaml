@@ -1,0 +1,38 @@
+post:
+  tags:
+  - dbo-320-payment-order-controller
+  summary: logout
+  operationId: logoutUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: Authorization
+    in: header
+    description: Authorization
+    required: true
+    type: string
+  - name: remoteid
+    in: header
+    description: remoteid
+    required: true
+    type: string
+  - name: sid
+    in: query
+    description: sid
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: object
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,30 @@
+type: object
+description: Счет клиента для регистрации в системе АС СБП c ЭКО идентификатором счета
+properties:
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+  number:
+    type: string
+    description: Номер счета
+  b2bOnly:
+    type: integer
+    format: int32
+    description: Признак операции по счету (B2C и B2B)
+  actionsByDocTypes:
+    type: array
+    description: Признаки доступа по типам действия над документом
+    items:
+      $ref: ./ActionByDocTypeDto.yaml
+  signatoryInfo:
+    $ref: ./SignatoryInfoDto.yaml
+    description: Уровень подписи
+  registered:
+    type: boolean
+  return:
+    type: boolean
+  commission:
+    type: boolean
+  rkoBase:
+    type: boolean

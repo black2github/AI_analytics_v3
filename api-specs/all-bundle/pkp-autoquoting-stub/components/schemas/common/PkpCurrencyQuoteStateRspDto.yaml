@@ -1,0 +1,5 @@
+type: string
+enum:
+- OK
+- NOT_AVAILABLE
+- POSITION_LIMIT

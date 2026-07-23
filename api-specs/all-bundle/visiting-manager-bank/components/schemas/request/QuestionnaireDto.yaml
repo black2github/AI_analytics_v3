@@ -1,0 +1,42 @@
+type: object
+properties:
+  negativeSignsIdentified:
+    type: boolean
+    description: 'Признак выявления негативных признаков: да/нет.'
+  questions:
+    type: array
+    description: Список вопросов.
+    items:
+      $ref: ./QuestionDto.yaml
+  otherNegativeSigns:
+    type: string
+    description: Прочие негативные признаки.
+  beneficialOwners:
+    type: string
+    description: Бенефициарные владельцы.
+    enum:
+    - INFO_MATCHES
+    - INFO_NOT_PROVIDED
+    - NO_EXECUTIVE_BODY
+    - HIMSELF_CITIZEN_OF_RF
+    - NOT_IDENTIFY
+  comment:
+    type: string
+    description: Отметки работника банка.
+  fatcaQuestionsIp:
+    $ref: ./FatcaQuestionsIpDto.yaml
+  fatcaQuestionsUl:
+    $ref: ./FatcaQuestionsUlDto.yaml
+  printForm:
+    $ref: ./AttachmentInfoDto.yaml
+  fatcaPrintForm:
+    $ref: ./AttachmentInfoDto.yaml
+  printFormDate:
+    type: string
+    description: Дата и время формирования печатной формы приложения к опроснику.
+    format: date-time
+  fatcaPrintFormDate:
+    type: string
+    description: Дата и время формирования печатной формы к опроснику для ИП/ЮЛ.
+    format: date-time
+description: Опросник заявки на выезд менеджера.

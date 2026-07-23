@@ -1,0 +1,5 @@
+type: object
+properties:
+  linkedDocumentId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр сообщения связанного документа для скроллера

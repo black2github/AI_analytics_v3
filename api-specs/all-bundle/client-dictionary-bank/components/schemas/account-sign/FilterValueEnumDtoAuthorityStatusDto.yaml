@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ACTIVE
+    - INACTIVE
+  notEq:
+    type: string
+    enum:
+    - ACTIVE
+    - INACTIVE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - INACTIVE
+  isNull:
+    type: boolean
+description: Статус полномочия

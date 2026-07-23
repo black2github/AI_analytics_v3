@@ -1,0 +1,17 @@
+type: object
+properties:
+  type:
+    type: string
+    enum:
+    - VIEW
+    - EDIT
+    - PRINT_CLIENT_CONFIRMATION
+    - PRINT_BANK_CONFIRMATION
+    - RESEND_TO_ASK
+    - EXPORT_SIGN
+    - CHECK_SIGN
+    - CANCEL_VISA
+  allowed:
+    type: boolean
+  allowedForUser:
+    type: boolean

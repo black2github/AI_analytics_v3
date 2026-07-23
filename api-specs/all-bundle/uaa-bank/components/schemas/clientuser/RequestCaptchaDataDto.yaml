@@ -1,0 +1,18 @@
+type: object
+properties:
+  algorithm:
+    type: string
+    enum:
+    - SHA-1
+    - SHA-256
+    - SHA-512
+  challenge:
+    type: string
+    description: Хэш сгенерированного числа
+  salt:
+    type: string
+    description: Соль
+  signature:
+    type: string
+    description: Подпись
+description: Данные капчи

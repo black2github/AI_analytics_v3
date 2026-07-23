@@ -1,0 +1,31 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  fio:
+    $ref: ../common/FilterValueDtoString.yaml
+  fioOrEmail:
+    $ref: ../common/FilterValueDtoString.yaml
+  fioOrLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  familyName:
+    $ref: ../common/FilterValueDtoString.yaml
+  firstName:
+    $ref: ../common/FilterValueDtoString.yaml
+  middleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  lastLogin:
+    $ref: ../common/FilterValueDtoZonedDateTime.yaml
+  login:
+    $ref: ../common/FilterValueDtoString.yaml
+  roles:
+    $ref: ../common/FilterValueDtoString.yaml
+  notInRoles:
+    $ref: ../common/FilterValueDtoString.yaml
+  segments:
+    $ref: ../common/FilterValueDtoString.yaml
+  branches:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  blockedByAnyReason:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр пользователей Банка

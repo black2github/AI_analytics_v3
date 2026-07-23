@@ -1,0 +1,21 @@
+type: object
+description: Запрос на создание документа из АС СКВО
+properties:
+  correlationId:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор связанного входящего сообщения
+  flag:
+    type: integer
+    format: int32
+    description: Тег "Flag"
+  state:
+    type: string
+    description: Тег "State"
+  isFinal:
+    type: boolean
+    description: Тег "Final"
+  description:
+    type: string
+    description: Тег "Description"

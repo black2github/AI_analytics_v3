@@ -1,0 +1,32 @@
+post:
+  tags:
+  - Журнал взаимодействия с сервисом "Светофор"
+  summary: Получение страницы записей журнала
+  operationId: getPageUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GetPageCommand«SkbJournalFilter»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/PageData«SkbJournalDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

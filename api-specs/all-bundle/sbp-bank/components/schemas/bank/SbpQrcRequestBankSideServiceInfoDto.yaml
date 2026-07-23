@@ -1,0 +1,40 @@
+type: object
+description: Реквизиты сервиса ЭКО, инициировавшего запрос
+properties:
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса из справочника сервисов Экосистемы
+  ecoServiceDescription:
+    type: string
+    description: Описание ЭКО сервиса из справочника сервисов Экосистемы
+  ecoDocTypeId:
+    type: string
+    description: Идентификатор типа документа ЭКО
+  ecoDocTypeDescription:
+    type: string
+    description: Описание типа документа ЭКО
+  docId:
+    type: string
+    description: Идентификатор заявки сервиса ЭКО
+  docUrl:
+    type: string
+    description: Ссылка на заявку сервиса ЭКО
+  paymentChannel:
+    type: string
+    description: Канал оплаты
+  ecoClientId:
+    type: string
+    format: uuid
+    description: Идентификатор клиента сервиса ЭКО, для которого создается Qr-код
+  ecoClientName:
+    type: string
+    description: Наименование клиента ЭКО
+  ecoClientInn:
+    type: string
+    description: ИНН клиента ЭКО
+  ecoClientKpp:
+    type: string
+    description: КПП клиента сервиса ЭКО
+  tariffName:
+    type: string
+    description: Название тарифа

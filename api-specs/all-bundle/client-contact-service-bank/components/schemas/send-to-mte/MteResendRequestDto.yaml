@@ -1,0 +1,7 @@
+type: object
+properties:
+  requestIds:
+    type: array
+    items:
+      type: string
+      format: uuid

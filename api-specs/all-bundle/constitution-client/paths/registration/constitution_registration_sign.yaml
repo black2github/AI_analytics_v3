@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API заявки заявки на регистрацию данных сотрудника. Операции подписи.
+  summary: Подписать заявку
+  description: 'Привилегии: CONSTITUTION_REGISTRATION.SIGN'
+  operationId: signUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/SignCommand'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/CompositeResponse«ConstitutionRegistrationRequestDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

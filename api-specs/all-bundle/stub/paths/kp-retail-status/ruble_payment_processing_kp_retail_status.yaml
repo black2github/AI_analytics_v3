@@ -1,0 +1,46 @@
+get:
+  tags:
+  - Контроллер ручной отправки ответа из АБС Ф1 для платежных документов
+  summary: Генерация и отправка ответа КП Ритейл статуса из АБС Ф1
+  operationId: sendKpRetailStatusResponseUsingGET
+  produces:
+  - application/xml
+  parameters:
+  - name: documentId
+    in: query
+    description: Идентификатор РПП
+    required: true
+    type: string
+    format: uuid
+  - name: eventTimestamp
+    in: query
+    description: Дата и время присвоения статуса по КП Ритейп в UTC+3 (Europe/Moscow)
+    required: true
+    type: string
+    format: date-time
+    x-example: '2000-01-01T00:00:00'
+  - name: messageId
+    in: query
+    description: Идентификатор сообщения
+    required: false
+    type: string
+    format: uuid
+  - name: status
+    in: query
+    description: КП Ритейл статус
+    required: true
+    type: string
+    enum:
+    - FAILED
+    - SUCCESS
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,string»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

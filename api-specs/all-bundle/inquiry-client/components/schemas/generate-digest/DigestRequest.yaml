@@ -1,0 +1,14 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+    example: null
+  version:
+    type: integer
+    description: Номер версии искомого дайджеста
+    format: int32
+    example: null
+description: Запрос дайджеста
+example: null

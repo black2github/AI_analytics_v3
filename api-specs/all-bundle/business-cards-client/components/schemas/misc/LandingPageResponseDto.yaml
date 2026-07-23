@@ -1,0 +1,5 @@
+type: object
+properties:
+  result:
+    type: boolean
+description: Ответ на запрос о показе landing page

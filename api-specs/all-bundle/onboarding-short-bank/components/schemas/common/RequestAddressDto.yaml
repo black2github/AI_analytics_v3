@@ -1,0 +1,78 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Адрес одной строкой
+  block:
+    type: string
+    description: Корпус/строение
+  building:
+    type: string
+    description: Дом
+  buildingFias:
+    type: string
+    description: Дом ФИАС
+  city:
+    type: string
+    description: Город
+  cityFias:
+    type: string
+    description: Город ФИАС код
+  countryCode:
+    type: string
+    description: Код страны
+  district:
+    type: string
+    description: Район
+  districtFias:
+    type: string
+    description: Район ФИАС код
+  fiasGuid:
+    type: string
+    description: ФИАС GUID код
+    format: uuid
+  fiasLevel:
+    type: integer
+    description: Уровень кода
+    format: int32
+  flat:
+    type: string
+    description: Квартира
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  isBuildingExists:
+    type: boolean
+    description: Присутствует дом
+  isFlatExists:
+    type: boolean
+    description: Присутствует квартира
+  isForeignAddress:
+    type: boolean
+    description: Признак "Иностранный адрес"
+  region:
+    type: string
+    description: Регион
+  regionCode:
+    type: string
+    description: Код региона
+  regionFias:
+    type: string
+    description: Регион ФИАС код
+  settlement:
+    type: string
+    description: Нас. Пункт
+  settlementFias:
+    type: string
+    description: Нас. Пункт ФИАС код
+  street:
+    type: string
+    description: Улица
+  streetFias:
+    type: string
+    description: Улица ФИАС
+  zip:
+    type: string
+    description: Индекс
+description: Адрес в заявке

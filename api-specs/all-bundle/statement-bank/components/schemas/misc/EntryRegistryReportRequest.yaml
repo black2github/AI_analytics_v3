@@ -1,0 +1,21 @@
+type: object
+properties:
+  accountingEntryIds:
+    type: array
+    items:
+      type: integer
+      format: int64
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+  actualTime:
+    type: string
+    format: date-time
+  format:
+    type: string
+    enum:
+    - PDF
+    - EXCEL

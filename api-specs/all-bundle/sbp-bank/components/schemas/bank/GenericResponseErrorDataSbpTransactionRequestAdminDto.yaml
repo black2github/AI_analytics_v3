@@ -1,0 +1,12 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    $ref: ./SbpTransactionRequestAdminDto.yaml
+    description: Данные
+  error:
+    $ref: ./ErrorData.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

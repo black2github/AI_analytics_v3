@@ -1,0 +1,34 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID роли пользователя
+    format: uuid
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  comments:
+    type: string
+    description: Коментарий
+  roleId:
+    type: string
+    description: ID роли
+    format: uuid
+  roleCode:
+    type: string
+    description: Код роли
+  roleName:
+    type: string
+    description: Наименование роли
+  segmentId:
+    type: string
+    description: ID сегмента
+    format: uuid
+  segmentCode:
+    type: string
+    description: Код сегмента
+  segmentName:
+    type: string
+    description: Наименование сегмента
+description: Облегченное ДТО роли пользователя

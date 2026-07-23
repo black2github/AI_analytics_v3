@@ -1,0 +1,11 @@
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    format: int64
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date

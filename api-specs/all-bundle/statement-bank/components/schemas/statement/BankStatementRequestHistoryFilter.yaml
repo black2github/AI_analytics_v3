@@ -1,0 +1,11 @@
+type: object
+properties:
+  scheduleId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  requestStatus:
+    $ref: ./FilterValueEnumDtoStatementRequestStatusDto.yaml
+  statementStatus:
+    $ref: ./FilterValueEnumDtoStatementStatusDto.yaml
+description: Фильтр

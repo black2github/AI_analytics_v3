@@ -1,0 +1,8 @@
+type: object
+description: Запрос на импорт входящего QR-кода
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор входящего QR кода в СБП
+required:
+- qrcId

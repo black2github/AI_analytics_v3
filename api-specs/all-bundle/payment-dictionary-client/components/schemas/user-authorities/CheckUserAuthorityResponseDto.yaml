@@ -1,0 +1,6 @@
+type: object
+properties:
+  authorityAvailable:
+    type: boolean
+    description: Признак доступности привилегии
+description: Ответ на запрос на получение признака наличия привилегии пользователя

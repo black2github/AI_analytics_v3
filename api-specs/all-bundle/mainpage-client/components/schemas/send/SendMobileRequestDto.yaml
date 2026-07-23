@@ -1,0 +1,35 @@
+required:
+- clientInn
+- clientName
+- email
+- phoneNumber
+- userName
+type: object
+properties:
+  userName:
+    maxLength: 150
+    type: string
+    description: ФИО
+  clientName:
+    maxLength: 2000
+    type: string
+    description: Наименование юридического лица
+  clientInn:
+    maxLength: 12
+    pattern: ^[0-9]{10}(?:[0-9]{2})?$
+    type: string
+    description: ИНН
+  phoneNumber:
+    pattern: ^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$
+    type: string
+    description: Мобильный телефон
+  email:
+    maxLength: 100
+    pattern: ^.+@.+\..+$
+    type: string
+    description: Эл. почта
+  comment:
+    maxLength: 1000
+    type: string
+    description: Комментарий
+description: Запрос на отправку уведомления для ЭФ "Мобильная связь"

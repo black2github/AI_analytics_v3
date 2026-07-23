@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Подтверждение возврата'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/B2cReturnConfirmRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/B2cReturnConfirmResultDto.yaml
+    '400':
+      description: Bad Request

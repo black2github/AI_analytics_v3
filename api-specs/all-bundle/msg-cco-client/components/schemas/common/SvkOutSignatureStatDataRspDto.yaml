@@ -1,0 +1,9 @@
+type: object
+properties:
+  sourceSystem:
+    type: string
+    description: Система подписи документа
+  sourcePage:
+    type: string
+    description: Страница, с которой вызвана подпись документа.
+description: Данные для статистики/анализа

@@ -1,0 +1,29 @@
+type: object
+properties:
+  flId:
+    type: string
+    description: Идентификатор ФЛ
+  eioUlId:
+    type: string
+    description: Идентификатор ЕИО ЮЛ
+  isEioFl:
+    type: boolean
+    description: Признак наличия ЕИО ФЛ
+  eioFlId:
+    type: string
+    description: ID ЕИО ФЛ
+  suvEio:
+    type: string
+    description: GUID СУВ ЕИО
+  beneficialOwners:
+    type: array
+    description: Бенефициарные владельцы
+    items:
+      type: string
+      description: Бенефициарные владельцы
+  stopListCategories:
+    type: array
+    description: Категории стоп листов
+    items:
+      $ref: ./StopListCategory.yaml
+description: Блок служебной информации

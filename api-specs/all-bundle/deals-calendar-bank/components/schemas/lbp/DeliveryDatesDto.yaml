@@ -1,0 +1,8 @@
+required:
+- date
+type: object
+properties:
+  date:
+    type: string
+    description: Дата доставки в формате "yyyy-MM-dd"
+description: Данные

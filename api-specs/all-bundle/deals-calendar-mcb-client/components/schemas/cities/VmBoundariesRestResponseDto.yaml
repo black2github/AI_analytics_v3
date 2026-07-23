@@ -1,0 +1,18 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование города
+  coordinates:
+    type: array
+    description: Координаты
+    items:
+      type: array
+      description: Координаты
+      items:
+        type: array
+        description: Координаты
+        items:
+          type: string
+          description: Координаты
+description: Границы доступности выездного сервиса

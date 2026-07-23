@@ -1,0 +1,37 @@
+type: object
+description: Реквизиты QR-кода
+properties:
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  account:
+    type: string
+    description: Cчет зачисления
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  merchantName:
+    type: string
+    description: Торговое название
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  qrTtl:
+    type: integer
+    format: int32
+    description: Срок жизни Функциональной ссылки СБП в минутах
+  merchantRegDate:
+    type: string
+    format: date-time
+    description: Дата и время регистрации ТСП

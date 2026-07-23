@@ -1,0 +1,28 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат выполнения операции
+    enum:
+    - SUCCESS
+    - INVALID_PAYER_ACCOUNT_KEY
+    - PAYER_BIC_NOT_EXIST
+    - INVALID_RECEIVER_ACCOUNT_KEY
+    - RECEIVER_BIC_NOT_EXIST
+    - BANK_NAME_NOT_EXIST_IN_DICTIONARY
+    - INCORRECT_RECEIVER_CORRESPONDENT_ACCOUNT
+    - INVALID_RECEIVER_ACCOUNT_LENGTH
+    - INVALID_INN_KIO_LENGTH
+    - INVALID_KPP_LENGTH
+    - PAYMENT_GROUND_IS_EMPTY
+    - ADDITIONAL_AGREEMENT_DATE_IS_CURRENT
+    - PARSE_ERROR
+    - CREATE_ADDITIONAL_AGREEMENT_ERROR
+    - UNDEFINED
+  error:
+    type: string
+    description: Описание ошибки
+  resultCode:
+    type: string
+    description: Код ответ
+description: Результат выполнения операции с доп. соглашением

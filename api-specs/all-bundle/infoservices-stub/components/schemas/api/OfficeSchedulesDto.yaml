@@ -1,0 +1,18 @@
+type: object
+properties:
+  isForJuric:
+    type: boolean
+  isForPhis:
+    type: boolean
+  openingHours:
+    type: array
+    items:
+      $ref: ./OfficeSchedulesListItemOpeningHoursDto.yaml
+  periods:
+    type: array
+    items:
+      $ref: ./OfficeSchedulesPeriodDto.yaml
+  physicalDays:
+    type: string
+  legalDays:
+    type: string

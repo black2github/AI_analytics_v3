@@ -1,0 +1,18 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Идентификатор
+  label:
+    type: string
+    description: Название
+  description:
+    type: string
+    description: Описание
+  optional:
+    type: boolean
+    description: Опциональная
+  largeText:
+    type: boolean
+    description: Многострочное значение параметра
+description: Параметр стратегии активации

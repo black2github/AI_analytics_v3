@@ -1,0 +1,37 @@
+type: object
+properties:
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  payerNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./OutgoingPaymentRequestClientStatusEnumDto.yaml
+  externalSystemCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  amountIncludeVat:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  receiverAccountName:
+    $ref: ../common/FilterValueDtoString.yaml
+  incomeType:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  payerBankBic:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    $ref: ./OutgoingPaymentRequestClientCategoryDto.yaml
+  importId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  hasChargebackRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+  chargebackStatuses:
+    $ref: ./FilterValueEnumDtoOutgoingPaymentChargebackRequestStatusDto.yaml
+  sourceSystem:
+    $ref: ./OutgoingPaymentRequestDocumentSourceSystemEnumDto.yaml
+description: Клиентский фильтр для журнал документов платежное требование исходящее

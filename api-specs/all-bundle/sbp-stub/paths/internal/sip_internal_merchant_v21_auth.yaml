@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Управление авторизационными данными ТСП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/MerchantAuthDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/MerchantAuthResultDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,72 @@
+type: object
+properties:
+  additionalDescription:
+    type: string
+    description: Дополнительное описание тарифа
+  cashWithdrawalAmount:
+    type: number
+    description: Сумма выдачи наличных (руб.)
+  cashWithdrawalCommission:
+    type: number
+    description: Комиссия за выдачу наличных (%)
+  code:
+    type: string
+    description: Коды справочника тарифов на обслуживание счета
+    enum:
+    - STANDART
+    - NEEDFUL
+    - PROGRESS
+    - STABLE
+    - MAX
+    - FEA
+  currencyControl:
+    type: number
+    description: Валютный контроль (% от суммы операции)
+  foreignCurrencyTransferAmount:
+    type: number
+    description: Сумма переводов в валюте (руб.)
+  freeTransferCount:
+    type: integer
+    description: Количество бесплатных переводов на счета ЮЛ и ИП (шт.)
+    format: int32
+  gpbNextPersonAccPaidTransCommission:
+    type: number
+    description: Комиссия за последующие платные переводы на счета физ лиц в ГПБ (%)
+  gpbPersonAccFreeTransAmount:
+    type: number
+    description: Сумма бесплатных переводов на счета физ лиц в ГПБ (руб.)
+  maxCurrencyControlBound:
+    type: number
+    description: Макс. граница валютного контроля (руб.)
+  minCurrencyControlBound:
+    type: number
+    description: Мин. граница валютного контроля (руб.)
+  name:
+    type: string
+    description: Наименование тарифа
+  nextPaidTransferPrice:
+    type: number
+    description: Цена для последующих платных переводов на счета ЮЛ и ИП (руб.)
+  otherNextPersonAccPaidTransCommission:
+    type: number
+    description: Комиссия за последующие платные переводы на счета физ лиц в других банках (%)
+  otherPersonAccFreeTransAmount:
+    type: number
+    description: Сумма бесплатных переводов на счета физ лиц в других банках (руб.)
+  period:
+    type: integer
+    description: Период обслуживания
+    format: int32
+  price:
+    type: number
+    description: Цена
+  priceAtDiscount:
+    type: number
+    description: Цена с учетом скидки
+  promoCode:
+    type: string
+    description: Код акции тарифа
+  shortDescription:
+    type: string
+    description: Краткое описание тарифа
+description: Запись тарифа из "Справочник тарифов на обслуживание счета"

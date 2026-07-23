@@ -1,0 +1,12 @@
+type: object
+properties:
+  content:
+    type: array
+    description: Страница с данными
+    items:
+      $ref: ./DsfClientDocumentToBankScrollerResponseDto.yaml
+  next:
+    type: boolean
+  previous:
+    type: boolean
+description: Страничные данные

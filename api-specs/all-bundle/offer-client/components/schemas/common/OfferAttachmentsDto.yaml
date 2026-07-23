@@ -1,0 +1,5 @@
+type: object
+properties:
+  offerScan:
+    $ref: ./AttachmentInfoDto.yaml
+description: Вложенные файлы

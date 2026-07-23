@@ -1,0 +1,34 @@
+get:
+  tags:
+  - dbo-320-info-controller
+  summary: getNews
+  operationId: getNewsUsingGET_1
+  produces:
+  - '*/*'
+  parameters:
+  - name: Authorization
+    in: header
+    description: Authorization
+    required: true
+    type: string
+  - name: custids
+    in: query
+    description: custids
+    required: false
+    type: string
+  - name: Remoteid
+    in: header
+    description: Remoteid
+    required: true
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/NewsResponseWrapper'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

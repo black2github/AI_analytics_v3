@@ -1,0 +1,53 @@
+required:
+- accountNumber
+- bankBic
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Номер счета получателя
+  agreementAccount:
+    type: boolean
+    description: Счёт из договора
+  bankBic:
+    type: string
+    description: БИК получателя
+  bankCorrAccountNumber:
+    type: string
+    description: Корр. счет получателя
+  bankName:
+    type: string
+    description: БАНК получателя
+  budgetInfo:
+    $ref: ./BudgetInfoDto.yaml
+  firmNumber:
+    type: string
+    description: Номер фирмы
+  firmNumberDefined:
+    type: boolean
+    description: Номер фирмы определён
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  inn:
+    type: string
+    description: ИНН получателя
+  isBudget:
+    type: boolean
+    description: Признак Бюджетные реквизиты
+  kpp:
+    type: string
+    description: КПП получателя
+  name:
+    type: string
+    description: Наименование получателя
+  ogrn:
+    type: string
+    description: ОГРН получателя
+  useCommissionAccount:
+    type: boolean
+    description: Использовать счёт списания комиссии
+description: Реквизиты счёта для зачисления

@@ -1,0 +1,21 @@
+post:
+  summary: Отправить сообщение в прямой поток F1 ODS
+  tags:
+  - API заглушки для отправки в прямой поток F1 ODS
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: ../../components/schemas/f1-direct-flow/F1DataEntriesResponse.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

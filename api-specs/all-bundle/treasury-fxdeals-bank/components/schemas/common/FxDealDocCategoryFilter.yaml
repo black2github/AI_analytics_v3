@@ -1,0 +1,73 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - CAT_DRAFT
+    - CAT_QUOTED
+    - CAT_NEW
+    - CAT_WAITING_FOR_VISA
+    - CAT_VISA_REJECTED
+    - CAT_DELIVERED
+    - CAT_CANCELED
+    - CAT_DENIED
+    - CAT_CONFIRMED
+    - CAT_DONE
+    - CAT_VIOLATED
+    - CAT_EXECUTED
+  notEq:
+    type: string
+    enum:
+    - CAT_DRAFT
+    - CAT_QUOTED
+    - CAT_NEW
+    - CAT_WAITING_FOR_VISA
+    - CAT_VISA_REJECTED
+    - CAT_DELIVERED
+    - CAT_CANCELED
+    - CAT_DENIED
+    - CAT_CONFIRMED
+    - CAT_DONE
+    - CAT_VIOLATED
+    - CAT_EXECUTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - CAT_DRAFT
+      - CAT_QUOTED
+      - CAT_NEW
+      - CAT_WAITING_FOR_VISA
+      - CAT_VISA_REJECTED
+      - CAT_DELIVERED
+      - CAT_CANCELED
+      - CAT_DENIED
+      - CAT_CONFIRMED
+      - CAT_DONE
+      - CAT_VIOLATED
+      - CAT_EXECUTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - CAT_DRAFT
+      - CAT_QUOTED
+      - CAT_NEW
+      - CAT_WAITING_FOR_VISA
+      - CAT_VISA_REJECTED
+      - CAT_DELIVERED
+      - CAT_CANCELED
+      - CAT_DENIED
+      - CAT_CONFIRMED
+      - CAT_DONE
+      - CAT_VIOLATED
+      - CAT_EXECUTED
+  isNull:
+    type: boolean
+description: Категория документа

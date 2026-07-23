@@ -1,0 +1,9 @@
+type: object
+properties:
+  clientRegNumList:
+    type: array
+    description: Список РНК клиентов, доступных распорядителю счета
+    items:
+      type: integer
+      description: Список РНК клиентов, доступных распорядителю счета
+description: Запрос проверки клиентов на банкротство и контроль ДФМ

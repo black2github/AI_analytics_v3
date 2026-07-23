@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API для справочника SWIFT-кодов (банковская сторона)
+  summary: Экспортировать список SWIFT кодов в Excel формате
+  description: 'Привилегии: BANK_SWIFT_EXPORT'
+  operationId: exportToExcelUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/SwiftCodeExportRqDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,SwiftCodeExportRspDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

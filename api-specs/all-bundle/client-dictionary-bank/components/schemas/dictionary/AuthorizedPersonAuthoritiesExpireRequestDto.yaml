@@ -1,0 +1,24 @@
+required:
+- bankClientId
+- expiredAt
+- productType
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  expiredAt:
+    type: string
+    description: Дата и время завершения действия полномочия
+    format: date-time
+description: Запрос завершения действия полномочий на продукт УЛ Клиента Банка

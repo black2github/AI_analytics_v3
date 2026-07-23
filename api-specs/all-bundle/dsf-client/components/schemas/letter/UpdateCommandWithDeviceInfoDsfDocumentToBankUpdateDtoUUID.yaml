@@ -1,0 +1,10 @@
+type: object
+properties:
+  data:
+    $ref: ./DsfDocumentToBankUpdateDto.yaml
+  id:
+    type: string
+    format: uuid
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда изменения

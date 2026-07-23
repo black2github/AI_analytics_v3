@@ -1,0 +1,26 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип удостоверения
+  series:
+    type: string
+    description: Серия
+  number:
+    type: string
+    description: Номер
+  issuedBy:
+    type: string
+    description: Место выдачи
+  issueDate:
+    type: string
+    description: Дата выдачи
+    format: date
+  expiresDate:
+    type: string
+    description: Срок действия
+    format: date
+  authorityCode:
+    type: string
+    description: Код подразделения
+description: Удостоверение личности

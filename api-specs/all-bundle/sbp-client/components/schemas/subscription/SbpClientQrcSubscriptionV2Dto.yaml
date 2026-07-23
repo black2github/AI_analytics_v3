@@ -1,0 +1,64 @@
+type: object
+description: Подписка для клиента с блоком данных о доступных пользователю действиях
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата создания
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  requestId:
+    type: string
+    format: uuid
+    description: Ссылка на заявку
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NONE
+    - AWAITING
+    - SUBSCRIBED
+    - UNSUBSCRIBED
+    - BLOCKED
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший подписку (Идентификатор пользователя в экосистеме).
+  userName:
+    type: string
+    description: Пользователь, создавший подписку (ФИО).
+  bankClient:
+    $ref: ../common/SbpQrcBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  data:
+    $ref: ../common/SbpClientQrcDataV2Dto.yaml
+    description: Реквизиты QR-кода
+  subscriptionData:
+    $ref: ./SbpQrcSubscriptionSubscriptionDataDto.yaml
+    description: Реквизиты подписки
+  paymentRequests:
+    type: array
+    description: Заявки на списание средств по подписке
+    items:
+      $ref: ../common/SbpClientQrcPaymentRequestDto.yaml
+  availableOperations:
+    $ref: ./SbpQrcSubscriptionAvailableOperationsDto.yaml
+    description: Информация о доступных пользователю действиях
+required:
+- bankClient
+- createdAt
+- docNumber
+- id
+- qrcId
+- requestId
+- status
+- subscriptionData

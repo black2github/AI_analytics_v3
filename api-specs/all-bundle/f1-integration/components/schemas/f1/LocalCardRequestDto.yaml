@@ -1,0 +1,28 @@
+required:
+- clientAbsId
+type: object
+properties:
+  clientAbsId:
+    type: integer
+    description: РНК клиента в РКО Ф1
+    format: int64
+  paySystemCode:
+    type: string
+    description: Код технологического продукта
+  paySystemCodes:
+    type: array
+    description: Список кодов технологического продукта
+    items:
+      type: string
+      description: Список кодов технологического продукта
+  virtualCardNumbers:
+    type: array
+    description: Виртуальные номера карт
+    items:
+      type: string
+      description: Виртуальные номера карт
+  pageNumber:
+    type: integer
+    description: Номер страницы
+    format: int32
+description: Запрос на получение списка локальных карт питания

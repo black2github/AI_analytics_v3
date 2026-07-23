@@ -1,0 +1,12 @@
+type: object
+description: ДТО публикации статуса письма. ДТО запроса на создание.
+properties:
+  docStatus:
+    type: string
+    description: Статус письма.
+  typeCode:
+    type: string
+    description: Код типа письма
+required:
+- docStatus
+- typeCode

@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор заявки на открытие первого счета в офисе Банка
+    format: uuid
+  status:
+    type: string
+    description: Статус документа
+  changedIn:
+    type: string
+    description: Дата и время присвоения статуса документу
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, выполнивший смену статуса
+    format: uuid
+  userName:
+    type: string
+    description: Имя пользователя, выполнившего смену статуса
+  userType:
+    type: string
+    description: Тип пользователя, выполнившего смену статуса
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  commentForBank:
+    type: string
+    description: Комментарий для пользователя банка
+description: История заявки на открытие первого счета в офисе Банка

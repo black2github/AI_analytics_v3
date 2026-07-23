@@ -1,0 +1,29 @@
+required:
+- reportDigest
+type: object
+properties:
+  reportDigest:
+    minLength: 1
+    type: string
+    description: Дайджест отчета для подписи (в кодировке Base64)
+  reportType:
+    type: string
+    description: Классификатор типов отчетов
+    enum:
+    - INFO
+    - STATEMENT
+    - LETTER
+    - PAYDOC
+    - CURRCONTROLDOC
+    - DIRECT_1C
+    - COPY_DOC
+    - PAYDOC_OUTGOING_REGISTRY
+    - SIGN_BRK_BO
+    - SIGN_BRK_DO
+  filialCode:
+    type: string
+    description: Филиал (список кодов АБС Ф1)
+  letterCode:
+    type: string
+    description: Типы писем (список кодов из Справочника типов ДСФ)
+description: Запрос подписания дайджеста электронного документа для встраивания

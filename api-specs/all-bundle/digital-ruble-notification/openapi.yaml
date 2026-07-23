@@ -1,0 +1,42 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Уведомления. Клиентская часть.
+  description: Сервис Цифровой рубль.
+  version: 3.1.0
+servers:
+- url: /digital-ruble-notification
+security:
+- bearerAuth: []
+paths:
+  /notification/unread:
+    $ref: ./paths/unread/notification_unread.yaml
+  /notification/save-decrypt-results:
+    $ref: ./paths/save-decrypt-results/notification_save_decrypt_results.yaml
+  /notification/unread/count:
+    $ref: ./paths/unread/notification_unread_count.yaml
+components:
+  schemas:
+    Paging:
+      $ref: ./components/schemas/unread/Paging.yaml
+    UnreadNotificationsRequestDto:
+      $ref: ./components/schemas/unread/UnreadNotificationsRequestDto.yaml
+    DigitalRubleError:
+      $ref: ./components/schemas/common/DigitalRubleError.yaml
+    GenericResponseDigitalRubleErrorNotificationsDto:
+      $ref: ./components/schemas/unread/GenericResponseDigitalRubleErrorNotificationsDto.yaml
+    NotificationMsgDto:
+      $ref: ./components/schemas/unread/NotificationMsgDto.yaml
+    NotificationsDto:
+      $ref: ./components/schemas/unread/NotificationsDto.yaml
+    DecryptedNotificationDto:
+      $ref: ./components/schemas/save-decrypt-results/DecryptedNotificationDto.yaml
+    GenericResponseDigitalRubleErrorVoid:
+      $ref: ./components/schemas/save-decrypt-results/GenericResponseDigitalRubleErrorVoid.yaml
+    GenericResponseDigitalRubleErrorLong:
+      $ref: ./components/schemas/unread/GenericResponseDigitalRubleErrorLong.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

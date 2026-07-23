@@ -1,0 +1,17 @@
+type: object
+properties:
+  clientRnkId:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientWebDealingId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  active:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  enabled:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  status:
+    $ref: ./FilterValueEnumDtoClientProfileStatusDto.yaml
+description: Фильтр

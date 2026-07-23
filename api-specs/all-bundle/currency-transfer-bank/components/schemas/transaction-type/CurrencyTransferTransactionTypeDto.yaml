@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код валютной операции
+  name:
+    type: string
+    description: Наименование валютной операции
+description: Транспортное представление валютной операции

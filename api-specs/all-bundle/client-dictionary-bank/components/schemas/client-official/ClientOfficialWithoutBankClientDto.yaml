@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: UAA ID пользователя клиента
+    format: uuid
+  dstSynchronizationEnabled:
+    type: boolean
+    description: Разрешает синхронизацию СЭП из других учетных записей физ лица
+description: Представитель Клиента. ДТО

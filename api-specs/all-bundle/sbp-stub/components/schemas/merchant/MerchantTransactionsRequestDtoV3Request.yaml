@@ -1,0 +1,73 @@
+type: object
+description: Запрос транзакций ТСП версии 3
+properties:
+  startDate:
+    type: string
+    description: Начальная дата выбора операций
+  endDate:
+    type: string
+    description: Конечная дата выбора операций
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ
+  listParam:
+    type: array
+    items:
+      type: string
+    description: Список полей, которые необходимо вернуть по операции
+  merchantId:
+    type: array
+    items:
+      type: string
+    description: Идентификатор ТСП
+  page:
+    type: integer
+    format: int32
+    description: Номер страницы
+  size:
+    type: integer
+    format: int32
+    description: Количество записей
+  status:
+    type: array
+    items:
+      type: string
+    description: Статус операции
+  accNum:
+    type: string
+    description: Номер счета
+  amountFrom:
+    type: string
+    description: Сумма платежа от
+  amountTo:
+    type: string
+    description: Сумма платежа до
+  bankID:
+    type: string
+    description: Идентификатор Банка контрагента
+  inn:
+    type: string
+    description: ИНН
+  legalName:
+    type: string
+    description: Наименование юридического лица
+  numberPhone:
+    type: string
+    description: Номер телефона контрагента
+  pam:
+    type: string
+    description: PAM
+  sortBy:
+    type: string
+    description: 'Сортировать по: DATE, AMOUNT, MERCHANT_NAME'
+  transactionID:
+    type: string
+    description: Идентификатор транзакции
+  qrcID:
+    type: string
+    description: Идентификатор QR кода
+  trxType:
+    type: array
+    items:
+      type: string
+    description: Тип платежа

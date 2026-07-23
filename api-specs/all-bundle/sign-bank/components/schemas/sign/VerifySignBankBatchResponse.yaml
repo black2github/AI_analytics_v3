@@ -1,0 +1,12 @@
+type: object
+properties:
+  result:
+    type: boolean
+    description: Результат проверки
+  verifyResponses:
+    uniqueItems: true
+    type: array
+    description: Результаты проверок
+    items:
+      $ref: ./VerifySignBankResponse.yaml
+description: Ответ на запрос на проверку подписи на стороне Банка

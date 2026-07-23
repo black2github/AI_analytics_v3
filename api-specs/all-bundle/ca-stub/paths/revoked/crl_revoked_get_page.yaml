@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API данных CRL
+  summary: Получить страницу отозванных сертификатов
+  operationId: getRevokedPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/revoked/GetPageCommandRevokedCertFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/revoked/PageDataRevokedCertDto.yaml

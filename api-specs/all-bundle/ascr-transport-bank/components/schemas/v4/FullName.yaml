@@ -1,0 +1,11 @@
+type: object
+properties:
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  lastName:
+    type: string
+    description: Фамилия

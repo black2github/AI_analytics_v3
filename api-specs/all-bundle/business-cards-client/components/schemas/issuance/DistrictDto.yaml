@@ -1,0 +1,12 @@
+type: object
+properties:
+  district:
+    type: string
+    description: Район города
+  districtCode:
+    type: string
+    description: Код района города
+  fiasDistrictCode:
+    type: string
+    description: ФИАС код внутригородского района
+description: Район города

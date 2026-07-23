@@ -1,0 +1,39 @@
+type: object
+description: Реквизиты получателя по заявке на платеж B2B СБП
+properties:
+  legalId:
+    type: string
+    description: Идентификатор Получателя в АС СБП
+  name:
+    type: string
+    description: Наименование Получателя
+  inn:
+    type: string
+    description: ИНН Получателя
+  account:
+    type: string
+    description: Счет Получателя
+  memberId:
+    type: string
+    description: Идентификатор Банка Получателя
+  bankName:
+    type: string
+    description: Наименование банка Получателя
+  bankBic:
+    type: string
+    description: БИК банка Получателя
+  merchantId:
+    type: string
+    description: Идентификатор ТСП в АС СБП
+  merchantName:
+    type: string
+    description: Торговое название ТСП
+  merchantAddress:
+    type: string
+    description: Адрес Точки продаж
+  mccCode:
+    type: string
+    description: Вид деятельности код MCC Получателя
+  mccName:
+    type: string
+    description: Наименование вида деятельности Получателя

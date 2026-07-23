@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDocumentBankInnerClientSearchFilterDto.yaml
+description: Запрос страницы

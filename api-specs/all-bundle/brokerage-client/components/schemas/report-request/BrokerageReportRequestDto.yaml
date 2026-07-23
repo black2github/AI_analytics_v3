@@ -1,0 +1,51 @@
+type: object
+properties:
+  contractId:
+    type: string
+    description: Идентификатор договора
+  contractNumber:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Номер договора
+  contractDate:
+    type: string
+    description: Дата договора
+    format: date
+  clientContractName:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Наименование клиента в договоре
+  clientId:
+    type: string
+    description: Идентификатор организации (РНК)
+  clientName:
+    type: string
+    description: Наименование клиента
+  tradingFloor:
+    type: string
+    description: Наименование торговой площадки / биржи
+  cur:
+    $ref: ./BrokerageReportRequestCurrencyDto.yaml
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - TXT
+    - PDF
+    - XML
+    - EXCEL
+  type:
+    type: string
+    description: Тип отчета
+  date:
+    type: string
+    description: Дата, за которую формируется отчет в режиме "Запрос отчета Брокера о состоянии портфеля"
+    format: date
+  period:
+    $ref: ./BrokerageReportPeriodDto.yaml
+  brief:
+    type: string
+    description: Краткое наименование договора
+description: Представление запроса отчета брокера

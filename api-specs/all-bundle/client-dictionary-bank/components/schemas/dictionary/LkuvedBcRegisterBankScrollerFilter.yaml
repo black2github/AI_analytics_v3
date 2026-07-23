@@ -1,0 +1,15 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  creationMethod:
+    $ref: ./LkuvedBcRegisterSourceDtoFilter.yaml
+  supportServices:
+    $ref: ./FilterValueDtoInteger.yaml
+  textQuery:
+    $ref: ../common/FilterValueDtoString.yaml
+description: ЛК УВЭД. Реестр организаций. Фильтр для скроллера.

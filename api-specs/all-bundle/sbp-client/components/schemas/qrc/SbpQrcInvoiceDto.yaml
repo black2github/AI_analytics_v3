@@ -1,0 +1,81 @@
+type: object
+description: Входящий QR код
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сущности
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер входящего QR кода
+  qrcId:
+    type: string
+    description: Идентификатор входящего QR кода в СБП
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата создания
+  qrcType:
+    type: string
+    description: Тип QR кода
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  status:
+    type: string
+    description: Текущий статус QR кода
+    enum:
+    - NONE
+    - ACTIVE
+    - DELETED
+    - INACTIVE
+    - EXECUTED
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность Клиент Банка
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  clientInn:
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  recipientData:
+    $ref: ./SbpQrcInvoiceRecipientDataDto.yaml
+    description: Реквизиты получателя
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС в копейках
+  takeVat:
+    type: boolean
+    description: Информация о взимании НДС, false - не взимается
+  currency:
+    type: string
+    description: Валюта платежа
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  b2bTransactionRequests:
+    type: array
+    description: Заявки на регистрацию платежа B2B
+    items:
+      $ref: ./SbpB2bTransactionRequestDto.yaml
+required:
+- clientId
+- id
+- qrcId
+- qrcType
+- takeVat

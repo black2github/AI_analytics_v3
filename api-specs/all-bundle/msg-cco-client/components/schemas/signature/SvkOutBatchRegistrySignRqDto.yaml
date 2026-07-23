@@ -1,0 +1,19 @@
+required:
+- certificateId
+- clientSignCommands
+type: object
+properties:
+  clientSignCommands:
+    uniqueItems: true
+    type: array
+    description: Множество данных для клиентских подписей
+    items:
+      $ref: ./SvkOutClientRegistrySignRqDto.yaml
+  certificateId:
+    type: string
+    description: Идентификатор сертификат клиента
+    format: uuid
+  docSignPage:
+    type: string
+    description: Страница, с которой осуществляется подпись
+description: Запрос на реестровое подписание поручений

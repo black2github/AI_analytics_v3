@@ -1,0 +1,64 @@
+type: object
+properties:
+  clientId:
+    type: string
+    format: uuid
+  contractNumber:
+    type: string
+  documentType:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - CONVERSION
+    - GSNO_PARENT
+    - GSNO_CHILD_HEAD
+    - GSNO_CHILD_FRIEND
+    - DU_MNO
+    - DU_DEPOSIT
+    - DU_CONVERSION
+  status:
+    type: string
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED_OR_CHECKLIST_REJECTED
+    - RECEIVED_OR_WAITING_FOR_VISA
+    - WAITING_FOR_VISA
+    - VISA_CANCELED
+    - VISA_APPLIED
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - SENT_TO_CLIENT
+    - SENT_TO_CLIENT_FRIEND
+    - RECEIVED
+    - ASSIGNED
+    - VERIFIED_BY_BANK
+    - READY_TO_SIGN
+    - SIGNED_BY_BANK
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+    - SENT_TO_PKP_OR_FAIL
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL_OR_EXECUTED
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP
+    - SIGNED_BY_BANK_SENT_TO_PKP_SUCCESS
+    - SIGNED_BY_BANK_SENT_TO_PKP_FAIL

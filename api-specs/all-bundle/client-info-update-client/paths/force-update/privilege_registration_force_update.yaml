@@ -1,0 +1,12 @@
+put:
+  tags:
+  - privilege-registration-controller
+  description: 'Привилегии: hasAuthority(''UAA.PRIVILEGE_REGISTRATION'')'
+  operationId: forceUpdate
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/force-update/SingleResponseBoolean.yaml

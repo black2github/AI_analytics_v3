@@ -1,0 +1,40 @@
+type: object
+properties:
+  date:
+    type: string
+    format: date
+  number:
+    type: string
+  rkoID:
+    type: integer
+    format: int64
+  commissionAccounts:
+    type: array
+    items:
+      type: string
+  accountType:
+    type: string
+    description: Тип счета
+    enum:
+    - GOZ
+    - PAYMENT
+    - ANY_ANOTHER
+  kopop:
+    type: array
+    items:
+      $ref: ./KopopDto.yaml
+  branch:
+    type: string
+  openMark:
+    type: string
+    description: Тип возможности открытия счета
+    enum:
+    - DISALLOW
+    - ALLOW
+  commissionMark:
+    type: string
+    description: Тип возможности списания комисии
+    enum:
+    - DISALLOW
+    - ALLOW
+description: Контракт

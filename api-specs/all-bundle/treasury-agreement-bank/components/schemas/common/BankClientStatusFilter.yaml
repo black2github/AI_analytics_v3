@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  notEq:
+    type: string
+    enum:
+    - ACTIVE
+    - POTENTIAL
+    - LIQUIDATED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - POTENTIAL
+      - LIQUIDATED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - ACTIVE
+      - POTENTIAL
+      - LIQUIDATED
+  isNull:
+    type: boolean
+description: Клиент банка статус - активный или потенциальный

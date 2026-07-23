@@ -1,0 +1,18 @@
+required:
+- accessToken
+- attachmentId
+- taskId
+type: object
+properties:
+  taskId:
+    type: string
+    description: Идентификатор задания на экспорт
+    format: uuid
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  accessToken:
+    type: string
+    description: Токен доступа
+description: Транспортное представление сформированного файла реестра валютных переводов

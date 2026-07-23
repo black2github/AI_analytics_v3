@@ -1,0 +1,21 @@
+type: object
+properties:
+  documentsRegistry:
+    type: array
+    description: Реестр документов
+    items:
+      $ref: ./SignRegistryClientDocumentsDto.yaml
+  statistics:
+    $ref: ./SignRegistryStatisticsDto.yaml
+  statisticsByClient:
+    type: array
+    description: Статистика в разрезе организаций
+    items:
+      $ref: ./SignRegistryStatisticsByClientDto.yaml
+  allowedDstKinds:
+    uniqueItems: true
+    type: array
+    description: Виды СЭП, которыми можно подписывать документы реестра
+    items:
+      $ref: ./SignRegistryDocumentAllowedDstKind.yaml
+description: Реестр документов на подпись

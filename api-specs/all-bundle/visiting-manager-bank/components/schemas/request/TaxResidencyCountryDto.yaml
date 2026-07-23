@@ -1,0 +1,24 @@
+type: object
+properties:
+  countryName:
+    type: string
+    description: Название страны/юрисдикции.
+  hasInn:
+    type: boolean
+    description: ИНН/TIN (аналог) предоставлен.
+  innNumber:
+    type: string
+    description: Номер ИНН/TIN (аналога).
+  reasonA:
+    type: boolean
+    description: Причина А.
+  reasonB:
+    type: boolean
+    description: Причина B.
+  reasonC:
+    type: boolean
+    description: Причина C.
+  reasonD:
+    type: boolean
+    description: Причина D.
+description: Страна/юрисдикция налогового резидентства.

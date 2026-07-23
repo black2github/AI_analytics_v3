@@ -1,0 +1,196 @@
+openapi: 3.0.1
+info:
+  title: Сервис выдачи и приёма наличных. Банковская часть.
+  version: 3.0.0
+servers:
+- url: /cash-request-bank
+security:
+- bearerAuth: []
+paths:
+  /retry-send-to-abs:
+    $ref: ./paths/retry-send-to-abs/retry_send_to_abs.yaml
+  /retry-send-cashback-to-abs:
+    $ref: ./paths/retry-send-cashback-to-abs/retry_send_cashback_to_abs.yaml
+  /print:
+    $ref: ./paths/print/print.yaml
+  /print-reestr:
+    $ref: ./paths/print-reestr/print_reestr.yaml
+  /order-list-request:
+    $ref: ./paths/order-list-request/order_list_request.yaml
+  /order-journal-request:
+    $ref: ./paths/order-journal-request/order_journal_request.yaml
+  /export-sign-requisites:
+    $ref: ./paths/export-sign-requisites/export_sign_requisites.yaml
+  /export-cashback-sign-requisites:
+    $ref: ./paths/export-cashback-sign-requisites/export_cashback_sign_requisites.yaml
+  /change-order-status:
+    $ref: ./paths/change-order-status/change_order_status.yaml
+  /change-cashback-status:
+    $ref: ./paths/change-cashback-status/change_cashback_status.yaml
+  /get-order-history/{orderId}:
+    $ref: ./paths/{orderId}/get_order_history_orderId.yaml
+  /get-order-by-id/{id}:
+    $ref: ./paths/{id}/get_order_by_id_id.yaml
+  /get-cashback-history/{cashbackId}:
+    $ref: ./paths/{cashbackId}/get_cashback_history_cashbackId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ChangeMassOrderDto:
+      $ref: ./components/schemas/retry-send-to-abs/ChangeMassOrderDto.yaml
+    GenericCommandChangeMassOrderDto:
+      $ref: ./components/schemas/retry-send-to-abs/GenericCommandChangeMassOrderDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    ChangeOrderDto:
+      $ref: ./components/schemas/common/ChangeOrderDto.yaml
+    GenericCommandChangeOrderDto:
+      $ref: ./components/schemas/common/GenericCommandChangeOrderDto.yaml
+    CashOrderPrintDto:
+      $ref: ./components/schemas/print/CashOrderPrintDto.yaml
+    GenericCommandCashOrderPrintDto:
+      $ref: ./components/schemas/print/GenericCommandCashOrderPrintDto.yaml
+    ForPrintService:
+      $ref: ./components/schemas/common/ForPrintService.yaml
+    GenericResponseForPrintServicePrintResponse:
+      $ref: ./components/schemas/common/GenericResponseForPrintServicePrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    CashOrderReestrPrintDto:
+      $ref: ./components/schemas/print-reestr/CashOrderReestrPrintDto.yaml
+    GenericCommandCashOrderReestrPrintDto:
+      $ref: ./components/schemas/print-reestr/GenericCommandCashOrderReestrPrintDto.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLocalDateTime:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoLocalDateTime.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/order-list-request/FilterValueDtoUUID.yaml
+    GetPageCommandOrderListBankFilterDto:
+      $ref: ./components/schemas/order-list-request/GetPageCommandOrderListBankFilterDto.yaml
+    OrderListBankFilterDto:
+      $ref: ./components/schemas/order-list-request/OrderListBankFilterDto.yaml
+    OrderStatusFilter:
+      $ref: ./components/schemas/order-list-request/OrderStatusFilter.yaml
+    PageParamsOrderListBankFilterDto:
+      $ref: ./components/schemas/order-list-request/PageParamsOrderListBankFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/order-list-request/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/order-list-request/Sort.yaml
+    AbstractOrderViewDto:
+      $ref: ./components/schemas/common/AbstractOrderViewDto.yaml
+    AdditionalContactsDto:
+      $ref: ./components/schemas/common/AdditionalContactsDto.yaml
+    AddressDto:
+      $ref: ./components/schemas/common/AddressDto.yaml
+    AvailableOperationsDto:
+      $ref: ./components/schemas/common/AvailableOperationsDto.yaml
+    BankInfoDto:
+      $ref: ./components/schemas/common/BankInfoDto.yaml
+    BanknoteDto:
+      $ref: ./components/schemas/common/BanknoteDto.yaml
+    CashInOrderCheckDto:
+      $ref: ./components/schemas/common/CashInOrderCheckDto.yaml
+    CashInOrderViewDto:
+      $ref: ./components/schemas/common/CashInOrderViewDto.yaml
+    CashInPaymentInfoDto:
+      $ref: ./components/schemas/common/CashInPaymentInfoDto.yaml
+    CashOutOrderCheckDto:
+      $ref: ./components/schemas/common/CashOutOrderCheckDto.yaml
+    CashOutOrderViewDto:
+      $ref: ./components/schemas/common/CashOutOrderViewDto.yaml
+    CashOutPaymentInfoDto:
+      $ref: ./components/schemas/common/CashOutPaymentInfoDto.yaml
+    CashSymbolDto:
+      $ref: ./components/schemas/common/CashSymbolDto.yaml
+    CashSymbolExtDto:
+      $ref: ./components/schemas/common/CashSymbolExtDto.yaml
+    CashbackSignatureDto:
+      $ref: ./components/schemas/common/CashbackSignatureDto.yaml
+    CreationInfoRsDto:
+      $ref: ./components/schemas/common/CreationInfoRsDto.yaml
+    DictionaryDto:
+      $ref: ./components/schemas/common/DictionaryDto.yaml
+    DictionaryExtDto:
+      $ref: ./components/schemas/common/DictionaryExtDto.yaml
+    DocumentPackageDto:
+      $ref: ./components/schemas/common/DocumentPackageDto.yaml
+    ExecutionInfo:
+      $ref: ./components/schemas/common/ExecutionInfo.yaml
+    ForeignDocumentDto:
+      $ref: ./components/schemas/common/ForeignDocumentDto.yaml
+    GenericResponseErrorDataOrderListResponseDto:
+      $ref: ./components/schemas/order-list-request/GenericResponseErrorDataOrderListResponseDto.yaml
+    JournalOrganizationDto:
+      $ref: ./components/schemas/common/JournalOrganizationDto.yaml
+    OrderListResponseDto:
+      $ref: ./components/schemas/order-list-request/OrderListResponseDto.yaml
+    OrderOperationDtoForView:
+      $ref: ./components/schemas/common/OrderOperationDtoForView.yaml
+    OrderSignerDto:
+      $ref: ./components/schemas/common/OrderSignerDto.yaml
+    PageDataAbstractOrderViewDto:
+      $ref: ./components/schemas/order-list-request/PageDataAbstractOrderViewDto.yaml
+    PassportDto:
+      $ref: ./components/schemas/common/PassportDto.yaml
+    ServiceInfoDto:
+      $ref: ./components/schemas/common/ServiceInfoDto.yaml
+    UserDto:
+      $ref: ./components/schemas/common/UserDto.yaml
+    ViewerCashbackRsDto:
+      $ref: ./components/schemas/common/ViewerCashbackRsDto.yaml
+    OrderJournalRqDto:
+      $ref: ./components/schemas/order-journal-request/OrderJournalRqDto.yaml
+    SingleCommandOrderJournalRqDto:
+      $ref: ./components/schemas/order-journal-request/SingleCommandOrderJournalRqDto.yaml
+    DictionaryRefDto:
+      $ref: ./components/schemas/order-journal-request/DictionaryRefDto.yaml
+    GenericResponseErrorDataOrderJournalRsDto:
+      $ref: ./components/schemas/order-journal-request/GenericResponseErrorDataOrderJournalRsDto.yaml
+    OrderJournalRsDto:
+      $ref: ./components/schemas/order-journal-request/OrderJournalRsDto.yaml
+    OrganizationCheckDto:
+      $ref: ./components/schemas/order-journal-request/OrganizationCheckDto.yaml
+    OrganizationForBankDictionary:
+      $ref: ./components/schemas/order-journal-request/OrganizationForBankDictionary.yaml
+    StatusAggregatorDto:
+      $ref: ./components/schemas/order-journal-request/StatusAggregatorDto.yaml
+    GenericResponseErrorDataListPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseErrorDataListPrintResponse.yaml
+    ChangeMassOrderStatusDto:
+      $ref: ./components/schemas/change-order-status/ChangeMassOrderStatusDto.yaml
+    GenericCommandChangeMassOrderStatusDto:
+      $ref: ./components/schemas/change-order-status/GenericCommandChangeMassOrderStatusDto.yaml
+    ChangeOrderStatusDto:
+      $ref: ./components/schemas/change-cashback-status/ChangeOrderStatusDto.yaml
+    GenericCommandChangeOrderStatusDto:
+      $ref: ./components/schemas/change-cashback-status/GenericCommandChangeOrderStatusDto.yaml
+    CashOrderChangesHistoryDto:
+      $ref: ./components/schemas/common/CashOrderChangesHistoryDto.yaml
+    CashOrderHistoryDto:
+      $ref: ./components/schemas/common/CashOrderHistoryDto.yaml
+    GenericResponseErrorDataCashOrderHistoryDto:
+      $ref: ./components/schemas/common/GenericResponseErrorDataCashOrderHistoryDto.yaml
+    GenericResponseErrorDataAbstractOrderViewDto:
+      $ref: ./components/schemas/{id}/GenericResponseErrorDataAbstractOrderViewDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

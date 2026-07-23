@@ -1,0 +1,128 @@
+type: object
+description: Запись истории транзакций СБП
+properties:
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ в АС СБП
+  inn:
+    type: string
+    description: ИНН ЮЛ
+  merchantId:
+    type: string
+    description: Идентификатор торговой точки
+  merchantName:
+    type: string
+    description: Наименование торговой точки
+  amount:
+    type: integer
+    format: int64
+    description: Сумма операции
+  currency:
+    type: string
+    description: Валюта операции
+  totalTaxAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС в копейках
+  takeTax:
+    type: boolean
+    description: Признак взимания НДС
+  fpMessageId:
+    type: string
+    description: Идентификатор операции СБП
+  qrcId:
+    type: string
+    description: Идентификатор QR-кода
+  qrcEntityExists:
+    type: boolean
+    description: Признак присутствия QR-кода в базе сервиса
+  recipientAccount:
+    type: string
+    description: Счет получателя
+  recipientBic:
+    type: string
+    description: БИК получателя
+  recipientId:
+    type: string
+    description: Идентификатор получателя
+  recipientPam:
+    type: string
+    description: РАМ получателя
+  recipientInn:
+    type: string
+    description: ИНН получателя
+  recipientName:
+    type: string
+    description: Наименование получателя
+  recipientBankId:
+    type: string
+    description: Идентификатор банка получателя
+  recipientBankName:
+    type: string
+    description: Название банка получателя
+  senderAccount:
+    type: string
+    description: Номер счета отправителя
+  senderBankId:
+    type: string
+    description: Идентификатор банка отправителя
+  senderBankName:
+    type: string
+    description: Название банка отправителя
+  senderInn:
+    type: string
+    description: ИНН отправителя
+  senderName:
+    type: string
+    description: Наименование отправителя
+  senderBic:
+    type: string
+    description: БИК отправителя
+  senderId:
+    type: string
+    description: Идентификатор отправителя
+  senderPam:
+    type: string
+    description: РАМ отправителя
+  status:
+    type: string
+    description: Статус операции
+    enum:
+    - DRAFT
+    - IN_PROGRESS
+    - PERFORMED
+    - CANCELLED
+  origTransactionId:
+    type: string
+    description: Идентификатор оригинальной транзакции
+  transactionId:
+    type: string
+    description: Идентификатор транзакции
+  transactionTime:
+    type: string
+    format: date-time
+    description: Дата и время операции
+  transactionType:
+    type: string
+    description: Тип операции
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  requestId:
+    type: string
+    format: uuid
+    description: Идентификатор заявления на перевод
+  agentId:
+    type: string
+    description: Идентификатор Агента ТСП
+required:
+- amount
+- currency
+- fpMessageId
+- legalId
+- merchantId
+- merchantName
+- status
+- transactionId
+- transactionTime
+- transactionType

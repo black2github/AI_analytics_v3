@@ -1,0 +1,9 @@
+type: object
+properties:
+  dateFrom:
+    type: string
+    format: date
+  dateTo:
+    type: string
+    format: date
+description: Данные

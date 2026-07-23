@@ -1,0 +1,12 @@
+type: object
+properties:
+  signature:
+    type: string
+    description: Подпись
+    example: null
+  digest:
+    type: string
+    description: Дайджест
+    example: null
+description: Значение подписи
+example: null

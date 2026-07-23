@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  branchId:
+    type: string
+    description: Ссылка на сущность "Филиал Банка"
+    format: uuid
+  remoteCode:
+    type: string
+    description: Внутренний код филиала в ДБО БСС
+  smftCode:
+    type: string
+    description: Код филиала в кодировке SMFT
+  branchCode:
+    type: string
+    description: Код филиала в "Газпромбанк"
+  branch:
+    $ref: ../common/BranchDtoV2.yaml
+description: Cущность "Идентификаторы филиалов во внешних системах"

@@ -1,0 +1,23 @@
+type: object
+properties:
+  totalAmount:
+    type: number
+    description: Доступный остаток с учетом суммы заблокированных средств
+  totalAmountCcy:
+    type: string
+    description: Тип валюты доступного остатка
+  totalBlockedAmount:
+    type: number
+    description: Сумма заблокированных средств
+  totalBlockedAmountCcy:
+    type: string
+    description: Тип валюты суммы заблокированных средств
+  currentBalance:
+    type: number
+    description: Текущий баланс СЦР
+  currentBalanceCcy:
+    type: string
+    description: Тип валюты текущего баланса СЦР
+required:
+- totalAmount
+- totalAmountCcy

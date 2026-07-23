@@ -1,0 +1,9 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Электронная почта
+  mobile:
+    type: string
+    description: Мобильный телефон
+description: Сведения о контактах лица по заявке на открытие первого счета для встречи

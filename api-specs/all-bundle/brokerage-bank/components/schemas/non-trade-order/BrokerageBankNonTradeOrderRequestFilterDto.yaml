@@ -1,0 +1,27 @@
+required:
+- statusCategory
+type: object
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  contractNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория экранной формы
+    enum:
+    - ALL
+    - ERROR
+    - IN_PROCESS
+    - EXECUTED
+  docNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  docDateFrom:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  docDateTo:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  orderType:
+    $ref: ./FilterValueDtoBrokerageNonTradeOrderFrontalType.yaml
+  status:
+    $ref: ./FilterValueDtoBrokerageBankNonTradeOrderStatusDto.yaml
+description: Фильтр для скроллера неторговых поручений

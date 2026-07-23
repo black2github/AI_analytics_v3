@@ -1,0 +1,10 @@
+type: object
+description: Результат регистрации банковского счета
+properties:
+  account:
+    type: string
+    description: Счет юридического лица
+  status:
+    $ref: ./LegalResultStatusDto.yaml
+    type: string
+    description: Статус

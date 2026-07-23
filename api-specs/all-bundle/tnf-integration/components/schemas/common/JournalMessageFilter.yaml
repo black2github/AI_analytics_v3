@@ -1,0 +1,38 @@
+type: object
+description: Фильтр для скроллера журнала сообщений ТНФ
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Уникальный идентификатор записи в журнале
+  msgId:
+    $ref: ./FilterValueDtoUUID.yaml
+    description: Сквозной идентификатор обмена
+  rckMsgId:
+    $ref: ./FilterValueDtoLong.yaml
+    description: Идентификатор обмена ТНФ
+  flow:
+    $ref: ./JournalFlowFilter.yaml
+    description: Направление сообщения
+  typeMessage:
+    $ref: ./TypeMessageFilter.yaml
+    description: Тип сообщения
+  status:
+    $ref: ./MessageStatusFilter.yaml
+    description: Статус сообщения
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - DELIVERED
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+  tnfStatus:
+    $ref: ./TnfStatusFilter.yaml
+    description: Статус обработки сообщения для ТНФ
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время создания записи
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+    description: Дата и время обновления записи

@@ -1,0 +1,20 @@
+required:
+- accountId
+- bankClientId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Id счета клиента
+    format: uuid
+  bankClientId:
+    type: string
+    description: Id клиента банка
+    format: uuid
+  blockType:
+    type: string
+    description: Тип блокировки
+    enum:
+    - FULL
+    - PARTIAL
+description: Запрос на изменение признаков блокировки на счете и клиенте.

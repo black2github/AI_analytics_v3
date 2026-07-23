@@ -1,0 +1,27 @@
+type: object
+description: Запрос печати
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  docIds:
+    type: array
+    description: Список выбранных документов
+    items:
+      type: string
+      format: uuid
+  format:
+    type: string
+    description: Формат отчета
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  splitReport:
+    type: boolean
+    description: Если false отчеты будут объединены в один документ

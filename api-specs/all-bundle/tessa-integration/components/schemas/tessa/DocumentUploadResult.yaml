@@ -1,0 +1,16 @@
+type: object
+properties:
+  localId:
+    type: string
+  uploaded:
+    type: boolean
+  cardId:
+    type: string
+    format: uuid
+  fileId:
+    type: string
+    format: uuid
+  attachmentUploadResults:
+    type: array
+    items:
+      $ref: ./AttachmentUploadResult.yaml

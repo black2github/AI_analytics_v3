@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Получение списка ТСП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/MerchantTspEntityDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/MerchantTspListResultDto.yaml
+    '400':
+      description: Bad Request

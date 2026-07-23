@@ -1,0 +1,7 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+description: Реквизиты подразделения по заявке на встречу

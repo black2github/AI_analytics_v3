@@ -1,0 +1,31 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор оценки
+    format: uuid
+  result:
+    type: integer
+    description: Результат опроса
+    format: int32
+  comment:
+    type: string
+    description: Комментарий
+  refusePollTime:
+    type: string
+    description: Время отказа от оценки
+    format: date-time
+  pollObjectId:
+    type: string
+    description: Идентификатор объекта оценки
+    format: uuid
+  hashtags:
+    type: array
+    description: Хештеги
+    items:
+      type: string
+      description: Хештеги
+      format: uuid
+description: Запрос на сохранение Результата опроса

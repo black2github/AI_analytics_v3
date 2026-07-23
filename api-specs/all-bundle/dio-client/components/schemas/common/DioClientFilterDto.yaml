@@ -1,0 +1,38 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категория записей
+    enum:
+    - ALL
+    - DRAFT
+    - SIGN
+    - DECLINED
+    - EXECUTED
+  status:
+    $ref: ./DioClientStatusFilterValueDto.yaml
+  clientName:
+    $ref: ./FilterValueDtoString.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  docNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  branchName:
+    $ref: ./FilterValueDtoString.yaml
+  contractNumber:
+    $ref: ./FilterValueDtoString.yaml
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  operationCurrency:
+    $ref: ./FilterValueDtoString.yaml
+  operationAmount:
+    $ref: ./FilterValueDtoString.yaml
+  operationDocNumber:
+    $ref: ./FilterValueDtoString.yaml
+  operationDocDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  importId:
+    $ref: ./FilterValueDtoUUID.yaml
+  createSystem:
+    $ref: ./DioClientDocumentSystemClassifierFilterValueDto.yaml
+description: Фильтр скроллера клиентской стороны

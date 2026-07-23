@@ -1,0 +1,35 @@
+type: object
+properties:
+  totalSize:
+    type: integer
+    description: Общий размер принятых данных (байт)
+    format: int64
+  totalDuration:
+    type: integer
+    description: Общая продолжительность приема (с)
+    format: int32
+  averageRate:
+    type: integer
+    description: Средняя скорость приема (байт/с)
+    format: int32
+  averageRateText:
+    type: string
+    description: Средняя скорость приема (текст)
+  averagePageDuration:
+    type: integer
+    description: Средняя продолжительность приема условной страницы документа (с)
+    format: int32
+  averagePageDurationText:
+    type: string
+    description: Средняя продолжительность приема условной страницы документа (текст)
+  disconnectFlag:
+    type: boolean
+    description: Признак обрыва соединения
+  result:
+    type: string
+    description: Результат оценки качества приема
+    enum:
+    - BAD
+    - NORMAL
+    - GOOD
+description: Результаты оценки качества приема

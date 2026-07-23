@@ -1,0 +1,14 @@
+required:
+- changeEndDate
+- changeStartDate
+type: object
+properties:
+  changeStartDate:
+    type: string
+    description: Начало периода изменения документов
+    format: date-time
+  changeEndDate:
+    type: string
+    description: Окончание периода изменения документов
+    format: date-time
+description: Транспортное представление для запроса на выгрузку документов в файл в формате ISO20022

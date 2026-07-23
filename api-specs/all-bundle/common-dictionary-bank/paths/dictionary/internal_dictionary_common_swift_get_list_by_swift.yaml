@@ -1,0 +1,35 @@
+post:
+  tags:
+  - API для справочника SWIFT-кодов (банковская сторона)
+  summary: Получить список банков по набору BIC SWIFT кодов
+  description: 'Привилегии: BANK_SWIFT_GET_PAGE'
+  operationId: getAllBySwiftUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: codes
+    description: codes
+    required: true
+    schema:
+      type: array
+      items:
+        type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«SwiftCodeScrollerDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

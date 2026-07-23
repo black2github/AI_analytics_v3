@@ -1,0 +1,45 @@
+required:
+- accountId
+- accountNumber
+- bankAccountNumber
+- bankBic
+- bankLocalityName
+- bankLocalityType
+- bankName
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор банковского счета
+    format: uuid
+  accountNumber:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Номер банковского счета
+  bankName:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Наименование Банка
+  bankBic:
+    maxLength: 9
+    minLength: 9
+    type: string
+    description: БИК Банка
+  bankAccountNumber:
+    maxLength: 20
+    minLength: 20
+    type: string
+    description: Корсчет Банка
+  bankLocalityType:
+    maxLength: 5
+    minLength: 0
+    type: string
+    description: Краткое название типа населенного пункта для Банка
+  bankLocalityName:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Населенный пункт Банка
+description: DTO с реквизитами счёта организации по заявке.

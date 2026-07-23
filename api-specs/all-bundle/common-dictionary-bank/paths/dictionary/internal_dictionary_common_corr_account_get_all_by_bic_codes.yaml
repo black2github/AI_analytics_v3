@@ -1,0 +1,35 @@
+post:
+  tags:
+  - API справочника "Корреспондентские счета Банков РФ"
+  summary: Получить список записей по списку БИК
+  description: 'Привилегии: hasAuthority(''CORR_ACCOUNT_GET_PAGE'')'
+  operationId: getAllByBicCodesUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: bicCodes
+    description: bicCodes
+    required: true
+    schema:
+      type: array
+      items:
+        type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,List«CorrespondentAccountDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

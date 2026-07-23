@@ -1,0 +1,28 @@
+put:
+  tags:
+  - lbp-response-configuration-controller
+  summary: Включение/выключение featureGbo130262
+  operationId: setFeatureGbo130262UsingPUT
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - name: enabled
+    in: query
+    description: enabled
+    required: true
+    type: boolean
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: boolean
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

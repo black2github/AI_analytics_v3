@@ -1,0 +1,7 @@
+type: object
+description: Запрос
+properties:
+  data:
+    type: string
+    format: uuid
+    description: Данные

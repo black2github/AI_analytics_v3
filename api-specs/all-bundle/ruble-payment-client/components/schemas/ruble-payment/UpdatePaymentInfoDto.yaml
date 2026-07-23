@@ -1,0 +1,44 @@
+type: object
+properties:
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  paymentTypeName:
+    type: string
+    description: Вид платежа
+  paymentType:
+    type: string
+    description: Код вида платежа
+  incomeType:
+    maxLength: 1
+    pattern: ^[0-9]*$
+    type: string
+    description: Код вида дохода (назн. пл)
+  paymentCode:
+    type: string
+    description: Код платежа
+  paymentPriority:
+    type: string
+    description: Очередность платежа
+  paymentPurpose:
+    maxLength: 1000
+    pattern: ^[А-Яа-яёЁA-Za-z0-9_\s!?.,:;<=>@^%&#@№^~'`/|\\"\$\(\)\*\+\-\[\]\{\}]*$
+    type: string
+    description: Назначение платежа
+  currencyTransactionCode:
+    type: string
+    description: Код валютной операции
+  payoutCode:
+    type: string
+    description: Код выплат
+  transferConditions:
+    type: string
+    description: Резервное поле (Указывается признак условий перевода, в том числе в виде кода)
+  purchaseCode:
+    type: string
+    description: Код закупки
+description: Базовые реквизиты документа, заполняемые клиентом при обновлении заявки

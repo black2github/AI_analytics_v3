@@ -1,0 +1,51 @@
+type: object
+properties:
+  question_13:
+    type: boolean
+    description: Подлежит ли клиент контролю по FATCA.
+  question_14:
+    type: boolean
+    description: Противоречивые данные о себе.
+  question_15:
+    type: boolean
+    description: Налоговое резидентство США.
+  question_16:
+    type: boolean
+    description: Налоговое резидентство США - косвенные признаки.
+  question_17:
+    type: boolean
+    description: Было направлено Письмо с Формами самосертификации, ответ в установленный Банком срок не поступил.
+  question_18:
+    type: boolean
+    description: Клиент ответил «Нет, не подтверждаю» на вопрос 1 Формы самосертификации, либо «Да, я являюсь» на вопрос 9 Части 2 Подробной формы самосертификации.
+  question_19:
+    type: boolean
+    description: Клиент ответил «Да, подтверждаю» на вопрос 1 Формы самосертификации, либо «Нет, я не являюсь налоговым резидентом США» на вопрос 9 Части 2 Подробной формы самосертификации
+  question_20:
+    type: boolean
+    description: Не является налоговым резидентом США.
+  question_21:
+    type: boolean
+    description: Решение по результатам контроля ответственного по FATCA/CRS лица (FATCA-cтатус клиента).
+  question_22:
+    type: boolean
+    description: Налоговое резидентство США (выбрать один).
+  question_23:
+    type: boolean
+    description: Не является налоговым резидентом США (выбрать один).
+  question_24:
+    type: boolean
+    description: Противоречивые данные о себе (выбрать один).
+  question_25:
+    type: boolean
+    description: Упорствующий клиент без Налогового резидентства США (выбрать один).
+  question_26:
+    type: boolean
+    description: Упорствующий клиент Налоговое резидентство США (выбрать один).
+  question_27:
+    type: boolean
+    description: Упорствующий клиент Налоговое резидентство США - косвенные признаки (выбрать один).
+  question_28:
+    type: boolean
+    description: Возможность установления гражданско-правовых отношений с клиентом.
+description: FATCA-статус.

@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор набора данных
+    format: uuid
+  label:
+    type: string
+    description: Наименование
+  additionalInfo:
+    type: string
+    description: Дополнительная информация
+  dssLabel:
+    type: string
+    description: Наименование подписываемых данных для отображения в облачной подписи
+  digest:
+    type: string
+    description: Base64 представление дайджеста подписи
+  type:
+    $ref: ./UniSignDataTypeDto.yaml
+  signDataViewList:
+    type: array
+    description: Блок отображения подписываемых данных
+    items:
+      $ref: ./UniSignDataViewDto.yaml
+description: Подписываемые данные

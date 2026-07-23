@@ -1,0 +1,23 @@
+type: object
+properties:
+  clientCode:
+    type: string
+    description: Код РНК клиента
+  closingDate:
+    type: string
+    description: Дата закрытия договора
+    format: date
+  code:
+    type: string
+    description: Код договора
+  date:
+    type: string
+    description: Дата договора
+    format: date
+  number:
+    type: string
+    description: Номер договора
+  kindName:
+    type: string
+    description: Вид пакета
+description: Запрос на создание "пакета", к которому будут привязываться документы

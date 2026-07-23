@@ -1,0 +1,31 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Типы документов удостоверяющих личность
+    enum:
+    - PASSPORT_RUSSIA
+    - PASSPORT_FOREIGN_COUNTRY
+    - RESIDENCE_CARD
+    - OTHER
+  series:
+    type: string
+    description: Серия ДУЛ
+  number:
+    type: string
+    description: Номер ДУЛ
+  departmentCode:
+    type: string
+    description: Код подразделения ДУЛ
+  departmentPlace:
+    type: string
+    description: Место выдачи ДУЛ
+  releaseDate:
+    type: string
+    description: Дата выдачи ДУЛ
+    format: date
+  expirationDate:
+    type: string
+    description: Срок действия ДУЛ
+    format: date
+description: Документ, удостоверяющий личность. Интеграционное ДТО

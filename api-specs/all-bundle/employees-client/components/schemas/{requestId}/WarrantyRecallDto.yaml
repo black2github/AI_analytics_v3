@@ -1,0 +1,18 @@
+required:
+- version
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  recallMega:
+    type: boolean
+    description: Флаг - отменить мегадоверенность
+  recallProduct:
+    type: boolean
+    description: Флаг - отменить продуктовую доверенность
+  recallBankInfo:
+    type: boolean
+    description: Флаг - отменить доверенность на получение банковской информации
+description: Данные об отмене доверенности

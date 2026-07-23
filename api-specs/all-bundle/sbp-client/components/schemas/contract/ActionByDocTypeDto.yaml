@@ -1,0 +1,9 @@
+type: object
+description: Признак доступа по типам действия над документом
+properties:
+  actionType:
+    type: string
+    description: Тип действия над документом
+  accessible:
+    type: boolean
+    description: Признак доступа

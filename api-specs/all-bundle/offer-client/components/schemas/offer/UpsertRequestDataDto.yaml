@@ -1,0 +1,32 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  branchBankId:
+    type: string
+    description: Ссылка на сущность "Подразделение банка"
+    format: uuid
+  contractId:
+    type: string
+    description: Идентификатор сопровождаемого договора (ИСД)
+  phoneNumber:
+    type: string
+    description: Номер мобильного телефона
+  email:
+    type: string
+    description: Адрес электронной почты
+  agreeCondition1:
+    type: boolean
+    description: Согласие с условиями 1
+  agreeCondition2:
+    type: boolean
+    description: Согласие с условиями 2
+  issueBankGuarantee:
+    type: boolean
+    description: Выпуск банковской гарантии
+  forCredit:
+    type: boolean
+    description: Для кредит
+description: Взаимодействие с Ф1

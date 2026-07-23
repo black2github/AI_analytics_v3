@@ -1,0 +1,15 @@
+required:
+- segmentRolePairs
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  segmentRolePairs:
+    type: array
+    description: Пара сегмент - роль
+    items:
+      $ref: ./SegmentRolePairIntegrationDto.yaml
+description: Запрос поиска ид представитель клиента

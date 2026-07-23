@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  level:
+    $ref: ../common/SignatureLevelDto.yaml
+  fio:
+    type: string
+    description: ФИО
+  serialNumber:
+    type: string
+    description: UID сертификата (серийный номер)
+  signDate:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+description: Данные подписи заявки Платежное требование исходящее (данные для сотрудника банка)

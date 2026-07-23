@@ -1,0 +1,18 @@
+required:
+- consents
+- fiName
+- pcrFiId
+type: object
+properties:
+  fiName:
+    type: string
+    description: Наименование финансового посредника
+  pcrFiId:
+    type: string
+    description: Идентификатор финансового посредника на ПлЦР
+  consents:
+    type: array
+    description: Список согласий
+    items:
+      $ref: ./ConsentManagementBankConsentDto.yaml
+description: DTO банка, которому предоставляются согласия.

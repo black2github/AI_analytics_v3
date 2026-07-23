@@ -1,0 +1,64 @@
+post:
+  tags:
+  - API справочника "Корреспондентские счета Банков РФ"
+  summary: Создать запись
+  operationId: createUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«CorrespondentAccountDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«CorrespondentAccountDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - API справочника "Корреспондентские счета Банков РФ"
+  summary: Обновить запись
+  operationId: updateUsingPUT_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«CorrespondentAccountDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«CorrespondentAccountDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

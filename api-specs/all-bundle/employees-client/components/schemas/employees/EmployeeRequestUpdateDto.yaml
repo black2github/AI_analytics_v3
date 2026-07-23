@@ -1,0 +1,60 @@
+required:
+- additionalDetails
+- attachments
+- bankClientInfo
+- id
+- type
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+  requestStep:
+    type: string
+    description: Информация о шаге заявки
+    enum:
+    - EMPLOYEE_DATA
+    - ACCESS_TO_GBO
+    - EMPLOYEE_ROLES
+    - EMPLOYEE_WARRANTY
+    - CONFIRM
+    - EMPLOYEE_DATA_CONFIRM
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ./EmployeeRequestAttachmentUpdateDto.yaml
+  bankClientInfo:
+    $ref: ../common/BankClientInfoUpdateDto.yaml
+  employeeInfo:
+    $ref: ./EmployeeInfoUpdateDto.yaml
+  signatureInfo:
+    $ref: ../common/SignatureInfoUpdateDto.yaml
+  employeeMegaWarranty:
+    $ref: ./MegaWarrantyUpdateDto.yaml
+  employeeProductWarranty:
+    $ref: ./ProductWarrantyUpdateDto.yaml
+  employeeBankInfoWarranty:
+    $ref: ./BankInfoWarrantyUpdateDto.yaml
+  authPersonRights:
+    $ref: ./AuthorizedPersonRightsUpdateDto.yaml
+  requestInitiator:
+    $ref: ./EmployeeUpdateDto.yaml
+  additionalDetails:
+    $ref: ../common/AdditionalRequestShortDetailsDto.yaml
+description: Данные обновления заявки

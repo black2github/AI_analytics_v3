@@ -1,0 +1,77 @@
+type: object
+description: Заявка на изменение графика платежей для клиента
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  actionType:
+    type: string
+    description: Тип действия
+    enum:
+    - CREATE
+    - DELETE
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер
+  docDate:
+    type: string
+    format: date-time
+    description: Дата создания
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - REJECTED
+    - EXECUTED
+  subscriptionId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  subscriptionNumber:
+    type: integer
+    format: int32
+    description: Номер подписки
+  subscriptionDate:
+    type: string
+    format: date-time
+    description: Дата создания подписки
+  bankClient:
+    $ref: ./SbpQrcBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  data:
+    $ref: ./SbpClientQrcScheduleRequestDataDto.yaml
+    description: Реквизиты QR-кода
+  subscriptionData:
+    $ref: ./SbpQrcScheduleRequestSubscriptionDataDto.yaml
+    description: Реквизиты подписки
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший подписку (Идентификатор пользователя в экосистеме).
+  userName:
+    type: string
+    description: Пользователь, создавший подписку (ФИО).
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  validationResult:
+    $ref: ./ValidationResult.yaml
+    description: Результат валидации заявки
+required:
+- docDate
+- docNumber
+- id
+- status
+- subscriptionNumber

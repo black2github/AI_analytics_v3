@@ -1,0 +1,79 @@
+type: object
+description: Кредитный договор
+allOf:
+- $ref: ./DocumentCardDto.yaml
+- type: object
+  properties:
+    filialName:
+      type: string
+      description: Наименование подразделения
+    executorName:
+      type: string
+      description: Исполнитель
+    contact:
+      type: string
+      description: Телефон
+    commissionAccount:
+      type: string
+      description: Счет списания комиссии
+    tariffDescription:
+      type: string
+      description: Текст для ознакомления с тарифом
+    client:
+      $ref: ./ClientDto.yaml
+    nonResidents:
+      type: array
+      description: Реквизиты нерезидента
+      items:
+        $ref: ./NonresidentDto.yaml
+    creditContract:
+      $ref: ./CreditContractDto.yaml
+    tranches:
+      type: array
+      description: Сведения о сумме и сроках привлечения (предоставления) траншей
+      items:
+        $ref: ./TrancheDto.yaml
+    interestPayments:
+      $ref: ./InterestPaymentsDto.yaml
+    otherPayments:
+      type: string
+      description: Иные платежи
+    debt:
+      $ref: ./DebtDto.yaml
+    paymentScheduleGrounds:
+      $ref: ./PaymentScheduleGroundsDto.yaml
+    paymentsScheduleList:
+      type: array
+      description: Описание графика платежей
+      items:
+        $ref: ./PaymentScheduleDto.yaml
+    investmentFlag:
+      type: boolean
+      description: Отметка о наличии прямого инвестирования
+    securityAmount:
+      type: string
+      description: Сумма залогового или иного обеспечения
+    contractors:
+      type: array
+      description: Информация о привлечении резидентом кредита, предоставленного нерезидентами на синдицированной основе
+      items:
+        $ref: ./ContractorDto.yaml
+    dealPassportNumber:
+      type: string
+      description: Уникальный номер кредитного договора
+    psOtherBankNumber:
+      type: string
+      description: Сведения о ранее присвоенном уникальном номере ПС
+    commentForBank:
+      type: string
+      description: Комментарий для Банка
+    basisDebtCode:
+      type: integer
+      description: Код основания возникновения задолженности
+      format: int32
+    psBranch:
+      type: string
+      description: Регистрационный номер уполномоченного банка/ филиал уполномоченного банка
+    dealPassportNumberDept:
+      type: string
+      description: Уникальный номер контракта/ кредитного договора

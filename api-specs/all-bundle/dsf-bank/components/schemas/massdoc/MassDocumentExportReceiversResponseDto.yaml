@@ -1,0 +1,9 @@
+type: object
+description: DTO ответа на запрос на выгрузку списка получателей массовой рассылки
+properties:
+  attachmentAccessData:
+    $ref: ../common/AttachmentAccessData.yaml
+    description: Информация для скачивания сформированного XLS-файла или ZIP-архива. Если это поле не пустое, значит выгрузка списка получателей завершена (выгружены все данные).
+  state:
+    $ref: ./MassDocumentExportReceiversStateDto.yaml
+    description: Объект-состояние, который необходимо передать 'как есть' в следующем запросе в случае необходимости продолжения выгрузки

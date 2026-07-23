@@ -1,0 +1,18 @@
+required:
+- description
+- fullDescription
+type: object
+properties:
+  code:
+    type: integer
+    description: Код типа счета
+    format: int64
+  description:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Краткое наименование
+  fullDescription:
+    type: string
+    description: Полное наименование
+description: Тип счета

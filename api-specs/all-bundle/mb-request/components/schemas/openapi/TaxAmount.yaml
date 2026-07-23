@@ -1,0 +1,7 @@
+type: object
+properties:
+  rate:
+    type: string
+  totalAmount:
+    type: string
+description: Информация о НДС

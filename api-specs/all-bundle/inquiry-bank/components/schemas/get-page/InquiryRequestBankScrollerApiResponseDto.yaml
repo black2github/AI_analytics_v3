@@ -1,0 +1,76 @@
+required:
+- inquiries
+- receptionEmailAgreement
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+    example: null
+  number:
+    type: integer
+    description: Номер запроса
+    format: int32
+    example: null
+  date:
+    type: string
+    description: Дата запроса
+    format: date-time
+    example: null
+  status:
+    type: string
+    description: Статус ЖЦ запроса справок для ЮЛ.
+    example: null
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_ABS
+    - EXPORT_REQUEST_TO_ABS_ERROR
+    - REQUEST_EXECUTED_BY_ABS
+    - COMMISSION_REQUEST_TO_ABS
+    - COMMISSION_REQUEST_EXPORTED_TO_ABS
+    - COMMISSION_REQUEST_TO_ABS_ERROR
+    - COMMISSION_EXECUTED_BY_ABS
+    - FILE_REQUEST_TO_ABS
+    - FILE_REQUEST_EXPORTED_TO_ABS
+    - FILE_REQUEST_TO_ABS_ERROR
+    - FILE_EXECUTED_BY_ABS
+    - PROCESSING_EXPORT_TO_TESSA
+    - PROCESSING_EXPORT_TO_TESSA_ERROR
+    - DOC_READY_TO_TESSA
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - EXECUTED
+    - REJECTED
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+    example: null
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+    example: null
+  receptionEmailAgreement:
+    type: boolean
+    description: Согласие на получение по email
+    example: null
+  bankClient:
+    $ref: ./InquiryBankClientScrollerResponseDto.yaml
+  inquiries:
+    type: array
+    description: Справки, запрашиваемой по запросу для ЮЛ
+    example: null
+    items:
+      $ref: ./InquiryBankScrollerApiResponseDto.yaml
+  otherInfo:
+    $ref: ./OtherInfoBankScrollerApiResponseDto.yaml
+description: Запрос справок для ЮЛ
+example: null

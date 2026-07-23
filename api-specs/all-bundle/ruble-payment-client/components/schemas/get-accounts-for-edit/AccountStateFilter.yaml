@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./AccountStateDto.yaml
+  notEq:
+    $ref: ./AccountStateDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./AccountStateDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./AccountStateDto.yaml
+  isNull:
+    type: boolean
+description: Состояние счета. in + equals.

@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientOfficial:
+    $ref: ./ClientOfficialWithoutBankClientDto.yaml
+  client:
+    $ref: ../common/BankClientPlainDto.yaml
+  otherClientOfficials:
+    uniqueItems: true
+    type: array
+    description: Другие представители физ лица в этом клиенте
+    items:
+      $ref: ./ClientOfficialWithoutBankClientDto.yaml
+description: Данные

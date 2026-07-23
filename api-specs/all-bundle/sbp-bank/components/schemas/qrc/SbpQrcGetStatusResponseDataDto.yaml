@@ -1,0 +1,27 @@
+type: object
+description: Данные ответа на запрос получения статуса динамического QR-кода
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  code:
+    type: string
+    description: Код ответа на запрос статуса QR кода
+  message:
+    type: string
+    description: Описание кода ответа на запрос
+  status:
+    type: string
+    description: Статус операции, инициированной динамическим QR кодом
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  trxId:
+    type: string
+    description: Идентификатор операции, инициированной динамическим QR кодом

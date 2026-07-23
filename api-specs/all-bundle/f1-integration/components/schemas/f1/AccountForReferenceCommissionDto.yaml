@@ -1,0 +1,22 @@
+type: object
+properties:
+  account:
+    type: string
+    description: Номер счета списания комиссии
+  department:
+    type: string
+    description: Подразделение
+  amount:
+    type: number
+    description: Сумма остатка на счете комиссии
+  individualTariff:
+    type: boolean
+    description: Признак индивидуального тарифа
+  referenceRates:
+    type: array
+    description: Информация о комиссионных тарифах по справкам для счета
+    items:
+      $ref: ./AccountForReferenceRateDto.yaml
+  summaryRate:
+    $ref: ./AccountForReferenceSummaryRateDto.yaml
+description: Информация о счете доступном для списания комиссии за предоставление справки

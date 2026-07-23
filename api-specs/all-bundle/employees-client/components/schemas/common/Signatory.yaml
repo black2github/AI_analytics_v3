@@ -1,0 +1,16 @@
+required:
+- id
+- signatureLevel
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  signatureLevel:
+    type: string
+    description: Уровень подписи
+    enum:
+    - LEVEL_1
+    - LEVEL_2
+description: Данные подписанта

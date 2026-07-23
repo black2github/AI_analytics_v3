@@ -1,0 +1,7 @@
+type: string
+description: Тип значения поля
+enum:
+- TEXT
+- REFERENCE
+- FILE_IN_FILE_STORAGE
+- FILE_IN_INNER_STORAGE

@@ -1,0 +1,86 @@
+type: object
+properties:
+  accountAssignment:
+    type: string
+    description: Назначение счета
+    enum:
+    - BASE
+    - GPS_GOZ
+  accountCurrency:
+    type: string
+    description: Валюта счета (Цифровой код)
+  accountEcoType:
+    type: integer
+    description: Тип счета ЭКО
+    format: int32
+  accountId:
+    type: string
+    description: Идентификатор счета в Ф1
+  accountName:
+    type: string
+    description: Название счета
+  accountNumber:
+    type: string
+    description: 'Номер закрываемого счета. Допустимый алфавит: числа 0-9'
+  additionalAgreements:
+    type: array
+    description: Список расторгаемых доп-соглашений
+    items:
+      $ref: ./AdditionalAgreementDto.yaml
+  branchName:
+    type: string
+    description: Наименование филиала обслуживания закрываемого счета
+  cacheBalance:
+    type: number
+    description: Остаток денежных средств на счете
+  checkBooks:
+    type: array
+    description: Чековые книжки
+    items:
+      $ref: ./CheckBookDto.yaml
+  closureDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  closureReason:
+    type: string
+    description: Причина закрытия
+  commissionDebt:
+    type: number
+    description: Задолженность по комиссии
+  dbsClosed:
+    type: boolean
+    description: Признак закрытия договора банковского счета
+  dbsDate:
+    type: string
+    description: Дата заключения договора банковского счета
+    format: date
+  dbsNumber:
+    type: string
+    description: Номер договора банковского счета
+  divisionAddress:
+    type: string
+    description: Адрес подразделения
+  divisionName:
+    type: string
+    description: Наименование подразделения
+  f1Type:
+    type: string
+    description: Тип счета Ф1
+    enum:
+    - PAYMENT
+    - GOZ
+  gozContractDate:
+    type: string
+    description: Дата заключения контракта ГОЗ
+    format: date
+  gozContractNumber:
+    type: string
+    description: Номер контракта ГОЗ
+  isGozContractFinished:
+    type: boolean
+    description: Признак исполнения контракта ГОЗ
+  isPsbTransfered:
+    type: boolean
+    description: Признак перевода в ПСБ
+description: Параметры закрываемого счета

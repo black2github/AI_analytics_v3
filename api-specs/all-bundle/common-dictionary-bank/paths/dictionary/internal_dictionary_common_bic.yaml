@@ -1,0 +1,66 @@
+post:
+  tags:
+  - API для справочника БИК
+  summary: Создать запись
+  description: 'Привилегии: hasAuthority(''BIC_CREATE'')'
+  operationId: createUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/CreateCommand«BicDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«BicDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+put:
+  tags:
+  - API для справочника БИК
+  summary: Обновить запись
+  description: 'Привилегии: hasAuthority(''BIC_UPDATE'')'
+  operationId: updateUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/UpdateCommand«BicDto,uuid»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«BicDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

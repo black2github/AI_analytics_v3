@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API смены статусов документа
+  summary: Сменить статус заявки на отклонено
+  description: 'Привилегии: DVK_BANK.CHANGE.STATUS'
+  operationId: rejectDocumentStatus
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GenericCommandDocumentBankChangeStatusRqDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorBoolean.yaml

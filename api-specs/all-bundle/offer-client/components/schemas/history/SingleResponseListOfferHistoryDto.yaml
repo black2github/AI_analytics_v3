@@ -1,0 +1,11 @@
+type: object
+properties:
+  data:
+    type: array
+    items:
+      $ref: ./OfferHistoryDto.yaml
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

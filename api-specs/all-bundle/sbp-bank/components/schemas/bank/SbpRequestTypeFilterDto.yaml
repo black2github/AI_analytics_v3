@@ -1,0 +1,57 @@
+type: object
+description: Фильтр по типу обобщенной заявки
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - TSP_CREATE
+    - TSP_UPDATE
+    - QRC_CREATE
+    - QRC_BLOCK
+    - QRC_SCHEDULE
+    - QRC_PAYMENT
+    - DISCONNECT
+    - TSP_BLOCK
+  notEq:
+    type: string
+    enum:
+    - TSP_CREATE
+    - TSP_UPDATE
+    - QRC_CREATE
+    - QRC_BLOCK
+    - QRC_SCHEDULE
+    - QRC_PAYMENT
+    - DISCONNECT
+    - TSP_BLOCK
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - TSP_CREATE
+      - TSP_UPDATE
+      - QRC_CREATE
+      - QRC_BLOCK
+      - QRC_SCHEDULE
+      - QRC_PAYMENT
+      - DISCONNECT
+      - TSP_BLOCK
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - TSP_CREATE
+      - TSP_UPDATE
+      - QRC_CREATE
+      - QRC_BLOCK
+      - QRC_SCHEDULE
+      - QRC_PAYMENT
+      - DISCONNECT
+      - TSP_BLOCK
+  isNull:
+    type: boolean

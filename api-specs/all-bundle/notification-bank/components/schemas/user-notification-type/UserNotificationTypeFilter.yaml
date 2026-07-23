@@ -1,0 +1,17 @@
+type: object
+properties:
+  systemId:
+    $ref: ../common/FilterValueDtoString.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  importance:
+    $ref: ./FilterValueEnumDtoImportanceDto.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  serviceEco:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр типов уведомлений

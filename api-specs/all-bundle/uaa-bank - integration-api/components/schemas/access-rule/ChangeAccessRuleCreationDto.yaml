@@ -1,0 +1,36 @@
+type: object
+properties:
+  createdAt:
+    type: string
+    description: Дата и время создания правила
+    format: date-time
+  origin:
+    type: string
+    description: Система источник
+    enum:
+    - BSS_ECO
+    - CFT_RKO
+  phoneNumber:
+    type: string
+    description: Номер телефона пользователя
+  email:
+    type: string
+    description: Электронная почта пользователя
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  comments:
+    type: string
+    description: Комментарий
+  clientId:
+    type: string
+    description: Идентификатор клиента (организации)
+    format: uuid
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ Клиента банка
+    format: uuid
+  needBlockContactData:
+    type: boolean
+    description: Необходимость блокировки контактных данных
+description: Набор данных для создания правила на блокировку / разблокировку

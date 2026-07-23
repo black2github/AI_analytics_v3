@@ -1,0 +1,1082 @@
+openapi: 3.0.1
+info:
+  title: Сервис аутентификации и авторизации. Банковская часть.
+  version: 3.8.0
+servers:
+- url: /uaa-internal
+security:
+- Bearer: []
+tags:
+- name: JwtSignKey
+  description: API для работы с ключами подписи JWT
+- name: TechnicalUser
+  description: АПИ для работы с техническими пользователями
+- name: UaaRole
+  description: API ролей доступа
+- name: UaaSegmentProductUser
+  description: Информация о списке связей сегментов с продуктами для пользователя
+- name: ProfileBankV2
+  description: API для работы с информацией о профиле пользователя V2
+- name: RoleNotification
+  description: Шаблоны уведомления об изменении прав доступа
+- name: UaaUser
+  description: Пользователи UAA
+- name: AbacRuleView
+  description: Rest API для правил отображения записей
+- name: Token
+  description: API получения токена OAuth 2.0
+- name: PartnersBank
+  description: API для работы с компаниями-партнёрами банка
+- name: MobileBlacklist
+  description: API для работы с чёрным списком мобильных устройств клиента
+- name: OAuth2UserActiveApplication
+  description: АПИ для работы с активными приложениями OAuth2 пользователя
+- name: Application
+  description: API для работы с приложениями OAuth 2.0
+- name: AdminClientUserScroller
+  description: API скроллера пользователей клиента
+- name: UaaSegment
+  description: API сегментов доступа
+- name: AdminClientUserComment
+  description: API для работы с комментариями пользователей клиента
+- name: NetAddressFilterRule
+  description: API правил IP/MAC фильтрации
+- name: ProfileBank
+  description: API для работы с информацией о профиле пользователя
+- name: AccessGroup
+  description: API Групп доступа
+- name: UvedMigration
+  description: Миграция пользователей УВЭД
+- name: Logout
+  description: API для завершения сессии пользователя
+- name: UserLoginCrt
+  description: Сертификаты для входа
+- name: Authorization
+  description: API авторизации OAuth 2.0
+- name: DiscoveryV2
+  description: OpenID Connect discovery API V2
+- name: OAuth2Application
+  description: АПИ для работы с приложениями OAuth2
+- name: UaaAuthority
+  description: API привилегий
+- name: NetAddressFilter
+  description: API IP/MAC фильтрации
+- name: MfaCloudLoginSign
+  description: API облачной подписи используемое при MFA аутентификации
+- name: TransportToken
+  description: API для получения транспортного токена
+- name: AbacGrantAccessRule
+  description: Правило предоставления доступа по реквизиту
+- name: UaaRoleTemplate
+  description: API шаблонов ролей доступа
+- name: MfaChain
+  description: MfaChain
+- name: Approval
+  description: API для работы с одобрениями OAuth 2.0
+- name: MfaTotpUser
+  description: Данные аппаратных генераторов токенов для пользователей
+- name: BankUser
+  description: Банковские пользователи
+- name: Discovery
+  description: OpenID Connect discovery API
+- name: UaaAuthorityForceUpdate
+  description: АПИ принудительной проливки привилегий сервисов без их перезагрузки
+- name: Segment
+  description: Доступные сегменты
+- name: CommonUserInfo
+  description: Информация о пользователях
+- name: UserInfo
+  description: OpenID Connect userinfo API
+- name: ExternalToken
+  description: API для получения токена внешней системы
+- name: Session
+  description: Сессии
+- name: MfaChallenge
+  description: API многофакторной аутентификации (MFA)
+- name: AdminClientUser
+  description: API для работы с пользователями клиента
+- name: ClientUserWebAuthn
+  description: API для работы с WebAuthn (passkey)
+- name: ConfirmationRequest
+  description: АПИ для работы запросами на подтверждение
+- name: BankUserScroller
+  description: API скроллера пользователей банка
+- name: AbacConditionFind
+  description: Rest API для доступа по реквизиту. Поиск выражения.
+- name: AbacConditionFindV2
+  description: Rest API для доступа по реквизиту V2
+- name: AbacCondition
+  description: Rest API для доступа по реквизиту
+- name: Login
+  description: API для аутентификации пользователя
+paths:
+  /v2/segment:
+    $ref: ./paths/segment/v2_segment.yaml
+  /v2/role:
+    $ref: ./paths/role/v2_role.yaml
+  /v2/authority:
+    $ref: ./paths/authority/v2_authority.yaml
+  /user:
+    $ref: ./paths/user/user.yaml
+  /user/add-login-certificate:
+    $ref: ./paths/add-login-certificate/user_add_login_certificate.yaml
+  /user-info/{id}:
+    $ref: ./paths/{id}/user_info_id.yaml
+  /totp:
+    $ref: ./paths/totp/totp.yaml
+  /net-address-filter/{id}:
+    $ref: ./paths/{id}/net_address_filter_id.yaml
+  /net-address-filter/with-rules/{id}:
+    $ref: ./paths/with-rules/net_address_filter_with_rules_id.yaml
+  /net-address-filter-rule/{id}:
+    $ref: ./paths/{id}/net_address_filter_rule_id.yaml
+  /mobile/device/black-list/{id}:
+    $ref: ./paths/device/mobile_device_black_list_id.yaml
+  /mfachain:
+    $ref: ./paths/mfachain/mfachain.yaml
+  /login/change/password/eco/{userId}:
+    $ref: ./paths/change/login_change_password_eco_userId.yaml
+  /admin/technical-user:
+    $ref: ./paths/technical-user/admin_technical_user.yaml
+  /admin/oauth/application:
+    $ref: ./paths/oauth/admin_oauth_application.yaml
+  /admin/oauth/application/enable-auth:
+    $ref: ./paths/oauth/admin_oauth_application_enable_auth.yaml
+  /admin/oauth/application/disable-auth:
+    $ref: ./paths/oauth/admin_oauth_application_disable_auth.yaml
+  /admin/clientuser:
+    $ref: ./paths/clientuser/admin_clientuser.yaml
+  /admin/clientuser/esk-id:
+    $ref: ./paths/clientuser/admin_clientuser_esk_id.yaml
+  /admin/access-rule:
+    $ref: ./paths/access-rule/admin_access_rule.yaml
+  /access-group/{id}:
+    $ref: ./paths/{id}/access_group_id.yaml
+  /abac/ruleview/{id}:
+    $ref: ./paths/ruleview/abac_ruleview_id.yaml
+  /abac/condition:
+    $ref: ./paths/condition/abac_condition.yaml
+  /v2/segment/get-page:
+    $ref: ./paths/segment/v2_segment_get_page.yaml
+  /v2/segment/get-infos-page:
+    $ref: ./paths/segment/v2_segment_get_infos_page.yaml
+  /v2/segment/category:
+    $ref: ./paths/segment/v2_segment_category.yaml
+  /v2/role/product/get-page:
+    $ref: ./paths/role/v2_role_product_get_page.yaml
+  /v2/role/get-page:
+    $ref: ./paths/role/v2_role_get_page.yaml
+  /v2/role/get-infos-page:
+    $ref: ./paths/role/v2_role_get_infos_page.yaml
+  /v2/role/category:
+    $ref: ./paths/role/v2_role_category.yaml
+  /v2/authority/get-page:
+    $ref: ./paths/authority/v2_authority_get_page.yaml
+  /user/v2/user-authorities-fallback:
+    $ref: ./paths/v2/user_v2_user_authorities_fallback.yaml
+  /user/user-authorities:
+    $ref: ./paths/user-authorities/user_user_authorities.yaml
+  /user/unblock:
+    $ref: ./paths/unblock/user_unblock.yaml
+  /user/unblockList:
+    $ref: ./paths/unblockList/user_unblockList.yaml
+  /user/toggle-block-list:
+    $ref: ./paths/toggle-block-list/user_toggle_block_list.yaml
+  /user/is-role-conflict/{roleId}:
+    $ref: ./paths/is-role-conflict/user_is_role_conflict_roleId.yaml
+  /user/find-client-official-ids:
+    $ref: ./paths/find-client-official-ids/user_find_client_official_ids.yaml
+  /user/client-official-roles-exist:
+    $ref: ./paths/client-official-roles-exist/user_client_official_roles_exist.yaml
+  /user/client-official-role-exist:
+    $ref: ./paths/client-official-role-exist/user_client_official_role_exist.yaml
+  /user/block:
+    $ref: ./paths/block/user_block.yaml
+  /user/blockList:
+    $ref: ./paths/blockList/user_blockList.yaml
+  /user/add-role-by-external-system:
+    $ref: ./paths/add-role-by-external-system/user_add_role_by_external_system.yaml
+  /user-login-crt/certificate/filter:
+    $ref: ./paths/certificate/user_login_crt_certificate_filter.yaml
+  /user-login-crt/certificate/contains-any:
+    $ref: ./paths/certificate/user_login_crt_certificate_contains_any.yaml
+  /user-info/by-ids:
+    $ref: ./paths/by-ids/user_info_by_ids.yaml
+  /transport/oauth/token:
+    $ref: ./paths/oauth/transport_oauth_token.yaml
+  /totp/uploadkeys:
+    $ref: ./paths/uploadkeys/totp_uploadkeys.yaml
+  /sessions/set-need-refresh-token-for-user-ids:
+    $ref: ./paths/set-need-refresh-token-for-user-ids/sessions_set_need_refresh_token_for_user_ids.yaml
+  /sessions/get-page:
+    $ref: ./paths/get-page/sessions_get_page.yaml
+  /segment/delete:
+    $ref: ./paths/delete/segment_delete.yaml
+  /segment/delete-by-client-official-id:
+    $ref: ./paths/delete-by-client-official-id/segment_delete_by_client_official_id.yaml
+  /segment/add:
+    $ref: ./paths/add/segment_add.yaml
+  /oauth/token:
+    $ref: ./paths/token/oauth_token.yaml
+  /oauth/token/reset-refresh-flag:
+    $ref: ./paths/token/oauth_token_reset_refresh_flag.yaml
+  /oauth/token/introspect:
+    $ref: ./paths/token/oauth_token_introspect.yaml
+  /oauth/mfa/cloud-sign/sign:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_sign.yaml
+  /oauth/mfa/cloud-sign/search-operation:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_search_operation.yaml
+  /oauth/mfa/cloud-sign/search-operation-in-dss:
+    $ref: ./paths/mfa/oauth_mfa_cloud_sign_search_operation_in_dss.yaml
+  /oauth/mfa/challenge/totp:
+    $ref: ./paths/mfa/oauth_mfa_challenge_totp.yaml
+  /oauth/mfa/challenge/select:
+    $ref: ./paths/mfa/oauth_mfa_challenge_select.yaml
+  /oauth/mfa/challenge/otp:
+    $ref: ./paths/mfa/oauth_mfa_challenge_otp.yaml
+  /oauth/mfa/challenge/list:
+    $ref: ./paths/mfa/oauth_mfa_challenge_list.yaml
+  /oauth/mfa/challenge/certificate:
+    $ref: ./paths/mfa/oauth_mfa_challenge_certificate.yaml
+  /oauth/authorize:
+    $ref: ./paths/authorize/oauth_authorize.yaml
+  /oauth/approvals/{id}/deny:
+    $ref: ./paths/approvals/oauth_approvals_id_deny.yaml
+  /oauth/approvals/{id}/approve:
+    $ref: ./paths/approvals/oauth_approvals_id_approve.yaml
+  /oauth/applications:
+    $ref: ./paths/applications/oauth_applications.yaml
+  /net-address-filter:
+    $ref: ./paths/net-address-filter/net_address_filter.yaml
+  /net-address-filter/with-rules:
+    $ref: ./paths/with-rules/net_address_filter_with_rules.yaml
+  /net-address-filter/get-page:
+    $ref: ./paths/get-page/net_address_filter_get_page.yaml
+  /net-address-filter-rule:
+    $ref: ./paths/net-address-filter-rule/net_address_filter_rule.yaml
+  /net-address-filter-rule/rules/enabled/{state}:
+    $ref: ./paths/rules/net_address_filter_rule_rules_enabled_state.yaml
+  /net-address-filter-rule/rules/delete:
+    $ref: ./paths/rules/net_address_filter_rule_rules_delete.yaml
+  /mobile/device/black-list:
+    $ref: ./paths/device/mobile_device_black_list.yaml
+  /mobile/device/black-list/import-file:
+    $ref: ./paths/device/mobile_device_black_list_import_file.yaml
+  /mobile/device/black-list/get-page:
+    $ref: ./paths/device/mobile_device_black_list_get_page.yaml
+  /mobile/device/black-list/export-file:
+    $ref: ./paths/device/mobile_device_black_list_export_file.yaml
+  /mobile/device/black-list/delete:
+    $ref: ./paths/device/mobile_device_black_list_delete.yaml
+  /migration/uved/task-2:
+    $ref: ./paths/uved/migration_uved_task_2.yaml
+  /migration/uved/task-1:
+    $ref: ./paths/uved/migration_uved_task_1.yaml
+  /migration/uved/find-confirmed-users-by-logins:
+    $ref: ./paths/uved/migration_uved_find_confirmed_users_by_logins.yaml
+  /migration/uved/find-client-users-uved-roles:
+    $ref: ./paths/uved/migration_uved_find_client_users_uved_roles.yaml
+  /mfachain/user/{id}/all:
+    $ref: ./paths/user/mfachain_user_id_all.yaml
+  /mfachain/get-page:
+    $ref: ./paths/get-page/mfachain_get_page.yaml
+  /logout:
+    $ref: ./paths/logout/logout.yaml
+  /logout/v2:
+    $ref: ./paths/v2/logout_v2.yaml
+  /login:
+    $ref: ./paths/login/login.yaml
+  /external/oauth/token:
+    $ref: ./paths/oauth/external_oauth_token.yaml
+  /confirmation-request:
+    $ref: ./paths/confirmation-request/confirmation_request.yaml
+  /confirmation-request/check:
+    $ref: ./paths/check/confirmation_request_check.yaml
+  /authority/force-update/all:
+    $ref: ./paths/force-update/authority_force_update_all.yaml
+  /admin/technical-user/{id}/revoke-role:
+    $ref: ./paths/technical-user/admin_technical_user_id_revoke_role.yaml
+  /admin/technical-user/{id}/assign-role:
+    $ref: ./paths/technical-user/admin_technical_user_id_assign_role.yaml
+  /admin/technical-user/get-page:
+    $ref: ./paths/technical-user/admin_technical_user_get_page.yaml
+  /admin/role-notification/get-page:
+    $ref: ./paths/role-notification/admin_role_notification_get_page.yaml
+  /admin/oauth/user/application/get-page:
+    $ref: ./paths/oauth/admin_oauth_user_application_get_page.yaml
+  /admin/oauth/application/get-page:
+    $ref: ./paths/oauth/admin_oauth_application_get_page.yaml
+  /admin/jwt-sign-key/{id}/revoke:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id_revoke.yaml
+  /admin/jwt-sign-key/{id}/restore:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id_restore.yaml
+  /admin/jwt-sign-key/{id}/delete:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id_delete.yaml
+  /admin/jwt-sign-key/{id}/activate:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id_activate.yaml
+  /admin/jwt-sign-key/import:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_import.yaml
+  /admin/jwt-sign-key/get-page:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_get_page.yaml
+  /admin/jwt-sign-key/generate:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_generate.yaml
+  /admin/clientuser/{userId}/product/revoke-role:
+    $ref: ./paths/clientuser/admin_clientuser_userId_product_revoke_role.yaml
+  /admin/clientuser/{userId}/product/assign-role:
+    $ref: ./paths/clientuser/admin_clientuser_userId_product_assign_role.yaml
+  /admin/clientuser/{userId}/esia/unbind:
+    $ref: ./paths/clientuser/admin_clientuser_userId_esia_unbind.yaml
+  /admin/clientuser/{userId}/access-group:
+    $ref: ./paths/clientuser/admin_clientuser_userId_access_group.yaml
+  /admin/clientuser/{id}/roles/get-page:
+    $ref: ./paths/clientuser/admin_clientuser_id_roles_get_page.yaml
+  /admin/clientuser/{id}/revoke-role:
+    $ref: ./paths/clientuser/admin_clientuser_id_revoke_role.yaml
+  /admin/clientuser/{id}/assign-roles:
+    $ref: ./paths/clientuser/admin_clientuser_id_assign_roles.yaml
+  /admin/clientuser/{id}/assign-role:
+    $ref: ./paths/clientuser/admin_clientuser_id_assign_role.yaml
+  /admin/clientuser/switch-change-contact-data:
+    $ref: ./paths/clientuser/admin_clientuser_switch_change_contact_data.yaml
+  /admin/clientuser/scroller/get-page:
+    $ref: ./paths/clientuser/admin_clientuser_scroller_get_page.yaml
+  /admin/clientuser/get-slice:
+    $ref: ./paths/clientuser/admin_clientuser_get_slice.yaml
+  /admin/clientuser/get-page:
+    $ref: ./paths/clientuser/admin_clientuser_get_page.yaml
+  /admin/clientuser/get-page-user-access-group:
+    $ref: ./paths/clientuser/admin_clientuser_get_page_user_access_group.yaml
+  /admin/clientuser/findByUaaId:
+    $ref: ./paths/clientuser/admin_clientuser_findByUaaId.yaml
+  /admin/clientuser/findAllByUaaId:
+    $ref: ./paths/clientuser/admin_clientuser_findAllByUaaId.yaml
+  /admin/clientuser/find/short/get-page:
+    $ref: ./paths/clientuser/admin_clientuser_find_short_get_page.yaml
+  /admin/clientuser/find/light:
+    $ref: ./paths/clientuser/admin_clientuser_find_light.yaml
+  /admin/clientuser/find/all/light:
+    $ref: ./paths/clientuser/admin_clientuser_find_all_light.yaml
+  /admin/clientuser/find-all/esk-ids:
+    $ref: ./paths/clientuser/admin_clientuser_find_all_esk_ids.yaml
+  /admin/clientuser/disable-bio-pin:
+    $ref: ./paths/clientuser/admin_clientuser_disable_bio_pin.yaml
+  /admin/clientuser/completeRegister:
+    $ref: ./paths/clientuser/admin_clientuser_completeRegister.yaml
+  /admin/clientuser/comment/get-page:
+    $ref: ./paths/clientuser/admin_clientuser_comment_get_page.yaml
+  /admin/clientuser/changing-view-main-page:
+    $ref: ./paths/clientuser/admin_clientuser_changing_view_main_page.yaml
+  /admin/bankuser:
+    $ref: ./paths/bankuser/admin_bankuser.yaml
+  /admin/bankuser/{id}/toggle-block:
+    $ref: ./paths/bankuser/admin_bankuser_id_toggle_block.yaml
+  /admin/bankuser/{id}/revoke-role:
+    $ref: ./paths/bankuser/admin_bankuser_id_revoke_role.yaml
+  /admin/bankuser/{id}/edit-role:
+    $ref: ./paths/bankuser/admin_bankuser_id_edit_role.yaml
+  /admin/bankuser/{id}/assign-role:
+    $ref: ./paths/bankuser/admin_bankuser_id_assign_role.yaml
+  /admin/bankuser/short-info/get-page:
+    $ref: ./paths/bankuser/admin_bankuser_short_info_get_page.yaml
+  /admin/bankuser/searchAd:
+    $ref: ./paths/bankuser/admin_bankuser_searchAd.yaml
+  /admin/bankuser/scroller/get-page:
+    $ref: ./paths/bankuser/admin_bankuser_scroller_get_page.yaml
+  /admin/bankuser/getDetails:
+    $ref: ./paths/bankuser/admin_bankuser_getDetails.yaml
+  /admin/bankuser/get-page:
+    $ref: ./paths/bankuser/admin_bankuser_get_page.yaml
+  /admin/access-rule/v2/get-page:
+    $ref: ./paths/access-rule/admin_access_rule_v2_get_page.yaml
+  /admin/access-rule/v2/category:
+    $ref: ./paths/access-rule/admin_access_rule_v2_category.yaml
+  /admin/access-rule/get-page:
+    $ref: ./paths/access-rule/admin_access_rule_get_page.yaml
+  /admin/access-rule/execute-for-client-user/{id}:
+    $ref: ./paths/access-rule/admin_access_rule_execute_for_client_user_id.yaml
+  /admin/access-rule/category:
+    $ref: ./paths/access-rule/admin_access_rule_category.yaml
+  /access-rule:
+    $ref: ./paths/access-rule/access_rule.yaml
+  /access-group:
+    $ref: ./paths/access-group/access_group.yaml
+  /access-group/get-page:
+    $ref: ./paths/get-page/access_group_get_page.yaml
+  /abac/ruleview:
+    $ref: ./paths/ruleview/abac_ruleview.yaml
+  /abac/ruleview/get-page:
+    $ref: ./paths/ruleview/abac_ruleview_get_page.yaml
+  /abac/condition/v2/find-struct:
+    $ref: ./paths/condition/abac_condition_v2_find_struct.yaml
+  /abac/condition/get-page:
+    $ref: ./paths/condition/abac_condition_get_page.yaml
+  /abac/condition/find-struct:
+    $ref: ./paths/condition/abac_condition_find_struct.yaml
+  /abac/condition/category:
+    $ref: ./paths/condition/abac_condition_category.yaml
+  /abac/abac-grant-access-rule:
+    $ref: ./paths/abac-grant-access-rule/abac_abac_grant_access_rule.yaml
+  /abac/abac-grant-access-rule/get-page:
+    $ref: ./paths/abac-grant-access-rule/abac_abac_grant_access_rule_get_page.yaml
+  /abac/abac-grant-access-rule/category:
+    $ref: ./paths/abac-grant-access-rule/abac_abac_grant_access_rule_category.yaml
+  /v2/segment/{id}:
+    $ref: ./paths/segment/v2_segment_id.yaml
+  /v2/segment/is-not-used/{id}:
+    $ref: ./paths/segment/v2_segment_is_not_used_id.yaml
+  /v2/segment/get-all-infos:
+    $ref: ./paths/segment/v2_segment_get_all_infos.yaml
+  /v2/role/{id}:
+    $ref: ./paths/role/v2_role_id.yaml
+  /v2/role/is-not-used/{id}:
+    $ref: ./paths/role/v2_role_is_not_used_id.yaml
+  /v2/role/get-all-infos:
+    $ref: ./paths/role/v2_role_get_all_infos.yaml
+  /v2/role-template/{id}:
+    $ref: ./paths/role-template/v2_role_template_id.yaml
+  /v2/profile:
+    $ref: ./paths/profile/v2_profile.yaml
+  /v2/authority/{id}:
+    $ref: ./paths/authority/v2_authority_id.yaml
+  /v2/authority/get-all-infos:
+    $ref: ./paths/authority/v2_authority_get_all_infos.yaml
+  /v2/.well-known/openid-configuration:
+    $ref: ./paths/.well-known/v2_well_known_openid_configuration.yaml
+  /v2/.well-known/jwks.json:
+    $ref: ./paths/.well-known/v2_well_known_jwks_json.yaml
+  /user/{id}:
+    $ref: ./paths/{id}/user_id.yaml
+  /user/{id}/has-active-session:
+    $ref: ./paths/{id}/user_id_has_active_session.yaml
+  /user/user-authorities/{id}:
+    $ref: ./paths/user-authorities/user_user_authorities_id.yaml
+  /user/user-authorities-fallback/{id}:
+    $ref: ./paths/user-authorities-fallback/user_user_authorities_fallback_id.yaml
+  /user/is-role-conflict/{userId}/{roleId}:
+    $ref: ./paths/is-role-conflict/user_is_role_conflict_userId_roleId.yaml
+  /user-info/user-authorities:
+    $ref: ./paths/user-authorities/user_info_user_authorities.yaml
+  /totp/{id}:
+    $ref: ./paths/{id}/totp_id.yaml
+  /segment/get-list/{userId}/{clientId}:
+    $ref: ./paths/get-list/segment_get_list_userId_clientId.yaml
+  /segment-product/{userId}:
+    $ref: ./paths/{userId}/segment_product_userId.yaml
+  /profile:
+    $ref: ./paths/profile/profile.yaml
+  /oauth/open-id/userinfo:
+    $ref: ./paths/open-id/oauth_open_id_userinfo.yaml
+  /oauth/approvals/{id}:
+    $ref: ./paths/approvals/oauth_approvals_id.yaml
+  /net-address-filter-rule/find-by-net-address-filter-id/{id}:
+    $ref: ./paths/find-by-net-address-filter-id/net_address_filter_rule_find_by_net_address_filter_id_id.yaml
+  /mfachain/{id}:
+    $ref: ./paths/{id}/mfachain_id.yaml
+  /mfachain/user/default/{id}:
+    $ref: ./paths/user/mfachain_user_default_id.yaml
+  /mfachain/user/available/{id}:
+    $ref: ./paths/user/mfachain_user_available_id.yaml
+  /login/complete/registration/eco/{userId}/form-state:
+    $ref: ./paths/complete/login_complete_registration_eco_userId_form_state.yaml
+  /login/change/password/eco/{userId}/form-state:
+    $ref: ./paths/change/login_change_password_eco_userId_form_state.yaml
+  /idp/partners:
+    $ref: ./paths/partners/idp_partners.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /confirmation-request/{requestId}:
+    $ref: ./paths/{requestId}/confirmation_request_requestId.yaml
+  /admin/technical-user/{id}:
+    $ref: ./paths/technical-user/admin_technical_user_id.yaml
+  /admin/technical-user/{id}/roles:
+    $ref: ./paths/technical-user/admin_technical_user_id_roles.yaml
+  /admin/oauth/application/{id}:
+    $ref: ./paths/oauth/admin_oauth_application_id.yaml
+  /admin/oauth/application/scope-names:
+    $ref: ./paths/oauth/admin_oauth_application_scope_names.yaml
+  /admin/jwt-sign-key/{id}:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id.yaml
+  /admin/jwt-sign-key/{id}/history:
+    $ref: ./paths/jwt-sign-key/admin_jwt_sign_key_id_history.yaml
+  /admin/clientuser/{userId}/webauthn/settings:
+    $ref: ./paths/clientuser/admin_clientuser_userId_webauthn_settings.yaml
+  /admin/clientuser/{id}:
+    $ref: ./paths/clientuser/admin_clientuser_id.yaml
+  /admin/clientuser/{id}/roles:
+    $ref: ./paths/clientuser/admin_clientuser_id_roles.yaml
+  /admin/clientuser/{id}/mobile-props:
+    $ref: ./paths/clientuser/admin_clientuser_id_mobile_props.yaml
+  /admin/clientuser/top/{limit}:
+    $ref: ./paths/clientuser/admin_clientuser_top_limit.yaml
+  /admin/clientuser/enriched/{id}:
+    $ref: ./paths/clientuser/admin_clientuser_enriched_id.yaml
+  /admin/clientuser/enriched/by-client-user-id/{id}:
+    $ref: ./paths/clientuser/admin_clientuser_enriched_by_client_user_id_id.yaml
+  /admin/clientuser/details/{id}:
+    $ref: ./paths/clientuser/admin_clientuser_details_id.yaml
+  /admin/clientuser/count-all-personalized:
+    $ref: ./paths/clientuser/admin_clientuser_count_all_personalized.yaml
+  /admin/bankuser/{id}:
+    $ref: ./paths/bankuser/admin_bankuser_id.yaml
+  /admin/bankuser/{id}/roles:
+    $ref: ./paths/bankuser/admin_bankuser_id_roles.yaml
+  /admin/bankuser/top/{limit}:
+    $ref: ./paths/bankuser/admin_bankuser_top_limit.yaml
+  /admin/access-rule/{id}:
+    $ref: ./paths/access-rule/admin_access_rule_id.yaml
+  /admin/access-rule/{id}/history:
+    $ref: ./paths/access-rule/admin_access_rule_id_history.yaml
+  /access-group/get-all-infos:
+    $ref: ./paths/get-all-infos/access_group_get_all_infos.yaml
+  /abac/condition/{id}:
+    $ref: ./paths/condition/abac_condition_id.yaml
+  /abac/abac-grant-access-rule/{id}:
+    $ref: ./paths/abac-grant-access-rule/abac_abac_grant_access_rule_id.yaml
+  /.well-known/openid-configuration:
+    $ref: ./paths/openid-configuration/well_known_openid_configuration.yaml
+  /.well-known/jwks.json:
+    $ref: ./paths/jwks.json/well_known_jwks_json.yaml
+  /user/delete-user-roles-by-official/{clientOfficialId}:
+    $ref: ./paths/delete-user-roles-by-official/user_delete_user_roles_by_official_clientOfficialId.yaml
+  /sessions/{id}:
+    $ref: ./paths/{id}/sessions_id.yaml
+  /sessions/client-active:
+    $ref: ./paths/client-active/sessions_client_active.yaml
+  /sessions/active:
+    $ref: ./paths/active/sessions_active.yaml
+  /admin/clientuser/{userId}/webauthn/credentials/{credentialId}:
+    $ref: ./paths/clientuser/admin_clientuser_userId_webauthn_credentials_credentialId.yaml
+  /admin/clientuser/{userId}/access-group/{userAccessGroupId}:
+    $ref: ./paths/clientuser/admin_clientuser_userId_access_group_userAccessGroupId.yaml
+components:
+  schemas:
+    SingleResponseVoid:
+      $ref: ./components/schemas/common/SingleResponseVoid.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    CreateResponse:
+      $ref: ./components/schemas/common/CreateResponse.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    UaaSegmentDto:
+      $ref: ./components/schemas/common/UaaSegmentDto.yaml
+    UpdateCommandUaaSegmentDtoUUID:
+      $ref: ./components/schemas/segment/UpdateCommandUaaSegmentDtoUUID.yaml
+    UaaAuthorityDto:
+      $ref: ./components/schemas/common/UaaAuthorityDto.yaml
+    UaaRoleAuthorityDto:
+      $ref: ./components/schemas/common/UaaRoleAuthorityDto.yaml
+    UaaRoleBankDto:
+      $ref: ./components/schemas/common/UaaRoleBankDto.yaml
+    UpdateCommandUaaRoleBankDtoUUID:
+      $ref: ./components/schemas/role/UpdateCommandUaaRoleBankDtoUUID.yaml
+    ScopeNameDto:
+      $ref: ./components/schemas/common/ScopeNameDto.yaml
+    UaaAuthorityBankDto:
+      $ref: ./components/schemas/authority/UaaAuthorityBankDto.yaml
+    UpdateCommandUaaAuthorityBankDtoUUID:
+      $ref: ./components/schemas/authority/UpdateCommandUaaAuthorityBankDtoUUID.yaml
+    AvailableSegmentDto:
+      $ref: ./components/schemas/common/AvailableSegmentDto.yaml
+    UaaUserClientInfo:
+      $ref: ./components/schemas/common/UaaUserClientInfo.yaml
+    UaaUserRoleBankDto:
+      $ref: ./components/schemas/common/UaaUserRoleBankDto.yaml
+    UaaUserRoleBranchDto:
+      $ref: ./components/schemas/common/UaaUserRoleBranchDto.yaml
+    UaaUserShortInfoBankDto:
+      $ref: ./components/schemas/common/UaaUserShortInfoBankDto.yaml
+    UpdateCommandUserBankDtoUUID:
+      $ref: ./components/schemas/user/UpdateCommandUserBankDtoUUID.yaml
+    UserBankDto:
+      $ref: ./components/schemas/common/UserBankDto.yaml
+    AddLoginCertificateRqBankDto:
+      $ref: ./components/schemas/add-login-certificate/AddLoginCertificateRqBankDto.yaml
+    MfaTotpUserBankDto:
+      $ref: ./components/schemas/totp/MfaTotpUserBankDto.yaml
+    UpdateCommandMfaTotpUserBankDtoUUID:
+      $ref: ./components/schemas/totp/UpdateCommandMfaTotpUserBankDtoUUID.yaml
+    GenericCommandNetAddressFilterStoreDto:
+      $ref: ./components/schemas/common/GenericCommandNetAddressFilterStoreDto.yaml
+    NetAddressFilterRuleStoreDto:
+      $ref: ./components/schemas/common/NetAddressFilterRuleStoreDto.yaml
+    NetAddressFilterStoreDto:
+      $ref: ./components/schemas/common/NetAddressFilterStoreDto.yaml
+    GenericCommandNetAddressFilterRuleStoreDto:
+      $ref: ./components/schemas/common/GenericCommandNetAddressFilterRuleStoreDto.yaml
+    BlacklistUpdateDto:
+      $ref: ./components/schemas/device/BlacklistUpdateDto.yaml
+    GenericCommandBlacklistUpdateDto:
+      $ref: ./components/schemas/device/GenericCommandBlacklistUpdateDto.yaml
+    MfaChainCatalogDto:
+      $ref: ./components/schemas/mfachain/MfaChainCatalogDto.yaml
+    MfaChainInfoBankDto:
+      $ref: ./components/schemas/mfachain/MfaChainInfoBankDto.yaml
+    UpdateCommandMfaChainInfoBankDtoUUID:
+      $ref: ./components/schemas/mfachain/UpdateCommandMfaChainInfoBankDtoUUID.yaml
+    ChangePasswordLoginCommand:
+      $ref: ./components/schemas/change/ChangePasswordLoginCommand.yaml
+    TechnicalUserModifyDto:
+      $ref: ./components/schemas/technical-user/TechnicalUserModifyDto.yaml
+    UpdateCommandTechnicalUserModifyDtoUUID:
+      $ref: ./components/schemas/technical-user/UpdateCommandTechnicalUserModifyDtoUUID.yaml
+    OAuth2ApplicationModifyRequestBankDto:
+      $ref: ./components/schemas/oauth/OAuth2ApplicationModifyRequestBankDto.yaml
+    ScopeDto:
+      $ref: ./components/schemas/common/ScopeDto.yaml
+    UpdateCommandOAuth2ApplicationModifyRequestBankDtoString:
+      $ref: ./components/schemas/oauth/UpdateCommandOAuth2ApplicationModifyRequestBankDtoString.yaml
+    OAuth2ApplicationAuthEnabledRequest:
+      $ref: ./components/schemas/oauth/OAuth2ApplicationAuthEnabledRequest.yaml
+    ClientUserBankDto:
+      $ref: ./components/schemas/clientuser/ClientUserBankDto.yaml
+    ClientUserConsentDto:
+      $ref: ./components/schemas/clientuser/ClientUserConsentDto.yaml
+    UpdateCommandClientUserBankDtoUUID:
+      $ref: ./components/schemas/clientuser/UpdateCommandClientUserBankDtoUUID.yaml
+    UpdateCommandStringUUID:
+      $ref: ./components/schemas/clientuser/UpdateCommandStringUUID.yaml
+    AccessRuleCreationDto:
+      $ref: ./components/schemas/access-rule/AccessRuleCreationDto.yaml
+    UpdateCommandAccessRuleCreationDtoUUID:
+      $ref: ./components/schemas/access-rule/UpdateCommandAccessRuleCreationDtoUUID.yaml
+    AccessRuleDto:
+      $ref: ./components/schemas/access-rule/AccessRuleDto.yaml
+    BankClientInfo:
+      $ref: ./components/schemas/access-rule/BankClientInfo.yaml
+    SingleResponseAccessRuleDto:
+      $ref: ./components/schemas/access-rule/SingleResponseAccessRuleDto.yaml
+    UaaRoleDto:
+      $ref: ./components/schemas/access-rule/UaaRoleDto.yaml
+    AccessGroupStoreDto:
+      $ref: ./components/schemas/common/AccessGroupStoreDto.yaml
+    GenericCommandAccessGroupStoreDto:
+      $ref: ./components/schemas/common/GenericCommandAccessGroupStoreDto.yaml
+    RestrictionAuthorityStoreDto:
+      $ref: ./components/schemas/common/RestrictionAuthorityStoreDto.yaml
+    RestrictionStoreDto:
+      $ref: ./components/schemas/common/RestrictionStoreDto.yaml
+    AbacRuleViewRecordDto:
+      $ref: ./components/schemas/ruleview/AbacRuleViewRecordDto.yaml
+    GenericCommandAbacRuleViewRecordDto:
+      $ref: ./components/schemas/ruleview/GenericCommandAbacRuleViewRecordDto.yaml
+    UpdateInfoDto:
+      $ref: ./components/schemas/common/UpdateInfoDto.yaml
+    AbacBankClientInfo:
+      $ref: ./components/schemas/condition/AbacBankClientInfo.yaml
+    AbacBusinessEntityBankDto:
+      $ref: ./components/schemas/condition/AbacBusinessEntityBankDto.yaml
+    AbacBusinessEntityConditionDto:
+      $ref: ./components/schemas/condition/AbacBusinessEntityConditionDto.yaml
+    AbacBusinessEntityRoleDto:
+      $ref: ./components/schemas/condition/AbacBusinessEntityRoleDto.yaml
+    AbacBusinessEntityUserBankDto:
+      $ref: ./components/schemas/condition/AbacBusinessEntityUserBankDto.yaml
+    RecursiveNode:
+      $ref: ./components/schemas/condition/RecursiveNode.yaml
+    RecursiveNodeOperand:
+      $ref: ./components/schemas/condition/RecursiveNodeOperand.yaml
+    UpdateCommandAbacBusinessEntityBankDtoUUID:
+      $ref: ./components/schemas/condition/UpdateCommandAbacBusinessEntityBankDtoUUID.yaml
+    CreateCommandUaaSegmentDto:
+      $ref: ./components/schemas/segment/CreateCommandUaaSegmentDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueEnumDtoUaaSegmentEntityTypeDto:
+      $ref: ./components/schemas/segment/FilterValueEnumDtoUaaSegmentEntityTypeDto.yaml
+    GetPageCommandUaaSegmentFilter:
+      $ref: ./components/schemas/segment/GetPageCommandUaaSegmentFilter.yaml
+    PageParamsUaaSegmentFilter:
+      $ref: ./components/schemas/segment/PageParamsUaaSegmentFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    UaaSegmentFilter:
+      $ref: ./components/schemas/segment/UaaSegmentFilter.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    CreateCommandUaaRoleBankDto:
+      $ref: ./components/schemas/role/CreateCommandUaaRoleBankDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandUaaRoleFilterBankDto:
+      $ref: ./components/schemas/role/GetPageCommandUaaRoleFilterBankDto.yaml
+    PageParamsUaaRoleFilterBankDto:
+      $ref: ./components/schemas/role/PageParamsUaaRoleFilterBankDto.yaml
+    UaaRoleFilterBankDto:
+      $ref: ./components/schemas/role/UaaRoleFilterBankDto.yaml
+    GetPageCommandUaaAuthorityFilter:
+      $ref: ./components/schemas/authority/GetPageCommandUaaAuthorityFilter.yaml
+    PageParamsUaaAuthorityFilter:
+      $ref: ./components/schemas/authority/PageParamsUaaAuthorityFilter.yaml
+    UaaAuthorityFilter:
+      $ref: ./components/schemas/authority/UaaAuthorityFilter.yaml
+    UserAuthorityFallbackRequestBankDto:
+      $ref: ./components/schemas/v2/UserAuthorityFallbackRequestBankDto.yaml
+    CheckUserAuthorityRequestBankDto:
+      $ref: ./components/schemas/user-authorities/CheckUserAuthorityRequestBankDto.yaml
+    ToggleBlockUsersRequest:
+      $ref: ./components/schemas/toggle-block-list/ToggleBlockUsersRequest.yaml
+    SegmentRolePairBankDto:
+      $ref: ./components/schemas/find-client-official-ids/SegmentRolePairBankDto.yaml
+    UaaClientOfficialIdsFindRequestBankDto:
+      $ref: ./components/schemas/find-client-official-ids/UaaClientOfficialIdsFindRequestBankDto.yaml
+    UaaClientOfficialRoleBankDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRoleBankDto.yaml
+    UaaClientOfficialRolesExistRequestBankDto:
+      $ref: ./components/schemas/client-official-roles-exist/UaaClientOfficialRolesExistRequestBankDto.yaml
+    UaaClientOfficialRoleExistCommandBankDto:
+      $ref: ./components/schemas/client-official-role-exist/UaaClientOfficialRoleExistCommandBankDto.yaml
+    AddRoleRq:
+      $ref: ./components/schemas/add-role-by-external-system/AddRoleRq.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/common/ListCommandUUID.yaml
+    TransportTokenRq:
+      $ref: ./components/schemas/oauth/TransportTokenRq.yaml
+    CreateCommandMfaTotpUserBankDto:
+      $ref: ./components/schemas/totp/CreateCommandMfaTotpUserBankDto.yaml
+    MfaTotpUploadKeysRequest:
+      $ref: ./components/schemas/uploadkeys/MfaTotpUploadKeysRequest.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoUserTypeDto:
+      $ref: ./components/schemas/common/FilterValueDtoUserTypeDto.yaml
+    GetPageCommandSessionFilter:
+      $ref: ./components/schemas/common/GetPageCommandSessionFilter.yaml
+    PageParamsSessionFilter:
+      $ref: ./components/schemas/common/PageParamsSessionFilter.yaml
+    SessionFilter:
+      $ref: ./components/schemas/common/SessionFilter.yaml
+    OAuth2Error:
+      $ref: ./components/schemas/common/OAuth2Error.yaml
+    TokenIntrospectionResponse:
+      $ref: ./components/schemas/token/TokenIntrospectionResponse.yaml
+    MfaCloudSignLoginRequest:
+      $ref: ./components/schemas/mfa/MfaCloudSignLoginRequest.yaml
+    MfaCloudSignOperationSearchRequest:
+      $ref: ./components/schemas/mfa/MfaCloudSignOperationSearchRequest.yaml
+    MfaChallengeCreateRequest:
+      $ref: ./components/schemas/mfa/MfaChallengeCreateRequest.yaml
+    MfaChainSelectRequest:
+      $ref: ./components/schemas/mfa/MfaChainSelectRequest.yaml
+    MfaChainListRequest:
+      $ref: ./components/schemas/mfa/MfaChainListRequest.yaml
+    OAuth2ApplicationOauthDto:
+      $ref: ./components/schemas/applications/OAuth2ApplicationOauthDto.yaml
+    OAuth2ApplicationModifyRequestOauthDto:
+      $ref: ./components/schemas/applications/OAuth2ApplicationModifyRequestOauthDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    GetPageCommandNetAddressFilterScrollerFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandNetAddressFilterScrollerFilter.yaml
+    NetAddressFilterScrollerFilter:
+      $ref: ./components/schemas/get-page/NetAddressFilterScrollerFilter.yaml
+    PageParamsNetAddressFilterScrollerFilter:
+      $ref: ./components/schemas/get-page/PageParamsNetAddressFilterScrollerFilter.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/rules/GenericCommandSetUUID.yaml
+    BlacklistImportRequestDto:
+      $ref: ./components/schemas/device/BlacklistImportRequestDto.yaml
+    GenericCommandBlacklistImportRequestDto:
+      $ref: ./components/schemas/device/GenericCommandBlacklistImportRequestDto.yaml
+    GetPageCommandMobileBlacklistFilter:
+      $ref: ./components/schemas/device/GetPageCommandMobileBlacklistFilter.yaml
+    MobileBlacklistFilter:
+      $ref: ./components/schemas/device/MobileBlacklistFilter.yaml
+    PageParamsMobileBlacklistFilter:
+      $ref: ./components/schemas/device/PageParamsMobileBlacklistFilter.yaml
+    BlacklistIdsRequestDto:
+      $ref: ./components/schemas/device/BlacklistIdsRequestDto.yaml
+    GenericCommandBlacklistIdsRequestDto:
+      $ref: ./components/schemas/device/GenericCommandBlacklistIdsRequestDto.yaml
+    UvedMigrationSegmentBankDto:
+      $ref: ./components/schemas/uved/UvedMigrationSegmentBankDto.yaml
+    CreateCommandMfaChainInfoBankDto:
+      $ref: ./components/schemas/mfachain/CreateCommandMfaChainInfoBankDto.yaml
+    ApplicationMfaChainViewDto:
+      $ref: ./components/schemas/user/ApplicationMfaChainViewDto.yaml
+    MfaChainViewDto:
+      $ref: ./components/schemas/user/MfaChainViewDto.yaml
+    OAuth2ApplicationViewDto:
+      $ref: ./components/schemas/user/OAuth2ApplicationViewDto.yaml
+    GetPageCommandMfaChainFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandMfaChainFilter.yaml
+    MfaChainFilter:
+      $ref: ./components/schemas/get-page/MfaChainFilter.yaml
+    PageParamsMfaChainFilter:
+      $ref: ./components/schemas/get-page/PageParamsMfaChainFilter.yaml
+    LoginRequestDto:
+      $ref: ./components/schemas/login/LoginRequestDto.yaml
+    PromoInfoDto:
+      $ref: ./components/schemas/login/PromoInfoDto.yaml
+    ExternalTokenRqDto:
+      $ref: ./components/schemas/oauth/ExternalTokenRqDto.yaml
+    ConfirmationRequestCreateCommandBankDto:
+      $ref: ./components/schemas/confirmation-request/ConfirmationRequestCreateCommandBankDto.yaml
+    ConfirmationRequestCheckDataBankDto:
+      $ref: ./components/schemas/check/ConfirmationRequestCheckDataBankDto.yaml
+    CreateCommandTechnicalUserModifyDto:
+      $ref: ./components/schemas/technical-user/CreateCommandTechnicalUserModifyDto.yaml
+    GetPageCommandTechnicalUserFilter:
+      $ref: ./components/schemas/technical-user/GetPageCommandTechnicalUserFilter.yaml
+    PageParamsTechnicalUserFilter:
+      $ref: ./components/schemas/technical-user/PageParamsTechnicalUserFilter.yaml
+    TechnicalUserFilter:
+      $ref: ./components/schemas/technical-user/TechnicalUserFilter.yaml
+    FilterValueEnumDtoRoleNotificationTypeDto:
+      $ref: ./components/schemas/role-notification/FilterValueEnumDtoRoleNotificationTypeDto.yaml
+    GetPageCommandRoleNotificationFilter:
+      $ref: ./components/schemas/role-notification/GetPageCommandRoleNotificationFilter.yaml
+    PageParamsRoleNotificationFilter:
+      $ref: ./components/schemas/role-notification/PageParamsRoleNotificationFilter.yaml
+    RoleNotificationFilter:
+      $ref: ./components/schemas/role-notification/RoleNotificationFilter.yaml
+    GetPageCommandOAuth2UserActiveApplicationFilter:
+      $ref: ./components/schemas/oauth/GetPageCommandOAuth2UserActiveApplicationFilter.yaml
+    OAuth2UserActiveApplicationFilter:
+      $ref: ./components/schemas/oauth/OAuth2UserActiveApplicationFilter.yaml
+    PageParamsOAuth2UserActiveApplicationFilter:
+      $ref: ./components/schemas/oauth/PageParamsOAuth2UserActiveApplicationFilter.yaml
+    CreateCommandOAuth2ApplicationModifyRequestBankDto:
+      $ref: ./components/schemas/oauth/CreateCommandOAuth2ApplicationModifyRequestBankDto.yaml
+    GetPageCommandOAuth2ApplicationFilter:
+      $ref: ./components/schemas/oauth/GetPageCommandOAuth2ApplicationFilter.yaml
+    OAuth2ApplicationFilter:
+      $ref: ./components/schemas/oauth/OAuth2ApplicationFilter.yaml
+    PageParamsOAuth2ApplicationFilter:
+      $ref: ./components/schemas/oauth/PageParamsOAuth2ApplicationFilter.yaml
+    GenericCommandJwtSignKeyImportRequestDto:
+      $ref: ./components/schemas/jwt-sign-key/GenericCommandJwtSignKeyImportRequestDto.yaml
+    JwtSignKeyImportRequestDto:
+      $ref: ./components/schemas/jwt-sign-key/JwtSignKeyImportRequestDto.yaml
+    FilterValueEnumDtoKeyAlgorithmDto:
+      $ref: ./components/schemas/jwt-sign-key/FilterValueEnumDtoKeyAlgorithmDto.yaml
+    FilterValueEnumDtoKeySetDto:
+      $ref: ./components/schemas/jwt-sign-key/FilterValueEnumDtoKeySetDto.yaml
+    FilterValueEnumDtoKeyStatusDto:
+      $ref: ./components/schemas/jwt-sign-key/FilterValueEnumDtoKeyStatusDto.yaml
+    FilterValueEnumDtoKeyTypeDto:
+      $ref: ./components/schemas/jwt-sign-key/FilterValueEnumDtoKeyTypeDto.yaml
+    GetPageCommandJwtSignKeyFilter:
+      $ref: ./components/schemas/jwt-sign-key/GetPageCommandJwtSignKeyFilter.yaml
+    JwtSignKeyFilter:
+      $ref: ./components/schemas/jwt-sign-key/JwtSignKeyFilter.yaml
+    PageParamsJwtSignKeyFilter:
+      $ref: ./components/schemas/jwt-sign-key/PageParamsJwtSignKeyFilter.yaml
+    GenericCommandJwtSignKeyGenerateRequestDto:
+      $ref: ./components/schemas/jwt-sign-key/GenericCommandJwtSignKeyGenerateRequestDto.yaml
+    JwtSignKeyGenerateRequestDto:
+      $ref: ./components/schemas/jwt-sign-key/JwtSignKeyGenerateRequestDto.yaml
+    AddConsentRq:
+      $ref: ./components/schemas/clientuser/AddConsentRq.yaml
+    ClientUserInfoBankDto:
+      $ref: ./components/schemas/clientuser/ClientUserInfoBankDto.yaml
+    RegisterCommandBankDto:
+      $ref: ./components/schemas/clientuser/RegisterCommandBankDto.yaml
+    RequestCaptchaDataDto:
+      $ref: ./components/schemas/clientuser/RequestCaptchaDataDto.yaml
+    GenericCommandUaaUserAccessGroupAssignBankDto:
+      $ref: ./components/schemas/clientuser/GenericCommandUaaUserAccessGroupAssignBankDto.yaml
+    UaaUserAccessGroupAssignBankDto:
+      $ref: ./components/schemas/clientuser/UaaUserAccessGroupAssignBankDto.yaml
+    GetPageCommandUaaUserRoleFilter:
+      $ref: ./components/schemas/clientuser/GetPageCommandUaaUserRoleFilter.yaml
+    PageParamsUaaUserRoleFilter:
+      $ref: ./components/schemas/clientuser/PageParamsUaaUserRoleFilter.yaml
+    UaaUserRoleFilter:
+      $ref: ./components/schemas/clientuser/UaaUserRoleFilter.yaml
+    AssignRoleDto:
+      $ref: ./components/schemas/clientuser/AssignRoleDto.yaml
+    UaaUserRolesAssignBankDto:
+      $ref: ./components/schemas/clientuser/UaaUserRolesAssignBankDto.yaml
+    SetCanChangeContactDataRq:
+      $ref: ./components/schemas/clientuser/SetCanChangeContactDataRq.yaml
+    ClientUserFilterBankDto:
+      $ref: ./components/schemas/clientuser/ClientUserFilterBankDto.yaml
+    FilterValueDtoZonedDateTime:
+      $ref: ./components/schemas/common/FilterValueDtoZonedDateTime.yaml
+    FilterValueEnumDtoUaaPartnerCompanyClassifierDto:
+      $ref: ./components/schemas/clientuser/FilterValueEnumDtoUaaPartnerCompanyClassifierDto.yaml
+    GetPageCommandClientUserFilterBankDto:
+      $ref: ./components/schemas/clientuser/GetPageCommandClientUserFilterBankDto.yaml
+    PageParamsClientUserFilterBankDto:
+      $ref: ./components/schemas/clientuser/PageParamsClientUserFilterBankDto.yaml
+    FilterValueEnumDtoUserTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoUserTypeDto.yaml
+    GetPageCommandUaaUserAccessGroupFilter:
+      $ref: ./components/schemas/clientuser/GetPageCommandUaaUserAccessGroupFilter.yaml
+    PageParamsUaaUserAccessGroupFilter:
+      $ref: ./components/schemas/clientuser/PageParamsUaaUserAccessGroupFilter.yaml
+    UaaUserAccessGroupFilter:
+      $ref: ./components/schemas/clientuser/UaaUserAccessGroupFilter.yaml
+    FindByIdCommand:
+      $ref: ./components/schemas/clientuser/FindByIdCommand.yaml
+    ClientUserShortSearchFilter:
+      $ref: ./components/schemas/clientuser/ClientUserShortSearchFilter.yaml
+    GetPageCommandClientUserShortSearchFilter:
+      $ref: ./components/schemas/clientuser/GetPageCommandClientUserShortSearchFilter.yaml
+    PageParamsClientUserShortSearchFilter:
+      $ref: ./components/schemas/clientuser/PageParamsClientUserShortSearchFilter.yaml
+    GenericCommandGetClientUsersByIdsRequest:
+      $ref: ./components/schemas/clientuser/GenericCommandGetClientUsersByIdsRequest.yaml
+    GetClientUsersByIdsRequest:
+      $ref: ./components/schemas/clientuser/GetClientUsersByIdsRequest.yaml
+    ListCommandString:
+      $ref: ./components/schemas/clientuser/ListCommandString.yaml
+    DisableBioPinBankRq:
+      $ref: ./components/schemas/clientuser/DisableBioPinBankRq.yaml
+    CheckSmsCodeCommandBankDto:
+      $ref: ./components/schemas/clientuser/CheckSmsCodeCommandBankDto.yaml
+    ClientUserCommentFilter:
+      $ref: ./components/schemas/clientuser/ClientUserCommentFilter.yaml
+    FilterValueEnumDtoClientUserCommentFunctionalityDto:
+      $ref: ./components/schemas/clientuser/FilterValueEnumDtoClientUserCommentFunctionalityDto.yaml
+    GetPageCommandClientUserCommentFilter:
+      $ref: ./components/schemas/clientuser/GetPageCommandClientUserCommentFilter.yaml
+    PageParamsClientUserCommentFilter:
+      $ref: ./components/schemas/clientuser/PageParamsClientUserCommentFilter.yaml
+    ChangeUserInterfaceTypeAdminRequest:
+      $ref: ./components/schemas/clientuser/ChangeUserInterfaceTypeAdminRequest.yaml
+    BankUserBankDto:
+      $ref: ./components/schemas/bankuser/BankUserBankDto.yaml
+    CreateCommandBankUserBankDto:
+      $ref: ./components/schemas/bankuser/CreateCommandBankUserBankDto.yaml
+    BankUserToggleBlockDto:
+      $ref: ./components/schemas/bankuser/BankUserToggleBlockDto.yaml
+    BankUserShortInfoFilter:
+      $ref: ./components/schemas/bankuser/BankUserShortInfoFilter.yaml
+    GetPageCommandBankUserShortInfoFilter:
+      $ref: ./components/schemas/bankuser/GetPageCommandBankUserShortInfoFilter.yaml
+    PageParamsBankUserShortInfoFilter:
+      $ref: ./components/schemas/bankuser/PageParamsBankUserShortInfoFilter.yaml
+    SearchAdCommand:
+      $ref: ./components/schemas/bankuser/SearchAdCommand.yaml
+    BankUserFilter:
+      $ref: ./components/schemas/bankuser/BankUserFilter.yaml
+    GetPageCommandBankUserFilter:
+      $ref: ./components/schemas/bankuser/GetPageCommandBankUserFilter.yaml
+    PageParamsBankUserFilter:
+      $ref: ./components/schemas/bankuser/PageParamsBankUserFilter.yaml
+    CreateCommandAccessRuleCreationDto:
+      $ref: ./components/schemas/access-rule/CreateCommandAccessRuleCreationDto.yaml
+    CreateResponseAccessRuleDto:
+      $ref: ./components/schemas/access-rule/CreateResponseAccessRuleDto.yaml
+    AccessRuleV2Filter:
+      $ref: ./components/schemas/access-rule/AccessRuleV2Filter.yaml
+    FilterValueEnumDtoRuleType:
+      $ref: ./components/schemas/access-rule/FilterValueEnumDtoRuleType.yaml
+    GetPageCommandAccessRuleV2Filter:
+      $ref: ./components/schemas/access-rule/GetPageCommandAccessRuleV2Filter.yaml
+    PageParamsAccessRuleV2Filter:
+      $ref: ./components/schemas/access-rule/PageParamsAccessRuleV2Filter.yaml
+    AccessRuleV2Dto:
+      $ref: ./components/schemas/access-rule/AccessRuleV2Dto.yaml
+    AuthorizedPersonRuleDto:
+      $ref: ./components/schemas/access-rule/AuthorizedPersonRuleDto.yaml
+    BankClientRuleDto:
+      $ref: ./components/schemas/access-rule/BankClientRuleDto.yaml
+    PageDataAccessRuleV2Dto:
+      $ref: ./components/schemas/access-rule/PageDataAccessRuleV2Dto.yaml
+    AccessRuleFilter:
+      $ref: ./components/schemas/access-rule/AccessRuleFilter.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/access-rule/FilterValueDtoLong.yaml
+    FilterValueEnumDtoOriginSystem:
+      $ref: ./components/schemas/access-rule/FilterValueEnumDtoOriginSystem.yaml
+    FilterValueEnumDtoSegmentCode:
+      $ref: ./components/schemas/access-rule/FilterValueEnumDtoSegmentCode.yaml
+    GetPageCommandAccessRuleFilter:
+      $ref: ./components/schemas/access-rule/GetPageCommandAccessRuleFilter.yaml
+    PageParamsAccessRuleFilter:
+      $ref: ./components/schemas/access-rule/PageParamsAccessRuleFilter.yaml
+    PageDataAccessRuleDto:
+      $ref: ./components/schemas/access-rule/PageDataAccessRuleDto.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/access-rule/SingleResponseBoolean.yaml
+    CreateCommandListAccessRuleCreationDto:
+      $ref: ./components/schemas/access-rule/CreateCommandListAccessRuleCreationDto.yaml
+    CreateResponseListAccessRuleDto:
+      $ref: ./components/schemas/access-rule/CreateResponseListAccessRuleDto.yaml
+    AccessGroupFilter:
+      $ref: ./components/schemas/get-page/AccessGroupFilter.yaml
+    GetPageCommandAccessGroupFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandAccessGroupFilter.yaml
+    PageParamsAccessGroupFilter:
+      $ref: ./components/schemas/get-page/PageParamsAccessGroupFilter.yaml
+    AbacRuleViewRecordCreateDto:
+      $ref: ./components/schemas/ruleview/AbacRuleViewRecordCreateDto.yaml
+    GenericCommandAbacRuleViewRecordCreateDto:
+      $ref: ./components/schemas/ruleview/GenericCommandAbacRuleViewRecordCreateDto.yaml
+    AbacRuleViewRecordScrollerFilter:
+      $ref: ./components/schemas/ruleview/AbacRuleViewRecordScrollerFilter.yaml
+    GetPageCommandAbacRuleViewRecordScrollerFilter:
+      $ref: ./components/schemas/ruleview/GetPageCommandAbacRuleViewRecordScrollerFilter.yaml
+    PageParamsAbacRuleViewRecordScrollerFilter:
+      $ref: ./components/schemas/ruleview/PageParamsAbacRuleViewRecordScrollerFilter.yaml
+    AbacBusinessEntityCreateBankDto:
+      $ref: ./components/schemas/condition/AbacBusinessEntityCreateBankDto.yaml
+    CreateCommandAbacBusinessEntityCreateBankDto:
+      $ref: ./components/schemas/condition/CreateCommandAbacBusinessEntityCreateBankDto.yaml
+    FindConditionStructV2Request:
+      $ref: ./components/schemas/condition/FindConditionStructV2Request.yaml
+    AbacBusinessEntityScrollerFilter:
+      $ref: ./components/schemas/condition/AbacBusinessEntityScrollerFilter.yaml
+    GetPageCommandAbacBusinessEntityScrollerFilter:
+      $ref: ./components/schemas/condition/GetPageCommandAbacBusinessEntityScrollerFilter.yaml
+    PageParamsAbacBusinessEntityScrollerFilter:
+      $ref: ./components/schemas/condition/PageParamsAbacBusinessEntityScrollerFilter.yaml
+    FindConditionStructRequest:
+      $ref: ./components/schemas/condition/FindConditionStructRequest.yaml
+    AbacGrantAccessRuleEntityBankDto:
+      $ref: ./components/schemas/abac-grant-access-rule/AbacGrantAccessRuleEntityBankDto.yaml
+    AbacGrantAccessRuleRequestBankDto:
+      $ref: ./components/schemas/abac-grant-access-rule/AbacGrantAccessRuleRequestBankDto.yaml
+    GenericCommandAbacGrantAccessRuleRequestBankDto:
+      $ref: ./components/schemas/abac-grant-access-rule/GenericCommandAbacGrantAccessRuleRequestBankDto.yaml
+    AbacGrantAccessRuleScrollerFilter:
+      $ref: ./components/schemas/abac-grant-access-rule/AbacGrantAccessRuleScrollerFilter.yaml
+    FilterValueEnumDtoAbacGranAccessRuleEntityTypeDto:
+      $ref: ./components/schemas/abac-grant-access-rule/FilterValueEnumDtoAbacGranAccessRuleEntityTypeDto.yaml
+    GetPageCommandAbacGrantAccessRuleScrollerFilter:
+      $ref: ./components/schemas/abac-grant-access-rule/GetPageCommandAbacGrantAccessRuleScrollerFilter.yaml
+    PageParamsAbacGrantAccessRuleScrollerFilter:
+      $ref: ./components/schemas/abac-grant-access-rule/PageParamsAbacGrantAccessRuleScrollerFilter.yaml
+    ProviderMetadataInfo:
+      $ref: ./components/schemas/common/ProviderMetadataInfo.yaml
+    JwkInfo:
+      $ref: ./components/schemas/common/JwkInfo.yaml
+    JwksInfo:
+      $ref: ./components/schemas/common/JwksInfo.yaml
+    ChangePasswordFormState:
+      $ref: ./components/schemas/common/ChangePasswordFormState.yaml
+    ListResponseRuleExecutionHistoryDto:
+      $ref: ./components/schemas/access-rule/ListResponseRuleExecutionHistoryDto.yaml
+    RuleExecutionHistoryDto:
+      $ref: ./components/schemas/access-rule/RuleExecutionHistoryDto.yaml
+    tokenRequestSchema:
+      $ref: ./components/schemas/common/tokenRequestSchema.yaml
+    authorizeRequestSchema:
+      $ref: ./components/schemas/common/authorizeRequestSchema.yaml
+    introspectSchema:
+      $ref: ./components/schemas/common/introspectSchema.yaml
+  securitySchemes:
+    Bearer:
+      type: http
+      name: Bearer
+      scheme: bearer
+      bearerFormat: JWT

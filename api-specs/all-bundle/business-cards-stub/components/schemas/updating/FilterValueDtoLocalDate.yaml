@@ -1,0 +1,28 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./LocalDate.yaml
+  notEq:
+    $ref: ./LocalDate.yaml
+  in:
+    type: array
+    items:
+      $ref: ./LocalDate.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./LocalDate.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./LocalDate.yaml
+  ge:
+    $ref: ./LocalDate.yaml
+  lt:
+    $ref: ./LocalDate.yaml
+  le:
+    $ref: ./LocalDate.yaml

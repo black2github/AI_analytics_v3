@@ -1,0 +1,6 @@
+type: object
+description: Запрос
+properties:
+  data:
+    $ref: ./DsfDocumentStatusPublishChangeDto.yaml
+    description: Данные

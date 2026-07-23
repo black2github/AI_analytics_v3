@@ -1,0 +1,15 @@
+type: object
+properties:
+  token:
+    type: string
+    description: ИД МФА токена.
+    format: uuid
+  client_id:
+    type: string
+    description: ИД OAuth2 приложения
+  availability:
+    type: string
+    enum:
+    - ALL
+    - AVAILABLE
+description: ДТО Запроса МФА цепочек

@@ -1,0 +1,22 @@
+type: object
+properties:
+  organizationName:
+    type: string
+    description: Наименование организации
+  organizationInn:
+    type: string
+    description: ИНН организации
+  bankBranch:
+    type: string
+    description: Филиал банка
+  attachmentInfoList:
+    type: array
+    description: Имя вложения
+    items:
+      $ref: ./AttachmentLinkedDocumentInfoDto.yaml
+  comment:
+    type: string
+    description: Комментарий
+  commentClient:
+    $ref: ./LinkedDocumentCommentDto.yaml
+description: Информация о документе

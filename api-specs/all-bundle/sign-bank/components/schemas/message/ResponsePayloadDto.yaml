@@ -1,0 +1,9 @@
+type: object
+properties:
+  requestID:
+    type: string
+    description: ID запроса
+  externalId:
+    type: string
+    description: ID сообщения
+description: Данные ответа

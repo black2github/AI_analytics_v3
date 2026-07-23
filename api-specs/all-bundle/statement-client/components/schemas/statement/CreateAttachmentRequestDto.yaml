@@ -1,0 +1,77 @@
+type: object
+properties:
+  statementId:
+    type: string
+    format: uuid
+  accountingEntriesIds:
+    type: array
+    items:
+      type: integer
+      format: int64
+  action:
+    type: string
+    enum:
+    - DOWNLOAD
+    - PRINT
+    - VIEW
+    - REQUEST_HISTORY
+    - EXPORT
+    - SEND_TO_EMAIL
+  format:
+    type: string
+    enum:
+    - VIEW
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - EXCEL_XLSX
+    - MULTICASH
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - XML0
+    - XML1
+    - XML2
+    - XML_TNF
+    - CAMT053
+    - OPEN_API_CB
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+  email:
+    type: string
+  signed:
+    type: boolean
+  genStatement:
+    type: boolean
+  hideEmptyTurnovers:
+    type: boolean
+  separateAccountsFiles:
+    type: boolean
+  includeDebitStatements:
+    type: boolean
+  includeDebitOrders:
+    type: boolean
+  includeCreditStatements:
+    type: boolean
+  includeCreditOrders:
+    type: boolean
+  separateDocumentsFiles:
+    type: boolean
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+  totalsOfDay:
+    type: boolean
+  revaluationAccountingEntry:
+    type: boolean
+  nationalCurrency:
+    type: boolean
+  withDataMT:
+    type: boolean
+  reestrDocument:
+    type: boolean

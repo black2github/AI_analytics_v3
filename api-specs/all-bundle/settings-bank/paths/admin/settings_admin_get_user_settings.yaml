@@ -1,0 +1,22 @@
+post:
+  tags:
+  - АПИ Банка для управления настройками
+  summary: Получить пользовательские настройки по коду
+  description: 'Привилегии: SETTINGS_VIEW'
+  operationId: getUserSettings
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/GetUserSettingsRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            uniqueItems: true
+            type: array
+            items:
+              $ref: ../../components/schemas/admin/SettingAdminDto.yaml

@@ -1,0 +1,26 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Сбросить спецификацию к указанной ревизии
+  description: 'Привилегии: OPEN_API_SPEC_UPDATE'
+  operationId: revertRevision
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  - name: revisionId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml

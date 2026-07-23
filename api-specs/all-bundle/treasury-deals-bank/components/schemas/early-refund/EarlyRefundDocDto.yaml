@@ -1,0 +1,148 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  docBankComment:
+    type: string
+    description: Комментарий Банка
+  docErrorText:
+    type: string
+    description: Текст ошибки
+  docCreatorId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docCreatorFullName:
+    type: string
+    description: Ф.И.О пользователя
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  docStatus:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - CREATED
+    - DRAFT_OR_NEW
+    - DRAFT
+    - DELETED
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - SIGN_VALID_OR_INVALID
+    - SIGN_VALID
+    - SIGN_INVALID
+    - RECEIVED_OR_DETAILS_INVALID
+    - RECEIVED
+    - DEPOSIT_VALID_OR_INVALID
+    - DEPOSIT_VALID
+    - DEPOSIT_INVALID
+    - DETAILS_INVALID
+    - SENT_TO_ASK_OR_ERROR
+    - SENT_TO_ASK
+    - SENT_TO_ASK_SUCCESS
+    - SENT_TO_ASK_FAIL
+    - DENIED
+    - EXECUTED
+  uuid:
+    type: integer
+    description: Уникальный идентификатор заявки в Системе
+    format: int64
+  version:
+    type: integer
+    description: Версия
+    format: int64
+  signature:
+    $ref: ../common/SignatureDto.yaml
+  clientWebDealingId:
+    type: string
+    description: Идентификатор Клиента из справочника Клиентов Веб-Дилинга
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientOriginalInfo:
+    $ref: ../common/ClientDto.yaml
+  clientFullNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Полное наименование
+  clientShortNameExt:
+    type: string
+    description: Расширенное наименование Клиента - Краткое наименование
+  managementFund:
+    $ref: ../common/InvestmentDocManagementFundDto.yaml
+  branch:
+    $ref: ../common/BranchDto.yaml
+  accountRefundFixed:
+    type: boolean
+    description: Счет возврата суммы депозита, фиксирован
+  accountRefund:
+    $ref: ../common/InvestmentDocAccountDto.yaml
+  depositId:
+    type: string
+    description: 'Идентификатор '
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  depositNumber:
+    type: integer
+    description: Номер депозита
+    format: int32
+  depositDate:
+    type: string
+    description: Дата депозита
+    format: date
+  generalAgreement:
+    $ref: ../common/InvestmentDocGeneralAgreementDto.yaml
+  dateBegin:
+    type: string
+    description: Дата начала
+    format: date
+  dateEnd:
+    type: string
+    description: Дата окончания
+    format: date
+  period:
+    type: integer
+    description: Период сделки
+    format: int32
+  amount:
+    type: string
+    description: Сумма сделки
+  currency:
+    type: string
+    description: Валюта сделки
+  dealDate:
+    type: string
+    description: Дата сделки
+    format: date
+  dealNumber:
+    type: string
+    description: Номер сделки
+  dealRateInfo:
+    $ref: ../common/InvestmentDocRateInfoDto.yaml
+  earlyRefundRate:
+    type: string
+    description: Ставка досрочного истребования
+  dealRateTitle:
+    type: string
+    description: Значение ставки из печатной формы

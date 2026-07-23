@@ -1,0 +1,19 @@
+type: object
+properties:
+  enabled:
+    type: boolean
+    description: Признак удаленного открытия счета
+  isClientFL:
+    type: boolean
+    description: ФЛ Клиент Банка
+  refusedByEsk:
+    type: boolean
+    description: Признак технического отказа от УО
+  refusedByUser:
+    type: boolean
+    description: Признак отказа пользователя от УО счета
+  roid:
+    type: string
+    description: ID Сведений о физическом лице для удалённого открытия счёта
+    format: uuid
+description: Удаленное открытие счета

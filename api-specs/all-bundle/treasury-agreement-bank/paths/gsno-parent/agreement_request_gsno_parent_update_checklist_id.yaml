@@ -1,0 +1,65 @@
+put:
+  tags:
+  - Заявка на заключение генерального соглашения - ГСНО ГО (банк)
+  - Заявка на заключение генерального соглашения
+  - API печатных форм заявок на соглашения
+  - Банковский АPI работы с вложениями
+  summary: Обновить чек-лист
+  description: 'Привилегии: (#eco.userTypeIs(''BANK'') OR #eco.userTypeIs(''TECHNICAL'')) AND hasAuthority(''TREASURY_AGREEMENT_REQUEST_GSNO_PARENT_UPDATE_CHECKLIST'')'
+  operationId: updateCheckList_1
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/gsno-parent/GenericCommandAgreementRequestGSNOParentCheckListDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/gsno-parent/GenericResponseErrorDataAgreementRequestGSNOParentDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

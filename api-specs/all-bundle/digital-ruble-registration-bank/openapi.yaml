@@ -1,0 +1,268 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Регистрация. Банковская часть.
+  description: Сервис Цифровой рубль.
+  version: 3.5.0
+servers:
+- url: /digital-ruble-registration-bank
+security:
+- bearerAuth: []
+paths:
+  /request/wallet-unlock/reject-status:
+    $ref: ./paths/wallet-unlock/request_wallet_unlock_reject_status.yaml
+  /request/wallet-identify/reject-status:
+    $ref: ./paths/wallet-identify/request_wallet_identify_reject_status.yaml
+  /request/wallet-close/reject-status:
+    $ref: ./paths/wallet-close/request_wallet_close_reject_status.yaml
+  /request/wallet-block/reject-status:
+    $ref: ./paths/wallet-block/request_wallet_block_reject_status.yaml
+  /request/cert-revocation/reject-status:
+    $ref: ./paths/cert-revocation/request_cert_revocation_reject_status.yaml
+  /request/cert-registration/reject-status:
+    $ref: ./paths/cert-registration/request_cert_registration_reject_status.yaml
+  /request/summary:
+    $ref: ./paths/summary/request_summary.yaml
+  /request/page:
+    $ref: ./paths/page/request_page.yaml
+  /pcr-participant-wallet/page:
+    $ref: ./paths/page/pcr_participant_wallet_page.yaml
+  /organization/certificate/page:
+    $ref: ./paths/certificate/organization_certificate_page.yaml
+  /organization/certificate/download/{id}:
+    $ref: ./paths/certificate/organization_certificate_download_id.yaml
+  /integration/pcrparticipantwallet/find:
+    $ref: ./paths/pcrparticipantwallet/integration_pcrparticipantwallet_find.yaml
+  /integration/pcrparticipantwallet/find-by-cbr-participant-id:
+    $ref: ./paths/pcrparticipantwallet/integration_pcrparticipantwallet_find_by_cbr_participant_id.yaml
+  /integration/pcrcertificate/find:
+    $ref: ./paths/pcrcertificate/integration_pcrcertificate_find.yaml
+  /integration/pcrcertificate/find-last-actual:
+    $ref: ./paths/pcrcertificate/integration_pcrcertificate_find_last_actual.yaml
+  /external-system-message-journal/{id}/resend:
+    $ref: ./paths/{id}/external_system_message_journal_id_resend.yaml
+  /external-system-message-journal/summary:
+    $ref: ./paths/summary/external_system_message_journal_summary.yaml
+  /external-system-message-journal/page:
+    $ref: ./paths/page/external_system_message_journal_page.yaml
+  /request/wallet-unlock/{id}:
+    $ref: ./paths/wallet-unlock/request_wallet_unlock_id.yaml
+  /request/wallet-unlock/history/{id}:
+    $ref: ./paths/wallet-unlock/request_wallet_unlock_history_id.yaml
+  /request/wallet-identify/{id}:
+    $ref: ./paths/wallet-identify/request_wallet_identify_id.yaml
+  /request/wallet-identify/{id}/esk-data-formation-journal/request-json:
+    $ref: ./paths/wallet-identify/request_wallet_identify_id_esk_data_formation_journal_request_json.yaml
+  /request/wallet-identify/remarks-export/{id}:
+    $ref: ./paths/wallet-identify/request_wallet_identify_remarks_export_id.yaml
+  /request/wallet-identify/history/{id}:
+    $ref: ./paths/wallet-identify/request_wallet_identify_history_id.yaml
+  /request/wallet-close/{id}:
+    $ref: ./paths/wallet-close/request_wallet_close_id.yaml
+  /request/wallet-close/history/{id}:
+    $ref: ./paths/wallet-close/request_wallet_close_history_id.yaml
+  /request/wallet-block/{id}:
+    $ref: ./paths/wallet-block/request_wallet_block_id.yaml
+  /request/wallet-block/history/{id}:
+    $ref: ./paths/wallet-block/request_wallet_block_history_id.yaml
+  /request/cert-revocation/{id}:
+    $ref: ./paths/cert-revocation/request_cert_revocation_id.yaml
+  /request/cert-revocation/history/{id}:
+    $ref: ./paths/cert-revocation/request_cert_revocation_history_id.yaml
+  /request/cert-registration/{id}:
+    $ref: ./paths/cert-registration/request_cert_registration_id.yaml
+  /request/cert-registration/history/{id}:
+    $ref: ./paths/cert-registration/request_cert_registration_history_id.yaml
+  /pcr-participant-wallet/{id}:
+    $ref: ./paths/{id}/pcr_participant_wallet_id.yaml
+  /organization/certificate/cert-registration/{id}:
+    $ref: ./paths/certificate/organization_certificate_cert_registration_id.yaml
+  /management/certificate-sync:
+    $ref: ./paths/certificate-sync/management_certificate_sync.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /external-system-message-journal/{id}/remarks-export:
+    $ref: ./paths/{id}/external_system_message_journal_id_remarks_export.yaml
+  /external-system-message-journal/{id}/receipt:
+    $ref: ./paths/{id}/external_system_message_journal_id_receipt.yaml
+  /external-system-message-journal/{id}/esk-data-formation-journal/request-json:
+    $ref: ./paths/{id}/external_system_message_journal_id_esk_data_formation_journal_request_json.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    RequestStatusCommentDto:
+      $ref: ./components/schemas/common/RequestStatusCommentDto.yaml
+    DigitalRubleError:
+      $ref: ./components/schemas/common/DigitalRubleError.yaml
+    GenericResponseDigitalRubleErrorVoid:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorVoid.yaml
+    DigitalRubleRequestStatusFilter:
+      $ref: ./components/schemas/common/DigitalRubleRequestStatusFilter.yaml
+    DigitalRubleRequestTypeBankClassifierFilter:
+      $ref: ./components/schemas/common/DigitalRubleRequestTypeBankClassifierFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandRequestFilterBankDto:
+      $ref: ./components/schemas/common/GetPageCommandRequestFilterBankDto.yaml
+    PageParamsRequestFilterBankDto:
+      $ref: ./components/schemas/common/PageParamsRequestFilterBankDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestFilterBankDto:
+      $ref: ./components/schemas/common/RequestFilterBankDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    StatusCategoryDto:
+      $ref: ./components/schemas/common/StatusCategoryDto.yaml
+    StatusCategoryFilter:
+      $ref: ./components/schemas/common/StatusCategoryFilter.yaml
+    GenericResponseSimpleErrorDataSummaryDto:
+      $ref: ./components/schemas/summary/GenericResponseSimpleErrorDataSummaryDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    SummaryDto:
+      $ref: ./components/schemas/summary/SummaryDto.yaml
+    GenericResponseSimpleErrorDataPageDataRequestScrollerBankDto:
+      $ref: ./components/schemas/page/GenericResponseSimpleErrorDataPageDataRequestScrollerBankDto.yaml
+    PageDataRequestScrollerBankDto:
+      $ref: ./components/schemas/page/PageDataRequestScrollerBankDto.yaml
+    RequestScrollerBankDto:
+      $ref: ./components/schemas/page/RequestScrollerBankDto.yaml
+    GetPageCommandPcrParticipantWalletFilter:
+      $ref: ./components/schemas/page/GetPageCommandPcrParticipantWalletFilter.yaml
+    PageParamsPcrParticipantWalletFilter:
+      $ref: ./components/schemas/page/PageParamsPcrParticipantWalletFilter.yaml
+    PcrParticipantWalletFilter:
+      $ref: ./components/schemas/page/PcrParticipantWalletFilter.yaml
+    WalletStatusFilter:
+      $ref: ./components/schemas/page/WalletStatusFilter.yaml
+    GenericResponseDigitalRubleErrorPageDataPcrParticipantWalletScrollerDto:
+      $ref: ./components/schemas/page/GenericResponseDigitalRubleErrorPageDataPcrParticipantWalletScrollerDto.yaml
+    PageDataPcrParticipantWalletScrollerDto:
+      $ref: ./components/schemas/page/PageDataPcrParticipantWalletScrollerDto.yaml
+    PcrParticipantWalletScrollerDto:
+      $ref: ./components/schemas/page/PcrParticipantWalletScrollerDto.yaml
+    CertificateStatusFilter:
+      $ref: ./components/schemas/certificate/CertificateStatusFilter.yaml
+    CertificateTypeFilter:
+      $ref: ./components/schemas/certificate/CertificateTypeFilter.yaml
+    GetPageCommandPcrParticipantCertificateFilter:
+      $ref: ./components/schemas/certificate/GetPageCommandPcrParticipantCertificateFilter.yaml
+    PageParamsPcrParticipantCertificateFilter:
+      $ref: ./components/schemas/certificate/PageParamsPcrParticipantCertificateFilter.yaml
+    PcrParticipantCertificateFilter:
+      $ref: ./components/schemas/certificate/PcrParticipantCertificateFilter.yaml
+    GenericResponseDigitalRubleErrorPageDataPcrParticipantCertificateScrollerDto:
+      $ref: ./components/schemas/certificate/GenericResponseDigitalRubleErrorPageDataPcrParticipantCertificateScrollerDto.yaml
+    PageDataPcrParticipantCertificateScrollerDto:
+      $ref: ./components/schemas/certificate/PageDataPcrParticipantCertificateScrollerDto.yaml
+    PcrParticipantCertificateScrollerDto:
+      $ref: ./components/schemas/certificate/PcrParticipantCertificateScrollerDto.yaml
+    GenericResponseDigitalRubleErrorPcrParticipantCertificateDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorPcrParticipantCertificateDto.yaml
+    PcrParticipantCertificateDto:
+      $ref: ./components/schemas/common/PcrParticipantCertificateDto.yaml
+    FindPcrParticipantWalletRequestDto:
+      $ref: ./components/schemas/pcrparticipantwallet/FindPcrParticipantWalletRequestDto.yaml
+    FindPcrParticipantWalletResponseDto:
+      $ref: ./components/schemas/pcrparticipantwallet/FindPcrParticipantWalletResponseDto.yaml
+    GenericResponseDigitalRubleErrorFindPcrParticipantWalletResponseDto:
+      $ref: ./components/schemas/pcrparticipantwallet/GenericResponseDigitalRubleErrorFindPcrParticipantWalletResponseDto.yaml
+    PcrParticipantWalletIntegrationDto:
+      $ref: ./components/schemas/pcrparticipantwallet/PcrParticipantWalletIntegrationDto.yaml
+    FindPcrParticipantWalletByCbrParticipantIdRequestDto:
+      $ref: ./components/schemas/pcrparticipantwallet/FindPcrParticipantWalletByCbrParticipantIdRequestDto.yaml
+    FindPcrCertificateRequestDto:
+      $ref: ./components/schemas/pcrcertificate/FindPcrCertificateRequestDto.yaml
+    FindPcrCertificateResponseDto:
+      $ref: ./components/schemas/pcrcertificate/FindPcrCertificateResponseDto.yaml
+    GenericResponseDigitalRubleErrorFindPcrCertificateResponseDto:
+      $ref: ./components/schemas/pcrcertificate/GenericResponseDigitalRubleErrorFindPcrCertificateResponseDto.yaml
+    PcrCertificatesDto:
+      $ref: ./components/schemas/pcrcertificate/PcrCertificatesDto.yaml
+    PcrCrlsDto:
+      $ref: ./components/schemas/pcrcertificate/PcrCrlsDto.yaml
+    PcrWalletCertificateIntegrationDto:
+      $ref: ./components/schemas/pcrcertificate/PcrWalletCertificateIntegrationDto.yaml
+    ExternalSystemMessageJournalFilterDto:
+      $ref: ./components/schemas/common/ExternalSystemMessageJournalFilterDto.yaml
+    ExternalSystemMessageJournalStatusFilter:
+      $ref: ./components/schemas/common/ExternalSystemMessageJournalStatusFilter.yaml
+    GetPageCommandExternalSystemMessageJournalFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandExternalSystemMessageJournalFilterDto.yaml
+    PageParamsExternalSystemMessageJournalFilterDto:
+      $ref: ./components/schemas/common/PageParamsExternalSystemMessageJournalFilterDto.yaml
+    ExternalSystemMessageJournalSummaryDto:
+      $ref: ./components/schemas/summary/ExternalSystemMessageJournalSummaryDto.yaml
+    GenericResponseSimpleErrorDataExternalSystemMessageJournalSummaryDto:
+      $ref: ./components/schemas/summary/GenericResponseSimpleErrorDataExternalSystemMessageJournalSummaryDto.yaml
+    ExternalSystemMessageJournalScrollerDto:
+      $ref: ./components/schemas/page/ExternalSystemMessageJournalScrollerDto.yaml
+    GenericResponseSimpleErrorDataPageDataExternalSystemMessageJournalScrollerDto:
+      $ref: ./components/schemas/page/GenericResponseSimpleErrorDataPageDataExternalSystemMessageJournalScrollerDto.yaml
+    PageDataExternalSystemMessageJournalScrollerDto:
+      $ref: ./components/schemas/page/PageDataExternalSystemMessageJournalScrollerDto.yaml
+    GenericResponseDigitalRubleErrorWalletUnlockRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-unlock/GenericResponseDigitalRubleErrorWalletUnlockRequestGetResponseBankDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    WalletUnlockRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-unlock/WalletUnlockRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorListRequestHistoryBankDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorListRequestHistoryBankDto.yaml
+    RequestHistoryBankDto:
+      $ref: ./components/schemas/common/RequestHistoryBankDto.yaml
+    ClientAccountDto:
+      $ref: ./components/schemas/wallet-identify/ClientAccountDto.yaml
+    GenericResponseDigitalRubleErrorWalletIdentifyRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-identify/GenericResponseDigitalRubleErrorWalletIdentifyRequestGetResponseBankDto.yaml
+    OrganizationDetailsDto:
+      $ref: ./components/schemas/wallet-identify/OrganizationDetailsDto.yaml
+    WalletIdentifyRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-identify/WalletIdentifyRequestGetResponseBankDto.yaml
+    EskDataFormationJournalRequestJsonResponseDto:
+      $ref: ./components/schemas/common/EskDataFormationJournalRequestJsonResponseDto.yaml
+    GenericResponseDigitalRubleErrorEskDataFormationJournalRequestJsonResponseDto:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorEskDataFormationJournalRequestJsonResponseDto.yaml
+    GenericResponseDigitalRubleErrorPrintResponse:
+      $ref: ./components/schemas/common/GenericResponseDigitalRubleErrorPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    GenericResponseDigitalRubleErrorWalletCloseRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-close/GenericResponseDigitalRubleErrorWalletCloseRequestGetResponseBankDto.yaml
+    WalletCloseRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-close/WalletCloseRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorWalletBlockRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-block/GenericResponseDigitalRubleErrorWalletBlockRequestGetResponseBankDto.yaml
+    WalletBlockRequestGetResponseBankDto:
+      $ref: ./components/schemas/wallet-block/WalletBlockRequestGetResponseBankDto.yaml
+    CertRevocationRequestGetResponseBankDto:
+      $ref: ./components/schemas/cert-revocation/CertRevocationRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorCertRevocationRequestGetResponseBankDto:
+      $ref: ./components/schemas/cert-revocation/GenericResponseDigitalRubleErrorCertRevocationRequestGetResponseBankDto.yaml
+    CertRegistrationRequestGetResponseBankDto:
+      $ref: ./components/schemas/cert-registration/CertRegistrationRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorCertRegistrationRequestGetResponseBankDto:
+      $ref: ./components/schemas/cert-registration/GenericResponseDigitalRubleErrorCertRegistrationRequestGetResponseBankDto.yaml
+    GenericResponseDigitalRubleErrorPcrParticipantWalletBankDto:
+      $ref: ./components/schemas/{id}/GenericResponseDigitalRubleErrorPcrParticipantWalletBankDto.yaml
+    PcrParticipantWalletBankDto:
+      $ref: ./components/schemas/{id}/PcrParticipantWalletBankDto.yaml
+    GenericResponseDigitalRubleErrorReceiptResponseDto:
+      $ref: ./components/schemas/{id}/GenericResponseDigitalRubleErrorReceiptResponseDto.yaml
+    ReceiptResponseDto:
+      $ref: ./components/schemas/{id}/ReceiptResponseDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

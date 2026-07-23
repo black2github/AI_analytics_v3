@@ -1,0 +1,11 @@
+type: object
+properties:
+  baseDocumentId:
+    type: string
+    description: ID базового документа
+    format: uuid
+  baseClientAccountId:
+    type: string
+    description: Счет плательщик
+    format: uuid
+description: Базовые реквизиты плательщика

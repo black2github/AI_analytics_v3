@@ -1,0 +1,8 @@
+type: object
+properties:
+  printForms:
+    type: array
+    description: Сведения о печатных формах для сервиса технической заявки
+    items:
+      $ref: ./FrontOfficePrintFormDto.yaml
+description: Сведения о печатных формах для сервиса технической заявки

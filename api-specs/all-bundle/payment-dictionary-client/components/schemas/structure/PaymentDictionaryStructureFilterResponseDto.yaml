@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор справочника "Структуры"
+    format: uuid
+  name:
+    type: string
+    description: Наименование справочника "Структуры"
+description: Наименование справочника "Структуры"

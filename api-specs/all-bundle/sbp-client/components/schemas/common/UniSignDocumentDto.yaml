@@ -1,0 +1,12 @@
+type: object
+description: Подписываемый документ
+properties:
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор документа
+  signDataList:
+    type: array
+    description: Набор подписываемых данных
+    items:
+      $ref: ./UniSignDataDto.yaml

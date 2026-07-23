@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Регистрация ТСП'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/MerchantV3Dto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/LegalResultDtoMerchantResultDto.yaml
+    '400':
+      description: Bad Request

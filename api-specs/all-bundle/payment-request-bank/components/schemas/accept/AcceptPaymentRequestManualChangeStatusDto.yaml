@@ -1,0 +1,13 @@
+required:
+- status
+type: object
+properties:
+  status:
+    $ref: ./AcceptPaymentRequestChangeStatusDto.yaml
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  commentForBank:
+    type: string
+    description: Комментарий для банковского сотрудника
+description: Сменить статус

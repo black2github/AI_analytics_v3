@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  notEq:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  isNull:
+    type: boolean
+  gt:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  ge:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  lt:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  le:
+    $ref: ./ChargebackRequestPayerNameOrInnOrRnkDto.yaml
+description: Организация. Поиск по <Наименование плательщика>, <ИНН/КИО плательщика>, <РНК клиента>. Вхождение в множество

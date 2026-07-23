@@ -1,0 +1,42 @@
+required:
+- accountId
+- accountNumber
+- accountWorkMode
+- action
+- addedAt
+- userFio
+- userId
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  accountId:
+    type: string
+    description: ID счета
+    format: uuid
+  addedAt:
+    type: string
+    description: Дата добавления
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+  accountWorkMode:
+    type: string
+    description: Режим работы счёта
+    enum:
+    - ACCEPT
+    - MONITORING
+  userId:
+    type: string
+    description: ID пользователя (редактор)
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя (редактор)
+  action:
+    type: string
+    description: Действие
+description: Данные истории изменения счета ТНФ

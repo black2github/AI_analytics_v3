@@ -1,0 +1,17 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: string
+  summary: Send Aml Change Status Dsf From Bank
+  tags:
+  - Aml Request Controller

@@ -1,0 +1,20 @@
+type: object
+properties:
+  signatureId:
+    type: string
+    description: Идентификатор подписи
+    format: uuid
+  signerId:
+    type: string
+    description: Идентификатор пользователя, подписавшего документ
+    format: uuid
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+  level:
+    $ref: ./FileImportSignatureLevelDto.yaml
+description: Подписант

@@ -1,0 +1,26 @@
+required:
+- bankClientExternalGuid
+- requestId
+type: object
+properties:
+  bankClientExternalGuid:
+    type: string
+    description: GUID клиента в ЕСК
+  requestId:
+    type: string
+    description: Идентификатор заявки в Экосистеме
+  legalKind:
+    type: string
+    description: Категория клиента
+    enum:
+    - UL
+    - FL
+  relatedPartyType:
+    type: string
+    description: Тип связного лица.
+    enum:
+    - EIO
+    - CLIENT_OFFICIAL
+    - BENEFICIAL_OWNER
+    - BENEFICIAL_OWNER_EIO
+description: Данные для запроса ИО клиента.

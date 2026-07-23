@@ -1,0 +1,31 @@
+type: object
+properties:
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientNameOrInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  eskRequestId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  idOrNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOnboardingRequestArchiveStatusDto.yaml
+  tessaDocId:
+    $ref: ../common/FilterValueDtoString.yaml
+  userEmail:
+    $ref: ../common/FilterValueDtoString.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+  userPhone:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для поиска заявок "Архивная заявка на открытие первого счета" для банковского скроллера

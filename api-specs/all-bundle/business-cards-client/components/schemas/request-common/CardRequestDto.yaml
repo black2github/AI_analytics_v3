@@ -1,0 +1,48 @@
+type: object
+properties:
+  batchData:
+    $ref: ../common/BatchRequestBaseDto.yaml
+  cardGuid:
+    type: string
+    description: 'GUID карты в Ф1 '
+    format: uuid
+    nullable: true
+  cardHolder:
+    type: string
+    description: ФИО держателя карты
+  cardId:
+    type: string
+    description: Виртуальный номер карты
+    nullable: true
+  extendedInfo:
+    $ref: ./ExtendedInfoDto.yaml
+  id:
+    type: string
+    description: Уникальный идентификатор заявки в Экосистеме
+    format: uuid
+  maskedNum:
+    type: string
+    description: Маскированный номер карты
+  reqDate:
+    type: string
+    description: Дата и время создания заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Уникальный номер заявки в разрезе Пользователя, создавшего заявку, и года создания заявки
+    format: int32
+  reqType:
+    type: string
+    description: Код типа документа из Классификатора [Типы документов]
+  status:
+    type: string
+    description: Статус документа, устанавливаемый в соответствии с ЖЦ заявки
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+description: Список заявок по картам

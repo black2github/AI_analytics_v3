@@ -1,0 +1,15 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/create-get-card/CardIndexDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Create Get Card
+  tags:
+  - Pending Payments Controller

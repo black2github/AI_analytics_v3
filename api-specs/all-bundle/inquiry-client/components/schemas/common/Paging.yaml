@@ -1,0 +1,16 @@
+type: object
+properties:
+  offset:
+    minimum: 0
+    type: integer
+    description: Смещение
+    format: int32
+    example: null
+  limit:
+    minimum: 1
+    type: integer
+    description: Количество записей
+    format: int32
+    example: null
+description: Пагинация
+example: null

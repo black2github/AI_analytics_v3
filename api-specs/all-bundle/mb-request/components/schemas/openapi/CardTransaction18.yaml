@@ -1,0 +1,9 @@
+type: object
+properties:
+  Card:
+    $ref: ./PaymentCard4.yaml
+  POI:
+    $ref: ./PointOfInteraction1.yaml
+  Transaction:
+    $ref: ./CardIndividualTransaction2.yaml
+description: Предоставляет данные по карте (номер, платежная система), терминалу (номер, идентификатор) и транзакционные данные, используемые для уникальной идентификации операции по карте

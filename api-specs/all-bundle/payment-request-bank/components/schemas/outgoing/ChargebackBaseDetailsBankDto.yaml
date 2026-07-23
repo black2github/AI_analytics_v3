@@ -1,0 +1,23 @@
+type: object
+properties:
+  docDate:
+    type: string
+    description: Дата документа
+    format: date-time
+  docNumber:
+    type: string
+    description: Номер документа
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+description: Идентификация организации (отзыв  платежное требование исходящее данные для сотрудника банка)

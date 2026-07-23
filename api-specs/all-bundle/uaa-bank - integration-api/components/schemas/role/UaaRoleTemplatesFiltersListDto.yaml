@@ -1,0 +1,8 @@
+type: object
+properties:
+  filters:
+    type: array
+    description: Список фильтров
+    items:
+      $ref: ./UaaRoleTemplatesFilterDto.yaml
+description: DTO с данными фильтров для поиска шаблонов ролей

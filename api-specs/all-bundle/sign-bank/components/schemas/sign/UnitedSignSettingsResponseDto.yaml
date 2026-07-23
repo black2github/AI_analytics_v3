@@ -1,0 +1,8 @@
+type: object
+properties:
+  bankClients:
+    type: array
+    description: Список клиентов доступных для подключения к ЕП
+    items:
+      $ref: ./UnitedSignBankClientSettingDto.yaml
+description: Настройки ЕП для СЭПа представителя

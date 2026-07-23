@@ -1,0 +1,24 @@
+type: object
+properties:
+  caName:
+    type: string
+    description: Наименование УЦ
+  orderNumber:
+    type: string
+    description: Порядковый номер СОС
+  deltaOrderNumber:
+    type: string
+    description: Порядковый номер СОС для дельты
+  validFrom:
+    type: string
+    description: Дата начала действия
+    format: date-time
+  nextUpdate:
+    type: string
+    description: Дата следующего обновления.
+    format: date-time
+  nextPublicationDate:
+    type: string
+    description: Дата следующей публикации СОС
+    format: date-time
+description: DTO для редактирования записи справочника списка отозванных сертификатов

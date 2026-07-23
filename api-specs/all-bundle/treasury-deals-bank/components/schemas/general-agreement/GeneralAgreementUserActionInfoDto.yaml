@@ -1,0 +1,31 @@
+type: object
+properties:
+  type:
+    type: string
+    description: Тип действия
+    enum:
+    - VIEW
+    - EDIT
+    - DELETE
+    - CANCEL
+    - COPY
+    - EARLY_RECLAMATION
+    - RESEND_TO_ASK
+    - DELETE_FROM_BANK_USER
+    - PRINT_CLIENT_CONFIRMATION
+    - PRINT_BANK_CONFIRMATION
+    - PRINT_CLIENT_CANCEL
+    - PRINT_EARLY_RECLAMATION
+    - EXPORT_SIGN
+    - CHECK_SIGN
+    - CANCEL_VISA
+    - PAYMENT_INFO_UPDATE
+    - PRINT_PAYMENT_INFO_UPDATE
+    - STATEMENT_REQUEST
+  allowed:
+    type: boolean
+    description: Действие активно
+  allowedForUser:
+    type: boolean
+    description: Разрешено для пользователя
+description: Список пользовательских действий

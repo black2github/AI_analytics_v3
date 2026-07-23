@@ -1,0 +1,39 @@
+type: object
+description: Данные обратного вызова по операции Возврат B2C с согласием для маршрутизации в АС СБП.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР.
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  albumVersion:
+    type: string
+    description: Версия альбома ЭС от ПлЦР.
+  totalAmount:
+    type: number
+    description: Общая сумма операции.
+  totalAmountCcy:
+    type: string
+    description: Тип валюты операции.
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  settlementDateTime:
+    type: string
+    description: Дата и время исполнения распоряжения.
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- albumVersion
+- correlationId
+- operationId
+- organisationId
+- participantWalletId
+- totalAmount
+- totalAmountCcy

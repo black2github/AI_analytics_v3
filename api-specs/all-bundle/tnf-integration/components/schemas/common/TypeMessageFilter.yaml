@@ -1,0 +1,44 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип сообщения
+    enum:
+    - DOC
+    - DBOSERVICE
+    - CORPGATE
+    - RZKSERVICE
+  notEq:
+    type: string
+    description: Тип сообщения
+    enum:
+    - DOC
+    - DBOSERVICE
+    - CORPGATE
+    - RZKSERVICE
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип сообщения
+      enum:
+      - DOC
+      - DBOSERVICE
+      - CORPGATE
+      - RZKSERVICE
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип сообщения
+      enum:
+      - DOC
+      - DBOSERVICE
+      - CORPGATE
+      - RZKSERVICE
+  isNull:
+    type: boolean

@@ -1,0 +1,64 @@
+required:
+- cbdcType
+- creationDateTime
+- msgId
+- pcrParticipantWalletId
+- requestId
+- requestType
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения заявки
+    format: uuid
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  requestType:
+    type: string
+    description: Тип заявки.
+    enum:
+    - WalletIdentify
+    - CertRegistration
+    - WalletClose
+    - WalletBlock
+    - WalletUnlock
+    - CertRevocation
+    - OperationHistory
+    - WalletBalance
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  creationDateTime:
+    type: string
+    description: Дата и время создания сообщения
+    format: date-time
+  cbdcType:
+    type: string
+    description: Код типа CBDC-сообщения
+    enum:
+    - cbdc.020.001.04 OrganisationDataAdministrationRequest_2022.2
+    - cbdc.012.001.04 OrganisationWalletManagementPossibilityRequest_2022.2
+    - cbdc.013.001.04 OrganisationWalletManagementPossibilityResponse_2022.2
+    - cbdc.022.001.04 OrganisationWalletManagementRequest_2022.2
+    - cbdc.023.001.04 OrganisationWalletManagementNotification_2022.2
+  plainCbdc:
+    type: string
+    description: CBDC-сообщение (Base64)
+    format: byte
+  encryptedCbdc:
+    type: string
+    description: Зашифрованное CBDC-сообщение (Base64)
+  signatures:
+    type: array
+    description: Список подписей
+    items:
+      type: string
+      description: Список подписей
+  userId:
+    type: string
+    description: Идентификатор Пользователя
+    format: uuid
+description: Электронное сообщение заявки.

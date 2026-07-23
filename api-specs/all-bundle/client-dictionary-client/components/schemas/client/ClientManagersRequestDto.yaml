@@ -1,0 +1,14 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+  externalClientId:
+    type: string
+    description: Идентификатор клиента в ЕСК
+    format: uuid
+  absId:
+    type: string
+    description: Регистрационный номер клиента в РКО Ф1
+description: Запрос на получение менеджеров клиента

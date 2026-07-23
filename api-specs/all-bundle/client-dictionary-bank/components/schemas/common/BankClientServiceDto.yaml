@@ -1,0 +1,32 @@
+required:
+- code
+- name
+- state
+type: object
+properties:
+  code:
+    maxLength: 50
+    type: string
+    description: Услуги Клиента Банка
+    enum:
+    - FAKTURA_PRIV
+    - USES_DSF_IN_H2H
+  name:
+    maxLength: 500
+    type: string
+    description: Наименование услуги
+  state:
+    type: boolean
+    description: Статус услуги
+  sourceSystem:
+    maxLength: 50
+    type: string
+    description: Система источник записи
+    enum:
+    - BSS_DBO_320
+    - ECO
+    - RKO_F1
+    - ESK
+    - SBP
+    - TESSA
+description: Услуги Клиента Банка. ДТО

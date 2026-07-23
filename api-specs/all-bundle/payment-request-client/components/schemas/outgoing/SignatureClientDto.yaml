@@ -1,0 +1,23 @@
+required:
+- documentId
+- level
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  level:
+    $ref: ../common/SignatureLevelDto.yaml
+  isSigned:
+    type: boolean
+    writeOnly: true
+  signatureData:
+    $ref: ../common/acceptSignatureDataDto.yaml
+  signed:
+    type: boolean
+  signedAt:
+    type: string
+    description: Дата подписи
+    format: date-time
+description: Подпись документа, данные для клиента

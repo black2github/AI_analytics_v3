@@ -1,0 +1,21 @@
+type: object
+properties:
+  filter:
+    $ref: ./AdmRequestClientFilter.yaml
+  format:
+    type: string
+    description: Формат
+    enum:
+    - PDF
+    - XLS
+  limit:
+    type: integer
+    description: Количество записей
+    format: int32
+    default: 10000
+  status:
+    $ref: ./AdmRequestStatusDto.yaml
+  zoneId:
+    type: string
+    description: Временная зона
+description: Запрос экспорта реестра заявок АДМ

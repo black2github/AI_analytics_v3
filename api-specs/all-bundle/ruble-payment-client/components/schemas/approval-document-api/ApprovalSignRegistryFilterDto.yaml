@@ -1,0 +1,29 @@
+type: object
+properties:
+  senderClientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  senderClientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  visaDateTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  receiverName:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentType:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ../common/FilterValueDtoString.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentSummary:
+    $ref: ../common/FilterValueDtoString.yaml
+  documentNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  lastSignerFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  paymentDocumentSignDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  visaUserName:
+    $ref: ../common/FilterValueDtoString.yaml
+  visaDecision:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр реестра визируемых документов

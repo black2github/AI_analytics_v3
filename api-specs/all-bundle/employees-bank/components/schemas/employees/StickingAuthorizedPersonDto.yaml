@@ -1,0 +1,15 @@
+type: object
+properties:
+  fullName:
+    type: string
+    description: ФИО УЛ
+  phoneNumber:
+    type: string
+    description: Телефон УЛ
+  email:
+    type: string
+    description: Email УЛ
+  eskId:
+    type: string
+    description: Идентификатор УЛ в ЕСК
+description: Данные по УЛ в результате проверки склейки пользователей

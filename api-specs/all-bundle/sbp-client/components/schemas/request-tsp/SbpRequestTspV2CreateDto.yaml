@@ -1,0 +1,59 @@
+type: object
+description: Заявка V2 на регистрацию ТСП в СБП
+properties:
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  tradeName:
+    type: string
+    description: Торговое название
+  fullAddress:
+    type: string
+    description: Полный адрес
+  shortAddress:
+    type: string
+    description: Сокращенный адрес
+    maxLength: 140
+  fiasId:
+    type: string
+    description: Идентификатор ФИАС
+  postalCode:
+    type: string
+    description: Индекс
+  oktmo:
+    type: string
+    description: Код региона
+  city:
+    type: string
+    description: Город
+  regionName:
+    type: string
+    description: Наименование региона
+  phoneNumber:
+    type: string
+    description: Телефон
+  isReturned:
+    type: boolean
+    description: Возможен возврат платежа
+  passwordOfReturning:
+    type: string
+    description: Пароль возврата
+  redirectUrl:
+    type: string
+    description: Страница платформы Агента ТСП
+    maxLength: 1024
+  clientId:
+    type: string
+    format: uuid
+    description: Ссылка на сущность "Клиент Банка"
+  salesMode:
+    type: string
+    description: Способ приема оплаты ТСП
+    enum:
+    - REMOTE
+    - FACE_TO_FACE
+  url:
+    type: string
+    description: Веб-сайт ТСП
+    maxLength: 1024

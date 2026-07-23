@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./BusinessCardOperationRequestDto.yaml
+  paging:
+    $ref: ./Paging.yaml
+description: DTO запроса для получения списка операций по карте - постранично

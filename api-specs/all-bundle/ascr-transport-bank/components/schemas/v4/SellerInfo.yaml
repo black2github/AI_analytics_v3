@@ -1,0 +1,24 @@
+type: object
+description: Реквизиты, необходимые для проведения банковского перевода
+properties:
+  accountId:
+    type: string
+    description: Номер банковского счета покупателя цифровой валюты (BBAN) либо ЭСП покупателя (EPID)
+  schemeName:
+    type: string
+    description: 'Имя схемы идентификации:
+
+      EPID - Присваивается при использовании электронного средства платежа (ЭСП) вместо банковского счета
+
+      BBAN - Присваивается при использовании номера банковского счета'
+  clearingSystemCode:
+    type: string
+    description: Идентификация платежной системы в кодированной форме, опубликованной во внешнем списке
+  memberId:
+    type: string
+    description: Идентификация участника клиринговой системы
+required:
+- accountId
+- clearingSystemCode
+- memberId
+- schemeName

@@ -1,0 +1,24 @@
+required:
+- constPart
+- maxCommission
+- minCommission
+- percentage
+type: object
+properties:
+  constPart:
+    type: integer
+    description: Фиксированная часть комиссии в минимальных единицах валюты (копейки)
+    format: int64
+  maxCommission:
+    type: integer
+    description: Максимальная сумма комиссии в минимальных единицах валюты (копейки). Если нет ограничения — 999999999999
+    format: int64
+  minCommission:
+    type: integer
+    description: Минимальная сумма комиссии в минимальных единицах валюты (копейки)
+    format: int64
+  percentage:
+    type: integer
+    description: 'Процентная часть комиссии в базисных пунктах. Пример: 50 = 0,5%, 150 = 1,5%'
+    format: int64
+description: Параметры комиссии по порогу

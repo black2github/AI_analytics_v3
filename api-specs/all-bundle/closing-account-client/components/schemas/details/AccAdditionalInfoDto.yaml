@@ -1,0 +1,34 @@
+type: object
+properties:
+  addAgreementList:
+    type: array
+    description: Список дополнительных соглашений
+    items:
+      $ref: ./AddAgreementDto.yaml
+  branchName:
+    type: string
+    description: Наименование филиала
+  checkBookList:
+    type: array
+    description: Список чековых книжек
+    items:
+      $ref: ../common/CheckBookDto.yaml
+  dbsDate:
+    type: string
+    description: Дата ДБС
+    format: date
+  dbsNumber:
+    type: string
+    description: Номер ДБС
+  departmentAddress:
+    type: string
+    description: Адрес подразделения обслуживания
+  departmentName:
+    type: string
+    description: Наименование подразделения обслуживания
+  gozInfo:
+    $ref: ./GozInfoDto.yaml
+  isContractToBeTerminated:
+    type: boolean
+    description: Признак расторжения договора ДБС
+description: Детальная информация по счету

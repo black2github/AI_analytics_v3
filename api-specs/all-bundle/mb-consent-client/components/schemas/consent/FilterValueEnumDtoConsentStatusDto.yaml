@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  notEq:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус согласия.
+      enum:
+      - AWAITING_AUTHORISATION
+      - AUTHORISED
+      - REVOKED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус согласия.
+      enum:
+      - AWAITING_AUTHORISATION
+      - AUTHORISED
+      - REVOKED
+      - REJECTED
+  isNull:
+    type: boolean
+description: Статус согласия

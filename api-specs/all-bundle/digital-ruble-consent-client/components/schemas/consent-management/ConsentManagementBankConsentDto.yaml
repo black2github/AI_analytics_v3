@@ -1,0 +1,14 @@
+required:
+- actionType
+- consentType
+type: object
+properties:
+  consentType:
+    type: string
+    enum:
+    - B2CR
+    - C2BS
+  actionType:
+    type: boolean
+    description: Действие с согласием
+description: DTO элемента списка согласий в банке.

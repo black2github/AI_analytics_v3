@@ -1,0 +1,16 @@
+type: object
+properties:
+  transactionDate:
+    type: string
+    description: Дата совершения операции
+    format: date
+  transactionPurpose:
+    type: string
+    description: Назначение платежа
+  sumDebet:
+    type: number
+    description: Сумма по дебету
+  sumCredit:
+    type: number
+    description: Сумма по кредиту
+description: Данные операции по карточному счёту в сервисе корпоративных карт

@@ -1,0 +1,13 @@
+type: object
+properties:
+  status:
+    type: string
+    enum:
+    - PROCESSING
+    - COMPLETED
+    - FAILED
+  attachmentInfo:
+    $ref: ./AttachmentInfoDto.yaml
+  errorMessage:
+    type: string
+description: Данные

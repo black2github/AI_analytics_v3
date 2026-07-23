@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+description: Подпись заявки

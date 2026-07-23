@@ -1,0 +1,30 @@
+required:
+- innKio
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Счет списания (Счет контрагента)
+    nullable: true
+  name:
+    maxLength: 160
+    type: string
+    description: Плательщик (Наименование контрагента)
+    nullable: true
+  innKio:
+    maxLength: 12
+    type: string
+    description: ИНН плательщика (ИНН/КИО контрагента)
+  bankBic:
+    maxLength: 9
+    type: string
+    description: БИК банка контрагента
+    nullable: true
+  bankName:
+    maxLength: 160
+    type: string
+    description: Наименование Банка контрагента
+    nullable: true
+description: Реквизиты контрагента (плательщика) (скроллер админа платежное требование исходящее)
+nullable: true

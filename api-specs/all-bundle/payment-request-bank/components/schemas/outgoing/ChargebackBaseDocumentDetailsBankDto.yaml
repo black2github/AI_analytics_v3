@@ -1,0 +1,48 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  documentType:
+    type: string
+    description: Тип документа
+  baseDocumentNumber:
+    type: string
+    description: Номер документа
+  baseDocumentDate:
+    type: string
+    description: Дата документа
+    format: date
+  baseDocumentSum:
+    type: string
+    description: Сумма
+  payerName:
+    type: string
+    description: Наименование плательщика
+  payerAccountNumber:
+    type: string
+    description: Счет плательщика
+  payerInnKio:
+    type: string
+    description: ИНН плательщика
+  payerBankBic:
+    type: string
+    description: БИК банка плательщика
+  payerBankName:
+    type: string
+    description: Наименование банка плательщика
+  clientAccountId:
+    type: string
+    description: Идентификатор счета плательщика
+    format: uuid
+  receiverName:
+    type: string
+    description: Наименование получателя
+  receiverInnKio:
+    type: string
+    description: ИНН или КИО получателя
+  receiverAccountNumber:
+    type: string
+    description: Счет получателя
+description: Реквизиты базового документа

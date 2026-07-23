@@ -1,0 +1,21 @@
+type: object
+properties:
+  f1ContractDate:
+    type: string
+    description: Дата Договора
+    format: date
+  f1ContractId:
+    type: string
+    description: Идентификатор договора АДМ в Ф1
+  f1ContractNumber:
+    type: string
+    description: Номер Договора АДМ (АПУ-NNN-KKKKKК, где NNN – административный код Филиала, КККККК – РНК номер Клиента)
+  tessaCardId:
+    type: string
+    description: Идентификатор карточки документа в ТЕССА
+    format: uuid
+  tessaFileId:
+    type: string
+    description: Идентификатор файла в ТЕССА
+    format: uuid
+description: ДТО Иные сведения

@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Управление разрешениями ТСП'
+  tags:
+  - СИП. Сервис Internal Merchant API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/MerchantPermissionsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/MerchantPermissionsResultDto.yaml
+    '400':
+      description: Bad Request

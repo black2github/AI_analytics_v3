@@ -1,0 +1,63 @@
+openapi: 3.0.1
+info:
+  title: Сервис фоновых процессов. Клиентская часть.
+  description: Сервис фоновых процессов.
+  version: 1.23.0
+servers:
+- url: /background-tasks-client
+security:
+- bearerAuth: []
+tags:
+- name: API фоновых процессов
+paths:
+  /background-tasks/{id}/terminate:
+    $ref: ./paths/{id}/background_tasks_id_terminate.yaml
+  /background-tasks/terminate-active:
+    $ref: ./paths/terminate-active/background_tasks_terminate_active.yaml
+  /background-tasks/state/clear:
+    $ref: ./paths/state/background_tasks_state_clear.yaml
+  /background-tasks/get-page:
+    $ref: ./paths/get-page/background_tasks_get_page.yaml
+  /background-tasks/state:
+    $ref: ./paths/state/background_tasks_state.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    GenericResponseTerminationErrorDataActionResult:
+      $ref: ./components/schemas/{id}/GenericResponseTerminationErrorDataActionResult.yaml
+    TerminationErrorData:
+      $ref: ./components/schemas/{id}/TerminationErrorData.yaml
+    GenericResponseSimpleErrorDataActionResult:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataActionResult.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandSetBackgroundTasksStateTypeDto:
+      $ref: ./components/schemas/state/GenericCommandSetBackgroundTasksStateTypeDto.yaml
+    BackgroundTaskClientFilter:
+      $ref: ./components/schemas/get-page/BackgroundTaskClientFilter.yaml
+    GetPageCommandBackgroundTaskClientFilter:
+      $ref: ./components/schemas/get-page/GetPageCommandBackgroundTaskClientFilter.yaml
+    PageParamsBackgroundTaskClientFilter:
+      $ref: ./components/schemas/get-page/PageParamsBackgroundTaskClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/get-page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/get-page/Sort.yaml
+    BackgroundTaskDto:
+      $ref: ./components/schemas/get-page/BackgroundTaskDto.yaml
+    PageDataBackgroundTaskDto:
+      $ref: ./components/schemas/get-page/PageDataBackgroundTaskDto.yaml
+    BackgroundTasksStateDto:
+      $ref: ./components/schemas/state/BackgroundTasksStateDto.yaml
+    GenericResponseSimpleErrorDataBackgroundTasksStateDto:
+      $ref: ./components/schemas/state/GenericResponseSimpleErrorDataBackgroundTasksStateDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

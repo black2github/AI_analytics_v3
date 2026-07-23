@@ -1,0 +1,13 @@
+required:
+- consentType
+- consentVersion
+type: object
+properties:
+  consentType:
+    type: string
+    description: Тип согласия
+  consentVersion:
+    type: integer
+    description: Версия согласия
+    format: int32
+description: Запрос на добавление согласия пользователю

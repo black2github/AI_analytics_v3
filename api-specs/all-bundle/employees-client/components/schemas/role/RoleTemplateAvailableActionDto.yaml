@@ -1,0 +1,18 @@
+required:
+- docActionType
+- docForConfiguringAccessId
+type: object
+properties:
+  docActionType:
+    type: string
+    description: Тип действия с документом
+    enum:
+    - VIEW
+    - CREATE_AND_UPDATE
+    - SIGN_AND_SEND
+    - IMPORT
+  docForConfiguringAccessId:
+    type: string
+    description: Идентификатор документа для настройки доступа
+    format: uuid
+description: Доступное действие

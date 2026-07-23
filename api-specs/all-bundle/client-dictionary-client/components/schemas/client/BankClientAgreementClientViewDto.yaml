@@ -1,0 +1,38 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  productType:
+    type: string
+    description: Продукты ГПБ БО
+    enum:
+    - CONSTITUTION
+    - LK_UVED
+    - LK_MP
+    - TMG
+    - GPB_BO
+  offerNumber:
+    type: string
+    description: Регистрационный номер оферты, акцептованной клиентом.
+  offerDate:
+    type: string
+    description: Дата регистрации оферты, акцептованной клиентом.
+    format: date
+  bankClient:
+    $ref: ./BankClientInfoDto.yaml
+  breakDate:
+    type: string
+    description: Дата расторжения соглашения
+    format: date
+  supplyMode:
+    type: string
+    description: Способ оформления документа
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+description: Соглашения Клиента Банка. Профиль.

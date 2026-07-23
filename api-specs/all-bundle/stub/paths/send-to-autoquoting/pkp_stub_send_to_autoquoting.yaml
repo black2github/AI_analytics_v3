@@ -1,0 +1,27 @@
+post:
+  tags:
+  - АС ПКП. API автокотирования
+  summary: Отправить строку в кафка топик по обновлению автокотирования от ac пкп
+  operationId: sendToKafkaUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: profileRspDto
+    description: profileRspDto
+    required: true
+    schema:
+      $ref: '#/definitions/PkpClientProfileRspDto'
+  responses:
+    '200':
+      description: OK
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

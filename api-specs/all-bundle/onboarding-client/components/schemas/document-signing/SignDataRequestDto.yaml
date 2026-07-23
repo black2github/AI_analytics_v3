@@ -1,0 +1,8 @@
+type: object
+properties:
+  signDocuments:
+    type: array
+    description: Набор подписываемых документов
+    items:
+      $ref: ./SignDataRequestDocumentDto.yaml
+description: Запрос на получение дайджестов

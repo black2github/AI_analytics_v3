@@ -1,0 +1,15 @@
+required:
+- endDate
+- products
+type: object
+properties:
+  endDate:
+    type: string
+    description: Дата окончания действия доверенности
+    format: date
+  products:
+    type: array
+    description: Список продуктов
+    items:
+      $ref: ./WarrantyProductDto.yaml
+description: Данные для выдачи продуктовой доверенности

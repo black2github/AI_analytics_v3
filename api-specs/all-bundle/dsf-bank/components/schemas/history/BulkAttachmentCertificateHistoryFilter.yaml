@@ -1,0 +1,9 @@
+type: object
+description: Фильтр для истории изменений сертификатов автоматического письма.
+properties:
+  bulkAttachmentCertificateId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Идентификатор сертификата
+  ownerFio:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: ФИО владельца сертификата

@@ -1,0 +1,20 @@
+required:
+- uploadStartedAt
+type: object
+properties:
+  filesIds:
+    type: array
+    description: Идентификаторы файлов для распознавания
+    items:
+      type: string
+      description: Идентификаторы файлов для распознавания
+      format: uuid
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  uploadStartedAt:
+    type: string
+    description: Время начала загрузки файлов
+    format: date-time
+description: Запрос на распознавание данных документа

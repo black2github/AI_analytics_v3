@@ -1,0 +1,12 @@
+type: object
+properties:
+  content:
+    type: array
+    description: Данные запроса на пакетную выгрузку реквизитов ЭП для проверки
+    items:
+      $ref: ./SignExportContent.yaml
+  signCheckDate:
+    type: string
+    description: Дата проверки подписи
+    format: date-time
+description: Запрос на пакетную выгрузку реквизитов ЭП для проверки

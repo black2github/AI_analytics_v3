@@ -1,0 +1,15 @@
+type: object
+properties:
+  agreement1:
+    type: boolean
+    description: Согласие №1 (Признак подтверждения отсутствия изменений в документах)
+  agreement2:
+    type: boolean
+    description: Согласие №2 (Признак присоединения и ознакомления с с договором банковского счета, условиям РКО, условиям открытия и обслуживания карт)
+  agreement4:
+    type: boolean
+    description: Согласие №4
+  agreement5:
+    type: boolean
+    description: Согласие №5 (Согласие и присоединение к Условиям открытия и обслуживания карт Банка ГПБ (АО) и Тарифам Банка ГПБ (АО))
+description: Согласия

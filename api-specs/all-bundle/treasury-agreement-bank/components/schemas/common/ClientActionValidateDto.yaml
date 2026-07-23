@@ -1,0 +1,13 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность "Клиент"
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  failedCheckCode:
+    type: string
+    description: Код проверки, которая сломалась
+  result:
+    type: boolean
+    description: Результат обобщенной проверки

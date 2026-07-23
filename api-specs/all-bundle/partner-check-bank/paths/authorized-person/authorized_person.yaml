@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API уполномоченного лица
+  summary: Коллекция УЛ
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.NOTIFICATION'
+  operationId: getAuthorizedPersonsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: requestDto
+    description: requestDto
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«BankClientAuthorizedPersonRequestDto»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,List«BankClientAuthorizedPersonDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

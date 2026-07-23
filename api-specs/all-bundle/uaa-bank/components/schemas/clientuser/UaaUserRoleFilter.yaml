@@ -1,0 +1,15 @@
+type: object
+properties:
+  segmentId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  roleId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  roleCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  comment:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOfficialId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр для ролей представителя клиента

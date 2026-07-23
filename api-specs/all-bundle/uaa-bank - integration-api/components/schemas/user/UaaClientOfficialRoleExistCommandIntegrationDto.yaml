@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: Идентификатор представителя клиента
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  roleCode:
+    type: string
+    description: Предполагаемый код роли
+  segmentCode:
+    type: string
+    description: Предполагаемый сегмент роли

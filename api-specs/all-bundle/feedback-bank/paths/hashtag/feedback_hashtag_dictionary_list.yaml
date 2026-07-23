@@ -1,0 +1,19 @@
+post:
+  tags:
+  - '[Оценка 5*]. Банк — работа с хештегами'
+  summary: Получить справочник хештегов с пагинацией
+  description: 'Привилегии: FEEDBACK.BANK.HASHTAG_VIEW'
+  operationId: getHashtagDictionary
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/hashtag/HashtagDictionaryFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/hashtag/GenericResponseSimpleErrorDataSliceDataHashtagDictionaryDto.yaml

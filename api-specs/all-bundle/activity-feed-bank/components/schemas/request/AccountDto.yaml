@@ -1,0 +1,14 @@
+required:
+- accountId
+- f1AccountId
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета в Экосистеме
+    format: uuid
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета клиента в РКО Ф1
+    format: int64
+description: Счет

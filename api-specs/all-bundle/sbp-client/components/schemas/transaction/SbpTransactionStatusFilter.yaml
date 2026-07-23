@@ -1,0 +1,45 @@
+type: object
+description: Фильтр по статусу транзакции
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус транзакции
+    enum:
+    - DRAFT
+    - IN_PROGRESS
+    - PERFORMED
+    - CANCELLED
+  notEq:
+    type: string
+    description: Статус транзакции
+    enum:
+    - DRAFT
+    - IN_PROGRESS
+    - PERFORMED
+    - CANCELLED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус транзакции
+      enum:
+      - DRAFT
+      - IN_PROGRESS
+      - PERFORMED
+      - CANCELLED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус транзакции
+      enum:
+      - DRAFT
+      - IN_PROGRESS
+      - PERFORMED
+      - CANCELLED
+  isNull:
+    type: boolean

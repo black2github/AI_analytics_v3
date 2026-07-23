@@ -1,0 +1,9 @@
+required:
+- eskClientId
+type: object
+properties:
+  eskClientId:
+    type: string
+    description: Идентификатор Клиента Банка в ЕСК
+    format: uuid
+description: Данные запроса синхронизации ИО Клиент CORPORATE

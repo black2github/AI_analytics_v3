@@ -1,0 +1,29 @@
+type: object
+description: Данные типа ДСФ
+properties:
+  archived:
+    type: boolean
+    description: Признак архивный тип письма
+  code:
+    type: string
+    description: Код типа письма
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  letterCategory:
+    $ref: ./LetterCategory.yaml
+    description: Категория письма
+  nameInEnglish:
+    type: string
+    description: Наименование (EN)
+  nameInRussian:
+    type: string
+    description: Наименование (RU)
+  typeClass:
+    type: string
+    description: Класс типа письма
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+    - REPLY_MAIL_TO_BANK

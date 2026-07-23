@@ -1,0 +1,12 @@
+type: object
+properties:
+  key:
+    type: string
+    description: Ключ причины отказа для сохранения в сущность заявки
+  shortDescription:
+    type: string
+    description: Краткое текстовое описание ключа
+  fullDescription:
+    type: string
+    description: Полное текстовое описание ключа
+description: Элемент справочника причин отказа заявки регистрации СЭП

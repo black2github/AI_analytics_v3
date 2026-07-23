@@ -1,0 +1,9 @@
+type: object
+properties:
+  authorizingDoc:
+    type: string
+    description: Документ на основании которого пользователь подписал заявку
+  signerPosition:
+    type: string
+    description: Наименование должности пользователя подписавшего заявку
+description: Информация о пользователе, подписавшем заявку

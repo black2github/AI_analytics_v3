@@ -1,0 +1,9 @@
+type: string
+description: Статус обработки документов файлового импорта
+enum:
+- NEW
+- ERROR
+- SIGNED
+- SIGNED_1
+- SIGNED_2
+- REJECTED

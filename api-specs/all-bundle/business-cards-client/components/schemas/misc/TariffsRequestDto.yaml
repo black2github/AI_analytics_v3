@@ -1,0 +1,18 @@
+required:
+- cardId
+- levelsInfo
+type: object
+properties:
+  cardId:
+    type: string
+    description: Виртуальный номер карты, по которой запрашивается информация
+  counters:
+    type: array
+    description: Список кодов метрик из расширяемого справочника. По умолчанию массив из одного элемента cash_fee
+    items:
+      type: string
+      description: Список кодов метрик из расширяемого справочника. По умолчанию массив из одного элемента cash_fee
+  levelsInfo:
+    type: boolean
+    description: 'Признак возврата всех порогов: false - информация только по актуальному уровню, true - по всем существующим'
+description: Запрос тарифов по корпоративной карте

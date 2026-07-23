@@ -1,0 +1,43 @@
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счета
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета (20-знач.)
+  accountName:
+    type: string
+    description: Наименование счета
+  name:
+    type: string
+    description: Наименование
+  secondName:
+    type: string
+    description: Наименование плательщика 2
+  currencyCode:
+    type: string
+    description: Код валюты
+  clientId:
+    type: string
+    description: Идентификатор организации (ЭКО)
+    format: uuid
+  bank:
+    $ref: ./CurrencyTransferScrollerBankDto.yaml
+  clientRnk:
+    type: string
+    description: РНК клиента
+  branchName:
+    type: string
+    description: Филиал обслуживания плательщика
+  clientInn:
+    type: string
+    description: ИНН клиента
+  useCcf:
+    type: boolean
+    description: Признак "Использование ЦЦФ"
+  numberCcf:
+    type: string
+    description: Номер ЦЦФ
+description: Транспортное представление вложенных атрибутов плательщика

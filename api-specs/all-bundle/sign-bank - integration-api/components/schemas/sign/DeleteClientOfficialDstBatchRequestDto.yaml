@@ -1,0 +1,13 @@
+required:
+- clientOfficialsData
+type: object
+properties:
+  clientOfficialsData:
+    maxItems: 50
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Данные представителей для удаления связей
+    items:
+      $ref: ./DeleteClientOfficialDstDataDto.yaml
+description: Запрос на пакетное удаление связей СЭП представителей

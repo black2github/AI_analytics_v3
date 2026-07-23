@@ -1,0 +1,9 @@
+type: object
+properties:
+  documentTypeDto:
+    type: string
+    enum:
+    - STATEMENT
+    - BASE
+  documentName:
+    type: string

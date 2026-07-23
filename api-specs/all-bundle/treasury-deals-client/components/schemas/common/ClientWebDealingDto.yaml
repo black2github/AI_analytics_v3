@@ -1,0 +1,70 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientId:
+    type: string
+    description: Идентификатор Клиента в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientAskId:
+    type: integer
+    description: Идентификатор Клиента в АСК
+    format: int64
+  clientPkpId:
+    type: string
+    description: Идентификатор Клиента в ПКП
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientGroup:
+    type: string
+    description: Группа клиента для ставок
+  clientGroupId:
+    type: integer
+    description: ID Группы Клиентов ДБО в АС ПКП
+    format: int64
+  clientAbsF1Id:
+    type: string
+    description: ID Клиента в РКО F1
+  clientSuvId:
+    type: string
+    description: ID Клиента при передачи через СУВ
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  innKio:
+    type: string
+    description: ИНН/КИО
+  ogrn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  fullName:
+    type: string
+    description: Полное наименование Клиента
+  shortName:
+    type: string
+    description: Краткое наименование Клиента
+  clientManagerName:
+    type: string
+    description: Имя клиентского менеджера
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  accountAsyncUpdateType:
+    type: string
+    description: Способ обновления счетов
+    enum:
+    - DISABLED
+    - ENABLED_PERMANENT
+    - ENABLED_CALCULATED
+description: Информация об организации Клиента

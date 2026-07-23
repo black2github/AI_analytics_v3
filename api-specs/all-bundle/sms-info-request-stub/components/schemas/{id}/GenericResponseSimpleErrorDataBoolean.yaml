@@ -1,0 +1,8 @@
+type: object
+properties:
+  data:
+    type: boolean
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  traceId:
+    type: string

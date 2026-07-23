@@ -1,0 +1,42 @@
+required:
+- categoryCode
+- categoryName
+- direction
+- documentCode
+- id
+- name
+- typeCode
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  typeCode:
+    type: string
+    description: Код типа
+  name:
+    type: string
+    description: Наименование
+  categoryName:
+    type: string
+    description: Наименование категории
+  categoryCode:
+    type: string
+    description: Код категории
+  documentCode:
+    type: string
+    description: Код документа типа ДСФ
+    enum:
+    - DSF_IN
+    - DSF_OUT
+  direction:
+    type: string
+    description: Направление типа ДСФ
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+  relatedTypeCode:
+    type: string
+    description: Ссылка на связанный тип ДСФ
+description: Данные типа ДСФ сотрудника в заявке

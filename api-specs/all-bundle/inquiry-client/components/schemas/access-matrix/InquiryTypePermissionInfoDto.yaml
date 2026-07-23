@@ -1,0 +1,41 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Виды справок для ЮЛ.
+    example: null
+    enum:
+    - OPEN_ACCOUNT
+    - INFORMATION_CURRENCY
+    - CASH_BALANCE
+    - ACCOUNT_RESTRICTION
+    - FILE_CABINET
+    - MUTUAL_SETTLEMENTS
+    - MNO
+    - DEPOSIT_ACCOUNTS
+    - PERCENTAGE_STATEMENT
+    - CREDIT_DEALS_SECURITY
+    - CREDIT_AGREEMENT_BALANCE
+    - AUDITOR_REQUEST
+    - LOAN_DEBT_PRESENCE
+    - CREDIT_HISTORY_PRESENCE
+    - GUARANTEES
+  allow:
+    type: boolean
+    description: Доступность операции
+    example: null
+  reason:
+    uniqueItems: true
+    type: array
+    description: Источник запрета на операцию
+    example: null
+    items:
+      type: string
+      description: Источник запрета на операцию
+      example: null
+      enum:
+      - ESK
+      - NOT_SIGNATORY
+      - EMPL
+description: Информация о доступе к типу справки
+example: null

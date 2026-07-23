@@ -1,0 +1,85 @@
+type: object
+description: Заявка на отключение агентов ТСП в системе АС СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  version:
+    type: integer
+    format: int32
+    description: Версия
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  ecoDocTypeId:
+    type: string
+    description: Тип документа
+  status:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - WAIT_FOR_SIGN
+    - DELETED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP
+    - EXPORT_DISCONNECT_AGENTS_TO_AS_SBP_ERROR
+    - EXECUTED_BY_AS_SBP_DISCONNECT_AGENTS
+    - EXPORT_DISCONNECT_AGENTS_TO_F1
+    - EXPORT_DISCONNECT_AGENTS_TO_F1_ERROR
+    - EXECUTED_BY_F1_DISCONNECT_AGENTS
+    - EXECUTED
+    - REJECTED
+  clientF1ContractId:
+    type: integer
+    format: int64
+    description: ID договора СБП в РКО Ф1
+  contractNumber:
+    type: string
+    description: Номер договора
+  signDate:
+    type: string
+    format: date
+    description: Дата подписания договора
+  contractDate:
+    type: string
+    format: date
+    description: Дата начала действия договора
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший заявку (Идентификатор пользователя в экосистеме)
+  userName:
+    type: string
+    description: ФИО пользователя, создавшего заявку
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  signature:
+    $ref: ./SbpDisconnectAgentsRequestSignatureDto.yaml
+    description: Реквизиты электронной подписи заявки
+  bankClient:
+    $ref: ./SbpDisconnectAgentsRequestBankClientDto.yaml
+    description: Реквизиты клиента
+  agents:
+    type: array
+    description: Агенты клиента по заявке
+    items:
+      $ref: ./SbpRequestAgentTspDto.yaml
+  validationResult:
+    $ref: ./ValidationResult.yaml
+    description: Результат контролей

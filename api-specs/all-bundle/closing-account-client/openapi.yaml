@@ -1,0 +1,206 @@
+openapi: 3.0.1
+info:
+  title: Сервис закрытия счета. Клиентская часть.
+  version: 1.22.0
+servers:
+- url: /closing-account-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API клиентских операций.
+- name: API операций со счетами.
+- name: API операций заявок на закрытие счета.
+- name: API для первого контроля группы 0.
+- name: Заявка на закрытие счета. Операции для скроллера.
+- name: API Заявки на закрытие счета. Операции подписи.
+- name: Заявка на закрытие счета. Клиентский скроллер.
+- name: Заявка на закрытие счета. Операции печати.
+paths:
+  /account/details:
+    $ref: ./paths/details/account_details.yaml
+  /account/list/{organizationId}:
+    $ref: ./paths/list/account_list_organizationId.yaml
+  /account/possibilities:
+    $ref: ./paths/possibilities/account_possibilities.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /report/exportSignature/{closingAccountRequestId}:
+    $ref: ./paths/exportSignature/report_exportSignature_closingAccountRequestId.yaml
+  /report/upload/{closingAccountRequestId}:
+    $ref: ./paths/upload/report_upload_closingAccountRequestId.yaml
+  /request:
+    $ref: ./paths/request/request.yaml
+  /request/generate-digest/version:
+    $ref: ./paths/generate-digest/request_generate_digest_version.yaml
+  /request/generate-sign-data:
+    $ref: ./paths/generate-sign-data/request_generate_sign_data.yaml
+  /request/sign:
+    $ref: ./paths/sign/request_sign.yaml
+  /request/{id}:
+    $ref: ./paths/{id}/request_id.yaml
+  /scroller/accounts/list:
+    $ref: ./paths/accounts/scroller_accounts_list.yaml
+  /scroller/category:
+    $ref: ./paths/category/scroller_category.yaml
+  /scroller/division/list:
+    $ref: ./paths/division/scroller_division_list.yaml
+  /scroller/get-page:
+    $ref: ./paths/get-page/scroller_get_page.yaml
+  /scroller/organization-name/list:
+    $ref: ./paths/organization-name/scroller_organization_name_list.yaml
+  /settings/hashes:
+    $ref: ./paths/hashes/settings_hashes.yaml
+  /validate/agreement-existence:
+    $ref: ./paths/agreement-existence/validate_agreement_existence.yaml
+  /validate/certificate-validity-check:
+    $ref: ./paths/certificate-validity-check/validate_certificate_validity_check.yaml
+  /validate/signers:
+    $ref: ./paths/signers/validate_signers.yaml
+  /validate/validity-check:
+    $ref: ./paths/validity-check/validate_validity_check.yaml
+components:
+  schemas:
+    AccAdditionalInfoDto:
+      $ref: ./components/schemas/details/AccAdditionalInfoDto.yaml
+    AccountToCloseDetailsRequestDto:
+      $ref: ./components/schemas/details/AccountToCloseDetailsRequestDto.yaml
+    AccountToCloseDetailsResponseDto:
+      $ref: ./components/schemas/details/AccountToCloseDetailsResponseDto.yaml
+    AccountToClosePossibilityRequestDto:
+      $ref: ./components/schemas/possibilities/AccountToClosePossibilityRequestDto.yaml
+    AccountToClosePossibilityResponseDto:
+      $ref: ./components/schemas/possibilities/AccountToClosePossibilityResponseDto.yaml
+    AccountToCloseResponseDto:
+      $ref: ./components/schemas/list/AccountToCloseResponseDto.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    AddAgreementDto:
+      $ref: ./components/schemas/details/AddAgreementDto.yaml
+    AdditionalAgreementDto:
+      $ref: ./components/schemas/common/AdditionalAgreementDto.yaml
+    AgreementCloseAccountHashDto:
+      $ref: ./components/schemas/hashes/AgreementCloseAccountHashDto.yaml
+    AgreementClosureAccountDto:
+      $ref: ./components/schemas/common/AgreementClosureAccountDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/common/AttachmentInfoDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    CertificateCheckRequest:
+      $ref: ./components/schemas/certificate-validity-check/CertificateCheckRequest.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CheckBookDto:
+      $ref: ./components/schemas/common/CheckBookDto.yaml
+    ClientRequisitesDto:
+      $ref: ./components/schemas/common/ClientRequisitesDto.yaml
+    ClosingAccountParamsDto:
+      $ref: ./components/schemas/common/ClosingAccountParamsDto.yaml
+    ClosingAccountRequestDto:
+      $ref: ./components/schemas/common/ClosingAccountRequestDto.yaml
+    ClosingAccountRequestResponseDto:
+      $ref: ./components/schemas/common/ClosingAccountRequestResponseDto.yaml
+    ClosingAccountRequestSignatureDto:
+      $ref: ./components/schemas/common/ClosingAccountRequestSignatureDto.yaml
+    CreateCommandClosingAccountRequestDto:
+      $ref: ./components/schemas/request/CreateCommandClosingAccountRequestDto.yaml
+    DetailsForTransferringDto:
+      $ref: ./components/schemas/common/DetailsForTransferringDto.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    DivisionDto:
+      $ref: ./components/schemas/division/DivisionDto.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueEnumDtoAccountAssignmentDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoAccountAssignmentDto.yaml
+    FilterValueEnumDtoClosingRequestStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoClosingRequestStatusDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/generate-sign-data/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataAccountToCloseDetailsResponseDto:
+      $ref: ./components/schemas/details/GenericResponseSimpleErrorDataAccountToCloseDetailsResponseDto.yaml
+    GenericResponseSimpleErrorDataAgreementCloseAccountHashDto:
+      $ref: ./components/schemas/hashes/GenericResponseSimpleErrorDataAgreementCloseAccountHashDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataBoolean.yaml
+    GenericResponseSimpleErrorDataClosingAccountRequestDto:
+      $ref: ./components/schemas/sign/GenericResponseSimpleErrorDataClosingAccountRequestDto.yaml
+    GenericResponseSimpleErrorDataClosingAccountRequestResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataClosingAccountRequestResponseDto.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/generate-digest/GenericResponseSimpleErrorDataDigest.yaml
+    GenericResponseSimpleErrorDataListAccountToClosePossibilityResponseDto:
+      $ref: ./components/schemas/possibilities/GenericResponseSimpleErrorDataListAccountToClosePossibilityResponseDto.yaml
+    GenericResponseSimpleErrorDataListAccountToCloseResponseDto:
+      $ref: ./components/schemas/list/GenericResponseSimpleErrorDataListAccountToCloseResponseDto.yaml
+    GenericResponseSimpleErrorDataListDivisionDto:
+      $ref: ./components/schemas/division/GenericResponseSimpleErrorDataListDivisionDto.yaml
+    GenericResponseSimpleErrorDataListString:
+      $ref: ./components/schemas/organization-name/GenericResponseSimpleErrorDataListString.yaml
+    GenericResponseSimpleErrorDataSignersResponse:
+      $ref: ./components/schemas/signers/GenericResponseSimpleErrorDataSignersResponse.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/validity-check/GenericResponseSimpleErrorDataVoid.yaml
+    GetPageCommandRequestClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandRequestClientFilter.yaml
+    GozInfoDto:
+      $ref: ./components/schemas/details/GozInfoDto.yaml
+    Item:
+      $ref: ./components/schemas/signers/Item.yaml
+    PageDataString:
+      $ref: ./components/schemas/accounts/PageDataString.yaml
+    PageParamsRequestClientFilter:
+      $ref: ./components/schemas/common/PageParamsRequestClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestClientFilter:
+      $ref: ./components/schemas/common/RequestClientFilter.yaml
+    RequestNotificationsDto:
+      $ref: ./components/schemas/common/RequestNotificationsDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/sign/SignCommand.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SignersResponse:
+      $ref: ./components/schemas/signers/SignersResponse.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    TessaUploadRequestRequisitesDto:
+      $ref: ./components/schemas/common/TessaUploadRequestRequisitesDto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/generate-sign-data/UniSignV2x1Dto.yaml
+  securitySchemes:
+    bearer-key:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http

@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API выпуска CRL
+  summary: Выпустить CRL
+  operationId: issue
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/crl/GenericCommandCrlRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataCrlDto.yaml

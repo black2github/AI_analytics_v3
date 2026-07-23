@@ -1,0 +1,6 @@
+type: string
+description: Тип справки
+example: null
+enum:
+- SINGLE
+- COMPOSITE

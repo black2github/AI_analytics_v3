@@ -1,0 +1,30 @@
+required:
+- encryptedMessage
+- msgId
+- msgType
+- requestId
+- signatures
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  msgId:
+    type: string
+    description: Идентификатор сообщения
+    format: uuid
+  msgType:
+    type: string
+    enum:
+    - MSG1_OUT
+    - MSG1_IN
+  encryptedMessage:
+    type: string
+    description: Зашифрованное сообщение
+  signatures:
+    type: array
+    description: Подписи сообщения
+    items:
+      $ref: ./MessageSignatureDto.yaml
+description: DTO для сохранения зашифрованного исходящего сообщения и подписей.

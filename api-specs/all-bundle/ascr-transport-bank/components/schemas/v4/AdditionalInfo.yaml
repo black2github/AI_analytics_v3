@@ -1,0 +1,13 @@
+type: object
+properties:
+  recipient:
+    type: array
+    description: Данные Клиента-получателя
+    items:
+      $ref: ./Recipient.yaml
+  sender:
+    $ref: ./Sender.yaml
+    description: Данные Клиента-отправителя
+required:
+- recipient
+- sender

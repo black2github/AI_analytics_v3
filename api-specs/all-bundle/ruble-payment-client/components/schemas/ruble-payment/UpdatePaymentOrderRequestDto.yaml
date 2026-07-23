@@ -1,0 +1,29 @@
+type: object
+properties:
+  paymentInfo:
+    $ref: ./UpdatePaymentInfoDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9@:%_\+.-~#?&//=-]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+  sampleDocId:
+    type: string
+    description: Идентификатор документа на основе которого создан документ
+  paymentAmount:
+    $ref: ../common/CreatePaymentAmountDto.yaml
+  payerDetails:
+    $ref: ./CreatePayerDetailsDto.yaml
+  recipientDetails:
+    $ref: ../common/CreateRecipientDetailsDto.yaml
+  budgetInfo:
+    $ref: ../common/CreateBudgetInfoDto.yaml
+  controlAndAcceptance:
+    $ref: ../common/CreateControlAndAcceptanceDto.yaml
+description: Служебные реквизиты документа, заполняемые клиентом при обновлении заявки

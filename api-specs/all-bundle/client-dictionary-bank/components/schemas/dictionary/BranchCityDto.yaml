@@ -1,0 +1,10 @@
+type: object
+properties:
+  location:
+    type: string
+    description: Населенный пункт без типа
+  fiasId:
+    type: string
+    description: Идентификатор ФИАС города или нас пункта
+    format: uuid
+description: Города подразделений с идентификатором ФИАС

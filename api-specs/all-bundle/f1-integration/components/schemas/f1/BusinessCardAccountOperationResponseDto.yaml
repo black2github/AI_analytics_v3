@@ -1,0 +1,36 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  clientCode:
+    type: string
+    description: Код клиента (РНК)
+  clientName:
+    type: string
+    description: Краткое наименование организации
+  accountId:
+    type: string
+    description: Идентификатор счета
+  branchServiceCode:
+    type: string
+    description: Филиал (код)
+  departmentCode:
+    type: string
+    description: Подразделение (Код)
+  operations:
+    type: array
+    description: Массив с перечнем операций и их параметрами
+    items:
+      $ref: ./CardAccountOperationDto.yaml
+  size:
+    type: integer
+    description: Количество отфильтрованных записей
+    format: int64
+  result:
+    type: string
+    description: Результат выполнения запроса
+    enum:
+    - SUCCESS
+    - OPERATIONS_NOT_FOUND_ERROR
+description: Данные об операциях по карточному счёту

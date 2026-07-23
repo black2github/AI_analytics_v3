@@ -1,0 +1,20 @@
+required:
+- bankClient
+- id
+- supportServices
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  bankClient:
+    $ref: ./LkuvedBcRegisterBankClientModifyDto.yaml
+  supportServices:
+    type: integer
+    description: Признак перевода
+    format: int32
+    enum:
+    - 1
+    - 2
+description: ЛК УВЭД. Реестр организаций. Обновление.

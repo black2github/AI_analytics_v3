@@ -1,0 +1,12 @@
+type: object
+description: Дополнительные данные от ПЦР.
+properties:
+  key:
+    type: string
+    description: Код передаваемого реквизита.
+  itemName:
+    type: string
+    description: Название передаваемого реквизита.
+  value:
+    type: string
+    description: Значение передаваемого реквизита.

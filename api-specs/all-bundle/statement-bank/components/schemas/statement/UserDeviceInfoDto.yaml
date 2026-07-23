@@ -1,0 +1,6 @@
+type: object
+properties:
+  macAddress:
+    type: string
+  deviceDigitalPrint:
+    type: string

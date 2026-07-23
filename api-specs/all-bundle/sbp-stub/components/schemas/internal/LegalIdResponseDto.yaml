@@ -1,0 +1,42 @@
+type: object
+description: Данные клиента из АС СБП
+properties:
+  code:
+    type: string
+    description: Код ответа на запрос
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ
+  message:
+    type: string
+    description: Описание кода ответа
+  name:
+    type: string
+    description: Полное наименование юридического лица
+  type:
+    type: string
+    description: Организационно-правовая форма юридического лица
+  inn:
+    type: string
+    description: ИНН
+  ogrn:
+    type: string
+    description: ОГРН
+  kpp:
+    type: string
+    description: КПП
+  countryCode:
+    type: string
+    description: Код страны регистрации юридического лица
+  countrySubDivisionCode:
+    type: string
+    description: ОКТМО
+  city:
+    type: string
+    description: Город
+  zip:
+    type: string
+    description: Индекс
+  address:
+    type: string
+    description: Юридический адрес

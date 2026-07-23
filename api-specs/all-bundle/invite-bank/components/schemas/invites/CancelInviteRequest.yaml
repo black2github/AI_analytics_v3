@@ -1,0 +1,22 @@
+required:
+- authorizedPersonId
+- bankClientId
+- eskId
+- service
+type: object
+properties:
+  service:
+    type: string
+    description: Сервис
+  eskId:
+    type: string
+    description: Идентификатор представителя в ЕСК
+  authorizedPersonId:
+    type: string
+    description: Идентификатор УЛ
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: ДТО аннулирования инвайта

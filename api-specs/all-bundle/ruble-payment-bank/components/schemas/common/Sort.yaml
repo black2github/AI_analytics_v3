@@ -1,0 +1,12 @@
+required:
+- field
+type: object
+properties:
+  field:
+    type: string
+    description: Поле
+  direction:
+    $ref: ./Direction.yaml
+  nullHandling:
+    $ref: ./NullHandling.yaml
+description: Сортировка по нескольким полям

@@ -1,0 +1,18 @@
+required:
+- accountNumber
+- annulatedDate
+- requestId
+type: object
+properties:
+  requestId:
+    type: string
+    description: Ссылка на заявку резервирования
+    format: uuid
+  annulatedDate:
+    type: string
+    description: Дата аннулирования счета
+    format: date-time
+  accountNumber:
+    type: string
+    description: Номер счета
+description: Данные об аннулированном счете

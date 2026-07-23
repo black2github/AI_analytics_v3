@@ -1,0 +1,7 @@
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  userFio:
+    type: string

@@ -1,0 +1,11 @@
+type: object
+description: Информация о тарифам B2B по договору
+properties:
+  gpbB2bCommissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия за перевод внутри Банка
+  otherBankB2bCommissionAmount:
+    type: integer
+    format: int64
+    description: Комиссия за перевод в другой банк

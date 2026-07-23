@@ -1,0 +1,8 @@
+type: object
+properties:
+  from:
+    $ref: ../common/OffsetDateTime.yaml
+  timezone:
+    type: string
+  to:
+    $ref: ../common/OffsetDateTime.yaml

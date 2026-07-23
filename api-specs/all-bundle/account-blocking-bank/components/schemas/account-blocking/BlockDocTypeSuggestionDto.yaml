@@ -1,0 +1,6 @@
+type: object
+properties:
+  blockDocType:
+    type: string
+    description: Вид документа блокировки
+description: 'Подсказки: Вид документа блокировки'

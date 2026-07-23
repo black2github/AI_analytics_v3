@@ -1,0 +1,53 @@
+type: object
+properties:
+  contactFio:
+    type: string
+    description: ФИО контактного лица
+  contactPhone:
+    type: string
+    description: Телефон контактного лица
+  deliveryId:
+    type: string
+    description: Идентификатор доставки АС ЛБП
+    format: uuid
+  id:
+    type: string
+    description: Идентификатор короткой заявки
+    format: uuid
+  meetingAddress:
+    type: string
+    description: Адрес встречи
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  meetingEndDate:
+    type: string
+    description: Дата и время встречи (окончание)
+    format: date-time
+  meetingRequestId:
+    type: string
+    description: Идентификатор короткой заявки на встречу
+    format: uuid
+  meetingStatus:
+    type: string
+    description: Статус встречи
+    enum:
+    - NOTASSIGN
+    - ASSIGN
+    - EXECUTED
+    - REJECTED
+  signPlace:
+    type: string
+    description: Место подписания договора с банком
+    enum:
+    - BANK_OFFICE
+    - DEPARTURE_OF_BANK_EMPLOYEE
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+description: Информация о встрече по короткой заявке на открытие первого счета

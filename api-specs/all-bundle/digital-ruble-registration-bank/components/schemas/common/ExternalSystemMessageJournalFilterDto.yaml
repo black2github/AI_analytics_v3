@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  docType:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./ExternalSystemMessageJournalStatusFilter.yaml
+  statusCategory:
+    $ref: ./StatusCategoryFilter.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  bankClientExternalGuid:
+    $ref: ./FilterValueDtoUUID.yaml
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+description: Фильтр для журнала сообщений

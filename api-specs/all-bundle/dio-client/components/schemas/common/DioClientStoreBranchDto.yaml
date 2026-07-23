@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор отделения (подразделения банка)
+    format: uuid
+description: Транспортное описание подразделения банка на сохранение

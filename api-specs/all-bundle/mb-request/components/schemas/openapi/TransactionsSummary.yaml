@@ -1,0 +1,7 @@
+type: object
+properties:
+  TotalCreditEntries:
+    $ref: ./NumberAndSumOfTransactions.yaml
+  TotalDebitEntries:
+    $ref: ./NumberAndSumOfTransactions.yaml
+description: Обороты по кредиту и дебету

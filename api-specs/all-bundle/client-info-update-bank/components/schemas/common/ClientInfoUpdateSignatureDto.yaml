@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signedUserId:
+    type: string
+    description: Ссылка на пользователя, подписавшего заявку
+    format: uuid
+  signedUserFio:
+    type: string
+    description: ФИО пользователя, подписавшего заявку
+  signedUserEskId:
+    type: string
+    description: Локальный идентификатор пользователя, подписавшего заявку в ЕСК
+description: Информация о подписи заявки на генерацию НЭП

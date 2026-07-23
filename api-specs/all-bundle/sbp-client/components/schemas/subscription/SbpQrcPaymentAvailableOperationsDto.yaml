@@ -1,0 +1,12 @@
+type: object
+description: Информация о доступных пользователю действиях с заявкой на списание средств по подписке
+properties:
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  viewSubscription:
+    type: boolean
+    description: Признак возможности просмотра подписки
+  viewQr:
+    type: boolean
+    description: Признак возможности просмотра QR

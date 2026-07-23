@@ -1,0 +1,19 @@
+type: object
+properties:
+  schemeName:
+    type: string
+    enum:
+    - RU.CBR.TXID
+    - RU.CBR.LEI
+    - RU.CBR.PASP
+    - RU.CBR.CLID
+    - RU.CBR.QRST
+    - RU.CBR.TAXT
+    - RU.CBR.OGRN
+    - RU.CBR.SNILS
+    - RU.CBR.PAN
+    - RU.CBR.MTEL
+    - RU.CBR.BBAN
+  identification:
+    type: string
+description: Идентификация физического лица

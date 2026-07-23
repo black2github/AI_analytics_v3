@@ -1,0 +1,17 @@
+type: object
+description: Запрос инициализации подписки организации на профиль
+properties:
+  userId:
+    type: string
+    format: uuid
+    description: Идентификатор пользователя
+  bankClientIds:
+    type: array
+    description: Список идентификаторов организаций
+    items:
+      type: string
+      format: uuid
+    uniqueItems: true
+required:
+- bankClientIds
+- userId

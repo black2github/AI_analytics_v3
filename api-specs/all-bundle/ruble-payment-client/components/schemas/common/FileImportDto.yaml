@@ -1,0 +1,38 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID
+    format: uuid
+  fileStorageId:
+    type: string
+    description: ID файла в файловом сервисе
+    format: uuid
+  dataSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  importedWithSign:
+    type: boolean
+    description: Признак импорта с ЭП
+  canBeSigned:
+    type: boolean
+    description: Возможность подписания
+  errorMessage:
+    type: string
+    description: Текст ошибки
+  status:
+    $ref: ./FileImportStatusDto.yaml
+  signPhaseDto:
+    $ref: ./SignPhaseDto.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+description: Дто файла импорта

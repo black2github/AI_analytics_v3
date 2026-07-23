@@ -1,0 +1,14 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./CrmProductTypeDescriptionDto.yaml
+  error:
+    $ref: ../common/ErrorData.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

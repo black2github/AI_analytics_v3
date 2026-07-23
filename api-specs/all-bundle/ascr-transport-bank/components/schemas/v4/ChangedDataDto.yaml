@@ -1,0 +1,26 @@
+type: object
+description: Изменённые данные Клиента-ЮЛ.
+properties:
+  organizationName:
+    type: string
+    description: Название Клиента-ЮЛ.
+  ogrn:
+    type: string
+    description: ОГРН Клиента-ЮЛ.
+  inn:
+    type: string
+    description: ИНН организации или ИП, или КИО.
+  opf:
+    type: string
+    description: Организационно-правовая форма.
+  kpp:
+    type: string
+    description: Указывается Код причины постановки на учет.
+  phoneNumberChange:
+    $ref: ./PhoneNumberChangeDto.yaml
+    description: Изменение номера телефона Клиента-ЮЛ.
+  addresses:
+    type: array
+    description: Изменение номера телефона Клиента-ЮЛ.
+    items:
+      $ref: ./AddressDto.yaml

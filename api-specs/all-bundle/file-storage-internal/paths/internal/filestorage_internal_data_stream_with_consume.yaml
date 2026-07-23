@@ -1,0 +1,77 @@
+post:
+  tags:
+  - API загрузки файла
+  summary: Загрузка потоковых данных и привязка вложения
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'') or #eco.userTypeIs(''BANK'')'
+  operationId: consumeDataStreamUsingPOST
+  consumes:
+  - multipart/form-data
+  produces:
+  - '*/*'
+  parameters:
+  - in: formData
+    name: consumeDto.clientId
+    required: false
+    schema:
+      type: string
+      format: uuid
+  - in: formData
+    name: consumeDto.consumer
+    required: false
+    schema:
+      type: string
+  - in: formData
+    name: consumeDto.contextId
+    required: false
+    schema:
+      type: string
+      format: uuid
+  - in: formData
+    name: consumeDto.expireAt
+    required: false
+    schema:
+      type: string
+      format: date-time
+  - in: formData
+    name: consumeDto.internalFile
+    required: false
+    schema:
+      type: boolean
+  - in: formData
+    name: consumeDto.userId
+    required: false
+    schema:
+      type: string
+      format: uuid
+  - in: formData
+    name: dataStream.contentType
+    required: false
+    schema:
+      type: string
+  - in: formData
+    name: dataStream.fileName
+    required: false
+    schema:
+      type: string
+  - in: formData
+    name: dataStream.fileSize
+    required: false
+    schema:
+      type: integer
+      format: int64
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,InternalAttachmentDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

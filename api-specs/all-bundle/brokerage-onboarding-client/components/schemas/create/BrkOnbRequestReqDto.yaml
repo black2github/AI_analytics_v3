@@ -1,0 +1,33 @@
+required:
+- clientUuid
+- emailToBank
+- emailToReport
+type: object
+properties:
+  clientUuid:
+    type: string
+    description: UUID клиента
+    format: uuid
+  emailToBank:
+    maxItems: 10
+    minItems: 1
+    type: array
+    description: Email для обмена сообщений с банком
+    items:
+      type: string
+      description: Email для обмена сообщений с банком
+      format: email
+  emailToReport:
+    maxItems: 10
+    minItems: 1
+    type: array
+    description: Email для получения отчётов брокера
+    items:
+      type: string
+      description: Email для получения отчётов брокера
+      format: email
+  phone:
+    pattern: ^\+?[0-9]{0,15}$
+    type: string
+    description: Контактный телефон
+description: Сведения о модели заявки

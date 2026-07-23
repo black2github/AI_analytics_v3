@@ -1,0 +1,58 @@
+type: object
+properties:
+  accountingId:
+    type: integer
+    description: Идентификатор проводки в ODS
+    format: int64
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1 по которому запрашивается справка.
+    format: int64
+  accountId:
+    type: string
+    description: Составной идентификатор счета
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+  accountBranchCode:
+    type: string
+    description: Код филиала для счета клиента
+  accountOpenDate:
+    type: string
+    description: Дата открытиия счета
+    format: date
+  accountCloseDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  accountName:
+    type: string
+    description: Название счета по которому запрашивается справка
+  currencyCode:
+    type: string
+    description: Код валюты счета по которому запрашивается документ
+  accountDebit:
+    type: string
+    description: Номер счета Дебет
+  accountCredit:
+    type: string
+    description: Номер счета Кредит
+  documentId:
+    type: integer
+    description: ID документа
+    format: int64
+  documentNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  amount:
+    type: number
+    description: Сумма документа
+  entryDate:
+    type: string
+    description: Дата проводки
+    format: date
+  counterpartyName:
+    type: string
+    description: Наименование контрагента
+description: Сведения о платежных документах по которым запрашивается справка

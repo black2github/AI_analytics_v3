@@ -1,0 +1,33 @@
+type: object
+description: Фильтр по типу обобщенной заявки сервисов банка
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - QRC_CREATE
+    - QRC_BLOCK
+  notEq:
+    type: string
+    enum:
+    - QRC_CREATE
+    - QRC_BLOCK
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - QRC_CREATE
+      - QRC_BLOCK
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - QRC_CREATE
+      - QRC_BLOCK
+  isNull:
+    type: boolean

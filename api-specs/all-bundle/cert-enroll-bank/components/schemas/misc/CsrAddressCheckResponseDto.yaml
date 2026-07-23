@@ -1,0 +1,13 @@
+type: object
+properties:
+  checkResult:
+    type: string
+    description: Результат проверки
+    enum:
+    - VALID
+    - INVALID
+  certificateAddress:
+    $ref: ./AddressProviderParametersDto.yaml
+  csrAddress:
+    $ref: ./AddressProviderParametersDto.yaml
+description: Ответ функции проверки адреса CSR

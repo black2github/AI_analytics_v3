@@ -1,0 +1,9 @@
+type: object
+properties:
+  approvalUserId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  approvalStartDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  approvalFinishDate:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Фильтр подсчета количества документов на визирование для отображения в виджете на ГС

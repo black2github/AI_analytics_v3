@@ -1,0 +1,50 @@
+{
+  "_comment": "Auto domain map for treasury-agreement-client (seg1-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/agreement-request/mno",
+      "domain": "mno"
+    },
+    {
+      "prefix": "/agreement-request/gsno-parent",
+      "domain": "gsno-parent"
+    },
+    {
+      "prefix": "/agreement-request/gsno-child-head",
+      "domain": "gsno-child-head"
+    },
+    {
+      "prefix": "/agreement-request/gsno-child-friend",
+      "domain": "gsno-child-friend"
+    },
+    {
+      "prefix": "/agreement-request/du-mno",
+      "domain": "du-mno"
+    },
+    {
+      "prefix": "/agreement-request/du-deposit",
+      "domain": "du-deposit"
+    },
+    {
+      "prefix": "/agreement-request/du-conversion",
+      "domain": "du-conversion"
+    },
+    {
+      "prefix": "/agreement-request/deposit",
+      "domain": "deposit"
+    },
+    {
+      "prefix": "/agreement-request/conversion",
+      "domain": "conversion"
+    },
+    {
+      "prefix": "/agreement-request/change-accounts",
+      "domain": "change-accounts"
+    },
+    {
+      "prefix": "/agreement-request",
+      "domain": "misc"
+    }
+  ]
+}

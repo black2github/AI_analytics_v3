@@ -1,0 +1,7 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsAccountFilter.yaml
+  sessionId:
+    type: string
+    description: Идентификатор сессии

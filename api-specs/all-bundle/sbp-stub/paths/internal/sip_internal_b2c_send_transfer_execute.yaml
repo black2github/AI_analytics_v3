@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Подтверждение выплаты'
+  tags:
+  - СИП. Сервис b2c API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/internal/B2cTransferConfirmRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/internal/B2cTransferConfirmResultDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,29 @@
+post:
+  tags:
+  - currency-rates-controller
+  summary: Создает сообщение Курсы валют с настраиваемыми параметрами.
+  operationId: createUsingPOST_2
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/F1CurrencyRatesRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«ErrorData,string»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

@@ -1,0 +1,29 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+  notEq:
+    type: string
+  in:
+    type: array
+    items:
+      type: string
+  notIn:
+    type: array
+    items:
+      type: string
+  isNull:
+    type: boolean
+  gt:
+    type: string
+  ge:
+    type: string
+  lt:
+    type: string
+  le:
+    type: string
+description: 'ФИО Сотрудника. Полное совпадение. Частичное '

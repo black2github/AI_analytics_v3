@@ -1,0 +1,14 @@
+required:
+- charCode
+- numCode
+type: object
+properties:
+  charCode:
+    type: string
+    description: Буквенный код валюты
+  numCode:
+    type: integer
+    description: Цифровой код валюты
+    format: int32
+description: Валюта счётчика
+nullable: true

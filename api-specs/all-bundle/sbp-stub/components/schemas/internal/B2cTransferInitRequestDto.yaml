@@ -1,0 +1,39 @@
+type: object
+required:
+- docType
+- amount
+- currency
+- guid
+- recipient
+- sender
+description: Запрос инициализации выплаты.
+properties:
+  docType:
+    type: string
+    description: Тип документа
+  amount:
+    type: string
+    description: Сумма в копейках
+  currency:
+    type: string
+    description: Валюта операции
+  guid:
+    type: string
+    description: Идентификатор BSS
+  comment:
+    type: string
+    description: Комментарий
+  recipient:
+    $ref: ./B2cTransferInitRecipientDto.yaml
+    type: object
+    description: Получатель перевода
+  sender:
+    $ref: ./B2cTransferInitSenderDto.yaml
+    type: object
+    description: Отправитель перевода
+  callbackMerchantNotifications:
+    type: string
+    description: URL системы для получения сообщения о статусе возврата
+  sign:
+    type: string
+    description: Подпись сообщения

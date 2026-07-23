@@ -1,0 +1,37 @@
+type: object
+properties:
+  employee:
+    $ref: ./EmployeeUpdateDto.yaml
+  clientEmployeeUserId:
+    type: string
+    description: Пользователь из заявки (ID "Пользователь")
+    format: uuid
+  clientEmployeeId:
+    type: string
+    description: Сотрудник из заявки (ID "Сотрудники клиента")
+    format: uuid
+  registrationAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  actualAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  addressesMatches:
+    type: boolean
+    description: Признак "Адрес регистрации совпадает с фактическим адресом"
+  inn:
+    type: string
+    description: ИНН
+  personalDataConsent:
+    type: boolean
+    description: Признак "Получено согласие на обработку персональных данных"
+  publicOfficialStatus:
+    type: boolean
+    description: Статус ПДЛ
+  publicOfficialInfo:
+    maxLength: 128
+    pattern: ^[A-Za-zЁА-яё\d\s!"#\$%&'\(\)\*\+,\-\.\/:;<=>?@\\\^_`{¦}~№]*$
+    type: string
+    description: Информация ПДЛ
+  employeeDataConfirm:
+    type: boolean
+    description: Признак "Подтверждение личных данных сотрудника"
+description: Данные для создания сотрудника из заявки

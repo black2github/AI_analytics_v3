@@ -1,0 +1,39 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  orgNameOrInn:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoOnboardingFnsRequestStatusDto.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  fnsId:
+    $ref: ./FilterValueDtoString.yaml
+  fsArchiveFileId:
+    $ref: ./FilterValueDtoUUID.yaml
+  mflashId:
+    $ref: ./FilterValueDtoUUID.yaml
+  ogrn:
+    $ref: ./FilterValueDtoString.yaml
+  clientType:
+    $ref: ./FilterValueEnumDtoClientTypeDto.yaml
+  fullName:
+    $ref: ./FilterValueDtoString.yaml
+  representativePhone:
+    $ref: ./FilterValueDtoString.yaml
+  representativeEmail:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Статус категории
+    enum:
+    - PROCESSING_ERROR
+    - IN_PROGRESS
+    - FINISHED
+    - ALL
+  onlineCashRegisterStatusCode:
+    $ref: ./FilterValueDtoInteger.yaml
+  edoStatusCode:
+    $ref: ./FilterValueDtoInteger.yaml
+description: Фильтр для поиска заявок на удаленное открытие первого счёта по данным ФНС для банковского скроллера

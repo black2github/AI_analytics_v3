@@ -1,0 +1,12 @@
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика. Равенство
+  innKio:
+    type: string
+    description: ИНН плательщика. Равенство
+  rnk:
+    type: string
+    description: РНК плательщика. Равенство
+description: Запись фильтра по организации. Полное совпадение

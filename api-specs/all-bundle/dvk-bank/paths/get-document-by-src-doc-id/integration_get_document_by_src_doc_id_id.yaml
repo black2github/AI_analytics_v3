@@ -1,0 +1,19 @@
+get:
+  tags:
+  - dvk-get-by-id-tech-controller
+  summary: Получить документ по идентификатору DVK.src_document_id
+  operationId: getDocumentBySrcDocumentId
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataDvkDocumentDto.yaml

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API загрузки файла
+  summary: Проверка вложения на уязвимости
+  description: 'Привилегии: #eco.userTypeIs(''TECHNICAL'') or #eco.userTypeIs(''BANK'')'
+  operationId: checkAttachmentUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: attachmentDto
+    description: attachmentDto
+    required: true
+    schema:
+      $ref: '#/definitions/InternalAttachmentUploadDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/SingleResponse«MalwareCheckResultDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

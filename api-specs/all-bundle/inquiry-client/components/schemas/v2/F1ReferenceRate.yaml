@@ -1,0 +1,33 @@
+required:
+- comment
+- referenceCode
+- referenceElectronicPrice
+- referenceOnPaperPrice
+type: object
+properties:
+  referenceCode:
+    type: string
+    description: Код вида справки
+    example: null
+  referenceElectronicPrice:
+    type: number
+    description: Величина комиссии за электронную справку
+    example: null
+  referenceOnPaperPrice:
+    type: number
+    description: Величина комиссии за бумажную справку
+    example: null
+  comment:
+    type: string
+    description: Текстовая подсказка для пользователя
+    example: null
+  valueDigitalNds:
+    type: number
+    description: Величина включенного НДС для электронной справки (только для справок с НДС)
+    example: null
+  valueOnPaperNds:
+    type: number
+    description: Величина включенного НДС для справки в бумажном формате (только для справок с НДС)
+    example: null
+description: Информациея о комиссионных тарифах по справкам для счета
+example: null

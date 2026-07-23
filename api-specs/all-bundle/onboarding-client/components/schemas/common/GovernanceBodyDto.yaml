@@ -1,0 +1,40 @@
+type: object
+properties:
+  changedByClient:
+    type: boolean
+    description: Запись изменялась пользователем клиента
+  governanceBodyMembers:
+    type: array
+    description: Участники органа управления
+    items:
+      $ref: ./GovernanceBodyMemberDto.yaml
+  governanceBodyName:
+    type: string
+    description: Наименование органа управления
+    enum:
+    - DIRECTORS_COMMITTEE
+    - DIRECTORATE
+    - COUNCIL_OF_TRUSTEES
+    - GENERAL_MEETING
+    - OTHER
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  organizationRole:
+    type: string
+    description: Классификатор ролей организаций в заявке
+    enum:
+    - CLIENT
+    - MANAGEMENT_COMPANY
+    - MANAGING_IE
+    - SHAREHOLDER_COMPANY
+    - CONTRACTOR
+  otherGovernanceBodyName:
+    type: string
+    description: Наименование иного органа управления
+  sparkCreateDate:
+    type: string
+    description: Дата и время создания записи из СПАРК
+    format: date-time
+description: Орган управления в заявке

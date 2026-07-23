@@ -1,0 +1,22 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID переменной окружения
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя банка
+    format: uuid
+  edoProducts:
+    uniqueItems: true
+    type: array
+    description: Список продуктов ЭДО для пользователя банка
+    items:
+      type: string
+      description: Список продуктов ЭДО для пользователя банка
+  filialId:
+    type: string
+    description: Идентификатор филиала для пользователя банка
+    format: uuid
+description: Переменные окружения для пользователя банка

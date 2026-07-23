@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  notificationType:
+    type: string
+    description: Код типа нотификации.
+    enum:
+    - ONB_CALL_GROUP
+    - ONB_KZ_CALL_GROUP
+    - NEP_CALL_GROUP
+    - ADM_REQUEST_GROUP
+    - ADM_APPROVE_GROUP
+    - ADM_TID_GROUP
+    - ADM_FEEDBACK_GROUP
+    - ENCASHMENT_REQUEST_GROUP
+    - ENCASHMENT_APPROVE_GROUP
+    - ADM_GPN_GROUP
+  branchId:
+    type: string
+    description: Ссылка на сущность "Филиал Банка".
+    format: uuid
+  recipientEmails:
+    uniqueItems: true
+    type: array
+    description: Адрес получателя.
+    items:
+      type: string
+      description: Адрес получателя.
+  commentary:
+    type: string
+    description: Комментарий.
+description: Cущность "адрес для нотификации"

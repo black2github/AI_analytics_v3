@@ -1,0 +1,41 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Тип заявки
+    enum:
+    - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+    - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+    - REG_QUALIFIED_SIGN
+  notEq:
+    type: string
+    description: Тип заявки
+    enum:
+    - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+    - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+    - REG_QUALIFIED_SIGN
+  in:
+    type: array
+    items:
+      type: string
+      description: Тип заявки
+      enum:
+      - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+      - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+      - REG_QUALIFIED_SIGN
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Тип заявки
+      enum:
+      - ISSUE_REISSUE_LOCAL_UNQUALIFIED_SIGN
+      - ISSUE_REISSUE_CLOUD_UNQUALIFIED_SIGN
+      - REG_QUALIFIED_SIGN
+  isNull:
+    type: boolean
+description: Фильтр по типу заявки

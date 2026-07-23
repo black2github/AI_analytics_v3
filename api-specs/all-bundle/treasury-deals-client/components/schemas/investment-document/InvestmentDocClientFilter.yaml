@@ -1,0 +1,63 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAbsF1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+  docType:
+    $ref: ../common/FilterValueDtoString.yaml
+  docSubType:
+    $ref: ./InvestmentDocSubTypeFilter.yaml
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  dealDateTime:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  dealNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  dateEnd:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  period:
+    $ref: ./FilterValueDtoInteger.yaml
+  amount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  currency:
+    $ref: ../common/FilterValueDtoString.yaml
+  managementFundName:
+    $ref: ../common/FilterValueDtoString.yaml
+  docBankPreConfirmation:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  docClientFromBankConfirmation:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  dealStatus:
+    $ref: ./InvestmentDealStatusFilter.yaml
+  docStatus:
+    $ref: ./InvestmentDocStatusFilter.yaml
+  statusCategory:
+    $ref: ./InvestmentDocCategoryFilter.yaml
+  dealRateType:
+    $ref: ./InvestmentDocRateTypeFilter.yaml
+  excludeDraftRequest:
+    type: boolean
+    description: 'Отчет дежурного. Исключить из выборки заявки на автокотирование в статусах DRAFT, QUOTED, NEW '
+  includeSignOrDetailsInvalid:
+    type: boolean
+    description: Отчет дежурного. Включить в выборку заявки с статусом ЭП неверна и Ошибка реквизитов
+  excludeConfirmedDepositsFoToday:
+    type: boolean
+    description: Отчет дежурного. Исключить из выдачи подтвержденные депозиты
+  excludeConfirmedFutureDeposits:
+    type: boolean
+    description: Отчет дежурного. Исключить из выдачи подтвержденные депозиты с будущей датой начала сделки
+  dateBegin:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+description: InvestmentDocClientFilter

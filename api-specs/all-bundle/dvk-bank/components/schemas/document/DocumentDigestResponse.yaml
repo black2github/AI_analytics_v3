@@ -1,0 +1,9 @@
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  digest:
+    $ref: ./Digest.yaml
+description: Дайджеста документа

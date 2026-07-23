@@ -1,0 +1,10 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID подписанных данных
+    format: uuid
+  signature:
+    type: string
+    description: Подпись
+description: Подписанные данные по заявке ГЭП

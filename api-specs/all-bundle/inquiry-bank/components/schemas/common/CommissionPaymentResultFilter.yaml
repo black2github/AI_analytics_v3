@@ -1,0 +1,51 @@
+type: object
+properties:
+  contains:
+    type: string
+    example: null
+  notContains:
+    type: string
+    example: null
+  eq:
+    type: string
+    description: Результат списания комиссии.
+    example: null
+    enum:
+    - DEDUCTED
+    - FILE_CABINET
+    - NOT_CHARGED
+  notEq:
+    type: string
+    description: Результат списания комиссии.
+    example: null
+    enum:
+    - DEDUCTED
+    - FILE_CABINET
+    - NOT_CHARGED
+  in:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Результат списания комиссии.
+      example: null
+      enum:
+      - DEDUCTED
+      - FILE_CABINET
+      - NOT_CHARGED
+  notIn:
+    type: array
+    example: null
+    items:
+      type: string
+      description: Результат списания комиссии.
+      example: null
+      enum:
+      - DEDUCTED
+      - FILE_CABINET
+      - NOT_CHARGED
+  isNull:
+    type: boolean
+    example: null
+description: Фильтр по результату списания комиссии
+example: null

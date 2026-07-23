@@ -1,0 +1,25 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID клиента банка
+    format: uuid
+  clientName:
+    type: string
+    description: Название организации
+  inn:
+    type: string
+    description: ИНН
+  ogrnOgrnIp:
+    type: string
+    description: ОГРН/ОГРНИП
+  kpp:
+    type: string
+    description: КПП
+  absId:
+    type: string
+    description: РНК в РКО Ф1
+  unitedSignEnabled:
+    type: boolean
+    description: Признак того что организация подключена к ЕП
+description: Настройка ЕП для клиента банка

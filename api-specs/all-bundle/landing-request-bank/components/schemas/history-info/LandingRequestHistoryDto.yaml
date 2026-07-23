@@ -1,0 +1,17 @@
+type: object
+properties:
+  status:
+    type: string
+    description: Наименование статуса
+  variant:
+    type: string
+    description: Тип текущего статуса (изображение статуса)
+  iconVariant:
+    type: string
+    description: Вариант цвета статуса (цвет статуса)
+  historyEntries:
+    type: array
+    description: Операции
+    items:
+      $ref: ./DocumentOperationHistoryDto.yaml
+description: История операций заявки посадочной страницы. ДТО.

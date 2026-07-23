@@ -1,0 +1,28 @@
+type: object
+properties:
+  calculatedDistance:
+    type: string
+  fiasCode:
+    type: string
+  fiasId:
+    type: string
+  fullAddress:
+    type: string
+  kladrCode:
+    type: string
+  location:
+    type: string
+  metro:
+    type: array
+    items:
+      $ref: ./AtmDeviceAddressMetroDto.yaml
+  nearestSubway:
+    type: string
+  region:
+    type: string
+  regionType:
+    type: string
+  settlement:
+    type: string
+  settlementType:
+    type: string

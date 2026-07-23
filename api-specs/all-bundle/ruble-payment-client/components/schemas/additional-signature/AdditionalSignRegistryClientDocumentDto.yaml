@@ -1,0 +1,18 @@
+required:
+- clientId
+- documents
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  clientName:
+    type: string
+    description: Наименование организации
+  documents:
+    type: array
+    description: Документы
+    items:
+      $ref: ./AdditionalSignRegistryDocumentDto.yaml
+description: Документы реестра доп. подписи в разрезе клиента банка

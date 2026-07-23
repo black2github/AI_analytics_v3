@@ -1,0 +1,42 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор баннера
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  companyName:
+    pattern: ^[0-9A-zА-яЁё№\u0020\u0021\u0022\u0027\u0028\u0029\u002A\u002B\u002C\u002D\u002E\u002F\u003B\u005F\u0060\u00AB\u00BB\u2013\u201C\u201D]{1,255}$
+    type: string
+    description: Название организации
+  companyInn:
+    pattern: ^[0-9]{10}(?:[0-9]{2})?$
+    type: string
+    description: ИНН организации
+  partnerCode:
+    pattern: ^[A-zА-яЁё]{1,255}$
+    type: string
+    description: Код партнёра
+  productCode:
+    pattern: ^[0-9A-zА-яЁё\u0020\u0021\u0028\u0029\u002B\u002C\u002D\u003A\u005F]{1,255}$
+    type: string
+    description: Код продукта партнёра
+  productLink:
+    pattern: ^[0-9A-zА-яЁё\u003A\u002D\u002E\u002F\u003F\u005F\u003D\u0026]{1,2048}$
+    type: string
+    description: Ссылка для перехода на страницу партнера с предложением
+  userId:
+    type: string
+    description: Идентификатор пользователя в экосистеме, совершившего последний импорт данных в справочник
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя, совершившего последний импорт данных в справочник
+description: Справочник баннеров партнёров

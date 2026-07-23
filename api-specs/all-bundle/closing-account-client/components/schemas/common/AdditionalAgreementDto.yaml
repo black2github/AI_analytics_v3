@@ -1,0 +1,21 @@
+type: object
+properties:
+  agreementName:
+    type: string
+    description: Название расторгаемого доп-соглашения
+  agreementNumber:
+    type: string
+    description: Номер доп-соглашения
+  closingRequestId:
+    type: string
+    description: Ссылка на Заявка на закрытие счета
+    format: uuid
+  date:
+    type: string
+    description: Дата доп-соглашения
+    format: date
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+description: Список расторгаемых доп-соглашений

@@ -1,0 +1,14 @@
+required:
+- approvalSignType
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  approvalSignType:
+    $ref: ./ApprovalSignType.yaml
+  approvalSignComment:
+    type: string
+    description: Комментарий к визе
+description: Запрос данных для подписи визируемого документа

@@ -1,0 +1,252 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  docType:
+    type: string
+    description: Тип соглашения
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  userFullName:
+    type: string
+    description: Ф.И.О. пользователя
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int32
+  docDate:
+    type: string
+    description: Дата и время создания документа
+    format: date
+  docPrintTemplateVersion:
+    type: integer
+    description: Номер версии печатной формы документа
+    format: int32
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  errText:
+    type: string
+    description: Описание ошибки
+  status:
+    type: string
+    description: Статус документа
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED_OR_CHECKLIST_REJECTED
+    - RECEIVED_OR_WAITING_FOR_VISA
+    - WAITING_FOR_VISA
+    - VISA_CANCELED
+    - VISA_APPLIED
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - SENT_TO_CLIENT
+    - SENT_TO_CLIENT_FRIEND
+    - RECEIVED
+    - ASSIGNED
+    - VERIFIED_BY_BANK
+    - READY_TO_SIGN
+    - SIGNED_BY_BANK
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+    - SENT_TO_PKP_OR_FAIL
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL_OR_EXECUTED
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP
+    - SIGNED_BY_BANK_SENT_TO_PKP_SUCCESS
+    - SIGNED_BY_BANK_SENT_TO_PKP_FAIL
+  viewStatus:
+    type: string
+    description: Статус документа - для визуализации
+    enum:
+    - NONE
+    - DRAFT
+    - DRAFT_BANK
+    - DRAFT_OR_NEW
+    - DRAFT_BANK_OR_NEW_BANK
+    - NEW
+    - NEW_BANK
+    - SIGNED_BY_CLIENT
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - CLIENT_SIGN_VALID_OR_REJECTED
+    - CLIENT_SIGN_VALID
+    - DETAILS_VALID_OR_DETAILS_REJECTED
+    - RECEIVED_OR_CHECKLIST_REJECTED
+    - RECEIVED_OR_WAITING_FOR_VISA
+    - WAITING_FOR_VISA
+    - VISA_CANCELED
+    - VISA_APPLIED
+    - VISA_POSITIVE_OR_NEGATIVE
+    - VISA_REJECTED
+    - SENT_TO_CLIENT
+    - SENT_TO_CLIENT_FRIEND
+    - RECEIVED
+    - ASSIGNED
+    - VERIFIED_BY_BANK
+    - READY_TO_SIGN
+    - SIGNED_BY_BANK
+    - ACCEPTED
+    - EXECUTED
+    - REJECTED
+    - REJECTED_BY_CLIENT
+    - SIGN_INVALID
+    - SENT_TO_PKP_OR_FAIL
+    - SENT_TO_PKP
+    - SENT_TO_PKP_SUCCESS
+    - SENT_TO_PKP_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL_OR_EXECUTED
+    - SIGNED_BY_BANK_SENT_TO_PKP_OR_FAIL
+    - SIGNED_BY_BANK_SENT_TO_PKP
+    - SIGNED_BY_BANK_SENT_TO_PKP_SUCCESS
+    - SIGNED_BY_BANK_SENT_TO_PKP_FAIL
+  step:
+    type: string
+    description: Шаг заявки
+    enum:
+    - DATA
+    - DATA_ADDITIONAL
+    - CONFIRMATION
+  clientInfo:
+    $ref: ../common/ClientInfoDto.yaml
+  branchInfo:
+    $ref: ../common/BranchInfoDto.yaml
+  authorizedPersonInfo:
+    $ref: ../common/AuthorizedPersonInfoDto.yaml
+  personDocument:
+    $ref: ../common/PersonDocumentDto.yaml
+  personContactInfo:
+    $ref: ../common/PersonContactInfoDto.yaml
+  agreementNumber:
+    type: string
+    description: Номер соглашения
+  agreementDate:
+    type: string
+    description: Дата соглашения
+    format: date
+  beginDate:
+    type: string
+    description: Дата начала действия
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания действия
+    format: date
+  executorId:
+    type: string
+    description: Исполнитель по заявке
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  executorFullName:
+    type: string
+    description: Ф.И.О. исполнителя по заявке
+  additionalDataIsFulledUp:
+    type: boolean
+    description: Дополнительные данные полностью заполнены
+  additionalDataIsValid:
+    type: boolean
+    description: Дополнительные данные корректны
+  clientSignature:
+    $ref: ../common/SignatureDto.yaml
+  bankSignature:
+    $ref: ../common/SignatureDto.yaml
+  visaSignature:
+    $ref: ../common/SignatureDto.yaml
+  attachments:
+    type: array
+    description: Вложения
+    items:
+      $ref: ../common/AgreementRequestAttachmentDto.yaml
+  receivedAt:
+    type: string
+    description: Дата и время получения заявки на стороне Банка
+    format: date-time
+  signCheckAt:
+    type: string
+    description: Дата и время проверки подписи
+    format: date-time
+  earlyRefund:
+    type: boolean
+    description: Возможность досрочного истребования
+  earlyRefundRateRub:
+    type: string
+    description: Ставка досрочного истребования для рублей
+  earlyRefundRateCur:
+    type: string
+    description: Ставка досрочного истребования для валюты
+  isVisaNeeded:
+    type: boolean
+    description: Необходимо визирование
+  isVisaCanceled:
+    type: boolean
+    description: Визирование отменено
+  clientInfoVisa:
+    $ref: ../common/ClientInfoDto.yaml
+  visaType:
+    type: string
+    description: Тип наложенной визы
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  visaComment:
+    type: string
+    description: Комментарий визирующего для Клиента
+  sendingForVisaAt:
+    type: string
+    description: Отправлен на визирование
+    format: date-time
+  processedInPkp:
+    type: boolean
+    description: Обработан в ПКП
+  docSubType:
+    type: string
+    description: Тип оферты GSNO_CHILD_HEAD - оригинал или копия
+    enum:
+    - ORIGINAL
+    - COPY
+  efrOfferProductCode:
+    type: string
+    description: Идентификатор динамического продуктового предложения (ДПП)
+  efrOfferSourcePage:
+    type: string
+    description: Страница источник баннера ЕФР (Единое фронтальное решение)
+  checkList:
+    $ref: ./AgreementRequestGSNOParentCheckListDto.yaml
+  agreementRequestSource:
+    type: string
+    description: Источник заявки на ген. соглашение
+    enum:
+    - BANK
+    - CLIENT
+  clientContacts:
+    $ref: ./ClientContactsDto.yaml
+description: Данные

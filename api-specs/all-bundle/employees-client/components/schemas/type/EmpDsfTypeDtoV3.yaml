@@ -1,0 +1,66 @@
+required:
+- availableForEdit
+- category
+- categoryName
+- direction
+- documentCode
+- name
+- products
+- typeCode
+type: object
+properties:
+  category:
+    type: string
+    description: Код категории
+  categoryName:
+    type: string
+    description: Наименование категории
+  typeCode:
+    type: string
+    description: Код типа письма
+  name:
+    type: string
+    description: Наименование ДСФ
+  direction:
+    type: string
+    description: Направление типа ДСФ
+    enum:
+    - MAIL_TO_BANK
+    - MAIL_FROM_BANK
+  documentCode:
+    type: string
+    description: Код документа типа ДСФ
+    enum:
+    - DSF_IN
+    - DSF_OUT
+  products:
+    type: array
+    description: Продукты
+    items:
+      type: string
+      description: Код продукта
+      enum:
+      - RRKO
+      - VRKO
+      - DVK
+      - TREASURY_DEPOSITS
+      - TREASURY_MNO
+      - TREASURY_GSNO
+      - TREASURY_CONVERSION
+      - BANK_GUARANTEES
+      - CREDITING
+      - SBP
+      - CROSS_BORDER
+  relatedTypeCode:
+    type: string
+    description: Код связанного типа письма
+  relatedTypeCodeReply:
+    type: string
+    description: Код связанного типа письма(ответное)
+  availableForEdit:
+    type: boolean
+    description: Доступно для редактирования в заявлении2
+  isAuthPersonRestricted:
+    type: boolean
+    description: Указано в ограничении для УЛ (Тип письма)
+description: Данные типа ДСФ

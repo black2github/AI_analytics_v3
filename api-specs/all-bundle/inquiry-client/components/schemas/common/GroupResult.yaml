@@ -1,0 +1,21 @@
+type: object
+properties:
+  id:
+    type: string
+    example: null
+  name:
+    type: string
+    example: null
+  result:
+    type: string
+    example: null
+    enum:
+    - VALID
+    - INVALID
+    - SKIPPED
+  controlResults:
+    type: array
+    example: null
+    items:
+      $ref: ./ControlResult.yaml
+example: null

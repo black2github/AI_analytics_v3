@@ -1,0 +1,5 @@
+type: object
+properties:
+  page:
+    $ref: ./PageDataStatementDayTotalsScrollerDto.yaml
+description: Данные

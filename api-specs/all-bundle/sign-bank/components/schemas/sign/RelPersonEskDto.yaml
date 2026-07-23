@@ -1,0 +1,12 @@
+type: object
+properties:
+  applicant:
+    type: boolean
+    description: Признак заявителя
+  clientLocalIdRkoF1:
+    type: string
+    description: Local ID представителя в АС РКО Ф1
+  clientLocalEskId:
+    type: string
+    description: Local ID представителя в ЕСК
+description: Персоны, взаимосвязанные в рамках проверки

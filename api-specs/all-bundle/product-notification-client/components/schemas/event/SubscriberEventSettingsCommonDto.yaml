@@ -1,0 +1,33 @@
+required:
+- bellEnabled
+- byAccount
+- emailEnabled
+- groupId
+- minAmount
+type: object
+properties:
+  groupId:
+    type: string
+    description: ID группы событий
+    format: uuid
+  requestId:
+    type: string
+    description: ID связанного объекта
+    format: uuid
+  accountId:
+    type: string
+    description: ID Счет клиента
+    format: uuid
+  emailEnabled:
+    type: boolean
+    description: EMAIL
+  bellEnabled:
+    type: boolean
+    description: Уведомление Бизнес-Онлайн (Колокольчик)
+  byAccount:
+    type: boolean
+    description: Настройка по счетам отдельно
+  minAmount:
+    type: number
+    description: Сумма от
+description: Настройки получателей событий СФЗУ

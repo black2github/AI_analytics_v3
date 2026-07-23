@@ -1,0 +1,33 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - DBO17
+    - H2H
+  notEq:
+    type: string
+    enum:
+    - DBO17
+    - H2H
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - DBO17
+      - H2H
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - DBO17
+      - H2H
+  isNull:
+    type: boolean
+description: Фильтр по cистемe в которую осуществляется экспорт данных о сертификате

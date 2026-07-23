@@ -1,0 +1,9 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    format: uuid
+  documentKindID:
+    type: string
+    format: uuid
+description: Данные

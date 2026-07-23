@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности "Клиент Банка"
+    format: uuid
+  fullName:
+    type: string
+    description: Полное наименование
+  shortName:
+    type: string
+    description: Краткое наименование
+  innKio:
+    type: string
+    description: ИНН/КИО
+description: Подмножество полей сущности "Клиент Банка"

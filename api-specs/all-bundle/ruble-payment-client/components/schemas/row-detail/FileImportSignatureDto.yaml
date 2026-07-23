@@ -1,0 +1,12 @@
+type: object
+properties:
+  level:
+    $ref: ./FileImportSignatureLevelDto.yaml
+  signerFio:
+    type: string
+    description: Пользователь, подписавший документ (ФИО)
+  signedAt:
+    type: string
+    description: Дата и время подписи
+    format: date-time
+description: Подпись файла импорта

@@ -1,0 +1,23 @@
+type: object
+properties:
+  series:
+    type: string
+    description: Серия вида на жительство
+  number:
+    type: string
+    description: Номер вида на жительство
+  issuedBy:
+    type: string
+    description: Наименование органа, выдавшего вид на жительство
+  authorityCode:
+    type: string
+    description: Код подразделения, выдавшего вид на жительство
+  issueDate:
+    type: string
+    description: Дата выдачи вида на жительство
+    format: date
+  expirationDate:
+    type: string
+    description: Дата окончания срока действия вида на жительство
+    format: date
+description: Вид на жительство

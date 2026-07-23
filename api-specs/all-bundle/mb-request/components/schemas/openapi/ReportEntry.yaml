@@ -1,0 +1,80 @@
+type: object
+properties:
+  transactionIdentification:
+    type: string
+  instructionIdentification:
+    type: string
+  endtoendIdentification:
+    type: string
+  uetr:
+    type: string
+  purpose:
+    type: string
+    enum:
+    - '1'
+    - '2'
+    - '3'
+  creditDebitIndicator:
+    type: string
+    enum:
+    - Credit
+    - Debit
+  status:
+    type: string
+    enum:
+    - AcceptedCreditSettlementCompleted
+    - AcceptedSettlementCompleted
+    - AcceptedSettlementInProcess
+    - AcceptedWithoutPosting
+    - Pending
+    - Rejected
+  bookingDateTime:
+    type: string
+    format: date-time
+  accDocDate:
+    type: string
+    format: date
+  valueDateTime:
+    type: string
+    format: date-time
+  Amount:
+    $ref: ./ActiveOrHistoricCurrencyAndAmount.yaml
+  TransactionAmount:
+    $ref: ./ActiveOrHistoricCurrencyAndAmount.yaml
+  ChargeAmount:
+    $ref: ./ActiveOrHistoricCurrencyAndAmount.yaml
+  InstructedAmount:
+    $ref: ./AmountAndCurrencyExchangeDetails.yaml
+  BankTransactionCode:
+    $ref: ./BankTransactionCode.yaml
+  PaymentTypeInformation:
+    $ref: ./PaymentTypeInformation.yaml
+  UltimateDebtor:
+    $ref: ./PartyIdentification.yaml
+  Debtor:
+    $ref: ./PartyChoice.yaml
+  DebtorAgent:
+    $ref: ./BranchAndFinancialInstitutionInformationShort.yaml
+  DebtorAgentAccount:
+    $ref: ./CashAccount.yaml
+  DebtorAccount:
+    $ref: ./CashAccount.yaml
+  IntermediaryAgent:
+    $ref: ./BranchAndFinancialInstitutionInformationShort.yaml
+  IntermediaryAgentAccount:
+    $ref: ./CashAccount.yaml
+  CreditorAgent:
+    $ref: ./BranchAndFinancialInstitutionInformationShort.yaml
+  CreditorAccount:
+    $ref: ./CashAccount.yaml
+  CreditorAgentAccount:
+    $ref: ./CashAccount.yaml
+  Creditor:
+    $ref: ./PartyChoice.yaml
+  UltimateCreditor:
+    $ref: ./PartyIdentification.yaml
+  CardTransaction:
+    $ref: ./CardTransaction18.yaml
+  RemittanceInformation:
+    $ref: ./RemittanceInformation.yaml
+description:  Запись об операция по счету

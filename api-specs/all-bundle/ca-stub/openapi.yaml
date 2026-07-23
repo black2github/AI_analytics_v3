@@ -1,0 +1,117 @@
+openapi: 3.0.1
+info:
+  title: Сервис тестового УЦ
+  version: 1.9.0
+servers:
+- url: /ca-stub
+tags:
+- name: API данных CRL
+- name: API выпуска сертификатов
+- name: API выпуска CRL
+- name: API файлов сертификатов
+- name: API данных сертификатов
+- name: API распространения CRL
+- name: API настроек УЦ
+- name: API отзыва сертификата
+- name: API файлов CRL
+paths:
+  /settings:
+    $ref: ./paths/settings/settings.yaml
+  /crl:
+    $ref: ./paths/crl/crl.yaml
+  /crl/revoke:
+    $ref: ./paths/revoke/crl_revoke.yaml
+  /crl/revoked/get-page:
+    $ref: ./paths/revoked/crl_revoked_get_page.yaml
+  /cert/get-page:
+    $ref: ./paths/get-page/cert_get_page.yaml
+  /cert/csr:
+    $ref: ./paths/csr/cert_csr.yaml
+  /cert/create/certificates-without-original-statement:
+    $ref: ./paths/create/cert_create_certificates_without_original_statement.yaml
+  /cert/ca:
+    $ref: ./paths/ca/cert_ca.yaml
+  /crl/{authorityCertId}:
+    $ref: ./paths/{authorityCertId}/crl_authorityCertId.yaml
+  /crl/{authorityCertId}/export/{format}:
+    $ref: ./paths/{authorityCertId}/crl_authorityCertId_export_format.yaml
+  /cert/{id}:
+    $ref: ./paths/{id}/cert_id.yaml
+  /cert/{id}/export/{format}:
+    $ref: ./paths/{id}/cert_id_export_format.yaml
+  /cdp/{filename}:
+    $ref: ./paths/{filename}/cdp_filename.yaml
+components:
+  schemas:
+    CaSettingsDto:
+      $ref: ./components/schemas/settings/CaSettingsDto.yaml
+    GenericCommandCaSettingsDto:
+      $ref: ./components/schemas/settings/GenericCommandCaSettingsDto.yaml
+    GenericResponseSimpleErrorDataCaSettingsDto:
+      $ref: ./components/schemas/settings/GenericResponseSimpleErrorDataCaSettingsDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    CrlRequestDto:
+      $ref: ./components/schemas/crl/CrlRequestDto.yaml
+    GenericCommandCrlRequestDto:
+      $ref: ./components/schemas/crl/GenericCommandCrlRequestDto.yaml
+    CrlDto:
+      $ref: ./components/schemas/common/CrlDto.yaml
+    GenericResponseSimpleErrorDataCrlDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCrlDto.yaml
+    GenericCommandRevokeCertRequestDto:
+      $ref: ./components/schemas/revoke/GenericCommandRevokeCertRequestDto.yaml
+    RevokeCertRequestDto:
+      $ref: ./components/schemas/revoke/RevokeCertRequestDto.yaml
+    GenericResponseSimpleErrorDataRevokedCertDto:
+      $ref: ./components/schemas/revoke/GenericResponseSimpleErrorDataRevokedCertDto.yaml
+    RevokedCertDto:
+      $ref: ./components/schemas/common/RevokedCertDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandRevokedCertFilterDto:
+      $ref: ./components/schemas/revoked/GetPageCommandRevokedCertFilterDto.yaml
+    PageParamsRevokedCertFilterDto:
+      $ref: ./components/schemas/revoked/PageParamsRevokedCertFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RevokedCertFilterDto:
+      $ref: ./components/schemas/revoked/RevokedCertFilterDto.yaml
+    RevokedCertStatusFilterDto:
+      $ref: ./components/schemas/revoked/RevokedCertStatusFilterDto.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageDataRevokedCertDto:
+      $ref: ./components/schemas/revoked/PageDataRevokedCertDto.yaml
+    CertFilterDto:
+      $ref: ./components/schemas/get-page/CertFilterDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/get-page/FilterValueDtoBoolean.yaml
+    GetPageCommandCertFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandCertFilterDto.yaml
+    PageParamsCertFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsCertFilterDto.yaml
+    CertDto:
+      $ref: ./components/schemas/common/CertDto.yaml
+    DnDto:
+      $ref: ./components/schemas/common/DnDto.yaml
+    PageDataCertDto:
+      $ref: ./components/schemas/get-page/PageDataCertDto.yaml
+    CsrCertRequestDto:
+      $ref: ./components/schemas/csr/CsrCertRequestDto.yaml
+    GenericCommandCsrCertRequestDto:
+      $ref: ./components/schemas/csr/GenericCommandCsrCertRequestDto.yaml
+    GenericResponseSimpleErrorDataCertDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataCertDto.yaml
+    CaCreateCertWithoutOriginalStatementFileDto:
+      $ref: ./components/schemas/create/CaCreateCertWithoutOriginalStatementFileDto.yaml
+    CertWithoutOriginalStatementInfoDto:
+      $ref: ./components/schemas/create/CertWithoutOriginalStatementInfoDto.yaml
+    GenericCommandCaCreateCertWithoutOriginalStatementFileDto:
+      $ref: ./components/schemas/create/GenericCommandCaCreateCertWithoutOriginalStatementFileDto.yaml
+    CaCertRequestDto:
+      $ref: ./components/schemas/ca/CaCertRequestDto.yaml
+    GenericCommandCaCertRequestDto:
+      $ref: ./components/schemas/ca/GenericCommandCaCertRequestDto.yaml

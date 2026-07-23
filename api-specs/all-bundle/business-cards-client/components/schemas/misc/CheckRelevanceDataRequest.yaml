@@ -1,0 +1,13 @@
+required:
+- organizationId
+type: object
+properties:
+  organizationId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  sessionLeader:
+    type: string
+    description: Идентификатор запроса, «породившего» заявку (ProcessGUID)
+    format: uuid
+description: Запрос проверки актуальности данных в карточке клиента

@@ -1,0 +1,31 @@
+required:
+- bankClientId
+- consentChanges
+- fingerprint
+- organization
+- pcrParticipantWalletId
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  fingerprint:
+    maxLength: 2147483647
+    minLength: 1
+    type: string
+    description: Фингерпринт
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  organization:
+    $ref: ../common/OrganizationDto.yaml
+  consentChanges:
+    maxItems: 2147483647
+    minItems: 1
+    type: array
+    description: Изменения согласий в заявке
+    items:
+      $ref: ./ConsentChangeDto.yaml
+description: DTO для запроса на создание заявки на управление согласиями.

@@ -1,0 +1,17 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла
+  fileSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  fileHash:
+    type: string
+    description: Хэш файла
+description: Информация о вложении

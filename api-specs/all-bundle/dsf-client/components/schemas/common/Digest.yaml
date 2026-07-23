@@ -1,0 +1,9 @@
+type: object
+properties:
+  signFields:
+    type: string
+  value:
+    type: string
+  version:
+    type: integer
+    format: int32

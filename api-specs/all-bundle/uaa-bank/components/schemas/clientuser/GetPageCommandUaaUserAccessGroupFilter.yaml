@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsUaaUserAccessGroupFilter.yaml
+description: Запрос страницы

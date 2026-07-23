@@ -1,0 +1,8 @@
+type: object
+properties:
+  signDocuments:
+    type: array
+    description: Набор подписываемых документов
+    items:
+      $ref: ./SignDataResponseDocumentDto.yaml
+description: Параметры универсальной функции электронной подписи v2.2

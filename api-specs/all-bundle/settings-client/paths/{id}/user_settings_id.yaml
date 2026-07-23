@@ -1,0 +1,66 @@
+get:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Получить запись по идентификатору
+  description: 'Привилегии: USER_SETTINGS_VIEW'
+  operationId: getById
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml
+put:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Обновить запись
+  description: 'Привилегии: USER_SETTINGS_EDIT'
+  operationId: update
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/UserSettingsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml
+delete:
+  tags:
+  - АПИ Клиента для управления пользовательскими настройками
+  summary: Удалить запись
+  description: 'Привилегии: USER_SETTINGS_EDIT'
+  operationId: delete
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataUserSettingsDto.yaml

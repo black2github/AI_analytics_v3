@@ -1,0 +1,11 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор фонового процесса импорта
+    format: uuid
+  completeAt:
+    type: string
+    description: Дата и время завершения
+    format: date-time
+description: Легковесное дто для заполнения фильтра "Фоновый процесс импорта"

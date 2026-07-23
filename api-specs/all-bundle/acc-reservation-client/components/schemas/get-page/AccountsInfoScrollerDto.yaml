@@ -1,0 +1,20 @@
+type: object
+properties:
+  accountType:
+    type: integer
+    description: Тип счета
+    format: int32
+  currencyId:
+    type: string
+    description: Идентификатор валюты
+    format: uuid
+  currencyCode:
+    type: string
+    description: ISO код валюты
+  balancePosition:
+    type: string
+    description: Балансовая позиция
+  balancePositionDescription:
+    type: string
+    description: Описание балансовой позиции
+description: Информация о счетах

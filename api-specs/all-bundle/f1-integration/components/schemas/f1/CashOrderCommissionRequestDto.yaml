@@ -1,0 +1,32 @@
+required:
+- accountForCash
+- applicationType
+- cash
+- clientEskId
+- clientRegNum
+- traceId
+type: object
+properties:
+  applicationType:
+    type: string
+    description: Тип заявки
+  traceId:
+    type: string
+    description: Уникальный идентификатор запроса
+  clientEskId:
+    type: string
+    description: ЕСК Гуид клиента
+    format: uuid
+  clientRegNum:
+    type: integer
+    description: РНК клиента
+    format: int64
+  accountForCash:
+    type: string
+    description: Счет зачисления/списания
+  cash:
+    type: array
+    description: Список кассовых символов
+    items:
+      $ref: ./CashSymbolCommissionDto.yaml
+description: Запрос комиссии для кассовой операции

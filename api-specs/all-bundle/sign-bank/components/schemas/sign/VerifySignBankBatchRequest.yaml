@@ -1,0 +1,22 @@
+type: object
+properties:
+  verifySignRequests:
+    uniqueItems: true
+    type: array
+    description: Список запросов на проверку подписей
+    items:
+      $ref: ./VerifySignBankRequest.yaml
+  allowedSignKinds:
+    uniqueItems: true
+    type: array
+    description: Допустимые виды СЭП
+    items:
+      type: string
+      description: ДТО Классификатор видов электронной подписи
+      enum:
+      - CLOUD_SIGN
+      - NOT_QUALIFIED_SIGN
+      - QUALIFIED_SIGN
+      - SIMPLE_SIGN
+      - MOBILE_QUALIFIED_SIGN
+description: Запрос на проверку подписей на стороне Банка

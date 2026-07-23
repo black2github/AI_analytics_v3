@@ -1,0 +1,61 @@
+post:
+  description: 'Привилегии: ONB_KZ.CLIENT.EXPORT_PF,ONB_KZ.BANK.EXPORT_PF_AND_SCANS'
+  operationId: exportPreviewDocsSetForIpOperatingAcc
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/onboarding-short-request/GenericCommandDocsExportDto.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Сформировать и загрузить в файловое хранилище ПФ в zip-архиве для ИП (расч. счёт) для ознакомления на этапе одобрения заявки
+  tags:
+  - Короткая заявка на открытие первого счета. Операции печати.

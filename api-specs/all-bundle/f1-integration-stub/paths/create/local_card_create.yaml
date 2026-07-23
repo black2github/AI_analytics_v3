@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи о локальной карте питания
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARDS_IRAO_ECO (Данные о локальной карте питания карте)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/LocalCardDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/LocalCardDto.yaml
+    '400':
+      description: Bad Request

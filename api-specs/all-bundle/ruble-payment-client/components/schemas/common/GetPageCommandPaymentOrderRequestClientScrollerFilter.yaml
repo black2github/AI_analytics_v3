@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsPaymentOrderRequestClientScrollerFilter.yaml
+description: Запрос страницы

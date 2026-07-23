@@ -1,0 +1,13 @@
+type: object
+properties:
+  kind:
+    type: string
+    description: Вид СЭП
+  status:
+    type: string
+    description: Статус СЭП
+  certificate:
+    type: string
+    description: ID Сертификата ЭП
+    format: uuid
+description: Удаленное средство ЭП

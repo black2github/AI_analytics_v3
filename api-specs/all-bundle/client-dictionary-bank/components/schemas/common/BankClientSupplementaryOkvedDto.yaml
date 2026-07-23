@@ -1,0 +1,9 @@
+type: object
+properties:
+  okved:
+    type: string
+    description: Код ОКВЭД
+  enabled:
+    type: boolean
+    description: Признак активности дополнительного ОКВЭД
+description: Не основные коды ОКВЭД с признаком enabled

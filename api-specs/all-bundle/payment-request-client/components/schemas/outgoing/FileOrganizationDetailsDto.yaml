@@ -1,0 +1,6 @@
+type: object
+properties:
+  uniqueOrganizationCount:
+    type: string
+    description: Количество уникальных организаций в файле
+description: Данные организаций в файле

@@ -1,0 +1,19 @@
+required:
+- documents
+- myFnsProfileId
+type: object
+properties:
+  myFnsProfileId:
+    type: string
+    description: ID профиля ФНС
+    format: uuid
+  header:
+    type: string
+    description: Заголовок в списке документов на подпись в приложении Моя подпись ФНС
+  documents:
+    minItems: 1
+    type: array
+    description: Список документов на подпись
+    items:
+      $ref: ./DocumentForSignDto.yaml
+description: Запрос создания подписи Моя подпись ФНС

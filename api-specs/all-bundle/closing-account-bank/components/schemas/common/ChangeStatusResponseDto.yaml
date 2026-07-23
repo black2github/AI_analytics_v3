@@ -1,0 +1,10 @@
+type: object
+properties:
+  changed:
+    type: boolean
+    description: Результат изменения статуса заявки
+  requestId:
+    type: string
+    description: Id заявки
+    format: uuid
+description: Данные заявки после смены статуса

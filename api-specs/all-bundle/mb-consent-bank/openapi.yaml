@@ -1,0 +1,135 @@
+openapi: 3.0.1
+info:
+  title: Сервис копии документов. Банковская часть.
+  version: 1.0.0
+servers:
+- url: /mb-consent-bank
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+paths:
+  /v1/consent/get-page:
+    $ref: ./paths/consent/v1_consent_get_page.yaml
+  /integration/v1/consent:
+    $ref: ./paths/v1/integration_v1_consent.yaml
+  /integration/v1/consent/by-openapi-account-ids:
+    $ref: ./paths/v1/integration_v1_consent_by_openapi_account_ids.yaml
+  /integration/v1/consent/accounts:
+    $ref: ./paths/v1/integration_v1_consent_accounts.yaml
+  /v1/grant-consent/{id}:
+    $ref: ./paths/grant-consent/v1_grant_consent_id.yaml
+  /v1/grant-consent/check-signature/{id}:
+    $ref: ./paths/grant-consent/v1_grant_consent_check_signature_id.yaml
+  /v1/consent/{id}:
+    $ref: ./paths/consent/v1_consent_id.yaml
+  /integration/v1/consent/user/{userId}:
+    $ref: ./paths/v1/integration_v1_consent_user_userId.yaml
+  /integration/v1/consent/transaction-accounts:
+    $ref: ./paths/v1/integration_v1_consent_transaction_accounts.yaml
+  /integration/v1/consent/consent/{consentId}:
+    $ref: ./paths/v1/integration_v1_consent_consent_consentId.yaml
+  /integration/v1/consent/consent/ext/{extConsentId}:
+    $ref: ./paths/v1/integration_v1_consent_consent_ext_extConsentId.yaml
+  /integration/v1/consent/available-accounts/{consentId}:
+    $ref: ./paths/v1/integration_v1_consent_available_accounts_consentId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ConsentAvailableActionFilterDto:
+      $ref: ./components/schemas/consent/ConsentAvailableActionFilterDto.yaml
+    ConsentBankScrollerFilterDto:
+      $ref: ./components/schemas/consent/ConsentBankScrollerFilterDto.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/consent/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoBankCodeDto:
+      $ref: ./components/schemas/consent/FilterValueEnumDtoBankCodeDto.yaml
+    FilterValueEnumDtoConsentStatusDto:
+      $ref: ./components/schemas/consent/FilterValueEnumDtoConsentStatusDto.yaml
+    GetPageCommandConsentBankScrollerFilterDto:
+      $ref: ./components/schemas/consent/GetPageCommandConsentBankScrollerFilterDto.yaml
+    PageParamsConsentBankScrollerFilterDto:
+      $ref: ./components/schemas/consent/PageParamsConsentBankScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    ConsentAccountScrollerDto:
+      $ref: ./components/schemas/consent/ConsentAccountScrollerDto.yaml
+    ConsentBankScrollerRsDto:
+      $ref: ./components/schemas/consent/ConsentBankScrollerRsDto.yaml
+    PageDataConsentBankScrollerRsDto:
+      $ref: ./components/schemas/consent/PageDataConsentBankScrollerRsDto.yaml
+    ConsentIntegrationRequestDto:
+      $ref: ./components/schemas/v1/ConsentIntegrationRequestDto.yaml
+    ConsentIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentIntegrationDto.yaml
+    ConsentOperationIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentOperationIntegrationDto.yaml
+    ConsentPermissionIntegrationDto:
+      $ref: ./components/schemas/common/ConsentPermissionIntegrationDto.yaml
+    ConsentUserTokenIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentUserTokenIntegrationDto.yaml
+    GenericResponseSimpleErrorDataConsentIntegrationDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataConsentIntegrationDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    UserIntegrationDto:
+      $ref: ./components/schemas/v1/UserIntegrationDto.yaml
+    GenericResponseSimpleErrorDataListConsentIntegrationDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataListConsentIntegrationDto.yaml
+    ConsentAccountIntegrationFilter:
+      $ref: ./components/schemas/v1/ConsentAccountIntegrationFilter.yaml
+    GetPageCommandConsentAccountIntegrationFilter:
+      $ref: ./components/schemas/v1/GetPageCommandConsentAccountIntegrationFilter.yaml
+    PageParamsConsentAccountIntegrationFilter:
+      $ref: ./components/schemas/v1/PageParamsConsentAccountIntegrationFilter.yaml
+    BankServicerDto:
+      $ref: ./components/schemas/v1/BankServicerDto.yaml
+    ConsentAccountIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentAccountIntegrationDto.yaml
+    ConsentAccountsIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentAccountsIntegrationDto.yaml
+    GenericResponseSimpleErrorDataConsentAccountsIntegrationDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataConsentAccountsIntegrationDto.yaml
+    SliceDataConsentAccountIntegrationDto:
+      $ref: ./components/schemas/v1/SliceDataConsentAccountIntegrationDto.yaml
+    CreatorDto:
+      $ref: ./components/schemas/grant-consent/CreatorDto.yaml
+    GenericResponseSimpleErrorDataGrantConsentBankDto:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataGrantConsentBankDto.yaml
+    GrantAccountDto:
+      $ref: ./components/schemas/grant-consent/GrantAccountDto.yaml
+    GrantConsentBankDto:
+      $ref: ./components/schemas/grant-consent/GrantConsentBankDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/grant-consent/GenericResponseSimpleErrorDataBoolean.yaml
+    ConsentDto:
+      $ref: ./components/schemas/consent/ConsentDto.yaml
+    GenericResponseSimpleErrorDataConsentDto:
+      $ref: ./components/schemas/consent/GenericResponseSimpleErrorDataConsentDto.yaml
+    GenericResponseSimpleErrorDataListConsentAccountIntegrationDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataListConsentAccountIntegrationDto.yaml
+    ConsentAccessAccountIntegrationDto:
+      $ref: ./components/schemas/v1/ConsentAccessAccountIntegrationDto.yaml
+    GenericResponseSimpleErrorDataListConsentAccessAccountIntegrationDto:
+      $ref: ./components/schemas/v1/GenericResponseSimpleErrorDataListConsentAccessAccountIntegrationDto.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

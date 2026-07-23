@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsTechnicalUserFilter.yaml
+description: Запрос страницы

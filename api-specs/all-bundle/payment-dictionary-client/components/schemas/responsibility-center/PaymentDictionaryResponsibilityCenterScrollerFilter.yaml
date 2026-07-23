@@ -1,0 +1,5 @@
+type: object
+properties:
+  structureName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр справочника Центры ответственности для скроллера

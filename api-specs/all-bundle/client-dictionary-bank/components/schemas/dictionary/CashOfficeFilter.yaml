@@ -1,0 +1,25 @@
+type: object
+properties:
+  location:
+    $ref: ../common/FilterValueDtoString.yaml
+  filialEskCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  absCode:
+    $ref: ../common/FilterValueDtoString.yaml
+  branchServices:
+    $ref: ../common/FilterValueDtoString.yaml
+  needAgreement:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  address:
+    $ref: ../common/FilterValueDtoString.yaml
+  vspNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  isAccessibility:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр

@@ -1,0 +1,36 @@
+type: object
+description: Информация о банке из системы СБП
+properties:
+  memberBic:
+    type: string
+    description: БИК банка
+  memberId:
+    type: string
+    description: Идентификатор Банка
+  scenarios:
+    type: array
+    description: Поддерживаемые участником СБП сценарии
+    items:
+      $ref: ./SbpBankDtoScenario.yaml
+    uniqueItems: true
+  memberName:
+    type: string
+    description: Международное имя участника
+  memberNameRus:
+    type: string
+    description: Имя участника на русском языке
+  membersProfileName:
+    type: string
+    description: Тип участника (банк, ОПКЦ)
+  membersEffectiveDate:
+    type: string
+    format: date
+    description: Дата операционного дня, на которую данные актуальны
+required:
+- memberBic
+- memberId
+- memberName
+- memberNameRus
+- membersEffectiveDate
+- membersProfileName
+- scenarios

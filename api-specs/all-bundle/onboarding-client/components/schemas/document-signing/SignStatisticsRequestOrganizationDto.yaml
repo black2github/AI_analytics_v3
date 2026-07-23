@@ -1,0 +1,12 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: ID Клиента
+    format: uuid
+  documents:
+    type: array
+    description: Подписываемые документы
+    items:
+      $ref: ./SignStatisticsRequestDocumentDto.yaml
+description: Данные организации, документы которой подписывает пользователь

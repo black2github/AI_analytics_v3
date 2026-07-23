@@ -1,0 +1,9 @@
+required:
+- operationId
+type: object
+properties:
+  operationId:
+    type: string
+    description: ID операции подписи
+    format: uuid
+description: Запрос отмены подписи ПЭП.

@@ -1,0 +1,47 @@
+type: object
+properties:
+  acceptForExecutionAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  clientRnk:
+    $ref: ./FilterValueDtoString.yaml
+  payerInn:
+    $ref: ./FilterValueDtoString.yaml
+  payerName:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterPaymentOrderRequestStatus.yaml
+  createdAtRange:
+    $ref: ./FilterValueDtoInstant.yaml
+  payerBankName:
+    $ref: ./FilterValueDtoString.yaml
+  payerAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  requestSourceSystem:
+    $ref: ./FilterPaymentOrderRequestSourceSystem.yaml
+  requestCreationType:
+    $ref: ./FilterPaymentOrderRequestCreationType.yaml
+  docNumber:
+    $ref: ./FilterValueDtoString.yaml
+  paymentAmountIncludeVat:
+    $ref: ./FilterValueDtoString.yaml
+  recipientNameOrInn:
+    $ref: ./FilterValueDtoString.yaml
+  recipientBankBicOrBankName:
+    $ref: ./FilterValueDtoString.yaml
+  recipientAccountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  budgetInfoBasisDocNumber:
+    $ref: ./FilterValueDtoString.yaml
+  budgetInfoBasisDocDate:
+    $ref: ./FilterValueDtoString.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    $ref: ./PaymentOrderRequestBankCategoryDto.yaml
+  isChargebackRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+  numberCcf:
+    $ref: ./FilterValueDtoString.yaml
+  statusOfSendingKcp:
+    $ref: ./FilterPaymentOrderRequestStatusOfSendingKcp.yaml
+description: Фильтр скроллера Платежного Поручения. Банковская часть.

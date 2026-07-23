@@ -1,0 +1,41 @@
+required:
+- columns
+- multiSort
+type: object
+properties:
+  multiSort:
+    type: array
+    description: Параметры сортировки
+    items:
+      $ref: ../common/Sort.yaml
+  filter:
+    $ref: ./AccountBlockingRequestBankScrollerFilter.yaml
+  columns:
+    type: array
+    description: Отображаемые колонки
+    items:
+      type: string
+      description: Колонки скроллера блокировок
+      enum:
+      - CREATED_AT
+      - ORGANIZATION
+      - ACCOUNT_NUMBER
+      - ORG_TYPE
+      - BLOCK_SUM
+      - DOC_SUM
+      - DOC_DATE
+      - STATUS
+      - ID
+      - ID_F1
+      - ORG_NAME
+      - ORG_INN
+      - BLOCK_REASON
+      - BLOCK_DOC_TYPE
+      - BLOCK_TYPE
+      - FULL_BLOCK
+      - BLOCK_NUMBER
+      - UPDATE_DATE
+      - CURRENCY_CONVERSION_DATE
+  reportFormat:
+    $ref: ./ReportFormatDto.yaml
+description: Запрос экспорта блокировок по счетам организации

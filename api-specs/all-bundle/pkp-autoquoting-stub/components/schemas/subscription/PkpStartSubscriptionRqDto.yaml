@@ -1,0 +1,23 @@
+type: object
+required:
+- delay
+- profile
+description: Транспортное представление запроса на старт потока профилей от АС ПКП
+properties:
+  delay:
+    $ref: ./DelayBounds.yaml
+    type: object
+    description: Диапазон задержек отправки профилей в режиме подписки
+  duration:
+    type: string
+    format: duration
+    examples:
+    - P1D
+    description: Длительность подписки
+  quoteDelta:
+    type: string
+    description: Дельта отправляемых котировок
+  profile:
+    $ref: ../common/PkpClientProfileRspDto.yaml
+    type: object
+    description: Профиль клиента ПКП

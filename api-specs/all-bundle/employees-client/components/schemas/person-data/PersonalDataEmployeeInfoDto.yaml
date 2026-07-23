@@ -1,0 +1,21 @@
+required:
+- employee
+type: object
+properties:
+  employee:
+    $ref: ./PersonalDataEmployeeDto.yaml
+  personalDataConsent:
+    type: boolean
+    description: Признак "Получено согласие на обработку персональных данных"
+  clientEmployeeUserId:
+    type: string
+    description: Идентификатор клиентского пользователя
+    format: uuid
+  registrationAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  actualAddress:
+    $ref: ../common/EmployeeAddressUpdateDto.yaml
+  addressesMatches:
+    type: boolean
+    description: Признак "Адрес регистрации совпадает с фактическим адресом"
+description: Заявка на добавление нового сотрудника. Личные данные. Реквизиты сотрудника из заявки.

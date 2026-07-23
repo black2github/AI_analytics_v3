@@ -1,0 +1,22 @@
+type: object
+description: Группа подписантов
+properties:
+  code:
+    type: string
+    description: Уникальный код группы.
+  comment:
+    type: string
+    description: Пользовательский комментарий при создание/редактировании записи
+  name:
+    type: string
+    description: Уникальное имя группы.
+  notifiablePeople:
+    type: array
+    description: Список оповещаемых.
+    items:
+      $ref: ./NotifiablePersonCreateDto.yaml
+  signatoryPeople:
+    type: array
+    description: Список подписантов.
+    items:
+      $ref: ./SignatoryPersonCreateDto.yaml

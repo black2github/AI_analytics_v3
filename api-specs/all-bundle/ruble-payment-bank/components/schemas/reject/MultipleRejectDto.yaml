@@ -1,0 +1,12 @@
+type: object
+properties:
+  documentIds:
+    type: array
+    description: Список id документов
+    items:
+      type: string
+      description: Список id документов
+      format: uuid
+  comment:
+    $ref: ../common/CommentDto.yaml
+description: Команда множественного отклонения заявок

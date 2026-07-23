@@ -1,0 +1,18 @@
+type: object
+description: Реквизиты клиента по заявке
+properties:
+  shortName:
+    type: string
+    description: Наименование Плательщика
+  inn:
+    type: string
+    description: ИНН Плательщика
+  kpp:
+    type: string
+    description: КПП Плательщика
+  legalId:
+    type: string
+    description: Идентификатор Клиента (ЮЛ) в АС СБП
+required:
+- inn
+- shortName

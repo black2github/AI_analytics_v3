@@ -1,0 +1,14 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Общий результат проверки
+    enum:
+    - VALID
+    - INVALID
+  failedControls:
+    type: array
+    description: Список упавших контролей
+    items:
+      $ref: ./FailedControl.yaml
+description: Результат проверки контролей

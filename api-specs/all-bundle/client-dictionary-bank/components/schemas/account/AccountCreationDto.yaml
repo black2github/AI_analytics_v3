@@ -1,0 +1,102 @@
+required:
+- accountNumber
+- accountTypeId
+- accountingBalanceHeadUnit
+- balanceBranchId
+- clientId
+- createSource
+- currencyId
+- onbAutomaticReservation
+- state
+- userId
+type: object
+properties:
+  createSource:
+    type: string
+    description: Источник создания счета
+    enum:
+    - RES_ONB
+    - O2_PLUS
+  accountNumber:
+    type: string
+    description: Номер
+  state:
+    type: string
+    description: Состояние
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  startDate:
+    type: string
+    description: Дата начала резервирования
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания резервирования
+    format: date
+  openDate:
+    type: string
+    description: Дата открытия
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия
+    format: date
+  transitAccountNumber:
+    type: string
+    description: Транзитный номер
+  accountTypeId:
+    type: integer
+    description: ID типа счета
+    format: int64
+  currencyId:
+    type: string
+    description: ID валюты счета
+    format: uuid
+  clientId:
+    type: string
+    description: ID Клиента Банка
+    format: uuid
+  branchId:
+    type: string
+    description: Филиал обслуживания
+    format: uuid
+  balanceBranchId:
+    type: string
+    description: Филиал баланса
+    format: uuid
+  gozContractId:
+    type: string
+    description: ID гос. контракта
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  reservationRequestId:
+    type: string
+    description: ID заявки на резервирование
+    format: uuid
+  openingRequestId:
+    type: string
+    description: ID заявки на открытие
+    format: uuid
+  openingContractRequestId:
+    type: string
+    description: Ссылка на заявку на открытие доп счета и заключение ДБС
+    format: uuid
+  documentPackageRequestId:
+    type: string
+    description: Ссылка на идентификатор ОНБ
+    format: uuid
+  accountingBalanceHeadUnit:
+    type: boolean
+    description: Признак учета на Балансе ГО
+  onbAutomaticReservation:
+    type: boolean
+    description: Признак Автоматического резервирования в ОНБ
+description: ДТО создания счета

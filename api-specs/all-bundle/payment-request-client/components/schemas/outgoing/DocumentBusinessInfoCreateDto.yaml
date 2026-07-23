@@ -1,0 +1,39 @@
+type: object
+properties:
+  docNumber:
+    maxLength: 15
+    pattern: ^[0-9]*$
+    type: string
+    description: Номер документа
+    nullable: true
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+    nullable: true
+  amount:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма
+    nullable: true
+  amountIncludeVat:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма с учетом НДС
+    nullable: true
+  vatCalculationMethod:
+    $ref: ./VatCalculationTypeDto.yaml
+  vatPercentRate:
+    maximum: 100
+    minimum: 0
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+    nullable: true
+  vatAmount:
+    pattern: ^\d{0,18}\.?\d{0,2}$
+    type: string
+    description: Сумма НДС
+    nullable: true
+description: Основные реквизиты документа платежное требование исходящее (данные для создания)
+nullable: true

@@ -1,0 +1,18 @@
+post:
+  tags:
+  - debt-bank-print-controller
+  description: 'Привилегии: DEBT.BANK.PRINT'
+  operationId: print
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/print/SingleCommandPrintRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/print/SingleResponsePrintResponse.yaml

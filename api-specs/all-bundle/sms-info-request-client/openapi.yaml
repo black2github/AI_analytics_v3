@@ -1,0 +1,127 @@
+openapi: 3.0.1
+info:
+  title: Сервис "СФЗУ_Заявки". Клиентская часть.
+  version: 1.4.0
+servers:
+- url: /sms-info-request-client
+security:
+- bearerAuth: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /sms-info/signature/sign:
+    $ref: ./paths/signature/sms_info_signature_sign.yaml
+  /sms-info/signature/generate-sign-data:
+    $ref: ./paths/signature/sms_info_signature_generate_sign_data.yaml
+  /sms-info/request/send:
+    $ref: ./paths/request/sms_info_request_send.yaml
+  /sms-info/request/get-by-id:
+    $ref: ./paths/request/sms_info_request_get_by_id.yaml
+  /sms-info/request/get-by-client-id:
+    $ref: ./paths/request/sms_info_request_get_by_client_id.yaml
+  /sms-info/request/connect:
+    $ref: ./paths/request/sms_info_request_connect.yaml
+  /sms-info/request/change:
+    $ref: ./paths/request/sms_info_request_change.yaml
+  /sms-info/request/cancel:
+    $ref: ./paths/request/sms_info_request_cancel.yaml
+  /sms-info/bank-client/{clientId}/user-accounts:
+    $ref: ./paths/bank-client/sms_info_bank_client_clientId_user_accounts.yaml
+  /sms-info/subscription:
+    $ref: ./paths/subscription/sms_info_subscription.yaml
+  /sms-info/bank-client/{clientId}/officials:
+    $ref: ./paths/bank-client/sms_info_bank_client_clientId_officials.yaml
+  /sms-info/bank-client/{clientId}/accounts:
+    $ref: ./paths/bank-client/sms_info_bank_client_clientId_accounts.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataObject:
+      $ref: ./components/schemas/common/GenericResponseErrorDataObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/request/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/request/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/request/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/request/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/request/ValidationResult.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    GenericCommandSignCommandV2x2:
+      $ref: ./components/schemas/signature/GenericCommandSignCommandV2x2.yaml
+    SignCommandV2x2:
+      $ref: ./components/schemas/signature/SignCommandV2x2.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataUUID.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/signature/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/signature/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/signature/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/signature/UniSignV2x1Dto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/request/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataSmsInfoRequestDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataSmsInfoRequestDto.yaml
+    SmsInfoRequestDto:
+      $ref: ./components/schemas/request/SmsInfoRequestDto.yaml
+    SmsInfoRequestUserDto:
+      $ref: ./components/schemas/request/SmsInfoRequestUserDto.yaml
+    GenericCommandSmsInfoRequestUpsertDto:
+      $ref: ./components/schemas/request/GenericCommandSmsInfoRequestUpsertDto.yaml
+    SmsInfoRequestCreateUserDto:
+      $ref: ./components/schemas/request/SmsInfoRequestCreateUserDto.yaml
+    SmsInfoRequestUpsertDto:
+      $ref: ./components/schemas/request/SmsInfoRequestUpsertDto.yaml
+    GenericResponseSimpleErrorDataWithValidationSmsInfoRequestDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataWithValidationSmsInfoRequestDto.yaml
+    SimpleErrorDataWithValidation:
+      $ref: ./components/schemas/request/SimpleErrorDataWithValidation.yaml
+    GenericCommandSmsInfoRequestCancelDto:
+      $ref: ./components/schemas/request/GenericCommandSmsInfoRequestCancelDto.yaml
+    SmsInfoRequestCancelDto:
+      $ref: ./components/schemas/request/SmsInfoRequestCancelDto.yaml
+    GenericResponseSimpleErrorDataMapUUIDListUUID:
+      $ref: ./components/schemas/bank-client/GenericResponseSimpleErrorDataMapUUIDListUUID.yaml
+    ClientSubscriptionInfoDto:
+      $ref: ./components/schemas/subscription/ClientSubscriptionInfoDto.yaml
+    GenericResponseSimpleErrorDataSubscriptionInfoDto:
+      $ref: ./components/schemas/subscription/GenericResponseSimpleErrorDataSubscriptionInfoDto.yaml
+    SubscriptionInfoDto:
+      $ref: ./components/schemas/subscription/SubscriptionInfoDto.yaml
+    GenericResponseSimpleErrorDataListSmsInfoOfficialDto:
+      $ref: ./components/schemas/bank-client/GenericResponseSimpleErrorDataListSmsInfoOfficialDto.yaml
+    SmsInfoOfficialDto:
+      $ref: ./components/schemas/bank-client/SmsInfoOfficialDto.yaml
+    GenericResponseSimpleErrorDataListSmsInfoAccountDto:
+      $ref: ./components/schemas/bank-client/GenericResponseSimpleErrorDataListSmsInfoAccountDto.yaml
+    SmsInfoAccountDto:
+      $ref: ./components/schemas/bank-client/SmsInfoAccountDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

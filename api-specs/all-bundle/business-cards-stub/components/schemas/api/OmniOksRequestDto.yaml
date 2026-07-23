@@ -1,0 +1,6 @@
+type: object
+properties:
+  meta:
+    $ref: ./OmniOksRequestMetaDto.yaml
+  data:
+    $ref: ./OmniOksRequestDataDto.yaml

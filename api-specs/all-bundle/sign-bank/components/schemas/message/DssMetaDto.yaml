@@ -1,0 +1,8 @@
+required:
+- systemId
+type: object
+properties:
+  systemId:
+    type: string
+    description: Мнемокод системы отправителя
+description: Мета информация отправляемого сообщения

@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Branch ID
+    format: uuid
+  name:
+    type: string
+    description: Name
+  bic:
+    type: string
+    description: BIC
+  correspondentAccount:
+    type: string
+    description: Correspondent account
+description: Branch DTO.

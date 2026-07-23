@@ -1,0 +1,43 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор запроса на регистрацию, полученный от вызова метода register.
+    format: uuid
+  smsCode:
+    type: string
+    description: Код полученный в SMS сообщении.
+  registrationMethod:
+    type: string
+    enum:
+    - DEFAULT
+    - CHATBOT
+    - CONFIRMED_PHONE_NUMBER
+    - EXTERNAL_SITE
+  partnerCode:
+    type: string
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - GPB_AUTOLEASING
+    - GPB_FACTORING
+    - GPB_CARCADE
+    - GPB_BSK
+    - ESIA
+    - GPB_IO_BSK
+    - CP_RETAIL
+    - ETP_GAZ
+    - FAP_DARK
+    - AB_PAYMENTS
+    - ETP_EDO
+    - ETP_VESNA
+    - AUTO_USN
+    - ULUKY
+    - OB_VTB
+  clientId:
+    type: string
+    description: ID oauth2 приложения
+  user_environment:
+    type: string
+    description: Информация об окружении пользователя
+description: Запрос на завершение регистрации

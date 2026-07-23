@@ -1,0 +1,22 @@
+required:
+- clientOfficialId
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя Клента
+    format: uuid
+  userAbsId:
+    type: string
+    description: ID пользователя в РКО Ф1
+  certIds:
+    maxItems: 2
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: ID сертификатов для которых создаются СЭП
+    items:
+      type: string
+      description: ID сертификатов для которых создаются СЭП
+      format: uuid
+description: Запрос создания или изменения СЭП для представителя клиента

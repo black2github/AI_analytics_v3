@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./TypeLayoutDto.yaml
+description: Запрос

@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API Банка для работы со скроллером ДВК.
+  summary: Журнал документов. Получить список документов
+  description: 'Привилегии: DVK_BANK.DOCUMENT_LIST'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GetPageCommandDocumentBankFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorPageDataDocumentBankScrollerDto.yaml

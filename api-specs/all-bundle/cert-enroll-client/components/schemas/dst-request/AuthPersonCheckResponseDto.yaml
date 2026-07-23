@@ -1,0 +1,6 @@
+type: object
+properties:
+  hasAuthorities:
+    type: boolean
+    description: Признак что у УЛ есть полномомочия на создания заявления ОЭП
+description: Ответ на запрос проверки полномочий УЛ на подачу заявления на выпуск ОЭП

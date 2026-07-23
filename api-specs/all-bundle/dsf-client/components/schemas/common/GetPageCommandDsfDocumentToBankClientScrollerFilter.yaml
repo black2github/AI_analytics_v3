@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDsfDocumentToBankClientScrollerFilter.yaml
+description: Запрос страницы

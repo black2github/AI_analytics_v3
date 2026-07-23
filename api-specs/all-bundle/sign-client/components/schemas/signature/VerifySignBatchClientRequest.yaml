@@ -1,0 +1,87 @@
+type: object
+properties:
+  certificateItems:
+    type: array
+    description: Данные для подписания сертификатом
+    items:
+      $ref: ./VerifySignBatchRequestCertificateItem.yaml
+  ownerId:
+    type: string
+    description: ID пользователя, подписавшего документ
+    format: uuid
+  clientId:
+    type: string
+    description: ID клиента
+    format: uuid
+  accountId:
+    type: string
+    description: ID счета. Опционально
+    format: uuid
+  shouldCheckCrypto:
+    type: boolean
+    description: 'Требуется ли проверка в криптомодуле. По умолчанию: true'
+  clientInnKio:
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  clientOgrn:
+    type: string
+    description: ОГРН клиента
+  clientName:
+    type: string
+    description: Имя клиента
+  clientEskId:
+    type: string
+    description: ID клиента в ЕСК
+  clientAbsId:
+    type: string
+    description: ID клиента в РКО Ф1
+  productCodes:
+    type: array
+    description: Коды продуктов банка
+    items:
+      type: string
+      description: Коды продуктов банка
+  validators:
+    uniqueItems: true
+    type: array
+    description: Опции проверки подписи
+    items:
+      type: string
+      description: Опции проверки подписи
+      enum:
+      - CERTIFICATE_EXISTS
+      - CERTIFICATE_OWNER
+      - SIGN_CRYPTO
+      - ORG_OFFICIAL_CERT_EXISTS
+      - DBO_320_CERT_VALID
+      - CA_FNS
+      - EIO_CHECK
+      - ORG_REPRESENTATIVE
+      - SIGN_RULE
+  eioProcess:
+    type: string
+    description: Тип процесса проверки полномочий ЕИО
+    enum:
+    - GPB_BO_AGR_SIGN_AUTH_CHECK
+    - GPB_DOG_ACC_OPEN_AUTH_CHECK
+    - GPB_ACC_OPEN_AUTH_CHECK
+    - GPB_EXTRA_SERVICES_RKO_AUTH_CHECK
+    - OFFER_JOIN_GPB_BO1_REQ
+    - REPR_REG_CERT
+    - GPB_BO_GLOB_EMPW_BLOCK_AUTH_CHECK
+    - GPB_BO_REPR_REG_BLOCK_AUTH_CHECK
+    - GPB_CORP_CARD_ISSUE_AUTH_CHECK
+    - GPB_PRESETCREDENTIALS_AUTH_CHECK
+    - GPB_PROD_CREDENTIALS_COMB_AUTH_CHECK
+    - DEFAULT_DOCUMENT_TYPE
+  language:
+    type: string
+    description: Локаль в которой требуется выдать ответ
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+description: Клиентский/Банковский запрос проверки нескольких клиентских подписей

@@ -1,0 +1,107 @@
+openapi: 3.0.1
+info:
+  title: Сервис Цифровой рубль. Согласия. Клиентская часть.
+  description: Сервис Цифровой рубль. Согласия.
+  version: 3.0.0
+servers:
+- url: /digital-ruble-consent-client
+security:
+- bearerAuth: []
+tags:
+- name: ConsentRequestClient
+  description: API для работы с заявками.
+- name: ConsentListClient
+  description: API для получения текущего перечня согласий организации.
+- name: ConsentRequestMsgClient
+  description: API для работы с исходящими и входящими электронными сообщениями заявок.
+paths:
+  /request/page:
+    $ref: ./paths/page/request_page.yaml
+  /request/consent-management:
+    $ref: ./paths/consent-management/request_consent_management.yaml
+  /request/consent-list:
+    $ref: ./paths/consent-list/request_consent_list.yaml
+  /request-msg/consent-management/sign:
+    $ref: ./paths/consent-management/request_msg_consent_management_sign.yaml
+  /request-msg/consent-management/decrypt:
+    $ref: ./paths/consent-management/request_msg_consent_management_decrypt.yaml
+  /request-msg/consent-list/sign:
+    $ref: ./paths/consent-list/request_msg_consent_list_sign.yaml
+  /request-msg/consent-list/decrypt:
+    $ref: ./paths/consent-list/request_msg_consent_list_decrypt.yaml
+  /consent-list/page:
+    $ref: ./paths/page/consent_list_page.yaml
+  /request/consent-management/{id}:
+    $ref: ./paths/consent-management/request_consent_management_id.yaml
+  /request/consent-management/history/{id}:
+    $ref: ./paths/consent-management/request_consent_management_history_id.yaml
+  /request/consent-list/{id}:
+    $ref: ./paths/consent-list/request_consent_list_id.yaml
+  /request/consent-list/history/{id}:
+    $ref: ./paths/consent-list/request_consent_list_history_id.yaml
+  /request-msg/consent-management/{msgType}/{requestId}:
+    $ref: ./paths/consent-management/request_msg_consent_management_msgType_requestId.yaml
+  /request-msg/consent-list/{msgType}/{requestId}:
+    $ref: ./paths/consent-list/request_msg_consent_list_msgType_requestId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /consent-list/lastUpdateDateTime:
+    $ref: ./paths/lastUpdateDateTime/consent_list_lastUpdateDateTime.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/{locale}/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    ConsentRequestFilterClientDto:
+      $ref: ./components/schemas/page/ConsentRequestFilterClientDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/page/FilterValueDtoInstant.yaml
+    FilterValueEnumDtoConsentRequestStatusDto:
+      $ref: ./components/schemas/page/FilterValueEnumDtoConsentRequestStatusDto.yaml
+    FilterValueEnumDtoConsentRequestTypeDto:
+      $ref: ./components/schemas/page/FilterValueEnumDtoConsentRequestTypeDto.yaml
+    GetPageCommandConsentRequestFilterClientDto:
+      $ref: ./components/schemas/page/GetPageCommandConsentRequestFilterClientDto.yaml
+    PageParamsConsentRequestFilterClientDto:
+      $ref: ./components/schemas/page/PageParamsConsentRequestFilterClientDto.yaml
+    Paging:
+      $ref: ./components/schemas/page/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/page/Sort.yaml
+    ConsentChangeDto:
+      $ref: ./components/schemas/consent-management/ConsentChangeDto.yaml
+    ConsentManagementBankConsentDto:
+      $ref: ./components/schemas/consent-management/ConsentManagementBankConsentDto.yaml
+    ConsentManagementRequestCreateDto:
+      $ref: ./components/schemas/consent-management/ConsentManagementRequestCreateDto.yaml
+    OrganizationDto:
+      $ref: ./components/schemas/common/OrganizationDto.yaml
+    ConsentListRequestCreateDto:
+      $ref: ./components/schemas/consent-list/ConsentListRequestCreateDto.yaml
+    MessageSignatureDto:
+      $ref: ./components/schemas/common/MessageSignatureDto.yaml
+    MsgSignDto:
+      $ref: ./components/schemas/common/MsgSignDto.yaml
+    DecryptRequestMsgDto:
+      $ref: ./components/schemas/common/DecryptRequestMsgDto.yaml
+    ConsentListFilterClientDto:
+      $ref: ./components/schemas/page/ConsentListFilterClientDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/page/FilterValueDtoBoolean.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/page/FilterValueDtoString.yaml
+    FilterValueEnumDtoConsentType:
+      $ref: ./components/schemas/page/FilterValueEnumDtoConsentType.yaml
+    GetPageCommandConsentListFilterClientDto:
+      $ref: ./components/schemas/page/GetPageCommandConsentListFilterClientDto.yaml
+    PageParamsConsentListFilterClientDto:
+      $ref: ./components/schemas/page/PageParamsConsentListFilterClientDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

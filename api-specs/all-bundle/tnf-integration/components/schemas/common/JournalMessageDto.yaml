@@ -1,0 +1,83 @@
+type: object
+description: Журнал сообщений ТНФ
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор записи в Журнале
+  msgId:
+    type: string
+    format: uuid
+    description: Сквозной идентификатор обмена
+  rckMsgId:
+    type: integer
+    format: int64
+    description: Идентификатор обмена ТНФ
+  flow:
+    type: string
+    description: 'Направления сообщения: TO_GPBBOL - от ТНФ в сервисы ЭКО, TO_TNF - от сервисов ЭКО в ТНФ'
+    enum:
+    - TO_GPBBOL
+    - TO_TNF
+  typeMessage:
+    type: string
+    description: 'Тип сообщения: DOC - Запрос на создание ПП, DBOSERVICE - Запрос алгоритмов подписи, CORPGATE - Запрос на создание ПП или Выписка, RZKSERVICE - Алгоритм подписи'
+    enum:
+    - DOC
+    - DBOSERVICE
+    - CORPGATE
+    - RZKSERVICE
+  status:
+    type: string
+    description: 'Описывает состояния сообщения относительно Сервиса ТНФ: RECEIVED - "Получено", SENT - "Отправлено", SEND_ERROR - "Ошибка отправки"'
+    enum:
+    - RECEIVED
+    - SENT
+    - SENDING
+    - SEND_ERROR
+    - SEND_ERROR_RETRY_LIMIT
+  resendAttemptsCount:
+    type: integer
+    format: int32
+    description: Количество попыток повторной отправки сообщения
+  retryDelay:
+    type: string
+    format: date-time
+    description: Дата и время повторной отправки сообщения
+  queue:
+    type: string
+    description: Тип  входящего/исходящего сообщения
+    enum:
+    - DOC
+    - DBOSERVICE
+    - CORPGATE
+    - RZKSERVICE
+  toGpbbolId:
+    type: integer
+    format: int64
+    description: Уникальный идентификатор записи в разрезе буферной таблицы
+  tnfStatus:
+    type: string
+    description: 'Статус обработки сообщения для ТНФ: NEW - "Новое", RECEIVED - "Получено", ERROR - "Ошибка", IGNORED - "Игнорировано"'
+    enum:
+    - NEW
+    - RECEIVED
+    - ERROR
+    - IGNORED
+  descError:
+    type: string
+    description: Описание ошибки
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания сообщения
+  updatedAt:
+    type: string
+    format: date-time
+    description: Дата и время обновления сообщения
+required:
+- createdAt
+- flow
+- id
+- msgId
+- status

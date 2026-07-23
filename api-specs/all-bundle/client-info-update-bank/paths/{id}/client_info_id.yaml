@@ -1,0 +1,20 @@
+get:
+  tags:
+  - client-info-update-request-bank-controller
+  summary: Получить документ по идентификатору
+  description: 'Привилегии: CLIENT_INFO_UPD.BANK.REQUEST_VIEW'
+  operationId: getById
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/{id}/SingleResponseClientInfoUpdateRequestViewResponseDto.yaml

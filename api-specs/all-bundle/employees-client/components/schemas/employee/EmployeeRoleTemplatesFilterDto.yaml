@@ -1,0 +1,14 @@
+required:
+- bankClientId
+- employeeId
+type: object
+properties:
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+description: Фильтр для поиска о действующих доверенностях сотрудника

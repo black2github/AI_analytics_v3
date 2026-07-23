@@ -1,0 +1,40 @@
+required:
+- keepUserRoleOnAuthorizedPersonBlocking
+type: object
+properties:
+  id:
+    type: string
+    description: ID роли
+    format: uuid
+  code:
+    type: string
+    description: Код роли
+  name:
+    type: string
+    description: Наименование роли
+  segment:
+    $ref: ./UaaSegmentIntegrationDto.yaml
+  description:
+    type: string
+    description: Описание
+  keepUserRoleOnAuthorizedPersonBlocking:
+    type: boolean
+    description: Оставлять за пользователем роль при блокировке УЛ
+  type:
+    type: string
+    enum:
+    - BANK
+    - CLIENT
+    - TECHNICAL
+  authorities:
+    uniqueItems: true
+    type: array
+    description: Привилегии роли
+    items:
+      $ref: ./UaaRoleAuthorityIntegrationDto.yaml
+  userChannel:
+    type: string
+    enum:
+    - BANK_WEB
+    - MOBILE_IRON
+description: ДТО роли

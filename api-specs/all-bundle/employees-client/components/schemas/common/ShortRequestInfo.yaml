@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  requestType:
+    type: string
+    enum:
+    - UPDATE_INFORM
+    - ADD_EDIT_USER
+  subType:
+    type: string
+  fio:
+    type: string
+  status:
+    type: string
+  updatedAt:
+    type: string
+    format: date-time
+  number:
+    type: string
+  date:
+    type: string
+    format: date-time
+  commentForClient:
+    type: string
+  tag:
+    type: string
+    enum:
+    - UPDATE_INFORMATION
+    - REJECTED
+    - DRAFT
+    - TO_SIGN
+    - CHECKED_BANK
+description: Сокращенное описание заявок

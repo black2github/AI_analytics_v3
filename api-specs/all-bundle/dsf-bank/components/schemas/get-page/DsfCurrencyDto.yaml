@@ -1,0 +1,12 @@
+type: object
+description: ДТО валюты
+properties:
+  code:
+    type: string
+    description: Буквенный код валюты
+  name:
+    type: string
+    description: Наименование валюты
+  numericCode:
+    type: string
+    description: Цифровой код валюты

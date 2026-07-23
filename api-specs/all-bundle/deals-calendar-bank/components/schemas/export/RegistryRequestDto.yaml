@@ -1,0 +1,35 @@
+type: object
+properties:
+  documentIds:
+    type: array
+    description: ID документов
+    items:
+      type: string
+      description: ID документов
+      format: uuid
+  exportFormat:
+    type: string
+    description: Формат печатной формы
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  exportColumns:
+    type: array
+    description: Набор колонок в выгружаемом реестре
+    items:
+      type: string
+      description: Список колонок отображаемые в реестре
+      enum:
+      - DATE
+      - STATUS
+      - TYPE
+      - USER
+      - ERROR_TEXT
+      - ERROR_CODE
+      - TASK_ID
+description: Запрос на выгрузку реестра календаря сделок

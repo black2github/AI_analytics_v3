@@ -1,0 +1,95 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID заявки
+    format: uuid
+    readOnly: true
+  requestNumberSystem:
+    type: integer
+    description: Номер заявки общий
+    format: int64
+    readOnly: true
+  requestNumberUser:
+    type: integer
+    description: Номер заявки пользователя
+    format: int64
+    readOnly: true
+  timeOfDelivery:
+    type: string
+    description: Дата и время отправки заявки
+    format: date-time
+    readOnly: true
+  certInfo:
+    $ref: ../common/CertInfoDto.yaml
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+    readOnly: true
+  bankComment:
+    type: string
+    description: Комментарий для банка
+    readOnly: true
+  clientComment:
+    type: string
+    description: Комментарий для клиента
+    readOnly: true
+  status:
+    type: string
+    description: Статус заявки
+    readOnly: true
+    enum:
+    - NONE
+    - NEW
+    - TO_KPP_ATTACH
+    - KPP_ATTACHED
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - AUTHORIZED_PERSON_CHECK
+    - GET_DBO_CONTRACTS
+    - GET_DBO_CONTRACTS_EXECUTED
+    - GET_DBO_CONTRACTS_ERROR
+    - IDENTIFY_ORG_AUTO
+    - IDENTIFY_ORG_MANUAL
+    - ORG_DEFINED
+    - REGISTER_CERT
+    - DENIED
+    - DELETED
+    - EXECUTED
+    - NEED_ATTACH_KPP_OR_NOT
+    - SIGN_VALID_OR_NOT
+    - RECEIVED_OR_NOT
+    - COMPLETED
+  certType:
+    type: string
+    description: Тип регистрируемого сертификата
+    readOnly: true
+    enum:
+    - QUALIFIED_SIGN
+    - UNQUALIFIED_SIGN
+    - MOB_QUALIFIED_SIGN_FNS
+  signature:
+    $ref: ../common/SignatureDto.yaml
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+    readOnly: true
+  eskId:
+    type: string
+    description: ID ESK пользователя
+    readOnly: true
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+    readOnly: true
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+    readOnly: true
+description: Данные для банковского скроллера ГЭП заявки

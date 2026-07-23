@@ -1,0 +1,86 @@
+post:
+  tags:
+  - Login
+  summary: Аутентификация пользователя в зависимости от типа аутентификации (grant_type)
+  operationId: login
+  parameters:
+  - name: X-Domain-Env
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: Authorization
+    in: header
+    required: false
+    schema:
+      type: string
+  - name: User-Agent
+    in: header
+    description: Информации о системе пользователя
+    required: false
+    schema:
+      type: string
+  - name: x-device-id
+    in: cookie
+    description: Идентификатор устройства пользователя для отображения экрана Быстрого входа
+    required: false
+    schema:
+      type: string
+  requestBody:
+    content:
+      application/json;charset=UTF-8:
+        schema:
+          $ref: ../../components/schemas/login/LoginRequestDto.yaml
+      application/json:
+        schema:
+          $ref: ../../components/schemas/login/LoginRequestDto.yaml
+    required: true
+  responses:
+    '400':
+      description: Некорректный запрос. Возвращается либо из-за ошибки парсинга значений, либо из-за ошибки валидации
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/OAuth2Error.yaml
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+    '423':
+      description: Locked
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '405':
+      description: Method Not Allowed
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

@@ -1,0 +1,63 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  branchId:
+    type: string
+    format: uuid
+  serviceCode:
+    type: string
+  scheduleId:
+    type: integer
+    format: int64
+  workTypeDayId:
+    type: string
+  workTypeDayName:
+    type: string
+  weekDay:
+    type: string
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  weekDayFrom:
+    type: string
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  weekDayTo:
+    type: string
+    enum:
+    - MONDAY
+    - TUESDAY
+    - WEDNESDAY
+    - THURSDAY
+    - FRIDAY
+    - SATURDAY
+    - SUNDAY
+  exactDate:
+    type: string
+  dateTo:
+    type: string
+  timeFrom:
+    type: string
+  timeTo:
+    type: string
+  lunchBreaks:
+    type: string
+  base:
+    type: boolean
+  dateBegin:
+    type: string
+  dateEnd:
+    type: string

@@ -1,0 +1,11 @@
+type: object
+properties:
+  result:
+    type: boolean
+    description: Признак прохождения контроля
+  controlResultList:
+    type: array
+    description: Список городов, участвующих в маркетинговой кампании
+    items:
+      $ref: ./CityVisitingManagerAdminControlResult.yaml
+description: Ответ контроля на уникальность записи по идентификатору ФИАС и типу маркетинговой кампании

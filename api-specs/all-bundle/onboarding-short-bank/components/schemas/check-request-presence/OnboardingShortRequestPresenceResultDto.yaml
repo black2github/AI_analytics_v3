@@ -1,0 +1,19 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код ответа
+    enum:
+    - EDITING_REQUESTS
+    - PROCESSING_REQUESTS
+    - WAITING_REQUESTS
+    - REJECTED_REQUESTS
+    - APPROVED_REQUESTS
+    - REFUSED_REQUESTS
+    - ESK_PROCESSING_STARTED_FOR_NOT_FINAL_STATUS_ARCHIVE_REQUESTS
+    - REJECTED_ARCHIVE_REQUESTS
+  multiRequests:
+    type: integer
+    description: Признак наличия нескольких заявок
+    format: int64
+description: Результат поиска заявок на открытие счета

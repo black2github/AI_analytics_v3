@@ -1,0 +1,16 @@
+type: object
+properties:
+  fileImportId:
+    type: string
+    format: uuid
+  format:
+    type: string
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+description: Данные

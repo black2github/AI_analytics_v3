@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Повторить обработку заявки
+  description: 'Привилегии: BRK_ONBOARDING.BANK.REQUEST.RELOAD'
+  operationId: retry
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandBrkOnbAdminRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBrkOnbRequestViewDto.yaml

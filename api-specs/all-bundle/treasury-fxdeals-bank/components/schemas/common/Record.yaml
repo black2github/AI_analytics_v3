@@ -1,0 +1,11 @@
+type: object
+properties:
+  label:
+    type: string
+  level:
+    type: integer
+    format: int32
+  value:
+    type: integer
+    format: int64
+description: Данные

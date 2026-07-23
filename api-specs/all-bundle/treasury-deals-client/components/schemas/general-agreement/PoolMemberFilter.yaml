@@ -1,0 +1,16 @@
+required:
+- gsnoParentAgreementId
+type: object
+properties:
+  gsnoParentAgreementId:
+    type: string
+    format: uuid
+  clientShortName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./PoolMemberStatusFilter.yaml
+description: Фильтр

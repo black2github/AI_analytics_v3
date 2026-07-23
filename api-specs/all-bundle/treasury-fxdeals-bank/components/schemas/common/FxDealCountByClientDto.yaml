@@ -1,0 +1,9 @@
+type: object
+properties:
+  clientWebDealingId:
+    type: string
+    format: uuid
+  count:
+    type: integer
+    format: int64
+description: Данные

@@ -1,0 +1,52 @@
+type: object
+description: Данные на получение документов (КА-конвертов) Клиента-ЮЛ ПлЦР.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК
+  albumVersion:
+    type: string
+    description: Версия альбома, по которому сформировано сообщение
+  modelType:
+    type: string
+    description: Тип эталона ЭС
+  model:
+    type: string
+    description: Незашифрованный эталон ЭС, который закодирован в Base64 и соответствует исполняемому процессу. Например, для перевода B2B будет содержать cbdc.006 B2B
+  modelData:
+    $ref: ./ModelData.yaml
+    description: Данные из эталона ЭС, преобразованные в формат json для удобства
+  additionalAmlCftInfo:
+    $ref: ./AdditionalAmlCftInfo.yaml
+    description: Данные получателя для контроля ПОД/ФТ
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- additionalAmlCftInfo
+- albumVersion
+- correlationId
+- messageCreationDateTime
+- model
+- modelData
+- modelType
+- operationId
+- organisationId
+- participantId
+- participantWalletId

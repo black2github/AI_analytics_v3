@@ -1,0 +1,22 @@
+type: object
+properties:
+  notificationId:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  type:
+    type: string
+    description: Тип действия над уведомлением
+    enum:
+    - CLOSING
+    - CLOSING_NOT_INTERESTING
+    - CLOSING_INTERFERES_WITH_VIEWING
+    - TRANSITION
+  time:
+    type: string
+    description: Время действия
+    format: date-time
+  page:
+    type: string
+    description: Страница на которой выполнено действие
+description: Действие над уведомлением

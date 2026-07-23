@@ -1,0 +1,46 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docType:
+    $ref: ../common/FilterValueDtoString.yaml
+  docNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  agrNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  status:
+    $ref: ./AgreementRequestStatusFilter.yaml
+  type:
+    $ref: ./AgreementRequestTypeFilter.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientInn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  executorFullName:
+    $ref: ../common/FilterValueDtoString.yaml
+  executorId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAbsF1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям
+    enum:
+    - ALL
+    - ON_CLIENT_APPROVE
+    - ON_ASSIGN
+    - ON_VALIDATION
+    - IN_PROCESSING
+    - PROCESSING_ERROR
+    - ON_ADJUSTMENT
+    - ON_SIGN
+    - FINISHED
+  userLogin:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

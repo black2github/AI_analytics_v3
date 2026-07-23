@@ -1,0 +1,32 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    description: Идентификатор файла.
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла.
+  fileSize:
+    type: integer
+    description: Размер файла.
+    format: int64
+  accessToken:
+    type: string
+    description: Access token для файла.
+  tessaFileId:
+    type: string
+    description: Идентификатор вложения в ТЕССА
+    format: uuid
+  expiration:
+    type: string
+    description: Максимальная дата хранения
+    format: date-time
+  uploadedById:
+    type: string
+    description: Идентификатор технического пользователя
+    format: uuid
+  signature:
+    type: string
+    description: Служебное поле
+description: Информация о вложении.

@@ -1,0 +1,16 @@
+type: object
+properties:
+  changedIn:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  operationName:
+    type: string
+    description: Наименование операции
+  fio:
+    type: string
+    description: ФИО
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+description: Операции статуса

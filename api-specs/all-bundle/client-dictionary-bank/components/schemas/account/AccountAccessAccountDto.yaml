@@ -1,0 +1,109 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  accountName:
+    type: string
+    description: Наименование счета
+  ecoAccountName:
+    type: string
+    description: Название счета в Экосистеме
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в РКО Ф1
+    format: int64
+  accountNumber:
+    type: string
+    description: Номер счета
+  createdAt:
+    type: string
+    description: Дата создания записи
+    format: date-time
+  state:
+    type: string
+    description: Статус
+    enum:
+    - RESERVED
+    - ANNULLED
+    - OPENED
+    - CLOSED
+    - TO_OPEN
+    - TO_CLOSE
+  startDate:
+    type: string
+    description: Дата резервирования счета
+    format: date
+  endDate:
+    type: string
+    description: Дата окончания резервирования счета
+    format: date
+  annulledDate:
+    type: string
+    description: Дата аннулирования счета (факт)
+    format: date
+  openDate:
+    type: string
+    description: Дата открытия счета
+    format: date
+  closeDate:
+    type: string
+    description: Дата закрытия счета
+    format: date
+  accountRatioToRkoVrko:
+    type: integer
+    description: Отношение счета к РКО/ВРКО
+    format: int64
+  currencyInfo:
+    $ref: ./CurrencyInfoDto.yaml
+  bankClient:
+    $ref: ../common/BankClientInfoDto.yaml
+  branch:
+    $ref: ../common/BranchDto.yaml
+  balanceBranch:
+    $ref: ../common/BranchDto.yaml
+  turnoverInfo:
+    $ref: ../common/TurnoverInfoDto.yaml
+  accountBlockType:
+    type: string
+    description: Тип блокировки
+    enum:
+    - FULL
+    - PARTIAL
+  accountPartialBlockedFoif:
+    type: boolean
+    description: Признак частичной блокировки счета ФОИВ
+  accountBlockedFoif:
+    type: boolean
+    description: Признак полной блокировки счета ФОИВ
+  accountBlocked:
+    type: boolean
+    description: Признак блокировки счета ДФМ
+  h2hBlocked:
+    $ref: ./H2hBlockDto.yaml
+  disconnectedFromRko:
+    type: boolean
+    description: Признак удаления счета из представления Ф1
+  contractInfo:
+    $ref: ../common/ContractInfoDto.yaml
+  accountTypeCode:
+    type: integer
+    description: Код типа счета
+    format: int64
+  kredDogMark:
+    type: boolean
+    description: Признак наличия кредитного договора к расчетному счету
+  mnoDogMark:
+    type: boolean
+    description: Признак наличия договора МНО к расчетному счету
+  snoDogMark:
+    type: boolean
+    description: Признак наличия договора СНО к расчетному счету
+  gsnoDogMark:
+    type: boolean
+    description: Признак наличия договора ГСНО к расчетному счету
+  cardMark:
+    type: boolean
+    description: Признак наличия корпоративной карты к расчетному счету
+description: Доступы к счету для платежных документов

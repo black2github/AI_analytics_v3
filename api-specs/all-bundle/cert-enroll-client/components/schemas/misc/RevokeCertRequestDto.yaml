@@ -1,0 +1,79 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID заявки
+    format: uuid
+    readOnly: true
+  userId:
+    type: string
+    description: ID пользователя создавшего заявку
+    format: uuid
+    readOnly: true
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+    readOnly: true
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+    readOnly: true
+  requestNumberSystem:
+    type: integer
+    description: Номер заявки общий
+    format: int64
+    readOnly: true
+  requestNumberUser:
+    type: integer
+    description: Номер заявки пользователя
+    format: int64
+    readOnly: true
+  clientOfficialSignatureToolId:
+    type: string
+    description: ID СЭП представителя клиента
+    format: uuid
+    readOnly: true
+  certificateId:
+    type: string
+    description: ID Сертификата
+    format: uuid
+    readOnly: true
+  status:
+    type: string
+    description: Статус заявки
+    readOnly: true
+    enum:
+    - NEW
+    - EXECUTED
+    - REJECTED
+  orgName:
+    type: string
+    description: Наименование организации
+    readOnly: true
+  inn:
+    type: string
+    description: ИНН
+    readOnly: true
+  ogrnOgrnip:
+    type: string
+    description: ОГРН/ОГРНИП
+    readOnly: true
+  kpp:
+    type: string
+    description: КПП
+    readOnly: true
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+    readOnly: true
+  ownerFio:
+    type: string
+    description: ФИО пользователя
+    readOnly: true
+  dstId:
+    type: string
+    description: ID СЭП
+    readOnly: true
+description: ДТО заявки на отзыв сертификата

@@ -1,0 +1,12 @@
+type: object
+properties:
+  fullName:
+    type: string
+    description: Полное наименование организации/ИП
+  ogrn:
+    type: string
+    description: ОГРН/ОГРНИП
+  shortName:
+    type: string
+    description: Краткое наименование организации/ИП
+description: Результат обогащения данных заявки для поиска в ЕСК

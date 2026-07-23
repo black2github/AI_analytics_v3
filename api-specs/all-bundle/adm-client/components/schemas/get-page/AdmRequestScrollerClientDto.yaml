@@ -1,0 +1,24 @@
+type: object
+properties:
+  bankClient:
+    $ref: ../common/AdmBankClientDto.yaml
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  isSigned:
+    type: boolean
+    description: Признак наличия подписи в заявке
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  requestType:
+    $ref: ../common/AdmRequestTypeDto.yaml
+  status:
+    $ref: ../common/AdmRequestStatusDto.yaml
+description: ДТО для клиентского скроллера. Запрос заявок

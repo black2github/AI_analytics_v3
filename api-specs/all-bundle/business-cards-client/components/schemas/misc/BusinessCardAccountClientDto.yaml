@@ -1,0 +1,51 @@
+type: object
+properties:
+  absClientId:
+    type: string
+    description: Код РНК клиента в РКО Ф1
+  accountId:
+    type: string
+    description: Идентификатор счета в ЭКО
+    format: uuid
+  balanceBranchCode:
+    type: string
+    description: Код филиала баланса в РКО Ф1
+  cardId:
+    type: string
+    description: Идентификатор(GUID) карты в РКО Ф1
+    format: uuid
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  currencyCode:
+    type: string
+    description: Код валюты счета (буквенный)
+  id:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  number:
+    type: string
+    description: Номер счета
+  restAmount:
+    type: number
+    description: Остаток на счете
+  rkoF1AccountId:
+    type: string
+    description: Идентификатор счета в РКО Ф1
+  rkoF1CardId:
+    type: string
+    description: Внутренний идентификатор карты в Ф1
+  serviceBranchCode:
+    type: string
+    description: Код филиала обслуживания счета в РКО Ф1
+  serviceOfficeCode:
+    type: string
+    description: Код подразделения обслуживания счета в РКО Ф1
+  type:
+    type: string
+    description: Тип счета
+  typeContrAccount:
+    type: string
+    description: Код вида счета
+description: Запрос для списка счетов

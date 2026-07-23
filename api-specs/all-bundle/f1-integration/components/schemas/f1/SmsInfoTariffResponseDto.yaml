@@ -1,0 +1,12 @@
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  accounts:
+    type: array
+    description: Список счетов, доступных для списания комиссии
+    items:
+      $ref: ./SmsInfoTariffAccountDto.yaml
+description: Результат получения списка счетов для списания комиссии и действующих тарифов

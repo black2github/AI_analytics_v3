@@ -1,0 +1,13 @@
+type: object
+properties:
+  commentDate:
+    type: string
+    description: Дата и время пришедшего комментария
+    format: date-time
+  comment:
+    type: string
+    description: Комментарий от банка
+  fio:
+    type: string
+    description: ФИО банковского пользователя
+description: Блок информации с комментарием для банка

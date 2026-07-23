@@ -1,0 +1,6 @@
+type: object
+properties:
+  data:
+    $ref: ./SingleResponseGozContractDto.yaml
+  errorInfo:
+    $ref: ../common/ErrorInfo.yaml

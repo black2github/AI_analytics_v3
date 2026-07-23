@@ -1,0 +1,19 @@
+post:
+  summary: Отослать полученный от ПКП профиль
+  tags:
+  - АС ПКП. API автокотирования для поручения на покупку/продажу валюты
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/PkpClientProfileRspDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+    '400':
+      description: Bad Request

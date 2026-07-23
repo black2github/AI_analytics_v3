@@ -1,0 +1,21 @@
+type: object
+description: Информация о комиссионных тарифах по сводным справкам
+properties:
+  ndsDigital:
+    type: number
+    description: С НДС цифровая
+  ndsOnPaper:
+    type: number
+    description: С НДС бумажная
+  noNdsDigital:
+    type: number
+    description: Без НДС цифровая
+  noNdsOnPaper:
+    type: number
+    description: Без НДС бумажная
+  valueDigitalNds:
+    type: number
+    description: Величина включенного НДС для электронной справки
+  valueOnPaperNds:
+    type: number
+    description: Величина включенного НДС для справки в бумажном формате

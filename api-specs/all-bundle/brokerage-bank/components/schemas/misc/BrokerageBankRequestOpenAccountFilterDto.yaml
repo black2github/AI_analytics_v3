@@ -1,0 +1,25 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  dateFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  dateTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  representativeName:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativePhone:
+    $ref: ../common/FilterValueDtoString.yaml
+  representativeEmail:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueDtoBrokerageBankOpenAccountRequestStatusDto.yaml
+description: Фильтр скроллера запросов на открытие брокерского счета банковской стороны

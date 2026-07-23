@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsCurrencyTransferSearchFilterDto.yaml
+description: Запрос страницы

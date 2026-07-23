@@ -1,0 +1,6 @@
+type: string
+enum:
+- SvkIn
+- SvkOut
+- Dio
+- Dvk

@@ -1,0 +1,47 @@
+type: object
+properties:
+  contentType:
+    type: string
+    description: Тип содержимого файла
+  dataSize:
+    type: integer
+    description: Размер файла
+    format: int64
+  fileHash:
+    type: string
+    description: Хэш сумма файла оригинала документа
+  fileId:
+    type: string
+    description: Идентификатор файла в хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Наименование файла оригинала документа
+  fileUploadDate:
+    type: string
+    description: Дата и время загрузки файла
+    format: date-time
+  fsStatus:
+    $ref: ./ExtendedFileStorageStatusDto.yaml
+  id:
+    type: string
+    description: Идентификатор файла документа
+    format: uuid
+  needStatusCheck:
+    type: boolean
+    description: Признак необходимости проверки статуса загрузки файла
+  originalDocumentId:
+    type: string
+    description: Идентификатор оригинала документов
+    format: uuid
+  personId:
+    type: string
+    description: Идентификатор физ. лица
+    format: uuid
+  signatureFile:
+    $ref: ./OriginalDocumentSignatureFileDto.yaml
+  sourceFileId:
+    type: string
+    description: Ссылка на исходный файл
+    format: uuid
+description: Оригиналы документов

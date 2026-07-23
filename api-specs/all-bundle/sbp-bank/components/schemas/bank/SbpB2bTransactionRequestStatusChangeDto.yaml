@@ -1,0 +1,52 @@
+type: object
+description: Запрос смены статуса заявления на платеж СБП для B2B
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор заявления
+  nextStatus:
+    type: string
+    description: Статус, на который необходимо сменить заявления
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SBP_B2B_GET_QR_REQUEST
+    - SBP_B2B_GET_QR_ERROR
+    - SBP_B2B_GET_QR_RECEIVED
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_F1
+    - EXPORT_REQUEST_TO_F1_ERROR
+    - REQUEST_EXECUTED_BY_F1
+    - ACCOUNTS_REGISTRATION
+    - ACCOUNTS_REGISTRATION_ERROR
+    - ACCOUNTS_REGISTERED
+    - SBP_B2B_CONFIRM_REQUEST
+    - SBP_B2B_CONFIRM_ERROR
+    - SBP_B2B_CONFIRM_DELIVERED
+    - ACCEPTED
+    - SBP_B2B_INFO_REQUEST
+    - SBP_B2B_INFO_ERROR
+    - SBP_B2B_FINAL_STATUS_RECEIVED
+    - COMPLETED
+    - REJECTED
+    - SBP_B2B_AWATING_FINAL_STATUS
+  commentForClient:
+    type: string
+    description: Комментарий к смене статуса для клиента
+  commentForBank:
+    type: string
+    description: Комментарий к смене статуса для банка
+required:
+- commentForBank
+- id
+- nextStatus

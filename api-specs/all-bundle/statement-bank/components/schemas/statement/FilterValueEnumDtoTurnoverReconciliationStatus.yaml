@@ -1,0 +1,52 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NO_TURNOVER_FOUND
+    - SUCCESS
+    - FAILURE
+    - UNDER_REPAIR
+    - REPAIR_FAILED
+    - PREVIOUS_NONE
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NO_TURNOVER_FOUND
+    - SUCCESS
+    - FAILURE
+    - UNDER_REPAIR
+    - REPAIR_FAILED
+    - PREVIOUS_NONE
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NO_TURNOVER_FOUND
+      - SUCCESS
+      - FAILURE
+      - UNDER_REPAIR
+      - REPAIR_FAILED
+      - PREVIOUS_NONE
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NO_TURNOVER_FOUND
+      - SUCCESS
+      - FAILURE
+      - UNDER_REPAIR
+      - REPAIR_FAILED
+      - PREVIOUS_NONE
+  isNull:
+    type: boolean

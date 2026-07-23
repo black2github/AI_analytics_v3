@@ -1,0 +1,133 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - WAIT_DETACH
+      - DETACH_EXECUTED
+      - DETACH_ERROR
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - WAIT_DETACH
+      - DETACH_EXECUTED
+      - DETACH_ERROR
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  ge:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  lt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+  le:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - WAIT_DETACH
+    - DETACH_EXECUTED
+    - DETACH_ERROR
+    - EXECUTED
+    - REJECTED
+description: Статус поручения

@@ -1,0 +1,9 @@
+type: object
+properties:
+  operationId:
+    type: string
+    description: ИД транзакции подписи
+  OTP:
+    type: string
+    description: OTP код
+description: Параметры отправляемого сообщения

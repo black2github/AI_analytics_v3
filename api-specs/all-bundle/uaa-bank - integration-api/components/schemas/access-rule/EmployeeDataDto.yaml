@@ -1,0 +1,29 @@
+required:
+- contactData
+type: object
+properties:
+  familyName:
+    type: string
+    description: Фамилия физ.лица
+  firstName:
+    type: string
+    description: Имя физ.лица
+  middleName:
+    type: string
+    description: Отчество физ.лица
+  contactData:
+    $ref: ./ContactDataDto.yaml
+  eskId:
+    type: string
+    description: ИД физ лица в ЕСК
+  authorizedPersonId:
+    type: string
+    description: ИД УЛ
+    format: uuid
+  bankClientId:
+    type: string
+    description: ИД клиента
+    format: uuid
+  oldContactData:
+    $ref: ./ContactDataDto.yaml
+description: Данные сотрудника

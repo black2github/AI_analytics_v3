@@ -1,0 +1,52 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор.
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  rateAskId:
+    type: integer
+    description: Уникальный идентификатор матрицы в АСК.
+    format: int64
+  beginDate:
+    type: string
+    description: Время начала действия матрицы.
+    format: date-time
+  endDate:
+    type: string
+    description: Время окончания действия матрицы.
+    format: date-time
+  branch:
+    $ref: ../common/BranchDto.yaml
+  clientGroup:
+    type: string
+    description: Группа клиента.
+  clientGroupId:
+    type: integer
+    description: Идентификатор группы клиента.
+    format: int64
+  status:
+    type: string
+    description: Статус.
+    enum:
+    - ACTIVE
+    - FROZEN
+    - DELETED
+  createdAt:
+    type: string
+    description: Время создания.
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления.
+    format: date-time
+  rateTypes:
+    type: object
+    additionalProperties:
+      type: array
+      description: Мапа типов сделок и возможных типов ставок.
+      items:
+        $ref: ./RateTypesDto.yaml
+    description: Мапа типов сделок и возможных типов ставок.
+description: Страница с данными

@@ -1,0 +1,21 @@
+required:
+- comment
+- productCodes
+- services
+type: object
+properties:
+  services:
+    type: array
+    description: Обновленный набор услуг
+    items:
+      $ref: ./BankClientServiceUpdateDto.yaml
+  productCodes:
+    type: array
+    description: Обновленный список продуктов ЭДО
+    items:
+      type: string
+      description: Обновленный список продуктов ЭДО
+  comment:
+    type: string
+    description: Комментарий
+description: Настройки ЭДО клиента Банка. ДТО для запроса на изменение настроек.

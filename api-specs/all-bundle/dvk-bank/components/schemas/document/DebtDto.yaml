@@ -1,0 +1,8 @@
+type: object
+properties:
+  debtAmount:
+    type: string
+    description: Сумма задолженности по основному долгу
+  currency:
+    $ref: ./CurrencyDto.yaml
+description: Сумма задолженности по основному долгу на дату, предшествующую дате оформления ПС

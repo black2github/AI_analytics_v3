@@ -1,0 +1,10 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  rollUp:
+    type: boolean
+    description: Признак свернут
+description: Обновление признака свернутости организации

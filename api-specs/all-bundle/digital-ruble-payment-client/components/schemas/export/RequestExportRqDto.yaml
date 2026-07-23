@@ -1,0 +1,17 @@
+required:
+- pcrParticipantWalletId
+- selectedDocuments
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  selectedDocuments:
+    type: array
+    description: Массив выбранных документов
+    items:
+      type: string
+      description: Массив выбранных документов
+      format: uuid
+description: Экспорт печатной формы.

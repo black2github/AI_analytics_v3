@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsRateMatrixFilter.yaml
+description: Запрос страницы

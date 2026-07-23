@@ -1,0 +1,23 @@
+type: object
+description: Категория ДСФ. ДТО на создание или обновление
+properties:
+  code:
+    type: string
+    description: Код категории
+  comment:
+    type: string
+    description: Пользовательский комментарий при изменении записи
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  name:
+    type: string
+    description: Наименование категории
+  nameEn:
+    type: string
+    description: Наименование категории на английском
+required:
+- code
+- name
+- nameEn

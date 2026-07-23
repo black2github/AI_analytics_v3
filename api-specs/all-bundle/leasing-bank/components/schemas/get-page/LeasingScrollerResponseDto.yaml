@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: integer
+    format: int32
+  date:
+    type: string
+    format: date-time
+  sender:
+    type: string
+  phone:
+    type: string
+  email:
+    type: string
+  bankClientName:
+    type: string
+  bankClientInn:
+    type: string
+  type:
+    type: string
+    enum:
+    - AUTO
+    - CORPORATE
+  status:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXPORT_REQUEST_TO_LEASING
+    - EXPORT_REQUEST_TO_LEASING_ERROR
+    - EXECUTED_BY_LEASING
+    - EXECUTED
+    - REJECTED

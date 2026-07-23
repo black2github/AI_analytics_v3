@@ -1,0 +1,11 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя представителя клиента
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+description: Данные для добавления комментариев после удаления связей СЭП представителя

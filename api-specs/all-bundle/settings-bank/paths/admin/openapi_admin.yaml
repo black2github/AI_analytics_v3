@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Создать запись
+  description: 'Привилегии: OPEN_API_SPEC_CREATE'
+  operationId: create_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/OpenApiSpecDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataOpenApiSpecDto.yaml

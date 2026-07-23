@@ -1,0 +1,19 @@
+type: object
+properties:
+  eventType:
+    type: string
+    enum:
+    - BEGIN_DATE
+    - END_DATE
+    - EXECUTED
+    - BUY
+    - SELL
+    - WITHDRAWN
+  dealType:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+description: Маркеры событий на дату

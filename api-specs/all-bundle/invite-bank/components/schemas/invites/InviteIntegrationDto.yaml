@@ -1,0 +1,43 @@
+required:
+- message
+- status
+- targetPerson
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+  topic:
+    type: string
+    description: Тема приглашения
+  message:
+    type: string
+    description: Текст приглашения
+  service:
+    type: string
+    description: Сервис, инициировавший запрос
+  status:
+    type: string
+    description: Статус
+    enum:
+    - ACTIVE
+    - USED
+    - CANCELED
+  type:
+    type: string
+    description: Тип инвайта
+    enum:
+    - REGISTRATION
+    - AUTHENTICATION
+  expiredAt:
+    type: string
+    description: Дата/время истечения инвайта
+    format: date-time
+  shortLinkCode:
+    type: string
+    description: Короткая ссылка
+description: ДТО инвайта

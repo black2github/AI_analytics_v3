@@ -1,0 +1,26 @@
+required:
+- clientId
+- deviceId
+- pin
+- publicKey
+type: object
+properties:
+  deviceId:
+    type: string
+    description: Идентификатор мобильного устройства
+  clientId:
+    type: string
+    description: Идентификатор мобильного приложения
+  publicKey:
+    type: string
+    description: Открытый ключ для проверки подписи PIN-кода
+  pin:
+    type: string
+    description: Хэшированное значение PIN-кода
+  oldPin:
+    type: string
+    description: Текущий PIN-код
+  signature:
+    type: string
+    description: Подписанное значение текущего PIN-кода
+description: ДТО запроса на изменение PIN-кода.

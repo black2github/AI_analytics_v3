@@ -1,0 +1,14 @@
+type: object
+properties:
+  branchId:
+    type: string
+    description: Идентификатор подразделения
+    format: uuid
+  marketingCampaign:
+    type: string
+    description: Тип маркетинговой кампании (null == STANDARD)
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+description: Запрос данных по подразделению из справочника городов выездных менеджеров

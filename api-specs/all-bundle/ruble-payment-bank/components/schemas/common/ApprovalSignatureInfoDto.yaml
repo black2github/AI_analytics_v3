@@ -1,0 +1,8 @@
+type: object
+properties:
+  approvalSignType:
+    $ref: ./ApprovalSignTypeDto.yaml
+  approvalSignComment:
+    type: string
+    description: Комментарий к визе
+description: Данные визирования

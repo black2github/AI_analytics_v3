@@ -1,0 +1,30 @@
+type: object
+description: Расширенные данные платежа
+properties:
+  dateTime:
+    type: string
+    description: Дата и время операции
+  code:
+    type: integer
+    format: int32
+    description: Код документа
+  kktRegId:
+    type: string
+    description: Регистрационный номер ККТ
+  shiftNumber:
+    type: integer
+    format: int32
+    description: Номер смены
+  requestNumber:
+    type: integer
+    format: int32
+    description: Номер чека за смену
+  operator:
+    type: string
+    description: Кассир
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  user:
+    type: string
+    description: Наименование пользователя

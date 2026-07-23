@@ -1,0 +1,7 @@
+type: object
+properties:
+  email1:
+    type: string
+  email2:
+    type: string
+description: Адреса электронной почты клиента

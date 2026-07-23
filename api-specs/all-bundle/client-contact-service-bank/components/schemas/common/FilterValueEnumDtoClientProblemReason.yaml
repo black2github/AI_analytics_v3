@@ -1,0 +1,20 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./ClientProblemReason.yaml
+  notEq:
+    $ref: ./ClientProblemReason.yaml
+  in:
+    type: array
+    items:
+      $ref: ./ClientProblemReason.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./ClientProblemReason.yaml
+  isNull:
+    type: boolean

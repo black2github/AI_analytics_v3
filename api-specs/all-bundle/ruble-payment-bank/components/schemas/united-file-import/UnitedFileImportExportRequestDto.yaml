@@ -1,0 +1,15 @@
+required:
+- format
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы записей
+    items:
+      type: string
+      description: Идентификаторы записей
+      format: uuid
+  format:
+    $ref: ../common/ReportFormat.yaml
+description: Запрос на экспорт списка файлов импорта/фоновых процессов импорта

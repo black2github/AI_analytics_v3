@@ -1,0 +1,9 @@
+type: object
+properties:
+  layout:
+    type: string
+    description: Тип представления
+    enum:
+    - COLUMN
+    - TILE
+description: Тип представления

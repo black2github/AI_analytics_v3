@@ -1,0 +1,29 @@
+required:
+- docVersion
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы сущности "Валютное поручение"
+    items:
+      type: string
+      description: Идентификаторы сущности "Валютное поручение"
+      format: uuid
+  reportFormat:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - DOCX
+    - PDF
+    - XLS
+  archive:
+    type: boolean
+    description: Необходимость архивировать файлы
+  docVersion:
+    type: string
+    description: Версия формата документа валютного перевода
+    enum:
+    - MT
+    - MX
+description: Запрос на формирование печатной формы

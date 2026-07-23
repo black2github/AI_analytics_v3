@@ -1,0 +1,7 @@
+type: object
+properties:
+  attachmentId:
+    type: string
+    format: uuid
+  certificate:
+    type: string

@@ -1,0 +1,8 @@
+type: object
+properties:
+  nameField:
+    type: string
+  nameColumn:
+    type: string
+  styleData:
+    type: string

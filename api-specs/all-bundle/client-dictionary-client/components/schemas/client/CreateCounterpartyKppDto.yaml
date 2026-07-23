@@ -1,0 +1,13 @@
+required:
+- mandatory
+type: object
+properties:
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: КПП контрагента
+  mandatory:
+    type: boolean
+    description: Признак основного КПП
+description: КПП контрагента

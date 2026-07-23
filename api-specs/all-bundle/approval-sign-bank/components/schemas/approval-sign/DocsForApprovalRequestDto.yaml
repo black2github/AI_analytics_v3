@@ -1,0 +1,11 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  filter:
+    $ref: ./ApprovalSignScrollerFilterDto.yaml
+description: Информация для подготовки заявок на визирование

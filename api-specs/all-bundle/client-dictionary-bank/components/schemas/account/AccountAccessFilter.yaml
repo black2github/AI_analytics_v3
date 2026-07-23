@@ -1,0 +1,9 @@
+type: object
+properties:
+  accountId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  authorizedPersonId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  permissionType:
+    $ref: ./FilterValueEnumDtoAccountAccessPermissionTypeDto.yaml
+description: Фильтр поиска доступов по счетам

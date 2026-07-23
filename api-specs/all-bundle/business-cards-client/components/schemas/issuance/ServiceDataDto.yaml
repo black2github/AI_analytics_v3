@@ -1,0 +1,12 @@
+type: object
+properties:
+  position:
+    type: string
+    description: Должность
+  workingAddress:
+    type: string
+    description: Адрес места работы
+  workingPhone:
+    type: string
+    description: Служебный телефон/факс
+description: Служебная информация в заявке на выпуск карты

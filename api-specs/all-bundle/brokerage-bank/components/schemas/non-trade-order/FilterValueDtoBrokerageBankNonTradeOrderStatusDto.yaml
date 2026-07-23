@@ -1,0 +1,165 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - SENT
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_TO_CRM
+      - EXPORTED_TO_CRM
+      - EXPORTED_TO_CRM_ERROR
+      - ACCEPTED_FOR_EXECUTION
+      - EXECUTED
+      - CANCELLED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NONE
+      - NEW
+      - SIGNED
+      - DELETED
+      - SENT
+      - DELIVERED
+      - DETAILS_VALID
+      - SIGN_VALID
+      - RECEIVED
+      - EXPORT_TO_CRM
+      - EXPORTED_TO_CRM
+      - EXPORTED_TO_CRM_ERROR
+      - ACCEPTED_FOR_EXECUTION
+      - EXECUTED
+      - CANCELLED
+      - REJECTED
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  ge:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  lt:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+  le:
+    type: string
+    enum:
+    - NONE
+    - NEW
+    - SIGNED
+    - DELETED
+    - SENT
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_CRM
+    - EXPORTED_TO_CRM
+    - EXPORTED_TO_CRM_ERROR
+    - ACCEPTED_FOR_EXECUTION
+    - EXECUTED
+    - CANCELLED
+    - REJECTED
+description: Статус поручения

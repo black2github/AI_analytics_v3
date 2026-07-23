@@ -1,0 +1,19 @@
+post:
+  tags:
+  - client-info-update-bank-scroller-controller
+  summary: Получить страницу заявок
+  description: 'Привилегии: CLIENT_INFO_UPD.BANK.REQUEST_LIST_VIEW'
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GetPageCommandClientInfoUpdRequestBankFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataClientInfoUpdRequestBankScrollerDto.yaml

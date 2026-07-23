@@ -1,0 +1,27 @@
+type: object
+properties:
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+  lastName:
+    type: string
+    description: Фамилия УЛ
+  firstName:
+    type: string
+    description: Имя УЛ
+  patronymic:
+    type: string
+    description: Отчество УЛ
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  inn:
+    type: string
+    description: ИНН
+  eio:
+    type: boolean
+    description: Является ЕИО (Единоличный исполнительный орган)
+  identityCard:
+    $ref: ../common/IdentityCardDto.yaml
+description: Данные УЛ и связанного с ним сотрудника

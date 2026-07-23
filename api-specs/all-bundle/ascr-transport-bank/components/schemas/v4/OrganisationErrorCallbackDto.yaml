@@ -1,0 +1,73 @@
+type: object
+description: Данные обратного вызова при ошибках КО ЮЛ.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  callbackType:
+    type: string
+    description: Тип обратного вызова.
+    enum:
+    - OrganisationRegistration
+    - OrganisationCertRegistration
+    - OrganisationDataChange
+    - OrganisationWalletManagement
+    - OrganisationWalletInfo
+    - OrganisationC2BDC
+    - OrganisationRecipientB2BDC
+    - OrganisationBuyingDC
+    - OrganisationSellingDC
+    - OrganisationB2CRefundDC
+    - OrganisationWalletManagementByFI
+    - OrganisationWalletManagementByPcr
+    - OrganisationCertRevoke
+    - OrganisationWalletManagementFI
+    - OrganisationRecipientOpTransferToDCA
+    - OrganisationSenderOpTransferToDCA
+    - OrganisationSenderOpTransferToBank
+    - OrganisationSenderOpTransferToBankRefund
+    - OrganisationInfoResponse
+    - OrganisationDelayReceipt
+    - OrganisationRejectionReceipt
+    - OrganisationAmlCftReceipt
+    - OrganisationWalletManagementPossibilityRequest
+    - OrganisationRecipientG2BTransfer
+    - OrganisationB2BPossibilityResponse
+    - OrganisationB2CRefundDCPossibilityResponse
+    - OrganisationSellingDCPossibilityResponse
+    - OrganisationAuthManagement
+    - OrganisationAuthList
+    - OrganisationB2CRefundAuthDC
+    - OrganisationB2CRefundAuthFI
+    - OrganisationInfoSender
+  code:
+    type: string
+    description: Код ошибки ПЦР-Коннект, которая позволит идентифицировать конкретную проблему
+  pcrCode:
+    type: string
+    description: Код ошибки ПЦР, которая позволит идентифицировать конкретную проблему на ПЦР, может быть null, если ошибка была выявлена не на ПЦР
+  message:
+    type: string
+    description: Описание ошибки
+  albumVersion:
+    type: string
+    description: Номер версии альбома ЭС ПлЦР, по которому отправляется callback.
+  operationInformationKv:
+    $ref: ./ErrorAdditionalDataDto.yaml
+    description: Информация об операции, представляемая в формате "ключ" - "значение"
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР из тега <MsgHdr/CreDt>.
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- callbackType
+- code
+- correlationId
+- message
+- pcrCode

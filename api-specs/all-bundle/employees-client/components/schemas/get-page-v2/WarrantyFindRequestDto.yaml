@@ -1,0 +1,26 @@
+type: object
+properties:
+  hasGlobalWarranty:
+    type: boolean
+  warrantyProductTypes:
+    type: array
+    items:
+      type: string
+      enum:
+      - LK_UVED
+      - LK_MP
+      - GPB_BO
+      - CORP_CARDS
+      - SALARY_PROJECT
+      - TREASURY_DEPOSIT
+      - TREASURY_FX
+      - TREASURY_GSNO
+      - TREASURY_NESNIZ
+      - UNI_BUH_OF_SALARY_GPBBO
+      - ENCASHMENT
+      - ENCASHMENT_EX
+      - SBP
+      - RKO
+  hasBankInfoWarranty:
+    type: boolean
+description: Поиск по выбранным параметрам доверенностей

@@ -1,0 +1,17 @@
+post:
+  summary: 'Сервис: проверка по стоп-листам'
+  tags:
+  - СИП. Сервис Merchant API
+  requestBody:
+    content:
+      application/xml;charset=UTF-8:
+        schema:
+          type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/xml;charset=UTF-8:
+          schema:
+            type: string

@@ -1,0 +1,21 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование
+  fullName:
+    type: string
+    description: Полное наименование
+  inn:
+    type: string
+    description: ИНН
+  kpp:
+    type: string
+    description: КПП
+description: Данные клиента банка

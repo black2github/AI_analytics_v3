@@ -1,0 +1,7 @@
+type: string
+description: Статусы фильтрации "Банковское сопровождение контрактов"
+enum:
+- HAS_CONTRACT
+- HAS_WARNINGS
+- AWAITING_OD
+- NEW_COMMENT

@@ -1,0 +1,73 @@
+type: object
+description: Сертификаты для подписи при автоматической рассылке.
+properties:
+  bankCertificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата пользователя банка.
+  branches:
+    type: array
+    description: Список филиалов банка.
+    items:
+      $ref: ./BulkAttachmentCertificateBranchDto.yaml
+  catalogId:
+    type: string
+    format: uuid
+    description: Идентификатор настроек автоматической рассылки писем из банка для определенного каталога.
+  certificateId:
+    type: string
+    format: uuid
+    description: Идентификатор сертификата ЭП.
+  comment:
+    type: string
+    description: Комментарий.
+  dateEnd:
+    type: string
+    format: date
+    description: 'Период действия сертификата: по.'
+  dateStart:
+    type: string
+    format: date
+    description: 'Период действия сертификата: с.'
+  id:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор.
+  isBlocked:
+    type: boolean
+    description: Временная блокировка.
+  mainCertificateId:
+    type: string
+    format: uuid
+    description: Ссылка на основной сертификат.
+  massDocCert:
+    type: boolean
+    description: Сертификат массовой рассылки
+  ownerFio:
+    type: string
+    description: Владелец сертификата.
+  ownerId:
+    type: string
+    format: uuid
+    description: Id владельца сертификата.
+  pinPresent:
+    type: boolean
+    description: Признак наличия пин-кода контейнера
+  status:
+    type: string
+    description: Статус.
+    enum:
+    - ADDED
+    - UPDATED
+    - DELETED
+required:
+- bankCertificateId
+- branches
+- catalogId
+- certificateId
+- dateStart
+- isBlocked
+- mainCertificateId
+- massDocCert
+- pinPresent
+- status

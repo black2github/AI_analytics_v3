@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  name:
+    type: string
+    description: Наименование клиента банка
+  inn:
+    type: string
+    description: ИНН клиента банка
+description: Транспортное справочное представление клиента банка

@@ -1,0 +1,16 @@
+required:
+- branchCode
+- clientAbsId
+- tariffCode
+type: object
+properties:
+  clientAbsId:
+    type: string
+    description: Идентификатор Клиента Банка (РНК)
+  branchCode:
+    type: string
+    description: Код филиала в Ф1
+  tariffCode:
+    type: string
+    description: Код тарифа в Ф1
+description: Запрос информации о подключаемом тарифе в F1

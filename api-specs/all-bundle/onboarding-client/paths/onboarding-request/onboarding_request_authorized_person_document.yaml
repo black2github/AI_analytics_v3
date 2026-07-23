@@ -1,0 +1,60 @@
+get:
+  operationId: getAuthorizedPersonDocument
+  parameters:
+  - in: query
+    name: eskId
+    required: true
+    schema:
+      type: string
+  - in: query
+    name: bankClientId
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/onboarding-request/GenericResponseSimpleErrorDataAuthorizedPersonDocumentDto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Возвращает паспортные данные физического лица-подписанта по счёту/ЕИО (ПУЛ)
+  tags:
+  - Клиентское API заявки на открытие первого счета для получения данных о физических лицах в заявке

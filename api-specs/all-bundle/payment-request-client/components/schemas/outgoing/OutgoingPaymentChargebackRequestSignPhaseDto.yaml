@@ -1,0 +1,27 @@
+required:
+- canRemoveSign
+- hasUserSignAuthority
+- notSignedLevels
+- signedLevels
+- userSendAbility
+type: object
+properties:
+  canRemoveSign:
+    type: boolean
+    description: Доступно ли пользователю снятие подписи
+  hasUserSignAuthority:
+    type: boolean
+    description: Доступно пользователю подписание или нет
+  userSendAbility:
+    $ref: ../common/SendAbility.yaml
+  notSignedLevels:
+    type: array
+    description: Список пустых подписей
+    items:
+      $ref: ../common/SignatureLevelDto.yaml
+  signedLevels:
+    type: array
+    description: Список заполненных подписей
+    items:
+      $ref: ../common/SignatureLevelDto.yaml
+description: Фаза подписания документа

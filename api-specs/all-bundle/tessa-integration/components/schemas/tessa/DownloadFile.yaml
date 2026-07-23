@@ -1,0 +1,16 @@
+type: object
+properties:
+  cardId:
+    type: string
+    format: uuid
+  fileId:
+    type: string
+    format: uuid
+  version:
+    type: string
+  cardTypeId:
+    type: string
+    format: uuid
+  fileTypeId:
+    type: string
+    format: uuid

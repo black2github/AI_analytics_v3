@@ -1,0 +1,11 @@
+type: object
+properties:
+  clientOfficial:
+    $ref: ../common/ClientOfficialDto.yaml
+  markers:
+    type: array
+    description: Метки представителя клиента
+    items:
+      type: string
+      description: Метки представителя клиента
+description: Представитель Клиента с метками

@@ -1,0 +1,24 @@
+required:
+- authorizedPersonsIds
+- originalService
+type: object
+properties:
+  authorizedPersonsIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы УЛ
+    items:
+      type: string
+      description: Идентификаторы УЛ
+      format: uuid
+  roleTemplateCode:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Код шаблона роли
+  originalService:
+    maxLength: 255
+    minLength: 0
+    type: string
+    description: Источник записи
+description: Параметры поиска шаблонов ролей по идентификаторам УЛ

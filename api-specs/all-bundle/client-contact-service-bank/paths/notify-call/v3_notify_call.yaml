@@ -1,0 +1,55 @@
+post:
+  tags:
+  - Апи для работы с Коммуникациями типа Звонок Клиента Банка третьей версии
+  summary: Сохранение результата звонка
+  description: 'Привилегии: NSK.KZ.BANK.NOTIFY_CALL.CREATE, NSK.CLASSIC.BANK.NOTIFY_CALL.CREATE'
+  operationId: saveNotifyCallResult
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/notify-call/GenericCommandNotifyCallRequest.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/notify-call/GenericResponseErrorDataNotifyCallCreateRestResponseV3Dto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

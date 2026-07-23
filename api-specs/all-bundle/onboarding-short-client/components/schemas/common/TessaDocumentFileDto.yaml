@@ -1,0 +1,31 @@
+type: object
+properties:
+  fileFormat:
+    type: string
+    description: Формат файла
+  fileHash:
+    type: string
+    description: Хэш файла
+  fileId:
+    type: string
+    description: Ссылка на файл в хранилище
+    format: uuid
+  fileName:
+    type: string
+    description: Название файла
+  id:
+    type: string
+    description: Идентификатор файла ТЕССА документа
+    format: uuid
+  signatureFileHash:
+    type: string
+    description: Хэш файла электронной подписи
+  signatureFileId:
+    type: string
+    description: Ссылка на файл электронной подписи
+    format: uuid
+  tessaDocumentId:
+    type: string
+    description: Ссылка на ТЕССА документ
+    format: uuid
+description: Оригиналы документов

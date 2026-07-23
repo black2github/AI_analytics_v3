@@ -1,0 +1,14 @@
+required:
+- accountNumber
+- bic
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Номер счёта
+  bic:
+    maxLength: 9
+    type: string
+    description: БИК
+description: Счета БСК

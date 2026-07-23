@@ -1,0 +1,7 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  reqType:
+    $ref: ./FilterValueEnumDtoDocumentTypeDto.yaml
+description: Фильтр для выборки номеров счетов из таблицы заявок

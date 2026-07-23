@@ -1,0 +1,6 @@
+type: object
+properties:
+  atmType:
+    type: string
+  count:
+    type: string

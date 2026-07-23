@@ -1,0 +1,24 @@
+required:
+- id
+- reportFormat
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  reportFormat:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - PDF
+    - XLS
+    - RTF
+    - HTML
+    - DOC
+    - DOCX
+    - DOCX_TO_PDF
+  skipPassportData:
+    type: boolean
+    description: Пропустить печать паспортных данных
+description: Тип формата печатной формы

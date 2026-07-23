@@ -1,0 +1,10 @@
+type: object
+properties:
+  linkedEntityId:
+    type: string
+    description: Идентификатор связанной сущности
+    format: uuid
+  template:
+    type: string
+    description: Наименование шаблона
+description: Параметры шаблона

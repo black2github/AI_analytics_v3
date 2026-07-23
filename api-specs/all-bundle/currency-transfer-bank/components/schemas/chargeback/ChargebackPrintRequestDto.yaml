@@ -1,0 +1,18 @@
+type: object
+properties:
+  ids:
+    type: array
+    description: Идентификаторы сущности "Отзыв валютного поручения"
+    items:
+      type: string
+      description: Идентификаторы сущности "Отзыв валютного поручения"
+      format: uuid
+  reportFormat:
+    type: string
+    description: Тип печатной формы
+    enum:
+    - PDF
+  archive:
+    type: boolean
+    description: Необходимость архивировать файлы
+description: Запрос на формирование печатной формы

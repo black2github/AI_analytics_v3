@@ -1,0 +1,20 @@
+get:
+  tags:
+  - API Банка для работы с ДВК.
+  summary: История операции по документу
+  description: 'Привилегии: DVK_BANK.VIEW'
+  operationId: getHistory
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorListDocumentHistoryBankDto.yaml

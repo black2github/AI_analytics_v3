@@ -1,0 +1,31 @@
+type: object
+properties:
+  requestType:
+    $ref: ./UnitedRequestV2TypeFilter.yaml
+  date:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  number:
+    $ref: ../common/FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueEnumDtoUnitedRequestStatusDto.yaml
+  statusCategory:
+    type: string
+    description: Категория заявки объединенного скроллера V2. Клиентская часть.
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - IN_PROCESSING
+    - FINISHED
+  contractId:
+    $ref: ../common/FilterValueDtoString.yaml
+  surname:
+    $ref: ../common/FilterValueDtoString.yaml
+  forename:
+    $ref: ../common/FilterValueDtoString.yaml
+  patronymic:
+    $ref: ../common/FilterValueDtoString.yaml
+  newRole:
+    $ref: ./UnitedRequestV2NewRoleFilter.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+description: Фильтр объединенного скроллера заявок V2. Клиентская часть.

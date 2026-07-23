@@ -1,0 +1,30 @@
+required:
+- accountNumber
+type: object
+properties:
+  name:
+    type: string
+    description: Наименование плательщика
+  innKio:
+    type: string
+    description: ИНН/КИО плательщика
+  accountNumber:
+    type: string
+    description: Счет плательщика
+  clientAccountId:
+    type: string
+    description: Ссылка на сущность "Счет клиента"
+    format: uuid
+  bankName:
+    type: string
+    description: Наименование Банка плательщика
+  bankBic:
+    type: string
+    description: БИК банка плательщика
+  branchName:
+    type: string
+    description: Наименование филиала обслуживания
+  numberCcf:
+    type: string
+    description: Номер ЦЦФ
+description: Реквизиты плательщика

@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Транспортное представление Gpi статусов документа (клиент)
+    enum:
+    - GPI_SENDED
+    - GPI_IN_PROCESS
+    - GPI_COMPLETED
+    - GPI_REJECTED
+  notEq:
+    type: string
+    description: Транспортное представление Gpi статусов документа (клиент)
+    enum:
+    - GPI_SENDED
+    - GPI_IN_PROCESS
+    - GPI_COMPLETED
+    - GPI_REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      description: Транспортное представление Gpi статусов документа (клиент)
+      enum:
+      - GPI_SENDED
+      - GPI_IN_PROCESS
+      - GPI_COMPLETED
+      - GPI_REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Транспортное представление Gpi статусов документа (клиент)
+      enum:
+      - GPI_SENDED
+      - GPI_IN_PROCESS
+      - GPI_COMPLETED
+      - GPI_REJECTED
+  isNull:
+    type: boolean
+description: Статус GPI

@@ -1,0 +1,31 @@
+post:
+  tags:
+  - Эмулятор запросов от Ф1 на импорт инкассовых поручений (входящих)
+  summary: Отправка квитанции от Ф1 в очередь
+  operationId: receiptUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: dataList
+    description: dataList
+    required: true
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/IncomingCollectionOrderF1ReceiptDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,string»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

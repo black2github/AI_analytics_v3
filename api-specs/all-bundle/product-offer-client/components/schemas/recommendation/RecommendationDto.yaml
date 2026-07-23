@@ -1,0 +1,29 @@
+required:
+- id
+- rating
+- serviceCode
+- serviceName
+- url
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор рекомендации
+    format: uuid
+  serviceName:
+    type: string
+    description: Наименование услуги/сервиса
+  serviceCode:
+    type: string
+    description: Код услуги/сервиса
+  description:
+    type: string
+    description: Описание услуги
+  url:
+    type: string
+    description: Ссылка на услугу/сервис
+  rating:
+    type: integer
+    description: Рейтинг рекомендации
+    format: int32
+description: Данные рекомендации пользователя

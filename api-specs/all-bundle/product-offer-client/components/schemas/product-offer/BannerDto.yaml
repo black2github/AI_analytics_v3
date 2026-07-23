@@ -1,0 +1,12 @@
+required:
+- bannerType
+- productCode
+type: object
+properties:
+  productCode:
+    type: string
+    description: Код продукта текущего пользователя
+  bannerType:
+    type: string
+    description: Тип баннера для отображения
+description: Ответ для генерации баннера

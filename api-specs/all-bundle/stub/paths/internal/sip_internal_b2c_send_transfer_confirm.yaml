@@ -1,0 +1,125 @@
+post:
+  tags:
+  - СИП. Сервис b2c API
+  summary: 'Сервис: Инициализация выплаты'
+  operationId: transferInitUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.amount
+    in: query
+    description: Сумма в копейках
+    required: true
+    type: string
+  - name: body.callbackMerchantNotifications
+    in: query
+    description: URL системы для получения сообщения о статусе возврата
+    required: false
+    type: string
+  - name: body.comment
+    in: query
+    description: Комментарий
+    required: false
+    type: string
+  - name: body.currency
+    in: query
+    description: Валюта операции
+    required: true
+    type: string
+  - name: body.docType
+    in: query
+    description: Тип документа
+    required: true
+    type: string
+  - name: body.guid
+    in: query
+    description: Идентификатор BSS
+    required: true
+    type: string
+  - name: body.recipient.bankId
+    in: query
+    description: Идентификатор банка получателя
+    required: true
+    type: string
+  - name: body.recipient.bic
+    in: query
+    description: БИК Банка Получателя
+    required: true
+    type: string
+  - name: body.recipient.incomeCode
+    in: query
+    description: Код вида дохода
+    required: false
+    type: string
+  - name: body.recipient.paymentId
+    in: query
+    description: Идентификатор получателя
+    required: true
+    type: string
+  - name: body.recipient.paymentType
+    in: query
+    description: Тип идентификатора получателя
+    required: true
+    type: string
+  - name: body.sender.account
+    in: query
+    description: Номер счета ТСП или ЮЛ
+    required: true
+    type: string
+  - name: body.sender.inn
+    in: query
+    description: ИНН плательщика
+    required: false
+    type: string
+  - name: body.sender.legalId
+    in: query
+    description: Идентификатор ЮЛ в СБП
+    required: false
+    type: string
+  - name: body.sender.merchantId
+    in: query
+    description: Идентификатор ТСП
+    required: false
+    type: string
+  - name: body.sign
+    in: query
+    description: Подпись сообщения
+    required: false
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/B2cTransferInitResultDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

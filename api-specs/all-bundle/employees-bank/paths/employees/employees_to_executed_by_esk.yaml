@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API заявки на создание нового/изменение данных и полномочий сотрудника Клиента. Изменение статуса
+  summary: Изменить статус заявки на "Заявка исполнена в ЕСК"
+  description: 'Привилегии: EMPLOYEES.RQ_BANK_STATUS_CHANGE'
+  operationId: executeByEsk
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/employees/GenericCommandReqStatusChangeCommand.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/employees/GenericResponseErrorDataListEmployeeRequestBriefResponseDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

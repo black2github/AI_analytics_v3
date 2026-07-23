@@ -1,0 +1,18 @@
+required:
+- asyncTaskGroupId
+- clientSignCommands
+type: object
+properties:
+  asyncTaskGroupId:
+    type: string
+    description: Идентификатор группы асинхронных задач
+    format: uuid
+  clientSignCommands:
+    uniqueItems: true
+    type: array
+    description: Множество данных для клиентских подписей
+    items:
+      $ref: ../common/ClientSignCommand.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Данные для пакетной подписи документов с формированием файла

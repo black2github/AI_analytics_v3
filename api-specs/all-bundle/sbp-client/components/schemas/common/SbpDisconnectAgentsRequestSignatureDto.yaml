@@ -1,0 +1,39 @@
+type: object
+description: Реквизиты электронной подписи заявки на отключение агентов ТСП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  ownerId:
+    type: string
+    format: uuid
+    description: Идентификатор владельца
+  typeId:
+    type: string
+    format: uuid
+    description: Идентификатор типа подписи
+  value:
+    $ref: ./SignatureValueDto.yaml
+    description: Значение подписи
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+    description: Данные сертификата
+  signedAt:
+    type: string
+    format: date-time
+    description: Дата подписания
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, подписавший заявку (Идентификатор пользователя в экосистеме)
+  userFio:
+    type: string
+    description: Пользователь, подписавший заявку (ФИО)
+  userEskId:
+    type: string
+    description: Идентификатор ЕСК пользователя, подписавшего запрос
+  sppVersion:
+    type: integer
+    format: int32
+    description: Версия СПП

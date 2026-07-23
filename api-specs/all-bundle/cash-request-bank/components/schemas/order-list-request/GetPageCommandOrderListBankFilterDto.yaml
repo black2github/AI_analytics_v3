@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOrderListBankFilterDto.yaml
+description: Тело запроса списка заявок на внесение или выдачу по указанному фильтру

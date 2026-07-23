@@ -1,0 +1,15 @@
+type: object
+description: Информация о доступных пользователю действиях c заявкой на регистрацию Qr-кода
+properties:
+  viewQr:
+    type: boolean
+    description: Признак возможности просмотра QR
+  remove:
+    type: boolean
+    description: Признак возможности удаления
+  view:
+    type: boolean
+    description: Признак возможности просмотра заявки
+  edit:
+    type: boolean
+    description: Признак возможности редактирования

@@ -1,0 +1,5 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для поиска организаций для банковского скроллера

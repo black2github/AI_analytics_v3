@@ -1,0 +1,8 @@
+type: object
+properties:
+  taskId:
+    type: string
+    format: uuid
+  status:
+    $ref: ./ExportTaskStatusDto.yaml
+description: Данные

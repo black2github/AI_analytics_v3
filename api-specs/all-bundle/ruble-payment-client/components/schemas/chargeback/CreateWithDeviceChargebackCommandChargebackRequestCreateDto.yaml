@@ -1,0 +1,9 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  data:
+    $ref: ./ChargebackRequestCreateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда создания

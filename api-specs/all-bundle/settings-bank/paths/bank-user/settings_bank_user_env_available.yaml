@@ -1,0 +1,12 @@
+get:
+  tags:
+  - АПИ получения переменных окружения для пользователя банка
+  summary: Получить список доступных переменных окружения
+  operationId: getAvailableEnvironment_1
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ListResponseUserEnvironmentDto.yaml

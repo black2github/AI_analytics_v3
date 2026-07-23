@@ -1,0 +1,10 @@
+type: object
+properties:
+  datetime:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  message:
+    type: string
+    description: Полный комментарий
+description: Информация о комментарии для клиента

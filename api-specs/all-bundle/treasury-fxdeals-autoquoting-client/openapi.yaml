@@ -1,0 +1,359 @@
+openapi: 3.0.1
+info:
+  title: Сервис формирования сделок конверсии автокотирования. Клиентская часть.
+  version: 1.68.1
+servers:
+- url: /treasury-fxdeals-autoquoting-client
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/misc/privilege_registration_force_update.yaml
+  /info/user/by-clients:
+    $ref: ./paths/misc/info_user_by_clients.yaml
+  /fx-rates-subscribe/v2/prolong:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_prolong.yaml
+  /fx-rates-subscribe/v2/init:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_init.yaml
+  /fx-rates-subscribe/v2/init-group:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_init_group.yaml
+  /fx-rates-subscribe/v2/init-group-and-cancel:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_init_group_and_cancel.yaml
+  /fx-rates-subscribe/v2/init-and-cancel:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_init_and_cancel.yaml
+  /fx-rates-subscribe/v2/cancel:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_cancel.yaml
+  /fx-deal:
+    $ref: ./paths/fx-deal/fx_deal.yaml
+  /fx-deal/v2:
+    $ref: ./paths/fx-deal/fx_deal_v2.yaml
+  /fx-deal/v2/print-reportclient:
+    $ref: ./paths/fx-deal/fx_deal_v2_print_reportclient.yaml
+  /fx-deal/v2/print-reportbank:
+    $ref: ./paths/fx-deal/fx_deal_v2_print_reportbank.yaml
+  /fx-deal/v2/hide-in-trading-panel:
+    $ref: ./paths/fx-deal/fx_deal_v2_hide_in_trading_panel.yaml
+  /fx-deal/v2/accounts-sell/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_v2_accounts_sell_by_client_id.yaml
+  /fx-deal/v2/accounts-sell-v2/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_v2_accounts_sell_v2_by_client_id.yaml
+  /fx-deal/v2/accounts-buy/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_v2_accounts_buy_by_client_id.yaml
+  /fx-deal/v2/accounts-buy-v2/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_v2_accounts_buy_v2_by_client_id.yaml
+  /fx-deal/sign-certificates:
+    $ref: ./paths/fx-deal/fx_deal_sign_certificates.yaml
+  /fx-deal/sign-and-send:
+    $ref: ./paths/fx-deal/fx_deal_sign_and_send.yaml
+  /fx-deal/print-reportclient:
+    $ref: ./paths/fx-deal/fx_deal_print_reportclient.yaml
+  /fx-deal/print-reportbank:
+    $ref: ./paths/fx-deal/fx_deal_print_reportbank.yaml
+  /fx-deal/hide-in-trading-panel:
+    $ref: ./paths/fx-deal/fx_deal_hide_in_trading_panel.yaml
+  /fx-deal/get-page:
+    $ref: ./paths/fx-deal/fx_deal_get_page.yaml
+  /fx-deal/get-data-for-print:
+    $ref: ./paths/fx-deal/fx_deal_get_data_for_print.yaml
+  /fx-deal/get-count:
+    $ref: ./paths/fx-deal/fx_deal_get_count.yaml
+  /fx-deal/generate-sign-data:
+    $ref: ./paths/fx-deal/fx_deal_generate_sign_data.yaml
+  /fx-deal/generate-sign-data-v2:
+    $ref: ./paths/fx-deal/fx_deal_generate_sign_data_v2.yaml
+  /fx-deal/export-sign:
+    $ref: ./paths/fx-deal/fx_deal_export_sign.yaml
+  /fx-deal/doc-statuses-by-filter:
+    $ref: ./paths/fx-deal/fx_deal_doc_statuses_by_filter.yaml
+  /fx-deal/currency-pairs-by-filter:
+    $ref: ./paths/fx-deal/fx_deal_currency_pairs_by_filter.yaml
+  /fx-deal/accounts-sell/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_accounts_sell_by_client_id.yaml
+  /fx-deal/accounts-buy/by-client-id:
+    $ref: ./paths/fx-deal/fx_deal_accounts_buy_by_client_id.yaml
+  /client-profile-subscribe/v2/reinit:
+    $ref: ./paths/misc/client_profile_subscribe_v2_reinit.yaml
+  /client-profile-subscribe/v2/prolong:
+    $ref: ./paths/misc/client_profile_subscribe_v2_prolong.yaml
+  /client-profile-subscribe/v2/init:
+    $ref: ./paths/misc/client_profile_subscribe_v2_init.yaml
+  /client-profile-subscribe/v2/cancel:
+    $ref: ./paths/misc/client_profile_subscribe_v2_cancel.yaml
+  /info/user/{userId}:
+    $ref: ./paths/misc/info_user_userId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /fx-rates-subscribe/v2/{clientSubscribeId}:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_clientSubscribeId.yaml
+  /fx-rates-subscribe/v2/new-subscribe-id:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_new_subscribe_id.yaml
+  /fx-rates-subscribe/v2/new-group-subscribe-id:
+    $ref: ./paths/fx-rates-subscribe/fx_rates_subscribe_v2_new_group_subscribe_id.yaml
+  /fx-deal/{id}:
+    $ref: ./paths/fx-deal/fx_deal_id.yaml
+  /fx-deal/v2/{id}:
+    $ref: ./paths/fx-deal/fx_deal_v2_id.yaml
+  /fx-deal/v2/new/{clientId}/{instrumentCode}:
+    $ref: ./paths/fx-deal/fx_deal_v2_new_clientId_instrumentCode.yaml
+  /fx-deal/v2/general-agreements/{clientId}:
+    $ref: ./paths/fx-deal/fx_deal_v2_general_agreements_clientId.yaml
+  /fx-deal/v2/general-agreement-management-funds/{agreementId}:
+    $ref: ./paths/fx-deal/fx_deal_v2_general_agreement_management_funds_agreementId.yaml
+  /fx-deal/v2/full/{id}:
+    $ref: ./paths/fx-deal/fx_deal_v2_full_id.yaml
+  /fx-deal/v2/cancel-request/{id}:
+    $ref: ./paths/fx-deal/fx_deal_v2_cancel_request_id.yaml
+  /fx-deal/new/{clientId}/{instrumentPkpId}:
+    $ref: ./paths/fx-deal/fx_deal_new_clientId_instrumentPkpId.yaml
+  /fx-deal/general-agreements/{clientId}:
+    $ref: ./paths/fx-deal/fx_deal_general_agreements_clientId.yaml
+  /fx-deal/full/{id}:
+    $ref: ./paths/fx-deal/fx_deal_full_id.yaml
+  /fx-deal/doc-statuses:
+    $ref: ./paths/fx-deal/fx_deal_doc_statuses.yaml
+  /fx-deal/delete/{id}:
+    $ref: ./paths/fx-deal/fx_deal_delete_id.yaml
+  /fx-deal/currency-pairs:
+    $ref: ./paths/fx-deal/fx_deal_currency_pairs.yaml
+  /caches/clear:
+    $ref: ./paths/misc/caches_clear.yaml
+components:
+  schemas:
+    SingleResponseObject:
+      $ref: ./components/schemas/common/SingleResponseObject.yaml
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/fx-deal/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/fx-deal/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/fx-deal/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/fx-deal/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/fx-deal/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/misc/SingleResponseBoolean.yaml
+    UserInformationByClientBaseDto:
+      $ref: ./components/schemas/misc/UserInformationByClientBaseDto.yaml
+    DealBaseRateVariantsDto:
+      $ref: ./components/schemas/misc/DealBaseRateVariantsDto.yaml
+    DealRateTypeDto:
+      $ref: ./components/schemas/misc/DealRateTypeDto.yaml
+    ErrorData:
+      $ref: ./components/schemas/common/ErrorData.yaml
+    GenericResponseErrorDataUserInformationV2ByServiceDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataUserInformationV2ByServiceDto.yaml
+    UserInformationByClientByServiceDto:
+      $ref: ./components/schemas/misc/UserInformationByClientByServiceDto.yaml
+    UserInformationByDealTypeDto:
+      $ref: ./components/schemas/misc/UserInformationByDealTypeDto.yaml
+    UserInformationV2ByServiceDto:
+      $ref: ./components/schemas/misc/UserInformationV2ByServiceDto.yaml
+    FxRatesSubscribeProlongDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeProlongDto.yaml
+    GenericResponseErrorDataFxRatesSubscribeProlongDto:
+      $ref: ./components/schemas/fx-rates-subscribe/GenericResponseErrorDataFxRatesSubscribeProlongDto.yaml
+    FxRatesSubscribeInitDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeInitDto.yaml
+    FxRatesSubscribeInitResponseDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeInitResponseDto.yaml
+    GenericResponseErrorDataFxRatesSubscribeInitResponseDto:
+      $ref: ./components/schemas/fx-rates-subscribe/GenericResponseErrorDataFxRatesSubscribeInitResponseDto.yaml
+    FxRatesSubscribeGroupInitDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeGroupInitDto.yaml
+    FxRatesSubscribeGroupInitResponseDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeGroupInitResponseDto.yaml
+    GenericResponseErrorDataFxRatesSubscribeGroupInitResponseDto:
+      $ref: ./components/schemas/fx-rates-subscribe/GenericResponseErrorDataFxRatesSubscribeGroupInitResponseDto.yaml
+    FxRatesSubscribeGroupInitAndCancelDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeGroupInitAndCancelDto.yaml
+    FxRatesSubscribeInitAndCancelDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeInitAndCancelDto.yaml
+    FxRatesSubscribeCancelDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeCancelDto.yaml
+    GenericResponseErrorDataFxRatesSubscribeCancelDto:
+      $ref: ./components/schemas/fx-rates-subscribe/GenericResponseErrorDataFxRatesSubscribeCancelDto.yaml
+    BranchDto:
+      $ref: ./components/schemas/fx-deal/BranchDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/fx-deal/CertificateInfoDto.yaml
+    ClientInfoDto:
+      $ref: ./components/schemas/fx-deal/ClientInfoDto.yaml
+    DealDocAccountBuyDto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountBuyDto.yaml
+    DealDocAccountDto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountDto.yaml
+    DealDocAccountSupplyDto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountSupplyDto.yaml
+    DealDocFxInstrumentDto:
+      $ref: ./components/schemas/fx-deal/DealDocFxInstrumentDto.yaml
+    DealDocGeneralAgreementDto:
+      $ref: ./components/schemas/fx-deal/DealDocGeneralAgreementDto.yaml
+    DealDocManagementFundDto:
+      $ref: ./components/schemas/fx-deal/DealDocManagementFundDto.yaml
+    FxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocDto.yaml
+    FxDealDocUserActionInfoDto:
+      $ref: ./components/schemas/fx-deal/FxDealDocUserActionInfoDto.yaml
+    GenericCommandFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/GenericCommandFxDealAutoQuotingDocDto.yaml
+    SignatureDataDto:
+      $ref: ./components/schemas/fx-deal/SignatureDataDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/fx-deal/SignatureDto.yaml
+    SignerInfoDto:
+      $ref: ./components/schemas/fx-deal/SignerInfoDto.yaml
+    UserInfoDto:
+      $ref: ./components/schemas/fx-deal/UserInfoDto.yaml
+    CreateResponseFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/CreateResponseFxDealAutoQuotingDocDto.yaml
+    GenericCommandPrintRequestDtoWdUUID:
+      $ref: ./components/schemas/fx-deal/GenericCommandPrintRequestDtoWdUUID.yaml
+    PrintRequestDtoWdUUID:
+      $ref: ./components/schemas/fx-deal/PrintRequestDtoWdUUID.yaml
+    GenericResponseErrorDataListPrintResponseTreasury:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListPrintResponseTreasury.yaml
+    PrintResponseTreasury:
+      $ref: ./components/schemas/fx-deal/PrintResponseTreasury.yaml
+    GenericCommandHideInTradingPanelRequestDto:
+      $ref: ./components/schemas/fx-deal/GenericCommandHideInTradingPanelRequestDto.yaml
+    HideInTradingPanelRequestDto:
+      $ref: ./components/schemas/fx-deal/HideInTradingPanelRequestDto.yaml
+    GenericResponseErrorDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataFxDealAutoQuotingDocDto.yaml
+    AccountRequestDto:
+      $ref: ./components/schemas/fx-deal/AccountRequestDto.yaml
+    GenericCommandAccountRequestDto:
+      $ref: ./components/schemas/fx-deal/GenericCommandAccountRequestDto.yaml
+    DealDocAccountExtDto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountExtDto.yaml
+    GenericResponseErrorDataListDealDocAccountExtDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocAccountExtDto.yaml
+    DealDocAccountExtV2Dto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountExtV2Dto.yaml
+    GenericResponseErrorDataListDealDocAccountExtV2Dto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocAccountExtV2Dto.yaml
+    GenericResponseErrorDataListDealDocAccountBuyDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocAccountBuyDto.yaml
+    DealDocAccountBuyV2Dto:
+      $ref: ./components/schemas/fx-deal/DealDocAccountBuyV2Dto.yaml
+    GenericResponseErrorDataListDealDocAccountBuyV2Dto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocAccountBuyV2Dto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/fx-deal/GenericCommandUUID.yaml
+    GenericResponseErrorDataListUniCertificateTreasuryDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListUniCertificateTreasuryDto.yaml
+    UniCertificateTreasuryDto:
+      $ref: ./components/schemas/fx-deal/UniCertificateTreasuryDto.yaml
+    SignCommand:
+      $ref: ./components/schemas/fx-deal/SignCommand.yaml
+    FilterValueDtoBigDecimal:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoBigDecimal.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoInstant.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/fx-deal/FilterValueDtoUUID.yaml
+    FxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocClientFilter.yaml
+    FxDealAutoQuotingDocDealStatusFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocDealStatusFilter.yaml
+    FxDealAutoQuotingDocDealTypeFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocDealTypeFilter.yaml
+    FxDealAutoQuotingDocDocStatusFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocDocStatusFilter.yaml
+    FxDealAutoQuotingDocDocTypeFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocDocTypeFilter.yaml
+    FxDealAutoQuotingDocTradingStatusFilter:
+      $ref: ./components/schemas/fx-deal/FxDealAutoQuotingDocTradingStatusFilter.yaml
+    GetPageCommandFxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/GetPageCommandFxDealAutoQuotingDocClientFilter.yaml
+    PageParamsFxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/PageParamsFxDealAutoQuotingDocClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/fx-deal/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/fx-deal/Sort.yaml
+    GenericResponseErrorDataPageDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataPageDataFxDealAutoQuotingDocDto.yaml
+    PageDataFxDealAutoQuotingDocDto:
+      $ref: ./components/schemas/fx-deal/PageDataFxDealAutoQuotingDocDto.yaml
+    GenericCommandPrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/GenericCommandPrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocClientFilter.yaml
+    PrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/PrintRequestTypeDtoWdUUIDFxDealAutoQuotingDocClientFilter.yaml
+    DataDto:
+      $ref: ./components/schemas/fx-deal/DataDto.yaml
+    GenericResponseErrorDataMapUUIDDataDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataMapUUIDDataDto.yaml
+    GenericResponseErrorDataLong:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataLong.yaml
+    Digest:
+      $ref: ./components/schemas/fx-deal/Digest.yaml
+    DigestInfoDto:
+      $ref: ./components/schemas/fx-deal/DigestInfoDto.yaml
+    DigestInfoFieldDto:
+      $ref: ./components/schemas/fx-deal/DigestInfoFieldDto.yaml
+    GenericResponseErrorDataUniSignDataTreasuryDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataUniSignDataTreasuryDto.yaml
+    UniSignDataTreasuryDto:
+      $ref: ./components/schemas/fx-deal/UniSignDataTreasuryDto.yaml
+    GenericResponseErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/fx-deal/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/fx-deal/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/fx-deal/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/fx-deal/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/fx-deal/UniSignV2x1Dto.yaml
+    FileDataResponseDto:
+      $ref: ./components/schemas/fx-deal/FileDataResponseDto.yaml
+    GenericResponseErrorDataFileDataResponseDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataFileDataResponseDto.yaml
+    GenericCommandFxDealAutoQuotingDocClientFilter:
+      $ref: ./components/schemas/fx-deal/GenericCommandFxDealAutoQuotingDocClientFilter.yaml
+    EnumObjectDto:
+      $ref: ./components/schemas/fx-deal/EnumObjectDto.yaml
+    GenericResponseErrorDataListEnumObjectDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListEnumObjectDto.yaml
+    GenericResponseErrorDataListString:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListString.yaml
+    ClientProfileSubscribeUpdateRequestDto:
+      $ref: ./components/schemas/misc/ClientProfileSubscribeUpdateRequestDto.yaml
+    ClientProfileSubscribeResponseDto:
+      $ref: ./components/schemas/misc/ClientProfileSubscribeResponseDto.yaml
+    GenericResponseErrorDataClientProfileSubscribeResponseDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataClientProfileSubscribeResponseDto.yaml
+    ClientProfileSubscribeInitRequestDto:
+      $ref: ./components/schemas/misc/ClientProfileSubscribeInitRequestDto.yaml
+    GenericResponseErrorDataListUserInformationByClientDto:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataListUserInformationByClientDto.yaml
+    UserInformationByClientDto:
+      $ref: ./components/schemas/misc/UserInformationByClientDto.yaml
+    GenericResponseErrorDataMapStringString:
+      $ref: ./components/schemas/misc/GenericResponseErrorDataMapStringString.yaml
+    FxRatesSubscribeCompactDto:
+      $ref: ./components/schemas/fx-rates-subscribe/FxRatesSubscribeCompactDto.yaml
+    GenericResponseErrorDataListFxRatesSubscribeCompactDto:
+      $ref: ./components/schemas/fx-rates-subscribe/GenericResponseErrorDataListFxRatesSubscribeCompactDto.yaml
+    GenericResponseErrorDataString:
+      $ref: ./components/schemas/common/GenericResponseErrorDataString.yaml
+    GenericResponseErrorDataListDealDocGeneralAgreementDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocGeneralAgreementDto.yaml
+    GenericResponseErrorDataListDealDocManagementFundDto:
+      $ref: ./components/schemas/fx-deal/GenericResponseErrorDataListDealDocManagementFundDto.yaml

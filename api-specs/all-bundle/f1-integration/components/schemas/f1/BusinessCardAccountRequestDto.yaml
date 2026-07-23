@@ -1,0 +1,6 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Код РНК клиента
+description: Данные запроса для получения списка счетов клиента в сервисе корпоративных карт

@@ -1,0 +1,17 @@
+type: object
+properties:
+  certificateName:
+    type: string
+    description: Наименование сертификата
+  ownerName:
+    type: string
+    description: ФИО владельца сертификата
+  status:
+    type: string
+    description: Статус
+    enum:
+    - NEW
+    - PROCESSING
+    - ACTIVE
+    - REJECTED
+description: Запрос на редактирование СПБ

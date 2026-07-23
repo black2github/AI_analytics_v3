@@ -1,0 +1,48 @@
+type: object
+properties:
+  businessId:
+    type: string
+  accountType:
+    type: string
+    enum:
+    - EXTERNAL
+    - INTERNAL
+  accountName:
+    type: string
+  accountNameExtended:
+    type: string
+  currency:
+    type: string
+  accountNumber:
+    type: string
+  kbk:
+    type: string
+  bankName:
+    type: string
+  bankCode:
+    type: string
+  bankKS:
+    type: string
+  corrBankName:
+    type: string
+  corrBankCode:
+    type: string
+  absId:
+    type: string
+    format: uuid
+  defaultUsage:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      enum:
+      - DEPOSIT_MATURITY
+      - DEPOSIT_VALUE
+      - FX_SELL
+      - FX_BUY
+      - INTEREST
+      - MNO
+  currentBalance:
+    type: string
+    description: Текущий остаток
+description: Данные

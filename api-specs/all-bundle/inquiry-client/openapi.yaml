@@ -1,0 +1,241 @@
+openapi: 3.0.1
+info:
+  title: Сервис справок. Клиентская часть.
+  version: 1.69.0-SNAPSHOT
+servers:
+- url: /inquiry-client
+security:
+- bearer-jwt:
+  - read
+  - write
+  bearer-key: []
+tags:
+- name: API проверки возможности формирования справки
+- name: Подпись запроса на справку.
+- name: API Заявки на запрос справок для ЮЛ. Валидация заявки и клиента.
+- name: API Клиентского скроллера счетов для списания комиссии.
+- name: API Клиентского скроллера заявки на запрос справок для ЮЛ.
+- name: API Заявки на запрос справок для ЮЛ. Базовые операции.
+- name: API списка счетов для запроса справок. Версия 2
+paths:
+  /inquiry:
+    $ref: ./paths/inquiry/inquiry.yaml
+  /inquiry/validate/validity-check:
+    $ref: ./paths/validate/inquiry_validate_validity_check.yaml
+  /inquiry/v2.1/generate-sign-data:
+    $ref: ./paths/v2.1/inquiry_v2_1_generate_sign_data.yaml
+  /inquiry/sign:
+    $ref: ./paths/sign/inquiry_sign.yaml
+  /inquiry/sign-and-process:
+    $ref: ./paths/sign-and-process/inquiry_sign_and_process.yaml
+  /inquiry/send:
+    $ref: ./paths/send/inquiry_send.yaml
+  /inquiry/get-page:
+    $ref: ./paths/get-page/inquiry_get_page.yaml
+  /inquiry/get-file-storage-ids:
+    $ref: ./paths/get-file-storage-ids/inquiry_get_file_storage_ids.yaml
+  /inquiry/generate-sign-data:
+    $ref: ./paths/generate-sign-data/inquiry_generate_sign_data.yaml
+  /inquiry/generate-digest:
+    $ref: ./paths/generate-digest/inquiry_generate_digest.yaml
+  /inquiry/generate-digest/version:
+    $ref: ./paths/generate-digest/inquiry_generate_digest_version.yaml
+  /inquiry/copy/{id}:
+    $ref: ./paths/copy/inquiry_copy_id.yaml
+  /inquiry/category:
+    $ref: ./paths/category/inquiry_category.yaml
+  /inquiry/calc-paid:
+    $ref: ./paths/calc-paid/inquiry_calc_paid.yaml
+  /inquiry/access-matrix/{clientId}:
+    $ref: ./paths/access-matrix/inquiry_access_matrix_clientId.yaml
+  /accounts/v2/tariff/{clientId}:
+    $ref: ./paths/v2/accounts_v2_tariff_clientId.yaml
+  /accounts/v2/commission-accounts:
+    $ref: ./paths/v2/accounts_v2_commission_accounts.yaml
+  /inquiry/{id}:
+    $ref: ./paths/{id}/inquiry_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /check-forming/{requestId}:
+    $ref: ./paths/{requestId}/check_forming_requestId.yaml
+  /accounts/v2/{bankClientId}:
+    $ref: ./paths/v2/accounts_v2_bankClientId.yaml
+  /accounts/v2/tariff/{clientId}/{accountId}:
+    $ref: ./paths/v2/accounts_v2_tariff_clientId_accountId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CheckMessage:
+      $ref: ./components/schemas/common/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/common/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/common/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/common/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/common/ValidationResult.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    CommissionInfoRequestDto:
+      $ref: ./components/schemas/common/CommissionInfoRequestDto.yaml
+    InquiryAccountDto:
+      $ref: ./components/schemas/common/InquiryAccountDto.yaml
+    InquiryBankClientRequestDto:
+      $ref: ./components/schemas/common/InquiryBankClientRequestDto.yaml
+    InquiryDto:
+      $ref: ./components/schemas/common/InquiryDto.yaml
+    InquiryMethodDto:
+      $ref: ./components/schemas/common/InquiryMethodDto.yaml
+    InquiryRequestClientApiRequestDto:
+      $ref: ./components/schemas/common/InquiryRequestClientApiRequestDto.yaml
+    InquirySignatureDto:
+      $ref: ./components/schemas/common/InquirySignatureDto.yaml
+    InquiryTypeCodeDto:
+      $ref: ./components/schemas/common/InquiryTypeCodeDto.yaml
+    InquiryTypeDto:
+      $ref: ./components/schemas/common/InquiryTypeDto.yaml
+    OtherInfoDto:
+      $ref: ./components/schemas/common/OtherInfoDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    UpdateCommandInquiryRequestClientApiRequestDtoUUID:
+      $ref: ./components/schemas/inquiry/UpdateCommandInquiryRequestClientApiRequestDtoUUID.yaml
+    CommissionInfoResponseDto:
+      $ref: ./components/schemas/common/CommissionInfoResponseDto.yaml
+    CommissionPaymentResultDto:
+      $ref: ./components/schemas/common/CommissionPaymentResultDto.yaml
+    GenericResponseSimpleErrorWithValidationDataInquiryRequestClientApiResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorWithValidationDataInquiryRequestClientApiResponseDto.yaml
+    InquiryBankClientResponseDto:
+      $ref: ./components/schemas/common/InquiryBankClientResponseDto.yaml
+    InquiryRequestClientApiResponseDto:
+      $ref: ./components/schemas/common/InquiryRequestClientApiResponseDto.yaml
+    SimpleErrorWithValidationData:
+      $ref: ./components/schemas/common/SimpleErrorWithValidationData.yaml
+    CreateCommandInquiryRequestClientApiRequestDto:
+      $ref: ./components/schemas/inquiry/CreateCommandInquiryRequestClientApiRequestDto.yaml
+    GenericResponseSimpleErrorDataVoid:
+      $ref: ./components/schemas/validate/GenericResponseSimpleErrorDataVoid.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/v2.1/GenericCommandUUID.yaml
+    GenericResponseSimpleErrorDataUniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/v2.1/UniSignV2x1Dto.yaml
+    SignCommand:
+      $ref: ./components/schemas/common/SignCommand.yaml
+    GenericResponseSimpleErrorDataInquiryRequestClientApiResponseDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataInquiryRequestClientApiResponseDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandInquiryRequestClientFilter:
+      $ref: ./components/schemas/common/GetPageCommandInquiryRequestClientFilter.yaml
+    InquiryRequestClientCategoryDto:
+      $ref: ./components/schemas/common/InquiryRequestClientCategoryDto.yaml
+    InquiryRequestClientFilter:
+      $ref: ./components/schemas/common/InquiryRequestClientFilter.yaml
+    InquiryRequestStatusFilter:
+      $ref: ./components/schemas/common/InquiryRequestStatusFilter.yaml
+    PageParamsInquiryRequestClientFilter:
+      $ref: ./components/schemas/common/PageParamsInquiryRequestClientFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponseSimpleErrorDataListInquiryFileDto:
+      $ref: ./components/schemas/get-file-storage-ids/GenericResponseSimpleErrorDataListInquiryFileDto.yaml
+    InquiryFileDto:
+      $ref: ./components/schemas/get-file-storage-ids/InquiryFileDto.yaml
+    GenericResponseSimpleErrorDataUniSignDto:
+      $ref: ./components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignDto.yaml
+    UniCertificateDto:
+      $ref: ./components/schemas/generate-sign-data/UniCertificateDto.yaml
+    UniSignDocumentDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDocumentDto.yaml
+    UniSignDto:
+      $ref: ./components/schemas/generate-sign-data/UniSignDto.yaml
+    Digest:
+      $ref: ./components/schemas/generate-digest/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/generate-digest/GenericResponseSimpleErrorDataDigest.yaml
+    DigestRequest:
+      $ref: ./components/schemas/generate-digest/DigestRequest.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    SingleCommandInquiryRequestClientApiRequestDto:
+      $ref: ./components/schemas/calc-paid/SingleCommandInquiryRequestClientApiRequestDto.yaml
+    GenericResponseSimpleErrorDataCommissionInfoResponseDto:
+      $ref: ./components/schemas/calc-paid/GenericResponseSimpleErrorDataCommissionInfoResponseDto.yaml
+    GenericResponseSimpleErrorDataInquiryAccessMatrixDto:
+      $ref: ./components/schemas/access-matrix/GenericResponseSimpleErrorDataInquiryAccessMatrixDto.yaml
+    InquiryAccessMatrixDto:
+      $ref: ./components/schemas/access-matrix/InquiryAccessMatrixDto.yaml
+    InquiryTypePermissionInfoDto:
+      $ref: ./components/schemas/access-matrix/InquiryTypePermissionInfoDto.yaml
+    GenericCommandTariffDto:
+      $ref: ./components/schemas/v2/GenericCommandTariffDto.yaml
+    TariffDto:
+      $ref: ./components/schemas/v2/TariffDto.yaml
+    F1ReferenceRate:
+      $ref: ./components/schemas/v2/F1ReferenceRate.yaml
+    F1SummaryReferenceRate:
+      $ref: ./components/schemas/v2/F1SummaryReferenceRate.yaml
+    GenericResponseSimpleErrorDataTariffInfoDto:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataTariffInfoDto.yaml
+    TariffInfoDto:
+      $ref: ./components/schemas/v2/TariffInfoDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/v2/FilterValueDtoString.yaml
+    GetPageCommandInquiryCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/GetPageCommandInquiryCommissionAccountsClientFilter.yaml
+    InquiryCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/InquiryCommissionAccountsClientFilter.yaml
+    PageParamsInquiryCommissionAccountsClientFilter:
+      $ref: ./components/schemas/v2/PageParamsInquiryCommissionAccountsClientFilter.yaml
+    CommissionAccountScrollerDto:
+      $ref: ./components/schemas/v2/CommissionAccountScrollerDto.yaml
+    PageDataCommissionAccountScrollerDto:
+      $ref: ./components/schemas/v2/PageDataCommissionAccountScrollerDto.yaml
+    F1CommissionAccountInfo:
+      $ref: ./components/schemas/{requestId}/F1CommissionAccountInfo.yaml
+    GenericResponseSimpleErrorDataInquiryCheckFormingResponseDto:
+      $ref: ./components/schemas/{requestId}/GenericResponseSimpleErrorDataInquiryCheckFormingResponseDto.yaml
+    InquiryCheckFormingResponseDto:
+      $ref: ./components/schemas/{requestId}/InquiryCheckFormingResponseDto.yaml
+    AccountInfoV2:
+      $ref: ./components/schemas/v2/AccountInfoV2.yaml
+    ClientAccountsDtoV2:
+      $ref: ./components/schemas/v2/ClientAccountsDtoV2.yaml
+    F1AccountStatusDto:
+      $ref: ./components/schemas/v2/F1AccountStatusDto.yaml
+    GenericResponseSimpleErrorDataClientAccountsDtoV2:
+      $ref: ./components/schemas/v2/GenericResponseSimpleErrorDataClientAccountsDtoV2.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

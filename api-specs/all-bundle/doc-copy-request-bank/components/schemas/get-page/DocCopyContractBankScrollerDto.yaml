@@ -1,0 +1,36 @@
+type: object
+properties:
+  f1AccountId:
+    type: integer
+    description: Идентификатор счета в Ф1 по которому запрашивается справка.
+    format: int64
+  accountId:
+    type: string
+    description: Составной идентификатор счета
+  accountNumber:
+    type: string
+    description: Номер счета по которому запрашивается справка
+  accountBranchCode:
+    type: string
+    description: Код филиала для счета клиента (филиал баланса)
+  currencyCode:
+    type: string
+    description: Код валюты счета по которому запрашивается документ
+  accountName:
+    type: string
+    description: Название счета по которому запрашивается справка
+  docType:
+    type: string
+    description: Тип докумета
+    enum:
+    - KOPOP
+    - AKZEPT
+    - DBS
+  documentNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+description: Сведения о договорных документах по которым запрашивается справка

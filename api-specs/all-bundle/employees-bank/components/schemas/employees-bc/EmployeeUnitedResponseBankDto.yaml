@@ -1,0 +1,106 @@
+required:
+- authorizedPerson
+- bankClientId
+- deleted
+- fio
+- fired
+- relationship
+- shouldChangeContacts
+type: object
+properties:
+  relationship:
+    type: string
+    description: Отношение записи к источникам ее хранения
+    enum:
+    - G1_ECO_AND_ESK
+    - G2_ONLY_ESK
+    - G3_ONLY_ECO
+  fio:
+    type: string
+    description: ФИО сотрудника
+  phoneNumber:
+    type: string
+    description: Номер телефона. Применяется маскирование.
+  email:
+    type: string
+    description: Электронная почта. Применяется маскирование.
+  birthDate:
+    type: string
+    description: Дата рождения
+    format: date
+  identityCardInfo:
+    type: string
+    description: Паспортные данные. Применяется маскирование.
+  authorizedPerson:
+    type: boolean
+    description: Признак "УЛ по ГПБ БОЛ"
+  position:
+    type: string
+    description: Должность
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  emplEskSyncedAt:
+    type: string
+    description: Сотрудник. Дата и время последней синхронизации с ЕСК
+    format: date-time
+  sourceOfUpdate:
+    type: string
+    description: Источник обновления ИО Клиент
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  emplId:
+    type: string
+    description: Ссылка на сущность "Сотрудники клиента"
+    format: uuid
+  userUaaId:
+    type: string
+    description: Ссылка на сущность "Клиентский пользователь"
+    format: uuid
+  blockedAt:
+    type: string
+    description: Дата и время блокировки
+    format: date-time
+  fired:
+    type: boolean
+    description: Признак, что сотрудник уволен
+  firedAt:
+    type: string
+    description: Дата, когда сотрудник был уволен
+    format: date-time
+  deleted:
+    type: boolean
+    description: Признак, что сотрудник удалён
+  deletedAt:
+    type: string
+    description: Дата, когда сотрудник был удалён
+    format: date-time
+  interactionPerson:
+    type: boolean
+    description: Является взаимодействующим лицом
+  clientRepresentative:
+    type: boolean
+    description: Является представителем клиента
+  eio:
+    type: boolean
+    description: Является ЕИО
+  shouldChangeContacts:
+    type: boolean
+    description: Признак отображения плашки требования смены контактных данных
+  selfRequestInfos:
+    type: array
+    description: Краткое описание списка заявок на создание нового или обновление текущего
+    items:
+      $ref: ./SelfRequestInfoDto.yaml
+  updateRequestInfo:
+    $ref: ./UpdateRequestInfoDto.yaml
+  changeRequirementInfo:
+    $ref: ./ChangeRequirementInfoDto.yaml
+  warranties:
+    type: array
+    description: Краткое описание списка доверенностей сотрудника организации
+    items:
+      $ref: ./EmployeeWarrantyInfoDto.yaml
+description: Сотрудник организации.Банк

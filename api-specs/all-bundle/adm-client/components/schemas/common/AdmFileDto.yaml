@@ -1,0 +1,10 @@
+type: object
+properties:
+  accessToken:
+    type: string
+    description: Токен доступа к файлу на внешнем файловом перекладчике
+  storageId:
+    type: string
+    description: Идентификатор файла на файловом перекладчике
+    format: uuid
+description: Файл вложения на файловом перекладчике

@@ -1,0 +1,49 @@
+type: object
+description: Фильтр скроллера истории операций версия 3.
+properties:
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+    description: Ссылка на сущность "Клиент Банка" (eq)
+  merchantId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификаторы ТСП в АС СБП (merchantId) (eq)
+  dateTime:
+    $ref: ../common/FilterValueDtoInstant.yaml
+    description: Дата время (ge, le)
+  status:
+    $ref: ./SbpTransactionStatusFilter.yaml
+    description: Статус (eq)
+  operationType:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: 'Тип операции: INCOMING_PAY, RETURN, TRANSFER (eq)'
+  contractor:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Контрагент (contains)
+  phoneNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Телефон контрагента (eq)
+  account:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Номер счета клиента банка (eq)
+  amount:
+    $ref: ../common/FilterValueDtoLong.yaml
+    description: Сумма операции в копейках (ge, le)
+  transactionId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор транзакции (eq)
+  qrcId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор QR-кода (eq)
+  contractorBankId:
+    $ref: ../common/FilterValueDtoString.yaml
+    description: Идентификатор банка контрагента (eq)
+  b2cType:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+    description: 'Тип контрагента: B2C (физическое) или B2B (юридическое) лицо (eq)'
+  date:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+required:
+- clientId
+- dateTime

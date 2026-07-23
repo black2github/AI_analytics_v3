@@ -1,0 +1,16 @@
+type: object
+required:
+- accountNumber
+description: Ответ к запросу на получение числа действующих карт
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета клиента
+  countCCard:
+    type: integer
+    format: int32
+    description: Количество корпоративных карт
+  errorInfo:
+    $ref: ./WebGateErrorDto.yaml
+    type: object
+    description: Текст технической ошибки

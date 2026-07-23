@@ -1,0 +1,7 @@
+type: object
+properties:
+  data:
+    $ref: ./BusinessCardAccountOperationRequestDto.yaml
+  paging:
+    $ref: ./Paging.yaml
+description: Данные запроса для получения списка операций по карточному счёту

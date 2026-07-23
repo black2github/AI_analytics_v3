@@ -1,0 +1,43 @@
+required:
+- code
+type: object
+properties:
+  code:
+    type: string
+    description: Код сервиса
+  label:
+    type: string
+    description: Лейбл сервиса
+  icon:
+    type: string
+    description: Иконка сервиса
+  smsStatus:
+    type: string
+    description: Статусы SMS-уведомлений
+    enum:
+    - 'ON'
+    - 'OFF'
+    - FORBIDDEN
+  selectionMode:
+    type: string
+    description: Режимы настройки событий СФЗУ в разрезе счетов
+    enum:
+    - ALL
+    - SELECTED
+  byAccounts:
+    type: boolean
+    description: Признак наличия настроек по счетам
+  commonEvents:
+    type: array
+    description: Общие события для сервиса
+    items:
+      $ref: ./EventSettingsDto.yaml
+  accountEvents:
+    type: object
+    additionalProperties:
+      type: array
+      description: Настройки событий по каждому счёту
+      items:
+        $ref: ./EventSettingsDto.yaml
+    description: Настройки событий по каждому счёту
+description: Настройки событий СФЗУ в разрезе сервисов

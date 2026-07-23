@@ -1,0 +1,32 @@
+type: object
+description: Реквизиты QR-кода
+properties:
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа
+  merchantName:
+    type: string
+    description: Наименование ТСП
+  account:
+    type: string
+    description: Счет
+  merchantAddress:
+    type: string
+    description: Адрес ТСП
+  merchantId:
+    type: string
+    description: Идентификатор ТСП
+  paymentPurpose:
+    type: string
+    description: Дополнительные информация от ТСП
+  ecoAccountId:
+    type: string
+    format: uuid
+    description: ID счета в ЭКО
+required:
+- account
+- amount
+- merchantAddress
+- merchantId
+- merchantName

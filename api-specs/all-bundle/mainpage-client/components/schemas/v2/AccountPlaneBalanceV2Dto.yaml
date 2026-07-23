@@ -1,0 +1,13 @@
+type: object
+properties:
+  f1Id:
+    type: integer
+    description: Идентификатор счета Ф1
+    format: int64
+  planeBalance:
+    type: number
+    description: Плановый остаток
+  currentOverdraft:
+    type: number
+    description: Лимит овердрафта
+description: Данные о плановом остатке по счету

@@ -1,0 +1,8 @@
+type: object
+properties:
+  roleTemplateId:
+    type: string
+    format: uuid
+  bankClientId:
+    type: string
+    format: uuid

@@ -1,0 +1,120 @@
+type: object
+description: Qr-код для клиента с блоком данных о доступных пользователю действиях
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор записи QR-кода.
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер QR-кода.
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата создания
+  expiresAt:
+    type: string
+    format: date-time
+    description: Дата окончания действия
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR кода в СБП
+  requestId:
+    type: string
+    format: uuid
+    description: Ссылка на заявку
+  payload:
+    type: string
+    description: Payload зарегистрированного QR кода в СБП
+  statusQr:
+    type: string
+    description: Текущий статус QR-кода в АС СБП.
+  status:
+    type: string
+    description: Текущий статус QR-кода.
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  subscriptionStatus:
+    type: string
+    description: Статус подписки
+    enum:
+    - NONE
+    - AWAITING
+    - SUBSCRIBED
+    - UNSUBSCRIBED
+    - BLOCKED
+  userId:
+    type: string
+    format: uuid
+    description: Пользователь, создавший QR-код (Идентификатор пользователя в экосистеме).
+  userName:
+    type: string
+    description: Пользователь, создавший QR-код (ФИО).
+  payersEmail:
+    type: string
+    description: Адрес электронной почты Плательщика.
+  bankClient:
+    $ref: ../common/SbpQrcBankClientDto.yaml
+    description: Реквизиты клиента по заявке
+  data:
+    $ref: ../common/SbpClientQrcDataV2Dto.yaml
+    description: Реквизиты QR-кода
+  subscriptionData:
+    $ref: ./SbpQrcSubscriptionDataDto.yaml
+    description: Реквизиты подписки по QR-коду
+  b2bData:
+    $ref: ../common/SbpQrcB2bDataDto.yaml
+    description: Реквизиты QR-кода для B2B
+  imageName:
+    type: string
+    description: Имя файла изображения кода
+  clientRequest:
+    type: boolean
+    description: Признак создания заявки клиентом банка
+  b2bPayer:
+    type: boolean
+    description: Признак того, что плательщик - юридическое лицо
+  sideServiceData:
+    $ref: ../common/SbpQrcSideServiceDataDto.yaml
+    description: Реквизиты сервиса инициатора заявки
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  callbackMerchantNotifications:
+    type: string
+    description: Адрес получения колбэка о финальном статусе QR-кода
+  additionalData:
+    type: array
+    description: Распределенные платежи
+    items:
+      $ref: ./SbpQrcAdditionalDataDto.yaml
+  transactionData:
+    $ref: ./SbpQrcTransactionDataDto.yaml
+    description: Реквизиты оплаты, получаемые в процессе оплаты Qr-кода
+  availableOperations:
+    $ref: ./SbpQrcAvailableOperationsDto.yaml
+    description: Информация о доступных пользователю действиях
+  paymentServices:
+    type: array
+    description: Платежные сервисы
+    items:
+      $ref: ../common/SbpPaymentServiceDto.yaml
+required:
+- bankClient
+- createdAt
+- data
+- docNumber
+- id
+- payload
+- qrcId
+- requestId
+- status
+- subscriptionStatus

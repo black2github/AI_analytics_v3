@@ -1,0 +1,7 @@
+type: object
+properties:
+  platforms:
+    type: array
+    items:
+      $ref: ./RefContractRestByPlatformDto.yaml
+description: Данные

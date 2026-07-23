@@ -1,0 +1,19 @@
+type: object
+properties:
+  paymentAmount:
+    pattern: ^\d{0,16}(\.\d{0,2})?$
+    type: string
+    description: Сумма
+  paymentAmountIncludeVat:
+    type: string
+    description: Сумма платежа с учетом НДС
+  vatCalculationMethod:
+    $ref: ./VatCalculationTypeDto.yaml
+  vatAmount:
+    type: string
+    description: Сумма НДС
+  vatPercentRate:
+    type: integer
+    description: Ставка НДС в процентах
+    format: int32
+description: Сумма платежа и НДС, заполняемые клиентом

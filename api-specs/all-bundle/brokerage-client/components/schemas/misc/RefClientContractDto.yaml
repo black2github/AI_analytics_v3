@@ -1,0 +1,12 @@
+type: object
+properties:
+  contractId:
+    type: string
+    format: uuid
+  contractNumber:
+    type: string
+  contractDate:
+    type: string
+    format: date
+  contractTitle:
+    type: string

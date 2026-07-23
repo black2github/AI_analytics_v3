@@ -1,0 +1,29 @@
+required:
+- clientId
+- status
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  status:
+    type: string
+    description: Статус подключения
+    enum:
+    - SUBSCRIBED
+    - NOT_SUBSCRIBED
+    - IN_PROGRESS
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  phonesCount:
+    type: integer
+    description: Количество номеров
+    format: int32
+  employeesCount:
+    type: integer
+    description: Количество сотрудников
+    format: int32
+description: Параметры подключения СМС-информирования клиента

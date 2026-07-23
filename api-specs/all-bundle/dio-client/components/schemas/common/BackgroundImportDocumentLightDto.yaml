@@ -1,0 +1,32 @@
+type: object
+properties:
+  position:
+    type: integer
+    description: Позиция
+    format: int32
+  docNumber:
+    type: string
+    description: Номер документа
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  documentStatus:
+    type: string
+    description: Статус подготовки импорта
+    enum:
+    - NONE
+    - IMPORTED_ERROR
+    - IMPORTED_CORRECT
+    - IMPORTED_WARNING
+    - IMPORTED_ACCESS_ERROR
+    - IMPORTED_FLK_ERROR
+  errorMessage:
+    type: string
+    description: Ошибки импорта
+  flkErrors:
+    type: array
+    description: Ошибки контроля ФЛК
+    items:
+      $ref: ./FlkErrorDto.yaml
+description: Легковесное дто документа сеанса импорта

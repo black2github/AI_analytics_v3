@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ../common/OnboardingRequestReExportDto.yaml
+description: Запрос

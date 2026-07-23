@@ -1,0 +1,10 @@
+type: object
+properties:
+  balance:
+    type: string
+    description: Тип баланса
+    enum:
+    - PLANE
+    - CURRENT
+    - ALL
+description: Тип баланса

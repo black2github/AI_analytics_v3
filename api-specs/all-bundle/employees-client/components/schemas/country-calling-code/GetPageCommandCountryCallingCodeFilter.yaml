@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsCountryCallingCodeFilter.yaml
+description: Запрос страницы

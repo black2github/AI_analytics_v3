@@ -1,0 +1,68 @@
+type: object
+properties:
+  localId:
+    type: string
+  cardTypeId:
+    type: string
+    format: uuid
+  cardId:
+    type: string
+    format: uuid
+  typeId:
+    type: string
+    format: uuid
+  statusId:
+    type: string
+    format: uuid
+    deprecated: true
+  statusName:
+    type: string
+    deprecated: true
+  filename:
+    type: string
+  firstUpload:
+    type: boolean
+  date:
+    type: string
+    format: date-time
+  scanDateTime:
+    type: string
+    format: date-time
+  scanUser:
+    type: string
+  sheetCount:
+    type: integer
+    format: int32
+  skipSheetCount:
+    type: boolean
+  sourceService:
+    type: string
+    enum:
+    - VISITING_MANAGER
+  number:
+    type: string
+  fileId:
+    type: string
+    format: uuid
+  submissionFormId:
+    type: string
+    format: uuid
+  submissionFormName:
+    type: string
+  fileSignatureUploaded:
+    type: boolean
+  fileSignatureId:
+    type: string
+    format: uuid
+  additionalDocInfo:
+    $ref: ./AdditionalDocInfo.yaml
+  currencyControlSection:
+    $ref: ./CurrencyControlSection.yaml
+  attachmentList:
+    type: array
+    items:
+      $ref: ./Attachment.yaml
+  closingAccountAdditionalDocInfo:
+    $ref: ./ClosingAccountAdditionalDocInfo.yaml
+  docCopySection:
+    $ref: ./DocCopySection.yaml

@@ -1,0 +1,21 @@
+get:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Скачать спецификацию
+  description: 'Привилегии: OPEN_API_SPEC_VIEW'
+  operationId: download
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: string
+            format: binary

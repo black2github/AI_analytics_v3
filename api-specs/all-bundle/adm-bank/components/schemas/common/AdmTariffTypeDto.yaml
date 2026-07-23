@@ -1,0 +1,5 @@
+type: string
+description: Тип тарифа
+enum:
+- PERCENT_AND_FIX
+- PERCENT_PLUS_FIX

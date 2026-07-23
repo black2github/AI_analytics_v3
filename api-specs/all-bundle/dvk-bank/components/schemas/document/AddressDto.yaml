@@ -1,0 +1,30 @@
+type: object
+properties:
+  rfSubject:
+    type: string
+    description: Субъект РФ
+  area:
+    type: string
+    description: Район
+  city:
+    type: string
+    description: Город
+  settlement:
+    type: string
+    description: Населенный пункт
+  street:
+    type: string
+    description: Улица (проспект, переулок)
+  houseNumber:
+    type: string
+    description: Номер дома (владение)
+  houseExt:
+    type: string
+    description: Корпус (строение)
+  unit:
+    type: string
+    description: Единица адресации(офис/квартира)
+  unitNumber:
+    type: string
+    description: Номер офиса/квартиры
+description: Информация об адресе

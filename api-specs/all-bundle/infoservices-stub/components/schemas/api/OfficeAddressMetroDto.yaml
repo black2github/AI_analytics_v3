@@ -1,0 +1,10 @@
+type: object
+properties:
+  distance:
+    type: string
+  icon:
+    $ref: ./OfficeAddressMetroIconDto.yaml
+  line:
+    $ref: ./OfficeAddressMetroLineDto.yaml
+  name:
+    type: string

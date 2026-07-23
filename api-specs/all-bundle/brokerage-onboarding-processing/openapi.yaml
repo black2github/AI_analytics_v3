@@ -1,0 +1,20 @@
+openapi: 3.1.0
+info:
+  title: БРК. Onboarding. Processing.
+  version: 3.0.0
+servers:
+- url: /brokerage-onboarding-processing
+security:
+- bearer-key: []
+paths:
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+components:
+  schemas:
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+  securitySchemes:
+    bearer-key:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

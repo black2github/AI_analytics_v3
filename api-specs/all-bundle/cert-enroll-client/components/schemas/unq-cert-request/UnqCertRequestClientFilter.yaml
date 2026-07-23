@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  status:
+    $ref: ./UnqCertRequestStatusFilter.yaml
+  type:
+    $ref: ./CsrDataFormatFilter.yaml
+  date:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  orgName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  fio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOfficialDstId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  requestNumberUser:
+    $ref: ../common/FilterValueDtoLong.yaml
+  activeRequest:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр для клиентского скроллера

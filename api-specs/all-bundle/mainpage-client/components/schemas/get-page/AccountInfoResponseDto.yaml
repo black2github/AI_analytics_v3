@@ -1,0 +1,13 @@
+type: object
+properties:
+  total:
+    type: array
+    description: Список совокупных остатков и оборотов по разным валютам
+    items:
+      $ref: ./CurrencyTotalDto.yaml
+  accounts:
+    type: array
+    description: Группы счетов, содержащие совокупные остатки и обороты по этим счетам
+    items:
+      $ref: ./AccountGroupDto.yaml
+description: Информация об остатках и оборотах

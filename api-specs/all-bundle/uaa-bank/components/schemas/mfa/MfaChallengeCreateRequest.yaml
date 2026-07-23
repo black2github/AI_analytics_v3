@@ -1,0 +1,16 @@
+type: object
+properties:
+  token:
+    type: string
+    description: ID процесса аутентификации
+    format: uuid
+  userId:
+    type: string
+    description: ID пользователя
+    format: uuid
+  otpChannel:
+    type: string
+    enum:
+    - SMS
+    - EMAIL
+description: ДТО запроса на создание проверки многофакторной аутентификации

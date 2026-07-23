@@ -1,0 +1,22 @@
+type: object
+description: DTO запроса на многофайловую выгрузку массовой рассылки
+properties:
+  fields:
+    type: array
+    description: Поля в выгрузке; если не указаны, то выгружаются все поля
+    items:
+      type: string
+  filter:
+    $ref: ./MassDocumentScrollerFilter.yaml
+    description: Фильтр скроллера массовой рассылки
+  multiSort:
+    type: array
+    description: Сортировка скроллера массовой рассылки по нескольким полям
+    items:
+      $ref: ../common/Sort.yaml
+  sort:
+    $ref: ../common/Sort.yaml
+    description: Сортировка скроллера массовой рассылки
+  state:
+    $ref: ../common/MultipartScrollerExportStateDto.yaml
+    description: Объект-состояние, который был получен от сервера в результате предыдущего запроса. Если это первый запрос, то нужно передать null. Если это не первый запрос, то необходимо передать значение, взятое из ответа сервера.

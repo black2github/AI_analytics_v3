@@ -1,0 +1,58 @@
+get:
+  tags:
+  - Справочник ОКФС
+  summary: Получить по идентификатору
+  description: 'Привилегии: hasAuthority(''OKFS_GET_BY_ID'')'
+  operationId: getByIdUsingGET_7
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«OkfsDto»»'
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false
+delete:
+  tags:
+  - Справочник ОКФС
+  summary: Удалить запись
+  description: 'Привилегии: hasAuthority(''OKFS_DELETE'')'
+  operationId: deleteUsingDELETE_7
+  produces:
+  - '*/*'
+  parameters:
+  - name: id
+    in: path
+    description: id
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ActionResult«SingleResponse«OkfsDto»»'
+    '204':
+      description: No Content
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+  security:
+  - Bearer: []
+  deprecated: false

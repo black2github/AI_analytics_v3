@@ -1,0 +1,9 @@
+required:
+- roleTemplateId
+type: object
+properties:
+  roleTemplateId:
+    type: string
+    description: Идентификатор шаблона роли
+    format: uuid
+description: Данные шаблона роли

@@ -1,0 +1,33 @@
+post:
+  tags:
+  - API методы Админки
+  summary: Повторить заявку
+  description: 'Привилегии: ECO_PARTNER_CHECK_BANK.REPEAT_REQUEST'
+  operationId: repeatListRequestsUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: command
+    description: command
+    required: true
+    schema:
+      $ref: '#/definitions/GenericCommand«List«uuid»»'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,boolean»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

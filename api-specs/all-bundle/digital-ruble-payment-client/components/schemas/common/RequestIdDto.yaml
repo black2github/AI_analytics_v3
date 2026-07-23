@@ -1,0 +1,12 @@
+required:
+- requestId
+type: object
+properties:
+  requestId:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  timezone:
+    type: string
+    description: Часовой пояс
+description: DTO с идентификатором заявки.

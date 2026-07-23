@@ -1,0 +1,24 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  type:
+    $ref: ./FilterValueDtoRoleTemplateTypeDto.yaml
+  archival:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  displayPriority:
+    $ref: ./FilterValueDtoInteger.yaml
+  bankClientTextSearch:
+    type: string
+    description: Текстовый поиск клиента банка (Краткое наименование/ИНН/КПП)
+  creatorTextSearch:
+    type: string
+    description: Текстовый поиск автора (Фамилия/Имя/Отчество)
+  visibility:
+    type: boolean
+    description: Видимость
+description: Фильтр поиска шаблонов ролей

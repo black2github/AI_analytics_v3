@@ -1,0 +1,52 @@
+required:
+- comment
+- documentId
+- sendAbility
+- signAbility
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор
+    format: uuid
+  signAbility:
+    type: string
+    description: Возможность подписать
+    enum:
+    - SIGN_ALLOWED
+    - UNABLE_TO_SIGN_WITH_STATUS
+    - LEVEL_SIGNED
+    - LEVEL_SIGN_NOT_REQUIRED
+    - SIGN_RESTRICTED
+    - NO_CERTIFICATE
+  comment:
+    type: string
+    description: Комментарий
+  signatureLevel:
+    type: string
+    description: Уровень подписи
+    enum:
+    - SINGLE
+    - LEVEL_1
+    - LEVEL_2
+  digest:
+    type: string
+    description: Дайджест подписи
+  ssdVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  sendAbility:
+    type: string
+    description: Возможность отправить
+    enum:
+    - READY_TO_SEND
+    - CAN_BE_SENT
+    - UNABLE_TO_SEND
+  signError:
+    type: string
+    description: Ошибка подписи
+  sendError:
+    type: string
+    description: Ошибка отправки
+description: Детальная информация о подписываемом документе

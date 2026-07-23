@@ -1,0 +1,22 @@
+type: object
+properties:
+  simpleSign:
+    type: boolean
+    description: Признак что подпись создана СЭП с видом ПЭП
+  fio:
+    type: string
+    description: ФИО подписанта
+  orgName:
+    type: string
+    description: Название организации
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  validTo:
+    type: string
+    description: Дата до которой считать сертификат действительным
+    format: date-time
+  issuer:
+    type: string
+    description: Издатель сертификата
+description: Краткая информация из подписи

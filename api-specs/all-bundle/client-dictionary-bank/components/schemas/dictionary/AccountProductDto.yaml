@@ -1,0 +1,43 @@
+type: object
+properties:
+  contractId:
+    type: integer
+    description: Идентификатор договора
+    format: int64
+  accountRole:
+    type: string
+    description: Отношение счета к продукту
+  productCode:
+    type: string
+    description: Код продукта
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractCreateDate:
+    type: string
+    description: Дата создания договора
+    format: date
+  contractStartDate:
+    type: string
+    description: Дата начала действия договора
+    format: date
+  contractFinishDate:
+    type: string
+    description: Дата окончания действия договора
+    format: date
+  contractCloseDate:
+    type: string
+    description: Дата закрытия договора
+    format: date
+  contractStatusCode:
+    type: string
+    description: Статус договора
+  createdAt:
+    type: string
+    description: Дата создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления
+    format: date-time
+description: Страница с данными

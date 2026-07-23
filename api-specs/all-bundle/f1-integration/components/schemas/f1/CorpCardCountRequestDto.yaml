@@ -1,0 +1,28 @@
+required:
+- accountsNumber
+- arrayOfStatus
+- clientGUID
+- source
+type: object
+properties:
+  clientGUID:
+    type: string
+    description: GUID клиента в ЕСК
+    format: uuid
+  accountsNumber:
+    type: array
+    description: Номера счетов клиента
+    items:
+      type: string
+      description: Номера счетов клиента
+  arrayOfStatus:
+    type: array
+    description: Номера счетов клиента
+    items:
+      $ref: ./CorpCardCountStatusFilterDto.yaml
+  source:
+    type: string
+    description: Тип заявки
+    enum:
+    - GetCountCCardAccount
+description: Запрос на получение числа действующих карт

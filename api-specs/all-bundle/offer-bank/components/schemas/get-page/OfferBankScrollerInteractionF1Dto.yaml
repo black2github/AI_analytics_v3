@@ -1,0 +1,10 @@
+type: object
+properties:
+  stageInteraction:
+    type: string
+    description: Стадия взаимодействия
+    enum:
+    - CREATE_DS_IN_RKO_F1
+    - UNLOAD_PF_OFFER_IN_RKO_F1
+    - CREATE_DOSSIER_IN_TESSA
+description: Взаимодействие с Ф1. Банковский скроллер.

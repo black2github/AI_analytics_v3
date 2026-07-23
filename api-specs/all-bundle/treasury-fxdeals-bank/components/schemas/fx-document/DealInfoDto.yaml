@@ -1,0 +1,33 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ИД сделки в ЭКО
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  askId:
+    type: integer
+    description: ИД сделки в АСК
+    format: int64
+  dealType:
+    type: string
+    description: Тип сделки
+  dealSubType:
+    type: string
+    description: Подтип сделки
+  docType:
+    type: string
+    description: Тип заявки
+  dealStatus:
+    type: string
+    description: Статус сделки
+  dealStatusDesc:
+    type: string
+    description: Статус сделки - описание
+  docStatus:
+    type: string
+    description: Статус заявки
+  docStatusDesc:
+    type: string
+    description: Статус заявки - описание
+description: Список сделок по данной метрике

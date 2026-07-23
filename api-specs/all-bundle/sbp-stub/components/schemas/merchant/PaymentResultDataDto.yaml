@@ -1,0 +1,12 @@
+type: object
+required:
+- code
+- message
+description: Данные СПБ на запрос о статусе QR кода
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа

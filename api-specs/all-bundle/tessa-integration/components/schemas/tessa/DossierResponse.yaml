@@ -1,0 +1,8 @@
+type: object
+properties:
+  tessaDossierId:
+    type: string
+    format: uuid
+  tessaClientId:
+    type: string
+    format: uuid

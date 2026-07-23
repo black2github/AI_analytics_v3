@@ -1,0 +1,35 @@
+required:
+- familyName
+- firstName
+- id
+- uaaId
+- userType
+type: object
+properties:
+  id:
+    type: string
+    description: ID пользователя
+    format: uuid
+  uaaId:
+    type: string
+    description: uaaID пользователя
+    format: uuid
+  familyName:
+    maxLength: 128
+    minLength: 0
+    type: string
+    description: Фамилия
+  firstName:
+    maxLength: 128
+    minLength: 0
+    type: string
+    description: Имя
+  middleName:
+    maxLength: 128
+    minLength: 0
+    type: string
+    description: Отчество
+  userType:
+    type: string
+    description: Тип пользователя
+description: Пользователь. Банковская часть.

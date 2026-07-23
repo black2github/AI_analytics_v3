@@ -1,0 +1,18 @@
+post:
+  tags:
+  - API данных сертификатов
+  summary: Получить страницу сертификатов
+  operationId: getPage
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/get-page/GetPageCommandCertFilterDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/get-page/PageDataCertDto.yaml

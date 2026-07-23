@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsDebtRequestHistoryBankFilter.yaml
+description: Запрос страницы

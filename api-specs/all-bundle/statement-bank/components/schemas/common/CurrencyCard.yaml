@@ -1,0 +1,6 @@
+type: object
+properties:
+  letterCode:
+    type: string
+  numericCode:
+    type: string

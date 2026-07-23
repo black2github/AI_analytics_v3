@@ -1,0 +1,15 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/svfe/SipSvfeCardBlockingRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+    '400':
+      description: Bad Request
+  summary: Block Card
+  tags:
+  - Sip Svfe Controller

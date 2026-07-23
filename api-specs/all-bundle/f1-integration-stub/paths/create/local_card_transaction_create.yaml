@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи о транзакции по локальной карте
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARD_DOCS_IRAO_ECO (Данные о транзакциях по локальной карте питания)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/LocalCardTransactionDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/LocalCardTransactionDto.yaml
+    '400':
+      description: Bad Request

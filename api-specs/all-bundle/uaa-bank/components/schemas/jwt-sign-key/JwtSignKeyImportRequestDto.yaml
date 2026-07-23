@@ -1,0 +1,18 @@
+required:
+- attachmentId
+- keySet
+type: object
+properties:
+  keySet:
+    type: string
+    enum:
+    - ECO
+    - OPENAPI
+  attachmentId:
+    type: string
+    description: Идентификатор вложения
+    format: uuid
+  filePassword:
+    type: string
+    description: Пароль файла хранилища ключей
+description: Запрос импорта ключа подписи JWT

@@ -1,0 +1,286 @@
+info:
+  version: 1.119.0
+  title: Сервис общих справочников. Банковская часть.
+tags:
+- name: API для справочника SWIFT-кодов (банковская сторона)
+  description: Swift Code Controller
+- name: API для справочника БИК
+  description: Bic Controller
+- name: API для справочника платёжных систем и категорий корпоративных карт
+  description: Payment System Controller
+- name: API для справочника типовых уставов
+  description: Model Regulation Controller
+- name: API получения рабочих дней.
+  description: Business Days Calendar Controller
+- name: API справочника "Вид платежа"
+  description: Payment Type Controller
+- name: API справочника "Виды валютных операций"
+  description: Currency Transaction Type Controller
+- name: API справочника "Виды дохода"
+  description: Income Type Controller
+- name: API справочника "Корреспондентские счета Банков РФ"
+  description: Correspondent Account Controller
+- name: API справочника "Очередность платежа"
+  description: Payment Order Controller
+- name: API справочника "Показатели налогового периода"
+  description: Tax Period Controller
+- name: API справочника "Показатели основания платежа"
+  description: Payment Basis Type Controller
+- name: API справочника "Показатель статуса налогоплательщика"
+  description: Tax Payer Status Controller
+- name: API справочника "Регион"
+  description: Region Controller
+- name: API справочника "Телефонные коды стран"
+  description: Country Calling Code Bank Controller
+- name: API справочника "Условия заполнения статуса налогоплательщика (поле 101)"
+  description: Tax Payer Status Validation Controller
+- name: API справочника ABAC. Работа со схемой.
+  description: Abac Schema Controller
+- name: API справочника КБК
+  description: Kbk Controller
+- name: API справочника ЭКО сервисов.
+  description: Eco Service Controller
+- name: Внутренний API переменных окружения пользователя
+  description: User Environment Controller
+- name: Интеграционное API справочника "Виды валютных операций"
+  description: Currency Transaction Type Integration Controller
+- name: Интеграционное API справочника "Виды дохода"
+  description: Income Type Integration Controller
+- name: Интеграционное API справочника "Виды платежа"
+  description: Payment Type Integration Controller
+- name: Интеграционное API справочника "Корреспондентские счета Банков РФ"
+  description: Correspondent Account Integration Controller
+- name: Интеграционное API справочника "Очередность платежа"
+  description: Payment Order Integration Controller
+- name: Интеграционное API справочника "Показатели налогового периода"
+  description: Tax Period Integration Controller
+- name: Интеграционное API справочника "Показатели основания платежа"
+  description: Payment Basis Type Integration Controller
+- name: Интеграционное API справочника "Показатели статуса налогоплательщика"
+  description: Tax Payer Status Integration Controller
+- name: Интеграционное API справочника БИК
+  description: Bic Integration Controller
+- name: Интеграционное API справочника КБК
+  description: Kbk Integration Controller
+- name: Интеграционное API справочника ОКОПФ
+  description: Okopf Integration Controller
+- name: Сервис подсказок
+  description: Suggestion Controller
+- name: Справочник ОКОПФ
+  description: Okopf Controller
+- name: Справочник ОКФС
+  description: Okfs Controller
+- name: Справочник Типы документов
+  description: Doc Type Controller
+- name: Справочник текстов ошибок
+  description: External System Message Controller
+paths:
+  /dictionary/common/currency-transaction-type/get-all-by-codes:
+    $ref: ./paths/common/dictionary_common_currency_transaction_type_get_all_by_codes.yaml
+  /dictionary/common/currency-transaction-type/get-page:
+    $ref: ./paths/common/dictionary_common_currency_transaction_type_get_page.yaml
+  /dictionary/common/income-type/get-page:
+    $ref: ./paths/common/dictionary_common_income_type_get_page.yaml
+  /dictionary/common/payment-basis-type/get-all-by-codes:
+    $ref: ./paths/common/dictionary_common_payment_basis_type_get_all_by_codes.yaml
+  /dictionary/common/payment-basis-type/get-page:
+    $ref: ./paths/common/dictionary_common_payment_basis_type_get_page.yaml
+  /dictionary/common/payment-order/get-all-by-codes:
+    $ref: ./paths/common/dictionary_common_payment_order_get_all_by_codes.yaml
+  /dictionary/common/payment-order/get-page:
+    $ref: ./paths/common/dictionary_common_payment_order_get_page.yaml
+  /dictionary/common/payment-type/get-all-by-codes:
+    $ref: ./paths/common/dictionary_common_payment_type_get_all_by_codes.yaml
+  /dictionary/common/payment-type/get-all-by-names:
+    $ref: ./paths/common/dictionary_common_payment_type_get_all_by_names.yaml
+  /dictionary/common/payment-type/get-page:
+    $ref: ./paths/common/dictionary_common_payment_type_get_page.yaml
+  /dictionary/common/region/by-name/{name}:
+    $ref: ./paths/common/dictionary_common_region_by_name_name.yaml
+  /dictionary/common/region/get-page:
+    $ref: ./paths/common/dictionary_common_region_get_page.yaml
+  /dictionary/common/region/{code}:
+    $ref: ./paths/common/dictionary_common_region_code.yaml
+  /dictionary/common/tax-payer-status-validation/get-page:
+    $ref: ./paths/common/dictionary_common_tax_payer_status_validation_get_page.yaml
+  /dictionary/common/tax-payer-status/get-all-by-codes:
+    $ref: ./paths/common/dictionary_common_tax_payer_status_get_all_by_codes.yaml
+  /dictionary/common/tax-payer-status/get-page:
+    $ref: ./paths/common/dictionary_common_tax_payer_status_get_page.yaml
+  /dictionary/common/tax-period/get-page:
+    $ref: ./paths/common/dictionary_common_tax_period_get_page.yaml
+  /integration/bic/code/{code}:
+    $ref: ./paths/bic/integration_bic_code_code.yaml
+  /integration/bic/get-all-by-codes:
+    $ref: ./paths/bic/integration_bic_get_all_by_codes.yaml
+  /integration/corr-account/get-all-by-bic-codes:
+    $ref: ./paths/corr-account/integration_corr_account_get_all_by_bic_codes.yaml
+  /integration/country-calling-code/get-page:
+    $ref: ./paths/country-calling-code/integration_country_calling_code_get_page.yaml
+  /integration/country-calling-code/is-foreign-phone-number:
+    $ref: ./paths/country-calling-code/integration_country_calling_code_is_foreign_phone_number.yaml
+  /integration/country-calling-code/phone-mask:
+    $ref: ./paths/country-calling-code/integration_country_calling_code_phone_mask.yaml
+  /integration/currency-transaction-type/get-all-by-codes:
+    $ref: ./paths/currency-transaction-type/integration_currency_transaction_type_get_all_by_codes.yaml
+  /integration/income-type/code/{code}:
+    $ref: ./paths/income-type/integration_income_type_code_code.yaml
+  /integration/kbk/code/{code}:
+    $ref: ./paths/kbk/integration_kbk_code_code.yaml
+  /integration/kbk/get-all-by-codes:
+    $ref: ./paths/kbk/integration_kbk_get_all_by_codes.yaml
+  /integration/okopf/code/{code}:
+    $ref: ./paths/okopf/integration_okopf_code_code.yaml
+  /integration/okopf/get-slice:
+    $ref: ./paths/okopf/integration_okopf_get_slice.yaml
+  /integration/payment-basis-type/get-all-by-codes:
+    $ref: ./paths/payment-basis-type/integration_payment_basis_type_get_all_by_codes.yaml
+  /integration/payment-order/get-all-by-codes:
+    $ref: ./paths/payment-order/integration_payment_order_get_all_by_codes.yaml
+  /integration/payment-type/get-all-by-codes:
+    $ref: ./paths/payment-type/integration_payment_type_get_all_by_codes.yaml
+  /integration/payment-type/get-all-by-names:
+    $ref: ./paths/payment-type/integration_payment_type_get_all_by_names.yaml
+  /integration/tax-payer-status/get-all-by-codes:
+    $ref: ./paths/tax-payer-status/integration_tax_payer_status_get_all_by_codes.yaml
+  /integration/tax-period/code/{code}:
+    $ref: ./paths/tax-period/integration_tax_period_code_code.yaml
+  /internal/dictionary/common/abac/schema/find-full-schemas:
+    $ref: ./paths/dictionary/internal_dictionary_common_abac_schema_find_full_schemas.yaml
+  /internal/dictionary/common/abac/schema/find-requisites:
+    $ref: ./paths/dictionary/internal_dictionary_common_abac_schema_find_requisites.yaml
+  /internal/dictionary/common/abac/schema/find-schema:
+    $ref: ./paths/dictionary/internal_dictionary_common_abac_schema_find_schema.yaml
+  /internal/dictionary/common/abac/schema/get-schema:
+    $ref: ./paths/dictionary/internal_dictionary_common_abac_schema_get_schema.yaml
+  /internal/dictionary/common/bic:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic.yaml
+  /internal/dictionary/common/bic/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic_code_code.yaml
+  /internal/dictionary/common/bic/get-all-by-codes:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic_get_all_by_codes.yaml
+  /internal/dictionary/common/bic/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic_get_page.yaml
+  /internal/dictionary/common/bic/service/update:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic_service_update.yaml
+  /internal/dictionary/common/bic/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_bic_id.yaml
+  /internal/dictionary/common/calendar/near-business-day:
+    $ref: ./paths/dictionary/internal_dictionary_common_calendar_near_business_day.yaml
+  /internal/dictionary/common/corr-account:
+    $ref: ./paths/dictionary/internal_dictionary_common_corr_account.yaml
+  /internal/dictionary/common/corr-account/get-all-by-bic-codes:
+    $ref: ./paths/dictionary/internal_dictionary_common_corr_account_get_all_by_bic_codes.yaml
+  /internal/dictionary/common/corr-account/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_corr_account_get_page.yaml
+  /internal/dictionary/common/corr-account/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_corr_account_id.yaml
+  /internal/dictionary/common/country-calling-code:
+    $ref: ./paths/dictionary/internal_dictionary_common_country_calling_code.yaml
+  /internal/dictionary/common/country-calling-code/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_country_calling_code_get_page.yaml
+  /internal/dictionary/common/country-calling-code/phone-mask:
+    $ref: ./paths/dictionary/internal_dictionary_common_country_calling_code_phone_mask.yaml
+  /internal/dictionary/common/country-calling-code/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_country_calling_code_id.yaml
+  /internal/dictionary/common/doc-type:
+    $ref: ./paths/dictionary/internal_dictionary_common_doc_type.yaml
+  /internal/dictionary/common/doc-type/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_doc_type_code_code.yaml
+  /internal/dictionary/common/doc-type/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_doc_type_get_page.yaml
+  /internal/dictionary/common/doc-type/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_doc_type_id.yaml
+  /internal/dictionary/common/eco-service/get-all:
+    $ref: ./paths/dictionary/internal_dictionary_common_eco_service_get_all.yaml
+  /internal/dictionary/common/eco-service/get-ready:
+    $ref: ./paths/dictionary/internal_dictionary_common_eco_service_get_ready.yaml
+  /internal/dictionary/common/env/available:
+    $ref: ./paths/dictionary/internal_dictionary_common_env_available.yaml
+  /internal/dictionary/common/env/bank-user/available:
+    $ref: ./paths/dictionary/internal_dictionary_common_env_bank_user_available.yaml
+  /internal/dictionary/common/env/bank-user/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_env_bank_user_id.yaml
+  /internal/dictionary/common/env/client-user/available:
+    $ref: ./paths/dictionary/internal_dictionary_common_env_client_user_available.yaml
+  /internal/dictionary/common/env/client-user/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_env_client_user_id.yaml
+  /internal/dictionary/common/kbk:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk.yaml
+  /internal/dictionary/common/kbk/all:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_all.yaml
+  /internal/dictionary/common/kbk/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_code_code.yaml
+  /internal/dictionary/common/kbk/get-all-by-codes:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_get_all_by_codes.yaml
+  /internal/dictionary/common/kbk/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_get_page.yaml
+  /internal/dictionary/common/kbk/import-file:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_import_file.yaml
+  /internal/dictionary/common/kbk/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_kbk_id.yaml
+  /internal/dictionary/common/model-regulation:
+    $ref: ./paths/dictionary/internal_dictionary_common_model_regulation.yaml
+  /internal/dictionary/common/model-regulation/active-by-number/{number}:
+    $ref: ./paths/dictionary/internal_dictionary_common_model_regulation_active_by_number_number.yaml
+  /internal/dictionary/common/model-regulation/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_model_regulation_get_page.yaml
+  /internal/dictionary/common/model-regulation/get/active:
+    $ref: ./paths/dictionary/internal_dictionary_common_model_regulation_get_active.yaml
+  /internal/dictionary/common/model-regulation/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_model_regulation_id.yaml
+  /internal/dictionary/common/okfs:
+    $ref: ./paths/dictionary/internal_dictionary_common_okfs.yaml
+  /internal/dictionary/common/okfs/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_okfs_code_code.yaml
+  /internal/dictionary/common/okfs/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_okfs_get_page.yaml
+  /internal/dictionary/common/okfs/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_okfs_id.yaml
+  /internal/dictionary/common/okopf:
+    $ref: ./paths/dictionary/internal_dictionary_common_okopf.yaml
+  /internal/dictionary/common/okopf/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_okopf_code_code.yaml
+  /internal/dictionary/common/okopf/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_okopf_get_page.yaml
+  /internal/dictionary/common/okopf/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_okopf_id.yaml
+  /internal/dictionary/common/payment-system:
+    $ref: ./paths/dictionary/internal_dictionary_common_payment_system.yaml
+  /internal/dictionary/common/payment-system/code/{code}:
+    $ref: ./paths/dictionary/internal_dictionary_common_payment_system_code_code.yaml
+  /internal/dictionary/common/payment-system/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_payment_system_get_page.yaml
+  /internal/dictionary/common/payment-system/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_common_payment_system_id.yaml
+  /internal/dictionary/common/swift/export:
+    $ref: ./paths/dictionary/internal_dictionary_common_swift_export.yaml
+  /internal/dictionary/common/swift/get-attribute-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_swift_get_attribute_page.yaml
+  /internal/dictionary/common/swift/get-list-by-swift:
+    $ref: ./paths/dictionary/internal_dictionary_common_swift_get_list_by_swift.yaml
+  /internal/dictionary/common/swift/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_common_swift_get_page.yaml
+  /internal/dictionary/common/swift/sync:
+    $ref: ./paths/dictionary/internal_dictionary_common_swift_sync.yaml
+  /internal/dictionary/system_message_config:
+    $ref: ./paths/dictionary/internal_dictionary_system_message_config.yaml
+  /internal/dictionary/system_message_config/get-page:
+    $ref: ./paths/dictionary/internal_dictionary_system_message_config_get_page.yaml
+  /internal/dictionary/system_message_config/get_or_create:
+    $ref: ./paths/dictionary/internal_dictionary_system_message_config_get_or_create.yaml
+  /internal/dictionary/system_message_config/{id}:
+    $ref: ./paths/dictionary/internal_dictionary_system_message_config_id.yaml
+  /suggest:
+    $ref: ./paths/suggest/suggest.yaml
+  /suggest/addressByCode:
+    $ref: ./paths/addressByCode/suggest_addressByCode.yaml
+  /suggest/geolocation:
+    $ref: ./paths/geolocation/suggest_geolocation.yaml
+  /suggest/okved2:
+    $ref: ./paths/okved2/suggest_okved2.yaml
+  /suggest/party:
+    $ref: ./paths/party/suggest_party.yaml
+  /suggest/v2:
+    $ref: ./paths/v2/suggest_v2.yaml
+components: {}

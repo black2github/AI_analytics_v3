@@ -1,0 +1,21 @@
+post:
+  tags:
+  - Клиентское API для работы с уведомлениями.
+  summary: Сохранение расшифрованных уведомлений
+  description: 'Привилегии: DRUB.CLIENT.NOTIFICATIONS_LIST_VIEW'
+  operationId: saveDecryptResults
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: ../../components/schemas/save-decrypt-results/DecryptedNotificationDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/save-decrypt-results/GenericResponseDigitalRubleErrorVoid.yaml

@@ -1,0 +1,22 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  orgNameOrInnOrOgrn:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoAccReservationRequestStatusDto.yaml
+  requestNumber:
+    $ref: ./FilterValueDtoInteger.yaml
+  accountTypeCode:
+    $ref: ./FilterValueDtoInteger.yaml
+  currencyCode:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Статус категории заявок на резервирование
+    enum:
+    - IN_PROGRESS
+    - FINISHED
+    - ALL
+description: Фильтр для поиска заявок на резервирование счёта для скроллера.

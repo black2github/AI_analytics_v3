@@ -1,0 +1,61 @@
+post:
+  description: 'Привилегии: CLOSING_ACCOUNT.ESIGN_CREATE,ACCOUNT_CLOSING.CLIENT.ESIGN_CREATE'
+  operationId: generateSignDataV2x1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/generate-sign-data/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/generate-sign-data/GenericResponseSimpleErrorDataUniSignV2x1Dto.yaml
+      description: OK
+    '400':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Bad Request
+    '401':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unauthorized
+    '403':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Forbidden
+    '405':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Method Not Allowed
+    '415':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Unsupported Media Type
+    '423':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+      description: Locked
+    '500':
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+      description: Internal Server Error
+  summary: Сформировать данные для функции подписи v2.1
+  tags:
+  - API Заявки на закрытие счета. Операции подписи.

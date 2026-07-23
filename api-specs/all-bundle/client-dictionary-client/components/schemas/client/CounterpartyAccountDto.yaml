@@ -1,0 +1,44 @@
+required:
+- account
+- bankBik
+- correspondentBankAccount
+- counterpartyId
+- updatedAt
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи в экосистеме.
+    format: uuid
+  counterpartyId:
+    type: string
+    description: Ссылка на сущность "Контрагент".
+    format: uuid
+  sourceRecordClassifier:
+    type: string
+    description: Классификатор источников записи справочника.
+    enum:
+    - MIGRATION
+    - MANUAL
+    - AUTOFILL
+    - IMPORT
+  updatedAt:
+    type: string
+    description: Дата и время обновления записи
+    format: date-time
+  account:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Счёт контрагента
+  bankBik:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: БИК Банка контрагента
+  correspondentBankAccount:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Корр. счёт банка контрагента
+description: Счет контрагента

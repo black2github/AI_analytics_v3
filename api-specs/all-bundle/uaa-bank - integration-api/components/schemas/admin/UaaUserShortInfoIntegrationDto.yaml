@@ -1,0 +1,19 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID пользователя
+    format: uuid
+  firstName:
+    type: string
+    description: Имя пользователя
+  familyName:
+    type: string
+    description: Фамилия пользователя
+  middleName:
+    type: string
+    description: Отчество пользователя
+  login:
+    type: string
+    description: Логин пользователя
+description: ДТО для минимального набора данных о пользователе

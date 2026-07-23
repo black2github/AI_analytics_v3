@@ -1,0 +1,17 @@
+get:
+  summary: Поиск записи в таблице sms_info_f1_response по GUID клиента в ЕСК
+  tags:
+  - Обновление заглушек sms_info_f1_response (Ответ для заявки на подключение/отключение/изменение услуги СМС-информирования в Ф1)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataSmsInfoF1ResponseDto.yaml

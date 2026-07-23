@@ -1,0 +1,10 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Распознанный текст поля документа
+  confidence:
+    type: number
+    description: Коэффициент уверенности распознавания
+    format: float
+description: Распознанное поле документа

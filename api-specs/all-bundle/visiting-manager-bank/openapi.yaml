@@ -1,0 +1,277 @@
+openapi: 3.0.1
+info:
+  title: Сервис выездного менеджера. Банковская часть.
+  version: 3.7.0
+servers:
+- url: /visiting-manager-bank
+security:
+- bearerAuth: []
+paths:
+  /vstmgr/request/{id}/ukep:
+    $ref: ./paths/request/vstmgr_request_id_ukep.yaml
+  /vstmgr/request/{id}/tessa-dossier-reject:
+    $ref: ./paths/request/vstmgr_request_id_tessa_dossier_reject.yaml
+  /vstmgr/request/{id}/return-to-draft:
+    $ref: ./paths/request/vstmgr_request_id_return_to_draft.yaml
+  /vstmgr/request/{id}/reject:
+    $ref: ./paths/request/vstmgr_request_id_reject.yaml
+  /vstmgr/request/{id}/questionnaire-service-part:
+    $ref: ./paths/request/vstmgr_request_id_questionnaire_service_part.yaml
+  /vstmgr/request/{id}/questionnaire-fatca-crs-ul:
+    $ref: ./paths/request/vstmgr_request_id_questionnaire_fatca_crs_ul.yaml
+  /vstmgr/request/{id}/questionnaire-fatca-crs-ip:
+    $ref: ./paths/request/vstmgr_request_id_questionnaire_fatca_crs_ip.yaml
+  /vstmgr/request/{id}/export-to-tessa:
+    $ref: ./paths/request/vstmgr_request_id_export_to_tessa.yaml
+  /vstmgr/request/{id}/export-to-esk:
+    $ref: ./paths/request/vstmgr_request_id_export_to_esk.yaml
+  /vstmgr/request/{id}/executor:
+    $ref: ./paths/request/vstmgr_request_id_executor.yaml
+  /vstmgr/request/{id}/contacts:
+    $ref: ./paths/request/vstmgr_request_id_contacts.yaml
+  /vstmgr/request/{id}/complete:
+    $ref: ./paths/request/vstmgr_request_id_complete.yaml
+  /vstmgr/request/documents:
+    $ref: ./paths/request/vstmgr_request_documents.yaml
+  /vstmgr/request/documents/type:
+    $ref: ./paths/request/vstmgr_request_documents_type.yaml
+  /vstmgr/request/documents/transferred-in-paper-form:
+    $ref: ./paths/request/vstmgr_request_documents_transferred_in_paper_form.yaml
+  /vstmgr/request/documents/provided:
+    $ref: ./paths/request/vstmgr_request_documents_provided.yaml
+  /vstmgr/request/documents/number:
+    $ref: ./paths/request/vstmgr_request_documents_number.yaml
+  /vstmgr/request/documents/date:
+    $ref: ./paths/request/vstmgr_request_documents_date.yaml
+  /privilege-registration/force-update:
+    $ref: ./paths/force-update/privilege_registration_force_update.yaml
+  /vstmgr/request/{id}/resend-to-tessa:
+    $ref: ./paths/request/vstmgr_request_id_resend_to_tessa.yaml
+  /vstmgr/request/{id}/resend-documents-to-lbp:
+    $ref: ./paths/request/vstmgr_request_id_resend_documents_to_lbp.yaml
+  /vstmgr/request/onboarding:
+    $ref: ./paths/request/vstmgr_request_onboarding.yaml
+  /vstmgr/request/documents/delete:
+    $ref: ./paths/request/vstmgr_request_documents_delete.yaml
+  /vstmgr/qos/upload:
+    $ref: ./paths/qos/vstmgr_qos_upload.yaml
+  /vstmgr/qos/upload-results:
+    $ref: ./paths/qos/vstmgr_qos_upload_results.yaml
+  /vstmgr/qos/start:
+    $ref: ./paths/qos/vstmgr_qos_start.yaml
+  /vstmgr/qos/download:
+    $ref: ./paths/qos/vstmgr_qos_download.yaml
+  /vstmgr/qos/download-results:
+    $ref: ./paths/qos/vstmgr_qos_download_results.yaml
+  /vstmgr/get-page:
+    $ref: ./paths/get-page/vstmgr_get_page.yaml
+  /vstmgr/category:
+    $ref: ./paths/category/vstmgr_category.yaml
+  /local/branches/update:
+    $ref: ./paths/branches/local_branches_update.yaml
+  /integration/visiting-manager-request/requests-available-for-sign-cancel:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_requests_available_for_sign_cancel.yaml
+  /integration/visiting-manager-request/clean-related-not-finished-request-signed-documents/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_clean_related_not_finished_request_signed_documents_onboardingRequestId.yaml
+  /vstmgr/request/{id}:
+    $ref: ./paths/request/vstmgr_request_id.yaml
+  /vstmgr/request/{id}/history:
+    $ref: ./paths/request/vstmgr_request_id_history.yaml
+  /vstmgr/request/{id}/export-documents-as-zip:
+    $ref: ./paths/request/vstmgr_request_id_export_documents_as_zip.yaml
+  /vstmgr/request/{id}/documents-as-zip:
+    $ref: ./paths/request/vstmgr_request_id_documents_as_zip.yaml
+  /vstmgr/request/onboarding/{id}:
+    $ref: ./paths/request/vstmgr_request_onboarding_id.yaml
+  /vstmgr/doc-types:
+    $ref: ./paths/doc-types/vstmgr_doc_types.yaml
+  /integration/visiting-manager-request/related-waiting-for-esk-request-exists/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_related_waiting_for_esk_request_exists_onboardingRequestId.yaml
+  /integration/visiting-manager-request/related-request-exists/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_related_request_exists_onboardingRequestId.yaml
+  /integration/visiting-manager-request/related-not-rejected-request-exists/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_related_not_rejected_request_exists_onboardingRequestId.yaml
+  /integration/visiting-manager-request/related-not-finished-signed-request-exists/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_related_not_finished_signed_request_exists_onboardingRequestId.yaml
+  /integration/visiting-manager-request/related-not-finished-request-exists/{onboardingRequestId}:
+    $ref: ./paths/visiting-manager-request/integration_visiting_manager_request_related_not_finished_request_exists_onboardingRequestId.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /vstmgr/request/files/access-token/{requestId}/{fileId}:
+    $ref: ./paths/request/vstmgr_request_files_access_token_requestId_fileId.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/request/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/request/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/request/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/request/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/request/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    UkepFlagsDto:
+      $ref: ./components/schemas/request/UkepFlagsDto.yaml
+    AdditionalFileDto:
+      $ref: ./components/schemas/request/AdditionalFileDto.yaml
+    AttachmentInfoDto:
+      $ref: ./components/schemas/request/AttachmentInfoDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/common/BankClientInfoDto.yaml
+    BranchInfoDto:
+      $ref: ./components/schemas/common/BranchInfoDto.yaml
+    ContactInfoDto:
+      $ref: ./components/schemas/common/ContactInfoDto.yaml
+    FatcaQuestionsIpDto:
+      $ref: ./components/schemas/request/FatcaQuestionsIpDto.yaml
+    FatcaQuestionsUlDto:
+      $ref: ./components/schemas/request/FatcaQuestionsUlDto.yaml
+    GenericResponseSimpleErrorDataRequestDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataRequestDto.yaml
+    OnboardingRequestInfoDto:
+      $ref: ./components/schemas/request/OnboardingRequestInfoDto.yaml
+    QuestionDto:
+      $ref: ./components/schemas/request/QuestionDto.yaml
+    QuestionnaireDto:
+      $ref: ./components/schemas/request/QuestionnaireDto.yaml
+    RequestDocumentDto:
+      $ref: ./components/schemas/request/RequestDocumentDto.yaml
+    RequestDto:
+      $ref: ./components/schemas/request/RequestDto.yaml
+    ScannedAttachmentInfoDto:
+      $ref: ./components/schemas/request/ScannedAttachmentInfoDto.yaml
+    ShortUserInfoDto:
+      $ref: ./components/schemas/common/ShortUserInfoDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    TaxResidencyCountryDto:
+      $ref: ./components/schemas/request/TaxResidencyCountryDto.yaml
+    SingleResponseRequestDto:
+      $ref: ./components/schemas/request/SingleResponseRequestDto.yaml
+    QuestionnaireServicePartDto:
+      $ref: ./components/schemas/request/QuestionnaireServicePartDto.yaml
+    RequestExecutorChangeDto:
+      $ref: ./components/schemas/request/RequestExecutorChangeDto.yaml
+    RequestDocumentAttachmentsUpdateDto:
+      $ref: ./components/schemas/request/RequestDocumentAttachmentsUpdateDto.yaml
+    ScannedAttachmentUpdateDto:
+      $ref: ./components/schemas/request/ScannedAttachmentUpdateDto.yaml
+    UpdateCommandRequestDocumentAttachmentsUpdateDtoUUID:
+      $ref: ./components/schemas/request/UpdateCommandRequestDocumentAttachmentsUpdateDtoUUID.yaml
+    SingleResponseRequestDocumentDto:
+      $ref: ./components/schemas/request/SingleResponseRequestDocumentDto.yaml
+    UpdateCommandDocumentTypeCodeDtoUUID:
+      $ref: ./components/schemas/request/UpdateCommandDocumentTypeCodeDtoUUID.yaml
+    UpdateCommandBooleanUUID:
+      $ref: ./components/schemas/request/UpdateCommandBooleanUUID.yaml
+    UpdateCommandStringUUID:
+      $ref: ./components/schemas/request/UpdateCommandStringUUID.yaml
+    UpdateCommandLocalDateUUID:
+      $ref: ./components/schemas/request/UpdateCommandLocalDateUUID.yaml
+    SingleResponseBoolean:
+      $ref: ./components/schemas/force-update/SingleResponseBoolean.yaml
+    CreateCommandNewRequestDto:
+      $ref: ./components/schemas/request/CreateCommandNewRequestDto.yaml
+    NewRequestDto:
+      $ref: ./components/schemas/request/NewRequestDto.yaml
+    CreateResponseRequestDto:
+      $ref: ./components/schemas/request/CreateResponseRequestDto.yaml
+    CreateCommandRequestDocumentCreateDto:
+      $ref: ./components/schemas/request/CreateCommandRequestDocumentCreateDto.yaml
+    RequestDocumentCreateDto:
+      $ref: ./components/schemas/request/RequestDocumentCreateDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/request/SingleCommandUUID.yaml
+    SingleResponseVoid:
+      $ref: ./components/schemas/qos/SingleResponseVoid.yaml
+    QosUploadResultsDto:
+      $ref: ./components/schemas/qos/QosUploadResultsDto.yaml
+    QosAssessmentPropertiesDto:
+      $ref: ./components/schemas/qos/QosAssessmentPropertiesDto.yaml
+    SingleResponseQosAssessmentPropertiesDto:
+      $ref: ./components/schemas/qos/SingleResponseQosAssessmentPropertiesDto.yaml
+    QosDownloadResultsDto:
+      $ref: ./components/schemas/qos/QosDownloadResultsDto.yaml
+    BankClientTypeFilter:
+      $ref: ./components/schemas/common/BankClientTypeFilter.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/common/FilterValueDtoInstant.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/common/FilterValueDtoInteger.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoVisitingServiceTypeDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoVisitingServiceTypeDto.yaml
+    GetPageCommandRequestBankFilter:
+      $ref: ./components/schemas/common/GetPageCommandRequestBankFilter.yaml
+    PageParamsRequestBankFilter:
+      $ref: ./components/schemas/common/PageParamsRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    RequestBankFilter:
+      $ref: ./components/schemas/common/RequestBankFilter.yaml
+    RequestStatusFilter:
+      $ref: ./components/schemas/common/RequestStatusFilter.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    PageDataRequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/PageDataRequestBankScrollerDto.yaml
+    RequestBankScrollerDto:
+      $ref: ./components/schemas/get-page/RequestBankScrollerDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/category/CategoryResponse.yaml
+    BranchAbsCodesUpdateDto:
+      $ref: ./components/schemas/branches/BranchAbsCodesUpdateDto.yaml
+    BranchesUpdateMassRequestDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassRequestDto.yaml
+    BranchUpdateStatisticsDto:
+      $ref: ./components/schemas/branches/BranchUpdateStatisticsDto.yaml
+    BranchesUpdateMassResponseDto:
+      $ref: ./components/schemas/branches/BranchesUpdateMassResponseDto.yaml
+    ParticularBranchUpdateResultDto:
+      $ref: ./components/schemas/branches/ParticularBranchUpdateResultDto.yaml
+    GenericCommandSignCancelCheckRequestDto:
+      $ref: ./components/schemas/visiting-manager-request/GenericCommandSignCancelCheckRequestDto.yaml
+    SignCancelCheckRequestDto:
+      $ref: ./components/schemas/visiting-manager-request/SignCancelCheckRequestDto.yaml
+    GenericResponseSimpleErrorDataSignCancelCheckResponseDto:
+      $ref: ./components/schemas/visiting-manager-request/GenericResponseSimpleErrorDataSignCancelCheckResponseDto.yaml
+    SignCancelCheckResponseDto:
+      $ref: ./components/schemas/visiting-manager-request/SignCancelCheckResponseDto.yaml
+    GenericResponseSimpleErrorDataUUID:
+      $ref: ./components/schemas/visiting-manager-request/GenericResponseSimpleErrorDataUUID.yaml
+    ListResponseRequestHistoryDto:
+      $ref: ./components/schemas/request/ListResponseRequestHistoryDto.yaml
+    RequestHistoryDto:
+      $ref: ./components/schemas/request/RequestHistoryDto.yaml
+    GenericResponseSimpleErrorDataAttachmentInfoDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataAttachmentInfoDto.yaml
+    DocumentTypeDto:
+      $ref: ./components/schemas/doc-types/DocumentTypeDto.yaml
+    ListResponseDocumentTypeDto:
+      $ref: ./components/schemas/doc-types/ListResponseDocumentTypeDto.yaml
+    GenericResponseSimpleErrorDataBoolean:
+      $ref: ./components/schemas/visiting-manager-request/GenericResponseSimpleErrorDataBoolean.yaml
+    GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto:
+      $ref: ./components/schemas/request/GenericResponseSimpleErrorDataGetFileAccessTokenResponseDto.yaml
+    GetFileAccessTokenResponseDto:
+      $ref: ./components/schemas/request/GetFileAccessTokenResponseDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

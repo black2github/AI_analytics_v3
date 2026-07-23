@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  isoCode:
+    maxLength: 3
+    pattern: ^[0-9A-Za-z]+$
+    type: string
+    description: Код валюты
+  name:
+    maxLength: 30
+    pattern: ^[0-9A-Za-z]+$
+    type: string
+    description: Наименование валюты
+  tradingFloor:
+    type: string
+    description: Торговая площадка
+  rest:
+    type: number
+    description: Доступный остаток
+  contractEcoId:
+    type: string
+    description: Эко идентификатор брокерского договора
+    format: uuid
+description: Представление ответа для получения остатков по ДС

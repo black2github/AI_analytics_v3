@@ -1,0 +1,5 @@
+type: object
+properties:
+  signatureType:
+    $ref: ./SignatureTypeDto.yaml
+description: Данные ЭП, импорт ПЭД

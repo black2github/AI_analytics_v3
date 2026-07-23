@@ -1,0 +1,19 @@
+post:
+  summary: 'Сервис: Подтверждение выплаты B2B'
+  tags:
+  - СИП. Сервис b2b API
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/merchant/B2bTransferConfirmDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/merchant/B2bTransferConfirmResultDto.yaml
+    '400':
+      description: Bad Request

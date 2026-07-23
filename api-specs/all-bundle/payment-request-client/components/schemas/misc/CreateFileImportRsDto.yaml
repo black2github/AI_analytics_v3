@@ -1,0 +1,40 @@
+required:
+- fileImportId
+- operationCode
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: ID Файла импорта
+    format: uuid
+  status:
+    type: string
+    description: Статус файла (Статус импорта)
+    enum:
+    - DRAFT
+    - DELETED
+    - ERROR
+    - NOT_SIGNED
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - IMPORT
+    - IMPORT_TO_CONFIRM
+    - IMPORT_CONFIRMED
+    - IMPORT_NOT_CONFIRMED
+    - IMPORTED
+    - IMPORTED_ERROR
+  operationCode:
+    type: string
+    description: Код операции
+    enum:
+    - NO_CODE
+    - CREATE
+    - PREPARE_TO_IMPORT
+    - IMPORT
+    - SIGN
+    - SIGN_REMOVE
+    - DELETE
+    - SIGN_CHECK
+    - RECEIVE_CHECK
+description: '[Импорт ПЭД] Система: Функция создания записи файла импорта. Исходящие параметры.'

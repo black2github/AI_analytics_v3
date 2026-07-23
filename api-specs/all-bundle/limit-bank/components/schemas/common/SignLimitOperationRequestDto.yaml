@@ -1,0 +1,29 @@
+type: object
+properties:
+  messageId:
+    type: string
+    description: Идентификатор сообщения/события
+    format: uuid
+  messageTimestamp:
+    type: string
+    description: Время формирования сообщения (бизнес-сервис), в часовом поясе UTC+3
+    format: date-time
+  bankClientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  userId:
+    type: string
+    description: Уникальный идентификатор пользователя, выполняющего операцию. Используется для учёта лимитов в разрезе пользователей.
+    format: uuid
+  limitsType:
+    type: string
+    description: 'Определяет тип лимита для разных сценариев. Допустимые значения: SES — Simple Electronic Signature (предложение)'
+    enum:
+    - SES
+  documents:
+    type: array
+    description: Данные документов
+    items:
+      $ref: ./SignLimitOperationDocumentRequestDto.yaml
+description: Данные запроса

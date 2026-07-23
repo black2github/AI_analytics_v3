@@ -1,0 +1,11 @@
+type: object
+properties:
+  flash_id:
+    type: string
+  folder_id:
+    type: string
+  filename:
+    type: string
+  size:
+    type: integer
+    format: int64

@@ -1,0 +1,14 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    description: Данные
+    items:
+      $ref: ./ClientOfficialLightWeightDto.yaml
+  error:
+    $ref: ./SimpleErrorData.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

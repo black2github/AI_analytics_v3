@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    type: integer
+    description: Данные
+    format: int64
+  error:
+    $ref: ../common/DigitalRubleError.yaml
+  traceId:
+    type: string
+    description: Идентификатор
+description: Ответ, содержащий результат операции или ошибку

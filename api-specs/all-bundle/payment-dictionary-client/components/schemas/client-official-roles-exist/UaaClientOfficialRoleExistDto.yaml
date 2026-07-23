@@ -1,0 +1,14 @@
+type: object
+properties:
+  roleCode:
+    type: string
+    description: Предполагаемый код роли
+  segmentCode:
+    type: string
+    description: Предполагаемый сегмент роли
+  isExists:
+    type: boolean
+    writeOnly: true
+  exists:
+    type: boolean
+description: Упорядоченный набор соответствий роль + сегмент

@@ -1,0 +1,9 @@
+type: object
+properties:
+  commentTargets:
+    uniqueItems: true
+    type: array
+    description: Набор идентификаторов клиента и пользователя для добавления комментариев
+    items:
+      $ref: ./ClientOfficialCommentTargetDto.yaml
+description: Результат пакетного удаления связей СЭП представителей

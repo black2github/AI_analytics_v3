@@ -1,0 +1,5 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

@@ -1,0 +1,170 @@
+post:
+  tags:
+  - СИП. Сервис Merchant API
+  summary: 'Сервис: Регистрация QRC'
+  operationId: qrcDataUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: body.account
+    in: query
+    description: Счет юридического лица.
+    required: false
+    type: string
+  - name: body.additionalData[0].acc
+    in: query
+    description: Номер счета для распределения платежа
+    required: false
+    type: string
+  - name: body.additionalData[0].purp
+    in: query
+    description: Назначение распределяемого платежа
+    required: false
+    type: string
+  - name: body.additionalData[0].sum
+    in: query
+    description: Распределенная сумма в копейках
+    required: false
+    type: integer
+    format: int64
+  - name: body.amount
+    in: query
+    description: Сумма операции
+    required: false
+    type: string
+  - name: body.callbackMerchantNotifications
+    in: query
+    description: Url для получения сообщения
+    required: false
+    type: string
+  - name: body.currency
+    in: query
+    description: Валюта операции
+    required: false
+    type: string
+  - name: body.fraudScore
+    in: query
+    description: Индикатор Подозрительной Операции
+    required: false
+    type: string
+  - name: body.merchantId
+    in: query
+    description: Идентификатор ТСП
+    required: true
+    type: string
+  - name: body.paymentDetails.code
+    in: query
+    description: Код документа
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.dateTime
+    in: query
+    description: Дата и время операции
+    required: false
+    type: string
+  - name: body.paymentDetails.kktRegId
+    in: query
+    description: Регистрационный номер ККТ
+    required: false
+    type: string
+  - name: body.paymentDetails.merchantAddress
+    in: query
+    description: Адрес ТСП
+    required: false
+    type: string
+  - name: body.paymentDetails.operator
+    in: query
+    description: Кассир
+    required: false
+    type: string
+  - name: body.paymentDetails.requestNumber
+    in: query
+    description: Номер чека за смену
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.shiftNumber
+    in: query
+    description: Номер смены
+    required: false
+    type: integer
+    format: int32
+  - name: body.paymentDetails.user
+    in: query
+    description: Наименование пользователя
+    required: false
+    type: string
+  - name: body.paymentPurpose
+    in: query
+    description: Дополнительная информация от ТСП
+    required: false
+    type: string
+  - name: body.qrcType
+    in: query
+    description: Тип QR кода
+    required: true
+    type: string
+  - name: body.qrTtl
+    in: query
+    description: Срок жизни
+    required: false
+    type: integer
+    format: int32
+  - name: body.redirectUrl
+    in: query
+    description: Ссылка для автоматического возврата
+    required: false
+    type: string
+  - name: body.sign
+    in: query
+    description: Подпись сообщения
+    required: false
+    type: string
+  - name: body.subscriptionPurpose
+    in: query
+    description: Информация от ТСП с деталями привязки счета.
+    required: false
+    type: string
+  - name: body.templateVersion
+    in: query
+    description: Версия payload QR кода
+    required: true
+    type: string
+  - name: method
+    in: query
+    required: false
+    type: string
+    enum:
+    - DELETE
+    - GET
+    - HEAD
+    - OPTIONS
+    - PATCH
+    - POST
+    - PUT
+    - TRACE
+  - name: type
+    in: query
+    required: false
+    type: string
+  - name: url
+    in: query
+    required: false
+    type: string
+    format: uri
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/QrcDataResultDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

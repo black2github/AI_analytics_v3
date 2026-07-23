@@ -1,0 +1,39 @@
+title: Информация о регионе и районе
+type: object
+properties:
+  postCode:
+    title: Почтовый индекс
+    type: string
+  regionName:
+    title: Наименование региона
+    type: string
+  regionFullName:
+    title: Наименование региона (полное)
+    type: string
+  regionId:
+    title: GUID региона
+    type: string
+    format: uuid
+  regionType:
+    title: Тип региона
+    type: string
+  regionTypeCode:
+    title: Код типа региона
+    type: string
+  areaName:
+    title: Наименование района
+    type: string
+  areaFullName:
+    title: Наименование района (полное)
+    type: string
+  areaId:
+    title: GUID района
+    type: string
+    format: uuid
+  areaType:
+    title: Тип района
+    type: string
+  areaTypeCode:
+    title: Код типа района
+    type: string
+description: Данные о регионе/районе клиента в ФИАС

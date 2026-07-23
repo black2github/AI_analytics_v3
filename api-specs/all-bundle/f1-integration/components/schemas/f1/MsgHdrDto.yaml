@@ -1,0 +1,11 @@
+type: object
+properties:
+  msgId:
+    type: string
+    description: Идентификатор сообщения
+    format: uuid
+  creDt:
+    type: string
+    description: Дата создания
+    format: date-time
+description: Заголовок ответа

@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsConsentAccountIntegrationFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,9 @@
+type: object
+properties:
+  text:
+    type: string
+    description: Текст комментария
+  isRequired:
+    type: boolean
+    description: Обязательность комментария
+description: Подсказка к комментарию

@@ -1,0 +1,10 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиент Банка
+    format: uuid
+  logo:
+    type: string
+    description: Логотип клиента
+description: Обновление логотипа организации клиента

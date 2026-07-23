@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи в таблице f1_run_msg_stub
+  tags:
+  - Обновление данных для процедуры RUN_MSG онлайн-адаптера Ф1
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

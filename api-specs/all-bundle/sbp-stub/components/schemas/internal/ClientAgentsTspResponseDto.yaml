@@ -1,0 +1,26 @@
+type: object
+description: Список агентов ТСП, подключенных к клиенту
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  legalId:
+    type: string
+    description: Идентификатор ЮЛ/ИП – клиента Банка в СБП
+  guid:
+    type: string
+    description: GUID, идентификатор BSS
+  docType:
+    type: string
+    description: Тип документа
+  transactionId:
+    type: string
+    description: Идентификатор нефинансовой операции
+  agents:
+    type: array
+    items:
+      type: string
+    description: Полученные данные по агентам от АС СБП

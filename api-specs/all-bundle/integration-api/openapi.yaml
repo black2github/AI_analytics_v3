@@ -1,0 +1,10 @@
+info:
+  version: 1.31.0
+  title: Сервис аудита. Интеграционная часть.
+tags:
+- name: API информации об устройстве пользователя
+  description: User Device Info Integration Controller
+paths:
+  /integration/user-device-info/get-by-session/{sessionId}:
+    $ref: ./paths/user-device-info/integration_user_device_info_get_by_session_sessionId.yaml
+components: {}

@@ -1,0 +1,54 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Уникальный идентификатор записи
+    format: uuid
+  status:
+    type: string
+    description: Статус
+  clientStatus:
+    type: string
+    description: Клиентский статус
+  statusCategory:
+    type: string
+    description: Категория статуса
+    enum:
+    - ALL
+    - ERROR
+    - DECLINED
+    - NEW
+    - IN_PROCESS
+    - EXECUTED
+  order:
+    type: integer
+    description: Порядок следования
+    format: int64
+  bankStatus:
+    type: string
+    description: Банковский статус
+  changedIn:
+    type: string
+    description: Дата/время смены статуса
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  userName:
+    type: string
+    description: Фамилия И.О. пользователя, изменившего заявку
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commentForBank:
+    type: string
+    description: Комментарий для Банка.
+description: История заявки

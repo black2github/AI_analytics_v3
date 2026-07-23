@@ -1,0 +1,45 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  documentNumber:
+    type: integer
+    description: Номер заявки
+    format: int64
+  landingCode:
+    type: string
+    description: Тип заявки. ДТО
+    enum:
+    - ARCHIVAL_DOC
+    - GPB_MOBILE
+  clientData:
+    type: string
+    description: Организация (название или ИНН)
+  status:
+    type: string
+    description: Статус заявки посадочной страницы
+    enum:
+    - NONE
+    - NEW
+    - DELIVERED
+    - DETAILS_VALID
+    - RECEIVED
+    - EXECUTED
+    - REJECTED
+    - DETAILS_VALID_OR_REJECTED
+  fio:
+    type: string
+    description: ФИО инициатора заявки
+  phone:
+    type: string
+    description: Телефон инициатора заявки
+  email:
+    type: string
+    description: Email инициатора заявки
+description: Заявка посадочной страницы. ДТО

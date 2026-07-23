@@ -1,0 +1,39 @@
+type: object
+properties:
+  receiptAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  status:
+    $ref: ./ChargebackRequestStatusFilter.yaml
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  sourceSystem:
+    $ref: ./ChargebackRequestSourceSystemFilter.yaml
+  creationType:
+    $ref: ./ChargebackRequestCreationTypeFilter.yaml
+  id:
+    $ref: ../common/FilterValueDtoString.yaml
+  baseAmount:
+    $ref: ../common/FilterValueDtoString.yaml
+  baseDocCreatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  baseDocNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  payerNameOrInnOrRnk:
+    $ref: ./FilterValueDtoChargebackRequestPayerNameOrInnOrRnkDto.yaml
+  payerBankNameOrBic:
+    $ref: ./FilterValueDtoChargebackRequestPayerBankNameOrBicDto.yaml
+  baseAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Фильтрация по категориям. Полное совпадение.
+    enum:
+    - ERROR_PROCESSING
+    - PROCESSING
+    - DONE
+    - ALL
+  innKio:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера заявки "Запрос на отзыв". Банковская часть.

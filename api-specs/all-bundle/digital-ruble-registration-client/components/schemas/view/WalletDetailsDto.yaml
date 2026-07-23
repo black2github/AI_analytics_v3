@@ -1,0 +1,43 @@
+required:
+- active
+- cbrParticipantId
+- cbrParticipantWalletId
+- pcrParticipantWalletId
+- walletRegistrationDate
+- walletStatus
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  cbrParticipantWalletId:
+    type: string
+    description: Идентификатор кошелька организации на ПлЦР
+  active:
+    type: boolean
+    description: Признак активности кошелька ЦР
+  walletStatus:
+    type: string
+    description: Статус кошелька в ЦБ
+  walletRegistrationDate:
+    type: string
+    description: Дата регистрации цифрового кошелька
+    format: date-time
+  cbrAccountNumber:
+    type: string
+    description: Счет цифрового рубля
+  cbrParticipantWalletStatusChangeReason:
+    type: string
+    description: Причина изменения статуса СЦР
+  cbrParticipantId:
+    type: string
+    description: Идентификатор организации в ЦБ.
+  cbrAgreementNumber:
+    type: string
+    description: Номер договора СЦР Клиента.
+  cbrAgreementOpenDate:
+    type: string
+    description: Дата открытия договора СЦР.
+    format: date
+description: Агрегированная информация по СЦР

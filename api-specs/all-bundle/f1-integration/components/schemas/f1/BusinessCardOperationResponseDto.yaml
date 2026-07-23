@@ -1,0 +1,45 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  clientCode:
+    type: string
+    description: Код клиента (РНК)
+  clientName:
+    type: string
+    description: Наименование организации
+  cardHolderFullName:
+    type: string
+    description: Наименование держателя карты
+  cardMaskedNumber:
+    type: string
+    description: PAN (маскированный)
+  accountId:
+    type: string
+    description: ID счета
+  cardVirtualNumber:
+    type: string
+    description: Виртуальный ID карты (VPAN)
+  cardGuid:
+    type: string
+    description: Внешний идентификатор карты
+  operations:
+    type: array
+    description: Массив с перечнем операций и их параметрами
+    items:
+      $ref: ./CardOperationDto.yaml
+  holdAmount:
+    type: number
+    description: Сумма захолдированных средств по карте (в валюте счета) за отчетный период
+  totalAmount:
+    type: number
+    description: Итоговая сумма операций
+  size:
+    type: integer
+    description: Количество отфильтрованных записей
+    format: int64
+  result:
+    type: string
+    description: Результат выполнения запроса
+description: Данные об операциях по карте в сервисе корпоративных карт

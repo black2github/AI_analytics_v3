@@ -1,0 +1,13 @@
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения в АБС
+  branchId:
+    type: string
+    description: Идентификатор подразделения банка
+    format: uuid
+  name:
+    type: string
+    description: Наименование подразделения
+description: Информация о филиале, в котором создана заявка на выпуск карты

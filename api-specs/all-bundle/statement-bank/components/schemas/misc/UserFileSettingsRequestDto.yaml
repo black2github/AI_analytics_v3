@@ -1,0 +1,26 @@
+type: object
+properties:
+  userId:
+    type: string
+    format: uuid
+  statementFormat:
+    type: string
+    enum:
+    - C1
+    - C1_02
+    - TXT
+    - TXT_WITHOUT_AMOUNTS
+    - PDF
+    - PDF_IMPERSONAL
+    - EXCEL
+    - RTF
+    - DOCX
+    - MT940
+    - C1_SPECIAL
+    - C1_SPECIAL_2
+    - CAMT053
+    - MULTICASH
+    - EXCEL_XLSX
+    - PDF_MULTIBANKING
+    - EXCEL_MULTIBANKING
+description: Данные

@@ -1,0 +1,23 @@
+required:
+- accountId
+- authPersId
+- permission
+type: object
+properties:
+  recordId:
+    type: string
+    description: ID записи
+    format: uuid
+  accountId:
+    type: string
+    description: ID счета
+    format: uuid
+  authPersId:
+    type: string
+    description: ID УЛ
+    format: uuid
+  permission:
+    pattern: ^[A-Z]{1,14}$
+    type: string
+    description: Режим доступа к счёту
+description: Элемент "Доступ УЛ к счёту (создание/редактирование)". Банковская часть.

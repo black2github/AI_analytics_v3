@@ -1,0 +1,11 @@
+type: object
+properties:
+  eskRequestId:
+    type: integer
+    description: ID заявки 115 в ЕСК
+    format: int64
+  tessaDossierId:
+    type: string
+    description: ID досье в ТЕССА
+    format: uuid
+description: Реквизиты, получаемые в процессе обработки заявки из смежных систем

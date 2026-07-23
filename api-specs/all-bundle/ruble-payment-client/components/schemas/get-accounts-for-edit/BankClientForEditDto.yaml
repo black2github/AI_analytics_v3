@@ -1,0 +1,35 @@
+required:
+- innKio
+- kpp
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  fullName:
+    maxLength: 255
+    minLength: 0
+    type: string
+  shortName:
+    maxLength: 160
+    minLength: 0
+    type: string
+  innKio:
+    maxLength: 12
+    minLength: 0
+    type: string
+  kpp:
+    maxLength: 9
+    minLength: 0
+    type: string
+    description: Обязательно если isResident = true и clientType = UL.
+  legalAddress:
+    type: string
+    description: Юридический адрес Клиента
+  postAddress:
+    type: string
+    description: Почтовый адрес Клиента
+  useCcf:
+    type: boolean
+    description: Признак "Использование ЦЦФ"
+description: Информация об организации

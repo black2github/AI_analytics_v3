@@ -1,0 +1,10 @@
+type: object
+properties:
+  address:
+    type: string
+    description: Место гос. регистрации
+  date:
+    type: string
+    description: Дата гос. регистрации
+    format: date
+description: Реквизиты гос. регистрации клиента

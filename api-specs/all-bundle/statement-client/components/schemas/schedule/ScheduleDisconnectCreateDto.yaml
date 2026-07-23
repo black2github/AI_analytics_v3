@@ -1,0 +1,18 @@
+type: object
+properties:
+  scheduleConnectId:
+    type: string
+    format: uuid
+  sourcePage:
+    type: string
+  counterpartyFilterType:
+    type: string
+    enum:
+    - INN
+    - NAME
+    - ACCOUNT
+  counterpartyFilters:
+    type: array
+    items:
+      $ref: ../common/CounterpartyFilterDataDto.yaml
+description: Данные

@@ -1,0 +1,9 @@
+required:
+- clientOfficialId
+type: object
+properties:
+  clientOfficialId:
+    type: string
+    description: ID представителя клиента
+    format: uuid
+description: Запрос на поиск ДСС профиля при выпуске/перевыпуске ОЭП

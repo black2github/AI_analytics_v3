@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код ответа
+    enum:
+    - SUCCESS
+    - FAILURE
+    - ACCOUNT_OPENING_IN_PROGRESS
+    - NOT_RETRACTABLE_STATE
+    - NOT_FOUND
+description: Данные

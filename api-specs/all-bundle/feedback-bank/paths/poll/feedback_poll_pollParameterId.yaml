@@ -1,0 +1,92 @@
+get:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Получить детальную информацию об опросе
+  description: 'Привилегии: FEEDBACK.BANK.POLL_VIEW'
+  operationId: getPollDetail
+  parameters:
+  - name: pollParameterId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/poll/GenericResponseSimpleErrorDataPollDetailDto.yaml
+put:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Полное обновление опроса
+  description: 'Привилегии: FEEDBACK.BANK.POLL_EDIT'
+  operationId: updatePollPut
+  parameters:
+  - name: pollParameterId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/poll/PollParameterCreateUpdateDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/poll/GenericResponseSimpleErrorDataPollDetailDto.yaml
+delete:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Удалить (деактивировать) опрос
+  description: 'Привилегии: FEEDBACK.BANK.POLL_DELETE'
+  operationId: deletePoll
+  parameters:
+  - name: pollParameterId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataVoid.yaml
+patch:
+  tags:
+  - '[Оценка 5*]. Банк — работа с опросами'
+  summary: Частичное обновление опроса
+  description: 'Привилегии: FEEDBACK.BANK.POLL_EDIT'
+  operationId: updatePollPatch
+  parameters:
+  - name: pollParameterId
+    in: path
+    required: true
+    schema:
+      type: string
+      format: uuid
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/poll/PollParameterCreateUpdateDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/poll/GenericResponseSimpleErrorDataPollDetailDto.yaml

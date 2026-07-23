@@ -1,0 +1,13 @@
+type: object
+properties:
+  email:
+    type: string
+    description: Электронная почта
+  personId:
+    type: string
+    description: Идентификатор физ. лица
+    format: uuid
+  phone:
+    type: string
+    description: Телефон
+description: Новые значения контактных данных для физ. лица

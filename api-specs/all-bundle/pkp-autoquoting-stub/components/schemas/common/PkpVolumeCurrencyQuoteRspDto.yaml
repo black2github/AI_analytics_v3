@@ -1,0 +1,17 @@
+type: object
+properties:
+  Volume:
+    type: integer
+    format: int32
+  QuoteBuy:
+    type: number
+  QuoteSell:
+    type: number
+  NoQuoteReasonBuy:
+    $ref: ./PkpNoQuoteReasonRspDto.yaml
+  NoQuoteReasonSell:
+    $ref: ./PkpNoQuoteReasonRspDto.yaml
+  VolumeBuy:
+    type: number
+  VolumeSell:
+    type: number

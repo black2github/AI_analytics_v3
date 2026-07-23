@@ -1,0 +1,64 @@
+info:
+  version: 1.63.0
+  title: Сервис проверки контрагентов. Банковская часть
+tags:
+- name: API для работы с файлами
+  description: File Store Token Controller
+- name: API локализации
+  description: I 18n Controller
+- name: API методы Админки
+  description: Check Request Controller
+- name: API методы для работы с подписками
+  description: Subscription Request Controller
+- name: API методы сервиса Светофор.
+  description: Traffic Light Bank Controller
+- name: API уполномоченного лица
+  description: Authorized Person Controller
+paths:
+  /authorized-person:
+    $ref: ./paths/authorized-person/authorized_person.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+  /request:
+    $ref: ./paths/request/request.yaml
+  /request/category-count:
+    $ref: ./paths/category-count/request_category_count.yaml
+  /request/dict/service:
+    $ref: ./paths/dict/request_dict_service.yaml
+  /request/dict/status:
+    $ref: ./paths/dict/request_dict_status.yaml
+  /request/get-available-statuses:
+    $ref: ./paths/get-available-statuses/request_get_available_statuses.yaml
+  /request/history:
+    $ref: ./paths/history/request_history.yaml
+  /request/id:
+    $ref: ./paths/id/request_id.yaml
+  /request/print-request-card:
+    $ref: ./paths/print-request-card/request_print_request_card.yaml
+  /request/print-request-list:
+    $ref: ./paths/print-request-list/request_print_request_list.yaml
+  /request/repeat:
+    $ref: ./paths/repeat/request_repeat.yaml
+  /request/repeat-list:
+    $ref: ./paths/repeat-list/request_repeat_list.yaml
+  /request/send-notification:
+    $ref: ./paths/send-notification/request_send_notification.yaml
+  /request/set-multiple-statuses:
+    $ref: ./paths/set-multiple-statuses/request_set_multiple_statuses.yaml
+  /request/set-status:
+    $ref: ./paths/set-status/request_set_status.yaml
+  /subscription-request/document/get/{subscriptionDocumentId}:
+    $ref: ./paths/document/subscription_request_document_get_subscriptionDocumentId.yaml
+  /subscription-request/document/request/{subscriptionDocumentId}:
+    $ref: ./paths/document/subscription_request_document_request_subscriptionDocumentId.yaml
+  /subscription-request/{subscriptionRequestId}/signature:
+    $ref: ./paths/{subscriptionRequestId}/subscription_request_subscriptionRequestId_signature.yaml
+  /token:
+    $ref: ./paths/token/token.yaml
+  /traffic-light/detailed-report-url:
+    $ref: ./paths/detailed-report-url/traffic_light_detailed_report_url.yaml
+  /traffic-light/indicators:
+    $ref: ./paths/indicators/traffic_light_indicators.yaml
+  /traffic-light/is-available:
+    $ref: ./paths/is-available/traffic_light_is_available.yaml
+components: {}

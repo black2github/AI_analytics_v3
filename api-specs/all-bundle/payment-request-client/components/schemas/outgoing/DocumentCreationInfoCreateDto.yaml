@@ -1,0 +1,18 @@
+required:
+- creationType
+type: object
+properties:
+  creationType:
+    $ref: ./DocumentCreationTypeDto.yaml
+  docCreationPage:
+    maxLength: 20
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+    nullable: true
+  originDocumentId:
+    type: string
+    description: ID документа-основания
+    format: uuid
+    nullable: true
+description: Информация о создании документа (создание заявки платежное требование исходящее)

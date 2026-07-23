@@ -1,0 +1,246 @@
+info:
+  version: 1.103.0
+  title: Сервис-прокси над БД ODS
+tags:
+- name: API Выписки
+  description: Statement Controller
+- name: API банковского и клиентского скроллера документов
+  description: Doc For Approval Scroller Controller
+- name: API данных фильтра визирующих документов
+  description: Approval Sing Data Filter Controller
+- name: API для визируемых счетов.
+  description: Approval Account Controller
+- name: API для визирующей организации.
+  description: Approval Client Controller
+- name: API для работы с документами ДИО
+  description: Ods Dio Controller
+- name: API для счетчиков платежных докуметов.
+  description: Payment Counter Controller
+- name: API клиентского скроллера субдоговоров договора АДМ
+  description: Adm Sub Agreement Controller
+- name: API клиентского скроллера точек инкассации АДМ
+  description: Adm Poc Master Controller
+- name: API методы для работы с задачами
+  description: Assignment Statement Request To Accounting Entry Controller
+- name: API объединенного списка сотрудников
+  description: Employee United Controller
+- name: API объединенной заявки на присоединение к соглашению
+  description: United Agreement Request Controller
+- name: API объединенных заявок на сотрудников
+  description: Employee Request United Controller
+- name: API остатков и оборотов
+  description: Turnover Controller
+- name: API отчётов АДМ
+  description: Adm Report Controller
+- name: API отчётов копии документов
+  description: Doc Copy Accounting Entry Controller
+- name: API параметров продукта
+  description: Product Params Controller
+- name: API параметров счетов в продуктах
+  description: Account Product Params Controller
+- name: API по истории изменений остатков и оборотов по счету
+  description: SCN Turnover Controller
+- name: API получения информации по Договору АДМ
+  description: Adm Agreement Controller
+- name: API получения реквизитов точек инкассации АДМ
+  description: Adm Poc Requisite Controller
+- name: API проводок
+  description: Accounting Entry Controller
+- name: API сверки
+  description: Reconciliation Controller
+- name: API связей счета с продуктом
+  description: Account Product Reference Controller
+- name: API списка счетов клиентов
+  description: Cash Client Accounts Controller
+- name: API статистики количества документов
+  description: Doc For Approval Controller
+- name: API сущности Журнал технических работ Ф1
+  description: Maintenance Day Controller
+- name: API сущности Закрытый день
+  description: Closed Day Controller
+- name: API сущности Курсы ЦБ
+  description: Currency Rate Controller
+- name: API счетов
+  description: Account Controller
+paths:
+  /account-product-params/{absContractId}:
+    $ref: ./paths/{absContractId}/account_product_params_absContractId.yaml
+  /account-product-reference/list:
+    $ref: ./paths/list/account_product_reference_list.yaml
+  /account/list:
+    $ref: ./paths/list/account_list.yaml
+  /account/list/by-number-balance-code:
+    $ref: ./paths/list/account_list_by_number_balance_code.yaml
+  /accounting-entry/card/page:
+    $ref: ./paths/card/accounting_entry_card_page.yaml
+  /accounting-entry/count:
+    $ref: ./paths/count/accounting_entry_count.yaml
+  /accounting-entry/get-by-ids:
+    $ref: ./paths/get-by-ids/accounting_entry_get_by_ids.yaml
+  /accounting-entry/get-client:
+    $ref: ./paths/get-client/accounting_entry_get_client.yaml
+  /accounting-entry/get-counterparty:
+    $ref: ./paths/get-counterparty/accounting_entry_get_counterparty.yaml
+  /accounting-entry/get-day-totals-page:
+    $ref: ./paths/get-day-totals-page/accounting_entry_get_day_totals_page.yaml
+  /accounting-entry/get-day-totals-page-v2:
+    $ref: ./paths/get-day-totals-page-v2/accounting_entry_get_day_totals_page_v2.yaml
+  /accounting-entry/get-list:
+    $ref: ./paths/get-list/accounting_entry_get_list.yaml
+  /accounting-entry/get-scroller-page:
+    $ref: ./paths/get-scroller-page/accounting_entry_get_scroller_page.yaml
+  /accounting-entry/latest:
+    $ref: ./paths/latest/accounting_entry_latest.yaml
+  /accounting-entry/one-window/get-list:
+    $ref: ./paths/one-window/accounting_entry_one_window_get_list.yaml
+  /accounting-entry/receive-counterparty:
+    $ref: ./paths/receive-counterparty/accounting_entry_receive_counterparty.yaml
+  /accounting-entry/{id}:
+    $ref: ./paths/{id}/accounting_entry_id.yaml
+  /adm-agreements/get-by-client-ids:
+    $ref: ./paths/get-by-client-ids/adm_agreements_get_by_client_ids.yaml
+  /adm-agreements/pocs/get-page:
+    $ref: ./paths/pocs/adm_agreements_pocs_get_page.yaml
+  /adm-agreements/requisites/get-page:
+    $ref: ./paths/requisites/adm_agreements_requisites_get_page.yaml
+  /adm-agreements/{bankClientId}:
+    $ref: ./paths/{bankClientId}/adm_agreements_bankClientId.yaml
+  /adm-agreements/{osnDogId}/pocs/{masterId}:
+    $ref: ./paths/{osnDogId}/adm_agreements_osnDogId_pocs_masterId.yaml
+  /adm-reports/cash/get-page:
+    $ref: ./paths/cash/adm_reports_cash_get_page.yaml
+  /adm-reports/cash/get-total:
+    $ref: ./paths/cash/adm_reports_cash_get_total.yaml
+  /adm-reports/commission/get-page:
+    $ref: ./paths/commission/adm_reports_commission_get_page.yaml
+  /adm-reports/surplus/get-page:
+    $ref: ./paths/surplus/adm_reports_surplus_get_page.yaml
+  /adm-reports/transfer-client/get-page:
+    $ref: ./paths/transfer-client/adm_reports_transfer_client_get_page.yaml
+  /adm-reports/write-off/get-page:
+    $ref: ./paths/write-off/adm_reports_write_off_get_page.yaml
+  /approval-sign/account/get-list/{clientId}:
+    $ref: ./paths/account/approval_sign_account_get_list_clientId.yaml
+  /approval-sign/approval-person/get-by-client-and-signer:
+    $ref: ./paths/approval-person/approval_sign_approval_person_get_by_client_and_signer.yaml
+  /approval-sign/approval-person/get-list-for-privileges/{id}:
+    $ref: ./paths/approval-person/approval_sign_approval_person_get_list_for_privileges_id.yaml
+  /approval-sign/approval-person/get-list/{id}:
+    $ref: ./paths/approval-person/approval_sign_approval_person_get_list_id.yaml
+  /approval-sign/approval-person/search-approval-persons:
+    $ref: ./paths/approval-person/approval_sign_approval_person_search_approval_persons.yaml
+  /approval-sign/approval-person/{id}:
+    $ref: ./paths/approval-person/approval_sign_approval_person_id.yaml
+  /approval-sign/client/client-id/{id}:
+    $ref: ./paths/client/approval_sign_client_client_id_id.yaml
+  /approval-sign/client/get-list:
+    $ref: ./paths/client/approval_sign_client_get_list.yaml
+  /approval-sign/client/get-list/{id}:
+    $ref: ./paths/client/approval_sign_client_get_list_id.yaml
+  /approval-sign/client/sign-update/{id}:
+    $ref: ./paths/client/approval_sign_client_sign_update_id.yaml
+  /approval-sign/data:
+    $ref: ./paths/data/approval_sign_data.yaml
+  /approval-sign/document/approval-sign-doc-after-list:
+    $ref: ./paths/document/approval_sign_document_approval_sign_doc_after_list.yaml
+  /approval-sign/document/approval-sign-doc-before-list:
+    $ref: ./paths/document/approval_sign_document_approval_sign_doc_before_list.yaml
+  /approval-sign/document/category:
+    $ref: ./paths/document/approval_sign_document_category.yaml
+  /approval-sign/document/category-bank:
+    $ref: ./paths/document/approval_sign_document_category_bank.yaml
+  /approval-sign/document/get-page:
+    $ref: ./paths/document/approval_sign_document_get_page.yaml
+  /approval-sign/document/get-page-bank:
+    $ref: ./paths/document/approval_sign_document_get_page_bank.yaml
+  /assignment/create:
+    $ref: ./paths/create/assignment_create.yaml
+  /cash-request/client-accounts:
+    $ref: ./paths/client-accounts/cash_request_client_accounts.yaml
+  /closed-day/closest-closed-day-date/{date}:
+    $ref: ./paths/closest-closed-day-date/closed_day_closest_closed_day_date_date.yaml
+  /closed-day/is-closed-day-present:
+    $ref: ./paths/is-closed-day-present/closed_day_is_closed_day_present.yaml
+  /closed-day/last-closed-day-date/{branchCode}:
+    $ref: ./paths/last-closed-day-date/closed_day_last_closed_day_date_branchCode.yaml
+  /closed-day/page:
+    $ref: ./paths/page/closed_day_page.yaml
+  /currency-rate/get:
+    $ref: ./paths/get/currency_rate_get.yaml
+  /currency-rate/get-on-specified-day-or-on-nearest-smaller-date:
+    $ref: ./paths/get-on-specified-day-or-on-nearest-smaller-date/currency_rate_get_on_specified_day_or_on_nearest_smaller_date.yaml
+  /currency-rate/get-spot-rate:
+    $ref: ./paths/get-spot-rate/currency_rate_get_spot_rate.yaml
+  /currency-rate/get-spot-rate-on-specified-day-or-on-nearest-smaller-date:
+    $ref: ./paths/get-spot-rate-on-specified-day-or-on-nearest-smaller-date/currency_rate_get_spot_rate_on_specified_day_or_on_nearest_smaller_date.yaml
+  /currency-rate/page:
+    $ref: ./paths/page/currency_rate_page.yaml
+  /dio/{id}:
+    $ref: ./paths/{id}/dio_id.yaml
+  /doc-copy-reports/accounting:
+    $ref: ./paths/accounting/doc_copy_reports_accounting.yaml
+  /doc-copy-reports/get-by-ids:
+    $ref: ./paths/get-by-ids/doc_copy_reports_get_by_ids.yaml
+  /employee-request-united/category:
+    $ref: ./paths/category/employee_request_united_category.yaml
+  /employee-request-united/get-page:
+    $ref: ./paths/get-page/employee_request_united_get_page.yaml
+  /employee-united/employees-export-list:
+    $ref: ./paths/employees-export-list/employee_united_employees_export_list.yaml
+  /employee-united/find:
+    $ref: ./paths/find/employee_united_find.yaml
+  /employee-united/get-page:
+    $ref: ./paths/get-page/employee_united_get_page.yaml
+  /employee-united/hide-request:
+    $ref: ./paths/hide-request/employee_united_hide_request.yaml
+  /external/accounting-entry/get-scroller-page:
+    $ref: ./paths/accounting-entry/external_accounting_entry_get_scroller_page.yaml
+  /external/accounting-entry/receive-counterparty:
+    $ref: ./paths/accounting-entry/external_accounting_entry_receive_counterparty.yaml
+  /external/accounting-entry/{id}:
+    $ref: ./paths/accounting-entry/external_accounting_entry_id.yaml
+  /maintenance-day/page:
+    $ref: ./paths/page/maintenance_day_page.yaml
+  /outdated-statement-request/is-outdated/{id}:
+    $ref: ./paths/is-outdated/outdated_statement_request_is_outdated_id.yaml
+  /payment-counter/analytic:
+    $ref: ./paths/analytic/payment_counter_analytic.yaml
+  /payment-counter/person:
+    $ref: ./paths/person/payment_counter_person.yaml
+  /product-params/{absContractId}:
+    $ref: ./paths/{absContractId}/product_params_absContractId.yaml
+  /reconciliation/card/page:
+    $ref: ./paths/card/reconciliation_card_page.yaml
+  /reconciliation/request/is-reconciled:
+    $ref: ./paths/request/reconciliation_request_is_reconciled.yaml
+  /reconciliation/summary-by-status:
+    $ref: ./paths/summary-by-status/reconciliation_summary_by_status.yaml
+  /statement/external/summary/{statementRequestId}:
+    $ref: ./paths/external/statement_external_summary_statementRequestId.yaml
+  /statement/summary/{statementRequestId}:
+    $ref: ./paths/summary/statement_summary_statementRequestId.yaml
+  /turnover/count-not-empty:
+    $ref: ./paths/count-not-empty/turnover_count_not_empty.yaml
+  /turnover/find-prev-operation-date:
+    $ref: ./paths/find-prev-operation-date/turnover_find_prev_operation_date.yaml
+  /turnover/find-prev-operation-date-for-accounts:
+    $ref: ./paths/find-prev-operation-date-for-accounts/turnover_find_prev_operation_date_for_accounts.yaml
+  /turnover/get-account-entries-journal-page:
+    $ref: ./paths/get-account-entries-journal-page/turnover_get_account_entries_journal_page.yaml
+  /turnover/get-list:
+    $ref: ./paths/get-list/turnover_get_list.yaml
+  /turnover/get-list-by-ids:
+    $ref: ./paths/get-list-by-ids/turnover_get_list_by_ids.yaml
+  /turnover/get-summary:
+    $ref: ./paths/get-summary/turnover_get_summary.yaml
+  /turnover/get-turnover-log-by-event-id/{eventId}:
+    $ref: ./paths/get-turnover-log-by-event-id/turnover_get_turnover_log_by_event_id_eventId.yaml
+  /turnover/get-turnover-log-page:
+    $ref: ./paths/get-turnover-log-page/turnover_get_turnover_log_page.yaml
+  /turnover/summary-by-period:
+    $ref: ./paths/summary-by-period/turnover_summary_by_period.yaml
+  /united-agreement-request/category:
+    $ref: ./paths/category/united_agreement_request_category.yaml
+  /united-agreement-request/get-page:
+    $ref: ./paths/get-page/united_agreement_request_get_page.yaml
+components: {}

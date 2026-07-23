@@ -1,0 +1,10 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента в ЭКО
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Входные параметры функции получения статуса заявок на ЭП по идентификатору ФЛ в ЕСК

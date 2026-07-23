@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsCurrencyFilter.yaml
+description: Запрос страницы

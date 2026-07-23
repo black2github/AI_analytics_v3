@@ -1,0 +1,7 @@
+type: object
+properties:
+  error:
+    $ref: ../common/SimpleErrorData.yaml
+  affectedEntity:
+    $ref: ./ApRoleTemplateDto.yaml
+description: Результат обработки записи в API, которое работает с пачками

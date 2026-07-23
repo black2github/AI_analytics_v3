@@ -1,0 +1,18 @@
+type: object
+description: Информация о доступных пользователю действиях со списком заявок
+properties:
+  view:
+    type: boolean
+    description: Признак возможности просмотра
+  remove:
+    type: boolean
+    description: Признак возможности удаления
+  edit:
+    type: boolean
+    description: Признак возможности редактирования
+  viewQr:
+    type: boolean
+    description: Признак возможности просмотра QR
+  viewSubscription:
+    type: boolean
+    description: Признак возможности просмотра подписки

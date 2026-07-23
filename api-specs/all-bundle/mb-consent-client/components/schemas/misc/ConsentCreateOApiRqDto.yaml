@@ -1,0 +1,8 @@
+type: object
+properties:
+  Data:
+    $ref: ./Consent.yaml
+  Risk:
+    type: object
+    description: Индикаторы риска
+description: Запрос на создание неавторизованного согласия на доступ к счетам и пр.

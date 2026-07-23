@@ -1,0 +1,12 @@
+required:
+- userDeviceInfo
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  data:
+    $ref: ./ChargebackRequestUpdateDto.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Команда обновления

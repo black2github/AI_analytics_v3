@@ -1,0 +1,9 @@
+type: object
+properties:
+  hash:
+    type: string
+    description: Хеш
+  alg:
+    type: string
+    description: Алгоритм
+description: Хеш digest

@@ -1,0 +1,22 @@
+required:
+- docCreationPage
+- docCreationType
+- payerDetails
+type: object
+properties:
+  additionalFields:
+    $ref: ./PaymentOrderRequestAdditionalFieldsReq.yaml
+  payerDetails:
+    $ref: ./PayerDetailsSimplifiedBrokerageDto.yaml
+  recipientDetails:
+    $ref: ./RecipientDetailsSimplifiedDto.yaml
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9@:%_\+.-~#?&//=-]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+  paymentAmount:
+    $ref: ./PaymentAmountSimplifiedDto.yaml
+description: Входящие параметры для создания перевода на брокерский счёт.

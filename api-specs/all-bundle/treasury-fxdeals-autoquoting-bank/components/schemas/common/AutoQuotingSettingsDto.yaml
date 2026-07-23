@@ -1,0 +1,37 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  date:
+    type: string
+    description: Дата на которую актуальны настройки
+    format: date
+  cbRates:
+    type: array
+    description: Курсы валют ЦБ
+    items:
+      $ref: ./CBRateDto.yaml
+  quotingEnabled:
+    type: boolean
+    description: Признак доступности котирования
+  status:
+    type: string
+    description: Статус
+    enum:
+    - CURRENT
+    - ARCHIVED
+  createdAt:
+    type: string
+    description: Дата и время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения
+    format: date-time
+  actual:
+    type: boolean
+    description: Признак актуальности настроек
+description: Страница с данными

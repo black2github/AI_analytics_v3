@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsSvkOutStatusExportRqDto.yaml
+description: Запрос страницы

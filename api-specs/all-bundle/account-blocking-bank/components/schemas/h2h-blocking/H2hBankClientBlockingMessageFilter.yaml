@@ -1,0 +1,27 @@
+type: object
+properties:
+  statusCategory:
+    type: string
+    description: Категории ЭФ сообщений блокировок H2H по статусу
+    enum:
+    - PROCESS_ERROR
+    - IN_PROGRESS
+    - COMPLETED
+    - ALL
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientRnk:
+    $ref: ../common/FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoH2hBlockMessageStatusDto.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  docNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  docDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  fileName:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Запись журнала сообщений о блокировках H2H

@@ -1,0 +1,9 @@
+type: object
+required:
+- body
+- meta
+properties:
+  body:
+    $ref: ./PayerBody.yaml
+  meta:
+    $ref: ./AusnMetaDto.yaml

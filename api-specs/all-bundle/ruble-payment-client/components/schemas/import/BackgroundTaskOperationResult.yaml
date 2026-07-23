@@ -1,0 +1,6 @@
+type: object
+properties:
+  success:
+    type: boolean
+    description: Запрос успешно обработан
+description: Результат операции фоновой задачи

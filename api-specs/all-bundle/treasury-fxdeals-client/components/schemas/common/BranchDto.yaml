@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  knosisBranchId:
+    type: integer
+    format: int64
+  absCode:
+    type: string
+  name:
+    type: string
+  bic:
+    type: string
+  filialName:
+    type: string

@@ -1,0 +1,7 @@
+type: object
+properties:
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+description: Фильтр лога изменений клиентов банка

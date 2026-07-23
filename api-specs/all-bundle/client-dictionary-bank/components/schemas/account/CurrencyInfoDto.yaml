@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID валюты
+    format: uuid
+  numericCode:
+    type: string
+    description: Цифровой код валюты счета
+  code:
+    type: string
+    description: Буквенный код валюты счета
+  name:
+    type: string
+    description: Наименование валюты
+description: Доступы к счету для платежных документов

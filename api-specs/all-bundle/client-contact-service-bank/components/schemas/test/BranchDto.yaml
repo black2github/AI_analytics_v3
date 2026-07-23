@@ -1,0 +1,9 @@
+type: object
+properties:
+  city:
+    type: string
+  branchName:
+    type: string
+  utc_offset:
+    type: integer
+    format: int32

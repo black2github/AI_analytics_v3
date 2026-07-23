@@ -1,0 +1,28 @@
+get:
+  summary: Список корпоративных карт
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARDS_ECO (Данные о корпоративной карте)
+  parameters:
+  - name: limit
+    in: query
+    schema:
+      type: object
+      description: Количество записей
+      default: 100
+      minimum: 1
+    required: false
+  - name: offset
+    in: query
+    schema:
+      type: object
+      description: Смещение
+      default: 0
+      minimum: 0
+    required: false
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/page/PageDataBusinessCardDto.yaml

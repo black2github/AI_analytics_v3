@@ -1,0 +1,31 @@
+type: object
+properties:
+  types:
+    type: array
+    description: Типы счетов
+    items:
+      $ref: ./SuggestionAccountTypeDto.yaml
+  states:
+    type: array
+    description: Статусы счетов
+    items:
+      type: string
+      description: Статусы счетов
+      enum:
+      - RESERVED
+      - ANNULLED
+      - OPENED
+      - CLOSED
+      - TO_OPEN
+      - TO_CLOSE
+  accounts:
+    type: array
+    description: Счета
+    items:
+      $ref: ./AccountInfoDto.yaml
+  clients:
+    type: array
+    description: Клиенты
+    items:
+      $ref: ../common/BankClientInfoDto.yaml
+description: Информация для отображения в фильтре

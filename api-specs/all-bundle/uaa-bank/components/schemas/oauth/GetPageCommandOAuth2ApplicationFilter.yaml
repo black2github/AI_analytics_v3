@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsOAuth2ApplicationFilter.yaml
+description: Запрос страницы

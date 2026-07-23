@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsAskMessageLogFilter.yaml
+description: Запрос страницы

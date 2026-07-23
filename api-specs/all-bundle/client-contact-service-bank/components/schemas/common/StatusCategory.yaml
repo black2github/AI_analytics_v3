@@ -1,0 +1,9 @@
+type: string
+description: Категория статуса для ЭФ "Журнал звонков"
+enum:
+- NEW
+- WILL_CALL
+- SENT_TO_CC_WITH_ERROR
+- SENT_TO_CC
+- CALL_NOT_REQUIRED
+- ALL

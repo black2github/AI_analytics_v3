@@ -1,0 +1,16 @@
+type: object
+description: Информация о тарифе по договору
+properties:
+  percentRate:
+    type: number
+    description: Тариф (процент).
+  maxAmount:
+    type: number
+    description: Тариф максимум.
+  minAmount:
+    type: number
+    description: Тариф минимум
+  recordId:
+    type: integer
+    format: int64
+    description: Идентификатор записи тарифа

@@ -1,0 +1,23 @@
+required:
+- result
+type: object
+properties:
+  batchModes:
+    type: array
+    description: Выбор режима работы с пакетными заявками в рамках реестровой подписи
+    items:
+      type: string
+      description: Выбор режима работы с пакетными заявками в рамках реестровой подписи
+      enum:
+      - EXCLUDE_REQUESTS_FROM_BATCH
+      - ADD_BATCHES_TO_REGISTRY
+      - EXCLUDE_BATCHES_FROM_REGISTRY
+  result:
+    type: string
+    description: Результат проверки списка заявок перед реестровой подписи
+    example: success
+    enum:
+    - success
+    - incompleteBatch
+    - exceedingRequestAmount
+description: Результат проверки списка заявок на полноту вхождения в пакеты

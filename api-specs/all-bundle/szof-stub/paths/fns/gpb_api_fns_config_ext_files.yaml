@@ -1,0 +1,13 @@
+post:
+  requestBody:
+    content:
+      multipart/form-data:
+        schema:
+          $ref: ../../components/schemas/fns/FnsFileUploadRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+  summary: Upload Fns Archive
+  tags:
+  - Gpb Api Fns Stub Config Controller

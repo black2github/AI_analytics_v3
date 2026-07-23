@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице gps_eco_doc_issue_check_err
+  tags:
+  - Обновление заглушек gps_eco_doc_issue_check_err (Ошибки проверки возможности получения справки)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/RkoReferenceAvailabilityErrorDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/RkoReferenceAvailabilityErrorDto.yaml
+    '400':
+      description: Bad Request

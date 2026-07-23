@@ -1,0 +1,12 @@
+type: object
+properties:
+  responseCode:
+    type: integer
+    format: int32
+  openCommissionAmount:
+    type: number
+  openCommissionAccount:
+    type: string
+  hasIndividualTariff:
+    type: boolean
+description: Данные

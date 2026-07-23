@@ -1,0 +1,29 @@
+type: object
+properties:
+  creationDate:
+    type: string
+    description: Дата создания запроса на отзыв
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя, создавшего запрос
+  systemCode:
+    type: string
+    description: Система создания
+  wayCode:
+    type: string
+    description: Способ создания
+  baseDocumentId:
+    type: string
+    description: Идентификатор родительской заявки
+    format: uuid
+  pageCode:
+    type: string
+    description: Страница создания
+  status:
+    $ref: ./DictionaryDto.yaml
+description: Информация о создании запроса на отзыв

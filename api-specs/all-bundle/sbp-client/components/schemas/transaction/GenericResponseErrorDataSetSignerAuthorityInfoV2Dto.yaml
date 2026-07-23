@@ -1,0 +1,15 @@
+type: object
+description: Ответ, содержащий результат операции или ошибку
+properties:
+  data:
+    type: array
+    description: Данные
+    items:
+      $ref: ./SignerAuthorityInfoV2Dto.yaml
+    uniqueItems: true
+  error:
+    $ref: ../common/ErrorData.yaml
+    description: Ошибка
+  traceId:
+    type: string
+    description: Идентификатор

@@ -1,0 +1,15 @@
+type: object
+properties:
+  taskId:
+    type: string
+    description: Идентификатор задания
+    format: uuid
+  error:
+    type: string
+    description: Ошибка
+  balancePositions:
+    type: array
+    description: Данные балансовой позиции
+    items:
+      $ref: ./BalancePositionResponseDto.yaml
+description: Ответ на запрос по созданию задания на определение балансовых позиций 2-го порядка

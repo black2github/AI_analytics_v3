@@ -1,0 +1,7 @@
+type: object
+properties:
+  service:
+    type: string
+  targetPerson:
+    $ref: ./InviteTargetPersonDto.yaml
+description: ДТО смены контактных данных в инвайте

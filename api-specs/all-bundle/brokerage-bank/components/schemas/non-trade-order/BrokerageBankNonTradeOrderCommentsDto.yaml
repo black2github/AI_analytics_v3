@@ -1,0 +1,9 @@
+type: object
+properties:
+  commentForClient:
+    type: string
+    description: Комментарий для пользователя
+  commentForBank:
+    type: string
+    description: Комментарий для сотрудника банка
+description: Транспортная сущность для указания комментариев к неторговому поручению

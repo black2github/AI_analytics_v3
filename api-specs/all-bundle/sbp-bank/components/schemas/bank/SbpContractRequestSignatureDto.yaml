@@ -1,0 +1,32 @@
+type: object
+description: Реквизиты электронной подписи заявки
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор
+  ownerId:
+    type: string
+    format: uuid
+    description: Идентификатор владельца
+  typeId:
+    type: string
+    format: uuid
+    description: Идентификатор типа подписи
+  value:
+    $ref: ./SignatureValueDto.yaml
+    description: Значение подписи
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+    description: Данные сертификата
+  signedAt:
+    type: string
+    format: date-time
+    description: Дата подписания
+  userFio:
+    type: string
+    description: Пользователь, подписавший заявку (ФИО)
+  sppVersion:
+    type: integer
+    format: int32
+    description: Версия СПП

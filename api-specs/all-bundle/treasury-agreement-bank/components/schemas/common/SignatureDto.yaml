@@ -1,0 +1,39 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  ownerId:
+    type: string
+    description: Идентификатор владельца
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  typeId:
+    type: string
+    description: Идентификатор типа подписи
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  value:
+    $ref: ./SignatureValueDto.yaml
+  certificate:
+    $ref: ./CertificateInfoDto.yaml
+  signedAt:
+    type: string
+    description: Дата подписания
+    format: date-time
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  kind:
+    type: string
+    description: Признак подписи
+    enum:
+    - UNDEFINED
+    - UNKNOWN_SIGN
+    - LOCAL
+    - CLOUD_SIGN
+    - NOT_QUALIFIED_SIGN
+    - QUALIFIED_SIGN
+    - SIMPLE_SIGN
+description: Подпись Визирующего

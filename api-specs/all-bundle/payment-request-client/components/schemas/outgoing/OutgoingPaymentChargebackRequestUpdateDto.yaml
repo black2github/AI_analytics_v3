@@ -1,0 +1,14 @@
+required:
+- version
+type: object
+properties:
+  chargebackReason:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9\s'"\-!?.,:;]*$
+    type: string
+    description: Причина отзыва
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Обновление сущности "Запрос на отзыв"

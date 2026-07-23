@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./RemoteSourceDto.yaml
+  notEq:
+    $ref: ./RemoteSourceDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./RemoteSourceDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./RemoteSourceDto.yaml
+  isNull:
+    type: boolean
+description: Система источник записи.

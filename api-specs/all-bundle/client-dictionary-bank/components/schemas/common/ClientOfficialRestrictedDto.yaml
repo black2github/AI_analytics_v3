@@ -1,0 +1,26 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор представителя
+    format: uuid
+  position:
+    type: string
+    description: Должность
+  blockState:
+    type: string
+    description: 'BLOCKED - Заблокирован;
+
+      UNBLOCKED - Не заблокирован.'
+    enum:
+    - BLOCKED
+    - UNBLOCKED
+  clientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+description: Облегченная ДТО представителя

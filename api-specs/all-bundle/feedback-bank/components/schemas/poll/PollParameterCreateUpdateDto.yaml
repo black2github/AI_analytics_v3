@@ -1,0 +1,53 @@
+type: object
+properties:
+  screenFormName:
+    type: string
+    description: Наименование экранной формы
+  daysSinceFeedbackCancel:
+    type: integer
+    description: Кол-во дней при отказе от оценки
+    format: int32
+  daysSinceLastFeedback:
+    type: integer
+    description: Кол-во дней от последней оценки
+    format: int32
+  pollParameterSource:
+    type: string
+    description: Источник оценки
+  useHashtags:
+    type: boolean
+    description: Использовать хештеги
+  notFilledStars:
+    type: array
+    description: Подсказки для оценки «Не заполнено» (NULL)
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  stars1:
+    type: array
+    description: Подсказки для оценок 1 звезда
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  stars2:
+    type: array
+    description: Подсказки для оценок 2 звезды
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  stars3:
+    type: array
+    description: Подсказки для оценок 3 звезды
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  stars4:
+    type: array
+    description: Подсказки для оценки 4 звезды
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  stars5:
+    type: array
+    description: Подсказки для оценки 5 звёзд
+    items:
+      $ref: ./CommentHintDisplayDto.yaml
+  active:
+    type: boolean
+    description: Активный ли опрос
+description: DTO для создания и обновления параметра опроса

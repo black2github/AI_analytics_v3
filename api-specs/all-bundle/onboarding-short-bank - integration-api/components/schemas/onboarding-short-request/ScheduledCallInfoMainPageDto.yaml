@@ -1,0 +1,12 @@
+type: object
+properties:
+  callDate:
+    type: string
+    description: Дата звонка клиенту
+  callTimeFrom:
+    type: string
+    description: Начало диапазона времени звонка клиенту
+  callTimeTo:
+    type: string
+    description: Конец диапазона времени звонка клиенту
+description: Дата и диапазон времени назначаемого звонка клиенту

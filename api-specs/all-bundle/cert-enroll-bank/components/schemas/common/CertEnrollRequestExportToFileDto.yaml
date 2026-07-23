@@ -1,0 +1,22 @@
+required:
+- documentIds
+- visibleColumns
+type: object
+properties:
+  documentIds:
+    minItems: 1
+    type: array
+    description: Список ID документов
+    items:
+      type: string
+      description: Список ID документов
+      format: uuid
+  visibleColumns:
+    minItems: 1
+    uniqueItems: true
+    type: array
+    description: Список колонок скроллера включаемых в выгрузку
+    items:
+      type: string
+      description: Список колонок скроллера включаемых в выгрузку
+description: Запрос на выгрузку списка заявок на выпуск/регистрацию ЭП

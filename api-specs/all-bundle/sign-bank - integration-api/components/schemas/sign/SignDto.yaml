@@ -1,0 +1,33 @@
+required:
+- certificateId
+- data
+- sign
+- signDate
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  data:
+    minLength: 1
+    type: string
+    description: Дайджест
+  sign:
+    minLength: 1
+    type: string
+    description: Подпись
+  signDate:
+    type: string
+    description: Дата подписи
+    format: date-time
+  signFileName:
+    type: string
+    description: Название файла подписи
+  signFileNameSize:
+    type: string
+    description: Размер файла подписи
+  hashed:
+    type: boolean
+    description: Признак хешированных данных
+description: Объект, представляющий данные ЭП

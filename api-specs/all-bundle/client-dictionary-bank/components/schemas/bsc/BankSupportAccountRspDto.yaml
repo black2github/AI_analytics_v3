@@ -1,0 +1,40 @@
+required:
+- accountNumber
+- bic
+- preCheckEnabled
+type: object
+properties:
+  accountNumber:
+    maxLength: 20
+    type: string
+    description: Номер счёта
+  bic:
+    maxLength: 9
+    type: string
+    description: БИК
+  currencyCode:
+    maxLength: 3
+    type: string
+    description: Код валюты ISO
+  isBankSupport:
+    type: boolean
+    writeOnly: true
+  preCheckEnabled:
+    type: boolean
+    description: Предпроверки БСК применимы
+  isDocumentAttachmentRequired:
+    type: boolean
+    writeOnly: true
+  lastExtEventId:
+    type: string
+    description: ID последнего внешнего события
+    format: uuid
+  lastExtEventDate:
+    type: string
+    description: Дата формирования последнего внешнего события
+    format: date-time
+  bankSupport:
+    type: boolean
+  documentAttachmentRequired:
+    type: boolean
+description: Счета БСК

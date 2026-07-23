@@ -1,0 +1,39 @@
+type: object
+description: Сообщение АС СБП
+properties:
+  id:
+    type: string
+    format: uuid
+    description: Идентификатор сообщения
+  docDate:
+    type: string
+    format: date-time
+    description: Дата и время получения сообщения
+  qrcId:
+    type: string
+    description: Идентификатор QR
+  transactionId:
+    type: string
+    description: Идентификатор операции оплаты
+  messageCode:
+    type: string
+    description: Код сообщения
+  messageIn:
+    type: string
+    description: Текст сообщения
+  answerCode:
+    type: string
+    description: Код ответа
+  notificationType:
+    type: string
+    description: Вид сообщения
+    enum:
+    - SUBSCRIPTION
+    - RESOLUTION
+    - PAYMENT
+    - TRANSACTION
+    - B2B_PAYMENT
+required:
+- docDate
+- id
+- notificationType

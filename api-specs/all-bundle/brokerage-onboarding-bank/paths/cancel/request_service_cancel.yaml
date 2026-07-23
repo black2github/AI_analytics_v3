@@ -1,0 +1,19 @@
+post:
+  tags:
+  - Работа с заявками на заключение брокерского договора
+  summary: Отметить заявку отмененной
+  description: 'Привилегии: BRK_ONBOARDING.BANK.REQUEST.STATUS.CHANGE'
+  operationId: cancel
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GenericCommandBrkOnbAdminRequestDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataBrkOnbRequestViewDto.yaml

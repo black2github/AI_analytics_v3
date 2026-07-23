@@ -1,0 +1,77 @@
+type: object
+properties:
+  accountAssignment:
+    type: string
+    description: Назначение счета
+    enum:
+    - BASE
+    - GPS_GOZ
+  accountEcoType:
+    type: integer
+    description: Тип счета в ЭКО
+    format: int64
+  accountId:
+    type: string
+    description: Идентификатор счета в Ф1
+  accountName:
+    type: string
+    description: Название счета
+  curShort:
+    type: string
+    description: Валюта
+  debt:
+    type: number
+    description: Текущая задолженность по комиссии перед Банком
+  f1AccountType:
+    type: string
+    description: Типы счета в РКО Ф1
+    enum:
+    - PAYMENT
+    - GOZ
+  mainVId:
+    type: string
+    description: Номер счета
+  restrictions:
+    uniqueItems: true
+    type: array
+    description: Список ограничений
+    items:
+      type: string
+      description: Список ограничений
+      enum:
+      - IS_RESTRICTIONS
+      - IS_CREDITS
+      - IS_115FZ
+      - IS_499P
+      - IS_BAN_KOMMS
+      - IS_GPB_KK
+      - IS_KORP_KARTA
+      - IS_DEPOSIT_RETURN
+      - IS_LAST
+      - IS_DEBT_NOT_NULL
+      - IS_GOSCONTRACT
+      - IS_GOSCONTRACT_IN_PSB
+      - GPB_KORPKARTA
+      - GPS_ETP_AGR
+      - ESKROU
+      - ESKROU_NEW
+      - MONITORING_BC
+      - BANK_SUPP_AND_CONTR
+      - ACCEPT_VTB_DEP
+      - SCORE_3WAY
+      - SPFS_3WAY
+      - GPS_CASH_POOLING
+      - CASH_POOLING
+      - CASH_POOLING_OVER
+      - CASH_POOLING_CONSOLIDATION
+      - GPS_PRCK_GSNO
+      - GPS_GEN_MNO
+      - GPS_PRCK_MNO
+      - GPS_PRCK_MNO_PS
+      - GPS_PRCK_SNO
+      - IS_BLOCK_MNO
+      - IS_GOZ_EMPTY
+  saldo:
+    type: number
+    description: Остаток денежных средств
+description: Счет, доступный для закрытия

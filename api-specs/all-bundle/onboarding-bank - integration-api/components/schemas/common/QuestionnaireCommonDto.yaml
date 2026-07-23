@@ -1,0 +1,9 @@
+type: object
+properties:
+  isSiteUsage:
+    type: boolean
+    description: Оказывает ли компания услуги с использованием сайта в сети интернет
+  site:
+    type: string
+    description: Сайт, на котором осуществляется деятельность
+description: Общие сведения из опросника

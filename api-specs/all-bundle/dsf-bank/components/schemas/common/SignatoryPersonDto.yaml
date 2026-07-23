@@ -1,0 +1,23 @@
+type: object
+description: Подписант
+properties:
+  active:
+    type: boolean
+    description: Индикатор валидности подписанта.
+  email:
+    type: string
+    description: Email подписанта.
+  fullName:
+    type: string
+    description: ФИО подписанта.
+  login:
+    type: string
+    description: Логин подписанта.
+  order:
+    type: integer
+    format: int32
+    description: Очередность подписанта в группе.
+  userId:
+    type: string
+    format: uuid
+    description: Уникальный идентификатор подписанта.

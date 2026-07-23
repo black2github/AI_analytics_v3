@@ -1,0 +1,38 @@
+type: object
+description: ДТО импорта входящего QR кода
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор входящего QR кода в СБП
+  qrcType:
+    type: string
+    description: Тип QR кода
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  recipientData:
+    $ref: ./SbpQrcInvoiceImportRecipientDataDto.yaml
+    description: Реквизиты получателя
+  amount:
+    type: integer
+    format: int64
+    description: Сумма платежа в копейках
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС в копейках
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  vat:
+    type: boolean
+    description: Информация о взимании НДС, false - не взимается
+  noAmountQrc:
+    type: boolean
+    description: Входящий QR без суммы платежа, true - требуется заполнить сумму
+required:
+- vat

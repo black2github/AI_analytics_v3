@@ -1,0 +1,12 @@
+type: object
+properties:
+  approvalSignType:
+    type: string
+    description: Тип визы
+    enum:
+    - POSITIVE
+    - NEGATIVE
+  approvalSignComment:
+    type: string
+    description: Комментарий к визе
+description: Данные визы

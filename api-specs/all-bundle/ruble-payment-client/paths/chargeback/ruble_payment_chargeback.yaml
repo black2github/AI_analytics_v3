@@ -1,0 +1,118 @@
+put:
+  tags:
+  - Заявка на отзыв. Базовые операции.
+  summary: Обновление документа
+  description: 'Привилегии: CHARGEBACK.EDIT'
+  operationId: update_4
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/chargeback/UpdateWithDeviceChargebackCommandChargebackRequestUpdateDtoUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/chargeback/CreateResponseChargebackRequestClientDto.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+post:
+  tags:
+  - Заявка на отзыв. Базовые операции.
+  summary: Создание документа
+  description: 'Привилегии: CHARGEBACK.CREATE'
+  operationId: create_4
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/chargeback/CreateWithDeviceChargebackCommandChargebackRequestCreateDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            oneOf:
+            - $ref: ../../components/schemas/common/CreateResponse.yaml
+            - $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '201':
+      description: Created
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/chargeback/ListResponseCreateResponseChargebackRequestClientDto.yaml

@@ -1,0 +1,12 @@
+required:
+- ids
+type: object
+properties:
+  ids:
+    type: array
+    description: Массив идентификаторов счётов ТНФ
+    items:
+      type: string
+      description: Массив идентификаторов счётов ТНФ
+      format: uuid
+description: Данные по счету ТНФ в запросе на удаление счета ТНФ

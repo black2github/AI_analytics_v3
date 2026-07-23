@@ -1,0 +1,25 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  lastName:
+    type: string
+    description: Фамилия УЛ
+  firstName:
+    type: string
+    description: Имя УЛ
+  patronymic:
+    type: string
+    description: Отчество УЛ
+  email:
+    type: string
+    description: Адрес электронной почты УЛ
+  phoneNumber:
+    type: string
+    description: Номер телефона УЛ
+  eskId:
+    type: string
+    description: Идентификатор физического лица в ЕСК
+description: Пользователь УЛ Клиента Банка

@@ -1,0 +1,32 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор истории оферты
+    format: uuid
+  documentId:
+    type: string
+    description: Идентификатор оферты
+    format: uuid
+  status:
+    type: string
+    description: Статус изменения
+  changedIn:
+    type: string
+    description: Изменен в
+    format: date-time
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userName:
+    type: string
+    description: Имя пользователя изменивший оферту
+  stageInteraction:
+    type: string
+    description: Стадия взаимодействия с АБС
+    enum:
+    - CREATE_DS_IN_RKO_F1
+    - UNLOAD_PF_OFFER_IN_RKO_F1
+    - CREATE_DOSSIER_IN_TESSA
+description: История оферты

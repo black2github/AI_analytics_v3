@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с фичами
+  summary: Создать запись
+  description: 'Привилегии: FEATURE_CREATE'
+  operationId: create_2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/FeatureDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/GenericResponseSimpleErrorDataFeatureDto.yaml

@@ -1,0 +1,9 @@
+required:
+- duration
+type: object
+properties:
+  duration:
+    type: integer
+    description: Длительность временной блокировки в секундах
+    format: int64
+description: Запрос на временную блокировку пользователя

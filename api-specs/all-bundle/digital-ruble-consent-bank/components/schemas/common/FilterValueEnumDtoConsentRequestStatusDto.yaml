@@ -1,0 +1,68 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - DELIVERED
+    - DETAILS_VALID
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_SENDING_TO_ASCR
+    - MSG1_SENT_TO_ASCR
+    - MSG1_ACCEPTED_IN_ASCR
+    - MSG1_SENT_ERROR_IN_ASCR
+    - EXECUTED_ENCRYPTED
+    - EXECUTED
+    - REJECTED
+  notEq:
+    type: string
+    enum:
+    - DELIVERED
+    - DETAILS_VALID
+    - MSG1_NEED_SIGN
+    - MSG1_SIGN_VALID
+    - MSG1_SENDING_TO_ASCR
+    - MSG1_SENT_TO_ASCR
+    - MSG1_ACCEPTED_IN_ASCR
+    - MSG1_SENT_ERROR_IN_ASCR
+    - EXECUTED_ENCRYPTED
+    - EXECUTED
+    - REJECTED
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - DELIVERED
+      - DETAILS_VALID
+      - MSG1_NEED_SIGN
+      - MSG1_SIGN_VALID
+      - MSG1_SENDING_TO_ASCR
+      - MSG1_SENT_TO_ASCR
+      - MSG1_ACCEPTED_IN_ASCR
+      - MSG1_SENT_ERROR_IN_ASCR
+      - EXECUTED_ENCRYPTED
+      - EXECUTED
+      - REJECTED
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - DELIVERED
+      - DETAILS_VALID
+      - MSG1_NEED_SIGN
+      - MSG1_SIGN_VALID
+      - MSG1_SENDING_TO_ASCR
+      - MSG1_SENT_TO_ASCR
+      - MSG1_ACCEPTED_IN_ASCR
+      - MSG1_SENT_ERROR_IN_ASCR
+      - EXECUTED_ENCRYPTED
+      - EXECUTED
+      - REJECTED
+  isNull:
+    type: boolean

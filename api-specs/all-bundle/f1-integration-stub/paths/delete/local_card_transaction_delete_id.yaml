@@ -1,0 +1,13 @@
+delete:
+  summary: Удаление записи о транзакции по локальной карте
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARD_DOCS_IRAO_ECO (Данные о транзакциях по локальной карте питания)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      type: integer
+  responses:
+    '204':
+      description: No Content

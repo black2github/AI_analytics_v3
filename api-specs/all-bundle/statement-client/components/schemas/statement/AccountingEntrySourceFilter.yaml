@@ -1,0 +1,32 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - VIEW
+    - OTHER
+  notEq:
+    type: string
+    enum:
+    - VIEW
+    - OTHER
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - VIEW
+      - OTHER
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - VIEW
+      - OTHER
+  isNull:
+    type: boolean

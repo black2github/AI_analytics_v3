@@ -1,0 +1,21 @@
+required:
+- bankClientId
+- certificateRegistered
+- walletDetails
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  walletIdentified:
+    type: boolean
+    description: Признак завершения идентификации кошелька
+  certificateRegistered:
+    type: boolean
+    description: Признак завершения регистрации сертификата
+  walletDetails:
+    $ref: ./WalletDetailsDto.yaml
+  certificateDetails:
+    $ref: ./CertificateDetailsDto.yaml
+description: Агрегированная информация по СЦР (для отображения в виджете сервиса ЦР)

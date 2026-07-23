@@ -1,0 +1,77 @@
+required:
+- admPocs
+- requestBody
+- requestSubject
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  admPocs:
+    type: array
+    description: АДМы
+    items:
+      $ref: ../common/AdmPocDto.yaml
+  bankClient:
+    $ref: ../common/AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  contactPerson:
+    type: string
+    description: Контактное лицо (ФИО)
+  contactPersonPhone:
+    type: string
+    description: Контактное лицо (телефон)
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  otherInfo:
+    $ref: ../common/OtherInfoDto.yaml
+  requestBody:
+    type: string
+    description: Описание неисправности
+  requestSubject:
+    type: string
+    description: Тип неисправности
+  requestType:
+    $ref: ../common/AdmRequestTypeDto.yaml
+  status:
+    $ref: ../common/AdmRequestStatusDto.yaml
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка о неисправности АДМ

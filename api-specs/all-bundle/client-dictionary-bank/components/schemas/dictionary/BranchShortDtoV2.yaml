@@ -1,0 +1,47 @@
+required:
+- name
+- number
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Наименование подразделения
+  docsName:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Название филиала для платежных документов
+  number:
+    maxLength: 50
+    minLength: 0
+    type: string
+    description: Номер подразделения
+  address:
+    maxLength: 100
+    minLength: 0
+    type: string
+    description: Адрес подразделения
+  requisites:
+    $ref: ./RequisitesShortDtoV2.yaml
+  filialName:
+    type: string
+    description: Название филиала
+  parentBranch:
+    type: string
+    description: Идентификатор филиала
+    format: uuid
+  absCode:
+    type: string
+    description: АБС Код подразделения
+  filialEskCode:
+    maxLength: 3
+    minLength: 0
+    type: string
+    description: Код филиала
+description: Подразделение банка

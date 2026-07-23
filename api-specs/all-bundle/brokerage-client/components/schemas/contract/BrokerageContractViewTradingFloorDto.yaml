@@ -1,0 +1,24 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код биржи
+  ordinal:
+    type: integer
+    description: Порядковый представления биржи в наборе
+    format: int32
+  name:
+    type: string
+    description: Наименование биржи
+  connected:
+    type: boolean
+    description: Признак подключен
+  currencyAccounts:
+    type: array
+    description: Список валют счета
+    items:
+      $ref: ./AccountCurrencyDto.yaml
+  clientCode:
+    type: string
+    description: Kод клиента
+description: Биржа

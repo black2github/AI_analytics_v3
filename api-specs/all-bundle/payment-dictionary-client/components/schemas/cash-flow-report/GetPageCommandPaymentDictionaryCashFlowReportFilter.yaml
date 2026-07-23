@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsPaymentDictionaryCashFlowReportFilter.yaml
+description: Запрос страницы

@@ -1,0 +1,22 @@
+{
+  "_comment": "Auto domain map for brokerage-bank (seg0-resources)",
+  "default": "misc",
+  "rules": [
+    {
+      "prefix": "/trade-order",
+      "domain": "trade-order"
+    },
+    {
+      "prefix": "/report-request",
+      "domain": "report-request"
+    },
+    {
+      "prefix": "/non-trade-order",
+      "domain": "non-trade-order"
+    },
+    {
+      "prefix": "/contract-service",
+      "domain": "contract-service"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор справочника "Периоды планирования"
+    format: uuid
+  name:
+    type: string
+    description: Наименование справочника "Периоды планирования"
+  isParent:
+    type: boolean
+    description: Признак головной период
+description: Наименование справочника "Периоды планирования"

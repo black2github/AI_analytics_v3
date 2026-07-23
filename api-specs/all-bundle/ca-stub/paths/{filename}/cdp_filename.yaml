@@ -1,0 +1,21 @@
+get:
+  tags:
+  - API распространения CRL
+  summary: Получить CRL
+  operationId: getCrl
+  parameters:
+  - name: filename
+    in: path
+    required: true
+    schema:
+      type: string
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            type: array
+            items:
+              type: string
+              format: byte

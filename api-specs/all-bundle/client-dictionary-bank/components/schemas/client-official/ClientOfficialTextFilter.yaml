@@ -1,0 +1,6 @@
+type: object
+properties:
+  textQuery:
+    type: string
+    description: Строка поиска по наименованию клиента, ИНН/КИО, ОГРН, РНК.
+description: Представитель Клиента Банка справочник

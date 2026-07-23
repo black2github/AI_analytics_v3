@@ -1,0 +1,11 @@
+type: object
+properties:
+  onboardingRequestId:
+    type: string
+    description: Идентификатор короткой заявки на открытие первого счета
+    format: uuid
+  zkboSignerId:
+    type: integer
+    description: ID ЕСК физ.лица-подписанта ЗКБО
+    format: int64
+description: DTO для обновления признака подписанта ЗКБО для физ.лиц в короткой заявке на открытие первого счета

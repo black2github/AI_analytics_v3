@@ -1,0 +1,13 @@
+type: object
+properties:
+  fileId:
+    type: string
+    description: Идентификатор файла
+    format: uuid
+  fileName:
+    type: string
+    description: Имя файла
+  token:
+    type: string
+    description: Токен загрузки файла
+description: Данные для загрузки файла

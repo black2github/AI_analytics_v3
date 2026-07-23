@@ -1,0 +1,25 @@
+required:
+- bankClientId
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Технический идентификатор. Не используется в процедуре поиска
+    format: uuid
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  eskId:
+    type: string
+    description: Идентификатор сотрудника в ЕСК
+  emplId:
+    type: string
+    description: Ссылка на сущность "Сотрудники клиента"
+    format: uuid
+  userUaaId:
+    type: string
+    description: Ссылка на сущность "Клиентский пользователь"
+    format: uuid
+description: Запрос сотрудника организации

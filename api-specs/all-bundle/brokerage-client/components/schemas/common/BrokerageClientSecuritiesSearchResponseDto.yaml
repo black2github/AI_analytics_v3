@@ -1,0 +1,50 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  isin:
+    maxLength: 12
+    pattern: ^[0-9A-Za-z]+$
+    type: string
+    description: Международный идентификационный код ценной бумаги
+  number:
+    maxLength: 30
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Регистрационный номер ценной бумаги
+  ticker:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Краткое название в биржевой информации котируемых инструментов
+  issuer:
+    maxLength: 255
+    pattern: ^[0-9A-Za-zА-Яа-яЁё\s\!\"\№\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\]\\\^\_\`\{\}\|\~\№\.]+$
+    type: string
+    description: Эмитент ценной бумаги
+  type:
+    type: string
+    description: Тип ценной бумаги
+    enum:
+    - BONDS
+    - EQUITIES
+    - SHARES
+    - FUTURES
+    - OPTIONS
+    - KSU
+  guid:
+    type: string
+    description: Guid ценной бумаги в ЦРМ БРК
+  tradingFloor:
+    type: string
+    description: Торговая площадка
+  count:
+    type: number
+    description: Количество доступных ценных бумаг на продажу
+  contractEcoId:
+    type: string
+    description: Эко идентификатор брокерского договора
+    format: uuid
+description: Представление ответа для получения данных ISIN

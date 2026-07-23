@@ -1,0 +1,29 @@
+post:
+  tags:
+  - Контроллер F1 версии 2.
+  summary: Запустить хранимую процедуру и получить результат
+  operationId: executeUsingPOST_1
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: requestDto
+    description: requestDto
+    required: true
+    schema:
+      $ref: '#/definitions/F1RequestDto'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/F1ResponseDto'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

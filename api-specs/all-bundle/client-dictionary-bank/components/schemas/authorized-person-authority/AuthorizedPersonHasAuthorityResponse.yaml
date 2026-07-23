@@ -1,0 +1,10 @@
+type: object
+properties:
+  authorizedPersonStatus:
+    type: string
+    description: Статус уполномоченного лица
+    enum:
+    - UNDEFINED
+    - ACTIVE
+    - POTENTIAL
+description: Ответ на запрос проверки доступности привилегий уполномоченного лица

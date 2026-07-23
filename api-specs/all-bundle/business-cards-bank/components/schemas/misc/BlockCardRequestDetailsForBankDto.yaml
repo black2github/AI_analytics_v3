@@ -1,0 +1,89 @@
+type: object
+properties:
+  accountNumber:
+    type: string
+    description: Номер счета
+  action:
+    type: string
+    description: Действие по изменению статуса карты
+    enum:
+    - HARD_BLOCK
+    - CLOSE
+    - SOFT_BLOCK
+    - UNLOCK
+  addInfo:
+    type: string
+    description: Дополнительная информация
+  agreement:
+    type: boolean
+    description: Согласие
+  agreementTextVersion:
+    type: integer
+    description: Версия текста согласия
+    format: int32
+  batchNumber:
+    type: integer
+    description: Номер пакета
+    format: int32
+  cardHolder:
+    type: string
+    description: ФИО держателя карты
+  cardId:
+    type: string
+    description: Виртуальный номер карты
+  clientId:
+    type: string
+    description: Идентификатор клиента в Экосистеме
+    format: uuid
+  clientName:
+    type: string
+    description: Организация
+  commentForBank:
+    type: string
+    description: Информация для банка
+  commentForClient:
+    type: string
+    description: Информация для клиента
+  createdAt:
+    type: string
+    description: Дата и время создания заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  inn:
+    type: string
+    description: ИНН
+  maskedNum:
+    type: string
+    description: Номер карты
+  paymentSystem:
+    type: string
+    description: Платежная система
+  reason:
+    type: string
+    description: Причина блокировки
+  reqDate:
+    type: string
+    description: Дата заявки
+    format: date
+  reqNum:
+    type: integer
+    description: Номер заявки
+    format: int32
+  signerId:
+    type: string
+    description: Идентификатор подписанта
+    format: uuid
+  status:
+    type: string
+    description: Статус
+  statusForBank:
+    type: string
+    description: Статус для банка
+  updatedAt:
+    type: string
+    description: Дата и время обновления заявки
+    format: date-time
+description: Заявка на изменение статуса карты. Банковская часть

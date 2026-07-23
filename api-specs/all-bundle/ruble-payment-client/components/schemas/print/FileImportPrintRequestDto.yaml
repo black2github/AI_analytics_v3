@@ -1,0 +1,12 @@
+required:
+- fileImportId
+- format
+type: object
+properties:
+  fileImportId:
+    type: string
+    description: Идентификаторы записи файлового импорта
+    format: uuid
+  format:
+    $ref: ./ReportFormat.yaml
+description: Запрос на печать/экспорт протокола файлового импорта

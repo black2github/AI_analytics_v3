@@ -1,0 +1,25 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  code:
+    type: string
+    description: Код базовой ставки
+  shortName:
+    type: string
+    description: Короткое наименование базовой ставки
+  fullName:
+    type: string
+    description: Полное наименование базовой ставки
+  createdAt:
+    type: string
+    description: Время создания
+    format: date-time
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+description: Данные

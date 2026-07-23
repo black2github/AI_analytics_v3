@@ -1,0 +1,8 @@
+type: object
+properties:
+  accounts:
+    type: array
+    description: Массив счетов, доступных для закрытия
+    items:
+      $ref: ./F1AccountToClosePossibilityResponseDto.yaml
+description: Проверка возможности закрыть счет

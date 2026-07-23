@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoString.yaml
+  category:
+    $ref: ./FilterValueEnumDtoOpenApiSpecCategoryDto.yaml
+  deleted:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр OpenApi спецификаций

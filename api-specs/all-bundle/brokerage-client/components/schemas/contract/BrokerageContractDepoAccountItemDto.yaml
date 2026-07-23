@@ -1,0 +1,15 @@
+type: object
+properties:
+  depoAccountId:
+    type: string
+    description: Идентификатор счета Депо
+  floorName:
+    type: string
+    description: Наименование торговой площадки
+  account:
+    type: string
+    description: Номер счета
+  subAccount:
+    type: string
+    description: Раздел счета
+description: Элемент списка счетов Депо

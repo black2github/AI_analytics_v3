@@ -1,0 +1,21 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  landingCode:
+    $ref: ./FilterValueEnumDtoLandingRequestTypeDto.yaml
+  clientData:
+    $ref: ./FilterValueDtoString.yaml
+  status:
+    $ref: ./FilterValueEnumDtoLandingRequestStatusDto.yaml
+  id:
+    $ref: ./FilterValueDtoUUID.yaml
+  documentNumber:
+    $ref: ./FilterValueDtoLong.yaml
+  fio:
+    $ref: ./FilterValueDtoString.yaml
+  phone:
+    $ref: ./FilterValueDtoString.yaml
+  email:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр скроллера заявок посадочных страниц

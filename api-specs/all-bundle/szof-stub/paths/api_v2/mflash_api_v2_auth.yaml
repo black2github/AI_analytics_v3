@@ -1,0 +1,14 @@
+post:
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/api_v2/MflashAuthRequest.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/api_v2/MflashAuthResponse.yaml

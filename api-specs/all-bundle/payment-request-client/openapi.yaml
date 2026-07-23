@@ -1,0 +1,1010 @@
+openapi: 3.0.1
+info:
+  title: Платежные требования. Клиентская часть.
+  description: Сервис платежных требований.
+  version: 1.76.0
+servers:
+- url: /payment-request-client
+tags:
+- name: Операции импорта из файла.
+- name: Платежное требование вдодящее. Операции с историей.
+- name: Подсказки для клиентского фильтра.
+- name: Платежное требование исходящее. Операции импорта из файла.
+- name: Платежное требование (входящее). Базовые операции.
+- name: Статистика импорта из файла
+- name: Акцепт платежного требования. Базовые операции.
+- name: Интеграция c Ф1
+- name: Платежное требование исходящее. Счета клиента.
+- name: Операции печати файлового импорта.
+- name: АПИ для работы с подписью файлов импорта
+- name: Отзыв платежного требования исходящего. Базовые операции.
+- name: API справочника [РРКО_ПТ Исх] Справочник состояний ПТИ
+- name: Подпись акцепта платёжного требования
+- name: Платежное требование входящее. Операции печати и экспорта.
+- name: API справочника [РРКО_ПТ Исх] Справочник кодовых назначений платежа
+- name: Платежное требование исходящее. Вспомогательные вычисления
+- name: Платежное требование исходящее. Операции с историей.
+- name: Подсказки для заявки Платёжное требование исходящее
+- name: Шаблон платежное требование исходящее. Базовые операции
+- name: Платежное требование исходящее. Операции печати и экспорта.
+- name: Платежное требование исходящее. Базовые операции.
+- name: Акцепт платежного требования. Счета клиента.
+- name: Платежное требование исходящее. Данные для вкладок.
+- name: Подпись платёжного требования исходящего
+- name: Подпись отзыва платёжного требования исходящего
+- name: Подсказки для фильтра журнала загруженных файлов.
+paths:
+  /payment-request/outgoing:
+    $ref: ./paths/outgoing/payment_request_outgoing.yaml
+  /payment-request/outgoing/template:
+    $ref: ./paths/outgoing/payment_request_outgoing_template.yaml
+  /payment-request/outgoing/chargeback:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback.yaml
+  /payment-request/outgoing/verify-sign-data:
+    $ref: ./paths/outgoing/payment_request_outgoing_verify_sign_data.yaml
+  /payment-request/outgoing/v2.1/generate-sign-data:
+    $ref: ./paths/outgoing/payment_request_outgoing_v2_1_generate_sign_data.yaml
+  /payment-request/outgoing/template/update-by-document:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_update_by_document.yaml
+  /payment-request/outgoing/template/get-page:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_get_page.yaml
+  /payment-request/outgoing/template/create-by-document:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_create_by_document.yaml
+  /payment-request/outgoing/suggestion/vat-amount:
+    $ref: ./paths/outgoing/payment_request_outgoing_suggestion_vat_amount.yaml
+  /payment-request/outgoing/sign:
+    $ref: ./paths/outgoing/payment_request_outgoing_sign.yaml
+  /payment-request/outgoing/sign/check:
+    $ref: ./paths/outgoing/payment_request_outgoing_sign_check.yaml
+  /payment-request/outgoing/sign-registry:
+    $ref: ./paths/outgoing/payment_request_outgoing_sign_registry.yaml
+  /payment-request/outgoing/send:
+    $ref: ./paths/outgoing/payment_request_outgoing_send.yaml
+  /payment-request/outgoing/send/check:
+    $ref: ./paths/outgoing/payment_request_outgoing_send_check.yaml
+  /payment-request/outgoing/send-async:
+    $ref: ./paths/outgoing/payment_request_outgoing_send_async.yaml
+  /payment-request/outgoing/remove-sign:
+    $ref: ./paths/outgoing/payment_request_outgoing_remove_sign.yaml
+  /payment-request/outgoing/print:
+    $ref: ./paths/outgoing/payment_request_outgoing_print.yaml
+  /payment-request/outgoing/import:
+    $ref: ./paths/outgoing/payment_request_outgoing_import.yaml
+  /payment-request/outgoing/import/report:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_report.yaml
+  /payment-request/outgoing/import/report/v2:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_report_v2.yaml
+  /payment-request/outgoing/import/reject:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_reject.yaml
+  /payment-request/outgoing/import/get-protocol:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_get_protocol.yaml
+  /payment-request/outgoing/import/complete:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_complete.yaml
+  /payment-request/outgoing/get-sum:
+    $ref: ./paths/outgoing/payment_request_outgoing_get_sum.yaml
+  /payment-request/outgoing/get-page:
+    $ref: ./paths/outgoing/payment_request_outgoing_get_page.yaml
+  /payment-request/outgoing/get-accounts-for-edit:
+    $ref: ./paths/outgoing/payment_request_outgoing_get_accounts_for_edit.yaml
+  /payment-request/outgoing/generate-sign-data:
+    $ref: ./paths/outgoing/payment_request_outgoing_generate_sign_data.yaml
+  /payment-request/outgoing/generate-digest:
+    $ref: ./paths/outgoing/payment_request_outgoing_generate_digest.yaml
+  /payment-request/outgoing/f1/account-balance:
+    $ref: ./paths/outgoing/payment_request_outgoing_f1_account_balance.yaml
+  /payment-request/outgoing/export-task:
+    $ref: ./paths/outgoing/payment_request_outgoing_export_task.yaml
+  /payment-request/outgoing/dictionary/purpose-code/get-page:
+    $ref: ./paths/outgoing/payment_request_outgoing_dictionary_purpose_code_get_page.yaml
+  /payment-request/outgoing/dictionary/purpose-code/get-all-by-codes:
+    $ref: ./paths/outgoing/payment_request_outgoing_dictionary_purpose_code_get_all_by_codes.yaml
+  /payment-request/outgoing/dictionary/document-state/get-page:
+    $ref: ./paths/outgoing/payment_request_outgoing_dictionary_document_state_get_page.yaml
+  /payment-request/outgoing/dictionary/document-state/get-all-by-codes:
+    $ref: ./paths/outgoing/payment_request_outgoing_dictionary_document_state_get_all_by_codes.yaml
+  /payment-request/outgoing/copy:
+    $ref: ./paths/outgoing/payment_request_outgoing_copy.yaml
+  /payment-request/outgoing/chargeback/verify-sign-data:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_verify_sign_data.yaml
+  /payment-request/outgoing/chargeback/v2.1/generate-sign-data:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_v2_1_generate_sign_data.yaml
+  /payment-request/outgoing/chargeback/sign:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_sign.yaml
+  /payment-request/outgoing/chargeback/sign-registry:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_sign_registry.yaml
+  /payment-request/outgoing/chargeback/send-all:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_send_all.yaml
+  /payment-request/outgoing/chargeback/remove-sign:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_remove_sign.yaml
+  /payment-request/outgoing/chargeback/generate-digest:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_generate_digest.yaml
+  /payment-request/outgoing/chargeback/delete-all:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_delete_all.yaml
+  /payment-request/outgoing/category:
+    $ref: ./paths/outgoing/payment_request_outgoing_category.yaml
+  /payment-request/outgoing/assist/payment-purpose:
+    $ref: ./paths/outgoing/payment_request_outgoing_assist_payment_purpose.yaml
+  /payment-request/incoming/print:
+    $ref: ./paths/incoming/payment_request_incoming_print.yaml
+  /payment-request/incoming/get-page:
+    $ref: ./paths/incoming/payment_request_incoming_get_page.yaml
+  /payment-request/incoming/export:
+    $ref: ./paths/incoming/payment_request_incoming_export.yaml
+  /payment-request/incoming/export-task:
+    $ref: ./paths/incoming/payment_request_incoming_export_task.yaml
+  /payment-request/incoming/category:
+    $ref: ./paths/incoming/payment_request_incoming_category.yaml
+  /payment-request/accept:
+    $ref: ./paths/accept/payment_request_accept.yaml
+  /payment-request/accept/v2.1/generate-sign-data:
+    $ref: ./paths/accept/payment_request_accept_v2_1_generate_sign_data.yaml
+  /payment-request/accept/sign:
+    $ref: ./paths/accept/payment_request_accept_sign.yaml
+  /payment-request/accept/sign-registry:
+    $ref: ./paths/accept/payment_request_accept_sign_registry.yaml
+  /payment-request/accept/send:
+    $ref: ./paths/accept/payment_request_accept_send.yaml
+  /payment-request/accept/remove-sign:
+    $ref: ./paths/accept/payment_request_accept_remove_sign.yaml
+  /payment-request/accept/get-page:
+    $ref: ./paths/accept/payment_request_accept_get_page.yaml
+  /payment-request/accept/get-accounts-for-edit:
+    $ref: ./paths/accept/payment_request_accept_get_accounts_for_edit.yaml
+  /payment-request/accept/generate-sign-data:
+    $ref: ./paths/accept/payment_request_accept_generate_sign_data.yaml
+  /payment-request/accept/generate-digest:
+    $ref: ./paths/accept/payment_request_accept_generate_digest.yaml
+  /payment-request/accept/delete-all:
+    $ref: ./paths/accept/payment_request_accept_delete_all.yaml
+  /payment-request/accept/category:
+    $ref: ./paths/accept/payment_request_accept_category.yaml
+  /file-import/verify-duplicate:
+    $ref: ./paths/misc/file_import_verify_duplicate.yaml
+  /file-import/suggestion/file:
+    $ref: ./paths/misc/file_import_suggestion_file.yaml
+  /file-import/signature/v2.1/generate-sign-data:
+    $ref: ./paths/misc/file_import_signature_v2_1_generate_sign_data.yaml
+  /file-import/signature/sign:
+    $ref: ./paths/misc/file_import_signature_sign.yaml
+  /file-import/signature/sign-registry:
+    $ref: ./paths/misc/file_import_signature_sign_registry.yaml
+  /file-import/signature/remove-sign:
+    $ref: ./paths/misc/file_import_signature_remove_sign.yaml
+  /file-import/signature/generate-attachment-digest-hash:
+    $ref: ./paths/misc/file_import_signature_generate_attachment_digest_hash.yaml
+  /file-import/print/print-protocol:
+    $ref: ./paths/misc/file_import_print_print_protocol.yaml
+  /file-import/print/get-protocol:
+    $ref: ./paths/misc/file_import_print_get_protocol.yaml
+  /file-import/get-page:
+    $ref: ./paths/misc/file_import_get_page.yaml
+  /file-import/get-file-import-info:
+    $ref: ./paths/misc/file_import_get_file_import_info.yaml
+  /file-import/create-file-import:
+    $ref: ./paths/misc/file_import_create_file_import.yaml
+  /file-import/create-documents-in-doc-service:
+    $ref: ./paths/misc/file_import_create_documents_in_doc_service.yaml
+  /file-import/complete:
+    $ref: ./paths/misc/file_import_complete.yaml
+  /payment-request/outgoing/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_id.yaml
+  /payment-request/outgoing/{id}/signature-info:
+    $ref: ./paths/outgoing/payment_request_outgoing_id_signature_info.yaml
+  /payment-request/outgoing/{id}/related-doc:
+    $ref: ./paths/outgoing/payment_request_outgoing_id_related_doc.yaml
+  /payment-request/outgoing/v2/check/{paymentRequestId}:
+    $ref: ./paths/outgoing/payment_request_outgoing_v2_check_paymentRequestId.yaml
+  /payment-request/outgoing/template/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_id.yaml
+  /payment-request/outgoing/template/name/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_name_id.yaml
+  /payment-request/outgoing/template/fill/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_fill_id.yaml
+  /payment-request/outgoing/template/compare-by-document/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_template_compare_by_document_id.yaml
+  /payment-request/outgoing/suggestion/import:
+    $ref: ./paths/outgoing/payment_request_outgoing_suggestion_import.yaml
+  /payment-request/outgoing/suggestion/documents-state:
+    $ref: ./paths/outgoing/payment_request_outgoing_suggestion_documents_state.yaml
+  /payment-request/outgoing/suggestion/accounts:
+    $ref: ./paths/outgoing/payment_request_outgoing_suggestion_accounts.yaml
+  /payment-request/outgoing/send-statistic/{asyncTaskId}:
+    $ref: ./paths/outgoing/payment_request_outgoing_send_statistic_asyncTaskId.yaml
+  /payment-request/outgoing/import/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_import_id.yaml
+  /payment-request/outgoing/history/{id}:
+    $ref: ./paths/outgoing/payment_request_outgoing_history_id.yaml
+  /payment-request/outgoing/export-task/{taskId}:
+    $ref: ./paths/outgoing/payment_request_outgoing_export_task_taskId.yaml
+  /payment-request/outgoing/export-task/{taskId}/attachment:
+    $ref: ./paths/outgoing/payment_request_outgoing_export_task_taskId_attachment.yaml
+  /payment-request/outgoing/check/{paymentRequestId}:
+    $ref: ./paths/outgoing/payment_request_outgoing_check_paymentRequestId.yaml
+  /payment-request/outgoing/chargeback/authority:
+    $ref: ./paths/outgoing/payment_request_outgoing_chargeback_authority.yaml
+  /payment-request/outgoing/available-accounts:
+    $ref: ./paths/outgoing/payment_request_outgoing_available_accounts.yaml
+  /payment-request/outgoing/authority:
+    $ref: ./paths/outgoing/payment_request_outgoing_authority.yaml
+  /payment-request/outgoing/account-access:
+    $ref: ./paths/outgoing/payment_request_outgoing_account_access.yaml
+  /payment-request/incoming/{id}:
+    $ref: ./paths/incoming/payment_request_incoming_id.yaml
+  /payment-request/incoming/{id}/signature:
+    $ref: ./paths/incoming/payment_request_incoming_id_signature.yaml
+  /payment-request/incoming/{id}/related-documents:
+    $ref: ./paths/incoming/payment_request_incoming_id_related_documents.yaml
+  /payment-request/incoming/suggestion/client-account:
+    $ref: ./paths/incoming/payment_request_incoming_suggestion_client_account.yaml
+  /payment-request/incoming/history/{id}:
+    $ref: ./paths/incoming/payment_request_incoming_history_id.yaml
+  /payment-request/incoming/export-task/{taskId}:
+    $ref: ./paths/incoming/payment_request_incoming_export_task_taskId.yaml
+  /payment-request/incoming/export-task/{taskId}/attachment:
+    $ref: ./paths/incoming/payment_request_incoming_export_task_taskId_attachment.yaml
+  /payment-request/incoming/account-access:
+    $ref: ./paths/incoming/payment_request_incoming_account_access.yaml
+  /payment-request/accept/{id}:
+    $ref: ./paths/accept/payment_request_accept_id.yaml
+  /payment-request/accept/{id}/signature:
+    $ref: ./paths/accept/payment_request_accept_id_signature.yaml
+  /payment-request/accept/{id}/related-documents:
+    $ref: ./paths/accept/payment_request_accept_id_related_documents.yaml
+  /payment-request/accept/available-accounts:
+    $ref: ./paths/accept/payment_request_accept_available_accounts.yaml
+  /payment-request/accept/authority:
+    $ref: ./paths/accept/payment_request_accept_authority.yaml
+  /payment-request/accept/account-access:
+    $ref: ./paths/accept/payment_request_accept_account_access.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+  /file-import/{id}:
+    $ref: ./paths/misc/file_import_id.yaml
+  /file-import/statistic/create-documents/{id}:
+    $ref: ./paths/misc/file_import_statistic_create_documents_id.yaml
+  /file-import/statistic/complete-process/{id}:
+    $ref: ./paths/misc/file_import_statistic_complete_process_id.yaml
+  /file-import/statistic/complete-import/{id}:
+    $ref: ./paths/misc/file_import_statistic_complete_import_id.yaml
+  /file-import/signature/file-import-sign/{id}:
+    $ref: ./paths/misc/file_import_signature_file_import_sign_id.yaml
+  /file-import/signature/check/{fileImportId}:
+    $ref: ./paths/misc/file_import_signature_check_fileImportId.yaml
+  /file-import/signature/can-sign/{id}:
+    $ref: ./paths/misc/file_import_signature_can_sign_id.yaml
+  /file-import/row-detail/{id}:
+    $ref: ./paths/misc/file_import_row_detail_id.yaml
+  /file-import/processing-options/{id}:
+    $ref: ./paths/misc/file_import_processing_options_id.yaml
+  /file-import/delete-file-import/{id}:
+    $ref: ./paths/misc/file_import_delete_file_import_id.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    CheckMessage:
+      $ref: ./components/schemas/accept/CheckMessage.yaml
+    CheckResult:
+      $ref: ./components/schemas/accept/CheckResult.yaml
+    ControlResult:
+      $ref: ./components/schemas/accept/ControlResult.yaml
+    GroupResult:
+      $ref: ./components/schemas/accept/GroupResult.yaml
+    ValidationResult:
+      $ref: ./components/schemas/accept/ValidationResult.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    CreateWithDeviceCommandOutgoingPaymentRequestUpdateDto:
+      $ref: ./components/schemas/outgoing/CreateWithDeviceCommandOutgoingPaymentRequestUpdateDto.yaml
+    DocumentBusinessInfoCreateDto:
+      $ref: ./components/schemas/outgoing/DocumentBusinessInfoCreateDto.yaml
+    DocumentCreationInfoCreateDto:
+      $ref: ./components/schemas/outgoing/DocumentCreationInfoCreateDto.yaml
+    DocumentCreationTypeDto:
+      $ref: ./components/schemas/outgoing/DocumentCreationTypeDto.yaml
+    OutgoingPaymentRequestUpdateDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestUpdateDto.yaml
+    PayerInfoCreateDto:
+      $ref: ./components/schemas/outgoing/PayerInfoCreateDto.yaml
+    PaymentInfoCreateDto:
+      $ref: ./components/schemas/outgoing/PaymentInfoCreateDto.yaml
+    ReceiverInfoCreateDto:
+      $ref: ./components/schemas/outgoing/ReceiverInfoCreateDto.yaml
+    UserDeviceInfoDto:
+      $ref: ./components/schemas/common/UserDeviceInfoDto.yaml
+    VatCalculationTypeDto:
+      $ref: ./components/schemas/outgoing/VatCalculationTypeDto.yaml
+    BankClientInfoClientDto:
+      $ref: ./components/schemas/outgoing/BankClientInfoClientDto.yaml
+    CertificateInfoResponseDto:
+      $ref: ./components/schemas/common/CertificateInfoResponseDto.yaml
+    ChargebackBaseDetailsClientDto:
+      $ref: ./components/schemas/outgoing/ChargebackBaseDetailsClientDto.yaml
+    ChargebackDocumentDetailsClientDto:
+      $ref: ./components/schemas/outgoing/ChargebackDocumentDetailsClientDto.yaml
+    DocumentBusinessInfoClientDto:
+      $ref: ./components/schemas/outgoing/DocumentBusinessInfoClientDto.yaml
+    DocumentCreationInfoClientDto:
+      $ref: ./components/schemas/outgoing/DocumentCreationInfoClientDto.yaml
+    DocumentSourceSystemDto:
+      $ref: ./components/schemas/common/DocumentSourceSystemDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestClientDto.yaml
+    OutgoingPaymentChargebackRequestClientDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentChargebackRequestClientDto.yaml
+    OutgoingPaymentChargebackRequestSignPhaseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentChargebackRequestSignPhaseDto.yaml
+    OutgoingPaymentChargebackRequestStatusDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentChargebackRequestStatusDto.yaml
+    OutgoingPaymentRequestClientDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientDto.yaml
+    OutgoingPaymentRequestHistoryInfoClientDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestHistoryInfoClientDto.yaml
+    OutgoingPaymentRequestSignPhaseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestSignPhaseDto.yaml
+    OutgoingPaymentRequestStatusDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestStatusDto.yaml
+    PayerBankInfoClientDto:
+      $ref: ./components/schemas/outgoing/PayerBankInfoClientDto.yaml
+    PayerInfoClientDto:
+      $ref: ./components/schemas/outgoing/PayerInfoClientDto.yaml
+    PaymentInfoClientDto:
+      $ref: ./components/schemas/outgoing/PaymentInfoClientDto.yaml
+    PaymentRequestError:
+      $ref: ./components/schemas/common/PaymentRequestError.yaml
+    ReceiverInfoClientDto:
+      $ref: ./components/schemas/outgoing/ReceiverInfoClientDto.yaml
+    SendAbility:
+      $ref: ./components/schemas/common/SendAbility.yaml
+    SignatureLevelDto:
+      $ref: ./components/schemas/common/SignatureLevelDto.yaml
+    acceptSignatureDataDto:
+      $ref: ./components/schemas/common/acceptSignatureDataDto.yaml
+    outgoingChargebackSignatureClientDto:
+      $ref: ./components/schemas/outgoing/outgoingChargebackSignatureClientDto.yaml
+    outgoingSignatureClientDto:
+      $ref: ./components/schemas/outgoing/outgoingSignatureClientDto.yaml
+    ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BackgroundImportProcessClientScrollerDto:
+      $ref: ./components/schemas/outgoing/ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BackgroundImportProcessClientScrollerDto.yaml
+    BankClientTemplateInfoClientDto:
+      $ref: ./components/schemas/outgoing/BankClientTemplateInfoClientDto.yaml
+    DocumentBusinessTemplateInfoClientDto:
+      $ref: ./components/schemas/outgoing/DocumentBusinessTemplateInfoClientDto.yaml
+    GenericCommandOutgoingPaymentRequestTemplateUpdateRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandOutgoingPaymentRequestTemplateUpdateRequestDto.yaml
+    OutgoingPaymentRequestTemplateUpdateRequestDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateUpdateRequestDto.yaml
+    PayerTemplateInfoClientDto:
+      $ref: ./components/schemas/outgoing/PayerTemplateInfoClientDto.yaml
+    PaymentTemplateInfoClientDto:
+      $ref: ./components/schemas/outgoing/PaymentTemplateInfoClientDto.yaml
+    ReceiverTemplateInfoClientDto:
+      $ref: ./components/schemas/outgoing/ReceiverTemplateInfoClientDto.yaml
+    BankClientInfoTemplateResponseClientDto:
+      $ref: ./components/schemas/outgoing/BankClientInfoTemplateResponseClientDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestTemplateResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestTemplateResponseDto.yaml
+    OutgoingPaymentRequestTemplateResponseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateResponseDto.yaml
+    OutgoingPaymentChargebackRequestUpdateDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentChargebackRequestUpdateDto.yaml
+    UpdateWithDeviceCommandOutgoingPaymentChargebackRequestUpdateDtoUUID:
+      $ref: ./components/schemas/outgoing/UpdateWithDeviceCommandOutgoingPaymentChargebackRequestUpdateDtoUUID.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestClientDto.yaml
+    CreateWithDeviceCommandOutgoingPaymentRequestCreateDto:
+      $ref: ./components/schemas/outgoing/CreateWithDeviceCommandOutgoingPaymentRequestCreateDto.yaml
+    OutgoingPaymentRequestCreateDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestCreateDto.yaml
+    GenericCommandListUUID:
+      $ref: ./components/schemas/common/GenericCommandListUUID.yaml
+    GenericResponsePaymentRequestErrorListSignatureClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListSignatureClientDto.yaml
+    SignatureClientDto:
+      $ref: ./components/schemas/outgoing/SignatureClientDto.yaml
+    GenericResponsePaymentRequestErrorUniSignV2x1Dto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorUniSignV2x1Dto.yaml
+    UniSignDataDto:
+      $ref: ./components/schemas/common/UniSignDataDto.yaml
+    UniSignDataViewDto:
+      $ref: ./components/schemas/common/UniSignDataViewDto.yaml
+    UniSignDocumentV2x1Dto:
+      $ref: ./components/schemas/common/UniSignDocumentV2x1Dto.yaml
+    UniSignFieldViewDto:
+      $ref: ./components/schemas/common/UniSignFieldViewDto.yaml
+    UniSignV2x1Dto:
+      $ref: ./components/schemas/common/UniSignV2x1Dto.yaml
+    GenericCommandOutgoingPaymentRequestTemplateCreateRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandOutgoingPaymentRequestTemplateCreateRequestDto.yaml
+    OutgoingPaymentRequestTemplateCreateRequestDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateCreateRequestDto.yaml
+    GenericCommandOutgoingPaymentRequestTemplateUpdateByDocumentRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandOutgoingPaymentRequestTemplateUpdateByDocumentRequestDto.yaml
+    OutgoingPaymentRequestTemplateUpdateByDocumentRequestDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateUpdateByDocumentRequestDto.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandOutgoingPaymentRequestTemplateClientScrollerFilterDto:
+      $ref: ./components/schemas/outgoing/GetPageCommandOutgoingPaymentRequestTemplateClientScrollerFilterDto.yaml
+    OutgoingPaymentRequestTemplateClientScrollerFilterDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateClientScrollerFilterDto.yaml
+    PageParamsOutgoingPaymentRequestTemplateClientScrollerFilterDto:
+      $ref: ./components/schemas/outgoing/PageParamsOutgoingPaymentRequestTemplateClientScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    GenericResponsePaymentRequestErrorPageOutgoingPaymentRequestTemplateScrollerResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorPageOutgoingPaymentRequestTemplateScrollerResponseDto.yaml
+    OutgoingPaymentRequestTemplateScrollerResponseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateScrollerResponseDto.yaml
+    PageOutgoingPaymentRequestTemplateScrollerResponseDto:
+      $ref: ./components/schemas/outgoing/PageOutgoingPaymentRequestTemplateScrollerResponseDto.yaml
+    GenericCommandOutgoingPaymentRequestTemplateCreateRequestFromOutgoingPaymentRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandOutgoingPaymentRequestTemplateCreateRequestFromOutgoingPaymentRequestDto.yaml
+    OutgoingPaymentRequestTemplateCreateRequestFromOutgoingPaymentRequestDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateCreateRequestFromOutgoingPaymentRequestDto.yaml
+    GenericCommandVatAmountRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandVatAmountRequestDto.yaml
+    VatAmountRequestDto:
+      $ref: ./components/schemas/outgoing/VatAmountRequestDto.yaml
+    GenericResponsePaymentRequestErrorVatAmountResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorVatAmountResponseDto.yaml
+    VatAmountResponseDto:
+      $ref: ./components/schemas/outgoing/VatAmountResponseDto.yaml
+    BatchClientSignCommand:
+      $ref: ./components/schemas/common/BatchClientSignCommand.yaml
+    ClientSignCommand:
+      $ref: ./components/schemas/common/ClientSignCommand.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestClientDto.yaml
+    GenericCommandListPermissionProcessRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandListPermissionProcessRequestDto.yaml
+    PermissionProcessRequestDto:
+      $ref: ./components/schemas/outgoing/PermissionProcessRequestDto.yaml
+    GenericResponsePaymentRequestErrorPermissionProcessResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorPermissionProcessResponseDto.yaml
+    PermissionProcessDenyDto:
+      $ref: ./components/schemas/outgoing/PermissionProcessDenyDto.yaml
+    PermissionProcessResponseDto:
+      $ref: ./components/schemas/outgoing/PermissionProcessResponseDto.yaml
+    GenericResponsePaymentRequestErrorSignRegistryDto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorSignRegistryDto.yaml
+    SignRegistryClientDocumentsDto:
+      $ref: ./components/schemas/common/SignRegistryClientDocumentsDto.yaml
+    SignRegistryDocumentDto:
+      $ref: ./components/schemas/common/SignRegistryDocumentDto.yaml
+    SignRegistryDto:
+      $ref: ./components/schemas/common/SignRegistryDto.yaml
+    SignRegistryStatisticsByClientDto:
+      $ref: ./components/schemas/common/SignRegistryStatisticsByClientDto.yaml
+    SignRegistryStatisticsDto:
+      $ref: ./components/schemas/common/SignRegistryStatisticsDto.yaml
+    SendListCommandUUID:
+      $ref: ./components/schemas/common/SendListCommandUUID.yaml
+    GenericResponsePaymentRequestErrorUUID:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorUUID.yaml
+    BatchClientRemoveSignCommand:
+      $ref: ./components/schemas/common/BatchClientRemoveSignCommand.yaml
+    GenericCommandPrintRequestDto:
+      $ref: ./components/schemas/outgoing/GenericCommandPrintRequestDto.yaml
+    PrintRequestDto:
+      $ref: ./components/schemas/common/PrintRequestDto.yaml
+    ReportFormat:
+      $ref: ./components/schemas/common/ReportFormat.yaml
+    AttachmentAccessData:
+      $ref: ./components/schemas/outgoing/AttachmentAccessData.yaml
+    GenericResponsePaymentRequestErrorAttachmentAccessData:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorAttachmentAccessData.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/outgoing/SingleCommandUUID.yaml
+    BackgroundImportProcessDto:
+      $ref: ./components/schemas/outgoing/BackgroundImportProcessDto.yaml
+    FileDetailsDto:
+      $ref: ./components/schemas/outgoing/FileDetailsDto.yaml
+    FileDocumentDetailsDto:
+      $ref: ./components/schemas/outgoing/FileDocumentDetailsDto.yaml
+    FileOrganizationDetailsDto:
+      $ref: ./components/schemas/outgoing/FileOrganizationDetailsDto.yaml
+    GenericResponsePaymentRequestErrorBackgroundImportProcessDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorBackgroundImportProcessDto.yaml
+    ImportParametersDto:
+      $ref: ./components/schemas/outgoing/ImportParametersDto.yaml
+    ImportedDocumentDetailsDto:
+      $ref: ./components/schemas/outgoing/ImportedDocumentDetailsDto.yaml
+    ProcessDetailsDto:
+      $ref: ./components/schemas/outgoing/ProcessDetailsDto.yaml
+    PrintReportRq:
+      $ref: ./components/schemas/outgoing/PrintReportRq.yaml
+    FileStorageAccessData:
+      $ref: ./components/schemas/common/FileStorageAccessData.yaml
+    GenericResponsePaymentRequestErrorFileStorageAccessData:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorFileStorageAccessData.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    BackgroundImportProcessDocControlResultDto:
+      $ref: ./components/schemas/outgoing/BackgroundImportProcessDocControlResultDto.yaml
+    BackgroundImportProcessDocumentGroupProcessingResultDto:
+      $ref: ./components/schemas/outgoing/BackgroundImportProcessDocumentGroupProcessingResultDto.yaml
+    BackgroundImportProcessDocumentProcessingResultDto:
+      $ref: ./components/schemas/outgoing/BackgroundImportProcessDocumentProcessingResultDto.yaml
+    BackgroundImportProcessProtocolDto:
+      $ref: ./components/schemas/outgoing/BackgroundImportProcessProtocolDto.yaml
+    GenericResponsePaymentRequestErrorBackgroundImportProcessProtocolDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorBackgroundImportProcessProtocolDto.yaml
+    CompleteImportDto:
+      $ref: ./components/schemas/outgoing/CompleteImportDto.yaml
+    CreateWithDeviceCommandCompleteImportDto:
+      $ref: ./components/schemas/outgoing/CreateWithDeviceCommandCompleteImportDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    FilterValueEnumDtoOutgoingPaymentChargebackRequestStatusDto:
+      $ref: ./components/schemas/outgoing/FilterValueEnumDtoOutgoingPaymentChargebackRequestStatusDto.yaml
+    GetPageCommandOutgoingPaymentRequestClientFilter:
+      $ref: ./components/schemas/outgoing/GetPageCommandOutgoingPaymentRequestClientFilter.yaml
+    OutgoingPaymentRequestClientCategoryDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientCategoryDto.yaml
+    OutgoingPaymentRequestClientFilter:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientFilter.yaml
+    OutgoingPaymentRequestClientStatusDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientStatusDto.yaml
+    OutgoingPaymentRequestClientStatusEnumDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientStatusEnumDto.yaml
+    OutgoingPaymentRequestDocumentSourceSystemEnumDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestDocumentSourceSystemEnumDto.yaml
+    PageParamsOutgoingPaymentRequestClientFilter:
+      $ref: ./components/schemas/outgoing/PageParamsOutgoingPaymentRequestClientFilter.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestSignedStatisticDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestSignedStatisticDto.yaml
+    OutgoingPaymentRequestSignedStatisticDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestSignedStatisticDto.yaml
+    GenericPagePaymentRequestErrorOutgoingPaymentRequestClientScrollerDto:
+      $ref: ./components/schemas/outgoing/GenericPagePaymentRequestErrorOutgoingPaymentRequestClientScrollerDto.yaml
+    OutgoingPaymentRequestClientScrollerDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestClientScrollerDto.yaml
+    PaymentInfoClientScrollerDto:
+      $ref: ./components/schemas/outgoing/PaymentInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BankClientInfoClientScrollerDto:
+      $ref: ./components/schemas/outgoing/ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.BankClientInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.DocumentBusinessInfoClientScrollerDto:
+      $ref: ./components/schemas/outgoing/ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.DocumentBusinessInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.PayerInfoClientScrollerDto:
+      $ref: ./components/schemas/outgoing/ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.PayerInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.ReceiverInfoClientScrollerDto:
+      $ref: ./components/schemas/outgoing/ru.gpb.eco.payment.request.business.api.outgoing.dto.client.scroller.ReceiverInfoClientScrollerDto.yaml
+    AccountFilter:
+      $ref: ./components/schemas/common/AccountFilter.yaml
+    AccountStateFilter:
+      $ref: ./components/schemas/common/AccountStateFilter.yaml
+    BranchTypeFilter:
+      $ref: ./components/schemas/common/BranchTypeFilter.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueEnumDtoBankClientStatusDto:
+      $ref: ./components/schemas/common/FilterValueEnumDtoBankClientStatusDto.yaml
+    GetPageCommandAccountFilter:
+      $ref: ./components/schemas/common/GetPageCommandAccountFilter.yaml
+    PageParamsAccountFilter:
+      $ref: ./components/schemas/common/PageParamsAccountFilter.yaml
+    RemoteSourceDtoFilter:
+      $ref: ./components/schemas/common/RemoteSourceDtoFilter.yaml
+    AccountSelectDto:
+      $ref: ./components/schemas/common/AccountSelectDto.yaml
+    BankClientSelectDto:
+      $ref: ./components/schemas/common/BankClientSelectDto.yaml
+    BranchSelectDto:
+      $ref: ./components/schemas/common/BranchSelectDto.yaml
+    ContractInfoSelectDto:
+      $ref: ./components/schemas/common/ContractInfoSelectDto.yaml
+    ContractTypeDtoV2:
+      $ref: ./components/schemas/common/ContractTypeDtoV2.yaml
+    GenericPagePaymentRequestErrorAccountSelectDto:
+      $ref: ./components/schemas/common/GenericPagePaymentRequestErrorAccountSelectDto.yaml
+    RequisitesSelectDto:
+      $ref: ./components/schemas/common/RequisitesSelectDto.yaml
+    ListCommandUUID:
+      $ref: ./components/schemas/common/ListCommandUUID.yaml
+    BankClientOfficialCertificate:
+      $ref: ./components/schemas/common/BankClientOfficialCertificate.yaml
+    BankClientSigner:
+      $ref: ./components/schemas/common/BankClientSigner.yaml
+    DocumentsAmountSignInfo:
+      $ref: ./components/schemas/common/DocumentsAmountSignInfo.yaml
+    GenericResponsePaymentRequestErrorSignData:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorSignData.yaml
+    PaymentRequestPaymentAmount:
+      $ref: ./components/schemas/common/PaymentRequestPaymentAmount.yaml
+    SignAbility:
+      $ref: ./components/schemas/common/SignAbility.yaml
+    SignData:
+      $ref: ./components/schemas/common/SignData.yaml
+    SignResultInfo:
+      $ref: ./components/schemas/common/SignResultInfo.yaml
+    SignatureInfo:
+      $ref: ./components/schemas/common/SignatureInfo.yaml
+    DigestRequest:
+      $ref: ./components/schemas/common/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/common/Digest.yaml
+    GenericResponsePaymentRequestErrorDigest:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorDigest.yaml
+    BalanceRequestDto:
+      $ref: ./components/schemas/outgoing/BalanceRequestDto.yaml
+    SingleCommandBalanceRequestDto:
+      $ref: ./components/schemas/outgoing/SingleCommandBalanceRequestDto.yaml
+    AccountBalanceDto:
+      $ref: ./components/schemas/outgoing/AccountBalanceDto.yaml
+    BalanceDto:
+      $ref: ./components/schemas/outgoing/BalanceDto.yaml
+    GenericResponsePaymentRequestErrorListAccountBalanceDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListAccountBalanceDto.yaml
+    ColumnDescriptionDto:
+      $ref: ./components/schemas/common/ColumnDescriptionDto.yaml
+    ExportRegistryRequestClientDtoOutgoingPaymentRequestClientFilter:
+      $ref: ./components/schemas/outgoing/ExportRegistryRequestClientDtoOutgoingPaymentRequestClientFilter.yaml
+    ExportError:
+      $ref: ./components/schemas/common/ExportError.yaml
+    GenericResponseExportErrorShortExportTaskDto:
+      $ref: ./components/schemas/common/GenericResponseExportErrorShortExportTaskDto.yaml
+    ShortExportTaskDto:
+      $ref: ./components/schemas/common/ShortExportTaskDto.yaml
+    GetPageCommandOutgoingPaymentRequestPurposeCodeFilter:
+      $ref: ./components/schemas/outgoing/GetPageCommandOutgoingPaymentRequestPurposeCodeFilter.yaml
+    OutgoingPaymentRequestPurposeCodeFilter:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestPurposeCodeFilter.yaml
+    PageParamsOutgoingPaymentRequestPurposeCodeFilter:
+      $ref: ./components/schemas/outgoing/PageParamsOutgoingPaymentRequestPurposeCodeFilter.yaml
+    GenericPagePaymentRequestErrorOutgoingPaymentRequestPurposeCodeDto:
+      $ref: ./components/schemas/outgoing/GenericPagePaymentRequestErrorOutgoingPaymentRequestPurposeCodeDto.yaml
+    OutgoingPaymentRequestPurposeCodeDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestPurposeCodeDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestPurposeCodeDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestPurposeCodeDto.yaml
+    GetPageCommandOutgoingPaymentRequestDocumentStateFilter:
+      $ref: ./components/schemas/outgoing/GetPageCommandOutgoingPaymentRequestDocumentStateFilter.yaml
+    OutgoingPaymentRequestDocumentStateFilter:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestDocumentStateFilter.yaml
+    PageParamsOutgoingPaymentRequestDocumentStateFilter:
+      $ref: ./components/schemas/outgoing/PageParamsOutgoingPaymentRequestDocumentStateFilter.yaml
+    GenericPagePaymentRequestErrorOutgoingPaymentRequestCodeDocumentStateDto:
+      $ref: ./components/schemas/outgoing/GenericPagePaymentRequestErrorOutgoingPaymentRequestCodeDocumentStateDto.yaml
+    OutgoingPaymentRequestCodeDocumentStateDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestCodeDocumentStateDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestCodeDocumentStateDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestCodeDocumentStateDto.yaml
+    GenericCommandOutgoingPaymentRequestCopyDto:
+      $ref: ./components/schemas/outgoing/GenericCommandOutgoingPaymentRequestCopyDto.yaml
+    OutgoingPaymentRequestCopyDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestCopyDto.yaml
+    CreateWithDeviceCommandOutgoingPaymentChargebackRequestCreateDto:
+      $ref: ./components/schemas/outgoing/CreateWithDeviceCommandOutgoingPaymentChargebackRequestCreateDto.yaml
+    OutgoingPaymentChargebackRequestCreateDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentChargebackRequestCreateDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentChargebackRequestClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentChargebackRequestClientDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestSendResultDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestSendResultDto.yaml
+    outgoingPaymentChargebackRequestSendResultDto:
+      $ref: ./components/schemas/outgoing/outgoingPaymentChargebackRequestSendResultDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestDeleteResultDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentChargebackRequestDeleteResultDto.yaml
+    outgoingPaymentChargebackRequestDeleteResultDto:
+      $ref: ./components/schemas/outgoing/outgoingPaymentChargebackRequestDeleteResultDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/common/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/common/CategoryResponse.yaml
+    PaymentPurposeRequestDto:
+      $ref: ./components/schemas/outgoing/PaymentPurposeRequestDto.yaml
+    SingleCommandPaymentPurposeRequestDto:
+      $ref: ./components/schemas/outgoing/SingleCommandPaymentPurposeRequestDto.yaml
+    UpdatedFieldDto:
+      $ref: ./components/schemas/outgoing/UpdatedFieldDto.yaml
+    GenericResponsePaymentRequestErrorString:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorString.yaml
+    SingleCommandPrintRequestDto:
+      $ref: ./components/schemas/incoming/SingleCommandPrintRequestDto.yaml
+    GenericResponsePaymentRequestErrorPrintResponse:
+      $ref: ./components/schemas/incoming/GenericResponsePaymentRequestErrorPrintResponse.yaml
+    PrintResponse:
+      $ref: ./components/schemas/incoming/PrintResponse.yaml
+    AcceptPaymentRequestClientStatusDto:
+      $ref: ./components/schemas/incoming/AcceptPaymentRequestClientStatusDto.yaml
+    AcceptPaymentRequestClientStatusEnumDto:
+      $ref: ./components/schemas/incoming/AcceptPaymentRequestClientStatusEnumDto.yaml
+    GetPageCommandIncomingPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/incoming/GetPageCommandIncomingPaymentRequestClientScrollerFilter.yaml
+    IncomingPaymentRequestCategoryClientDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestCategoryClientDto.yaml
+    IncomingPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestClientScrollerFilter.yaml
+    IncomingPaymentRequestClientStatusDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestClientStatusDto.yaml
+    IncomingPaymentRequestClientStatusEnumDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestClientStatusEnumDto.yaml
+    PageParamsIncomingPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/incoming/PageParamsIncomingPaymentRequestClientScrollerFilter.yaml
+    AcceptPaymentRequestDecisionDto:
+      $ref: ./components/schemas/common/AcceptPaymentRequestDecisionDto.yaml
+    AcceptPaymentRequestShortClientDto:
+      $ref: ./components/schemas/incoming/AcceptPaymentRequestShortClientDto.yaml
+    AcceptPaymentRequestSignPhaseDto:
+      $ref: ./components/schemas/common/AcceptPaymentRequestSignPhaseDto.yaml
+    AcceptPaymentRequestStatusDto:
+      $ref: ./components/schemas/common/AcceptPaymentRequestStatusDto.yaml
+    GenericPagePaymentRequestErrorIncomingPaymentRequestClientScrollerDto:
+      $ref: ./components/schemas/incoming/GenericPagePaymentRequestErrorIncomingPaymentRequestClientScrollerDto.yaml
+    IncomingPaymentRequestClientScrollerDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestClientScrollerDto.yaml
+    IncomingPaymentRequestStatusDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestStatusDto.yaml
+    acceptSignatureClientDto:
+      $ref: ./components/schemas/common/acceptSignatureClientDto.yaml
+    ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.AdditionalInfoClientScrollerDto:
+      $ref: ./components/schemas/incoming/ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.AdditionalInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.BankClientInfoClientScrollerDto:
+      $ref: ./components/schemas/incoming/ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.BankClientInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.DocumentBusinessInfoClientScrollerDto:
+      $ref: ./components/schemas/incoming/ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.DocumentBusinessInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.PayerInfoClientScrollerDto:
+      $ref: ./components/schemas/incoming/ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.PayerInfoClientScrollerDto.yaml
+    ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.ReceiverInfoClientScrollerDto:
+      $ref: ./components/schemas/incoming/ru.gpb.eco.payment.request.business.api.incoming.dto.client.scroller.ReceiverInfoClientScrollerDto.yaml
+    ExportRegistryRequestClientDtoIncomingPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/incoming/ExportRegistryRequestClientDtoIncomingPaymentRequestClientScrollerFilter.yaml
+    AcceptInfoCreateDto:
+      $ref: ./components/schemas/accept/AcceptInfoCreateDto.yaml
+    AcceptPaymentRequestCreateDto:
+      $ref: ./components/schemas/accept/AcceptPaymentRequestCreateDto.yaml
+    CreateWithDeviceCommandAcceptPaymentRequestCreateDto:
+      $ref: ./components/schemas/accept/CreateWithDeviceCommandAcceptPaymentRequestCreateDto.yaml
+    AcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/AcceptPaymentRequestClientDto.yaml
+    CreateResponseAcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/CreateResponseAcceptPaymentRequestClientDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/common/DocumentSignatureDto.yaml
+    acceptBankClientInfoDto:
+      $ref: ./components/schemas/accept/acceptBankClientInfoDto.yaml
+    acceptDocumentBusinessInfoDto:
+      $ref: ./components/schemas/accept/acceptDocumentBusinessInfoDto.yaml
+    acceptIncomingPaymentRequestInfoDto:
+      $ref: ./components/schemas/accept/acceptIncomingPaymentRequestInfoDto.yaml
+    acceptInfoDto:
+      $ref: ./components/schemas/accept/acceptInfoDto.yaml
+    acceptPayerInfoDto:
+      $ref: ./components/schemas/accept/acceptPayerInfoDto.yaml
+    acceptPaymentRequestInfoDto:
+      $ref: ./components/schemas/accept/acceptPaymentRequestInfoDto.yaml
+    GenericResponsePaymentRequestErrorListAcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/GenericResponsePaymentRequestErrorListAcceptPaymentRequestClientDto.yaml
+    GenericResponsePaymentRequestErrorAcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/GenericResponsePaymentRequestErrorAcceptPaymentRequestClientDto.yaml
+    ListResponseGenericResponsePaymentRequestErrorAcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/ListResponseGenericResponsePaymentRequestErrorAcceptPaymentRequestClientDto.yaml
+    AcceptPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/accept/AcceptPaymentRequestClientScrollerFilter.yaml
+    GetPageCommandAcceptPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/accept/GetPageCommandAcceptPaymentRequestClientScrollerFilter.yaml
+    PageParamsAcceptPaymentRequestClientScrollerFilter:
+      $ref: ./components/schemas/accept/PageParamsAcceptPaymentRequestClientScrollerFilter.yaml
+    GenericPagePaymentRequestErrorAcceptPaymentRequestClientDto:
+      $ref: ./components/schemas/accept/GenericPagePaymentRequestErrorAcceptPaymentRequestClientDto.yaml
+    GenericResponsePaymentRequestErrorAcceptPaymentRequestDeleteResultDto:
+      $ref: ./components/schemas/accept/GenericResponsePaymentRequestErrorAcceptPaymentRequestDeleteResultDto.yaml
+    acceptPaymentRequestDeleteResultDto:
+      $ref: ./components/schemas/accept/acceptPaymentRequestDeleteResultDto.yaml
+    VerifyDuplicateFileImportRqDto:
+      $ref: ./components/schemas/misc/VerifyDuplicateFileImportRqDto.yaml
+    GenericResponsePaymentRequestErrorVerifyDuplicateFileImportRsDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorVerifyDuplicateFileImportRsDto.yaml
+    VerifyDuplicateFileImportRsDto:
+      $ref: ./components/schemas/misc/VerifyDuplicateFileImportRsDto.yaml
+    FileImportSuggestionFileFilter:
+      $ref: ./components/schemas/misc/FileImportSuggestionFileFilter.yaml
+    GetPageCommandFileImportSuggestionFileFilter:
+      $ref: ./components/schemas/misc/GetPageCommandFileImportSuggestionFileFilter.yaml
+    PageParamsFileImportSuggestionFileFilter:
+      $ref: ./components/schemas/misc/PageParamsFileImportSuggestionFileFilter.yaml
+    FileImportFileSuggestionDto:
+      $ref: ./components/schemas/misc/FileImportFileSuggestionDto.yaml
+    GenericResponsePaymentRequestErrorListFileImportFileSuggestionDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorListFileImportFileSuggestionDto.yaml
+    FileImportDto:
+      $ref: ./components/schemas/misc/FileImportDto.yaml
+    GenericResponsePaymentRequestErrorFileImportDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportDto.yaml
+    SignPhaseDto:
+      $ref: ./components/schemas/misc/SignPhaseDto.yaml
+    FileImportRemoveSignRequest:
+      $ref: ./components/schemas/misc/FileImportRemoveSignRequest.yaml
+    FileImportRemoveSignResponse:
+      $ref: ./components/schemas/misc/FileImportRemoveSignResponse.yaml
+    GenericResponsePaymentRequestErrorFileImportRemoveSignResponse:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportRemoveSignResponse.yaml
+    AttachmentGenerateDigestHashCommand:
+      $ref: ./components/schemas/misc/AttachmentGenerateDigestHashCommand.yaml
+    FileImportPrintRequestDto:
+      $ref: ./components/schemas/misc/FileImportPrintRequestDto.yaml
+    GenericCommandFileImportPrintRequestDto:
+      $ref: ./components/schemas/misc/GenericCommandFileImportPrintRequestDto.yaml
+    FileImportDocControlResultDto:
+      $ref: ./components/schemas/misc/FileImportDocControlResultDto.yaml
+    FileImportDocResultDto:
+      $ref: ./components/schemas/misc/FileImportDocResultDto.yaml
+    FileImportGroupByStatusAndCurrencyResultDto:
+      $ref: ./components/schemas/misc/FileImportGroupByStatusAndCurrencyResultDto.yaml
+    FileImportProtocolDto:
+      $ref: ./components/schemas/misc/FileImportProtocolDto.yaml
+    GenericResponsePaymentRequestErrorFileImportProtocolDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportProtocolDto.yaml
+    FileImportScrollerFilterDto:
+      $ref: ./components/schemas/misc/FileImportScrollerFilterDto.yaml
+    FilterValueDtoFileImportSignStatusDto:
+      $ref: ./components/schemas/misc/FilterValueDtoFileImportSignStatusDto.yaml
+    FilterValueDtoFileImportStatusDto:
+      $ref: ./components/schemas/misc/FilterValueDtoFileImportStatusDto.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/misc/FilterValueDtoInstant.yaml
+    GetPageCommandFileImportScrollerFilterDto:
+      $ref: ./components/schemas/misc/GetPageCommandFileImportScrollerFilterDto.yaml
+    PageParamsFileImportScrollerFilterDto:
+      $ref: ./components/schemas/misc/PageParamsFileImportScrollerFilterDto.yaml
+    FileImportClientScrollerDto:
+      $ref: ./components/schemas/misc/FileImportClientScrollerDto.yaml
+    GenericResponsePaymentRequestErrorPageDataFileImportClientScrollerDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorPageDataFileImportClientScrollerDto.yaml
+    PageDataFileImportClientScrollerDto:
+      $ref: ./components/schemas/misc/PageDataFileImportClientScrollerDto.yaml
+    FileImportInfoDto:
+      $ref: ./components/schemas/misc/FileImportInfoDto.yaml
+    GenericResponsePaymentRequestErrorFileImportInfoDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportInfoDto.yaml
+    CreateFileImportRqDto:
+      $ref: ./components/schemas/misc/CreateFileImportRqDto.yaml
+    CreateFileImportRsDto:
+      $ref: ./components/schemas/misc/CreateFileImportRsDto.yaml
+    GenericResponsePaymentRequestErrorCreateFileImportRsDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorCreateFileImportRsDto.yaml
+    GenericResponsePaymentRequestErrorVoid:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorVoid.yaml
+    FileImportCompleteRqDto:
+      $ref: ./components/schemas/misc/FileImportCompleteRqDto.yaml
+    GenericResponsePaymentRequestErrorBoolean:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorBoolean.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSignatureInfoClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSignatureInfoClientDto.yaml
+    OutgoingPaymentRequestSignatureInfoClientDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestSignatureInfoClientDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestRelatedDocClientDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestRelatedDocClientDto.yaml
+    OutgoingPaymentRequestRelatedDocClientDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestRelatedDocClientDto.yaml
+    GenericResponsePaymentRequestErrorListRkoSignatureCheckResultDataDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListRkoSignatureCheckResultDataDto.yaml
+    RkoCheckCertificateDataDto:
+      $ref: ./components/schemas/outgoing/RkoCheckCertificateDataDto.yaml
+    RkoSignatureCheckResultDataDto:
+      $ref: ./components/schemas/outgoing/RkoSignatureCheckResultDataDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestFillTemplateResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestFillTemplateResponseDto.yaml
+    OutgoingPaymentRequestFillTemplateResponseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestFillTemplateResponseDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestTemplateComparisonResponseDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestTemplateComparisonResponseDto.yaml
+    OutgoingPaymentRequestTemplateComparisonFieldDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateComparisonFieldDto.yaml
+    OutgoingPaymentRequestTemplateComparisonResponseDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestTemplateComparisonResponseDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSuggestionImportDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSuggestionImportDto.yaml
+    OutgoingPaymentRequestSuggestionImportDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestSuggestionImportDto.yaml
+    GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSuggestionAccountDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorListOutgoingPaymentRequestSuggestionAccountDto.yaml
+    OutgoingPaymentRequestSuggestionAccountDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestSuggestionAccountDto.yaml
+    GenericResponsePaymentRequestErrorSendToBankStatisticDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorSendToBankStatisticDto.yaml
+    SendToBankStatisticDto:
+      $ref: ./components/schemas/outgoing/SendToBankStatisticDto.yaml
+    GenericResponseSimpleErrorDataListHistoryGroupDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataListHistoryGroupDto.yaml
+    HistoryGroupDto:
+      $ref: ./components/schemas/common/HistoryGroupDto.yaml
+    HistoryGroupEntryDto:
+      $ref: ./components/schemas/common/HistoryGroupEntryDto.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    AttachmentDataDto:
+      $ref: ./components/schemas/common/AttachmentDataDto.yaml
+    GenericResponseExportErrorAttachmentDataDto:
+      $ref: ./components/schemas/common/GenericResponseExportErrorAttachmentDataDto.yaml
+    GenericResponsePaymentRequestErrorOutgoingPaymentRequestCheckRequisitesAndCertDto:
+      $ref: ./components/schemas/outgoing/GenericResponsePaymentRequestErrorOutgoingPaymentRequestCheckRequisitesAndCertDto.yaml
+    OutgoingPaymentRequestCheckCertDataDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestCheckCertDataDto.yaml
+    OutgoingPaymentRequestCheckRequisitesAndCertDto:
+      $ref: ./components/schemas/outgoing/OutgoingPaymentRequestCheckRequisitesAndCertDto.yaml
+    GenericResponsePaymentRequestErrorSetSignerAuthorityInfo:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorSetSignerAuthorityInfo.yaml
+    SignerAuthorityInfo:
+      $ref: ./components/schemas/common/SignerAuthorityInfo.yaml
+    SignerAuthorityStatusDto:
+      $ref: ./components/schemas/common/SignerAuthorityStatusDto.yaml
+    AvailableAccountDto:
+      $ref: ./components/schemas/common/AvailableAccountDto.yaml
+    GenericResponsePaymentRequestErrorAvailableAccountDto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorAvailableAccountDto.yaml
+    AccountAccessDto:
+      $ref: ./components/schemas/common/AccountAccessDto.yaml
+    GenericResponsePaymentRequestErrorListAccountAccessDto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorListAccountAccessDto.yaml
+    AdditionalInfoClientDto:
+      $ref: ./components/schemas/incoming/AdditionalInfoClientDto.yaml
+    BankClientInfoDto:
+      $ref: ./components/schemas/incoming/BankClientInfoDto.yaml
+    DocumentBusinessInfoDto:
+      $ref: ./components/schemas/incoming/DocumentBusinessInfoDto.yaml
+    GenericResponsePaymentRequestErrorIncomingPaymentRequestClientDto:
+      $ref: ./components/schemas/incoming/GenericResponsePaymentRequestErrorIncomingPaymentRequestClientDto.yaml
+    IncomingPaymentRequestClientDto:
+      $ref: ./components/schemas/incoming/IncomingPaymentRequestClientDto.yaml
+    PayerInfoDto:
+      $ref: ./components/schemas/incoming/PayerInfoDto.yaml
+    ReceiverInfoDto:
+      $ref: ./components/schemas/incoming/ReceiverInfoDto.yaml
+    GenericResponsePaymentRequestErrorDocumentSignatureDto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorDocumentSignatureDto.yaml
+    GenericResponsePaymentRequestErrorRelatedDocumentDto:
+      $ref: ./components/schemas/common/GenericResponsePaymentRequestErrorRelatedDocumentDto.yaml
+    RelatedDocumentDto:
+      $ref: ./components/schemas/common/RelatedDocumentDto.yaml
+    ClientAccountSuggestionDto:
+      $ref: ./components/schemas/incoming/ClientAccountSuggestionDto.yaml
+    GenericResponsePaymentRequestErrorListClientAccountSuggestionDto:
+      $ref: ./components/schemas/incoming/GenericResponsePaymentRequestErrorListClientAccountSuggestionDto.yaml
+    FileImportDocumentsStatisticDto:
+      $ref: ./components/schemas/misc/FileImportDocumentsStatisticDto.yaml
+    GenericResponsePaymentRequestErrorFileImportDocumentsStatisticDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportDocumentsStatisticDto.yaml
+    FileImportCompleteProcessStatisticDto:
+      $ref: ./components/schemas/misc/FileImportCompleteProcessStatisticDto.yaml
+    GenericResponsePaymentRequestErrorFileImportCompleteProcessStatisticDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportCompleteProcessStatisticDto.yaml
+    CompleteFileImportStatisticDto:
+      $ref: ./components/schemas/misc/CompleteFileImportStatisticDto.yaml
+    FileImportStatisticByStatusDto:
+      $ref: ./components/schemas/misc/FileImportStatisticByStatusDto.yaml
+    GenericResponsePaymentRequestErrorCompleteFileImportStatisticDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorCompleteFileImportStatisticDto.yaml
+    GenericResponsePaymentRequestErrorListSignatureDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorListSignatureDto.yaml
+    SignatureDto:
+      $ref: ./components/schemas/misc/SignatureDto.yaml
+    CheckCertificateDataDto:
+      $ref: ./components/schemas/misc/CheckCertificateDataDto.yaml
+    GenericResponsePaymentRequestErrorRu.gpb.eco.payment.request.business.api.common.dto.sign.CheckSignByImportFileDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorRu.gpb.eco.payment.request.business.api.common.dto.sign.CheckSignByImportFileDto.yaml
+    ru.gpb.eco.payment.request.business.api.common.dto.sign.CheckSignByImportFileDto:
+      $ref: ./components/schemas/misc/ru.gpb.eco.payment.request.business.api.common.dto.sign.CheckSignByImportFileDto.yaml
+    FileImportClientScrollerRowDetailDto:
+      $ref: ./components/schemas/misc/FileImportClientScrollerRowDetailDto.yaml
+    FileImportSignatureDto:
+      $ref: ./components/schemas/misc/FileImportSignatureDto.yaml
+    GenericResponsePaymentRequestErrorFileImportClientScrollerRowDetailDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportClientScrollerRowDetailDto.yaml
+    FileImportProcessingOptionRsDto:
+      $ref: ./components/schemas/misc/FileImportProcessingOptionRsDto.yaml
+    GenericResponsePaymentRequestErrorFileImportProcessingOptionRsDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportProcessingOptionRsDto.yaml
+    FileImportDeleteRsDto:
+      $ref: ./components/schemas/misc/FileImportDeleteRsDto.yaml
+    GenericResponsePaymentRequestErrorFileImportDeleteRsDto:
+      $ref: ./components/schemas/misc/GenericResponsePaymentRequestErrorFileImportDeleteRsDto.yaml

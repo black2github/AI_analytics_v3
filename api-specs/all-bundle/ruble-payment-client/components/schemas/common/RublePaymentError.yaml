@@ -1,0 +1,11 @@
+type: object
+properties:
+  message:
+    type: string
+  code:
+    type: string
+  additionalData:
+    type: object
+    additionalProperties:
+      type: string
+description: Ошибка

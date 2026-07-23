@@ -1,0 +1,24 @@
+type: object
+properties:
+  currencies:
+    type: array
+    description: Валюты. Список значений.
+    items:
+      type: string
+      description: Валюты. Список значений.
+  customers:
+    type: array
+    description: Организации. Список значений.
+    items:
+      type: string
+      description: Организации. Список значений.
+  serviceBranches:
+    type: array
+    description: Филиалы обслуживания. Список значений.
+    items:
+      type: string
+      description: Филиалы обслуживания. Список значений.
+  accountNumber:
+    type: string
+    description: Номер счета. Поиск по вхождению цифр слева-направо
+description: Фильтр счетов.

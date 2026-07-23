@@ -1,0 +1,30 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientWebDealingId:
+    type: string
+    description: Идентификатор клиента в ВебДилинг
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  clientFullName:
+    type: string
+    description: Полное наименование Клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование Клиента
+  signer:
+    type: boolean
+    description: Пользователь является подписантом с ЭП
+  signerSimple:
+    type: boolean
+    description: Пользователь является подписантом с ПЭП
+  systemAgreementExist:
+    type: boolean
+    description: Наличие глобальных соглашений
+  privilegesNewStyle:
+    type: boolean
+    description: Тип привилегий пользователя

@@ -1,0 +1,14 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  number:
+    type: integer
+    format: int32
+  date:
+    type: string
+    format: date-time
+  commentForClient:
+    type: string
+description: Краткое описание заявки на обновление сведений о клиенте

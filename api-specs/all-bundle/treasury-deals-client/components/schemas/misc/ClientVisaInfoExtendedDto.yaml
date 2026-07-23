@@ -1,0 +1,25 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Ссылка на сущность Клиент
+    format: uuid
+    example: 123e4567-e89b-12d3-a456-426614174000
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  innKio:
+    type: string
+    description: ИНН клиента.
+  kpp:
+    type: string
+    description: КПП клиента.
+  ogrn:
+    type: string
+    description: ОГРН клиента
+  defaultClient:
+    type: boolean
+    description: Визирующая организация по умолчанию

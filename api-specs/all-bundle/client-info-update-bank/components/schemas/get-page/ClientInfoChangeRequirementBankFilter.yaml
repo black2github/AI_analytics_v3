@@ -1,0 +1,33 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  id:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  recordSource:
+    $ref: ./BankSystemFilter.yaml
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskClientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  userFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  eskUserId:
+    $ref: ../common/FilterValueDtoString.yaml
+  changeRequirement:
+    $ref: ./ChangeRequirementFilter.yaml
+  requirementPriority:
+    $ref: ./ChangeRequirementPriorityTypeFilter.yaml
+  actual:
+    $ref: ./FilterValueDtoBoolean.yaml
+  expiryDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  lastNotification:
+    $ref: ../common/FilterValueDtoInstant.yaml
+description: Банковская часть фильтров для скроллеров

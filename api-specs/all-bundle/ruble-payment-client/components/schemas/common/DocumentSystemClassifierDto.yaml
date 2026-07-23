@@ -1,0 +1,17 @@
+type: string
+description: Система создания документа
+enum:
+- UNKNOWN
+- WEB
+- MBC
+- MBC_NATIVE
+- DIRECT_1C
+- F1
+- SKVO
+- LK_UVED
+- TNF
+- IMPORT_SERVICE
+- SINGLE_WINDOW_SERVICE
+- OPEN_API_CB
+- MSB_IB
+- MSB_APP

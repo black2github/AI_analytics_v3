@@ -1,0 +1,9 @@
+type: object
+properties:
+  request:
+    type: string
+  files:
+    type: array
+    items:
+      type: string
+      format: binary

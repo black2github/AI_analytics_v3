@@ -1,0 +1,27 @@
+type: object
+properties:
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  address:
+    $ref: ./FilterValueDtoString.yaml
+  bankClientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  branchName:
+    $ref: ./FilterValueDtoString.yaml
+  closeDate:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  mainTid:
+    $ref: ./FilterValueDtoInteger.yaml
+  pilotTariffMinAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  pilotTariffRate:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  status:
+    $ref: ./AdmPocStatusFilter.yaml
+  tariffMinAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  tariffRate:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  tariffType:
+    $ref: ./FilterValueDtoString.yaml
+description: Фильтр на запрос АДМ. Клиентская часть

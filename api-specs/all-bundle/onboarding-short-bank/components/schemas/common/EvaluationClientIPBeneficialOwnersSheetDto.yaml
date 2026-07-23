@@ -1,0 +1,6 @@
+type: object
+properties:
+  question_11:
+    type: boolean
+    description: Бенефициарным владельцем ИП является сам гражданин.
+description: Блок Лист оценки Клиента ИП "Бенефициарные владельцы".

@@ -1,0 +1,17 @@
+type: object
+properties:
+  productCode:
+    type: string
+    description: Код продукта
+  accountRole:
+    type: string
+    description: Отношение счета к продукту
+  f1ClientIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы клиента Ф1 (F1_Client_ID)
+    items:
+      type: integer
+      description: Идентификаторы клиента Ф1 (F1_Client_ID)
+      format: int64
+description: Дто для проверки наличия действующего договора клиента

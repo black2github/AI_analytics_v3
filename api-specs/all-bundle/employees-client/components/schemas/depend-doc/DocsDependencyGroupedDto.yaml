@@ -1,0 +1,22 @@
+required:
+- masterDocs
+- slaveDocs
+type: object
+properties:
+  masterDocs:
+    type: object
+    additionalProperties:
+      type: array
+      description: Управляющие документы, сгруппированные по идентификаторам
+      items:
+        $ref: ./DocDependencyDto.yaml
+    description: Управляющие документы, сгруппированные по идентификаторам
+  slaveDocs:
+    type: object
+    additionalProperties:
+      type: array
+      description: Зависимые документы, сгруппированные по идентификаторам
+      items:
+        $ref: ./DocDependencyDto.yaml
+    description: Зависимые документы, сгруппированные по идентификаторам
+description: Управляющие и зависимые документы, сгруппированные по идентификаторам

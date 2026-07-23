@@ -1,0 +1,14 @@
+type: object
+properties:
+  desc:
+    type: string
+    deprecated: true
+  value:
+    type: object
+  path:
+    type: string
+  env:
+    type: string
+  description:
+    type: string
+    writeOnly: true

@@ -1,0 +1,39 @@
+required:
+- login
+type: object
+properties:
+  uaaUserId:
+    type: string
+    description: UAA ИД пользователя
+    format: uuid
+  login:
+    type: string
+    description: Логин
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  familyName:
+    type: string
+    description: Фамилия
+  phoneNumber:
+    type: string
+    description: Внутренний телефон
+  landLinePhoneNumber:
+    type: string
+    description: Стационарный телефон
+  email:
+    type: string
+    description: Электронная почта
+  position:
+    type: string
+    description: Должность
+  uaaUser:
+    $ref: ../common/UserBankDto.yaml
+  lastLogin:
+    type: string
+    description: Дата последнего входа
+    format: date-time
+description: Банковский пользователь

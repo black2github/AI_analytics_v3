@@ -1,0 +1,25 @@
+type: object
+properties:
+  absClientId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountId:
+    $ref: ../common/FilterValueDtoString.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  cardGuid:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  cardId:
+    $ref: ../common/FilterValueDtoString.yaml
+  cardholderName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  maskNum:
+    $ref: ../common/FilterValueDtoString.yaml
+  operationType:
+    $ref: ./FilterValueDtoOperationType.yaml
+  period:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  reportType:
+    $ref: ./FilterValueDtoReportType.yaml
+description: Отчет по карте

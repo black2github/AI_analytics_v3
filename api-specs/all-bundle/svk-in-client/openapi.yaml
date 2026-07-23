@@ -1,0 +1,172 @@
+openapi: 3.0.1
+info:
+  title: СВК2. Клиентская часть
+  description: 'Сервис '
+  version: 3.7.0
+servers:
+- url: /svk-in-client
+security:
+- bearerAuth: []
+paths:
+  /svk-in/signature/generate-digest:
+    $ref: ./paths/signature/svk_in_signature_generate_digest.yaml
+  /svk-in/print:
+    $ref: ./paths/print/svk_in_print.yaml
+  /svk-in/get-page:
+    $ref: ./paths/get-page/svk_in_get_page.yaml
+  /svk-in/get-linked-documents:
+    $ref: ./paths/get-linked-documents/svk_in_get_linked_documents.yaml
+  /svk-in/get-linked-document:
+    $ref: ./paths/get-linked-document/svk_in_get_linked_document.yaml
+  /svk-in/get-dio-linked-documents:
+    $ref: ./paths/get-dio-linked-documents/svk_in_get_dio_linked_documents.yaml
+  /svk-in/favorites/remove:
+    $ref: ./paths/favorites/svk_in_favorites_remove.yaml
+  /svk-in/favorites/add:
+    $ref: ./paths/favorites/svk_in_favorites_add.yaml
+  /svk-in/export-task:
+    $ref: ./paths/export-task/svk_in_export_task.yaml
+  /svk-in/export-registry:
+    $ref: ./paths/export-registry/svk_in_export_registry.yaml
+  /svk-in/category:
+    $ref: ./paths/category/svk_in_category.yaml
+  /svk-in/attach/zip-access-token:
+    $ref: ./paths/attach/svk_in_attach_zip_access_token.yaml
+  /svk-in/{id}:
+    $ref: ./paths/{id}/svk_in_id.yaml
+  /svk-in/{id}/attach/{attachId}/token:
+    $ref: ./paths/{id}/svk_in_id_attach_attachId_token.yaml
+  /svk-in/history/{id}:
+    $ref: ./paths/history/svk_in_history_id.yaml
+  /svk-in/export-task/{taskId}:
+    $ref: ./paths/export-task/svk_in_export_task_taskId.yaml
+  /svk-in/export-task/{taskId}/attachment:
+    $ref: ./paths/export-task/svk_in_export_task_taskId_attachment.yaml
+  /i18n/{locale}:
+    $ref: ./paths/{locale}/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    DigestRequest:
+      $ref: ./components/schemas/signature/DigestRequest.yaml
+    Digest:
+      $ref: ./components/schemas/signature/Digest.yaml
+    GenericResponseSimpleErrorDataDigest:
+      $ref: ./components/schemas/signature/GenericResponseSimpleErrorDataDigest.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    GenericCommandSvkInPrintRequestDto:
+      $ref: ./components/schemas/print/GenericCommandSvkInPrintRequestDto.yaml
+    SvkInPrintRequestDto:
+      $ref: ./components/schemas/print/SvkInPrintRequestDto.yaml
+    FileDataForDownloadDto:
+      $ref: ./components/schemas/common/FileDataForDownloadDto.yaml
+    GenericResponseSimpleErrorDataFileDataForDownloadDto:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataFileDataForDownloadDto.yaml
+    DioSvkInDocumentStatusFilterValueDto:
+      $ref: ./components/schemas/common/DioSvkInDocumentStatusFilterValueDto.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/common/FilterValueDtoBoolean.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/common/FilterValueDtoLocalDate.yaml
+    FilterValueDtoLong:
+      $ref: ./components/schemas/common/FilterValueDtoLong.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/common/FilterValueDtoString.yaml
+    GetPageCommandSvkInClientScrollerFilterDto:
+      $ref: ./components/schemas/get-page/GetPageCommandSvkInClientScrollerFilterDto.yaml
+    PageParamsSvkInClientScrollerFilterDto:
+      $ref: ./components/schemas/get-page/PageParamsSvkInClientScrollerFilterDto.yaml
+    Paging:
+      $ref: ./components/schemas/common/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/common/Sort.yaml
+    SvkInClientScrollerFilterDto:
+      $ref: ./components/schemas/common/SvkInClientScrollerFilterDto.yaml
+    AttachmentClientInfoDto:
+      $ref: ./components/schemas/common/AttachmentClientInfoDto.yaml
+    LinkedDocClientInfoDto:
+      $ref: ./components/schemas/common/LinkedDocClientInfoDto.yaml
+    OrganizationClientInfoDto:
+      $ref: ./components/schemas/common/OrganizationClientInfoDto.yaml
+    PageSvkInClientScrollerRspDto:
+      $ref: ./components/schemas/get-page/PageSvkInClientScrollerRspDto.yaml
+    SkvoClientInfoDto:
+      $ref: ./components/schemas/common/SkvoClientInfoDto.yaml
+    SvkInClientScrollerRspDto:
+      $ref: ./components/schemas/get-page/SvkInClientScrollerRspDto.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/common/FilterValueDtoUUID.yaml
+    GetPageCommandLinkedDocFilterDto:
+      $ref: ./components/schemas/common/GetPageCommandLinkedDocFilterDto.yaml
+    LinkedDocFilterDto:
+      $ref: ./components/schemas/common/LinkedDocFilterDto.yaml
+    PageParamsLinkedDocFilterDto:
+      $ref: ./components/schemas/common/PageParamsLinkedDocFilterDto.yaml
+    AttachmentLinkedDocumentInfoDto:
+      $ref: ./components/schemas/common/AttachmentLinkedDocumentInfoDto.yaml
+    LinkedDocScrollerInfoDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocScrollerInfoDto.yaml
+    LinkedDocScrollerRspDto:
+      $ref: ./components/schemas/get-linked-documents/LinkedDocScrollerRspDto.yaml
+    PageLinkedDocScrollerRspDto:
+      $ref: ./components/schemas/get-linked-documents/PageLinkedDocScrollerRspDto.yaml
+    LinkedDocInfoDto:
+      $ref: ./components/schemas/common/LinkedDocInfoDto.yaml
+    LinkedDocRspDto:
+      $ref: ./components/schemas/common/LinkedDocRspDto.yaml
+    LinkedDocTypeDto:
+      $ref: ./components/schemas/common/LinkedDocTypeDto.yaml
+    PageLinkedDocRspDto:
+      $ref: ./components/schemas/common/PageLinkedDocRspDto.yaml
+    GenericCommandSetUUID:
+      $ref: ./components/schemas/favorites/GenericCommandSetUUID.yaml
+    GenericResponseSimpleErrorDataSetUUID:
+      $ref: ./components/schemas/favorites/GenericResponseSimpleErrorDataSetUUID.yaml
+    ExportRegistryRequestDtoSvkInClientScrollerFilterDtoSvkInClientColumnDto:
+      $ref: ./components/schemas/export-task/ExportRegistryRequestDtoSvkInClientScrollerFilterDtoSvkInClientColumnDto.yaml
+    ExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/ExportRegistryTaskStubRspDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryTaskStubRspDto.yaml
+    GenericCommandSvkInClientExportRegistryDto:
+      $ref: ./components/schemas/export-registry/GenericCommandSvkInClientExportRegistryDto.yaml
+    SvkInClientExportRegistryDto:
+      $ref: ./components/schemas/export-registry/SvkInClientExportRegistryDto.yaml
+    CategoryCount:
+      $ref: ./components/schemas/category/CategoryCount.yaml
+    GenericResponseSimpleErrorDataListCategoryCount:
+      $ref: ./components/schemas/category/GenericResponseSimpleErrorDataListCategoryCount.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/attach/GenericCommandUUID.yaml
+    DocumentSignatureCertificateDto:
+      $ref: ./components/schemas/{id}/DocumentSignatureCertificateDto.yaml
+    DocumentSignatureDto:
+      $ref: ./components/schemas/{id}/DocumentSignatureDto.yaml
+    GenericResponseSimpleErrorDataSvkInClientViewRspDto:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataSvkInClientViewRspDto.yaml
+    SvkInClientViewRspDto:
+      $ref: ./components/schemas/{id}/SvkInClientViewRspDto.yaml
+    GenericResponseSimpleErrorDataString:
+      $ref: ./components/schemas/{id}/GenericResponseSimpleErrorDataString.yaml
+    GenericResponseSimpleErrorDataListSvkInClientHistoryDto:
+      $ref: ./components/schemas/history/GenericResponseSimpleErrorDataListSvkInClientHistoryDto.yaml
+    SvkInClientHistoryDto:
+      $ref: ./components/schemas/history/SvkInClientHistoryDto.yaml
+    SvkInClientOperationHistoryDto:
+      $ref: ./components/schemas/history/SvkInClientOperationHistoryDto.yaml
+    ExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/ExportRegistryAttachmentDto.yaml
+    GenericResponseSimpleErrorDataExportRegistryAttachmentDto:
+      $ref: ./components/schemas/export-task/GenericResponseSimpleErrorDataExportRegistryAttachmentDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

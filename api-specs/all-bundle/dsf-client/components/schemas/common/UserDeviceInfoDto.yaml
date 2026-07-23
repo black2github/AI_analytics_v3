@@ -1,0 +1,12 @@
+type: object
+properties:
+  deviceDigitalPrint:
+    type: string
+    description: Цифровой отпечаток компьютера, с которого был осуществлен вход АС "Экосистема (ДБО ЮЛ)"
+  macAddress:
+    type: array
+    description: MAC адрес устройства пользователя
+    items:
+      type: string
+      description: MAC адрес устройства пользователя
+description: Данные устройства пользователя

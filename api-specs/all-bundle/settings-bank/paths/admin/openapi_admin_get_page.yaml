@@ -1,0 +1,19 @@
+post:
+  tags:
+  - АПИ для выполнения CRUD операций с OpenApi спецификациями
+  summary: Получить страницу записей
+  description: 'Привилегии: OPEN_API_SPEC_VIEW'
+  operationId: getPage_3
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/admin/GetPageCommandOpenApiSpecFilter.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/admin/PageDataOpenApiSpecScrollerDto.yaml

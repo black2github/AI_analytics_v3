@@ -1,0 +1,15 @@
+type: object
+properties:
+  service:
+    type: string
+  eskId:
+    type: string
+  authorizedPersonId:
+    type: string
+    format: uuid
+  bankClientId:
+    type: string
+    format: uuid
+  shortUrlCode:
+    type: string
+description: ДТО деактивации инвайта

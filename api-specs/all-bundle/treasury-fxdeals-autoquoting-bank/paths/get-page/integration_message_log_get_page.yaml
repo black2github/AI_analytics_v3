@@ -1,0 +1,55 @@
+post:
+  tags:
+  - API для работы c логом сообщений обмена с внешними системами
+  summary: Получить страницу записей
+  description: 'Привилегии: (#eco.userTypeIs(''BANK'') OR #eco.userTypeIs(''TECHNICAL'')) AND hasAuthority(''TREASURY_FX_DEALS_AUTOQUOTING_INTEGRATION_MESSAGE_LOG_VIEW'')'
+  operationId: getPage_1
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/GetPageCommandIntegrationMessageLogFilter.yaml
+    required: true
+  responses:
+    '403':
+      description: Forbidden
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/SingleResponseObject.yaml
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseErrorDataPageDataIntegrationMessageLogDto.yaml
+    '500':
+      description: Internal Server Error
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResult.yaml
+    '423':
+      description: Locked
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '415':
+      description: Unsupported Media Type
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '401':
+      description: Unauthorized
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml
+    '400':
+      description: Bad Request
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/common/ActionResultObject.yaml

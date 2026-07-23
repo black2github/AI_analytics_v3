@@ -1,0 +1,16 @@
+type: object
+properties:
+  company:
+    $ref: ./Company.yaml
+    type: object
+    xml:
+      name: Company
+  errorCode:
+    type: integer
+    xml:
+      name: ErrorCode
+    format: int32
+  errorMessage:
+    type: string
+    xml:
+      name: ErrorMessage

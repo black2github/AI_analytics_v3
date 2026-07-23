@@ -1,0 +1,7 @@
+type: object
+properties:
+  entityId:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+description: Транспортная сущность запросов для обработки заявки банковским сотрудником

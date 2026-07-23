@@ -1,0 +1,6 @@
+type: string
+description: Статус счета
+example: null
+enum:
+- OPEN
+- CLOSE

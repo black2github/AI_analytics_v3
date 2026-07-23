@@ -1,0 +1,40 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - NOT_EXECUTED
+    - EXECUTED
+    - ERROR
+    - NOT_RELEVANT
+  notEq:
+    type: string
+    enum:
+    - NOT_EXECUTED
+    - EXECUTED
+    - ERROR
+    - NOT_RELEVANT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - NOT_EXECUTED
+      - EXECUTED
+      - ERROR
+      - NOT_RELEVANT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - NOT_EXECUTED
+      - EXECUTED
+      - ERROR
+      - NOT_RELEVANT
+  isNull:
+    type: boolean

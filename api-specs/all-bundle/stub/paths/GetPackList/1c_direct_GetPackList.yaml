@@ -1,0 +1,29 @@
+get:
+  tags:
+  - direct-1-c-controller
+  summary: Получение электронных документов в 1С
+  operationId: getPackListUsingGET
+  produces:
+  - application/xml;charset=UTF-8
+  parameters:
+  - name: customerId
+    in: header
+    description: customerId
+    required: true
+    type: string
+  - name: date
+    in: query
+    description: date
+    required: false
+    type: string
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: string
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

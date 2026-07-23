@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ../common/BrkOnbBankRequestRequestFilterDto.yaml
+description: Запрос

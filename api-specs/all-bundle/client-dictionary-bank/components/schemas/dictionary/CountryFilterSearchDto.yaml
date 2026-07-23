@@ -1,0 +1,16 @@
+required:
+- attributes
+- value
+type: object
+properties:
+  value:
+    type: string
+    description: Значение для поиска по вхождению по указанным атрибутам
+  attributes:
+    uniqueItems: true
+    type: array
+    description: Набор атрибутов для поиска
+    items:
+      type: string
+      description: Набор атрибутов для поиска
+description: Динамический критерий поиска по указанным атрибутам

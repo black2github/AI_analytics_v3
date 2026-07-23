@@ -1,0 +1,27 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  innKio:
+    type: string
+    description: ИНН клиента
+  kpp:
+    type: string
+    description: КПП клиента
+  ogrnOgrip:
+    type: string
+    description: ОГРН клиента
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  internationalName:
+    type: string
+    description: Международное наименование клиента
+  branch:
+    $ref: ./BranchShortDto.yaml
+description: Реквизиты клиента

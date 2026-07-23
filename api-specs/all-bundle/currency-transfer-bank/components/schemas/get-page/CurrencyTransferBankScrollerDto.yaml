@@ -1,0 +1,182 @@
+required:
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа в Экосистеме
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+  docNumber:
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Номер документа
+    format: date
+  receiveDate:
+    type: string
+    description: Дата приема
+    format: date-time
+  payer:
+    $ref: ./CurrencyTransferScrollerPayerDto.yaml
+  beneficiary:
+    $ref: ./CurrencyTransferScrollerBeneficiaryDto.yaml
+  docSourceSystem:
+    type: string
+    description: Система создания документа
+    enum:
+    - UNKNOWN
+    - WEB
+    - MBC
+    - MBC_NATIVE
+    - DIRECT_1C
+    - F1
+    - SKVO
+    - LK_UVED
+    - TNF
+    - IMPORT_SERVICE
+    - SINGLE_WINDOW_SERVICE
+    - OPEN_API_CB
+    - MSB_IB
+    - MSB_APP
+  docCreationType:
+    type: string
+    description: Способ создания документа
+    enum:
+    - UNKNOWN
+    - NEW
+    - COPY
+    - IMPORT_FILE
+    - IMPORT
+    - DIRECT_1C
+    - TEMPLATE
+    - SALARY
+    - STATEMENT
+    - TAX_NOTICE
+    - F1_INSERT
+    - SKVO_INSERT
+    - LK_UVED_INSERT
+    - IMPORT_TNF
+    - OPEN_API_CB
+    - CSV_INSERT
+    - EBG_COMISSION
+  amount:
+    type: string
+    description: Сумма перевода
+  valueDate:
+    type: string
+    description: Дата валютирования
+    format: date
+  charge:
+    type: string
+    description: Комиссия за перевод
+  paymentPurpose:
+    type: string
+    description: Детали платежа
+  payeeInfo:
+    type: string
+    description: Информация получателю
+  status:
+    type: string
+    description: Транспортное представление констант для передачи статуса
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - WAIT_FOR_SIGN
+    - SIGNED_1
+    - SIGNED_2
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - SIGN_VALID
+    - DETAILS_VALID
+    - ACCEPTED
+    - WAIT_DATE_COMPLETED
+    - CURRENCY_CONTROL
+    - ADDITIONAL_CONTROL
+    - ACCEPT_FOR_EXECUTION
+    - EXPORT_TO_ABS1
+    - EXPORT_TO_ABS2
+    - EXPORTED_TO_ABS1
+    - EXPORTED_TO_ABS2
+    - EXPORT_TO_ABS_ERROR1
+    - EXPORT_TO_ABS_ERROR2
+    - COMPLETED
+    - REJECTED
+    - CANCELED
+    - IMPORTED
+    - IMPORTED_DENY
+    - IMPORTED_CORRECT
+    - IMPORTED_ERROR
+    - IMPORTED_WARNING
+    - EXPORTED_TO_TMG
+    - EXPORT_TO_TMG_ERROR
+    - WAIT_ACCEPT_TMG
+    - WAIT_ACCEPT_TMG_NO_LIMIT
+    - COMPLETED_TMG
+    - DECLINE_TMG
+    - CANCELED_LKUVED
+    - SIGHTING_CHECK
+    - SIGHTING_CHECK_ERROR
+    - WAIT_SIGHTING
+    - SIGNED_SIGHTING
+    - SIGHTING_SIGN_VALID
+    - SIGHTING_DETAILS_VALID
+  currencyControl:
+    $ref: ./CurrencyTransferScrollerControlDto.yaml
+  bankComment:
+    $ref: ../common/CurrencyTransferCommentDto.yaml
+  signatures:
+    type: array
+    description: Подписи платежного поручения
+    items:
+      $ref: ../common/CurrencyTransferSignatureDto.yaml
+  ssdVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  gpiStatus:
+    type: string
+    description: Транспортное представление Gpi статусов документа (клиент)
+    enum:
+    - GPI_SENDED
+    - GPI_IN_PROCESS
+    - GPI_COMPLETED
+    - GPI_REJECTED
+  absValueDate:
+    type: string
+    description: Дата валютирования из АБС
+    format: date
+  chargebackRequest:
+    $ref: ../common/ChargebackRequestBankDto.yaml
+  analyticalClassifierCode:
+    type: string
+    description: Аналитический классификатор
+  analyticalClassifierName:
+    type: string
+    description: Наименование аналитического классификатора
+  authorId:
+    type: string
+    description: Пользовательский идентификатор автора заявки ВП
+    format: uuid
+  lkuvedDocId:
+    type: string
+    description: ID документа в ЛК УВЭД
+    format: uuid
+  lkuvedMsgId:
+    type: string
+    description: ID сообщения в ЛК УВЭД
+    format: uuid
+  docVersion:
+    type: string
+    description: Версия формата документа валютного перевода
+    enum:
+    - MT
+    - MX
+description: Транспортное представление строки данных о ВП в скроллере(банковская сторона)

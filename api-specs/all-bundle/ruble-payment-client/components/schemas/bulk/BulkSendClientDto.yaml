@@ -1,0 +1,15 @@
+required:
+- asyncTaskGroupId
+- bulkSignFileFilter
+- userDeviceInfo
+type: object
+properties:
+  asyncTaskGroupId:
+    type: string
+    description: Идентификатор группы асинхронных задач
+    format: uuid
+  bulkSignFileFilter:
+    $ref: ./BulkSignFileFilter.yaml
+  userDeviceInfo:
+    $ref: ../common/UserDeviceInfoDto.yaml
+description: Данные для пакетной отправки документов через асинхронную задачу

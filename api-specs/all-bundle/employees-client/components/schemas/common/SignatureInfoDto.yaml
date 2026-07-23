@@ -1,0 +1,25 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Пользователь, подписавший заявку
+    format: uuid
+  userFio:
+    type: string
+    description: Пользователь, подписавший заявку (ФИО)
+  spp:
+    type: integer
+    description: Версия СПП
+    format: int32
+  signatureData:
+    $ref: ./SignatureDataDto.yaml
+  extUserId:
+    type: string
+    description: Ссылка на подписанта из ЕСК
+  userPosition:
+    type: string
+    description: Должность пользователя, подписавшего заявку
+  baseDoc:
+    type: string
+    description: Документ, на основании которого пользователь подписал заявку
+description: Реквизиты электронной подписи заявки

@@ -1,0 +1,34 @@
+required:
+- docCreationPage
+- docCreationType
+- id
+- payerDetails
+- version
+type: object
+properties:
+  paymentInfo:
+    $ref: ./PaymentInfoSimplifiedDto.yaml
+  additionalFields:
+    $ref: ./PaymentOrderRequestAdditionalFieldsReq.yaml
+  payerDetails:
+    $ref: ./PayerDetailsSimplifiedBrokerageDto.yaml
+  recipientDetails:
+    $ref: ./RecipientDetailsSimplifiedDto.yaml
+  docCreationType:
+    $ref: ../common/DocumentCreationMethodClassifierDto.yaml
+  docCreationPage:
+    maxLength: 255
+    pattern: ^[А-Яа-яёЁA-Za-z0-9@:%_\+.-~#?&//=-]*$
+    type: string
+    description: Страница с которой вызвано создание документа
+  paymentAmount:
+    $ref: ./PaymentAmountSimplifiedDto.yaml
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Входящие параметры для обновления перевода на брокерский счёт.

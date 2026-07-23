@@ -1,0 +1,15 @@
+type: object
+properties:
+  innKio:
+    type: string
+  orgName:
+    type: string
+  residentFlag:
+    type: boolean
+  opfType:
+    type: string
+    enum:
+    - IP
+    - LLC_SIMPLE
+    - LLC_OTHER
+    - OTHER

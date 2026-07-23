@@ -1,0 +1,12 @@
+type: object
+properties:
+  approvalSignDocumentBeforeDto:
+    type: array
+    description: Дто статистики количества документов по фиксированному типу документа
+    items:
+      $ref: ./ApprovalSignDocumentBeforeDto.yaml
+  docAcceptAll:
+    type: integer
+    description: Всего на акцепт
+    format: int32
+description: ДТО Статистики количества документов по фиксированному типу документа и количества документов данного типа

@@ -1,0 +1,14 @@
+type: object
+properties:
+  fileName:
+    type: string
+    description: Имя архива
+  attachmentIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы вложений для архивации
+    items:
+      type: string
+      description: Идентификаторы вложений для архивации
+      format: uuid
+description: ДТО на создание zip вложения

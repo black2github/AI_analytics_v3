@@ -1,0 +1,44 @@
+type: object
+description: Реквизиты заявки на регистрацию платежа B2B в системе АС СБП
+properties:
+  docDate:
+    type: string
+    format: date-time
+    description: Дата заявки
+  docNumber:
+    type: integer
+    format: int32
+    description: Номер заявки
+  qrcId:
+    type: string
+    description: Идентификатор QR кода для оплаты
+  qrcType:
+    type: string
+    description: Тип QR
+    enum:
+    - STATIC
+    - DYNAMIC
+    - SUBSCRIPTION
+  redirectUrl:
+    type: string
+    description: Ссылка для автоматического возврата
+  qrcInvoiceId:
+    type: string
+    format: uuid
+    description: Идентификатор входящего QR кода
+  paymentPurpose:
+    type: string
+    description: Назначение платежа
+  vat:
+    type: boolean
+    description: Информация о взимании НДС
+  vatAmount:
+    type: integer
+    format: int64
+    description: Сумма НДС операции в копейках
+  noAmountQrc:
+    type: boolean
+    description: Входящий QR без суммы платежа
+required:
+- docDate
+- docNumber

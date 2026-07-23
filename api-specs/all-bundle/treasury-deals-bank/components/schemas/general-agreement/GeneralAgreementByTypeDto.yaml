@@ -1,0 +1,37 @@
+type: object
+properties:
+  contractType:
+    type: string
+    description: Тип соглашения
+    enum:
+    - ACCESSION
+    - STANDART
+    - INDIVIDUAL
+    - ACCESSION_DU
+    - INDIVIDUAL_DU
+    - STANDART_DU
+  status:
+    type: string
+    description: Статус соглашения
+    enum:
+    - ACTIVE
+    - ENDED
+    - BLOCKED
+    - DELETED
+  usage:
+    uniqueItems: true
+    type: array
+    description: Назначения
+    items:
+      type: string
+      description: Назначения
+      enum:
+      - DEPOSIT
+      - MNO
+      - GSNO
+      - FX
+  count:
+    type: integer
+    description: Количество соглашений
+    format: int64
+description: Данные

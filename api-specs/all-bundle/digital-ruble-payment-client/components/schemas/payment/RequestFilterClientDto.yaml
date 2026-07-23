@@ -1,0 +1,39 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  requestType:
+    $ref: ./DigitalRublePaymentRequestTypeClassifierFilter.yaml
+  status:
+    $ref: ./DigitalRubleRequestStatusFilter.yaml
+  paymentAmount:
+    $ref: ./FilterValueDtoBigDecimal.yaml
+  number:
+    $ref: ../common/FilterValueDtoString.yaml
+  pointOfSaleName:
+    $ref: ../common/FilterValueDtoString.yaml
+  purposeOfPayment:
+    $ref: ../common/FilterValueDtoString.yaml
+  operationId:
+    $ref: ./FilterValueDtoUUID.yaml
+  accountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  organizationName:
+    $ref: ../common/FilterValueDtoString.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorCbrParticipantId:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorPam:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorName:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorCbrWalletId:
+    $ref: ../common/FilterValueDtoString.yaml
+  contractorAccountNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  organizationNameOrInnOrOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр для заявок

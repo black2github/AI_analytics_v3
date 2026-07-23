@@ -1,0 +1,45 @@
+post:
+  tags:
+  - API для справочника офисов
+  summary: Получить страницу записей
+  description: 'Привилегии: COMMON_DICTIONARY_BS_OFFICE_GET_PAGE'
+  operationId: getPageUsingPOST_7
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: page
+    in: query
+    description: page
+    required: false
+    type: integer
+    format: int32
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/ApiRequestDto«OfficeListRequestDto»'
+  - name: size
+    in: query
+    description: size
+    required: false
+    type: integer
+    format: int32
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,ApiResponseDto«OfficeListResponseDto»»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

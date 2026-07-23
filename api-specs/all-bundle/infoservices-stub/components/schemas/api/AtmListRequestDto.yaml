@@ -1,0 +1,8 @@
+type: object
+properties:
+  filter:
+    $ref: ./AtmListRequestFilterDto.yaml
+  mode:
+    type: string
+  searchValue:
+    type: string

@@ -1,0 +1,68 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  createdAt:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  creator:
+    $ref: ./CreatorDto.yaml
+  consentId:
+    type: string
+    description: Идентификатор согласия
+    format: uuid
+  consentStatus:
+    type: string
+    description: Статус согласия.
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REVOKED
+    - REJECTED
+  consentStatusUpdatedAt:
+    type: string
+    description: Дата обновления статуса согласия
+    format: date-time
+  tokenId:
+    type: string
+    description: Идентификатор токена
+  tokenExpiresAt:
+    type: string
+    description: Срок действия токена
+    format: date-time
+  bankCode:
+    type: string
+    description: Код банка-партнера
+  organization:
+    $ref: ../common/BankClientInfoDto.yaml
+  accounts:
+    type: array
+    description: Счета
+    items:
+      $ref: ./GrantAccountDto.yaml
+  consentExpiresAt:
+    type: string
+    description: Срок действия согласия
+    format: date-time
+  operations:
+    type: array
+    description: Доступные операции
+    items:
+      type: string
+      description: Доступные операции
+      enum:
+      - BASE
+      - TRANSACTIONS
+  permissions:
+    type: array
+    description: Разрешения в согласии
+    items:
+      $ref: ../common/ConsentPermissionIntegrationDto.yaml
+description: Заявка на выдачу согласия

@@ -1,0 +1,119 @@
+type: object
+properties:
+  additionalParams:
+    $ref: ./AdditionalParamsMainPageDto.yaml
+  bankClient:
+    $ref: ./BankClientInfoMainPageDto.yaml
+  branch:
+    $ref: ./BranchMainPageDto.yaml
+  date:
+    type: string
+    description: Дата короткой заявки
+    format: date
+  fillingPercentage:
+    type: integer
+    description: Процент заполнения
+    format: int32
+  id:
+    type: string
+    description: Идентификатор короткой заявки
+    format: uuid
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  openingAccounts:
+    type: array
+    description: Список открываемых счетов
+    items:
+      $ref: ./OpeningAccountMainPageDto.yaml
+  primaryCheckResult:
+    type: string
+    description: Результат первичных проверок
+    enum:
+    - POSITIVE
+    - NEGATIVE
+    - ERROR
+    - CONDITIONALLY_POSITIVE
+    - CONDITIONALLY_POSITIVE_BY_FNS
+    - CONDITIONALLY_POSITIVE_BY_FTS
+    - EMPTY
+  scheduledCallInfo:
+    $ref: ./ScheduledCallInfoMainPageDto.yaml
+  status:
+    type: string
+    description: Статус короткой заявки на открытие первого счета
+    enum:
+    - NONE
+    - DRAFT
+    - COMPLETED
+    - CLIENT_DOCS_UPLOAD
+    - DELETED
+    - DELIVERED
+    - MIDDLE_OFFICE_CONTROL
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_PASSPORT_TO_TESSA_1070
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - RECEIVED
+    - EXPORT_TO_ESK_1070
+    - EXPORT_TO_ESK_1099
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_1070
+    - EXPORTED_TO_ESK_1099
+    - EXPORTED_TO_ESK_115
+    - TECH_EXPORT_TO_ESK_ERROR_1070
+    - TECH_EXPORT_TO_ESK_ERROR_1099
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_1070
+    - EXECUTED_BY_ESK_1099
+    - DOSSIER_APPROVED_BY_ESK_115
+    - DOSSIER_CREATED_BY_ESK_115
+    - DOSSIER_REPEATED_EXAMINATION_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+  tariffCode:
+    type: string
+    description: Коды справочника тарифов на обслуживание счета
+    enum:
+    - STANDART
+    - NEEDFUL
+    - PROGRESS
+    - STABLE
+    - MAX
+    - FEA
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя, который создал короткую заявку
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+description: Короткая заявка на открытие первого счета для сервиса ГС

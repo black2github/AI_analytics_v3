@@ -1,0 +1,15 @@
+type: object
+properties:
+  postAddress:
+    type: string
+    description: Почтовый адрес организации
+  courierAddress:
+    type: string
+    description: Адрес для курьерской доставки
+  representativePhone:
+    type: string
+    description: Контактный телефон представителя
+  representativeEmail:
+    type: string
+    description: E-mail представителя
+description: Контактные данные организации

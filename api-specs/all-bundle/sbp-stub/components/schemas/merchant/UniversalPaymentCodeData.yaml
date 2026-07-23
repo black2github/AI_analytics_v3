@@ -1,0 +1,10 @@
+type: object
+properties:
+  uniQrId:
+    type: string
+  payload:
+    type: string
+  status:
+    type: string
+  image:
+    $ref: ./QrcImageDto.yaml

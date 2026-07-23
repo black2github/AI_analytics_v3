@@ -1,0 +1,45 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - USER_ADD
+    - USER_CERT_ADD
+    - USER_BLOCK
+    - USER_BLOCK_IN_CLIENT
+    - USER_UNLOCK_IN_CLIENT
+  notEq:
+    type: string
+    enum:
+    - USER_ADD
+    - USER_CERT_ADD
+    - USER_BLOCK
+    - USER_BLOCK_IN_CLIENT
+    - USER_UNLOCK_IN_CLIENT
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - USER_ADD
+      - USER_CERT_ADD
+      - USER_BLOCK
+      - USER_BLOCK_IN_CLIENT
+      - USER_UNLOCK_IN_CLIENT
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - USER_ADD
+      - USER_CERT_ADD
+      - USER_BLOCK
+      - USER_BLOCK_IN_CLIENT
+      - USER_UNLOCK_IN_CLIENT
+  isNull:
+    type: boolean
+description: Тип правила на предоставление/удаление доступа (=)

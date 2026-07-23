@@ -1,0 +1,24 @@
+required:
+- accountId
+- permissionTypeDto
+type: object
+properties:
+  accountId:
+    type: string
+    description: id счета
+    format: uuid
+  accountNumber:
+    maxLength: 20
+    minLength: 0
+    type: string
+    description: Номер счета
+  permissionTypeDto:
+    type: string
+    description: Режим доступа к счету
+    enum:
+    - BLOCK
+    - INFORM_ONLY
+    - OPEN
+    - RECEPTION_ONLY
+    - EXTENDED
+description: Настройки базового доступа к счетам

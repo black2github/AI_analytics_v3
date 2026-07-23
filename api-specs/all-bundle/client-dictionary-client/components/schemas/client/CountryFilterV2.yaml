@@ -1,0 +1,13 @@
+type: object
+properties:
+  code:
+    $ref: ./FilterValueDtoString.yaml
+  name:
+    $ref: ./FilterValueDtoString.yaml
+  alfa2:
+    $ref: ./FilterValueDtoString.yaml
+  dateTo:
+    $ref: ./FilterValueDtoLocalDate.yaml
+  search:
+    $ref: ./CountryFilterSearchDto.yaml
+description: Фильтр выборки стран (v2)

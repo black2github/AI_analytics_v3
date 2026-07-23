@@ -1,0 +1,26 @@
+type: object
+properties:
+  date:
+    type: string
+    description: Дата и время создания операции
+    format: date-time
+  name:
+    type: string
+    description: Наименование операции
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+  fio:
+    type: string
+    description: ФИО
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+description: Операция документа

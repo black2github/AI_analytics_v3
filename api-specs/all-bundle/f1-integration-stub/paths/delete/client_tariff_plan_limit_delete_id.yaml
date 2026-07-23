@@ -1,0 +1,13 @@
+delete:
+  summary: Удалить запись в таблице f1_client_tariff_plan_limit
+  tags:
+  - Обновление данных заглушек в таблице f1_client_tariff_plan_limit (Лимиты тарифных планов Клиента Банка в Ф1)
+  parameters:
+  - name: id
+    in: path
+    required: true
+    schema:
+      $ref: ../../components/schemas/common/UUID.yaml
+  responses:
+    '204':
+      description: No Content

@@ -1,0 +1,59 @@
+type: object
+description: Данные транзакции ТСП
+properties:
+  amount:
+    type: integer
+    format: int64
+    description: Сумма операции
+  currency:
+    type: string
+    description: 'Валюта операции '
+  fpMessageId:
+    type: string
+    description: 'Идентификатор операции СБП '
+  qrcId:
+    type: string
+    description: Идентификатор QR-кода
+  recipientAccount:
+    type: string
+    description: 'Счет получателя '
+  recipientBic:
+    type: string
+    description: 'БИК получателя '
+  recipientId:
+    type: string
+    description: Идентификатор получателя
+  recipientPam:
+    type: string
+    description: РАМ получателя
+  recipientBankId:
+    type: string
+    description: Идентификатор банка получателя
+  senderAccount:
+    type: string
+    description: 'Номер счета отправителя '
+  senderBankId:
+    type: string
+    description: 'Идентификатор банка отправителя '
+  senderId:
+    type: string
+    description: 'Идентификатор отправителя '
+  senderPam:
+    type: string
+    description: 'РАМ отправителя '
+  status:
+    type: string
+    description: Статус операции
+  origTransactionId:
+    type: string
+    description: 'Идентификатор оригинальной транзакции '
+  transactionId:
+    type: string
+    description: 'Идентификатор транзакции '
+  transactionTime:
+    $ref: ./Instant.yaml
+    type: string
+    description: 'Дата и время операции '
+  transactionType:
+    type: string
+    description: 'Тип операции '

@@ -1,0 +1,5 @@
+type: object
+properties:
+  addressInfo:
+    $ref: ./AddressProviderParametersDto.yaml
+description: Ответ на расчет аттрибутов CSR для клиента

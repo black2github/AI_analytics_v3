@@ -1,0 +1,28 @@
+get:
+  summary: Список всех записей в таблице gps_eco_accs_smsinfo
+  tags:
+  - Обновление заглушек GPS_ECO_SMS_INFO_ACCS (счет и тариф для списания комиссии (смс-информирование))
+  parameters:
+  - name: limit
+    in: query
+    schema:
+      type: object
+      description: Количество записей
+      default: 100
+      minimum: 1
+    required: false
+  - name: offset
+    in: query
+    schema:
+      type: object
+      description: Смещение
+      default: 0
+      minimum: 0
+    required: false
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/page/PageDataAccountSmsInfoTariffDto.yaml

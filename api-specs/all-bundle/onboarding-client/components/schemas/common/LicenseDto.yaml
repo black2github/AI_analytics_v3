@@ -1,0 +1,47 @@
+type: object
+properties:
+  activityKind:
+    type: string
+    description: Вид деятельности
+  documentType:
+    type: string
+    description: Тип документа
+    enum:
+    - LICENSE
+    - PERMISSION
+    - CERTIFICATE
+  expiryDate:
+    type: string
+    description: Срок действия лицензии
+    format: date
+  id:
+    type: string
+    description: Идентификатор
+    format: uuid
+  issuingAuthority:
+    type: string
+    description: Орган, выдавший лицензию
+  number:
+    type: string
+    description: Номер лицензии/разрешения
+  organizationRole:
+    type: string
+    description: Классификатор ролей организаций в заявке
+    enum:
+    - CLIENT
+    - MANAGEMENT_COMPANY
+    - MANAGING_IE
+    - SHAREHOLDER_COMPANY
+    - CONTRACTOR
+  releaseDate:
+    type: string
+    description: Дата выдачи лицензии
+    format: date
+  sparkCreateDate:
+    type: string
+    description: Дата и время создания записи из СПАРК
+    format: date-time
+  termless:
+    type: boolean
+    description: Признак бессрочной лицензии
+description: Лицензии

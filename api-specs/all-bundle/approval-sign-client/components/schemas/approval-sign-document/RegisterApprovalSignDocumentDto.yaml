@@ -1,0 +1,10 @@
+type: object
+properties:
+  scrollerFilterDto:
+    $ref: ../common/ApprovalSignScrollerFilterDto.yaml
+  documentDto:
+    type: array
+    description: Лист документов на визирование
+    items:
+      $ref: ./ApprovalSignDocumentDto.yaml
+description: Информация о списке документов и фильтрах

@@ -1,0 +1,19 @@
+post:
+  tags:
+  - API методы для работы с документами валютного контроля
+  summary: Выгрузить электронную подпись
+  description: 'Привилегии: DVK_BANK.DOWNLOAD.SIGN'
+  operationId: exportSignature
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/document/GenericCommandUUID.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/document/GenericResponseDocumentErrorListDocumentFileDataForDownloadDto.yaml

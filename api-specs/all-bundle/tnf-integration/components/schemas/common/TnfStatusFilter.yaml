@@ -1,0 +1,44 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    description: Статус обработки сообщения для ТНФ
+    enum:
+    - NEW
+    - RECEIVED
+    - ERROR
+    - IGNORED
+  notEq:
+    type: string
+    description: Статус обработки сообщения для ТНФ
+    enum:
+    - NEW
+    - RECEIVED
+    - ERROR
+    - IGNORED
+  in:
+    type: array
+    items:
+      type: string
+      description: Статус обработки сообщения для ТНФ
+      enum:
+      - NEW
+      - RECEIVED
+      - ERROR
+      - IGNORED
+  notIn:
+    type: array
+    items:
+      type: string
+      description: Статус обработки сообщения для ТНФ
+      enum:
+      - NEW
+      - RECEIVED
+      - ERROR
+      - IGNORED
+  isNull:
+    type: boolean

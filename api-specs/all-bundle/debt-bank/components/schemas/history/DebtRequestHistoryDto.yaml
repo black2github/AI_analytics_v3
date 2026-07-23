@@ -1,0 +1,32 @@
+required:
+- clientIds
+- id
+- requestAt
+- requestBody
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  requestId:
+    type: string
+    format: uuid
+  clientIds:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+      format: uuid
+  requestAt:
+    type: string
+    format: date-time
+  requestBody:
+    type: string
+  responseAt:
+    type: string
+    format: date-time
+  responseBody:
+    type: string
+  comment:
+    type: string
+description: Страница с данными

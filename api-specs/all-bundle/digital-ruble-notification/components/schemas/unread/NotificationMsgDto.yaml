@@ -1,0 +1,57 @@
+required:
+- createdAt
+- notificationMsgId
+- pcrParticipantWalletId
+- type
+type: object
+properties:
+  type:
+    type: string
+    description: Тип уведомления
+    enum:
+    - B2B_IN
+    - C2B
+    - InTransfer
+    - OutTransfer
+    - Payout
+    - PayoutRefund
+    - OrganisationTermination
+    - G2B
+    - B2C_REFUND_AUTH
+  notificationMsgId:
+    type: string
+    description: ID уведомления
+    format: uuid
+  encryptedCbdc:
+    type: string
+    description: Зашифрованное сообщение (Base64).
+  operationId:
+    type: string
+    description: Идентификатор операции на ПлЦР
+    format: uuid
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор СЦР
+    format: uuid
+  albumVersion:
+    type: string
+    description: Версия альбома
+  signatures:
+    type: array
+    description: Открепленная ЭП
+    items:
+      type: string
+      description: Открепленная ЭП
+  createdAt:
+    type: string
+    description: Дата и время создания записи
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата обновления записи
+    format: date-time
+  executedAt:
+    type: string
+    description: Дата и время исполнения распоряжения
+    format: date-time
+description: Уведомление об операции для Клиента Банка

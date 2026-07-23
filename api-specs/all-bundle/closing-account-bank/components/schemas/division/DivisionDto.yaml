@@ -1,0 +1,9 @@
+type: object
+properties:
+  divisionAddress:
+    type: string
+    description: Адрес подразделения
+  divisionName:
+    type: string
+    description: Наименование подразделения
+description: Данные подразделения

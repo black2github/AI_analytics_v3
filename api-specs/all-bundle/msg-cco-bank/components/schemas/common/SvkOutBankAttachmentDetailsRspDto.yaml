@@ -1,0 +1,21 @@
+required:
+- allUploadedToTessa
+type: object
+properties:
+  allUploadedToTessa:
+    type: boolean
+    description: Признак, что все вложения были выгружены в ТЕССА
+  attachmentCount:
+    type: integer
+    description: Общее количество вложений
+    format: int32
+  tessaProcessingStatus:
+    type: string
+    description: Статус обработки выгрузки аттачментов СВК1 в ТЕССА
+    enum:
+    - NO_ATTACHMENTS
+    - WAIT_FOR_PROCESSING
+    - IN_PROCESSING
+    - EXECUTED
+    - EXECUTED_ERROR
+description: Информация о вложениях

@@ -1,0 +1,47 @@
+required:
+- email
+- expiredAt
+- fullUrl
+- id
+- name
+- phone
+- service
+- surname
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки, по которой создаются ссылки
+    format: uuid
+  service:
+    type: string
+    description: Сервис экосистемы, который вызвал метод
+  fullUrl:
+    type: string
+    description: Полный URL на который нужно совершить редирект с параметрами по короткой ссылке
+  surname:
+    type: string
+    description: Фамилия
+  name:
+    type: string
+    description: Имя
+  patronymic:
+    type: string
+    description: Отчество
+  email:
+    type: string
+    description: email
+  phone:
+    type: string
+    description: Телефон
+  expiredAt:
+    type: string
+    description: Дата/время окончания действия ссылки
+    format: date-time
+  eskId:
+    type: string
+    description: ID пользователя в ЕСК
+  redirectUrl:
+    type: string
+    description: Ссылка для редиректа (используется в процессе удаленного открытия счета)
+description: ДТО запрос на создание короткой ссылки (integration)

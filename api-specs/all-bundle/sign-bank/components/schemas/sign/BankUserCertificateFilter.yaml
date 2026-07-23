@@ -1,0 +1,13 @@
+type: object
+properties:
+  validFrom:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  validTo:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  status:
+    $ref: ./FilterValueEnumDtoBankUserCertificateStatusDto.yaml
+  ownerName:
+    $ref: ../common/FilterValueDtoString.yaml
+  deleted:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр СПБ

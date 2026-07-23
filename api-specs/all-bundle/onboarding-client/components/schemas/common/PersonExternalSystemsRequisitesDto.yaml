@@ -1,0 +1,14 @@
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: ID уполномоченного лица
+    format: uuid
+  eskId:
+    type: string
+    description: ЕСК ID для физ.лица
+  tessaIdentityDocumentId:
+    type: string
+    description: ID ДУЛ в ТЕССА
+    format: uuid
+description: Реквизиты, получаемые в процессе обработки заявки из смежных систем (для ФЛ)

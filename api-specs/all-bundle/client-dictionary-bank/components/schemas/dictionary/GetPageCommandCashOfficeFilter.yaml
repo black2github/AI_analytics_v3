@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsCashOfficeFilter.yaml
+description: Запрос страницы

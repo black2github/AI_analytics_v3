@@ -1,0 +1,33 @@
+required:
+- accessItems
+- bankClientId
+- type
+- userId
+type: object
+properties:
+  accessItems:
+    type: array
+    description: Массив "Доступ УЛ к счёту"
+    items:
+      $ref: ./AdminAccountAccessItemDto.yaml
+  userId:
+    type: string
+    description: Ссылка на сущность "Пользователь"
+    format: uuid
+  type:
+    type: string
+    description: Тип действия. Банковская часть.
+    enum:
+    - CREATE
+    - EDIT
+  bankClientId:
+    type: string
+    description: Ссылка на сущность "Клиент Банка"
+    format: uuid
+  selectAccountType:
+    type: string
+    description: Режим выбора счёта.
+    enum:
+    - ALL
+    - SELECT
+description: Доступ УЛ к счёту (создание/редактирование). Банковская часть.

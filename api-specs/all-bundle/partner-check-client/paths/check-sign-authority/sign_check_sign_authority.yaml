@@ -1,0 +1,44 @@
+post:
+  tags:
+  - Подпись заявки на подключение/отключение подписки на сервис проверки контрагентов
+  summary: Проверить полномочия текущего пользователя на подписание заявок от имени указанной организации
+  description: 'Привилегии: ECO_PARTNER_CHECK_CLIENT.SUBSCRIPTION_SIGN'
+  operationId: checkSignAuthorityUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - name: OrganizationId
+    in: header
+    description: Client id
+    required: true
+    type: string
+  - name: bankClientId
+    in: query
+    description: bankClientId
+    required: true
+    type: string
+    format: uuid
+  - name: certificateId
+    in: query
+    description: certificateId
+    required: true
+    type: string
+    format: uuid
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«PartnerCheckError,SignAuthorityResponseDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

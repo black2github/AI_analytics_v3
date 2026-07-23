@@ -1,0 +1,28 @@
+required:
+- type
+type: object
+properties:
+  type:
+    type: string
+    description: Тип уведомления
+    enum:
+    - B2B_IN
+    - C2B
+    - InTransfer
+    - OutTransfer
+    - Payout
+    - PayoutRefund
+    - OrganisationTermination
+    - G2B
+    - B2C_REFUND_AUTH
+  notificationMsgId:
+    type: string
+    description: Идентификатор уведомления
+    format: uuid
+  plainCbdc:
+    type: string
+    description: Расшифрованное CBDC-сообщение (base64)
+  errorMessage:
+    type: string
+    description: Сообщение об ошибке расшифровки
+description: Результат расшифровки CBDC-сообщения

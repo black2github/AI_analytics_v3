@@ -1,0 +1,40 @@
+required:
+- bankClientInfo
+- docDate
+- id
+- message
+- version
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор документа
+    format: uuid
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  docNumber:
+    maximum: 999999
+    minimum: 1
+    type: integer
+    description: Номер документа
+    format: int64
+  docDate:
+    type: string
+    description: Дата документа
+    format: date
+  linkedDocumentInfo:
+    $ref: ../common/SvkOutLinkedDocumentInfoRqDto.yaml
+  branchInfo:
+    $ref: ../common/SvkOutBranchInfoRqDto.yaml
+  message:
+    $ref: ../common/SvkOutMessageInfoRqDto.yaml
+  bankClientInfo:
+    $ref: ../common/SvkOutBankClientInfoRqDto.yaml
+  attachments:
+    type: array
+    description: Файловые вложения документа
+    items:
+      $ref: ../common/SvkOutAttachmentInfoRqDto.yaml
+description: ДТО на обновление документа

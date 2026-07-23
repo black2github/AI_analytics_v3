@@ -1,0 +1,20 @@
+type: string
+description: Статусы заявки Акцепт платежного требования
+enum:
+- DRAFT
+- NEW
+- WAIT_FOR_SIGN
+- SIGNED_1
+- SIGNED_2
+- SIGNED
+- DELETED
+- DELIVERED
+- SIGN_VALID
+- DETAILS_VALID
+- ACCEPTED
+- EXPORT_TO_ABS
+- EXPORTED_TO_ABS
+- EXPORT_TO_ABS_ERROR
+- COMPLETED
+- REJECTED
+- CANCELED

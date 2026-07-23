@@ -1,0 +1,69 @@
+openapi: 3.0.1
+info:
+  title: Сервис задолженностей/начислений. Банковская часть.
+  version: 3.0.0
+servers:
+- url: /debt-bank
+security:
+- bearerAuth: []
+paths:
+  /debt/print:
+    $ref: ./paths/print/debt_print.yaml
+  /debt/history/get-page:
+    $ref: ./paths/history/debt_history_get_page.yaml
+  /debt/{id}:
+    $ref: ./paths/{id}/debt_id.yaml
+  /debt/run-fns-agent:
+    $ref: ./paths/run-fns-agent/debt_run_fns_agent.yaml
+  /debt/list/{clientId}:
+    $ref: ./paths/list/debt_list_clientId.yaml
+components:
+  schemas:
+    PrintRequestDto:
+      $ref: ./components/schemas/print/PrintRequestDto.yaml
+    SingleCommandPrintRequestDto:
+      $ref: ./components/schemas/print/SingleCommandPrintRequestDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/print/PrintResponse.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/print/SingleResponsePrintResponse.yaml
+    DebtRequestHistoryBankFilter:
+      $ref: ./components/schemas/history/DebtRequestHistoryBankFilter.yaml
+    FilterValueDtoBoolean:
+      $ref: ./components/schemas/history/FilterValueDtoBoolean.yaml
+    FilterValueDtoInstant:
+      $ref: ./components/schemas/history/FilterValueDtoInstant.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/history/FilterValueDtoUUID.yaml
+    GetPageCommandDebtRequestHistoryBankFilter:
+      $ref: ./components/schemas/history/GetPageCommandDebtRequestHistoryBankFilter.yaml
+    PageParamsDebtRequestHistoryBankFilter:
+      $ref: ./components/schemas/history/PageParamsDebtRequestHistoryBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/history/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/history/Sort.yaml
+    DebtRequestHistoryDto:
+      $ref: ./components/schemas/history/DebtRequestHistoryDto.yaml
+    PageDataDebtRequestHistoryDto:
+      $ref: ./components/schemas/history/PageDataDebtRequestHistoryDto.yaml
+    DebtDto:
+      $ref: ./components/schemas/{id}/DebtDto.yaml
+    PaymentInfoDto:
+      $ref: ./components/schemas/{id}/PaymentInfoDto.yaml
+    ReceiverDto:
+      $ref: ./components/schemas/{id}/ReceiverDto.yaml
+    SingleResponseDebtDto:
+      $ref: ./components/schemas/{id}/SingleResponseDebtDto.yaml
+    DataListResponseDebtListViewDto:
+      $ref: ./components/schemas/list/DataListResponseDebtListViewDto.yaml
+    DebtListViewDto:
+      $ref: ./components/schemas/list/DebtListViewDto.yaml
+    DebtRowViewDto:
+      $ref: ./components/schemas/list/DebtRowViewDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT

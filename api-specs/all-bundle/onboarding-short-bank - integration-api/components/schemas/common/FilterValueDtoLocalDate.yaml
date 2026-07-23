@@ -1,0 +1,37 @@
+type: object
+properties:
+  contains:
+    type: string
+  eq:
+    type: string
+    format: date
+  ge:
+    type: string
+    format: date
+  gt:
+    type: string
+    format: date
+  in:
+    type: array
+    items:
+      type: string
+      format: date
+  isNull:
+    type: boolean
+  le:
+    type: string
+    format: date
+  lt:
+    type: string
+    format: date
+  notContains:
+    type: string
+  notEq:
+    type: string
+    format: date
+  notIn:
+    type: array
+    items:
+      type: string
+      format: date
+description: Номер договора. Интервал (gt, ge, lt, le)

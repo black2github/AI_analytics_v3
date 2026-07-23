@@ -1,0 +1,59 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  contractId:
+    type: integer
+    description: Идентификатор Договора
+    format: int64
+  contractClass:
+    type: string
+    description: Класс договора
+  f1ClientId:
+    type: integer
+    description: Внутренний ID клиента в АБС Ф1
+    format: int64
+  clientRegistrationNumber:
+    type: integer
+    description: РНК клиента
+    format: int64
+  contractNumber:
+    type: string
+    description: Номер договора
+  contractCreateDate:
+    type: string
+    description: Дата создания договора
+    format: date
+  contractStartDate:
+    type: string
+    description: Дата начала действия договора
+    format: date
+  contractEndDate:
+    type: string
+    description: Дата окончания действия договора
+    format: date
+  contractCloseDate:
+    type: string
+    description: Дата закрытия договора
+    format: date
+  contractCurrency:
+    type: string
+    description: Валюта договора
+  contractStatusCode:
+    type: string
+    description: Статус договора (код)
+  contractDepartmentCode:
+    type: string
+    description: Подразделение (Код)
+  contractFilialCode:
+    type: string
+    description: Филиал (Код)
+  contractTypeCode:
+    type: string
+    description: Вид договора(Код)
+  contractTypeName:
+    type: string
+    description: Вид договора (Наименование)
+description: Данные продукта РКО (рубли/валюта)

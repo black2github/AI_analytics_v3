@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: string
+    description: ID результата операции
+    format: uuid
+  documents:
+    uniqueItems: true
+    type: array
+    description: Информация о подписи документа
+    items:
+      $ref: ./CloudDocumentSignInfoDto.yaml
+  result:
+    type: string
+    description: Тип результата облачной подписи
+    enum:
+    - UNKNOWN
+    - SUCCESS
+    - ERROR
+  errorText:
+    type: string
+    description: Описание ошибки
+description: ДТО результата операции облачной подписи

@@ -1,0 +1,19 @@
+required:
+- operations
+type: object
+properties:
+  status:
+    type: string
+    description: Код статуса
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  operations:
+    type: array
+    description: Операции
+    items:
+      $ref: ./DocumentOperationHistoryBankDto.yaml
+description: Транспортное представление истории СВК

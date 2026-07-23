@@ -1,0 +1,9 @@
+required:
+- taskId
+type: object
+properties:
+  taskId:
+    type: string
+    description: ID задачи распарсивания архива
+    format: uuid
+description: Результат запуска задачи распарсивания архива

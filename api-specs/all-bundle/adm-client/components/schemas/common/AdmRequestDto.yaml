@@ -1,0 +1,110 @@
+required:
+- admAccounts
+- admPocs
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  admAccounts:
+    type: array
+    description: Реквизиты счетов для зачисления
+    items:
+      $ref: ./AdmAccountDto.yaml
+  admPocs:
+    type: array
+    description: АДМы
+    items:
+      $ref: ./AdmPocDto.yaml
+  agreements:
+    $ref: ./AgreementsDto.yaml
+  bankClient:
+    $ref: ./AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  commissionAccountNumber:
+    type: string
+    description: Счёт списания комиссии
+  commissionType:
+    $ref: ./AdmCommissionTypeDto.yaml
+  contactEmail:
+    type: string
+    description: Email
+  contactPerson:
+    type: string
+    description: Контактное лицо (ФИО)
+  contactPersonPhone:
+    type: string
+    description: Контактное лицо (телефон)
+  contractType:
+    $ref: ./AdmContractTypeDto.yaml
+  crmCorpLink:
+    type: string
+    description: Ссылка на продажу в CRM Corporate
+  currentCollector:
+    type: string
+    description: Текущий инкассатор
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  externalId:
+    type: string
+    description: Идентификатор внешней заявки
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  industry:
+    $ref: ./AdmIndustryTypeDto.yaml
+  initiator:
+    type: string
+    description: Источник
+    enum:
+    - BOL
+    - INFOR
+    - BANNER
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  otherInfo:
+    $ref: ./OtherInfoDto.yaml
+  productCode:
+    type: string
+    description: Идентификатор продукта
+  requestType:
+    $ref: ./AdmRequestTypeDto.yaml
+  signature:
+    $ref: ./AdmSignatureDto.yaml
+  status:
+    $ref: ./AdmRequestStatusDto.yaml
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  validationResult:
+    $ref: ./ValidationResult.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка на открытие Договора АДМ

@@ -1,0 +1,11 @@
+required:
+- accountIds
+type: object
+properties:
+  accountIds:
+    type: array
+    description: Список идентификаторов счетов
+    items:
+      type: integer
+      description: Список идентификаторов счетов
+      format: int64

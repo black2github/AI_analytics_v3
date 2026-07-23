@@ -1,0 +1,17 @@
+required:
+- branchIds
+- serviceCode
+type: object
+properties:
+  branchIds:
+    uniqueItems: true
+    type: array
+    description: Множество идентификаторов подразделения в экосистеме
+    items:
+      type: string
+      description: Множество идентификаторов подразделения в экосистеме
+      format: uuid
+  serviceCode:
+    type: string
+    description: Услуга подразделения
+description: Запрос на получение расписания подразделения

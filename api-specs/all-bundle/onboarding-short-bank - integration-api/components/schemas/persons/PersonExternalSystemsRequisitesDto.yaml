@@ -1,0 +1,10 @@
+type: object
+properties:
+  authorizedPersonId:
+    type: string
+    description: ID уполномоченного лица
+    format: uuid
+  eskId:
+    type: string
+    description: ЕСК ID для физ.лица
+description: Реквизиты, получаемые в процессе обработки короткой заявки из смежных систем (для ФЛ)

@@ -1,0 +1,17 @@
+type: object
+properties:
+  result:
+    type: string
+    description: Результат проверки доступности согласия 2 по заявке на выпуск/регистрацию СЭП для ОЭП
+    enum:
+    - AGREEMENT_2_AVAILABLE
+    - DST_CERT_HAS_DIFF
+  comparisons:
+    type: array
+    description: Список сравнений реквизитов
+    items:
+      $ref: ../common/CertDataCompareDto.yaml
+  originalStatementExist:
+    type: boolean
+    description: Существует ли оригинальное заявление
+description: Ответ на запрос проверки доступности согласия 2 по заявке на выпуск/регистрацию СЭП для ОЭП

@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи в таблице gps_eco_accs_det
+  tags:
+  - Обновление заглушек gps_eco_accs_det (Информация о тарифах по счету в Ф1)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/AccountTariffDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/AccountTariffDto.yaml
+    '400':
+      description: Bad Request

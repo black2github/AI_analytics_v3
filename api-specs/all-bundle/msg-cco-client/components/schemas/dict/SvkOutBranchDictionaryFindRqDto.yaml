@@ -1,0 +1,12 @@
+required:
+- orgId
+type: object
+properties:
+  orgId:
+    type: string
+    description: Id организации
+    format: uuid
+  search:
+    type: string
+    description: Строка поиска
+description: Запрос на поиск филиалов банка по организации

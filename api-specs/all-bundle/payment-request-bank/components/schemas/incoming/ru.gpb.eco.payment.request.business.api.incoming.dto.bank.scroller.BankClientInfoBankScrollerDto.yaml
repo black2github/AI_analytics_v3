@@ -1,0 +1,8 @@
+type: object
+properties:
+  filialName:
+    type: string
+    description: Наименование филиала обслуживания
+    nullable: true
+description: Идентификация организации, скроллер банка
+nullable: true

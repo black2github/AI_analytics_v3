@@ -1,0 +1,95 @@
+required:
+- requestBody
+- requestSubject
+type: object
+properties:
+  absCode:
+    type: string
+    description: Код подразделения
+  absNumber:
+    type: string
+    description: Код филиала в РКО Ф1
+  admPocs:
+    type: array
+    description: АДМы
+    items:
+      $ref: ./AdmPocCallbackDto.yaml
+  bankClient:
+    $ref: ../common/AdmBankClientDto.yaml
+  branchId:
+    type: string
+    description: Уникальный идентификатор подразделения банка, к которому привязан клиент
+    format: uuid
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  contactEmail:
+    type: string
+    description: Контактное лицо (Email)
+  contactPerson:
+    type: string
+    description: Контактное лицо (ФИО)
+  contactPersonPhone:
+    type: string
+    description: Контактное лицо (телефон)
+  date:
+    type: string
+    description: Дата заявки
+    format: date-time
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  operationErrorAmount:
+    type: integer
+    description: Сумма ошибочной операции.
+    format: int32
+  operationErrorReason:
+    type: string
+    description: Причина ошибочной операции.
+    enum:
+    - OFFLINE_OPERATION
+    - UNCONFIRMED_OPERATION
+    - BANKNOTE_JAM_OPERATION
+    - DUPLICATED_OPERATION
+  operationTimestamp:
+    type: string
+    description: Дата и время операции.
+    format: date-time
+  otherInfo:
+    $ref: ../common/OtherInfoDto.yaml
+  requestBody:
+    type: string
+    description: Текст обращения
+  requestSubject:
+    type: string
+    description: Тема обращения
+  requestType:
+    $ref: ../common/AdmRequestTypeDto.yaml
+  status:
+    $ref: ../common/AdmRequestStatusDto.yaml
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку (Ссылка на сущность "Пользователь")
+    format: uuid
+  validationResult:
+    $ref: ../common/ValidationResult.yaml
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Заявка на обратную связь

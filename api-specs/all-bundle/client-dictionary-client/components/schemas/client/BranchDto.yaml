@@ -1,0 +1,94 @@
+required:
+- absNumber
+- latitude
+- locality
+- longitude
+- name
+- number
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    maxLength: 110
+    minLength: 0
+    type: string
+  docsName:
+    maxLength: 110
+    minLength: 0
+    type: string
+    description: Название филиала для платежных документов
+  number:
+    maxLength: 50
+    minLength: 0
+    type: string
+  absNumber:
+    maxLength: 3
+    minLength: 0
+    type: string
+  locality:
+    maxLength: 25
+    minLength: 0
+    type: string
+  address:
+    maxLength: 100
+    minLength: 0
+    type: string
+  phone:
+    maxLength: 255
+    minLength: 0
+    type: string
+  schedule:
+    maxLength: 255
+    minLength: 0
+    type: string
+  latitude:
+    type: number
+  longitude:
+    type: number
+  requisites:
+    $ref: ./RequisitesDto.yaml
+  canOpenAccounts:
+    type: boolean
+  canOpenGozAccounts:
+    type: boolean
+  filialName:
+    type: string
+  isHeadUnit:
+    type: boolean
+  branchType:
+    type: string
+    enum:
+    - BRANCH
+    - SUBDIVISION
+  parentBranch:
+    type: string
+    format: uuid
+  absCode:
+    type: string
+    description: АБС Код подразделения
+  filialEskCode:
+    type: string
+    description: Код филиала
+  swift:
+    type: string
+    description: SWIFT филиала
+  branchVSPNumber:
+    type: string
+    description: Учетный номер ВСП филиала
+  officeVSPNumber:
+    type: string
+    description: Учетный номер ВСП подразделения
+  stateType:
+    type: string
+    description: Идентификатор статуса подразделения
+    enum:
+    - PLANNING_OPEN
+    - OPENED
+    - TEMP_CLOSED
+    - PLANNING_CLOSE
+    - CLOSED
+  officeState:
+    type: string
+    description: Наименование статуса подразделения

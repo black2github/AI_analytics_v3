@@ -1,0 +1,10 @@
+type: object
+properties:
+  platformCode:
+    type: string
+  platformTitle:
+    type: string
+  currencies:
+    type: array
+    items:
+      $ref: ./RefContractRestByPlatformCurrencyDto.yaml

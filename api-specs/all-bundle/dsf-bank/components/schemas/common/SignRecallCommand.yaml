@@ -1,0 +1,15 @@
+type: object
+properties:
+  attachmentSignIds:
+    type: array
+    items:
+      type: string
+      format: uuid
+  documentId:
+    type: string
+    format: uuid
+  documentSignIds:
+    type: array
+    items:
+      type: string
+      format: uuid

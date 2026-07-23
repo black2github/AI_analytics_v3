@@ -1,0 +1,25 @@
+type: object
+properties:
+  clientFullName:
+    type: string
+    description: Полное наименование клиента
+  clientId:
+    type: string
+    description: Ссылка на сущность Клиент Банка
+    format: uuid
+  clientInn:
+    type: string
+    description: ИНН клиента
+  clientKpp:
+    type: string
+    description: КПП клиента
+  clientOgrn:
+    type: string
+    description: ОГРН/ОГРНИП клиента
+  clientShortName:
+    type: string
+    description: Краткое наименование клиента
+  riskLevel:
+    type: string
+    description: Уровень риска
+description: Реквизиты клиента по заявке

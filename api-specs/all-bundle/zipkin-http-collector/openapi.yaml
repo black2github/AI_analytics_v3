@@ -1,0 +1,13 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://zipkin-http-collector
+  description: Generated server url
+tags:
+- name: zipkin
+paths:
+  /api/v1/spans:
+    $ref: ./paths/v1/api_v1_spans.yaml
+components: {}

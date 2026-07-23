@@ -1,0 +1,45 @@
+type: object
+description: Данные на получение документов (КА-конвертов) Клиента-ЮЛ ПлЦР.
+properties:
+  operationId:
+    type: string
+    description: Идентификатор операции на ПЦР (значение из тега ЭС <MsgHdr/OprId>).
+  settlementDateTime:
+    type: string
+    description: Дата и время исполнения распоряжения.
+  correlationId:
+    type: string
+    description: Идентификатор для сопоставления.
+  participantId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ на ПЦР.
+  participantWalletId:
+    type: string
+    description: Идентификатор кошелька Клиента-ЮЛ на ПЦР.
+  organisationId:
+    type: string
+    description: Идентификатор Клиента-ЮЛ в ЕСК.
+  albumVersion:
+    type: string
+    description: Версия альбома, по которому сформировано сообщение.
+  cbdcMessage:
+    type: string
+    description: Ответный документ от ПЦР.
+  decryptedCbdcMessage:
+    type: string
+    description: Ответный КА-конверт, содержащий незашифрованное ЭС от ПлЦР и закодированный в Base64.
+  messageCreationDateTime:
+    type: string
+    description: Дата и время создания ЭС на ПлЦР.
+  additionalParameters:
+    type: object
+    additionalProperties: {}
+    description: Опциональные дополнительные параметры.
+required:
+- albumVersion
+- cbdcMessage
+- messageCreationDateTime
+- operationId
+- organisationId
+- participantId
+- participantWalletId

@@ -1,0 +1,29 @@
+put:
+  tags:
+  - lbp-response-configuration-controller
+  summary: Установка Error для настройки нотификаций
+  operationId: setErrorDtoUsingPUT
+  consumes:
+  - application/json
+  produces:
+  - application/json
+  parameters:
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/ErrorReceivedMessageDeliveryNotificationLbpDtoReq'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/ErrorReceivedMessageDeliveryNotificationLbpDtoRes'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

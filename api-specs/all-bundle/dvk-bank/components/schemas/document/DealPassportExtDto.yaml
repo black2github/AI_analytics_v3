@@ -1,0 +1,23 @@
+type: object
+properties:
+  dealPassportId:
+    type: string
+    description: Идентификатор Паспорта сделки в ЛК УВЭД
+    format: uuid
+  dealPassportDate:
+    type: string
+    description: Дата паспорта сделки
+    format: date
+  dealPassportNumber:
+    type: string
+    description: Уникальный номер контракта
+  applicationReason:
+    type: string
+    description: Случай предоставления заявления (код)
+  applicationReasonDesc:
+    type: string
+    description: Случай предоставления заявления
+  closeReason:
+    type: string
+    description: Основание для закрытия (комментарий клиента)
+description: Паспорт сделки с дополнительными полями

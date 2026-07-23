@@ -1,0 +1,23 @@
+post:
+  tags:
+  - client-info-update-client-sign-controller
+  summary: Подписать заявку версии 2.2
+  description: 'Привилегии: CLIENT_INFO_UPD.CLIENT.SIGN'
+  operationId: signV2x2
+  requestBody:
+    content:
+      application/json:
+        schema:
+          maxItems: 1
+          minItems: 1
+          type: array
+          items:
+            $ref: ../../components/schemas/sign/SignCommandV2x2.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/sign/GenericResponseSimpleErrorDataListClientInfoUpdateRequestDto.yaml

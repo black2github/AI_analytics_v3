@@ -1,0 +1,17 @@
+type: object
+required:
+- transactionId
+description: Запрос подтверждения возврата
+properties:
+  transactionId:
+    type: string
+    description: ID операции, по которой делаем возврат в СБП
+  docType:
+    type: string
+    description: Тип документа
+  type:
+    type: string
+    description: Тип запроса
+  guid:
+    type: string
+    description: Идентификатор BSS

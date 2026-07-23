@@ -1,0 +1,32 @@
+type: object
+properties:
+  signerFio:
+    type: string
+    description: Фамилия Имя Отчество владельца сертификата
+  signDate:
+    type: string
+    description: Дата подписи
+    format: date-time
+  role:
+    type: string
+    description: Роль
+  certificateNumber:
+    type: string
+    description: Номер СЭП
+  organization:
+    type: string
+    description: Организация
+  owner:
+    type: string
+    description: Владелец
+  creator:
+    type: string
+    description: Наименование центра сертификации (Издателя)
+  validTo:
+    type: string
+    description: Период действия по
+    format: date-time
+  valid:
+    type: boolean
+    description: Результат проверки
+description: Проверка сертификата ПТИ

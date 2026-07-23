@@ -1,0 +1,45 @@
+type: object
+description: Блок данных по ранее зарегистрированному QR
+properties:
+  qrcId:
+    type: string
+    description: Идентификатор зарегистрированного QR в СБП
+  payload:
+    type: string
+    description: Payload зарегистрированного QR кода в СБП
+  status:
+    type: string
+    description: Текущий статус QR-кода
+    enum:
+    - NONE
+    - NOT_STARTED
+    - RECEIVED
+    - IN_PROGRESS
+    - EXPIRED
+    - BLOCKED
+    - ACCEPTED
+    - REJECTED
+  paymentTransactionId:
+    type: string
+    description: Идентификатор операции оплаты в АС СБП
+  createdAt:
+    type: string
+    format: date-time
+    description: Дата и время создания
+  ecoServiceCode:
+    type: string
+    description: Код ЭКО сервиса
+  docType:
+    type: string
+    description: Тип заявки
+  data:
+    $ref: ../common/SbpQrcDataDto.yaml
+    description: Реквизиты QR-кода
+  additionalData:
+    type: array
+    description: Распределение платежа по QR-коду
+    items:
+      $ref: ../common/SbpQrcAdditionalDataDto.yaml
+  image:
+    $ref: ./SbpQrcImageDto.yaml
+    description: Изображение QR

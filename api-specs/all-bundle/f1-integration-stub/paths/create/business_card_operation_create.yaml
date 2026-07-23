@@ -1,0 +1,19 @@
+post:
+  summary: Создание записи об операции по корпоративной карте
+  tags:
+  - Обновление заглушек VW_RPT_GPS_CARD_DOCS_ECO (Данные об операции по корпоративной карте)
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/BusinessCardOperationDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/BusinessCardOperationDto.yaml
+    '400':
+      description: Bad Request

@@ -1,0 +1,305 @@
+type: object
+properties:
+  accountInfo:
+    $ref: ./AccountInfoDto.yaml
+  accountTypeCode:
+    type: integer
+    description: Тип открываемого счёта
+    format: int64
+  acquiring:
+    $ref: ./AcquiringDto.yaml
+  additionalDocsGenFlags:
+    $ref: ./AdditionalDocsGenFlagsDto.yaml
+  additionalDocuments:
+    $ref: ./OriginalDocumentCheckboxesDto.yaml
+  addresses:
+    type: array
+    description: Список адресов
+    items:
+      $ref: ./RequestAddressDto.yaml
+  availableTariffPromo:
+    type: string
+    description: Доступная по заявке акция
+  bankClient:
+    $ref: ./BankClientInfoDto.yaml
+  branch:
+    $ref: ./BranchDto.yaml
+  businessActivities:
+    type: array
+    description: Коды видов деятельности (ОКВЭД)
+    items:
+      $ref: ./BusinessActivityDto.yaml
+  clientStep:
+    type: string
+    description: Шаг заполнения короткой заявки на открытие первого счета
+    enum:
+    - CREATE_DATA_INPUT
+    - DATACLIENT
+    - TARIFF
+    - CALL_SCHEDULE
+    - COMPLETED
+    - DOCUMENTS
+  commentForBank:
+    type: string
+    description: Комментарий для банка
+  commentForClient:
+    type: string
+    description: Комментарий для клиента
+  constituentDocumentChanges:
+    $ref: ./ConstituentDocumentChangesDto.yaml
+  contactFio:
+    type: string
+    description: ФИО контактного лица
+  contactPhone:
+    type: string
+    description: Телефон контактного лица
+  contractSignerId:
+    type: string
+    description: GUID запроса, в котором передается инфо о физ.лице - подписанте по договору.
+    format: uuid
+  date:
+    type: string
+    description: Дата и время короткой заявки
+    format: date-time
+  documentType:
+    type: string
+    description: Классификатор типов документа
+    enum:
+    - ACC_OPEN_FIRST_SHORT
+  eioInfo:
+    $ref: ./EioInfoDto.yaml
+  externalSystemsRequisites:
+    $ref: ./ExternalSystemsRequisitesDto.yaml
+  fillingPercentage:
+    type: integer
+    description: Процент заполнения
+    format: int32
+  financialInfo:
+    $ref: ./FinancialInfoDto.yaml
+  formedDocuments:
+    type: array
+    description: Список формируемых документов
+    items:
+      $ref: ./FormedDocumentDto.yaml
+  governanceBodies:
+    type: array
+    description: Список органов управлений
+    items:
+      $ref: ./GovernanceBodyDto.yaml
+  gpbBoConnectionInfo:
+    $ref: ./GpbBoConnectionInfoDto.yaml
+  hasPreviouslyOpenedAccounts:
+    type: boolean
+    description: Признак наличия ранее открытых банковских счетов
+  hideOnRejectionBanner:
+    type: boolean
+    description: Признак отображения баннера "Заявка отклонена"
+  id:
+    type: string
+    description: Идентификатор  короткой заявки
+    format: uuid
+  isCallCompleted:
+    type: boolean
+    description: Признак совершения звонка клиенту
+  isRequestEditing:
+    type: boolean
+    description: Флаг редактирования короткой заявки
+  lastClientCall:
+    $ref: ./ClientCallHistoryDto.yaml
+  lastManagerVisit:
+    $ref: ./ManagerVisitHistoryDto.yaml
+  licenses:
+    type: array
+    description: Список лицензий
+    items:
+      $ref: ./LicenseDto.yaml
+  limitSchemeCode:
+    type: string
+    description: Код вида схемы лимитов
+    enum:
+    - TOTAL_LIMIT
+    - SEPARATE_LIMIT
+  meetingAddress:
+    type: string
+    description: Адрес встречи
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  meetingEndDate:
+    type: string
+    description: Дата и время встречи (окончание)
+    format: date-time
+  meetingRequestId:
+    type: string
+    description: Идентификатор короткой заявки на встречу
+    format: uuid
+  meetingStatus:
+    type: string
+    description: Статус встречи
+    enum:
+    - NOTASSIGN
+    - ASSIGN
+    - EXECUTED
+    - REJECTED
+  number:
+    type: integer
+    description: Номер  короткой заявки
+    format: int32
+  onRework:
+    type: boolean
+    description: На доработке
+  onlineCashCollection:
+    $ref: ./OnlineCashCollectionDto.yaml
+  openingAccounts:
+    type: array
+    description: Список открываемых счетов
+    items:
+      $ref: ./OpeningAccountDto.yaml
+  organizations:
+    type: array
+    description: Список организаций
+    items:
+      $ref: ./OrganizationDto.yaml
+  originalDocuments:
+    type: array
+    description: Список оригинальных документов
+    items:
+      $ref: ./OriginalDocumentDto.yaml
+  partnerSite:
+    type: string
+    description: Сайт партнёра
+  persons:
+    type: array
+    description: Список физических лиц
+    items:
+      $ref: ./PersonDto.yaml
+  questionnaireOfficialFormsIp:
+    $ref: ./QuestionnaireOfficialFormsIpDto.yaml
+  questionnaireOfficialFormsUl:
+    $ref: ./QuestionnaireOfficialFormsUlDto.yaml
+  referencePage:
+    type: string
+    description: Страница, с которой вызвано создание документа
+  registrationRequisites:
+    $ref: ./RegistrationRequisitesDto.yaml
+  responsibleBankUserFio:
+    type: string
+    description: Ответственный операционист. ФИО пользователя банка, соответствующее полю "Ответственный за заявку"
+  responsibleBankUserId:
+    type: string
+    description: Ответственный операционист. UAA id пользователя-операциониста, ответственного сотрудника банка, который последним редактировал заявку.
+    format: uuid
+  salaryProjectInfo:
+    $ref: ./SalaryProjectInfoDto.yaml
+  sbpAccountNumber:
+    type: string
+    description: Номер счета для СБП
+  sbpConnected:
+    type: boolean
+    description: Признак подключения к СБП (Система быстрых платежей)
+  sbpOkved:
+    type: string
+    description: ОКВЭД (СБП)
+  scheduledCallInfo:
+    $ref: ./ScheduledCallInfoDto.yaml
+  signPlace:
+    type: string
+    description: Место подписания договора с банком
+    enum:
+    - BANK_OFFICE
+    - DEPARTURE_OF_BANK_EMPLOYEE
+  signerInfo:
+    $ref: ./SignerInfoDto.yaml
+  source:
+    type: string
+    description: Источник создания короткой заявки
+    enum:
+    - LANDING_PAGE
+    - CRM_INFOR
+    - ONBOARDING
+  status:
+    type: string
+    description: Статус короткой заявки на открытие первого счета
+    enum:
+    - NONE
+    - DRAFT
+    - COMPLETED
+    - CLIENT_DOCS_UPLOAD
+    - DELETED
+    - DELIVERED
+    - MIDDLE_OFFICE_CONTROL
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_PASSPORT_TO_TESSA_1070
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - RECEIVED
+    - EXPORT_TO_ESK_1070
+    - EXPORT_TO_ESK_1099
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_1070
+    - EXPORTED_TO_ESK_1099
+    - EXPORTED_TO_ESK_115
+    - TECH_EXPORT_TO_ESK_ERROR_1070
+    - TECH_EXPORT_TO_ESK_ERROR_1099
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_1070
+    - EXECUTED_BY_ESK_1099
+    - DOSSIER_APPROVED_BY_ESK_115
+    - DOSSIER_CREATED_BY_ESK_115
+    - DOSSIER_REPEATED_EXAMINATION_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+  statusUpdatedAt:
+    type: string
+    description: Дата и время изменение статуса
+    format: date-time
+  step:
+    type: string
+    description: Шаг заполнения полной заявки на открытие первого счета, сотрудником банка
+    enum:
+    - DATACLIENT
+    - ACCOUNTS
+    - TARIFF
+    - PRODUCTS
+    - QUESTIONARY
+    - COMPLETED
+    - SERVICES_FORMS
+  tessaDocuments:
+    type: array
+    description: Документы для выгрузки в ТЕССА
+    items:
+      $ref: ./TessaDocumentDto.yaml
+  travelBusiness:
+    $ref: ./TravelBusinessDto.yaml
+  updatedAt:
+    type: string
+    description: Дата изменения короткой заявки
+    format: date-time
+  userFio:
+    type: string
+    description: Пользователь, создавший заявку (ФИО)
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  version:
+    type: integer
+    description: Версия
+    format: int32
+description: Короткая заявка на открытие первого счета

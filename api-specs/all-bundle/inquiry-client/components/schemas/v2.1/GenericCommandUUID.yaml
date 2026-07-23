@@ -1,0 +1,11 @@
+required:
+- data
+type: object
+properties:
+  data:
+    type: string
+    description: Данные
+    format: uuid
+    example: null
+description: Запрос
+example: null

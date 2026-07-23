@@ -1,0 +1,19 @@
+required:
+- account
+- bankBic
+- correspondentBankAccount
+type: object
+properties:
+  inn:
+    type: string
+    description: ИНН контрагента
+  account:
+    type: string
+    description: Счет контрагента
+  bankBic:
+    type: string
+    description: БИК банка
+  correspondentBankAccount:
+    type: string
+    description: Корресподнетский счет банка
+description: Дто поиска счета контрагента

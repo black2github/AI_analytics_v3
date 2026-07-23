@@ -1,0 +1,32 @@
+post:
+  tags:
+  - Работа с аттачами
+  summary: Получение информацию о вложении из internal экземпляра
+  operationId: getInternalAttachmentInfoUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: request
+    description: request
+    required: true
+    schema:
+      $ref: '#/definitions/GetInfoCommand'
+  responses:
+    '200':
+      description: OK
+      schema:
+        $ref: '#/definitions/GenericResponse«SimpleErrorData,AttachmentInfoDto»'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found
+  security:
+  - Bearer: []
+  deprecated: false

@@ -1,0 +1,33 @@
+type: object
+description: Информация о комиссионных тарифах по справкам для данного счета в Ф1
+properties:
+  id:
+    type: string
+    format: uuid
+    pattern: '[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}'
+    description: Идентификатор записи
+  referenceCode:
+    type: string
+    examples:
+    - '1'
+    - '2'
+    - '15'
+    description: Код вида справки
+  referenceElectronicPrice:
+    type: number
+    description: Величина комиссии за электронную справку
+  referenceOnPaperPrice:
+    type: number
+    description: Величина комиссии за бумажную справку
+  comment:
+    type: string
+    examples:
+    - С НДС
+    - Без НДС
+    description: Текстовая подсказка для пользователя
+  valueDigitalNds:
+    type: number
+    description: Величина включенного в стоимость правки НДС (только для справок с НДС) для электронной справки
+  valueOnPaperNds:
+    type: number
+    description: Величина включенного в стоимость правки НДС (только для справок с НДС) для справки в бумажном виде

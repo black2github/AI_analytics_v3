@@ -1,0 +1,8 @@
+type: object
+description: Ответ по одной заявке для заполнения таблицы на внесение наличных денег
+allOf:
+- $ref: ./AbstractOrderViewDto.yaml
+- type: object
+  properties:
+    paymentInfo:
+      $ref: ./CashInPaymentInfoDto.yaml

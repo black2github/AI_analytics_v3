@@ -1,0 +1,19 @@
+type: object
+description: Обертка для ответа заглушки merchant service API
+properties:
+  code:
+    type: string
+    description: Код ответа
+  message:
+    type: string
+    description: Описание кода ответа
+  transactionId:
+    type: string
+    description: ID операции в СБПGate Master System
+  legalId:
+    type: string
+    description: Идентификатор зарегистрированного юридического лица в СБП
+  data:
+    $ref: ./MerchantResultDto.yaml
+    type: object
+    description: Данные ответа

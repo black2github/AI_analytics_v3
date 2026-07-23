@@ -1,0 +1,113 @@
+required:
+- additionalDetails
+- bankClientId
+- date
+- employeeFullName
+- id
+- number
+- requestStatus
+- type
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  date:
+    type: string
+    description: Дата создания заявки
+    format: date-time
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  type:
+    type: string
+    description: Тип заявки
+    enum:
+    - NEW_USER_ADD
+    - USER_BLOCK
+    - USER_ESK_EDIT
+    - USER_NOT_ESK_EDIT
+    - USER_ESK_CONTACT_EDIT
+  requestStatus:
+    type: string
+    description: Текущий статус обработки заявки
+    enum:
+    - NONE
+    - DRAFT
+    - NEW
+    - SIGNED
+    - DELETED
+    - DELIVERED
+    - DETAILS_VALID
+    - SIGN_VALID
+    - RECEIVED
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - ACCEPTED_BY_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - EXPORT_TO_TESSA
+    - GENERATE_TESSA_DOCUMENTS_ERROR
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - WAITING_FOR_ESK_DECISION
+    - EXECUTED_IN_ESK
+    - WAITING_FOR_IO_CUSTOMER_RESULT
+    - CREATE_ACCESS_RULES
+    - CREATE_ACCESS_RULES_ERROR
+    - ACCESS_RULES_CREATED
+    - ACCOUNT_ACCESS_UPDATE
+    - ACCOUNT_ACCESS_UPDATE_ERROR
+    - ACCOUNT_ACCESS_UPDATED
+    - EXECUTED
+    - REJECTED
+  bankClientId:
+    type: string
+    description: Идентификатор организации
+    format: uuid
+  bankClientName:
+    type: string
+    description: Организация (краткое или полное наименование)
+  bankClientInn:
+    type: string
+    description: ИНН/КИО организации
+  employeeFullName:
+    type: string
+    description: ФИО сотрудника
+  grantNewWarranty:
+    type: boolean
+    description: Выдать новую мегадоверенность
+  grantNewProductWarranty:
+    type: boolean
+    description: Выдать новую продуктовую доверенность
+  grantNewBankInfoWarranty:
+    type: boolean
+    description: Выдать новую доверенность на получение информации
+  activeWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую мегадоверенность
+  productWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую продуктовую доверенность
+  activeBankInfoWarrantyRecall:
+    type: boolean
+    description: Отозвать действующую доверенность на получение информации
+  commentForBank:
+    type: string
+    description: Комментарий для Банка
+  commentForClient:
+    type: string
+    description: Комментарий для Клиента
+  authPersonRights:
+    $ref: ./AuthorizedPersonRightsDto.yaml
+  phoneChanged:
+    type: boolean
+    description: Признак "Изменен номер телефона ГПБ БО"
+  emailChanged:
+    type: boolean
+    description: Признак "Изменен адрес электронной почты ГПБ БО"
+  additionalDetails:
+    $ref: ./AdditionalRequestDetailsDto.yaml
+description: Заявка на создание/изменение сотрудника

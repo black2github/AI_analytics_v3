@@ -1,0 +1,7 @@
+type: object
+properties:
+  grantConsentId:
+    type: string
+    description: Идентификатор заявки на выдачу Согласия, запрос на подтверждение которого не удалось подтвердить
+    format: uuid
+description: ДТО неудачного подтверждения запроса на подтверждение Согласия

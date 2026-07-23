@@ -1,0 +1,17 @@
+type: object
+properties:
+  failed:
+    type: array
+    description: Идентификаторы документов выполненных с ошибкой
+    items:
+      type: string
+      description: Идентификаторы документов выполненных с ошибкой
+      format: uuid
+  successful:
+    type: array
+    description: Идентификаторы документов выполненных успешно
+    items:
+      type: string
+      description: Идентификаторы документов выполненных успешно
+      format: uuid
+description: Транспортное представление ответа на запрос об изменении статусов документов на банковской стороне

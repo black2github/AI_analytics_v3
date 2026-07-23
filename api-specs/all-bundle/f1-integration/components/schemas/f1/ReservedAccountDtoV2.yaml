@@ -1,0 +1,20 @@
+type: object
+properties:
+  currencyIsoCode:
+    type: string
+    description: 'Валюта счета. Строковый ISO код валюты. Например: RUR'
+  accountNumber:
+    type: string
+    description: Номер счета
+  bic:
+    type: string
+    description: БИК счета
+  accountType:
+    type: string
+    description: Тип счета
+    enum:
+    - OTHER
+    - PAYMENT
+    - GOZ
+    - SPECIAL_PURCHASE
+description: Блок с информацией об одном зарезервированном счете. Версия 2

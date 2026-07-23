@@ -1,0 +1,30 @@
+type: object
+properties:
+  createdAt:
+    $ref: ../common/FilterValueDtoInstant.yaml
+  orgName:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestNumber:
+    $ref: ../common/FilterValueDtoLong.yaml
+  status:
+    $ref: ./FilterValueEnumDtoRevokeCertRequestStatusDto.yaml
+  inn:
+    $ref: ../common/FilterValueDtoString.yaml
+  kpp:
+    $ref: ../common/FilterValueDtoString.yaml
+  ogrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  ownerFio:
+    $ref: ../common/FilterValueDtoString.yaml
+  serialNumber:
+    $ref: ../common/FilterValueDtoString.yaml
+  requestId:
+    $ref: ../common/FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ALL
+    - IN_PROGRESS
+    - FINISHED
+description: Фильтр для скроллера заявок на отзыв сертификата

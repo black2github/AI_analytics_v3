@@ -1,0 +1,27 @@
+required:
+- marketingCampaignType
+type: object
+properties:
+  marketingCampaignType:
+    type: string
+    description: Источник маркетинговой кампании
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  organizationIds:
+    uniqueItems: true
+    type: array
+    description: Идентификаторы организаций
+    items:
+      type: string
+      description: Идентификаторы организаций
+      format: uuid
+  inns:
+    uniqueItems: true
+    type: array
+    description: ИНН организаций
+    items:
+      type: string
+      description: ИНН организаций
+description: Групповой запрос на проверку на принадлежность справочнику организаций участников маркетинговых кампаний

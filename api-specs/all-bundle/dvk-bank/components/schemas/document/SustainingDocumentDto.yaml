@@ -1,0 +1,50 @@
+type: object
+properties:
+  orderNumber:
+    type: integer
+    description: Порядковый номер подтверждающего документа
+    format: int32
+  instruction117CorrectionDate:
+    type: string
+    description: Признак корректировки по 117-И (Дата)
+    format: date
+  documentDate:
+    type: string
+    description: Дата подтверждающего документа
+    format: date
+  documentNumber:
+    type: string
+    description: Номер подтверждающего документа
+  expectedPeriod:
+    type: string
+    description: Ожидаемый срок получения от нерезидента денежных средств
+    format: date
+  documentCode:
+    $ref: ./SustainingDocumentCodeDto.yaml
+  documentAmount:
+    type: string
+    description: Сумма в единицах валюты документа
+  deliveryBaseAmount:
+    type: string
+    description: Сумма подтверждающего документа в валюте подтверждающего документа в т.ч. по признаку 2 или 3
+  documentCurrency:
+    $ref: ./CurrencyDto.yaml
+  contractAmount:
+    type: string
+    description: Сумма в единицах валюты контракта (кредитного договора)
+  contractDeliveryBaseAmount:
+    type: string
+    description: Сумма в валюте контракта в т.ч. по признаку 2 или 3
+  contractCurrency:
+    $ref: ./CurrencyDto.yaml
+  shipmentInfo:
+    $ref: ./ShipmentInfoDto.yaml
+  shipperInfo:
+    $ref: ./ShipperInfoDto.yaml
+  prNotCalculateRates:
+    type: boolean
+    description: Не использовать в расчетах показателей в разделах IV и V ВБК и формы 0409665
+  nonresidentCountryCode:
+    type: string
+    description: Получение денежных средств нерезидентом КНР (код страны)
+description: Подтверждающий документ

@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./UnitedFileImportStatusDto.yaml
+  notEq:
+    $ref: ./UnitedFileImportStatusDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./UnitedFileImportStatusDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./UnitedFileImportStatusDto.yaml
+  isNull:
+    type: boolean
+description: Статус файла. Статус файла импорта/фонового процесса импорта. Содержится в списке

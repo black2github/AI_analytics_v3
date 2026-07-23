@@ -1,0 +1,13 @@
+required:
+- accountId
+- accountNumber
+type: object
+properties:
+  accountId:
+    type: string
+    description: Идентификатор счёта в ЭКО
+    format: uuid
+  accountNumber:
+    type: string
+    description: Номер счета
+description: Данные обработанной записи на запрос создания счета ТНФ

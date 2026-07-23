@@ -1,0 +1,49 @@
+required:
+- createdAt
+- id
+- inn
+- marketingCampaignCode
+- marketingCampaignMember
+- organizationId
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сущности
+    format: uuid
+  organizationId:
+    type: string
+    description: Идентификатор организации.
+    format: uuid
+  inn:
+    type: string
+    description: ИНН организации.
+  marketingCampaignCode:
+    type: string
+    description: Код маркетинговой кампании.
+    enum:
+    - UNKNOWN
+    - GPN_CRED
+    - STANDARD
+  marketingCampaignMember:
+    type: boolean
+    description: Признак участника маркетинговой компании
+  comment:
+    type: string
+    description: Комментарий
+  createdAt:
+    type: string
+    description: Дата и время добавления
+    format: date-time
+  updatedAt:
+    type: string
+    description: Дата и время изменения записи
+    format: date-time
+  userId:
+    type: string
+    description: Ссылка на пользователя изменившего запись
+    format: uuid
+  userFio:
+    type: string
+    description: ФИО пользователя изменившего запись
+description: Справочник организаций участников маркетинговых кампаний

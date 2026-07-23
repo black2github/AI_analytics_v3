@@ -1,0 +1,32 @@
+type: object
+properties:
+  createdAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  updatedAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  expiredAt:
+    $ref: ./FilterValueDtoInstant.yaml
+  shortUrlParams:
+    $ref: ./FilterValueDtoString.yaml
+  service:
+    $ref: ./FilterValueDtoString.yaml
+  shortUrlCode:
+    $ref: ./FilterValueDtoString.yaml
+  email:
+    $ref: ./FilterValueDtoString.yaml
+  phoneNumber:
+    $ref: ./FilterValueDtoString.yaml
+  targetPersonFio:
+    $ref: ./FilterValueDtoString.yaml
+  statusCategory:
+    type: string
+    description: Категория инвайта
+    enum:
+    - ACTIVE
+    - USED
+    - CANCELED
+    - ALL
+    - NO_INVITE
+  usageStatus:
+    $ref: ./FilterValueEnumDtoShortLinkUsageStatusDto.yaml
+description: Фильтр для инвайтов

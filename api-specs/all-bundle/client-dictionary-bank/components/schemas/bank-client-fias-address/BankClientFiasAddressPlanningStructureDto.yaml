@@ -1,0 +1,58 @@
+title: Информация о планировочной структуре
+type: object
+properties:
+  planningStructure:
+    title: Планировочная структура
+    type: string
+  planningStructureId:
+    title: GUID планировочной структуры
+    type: string
+    format: uuid
+  planningStructureType:
+    title: Тип планировочной структуры
+    type: string
+  planningStructureTypeCode:
+    title: Код типа планировочной структуры
+    type: string
+  streetName:
+    title: Наименование улицы
+    type: string
+  streetFullName:
+    title: Наименование улицы (полное)
+    type: string
+  streetId:
+    title: GUID улицы
+    type: string
+    format: uuid
+  streetType:
+    title: Тип улицы
+    type: string
+  streetTypeCode:
+    title: Код типа улицы
+    type: string
+  houseNum:
+    title: Номер дома
+    type: string
+  houseType:
+    title: Тип дома
+    type: string
+  houseTypeCode:
+    title: Код типа дома
+    type: string
+  buildingNum:
+    title: Номер корпуса/строения
+    type: string
+  buildingType:
+    title: Тип корпуса/строения
+    type: string
+  buildingTypeCode:
+    title: Код типа корпуса/строения
+    type: string
+  objectId:
+    title: GUID конечного объекта
+    type: string
+    format: uuid
+  unitNum:
+    title: Номер офиса/квартиры
+    type: string
+description: Данные о населенном пункте клиента в ФИАС

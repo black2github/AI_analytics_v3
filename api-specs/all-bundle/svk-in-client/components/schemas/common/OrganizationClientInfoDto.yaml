@@ -1,0 +1,16 @@
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: ID Клиент Банка
+    format: uuid
+  organizationName:
+    type: string
+    description: Наименование организации
+  organizationInn:
+    type: string
+    description: ИНН организации
+  bankBranch:
+    type: string
+    description: Филиал банка
+description: Информация об организации

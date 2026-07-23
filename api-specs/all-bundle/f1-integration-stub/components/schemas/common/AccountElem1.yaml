@@ -1,0 +1,30 @@
+type: object
+description: Информация по счету клиента
+properties:
+  error:
+    $ref: ./WebGateErrorDto.yaml
+    type: object
+    description: Блок с телом ошибки по этому счету
+  accountNumber:
+    type: string
+    description: Номер счета клиента для списания комиссии
+  f1AccountId:
+    type: integer
+    format: int64
+    description: Идентификатор счета списания комиссии в Ф1
+  individualTariff:
+    type: boolean
+    description: Признак индивидуального тарифа, приходит только для source=reference
+  referenceRates:
+    type: array
+    items:
+      $ref: ./ReferenceRate.yaml
+    description: Блок с информацией о комиссионных тарифах по справкам для данного счета, приходит только для source=reference.Приходит всегда 15 элементов по количеству вида справок, доступных на втором этапе
+  summaryReferenceRates:
+    $ref: ./SummaryReferenceRates.yaml
+    type: object
+    description: Информация о комиссионных тарифах по сводным справкам для конкретного счета списания комиссии
+  tariffInfo:
+    $ref: ./TariffInfo.yaml
+    type: object
+    description: Блок с информацией о комиссионных тарифах для копий документов

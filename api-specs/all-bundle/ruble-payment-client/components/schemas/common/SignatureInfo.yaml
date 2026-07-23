@@ -1,0 +1,34 @@
+required:
+- comment
+- documentId
+- sendAbility
+- signAbility
+type: object
+properties:
+  documentId:
+    type: string
+    description: Идентификатор Платежного поручения
+    format: uuid
+  signAbility:
+    $ref: ./SignAbility.yaml
+  comment:
+    type: string
+    description: Комментарий
+  signatureLevel:
+    $ref: ./SignatureLevelClassifierDto.yaml
+  digest:
+    type: string
+    description: Дайджест подписи
+  sppVersion:
+    type: integer
+    description: Версия СПП
+    format: int32
+  sendAbility:
+    $ref: ./SendAbility.yaml
+  signError:
+    type: string
+    description: Ошибка подписи
+  sendError:
+    type: string
+    description: Ошибка отправки
+description: Детальная информация о платежном поручении

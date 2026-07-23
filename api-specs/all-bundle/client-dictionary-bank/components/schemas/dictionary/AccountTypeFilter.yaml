@@ -1,0 +1,9 @@
+type: object
+properties:
+  code:
+    $ref: ../common/FilterValueDtoLong.yaml
+  description:
+    $ref: ../common/FilterValueDtoString.yaml
+  fullDescription:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр скроллера типов счетов

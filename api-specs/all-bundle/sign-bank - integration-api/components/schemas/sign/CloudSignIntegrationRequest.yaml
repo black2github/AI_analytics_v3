@@ -1,0 +1,38 @@
+required:
+- documents
+- dstId
+- lang
+- userId
+type: object
+properties:
+  dstId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  userId:
+    type: string
+    description: ID облачного СЭП
+    format: uuid
+  documents:
+    minItems: 1
+    type: array
+    description: Подписываемые документы
+    items:
+      $ref: ./CloudSignDocDto.yaml
+  hashed:
+    type: boolean
+    description: Признак подписи хешированных данных
+  detached:
+    type: boolean
+    description: Признак что подпись открепленная
+  pinCode:
+    type: string
+    description: Пин-код для доступа к закрытому ключу сертификата
+  lang:
+    type: string
+    description: Язык для отображения информации о подписываемых данных
+    enum:
+    - UNKNOWN
+    - RU
+    - EN
+description: Запрос подписи с помощью облачного СЭП

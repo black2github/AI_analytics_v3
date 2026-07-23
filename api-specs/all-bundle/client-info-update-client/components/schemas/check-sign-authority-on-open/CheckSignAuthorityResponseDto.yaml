@@ -1,0 +1,38 @@
+type: object
+properties:
+  checkAuthorityResult:
+    type: string
+    description: Результат проверки полномочий
+    enum:
+    - AUTHORIZED
+    - NO_CERTIFICATE
+    - NO_AUTHORITY
+  request:
+    $ref: ../common/ClientInfoUpdateRequestDto.yaml
+  requiredClientInfoUpdType:
+    type: string
+    description: Необходимого обновление ДУЛ, его тип.
+    enum:
+    - IDENTITY_DOCUMENT_UPD
+    - HEAD_APPOINTMENT_UPD
+    - MC_RIGHTS_UPD
+    - SIGNER_RIGHTS_UPD
+    - ARTICLES_OF_ASSOCIATION_CHANGES_UPD
+    - ARTICLES_OF_ASSOCIATION_UPD
+    - KPP_LARGEST_TAXPAYER_UPD
+    - ACTUAL_ADDRESS_ORGANIZATION_UPD
+    - ADD_FREE_FORMAT_DOCUMENT
+  updateOwnIdentityDocument:
+    type: boolean
+    description: Необходимо обновить ДУЛ для текущего пользователя
+  updateIdentityDocumentType:
+    type: string
+    description: Тип ДУЛ для обновления. Если задано, тогда необходимо необходимо обновить ДУЛ
+  updateIdentityDocumentEmployeeFio:
+    type: string
+    description: ФИО сотрудника для которого необходимо обновить ДУЛ
+  updateIdentityDocumentEmployeeId:
+    type: string
+    description: Идентификатор сотрудника для которого необходимо обновить ДУЛ
+    format: uuid
+description: Данные

@@ -1,0 +1,14 @@
+required:
+- asyncTaskId
+- bulkSignFileId
+type: object
+properties:
+  asyncTaskId:
+    type: string
+    description: Идентификатор фоновой задачи
+    format: uuid
+  bulkSignFileId:
+    type: string
+    description: Идентификатор файла массовой подписи
+    format: uuid
+description: Результат массовой подписи документов

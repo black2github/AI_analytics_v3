@@ -1,0 +1,12 @@
+type: string
+description: Операция с файлом импорта
+enum:
+- NO_CODE
+- CREATE
+- PREPARE_TO_IMPORT
+- IMPORT
+- SIGN
+- SIGN_REMOVE
+- DELETE
+- SIGN_CHECK
+- RECEIVE_CHECK

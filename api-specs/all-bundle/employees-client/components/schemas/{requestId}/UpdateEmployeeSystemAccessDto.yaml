@@ -1,0 +1,30 @@
+required:
+- agreements
+- authorizedPersonRegistration
+- employeeId
+- version
+type: object
+properties:
+  version:
+    type: integer
+    description: Версия заявки
+    format: int32
+  employeeId:
+    type: string
+    description: Идентификатор сотрудника в справочниках
+    format: uuid
+  phone:
+    type: string
+    description: Номер телефона ГПБ БО
+  phoneCountryCode:
+    type: string
+    description: Телефонный код страны
+  email:
+    type: string
+    description: Адрес электронной почты ГПБ БО
+  authorizedPersonRegistration:
+    type: boolean
+    description: Регистрация УЛ
+  agreements:
+    $ref: ../common/EmployeeCreateAgreementsDto.yaml
+description: Заявка на редактирование сотрудника из ЕСК. Доступ к системе.

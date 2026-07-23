@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента банка
+    format: uuid
+  allOfficialsCount:
+    type: integer
+    description: Количество всех представителей
+    format: int64
+  bssOfficialsCount:
+    type: integer
+    description: Количество представителей из ДБО БСС
+    format: int64
+description: Количество представителей клиента

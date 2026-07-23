@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsBankClientSearchByFieldNameRequest.yaml
+description: Запрос страницы

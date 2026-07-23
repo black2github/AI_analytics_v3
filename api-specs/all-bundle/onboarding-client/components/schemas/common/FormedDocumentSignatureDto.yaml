@@ -1,0 +1,30 @@
+type: object
+properties:
+  body:
+    type: string
+    description: Тело сертификата ЭП
+  certificateNumber:
+    type: string
+    description: Серийный номер сертификата ЭП
+  endDate:
+    type: string
+    description: Дата окончания действия сертификата ЭП
+    format: date-time
+  issuer:
+    type: string
+    description: Издатель сертификата ЭП
+  organizationOwner:
+    type: string
+    description: Организация - владелец сертификата ЭП
+  personOwner:
+    type: string
+    description: ФЛ - владелец сертификата ЭП
+  signedIn:
+    type: string
+    description: Дата и время подписания ПФ ЭП
+    format: date-time
+  startDate:
+    type: string
+    description: Дата начала действия сертификата ЭП
+    format: date-time
+description: Сведения о ЭП с помощью которой подписана ПФ.

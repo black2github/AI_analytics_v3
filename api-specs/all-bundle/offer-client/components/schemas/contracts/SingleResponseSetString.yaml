@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    uniqueItems: true
+    type: array
+    items:
+      type: string
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

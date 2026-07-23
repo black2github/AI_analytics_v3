@@ -1,0 +1,46 @@
+required:
+- filialName
+- id
+- status
+type: object
+properties:
+  id:
+    type: string
+    description: ID документа
+    format: uuid
+  status:
+    $ref: ./OutgoingPaymentRequestStatusDto.yaml
+  commentForBank:
+    maxLength: 255
+    type: string
+    description: Комментарий для банка
+    nullable: true
+  filialName:
+    type: string
+    description: Филиал обслуживания
+  currentEditorId:
+    type: string
+    description: Текущий редактор
+    format: uuid
+    nullable: true
+  bankClientInfo:
+    $ref: ../common/BankClientInfoDto.yaml
+  documentBusinessInfo:
+    $ref: ./DocumentBusinessInfoBankScrollerDto.yaml
+  paymentInfo:
+    $ref: ./PaymentInfoBankScrollerDto.yaml
+  payerBankInfo:
+    $ref: ./PayerBankInfoBankScrollerDto.yaml
+  payerInfo:
+    $ref: ./PayerInfoBankScrollerDto.yaml
+  receiverInfo:
+    $ref: ./ReceiverInfoBankScrollerDto.yaml
+  chargebackRequest:
+    $ref: ./OutgoingPaymentChargebackRequestBankDto.yaml
+  sourceSystem:
+    type: string
+    description: Система создания документа
+  creationType:
+    type: string
+    description: Способ создания документа
+description: Платежное требование исходящее (скроллер банка)

@@ -1,0 +1,28 @@
+type: object
+properties:
+  id:
+    type: string
+    description: GUID клиента
+    format: uuid
+    example: a29c714d-bf4b-48d2-a1fd-6c42bc2961ef
+  regNumber:
+    type: string
+    description: Номер клиента в ДБО БСС
+    example: '12345'
+  kpp:
+    type: string
+    description: КПП клиента
+    example: '997750001'
+  name:
+    type: string
+    description: Название клиента
+    example: ООО Яндекс
+  ogrn:
+    type: string
+    description: ОГРН клиента
+    example: '1027700229193'
+  inn:
+    type: string
+    description: ИНН клиента
+    example: '7736207543'
+description: Запрос счетов клиента

@@ -1,0 +1,35 @@
+type: object
+properties:
+  id:
+    $ref: ./FilterValueDtoString.yaml
+  uaaUserId:
+    $ref: ./FilterValueDtoUUID.yaml
+  userFio:
+    $ref: ./FilterValueDtoString.yaml
+  number:
+    $ref: ./FilterValueDtoInteger.yaml
+  status:
+    $ref: ./FilterValueDtoString.yaml
+  method:
+    $ref: ./DocCopyMethodFilterValueDto.yaml
+  type:
+    $ref: ./DocCopyTypeCodeFilterValueDto.yaml
+  clientId:
+    $ref: ./FilterValueDtoUUID.yaml
+  statusCategory:
+    type: string
+    description: Категория
+    enum:
+    - ERROR
+    - IN_PROGRESS
+    - FINISHED
+    - ALL
+  accountNumber:
+    $ref: ./FilterValueDtoString.yaml
+  accountId:
+    $ref: ./FilterValueDtoString.yaml
+  creationDate:
+    $ref: ./FilterValueDtoInstant.yaml
+  duplicateByEmails:
+    $ref: ./FilterValueDtoBoolean.yaml
+description: Фильтр

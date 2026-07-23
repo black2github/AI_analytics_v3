@@ -1,0 +1,5 @@
+type: string
+description: Порядок сортировки
+enum:
+- ASC
+- DESC

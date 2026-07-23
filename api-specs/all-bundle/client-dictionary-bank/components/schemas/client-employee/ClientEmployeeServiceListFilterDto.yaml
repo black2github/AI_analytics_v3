@@ -1,0 +1,27 @@
+required:
+- clientId
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  identityCard:
+    $ref: ./IdentityCardFilterDto.yaml
+  surname:
+    $ref: ../common/FilterValueDtoString.yaml
+  name:
+    $ref: ../common/FilterValueDtoString.yaml
+  patronymic:
+    $ref: ../common/FilterValueDtoString.yaml
+  birthDate:
+    $ref: ../common/FilterValueDtoLocalDate.yaml
+  isFired:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  eskId:
+    $ref: ../common/FilterValueDtoString.yaml
+  isAuthorizedPerson:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+  isEio:
+    $ref: ../common/FilterValueDtoBoolean.yaml
+description: Фильтр сотрудников Клиента по заданным параметрам внутреннего API

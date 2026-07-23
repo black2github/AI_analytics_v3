@@ -1,0 +1,68 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  notEq:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  in:
+    type: array
+    items:
+      type: string
+      enum:
+      - TECHNICAL
+      - CUSTOMER
+      - COMMON
+      - MIGRATION
+  notIn:
+    type: array
+    items:
+      type: string
+      enum:
+      - TECHNICAL
+      - CUSTOMER
+      - COMMON
+      - MIGRATION
+  isNull:
+    type: boolean
+  gt:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  ge:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  lt:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION
+  le:
+    type: string
+    enum:
+    - TECHNICAL
+    - CUSTOMER
+    - COMMON
+    - MIGRATION

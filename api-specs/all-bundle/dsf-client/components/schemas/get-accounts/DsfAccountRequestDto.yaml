@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Список организаций.
+    items:
+      type: string
+      description: Список организаций.
+      format: uuid
+description: ДТО со списком организаций.

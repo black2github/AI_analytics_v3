@@ -1,0 +1,15 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: ID сертификата
+    format: uuid
+  duplicates:
+    uniqueItems: true
+    type: array
+    description: ID дубликатов сертификата
+    items:
+      type: string
+      description: ID дубликатов сертификата
+      format: uuid
+description: ДТО содержащее идентификаторы дубликатов указанного сертификата

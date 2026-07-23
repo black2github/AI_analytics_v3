@@ -1,0 +1,97 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код документа
+    enum:
+    - UNKNOWN
+    - GLOBAL_WRNT
+    - ACCOUNTING
+    - ATHRT_DELEGATION
+    - EGRUL_EGRIP_EXTRT
+    - JOB_ASSIGNMENT
+    - LABOUR_CONTRACT
+    - MNG_BODY_DCSN
+    - ORDER
+    - OTHER
+    - PAYM_MNGM_WRNT
+    - PROD_AGR_WRNT
+    - PROD_EXEC_WRNT
+    - REPR_GPB_BO_REG
+    - SIGN_RIGHT
+    - STATE_AGNC_DCSN
+    - WARRANT
+    - MRPA_WRNT
+    - OBTN_BANKINFO_WRNT
+  issueDate:
+    type: string
+    description: Дата выдачи доверенности
+    format: date
+  startDate:
+    type: string
+    description: Дата начала действия доверенности
+    format: date
+  expDate:
+    type: string
+    description: Дата окончания действия доверенности
+    format: date
+  number:
+    type: string
+    description: Номер документа
+  kind:
+    type: string
+    description: Вид документа
+  type:
+    type: string
+    description: Тип документа
+  blocked:
+    type: boolean
+    description: Признак блокировки документа
+  blockDate:
+    type: string
+    description: Дата начала блокировки
+    format: date
+  termless:
+    type: boolean
+    description: Признак бессрочного действия документа
+  supplyMode:
+    type: string
+    description: Способ оформления документа
+    enum:
+    - DBO_SERVICE
+    - DBO
+    - PAPER
+    - AUTOMATICALLY
+    - MRPA
+  contractSigner:
+    type: boolean
+    description: Право подписи договора
+  retrustRight:
+    type: boolean
+    description: Право передоверия документа
+  appliesToAllProducts:
+    type: boolean
+    description: Признак действия доверенности на все продукты
+  productWarranties:
+    uniqueItems: true
+    type: array
+    description: Продукты, на которые распространяются права документа
+    items:
+      type: string
+      description: Классификатор продуктов банка
+      enum:
+      - LK_UVED
+      - LK_MP
+      - GPB_BO
+      - CORP_CARDS
+      - SALARY_PROJECT
+      - TREASURY_DEPOSIT
+      - TREASURY_FX
+      - TREASURY_GSNO
+      - TREASURY_NESNIZ
+      - UNI_BUH_OF_SALARY_GPBBO
+      - ENCASHMENT
+      - ENCASHMENT_EX
+      - SBP
+      - RKO
+description: Доверенность сотрудника клиента. Интеграционное ДТО

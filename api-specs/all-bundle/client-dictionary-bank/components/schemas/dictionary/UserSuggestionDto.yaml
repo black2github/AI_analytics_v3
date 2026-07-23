@@ -1,0 +1,21 @@
+required:
+- userId
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  familyName:
+    type: string
+    description: Фамилия
+  firstName:
+    type: string
+    description: Имя
+  middleName:
+    type: string
+    description: Отчество
+  login:
+    type: string
+    description: Логин
+description: Информация о пользователе

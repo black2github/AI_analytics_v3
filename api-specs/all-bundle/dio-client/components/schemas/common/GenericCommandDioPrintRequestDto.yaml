@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./DioPrintRequestDto.yaml
+description: Запрос

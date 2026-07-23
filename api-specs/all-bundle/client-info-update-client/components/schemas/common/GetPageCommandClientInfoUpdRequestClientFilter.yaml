@@ -1,0 +1,5 @@
+type: object
+properties:
+  params:
+    $ref: ./PageParamsClientInfoUpdRequestClientFilter.yaml
+description: Запрос страницы

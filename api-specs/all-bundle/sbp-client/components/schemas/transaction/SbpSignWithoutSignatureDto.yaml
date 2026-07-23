@@ -1,0 +1,13 @@
+type: object
+description: Запрос для подписания заявления без сертификата ЭП
+properties:
+  documentId:
+    type: string
+    format: uuid
+    description: Идентификатор заявки
+  smftParameters:
+    $ref: ./SmftParametersDto.yaml
+    description: Параметры СМФТ
+required:
+- documentId
+- smftParameters

@@ -1,0 +1,12 @@
+type: object
+properties:
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  signItems:
+    type: array
+    description: Подписываемые документы
+    items:
+      $ref: ./VerifySignBatchRequestSignItem.yaml
+description: Данные о сертификате и о подписываемых им документах

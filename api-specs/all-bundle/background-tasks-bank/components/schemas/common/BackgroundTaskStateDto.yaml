@@ -1,0 +1,8 @@
+required:
+- terminated
+type: object
+properties:
+  terminated:
+    type: boolean
+    description: Признак терминации процесса
+description: Состояние процесса

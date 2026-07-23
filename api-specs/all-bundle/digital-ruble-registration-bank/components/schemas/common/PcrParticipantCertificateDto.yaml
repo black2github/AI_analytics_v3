@@ -1,0 +1,84 @@
+required:
+- bankClientId
+- bankClientOfficialId
+- certificateBody
+- certificateId
+- endDate
+- pcrParticipantWalletId
+- privateKeyEndDate
+- privateKeyStartDate
+- publisherName
+- registrationRequestId
+- revocationRequestId
+- serialNumber
+- startDate
+- status
+- userId
+type: object
+properties:
+  pcrParticipantWalletId:
+    type: string
+    description: Идентификатор цифрового кошелька организации
+    format: uuid
+  certificateId:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  bankClientId:
+    type: string
+    description: Идентификатор Клиента Банка
+    format: uuid
+  bankClientOfficialId:
+    type: string
+    description: Ссылка на сущность Представитель Клиента Банка
+    format: uuid
+  registrationRequestId:
+    type: string
+    description: Идентификатор заявки, в рамках которой был выпущен сертификат
+    format: uuid
+  revocationRequestId:
+    type: string
+    description: Идентификатор заявки, в рамках которой был отозван сертификат
+    format: uuid
+  startDate:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  endDate:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  privateKeyStartDate:
+    type: string
+    description: Дата начала действия закрытого ключа
+    format: date-time
+  privateKeyEndDate:
+    type: string
+    description: Дата окончания действия закрытого ключа
+    format: date-time
+  serialNumber:
+    type: string
+    description: Серийный номер сертификата
+  publisherName:
+    type: string
+    description: Наименование УЦ-издателя
+  certificateBody:
+    type: string
+    description: Тело сертификата
+  status:
+    type: string
+    description: Статус сертификата
+    enum:
+    - INITIAL
+    - VERIFIED
+    - COMPLETED
+    - REJECTED
+    - REVOKE_IN_PROGRESS
+    - REVOKED
+    - REVOKE_ERROR
+    - EXPIRED
+  userId:
+    type: string
+    description: Идентификатор Пользователя
+    format: uuid
+description: Сертификат ЦР

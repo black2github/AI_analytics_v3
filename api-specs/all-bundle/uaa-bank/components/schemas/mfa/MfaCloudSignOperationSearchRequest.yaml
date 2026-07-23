@@ -1,0 +1,14 @@
+required:
+- operationId
+- tokenId
+type: object
+properties:
+  tokenId:
+    type: string
+    description: ID МФА токена
+    format: uuid
+  operationId:
+    type: string
+    description: ID операции
+    format: uuid
+description: Запрос поиска операции облачной подписи

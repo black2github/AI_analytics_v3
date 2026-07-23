@@ -1,0 +1,5 @@
+type: object
+properties:
+  data:
+    $ref: ./BlacklistUpdateDto.yaml
+description: Запрос

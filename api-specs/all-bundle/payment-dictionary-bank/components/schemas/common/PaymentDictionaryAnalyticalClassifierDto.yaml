@@ -1,0 +1,30 @@
+required:
+- active
+- id
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор записи
+    format: uuid
+  tmgId:
+    type: string
+    description: Идентификатор в TMG
+  active:
+    type: boolean
+    description: Действующая запись
+  paymentDictionaryStructureId:
+    type: string
+    description: Идентификатор справочника Структуры
+    format: uuid
+  code:
+    type: string
+    description: Код аналитического классификатора
+  name:
+    type: string
+    description: Наименование аналитического классификатора
+  parentDictionaryAnalyticClassifierId:
+    type: string
+    description: Идентификатор вышестоящего кода аналитического классификатора
+    format: uuid
+description: Справочник Аналитические классификаторы

@@ -1,0 +1,14 @@
+type: object
+properties:
+  userId:
+    type: string
+    description: Идентификатор пользователя
+    format: uuid
+  clientIds:
+    type: array
+    description: Идентификаторы клиентов банка
+    items:
+      type: string
+      description: Идентификаторы клиентов банка
+      format: uuid
+description: Запрос поиска представителей клиента по пользователю и клиентам банка

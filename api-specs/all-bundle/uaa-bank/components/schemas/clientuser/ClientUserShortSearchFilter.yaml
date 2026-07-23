@@ -1,0 +1,19 @@
+type: object
+properties:
+  fio:
+    $ref: ../common/FilterValueDtoString.yaml
+  email:
+    $ref: ../common/FilterValueDtoString.yaml
+  phone:
+    $ref: ../common/FilterValueDtoString.yaml
+  uaaId:
+    maxItems: 1000
+    minItems: 0
+    uniqueItems: true
+    type: array
+    description: Идентификатор пользователя
+    items:
+      type: string
+      description: Идентификатор пользователя
+      format: uuid
+description: Фильтр поиска компактного представления клиентского пользователя

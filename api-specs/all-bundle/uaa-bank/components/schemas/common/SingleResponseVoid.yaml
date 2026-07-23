@@ -1,0 +1,9 @@
+type: object
+properties:
+  data:
+    type: object
+  code:
+    type: integer
+    format: int32
+  message:
+    type: string

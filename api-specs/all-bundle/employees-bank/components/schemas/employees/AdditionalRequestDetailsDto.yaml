@@ -1,0 +1,6 @@
+type: object
+properties:
+  legalizationRequest:
+    type: boolean
+    description: Заявка на легализацию мигрированных прав
+description: Дополнительные реквизиты заявки

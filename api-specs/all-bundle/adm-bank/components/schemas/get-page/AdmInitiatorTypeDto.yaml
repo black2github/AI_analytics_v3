@@ -1,0 +1,6 @@
+type: string
+description: Инициатор подачи заявки
+enum:
+- BOL
+- INFOR
+- BANNER

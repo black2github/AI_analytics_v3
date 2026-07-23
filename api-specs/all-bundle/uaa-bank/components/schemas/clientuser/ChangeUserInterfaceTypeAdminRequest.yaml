@@ -1,0 +1,13 @@
+required:
+- clientUserId
+- simpleInterface
+type: object
+properties:
+  clientUserId:
+    type: string
+    description: Идентификатор клиентского пользователя
+    format: uuid
+  simpleInterface:
+    type: boolean
+    description: Компактный тип интерфейса
+description: ДТО запроса на изменение типа интерфейса

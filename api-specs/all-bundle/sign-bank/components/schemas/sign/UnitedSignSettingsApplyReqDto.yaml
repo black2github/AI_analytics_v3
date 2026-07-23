@@ -1,0 +1,11 @@
+type: object
+properties:
+  bankClientIds:
+    uniqueItems: true
+    type: array
+    description: Список ID клиентов с включенной ЕП
+    items:
+      type: string
+      description: Список ID клиентов с включенной ЕП
+      format: uuid
+description: Запрос применения настроек единой подписи

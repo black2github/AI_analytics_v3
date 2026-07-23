@@ -1,0 +1,6 @@
+type: object
+properties:
+  chargebackReason:
+    type: string
+    description: Причина отзыва
+description: Информация связанного документа, специфичная для типа "Запрос на отзыв"

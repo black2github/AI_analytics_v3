@@ -1,0 +1,16 @@
+type: object
+properties:
+  clientId:
+    type: string
+    description: Идентификатор клиента
+    format: uuid
+  shortName:
+    type: string
+    description: Краткое наименование клиента
+  fullName:
+    type: string
+    description: Полное наименование клиента
+  inn:
+    type: string
+    description: ИНН организации
+description: Данные о банке-владельце согласия

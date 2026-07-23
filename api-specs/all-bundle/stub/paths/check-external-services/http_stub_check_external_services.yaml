@@ -1,0 +1,31 @@
+post:
+  tags:
+  - http-stub-controller
+  summary: checkExtServices
+  operationId: checkExtServicesUsingPOST
+  consumes:
+  - application/json
+  produces:
+  - '*/*'
+  parameters:
+  - in: body
+    name: dto
+    description: dto
+    required: true
+    schema:
+      $ref: '#/definitions/EmulateRequest'
+  responses:
+    '200':
+      description: OK
+      schema:
+        type: array
+        items:
+          $ref: '#/definitions/EmulateResponse'
+    '201':
+      description: Created
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: Not Found

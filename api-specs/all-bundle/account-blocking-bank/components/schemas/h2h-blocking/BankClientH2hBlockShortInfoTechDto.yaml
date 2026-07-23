@@ -1,0 +1,48 @@
+required:
+- bankClientId
+- blockedActions
+- blockedDocs
+type: object
+properties:
+  bankClientId:
+    type: string
+    description: Ссылка на Клиента Банка, являющегося инициатором блокировки
+    format: uuid
+  blockedDocs:
+    type: string
+    description: Документ, подлежащий блокировке
+    enum:
+    - UNKNOWN
+    - RRKO_PAYMENT_ORDER
+    - RRKO_PAYMENT_REQUEST_IN
+    - RRKO_PAYMENT_REQUEST_OUT
+    - RRKO_PAYMENT_REQUEST_ACCEPT
+    - VRKO_TRANSFER
+    - VRKO_TRANSIT
+    - VRKO_CONVERSION
+    - STATEMENT
+    - RRKO_PAYMENT_COLLECTION_OUT
+    - LETTER
+    - CASH_ORDER
+    - SBP
+    - DW_WALLET_IDENTIFY
+    - DW_WALLET_DEPOSIT
+    - DW_WALLET_WITHDRAW
+  blockedActions:
+    type: array
+    description: Действия над документом, подлежащие блокировке
+    items:
+      type: string
+      description: Действия над документом, подлежащие блокировке
+      enum:
+      - UNKNOWN
+      - ACTION_CLIENT_USER_SIGN
+      - ACTION_CLIENT_USER_VIEW
+      - ACTION_CLIENT_USER_PRINT
+      - ACTION_CLIENT_USER_LISTVIEW
+      - ACTION_CLIENT_USER_EDIT
+      - ACTION_CLIENT_USER_CREATE
+      - ACTION_CLIENT_USER_IMPORT
+      - ACTION_CLIENT_USER_STATEMENT_CREATE
+      - ACTION_CLIENT_USER_SIGN_CLICK
+description: Блокировка Н2Н, представление для интеграции

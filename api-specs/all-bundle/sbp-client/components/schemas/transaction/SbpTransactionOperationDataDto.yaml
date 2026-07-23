@@ -1,0 +1,29 @@
+type: object
+description: Реквизиты входящей операции
+properties:
+  operationTransactionTime:
+    type: string
+    format: date-time
+    description: Дата и время входящей операции
+  operationAmount:
+    type: integer
+    format: int64
+    description: Сумма входящей операции в копейках
+  operationBankName:
+    type: string
+    description: Название банка
+  operationBankBic:
+    type: string
+    description: БИК банка
+  operationTransactionId:
+    type: string
+    description: Идентификатор транзакции
+  qrcId:
+    type: string
+    description: Идентификатор QR-кода
+  operationAccount:
+    type: string
+    description: Счет получателя по входящей операции
+required:
+- operationTransactionId
+- operationTransactionTime

@@ -1,0 +1,5 @@
+type: string
+description: Статус фонового режима
+enum:
+- IMPORT_NOT_IN_BACKGROUND
+- IMPORT_IN_BACKGROUND

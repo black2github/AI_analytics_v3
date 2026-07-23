@@ -1,0 +1,23 @@
+type: object
+properties:
+  dealType:
+    type: string
+    enum:
+    - DEPOSIT
+    - MNO
+    - GSNO
+    - FX
+  dealDateTime:
+    type: string
+    format: date-time
+  employeeFullName:
+    type: string
+  isEIO:
+    type: boolean
+  clientInn:
+    type: string
+  clientRnk:
+    type: string
+  comment:
+    type: string
+description: Данные

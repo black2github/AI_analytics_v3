@@ -1,0 +1,19 @@
+required:
+- clientAccountId
+type: object
+properties:
+  clientAccountId:
+    type: string
+    description: Id счета плательщика
+    format: uuid
+  name:
+    maxLength: 160
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\\n\r]*$
+    type: string
+    description: Наименование плательщика
+  kpp:
+    maxLength: 9
+    pattern: ^[A-Za-z0-9]*$
+    type: string
+    description: КПП плательщика
+description: Упрощенная форма создания ПП. Реквизиты плательщика для перевода на брокерский счёт.

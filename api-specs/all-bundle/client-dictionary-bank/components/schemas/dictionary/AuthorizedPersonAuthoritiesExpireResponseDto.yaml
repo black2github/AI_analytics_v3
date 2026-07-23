@@ -1,0 +1,8 @@
+type: object
+properties:
+  expiredAuthorities:
+    type: array
+    description: Завершенные полномочия УЛ Клиента Банка
+    items:
+      $ref: ./AuthorizedPersonAuthoritiesExpireResultDto.yaml
+description: Ответ на запрос завершения действия полномочий на продукт УЛ Клиента Банка

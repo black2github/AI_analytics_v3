@@ -1,0 +1,155 @@
+type: object
+properties:
+  additionalParams:
+    $ref: ./AdditionalParamsMainPageDto.yaml
+  bankClient:
+    $ref: ./BankClientInfoMainPageDto.yaml
+  branch:
+    $ref: ./BranchMainPageDto.yaml
+  date:
+    type: string
+    description: Дата заявки
+    format: date
+  fillingPercentage:
+    type: integer
+    description: Процент заполнения
+    format: int32
+  hasPreviouslyOpenedAccounts:
+    type: boolean
+    description: Признак наличия ранее открытых банковских счетов
+  id:
+    type: string
+    description: Идентификатор заявки
+    format: uuid
+  meetingDate:
+    type: string
+    description: Дата и время встречи
+    format: date-time
+  number:
+    type: integer
+    description: Номер заявки
+    format: int32
+  openingAccounts:
+    type: array
+    description: Список открываемых счетов
+    items:
+      $ref: ./OpeningAccountMainPageDto.yaml
+  primaryCheckResult:
+    type: string
+    description: ' Результат первичных проверок'
+    enum:
+    - POSITIVE
+    - NEGATIVE
+    - ERROR
+    - CONDITIONALLY_POSITIVE
+    - CONDITIONALLY_POSITIVE_BY_FNS
+    - CONDITIONALLY_POSITIVE_BY_FTS
+    - EMPTY
+  signingStatus:
+    type: string
+    description: Статус подписания с помощью УКЭП
+    enum:
+    - UNSIGNED
+    - SIGNED
+    - ERROR
+    - REQUIRED
+    - CANCELLED
+  status:
+    type: string
+    description: Статус заявки на открытие первого счета
+    enum:
+    - NONE
+    - PREDRAFT
+    - CREATED
+    - DRAFT
+    - COMPLETED
+    - DOCS_LOAD
+    - FORMED
+    - DELETED
+    - DATA_ERROR
+    - EXPORT_TO_ESK
+    - EXPORTED_TO_ESK
+    - EXPORT_TO_ESK_ERROR
+    - EXECUTED_BY_ESK
+    - WAITING_FOR_ESK_DECISION
+    - WAITING_FOR_ESK_ACCOUNTS
+    - EXPORT_TO_TESSA
+    - EXPORT_TO_TESSA_ERROR
+    - EXECUTED_BY_TESSA
+    - REPLACING_DOCS
+    - APPROVED
+    - REFUSED
+    - REJECTED
+    - EXECUTED
+    - EDITING
+    - EDITING_DRAFT
+    - EDITING_REPLACING_DOCS
+    - EDITING_COMPLETED
+    - EDITING_DOCS_LOAD
+    - DELIVERED
+    - RECEIVED
+    - PROCESSING_TESSA_COMMENTS
+    - DETAILS_ERROR
+    - WAITING_RESTRICTION
+    - TECH_REQ
+    - ARCHIVING
+    - ARCHIVED
+    - RECALL_IN_ESK
+    - RECALLED_IN_ESK
+    - RECALL_IN_ESK_ERROR
+    - RECALL_IN_TESSA
+    - RECALLED_IN_TESSA
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED
+    - RECALL_IN_TESSA_ERROR
+    - SIGN_VALID
+    - SIGN_NOT_VALID
+    - NEED_RESIGN
+    - SIGN_CANCELLED
+    - EXPORT_TO_ESK_115
+    - EXPORTED_TO_ESK_115
+    - EXPORT_TO_ESK_ERROR_115
+    - ACCEPTED_BY_ESK_115
+    - EXECUTED_BY_ESK_115
+    - EXPORT_TO_TESSA_115
+    - EXPORT_TO_TESSA_ERROR_115
+    - EXECUTED_BY_TESSA_115
+    - REMOTE_ACCOUNT_OPENING_UNAVAILABLE
+    - RECALL_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_REQUEST_SUBMITTED_REFUSING
+    - RECALLED_IN_TESSA_REFUSING
+    - RECALL_IN_TESSA_ERROR_REFUSING
+  tariffCode:
+    type: string
+    description: Коды справочника тарифов на обслуживание счета
+    deprecated: true
+    enum:
+    - STANDART
+    - NEEDFUL
+    - PROGRESS
+    - STABLE
+    - MAX
+    - FEA
+  updatedAt:
+    type: string
+    description: Время обновления
+    format: date-time
+  userId:
+    type: string
+    description: Пользователь, создавший заявку
+    format: uuid
+  userType:
+    type: string
+    description: Тип пользователя, который создал заявку
+    enum:
+    - CLIENT
+    - BANK
+    - TECHNICAL
+  visitingServiceType:
+    type: string
+    description: Тип выездного сервиса
+    enum:
+    - VISITING_MANAGER
+    - RETAIL_DELIVERY
+    - OFFICE
+    - UNKNOWN
+description: Заявка на открытие первого счета для сервиса ГС

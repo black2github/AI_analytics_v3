@@ -1,0 +1,18 @@
+type: object
+properties:
+  accountOpeningFreeByPromo:
+    type: boolean
+    description: Открытие счета бесплатно по акции
+  availableForMeeting:
+    type: boolean
+    description: Признак доступности назначения встречи до завершения короткой заявки
+  hasNotOperatingRubCorpCard:
+    type: boolean
+    description: Есть ли в заявке ФЛ с необходимостью выпуска корпоративной карты не к расчётному счёту в рублях
+  isCallCompleted:
+    type: boolean
+    description: Признак совершения звонка клиенту сотрудником банка
+  promotionFreeAccountAndSalaryProjectSuitable:
+    type: boolean
+    description: Подходит ли короткая заявка под акцию "РКО+Зарплатный проект"
+description: Дополнительные параметры

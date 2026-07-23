@@ -1,0 +1,9 @@
+type: object
+properties:
+  roleCode:
+    type: string
+    description: Предполагаемый код роли
+  segmentCode:
+    type: string
+    description: Предполагаемый сегмент роли
+description: Упорядоченный набор соответствий роль + сегмент

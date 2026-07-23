@@ -1,0 +1,15 @@
+type: object
+properties:
+  clientName:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientInnKio:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientOgrn:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientGroup:
+    $ref: ../common/FilterValueDtoString.yaml
+  clientAskId:
+    $ref: ../common/FilterValueDtoLong.yaml
+  clientAbsF1Id:
+    $ref: ../common/FilterValueDtoString.yaml
+description: Фильтр

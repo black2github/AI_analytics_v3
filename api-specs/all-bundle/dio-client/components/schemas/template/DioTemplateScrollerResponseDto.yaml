@@ -1,0 +1,17 @@
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор шаблона
+    format: uuid
+  templateName:
+    maxLength: 255
+    type: string
+    description: Имя шаблона
+  clientName:
+    type: string
+    description: Имя организации
+  clientInn:
+    type: string
+    description: ИНН организации
+description: Дто скроллер шаблонов валютных переводов

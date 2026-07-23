@@ -1,0 +1,21 @@
+type: object
+properties:
+  contains:
+    type: string
+  notContains:
+    type: string
+  eq:
+    $ref: ./PaymentOrderRequestStatusOfSendingDto.yaml
+  notEq:
+    $ref: ./PaymentOrderRequestStatusOfSendingDto.yaml
+  in:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestStatusOfSendingDto.yaml
+  notIn:
+    type: array
+    items:
+      $ref: ./PaymentOrderRequestStatusOfSendingDto.yaml
+  isNull:
+    type: boolean
+description: Статус выгрузки в АС КЦП.

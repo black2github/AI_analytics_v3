@@ -1,0 +1,43 @@
+required:
+- ca
+- id
+- notAfter
+- notBefore
+- serialNumber
+- subject
+type: object
+properties:
+  id:
+    type: string
+    description: Идентификатор сертификата
+    format: uuid
+  authorityCertId:
+    type: string
+    description: Идентификатор сертификата издателя
+    format: uuid
+  ca:
+    type: boolean
+    description: Признак сертификата УЦ
+  serialNumber:
+    type: string
+    description: Серийный номер
+  subject:
+    $ref: ./DnDto.yaml
+  notBefore:
+    type: string
+    description: Дата начала действия сертификата
+    format: date-time
+  notAfter:
+    type: string
+    description: Дата окончания действия сертификата
+    format: date-time
+  subjectKeyId:
+    type: string
+    description: Идентификатор ключа субъекта
+  authorityKeyId:
+    type: string
+    description: Идентификатор ключа издателя
+  authorityCertSerialNumber:
+    type: string
+    description: Серийный номер сертификата издателя
+description: Сертификат

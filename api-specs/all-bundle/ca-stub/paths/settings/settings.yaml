@@ -1,0 +1,30 @@
+get:
+  tags:
+  - API настроек УЦ
+  summary: Получить настройки УЦ
+  operationId: get
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/settings/GenericResponseSimpleErrorDataCaSettingsDto.yaml
+put:
+  tags:
+  - API настроек УЦ
+  summary: Обновить настройки УЦ
+  operationId: update
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/settings/GenericCommandCaSettingsDto.yaml
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: ../../components/schemas/settings/GenericResponseSimpleErrorDataCaSettingsDto.yaml

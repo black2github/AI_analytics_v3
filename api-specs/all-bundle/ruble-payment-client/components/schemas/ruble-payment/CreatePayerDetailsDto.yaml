@@ -1,0 +1,31 @@
+required:
+- accountNumber
+type: object
+properties:
+  name:
+    maxLength: 160
+    pattern: ^[А-Яа-яёЁA-Za-z0-9!"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\]\^_`\{\|\}~№\s\\\n\r]*$
+    type: string
+    description: Наименование плательщика
+  innKio:
+    maxLength: 12
+    pattern: ^[0-9]*$
+    type: string
+    description: ИНН/КИО плательщика
+  kpp:
+    maxLength: 9
+    pattern: ^[A-Za-z0-9]*$
+    type: string
+    description: КПП плательщика
+  accountNumber:
+    type: string
+    description: Счет плательщика
+  thirdPartyPayment:
+    type: boolean
+    description: Признак "Платеж за третье лицо"
+  numberCcf:
+    maxLength: 40
+    pattern: ^[A-Za-z0-9]*$
+    type: string
+    description: Номер ЦЦФ
+description: Реквизиты плательщика, заполняемые клиентом

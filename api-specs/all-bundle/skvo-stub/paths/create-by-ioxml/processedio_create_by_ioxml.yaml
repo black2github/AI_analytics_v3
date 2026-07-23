@@ -1,0 +1,22 @@
+post:
+  summary: Сохранить документ из АС СКВО в буферную таблицу на основе ioxml
+  tags:
+  - API заглушек документов, полученных из АС СКВО
+  parameters:
+  - name: Eco-Document-Type
+    in: header
+    schema:
+      $ref: ../../components/schemas/create-by-ioxml/EcoDocumentTypeDto.yaml
+  requestBody:
+    content:
+      application/xml:
+        schema:
+          type: string
+    required: true
+  responses:
+    '200':
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/GenericResponseSimpleErrorDataSkvoProcessedioDto.yaml

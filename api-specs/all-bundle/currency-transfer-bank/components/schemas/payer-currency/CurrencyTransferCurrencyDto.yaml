@@ -1,0 +1,12 @@
+type: object
+properties:
+  code:
+    type: string
+    description: Код валюты
+  name:
+    type: string
+    description: Наименование валютной операции
+  numericCode:
+    type: string
+    description: Код валюты (ISO)
+description: Транспортное представление атрибутов валюты

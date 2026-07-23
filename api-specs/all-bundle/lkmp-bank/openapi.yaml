@@ -1,0 +1,175 @@
+openapi: 3.0.1
+info:
+  title: Сервис ЛК МП. Банковская часть.
+  version: 3.2.0-hf-2
+servers:
+- url: lkmp-bank
+paths:
+  /united-lkmp-request/get-page:
+    $ref: ./paths/misc/united_lkmp_request_get_page.yaml
+  /united-lkmp-request/export-list:
+    $ref: ./paths/misc/united_lkmp_request_export_list.yaml
+  /united-lkmp-request/export-list-v2:
+    $ref: ./paths/misc/united_lkmp_request_export_list_v2.yaml
+  /united-lkmp-request/category:
+    $ref: ./paths/misc/united_lkmp_request_category.yaml
+  /lkmp/offer/to-executed-by-tessa/{id}:
+    $ref: ./paths/offer/lkmp_offer_to_executed_by_tessa_id.yaml
+  /lkmp/offer/to-executed-by-f1/{id}:
+    $ref: ./paths/offer/lkmp_offer_to_executed_by_f1_id.yaml
+  /lkmp/offer/repeat-send-to-tessa:
+    $ref: ./paths/offer/lkmp_offer_repeat_send_to_tessa.yaml
+  /lkmp/offer/repeat-send-to-f1:
+    $ref: ./paths/offer/lkmp_offer_repeat_send_to_f1.yaml
+  /lkmp/offer/print:
+    $ref: ./paths/offer/lkmp_offer_print.yaml
+  /lkmp/offer/print-v2:
+    $ref: ./paths/offer/lkmp_offer_print_v2.yaml
+  /lkmp/offer/export-sign:
+    $ref: ./paths/offer/lkmp_offer_export_sign.yaml
+  /lkmp/offer/export-sign-v2:
+    $ref: ./paths/offer/lkmp_offer_export_sign_v2.yaml
+  /lkmp/grant-access/to-executed-by-tessa/{id}:
+    $ref: ./paths/grant-access/lkmp_grant_access_to_executed_by_tessa_id.yaml
+  /lkmp/grant-access/send-to-tessa:
+    $ref: ./paths/grant-access/lkmp_grant_access_send_to_tessa.yaml
+  /lkmp/grant-access/print:
+    $ref: ./paths/grant-access/lkmp_grant_access_print.yaml
+  /lkmp/grant-access/print-v2:
+    $ref: ./paths/grant-access/lkmp_grant_access_print_v2.yaml
+  /lkmp/grant-access/export-sign:
+    $ref: ./paths/grant-access/lkmp_grant_access_export_sign.yaml
+  /lkmp/grant-access/export-sign-v2:
+    $ref: ./paths/grant-access/lkmp_grant_access_export_sign_v2.yaml
+  /lkmp/offer/{id}:
+    $ref: ./paths/offer/lkmp_offer_id.yaml
+  /lkmp/offer/history/{id}:
+    $ref: ./paths/offer/lkmp_offer_history_id.yaml
+  /lkmp/grant-access/{id}:
+    $ref: ./paths/grant-access/lkmp_grant_access_id.yaml
+  /lkmp/grant-access/history/{id}:
+    $ref: ./paths/grant-access/lkmp_grant_access_history_id.yaml
+  /i18n/{locale}:
+    $ref: ./paths/misc/i18n_locale.yaml
+components:
+  schemas:
+    ActionResult:
+      $ref: ./components/schemas/common/ActionResult.yaml
+    ErrorInfo:
+      $ref: ./components/schemas/common/ErrorInfo.yaml
+    ActionResultObject:
+      $ref: ./components/schemas/common/ActionResultObject.yaml
+    FilterValueDtoInteger:
+      $ref: ./components/schemas/misc/FilterValueDtoInteger.yaml
+    FilterValueDtoLocalDate:
+      $ref: ./components/schemas/misc/FilterValueDtoLocalDate.yaml
+    FilterValueDtoString:
+      $ref: ./components/schemas/misc/FilterValueDtoString.yaml
+    FilterValueDtoUUID:
+      $ref: ./components/schemas/misc/FilterValueDtoUUID.yaml
+    GetPageCommandUnitedLkmpRequestBankFilter:
+      $ref: ./components/schemas/misc/GetPageCommandUnitedLkmpRequestBankFilter.yaml
+    LkmpAccessRoleFilter:
+      $ref: ./components/schemas/misc/LkmpAccessRoleFilter.yaml
+    PageParamsUnitedLkmpRequestBankFilter:
+      $ref: ./components/schemas/misc/PageParamsUnitedLkmpRequestBankFilter.yaml
+    Paging:
+      $ref: ./components/schemas/misc/Paging.yaml
+    Sort:
+      $ref: ./components/schemas/misc/Sort.yaml
+    UnitedDocumentTypeFilter:
+      $ref: ./components/schemas/misc/UnitedDocumentTypeFilter.yaml
+    UnitedLkmpRequestBankFilter:
+      $ref: ./components/schemas/misc/UnitedLkmpRequestBankFilter.yaml
+    UnitedLkmpRequestStatusFilter:
+      $ref: ./components/schemas/misc/UnitedLkmpRequestStatusFilter.yaml
+    PageDataUnitedLkmpRequestDto:
+      $ref: ./components/schemas/misc/PageDataUnitedLkmpRequestDto.yaml
+    UnitedLkmpBankClientDto:
+      $ref: ./components/schemas/misc/UnitedLkmpBankClientDto.yaml
+    UnitedLkmpEmployeeInfoDto:
+      $ref: ./components/schemas/misc/UnitedLkmpEmployeeInfoDto.yaml
+    UnitedLkmpRequestDto:
+      $ref: ./components/schemas/misc/UnitedLkmpRequestDto.yaml
+    PrintCommandUUID:
+      $ref: ./components/schemas/misc/PrintCommandUUID.yaml
+    PrintRequestDtoUUID:
+      $ref: ./components/schemas/misc/PrintRequestDtoUUID.yaml
+    GenericCommandPrintRequestDtoUUID:
+      $ref: ./components/schemas/misc/GenericCommandPrintRequestDtoUUID.yaml
+    GenericResponseSimpleErrorDataPrintReferenceResponse:
+      $ref: ./components/schemas/common/GenericResponseSimpleErrorDataPrintReferenceResponse.yaml
+    PrintReferenceResponse:
+      $ref: ./components/schemas/common/PrintReferenceResponse.yaml
+    SimpleErrorData:
+      $ref: ./components/schemas/common/SimpleErrorData.yaml
+    CategoryCount:
+      $ref: ./components/schemas/misc/CategoryCount.yaml
+    CategoryResponse:
+      $ref: ./components/schemas/misc/CategoryResponse.yaml
+    CommentDto:
+      $ref: ./components/schemas/common/CommentDto.yaml
+    SingleCommandCommentDto:
+      $ref: ./components/schemas/common/SingleCommandCommentDto.yaml
+    AgreementsDto:
+      $ref: ./components/schemas/offer/AgreementsDto.yaml
+    CertificateInfoDto:
+      $ref: ./components/schemas/common/CertificateInfoDto.yaml
+    LkmpOfferBankClientInfoDto:
+      $ref: ./components/schemas/offer/LkmpOfferBankClientInfoDto.yaml
+    LkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/LkmpOfferRequestDto.yaml
+    LkmpOfferRequestSignatureDto:
+      $ref: ./components/schemas/offer/LkmpOfferRequestSignatureDto.yaml
+    RegistrationDataDto:
+      $ref: ./components/schemas/offer/RegistrationDataDto.yaml
+    SignatureValueDto:
+      $ref: ./components/schemas/common/SignatureValueDto.yaml
+    SingleResponseLkmpOfferRequestDto:
+      $ref: ./components/schemas/offer/SingleResponseLkmpOfferRequestDto.yaml
+    SingleCommandUUID:
+      $ref: ./components/schemas/common/SingleCommandUUID.yaml
+    LkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/LkmpOfferPrintFormatDto.yaml
+    SingleCommandLkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/SingleCommandLkmpOfferPrintFormatDto.yaml
+    PrintResponse:
+      $ref: ./components/schemas/common/PrintResponse.yaml
+    SingleResponsePrintResponse:
+      $ref: ./components/schemas/common/SingleResponsePrintResponse.yaml
+    GenericCommandLkmpOfferPrintFormatDto:
+      $ref: ./components/schemas/offer/GenericCommandLkmpOfferPrintFormatDto.yaml
+    GenericCommandUUID:
+      $ref: ./components/schemas/common/GenericCommandUUID.yaml
+    LkmpAccessAgreementsInfoDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessAgreementsInfoDto.yaml
+    LkmpAccessBankClientDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessBankClientDto.yaml
+    LkmpAccessEmployeeInfoDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessEmployeeInfoDto.yaml
+    LkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessRequestDto.yaml
+    LkmpAccessSignatureDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessSignatureDto.yaml
+    SingleResponseLkmpAccessRequestDto:
+      $ref: ./components/schemas/grant-access/SingleResponseLkmpAccessRequestDto.yaml
+    LkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessPrintFormatDto.yaml
+    SingleCommandLkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/SingleCommandLkmpAccessPrintFormatDto.yaml
+    GenericCommandLkmpAccessPrintFormatDto:
+      $ref: ./components/schemas/grant-access/GenericCommandLkmpAccessPrintFormatDto.yaml
+    ListResponseLkmpOfferRequestHistoryDto:
+      $ref: ./components/schemas/offer/ListResponseLkmpOfferRequestHistoryDto.yaml
+    LkmpOfferRequestHistoryDto:
+      $ref: ./components/schemas/offer/LkmpOfferRequestHistoryDto.yaml
+    ListResponseLkmpAccessRequestHistoryDto:
+      $ref: ./components/schemas/grant-access/ListResponseLkmpAccessRequestHistoryDto.yaml
+    LkmpAccessRequestHistoryDto:
+      $ref: ./components/schemas/grant-access/LkmpAccessRequestHistoryDto.yaml
+  securitySchemes:
+    bearerAuth:
+      type: http
+      name: bearerAuth
+      scheme: bearer
+      bearerFormat: JWT
