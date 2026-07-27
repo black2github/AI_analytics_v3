@@ -7,11 +7,14 @@
 #   • migration-manifest.yaml   — реестр мигрировавших задач (ТЗ п. 4.9);
 #   • migration-colors-report.json + .md — всё, что требует ручного разбора (ТЗ п. 4.10).
 #
-# ВАЖНО: этот срез НЕ пишет маркеры CriticMarkup в markdown (ТЗ п. 4.3: «Первый прогон
-# выполняется в режиме только отчёт, без записи файлов»). Эмиссия маркеров — срез 1b.
+# Команда `report` НЕ пишет маркеры (ТЗ п. 4.3: «первый прогон — только отчёт»); команда
+# `migrate` пишет .md с маркерами (боевой проход).
 #
-# Вход первого прогона — каталог сохранённых .html (напр. debug/html); позже сюда же
-# подключается штатный загрузчик Confluence (--http) без изменения ядра.
+# Основной вход — ПРЯМОЕ чтение страниц Confluence через штатный загрузчик (page_cache):
+# `--pages <id,...>` или `--root <id>` (обход поддерева). HTML берётся в память (raw_html),
+# промежуточное сохранение файлов НЕ выполняется. Ключ `--html-dir <каталог>` — опциональный
+# офлайн-режим для отладки на сохранённых .html (напр. debug/html). Всё ядро (карта, обход,
+# critic-экстракция) работает с HTML-строкой и от источника не зависит.
 
 import argparse
 import json
@@ -19,7 +22,7 @@ import re
 import sys
 from datetime import date
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import yaml
 
@@ -214,18 +217,83 @@ def render_report_md(report: dict) -> str:
 
 
 def _read_html_dir(html_dir: Path) -> List[Tuple[str, str]]:
+    """Офлайн-источник (отладка): страницы из сохранённых .html (имя = имя файла)."""
     return [(p.stem, p.read_text(encoding="utf-8"))
             for p in sorted(html_dir.glob("*.html"))]
+
+
+def _collect_page_ids(root: str, use_http: bool) -> List[str]:
+    """Идентификаторы поддерева, начиная с root (сам root + все потомки)."""
+    if use_http:
+        from app.page_cache import fetch_child_pages_via_http
+        ids, seen, stack = [root], {root}, [root]
+        while stack:
+            for child in fetch_child_pages_via_http(stack.pop()):
+                cid = child["id"]
+                if cid not in seen:
+                    seen.add(cid)
+                    ids.append(cid)
+                    stack.append(cid)
+        return ids
+    from app.confluence_loader import get_child_page_ids
+    return [root] + get_child_page_ids(root)
+
+
+def _pages_from_confluence(page_ids: List[str], use_http: bool) -> List[Tuple[str, str]]:
+    """Читает страницы Confluence в память: (заголовок, raw_html). Диск не задействуется."""
+    from app.page_cache import get_page_data
+    pages = []
+    for pid in page_ids:
+        data = get_page_data(pid, use_http=use_http)
+        if not data:
+            print(f"ПРЕДУПРЕЖДЕНИЕ: страница {pid} не загружена — пропущена.", file=sys.stderr)
+            continue
+        raw = data.get("raw_html")
+        if not raw:
+            print(f"ПРЕДУПРЕЖДЕНИЕ: у страницы {pid} пустой raw_html — пропущена.",
+                  file=sys.stderr)
+            continue
+        pages.append((data.get("title") or pid, raw))
+    return pages
+
+
+def _resolve_pages(args) -> Optional[List[Tuple[str, str]]]:
+    """Возвращает список (имя, raw_html) по выбранному источнику или None при ошибке."""
+    use_http = not args.api  # HTTP — канонический вход задачи; --api переключает на REST
+    if args.html_dir:
+        html_dir = Path(args.html_dir)
+        if not html_dir.is_dir():
+            print(f"ОШИБКА: каталог не найден: {html_dir}", file=sys.stderr)
+            return None
+        pages = _read_html_dir(html_dir)
+    elif args.root:
+        pages = _pages_from_confluence(_collect_page_ids(args.root, use_http), use_http)
+    elif args.pages:
+        ids = [p.strip() for p in args.pages.split(",") if p.strip()]
+        pages = _pages_from_confluence(ids, use_http)
+    else:
+        print("ОШИБКА: укажите источник — --pages, --root или --html-dir.", file=sys.stderr)
+        return None
+
+    if not pages:
+        print("ОШИБКА: не получено ни одной страницы.", file=sys.stderr)
+        return None
+    return pages
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(
         prog="migrate_colors.py",
-        description="Миграция цвета Confluence → CriticMarkup, режим «только отчёт» (ТЗ Модуль 1).")
+        description="Миграция цвета Confluence → CriticMarkup (ТЗ Модуль 1).")
     sub = parser.add_subparsers(dest="command", required=True)
 
     def _add_common(p):
-        p.add_argument("--html-dir", required=True, help="каталог с сохранёнными .html")
+        src = p.add_argument_group("источник страниц (один из)")
+        src.add_argument("--pages", help="идентификаторы страниц Confluence через запятую")
+        src.add_argument("--root", help="идентификатор корня — обход всего поддерева")
+        src.add_argument("--html-dir", help="ОФЛАЙН-режим (отладка): каталог с .html")
+        p.add_argument("--api", action="store_true",
+                       help="читать через REST API вместо прямого HTTP (по умолчанию — HTTP)")
         p.add_argument("--out", default=".", help="каталог для вывода")
         p.add_argument("--service", default="", help="код сервиса для манифеста")
         p.add_argument("--date", default=date.today().isoformat(),
@@ -236,14 +304,8 @@ def main(argv=None) -> int:
 
     args = parser.parse_args(argv)
 
-    html_dir = Path(args.html_dir)
-    if not html_dir.is_dir():
-        print(f"ОШИБКА: каталог не найден: {html_dir}", file=sys.stderr)
-        return 2
-
-    pages = _read_html_dir(html_dir)
-    if not pages:
-        print(f"ОШИБКА: в {html_dir} нет .html файлов", file=sys.stderr)
+    pages = _resolve_pages(args)
+    if pages is None:
         return 2
 
     out = Path(args.out)
