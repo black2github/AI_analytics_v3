@@ -6,7 +6,8 @@
 
 from app.utils.style_utils import normalize_color, is_black_color
 from app.color_map import build_color_task_map, survey_body_colors
-from app.scripts.migrate_colors import aggregate
+from app.scripts.migrate_colors import aggregate, migrate_pages
+from app.scripts.CI.critic import process_text
 
 
 def _hist(rows, headers=("Дата", "Описание", "Автор", "Задача в JIRA")):
@@ -156,6 +157,35 @@ class TestManifest:
         assert report["stats"]["pages_processed"] == 1
         # Все три цвета — по задаче, ничего не требует ручного разбора.
         assert report["stats"]["positions_manual_review"] == 0
+
+
+class TestMigrate:
+    """Срез 1b-4: команда migrate пишет .md с маркерами и собирает отчёт (ТЗ 4.5/4.9/4.10)."""
+
+    def test_migrate_writes_markers_and_roundtrips(self, tmp_path):
+        page = (_hist(_row("2025-01-01", "rgb(153,102,255)", "GBO-1", "01.01.2025")) +
+                '<p>Текст <span style="color: rgb(153,102,255)">правка</span>.</p>')
+        docs = tmp_path / "docs"
+        manifest, report = migrate_pages([("стр", page)], "КК", "2026-08-15", docs)
+
+        md = (docs / "стр.md").read_text(encoding="utf-8")
+        assert "{++GBO-1: правка++}" in md
+        assert "GBO-1" in manifest["tasks"]
+        assert "nested_flattened" in report
+        # round-trip: reject-all снимает все маркеры (Модуль 2 понимает продукт Модуля 1).
+        rejected, _ = process_text(md, "reject", None)
+        assert "{++" not in rejected and 'class="critic-' not in rejected
+
+    def test_migrate_records_nesting(self, tmp_path):
+        history = _hist(
+            _row("2025-01-01", "rgb(255,153,204)", "GBO-1", "01.01.2025") +
+            _row("2025-02-01", "rgb(153,204,0)", "GBO-2", "01.02.2025"))
+        body = ('<p><span style="color: rgb(255,153,204)">A '
+                '<span style="color: rgb(153,204,0)">B</span></span></p>')
+        _manifest, report = migrate_pages([("p", history + body)], "КК", "2026-08-15",
+                                          tmp_path / "docs")
+        assert report["stats"]["nested_flattened"] == 1
+        assert set(report["nested_flattened"][0]["tasks"]) == {"GBO-1", "GBO-2"}
 
 
 class TestRealDebugFiles:

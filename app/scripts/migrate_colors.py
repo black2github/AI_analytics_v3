@@ -15,6 +15,7 @@
 
 import argparse
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -112,14 +113,55 @@ def aggregate(pages: List[Tuple[str, str]], service: str, migrated_at: str) -> T
             "pages_processed": len(pages),
             "colored_fragments_total": colored_fragments_total,
             "positions_manual_review": positions_manual_review,
+            "nested_flattened": 0,
         },
         "pages_without_history": pages_without_history,
         "unresolved_placeholders": unresolved_placeholders,
         "collisions": collisions,
         "jira_unextractable": jira_unextractable,
+        "nested_flattened": [],  # заполняется командой migrate (ТЗ п. 4.5/4.10)
         "color_summary": sorted(color_summary.values(),
                                 key=lambda c: (-c["count"], c["color"])),
     }
+    return manifest, report
+
+
+def _safe_name(name: str) -> str:
+    """Безопасное имя файла .md из имени страницы."""
+    return re.sub(r'[<>:"/\\|?*]+', "_", name).strip() or "page"
+
+
+def _render_md(title: str, body: str) -> str:
+    """Минимальный .md: frontmatter с заголовком + тело с маркерами CriticMarkup."""
+    fm = f"---\ntitle: {json.dumps(title, ensure_ascii=False)}\nsource: CONFLUENCE\n---\n\n"
+    return fm + body
+
+
+def migrate_pages(pages, service, migrated_at, out_dir):
+    """Боевой проход миграции: пишет .md с маркерами и собирает манифест+отчёт.
+
+    Для каждой страницы: карта «цвет→задача» → critic-экстракция → запись <имя>.md.
+    Уплощённые вложенные конструкции (ТЗ п. 4.5) собираются из экстрактора в отчёт.
+    """
+    from app.color_map import build_color_task_map
+    from app.content_extractor import create_critic_extractor
+
+    manifest, report = aggregate(pages, service, migrated_at)
+
+    out_dir.mkdir(parents=True, exist_ok=True)
+    nested = []
+    for name, raw_html in pages:
+        cmap = build_color_task_map(raw_html).color_to_task
+        extractor = create_critic_extractor(cmap)
+        body = extractor.extract(raw_html)
+        for rec in extractor._critic_report:
+            nested.append({"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
+        (out_dir / (_safe_name(name) + ".md")).write_text(
+            _render_md(name, body), encoding="utf-8")
+
+    report["nested_flattened"] = nested
+    report["stats"]["nested_flattened"] = len(nested)
+    report["stats"]["positions_manual_review"] += len(nested)
     return manifest, report
 
 
@@ -157,6 +199,8 @@ def render_report_md(report: dict) -> str:
               f"{c['candidates']}" for c in report["collisions"]])
     _section("Ячейки «Задача в Jira» без извлекаемого id",
              [f"- {j['color']} на «{j['page']}»" for j in report["jira_unextractable"]])
+    _section("Автоматически уплощённые вложенные конструкции (требуют проверки)",
+             [f"- задачи {n['tasks']} на «{n['page']}»" for n in report.get("nested_flattened", [])])
 
     lines.append("## Сводка цветов (диагностика набора black_colors)")
     lines.append("")
@@ -180,12 +224,15 @@ def main(argv=None) -> int:
         description="Миграция цвета Confluence → CriticMarkup, режим «только отчёт» (ТЗ Модуль 1).")
     sub = parser.add_subparsers(dest="command", required=True)
 
-    p_report = sub.add_parser("report", help="построить отчёт и манифест без записи маркеров")
-    p_report.add_argument("--html-dir", required=True, help="каталог с сохранёнными .html")
-    p_report.add_argument("--out", default=".", help="каталог для отчёта и манифеста")
-    p_report.add_argument("--service", default="", help="код сервиса для манифеста")
-    p_report.add_argument("--date", default=date.today().isoformat(),
-                          help="значение migrated_at (по умолчанию сегодня)")
+    def _add_common(p):
+        p.add_argument("--html-dir", required=True, help="каталог с сохранёнными .html")
+        p.add_argument("--out", default=".", help="каталог для вывода")
+        p.add_argument("--service", default="", help="код сервиса для манифеста")
+        p.add_argument("--date", default=date.today().isoformat(),
+                       help="значение migrated_at (по умолчанию сегодня)")
+
+    _add_common(sub.add_parser("report", help="отчёт и манифест без записи маркеров (ТЗ 4.3)"))
+    _add_common(sub.add_parser("migrate", help="боевой проход: запись .md с маркерами + отчёт"))
 
     args = parser.parse_args(argv)
 
@@ -199,9 +246,13 @@ def main(argv=None) -> int:
         print(f"ОШИБКА: в {html_dir} нет .html файлов", file=sys.stderr)
         return 2
 
-    manifest, report = aggregate(pages, args.service, args.date)
-
     out = Path(args.out)
+    if args.command == "migrate":
+        docs_dir = out / "docs"
+        manifest, report = migrate_pages(pages, args.service, args.date, docs_dir)
+    else:
+        manifest, report = aggregate(pages, args.service, args.date)
+
     out.mkdir(parents=True, exist_ok=True)
     (out / "migration-manifest.yaml").write_text(
         yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False), encoding="utf-8")
@@ -211,9 +262,12 @@ def main(argv=None) -> int:
         render_report_md(report), encoding="utf-8")
 
     st = report["stats"]
-    print(f"Обработано страниц: {st['pages_processed']}; "
+    print(f"Команда: {args.command}. Обработано страниц: {st['pages_processed']}; "
           f"цветных фрагментов: {st['colored_fragments_total']}; "
-          f"ручной разбор: {st['positions_manual_review']} позиций.")
+          f"ручной разбор: {st['positions_manual_review']} позиций"
+          f" (в т.ч. уплощений: {st.get('nested_flattened', 0)}).")
+    if args.command == "migrate":
+        print(f"Markdown с маркерами записан в {out / 'docs'}")
     print(f"Отчёт и манифест записаны в {out}")
     return 0
 
