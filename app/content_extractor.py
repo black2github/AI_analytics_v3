@@ -88,6 +88,9 @@ class ContentExtractor:
         # Подавление inline-обёртки: включается при обработке цельно-цветной строки таблицы,
         # где правка отмечается на уровне строки (status / <tr class>), а не внутри ячеек.
         self._critic_suppress: bool = False
+        # Отчёт об автоматически уплощённых вложенных конструкциях (ТЗ п. 4.5): каждая запись —
+        # {tasks: [...], html: исходный_фрагмент}. Требует ручной проверки аналитиком.
+        self._critic_report: List[dict] = []
 
     def extract(self, html: str) -> str:
         """Главная точка входа с отладкой HTML"""
@@ -99,6 +102,7 @@ class ContentExtractor:
 
         self._critic_stack = []  # сброс на каждый вызов (переиспользуемый экстрактор)
         self._critic_suppress = False
+        self._critic_report = []
 
         soup = BeautifulSoup(html, "html.parser")
 
@@ -730,6 +734,11 @@ class ContentExtractor:
             marker = self._critic_marker_for(element)
             if marker is not None:
                 task, kind = marker
+                # Вложенность цветов (ТЗ п. 4.5): если внутри есть фрагмент ДРУГОГО цвета —
+                # уплощаем в один маркер под внутренней задачей, а не вкладываем маркеры.
+                outer_norm = normalize_color(self._element_own_color(element) or "")
+                if self._has_nested_diff_color(element, outer_norm):
+                    return self._flatten_nested_critic(element)
                 self._critic_stack.append(task)
                 try:
                     inner = self._dispatch_element(element, context)
@@ -815,6 +824,72 @@ class ContentExtractor:
             out.append(f"{open_tok}{task}:{sep}{part}{close_tok}")
         out.append(trail)
         return "".join(out)
+
+    def _critic_colored_descendants(self, element: Tag):
+        """Список (normalized_color, depth) для не-чёрных цветных потомков element (и его самого)."""
+        found = []
+        for tag in [element] + element.find_all(True):
+            color = self._element_own_color(tag)
+            if color and not is_black_color(color):
+                norm = normalize_color(color)
+                if norm:
+                    found.append((norm, len(list(tag.parents))))
+        return found
+
+    def _has_nested_diff_color(self, element: Tag, outer_norm: Optional[str]) -> bool:
+        """Есть ли внутри element цветной потомок с ДРУГИМ (не outer) не-чёрным цветом."""
+        for tag in element.find_all(True):
+            color = self._element_own_color(tag)
+            if color and not is_black_color(color):
+                norm = normalize_color(color)
+                if norm and norm != outer_norm:
+                    return True
+        return False
+
+    def _collect_nonstruck_text(self, element: Tag) -> str:
+        """Текст element БЕЗ зачёркнутых фрагментов (ТЗ п. 4.5: черновик другой задачи
+        не переносится). Пробелы схлопываются — конструкция инлайновая."""
+        parts = []
+        for text_node in element.find_all(string=True):
+            cur = text_node.parent
+            struck = False
+            while cur is not None and isinstance(cur, Tag):
+                if (cur.name in ("s", "del", "strike")
+                        or "line-through" in (cur.get("style") or "").lower()):
+                    struck = True
+                    break
+                if cur is element:
+                    break
+                cur = cur.parent
+            if not struck:
+                parts.append(str(text_node))
+        return re.sub(r"\s+", " ", "".join(parts)).strip()
+
+    def _flatten_nested_critic(self, element: Tag) -> str:
+        """Уплощает вложенную конструкцию цветов в ОДИН маркер (ТЗ п. 4.5).
+
+        Зачёркнутый черновик отбрасывается; выживший текст оборачивается целиком под
+        идентификатор ВНУТРЕННЕЙ (самой глубокой = более поздней) задачи. Конструкция
+        записывается в отчёт как черновая — требует ручной проверки аналитиком.
+        """
+        colored = self._critic_colored_descendants(element)
+        # Самый глубокий цвет = внутренняя (поздняя) задача.
+        deepest_norm = max(colored, key=lambda c: c[1])[0] if colored else None
+        tasks = []
+        for norm, _depth in sorted(colored, key=lambda c: c[1]):
+            t = self.config.color_map.get(norm) or ("UNKNOWN-" + norm.lstrip("#"))
+            if t not in tasks:
+                tasks.append(t)
+        inner_task = (self.config.color_map.get(deepest_norm)
+                      or ("UNKNOWN-" + deepest_norm.lstrip("#"))) if deepest_norm else None
+
+        self._critic_report.append({"tasks": tasks, "html": str(element)})
+
+        surviving = self._collect_nonstruck_text(element)
+        if not surviving or inner_task is None:
+            return ""
+        # Всегда вставка: выживший текст — это новое состояние под поздней задачей.
+        return f"{{++{inner_task}: {surviving}++}}"
 
     def _cell_uniform_critic(self, cell: Tag):
         """Возвращает (task, kind), если ВЕСЬ видимый текст ячейки окрашен одной задачей.

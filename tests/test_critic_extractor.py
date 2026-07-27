@@ -96,6 +96,32 @@ class TestRoundTripOracle:
         assert "{++" not in applied
 
 
+class TestNesting:
+    """5. Вложенность двух цветов (пример ТЗ п. 4.5): уплощение под внутреннюю задачу + отчёт."""
+
+    def test_nested_colors_flattened_under_inner_task(self):
+        cmap = {"#ff99cc": "GBO-12345", "#99cc00": "GBO-67890"}  # розовый, зелёный
+        html = ('<p><span style="color: rgb(255,153,204)">Организация должна быть '
+                '<span style="color: rgb(153,204,0)"><s>головной</s>'
+                'действующей и головной</span></span>.</p>')
+        ext = create_critic_extractor(cmap)
+        out = ext.extract(html)
+        # Уплощено под внутреннюю (позднюю) задачу; зачёркнутый черновик отброшен.
+        assert "{++GBO-67890: Организация должна быть действующей и головной++}" in out
+        assert "головной++}" in out and "<s>" not in out
+
+    def test_nesting_recorded_in_report(self):
+        cmap = {"#ff99cc": "GBO-12345", "#99cc00": "GBO-67890"}
+        html = ('<p><span style="color: rgb(255,153,204)">A '
+                '<span style="color: rgb(153,204,0)">B</span></span></p>')
+        ext = create_critic_extractor(cmap)
+        ext.extract(html)
+        assert len(ext._critic_report) == 1
+        rec = ext._critic_report[0]
+        assert set(rec["tasks"]) == {"GBO-12345", "GBO-67890"}
+        assert "rgb(255,153,204)" in rec["html"]  # исходный HTML сохранён для аналитика
+
+
 class TestNoRegressionWhenModeOff:
     """critic_mode выключен по умолчанию — существующие режимы не порождают маркеров."""
 
