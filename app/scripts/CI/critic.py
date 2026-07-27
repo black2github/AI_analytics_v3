@@ -29,6 +29,7 @@
 # Команды list и lint (Модуль 3, следующие этапы) здесь — заглушки.
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -517,6 +518,201 @@ def process_file(path: Path, op: str, task_id: Optional[str],
 
 
 # --------------------------------------------------------------------------------------
+# Модуль 3: линтер (ТЗ п. 6). Запускается в CI на каждый MR и командой `critic.py lint`.
+# --------------------------------------------------------------------------------------
+
+# «Свободные» маркеры — ловят конструкцию по опенеру/закрывателю без требования валидного ID
+# (для правила 2 «маркер без идентификатора / с идентификатором не по маске»).
+_LOOSE_RES = {
+    "ins": re.compile(r"\{\+\+(.*?)\+\+\}", re.DOTALL),
+    "del": re.compile(r"\{--(.*?)--\}", re.DOTALL),
+    "sub": re.compile(r"\{~~(.*?)~~\}", re.DOTALL),
+}
+# Префикс «ID:» в начале содержимого маркера.
+_ID_PREFIX_RE = re.compile(r"^\s*(" + TASK_ID_PATTERN + r")\s*:")
+# Любой опенер маркера (для поиска незакрытых).
+_ANY_OPENER_RE = re.compile(r"\{\+\+|\{--|\{~~")
+# Смарт-ссылка {{сервис:элемент}} (ТЗ п. 4.8) — внутрь неё маркер попадать не должен.
+_SMARTLINK_RE = re.compile(r"\{\{.*?\}\}", re.DOTALL)
+
+
+class Finding:
+    """Находка линтера в формате, пригодном для аннотаций CI (файл, строка, уровень)."""
+
+    __slots__ = ("path", "line", "level", "rule", "message")
+
+    def __init__(self, path: Optional[Path], line: int, level: str, rule: str, message: str):
+        self.path = path
+        self.line = line
+        self.level = level      # "error" | "warning"
+        self.rule = rule        # короткий код правила (E1..E7, W1..W2)
+        self.message = message
+
+    def _loc(self) -> str:
+        return f"{self.path}:{self.line}" if self.path is not None else f"line {self.line}"
+
+    def format_text(self) -> str:
+        return f"{self._loc()}: [{self.level}] {self.rule}: {self.message}"
+
+    def as_dict(self) -> dict:
+        return {
+            "path": str(self.path) if self.path is not None else None,
+            "line": self.line,
+            "level": self.level,
+            "rule": self.rule,
+            "message": self.message,
+        }
+
+    def _key(self):
+        return (str(self.path), self.line, self.level, self.rule, self.message)
+
+
+def _region_spans(text: str) -> List[Tuple[int, int, str]]:
+    """Абсолютные диапазоны зон (start, end, kind), kind ∈ {"code", "text"}."""
+    spans = []
+    off = 0
+    for kind, region_text, _ in _split_fenced_regions(text):
+        spans.append((off, off + len(region_text), kind))
+        off += len(region_text)
+    return spans
+
+
+def _line_at(text: str, pos: int) -> int:
+    """1-based номер строки для абсолютного смещения (CRLF считается по '\\n')."""
+    return text.count("\n", 0, pos) + 1
+
+
+def _in_ranges(pos: int, ranges) -> bool:
+    return any(s <= pos < e for s, e in ranges)
+
+
+def lint_text(text: str, path: Optional[Path] = None) -> List[Finding]:
+    """Проверяет разметку CriticMarkup по правилам ТЗ п. 6. Возвращает список находок."""
+    findings: List[Finding] = []
+
+    spans = _region_spans(text)
+    smartlinks = [(m.start(), m.end()) for m in _SMARTLINK_RE.finditer(text)]
+    islands = _find_table_islands(text)
+
+    def kind_at(pos: int) -> str:
+        for s, e, k in spans:
+            if s <= pos < e:
+                return k
+        return "text"
+
+    def add(line: int, level: str, rule: str, message: str):
+        findings.append(Finding(path, line, level, rule, message))
+
+    def line_of_start(pos: int) -> str:
+        ls = text.rfind("\n", 0, pos) + 1
+        le = text.find("\n", pos)
+        return text[ls: le if le != -1 else len(text)]
+
+    insertions_by_task = {}   # id -> list[(текст, line)]
+    deletions = []            # list[(id, текст, line)] — для W2 (del и левая часть sub)
+    valid_markers = []        # list[(start, end, id)] — для W1
+
+    covered_spans = []        # диапазоны опознанных маркеров — для поиска незакрытых (E4)
+
+    for opener_kind, rx in _LOOSE_RES.items():
+        for m in rx.finditer(text):
+            covered_spans.append((m.start(), m.end()))
+            start = m.start()
+            line = _line_at(text, start)
+            content = m.group(1)
+
+            # E2: маркер без ID / с ID не по маске.
+            idm = _ID_PREFIX_RE.match(content)
+            if not idm:
+                add(line, "error", "E2",
+                    "маркер без идентификатора задачи или с идентификатором не по маске")
+            else:
+                task_id = idm.group(1)
+                after = content[idm.end():]
+
+                # E3: плейсхолдер UNKNOWN-* (неразобранный остаток миграции).
+                if task_id.startswith("UNKNOWN-"):
+                    add(line, "error", "E3",
+                        f"плейсхолдер {task_id} не разобран аналитиком (остаток миграции)")
+
+                # E1: литеральная вложенность маркеров.
+                if any(op in after for op in _OPENERS):
+                    add(line, "error", "E1", "литеральная вложенность маркеров запрещена")
+
+                valid_markers.append((start, m.end(), task_id))
+
+                # Учёт для W2.
+                if opener_kind == "ins":
+                    insertions_by_task.setdefault(task_id, []).append((after.strip(), line))
+                elif opener_kind == "del":
+                    deletions.append((task_id, after.strip(), line))
+                else:  # sub: левая часть (старое) до ~>
+                    old = after.split("~>", 1)[0]
+                    deletions.append((task_id, old.strip(), line))
+
+            # Структурные правила — по положению маркера, независимо от валидности ID.
+            if _in_ranges(start, smartlinks):
+                add(line, "error", "E6", "маркер внутри смарт-ссылки {{сервис:элемент}}")
+            if _in_ranges(start, islands):
+                add(line, "error", "E7",
+                    "CriticMarkup внутри сырого HTML — здесь применяется HTML-нотация (п. 4.7)")
+            if kind_at(start) == "code":
+                add(line, "error", "E5", "маркер внутри fenced code block")
+            elif "\n" in m.group(0):
+                # E5: многострочный маркер, разрывающий синтаксическую конструкцию.
+                if _is_table_row(line_of_start(start) + "\n"):
+                    add(line, "error", "E5",
+                        "маркер открыт внутри строки таблицы и закрыт за её пределами")
+                if re.search(r"\n[ \t]*\n", m.group(0)):
+                    add(line, "error", "E5",
+                        "маркер пересекает границу абзаца/элемента списка")
+
+    # E4: незакрытый маркер — опенер, не входящий ни в один опознанный маркер и не в коде.
+    for m in _ANY_OPENER_RE.finditer(text):
+        pos = m.start()
+        if not _in_ranges(pos, covered_spans) and kind_at(pos) != "code":
+            add(_line_at(text, pos), "error", "E4",
+                f"незакрытый или некорректно вложенный маркер {m.group(0)}")
+
+    # W1: маркеры разных задач в одном предложении (сигнал проверить зависимость в Jira).
+    valid_markers.sort(key=lambda t: t[0])
+    for (a_start, a_end, a_id), (b_start, b_end, b_id) in zip(valid_markers, valid_markers[1:]):
+        between = text[a_end:b_start]
+        if a_id != b_id and not re.search(r"[.!?]\s|\n[ \t]*\n", between):
+            add(_line_at(text, b_start), "warning", "W1",
+                f"маркеры разных задач в одном предложении ({a_id}, {b_id}) — "
+                f"проверьте зависимость задач в Jira")
+
+    # W2: удаляемый/заменяемый текст буквально совпадает со вставкой ДРУГОЙ задачи (наруш. п. 4.5).
+    ins_index = {}
+    for tid, items in insertions_by_task.items():
+        for txt, _ in items:
+            if txt:
+                ins_index.setdefault(txt, set()).add(tid)
+    for tid, txt, line in deletions:
+        owners = ins_index.get(txt)
+        if owners and any(other != tid for other in owners):
+            others = ", ".join(sorted(o for o in owners if o != tid))
+            add(line, "warning", "W2",
+                f"удаляемый текст совпадает со вставкой другой задачи ({others}) — "
+                f"вероятное нарушение правила уплощения вложенности (п. 4.5)")
+
+    # Стабильный порядок + дедупликация одинаковых находок.
+    seen = set()
+    unique = []
+    for f in sorted(findings, key=lambda f: (f.line, f.rule, f.message)):
+        if f._key() not in seen:
+            seen.add(f._key())
+            unique.append(f)
+    return unique
+
+
+def lint_file(path: Path) -> List[Finding]:
+    """Прогоняет линтер по одному .md файлу."""
+    return lint_text(_read_text_preserving(path), path)
+
+
+# --------------------------------------------------------------------------------------
 # CLI.
 # --------------------------------------------------------------------------------------
 
@@ -549,6 +745,26 @@ def _run_edit(op: str, task_id: Optional[str], root: Path, status_column: str,
     prefix = "[dry-run] " if dry_run else ""
     print(f"{prefix}{op} ({label}): файлов изменено {changed_files}, правок {total}")
     return 0
+
+
+def _run_lint(root: Path, fmt: str) -> int:
+    """Прогоняет линтер по .md и печатает находки. Возвращает 1, если есть ошибки (ТЗ п. 6)."""
+    findings: List[Finding] = []
+    for fp in _iter_md_files(root):
+        findings.extend(lint_file(fp))
+
+    if fmt == "json":
+        print(json.dumps([f.as_dict() for f in findings], ensure_ascii=False, indent=2))
+    else:
+        for f in findings:
+            print(f.format_text())
+
+    errors = sum(1 for f in findings if f.level == "error")
+    warnings = len(findings) - errors
+    if fmt == "text":
+        print(f"[critic lint] ошибок: {errors}, предупреждений: {warnings}", file=sys.stderr)
+    # Ошибки блокируют слияние; одни предупреждения — нет (ТЗ п. 6).
+    return 1 if errors else 0
 
 
 def _valid_task_id(value: str) -> str:
@@ -587,10 +803,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_reject_all = sub.add_parser("reject-all", help="откатить правки ВСЕХ задач (текущий ПРОМ)")
     _add_common(p_reject_all)
 
-    # Модуль 3 / следующие этапы — заглушки, чтобы поверхность CLI совпадала с ТЗ п. 5.1.
-    for name in ("list", "lint"):
-        sp = sub.add_parser(name, help="не реализовано на Этапе 1 (Модуль 3 / п. 5.4)")
-        _add_common(sp)
+    p_lint = sub.add_parser("lint", help="проверить разметку CriticMarkup (Модуль 3, п. 6)")
+    p_lint.add_argument("--path", default=".", help="файл .md или каталог (обход *.md)")
+    p_lint.add_argument("--format", choices=("text", "json"), default="text",
+                        dest="fmt", help="формат вывода находок")
+
+    # list — Модуль 3, п. 5.4, следующий этап: заглушка, чтобы поверхность CLI совпадала с ТЗ.
+    p_list = sub.add_parser("list", help="не реализовано на этом этапе (Модуль 3, п. 5.4)")
+    _add_common(p_list)
 
     return parser
 
@@ -602,13 +822,15 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"ОШИБКА: путь не найден: {root}", file=sys.stderr)
         return 2
 
-    status_column = getattr(args, "status_column", STATUS_COLUMN)
+    if args.command == "lint":
+        return _run_lint(root, args.fmt)
 
-    if args.command in ("list", "lint"):
-        print(f"Команда '{args.command}' не реализована на Этапе 1 "
-              f"(Модуль 3 / list — п. 5.4).", file=sys.stderr)
+    if args.command == "list":
+        print("Команда 'list' не реализована на этом этапе (Модуль 3, п. 5.4).",
+              file=sys.stderr)
         return 2
 
+    status_column = getattr(args, "status_column", STATUS_COLUMN)
     op = "apply" if args.command in ("apply", "apply-all") else "reject"
     task_id = getattr(args, "task_id", None)  # None для *-all
     dry_run = getattr(args, "dry_run", False)
