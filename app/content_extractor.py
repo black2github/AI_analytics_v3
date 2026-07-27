@@ -72,6 +72,7 @@ class ExtractionConfig:
     # critic_mode подразумевает include_colored=True (ничего не выбрасываем, всё оборачиваем).
     critic_mode: bool = False
     color_map: Dict[str, str] = field(default_factory=dict)
+    critic_status_column: str = "status"  # имя служебного столбца markdown-таблиц (ТЗ п. 4.6)
 
 
 class ContentExtractor:
@@ -84,6 +85,9 @@ class ContentExtractor:
         # Стек активных задач для режима CriticMarkup (срез 1b): вершина — задача текущего
         # цветного региона, чтобы не оборачивать один и тот же цвет повторно.
         self._critic_stack: List[str] = []
+        # Подавление inline-обёртки: включается при обработке цельно-цветной строки таблицы,
+        # где правка отмечается на уровне строки (status / <tr class>), а не внутри ячеек.
+        self._critic_suppress: bool = False
 
     def extract(self, html: str) -> str:
         """Главная точка входа с отладкой HTML"""
@@ -94,6 +98,7 @@ class ContentExtractor:
         html = remove_history_sections(html)
 
         self._critic_stack = []  # сброс на каждый вызов (переиспользуемый экстрактор)
+        self._critic_suppress = False
 
         soup = BeautifulSoup(html, "html.parser")
 
@@ -229,13 +234,7 @@ class ContentExtractor:
         if thead:
             html_parts.append("<thead>")
             for row in thead.find_all("tr", recursive=False):
-                html_parts.append("<tr>")
-                for cell in row.find_all(["td", "th"], recursive=False):
-                    tag = "th" if cell.name == "th" else "td"
-                    attrs = self._build_span_attrs(cell)
-                    cell_text = self._render_cell_for_html_table(cell)
-                    html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
-                html_parts.append("</tr>")
+                html_parts.extend(self._html_row_parts(row))
             html_parts.append("</thead>")
 
         # Обрабатываем tbody если есть; если нет — берём tr прямо из таблицы
@@ -244,18 +243,42 @@ class ContentExtractor:
         if tbody:
             html_parts.append("<tbody>")
         for row in rows_source.find_all("tr", recursive=False):
-            html_parts.append("<tr>")
-            for cell in row.find_all(["td", "th"], recursive=False):
-                tag = "th" if cell.name == "th" else "td"
-                attrs = self._build_span_attrs(cell)
-                cell_text = self._render_cell_for_html_table(cell)
-                html_parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
-            html_parts.append("</tr>")
+            html_parts.extend(self._html_row_parts(row))
         if tbody:
             html_parts.append("</tbody>")
 
         html_parts.append("</table>")
         return "\n".join(html_parts)
+
+    def _html_row_parts(self, row: Tag) -> List[str]:
+        """Рендерит строку HTML-таблицы. В режиме CriticMarkup цельно-цветная строка
+        помечается на уровне <tr class="critic-row-ins|critic-row-del" data-task="ID">
+        (ТЗ п. 4.7), а её ячейки рендерятся без inline-обёртки (правка уже отмечена строкой).
+        Вне critic_mode вывод побайтово совпадает с прежним."""
+        tr_attrs = ""
+        suppress = False
+        if self.config.critic_mode:
+            rc = self._row_uniform_critic(row)
+            if rc is not None:
+                task, kind = rc
+                cls = "critic-row-ins" if kind == "ins" else "critic-row-del"
+                tr_attrs = f' class="{cls}" data-task="{task}"'
+                suppress = True
+
+        parts = [f"<tr{tr_attrs}>"]
+        prev = self._critic_suppress
+        if suppress:
+            self._critic_suppress = True
+        try:
+            for cell in row.find_all(["td", "th"], recursive=False):
+                tag = "th" if cell.name == "th" else "td"
+                attrs = self._build_span_attrs(cell)
+                cell_text = self._render_cell_for_html_table(cell)
+                parts.append(f"<{tag}{attrs}>{cell_text}</{tag}>")
+        finally:
+            self._critic_suppress = prev
+        parts.append("</tr>")
+        return parts
 
     def _build_span_attrs(self, cell: Tag) -> str:
         """Возвращает строку HTML-атрибутов colspan/rowspan для ячейки."""
@@ -289,7 +312,8 @@ class ContentExtractor:
             return self._process_top_level_table_to_html(element)
 
         # Для обычного контекста - создаём Markdown таблицу
-        # Собираем строки в правильном порядке
+        # Собираем строки: (тип, row_data, status). status непуст только для цельно-цветных
+        # строк в режиме CriticMarkup (целая добавленная/удалённая строка, ТЗ п. 4.6).
         table_rows = []
 
         # 1. Обрабатываем ВСЕ строки из thead как заголовки
@@ -303,7 +327,7 @@ class ContentExtractor:
                     # КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Все строки из thead обрабатываем как заголовки
                     row_data = self._process_table_row_cells(cells, context, is_header=True)
                     if row_data:
-                        table_rows.append(("header", row_data))
+                        table_rows.append(("header", row_data, ""))
 
         # 2. ЗАТЕМ обрабатываем тело таблицы из tbody
         tbody = element.find("tbody")
@@ -312,9 +336,9 @@ class ContentExtractor:
             for row in body_rows:
                 cells = row.find_all(["td", "th"], recursive=False)
                 if cells:
-                    row_data = self._process_table_row_cells(cells, context, is_header=False)
+                    row_data, status = self._critic_markdown_row(row, cells, context)
                     if row_data:
-                        table_rows.append(("body", row_data))
+                        table_rows.append(("body", row_data, status))
 
         # 3. Если нет явных thead/tbody, берем все tr напрямую
         if not table_rows:
@@ -324,10 +348,14 @@ class ContentExtractor:
                 if cells:
                     # Первая строка считается заголовком, если все ячейки - th
                     is_header = (i == 0 and all(cell.name == "th" for cell in cells))
-                    row_data = self._process_table_row_cells(cells, context, is_header=is_header)
+                    if is_header:
+                        row_data = self._process_table_row_cells(cells, context, is_header=True)
+                        status = ""
+                    else:
+                        row_data, status = self._critic_markdown_row(row, cells, context)
                     if row_data:
                         row_type = "header" if is_header else "body"
-                        table_rows.append((row_type, row_data))
+                        table_rows.append((row_type, row_data, status))
 
         if not table_rows:
             return ""
@@ -335,16 +363,23 @@ class ContentExtractor:
         # Вычисляем максимальное логическое число колонок по всем строкам,
         # раскрывая colspan: ячейка с colspan=N занимает N логических колонок.
         max_cols = 0
-        for _row_type, row_data in table_rows:
+        for _row_type, row_data, _status in table_rows:
             col_count = sum(span for _text, span in row_data)
             if col_count > max_cols:
                 max_cols = col_count
 
+        # Служебный столбец status добавляется, только если есть хоть одна размеченная строка
+        # (ТЗ п. 4.6: «если в таблице нет ни одной размеченной строки — столбец не добавлять»).
+        add_status = self.config.critic_mode and any(st for _rt, _rd, st in table_rows)
+        status_name = self.config.critic_status_column
+        total_cols = max_cols + (1 if add_status else 0)
+
         # Формируем таблицу
         table_lines = []
         has_separator = False
+        header_labeled = False
 
-        for row_type, row_data in table_rows:
+        for row_type, row_data, status in table_rows:
             # Нормализуем содержимое и раскрываем colspan:
             # ячейка с colspan=N превращается в N pipe-колонок,
             # где первая содержит текст, остальные пусты.
@@ -360,14 +395,22 @@ class ContentExtractor:
             while len(pipe_cells) < max_cols:
                 pipe_cells.append("")
 
+            # Служебный столбец status добавляется последним (ТЗ п. 4.6).
+            if add_status:
+                if row_type == "header":
+                    pipe_cells.append(status_name if not header_labeled else "")
+                else:
+                    pipe_cells.append(status)
+
             # Пропускаем строки, где все ячейки пусты
             if all(c == "" for c in pipe_cells):
                 continue
 
             row_line = "| " + " | ".join(pipe_cells) + " |"
-            separator_line = "|" + "|".join([" --- " for _ in range(max_cols)]) + "|"
+            separator_line = "|" + "|".join([" --- " for _ in range(total_cols)]) + "|"
 
             if row_type == "header":
+                header_labeled = True
                 table_lines.append(row_line)
                 if not has_separator:
                     table_lines.append(separator_line)
@@ -385,6 +428,32 @@ class ContentExtractor:
             return ""
 
         return "\n".join(table_lines)
+
+    def _critic_markdown_row(self, row: Tag, cells: List[Tag], context: str):
+        """Рендерит строку тела markdown-таблицы и возвращает (row_data, status).
+
+        Цельно-цветная строка (вся под одной задачей) отмечается служебным столбцом status
+        значением +TASK (добавлена) / -TASK (удалена); её ячейки рендерятся без inline-обёртки
+        — правка отмечена на уровне строки (ТЗ п. 4.6). Обычные строки → status="", а правки
+        внутри ячеек размечаются inline через общий механизм.
+        """
+        status = ""
+        suppress = False
+        if self.config.critic_mode:
+            rc = self._row_uniform_critic(row)
+            if rc is not None:
+                task, kind = rc
+                status = ("+" if kind == "ins" else "-") + task
+                suppress = True
+
+        prev = self._critic_suppress
+        if suppress:
+            self._critic_suppress = True
+        try:
+            row_data = self._process_table_row_cells(cells, context, is_header=False)
+        finally:
+            self._critic_suppress = prev
+        return row_data, status
 
     def _process_table_row_cells(self, cells: List[Tag], context: str, is_header: bool = False) -> List[tuple]:
         """
@@ -656,7 +725,7 @@ class ContentExtractor:
         в друга (это запрещено линтером).
         """
         if (self.config.critic_mode and isinstance(element, Tag)
-                and not self._critic_stack
+                and not self._critic_stack and not self._critic_suppress
                 and not self._is_ignored_element(element)):
             marker = self._critic_marker_for(element)
             if marker is not None:
@@ -746,6 +815,62 @@ class ContentExtractor:
             out.append(f"{open_tok}{task}:{sep}{part}{close_tok}")
         out.append(trail)
         return "".join(out)
+
+    def _cell_uniform_critic(self, cell: Tag):
+        """Возвращает (task, kind), если ВЕСЬ видимый текст ячейки окрашен одной задачей.
+
+        Возвращает None, если в ячейке есть чёрный/бесцветный текст или несколько цветов —
+        такая ячейка не является целостной правкой уровня строки (правки внутри неё
+        размечаются inline). Используется для определения целых добавленных/удалённых строк
+        таблицы (ТЗ п. 4.6/4.7).
+        """
+        colors = set()
+        has_plain = False
+        struck = False
+        for text_node in cell.find_all(string=True):
+            if not str(text_node).strip():
+                continue
+            color = None
+            strike = False
+            cur = text_node.parent
+            while cur is not None and isinstance(cur, Tag):
+                own = self._element_own_color(cur)
+                if own and color is None:
+                    color = own
+                if (cur.name in ("s", "del", "strike")
+                        or "line-through" in (cur.get("style") or "").lower()):
+                    strike = True
+                if cur is cell:
+                    break
+                cur = cur.parent
+            if color is None or is_black_color(color):
+                has_plain = True
+            else:
+                colors.add(normalize_color(color))
+                if strike:
+                    struck = True
+        if has_plain or len(colors) != 1:
+            return None
+        norm = colors.pop()
+        if not norm:
+            return None
+        task = self.config.color_map.get(norm) or ("UNKNOWN-" + norm.lstrip("#"))
+        return task, ("del" if struck else "ins")
+
+    def _row_uniform_critic(self, row: Tag):
+        """Возвращает (task, kind), если ВСЕ непустые ячейки строки — одна целостная правка."""
+        found = None
+        for cell in row.find_all(["td", "th"], recursive=False):
+            if not cell.get_text(strip=True):
+                continue
+            cc = self._cell_uniform_critic(cell)
+            if cc is None:
+                return None
+            if found is None:
+                found = cc
+            elif cc != found:
+                return None
+        return found
 
     def _dispatch_element(self, element, context: str = "default") -> Optional[str]:
         """Универсальная рекурсивная обработка элемента"""
@@ -1725,6 +1850,25 @@ class ContentExtractor:
                         if black_content:
                             result_parts.append(black_content)
                     continue
+
+                # Режим CriticMarkup внутри сырого HTML: цветной фрагмент оборачивается
+                # HTML-нотацией <span class="critic-ins|critic-del" data-task="ID"> (ТЗ п. 4.7),
+                # а не текстовым маркером — внутри HTML-острова {++..++} не рендерится.
+                if (self.config.critic_mode and not self._critic_stack
+                        and not self._critic_suppress):
+                    marker = self._critic_marker_for(child)
+                    if marker is not None:
+                        task, kind = marker
+                        self._critic_stack.append(task)
+                        try:
+                            inner = self._process_nested_table_cell_content(child)
+                        finally:
+                            self._critic_stack.pop()
+                        if inner.strip():
+                            cls = "critic-ins" if kind == "ins" else "critic-del"
+                            result_parts.append(
+                                f'<span class="{cls}" data-task="{task}">{inner}</span>')
+                        continue
 
                 # Элемент прошел цветовую фильтрацию - обрабатываем
                 if child.name == "table":
