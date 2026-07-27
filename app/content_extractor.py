@@ -2,10 +2,10 @@
 
 import logging
 import re
-from typing import List, Optional
+from typing import Dict, List, Optional
 from bs4 import BeautifulSoup, Tag, NavigableString
-from dataclasses import dataclass
-from app.utils.style_utils import is_black_color, has_colored_style
+from dataclasses import dataclass, field
+from app.utils.style_utils import is_black_color, has_colored_style, normalize_color
 
 logger = logging.getLogger(__name__)
 
@@ -67,6 +67,11 @@ class ExtractionConfig:
     format_headers: bool = True
     migrate_images: bool = False  # сохранять <ac:image> как HTML <img> с плейсхолдером вложения
     exclude_strikethrough: bool = False  # True - зачёркнутый <s> выкидывается при любом раскладе (в т.ч. под include_colored)
+    # Модуль 1, срез 1b: режим эмиссии CriticMarkup. Цветные прогоны оборачиваются в маркеры
+    # по карте color_map (нормализованный #rrggbb -> TASK-ID). Неизвестные цвета -> UNKNOWN-<hex>.
+    # critic_mode подразумевает include_colored=True (ничего не выбрасываем, всё оборачиваем).
+    critic_mode: bool = False
+    color_map: Dict[str, str] = field(default_factory=dict)
 
 
 class ContentExtractor:
@@ -76,6 +81,9 @@ class ContentExtractor:
 
     def __init__(self, config: ExtractionConfig):
         self.config = config
+        # Стек активных задач для режима CriticMarkup (срез 1b): вершина — задача текущего
+        # цветного региона, чтобы не оборачивать один и тот же цвет повторно.
+        self._critic_stack: List[str] = []
 
     def extract(self, html: str) -> str:
         """Главная точка входа с отладкой HTML"""
@@ -84,6 +92,8 @@ class ContentExtractor:
 
         from app.history_cleaner import remove_history_sections
         html = remove_history_sections(html)
+
+        self._critic_stack = []  # сброс на каждый вызов (переиспользуемый экстрактор)
 
         soup = BeautifulSoup(html, "html.parser")
 
@@ -638,6 +648,106 @@ class ContentExtractor:
         return result.strip()
 
     def _process_element(self, element, context: str = "default") -> Optional[str]:
+        """Обёртка диспетчера: в режиме CriticMarkup оборачивает цветной регион в маркер.
+
+        Обёртка — снаружи существующей логики (_dispatch_element), сам обход не меняется.
+        Срез 1b-1: оборачиваем только верхнеуровневый цветной регион (стек пуст); вложенные
+        цвета (регион в регионе) — отдельный срез 1b-2, здесь маркеры НЕ вкладываются друг
+        в друга (это запрещено линтером).
+        """
+        if (self.config.critic_mode and isinstance(element, Tag)
+                and not self._critic_stack
+                and not self._is_ignored_element(element)):
+            marker = self._critic_marker_for(element)
+            if marker is not None:
+                task, kind = marker
+                self._critic_stack.append(task)
+                try:
+                    inner = self._dispatch_element(element, context)
+                finally:
+                    self._critic_stack.pop()
+                return self._wrap_critic(task, kind, inner)
+        return self._dispatch_element(element, context)
+
+    def _element_own_color(self, element: Tag) -> Optional[str]:
+        """Собственный цвет элемента (style color: или <font color>), без учёта предков."""
+        style = (element.get("style") or "").lower()
+        m = re.search(r"color\s*:\s*([^;]+)", style)
+        if m:
+            return m.group(1).strip()
+        if element.name == "font" and element.get("color"):
+            return element.get("color").strip()
+        return None
+
+    def _is_strikethrough(self, element: Tag) -> bool:
+        """Признак зачёркивания: сам тег <s>/<del>/<strike>, line-through в стиле или вложенный <s>."""
+        if element.name in ("s", "del", "strike"):
+            return True
+        if "line-through" in (element.get("style") or "").lower():
+            return True
+        return element.find(["s", "del", "strike"]) is not None
+
+    def _critic_marker_for(self, element: Tag):
+        """Возвращает (task_id, kind) для цветного элемента либо None.
+
+        kind: 'del' для зачёркнутого (удаляемого) фрагмента, иначе 'ins'. Цвет нормализуется
+        и ищется в color_map; неизвестный не-чёрный цвет даёт плейсхолдер UNKNOWN-<hex>
+        (ТЗ п. 4.2.ж). Чёрный/бесцветный элемент маркера не порождает.
+        """
+        color = self._element_own_color(element)
+        if not color or is_black_color(color):
+            return None
+        norm = normalize_color(color)
+        if not norm:
+            return None
+        task = self.config.color_map.get(norm) or ("UNKNOWN-" + norm.lstrip("#"))
+        kind = "del" if self._is_strikethrough(element) else "ins"
+        return task, kind
+
+    def _wrap_critic(self, task: str, kind: str, inner: Optional[str]) -> str:
+        """Оборачивает отрендеренный фрагмент в маркер CriticMarkup (ТЗ п. 4.4).
+
+        Пробелы фрагмента сохраняются внутри маркера (значимы: после отбрасывания правки
+        не должно остаться двойного пробела). Пустой фрагмент не оборачивается.
+        """
+        inner = inner or ""
+        if not inner.strip():
+            return inner
+        open_tok, close_tok = ("{++", "++}") if kind == "ins" else ("{--", "--}")
+
+        # Блочные переводы строк на КРАЯХ (границы абзацев/заголовков) выносим наружу маркера,
+        # чтобы он не пересекал границу блока (иначе ошибка линтера E5 и битый HTML в
+        # pymdownx.critic). Одиночные пробелы на краях значимы (ТЗ п. 4.4) и остаются внутри.
+        lead = ""
+        mlead = re.match(r"^\s+", inner)
+        if mlead and "\n" in mlead.group(0):
+            lead = mlead.group(0)
+            inner = inner[len(lead):]
+        trail = ""
+        mtrail = re.search(r"\s+$", inner)
+        if mtrail and "\n" in mtrail.group(0):
+            trail = mtrail.group(0)
+            inner = inner[: len(inner) - len(trail)]
+
+        if not inner:
+            return lead + trail
+
+        # Внутренние блочные разрывы (пустые строки) бьют фрагмент на блоки, каждый из которых
+        # оборачивается в ОТДЕЛЬНЫЙ маркер: один маркер не должен пересекать границу блока
+        # (ТЗ п. 4.5 / ограничение pymdownx.critic). Так «вставка целого раздела» становится
+        # набором маркеров по одному на заголовок/абзац.
+        parts = re.split(r"(\n[ \t]*\n)", inner)
+        out = [lead]
+        for part in parts:
+            if not part or re.fullmatch(r"\n[ \t]*\n", part) or not part.strip():
+                out.append(part)
+                continue
+            sep = "" if part[:1] == " " else " "
+            out.append(f"{open_tok}{task}:{sep}{part}{close_tok}")
+        out.append(trail)
+        return "".join(out)
+
+    def _dispatch_element(self, element, context: str = "default") -> Optional[str]:
         """Универсальная рекурсивная обработка элемента"""
         if isinstance(element, NavigableString):
             return self._process_text_node(str(element), context)
@@ -1910,5 +2020,24 @@ def create_approved_fragments_extractor() -> ContentExtractor:
         normalize_spacing=False,
         migrate_images=_migrate_images_enabled(),
         exclude_strikethrough=_exclude_strikethrough_enabled()
+    )
+    return ContentExtractor(config)
+
+
+def create_critic_extractor(color_map: Dict[str, str]) -> ContentExtractor:
+    """Создаёт экстрактор режима CriticMarkup (Модуль 1, срез 1b).
+
+    Цветные фрагменты оборачиваются в маркеры по карте color_map (нормализованный
+    #rrggbb -> TASK-ID). Режим подразумевает include_colored=True — ничего не выбрасываем,
+    всё оборачиваем; зачёркивание в этом режиме НЕ выкидывается (становится {--...--}).
+    """
+    config = ExtractionConfig(
+        include_colored=True,
+        preserve_whitespace=True,
+        normalize_spacing=False,
+        migrate_images=_migrate_images_enabled(),
+        exclude_strikethrough=False,
+        critic_mode=True,
+        color_map=color_map,
     )
     return ContentExtractor(config)
