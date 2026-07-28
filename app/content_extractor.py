@@ -5,7 +5,7 @@ import re
 from typing import Dict, List, Optional
 from bs4 import BeautifulSoup, Tag, NavigableString
 from dataclasses import dataclass, field
-from app.utils.style_utils import is_black_color, has_colored_style, normalize_color
+from app.utils.style_utils import is_black_color, has_colored_style, normalize_color, is_ignored_color
 
 logger = logging.getLogger(__name__)
 
@@ -805,7 +805,8 @@ class ContentExtractor:
         (ТЗ п. 4.2.ж). Чёрный/бесцветный элемент маркера не порождает.
         """
         color = self._element_own_color(element)
-        if not color or is_black_color(color):
+        # Чёрный = ПРОМ; UI-цвет (ссылки/фон) — не правка требования (ignore-список).
+        if not color or is_black_color(color) or is_ignored_color(color):
             return None
         norm = normalize_color(color)
         if not norm:
@@ -862,7 +863,7 @@ class ContentExtractor:
         found = []
         for tag in [element] + element.find_all(True):
             color = self._element_own_color(tag)
-            if color and not is_black_color(color):
+            if color and not is_black_color(color) and not is_ignored_color(color):
                 norm = normalize_color(color)
                 if norm:
                     found.append((norm, len(list(tag.parents))))
@@ -872,7 +873,7 @@ class ContentExtractor:
         """Есть ли внутри element цветной потомок с ДРУГИМ (не outer) не-чёрным цветом."""
         for tag in element.find_all(True):
             color = self._element_own_color(tag)
-            if color and not is_black_color(color):
+            if color and not is_black_color(color) and not is_ignored_color(color):
                 norm = normalize_color(color)
                 if norm and norm != outer_norm:
                     return True

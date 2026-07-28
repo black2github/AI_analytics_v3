@@ -166,6 +166,17 @@ class TestInnermostColorWins:
         assert "{++T-1: целиком оранжевый++}" in out
 
 
+class TestIgnoredUiColors:
+    """Ignore-список: UI-цвета (ссылки/фон) не порождают маркер."""
+
+    def test_link_blue_not_marked(self):
+        html = ('<p>См. <span style="color: rgb(0,82,204)">ссылку</span> и '
+                '<span style="color: rgb(255,102,0)">правку</span>.</p>')
+        out = create_critic_extractor({"#ff6600": "T-1"}).extract(html)
+        assert "ссылку" in out and "{++T-1: ссылку" not in out and "UNKNOWN-0052cc" not in out
+        assert "{++T-1: правку++}" in out
+
+
 class TestNoRegressionWhenModeOff:
     """critic_mode выключен по умолчанию — существующие режимы не порождают маркеров."""
 

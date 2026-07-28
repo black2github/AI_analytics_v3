@@ -188,6 +188,18 @@ class TestMigrate:
         assert set(report["nested_flattened"][0]["tasks"]) == {"GBO-1", "GBO-2"}
 
 
+class TestIgnoredColors:
+    """Ignore-список UI-цветов: не задача и не UNKNOWN, отдельная классификация 'ignored'."""
+
+    def test_ui_color_classified_ignored_not_unknown(self):
+        history = _hist(_row("2025-01-01", "rgb(153,102,255)", "GBO-1", "01.01.2025"))
+        body = '<p><span style="color: rgb(0,82,204)">ссылка синим</span></p>'  # #0052cc
+        r = build_color_task_map(history + body)
+        survey = survey_body_colors(history + body, r)
+        assert survey["#0052cc"]["classification"] == "ignored"
+        assert survey["#0052cc"]["task"] is None
+
+
 class TestPerPageColorSummary:
     """Фикс C: сводка цветов — постраничная (один цвет может быть task/unknown на разных страницах)."""
 

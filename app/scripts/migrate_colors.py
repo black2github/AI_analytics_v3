@@ -67,7 +67,8 @@ def accumulate_page(acc: dict, name: str, result, survey: dict) -> None:
             "page": name, "color": color, "count": cnt,
             "classification": cls, "task": info.get("task")})
 
-        if cls == "black":
+        # 'black' (ПРОМ) и 'ignored' (UI-цвет) — не правка требования: в задачи не идут.
+        if cls in ("black", "ignored"):
             continue
         acc["colored_fragments_total"] += cnt
 

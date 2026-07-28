@@ -34,6 +34,8 @@ def has_colored_style(element: Tag) -> bool:
 black_colors = {
     'black', '#000', '#000000',
     'rgb(0,0,0)', 'rgb(0, 0, 0)',
+    'rgb(8,8,8)', 'rgb(8, 8, 8)',
+    'rgb(32,33,34)', 'rgb(32, 33, 34)',
     'rgba(0,0,0,1)', 'rgba(0, 0, 0, 1)',
     'rgb(51,51,0)', 'rgb(51, 51, 0)',
     'rgb(0,51,0)', 'rgb(0, 51, 0)',
@@ -109,6 +111,30 @@ def normalize_color(color_value: str) -> Optional[str]:
 # Нормализованные формы чёрного — считаются один раз (ТЗ п. 4.3: сравнение после
 # нормализации ОБЕИХ сторон).
 _BLACK_NORMALIZED = {n for n in (normalize_color(c) for c in black_colors) if n}
+
+
+# Нефункциональные цвета интерфейса Confluence/Atlassian — НЕ разметка требований, а стили
+# ссылок/фона. При миграции цвета их не считаем правкой (не порождают маркер/UNKNOWN),
+# трактуем как «не требование». Расширять по мере обнаружения на реальных данных.
+IGNORED_COLORS = {
+    'rgb(0,82,204)', 'rgb(0, 82, 204)',   # #0052cc — синий цвет гиперссылок Atlassian
+    'rgb(244,245,247)', 'rgb(244, 245, 247)',  # #f4f5f7 — светло-серый фон/подложка (N10)
+}
+_IGNORED_NORMALIZED = {n for n in (normalize_color(c) for c in IGNORED_COLORS) if n}
+
+
+def is_ignored_color(color_value: str) -> bool:
+    """True для нефункциональных UI-цветов (ссылки/фон): их не трактуем как правку требования.
+
+    Сравнение по нормализованной форме (как для чёрного). Пустое/нераспознанное значение — False.
+    """
+    if not color_value:
+        return False
+    value = color_value.strip().lower()
+    if value in IGNORED_COLORS:
+        return True
+    norm = normalize_color(value)
+    return norm is not None and norm in _IGNORED_NORMALIZED
 
 
 def is_black_color(color_value: str) -> bool:
