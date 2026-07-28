@@ -52,6 +52,13 @@ class TestLintErrors:
         text = "<table><tr><td>{++GBO-1: x++}</td></tr></table>"
         assert "E7" in _rules(text)
 
+    def test_e3_unknown_in_html_notation(self):
+        # UNKNOWN-* в HTML-нотации (data-task) тоже блокирует слияние, как и текстовый.
+        text = ('<table><tr><td>'
+                '<span class="critic-ins" data-task="UNKNOWN-9966ff">x</span>'
+                '</td></tr></table>')
+        assert "E3" in _rules(text)
+
 
 class TestLintWarnings:
     """Предупреждения п. 6."""

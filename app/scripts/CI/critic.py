@@ -667,6 +667,12 @@ def lint_text(text: str, path: Optional[Path] = None) -> List[Finding]:
                     add(line, "error", "E5",
                         "маркер пересекает границу абзаца/элемента списка")
 
+    # E3 в HTML-нотации: data-task="UNKNOWN-…" — тот же неразобранный остаток миграции,
+    # что и текстовый {++UNKNOWN…}, но внутри сырых HTML-таблиц (ТЗ п. 4.7).
+    for m in re.finditer(r'data-task="(UNKNOWN-[0-9a-fA-F]+)"', text):
+        add(_line_at(text, m.start(1)), "error", "E3",
+            f"плейсхолдер {m.group(1)} не разобран аналитиком (HTML-нотация)")
+
     # E4: незакрытый маркер — опенер, не входящий ни в один опознанный маркер и не в коде.
     for m in _ANY_OPENER_RE.finditer(text):
         pos = m.start()
