@@ -29,104 +29,107 @@ import yaml
 from app.color_map import build_color_task_map, survey_body_colors
 
 
-def aggregate(pages: List[Tuple[str, str]], service: str, migrated_at: str) -> Tuple[dict, dict]:
-    """Обрабатывает страницы и возвращает (manifest, report).
-
-    pages — список (имя_страницы, raw_html). Карта строится ЗАНОВО для каждой страницы
-    (ТЗ п. 4.2.д): один и тот же цвет на разных страницах может означать разные задачи.
-    """
-    pages_without_history: List[str] = []
-    collisions: List[dict] = []
-    jira_unextractable: List[dict] = []
-    unresolved_placeholders: List[dict] = []
-    # task_id -> агрегат по всем страницам
-    tasks: Dict[str, dict] = {}
-    # нормализованный цвет -> агрегированная сводка (для диагностики набора black_colors)
-    color_summary: Dict[str, dict] = {}
-
-    colored_fragments_total = 0
-
-    for name, raw_html in pages:
-        result = build_color_task_map(raw_html)
-        if result.no_history:
-            pages_without_history.append(name)
-
-        for col in result.collisions:
-            collisions.append({"page": name, **col})
-        for u in result.unresolved_jira:
-            jira_unextractable.append({"page": name, "color": u["color"]})
-
-        survey = survey_body_colors(raw_html, result)
-        for color, info in survey.items():
-            cls = info["classification"]
-            cnt = info["count"]
-            # Диагностика набора цветов (ТЗ п. 4.3): агрегируем частоты по всему прогону.
-            agg = color_summary.setdefault(
-                color, {"color": color, "count": 0, "classification": cls,
-                        "task": info.get("task")})
-            agg["count"] += cnt
-
-            if cls == "black":
-                continue
-            colored_fragments_total += cnt
-
-            task_id = info["task"]
-            if cls == "unknown":
-                unresolved_placeholders.append({
-                    "placeholder": task_id, "color": color, "page": name,
-                    "count": cnt, "reason": info.get("reason"),
-                })
-                confidence = "unresolved"
-            else:
-                confidence = result.confidence.get(color, "high")
-
-            entry = tasks.setdefault(task_id, {
-                "color": color, "confidence": confidence,
-                "pages": set(), "markers": 0})
-            entry["pages"].add(name)
-            entry["markers"] += cnt
-            # confidence 'low' (коллизия) приоритетнее 'high' в агрегате.
-            if confidence == "low":
-                entry["confidence"] = "low"
-
-    # Приводим множества к спискам и стабилизируем порядок.
-    manifest_tasks = {}
-    for task_id in sorted(tasks):
-        e = tasks[task_id]
-        manifest_tasks[task_id] = {
-            "color": e["color"],
-            "confidence": e["confidence"],
-            "pages": sorted(e["pages"]),
-            "markers": e["markers"],
-        }
-
-    manifest = {
-        "migrated_at": migrated_at,
-        "service": service,
-        "tasks": manifest_tasks,
+def new_accumulator() -> dict:
+    """Пустой аккумулятор отчёта/манифеста. Наполняется постранично accumulate_page()."""
+    return {
+        "pages": 0,
+        "pages_without_history": [],
+        "collisions": [],
+        "jira_unextractable": [],
+        "unresolved_placeholders": [],
+        "nested": [],                 # уплощённые вложенности (ТЗ 4.5) — заполняет вызывающий
+        "tasks": {},                  # task_id -> {color, confidence, pages:set, markers}
+        "color_summary": {},          # #rrggbb -> {color, count, classification, task}
+        "colored_fragments_total": 0,
     }
 
-    positions_manual_review = (
-        len(unresolved_placeholders) + len(collisions) + len(jira_unextractable))
 
+def accumulate_page(acc: dict, name: str, result, survey: dict) -> None:
+    """Добавляет в аккумулятор данные одной страницы (карта истории + обход тела).
+
+    result — HistoryMapResult, survey — результат survey_body_colors(). Вынесено из
+    aggregate(), чтобы боевой проход (migrate_confluence_tree) мог наполнять тот же
+    аккумулятор картой, уже построенной для критик-экстракции, без повторного разбора.
+    """
+    acc["pages"] += 1
+    if result.no_history:
+        acc["pages_without_history"].append(name)
+    for col in result.collisions:
+        acc["collisions"].append({"page": name, **col})
+    for u in result.unresolved_jira:
+        acc["jira_unextractable"].append({"page": name, "color": u["color"]})
+
+    for color, info in survey.items():
+        cls, cnt = info["classification"], info["count"]
+        agg = acc["color_summary"].setdefault(
+            color, {"color": color, "count": 0, "classification": cls, "task": info.get("task")})
+        agg["count"] += cnt
+
+        if cls == "black":
+            continue
+        acc["colored_fragments_total"] += cnt
+
+        task_id = info["task"]
+        if cls == "unknown":
+            acc["unresolved_placeholders"].append({
+                "placeholder": task_id, "color": color, "page": name,
+                "count": cnt, "reason": info.get("reason")})
+            confidence = "unresolved"
+        else:
+            confidence = result.confidence.get(color, "high")
+
+        entry = acc["tasks"].setdefault(
+            task_id, {"color": color, "confidence": confidence, "pages": set(), "markers": 0})
+        entry["pages"].add(name)
+        entry["markers"] += cnt
+        if confidence == "low":  # коллизия приоритетнее 'high'
+            entry["confidence"] = "low"
+
+
+def finalize(acc: dict, service: str, migrated_at: str) -> Tuple[dict, dict]:
+    """Строит (manifest, report) из наполненного аккумулятора."""
+    manifest_tasks = {}
+    for task_id in sorted(acc["tasks"]):
+        e = acc["tasks"][task_id]
+        manifest_tasks[task_id] = {
+            "color": e["color"], "confidence": e["confidence"],
+            "pages": sorted(e["pages"]), "markers": e["markers"],
+        }
+    manifest = {"migrated_at": migrated_at, "service": service, "tasks": manifest_tasks}
+
+    positions = (len(acc["unresolved_placeholders"]) + len(acc["collisions"])
+                 + len(acc["jira_unextractable"]) + len(acc["nested"]))
     report = {
         "migrated_at": migrated_at,
         "service": service,
         "stats": {
-            "pages_processed": len(pages),
-            "colored_fragments_total": colored_fragments_total,
-            "positions_manual_review": positions_manual_review,
-            "nested_flattened": 0,
+            "pages_processed": acc["pages"],
+            "colored_fragments_total": acc["colored_fragments_total"],
+            "positions_manual_review": positions,
+            "nested_flattened": len(acc["nested"]),
         },
-        "pages_without_history": pages_without_history,
-        "unresolved_placeholders": unresolved_placeholders,
-        "collisions": collisions,
-        "jira_unextractable": jira_unextractable,
-        "nested_flattened": [],  # заполняется командой migrate (ТЗ п. 4.5/4.10)
-        "color_summary": sorted(color_summary.values(),
+        "pages_without_history": acc["pages_without_history"],
+        "unresolved_placeholders": acc["unresolved_placeholders"],
+        "collisions": acc["collisions"],
+        "jira_unextractable": acc["jira_unextractable"],
+        "nested_flattened": acc["nested"],
+        "color_summary": sorted(acc["color_summary"].values(),
                                 key=lambda c: (-c["count"], c["color"])),
     }
     return manifest, report
+
+
+def aggregate(pages: List[Tuple[str, str]], service: str, migrated_at: str) -> Tuple[dict, dict]:
+    """Строит (manifest, report) по списку (имя, raw_html).
+
+    Карта строится ЗАНОВО для каждой страницы (ТЗ п. 4.2.д). Тонкая обёртка над
+    accumulate_page/finalize — используется офлайн-режимом (--html-dir) и тестами.
+    """
+    acc = new_accumulator()
+    for name, raw_html in pages:
+        result = build_color_task_map(raw_html)
+        accumulate_page(acc, name, result, survey_body_colors(raw_html, result))
+    return finalize(acc, service, migrated_at)
 
 
 def _safe_name(name: str) -> str:
@@ -141,31 +144,39 @@ def _render_md(title: str, body: str) -> str:
 
 
 def migrate_pages(pages, service, migrated_at, out_dir):
-    """Боевой проход миграции: пишет .md с маркерами и собирает манифест+отчёт.
+    """Офлайн боевой проход (отладка): пишет минимальный .md с маркерами и собирает отчёт.
 
-    Для каждой страницы: карта «цвет→задача» → critic-экстракция → запись <имя>.md.
-    Уплощённые вложенные конструкции (ТЗ п. 4.5) собираются из экстрактора в отчёт.
+    Карта строится ОДИН раз на страницу и используется и для critic-экстракции, и для
+    отчёта (через общий аккумулятор). Боевой прод-путь — migrate_confluence_tree.py --tasks
+    (там .md пишется с полным frontmatter, картинками и резолвингом ссылок).
     """
-    from app.color_map import build_color_task_map
+    from app.color_map import build_color_task_map, survey_body_colors
     from app.content_extractor import create_critic_extractor
 
-    manifest, report = aggregate(pages, service, migrated_at)
-
     out_dir.mkdir(parents=True, exist_ok=True)
-    nested = []
+    acc = new_accumulator()
     for name, raw_html in pages:
-        cmap = build_color_task_map(raw_html).color_to_task
-        extractor = create_critic_extractor(cmap)
+        result = build_color_task_map(raw_html)
+        extractor = create_critic_extractor(result.color_to_task)
         body = extractor.extract(raw_html)
+        accumulate_page(acc, name, result, survey_body_colors(raw_html, result))
         for rec in extractor._critic_report:
-            nested.append({"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
+            acc["nested"].append({"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
         (out_dir / (_safe_name(name) + ".md")).write_text(
             _render_md(name, body), encoding="utf-8")
 
-    report["nested_flattened"] = nested
-    report["stats"]["nested_flattened"] = len(nested)
-    report["stats"]["positions_manual_review"] += len(nested)
-    return manifest, report
+    return finalize(acc, service, migrated_at)
+
+
+def write_reports(out_dir: Path, manifest: dict, report: dict) -> None:
+    """Записывает manifest.yaml + report.json + report.md в каталог (единый писатель)."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "migration-manifest.yaml").write_text(
+        yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    (out_dir / "migration-colors-report.json").write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    (out_dir / "migration-colors-report.md").write_text(
+        render_report_md(report), encoding="utf-8")
 
 
 def render_report_md(report: dict) -> str:
@@ -315,13 +326,7 @@ def main(argv=None) -> int:
     else:
         manifest, report = aggregate(pages, args.service, args.date)
 
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "migration-manifest.yaml").write_text(
-        yaml.safe_dump(manifest, allow_unicode=True, sort_keys=False), encoding="utf-8")
-    (out / "migration-colors-report.json").write_text(
-        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    (out / "migration-colors-report.md").write_text(
-        render_report_md(report), encoding="utf-8")
+    write_reports(out, manifest, report)
 
     st = report["stats"]
     print(f"Команда: {args.command}. Обработано страниц: {st['pages_processed']}; "

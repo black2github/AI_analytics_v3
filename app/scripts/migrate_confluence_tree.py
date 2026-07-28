@@ -144,6 +144,32 @@ def get_direct_children(page_id: str, use_http: bool = False, retry_count: int =
         return []
 
 
+def _resolve_page_content(page_data: Dict, include_unapproved: bool, critic: bool,
+                          critic_acc: Optional[dict], name: str) -> str:
+    """Возвращает markdown-содержимое страницы по выбранному режиму.
+
+    approved (по умолчанию) / all (--all) / critic (--tasks). Критик-режим строит карту
+    «цвет→задача» из raw_html (до удаления истории), гоняет create_critic_extractor и
+    попутно наполняет аккумулятор отчёта (карта уже построена — без повторного разбора).
+    """
+    if critic:
+        from app.color_map import build_color_task_map, survey_body_colors
+        from app.content_extractor import create_critic_extractor
+        raw = page_data.get("raw_html", "") or ""
+        result = build_color_task_map(raw)
+        extractor = create_critic_extractor(result.color_to_task)
+        content = extractor.extract(raw)
+        if critic_acc is not None:
+            from app.scripts.migrate_colors import accumulate_page
+            accumulate_page(critic_acc, name, result, survey_body_colors(raw, result))
+            for rec in extractor._critic_report:
+                critic_acc["nested"].append(
+                    {"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
+        return content
+    content_field = "full_content" if include_unapproved else "approved_content"
+    return page_data.get(content_field, "")
+
+
 def save_page_file(
     page_data: Dict,
     page_id: str,
@@ -155,6 +181,8 @@ def save_page_file(
     page_registry: Dict[str, Path],
     title_registry: Dict[str, Path],
     include_unapproved: bool = False,
+    critic: bool = False,
+    critic_acc: Optional[dict] = None,
 ) -> bool:
     """Сохраняет страницу Confluence как .md файл с frontmatter.
 
@@ -162,13 +190,13 @@ def save_page_file(
     для последующего разрешения ссылок на этапе post-processing.
     Возвращает True при успешном сохранении.
 
-    include_unapproved=True — в файл пишется ПОЛНОЕ содержимое страницы
-    (full_content, все фрагменты), иначе только подтверждённые (approved_content).
+    Режим содержимого: approved (по умолчанию), all (include_unapproved), critic (critic —
+    полное содержимое с маркерами CriticMarkup). critic — вариант «полного» содержимого.
     """
-    content_field = "full_content" if include_unapproved else "approved_content"
-    content_md = page_data.get(content_field, "")
+    content_md = _resolve_page_content(page_data, include_unapproved, critic, critic_acc, title)
     if not content_md or not content_md.strip():
-        logger.warning("  Страница '%s' (id=%s) не содержит %s, пропущена", title, page_id, content_field)
+        mode = "critic" if critic else ("full_content" if include_unapproved else "approved_content")
+        logger.warning("  Страница '%s' (id=%s) не содержит %s, пропущена", title, page_id, mode)
         stats["skipped"] += 1
         return False
 
@@ -208,7 +236,7 @@ def save_page_file(
 
     frontmatter = page_to_frontmatter(
         page, service_code, source, doc_id,
-        include_unapproved=include_unapproved,
+        include_unapproved=include_unapproved or critic,  # критик — полное содержимое
         has_unapproved=has_unapproved,
     )
     write_md_file(filepath, frontmatter, content_md)
@@ -233,6 +261,8 @@ def migrate_subtree(
     depth: int = 0,
     use_http: bool = False,
     include_unapproved: bool = False,
+    critic: bool = False,
+    critic_acc: Optional[dict] = None,
 ) -> None:
     """Рекурсивно мигрирует страницу Confluence и всё её поддерево.
 
@@ -290,7 +320,9 @@ def migrate_subtree(
         # 2) Создаём папку <dir_name>/ рядом для детей
         # 3) Рекурсивно обходим детей внутри этой папки
 
-        content_field = "full_content" if include_unapproved else "approved_content"
+        # Критик — вариант «полного» содержимого, поэтому наличие проверяем по full_content
+        # (иначе целиком цветная страница без чёрного текста считалась бы пустой).
+        content_field = "full_content" if (include_unapproved or critic) else "approved_content"
         has_own_content = bool(
             page_data and page_data.get(content_field, "").strip()
         )
@@ -298,7 +330,8 @@ def migrate_subtree(
         if has_own_content:
             filepath = output_dir / f"{dir_name}.md"
             if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
-                              page_registry, title_registry, include_unapproved=include_unapproved):
+                              page_registry, title_registry, include_unapproved=include_unapproved,
+                              critic=critic, critic_acc=critic_acc):
                 logger.info(
                     "%s[file+dir] %s.md + %s/  (id=%s, дочерних=%d)",
                     indent, dir_name, dir_name, page_id, len(children),
@@ -326,6 +359,8 @@ def migrate_subtree(
                 depth + 1,
                 use_http=use_http,
                 include_unapproved=include_unapproved,
+                critic=critic,
+                critic_acc=critic_acc,
             )
 
     else:
@@ -337,7 +372,8 @@ def migrate_subtree(
 
         filepath = output_dir / f"{dir_name}.md"
         if save_page_file(page_data, page_id, title, service_code, source, filepath, stats,
-                          page_registry, title_registry, include_unapproved=include_unapproved):
+                          page_registry, title_registry, include_unapproved=include_unapproved,
+                          critic=critic, critic_acc=critic_acc):
             logger.info("%s[ok] %s.md  (id=%s)", indent, dir_name, page_id)
 
 
@@ -578,14 +614,23 @@ def main():
     # Флаги --http, --all, --keep-history, --with-images, --with-index и
     # --drop-strikethrough можно указать в любом месте аргументов; они переопределяют
     # соответствующие значения из конфигурации.
-    flags = {"--http", "--all", "--keep-history", "--with-images", "--with-index", "--drop-strikethrough"}
+    flags = {"--http", "--all", "--tasks", "--keep-history", "--with-images",
+             "--with-index", "--drop-strikethrough"}
     args = [a for a in sys.argv[1:] if a not in flags]
     use_http = ("--http" in sys.argv) or CONFLUENCE_USE_HTTP
     include_unapproved = ("--all" in sys.argv) or MIGRATE_INCLUDE_UNAPPROVED
+    critic = "--tasks" in sys.argv
     keep_history = "--keep-history" in sys.argv
     with_images = "--with-images" in sys.argv
     with_index = "--with-index" in sys.argv
     drop_strikethrough = "--drop-strikethrough" in sys.argv
+
+    # --tasks и --all взаимоисключающие: оба берут ПОЛНОЕ содержимое, но --tasks добавляет
+    # маркеры CriticMarkup, а --all — плоский текст. Одно представление на файл.
+    if critic and ("--all" in sys.argv):
+        print("ОШИБКА: --tasks и --all взаимоисключающие (оба — полное содержимое). "
+              "Выберите одно.")
+        sys.exit(2)
 
     if len(args) < 3:
         print("Usage: python migrate_confluence_tree.py "
@@ -597,6 +642,8 @@ def main():
               "12345 CORP_CARDS лимиты DBOCORPESPLN --http")
         print("Example (всё содержимое, включая неподтверждённое): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --all")
+        print("Example (разметка задач CriticMarkup + манифест/отчёт): "
+              "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --tasks")
         print("Example (сохранить раздел 'История изменений'): "
               "python migrate_confluence_tree.py 12345 CORP_CARDS лимиты --keep-history")
         print("Example (мигрировать картинки в img/ рядом с .md): "
@@ -639,8 +686,9 @@ def main():
     logger.info("Output: %s", base_output_dir)
     logger.info("Access mode: %s", "direct HTTP (в обход API)" if use_http else "REST API")
     logger.info("Content mode: %s",
-                "ВСЁ содержимое (включая неподтверждённое)" if include_unapproved
-                else "только подтверждённые фрагменты")
+                "CriticMarkup (маркеры задач) [--tasks]" if critic
+                else ("ВСЁ содержимое (включая неподтверждённое)" if include_unapproved
+                      else "только подтверждённые фрагменты"))
     logger.info("History mode: %s",
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
     logger.info("Images mode: %s",
@@ -657,6 +705,12 @@ def main():
     page_registry: Dict[str, Path] = {}
     title_registry: Dict[str, Path] = {}
 
+    # Аккумулятор манифеста/отчёта миграции цвета — наполняется только в режиме --tasks.
+    critic_acc = None
+    if critic:
+        from app.scripts.migrate_colors import new_accumulator
+        critic_acc = new_accumulator()
+
     logger.info("Pass 1: traversing Confluence tree ...")
     migrate_subtree(
         root_page_id,
@@ -670,6 +724,8 @@ def main():
         title_registry,
         use_http=use_http,
         include_unapproved=include_unapproved,
+        critic=critic,
+        critic_acc=critic_acc,
     )
 
     logger.info("")
@@ -688,6 +744,20 @@ def main():
         logger.info("")
         logger.info("Pass 3: generating section index.md ...")
         indexes = generate_section_indexes(base_output_dir)
+
+    # Режим --tasks: пишем реестр мигрировавших задач (manifest) и отчёт цвета (ТЗ 4.9/4.10).
+    if critic and critic_acc is not None:
+        from datetime import date as _date
+        from app.scripts.migrate_colors import finalize, write_reports
+        logger.info("")
+        logger.info("Pass 4: writing migration manifest and color report ...")
+        manifest, report = finalize(critic_acc, service_code, _date.today().isoformat())
+        write_reports(base_output_dir, manifest, report)
+        rst = report["stats"]
+        logger.info("  Отчёт цвета: %s", base_output_dir / "migration-colors-report.md")
+        logger.info("  Задач в манифесте: %d; ручной разбор: %d позиций (уплощений: %d)",
+                    len(manifest["tasks"]), rst["positions_manual_review"],
+                    rst["nested_flattened"])
 
     logger.info("")
     logger.info("Migration complete:")
