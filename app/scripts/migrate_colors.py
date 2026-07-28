@@ -39,7 +39,7 @@ def new_accumulator() -> dict:
         "unresolved_placeholders": [],
         "nested": [],                 # уплощённые вложенности (ТЗ 4.5) — заполняет вызывающий
         "tasks": {},                  # task_id -> {color, confidence, pages:set, markers}
-        "color_summary": {},          # #rrggbb -> {color, count, classification, task}
+        "color_summary": [],          # список {page, color, count, classification, task} — постранично
         "colored_fragments_total": 0,
     }
 
@@ -61,9 +61,11 @@ def accumulate_page(acc: dict, name: str, result, survey: dict) -> None:
 
     for color, info in survey.items():
         cls, cnt = info["classification"], info["count"]
-        agg = acc["color_summary"].setdefault(
-            color, {"color": color, "count": 0, "classification": cls, "task": info.get("task")})
-        agg["count"] += cnt
+        # Постраничная сводка (ТЗ 4.3): классификация цвета корректна ДЛЯ ЭТОЙ страницы —
+        # один цвет на разных страницах может быть task/unknown/black (постраничность 4.2.д).
+        acc["color_summary"].append({
+            "page": name, "color": color, "count": cnt,
+            "classification": cls, "task": info.get("task")})
 
         if cls == "black":
             continue
@@ -113,8 +115,8 @@ def finalize(acc: dict, service: str, migrated_at: str) -> Tuple[dict, dict]:
         "collisions": acc["collisions"],
         "jira_unextractable": acc["jira_unextractable"],
         "nested_flattened": acc["nested"],
-        "color_summary": sorted(acc["color_summary"].values(),
-                                key=lambda c: (-c["count"], c["color"])),
+        "color_summary": sorted(acc["color_summary"],
+                                key=lambda c: (c["color"], -c["count"], c["page"])),
     }
     return manifest, report
 
@@ -216,12 +218,15 @@ def render_report_md(report: dict) -> str:
     _section("Автоматически уплощённые вложенные конструкции (требуют проверки)",
              [f"- задачи {n['tasks']} на «{n['page']}»" for n in report.get("nested_flattened", [])])
 
-    lines.append("## Сводка цветов (диагностика набора black_colors)")
+    lines.append("## Сводка цветов по страницам (диагностика набора black_colors)")
     lines.append("")
-    lines.append("| Цвет | Частота | Классификация | Задача |")
-    lines.append("| --- | --- | --- | --- |")
+    lines.append("Классификация цвета указана ДЛЯ КАЖДОЙ страницы отдельно: один цвет на "
+                 "разных страницах может быть task/unknown/black (постраничность, ТЗ 4.2.д).")
+    lines.append("")
+    lines.append("| Цвет | Страница | Частота | Классификация | Задача |")
+    lines.append("| --- | --- | --- | --- | --- |")
     for c in report["color_summary"]:
-        lines.append(f"| {c['color']} | {c['count']} | {c['classification']} | "
+        lines.append(f"| {c['color']} | {c['page']} | {c['count']} | {c['classification']} | "
                      f"{c['task'] or ''} |")
     lines.append("")
     return "\n".join(lines)

@@ -188,6 +188,19 @@ class TestMigrate:
         assert set(report["nested_flattened"][0]["tasks"]) == {"GBO-1", "GBO-2"}
 
 
+class TestPerPageColorSummary:
+    """Фикс C: сводка цветов — постраничная (один цвет может быть task/unknown на разных страницах)."""
+
+    def test_same_color_two_pages_two_classifications(self):
+        p1 = (_hist(_row("2025-01-01", "rgb(153,102,255)", "GBO-1", "01.01.2025")) +
+              '<p><span style="color: rgb(153,102,255)">a</span></p>')       # есть история → task
+        p2 = '<p><span style="color: rgb(153,102,255)">b</span></p>'          # нет истории → unknown
+        _m, r = aggregate([("p1", p1), ("p2", p2)], "КК", "2026-08-15")
+        rows = [c for c in r["color_summary"] if c["color"] == "#9966ff"]
+        assert {row["page"] for row in rows} == {"p1", "p2"}
+        assert {row["classification"] for row in rows} == {"task", "unknown"}
+
+
 class TestRealDebugFiles:
     """Интеграция на приложенных rendered-view HTML (закрепляем поведение на реальных данных)."""
 
