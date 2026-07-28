@@ -122,6 +122,31 @@ class TestNesting:
         assert "rgb(255,153,204)" in rec["html"]  # исходный HTML сохранён для аналитика
 
 
+class TestFencedNotBrokenByMarkers:
+    """E5-фикс: маркеры не должны попадать в fenced-блоки (JSON-эвристика, ТЗ 4.8)."""
+
+    def test_whole_colored_paragraph_is_marker_not_fenced(self):
+        # Абзац из одного цветного спана: {++..++} не должен приниматься за JSON и фенситься.
+        html = '<p><span style="color: rgb(255,102,0)">Весь абзац под задачей.</span></p>'
+        out = create_critic_extractor({"#ff6600": "T-1"}).extract(html)
+        assert "```" not in out
+        assert "{++T-1: Весь абзац под задачей.++}" in out
+
+    def test_json_paragraph_fenced_without_markers(self):
+        # Настоящий JSON с цветным полем: фенсим по исходному тексту, внутри маркеров нет.
+        html = '<p>{"поле": <span style="color: rgb(255,102,0)">"значение"</span>}</p>'
+        out = create_critic_extractor({"#ff6600": "T-1"}).extract(html)
+        assert "```" in out
+        assert "{++" not in out
+
+    def test_no_e5_findings_after_fix(self):
+        from app.scripts.CI.critic import lint_text
+        html = ('<p><span style="color: rgb(255,102,0)">Строка требования один.</span></p>'
+                '<p><span style="color: rgb(255,102,0)">Строка требования два.</span></p>')
+        out = create_critic_extractor({"#ff6600": "T-1"}).extract(html)
+        assert not [f for f in lint_text(out) if f.rule == "E5"]
+
+
 class TestNoRegressionWhenModeOff:
     """critic_mode выключен по умолчанию — существующие режимы не порождают маркеров."""
 

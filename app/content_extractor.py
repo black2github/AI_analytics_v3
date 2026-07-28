@@ -1260,6 +1260,30 @@ class ContentExtractor:
         (после trim), оборачивает в тройные обратные кавычки как код.
         Это покрывает JSON-примеры, набранные в Confluence как обычный текст.
         """
+        # Режим CriticMarkup: решение о fenced принимаем по ИСХОДНОМУ тексту абзаца, а не по
+        # обёрнутому результату — иначе маркер {++…++} (начинается с '{', кончается на '}')
+        # ошибочно принимается за JSON и заворачивается в ```…``` (ТЗ 4.8: маркеры в коде
+        # недопустимы). Настоящий JSON-абзац фенсим, но содержимое внутри — без маркеров.
+        if self.config.critic_mode:
+            original = element.get_text().strip()
+            if original.startswith('{') and original.endswith('}'):
+                prev = self._critic_suppress
+                self._critic_suppress = True
+                try:
+                    content = self._process_children(element, context)
+                finally:
+                    self._critic_suppress = prev
+                stripped = content.strip()
+                return f"\n```\n{stripped}\n```\n" if stripped else ""
+
+            content = self._process_children(element, context)
+            if not content:
+                return ""
+            if not content.endswith('\n'):
+                content += '\n'
+            return content
+
+        # --- Прежнее поведение (не-критик) без изменений ---
         content = self._process_children(element, context)
 
         if not content:
