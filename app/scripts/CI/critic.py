@@ -767,6 +767,97 @@ def _run_lint(root: Path, fmt: str) -> int:
     return 1 if errors else 0
 
 
+_STATUS_CELL_RE = re.compile(r"\|\s*[+-](" + TASK_ID_PATTERN + r")\s*\|")
+_DATA_TASK_RE = re.compile(r'data-task="(' + TASK_ID_PATTERN + r')"')
+
+
+def collect_task_occurrences(text: str) -> dict:
+    """Собирает идентификаторы задач и номера строк из всех нотаций одного файла (ТЗ п. 5.4).
+
+    Источники: inline-маркеры {++/--/~~ ID:}, служебный столбец status (+ID/-ID),
+    HTML-нотация data-task="ID". Содержимое fenced code blocks игнорируется.
+    Возвращает {task_id: [отсортированные уникальные номера строк]}.
+    """
+    spans = _region_spans(text)
+    code = [(s, e) for s, e, kind in spans if kind == "code"]
+
+    def in_code(pos: int) -> bool:
+        return any(s <= pos < e for s, e in code)
+
+    occ: dict = {}
+
+    def add(task: str, pos: int):
+        if in_code(pos):
+            return
+        occ.setdefault(task, set()).add(_line_at(text, pos))
+
+    for rx in (_INS_RE, _DEL_RE, _SUB_RE):
+        for m in rx.finditer(text):
+            add(m.group(1), m.start())
+    for m in _STATUS_CELL_RE.finditer(text):
+        add(m.group(1), m.start(1))
+    for m in _DATA_TASK_RE.finditer(text):
+        add(m.group(1), m.start(1))
+
+    return {task: sorted(lines) for task, lines in occ.items()}
+
+
+def _run_list(root: Path, fmt: str, manifest_path: Optional[str]) -> int:
+    """Отчёт «что ещё не реализовано» (ТЗ п. 5.4): задачи с маркерами в репозитории.
+
+    С --manifest разделяет мигрировавшие (есть в манифесте) и новые задачи и показывает
+    остаток переходного периода — сколько мигрировавших задач ещё имеют маркеры.
+    """
+    tasks: dict = {}  # task_id -> list[(file, line)]
+    for fp in _iter_md_files(root):
+        text = _read_text_preserving(fp)
+        for task, lines in collect_task_occurrences(text).items():
+            tasks.setdefault(task, []).extend((str(fp), ln) for ln in lines)
+
+    found = set(tasks)
+    migrated_ids: set = set()
+    if manifest_path:
+        import yaml  # ленивый импорт: базовый инструмент зависит только от stdlib + bs4
+        with open(manifest_path, "r", encoding="utf-8") as f:
+            manifest = yaml.safe_load(f) or {}
+        migrated_ids = set((manifest.get("tasks") or {}).keys())
+
+    migrated_present = sorted(found & migrated_ids)
+    new_present = sorted(found - migrated_ids)
+    cleared = sorted(migrated_ids - found)  # мигрировавшие задачи БЕЗ маркеров (вышли на ПРОМ)
+
+    if fmt == "json":
+        payload = {
+            "tasks": {t: [{"file": f, "line": ln} for f, ln in sorted(tasks[t])]
+                      for t in sorted(tasks)},
+            "total_tasks": len(tasks),
+        }
+        if manifest_path:
+            payload["migrated_with_markers"] = migrated_present
+            payload["new_tasks"] = new_present
+            payload["transition_remaining"] = len(migrated_present)
+            payload["migrated_cleared"] = cleared
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return 0
+
+    heading = "#" if fmt == "md" else ""
+    print(f"{heading} Незавершённые задачи (маркеры в репозитории): {len(tasks)}")
+    for task in sorted(tasks):
+        positions = sorted(tasks[task])
+        print(f"- {task}: {len(positions)} позиций")
+        for f, ln in positions:
+            print(f"    {f}:{ln}")
+    if manifest_path:
+        print("")
+        print(f"Переходный период: мигрировавших задач с маркерами — {len(migrated_present)} "
+              f"из {len(migrated_ids)} (снято на ПРОМ: {len(cleared)}).")
+        if migrated_present:
+            print("  Остались мигрировавшие: " + ", ".join(migrated_present))
+        if new_present:
+            print("  Новые задачи (не из манифеста): " + ", ".join(new_present))
+    return 0
+
+
 def _valid_task_id(value: str) -> str:
     if not _TASK_ID_FULL_RE.match(value):
         raise argparse.ArgumentTypeError(
@@ -808,9 +899,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_lint.add_argument("--format", choices=("text", "json"), default="text",
                         dest="fmt", help="формат вывода находок")
 
-    # list — Модуль 3, п. 5.4, следующий этап: заглушка, чтобы поверхность CLI совпадала с ТЗ.
-    p_list = sub.add_parser("list", help="не реализовано на этом этапе (Модуль 3, п. 5.4)")
-    _add_common(p_list)
+    p_list = sub.add_parser("list", help="список незавершённых задач в репозитории (п. 5.4)")
+    p_list.add_argument("--path", default=".", help="файл .md или каталог (обход *.md)")
+    p_list.add_argument("--format", choices=("text", "md", "json"), default="text",
+                        dest="fmt", help="формат вывода")
+    p_list.add_argument("--manifest", default=None,
+                        help="migration-manifest.yaml — разделить мигрировавшие/новые задачи")
 
     return parser
 
@@ -826,9 +920,7 @@ def main(argv: Optional[List[str]] = None) -> int:
         return _run_lint(root, args.fmt)
 
     if args.command == "list":
-        print("Команда 'list' не реализована на этом этапе (Модуль 3, п. 5.4).",
-              file=sys.stderr)
-        return 2
+        return _run_list(root, args.fmt, args.manifest)
 
     status_column = getattr(args, "status_column", STATUS_COLUMN)
     op = "apply" if args.command in ("apply", "apply-all") else "reject"
