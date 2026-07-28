@@ -147,6 +147,25 @@ class TestFencedNotBrokenByMarkers:
         assert not [f for f in lint_text(out) if f.rule == "E5"]
 
 
+class TestInnermostColorWins:
+    """Фикс A: эффективный цвет = ближайший предок; внутренний чёрный перекрывает внешний."""
+
+    CMAP = {"#ff6600": "T-1"}
+
+    def test_black_inside_colored_wrapper_not_marked(self):
+        # Внешний оранжевый спан, текст внутри под чёрным спаном → на экране чёрный → без маркера.
+        html = ('<p><span style="color: rgb(255,102,0)">'
+                '<span style="color: rgb(0,0,0)">текст на ПРОМ</span></span></p>')
+        out = create_critic_extractor(self.CMAP).extract(html)
+        assert "{++" not in out
+        assert "текст на ПРОМ" in out
+
+    def test_genuinely_colored_still_marked(self):
+        html = '<p><span style="color: rgb(255,102,0)">целиком оранжевый</span></p>'
+        out = create_critic_extractor(self.CMAP).extract(html)
+        assert "{++T-1: целиком оранжевый++}" in out
+
+
 class TestNoRegressionWhenModeOff:
     """critic_mode выключен по умолчанию — существующие режимы не порождают маркеров."""
 

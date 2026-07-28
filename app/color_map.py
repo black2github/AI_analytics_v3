@@ -96,34 +96,43 @@ def _identify_columns(table: Tag) -> Tuple[Dict[str, int], Optional[Tag]]:
     return {}, None
 
 
-def _extract_row_colors(cell: Tag) -> List[str]:
-    """Все НЕ-чёрные цвета ячейки «Описание», нормализованные к #rrggbb (ТЗ п. 4.2.в).
+def _nearest_color(text_node) -> Optional[str]:
+    """Эффективный (ближайший) цвет текстового узла: ``color`` ближайшего предка,
+    задающего цвет. CSS: внутренний цвет перекрывает внешний, поэтому внешний цветной
+    спан с чёрным текстом внутри даёт ЧЁРНЫЙ. None — цвет не задан ни одним предком.
+    """
+    cur = text_node.parent
+    while cur is not None and isinstance(cur, Tag):
+        style = (cur.get("style") or "").lower()
+        m = re.search(r"color\s*:\s*([^;]+)", style)
+        if m:
+            return m.group(1).strip()
+        if cur.name == "font" and cur.get("color"):
+            return cur.get("color").strip()
+        cur = cur.parent
+    return None
 
-    Одна строка описания может нести несколько цветов — все попадают в результат
-    (см. п. 4.2.г «серия задач одного цвета»). Чёрные отбрасываются: чёрное описание =
-    задача уже на ПРОМ.
+
+def _extract_row_colors(cell: Tag) -> List[str]:
+    """НЕ-чёрные ЭФФЕКТИВНЫЕ цвета текста ячейки «Описание» (ТЗ п. 4.2.в).
+
+    Цвет берётся по БЛИЖАЙШЕМУ предку каждого текстового прогона (внутренний цвет
+    перекрывает внешний): внешний цветной спан с чёрным текстом внутри = чёрный и в карту
+    не идёт. Одна строка может нести несколько разных цветов — все попадают в результат
+    (п. 4.2.г «серия задач одного цвета»).
     """
     colors: List[str] = []
     seen = set()
-
-    def _add(raw: Optional[str]):
-        if not raw:
-            return
-        if is_black_color(raw):
-            return
+    for text_node in cell.find_all(string=True):
+        if not str(text_node).strip():
+            continue
+        raw = _nearest_color(text_node)
+        if not raw or is_black_color(raw):
+            continue
         norm = normalize_color(raw)
         if norm and norm not in seen:
             seen.add(norm)
             colors.append(norm)
-
-    for tag in cell.find_all(True):
-        style = (tag.get("style") or "").lower()
-        m = re.search(r"color\s*:\s*([^;]+)", style)
-        if m:
-            _add(m.group(1).strip())
-        # Устаревшая форма <font color="...">
-        if tag.name == "font" and tag.get("color"):
-            _add(tag.get("color").strip())
     return colors
 
 
@@ -196,15 +205,13 @@ def survey_body_colors(raw_html: str, result: "HistoryMapResult") -> Dict[str, d
 
     unresolved_colors = {u["color"] for u in result.unresolved_jira}
 
+    # Считаем по ТЕКСТОВЫМ прогонам и их ЭФФЕКТИВНОМУ (ближайшему) цвету, а не по тегам:
+    # внешний цветной спан с чёрным текстом внутри не должен считаться цветным (ТЗ 4.3).
     freq: Dict[str, int] = {}
-    for tag in soup.find_all(True):
-        raw = None
-        style = (tag.get("style") or "").lower()
-        m = re.search(r"color\s*:\s*([^;]+)", style)
-        if m:
-            raw = m.group(1).strip()
-        elif tag.name == "font" and tag.get("color"):
-            raw = tag.get("color").strip()
+    for text_node in soup.find_all(string=True):
+        if not str(text_node).strip():
+            continue
+        raw = _nearest_color(text_node)
         if not raw:
             continue
         norm = normalize_color(raw)

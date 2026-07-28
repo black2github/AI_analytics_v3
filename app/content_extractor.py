@@ -739,6 +739,11 @@ class ContentExtractor:
                 outer_norm = normalize_color(self._element_own_color(element) or "")
                 if self._has_nested_diff_color(element, outer_norm):
                     return self._flatten_nested_critic(element)
+                # Внутренний цвет перекрывает внешний (ТЗ, CSS): если ВЕСЬ текст элемента
+                # перекрашен изнутри (напр. внешний цветной спан с чёрным текстом внутри) —
+                # не оборачиваем целиком, спускаемся внутрь (иначе маркер на ПРОМ-тексте).
+                if not self._element_effectively_colored(element, outer_norm):
+                    return self._dispatch_element(element, context)
                 self._critic_stack.append(task)
                 try:
                     inner = self._dispatch_element(element, context)
@@ -746,6 +751,33 @@ class ContentExtractor:
                     self._critic_stack.pop()
                 return self._wrap_critic(task, kind, inner)
         return self._dispatch_element(element, context)
+
+    def _element_effectively_colored(self, element: Tag, own_norm: Optional[str]) -> bool:
+        """True, если хотя бы у одного текстового прогона внутри element ЭФФЕКТИВНЫЙ
+        (ближайший) цвет совпадает с собственным цветом element (own_norm).
+
+        Если весь текст перекрашен вложенными элементами (напр. внешний цветной спан, а
+        текст внутри — под чёрным спаном), возвращает False: оборачивать в маркер нечего,
+        на экране это чёрный (ПРОМ) текст.
+        """
+        if not own_norm:
+            return False
+        for text_node in element.find_all(string=True):
+            if not str(text_node).strip():
+                continue
+            cur = text_node.parent
+            eff = None
+            while cur is not None and isinstance(cur, Tag):
+                own = self._element_own_color(cur)
+                if own:
+                    eff = own
+                    break
+                if cur is element:
+                    break
+                cur = cur.parent
+            if eff is not None and normalize_color(eff) == own_norm:
+                return True
+        return False
 
     def _element_own_color(self, element: Tag) -> Optional[str]:
         """Собственный цвет элемента (style color: или <font color>), без учёта предков."""

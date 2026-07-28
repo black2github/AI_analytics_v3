@@ -198,10 +198,14 @@ class TestRealDebugFiles:
                 return p.read_text(encoding="utf-8")
         raise AssertionError(f"debug html not found: {name_part}")
 
-    def test_big_file_resolves_and_collides(self):
+    def test_big_file_resolves_via_link_and_drops_phantom_colors(self):
+        # После фикса A цвет берётся по ближайшему предку: фантомные внешние обёртки
+        # (magenta поверх оранжевого, зелёная строка поверх чёрного) отброшены —
+        # остаётся честная карта: оранжевый (через ссылку browse/) и зелёный (одна задача).
         r = build_color_task_map(self._load("Заявка-на-выпуск-карты"))
         assert r.color_to_task.get("#ff6600") == "TEAMTB-3633"   # через ссылку browse/
-        assert r.confidence.get("#99cc00") == "low"              # коллизия зелёного
+        assert r.color_to_task.get("#99cc00") == "GBO-48965"     # зелёный, одна задача
+        assert "#ff00ff" not in r.color_to_task                  # фантомная magenta-обёртка отброшена
 
     def test_small_file_all_unresolved(self):
         r = build_color_task_map(self._load("Настройка-скроллера"))
