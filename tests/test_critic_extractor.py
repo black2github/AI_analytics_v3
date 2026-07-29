@@ -192,6 +192,21 @@ class TestInnermostColorWins:
         assert "{++T-1: целиком оранжевый++}" in out
 
 
+class TestNearBlackExtractor:
+    """ТЗ 4.3.1/4.3.2: near-black не маркируется; но цвет из истории (шаг 3) раньше ΔE (шаг 4)."""
+
+    def test_near_black_not_marked(self):
+        html = '<p>текст <span style="color: rgb(10,10,10)">почти чёрное</span> ещё</p>'
+        out = create_critic_extractor({}).extract(html)   # #0a0a0a не в карте, near-black → чёрный
+        assert "{++" not in out and "почти чёрное" in out
+
+    def test_ordering_color_in_history_wins_over_delta_e(self):
+        # Если цвет сопоставлен задаче в истории — это маркер, даже будучи near-black (шаг 3 < 4).
+        html = '<p><span style="color: rgb(10,10,10)">правка задачи</span></p>'
+        out = create_critic_extractor({"#0a0a0a": "GBO-1"}).extract(html)
+        assert "{++GBO-1: правка задачи++}" in out
+
+
 class TestIgnoredUiColors:
     """Ignore-список: UI-цвета (ссылки/фон) не порождают маркер."""
 

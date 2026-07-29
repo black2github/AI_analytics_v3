@@ -67,8 +67,8 @@ def accumulate_page(acc: dict, name: str, result, survey: dict) -> None:
             "page": name, "color": color, "count": cnt,
             "classification": cls, "task": info.get("task")})
 
-        # 'black' (ПРОМ) и 'ignored' (UI-цвет) — не правка требования: в задачи не идут.
-        if cls in ("black", "ignored"):
+        # 'black'/'near-black' (ПРОМ) и 'ignored' (UI-цвет) — не правка: в задачи не идут.
+        if cls in ("black", "near-black", "ignored"):
             continue
         acc["colored_fragments_total"] += cnt
 
@@ -236,11 +236,12 @@ def render_report_md(report: dict) -> str:
     lines.append("Классификация цвета указана ДЛЯ КАЖДОЙ страницы отдельно: один цвет на "
                  "разных страницах может быть task/unknown/black (постраничность, ТЗ 4.2.д).")
     lines.append("")
-    lines.append("| Цвет | Страница | Частота | Классификация | Задача |")
-    lines.append("| --- | --- | --- | --- | --- |")
+    lines.append("| Цвет | Страница | Частота | Классификация | Задача | ΔE до чёрного |")
+    lines.append("| --- | --- | --- | --- | --- | --- |")
     for c in report["color_summary"]:
+        de = c.get("delta_e")
         lines.append(f"| {c['color']} | {c['page']} | {c['count']} | {c['classification']} | "
-                     f"{c['task'] or ''} |")
+                     f"{c['task'] or ''} | {de if de is not None else ''} |")
     lines.append("")
     return "\n".join(lines)
 

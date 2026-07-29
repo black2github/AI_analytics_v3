@@ -25,7 +25,9 @@ from typing import Dict, List, Optional, Tuple
 from bs4 import BeautifulSoup, Tag
 
 from app.history_cleaner import _is_history_table
-from app.utils.style_utils import normalize_color, is_black_color, is_ignored_color
+from app.utils.style_utils import (
+    normalize_color, is_black_color, is_ignored_color, is_near_black, delta_e_to_black,
+)
 
 # Синонимы заголовков столбцов (нормализованные). Вынесено в «конфиг» модуля (ТЗ п. 4.2.б).
 COLUMN_SYNONYMS = {
@@ -127,7 +129,8 @@ def _extract_row_colors(cell: Tag) -> List[str]:
         if not str(text_node).strip():
             continue
         raw = _nearest_color(text_node)
-        if not raw or is_black_color(raw) or is_ignored_color(raw):
+        # Чёрный / UI-цвет / перцептивно-чёрный (near-black, ТЗ 4.3.1) — не цвет правки.
+        if not raw or is_black_color(raw) or is_ignored_color(raw) or is_near_black(raw):
             continue
         norm = normalize_color(raw)
         if norm and norm not in seen:
@@ -218,16 +221,22 @@ def survey_body_colors(raw_html: str, result: "HistoryMapResult") -> Dict[str, d
         if norm:
             freq[norm] = freq.get(norm, 0) + 1
 
+    # Порядок проверок обязателен (ТЗ п. 4.3.2): точный чёрный → UI → задача (история) →
+    # near-black (ΔE) → UNKNOWN. Шаг near-black ПОСЛЕ поиска в истории, иначе тёмный
+    # цвет-маркер был бы проглочен как чёрный.
     summary: Dict[str, dict] = {}
     for color, count in freq.items():
         if is_black_color(color):
             summary[color] = {"count": count, "classification": "black", "task": None}
         elif is_ignored_color(color):
-            # UI-цвет (ссылки/фон): не требование — отдельная классификация, не UNKNOWN.
             summary[color] = {"count": count, "classification": "ignored", "task": None}
         elif color in result.color_to_task:
             summary[color] = {"count": count, "classification": "task",
                               "task": result.color_to_task[color]}
+        elif is_near_black(color):
+            # Вне палитры, но перцептивно чёрный (ТЗ 4.3.1) → чёрный. ΔE — для калибровки порога.
+            summary[color] = {"count": count, "classification": "near-black", "task": None,
+                              "delta_e": round(delta_e_to_black(color) or 0.0, 2)}
         else:
             reason = "jira-unresolved" if color in unresolved_colors else "not-in-history"
             summary[color] = {
@@ -235,6 +244,7 @@ def survey_body_colors(raw_html: str, result: "HistoryMapResult") -> Dict[str, d
                 "classification": "unknown",
                 "task": "UNKNOWN-" + color.lstrip("#"),
                 "reason": reason,
+                "delta_e": round(delta_e_to_black(color) or 0.0, 2),  # калибровка порога
             }
     return summary
 

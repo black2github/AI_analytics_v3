@@ -5,7 +5,9 @@ import re
 from typing import Dict, List, Optional
 from bs4 import BeautifulSoup, Tag, NavigableString
 from dataclasses import dataclass, field
-from app.utils.style_utils import is_black_color, has_colored_style, normalize_color, is_ignored_color
+from app.utils.style_utils import (
+    is_black_color, has_colored_style, normalize_color, is_ignored_color, is_near_black,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -797,20 +799,34 @@ class ContentExtractor:
             return True
         return element.find(["s", "del", "strike"]) is not None
 
-    def _critic_marker_for(self, element: Tag):
-        """Возвращает (task_id, kind) для цветного элемента либо None.
+    def _is_edit_color(self, color: Optional[str]) -> bool:
+        """Является ли цвет РЕАЛЬНОЙ правкой требования (порядок проверок ТЗ п. 4.3.2).
 
-        kind: 'del' для зачёркнутого (удаляемого) фрагмента, иначе 'ins'. Цвет нормализуется
-        и ищется в color_map; неизвестный не-чёрный цвет даёт плейсхолдер UNKNOWN-<hex>
-        (ТЗ п. 4.2.ж). Чёрный/бесцветный элемент маркера не порождает.
+        Не правка (→ False): нет цвета; точный чёрный; UI-цвет (ignore-список); либо цвет
+        перцептивно неотличим от чёрного (near-black) И НЕ сопоставлен задаче в истории.
+        Правка (→ True): цвет из карты истории (даже тёмный — это маркер задачи, шаг 3 ПЕРЕД
+        шагом 4), либо не-чёрный цвет далеко от чёрного.
         """
-        color = self._element_own_color(element)
-        # Чёрный = ПРОМ; UI-цвет (ссылки/фон) — не правка требования (ignore-список).
         if not color or is_black_color(color) or is_ignored_color(color):
-            return None
+            return False
         norm = normalize_color(color)
         if not norm:
+            return False
+        if norm in self.config.color_map:   # шаг 3: цвет-маркер задачи — раньше ΔE
+            return True
+        return not is_near_black(color)      # шаг 4: near-black, не в истории → чёрный
+
+    def _critic_marker_for(self, element: Tag):
+        """Возвращает (task_id, kind) для элемента-правки либо None.
+
+        kind: 'del' для зачёркнутого (удаляемого) фрагмента, иначе 'ins'. Неизвестный
+        не-чёрный цвет даёт плейсхолдер UNKNOWN-<hex> (ТЗ п. 4.2.ж). Чёрный / near-black /
+        UI-цвет / бесцветный маркера не порождают (см. _is_edit_color).
+        """
+        color = self._element_own_color(element)
+        if not self._is_edit_color(color):
             return None
+        norm = normalize_color(color)
         task = self.config.color_map.get(norm) or ("UNKNOWN-" + norm.lstrip("#"))
         kind = "del" if self._is_strikethrough(element) else "ins"
         return task, kind
@@ -863,17 +879,17 @@ class ContentExtractor:
         found = []
         for tag in [element] + element.find_all(True):
             color = self._element_own_color(tag)
-            if color and not is_black_color(color) and not is_ignored_color(color):
+            if self._is_edit_color(color):
                 norm = normalize_color(color)
                 if norm:
                     found.append((norm, len(list(tag.parents))))
         return found
 
     def _has_nested_diff_color(self, element: Tag, outer_norm: Optional[str]) -> bool:
-        """Есть ли внутри element цветной потомок с ДРУГИМ (не outer) не-чёрным цветом."""
+        """Есть ли внутри element потомок-правка с ДРУГИМ (не outer) цветом."""
         for tag in element.find_all(True):
             color = self._element_own_color(tag)
-            if color and not is_black_color(color) and not is_ignored_color(color):
+            if self._is_edit_color(color):
                 norm = normalize_color(color)
                 if norm and norm != outer_norm:
                     return True
@@ -903,8 +919,9 @@ class ContentExtractor:
                 if cur is element:
                     break
                 cur = cur.parent
-            # Зачёркнутый цветной черновик другой задачи → отбросить; чёрный струк — сохранить.
-            if struck and color and not is_black_color(color) and not is_ignored_color(color):
+            # Зачёркнутый ЦВЕТНОЙ (правка) черновик другой задачи → отбросить; зачёркнутый
+            # чёрный/near-black (реальное удаление с ПРОМ) — сохранить (не терять требование).
+            if struck and self._is_edit_color(color):
                 continue
             parts.append(str(text_node))
         return re.sub(r"\s+", " ", "".join(parts)).strip()
@@ -964,8 +981,8 @@ class ContentExtractor:
                 if cur is cell:
                     break
                 cur = cur.parent
-            if color is None or is_black_color(color):
-                has_plain = True
+            if not self._is_edit_color(color):
+                has_plain = True   # чёрный/near-black/UI/бесцветный — не правка
             else:
                 colors.add(normalize_color(color))
                 if strike:

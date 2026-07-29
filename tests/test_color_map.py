@@ -4,7 +4,7 @@
 # «цвет → задача» из истории изменений, обход тела, манифест и отчёт (режим «только отчёт»).
 # Нумерация ссылается на список тестов ТЗ п. 9 (8-14).
 
-from app.utils.style_utils import normalize_color, is_black_color
+from app.utils.style_utils import normalize_color, is_black_color, is_near_black
 from app.color_map import build_color_task_map, survey_body_colors
 from app.scripts.migrate_colors import aggregate, migrate_pages
 from app.scripts.CI.critic import process_text
@@ -186,6 +186,32 @@ class TestMigrate:
                                           tmp_path / "docs")
         assert report["stats"]["nested_flattened"] == 1
         assert set(report["nested_flattened"][0]["tasks"]) == {"GBO-1", "GBO-2"}
+
+
+class TestNearBlack:
+    """ТЗ 4.3.1/4.3.2: цвет вне палитры, перцептивно неотличимый от чёрного (ΔE), → чёрный."""
+
+    def _hist1(self):
+        return _hist(_row("2025-01-01", "rgb(153,102,255)", "GBO-1", "01.01.2025"))
+
+    def test_delta_e_separates_grey_from_saturated_darks(self):
+        assert is_near_black("#0a0a0a")        # почти-чёрный серый (ΔE мал)
+        assert not is_near_black("#000080")    # navy — реальный тёмный ЦВЕТ (ΔE велик)
+        assert not is_near_black("#008000")    # dark green
+        assert not is_near_black("#ff6600")    # оранжевый
+
+    def test_near_black_classified_black_with_delta_e(self):
+        body = '<p><span style="color: rgb(10,10,10)">почти чёрный вне палитры</span></p>'
+        r = build_color_task_map(self._hist1() + body)
+        survey = survey_body_colors(self._hist1() + body, r)
+        assert survey["#0a0a0a"]["classification"] == "near-black"
+        assert "delta_e" in survey["#0a0a0a"]           # для калибровки порога (req 5)
+
+    def test_saturated_dark_stays_unknown(self):
+        body = '<p><span style="color: rgb(0,0,128)">navy текст</span></p>'  # #000080
+        r = build_color_task_map(self._hist1() + body)
+        survey = survey_body_colors(self._hist1() + body, r)
+        assert survey["#000080"]["classification"] == "unknown"
 
 
 class TestIgnoredColors:

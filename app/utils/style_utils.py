@@ -114,6 +114,68 @@ def normalize_color(color_value: str) -> Optional[str]:
 _BLACK_NORMALIZED = {n for n in (normalize_color(c) for c in black_colors) if n}
 
 
+# --- Перцептивная близость к чёрному (ТЗ п. 4.3.1): ΔE CIE76 в CIE Lab ---------------
+# Цвет вне палитры редактора (систематический артефакт: вставка из буфера, REST/HTML-макрос,
+# тема), визуально неотличимый от чёрного, классифицируется как чёрный без ручного разбора.
+# ВАЖНО (п. 4.3.2): эту проверку применять ТОЛЬКО ПОСЛЕ поиска цвета в таблице истории —
+# иначе тёмный цвет-маркер (тёмно-синий/зелёный из палитры) будет проглочен как чёрный.
+# Поэтому near-black НЕ входит в is_black_color и не добавляется в black_colors (набор
+# остаётся ручным — иначе порог «уползает» от прогона к прогону).
+
+# Порог ΔE. По умолчанию 3 (граница воспринимаемого различия). Калибруется по отчёту
+# первого прогона — в тёмной области Lab перцептивно неравномерен (ТЗ п. 4.3.1, треб. 5).
+NEAR_BLACK_DELTA_E = 3.0
+
+
+def _srgb_hex_to_lab(hex6: str):
+    """sRGB '#rrggbb' → (L*, a*, b*) в CIE Lab. Линеаризация гаммы + XYZ с белой точкой D65."""
+    r = int(hex6[1:3], 16) / 255.0
+    g = int(hex6[3:5], 16) / 255.0
+    b = int(hex6[5:7], 16) / 255.0
+
+    def _lin(c):  # линеаризация sRGB-гаммы (пропуск = типовая ошибка в тёмной области)
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+    r, g, b = _lin(r), _lin(g), _lin(b)
+    x = r * 0.4124 + g * 0.3576 + b * 0.1805
+    y = r * 0.2126 + g * 0.7152 + b * 0.0722
+    z = r * 0.0193 + g * 0.1192 + b * 0.9505
+    # Нормировка на белую точку D65.
+    x, y, z = x / 0.95047, y / 1.0, z / 1.08883
+
+    def _f(t):
+        return t ** (1.0 / 3.0) if t > 0.008856 else (7.787 * t + 16.0 / 116.0)
+
+    fx, fy, fz = _f(x), _f(y), _f(z)
+    return (116.0 * fy - 16.0, 500.0 * (fx - fy), 200.0 * (fy - fz))
+
+
+# Lab-координаты элементов black_colors — считаются один раз.
+_BLACK_LAB = [_srgb_hex_to_lab(n) for n in _BLACK_NORMALIZED]
+
+
+def delta_e_to_black(color_value: str) -> Optional[float]:
+    """ΔE CIE76 от цвета до БЛИЖАЙШЕГО элемента black_colors (или None, если цвет не распознан)."""
+    norm = normalize_color(color_value)
+    if not norm:
+        return None
+    l0, a0, b0 = _srgb_hex_to_lab(norm)
+    return min(((l0 - l) ** 2 + (a0 - a) ** 2 + (b0 - b) ** 2) ** 0.5
+               for (l, a, b) in _BLACK_LAB)
+
+
+def is_near_black(color_value: str, threshold: Optional[float] = None) -> bool:
+    """True, если цвет перцептивно неотличим от чёрного (ΔE < порога, ТЗ п. 4.3.1).
+
+    Применять ТОЛЬКО после поиска в истории (п. 4.3.2). Точный чёрный уже покрыт
+    is_black_color — здесь именно «вне палитры, но визуально чёрный».
+    """
+    d = delta_e_to_black(color_value)
+    if d is None:
+        return False
+    return d < (NEAR_BLACK_DELTA_E if threshold is None else threshold)
+
+
 # Нефункциональные цвета интерфейса Confluence/Atlassian — НЕ разметка требований, а стили
 # ссылок/фона. При миграции цвета их не считаем правкой (не порождают маркер/UNKNOWN),
 # трактуем как «не требование». Расширять по мере обнаружения на реальных данных.
