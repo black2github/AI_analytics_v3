@@ -213,6 +213,14 @@ class TestNearBlack:
         survey = survey_body_colors(self._hist1() + body, r)
         assert survey["#000080"]["classification"] == "unknown"
 
+    def test_delta_e_propagates_to_report_summary(self):
+        # ΔE должен доходить до строки сводки отчёта (вход калибровки порога, req 5).
+        page = self._hist1() + '<p><span style="color: rgb(0,0,128)">navy</span></p>'
+        _m, report = aggregate([("p", page)], "КК", "2026-07-29")
+        navy = [c for c in report["color_summary"] if c["color"] == "#000080"][0]
+        assert navy["classification"] == "unknown"
+        assert isinstance(navy["delta_e"], float) and navy["delta_e"] > 10
+
 
 class TestIgnoredColors:
     """Ignore-список UI-цветов: не задача и не UNKNOWN, отдельная классификация 'ignored'."""

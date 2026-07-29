@@ -65,7 +65,8 @@ def accumulate_page(acc: dict, name: str, result, survey: dict) -> None:
         # один цвет на разных страницах может быть task/unknown/black (постраничность 4.2.д).
         acc["color_summary"].append({
             "page": name, "color": color, "count": cnt,
-            "classification": cls, "task": info.get("task")})
+            "classification": cls, "task": info.get("task"),
+            "delta_e": info.get("delta_e")})  # ΔE до чёрного — для калибровки порога (4.3.1)
 
         # 'black'/'near-black' (ПРОМ) и 'ignored' (UI-цвет) — не правка: в задачи не идут.
         if cls in ("black", "near-black", "ignored"):
