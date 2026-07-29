@@ -71,9 +71,25 @@ class TestLintWarnings:
         text = "Первое {++GBO-1: a++}. Второе {++GBO-2: b++}."
         assert "W1" not in _rules(text)
 
-    def test_w2_deleted_text_matches_other_task_insertion(self):
-        text = "Тут {++GBO-2: действующая++}. А там {--GBO-1: действующая--}."
-        assert "W2" in _rules(text)
+
+class TestE8ContainedDeletion:
+    """E8 (ошибка, п. 6 / 4.5.1): удаляемый текст входит в состав вставки другой задачи."""
+
+    def test_deletion_contained_in_other_insertion_is_error(self):
+        # «старое условие» входит в состав вставки GBO-2 → E8 (на ПРОМ не был).
+        text = ("{++GBO-2: добавлено старое условие теперь++}. "
+                "А тут {--GBO-1: старое условие--}.")
+        assert "E8" in _rules(text)
+
+    def test_partial_substring_not_flagged(self):
+        # ТЗ тест 11: удаляемый текст лишь ЧАСТИЧНО пересекается со вставкой (не входит целиком).
+        text = ("{++GBO-2: добавлено старое условие++}. "
+                "А тут {--GBO-1: старое условие полностью иное--}.")
+        assert "E8" not in _rules(text)
+
+    def test_same_task_not_flagged(self):
+        text = "{++GBO-1: старое условие тут++} и {--GBO-1: старое условие--}."
+        assert "E8" not in _rules(text)
 
 
 class TestLintClean:

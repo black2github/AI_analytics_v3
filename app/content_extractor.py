@@ -879,23 +879,34 @@ class ContentExtractor:
                     return True
         return False
 
-    def _collect_nonstruck_text(self, element: Tag) -> str:
-        """Текст element БЕЗ зачёркнутых фрагментов (ТЗ п. 4.5: черновик другой задачи
-        не переносится). Пробелы схлопываются — конструкция инлайновая."""
+    def _collect_flattened_text(self, element: Tag) -> str:
+        """Текст element для уплощения (ТЗ п. 4.5.3, шаг 2).
+
+        Отбрасывается только зачёркнутый ЦВЕТНОЙ текст (чужой/черновой — на ПРОМ не был).
+        Зачёркнутый ЧЁРНЫЙ текст (реальное удаление с ПРОМ) НЕ теряется — сохраняется в
+        выводе: молчаливая потеря требования ПРОМ недопустима (приоритет — сохранение текста).
+        Пробелы схлопываются — конструкция инлайновая.
+        """
         parts = []
         for text_node in element.find_all(string=True):
             cur = text_node.parent
             struck = False
+            color = None
             while cur is not None and isinstance(cur, Tag):
+                if color is None:
+                    own = self._element_own_color(cur)
+                    if own:
+                        color = own
                 if (cur.name in ("s", "del", "strike")
                         or "line-through" in (cur.get("style") or "").lower()):
                     struck = True
-                    break
                 if cur is element:
                     break
                 cur = cur.parent
-            if not struck:
-                parts.append(str(text_node))
+            # Зачёркнутый цветной черновик другой задачи → отбросить; чёрный струк — сохранить.
+            if struck and color and not is_black_color(color) and not is_ignored_color(color):
+                continue
+            parts.append(str(text_node))
         return re.sub(r"\s+", " ", "".join(parts)).strip()
 
     def _flatten_nested_critic(self, element: Tag) -> str:
@@ -916,9 +927,11 @@ class ContentExtractor:
         inner_task = (self.config.color_map.get(deepest_norm)
                       or ("UNKNOWN-" + deepest_norm.lstrip("#"))) if deepest_norm else None
 
-        self._critic_report.append({"tasks": tasks, "html": str(element)})
+        # confidence=high: сработал признак структурной вложенности (ТЗ п. 4.5.2, признак 1).
+        self._critic_report.append(
+            {"tasks": tasks, "html": str(element), "confidence": "high"})
 
-        surviving = self._collect_nonstruck_text(element)
+        surviving = self._collect_flattened_text(element)
         if not surviving or inner_task is None:
             return ""
         # Всегда вставка: выживший текст — это новое состояние под поздней задачей.

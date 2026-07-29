@@ -608,10 +608,7 @@ def lint_text(text: str, path: Optional[Path] = None) -> List[Finding]:
         le = text.find("\n", pos)
         return text[ls: le if le != -1 else len(text)]
 
-    insertions_by_task = {}   # id -> list[(текст, line)]
-    deletions = []            # list[(id, текст, line)] — для W2 (del и левая часть sub)
     valid_markers = []        # list[(start, end, id)] — для W1
-
     covered_spans = []        # диапазоны опознанных маркеров — для поиска незакрытых (E4)
 
     for opener_kind, rx in _LOOSE_RES.items():
@@ -640,15 +637,6 @@ def lint_text(text: str, path: Optional[Path] = None) -> List[Finding]:
                     add(line, "error", "E1", "литеральная вложенность маркеров запрещена")
 
                 valid_markers.append((start, m.end(), task_id))
-
-                # Учёт для W2.
-                if opener_kind == "ins":
-                    insertions_by_task.setdefault(task_id, []).append((after.strip(), line))
-                elif opener_kind == "del":
-                    deletions.append((task_id, after.strip(), line))
-                else:  # sub: левая часть (старое) до ~>
-                    old = after.split("~>", 1)[0]
-                    deletions.append((task_id, old.strip(), line))
 
             # Структурные правила — по положению маркера, независимо от валидности ID.
             if _in_ranges(start, smartlinks):
@@ -689,19 +677,13 @@ def lint_text(text: str, path: Optional[Path] = None) -> List[Finding]:
                 f"маркеры разных задач в одном предложении ({a_id}, {b_id}) — "
                 f"проверьте зависимость задач в Jira")
 
-    # W2: удаляемый/заменяемый текст буквально совпадает со вставкой ДРУГОЙ задачи (наруш. п. 4.5).
-    ins_index = {}
-    for tid, items in insertions_by_task.items():
-        for txt, _ in items:
-            if txt:
-                ins_index.setdefault(txt, set()).add(tid)
-    for tid, txt, line in deletions:
-        owners = ins_index.get(txt)
-        if owners and any(other != tid for other in owners):
-            others = ", ".join(sorted(o for o in owners if o != tid))
-            add(line, "warning", "W2",
-                f"удаляемый текст совпадает со вставкой другой задачи ({others}) — "
-                f"вероятное нарушение правила уплощения вложенности (п. 4.5)")
+    # E8: удаляемый текст ВХОДИТ в состав вставки другой задачи в том же файле (ТЗ п. 6,
+    # определение п. 4.5.1). Ошибка: {--…--} объявляет текст существующим на ПРОМ, хотя он —
+    # часть чужого черновика; ведёт к неверному reject (недостоверный «текущий ПРОМ»).
+    for f in find_contained_deletions(text):
+        add(_line_at(text, f["pos"]), "error", "E8",
+            f"удаляемый текст входит в состав вставки задачи {f['insert_task']} — "
+            f"на ПРОМ не был (нарушение п. 4.5.1)")
 
     # Стабильный порядок + дедупликация одинаковых находок.
     seen = set()
@@ -806,6 +788,71 @@ def collect_task_occurrences(text: str) -> dict:
         add(m.group(1), m.start(1))
 
     return {task: sorted(lines) for task, lines in occ.items()}
+
+
+def _norm_ws(s: str) -> str:
+    """Схлопывание пробелов + обрезка (nbsp/zero-width уже считаются \\s в Unicode-режиме)."""
+    return re.sub(r"\s+", " ", s).strip()
+
+
+# Порог длины: защита от тривиальных совпадений коротких строк («то», «=») при проверке
+# вхождения — чтобы не отбросить реальное удаление из-за случайной подстроки (ТЗ 4.5.4).
+_MIN_CONTAINED_LEN = 4
+
+
+def _insertions_by_task(text: str) -> dict:
+    """Нормализованные тексты вставок по задачам: {++ID: X++} и правая часть {~~ID: ..~>X~~}."""
+    ins: dict = {}
+    for m in _INS_RE.finditer(text):
+        ins.setdefault(m.group(1), []).append(_norm_ws(m.group(2)))
+    for m in _SUB_RE.finditer(text):
+        ins.setdefault(m.group(1), []).append(_norm_ws(m.group(3)))
+    return ins
+
+
+def find_contained_deletions(text: str) -> List[dict]:
+    """Удаляемые фрагменты, чей текст ВХОДИТ в состав вставки ДРУГОЙ задачи в том же файле.
+
+    Нарушение определения п. 4.5.1: удаляемый текст объявлен существующим на ПРОМ, хотя
+    находится внутри чужого черновика (никогда на ПРОМ не был). Используется и пост-проходом
+    миграции (4.5.4), и линтером (п. 6). Проверяет {--ID: X--} и левую часть {~~ID: X~>..~~}.
+    """
+    ins = _insertions_by_task(text)
+    findings: List[dict] = []
+
+    def check(task: str, xtext: str, pos: int):
+        xn = _norm_ws(xtext)
+        if len(xn) < _MIN_CONTAINED_LEN:
+            return
+        for c1, contents in ins.items():
+            if c1 != task and any(xn in c for c in contents):
+                findings.append({"task": task, "text": xn, "insert_task": c1, "pos": pos})
+                return
+
+    for m in _DEL_RE.finditer(text):
+        check(m.group(1), m.group(2), m.start())
+    for m in _SUB_RE.finditer(text):
+        check(m.group(1), m.group(2), m.start())  # левая часть (старое)
+    return findings
+
+
+def postpass_drop_contained_deletions(text: str):
+    """Пост-проход миграции (ТЗ 4.5.4): отбрасывает {--C2: X--}, где X входит в состав чужой
+    вставки — фрагмент никогда не был на ПРОМ (черновик). Возвращает (новый_текст, dropped)."""
+    ins = _insertions_by_task(text)
+    dropped: List[dict] = []
+
+    def repl(m):
+        task, xtext = m.group(1), m.group(2)
+        xn = _norm_ws(xtext)
+        if len(xn) >= _MIN_CONTAINED_LEN:
+            for c1, contents in ins.items():
+                if c1 != task and any(xn in c for c in contents):
+                    dropped.append({"task": task, "text": xn, "insert_task": c1})
+                    return ""  # отбросить черновик целиком (на ПРОМ не был)
+        return m.group(0)
+
+    return _DEL_RE.sub(repl, text), dropped
 
 
 def _run_list(root: Path, fmt: str, manifest_path: Optional[str]) -> int:

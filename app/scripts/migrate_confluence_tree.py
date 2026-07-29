@@ -156,15 +156,23 @@ def _resolve_page_content(page_data: Dict, include_unapproved: bool, critic: boo
         from app.color_map import build_color_task_map, survey_body_colors
         from app.content_extractor import create_critic_extractor
         raw = page_data.get("raw_html", "") or ""
+        from app.scripts.CI.critic import postpass_drop_contained_deletions
         result = build_color_task_map(raw)
         extractor = create_critic_extractor(result.color_to_task)
         content = extractor.extract(raw)
+        # Пост-проход 4.5.4: отбросить {--C2: X--}, где X входит в состав чужой вставки.
+        content, dropped = postpass_drop_contained_deletions(content)
         if critic_acc is not None:
             from app.scripts.migrate_colors import accumulate_page
             accumulate_page(critic_acc, name, result, survey_body_colors(raw, result))
-            for rec in extractor._critic_report:
+            for rec in extractor._critic_report:  # признак 1 (структурная вложенность)
                 critic_acc["nested"].append(
-                    {"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
+                    {"page": name, "tasks": rec["tasks"], "html": rec["html"][:500],
+                     "confidence": rec.get("confidence", "high")})
+            for d in dropped:  # пост-проход: переклассифицировано и отброшено
+                critic_acc["nested"].append(
+                    {"page": name, "tasks": [d["task"], d["insert_task"]],
+                     "html": d["text"][:500], "confidence": "post-pass"})
         return content
     content_field = "full_content" if include_unapproved else "approved_content"
     return page_data.get(content_field, "")

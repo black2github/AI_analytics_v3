@@ -6,7 +6,9 @@
 
 import pytest
 
-from app.scripts.CI.critic import process_text, process_file, main, CriticError
+from app.scripts.CI.critic import (
+    process_text, process_file, main, CriticError, postpass_drop_contained_deletions,
+)
 
 
 class TestInlineIsolation:
@@ -293,6 +295,39 @@ class TestHardFail:
             process_file(fp, "apply", "GBO-1")
         assert ei.value.line == 2
         assert ei.value.path == fp
+
+
+class TestPostpassContainedDeletions:
+    """ТЗ 4.5.4: {--C2: X--}, где X входит в состав чужой вставки, отбрасывается пост-проходом."""
+
+    def test_10_contained_deletion_dropped(self):
+        text = ("{++GBO-2: добавлено старое условие теперь++} и {--GBO-1: старое условие--}.")
+        new, dropped = postpass_drop_contained_deletions(text)
+        assert "{--GBO-1: старое условие--}" not in new   # отброшено (черновик, не ПРОМ)
+        assert len(dropped) == 1 and dropped[0]["insert_task"] == "GBO-2"
+
+    def test_11_partial_substring_not_dropped(self):
+        # Частичное совпадение (не вхождение целиком) → не трогаем.
+        text = ("{++GBO-2: добавлено старое условие++} и "
+                "{--GBO-1: старое условие иное целиком--}.")
+        new, dropped = postpass_drop_contained_deletions(text)
+        assert "{--GBO-1: старое условие иное целиком--}" in new
+        assert dropped == []
+
+    def test_same_task_not_dropped(self):
+        text = "{++GBO-1: старое условие тут++} и {--GBO-1: старое условие--}."
+        new, dropped = postpass_drop_contained_deletions(text)
+        assert "{--GBO-1: старое условие--}" in new
+        assert dropped == []
+
+
+class TestRejectRestoresDeletion:
+    """ТЗ тест 30: reject дословно восстанавливает текст {--ID: X--} (семантика п. 4.5.1)."""
+
+    def test_30_reject_restores_deleted_text(self):
+        out, n = process_text("на месте {--GBO-1: старое условие--} конец", "reject", "GBO-1")
+        assert out == "на месте старое условие конец"
+        assert n == 1
 
 
 class TestApplyAllRejectAll:

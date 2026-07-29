@@ -55,6 +55,32 @@ class TestDeletion:
         assert "{--GBO-12345: старое условие--}" in out
 
 
+class TestStrikethroughDeletion:
+    """ТЗ 4.5: зачёркнутое цветное по умолчанию = удаление {--..--}; сброс только по признаку 1."""
+
+    def test_4_colored_strikethrough_among_black_is_deletion(self):
+        # Признак 3: одиночный зачёркнутый цветной фрагмент среди чёрного → {--ID: текст--}.
+        html = ('<p>Осталось <span style="color: rgb(153,102,255)"><s>старое условие</s></span> '
+                'на месте.</p>')
+        ext = create_critic_extractor({"#9966ff": "GBO-1"})
+        out = ext.extract(html)
+        assert "{--GBO-1: старое условие--}" in out
+        assert ext._critic_report == []  # обычное удаление в отчёт не пишется
+
+    def test_5_nested_flatten_keeps_struck_black_prom_text(self):
+        # Устранение over-drop: во вложенной конструкции зачёркнутый ЦВЕТНОЙ черновик
+        # отбрасывается, а зачёркнутый ЧЁРНЫЙ (реальное удаление с ПРОМ) НЕ теряется.
+        html = ('<p><span style="color: rgb(255,153,204)">Осталось '
+                '<s><span style="color: rgb(0,0,0)">чёрное удаление</span></s> '
+                '<span style="color: rgb(153,204,0)"><s>зелёный черновик</s>новое</span>'
+                '</span></p>')
+        ext = create_critic_extractor({"#ff99cc": "GBO-1", "#99cc00": "GBO-2"})
+        out = ext.extract(html)
+        assert "чёрное удаление" in out          # ПРОМ-текст не потерян (over-drop устранён)
+        assert "зелёный черновик" not in out     # цветной черновик отброшен
+        assert ext._critic_report[0]["confidence"] == "high"
+
+
 class TestUnknownColor:
     """Цвет тела, отсутствующий в карте → плейсхолдер UNKNOWN-<hex> (ТЗ п. 4.2.ж)."""
 

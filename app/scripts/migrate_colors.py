@@ -155,6 +155,7 @@ def migrate_pages(pages, service, migrated_at, out_dir):
     """
     from app.color_map import build_color_task_map, survey_body_colors
     from app.content_extractor import create_critic_extractor
+    from app.scripts.CI.critic import postpass_drop_contained_deletions
 
     out_dir.mkdir(parents=True, exist_ok=True)
     acc = new_accumulator()
@@ -162,9 +163,14 @@ def migrate_pages(pages, service, migrated_at, out_dir):
         result = build_color_task_map(raw_html)
         extractor = create_critic_extractor(result.color_to_task)
         body = extractor.extract(raw_html)
+        body, dropped = postpass_drop_contained_deletions(body)  # ТЗ 4.5.4
         accumulate_page(acc, name, result, survey_body_colors(raw_html, result))
         for rec in extractor._critic_report:
-            acc["nested"].append({"page": name, "tasks": rec["tasks"], "html": rec["html"][:500]})
+            acc["nested"].append({"page": name, "tasks": rec["tasks"], "html": rec["html"][:500],
+                                  "confidence": rec.get("confidence", "high")})
+        for d in dropped:
+            acc["nested"].append({"page": name, "tasks": [d["task"], d["insert_task"]],
+                                  "html": d["text"][:500], "confidence": "post-pass"})
         (out_dir / (_safe_name(name) + ".md")).write_text(
             _render_md(name, body), encoding="utf-8")
 
@@ -216,8 +222,14 @@ def render_report_md(report: dict) -> str:
               f"{c['candidates']}" for c in report["collisions"]])
     _section("Ячейки «Задача в Jira» без извлекаемого id",
              [f"- {j['color']} на «{j['page']}»" for j in report["jira_unextractable"]])
-    _section("Автоматически уплощённые вложенные конструкции (требуют проверки)",
-             [f"- задачи {n['tasks']} на «{n['page']}»" for n in report.get("nested_flattened", [])])
+    nested = report.get("nested_flattened", [])
+    _by_conf = lambda c: [f"- задачи {n['tasks']} на «{n['page']}»"
+                          for n in nested if n.get("confidence") == c]
+    _section("Уплощено: структурная вложенность (confidence: high)", _by_conf("high"))
+    _section("Уплощено: примыкание к вставке (confidence: medium) — приоритет проверки",
+             _by_conf("medium"))
+    _section("Отброшено пост-проходом: текст входит в состав чужой вставки (п. 4.5.4)",
+             _by_conf("post-pass"))
 
     lines.append("## Сводка цветов по страницам (диагностика набора black_colors)")
     lines.append("")
