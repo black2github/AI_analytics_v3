@@ -165,7 +165,7 @@ def _resolve_page_content(page_data: Dict, include_unapproved: bool, critic: boo
         if critic_acc is not None:
             from app.scripts.migrate_colors import accumulate_page
             accumulate_page(critic_acc, name, result, survey_body_colors(raw, result))
-            for rec in extractor._critic_report:  # признак 1 (структурная вложенность)
+            for rec in extractor._critic_report:  # признаки 1 (вложенность) и 2 (примыкание)
                 critic_acc["nested"].append(
                     {"page": name, "tasks": rec["tasks"], "html": rec["html"][:500],
                      "confidence": rec.get("confidence", "high")})

@@ -81,6 +81,102 @@ class TestStrikethroughDeletion:
         assert ext._critic_report[0]["confidence"] == "high"
 
 
+class TestAdjacencyHeuristic:
+    """6-9. Признак 2 «примыкание» (ТЗ п. 4.5.2, confidence: medium).
+
+    Зачёркнутый фрагмент C2 вплотную к вставке другой задачи C1 = черновик, на ПРОМ не был.
+    Тесты на НЕсрабатывание (7, 9) так же обязательны, как на срабатывание: ошибочно
+    отброшенный фрагмент — требование, исчезнувшее из документации (ТЗ, асимметрия ошибок).
+    """
+
+    CMAP2 = {"#ff99cc": "GBO-1", "#99cc00": "GBO-2"}  # C1 розовый, C2 зелёный
+
+    def test_6_adjacent_to_foreign_insertion_is_dropped(self):
+        html = ('<p>Организация <span style="color: rgb(255,153,204)">должна быть '
+                'действующей</span><span style="color: rgb(153,204,0)"><s>головной</s>'
+                '</span> и активной.</p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "головной" not in out          # черновик отброшен
+        assert "{--GBO-2:" not in out         # и не остался удалением
+        assert "{++GBO-1: должна быть действующей++}" in out
+        rec = ext._critic_report[0]
+        assert rec["confidence"] == "medium"
+        assert set(rec["tasks"]) == {"GBO-1", "GBO-2"}
+        assert "головной" in rec["html"]      # исходный HTML — для ручной проверки
+
+    def test_7_black_text_between_breaks_adjacency(self):
+        # Условие 2: непустой ЧЁРНЫЙ узел между фрагментами → признак 3, фрагмент сохраняется.
+        html = ('<p><span style="color: rgb(255,153,204)">новое требование</span>'
+                ' далее по тексту '
+                '<span style="color: rgb(153,204,0)"><s>старое условие</s></span>.</p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "{--GBO-2: старое условие--}" in out
+        assert ext._critic_report == []
+
+    def test_7b_explicitly_black_text_between_breaks_adjacency(self):
+        # Условие 2 в чистом виде: узел между фрагментами имеет АТРИБУТ цвета, но цвет чёрный
+        # (п. 4.3). Без этой проверки чёрный узел был бы принят за «чужую вставку» и требование
+        # ПРОМ молча исчезло бы. Тест без атрибута цвета этот путь не покрывает.
+        html = ('<p><span style="color: rgb(255,153,204)">новое</span>'
+                '<span style="color: rgb(0,0,0)">текст на ПРОМ</span>'
+                '<span style="color: rgb(153,204,0)"><s>старое</s></span></p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "{--GBO-2: старое--}" in out
+        assert "текст на ПРОМ" in out
+        assert ext._critic_report == []
+
+    def test_8_only_whitespace_markup_between_keeps_adjacency(self):
+        # Условие 1: &nbsp;, <br/>, пустые теги форматирования прозрачны. Контроль: на сыром
+        # сравнении строк этот случай дал бы ложное несрабатывание.
+        html = ('<p><span style="color: rgb(255,153,204)">новое</span>&nbsp; <br/><b></b>'
+                '​<span style="color: rgb(153,204,0)"><s>старое</s></span></p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "старое" not in out
+        assert ext._critic_report[0]["confidence"] == "medium"
+
+    def test_9_separate_blocks_break_adjacency(self):
+        # Условие 3: соседние абзацы — примыкание НЕ установлено, даже без чёрного между.
+        html = ('<p><span style="color: rgb(255,153,204)">новое</span></p>'
+                '<p><span style="color: rgb(153,204,0)"><s>старое</s></span></p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "{--GBO-2: старое--}" in out
+        assert ext._critic_report == []
+
+    def test_9b_separate_table_cells_break_adjacency(self):
+        # Условие 3, вторая форма: соседние ячейки таблицы.
+        html = ('<table><tr><td><span style="color: rgb(255,153,204)">новое</span></td>'
+                '<td><span style="color: rgb(153,204,0)"><s>старое</s></span></td>'
+                '</tr></table>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "старое" in out                # фрагмент сохранён, а не отброшен
+        assert not [r for r in ext._critic_report if r.get("confidence") == "medium"]
+
+    def test_partially_struck_fragment_is_not_dropped(self):
+        # Ограничитель: в элементе есть незачёркнутый текст → целиком отбрасывать нельзя,
+        # иначе теряется соседнее требование (молчаливая потеря недопустима).
+        html = ('<p><span style="color: rgb(255,153,204)">новое</span>'
+                '<span style="color: rgb(153,204,0)"><s>убрано</s> осталось</span></p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "осталось" in out
+        assert not [r for r in ext._critic_report if r.get("confidence") == "medium"]
+
+    def test_same_task_neighbour_is_not_foreign(self):
+        # Вставка ТОГО ЖЕ цвета — не «чужая»: признак 2 не срабатывает, это обычное удаление.
+        html = ('<p><span style="color: rgb(153,204,0)">новое</span>'
+                '<span style="color: rgb(153,204,0)"><s>старое</s></span></p>')
+        ext = create_critic_extractor(self.CMAP2)
+        out = ext.extract(html)
+        assert "{--GBO-2: старое--}" in out
+        assert ext._critic_report == []
+
+
 class TestUnknownColor:
     """Цвет тела, отсутствующий в карте → плейсхолдер UNKNOWN-<hex> (ТЗ п. 4.2.ж)."""
 

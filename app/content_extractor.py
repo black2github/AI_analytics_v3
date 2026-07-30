@@ -3,13 +3,40 @@
 import logging
 import re
 from typing import Dict, List, Optional
-from bs4 import BeautifulSoup, Tag, NavigableString
+from bs4 import BeautifulSoup, Tag, NavigableString, Comment
 from dataclasses import dataclass, field
 from app.utils.style_utils import (
     is_black_color, has_colored_style, normalize_color, is_ignored_color, is_near_black,
 )
 
 logger = logging.getLogger(__name__)
+
+# Блочные элементы: пересечение их границы разрывает «примыкание» (ТЗ п. 4.5.2, условие 3).
+# Без этого ограничителя эвристика срабатывает на фрагментах из разных абзацев/ячеек,
+# между которыми нет содержательной связи — самый опасный класс ошибок (отброшенный ПРОМ).
+_BLOCK_TAGS = frozenset({
+    "p", "div", "li", "ul", "ol", "table", "thead", "tbody", "tfoot", "tr", "td", "th",
+    "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "pre", "section", "article",
+    "header", "footer", "aside", "figure", "figcaption", "dl", "dt", "dd", "hr", "form",
+})
+
+# Zero-width символы: невидимы, примыкание не разрывают (ТЗ п. 4.5.2, условие 1).
+_ZERO_WIDTH_CHARS = ("​", "﻿", "‌", "‍")
+
+
+def _normalize_gap_text(text: str) -> str:
+    """Нормализация текстового узла в промежутке между фрагментами (ТЗ п. 4.5.2, условие 1).
+
+    Схлопывает пробельные последовательности, приводит `&nbsp;` (\\u00a0) к обычному пробелу,
+    выбрасывает zero-width символы, обрезает края. Пустой результат = узел текста не несёт
+    и примыкание не разрывает. Сравнение сырых строк здесь давало бы ложное несрабатывание
+    признака всегда: между фрагментами почти всегда есть служебная разметка и пробелы.
+    """
+    s = text.replace(" ", " ")
+    for zw in _ZERO_WIDTH_CHARS:
+        s = s.replace(zw, "")
+    return re.sub(r"\s+", " ", s).strip()
+
 
 # Паттерны для извлечения page_id из URL Confluence
 _CONFLUENCE_PAGE_ID_RE = re.compile(
@@ -741,6 +768,17 @@ class ContentExtractor:
                 outer_norm = normalize_color(self._element_own_color(element) or "")
                 if self._has_nested_diff_color(element, outer_norm):
                     return self._flatten_nested_critic(element)
+                # Признак 2 (ТЗ п. 4.5.2, confidence: medium): зачёркнутый фрагмент вплотную
+                # к вставке другой задачи, без чёрного текста между — на ПРОМ, вероятно, не был
+                # (черновик), поэтому отбрасывается. Проверяется ПОСЛЕ признака 1 (тот даёт
+                # прямой структурный сигнал) и только для целиком зачёркнутого фрагмента.
+                if kind == "del" and self._is_fully_struck(element):
+                    foreign = self._adjacent_foreign_insertion(element, outer_norm)
+                    if foreign is not None:
+                        self._critic_report.append(
+                            {"tasks": [task, foreign], "html": str(element),
+                             "confidence": "medium"})
+                        return ""
                 # Внутренний цвет перекрывает внешний (ТЗ, CSS): если ВЕСЬ текст элемента
                 # перекрашен изнутри (напр. внешний цветной спан с чёрным текстом внутри) —
                 # не оборачиваем целиком, спускаемся внутрь (иначе маркер на ПРОМ-тексте).
@@ -894,6 +932,112 @@ class ContentExtractor:
                 if norm and norm != outer_norm:
                     return True
         return False
+
+    def _text_node_style(self, text_node) -> tuple:
+        """(эффективный цвет, зачёркнутость) текстового узла — подъём по всем предкам.
+
+        Цвет — ближайший заданный вверх по дереву (внутренний перекрывает внешний, как в CSS);
+        зачёркнутость — истинна, если хоть один предок зачёркивает.
+        """
+        color = None
+        struck = False
+        cur = text_node.parent
+        while cur is not None and isinstance(cur, Tag):
+            if color is None:
+                own = self._element_own_color(cur)
+                if own:
+                    color = own
+            if (cur.name in ("s", "del", "strike")
+                    or "line-through" in (cur.get("style") or "").lower()):
+                struck = True
+            cur = cur.parent
+        return color, struck
+
+    def _nearest_block_ancestor(self, node) -> Optional[Tag]:
+        """Ближайший блочный предок узла (ТЗ п. 4.5.2, условие 3). Отсчёт всегда от родителя:
+        нас интересует блок, В КОТОРОМ лежит фрагмент, а не сам фрагмент."""
+        cur = node.parent
+        while cur is not None and isinstance(cur, Tag):
+            if cur.name in _BLOCK_TAGS:
+                return cur
+            cur = cur.parent
+        return None
+
+    def _block_tag_between(self, first, last) -> bool:
+        """Есть ли блочный тег строго между двумя узлами в порядке обхода документа.
+
+        Ловит случай, который не ловится сравнением блочных предков: пустой заголовок между
+        двумя инлайновыми фрагментами одного `<div>` (ТЗ п. 4.5.2, условие 3 — «любой
+        заголовок между ними разрывает примыкание»). Предки и потомки границей не считаются.
+        """
+        skip = {id(x) for x in first.parents} | {id(x) for x in last.parents}
+        skip.add(id(first))
+        if isinstance(first, Tag):
+            skip |= {id(d) for d in first.descendants}
+        for node in first.next_elements:
+            if node is last:
+                return False
+            if (isinstance(node, Tag) and id(node) not in skip
+                    and node.name in _BLOCK_TAGS):
+                return True
+        return False
+
+    def _is_fully_struck(self, element: Tag) -> bool:
+        """Весь ли видимый текст элемента зачёркнут.
+
+        Ограничитель признака 2: отбрасывать целиком можно только фрагмент, в котором нет
+        незачёркнутого текста. Иначе `_is_strikethrough` (истинный и для элемента, лишь
+        СОДЕРЖАЩЕГО `<s>`) привёл бы к молчаливой потере соседнего незачёркнутого текста.
+        """
+        seen = False
+        for text_node in element.find_all(string=True):
+            if isinstance(text_node, Comment) or not _normalize_gap_text(str(text_node)):
+                continue
+            seen = True
+            _color, struck = self._text_node_style(text_node)
+            if not struck:
+                return False
+        return seen
+
+    def _adjacent_foreign_insertion(self, element: Tag, own_norm: Optional[str]) -> Optional[str]:
+        """ТЗ п. 4.5.2, признак 2 (`confidence: medium`): примыкает ли зачёркнутый фрагмент
+        вплотную к вставке ДРУГОЙ задачи. Возвращает id этой задачи либо None.
+
+        Обход — по текстовым узлам в порядке документа в обе стороны (при перекраске
+        зачёркнутого фрагмента в цвет поздней задачи структурная вложенность разрушается,
+        поэтому направление заранее неизвестно). Пустые после нормализации узлы прозрачны;
+        первый непустой решает исход:
+
+        * чужая незачёркнутая правка → примыкание установлено (при выполнении условия 3);
+        * чёрный текст ПРОМ, свой цвет или зачёркнутое → разрыв (условие 2).
+
+        Приоритет при неопределённости — сохранение текста (ТЗ п. 4.5.2): любое сомнение
+        трактуется как отсутствие примыкания, фрагмент остаётся удалением `{--ID: …--}`.
+        """
+        own_block = self._nearest_block_ancestor(element)
+        inside = {id(element)} | {id(d) for d in element.descendants}
+        for stream, forward in ((element.next_elements, True),
+                                (element.previous_elements, False)):
+            for node in stream:
+                if id(node) in inside or isinstance(node, Tag):
+                    continue
+                if not isinstance(node, NavigableString) or isinstance(node, Comment):
+                    continue
+                if not _normalize_gap_text(str(node)):
+                    continue                      # условие 1: узел текста не несёт — прозрачен
+                color, struck = self._text_node_style(node)
+                if struck or not self._is_edit_color(color):
+                    break                         # условие 2: чёрный ПРОМ-текст разрывает
+                norm = normalize_color(color)
+                if not norm or norm == own_norm:
+                    break                         # свой цвет — это не «чужая вставка»
+                first, last = (element, node) if forward else (node, element)
+                if (self._nearest_block_ancestor(node) is not own_block
+                        or self._block_tag_between(first, last)):
+                    break                         # условие 3: пересечена граница блока
+                return (self.config.color_map.get(norm)
+                        or ("UNKNOWN-" + norm.lstrip("#")))
+        return None
 
     def _collect_flattened_text(self, element: Tag) -> str:
         """Текст element для уплощения (ТЗ п. 4.5.3, шаг 2).
