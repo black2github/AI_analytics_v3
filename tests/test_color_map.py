@@ -4,9 +4,11 @@
 # «цвет → задача» из истории изменений, обход тела, манифест и отчёт (режим «только отчёт»).
 # Нумерация ссылается на список тестов ТЗ п. 9 (8-14).
 
-from app.utils.style_utils import normalize_color, is_black_color, is_near_black
+from app.utils.style_utils import (
+    normalize_color, is_black_color, is_near_black, to_rgb_notation,
+)
 from app.color_map import build_color_task_map, survey_body_colors
-from app.scripts.migrate_colors import aggregate, migrate_pages
+from app.scripts.migrate_colors import aggregate, migrate_pages, render_report_md
 from app.scripts.CI.critic import process_text
 
 
@@ -232,6 +234,40 @@ class TestIgnoredColors:
         survey = survey_body_colors(history + body, r)
         assert survey["#0052cc"]["classification"] == "ignored"
         assert survey["#0052cc"]["task"] is None
+
+
+class TestRgbNotationInReport:
+    """Отчёт показывает цвет в форме HTML-исходника: по `#rrggbb` аналитик не найдёт
+    фрагмент на странице — Confluence пишет цвет как rgb(r,g,b) (проверено на выгрузках)."""
+
+    def test_to_rgb_notation_forms(self):
+        assert to_rgb_notation("#9966ff") == "rgb(153,102,255)"
+        assert to_rgb_notation("rgb(153, 102, 255)") == "rgb(153,102,255)"  # пробелы схлопнуты
+        assert to_rgb_notation("#333") == "rgb(51,51,51)"                   # короткая форма
+        assert to_rgb_notation("black") == "rgb(0,0,0)"                     # именованный
+        assert to_rgb_notation("не цвет") is None
+
+    def test_to_rgb_notation_roundtrip(self):
+        # Обратная конверсия обязана возвращать ровно тот цвет, из которого получена.
+        for src in ("#000000", "#172b4d", "#ff6600", "#0a0a0a"):
+            assert normalize_color(to_rgb_notation(src)) == src
+
+    def test_summary_table_has_rgb_column(self):
+        page = (_hist(_row("2025-01-01", "rgb(153,102,255)", "GBO-1", "01.01.2025")) +
+                '<p><span style="color: rgb(255,102,0)">оранжевое</span></p>')
+        _m, report = aggregate([("стр", page)], "КК", "2026-07-31")
+        md = render_report_md(report)
+        assert "| Цвет в HTML | Цвет |" in md
+        # Форма из HTML-исходника — слитная, именно её ищут поиском по странице.
+        assert "rgb(255,102,0)" in md and "#ff6600" in md
+
+    def test_unresolved_section_shows_rgb(self):
+        # UNKNOWN — главная очередь ручного разбора, там форма для поиска нужнее всего.
+        page = '<p><span style="color: rgb(51,153,102)">без истории</span></p>'
+        _m, report = aggregate([("стр", page)], "КК", "2026-07-31")
+        md = render_report_md(report)
+        assert "UNKNOWN-339966" in md
+        assert "rgb(51,153,102)" in md
 
 
 class TestPerPageColorSummary:

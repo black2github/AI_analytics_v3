@@ -110,6 +110,21 @@ def normalize_color(color_value: str) -> Optional[str]:
     return None
 
 
+def to_rgb_notation(color_value: str) -> Optional[str]:
+    """Обратная конверсия цвета к форме ``rgb(r,g,b)`` — как он записан в HTML Confluence.
+
+    Нужна только для отчётов: канонический `#rrggbb` в исходнике страницы не встречается,
+    поэтому по нему аналитик не найдёт цвет поиском по HTML. Пробелы не ставятся —
+    Confluence пишет компоненты слитно (проверено на реальных выгрузках).
+    Возвращает ``None``, если значение распознать не удалось.
+    """
+    norm = normalize_color(color_value)
+    if not norm:
+        return None
+    r, g, b = (int(norm[i:i + 2], 16) for i in (1, 3, 5))
+    return f"rgb({r},{g},{b})"
+
+
 # Нормализованные формы чёрного — считаются один раз (ТЗ п. 4.3: сравнение после
 # нормализации ОБЕИХ сторон).
 _BLACK_NORMALIZED = {n for n in (normalize_color(c) for c in black_colors) if n}

@@ -27,6 +27,7 @@ from typing import Dict, List, Optional, Tuple
 import yaml
 
 from app.color_map import build_color_task_map, survey_body_colors
+from app.utils.style_utils import to_rgb_notation
 
 
 def new_accumulator() -> dict:
@@ -215,14 +216,17 @@ def render_report_md(report: dict) -> str:
 
     _section("Страницы без секции «История изменений»",
              [f"- {p}" for p in report["pages_without_history"]])
+    # Цвет всюду дублируется формой из HTML: аналитик ищет фрагмент на странице по ней.
     _section("Неразрешённые цвета (плейсхолдеры UNKNOWN-*)",
-             [f"- `{u['placeholder']}` цвет {u['color']} на «{u['page']}» "
-              f"×{u['count']} ({u['reason']})" for u in report["unresolved_placeholders"]])
+             [f"- `{u['placeholder']}` цвет {to_rgb_notation(u['color']) or ''} "
+              f"({u['color']}) на «{u['page']}» ×{u['count']} ({u['reason']})"
+              for u in report["unresolved_placeholders"]])
     _section("Коллизии «цвет → несколько задач»",
-             [f"- {c['color']} на «{c['page']}»: выбран {c['chosen']} из "
-              f"{c['candidates']}" for c in report["collisions"]])
+             [f"- {to_rgb_notation(c['color']) or ''} ({c['color']}) на «{c['page']}»: "
+              f"выбран {c['chosen']} из {c['candidates']}" for c in report["collisions"]])
     _section("Ячейки «Задача в Jira» без извлекаемого id",
-             [f"- {j['color']} на «{j['page']}»" for j in report["jira_unextractable"]])
+             [f"- {to_rgb_notation(j['color']) or ''} ({j['color']}) на «{j['page']}»"
+              for j in report["jira_unextractable"]])
     nested = report.get("nested_flattened", [])
     _by_conf = lambda c: [f"- задачи {n['tasks']} на «{n['page']}»"
                           for n in nested if n.get("confidence") == c]
@@ -237,12 +241,19 @@ def render_report_md(report: dict) -> str:
     lines.append("Классификация цвета указана ДЛЯ КАЖДОЙ страницы отдельно: один цвет на "
                  "разных страницах может быть task/unknown/black (постраничность, ТЗ 4.2.д).")
     lines.append("")
-    lines.append("| Цвет | Страница | Частота | Классификация | Задача | ΔE до чёрного |")
-    lines.append("| --- | --- | --- | --- | --- | --- |")
+    lines.append("Колонка «Цвет в HTML» — форма записи, в которой цвет лежит на странице "
+                 "Confluence: искать в исходнике нужно именно её, канонический `#rrggbb` "
+                 "там не встречается.")
+    lines.append("")
+    lines.append("| Цвет в HTML | Цвет | Страница | Частота | Классификация | Задача "
+                 "| ΔE до чёрного |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- |")
     for c in report["color_summary"]:
         de = c.get("delta_e")
-        lines.append(f"| {c['color']} | {c['page']} | {c['count']} | {c['classification']} | "
-                     f"{c['task'] or ''} | {de if de is not None else ''} |")
+        rgb = to_rgb_notation(c["color"]) or ""
+        lines.append(f"| {rgb} | {c['color']} | {c['page']} | {c['count']} | "
+                     f"{c['classification']} | {c['task'] or ''} | "
+                     f"{de if de is not None else ''} |")
     lines.append("")
     return "\n".join(lines)
 
