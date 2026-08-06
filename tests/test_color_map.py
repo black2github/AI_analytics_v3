@@ -69,6 +69,26 @@ class TestJiraResolvers:
         assert r.color_to_task == {"#9966ff": "GBO-1", "#00c800": "GBO-2", "#ff6600": "GBO-3"}
         assert all(c == "high" for c in r.confidence.values())
 
+    def test_long_project_key_resolved(self):
+        # Инцидент 2026-08-06: ключи длиннее 10 символов (DBOCORPESPLN-123456)
+        # не матчились ({1,9}) и цвет уходил в UNKNOWN. Все три формы.
+        macro = ('<ac:structured-macro ac:name="jira"><ac:parameter ac:name="key">'
+                 'DBOCORPESPLN-123456</ac:parameter></ac:structured-macro>')
+        href = ('<a href="https://jira.corp.local/browse/DBOCORPESPLN-123457">'
+                'DBOCORPESPLN-123457</a>')
+        plain = "DBOCORPESPLN-123458"
+        rows = (
+            _row("2025-01-01", "rgb(153,102,255)", macro, "01.01.2025") +
+            _row("2025-02-01", "rgb(0,200,0)", href, "01.02.2025") +
+            _row("2025-03-01", "rgb(255,102,0)", plain, "01.03.2025")
+        )
+        r = build_color_task_map(_hist(rows))
+        assert r.color_to_task == {
+            "#9966ff": "DBOCORPESPLN-123456",
+            "#00c800": "DBOCORPESPLN-123457",
+            "#ff6600": "DBOCORPESPLN-123458",
+        }
+
 
 class TestHistoryEdgeCases:
     """8, коллизии, чёрные строки, многоцветные строки (ТЗ п. 4.2)."""

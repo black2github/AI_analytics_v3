@@ -65,6 +65,39 @@ class TestParagraphGuard:
         assert "функцией аудита" in result
         assert "Переход" in result
 
+    def test_entity_page_with_history_name_survives(self):
+        # Инцидент 2026-08-06: страница СУЩНОСТИ «История изменений сообщения
+        # о блокировках Н2Н» — её имя входит в id-якоря всех заголовков
+        # (Confluence: id = <Страница>-<Заголовок>) → страница выпотрошена.
+        html = ('<h1 id="id-ИсторияизмененийсообщенияоблокировкахН2Н-'
+                'Краткоеописаниесущности">Краткое описание сущности</h1>'
+                '<p>Сущность хранит записи аудита.</p>'
+                '<h1 id="id-ИсторияизмененийсообщенияоблокировкахН2Н-'
+                'Атрибутныйсоставсущности">Атрибутный состав сущности</h1>'
+                '<div class="table-wrap"><table><tbody><tr><td>Идентификатор'
+                '</td><td>GUID</td></tr></tbody></table></div>')
+        result = remove_history_sections(html, enabled=True)
+        assert "Краткое описание сущности" in result
+        assert "Атрибутный состав сущности" in result
+        assert "Идентификатор" in result
+
+    def test_heading_starting_with_marker_but_longer_survives(self):
+        # startswith тоже недопустим: заголовок-название сущности
+        html = ('<h1>История изменений сообщения о блокировках Н2Н</h1>'
+                '<div class="table-wrap"><table><tbody><tr><td>Атрибут</td>'
+                '</tr></tbody></table></div>')
+        result = remove_history_sections(html, enabled=True)
+        assert "Атрибут" in result
+
+    def test_exact_history_heading_still_removed(self):
+        html = ('<h1>История изменений</h1>'
+                '<div class="table-wrap"><table><tbody><tr><td>01.01.2025</td>'
+                '<td>правка</td></tr></tbody></table></div>'
+                '<p>Содержательный текст после.</p>')
+        result = remove_history_sections(html, enabled=True)
+        assert "01.01.2025" not in result
+        assert "Содержательный текст после." in result
+
     def test_history_table_by_headers_still_removed(self):
         # Путь «таблица по колонкам Дата/Описание/Автор/Задача» не тронут фиксом
         html = ('<div class="table-wrap"><table>'
