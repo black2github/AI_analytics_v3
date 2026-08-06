@@ -98,6 +98,22 @@ class TestParagraphGuard:
         assert "01.01.2025" not in result
         assert "Содержательный текст после." in result
 
+    def test_content_table_right_after_history_survives(self):
+        # Инцидент 2026-08-06 (найден тестами): за историей сразу шла
+        # содержательная таблица без заголовка-разделителя — удалялась молча,
+        # т.к. чистильщик сносил ЛЮБУЮ следующую таблицу.
+        html = ('<h1>История изменений</h1>'
+                '<div class="table-wrap"><table><thead><tr><th>Дата</th>'
+                '<th>Описание</th><th>Автор</th><th>Задача в JIRA</th></tr></thead>'
+                '<tbody><tr><td>01.01.2025</td><td>правка</td><td>И</td>'
+                '<td>GBO-1</td></tr></tbody></table></div>'
+                '<div class="table-wrap"><table><tbody><tr><td>Шаг</td>'
+                '<td>Описание шага</td></tr><tr><td>1.1</td>'
+                '<td>Начальное событие</td></tr></tbody></table></div>')
+        result = remove_history_sections(html, enabled=True)
+        assert "Начальное событие" in result and "Описание шага" in result
+        assert "01.01.2025" not in result  # сама история удалена
+
     def test_history_table_by_headers_still_removed(self):
         # Путь «таблица по колонкам Дата/Описание/Автор/Задача» не тронут фиксом
         html = ('<div class="table-wrap"><table>'

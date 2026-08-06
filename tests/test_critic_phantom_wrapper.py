@@ -99,3 +99,62 @@ class TestRealEditsStillMarked:
         # Видимый цвет, которого нет в истории → UNKNOWN остаётся (это сигнал аналитику)
         out = _extract('<p><span style="color: rgb(0,128,0)">видимый цветной фрагмент</span></p>')
         assert "{++UNKNOWN-008000: видимый цветной фрагмент++}" in out
+
+
+EDIT = '<span style="color: rgb(255,102,0)">%s</span>'
+PHANTOM = ('<span style="color: rgb(255,102,0)">'
+           '<span style="color: rgb(0,51,102)">%s</span></span>')
+
+
+class TestBothRenderingPathsIntact:
+    """Проверка видимости живёт в ОБЩЕМ узле решения (_critic_marker_for), а формы
+    разметки у путей разные и обязаны такими остаться (ТЗ п. 4.4/4.6/4.7):
+      • чистый markdown  — текстовый маркер {++ID: …++};
+      • сырой HTML-остров — <span class="critic-ins" data-task="ID">;
+      • цельно-цветная строка — служебный столбец `status` (markdown) или
+        <tr class="critic-row-ins" data-task="ID"> (HTML).
+    Общий узел решает ЧТО есть правка, путь решает КАК её записать."""
+
+    def test_markdown_inline_form(self):
+        out = _extract(HIST + f'<p>{EDIT % "настоящая правка"}</p>')
+        assert "{++GBO-1: настоящая правка++}" in out
+
+    def test_html_island_inline_form(self):
+        # colspan форсирует рендер таблицы сырым HTML
+        out = _extract(HIST + f'<h2>Р</h2><table><tbody><tr><td colspan="2">{EDIT % "правка"}</td>'
+                              f'<td>обычный</td></tr></tbody></table>')
+        assert '<span class="critic-ins" data-task="GBO-1">правка</span>' in out
+
+    def test_markdown_row_level_status_column(self):
+        out = _extract(HIST + '<h2>Р</h2><table><tbody>'
+                              '<tr><td>обычная</td><td>строка</td></tr>'
+                              f'<tr><td>{EDIT % "новая"}</td><td>{EDIT % "строка"}</td></tr>'
+                              '</tbody></table>')
+        assert "| +GBO-1 |" in out
+
+    def test_html_row_level_tr_attribute(self):
+        out = _extract(HIST + '<h2>Р</h2><table><tbody>'
+                              '<tr><td colspan="2">шапка</td><td>x</td></tr>'
+                              f'<tr><td>{EDIT % "новая"}</td><td>{EDIT % "строка"}</td>'
+                              f'<td>{EDIT % "ещё"}</td></tr></tbody></table>')
+        assert '<tr class="critic-row-ins" data-task="GBO-1">' in out
+
+    # --- фантом игнорируется во ВСЕХ трёх механизмах ---
+
+    def test_phantom_ignored_in_markdown_table(self):
+        out = _extract(HIST + f'<h2>Р</h2><table><tbody><tr><td>{PHANTOM % "ПРОМ"}</td>'
+                              '<td>обычный</td></tr></tbody></table>')
+        assert "{++" not in out.split("Р\n")[-1] and "ПРОМ" in out
+
+    def test_phantom_ignored_in_html_island(self):
+        out = _extract(HIST + f'<h2>Р</h2><table><tbody><tr><td colspan="2">{PHANTOM % "ПРОМ"}</td>'
+                              '<td>обычный</td></tr></tbody></table>')
+        assert "critic-ins" not in out and "ПРОМ" in out
+
+    def test_phantom_row_not_marked_as_row_insert(self):
+        out = _extract(HIST + '<h2>Р</h2><table><tbody>'
+                              '<tr><td colspan="2">шапка</td><td>x</td></tr>'
+                              f'<tr><td>{PHANTOM % "ПРОМ-1"}</td><td>{PHANTOM % "ПРОМ-2"}</td>'
+                              f'<td>{PHANTOM % "ПРОМ-3"}</td></tr></tbody></table>')
+        assert "critic-row-ins" not in out
+        assert all(f"ПРОМ-{i}" in out for i in (1, 2, 3))
