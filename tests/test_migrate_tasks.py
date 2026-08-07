@@ -62,3 +62,88 @@ def test_approved_mode_unchanged_by_default(tmp_path, monkeypatch):
     md = fp.read_text(encoding="utf-8")
     assert "только подтверждённое" in md
     assert "{++" not in md and 'class="critic-' not in md
+
+
+def _black_history(jira: str) -> str:
+    # чёрная строка истории: описание без цвета — «задача на ПРОМ» по старой семантике
+    return ('<table><thead><tr><th>Дата</th><th>Описание</th><th>Автор</th>'
+            '<th>Задача в JIRA</th></tr></thead><tbody>'
+            '<tr><td><time datetime="2025-05-01">01.05.2025</time></td>'
+            f'<td><span>создание документа</span></td>'
+            f'<td>автор</td><td>{jira}</td></tr></tbody></table>')
+
+
+class TestForcedUnapprovedIntegration:
+    """Эмуляция похода в RAG (--unapproved-jira, 2026-08-07): чёрная страница,
+    чья джира из чёрной строки истории входит в список неутверждённых."""
+
+    def _black_page(self, jira="GBO-77"):
+        raw = _black_history(jira) + "<p>Требование новой функции.</p>"
+        return {"raw_html": raw, "requirement_type": "function",
+                "full_content": "Требование новой функции.",
+                "approved_content": "Требование новой функции."}
+
+    def test_critic_mode_wraps_black_content(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(cfg, "MIGRATE_IMAGES", False)
+        monkeypatch.setattr(cfg, "UNAPPROVED_JIRA_IDS", {"GBO-77"})
+        acc = new_accumulator()
+        stats = {"migrated": 0, "skipped": 0, "overwritten": 0}
+        fp = tmp_path / "Новая.md"
+        ok = mig.save_page_file(self._black_page(), "1", "Новая", "CC", "SRC",
+                                fp, stats, {}, {}, critic=True, critic_acc=acc)
+        assert ok is True
+        md = fp.read_text(encoding="utf-8")
+        assert "{++GBO-77: " in md                       # состав обёрнут вставками
+        assert "status: draft" in md                     # frontmatter — черновик
+        manifest, _rep = finalize(acc, "CC", "2026-08-15")
+        assert manifest["tasks"]["GBO-77"]["confidence"] == "forced"
+
+    def test_empty_list_leaves_behavior_unchanged(self, tmp_path, monkeypatch):
+        # тест на НЕсрабатывание: список пуст → ни маркеров, ни draft
+        monkeypatch.setattr(cfg, "MIGRATE_IMAGES", False)
+        monkeypatch.setattr(cfg, "UNAPPROVED_JIRA_IDS", set())
+        acc = new_accumulator()
+        stats = {"migrated": 0, "skipped": 0, "overwritten": 0}
+        fp = tmp_path / "Новая2.md"
+        ok = mig.save_page_file(self._black_page(), "2", "Новая2", "CC", "SRC",
+                                fp, stats, {}, {}, critic=True, critic_acc=acc)
+        assert ok is True
+        md = fp.read_text(encoding="utf-8")
+        assert "{++" not in md
+        assert "status: active" in md
+
+    def test_jira_not_in_list_no_force(self, tmp_path, monkeypatch):
+        # НЕсрабатывание: список непуст, но джира страницы в него не входит
+        monkeypatch.setattr(cfg, "MIGRATE_IMAGES", False)
+        monkeypatch.setattr(cfg, "UNAPPROVED_JIRA_IDS", {"GBO-999"})
+        stats = {"migrated": 0, "skipped": 0, "overwritten": 0}
+        fp = tmp_path / "Новая3.md"
+        ok = mig.save_page_file(self._black_page(), "3", "Новая3", "CC", "SRC",
+                                fp, stats, {}, {}, critic=True, critic_acc=new_accumulator())
+        assert ok is True
+        assert "{++" not in fp.read_text(encoding="utf-8")
+
+    def test_approved_mode_skips_forced_page(self, tmp_path, monkeypatch):
+        # approved-режим: неутверждённому не место в подтверждённой выгрузке — пропуск
+        monkeypatch.setattr(cfg, "MIGRATE_IMAGES", False)
+        monkeypatch.setattr(cfg, "UNAPPROVED_JIRA_IDS", {"GBO-77"})
+        stats = {"migrated": 0, "skipped": 0, "overwritten": 0}
+        fp = tmp_path / "Новая4.md"
+        ok = mig.save_page_file(self._black_page(), "4", "Новая4", "CC", "SRC",
+                                fp, stats, {}, {})
+        assert ok is False
+        assert not fp.exists()
+        assert stats["skipped"] == 1
+
+    def test_all_mode_full_content_draft_status(self, tmp_path, monkeypatch):
+        # --all: контент полный без маркеров, но статус draft (состав не утверждён)
+        monkeypatch.setattr(cfg, "MIGRATE_IMAGES", False)
+        monkeypatch.setattr(cfg, "UNAPPROVED_JIRA_IDS", {"GBO-77"})
+        stats = {"migrated": 0, "skipped": 0, "overwritten": 0}
+        fp = tmp_path / "Новая5.md"
+        ok = mig.save_page_file(self._black_page(), "5", "Новая5", "CC", "SRC",
+                                fp, stats, {}, {}, include_unapproved=True)
+        assert ok is True
+        md = fp.read_text(encoding="utf-8")
+        assert "{++" not in md
+        assert "status: draft" in md

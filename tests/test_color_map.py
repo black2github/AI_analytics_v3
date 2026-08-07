@@ -326,3 +326,58 @@ class TestRealDebugFiles:
         r = build_color_task_map(self._load("Настройка-скроллера"))
         assert r.color_to_task == {}                             # сломанные jira-макросы
         assert {u["color"] for u in r.unresolved_jira}           # цвета есть, id нет
+
+
+class TestForcedUnapproved:
+    """Эмуляция похода в RAG (2026-08-07): джира из ЧЁРНОЙ строки истории входит
+    в JSON-список неутверждённых → состав страницы метится этой джирой."""
+
+    def _hist_black(self, jira_html, date_iso="2025-01-01", dd="01.01.2025", extra=""):
+        return _hist(_row(date_iso, None, jira_html, dd) + extra)
+
+    def test_black_row_jira_in_list_forces(self):
+        from app.color_map import find_forced_unapproved
+        r = find_forced_unapproved(self._hist_black("GBO-100"), {"GBO-100"})
+        assert r is not None and r.task == "GBO-100"
+        assert r.candidates == ["GBO-100"] and not r.warnings
+
+    def test_jira_not_in_list_no_force(self):
+        # тест на НЕсрабатывание: чёрная строка с джирой вне списка — обычный режим
+        from app.color_map import find_forced_unapproved
+        assert find_forced_unapproved(self._hist_black("GBO-100"), {"GBO-999"}) is None
+
+    def test_colored_row_jira_ignored(self):
+        # цветная строка обрабатывается картой цветов, форс только по ЧЁРНЫМ
+        from app.color_map import find_forced_unapproved
+        html = _hist(_row("2025-01-01", "rgb(255,102,0)", "GBO-100", "01.01.2025"))
+        assert find_forced_unapproved(html, {"GBO-100"}) is None
+
+    def test_multiple_matches_latest_by_date_with_warning(self):
+        # решение пользователя: последняя по дате + предупреждение с перечнем
+        from app.color_map import find_forced_unapproved
+        html = _hist(
+            _row("2025-01-01", None, "GBO-100", "01.01.2025") +
+            _row("2025-03-01", None, "GBO-200", "01.03.2025")
+        )
+        r = find_forced_unapproved(html, {"GBO-100", "GBO-200"})
+        assert r.task == "GBO-200"
+        assert r.candidates == ["GBO-100", "GBO-200"]
+        assert r.warnings and "GBO-200" in r.warnings[0]
+
+    def test_no_history_not_covered(self):
+        # риск принят: страницы без истории механизм не покрывает
+        from app.color_map import find_forced_unapproved
+        assert find_forced_unapproved("<p>текст без истории</p>", {"GBO-1"}) is None
+
+    def test_empty_list_no_force(self):
+        from app.color_map import find_forced_unapproved
+        assert find_forced_unapproved(self._hist_black("GBO-100"), set()) is None
+
+    def test_link_and_macro_resolvers_work_for_black_rows(self):
+        # резолверы джиры те же, что у карты цветов (макрос / browse-ссылка)
+        from app.color_map import find_forced_unapproved
+        macro = ('<ac:structured-macro ac:name="jira">'
+                 '<ac:parameter ac:name="key">GBO-7</ac:parameter></ac:structured-macro>')
+        assert find_forced_unapproved(self._hist_black(macro), {"GBO-7"}).task == "GBO-7"
+        href = '<a href="https://jira.corp.local/browse/GBO-8">GBO-8</a>'
+        assert find_forced_unapproved(self._hist_black(href), {"GBO-8"}).task == "GBO-8"

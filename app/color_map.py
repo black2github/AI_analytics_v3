@@ -249,6 +249,71 @@ def survey_body_colors(raw_html: str, result: "HistoryMapResult") -> Dict[str, d
     return summary
 
 
+@dataclass
+class ForcedUnapproved:
+    """Страница признана неутверждённой по списку задач (эмуляция похода в RAG).
+
+    Чёрная строка истории обычно означает «задача на ПРОМ», но для НОВОЙ страницы
+    весь состав чёрный с рождения. Внешнее знание — JSON-список неутверждённых
+    Jira ID: если джира из ЧЁРНОЙ строки истории входит в список, состав страницы
+    считается неутверждённым и метится этой джирой (решение пользователя,
+    2026-08-07; риски забывчивости/чужих страниц приняты)."""
+    task: str                                   # джира, которой метится состав
+    candidates: List[str] = field(default_factory=list)   # все совпавшие джиры
+    warnings: List[str] = field(default_factory=list)
+
+
+def find_forced_unapproved(raw_html: str, unapproved_ids) -> Optional[ForcedUnapproved]:
+    """Джиры ЧЁРНЫХ строк истории ∈ списку неутверждённых → форс-режим страницы.
+
+    Возвращает ForcedUnapproved или None (страница живёт по обычным правилам).
+    При нескольких совпавших джирах берётся строка с самой поздней датой —
+    симметрично разрешению коллизий цветов (ТЗ п. 4.2.е), с предупреждением.
+    Страницы без опознанной истории не покрываются (риск принят: команды чистят
+    страницы к переезду)."""
+    unapproved = {u.strip() for u in unapproved_ids if u and u.strip()}
+    if not unapproved:
+        return None
+
+    soup = BeautifulSoup(raw_html, "html.parser")
+    table = find_history_table(soup)
+    if table is None:
+        return None
+    roles, header_row = _identify_columns(table)
+    if "description" not in roles or "jira" not in roles:
+        return None
+
+    di, ji = roles["description"], roles["jira"]
+    dti = roles.get("date")
+
+    matched: List[Tuple[str, Optional[Tuple[int, int, int]]]] = []
+    for row in table.find_all("tr"):
+        if row is header_row:
+            continue
+        cells = row.find_all(["th", "td"], recursive=False)
+        if max(di, ji, dti if dti is not None else 0) >= len(cells):
+            continue
+        if _extract_row_colors(cells[di]):
+            continue          # цветная строка — обрабатывается картой цветов
+        date = _extract_date(cells[dti]) if dti is not None else None
+        for task_id in _resolve_jira_ids(cells[ji]):
+            if task_id in unapproved:
+                matched.append((task_id, date))
+
+    if not matched:
+        return None
+
+    matched.sort(key=lambda m: m[1] or (0, 0, 0))
+    chosen = matched[-1][0]
+    distinct = sorted({t for t, _d in matched})
+    result = ForcedUnapproved(task=chosen, candidates=distinct)
+    if len(distinct) > 1:
+        result.warnings.append(
+            f"несколько неутверждённых задач в чёрных строках истории {distinct} — "
+            f"состав помечен последней по дате: {chosen}")
+    return result
+
+
 def build_color_task_map(raw_html: str) -> HistoryMapResult:
     """Строит карту «цвет → задача» из истории изменений страницы (ТЗ п. 4.2).
 
