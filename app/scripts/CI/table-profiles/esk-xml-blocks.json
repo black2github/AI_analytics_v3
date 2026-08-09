@@ -1,0 +1,10 @@
+{
+  "name": "esk-xml-blocks",
+  "header_rows": 1,
+  "blocks": true,
+  "path_block": 0,
+  "ladder": true,
+  "path_title": "XML-элемент",
+  "path_join": "/",
+  "strip_path_wildcards": true
+}
