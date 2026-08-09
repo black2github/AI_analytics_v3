@@ -61,6 +61,11 @@ class HistoryMapResult:
     """Результат разбора истории одной страницы (ТЗ п. 4.2)."""
     color_to_task: Dict[str, str] = field(default_factory=dict)   # #rrggbb -> TASK-ID
     confidence: Dict[str, str] = field(default_factory=dict)      # #rrggbb -> 'high'|'low'
+    # TASK-ID -> самая РАННЯЯ дата записи истории с этой задачей (г, м, д).
+    # Порядок вливания на внешнем контуре (2026-08-10): первая по времени
+    # запись характеризует момент появления задачи — по ней строится
+    # предложение порядка apply в отчёте migration-apply-order.md.
+    task_dates: Dict[str, Tuple[int, int, int]] = field(default_factory=dict)
     collisions: List[dict] = field(default_factory=list)          # цвет → несколько задач
     unresolved_jira: List[dict] = field(default_factory=list)     # цвет есть, id не извлечён
     multi_id_rows: List[dict] = field(default_factory=list)       # серия задач одного цвета
@@ -261,6 +266,9 @@ class ForcedUnapproved:
     task: str                                   # джира, которой метится состав
     candidates: List[str] = field(default_factory=list)   # все совпавшие джиры
     warnings: List[str] = field(default_factory=list)
+    # самая ранняя дата записи истории с выбранной задачей — для предложения
+    # порядка вливания (migration-apply-order.md, 2026-08-10)
+    first_seen: Optional[Tuple[int, int, int]] = None
 
 
 def find_forced_unapproved(raw_html: str, unapproved_ids) -> Optional[ForcedUnapproved]:
@@ -306,7 +314,9 @@ def find_forced_unapproved(raw_html: str, unapproved_ids) -> Optional[ForcedUnap
     matched.sort(key=lambda m: m[1] or (0, 0, 0))
     chosen = matched[-1][0]
     distinct = sorted({t for t, _d in matched})
-    result = ForcedUnapproved(task=chosen, candidates=distinct)
+    chosen_dates = [d for t, d in matched if t == chosen and d]
+    result = ForcedUnapproved(task=chosen, candidates=distinct,
+                              first_seen=min(chosen_dates) if chosen_dates else None)
     if len(distinct) > 1:
         result.warnings.append(
             f"несколько неутверждённых задач в чёрных строках истории {distinct} — "
@@ -350,6 +360,14 @@ def build_color_task_map(raw_html: str) -> HistoryMapResult:
         ids = _resolve_jira_ids(cells[ji])
         date = _extract_date(cells[dti]) if dti is not None else None
         rows_info.append(RowInfo(colors=colors, task_ids=ids, date=date, raw_html=str(row)))
+        # Дата первой записи по задаче: min по всем строкам с этим id (дубли
+        # легальны — одна задача правит страницу в разные даты). Дата строки
+        # относится ко ВСЕМ id серии (несколько задач в одной ячейке).
+        if date:
+            for tid in ids:
+                cur = result.task_dates.get(tid)
+                if cur is None or date < cur:
+                    result.task_dates[tid] = date
         if len(ids) > 1:
             result.multi_id_rows.append({"colors": colors, "task_ids": ids})
             result.warnings.append(

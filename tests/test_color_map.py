@@ -172,7 +172,8 @@ class TestManifest:
 
         assert set(manifest["tasks"]) == {"GBO-1", "GBO-2", "GBO-3"}
         assert manifest["tasks"]["GBO-1"] == {
-            "color": "#9966ff", "confidence": "high", "pages": ["страница"], "markers": 1}
+            "color": "#9966ff", "confidence": "high", "pages": ["страница"],
+            "markers": 1, "first_seen": "2025-01-01"}
         assert manifest["tasks"]["GBO-2"]["markers"] == 2
         assert manifest["tasks"]["GBO-3"]["markers"] == 1
         assert manifest["service"] == "КК" and manifest["migrated_at"] == "2026-08-15"
@@ -381,3 +382,79 @@ class TestForcedUnapproved:
         assert find_forced_unapproved(self._hist_black(macro), {"GBO-7"}).task == "GBO-7"
         href = '<a href="https://jira.corp.local/browse/GBO-8">GBO-8</a>'
         assert find_forced_unapproved(self._hist_black(href), {"GBO-8"}).task == "GBO-8"
+
+
+class TestTaskDatesAndApplyOrder:
+    """Порядок вливания задач (2026-08-10): дата первой записи истории по
+    задаче -> предложение порядка apply на внешнем контуре."""
+
+    def test_min_date_across_duplicate_rows(self):
+        # одна задача в двух строках истории — берётся самая ранняя дата
+        rows = (
+            _row("2025-03-01", "rgb(153,102,255)", "GBO-1", "01.03.2025") +
+            _row("2025-01-15", "rgb(153,102,255)", "GBO-1", "15.01.2025")
+        )
+        r = build_color_task_map(_hist(rows))
+        assert r.task_dates["GBO-1"] == (2025, 1, 15)
+
+    def test_series_row_dates_all_ids(self):
+        # серия задач в одной ячейке — дата строки относится ко всем id
+        rows = _row("2025-02-02", "rgb(0,200,0)", "GBO-2 GBO-3", "02.02.2025")
+        r = build_color_task_map(_hist(rows))
+        assert r.task_dates["GBO-2"] == (2025, 2, 2)
+        assert r.task_dates["GBO-3"] == (2025, 2, 2)
+
+    def test_row_without_date_gives_no_entry(self):
+        html = _hist('<tr><td>без даты</td>'
+                     '<td><span style="color: rgb(255,102,0)">описание</span></td>'
+                     '<td>автор</td><td>GBO-4</td></tr>')
+        r = build_color_task_map(html)
+        assert "GBO-4" not in r.task_dates
+        assert r.color_to_task.get("#ff6600") == "GBO-4"   # сама задача не потеряна
+
+    def test_forced_first_seen(self):
+        from app.color_map import find_forced_unapproved
+        html = _hist(
+            _row("2025-05-01", None, "GBO-7", "01.05.2025") +
+            _row("2025-04-01", None, "GBO-7", "01.04.2025")
+        )
+        r = find_forced_unapproved(html, {"GBO-7"})
+        assert r.first_seen == (2025, 4, 1)
+
+    def test_finalize_apply_order_sorted_undated_last(self):
+        from app.scripts.migrate_colors import (new_accumulator, accumulate_page,
+                                                finalize, render_apply_order_md)
+        acc = new_accumulator()
+        html_a = (_hist(_row("2025-03-01", "rgb(153,102,255)", "GBO-10", "01.03.2025"))
+                  + '<p><span style="color: rgb(153,102,255)">правка A</span></p>')
+        html_b = (_hist(_row("2025-01-01", "rgb(0,200,0)", "GBO-20", "01.01.2025"))
+                  + '<p><span style="color: rgb(0,200,0)">правка B</span></p>')
+        for name, h in (("A", html_a), ("B", html_b)):
+            res = build_color_task_map(h)
+            accumulate_page(acc, name, res, survey_body_colors(h, res))
+        # задача без даты — руками в аккумулятор (как UNKNOWN)
+        acc["tasks"]["GBO-30"] = {"color": "#123456", "confidence": "high",
+                                  "pages": {"C"}, "markers": 1, "date": None}
+        manifest, report = finalize(acc, "CC", "2026-08-10")
+        order = [o["task"] for o in report["apply_order"]]
+        assert order == ["GBO-20", "GBO-10", "GBO-30"]     # по дате, бездатные в конце
+        assert manifest["tasks"]["GBO-20"]["first_seen"] == "2025-01-01"
+        md = render_apply_order_md(report)
+        assert "run-critic.bat apply GBO-20 --path ." in md
+        assert md.index("apply GBO-20") < md.index("apply GBO-10")
+        assert "REM порядок уточните: run-critic.bat apply GBO-30" in md
+
+    def test_same_day_group_marked(self):
+        from app.scripts.migrate_colors import (new_accumulator, accumulate_page,
+                                                finalize, render_apply_order_md)
+        acc = new_accumulator()
+        rows = (_row("2025-06-01", "rgb(153,102,255)", "GBO-41", "01.06.2025") +
+                _row("2025-06-01", "rgb(0,200,0)", "GBO-42", "01.06.2025"))
+        h = (_hist(rows)
+             + '<p><span style="color: rgb(153,102,255)">a</span>'
+             '<span style="color: rgb(0,200,0)">b</span></p>')
+        res = build_color_task_map(h)
+        accumulate_page(acc, "P", res, survey_body_colors(h, res))
+        _m, report = finalize(acc, "CC", "2026-08-10")
+        md = render_apply_order_md(report)
+        assert md.count("⚠ один день") == 2               # обе строки помечены

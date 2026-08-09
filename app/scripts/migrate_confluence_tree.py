@@ -199,9 +199,14 @@ def _resolve_page_content(page_data: Dict, include_unapproved: bool, critic: boo
                 # Форс-задача — в реестр мигрировавших задач (по ней будут делать apply).
                 entry = critic_acc["tasks"].setdefault(
                     forced.task, {"color": "black (forced-unapproved)",
-                                  "confidence": "forced", "pages": set(), "markers": 0})
+                                  "confidence": "forced", "pages": set(),
+                                  "markers": 0, "date": None})
                 entry["pages"].add(name)
                 entry["markers"] += marks
+                # дата первой записи — в предложение порядка вливания (2026-08-10)
+                if forced.first_seen and (entry["date"] is None
+                                          or forced.first_seen < entry["date"]):
+                    entry["date"] = forced.first_seen
         if critic_acc is not None:
             from app.scripts.migrate_colors import accumulate_page
             accumulate_page(critic_acc, name, result, survey_body_colors(raw, result))
