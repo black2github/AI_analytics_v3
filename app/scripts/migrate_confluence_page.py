@@ -213,6 +213,11 @@ def migrate_page(
 
 
 def main():
+    # Версия при старте: сверка бандлов на контурах глазами (номер + отпечаток).
+    from app.version import banner
+    logger.info(banner("confluence-tree-exporter"))
+    logger.info("")
+
     from app.config import CONFLUENCE_USE_HTTP, MIGRATE_INCLUDE_UNAPPROVED
 
     # Флаги --http, --all, --keep-history, --with-images и --drop-strikethrough можно

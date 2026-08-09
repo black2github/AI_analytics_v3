@@ -327,3 +327,43 @@ class TestNoRegressionWhenModeOff:
         html = '<p>Текст <span style="color: rgb(153,102,255);">цветной</span> тут.</p>'
         out = create_approved_fragments_extractor().extract(html)
         assert "цветной" not in out and "{++" not in out
+
+
+class TestDropStrikethroughInCriticMode:
+    """--drop-strikethrough в критик-режиме (2026-08-07): действует только на
+    ЧЁРНОЕ зачёркнутое; цветное — удаление задачей, всегда {--ID--}."""
+
+    CMAP = {"#9966ff": "GBO-1"}
+
+    def _extract(self, html, monkeypatch, drop):
+        import app.config as cfg
+        monkeypatch.setattr(cfg, "EXCLUDE_STRIKETHROUGH", drop)
+        return create_critic_extractor(self.CMAP).extract(html)
+
+    def test_black_strikethrough_dropped_with_flag(self, monkeypatch):
+        out = self._extract(
+            "<p>Живой текст. <s>применённый мусор</s> Хвост.</p>",
+            monkeypatch, drop=True)
+        assert "применённый мусор" not in out
+        assert "Живой текст." in out and "Хвост." in out
+
+    def test_colored_strikethrough_kept_as_deletion_with_flag(self, monkeypatch):
+        # НЕсрабатывание (Д-22): цветное зачёркнутое — удаление задачей,
+        # обязано стать {--ID--} даже при флаге (им управляет critic)
+        out = self._extract(
+            '<p>До <span style="color: rgb(153,102,255)"><s>снимаемое задачей</s>'
+            "</span> после.</p>", monkeypatch, drop=True)
+        assert "{--GBO-1: снимаемое задачей--}" in out
+
+    def test_colored_inside_black_s_kept_with_flag(self, monkeypatch):
+        # обратный паттерн: <s> снаружи, цвет внутри — тоже правка задачи
+        out = self._extract(
+            '<p><s><span style="color: rgb(153,102,255)">цвет внутри</span></s></p>',
+            monkeypatch, drop=True)
+        assert "цвет внутри" in out
+
+    def test_without_flag_black_strikethrough_kept(self, monkeypatch):
+        # НЕсрабатывание: без флага чёрное зачёркнутое сохраняется (как раньше)
+        out = self._extract(
+            "<p>Текст <s>старое удаление</s> хвост.</p>", monkeypatch, drop=False)
+        assert "старое удаление" in out

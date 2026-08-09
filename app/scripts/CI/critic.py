@@ -965,6 +965,15 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
+    # Версия при старте (в stderr — не мешает перенаправлению вывода команд).
+    # Импорт мягкий: модуль автономен (stdlib + bs4) и обязан работать даже
+    # вне пакета app (например, скопированный отдельно).
+    try:
+        from app.version import banner
+        print(f"# {banner('critic')}", file=sys.stderr)
+    except ImportError:
+        pass
+
     args = build_parser().parse_args(argv)
     root = Path(args.path)
     if not root.exists():

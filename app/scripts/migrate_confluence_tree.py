@@ -673,6 +673,12 @@ def generate_section_indexes(base_dir: Path) -> int:
 
 
 def main():
+    # Версия при старте: сверка бандлов на внутреннем/внешнем контуре глазами
+    # (совпадать должны и номер, и отпечаток исходников).
+    from app.version import banner
+    logger.info(banner("confluence-tree-exporter"))
+    logger.info("")
+
     # Флаги --http, --all, --keep-history, --with-images, --with-index и
     # --drop-strikethrough можно указать в любом месте аргументов; они переопределяют
     # соответствующие значения из конфигурации.
@@ -802,9 +808,14 @@ def main():
                 "СОХРАНЯТЬ раздел истории" if keep_history else "удалять раздел истории")
     logger.info("Images mode: %s",
                 "СКАЧИВАТЬ картинки в img/" if with_images else "картинки игнорируются")
-    logger.info("Strikethrough mode: %s",
-                "ИСКЛЮЧАТЬ зачёркнутый текст (при любом раскладе)" if drop_strikethrough
-                else "по умолчанию (зачёркнутое — как обычно)")
+    if drop_strikethrough and critic:
+        strike_mode = ("ИСКЛЮЧАТЬ только ЧЁРНОЕ зачёркнутое; цветное сохраняется "
+                       "маркерами {--…--} (им управляет critic)")
+    elif drop_strikethrough:
+        strike_mode = "ИСКЛЮЧАТЬ зачёркнутый текст (при любом раскладе)"
+    else:
+        strike_mode = "по умолчанию (зачёркнутое — как обычно)"
+    logger.info("Strikethrough mode: %s", strike_mode)
     logger.info("Index mode: %s",
                 "генерировать index.md по папкам" if with_index else "без index.md")
     logger.info("")
