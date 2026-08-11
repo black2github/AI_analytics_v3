@@ -1,6 +1,6 @@
 # app/scripts/CI/normalize_tables.py
 #
-# Нормализатор сырых HTML-таблиц в markdown-файлах (Д-21, проход 1
+# Нормализатор сырых HTML-таблиц в markdown-файлах (проход 1
 # двухпроходного разбора source-parsing).
 #
 # Архитектура — три слоя по критерию «понимание — LLM, массовое
@@ -16,7 +16,7 @@
 #
 # Утилита класса critic: работает по локальным .md многократно, исходный
 # файл НЕ изменяет (режимы: stdout / sidecar). Confluence не нужен —
-# сырой HTML уже сохранён консервативной миграцией (Д-21).
+# сырой HTML уже сохранён консервативной миграцией.
 #
 # Формат профиля (JSON):
 #   {
@@ -626,10 +626,18 @@ def _title_suspicious(v: str) -> bool:
 
 
 def validate_columns(headers: List[str], rows: List[List[str]],
-                     path_index: Optional[int] = 0) -> List[dict]:
+                     path_index: Optional[int] = 0,
+                     source_literals: Optional[Dict[str, set]] = None) -> List[dict]:
     """Проверка СМЫСЛА колонок (инвариант строк её не заменяет — урок
     разжалования итерации 3): для каждой колонки с распознанной ролью считает
-    долю валидных значений. Возвращает список отчётов по колонкам."""
+    долю валидных значений. Возвращает список отчётов по колонкам.
+
+    source_literals (роль → дословные значения той же роли в ИСТОЧНИКЕ):
+    значение вне словаря роли, но дословно совпадающее с ячейкой источника,
+    браком не считается — дословность переноса сильнее словаря (ложный БРАК
+    жанра 3 file-storage, 2026-08-10: автор постановки написал «[1]» в
+    колонке обязательности). Совпадение ищется ТОЛЬКО в колонке той же роли:
+    «[1] где-то в источнике» переписанную кратность не оправдывает."""
     report: List[dict] = []
     for i, title in enumerate(headers):
         low = _title_key(title)
@@ -649,6 +657,9 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         if check is None:
             continue
         bad = [r[i] for r in rows if i < len(r) and not check(r[i])]
+        wl = (source_literals or {}).get(role) or set()
+        pardoned = [v for v in bad if _norm_cell(v) and _norm_cell(v) in wl]
+        bad = [v for v in bad if not (_norm_cell(v) and _norm_cell(v) in wl)]
         total = len(rows) or 1
         suspicious = ([r[i] for r in rows if i < len(r) and r[i].strip()
                        and _title_suspicious(r[i])]
@@ -659,6 +670,7 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             "valid_pct": round(100 * (len(rows) - len(bad)) / total, 1),
             "suspicious": suspicious[:5], "suspicious_count": len(suspicious),
             "samples": bad[:3],
+            "pardoned": pardoned[:3], "pardoned_count": len(pardoned),
         })
     return report
 
@@ -874,7 +886,39 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     return report, ok
 
 
-def check_file(md_path: Path, min_valid_pct: float = 95.0) -> Tuple[List[str], bool]:
+def source_role_literals(source_text: str) -> Dict[str, set]:
+    """Дословные значения якорных колонок ИСТОЧНИКА, сгруппированные по роли
+    («обязат», «кратн»): из готовых markdown-таблиц и из сырых HTML-таблиц
+    (первая строка сетки — шапка; многострочные шапки не распознаются — тогда
+    просто нет помилования, поведение прежнее, гейт строже, не мягче).
+
+    Нужны для --check --source: см. validate_columns (дословный перенос
+    авторского литерала — не брак, инцидент «Обяз.=[1]» жанра 3 file-storage,
+    2026-08-10)."""
+    lits: Dict[str, set] = {}
+
+    def add(headers: List[str], rows: List[List[str]]) -> None:
+        for i, h in enumerate(headers):
+            low = _title_key(h)
+            for key, _fn in _COLUMN_RULES:
+                if key in low or key[:4] in low:
+                    vals = lits.setdefault(key, set())
+                    for r in rows:
+                        if i < len(r) and _norm_cell(r[i]):
+                            vals.add(_norm_cell(r[i]))
+                    break
+
+    for hdr, rows in parse_md_tables(source_text):
+        add(hdr, rows)
+    for t in find_top_tables(source_text):
+        grid = expand_grid(t)
+        if len(grid) > 1:
+            add(grid[0], grid[1:])
+    return lits
+
+
+def check_file(md_path: Path, min_valid_pct: float = 95.0,
+               source_text: Optional[str] = None) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -892,6 +936,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0) -> Tuple[List[str], b
     text = md_path.read_text(encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
+    src_literals = source_role_literals(source_text) if source_text else None
 
     # Голый текст, зажатый МЕЖДУ строками таблицы, — разорванная ячейка:
     # перенос строки внутри ячейки (вместо <br>) выталкивает её хвост из
@@ -947,7 +992,8 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0) -> Tuple[List[str], b
                 f"таблица {i}: шапка выглядит строкой данных ({h0[:40]!r}) "
                 f"— хвост разорванной таблицы ✗ НИЖЕ ПОРОГА")
             continue
-        cols = validate_columns(headers, rows, path_index=path_index)
+        cols = validate_columns(headers, rows, path_index=path_index,
+                                source_literals=src_literals)
         if not cols:
             report.append(f"таблица {i} ({len(rows)} строк): ролей не распознано — пропущена")
             continue
@@ -961,6 +1007,11 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0) -> Tuple[List[str], b
                 ok = False
                 for s in col["samples"]:
                     report.append(f"      пример брака: {s[:80]!r}")
+            if col.get("pardoned_count"):
+                report.append(
+                    f"      вне словаря роли, но дословно из источника — "
+                    f"принято ({col['pardoned_count']}): "
+                    + ", ".join(repr(s[:30]) for s in col["pardoned"]))
             if col.get("suspicious_count"):
                 # В ГОТОВОЙ карточке подозрительное название — брак: проход 2
                 # обязан был разнести (название дословно, пояснения — в правила).
@@ -976,7 +1027,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0) -> Tuple[List[str], b
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Нормализатор сырых HTML-таблиц в .md (проход 1, Д-21). "
+        description="Нормализатор сырых HTML-таблиц в .md (проход 1). "
                     "Исходный файл не изменяется.")
     ap.add_argument("file", type=Path, help="markdown-файл с сырыми HTML-таблицами")
     ap.add_argument("--table", type=int, default=None, help="индекс таблицы (по умолчанию все)")
@@ -1001,11 +1052,13 @@ def main() -> int:
     profile = Profile.load(args.profile) if args.profile else None
 
     if args.check:
-        report, ok = check_file(args.file, min_valid_pct=args.min_valid)
-        if args.source is not None:
+        src_text = (args.source.read_text(encoding="utf-8")
+                    if args.source is not None else None)
+        report, ok = check_file(args.file, min_valid_pct=args.min_valid,
+                                source_text=src_text)
+        if src_text is not None:
             src_report, src_ok = check_source_tables(
-                args.file.read_text(encoding="utf-8"),
-                args.source.read_text(encoding="utf-8"))
+                args.file.read_text(encoding="utf-8"), src_text)
             report.extend(src_report)
             ok = ok and src_ok
         for line in report:

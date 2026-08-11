@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from app.scripts.CI.normalize_tables import (
     Profile, _title_key, assert_invariant, blocks_profile_applies, build_flat,
     check_file, expand_grid, find_top_tables, header_blocks, normalize_file,
-    render_sample, validate_columns,
+    render_sample, source_role_literals, validate_columns,
 )
 
 
@@ -339,6 +339,70 @@ class TestCheckMode:
             self.GOOD.replace("| = GUID |", "| **Если** запрос — **то** GUID |"),
             tmp_path)
         assert ok
+
+
+class TestSourceLiteralPardon:
+    """--check --source: дословный литерал источника вне словаря роли — не брак
+    (ложный БРАК жанра 3 file-storage, 2026-08-10: автор постановки написал
+    «[1]» в колонке обязательности; дословность переноса сильнее словаря)."""
+
+    # Источник в форме сырого HTML (как выгрузка Confluence): в колонке
+    # обязательности авторский литерал [1] у строки-контейнера.
+    SOURCE_HTML = (
+        "# Постановка\n\n"
+        "<table>\n"
+        "<tr><th colspan=\"2\">Структура ответа</th><th>Название параметра</th>"
+        "<th>Тип данных</th><th>Кратность</th><th>Обязательность</th></tr>\n"
+        "<tr><td colspan=\"2\">Тело ответа</td><td colspan=\"2\">Объект</td>"
+        "<td>[1]</td><td>[1]</td></tr>\n"
+        "<tr><td></td><td colspan=\"2\">addresses</td><td>Массив</td>"
+        "<td>[1]</td><td>Да</td></tr>\n"
+        "</table>\n"
+    )
+
+    CARD = (
+        "# Карточка\n\n"
+        "| JSON-элемент | Название | Тип | Обяз. | Кратность | Правила |\n"
+        "|---|---|---|---|---|---|\n"
+        "| Тело ответа | Объект | Объект | [1] | [1] |  |\n"
+        "| Тело ответа/addresses | Массив адресов | Массив | Да | [1] |  |\n"
+    )
+
+    def _check(self, card, tmp_path, source=None):
+        p = tmp_path / "card.md"
+        p.write_text(card, encoding="utf-8")
+        return check_file(p, source_text=source)
+
+    def test_source_literals_collected_per_role(self):
+        lits = source_role_literals(self.SOURCE_HTML)
+        assert "[1]" in lits["обязат"]
+        assert "да" in lits["обязат"]
+        assert "[1]" in lits["кратн"]
+
+    def test_verbatim_source_literal_pardoned(self, tmp_path):
+        # тест на НЕсрабатывание: [1] в Обяз. дословно из источника — OK
+        report, ok = self._check(self.CARD, tmp_path, source=self.SOURCE_HTML)
+        assert ok, "\n".join(report)
+        assert any("дословно из источника" in l for l in report)
+
+    def test_without_source_still_caught(self, tmp_path):
+        # без --source поведение прежнее: [1] в обязательности — брак
+        _report, ok = self._check(self.CARD, tmp_path)
+        assert not ok
+
+    def test_real_rewrite_not_pardoned(self, tmp_path):
+        # настоящий регресс ([1] → 1 в кратности) источником не оправдан:
+        # литерала «1» в колонке кратности источника нет
+        card = self.CARD.replace("| Да | [1] |", "| Да | 1 |")
+        _report, ok = self._check(card, tmp_path, source=self.SOURCE_HTML)
+        assert not ok
+
+    def test_literal_from_other_role_not_pardoned(self, tmp_path):
+        # совпадение ищется в колонке ТОЙ ЖЕ роли: «Объект» есть в источнике
+        # (название/тип), но обязательность «Объект» это не оправдывает
+        card = self.CARD.replace("| [1] | [1] |", "| Объект | [1] |")
+        _report, ok = self._check(card, tmp_path, source=self.SOURCE_HTML)
+        assert not ok
 
 
 class TestProfileApplicability:
