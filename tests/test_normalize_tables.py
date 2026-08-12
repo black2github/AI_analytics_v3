@@ -8,7 +8,8 @@ from bs4 import BeautifulSoup
 from app.scripts.CI.normalize_tables import (
     Profile, _title_key, assert_invariant, blocks_profile_applies, build_flat,
     check_file, expand_grid, find_top_tables, header_blocks, normalize_file,
-    render_sample, source_role_literals, validate_columns,
+    check_source_tables, html_param_names, render_sample,
+    source_role_literals, validate_columns,
 )
 
 
@@ -339,6 +340,53 @@ class TestCheckMode:
             self.GOOD.replace("| = GUID |", "| **Если** запрос — **то** GUID |"),
             tmp_path)
         assert ok
+
+
+class TestHtmlSourceCompleteness:
+    """--check --source: полнота HTML-таблиц источника — каждое имя параметра
+    из раскрытой сетки обязано присутствовать в карточке (инцидент
+    2026-08-12: file_id/upload_token потеряны при зелёном гейте)."""
+
+    SOURCE = (
+        "# Формат запроса\n\n"
+        "<table>\n"
+        "<tr><th>Структура запроса</th><th>Название параметра</th>"
+        "<th>Тип</th></tr>\n"
+        "<tr><td><strong>Тело запроса</strong></td><td></td><td></td></tr>\n"
+        "<tr><td>file_id</td><td>Идентификатор файла</td><td>UUID</td></tr>\n"
+        "<tr><td>upload_token</td><td>Токен загрузки</td><td>Строка</td></tr>\n"
+        "<tr><td>Content-Type</td><td>Заголовок</td><td>Строка</td></tr>\n"
+        "</table>\n"
+    )
+
+    def test_names_extracted(self):
+        names = html_param_names(self.SOURCE)
+        assert {"file_id", "upload_token", "Content-Type"} <= names
+        # секционная строка и типы именами не считаются
+        assert "UUID" not in names and "Строка" not in names
+
+    def test_missing_param_is_brak(self):
+        card = "| Код параметра | Наименование параметра |\n|---|---|\n| `file_id` | Идентификатор файла |\n"
+        _report, ok = check_source_tables(card, self.SOURCE)
+        assert not ok
+
+    def test_full_card_passes(self):
+        # тест на НЕсрабатывание: все имена на месте — OK
+        card = ("| Код параметра | Наименование параметра |\n|---|---|\n"
+                "| `file_id` | Идентификатор файла |\n"
+                "| `upload_token` | Токен загрузки |\n"
+                "| `Content-Type` | Заголовок |\n")
+        _report, ok = check_source_tables(card, self.SOURCE)
+        assert ok
+
+    def test_kod_parametra_is_path_role(self):
+        # каноническая шапка: «Код параметра» — роль путь; JSON-пути с точками валидны
+        headers = ["Код параметра", "Наименование параметра", "Тип", "Обяз.", "Кратность", "Правила"]
+        rows = [["body.file_id", "Идентификатор файла", "UUID", "Да", "[1]", ""],
+                ["body.parts[]", "Части", "Массив", "Нет", "[0..N]", ""]]
+        report = validate_columns(headers, rows, path_index=0)
+        path_col = [c for c in report if c["role"] == "путь"][0]
+        assert path_col["valid_pct"] == 100.0
 
 
 class TestSourceLiteralPardon:

@@ -844,6 +844,42 @@ def _norm_cell(v: str) -> str:
 _ATTACHMENT_RE = re.compile(r"\]\(/download/attachments/", re.IGNORECASE)
 
 
+# Токен-имя параметра: латинский идентификатор, возможно составной путь
+# (JSON через точку, XML через слэш, заголовки через дефис).
+_NAME_TOKEN_RE = re.compile(
+    r"^[A-Za-z][A-Za-z0-9_]*(?:[./\-\[\]][A-Za-z0-9_\[\]]+)*$")
+# Слова, похожие на имена, но имена параметров не являющиеся (типы, методы,
+# форматы) — их отсутствие в карточке потерей не считается.
+_TOKEN_STOP = frozenset({
+    "get", "post", "put", "delete", "patch", "rest", "soap", "json", "xml",
+    "true", "false", "null", "body", "string", "uuid", "guid", "int",
+    "integer", "boolean", "bool", "number", "object", "array", "multipart",
+    "bearer", "base64", "utf", "http", "https", "id", "api", "sync", "async",
+    "clob", "blob", "timestamp", "date", "datetime",
+})
+
+
+def html_param_names(source_text: str) -> set:
+    """Имена параметров из СЫРЫХ HTML-таблиц источника (первые две колонки
+    раскрытой сетки): file_id, upload_token, Content-Type…
+
+    Нужны для --check --source: гейт проверял валидность колонок карточки,
+    но НЕ полноту HTML-таблиц источника — потеря строки (file_id и
+    upload_token в MFlash «Подготовка к загрузке», 2026-08-12) проходила
+    зелёным. Каждый найденный токен обязан присутствовать в карточке."""
+    names: set = set()
+    for t in find_top_tables(source_text):
+        grid = expand_grid(t)
+        for row in grid[1:]:
+            for cell in row[:2]:
+                v = _plain(_BR_RE.sub(" ", cell)).strip().strip("`").strip()
+                if (2 < len(v) <= 64 and " " not in v
+                        and _NAME_TOKEN_RE.match(v)
+                        and v.lower() not in _TOKEN_STOP):
+                    names.add(v)
+    return names
+
+
 def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -881,6 +917,22 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 f"отсутствуют {len(missing)} значений ✗ НИЖЕ ПОРОГА")
             for v in missing[:3]:
                 report.append(f"      пример потери: {v!r}")
+    # Полнота HTML-таблиц источника: каждое имя параметра из раскрытых
+    # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
+    # file_id/upload_token потеряны при зелёном гейте).
+    html_names = html_param_names(source_text)
+    lost = sorted(n for n in html_names if _norm_cell(n) not in card_norm)
+    if lost:
+        ok = False
+        report.append(
+            f"HTML-таблицы источника: в карточке отсутствуют "
+            f"{len(lost)} имён параметров ✗ НИЖЕ ПОРОГА")
+        for v in lost[:5]:
+            report.append(f"      пример потери: {v!r}")
+    elif html_names:
+        report.append(
+            f"HTML-таблицы источника: все {len(html_names)} имён параметров "
+            f"на месте ✓")
     if ok:
         report.append("markdown-таблицы источника: все значения на месте ✓")
     return report, ok
@@ -968,7 +1020,10 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                 f"источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА")
     for i, (headers, rows) in enumerate(parse_md_tables(text)):
         low0 = _title_key(headers[0]) if headers else ""
-        path_index = 0 if ("xml" in low0 or "элемент" in low0 or "путь" in low0) else None
+        # «Код параметра» — каноническая колонка путей (XML через /, JSON
+        # через .); именно «код параметра» — «Код отказа» путём не является
+        path_index = 0 if ("xml" in low0 or "элемент" in low0 or "путь" in low0
+                           or ("код" in low0 and "параметр" in low0)) else None
         # Целостность строк: число ячеек = ширине шапки. Разорванная строка
         # (перенос строки ВНУТРИ ячейки вместо <br>) выглядит как короткая
         # строка + голый текст вне таблицы — инцидент 6-дец, 2026-08-09:
