@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from app.scripts.CI.normalize_tables import (
     Profile, _title_key, assert_invariant, blocks_profile_applies, build_flat,
     check_file, expand_grid, find_top_tables, header_blocks, normalize_file,
-    check_source_tables, html_param_names, render_sample,
+    check_source_tables, check_title, html_param_names, render_sample,
     source_role_literals, validate_columns,
 )
 
@@ -440,6 +440,45 @@ class TestLinkUrlNotLiteral:
                 "| **Где используется** | См. Метод [v2] выгрузки |\n")
         _report, ok = check_source_tables(card, source)
         assert ok
+
+
+class TestTitleTransfer:
+    """Дословный перенос title источника во frontmatter карточки —
+    постоянный атрибут, потеря наименования = брак."""
+
+    SRC = ("---\ntitle: '[Файловый сервис] Клиент: Функция загрузки файла'\n"
+           "confluence_page_id: '1'\n---\n# стр\n")
+
+    def test_verbatim_title_ok(self):
+        card = ("---\nid: FUN-CL-01\n"
+                "title: '[Файловый сервис] Клиент: Функция загрузки файла'\n"
+                "---\n# док\n")
+        _report, ok = check_title(card, self.SRC)
+        assert ok
+
+    def test_missing_title_is_loss(self):
+        card = "---\nid: FUN-CL-01\n---\n# док\n"
+        _report, ok = check_title(card, self.SRC)
+        assert not ok
+
+    def test_paraphrased_title_caught(self):
+        card = ("---\nid: FUN-CL-01\n"
+                "title: 'Функция загрузки файла (клиент)'\n---\n# док\n")
+        _report, ok = check_title(card, self.SRC)
+        assert not ok
+
+    def test_source_without_title_skipped(self):
+        # тест на НЕсрабатывание: источник без title сверке не подлежит
+        src = "---\nconfluence_page_id: '1'\n---\n# стр\n"
+        card = "---\nid: FUN-CL-01\n---\n# док\n"
+        _report, ok = check_title(card, src)
+        assert ok and not _report
+
+    def test_title_in_body_not_frontmatter(self):
+        # 'title:' в теле карточки — не frontmatter, не считается
+        card = "---\nid: FUN-CL-01\n---\n# док\n\ntitle: подделка\n"
+        _report, ok = check_title(card, self.SRC)
+        assert not ok
 
 
 class TestLogicFieldTableNotRequired:

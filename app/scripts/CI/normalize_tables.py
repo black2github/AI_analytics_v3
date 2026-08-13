@@ -938,6 +938,44 @@ def html_param_names(source_text: str) -> set:
     return names
 
 
+_FM_TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$", re.M)
+
+
+def _frontmatter_title(text: str) -> Optional[str]:
+    """Значение title из YAML frontmatter (до второго ---); None, если нет."""
+    body = text.lstrip("﻿")
+    if not body.startswith("---"):
+        return None
+    end = body.find("\n---", 3)
+    m = _FM_TITLE_RE.search(body[:end if end != -1 else 4000])
+    if not m:
+        return None
+    v = m.group(1)
+    if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+        v = v[1:-1].replace("''", "'") if v[0] == "'" else v[1:-1]
+    return v
+
+
+def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
+    """Дословный перенос title источника во frontmatter карточки.
+
+    title — постоянный атрибут (наименование в языке предметной области;
+    у функций отражён в ролевой модели): при переименовании файлов в слаги
+    он единственный носитель исходного наименования — тихая потеря хуже
+    шумного отказа. Источник без title сверке не подлежит."""
+    src = _frontmatter_title(source_text)
+    if src is None:
+        return [], True
+    card = _frontmatter_title(card_text)
+    if card == src:
+        return [f"title: дословно перенесён ({src!r}) ✓"], True
+    if card is None:
+        return [f"title: ОТСУТСТВУЕТ в карточке — у источника {src!r} "
+                "✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
+    return [f"title: расходится с источником ✗ (карточка {card!r}, "
+            f"источник {src!r} — перенос дословный)"], False
+
+
 def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -1170,10 +1208,12 @@ def main() -> int:
         report, ok = check_file(args.file, min_valid_pct=args.min_valid,
                                 source_text=src_text)
         if src_text is not None:
-            src_report, src_ok = check_source_tables(
-                args.file.read_text(encoding="utf-8"), src_text)
+            card_text = args.file.read_text(encoding="utf-8")
+            src_report, src_ok = check_source_tables(card_text, src_text)
+            ttl_report, ttl_ok = check_title(card_text, src_text)
             report.extend(src_report)
-            ok = ok and src_ok
+            report.extend(ttl_report)
+            ok = ok and src_ok and ttl_ok
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:

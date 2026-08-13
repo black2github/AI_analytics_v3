@@ -4,7 +4,7 @@
 
 from pathlib import Path
 
-from app.scripts.CI.source_coverage import collect
+from app.scripts.CI.source_coverage import collect, source_title
 
 
 def make(p: Path, text: str) -> None:
@@ -40,6 +40,16 @@ def test_orphan_dir_and_no_id(tmp_path):
     pages, parents, covered, no_id, orphans = collect(src, out)
     assert parents["300"] is None                    # родитель не найден
     assert len(no_id) == 1 and len(orphans) == 1
+
+
+def test_source_title(tmp_path):
+    # человеческое наименование для отчёта: кавычки снимаются; без title — None
+    p = tmp_path / "s.md"
+    make(p, "---\ntitle: '[Файловый сервис] Функции'\nconfluence_page_id: '7'\n---\n")
+    assert source_title(p) == "[Файловый сервис] Функции"
+    q = tmp_path / "t.md"
+    make(q, "---\nconfluence_page_id: '8'\n---\n")
+    assert source_title(q) is None
 
 
 def test_full_coverage_ok(tmp_path):

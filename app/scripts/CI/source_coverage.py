@@ -28,6 +28,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 _FM_BOUND = re.compile(r"^---\s*$")
+_TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
 _PAGE_ID_RE = re.compile(r"^confluence_page_id:\s*['\"]?(\d+)['\"]?\s*$")
 _PAGE_IDS_RE = re.compile(r"^confluence_page_ids:\s*\[(.*)\]\s*$")
 _ID_TOKEN_RE = re.compile(r"\d+")
@@ -49,6 +50,19 @@ def read_frontmatter_lines(path: Path, limit: int = 60) -> List[str]:
             return out
         out.append(ln)
     return []
+
+
+def source_title(path: Path) -> Optional[str]:
+    """title страницы из frontmatter — человеческое наименование для отчёта
+    (имена файлов выгрузки обрезаются/латинизируются, title — нет)."""
+    for ln in read_frontmatter_lines(path):
+        m = _TITLE_RE.match(ln.strip())
+        if m:
+            v = m.group(1)
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+                v = v[1:-1].replace("''", "'") if v[0] == "'" else v[1:-1]
+            return v
+    return None
 
 
 def source_page_id(path: Path) -> Optional[str]:
@@ -121,7 +135,9 @@ def main() -> int:
         par = parents.get(pid)
         mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
                 if par and par in covered else "")
-        print(f"  - [{pid}] {p.relative_to(args.sources)}{mark}")
+        ttl = source_title(p)
+        name = f" ({ttl})" if ttl else ""
+        print(f"  - [{pid}] {p.relative_to(args.sources)}{name}{mark}")
     if no_id:
         print(f"# страниц БЕЗ confluence_page_id (дефект выгрузки): {len(no_id)}")
         for p in no_id[:10]:
