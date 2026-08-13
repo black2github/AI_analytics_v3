@@ -342,6 +342,52 @@ class TestCheckMode:
         assert ok
 
 
+class TestLinkUrlNotLiteral:
+    """Сверка markdown-ссылок — по тексту-названию, URL не литерал: замена
+    живого URL Confluence относительной ссылкой на карточку не должна
+    валить сверку паспорта (конфликт правила и гейта, OQ-029)."""
+
+    SOURCE = (
+        "# Общая информация о методе\n\n"
+        "| **Название метода** | Загрузка файла |\n"
+        "| --- | --- |\n"
+        "| **Где используется** | На шаге [Функция просмотра](https://confluence.int.example/pages/1) |\n"
+        "| **Alias** | /upload |\n"
+    )
+
+    def test_replaced_link_passes(self):
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Название метода** | Загрузка файла |\n"
+                "| **Где используется** | На шаге Функция просмотра |\n"
+                "| **Alias** | /upload |\n")
+        _report, ok = check_source_tables(card, self.SOURCE)
+        assert ok
+
+    def test_lost_link_text_still_caught(self):
+        # тест на НЕсрабатывание послабления: потеря ТЕКСТА ссылки — брак
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Название метода** | Загрузка файла |\n"
+                "| **Где используется** | На шаге |\n"
+                "| **Alias** | /upload |\n")
+        _report, ok = check_source_tables(card, self.SOURCE)
+        assert not ok
+
+    def test_bracket_inside_link_text(self):
+        # названия Confluence бывают с «]» внутри текста ссылки — regex
+        # [^\]]* на таком обрезал значение, посимвольный разбор — нет
+        source = (
+            "# Общая информация о методе\n\n"
+            "| **Название метода** | Загрузка файла |\n"
+            "| --- | --- |\n"
+            "| **Где используется** | См. [Метод [v2] выгрузки](https://confluence.int.example/pages/7) |\n"
+        )
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Название метода** | Загрузка файла |\n"
+                "| **Где используется** | См. Метод [v2] выгрузки |\n")
+        _report, ok = check_source_tables(card, source)
+        assert ok
+
+
 class TestHtmlSourceCompleteness:
     """--check --source: полнота HTML-таблиц источника — каждое имя параметра
     из раскрытой сетки обязано присутствовать в карточке (инцидент

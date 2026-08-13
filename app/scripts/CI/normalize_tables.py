@@ -831,10 +831,41 @@ def parse_md_tables(md_text: str) -> List[Tuple[List[str], List[List[str]]]]:
     return tables
 
 
+def _strip_markdown_links(v: str) -> str:
+    """Снять [text](url), в т.ч. когда text содержит внутренние «]» (Confluence)."""
+    out: List[str] = []
+    i = 0
+    n = len(v)
+    while i < n:
+        if v[i] != "[":
+            out.append(v[i])
+            i += 1
+            continue
+        close = v.find("](", i + 1)
+        if close == -1:
+            out.append(v[i])
+            i += 1
+            continue
+        url_end = v.find(")", close + 2)
+        if url_end == -1:
+            out.append(v[i])
+            i += 1
+            continue
+        out.append(v[i + 1:close])
+        i = url_end + 1
+    return "".join(out)
+
+
 def _norm_cell(v: str) -> str:
     """Нормальная форма значения для сверки наличия: без markdown-разметки,
-    бэктиков, <br> и лишних пробелов, в нижнем регистре."""
+    бэктиков, <br> и лишних пробелов, в нижнем регистре.
+
+    Markdown-ссылки сводятся к тексту-названию: URL — навигация, не литерал.
+    Иначе замена живого URL Confluence относительной ссылкой на карточку
+    (правило шаблона контрактов) валила сверку паспорта §1 — агент был
+    зажат между правилом и гейтом (OQ-029 file-storage, 2026-08-13)."""
     v = _BR_RE.sub(" ", _plain(v)).replace("`", "").replace("\\|", "|")
+    v = _strip_markdown_links(v)
     return re.sub(r"\s+", " ", v).strip().lower()
 
 
