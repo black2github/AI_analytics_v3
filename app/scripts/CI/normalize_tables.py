@@ -130,7 +130,13 @@ def expand_grid(table: Tag) -> List[List[str]]:
     # занятость будущих строк: col -> (оставшийся rowspan, значение)
     carry: Dict[int, List] = {}
 
+    # только строки ЭТОЙ таблицы: tr вложенной таблицы (таблица полей в
+    # ячейке шаговой таблицы «Логики») подмешивались в сетку внешней —
+    # гейт полноты требовал их имена (storage_type, intc-035, 2026-08-14);
+    # вложенная таблица остаётся текстом родительской ячейки
     for tr in table.find_all("tr"):
+        if tr.find_parent("table") is not table:
+            continue
         row: List[Optional[str]] = []
         col = 0
 
@@ -832,7 +838,13 @@ def parse_md_tables(md_text: str) -> List[Tuple[List[str], List[List[str]]]]:
 
 
 def _strip_markdown_links(v: str) -> str:
-    """Снять [text](url), в т.ч. когда text содержит внутренние «]» (Confluence)."""
+    """Снять [text](url), в т.ч. когда text содержит внутренние «[…]»
+    (названия Confluence вида «[Файловый сервис] Клиент: …»).
+
+    Закрывающая скобка ищется БАЛАНСОМ, а не первым «](»: непарный «[»
+    раньше по тексту (например кратность [1]) склеивал чужой текст в
+    "текст ссылки" и валил сверку правильной карточки (инцидент
+    intc-014, 2026-08-14 — агент из-за этого убирал ссылки)."""
     out: List[str] = []
     i = 0
     n = len(v)
@@ -841,18 +853,24 @@ def _strip_markdown_links(v: str) -> str:
             out.append(v[i])
             i += 1
             continue
-        close = v.find("](", i + 1)
-        if close == -1:
-            out.append(v[i])
-            i += 1
-            continue
-        url_end = v.find(")", close + 2)
-        if url_end == -1:
-            out.append(v[i])
-            i += 1
-            continue
-        out.append(v[i + 1:close])
-        i = url_end + 1
+        depth = 0
+        j = i
+        while j < n:
+            if v[j] == "[":
+                depth += 1
+            elif v[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        if j < n and j + 1 < n and v[j + 1] == "(":
+            url_end = v.find(")", j + 2)
+            if url_end != -1:
+                out.append(v[i + 1:j])
+                i = url_end + 1
+                continue
+        out.append(v[i])
+        i += 1
     return "".join(out)
 
 
@@ -866,6 +884,9 @@ def _norm_cell(v: str) -> str:
     зажат между правилом и гейтом (OQ-029 file-storage, 2026-08-13)."""
     v = _BR_RE.sub(" ", _plain(v)).replace("`", "").replace("\\|", "|")
     v = _strip_markdown_links(v)
+    # markdown-экранирование HTML→MD-конвертера выгрузки (\[ДСФ_ЭКО\] и т.п.):
+    # карточка пишет чистый текст — сравниваем без обратных косых
+    v = re.sub(r"\\([^\w\s])", r"\1", v)
     return re.sub(r"\s+", " ", v).strip().lower()
 
 
@@ -901,6 +922,12 @@ def html_param_names(source_text: str) -> set:
     names: set = set()
     for t in find_top_tables(source_text):
         grid = expand_grid(t)
+        # Таблица заполнения полей из «Логики работы метода» («поле |
+        # значение», вложена в ячейку шаговой таблицы) — не сетка
+        # параметров контракта: её имена (storage_type…) в карточку не
+        # требуются (OQ-033 file-storage, intc-035, 2026-08-14).
+        if grid and [_plain(c).strip().lower() for c in grid[0][:2]] == ["поле", "значение"]:
+            continue
         for row in grid[1:]:
             for cell in row[:2]:
                 v = _plain(_BR_RE.sub(" ", cell)).strip().strip("`").strip()

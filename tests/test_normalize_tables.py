@@ -372,6 +372,60 @@ class TestLinkUrlNotLiteral:
         _report, ok = check_source_tables(card, self.SOURCE)
         assert not ok
 
+    def test_link_with_bracketed_text_near_unpaired_bracket(self):
+        # правило трёх случаев требует относительную ссылку; текст ссылки
+        # содержит «[Файловый сервис]», а раньше по карточке есть непарный
+        # «[1]» (кратность) — поиск первого «](» склеивал чужой текст
+        # и валил правильную карточку (инцидент intc-014)
+        source = (
+            "# Общая информация о методе\n\n"
+            "| **Название метода** | Создание архива |\n"
+            "| --- | --- |\n"
+            "| **При вызове метода** | Инициирование подпроцесса [\\[Файловый сервис\\] Клиент: Выгрузка архива (асинхрон)](https://confluence.int.example/pages/5) (шаг №3) |\n"
+            "| **Alias** | /archive |\n"
+        )
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Кратность** | [1] |\n"
+                "| **Название метода** | Создание архива |\n"
+                "| **При вызове метода** | Инициирование подпроцесса [[Файловый сервис] Клиент: Выгрузка архива (асинхрон)](../process/prc-004-client-download-archive-async.md) (шаг №3) |\n"
+                "| **Alias** | /archive |\n")
+        _report, ok = check_source_tables(card, source)
+        assert ok
+
+    def test_escaped_brackets_normalized(self):
+        # HTML→MD-конвертер выгрузки экранирует скобки в тексте ссылки
+        # (\[ДСФ_ЭКО\]); карточка пишет чистый текст — не брак
+        source = (
+            "# Общая информация о методе\n\n"
+            "| **Название метода** | Загрузка файла |\n"
+            "| --- | --- |\n"
+            "| **Где используется** | На шаге 5 [\\[ДСФ_ЭКО\\] Клиент: Функция скачивания](https://confluence.int.example/pages/9) |\n"
+            "| **Alias** | /upload |\n"
+        )
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Название метода** | Загрузка файла |\n"
+                "| **Где используется** | На шаге 5 [ДСФ_ЭКО] Клиент: Функция скачивания |\n"
+                "| **Alias** | /upload |\n")
+        _report, ok = check_source_tables(card, source)
+        assert ok
+
+    def test_escaped_brackets_loss_still_caught(self):
+        # тест на НЕсрабатывание послабления: значение с \[..\] всё равно
+        # обязано присутствовать — потеря остаётся браком
+        source = (
+            "# Общая информация о методе\n\n"
+            "| **Название метода** | Загрузка файла |\n"
+            "| --- | --- |\n"
+            "| **Где используется** | На шаге 5 [\\[ДСФ_ЭКО\\] Клиент: Функция скачивания](https://confluence.int.example/pages/9) |\n"
+            "| **Alias** | /upload |\n"
+        )
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Название метода** | Загрузка файла |\n"
+                "| **Где используется** | На шаге 5 |\n"
+                "| **Alias** | /upload |\n")
+        _report, ok = check_source_tables(card, source)
+        assert not ok
+
     def test_bracket_inside_link_text(self):
         # названия Confluence бывают с «]» внутри текста ссылки — regex
         # [^\]]* на таком обрезал значение, посимвольный разбор — нет
@@ -386,6 +440,46 @@ class TestLinkUrlNotLiteral:
                 "| **Где используется** | См. Метод [v2] выгрузки |\n")
         _report, ok = check_source_tables(card, source)
         assert ok
+
+
+class TestLogicFieldTableNotRequired:
+    """Вложенная таблица «поле | значение» из «Логики работы метода»
+    (заполнение полей БД-записи) — не сетка параметров контракта: её
+    имена в карточке не требуются (OQ-033, intc-035)."""
+
+    def test_pole_znachenie_table_skipped(self):
+        source = (
+            "# Метод\n\n"
+            '<table><tr><th>поле</th><th>значение</th></tr>'
+            '<tr><td>storage_type</td><td>= "S3"</td></tr></table>\n'
+        )
+        assert "storage_type" not in html_param_names(source)
+
+    def test_param_grid_still_required(self):
+        # тест на НЕсрабатывание: обычная сетка параметров сторожится
+        source = (
+            "# Метод\n\n"
+            "<table><tr><th>Параметр</th><th>Описание</th></tr>"
+            "<tr><td>file_id</td><td>Идентификатор файла</td></tr></table>\n"
+        )
+        assert "file_id" in html_param_names(source)
+
+    def test_nested_table_rows_not_mixed(self):
+        # таблица полей внутри ячейки шаговой таблицы «Логики» (intc-035):
+        # её строки не подмешиваются в сетку внешней и имена не требуются;
+        # соседняя настоящая сетка параметров — сторожится
+        source = (
+            "# Метод\n\n"
+            "<table><tr><th>№</th><th>Шаг</th><th>Описание</th></tr>"
+            "<tr><td>3</td><td>Создать запись</td><td>поля — см. таблицу:"
+            "<table><tr><th>поле</th><th>значение</th></tr>"
+            '<tr><td>storage_type</td><td>= "S3"</td></tr></table>'
+            "</td></tr></table>\n"
+            "<table><tr><th>Параметр</th><th>Описание</th></tr>"
+            "<tr><td>file_id</td><td>Идентификатор</td></tr></table>\n"
+        )
+        names = html_param_names(source)
+        assert "storage_type" not in names and "file_id" in names
 
 
 class TestHtmlSourceCompleteness:
