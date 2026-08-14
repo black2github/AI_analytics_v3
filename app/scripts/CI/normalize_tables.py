@@ -1370,6 +1370,11 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
             # Строка макетов ЭФ (Figma/размерности) — служебная, см. выше.
             if any(_LAYOUT_ROW_RE.search(c) for c in row):
                 continue
+            # Строка-указатель («Логика работы | …см. ниже») — навигация по
+            # странице, дублирующая целевой раздел карточки: не требуется
+            # (решение по шаблону agent, 2026-08-15).
+            if any(re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
+                continue
             for cell in row:
                 cv = _norm_cell(cell)
                 if cv and cv not in card_norm:
