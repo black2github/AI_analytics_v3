@@ -567,6 +567,30 @@ class TestBehaviorNumbering:
         assert not ok and any("склеит" in r for r in report)
 
 
+class TestMethodBehaviorCell:
+    """Алгоритм из ячейки «Что делает метод»: сверяется с карточкой,
+    несущей раздел «Поведение» (функция метода FUN-SYS); карточка
+    контракта INTC без раздела — законный skip."""
+
+    SRC = ("# Метод\n\n<table><tr><td><strong>Что делает метод</strong></td>"
+           "<td><p><strong>1)</strong> Взять клиента</p>"
+           '<p style="margin-left: 40.0px"><strong>1.1)</strong> Выбрать блокировки</p>'
+           "<p><strong>2)</strong> Вернуть массив</p></td></tr></table>\n")
+
+    def test_intc_card_without_behavior_skipped(self):
+        card = "---\nid: INTC-001\n---\n## 1. Краткое описание\n\nКонтракт.\n"
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert ok and not report
+
+    def test_fun_sys_card_checked(self):
+        good = ("## Поведение\n\n- **1)** Взять клиента\n"
+                "  - **1.1)** Выбрать блокировки\n- **2)** Вернуть массив\n")
+        flat = ("## Поведение\n\n- **1)** Взять клиента\n"
+                "- **2)** Вернуть массив\n")   # 1.1 потерян
+        assert check_behavior_nesting(good, self.SRC)[1]
+        assert not check_behavior_nesting(flat, self.SRC)[1]
+
+
 class TestQuotedLiterals:
     """Кавычечные литералы источника (сообщения, кнопки, значения) обязаны
     присутствовать в карточке дословно — механизируемая часть класса

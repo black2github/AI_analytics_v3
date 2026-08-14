@@ -989,6 +989,11 @@ _STEP_MARKER_RE = re.compile(
     re.IGNORECASE)
 _MARGIN_RE = re.compile(r"margin-left:\s*([\d.]+)\s*px", re.IGNORECASE)
 _BEHAVIOR_CELL_RE = re.compile(r"что\s+делает\s+функци", re.IGNORECASE)
+# алгоритм МЕТОДА: сверяется только когда карточка несёт раздел
+# «Поведение» (функция метода, FUN-SYS); карточка контракта INTC
+# алгоритм законно не несёт — сверка не её (перенос — заходом
+# create-function, потеря без долга сторожится правилом скилла)
+_BEHAVIOR_CELL_METHOD_RE = re.compile(r"что\s+делает\s+метод", re.IGNORECASE)
 
 
 def _marker_core(text: str) -> Optional[str]:
@@ -1008,12 +1013,15 @@ def _rank_levels(steps: List[Tuple[str, float]]) -> List[Tuple[str, int]]:
     return [(c, ranks[lv]) for c, lv in steps]
 
 
-def behavior_steps_from_source(source_text: str) -> List[Tuple[str, int]]:
-    """(маркер, уровень) из ячейки «Что делает функция» HTML-источника."""
+def behavior_steps_from_source(source_text: str,
+                               cell_re=None) -> List[Tuple[str, int]]:
+    """(маркер, уровень) из ячейки «Что делает функция» HTML-источника
+    (или иной ячейки поведения по cell_re)."""
     soup = BeautifulSoup(protect_token_tags(source_text), "html.parser")
     cell = None
+    rx = cell_re or _BEHAVIOR_CELL_RE
     for th in soup.find_all(["th", "td"]):
-        if _BEHAVIOR_CELL_RE.search(th.get_text(" ", strip=True) or ""):
+        if rx.search(th.get_text(" ", strip=True) or ""):
             cell = th.find_next_sibling("td")
             if cell is not None:
                 break
@@ -1058,7 +1066,14 @@ def check_behavior_nesting(card_text: str,
     """Профиль вложенности «Поведения» карточки против источника."""
     src = behavior_steps_from_source(source_text)
     if len(src) < 2:
-        return [], True   # вложенность в источнике не размечена — не сверяем
+        # ячейка «Что делает функция» пуста/не размечена: пробуем алгоритм
+        # МЕТОДА — он сверяется только с карточкой, несущей «Поведение»
+        # (функция метода); карточка без раздела (контракт INTC) — не её
+        src = behavior_steps_from_source(source_text,
+                                         _BEHAVIOR_CELL_METHOD_RE)
+        if len(src) < 2 or not re.search(r"^##\s+Поведение\s*$",
+                                         card_text, re.M):
+            return [], True
     card = behavior_steps_from_card(card_text)
     report: List[str] = []
     ok = True
