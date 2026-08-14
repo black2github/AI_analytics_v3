@@ -1050,14 +1050,42 @@ def check_behavior_nesting(card_text: str,
     return report, ok
 
 
+# Валидный элемент markdown-списка: -/*/+ или ОДИНОЧНОЕ число с . или ).
+# Составной маркер источника (1.1), А.2) — не маркер markdown: строка с ним
+# рендерится продолжением абзаца, шаги склеиваются в плоский текст
+# (инцидент mwqueue, 2026-08-14: структура в байтах ≠ структура в рендере).
+_MD_LIST_ITEM_RE = re.compile(r"^\s*(?:[-*+]|\d{1,9}[.)])\s")
+
+
 def check_behavior_numbering(card_text: str) -> Tuple[List[str], bool]:
-    """Самосогласованность карточки (работает и без --source): у точечной
-    нумерации глубина номера (1.1.1 → 3) обязана совпадать с уровнем
-    отступа. Иные системы маркеров не проверяются (профиль — по источнику)."""
-    steps = behavior_steps_from_card(card_text)
+    """Самосогласованность карточки (работает и без --source):
+    (1) каждая строка-шаг «Поведения» обязана быть элементом
+    markdown-списка — иначе рендер склеит шаги в плоский абзац;
+    (2) у точечной нумерации глубина номера (1.1.1 → 3) обязана
+    совпадать с уровнем вложенности."""
+    m = re.search(r"^##\s+Поведение\s*$(.*?)(?=^##\s|\Z)", card_text,
+                  re.M | re.S)
     report: List[str] = []
     ok = True
-    for core, lvl in steps:
+    if m:
+        prev_blank = True
+        for ln in m.group(1).splitlines():
+            if not ln.strip():
+                prev_blank = True
+                continue
+            is_step = _marker_core(ln.strip()) is not None
+            # склейка рендера — только у СМЕЖНЫХ строк: шаг-абзац,
+            # отделённый пустыми строками, рендерится самостоятельно
+            if (is_step and not prev_blank
+                    and not _MD_LIST_ITEM_RE.match(ln)):
+                report.append(
+                    f"поведение: строка «{ln.strip()[:60]}» — не элемент "
+                    "markdown-списка и прилипает к предыдущей: рендер склеит "
+                    "шаги в плоский абзац ✗ (пункт создаёт маркер «-», "
+                    "дословный маркер источника — текстом после него)")
+                ok = False
+            prev_blank = False
+    for core, lvl in behavior_steps_from_card(card_text):
         if "." not in core:
             continue
         want = core.count(".")

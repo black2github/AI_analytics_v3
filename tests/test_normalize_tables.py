@@ -518,7 +518,8 @@ class TestBehaviorNumbering:
     """Самосогласованность карточки: глубина точечного номера ↔ отступ."""
 
     def test_consistent_ok(self):
-        card = "## Поведение\n\n1. Шаг\n   1.1. Вложенный\n2. Конец\n"
+        card = ("## Поведение\n\n- **1.** Шаг\n  - **1.1.** Вложенный\n"
+                "- **2.** Конец\n")
         _report, ok = check_behavior_numbering(card)
         assert ok
 
@@ -528,10 +529,42 @@ class TestBehaviorNumbering:
         assert not ok and "1.1" in report[0]
 
     def test_non_dotted_markers_no_noise(self):
-        # тест на НЕсрабатывание: «Шаг №1/№2» — глубина в номере не закодирована
+        # «Шаг №1/№2» голым текстом — глубина в номере не закодирована, но
+        # строки не являются элементами списка → рендер склеит: брак
         card = "## Поведение\n\nШаг №1: Сделать\nШаг №2: Завершить\n"
-        _report, ok = check_behavior_numbering(card)
-        assert ok
+        report, ok = check_behavior_numbering(card)
+        assert not ok and "склеит" in report[0]
+
+    def test_paragraph_steps_with_blank_lines_ok(self):
+        # тест на НЕсрабатывание: шаги-абзацы, отделённые пустыми строками,
+        # рендерятся самостоятельно (стиль «Шаг № N.» file-storage)
+        card = ("## Поведение\n\n"
+                "Шаг № 1. Вызвать метод генерации токена.\n\n"
+                "- `<action>` = \"\"\n\n"
+                "Шаг № 2. Инициировать процесс выгрузки.\n")
+        report, ok = check_behavior_numbering(card)
+        assert ok and not report
+
+    def test_dash_wrapped_verbatim_markers_ok(self):
+        # канонный стиль: пункт создаёт «-», дословный маркер — текстом
+        card = ("## Поведение\n\n"
+                "- **1)** **Если** критично, **то:**\n"
+                "  - **1.1)** Найти номер\n"
+                "  - **1.2)** Разместить\n"
+                "  - **иначе:**\n"
+                "  - **1.3)** Отказ\n"
+                "- **2)** Завершение\n")
+        report, ok = check_behavior_numbering(card)
+        assert ok and not report
+
+    def test_composite_marker_without_list_item_caught(self):
+        # составной маркер с отступом без «-» — рендер склеит в абзац
+        card = ("## Поведение\n\n"
+                "1) **Если** критично, **то:**\n"
+                "   1.1) Найти номер\n"
+                "   1.2) Разместить\n")
+        report, ok = check_behavior_numbering(card)
+        assert not ok and any("склеит" in r for r in report)
 
 
 class TestTitleTransfer:
