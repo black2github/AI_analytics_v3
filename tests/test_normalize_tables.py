@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from app.scripts.CI.normalize_tables import (
     Profile, _title_key, assert_invariant, blocks_profile_applies, build_flat,
     check_file, expand_grid, find_top_tables, header_blocks, normalize_file,
+    check_behavior_nesting, check_behavior_numbering,
     check_source_tables, check_title, html_param_names, render_sample,
     source_role_literals, validate_columns,
 )
@@ -439,6 +440,97 @@ class TestLinkUrlNotLiteral:
                 "| **Название метода** | Загрузка файла |\n"
                 "| **Где используется** | См. Метод [v2] выгрузки |\n")
         _report, ok = check_source_tables(card, source)
+        assert ok
+
+
+class TestBehaviorNesting:
+    """Профиль вложенности «Поведения»: маркеры дословно, уровень — из
+    разметки источника (margin-left/списки), нормализация рангами."""
+
+    SRC = (
+        "# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+        '<p><strong>1)</strong> Если критично, то:</p>'
+        '<p style="margin-left: 40.0px"><strong>1.1)</strong> Найти номер</p>'
+        '<p style="margin-left: 40.0px"><strong>1.2)</strong> Разместить</p>'
+        "<p>иначе:</p>"
+        '<p style="margin-left: 40.0px"><strong>1.3)</strong> Отказ</p>'
+        "<p><strong>2)</strong> Завершение</p>"
+        "</td></tr></table>\n"
+    )
+
+    def test_matching_profile_ok(self):
+        card = ("## Поведение\n\n"
+                "1. **Если** критично, **то:**\n"
+                "   1.1. Найти номер\n"
+                "   1.2. Разместить\n"
+                "   **иначе:**\n"
+                "   1.3. Отказ\n"
+                "2. Завершение\n")
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert ok and "совпадает" in report[0]
+
+    def test_flattened_card_caught(self):
+        card = ("## Поведение\n\n"
+                "1. **Если** критично, **то:**\n"
+                "2. Найти номер\n"          # 1.1 потерян, плоско
+                "3. Разместить\n")
+        _report, ok = check_behavior_nesting(card, self.SRC)
+        assert not ok
+
+    def test_lost_step_caught(self):
+        card = ("## Поведение\n\n"
+                "1. **Если** критично, **то:**\n"
+                "   1.1. Найти номер\n"
+                "   1.3. Отказ\n"
+                "2. Завершение\n")           # 1.2 потерян
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert not ok and any("1.2" in r for r in report)
+
+    def test_flat_behavior_no_noise(self):
+        # тест на НЕсрабатывание: плоское поведение без вложенности
+        src = ("# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+               "<p><strong>1)</strong> Сделать</p>"
+               "<p><strong>2)</strong> Завершить</p></td></tr></table>\n")
+        card = "## Поведение\n\n1. Сделать\n2. Завершить\n"
+        _report, ok = check_behavior_nesting(card, src)
+        assert ok
+
+    def test_source_without_behavior_cell_skipped(self):
+        # тест на НЕсрабатывание: у контрактов ячейки «Что делает» нет
+        src = "# Метод\n\n<table><tr><th>Параметр</th><td>x</td></tr></table>\n"
+        report, ok = check_behavior_nesting("## Поведение\n\n1. Шаг\n", src)
+        assert ok and not report
+
+    def test_letter_markers_with_margin(self):
+        # маркеры не обязаны быть числовыми: A) / B) с отступом
+        src = ("# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+               "<p><strong>1)</strong> Цикл:</p>"
+               '<p style="margin-left: 40.0px"><strong>A)</strong> Взять</p>'
+               '<p style="margin-left: 40.0px"><strong>B)</strong> Положить</p>'
+               "</td></tr></table>\n")
+        good = ("## Поведение\n\n1. Цикл:\n   A) Взять\n   B) Положить\n")
+        flat = ("## Поведение\n\n1. Цикл:\nA) Взять\nB) Положить\n")
+        assert check_behavior_nesting(good, src)[1]
+        assert not check_behavior_nesting(flat, src)[1]
+
+
+class TestBehaviorNumbering:
+    """Самосогласованность карточки: глубина точечного номера ↔ отступ."""
+
+    def test_consistent_ok(self):
+        card = "## Поведение\n\n1. Шаг\n   1.1. Вложенный\n2. Конец\n"
+        _report, ok = check_behavior_numbering(card)
+        assert ok
+
+    def test_flattened_dotted_caught(self):
+        card = "## Поведение\n\n1. Шаг\n1.1. Вложенный без отступа\n"
+        report, ok = check_behavior_numbering(card)
+        assert not ok and "1.1" in report[0]
+
+    def test_non_dotted_markers_no_noise(self):
+        # тест на НЕсрабатывание: «Шаг №1/№2» — глубина в номере не закодирована
+        card = "## Поведение\n\nШаг №1: Сделать\nШаг №2: Завершить\n"
+        _report, ok = check_behavior_numbering(card)
         assert ok
 
 

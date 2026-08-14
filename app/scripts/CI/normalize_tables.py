@@ -938,6 +938,137 @@ def html_param_names(source_text: str) -> set:
     return names
 
 
+# ---------- вложенность раздела «Поведение» ----------
+#
+# Смысл ветвления Если/то/иначе кодируется в источнике ВИЗУАЛЬНО
+# (margin-left абзацев, вложенные списки) — выпрямление вложенности при
+# переносе меняет смысл молча. Сверяем ПРОФИЛЬ вложенности: маркеры шагов
+# переносятся дословно (система маркеров любая: 1.1 / A) / Шаг №2),
+# уровень определяется РАЗМЕТКОЙ, пиксели и отступы нормализуются
+# ранжированием уникальных значений (устойчиво к стилям разных авторов).
+# Ограничение (честное): если вложенность в источнике не выражена ни
+# списками, ни отступами (голый текст), механике не за что зацепиться —
+# остаются правило шаблона, образец и глаза эксперта.
+
+_STEP_MARKER_RE = re.compile(
+    r"^\s*(?:[-*+]\s+)?(?:\*\*)?\s*(?:шаг\s*)?№?\s*"
+    r"([0-9A-Za-zА-Яа-я]{1,4}(?:\.[0-9A-Za-z]{1,3})*)\s*[).:\]]",
+    re.IGNORECASE)
+_MARGIN_RE = re.compile(r"margin-left:\s*([\d.]+)\s*px", re.IGNORECASE)
+_BEHAVIOR_CELL_RE = re.compile(r"что\s+делает\s+функци", re.IGNORECASE)
+
+
+def _marker_core(text: str) -> Optional[str]:
+    m = _STEP_MARKER_RE.match(text)
+    if not m:
+        return None
+    core = m.group(1)
+    # маркер: содержит цифру либо одиночная буква (A/B/В…) — не слова
+    if any(ch.isdigit() for ch in core) or (len(core) == 1 and core.isalpha()):
+        return core.lower()
+    return None
+
+
+def _rank_levels(steps: List[Tuple[str, float]]) -> List[Tuple[str, int]]:
+    """Нормализация отступов: уровень = ранг уникального отступа."""
+    ranks = {v: i for i, v in enumerate(sorted({lv for _c, lv in steps}))}
+    return [(c, ranks[lv]) for c, lv in steps]
+
+
+def behavior_steps_from_source(source_text: str) -> List[Tuple[str, int]]:
+    """(маркер, уровень) из ячейки «Что делает функция» HTML-источника."""
+    soup = BeautifulSoup(protect_token_tags(source_text), "html.parser")
+    cell = None
+    for th in soup.find_all(["th", "td"]):
+        if _BEHAVIOR_CELL_RE.search(th.get_text(" ", strip=True) or ""):
+            cell = th.find_next_sibling("td")
+            if cell is not None:
+                break
+    if cell is None:
+        return []
+    steps: List[Tuple[str, float]] = []
+    for el in cell.find_all(["p", "li"]):
+        text = el.get_text(" ", strip=True)
+        core = _marker_core(text)
+        if core is None:
+            continue
+        if el.name == "li":
+            depth = len([a for a in el.parents
+                         if a.name in ("ul", "ol") and cell in a.parents]) or 1
+            indent = 40.0 * depth
+        else:
+            m = _MARGIN_RE.search(el.get("style") or "")
+            indent = float(m.group(1)) if m else 0.0
+        steps.append((core, indent))
+    return _rank_levels(steps)
+
+
+def behavior_steps_from_card(card_text: str) -> List[Tuple[str, int]]:
+    """(маркер, уровень) из раздела «## Поведение» карточки."""
+    m = re.search(r"^##\s+Поведение\s*$(.*?)(?=^##\s|\Z)", card_text,
+                  re.M | re.S)
+    if not m:
+        return []
+    steps: List[Tuple[str, float]] = []
+    for ln in m.group(1).splitlines():
+        if not ln.strip():
+            continue
+        core = _marker_core(ln.strip())
+        if core is None:
+            continue
+        steps.append((core, float(len(ln) - len(ln.lstrip()))))
+    return _rank_levels(steps)
+
+
+def check_behavior_nesting(card_text: str,
+                           source_text: str) -> Tuple[List[str], bool]:
+    """Профиль вложенности «Поведения» карточки против источника."""
+    src = behavior_steps_from_source(source_text)
+    if len(src) < 2:
+        return [], True   # вложенность в источнике не размечена — не сверяем
+    card = behavior_steps_from_card(card_text)
+    report: List[str] = []
+    ok = True
+    j = 0
+    for core, lvl in src:
+        k = next((i for i in range(j, len(card)) if card[i][0] == core), None)
+        if k is None:
+            report.append(f"поведение: шаг «{core}» источника не найден в "
+                          "карточке ✗ ПОТЕРЯ ШАГА")
+            ok = False
+            continue
+        if card[k][1] != lvl:
+            report.append(
+                f"поведение: шаг «{core}» — уровень вложенности {card[k][1]} "
+                f"в карточке против {lvl} в источнике ✗ (выпрямление меняет "
+                "смысл ветвления)")
+            ok = False
+        j = k + 1
+    if ok:
+        report.append(f"поведение: профиль вложенности совпадает "
+                      f"({len(src)} шагов) ✓")
+    return report, ok
+
+
+def check_behavior_numbering(card_text: str) -> Tuple[List[str], bool]:
+    """Самосогласованность карточки (работает и без --source): у точечной
+    нумерации глубина номера (1.1.1 → 3) обязана совпадать с уровнем
+    отступа. Иные системы маркеров не проверяются (профиль — по источнику)."""
+    steps = behavior_steps_from_card(card_text)
+    report: List[str] = []
+    ok = True
+    for core, lvl in steps:
+        if "." not in core:
+            continue
+        want = core.count(".")
+        if lvl != want:
+            report.append(
+                f"поведение: шаг «{core}» — глубина номера {want + 1}, но "
+                f"уровень отступа {lvl} ✗ (номер и структура расходятся)")
+            ok = False
+    return report, ok
+
+
 _FM_TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$", re.M)
 
 
@@ -1207,13 +1338,18 @@ def main() -> int:
                     if args.source is not None else None)
         report, ok = check_file(args.file, min_valid_pct=args.min_valid,
                                 source_text=src_text)
+        card_text = args.file.read_text(encoding="utf-8")
+        num_report, num_ok = check_behavior_numbering(card_text)
+        report.extend(num_report)
+        ok = ok and num_ok
         if src_text is not None:
-            card_text = args.file.read_text(encoding="utf-8")
             src_report, src_ok = check_source_tables(card_text, src_text)
             ttl_report, ttl_ok = check_title(card_text, src_text)
+            bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
             report.extend(src_report)
             report.extend(ttl_report)
-            ok = ok and src_ok and ttl_ok
+            report.extend(bh_report)
+            ok = ok and src_ok and ttl_ok and bh_ok
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:
