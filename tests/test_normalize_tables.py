@@ -567,6 +567,43 @@ class TestBehaviorNumbering:
         assert not ok and any("склеит" in r for r in report)
 
 
+class TestStepMarkers:
+    """Полнота маркеров шагов: номера — литералы; перенумерация и слияние
+    шагов — потеря (29 → 22 своих при зелёном гейте, src-locks)."""
+
+    SRC = ("# Процесс\n\n<table><tr><th>№</th><th>Шаг</th></tr>"
+           "<tr><td><strong>1.1</strong></td><td>Принять файл</td></tr>"
+           "<tr><td><strong>1.2</strong></td><td>Проверить</td></tr>"
+           "<tr><td><strong>1.22</strong></td><td>Сохранить</td></tr>"
+           "</table>\n")
+
+    def test_all_markers_present_ok(self):
+        from app.scripts.CI.normalize_tables import check_step_markers
+        card = "| 1.1 | Принять файл |\n| 1.2 | Проверить |\n| 1.22 | Сохранить |\n"
+        report, ok = check_step_markers(card, self.SRC)
+        assert ok and "все 3" in report[0]
+
+    def test_renumbering_caught(self):
+        from app.scripts.CI.normalize_tables import check_step_markers
+        card = "| 1 | Принять файл |\n| 2 | Проверить |\n| 3 | Сохранить |\n"
+        report, ok = check_step_markers(card, self.SRC)
+        assert not ok and "перенумерация" in report[0]
+
+    def test_marker_boundary_not_substring(self):
+        # «1.2» не должен «находиться» внутри «1.22»
+        from app.scripts.CI.normalize_tables import check_step_markers
+        card = "| 1.1 | x |\n| 1.22 | y |\n"
+        _report, ok = check_step_markers(card, self.SRC)
+        assert not ok  # 1.2 действительно отсутствует
+
+    def test_source_without_composite_markers_skipped(self):
+        # тест на НЕсрабатывание: голый текст без нумерации — сверять нечего
+        from app.scripts.CI.normalize_tables import check_step_markers
+        src = "# Ф\n\n<table><tr><th>Параметр</th><td>x</td></tr></table>\n"
+        report, ok = check_step_markers("текст", src)
+        assert ok and not report
+
+
 class TestTitleTransfer:
     """Дословный перенос title источника во frontmatter карточки —
     постоянный атрибут, потеря наименования = брак."""

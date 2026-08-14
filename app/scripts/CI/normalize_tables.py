@@ -1084,6 +1084,60 @@ def check_behavior_nesting(card_text: str,
 _MD_LIST_ITEM_RE = re.compile(r"^\s*(?:[-*+]|\d{1,9}[.)])\s")
 
 
+# Маркеры шагов процесса: составные номера с подшагом (1.1 … 1.29) и
+# «Шаг № N». Формат-агностичный сборщик: strong-токены и первые колонки
+# таблиц HTML; md-таблицы источника сверяются полной сверкой значений и
+# в этом стороже не нуждаются. Одиночные числа не собираются (шум:
+# нумерация колонок, счётчики). Если распознаваемых маркеров < 2 —
+# сверять нечего (голый текст без нумерации): честный skip, работают
+# правила шаблона и глаза эксперта.
+_STEP_TOKEN_RE = re.compile(r"^(?:шаг\s*№?\s*)?(\d+\.\d+(?:\.\d+)*)\)?\.?$",
+                            re.IGNORECASE)
+
+
+def step_markers_from_html(source_text: str) -> List[str]:
+    """Составные номера шагов из HTML источника (strong + первые колонки)."""
+    soup = BeautifulSoup(protect_token_tags(source_text), "html.parser")
+    found: List[str] = []
+    for el in soup.find_all("strong"):
+        m = _STEP_TOKEN_RE.match(el.get_text(" ", strip=True))
+        if m:
+            found.append(m.group(1))
+    for t in find_top_tables(source_text):
+        for row in expand_grid(t)[1:]:
+            if not row:
+                continue
+            m = _STEP_TOKEN_RE.match(_plain(row[0]).strip())
+            if m:
+                found.append(m.group(1))
+    seen, out = set(), []
+    for v in found:
+        if v not in seen:
+            seen.add(v)
+            out.append(v)
+    return out
+
+
+def check_step_markers(card_text: str, source_text: str) -> Tuple[List[str], bool]:
+    """Полнота маркеров шагов: каждый собранный из источника номер шага
+    обязан присутствовать в карточке ДОСЛОВНО (номера — литералы;
+    перенумерация и слияние шагов — потеря; инцидент src-locks:
+    29 шагов источника «упакованы» в 22 своих при зелёном гейте)."""
+    markers = step_markers_from_html(source_text)
+    if len(markers) < 2:
+        return [], True
+    norm_card = _norm_cell(card_text)
+    # границы токена: «1.2» не должен «находиться» внутри «1.22»
+    lost = [m for m in markers
+            if not re.search(re.escape(m) + r"(?![.\d])", norm_card)]
+    if lost:
+        return [f"маркеры шагов источника: в карточке отсутствуют "
+                f"{len(lost)} из {len(markers)} ✗ НИЖЕ ПОРОГА (номера шагов — "
+                f"литералы, перенумерация и слияние — потеря); примеры: "
+                + ", ".join(lost[:5])], False
+    return [f"маркеры шагов источника: все {len(markers)} на месте ✓"], True
+
+
 def check_behavior_numbering(card_text: str) -> Tuple[List[str], bool]:
     """Самосогласованность карточки (работает и без --source):
     (1) каждая строка-шаг «Поведения» обязана быть элементом
@@ -1389,7 +1443,11 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description="Нормализатор сырых HTML-таблиц в .md (проход 1). "
                     "Исходный файл не изменяется.")
-    ap.add_argument("file", type=Path, help="markdown-файл с сырыми HTML-таблицами")
+    ap.add_argument("file", type=Path, nargs="+",
+                    help="markdown-файл; в --check допускается НЕСКОЛЬКО "
+                         "карточек (межтиповая страница-источник: значения "
+                         "сверяются с ОБЪЕДИНЕНИЕМ, первая карточка — "
+                         "основная: title, поведение, колонки)")
     ap.add_argument("--table", type=int, default=None, help="индекс таблицы (по умолчанию все)")
     ap.add_argument("--profile", type=Path, default=None, help="JSON-профиль ролей колонок")
     ap.add_argument("--sample", action="store_true",
@@ -1410,24 +1468,35 @@ def main() -> int:
     args = ap.parse_args()
 
     profile = Profile.load(args.profile) if args.profile else None
+    main_file: Path = args.file[0]
+    if len(args.file) > 1 and not args.check:
+        print("# несколько файлов поддерживаются только в --check; "
+              f"использую {main_file}", file=sys.stderr)
 
     if args.check:
         src_text = (args.source.read_text(encoding="utf-8")
                     if args.source is not None else None)
-        report, ok = check_file(args.file, min_valid_pct=args.min_valid,
+        report, ok = check_file(main_file, min_valid_pct=args.min_valid,
                                 source_text=src_text)
-        card_text = args.file.read_text(encoding="utf-8")
+        card_text = main_file.read_text(encoding="utf-8")
+        # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
+        # карточек (пример: каталог статусов в dictionaries + переходы в
+        # status-model); title/поведение/колонки — по первой (основной)
+        combined = "\n\n".join(f.read_text(encoding="utf-8")
+                               for f in args.file)
         num_report, num_ok = check_behavior_numbering(card_text)
         report.extend(num_report)
         ok = ok and num_ok
         if src_text is not None:
-            src_report, src_ok = check_source_tables(card_text, src_text)
+            src_report, src_ok = check_source_tables(combined, src_text)
             ttl_report, ttl_ok = check_title(card_text, src_text)
             bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
+            st_report, st_ok = check_step_markers(combined, src_text)
             report.extend(src_report)
             report.extend(ttl_report)
             report.extend(bh_report)
-            ok = ok and src_ok and ttl_ok and bh_ok
+            report.extend(st_report)
+            ok = ok and src_ok and ttl_ok and bh_ok and st_ok
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:
@@ -1439,7 +1508,7 @@ def main() -> int:
         return 0
 
     if args.sample:
-        text = args.file.read_text(encoding="utf-8")
+        text = main_file.read_text(encoding="utf-8")
         tables = find_top_tables(text)
         for i, t in enumerate(tables):
             if args.table is not None and i != args.table:
@@ -1449,7 +1518,7 @@ def main() -> int:
             print(render_sample(grid))
         return 0
 
-    out, report, ok = normalize_file(args.file, profile, args.table,
+    out, report, ok = normalize_file(main_file, profile, args.table,
                                      min_valid_pct=args.min_valid)
     for line in report:
         print(f"# {line}", file=sys.stderr)
@@ -1460,7 +1529,7 @@ def main() -> int:
               "для разбора брака.", file=sys.stderr)
         return 2
     if args.sidecar:
-        target = args.file.with_suffix(args.file.suffix + ".tables.md")
+        target = main_file.with_suffix(main_file.suffix + ".tables.md")
         target.write_text(out + "\n", encoding="utf-8")
         print(f"# записано: {target}", file=sys.stderr)
     else:
