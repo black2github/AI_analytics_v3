@@ -54,14 +54,28 @@ def read_frontmatter_lines(path: Path, limit: int = 60) -> List[str]:
 
 def source_title(path: Path) -> Optional[str]:
     """title страницы из frontmatter — человеческое наименование для отчёта
-    (имена файлов выгрузки обрезаются/латинизируются, title — нет)."""
-    for ln in read_frontmatter_lines(path):
+    (имена файлов выгрузки обрезаются/латинизируются, title — нет).
+    YAML-перенос длинного значения склеивается пробелом (экспортёр пишет
+    продолжение со сдвигом — однострочное чтение обрезало хвост)."""
+    lines = read_frontmatter_lines(path)
+    for i, ln in enumerate(lines):
         m = _TITLE_RE.match(ln.strip())
-        if m:
-            v = m.group(1)
-            if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
-                v = v[1:-1].replace("''", "'") if v[0] == "'" else v[1:-1]
-            return v
+        if not m:
+            continue
+        v = m.group(1)
+        q = v[0] if v and v[0] in "'\"" else None
+        closed = (q is None or (len(v) >= 2 and v.endswith(q)
+                                and not v.endswith(q * 2)))
+        j = i + 1
+        while not closed and j < len(lines) and lines[j].startswith(" "):
+            v += " " + lines[j].strip()
+            closed = v.endswith(q) and not v.endswith(q * 2)
+            j += 1
+        if q and len(v) >= 2 and v.endswith(q):
+            v = v[1:-1]
+            if q == "'":
+                v = v.replace("''", "'")
+        return v
     return None
 
 

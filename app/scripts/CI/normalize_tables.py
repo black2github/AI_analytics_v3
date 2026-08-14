@@ -1128,18 +1128,41 @@ _FM_TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$", re.M)
 
 
 def _frontmatter_title(text: str) -> Optional[str]:
-    """Значение title из YAML frontmatter (до второго ---); None, если нет."""
+    """Значение title из YAML frontmatter (до второго ---); None, если нет.
+
+    Длинный title экспортёр пишет YAML-переносом (продолжение со сдвигом
+    на следующей строке) — однострочный regex обрезал значение у ОБЕИХ
+    сторон сверки, и хвост наименования не сверялся вовсе (слепое пятно;
+    находка агента src-locks, 2026-08-14). Продолжения склеиваются
+    пробелом по семантике YAML flow scalar."""
     body = text.lstrip("﻿")
     if not body.startswith("---"):
         return None
-    end = body.find("\n---", 3)
-    m = _FM_TITLE_RE.search(body[:end if end != -1 else 4000])
-    if not m:
-        return None
-    v = m.group(1)
-    if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
-        v = v[1:-1].replace("''", "'") if v[0] == "'" else v[1:-1]
-    return v
+    lines = body.splitlines()
+    for i, ln in enumerate(lines[1:60], start=1):
+        if ln.strip() == "---":
+            return None
+        m = re.match(r"^title:\s*(.+?)\s*$", ln)
+        if not m:
+            continue
+        v = m.group(1)
+        q = v[0] if v and v[0] in "'\"" else None
+        closed = (q is None or (len(v) >= 2 and v.endswith(q)
+                                and not v.endswith(q * 2)))
+        j = i + 1
+        while not closed and j < len(lines):
+            nxt = lines[j]
+            if nxt.strip() == "---" or not nxt.startswith(" "):
+                break
+            v += " " + nxt.strip()
+            closed = v.endswith(q) and not v.endswith(q * 2)
+            j += 1
+        if q and len(v) >= 2 and v.endswith(q):
+            v = v[1:-1]
+            if q == "'":
+                v = v.replace("''", "'")
+        return v
+    return None
 
 
 def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:

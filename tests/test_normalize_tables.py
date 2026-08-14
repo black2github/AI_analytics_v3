@@ -599,6 +599,28 @@ class TestTitleTransfer:
         _report, ok = check_title(card, src)
         assert ok and not _report
 
+    def test_multiline_yaml_title_joined(self):
+        # экспортёр переносит длинный title на следующую строку (YAML
+        # flow scalar) — значение склеивается, сверка по ПОЛНОМУ имени
+        src = ("---\ntitle: '[БлокН2Н] Банк: Функция повторного запуска обработки сообщения о блокировках\n"
+               "  Н2Н'\nconfluence_page_id: '1'\n---\n# стр\n")
+        full = ("---\nid: FUN-BNK-02\n"
+                "title: '[БлокН2Н] Банк: Функция повторного запуска обработки сообщения о блокировках Н2Н'\n"
+                "---\n# док\n")
+        _report, ok = check_title(full, src)
+        assert ok
+
+    def test_multiline_title_truncated_card_caught(self):
+        # тест на НЕсрабатывание слепоты: карточка только с первой строкой
+        # значения — раньше сверка «совпадала» по обрезку, теперь брак
+        src = ("---\ntitle: '[БлокН2Н] Банк: Функция повторного запуска обработки сообщения о блокировках\n"
+               "  Н2Н'\nconfluence_page_id: '1'\n---\n# стр\n")
+        cut = ("---\nid: FUN-BNK-02\n"
+               "title: '[БлокН2Н] Банк: Функция повторного запуска обработки сообщения о блокировках'\n"
+               "---\n# док\n")
+        _report, ok = check_title(cut, src)
+        assert not ok
+
     def test_title_in_body_not_frontmatter(self):
         # 'title:' в теле карточки — не frontmatter, не считается
         card = "---\nid: FUN-CL-01\n---\n# док\n\ntitle: подделка\n"

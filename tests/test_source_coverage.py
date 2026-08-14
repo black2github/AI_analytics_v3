@@ -50,6 +50,10 @@ def test_source_title(tmp_path):
     q = tmp_path / "t.md"
     make(q, "---\nconfluence_page_id: '8'\n---\n")
     assert source_title(q) is None
+    r = tmp_path / "u.md"
+    make(r, "---\ntitle: '[БлокН2Н] Банк: Функция повторного запуска обработки сообщения о блокировках\n"
+            "  Н2Н'\nconfluence_page_id: '9'\n---\n")
+    assert source_title(r).endswith("блокировках Н2Н")
 
 
 def test_full_coverage_ok(tmp_path):
