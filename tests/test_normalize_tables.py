@@ -567,6 +567,40 @@ class TestBehaviorNumbering:
         assert not ok and any("склеит" in r for r in report)
 
 
+class TestLayoutTableNotRequired:
+    """Таблица макетов ЭФ (Figma/размерности) — служебная: её значения в
+    карточке не требуются (шаблон запрещает Figma/Confluence-URL)."""
+
+    def test_figma_layout_table_skipped(self):
+        src = ("# ЭФ\n\n"
+               "| Размерность экрана | Cсылки на Figma |\n|---|---|\n"
+               "| XL - Web | https://figma.com/x |\n"
+               "| M - Tablet | https://figma.com/y |\n")
+        card = "# карточка без макетов\n"
+        _report, ok = check_source_tables(card, src)
+        assert ok
+
+    def test_layout_row_in_passport_skipped(self):
+        # макеты — СТРОКОЙ паспортной таблицы (вложенный HTML со ссылками)
+        src = ("# ЭФ\n\n"
+               "| **Зачем нужна ЭФ** | Ручное изменение статуса |\n"
+               "|---|---|\n"
+               '| **Макеты ЭФ:** | <table><tr><th>Размерность экрана</th><th>Cсылки на Figma</th></tr><tr><td>XL - Web</td><td>https://www.figma.com/design/x</td></tr></table> |\n'
+               "| **Кому доступна** | Пользователь Банка |\n")
+        card = ("| Поле | Значение |\n|---|---|\n"
+                "| **Зачем нужна ЭФ** | Ручное изменение статуса |\n"
+                "| **Кому доступна** | Пользователь Банка |\n")
+        _report, ok = check_source_tables(card, src)
+        assert ok
+
+    def test_ordinary_table_still_required(self):
+        # тест на НЕсрабатывание: обычная таблица сторожится по-прежнему
+        src = ("# ЭФ\n\n| Колонка | Формат |\n|---|---|\n"
+               "| Дата статуса | ДД.ММ.ГГГГ |\n| Номер | Строка |\n")
+        _report, ok = check_source_tables("# пусто\n", src)
+        assert not ok
+
+
 class TestStepMarkers:
     """Полнота маркеров шагов: номера — литералы; перенумерация и слияние
     шагов — потеря (29 → 22 своих при зелёном гейте, src-locks)."""

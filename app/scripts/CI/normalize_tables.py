@@ -922,6 +922,12 @@ def _norm_cell(v: str) -> str:
 # examples/, конвенция скилла) — сверка наличия их пропускает.
 _ATTACHMENT_RE = re.compile(r"\]\(/download/attachments/", re.IGNORECASE)
 
+# Строка макетов ЭФ в паспорте («Макеты ЭФ | <вложенная таблица Figma>»):
+# шаблон screen-form запрещает Figma/Confluence-URL в чистовике, макеты
+# живут в src — строка сверке не подлежит (иначе гейт заставлял включать
+# сырой HTML с живыми URL в карточку; src-locks, 2026-08-14).
+_LAYOUT_ROW_RE = re.compile(r"figma\.com|размерность экрана", re.IGNORECASE)
+
 
 # Токен-имя параметра: латинский идентификатор, возможно составной путь
 # (JSON через точку, XML через слэш, заголовки через дефис).
@@ -1258,11 +1264,21 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
         # в контракт не переносится, сверке не подлежит.
         if "документ" in hdr_norm and "дата" in hdr_norm:
             continue
+        # Таблица макетов ЭФ (размерности экрана + ссылки на Figma) —
+        # служебная: шаблон screen-form запрещает Figma/Confluence-URL в
+        # чистовике, макеты живут в src. Гейт требовал её значения — агент
+        # включил сырой HTML с живыми URL в карточку (src-locks,
+        # 2026-08-14, конфликт шаблон↔гейт).
+        if "figma" in hdr_norm or "размерност" in hdr_norm:
+            continue
         missing: List[str] = []
         for row in rows:
             # Строка с вложением (пример Запрос.xml/Ответ.xml) — целиком в
             # sidecar examples/, в карточке её значений законно нет.
             if any(_ATTACHMENT_RE.search(c) for c in row):
+                continue
+            # Строка макетов ЭФ (Figma/размерности) — служебная, см. выше.
+            if any(_LAYOUT_ROW_RE.search(c) for c in row):
                 continue
             for cell in row:
                 cv = _norm_cell(cell)
