@@ -1090,6 +1090,81 @@ def check_behavior_nesting(card_text: str,
 _MD_LIST_ITEM_RE = re.compile(r"^\s*(?:[-*+]|\d{1,9}[.)])\s")
 
 
+# Кавычечные литералы источника: тексты в «ёлочках» и прямых кавычках —
+# сообщения пользователю, названия кнопок, значения-константы. Свободный
+# текст вне таблиц построчно не сверяется — перефраз и сокращения
+# проходили зелёными (src-locks: пояснение категорий сокращено, буква
+# «жестко»→«жёстко»); литералы — механизируемая часть класса: каждый
+# обязан присутствовать в карточке дословно. Полные описания так не
+# защитить (там законна адаптация формата) — только кавычечные литералы.
+_QUOTED_RE = re.compile(r"[«\"]([^«»\"\n]{2,80})[»\"]")
+_QUOTED_SKIP_RE = re.compile(
+    r"figma|confluence|download/attachments|https?://", re.IGNORECASE)
+# отсев HTML-атрибутов и путей, попадающих в прямые кавычки сырого HTML
+# (href="../…", class="…"): литерал текстоподобен — без разметочных символов
+_QUOTED_MARKUP_RE = re.compile(r"[<>=/\\{}\[\]|`;]|&\w+")
+
+
+def _source_headings(body: str) -> set:
+    """Нормализованные заголовки разделов страницы: кавычечная отсылка на
+    СВОЙ раздел («см. "Фильтры ЭФ"») — навигация по структуре источника,
+    карточка переструктурирована по шаблону — не требуется."""
+    hs = set()
+    for m in re.finditer(r"^#{1,6}\s+(.+)$", body, re.M):
+        hs.add(_norm_cell(m.group(1)))
+    for m in re.finditer(r"<h[1-6][^>]*>(.*?)</h[1-6]>", body,
+                         re.I | re.S):
+        hs.add(_norm_cell(m.group(1)))
+    return hs
+
+
+def quoted_literals(source_text: str) -> List[str]:
+    body = source_text.split("---", 2)[-1]
+    headings = _source_headings(body)
+    seen, out = set(), []
+    for m in _QUOTED_RE.finditer(body):
+        v = m.group(1).strip()
+        if (not v or _QUOTED_SKIP_RE.search(v)
+                or _QUOTED_MARKUP_RE.search(v)):
+            continue
+        # структурная отсылка «см. раздел "..."» — навигация по источнику,
+        # карточка переструктурирована по шаблону: не требуется
+        if re.search(r"(?:раздел[еа]?|см\.)\s*$", body[:m.start()][-24:],
+                     re.IGNORECASE):
+            continue
+        # захват должен быть словом, а не межкавычечным обрезком («, то …»)
+        if not re.match(r"^[\wА-Яа-яЁё]", v) or not re.search(
+                r"[\wА-Яа-яЁё).%]$", v):
+            continue
+        # имена файлов-вложений (Имя_файла_1.8_28.08.2024.vsdx) — служебные
+        if v.count("_") >= 2 or re.search(r"\.\w{2,5}$", v):
+            continue
+        n = _norm_cell(v)
+        if not n or n in headings:
+            continue
+        if n not in seen:
+            seen.add(n)
+            out.append(v)
+    return out
+
+
+def check_quoted_literals(card_text: str,
+                          source_text: str) -> Tuple[List[str], bool]:
+    """Каждый кавычечный литерал источника обязан присутствовать в карточке
+    (сравнение нормализованное, кавычки не требуются)."""
+    lits = quoted_literals(source_text)
+    if not lits:
+        return [], True
+    norm_card = _norm_cell(card_text)
+    lost = [v for v in lits if _norm_cell(v) not in norm_card]
+    if lost:
+        return [f"кавычечные литералы источника: в карточке отсутствуют "
+                f"{len(lost)} из {len(lits)} ✗ НИЖЕ ПОРОГА (тексты сообщений, "
+                "кнопок и значений переносятся дословно); примеры: "
+                + "; ".join(repr(v[:50]) for v in lost[:4])], False
+    return [f"кавычечные литералы источника: все {len(lits)} на месте ✓"], True
+
+
 # Маркеры шагов процесса: составные номера с подшагом (1.1 … 1.29) и
 # «Шаг № N». Формат-агностичный сборщик: strong-токены и первые колонки
 # таблиц HTML; md-таблицы источника сверяются полной сверкой значений и
@@ -1508,11 +1583,13 @@ def main() -> int:
             ttl_report, ttl_ok = check_title(card_text, src_text)
             bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
             st_report, st_ok = check_step_markers(combined, src_text)
+            ql_report, ql_ok = check_quoted_literals(combined, src_text)
             report.extend(src_report)
             report.extend(ttl_report)
             report.extend(bh_report)
             report.extend(st_report)
-            ok = ok and src_ok and ttl_ok and bh_ok and st_ok
+            report.extend(ql_report)
+            ok = ok and src_ok and ttl_ok and bh_ok and st_ok and ql_ok
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:

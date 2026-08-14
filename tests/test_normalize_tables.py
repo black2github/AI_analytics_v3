@@ -567,6 +567,40 @@ class TestBehaviorNumbering:
         assert not ok and any("склеит" in r for r in report)
 
 
+class TestQuotedLiterals:
+    """Кавычечные литералы источника (сообщения, кнопки, значения) обязаны
+    присутствовать в карточке дословно — механизируемая часть класса
+    «свободный текст не сторожится»."""
+
+    def test_lost_message_caught(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: x\n---\nЕсли записей нет, отображается сообщение '
+               '"Записей пока нет" (см. макет ЭФ)\n')
+        report, ok = check_quoted_literals("# карточка без сообщения\n", src)
+        assert not ok and "Записей пока нет" in report[0]
+
+    def test_paraphrase_caught(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = '---\nt: x\n---\nКатегория «Ошибка обработки» выбрана всегда\n'
+        card = "Категория «Ошибки обработки» выбрана всегда\n"  # пересказ
+        _report, ok = check_quoted_literals(card, src)
+        assert not ok
+
+    def test_all_present_ok(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\nt: x\n---\nКнопка "Сохранить"; статус «Исполнен»\n')
+        card = 'Кнопка «Сохранить» переводит в статус "Исполнен".\n'
+        report, ok = check_quoted_literals(card, src)
+        assert ok and "все 2" in report[0]
+
+    def test_url_literals_not_required(self):
+        # тест на НЕсрабатывание: литералы с URL/figma не требуются
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = '---\nt: x\n---\nсм. "https://figma.com/x" и «страницу confluence»\n'
+        report, ok = check_quoted_literals("# пусто\n", src)
+        assert ok and not report
+
+
 class TestLayoutTableNotRequired:
     """Таблица макетов ЭФ (Figma/размерности) — служебная: её значения в
     карточке не требуются (шаблон запрещает Figma/Confluence-URL)."""
