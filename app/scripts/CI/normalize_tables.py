@@ -562,8 +562,27 @@ def _looks_like_obligation(v: str) -> bool:
         "", "-", "—", "О", "Н", "У", "O", "H", "Y", "ДА", "НЕТ", "УСЛ", "M", "М"}
 
 
+# Логическая кратность связей модели данных (шаблон data-model, раздел
+# «Связи»): «1 : N», «1 : 1», «0..1», «N : M». Расширение словаря, а не
+# замена (--check; строгий якорь разбора HTML _strict не трогаем — он
+# держит раскрой сеток). Инцидент src-locks 2026-08-14: агент переписал
+# шаблонную нотацию под гейт ([1..N]) — конфликт правило↔гейт.
+_LOGICAL_CARD_TOKEN = r"(?:\d+|[nNмМmM*])(?:\s*\.\.\s*(?:\d+|[nNмМmM*]))?"
+_LOGICAL_CARD_RE = re.compile(
+    rf"^{_LOGICAL_CARD_TOKEN}(?:\s*:\s*{_LOGICAL_CARD_TOKEN})?$")
+
+
 def _looks_like_cardinality(v: str) -> bool:
     return not v.strip() or bool(_CARDINALITY_RE.match(v.strip()))
+
+
+def _looks_like_cardinality_logical(v: str) -> bool:
+    """Роль кратн в ТАБЛИЦЕ СВЯЗЕЙ модели данных: допускает и скобочную,
+    и логическую нотацию. В таблицах параметров НЕ применяется —
+    раскавычивание [1] → 1 там остаётся браком (защита литералов)."""
+    v = v.strip()
+    return (not v or bool(_CARDINALITY_RE.match(v))
+            or bool(_LOGICAL_CARD_RE.match(v)))
 
 
 def _looks_like_path(v: str) -> bool:
@@ -645,6 +664,12 @@ def validate_columns(headers: List[str], rows: List[List[str]],
     колонке обязательности). Совпадение ищется ТОЛЬКО в колонке той же роли:
     «[1] где-то в источнике» переписанную кратность не оправдывает."""
     report: List[dict] = []
+    # сигнатура таблицы связей МД («Связь | Сущность | Кратность …»):
+    # роль кратн допускает логическую нотацию «1 : N» (шаблон data-model);
+    # в таблицах параметров послабления нет (src-locks, 2026-08-14)
+    hdr_keys = [_title_key(h) for h in headers]
+    links_table = any("связ" in h for h in hdr_keys) and any(
+        "сущност" in h for h in hdr_keys)
     for i, title in enumerate(headers):
         low = _title_key(title)
         check = None
@@ -657,6 +682,8 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                 if key in low or key[:4] in low:
                     role, check = key, fn
                     break
+            if links_table and role == "кратн":
+                check = _looks_like_cardinality_logical
             if check is None and ("назван" in low or "наимен" in low
                                   or "параметр" in low):
                 role, check = "название", _no_xml_path

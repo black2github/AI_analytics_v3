@@ -606,6 +606,42 @@ class TestTitleTransfer:
         assert not ok
 
 
+class TestLogicalCardinality:
+    """Логическая кратность связей МД («1 : N») — расширение словаря роли
+    кратн; строгий якорь раскроя HTML не затронут."""
+
+    def test_logical_forms_accepted_in_links(self):
+        from app.scripts.CI.normalize_tables import _looks_like_cardinality_logical
+        for v in ["1 : N", "1 : 1", "0..1", "N : M", "1 : 0..N", "[1..N]", "[1]"]:
+            assert _looks_like_cardinality_logical(v), v
+
+    def test_param_tables_still_strict(self):
+        # тест на НЕсрабатывание: в таблицах параметров раскавычивание
+        # [1] -> 1 остаётся браком (защита литералов якорных колонок)
+        from app.scripts.CI.normalize_tables import _looks_like_cardinality
+        assert not _looks_like_cardinality("1 : N")
+        assert not _looks_like_cardinality("1")
+
+    def test_garbage_still_rejected(self):
+        from app.scripts.CI.normalize_tables import _looks_like_cardinality_logical
+        for v in ["много", "1 или 2", "N шт.", "см. ниже"]:
+            assert not _looks_like_cardinality_logical(v), v
+
+    def test_links_table_signature(self):
+        # сигнатура «Связь|Сущность|Кратность» включает логическую нотацию
+        from app.scripts.CI.normalize_tables import validate_columns
+        rep = validate_columns(["Связь", "Сущность", "Кратность"],
+                               [["A → B", "ENT-002", "1 : N"]], path_index=None)
+        kr = [r for r in rep if r.get("role") == "кратн"]
+        assert kr and not kr[0].get("bad")
+
+    def test_strict_anchor_untouched(self):
+        # строгий якорь разбора HTML по-прежнему только скобочный
+        from app.scripts.CI.normalize_tables import _looks_like_cardinality_strict
+        assert _looks_like_cardinality_strict("[1..N]")
+        assert not _looks_like_cardinality_strict("1 : N")
+
+
 class TestLogicFieldTableNotRequired:
     """Вложенная таблица «поле | значение» из «Логики работы метода»
     (заполнение полей БД-записи) — не сетка параметров контракта: её
