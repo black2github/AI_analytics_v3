@@ -62,6 +62,24 @@ def test_unfulfillable_debt_caught(tmp_path):
     assert not ok and any("НЕИСПОЛНИМ" in r for r in report)
 
 
+def test_oq_order_violation_caught(tmp_path):
+    from app.scripts.CI.link_debts import check_oq_order
+    p = tmp_path / "open-questions.md"
+    make(p, "## OQ-001. А\n\n## OQ-003. Б\n\n## OQ-002. В\n")
+    report, ok = check_oq_order(p)
+    assert not ok and "OQ-002" in report[0]
+
+
+def test_oq_order_ok_and_missing_file(tmp_path):
+    from app.scripts.CI.link_debts import check_oq_order
+    p = tmp_path / "open-questions.md"
+    make(p, "## OQ-001. А\n\n## OQ-002. Б\n")
+    report, ok = check_oq_order(p)
+    assert ok and "соблюдён" in report[0]
+    r2, ok2 = check_oq_order(tmp_path / "нет.md")
+    assert ok2 and not r2
+
+
 def test_range_expansion_checks_both(tmp_path):
     # диапазон FUN-BNK-01…02: имя ищется в ОБОИХ ожидателях
     docs = tmp_path / "docs"

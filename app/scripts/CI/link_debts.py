@@ -167,16 +167,41 @@ def check(matrix_path: Path, docs_root: Path):
     return report, ok
 
 
+_OQ_NUM_RE = re.compile(r"^##\s+OQ-(\d+)\b", re.M)
+
+
+def check_oq_order(oq_path: Path) -> Tuple[List[str], bool]:
+    """Реестр open-questions — append-only: номера записей монотонно
+    возрастают по позиции в файле (вставка в середину и перемещение
+    записей при правке — брак; трёхкратный инцидент, третий —
+    src-locks 2026-08-15: закрытая запись переехала в конец)."""
+    if not oq_path.is_file():
+        return [], True
+    nums = [int(m.group(1)) for m in _OQ_NUM_RE.finditer(
+        oq_path.read_text(encoding="utf-8", errors="replace"))]
+    bad = [(a, b) for a, b in zip(nums, nums[1:]) if b < a]
+    if bad:
+        return [f"open-questions: порядок реестра нарушен (append-only): "
+                + ", ".join(f"OQ-{b:03d} стоит после OQ-{a:03d}"
+                            for a, b in bad[:3]) + " ✗"], False
+    return [f"open-questions: порядок реестра append-only соблюдён "
+            f"({len(nums)} записей) ✓"], True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Сторож долгов ссылок: просрочка (цель существует, "
-                    "ссылки нет) и исполнимость (имя находится дословно).")
+                    "ссылки нет) и исполнимость (имя находится дословно); "
+                    "плюс порядок реестра open-questions (append-only).")
     ap.add_argument("--matrix", type=Path, required=True)
     ap.add_argument("--docs", type=Path, required=True,
                     help="корень docs/ комплекта")
     ap.add_argument("--strict", action="store_true")
     args = ap.parse_args()
     report, ok = check(args.matrix, args.docs)
+    oq_report, oq_ok = check_oq_order(args.docs / "open-questions.md")
+    report.extend(oq_report)
+    ok = ok and oq_ok
     for ln in report:
         print(f"# {ln}")
     return 0 if ok or not args.strict else 2
