@@ -187,7 +187,7 @@ class TestAnchoredAssignment:
         assert headers[0] == "XML-элемент"
         # строка-лист: путь, название, тип, обязательность, кратность, комментарий
         leaf = rows[2]
-        assert leaf[0] == "ObjectBody/*/Context/*/ProcessGUID"
+        assert leaf[0] == "ObjectBody/Context/ProcessGUID"  # «*» контейнеров чистится по умолчанию
         assert leaf[1] == "GUID процесса"
         assert leaf[2] == "GUID"
         assert leaf[3] == "Н"
@@ -197,7 +197,7 @@ class TestAnchoredAssignment:
     def test_container_row_without_type(self):
         # У контейнера тип пуст — описание не должно занять колонку типа
         _headers, rows = self._rows()
-        assert rows[0][0] == "ObjectBody/*"
+        assert rows[0][0] == "ObjectBody"
         assert rows[0][1] == "Блок с телом запроса"
         assert rows[0][2] == ""          # тип пуст
         assert rows[0][3] == "О" and rows[0][4] == "[1]"
@@ -206,7 +206,7 @@ class TestAnchoredAssignment:
         # «[0-1]» — легальная форма; без неё якорь не срабатывал и хвост уезжал в путь
         _headers, rows = self._rows()
         assert rows[1][4] == "[0-1]"
-        assert rows[1][0] == "ObjectBody/*/Context/*"
+        assert rows[1][0] == "ObjectBody/Context"
 
     def test_prose_inside_path_block_not_in_path(self):
         # «все поля внутри блока…» — пояснение, а не уровень иерархии:
@@ -243,7 +243,7 @@ class TestAnchoredAssignment:
 """
         _headers, rows = build_flat(grid_of(html), BLOCKS_PROFILE)
         row = rows[0]
-        assert row[0] == "ObjectBody/*"          # путь чист от «**»
+        assert row[0] == "ObjectBody"            # путь чист от «**» и «*»-хвоста
         assert row[1] == "Блок с телом запроса"  # название чисто
         assert row[3] == "О" and row[4] == "[1]" # якоря распознаны и чисты
         assert "**Если**" in row[5]              # свободная колонка хранит жирный
@@ -301,7 +301,7 @@ class TestCheckMode:
         "| XML-элемент | Название | Тип | Обяз. | Кратность | Правила |\n"
         "|---|---|---|---|---|---|\n"
         "| `ObjectBody/*` | Блок с телом запроса |  | Да | [1] |  |\n"
-        "| `ObjectBody/*/ProcessGUID` | GUID процесса | GUID | Нет | [0..1] | = GUID |\n"
+        "| `ObjectBody/ProcessGUID` | GUID процесса | GUID | Нет | [0..1] | = GUID |\n"
     )
 
     def _check(self, text, tmp_path):
@@ -973,7 +973,7 @@ class TestProfileApplicability:
         assert blocks_profile_applies(grid_of(BLOCKS_HTML), BLOCKS_PROFILE)
         assert not blocks_profile_applies(grid_of(CODES_HTML), BLOCKS_PROFILE)
         _h, rows = build_flat(grid_of(BLOCKS_HTML), BLOCKS_PROFILE)
-        assert rows[2][0] == "ObjectBody/*/Context/*/ProcessGUID"
+        assert rows[2][0] == "ObjectBody/Context/ProcessGUID"
 
 
 class TestColumnValidators:
@@ -1001,7 +1001,7 @@ class TestColumnValidators:
     def test_path_with_attribute_segment_not_flagged(self):
         # Vars Code="SKIP_CONTROL_DUL" — элемент с атрибутом, законный путь
         headers = ["Путь"]
-        rows = [['ObjectBody/*/Vars Code="SKIP_CONTROL_DUL"/*']]
+        rows = [['ObjectBody/Vars Code="SKIP_CONTROL_DUL"']]
         report = validate_columns(headers, rows, path_index=0)
         assert report[0]["valid_pct"] == 100.0
 
@@ -1090,9 +1090,13 @@ class TestStripPathWildcards:
         assert rows[2][0] == "ObjectBody/Context/ProcessGUID"
         assert rows[0][0] == "ObjectBody"
 
-    def test_off_by_default_keeps_source_form(self):
-        # тест на НЕсрабатывание: без опции пути как в источнике
+    def test_on_by_default_and_opt_out(self):
+        # чистка «*» включена по умолчанию; выключение — опцией профиля
+        import dataclasses
         _h, rows = build_flat(grid_of(BLOCKS_HTML), BLOCKS_PROFILE)
+        assert rows[2][0] == "ObjectBody/Context/ProcessGUID"
+        raw = dataclasses.replace(BLOCKS_PROFILE, strip_path_wildcards=False)
+        _h, rows = build_flat(grid_of(BLOCKS_HTML), raw)
         assert rows[2][0] == "ObjectBody/*/Context/*/ProcessGUID"
 
 

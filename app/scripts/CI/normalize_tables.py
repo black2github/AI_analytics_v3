@@ -231,7 +231,11 @@ class Profile:
     # источник оформляет контейнеры как «ObjectBody/*», лесенка склеивает их в
     # «ObjectBody/*/Context/*/…» — в XML-пути «/*/» лишний. Ошибка тянется из
     # исходника и правится автоматом: сегменты «*» убираются при сборке пути.
-    strip_path_wildcards: bool = False
+    # «*» в путях — оформление контейнеров исходника, не данные: чистка
+    # по умолчанию ВКЛЮЧЕНА (решение 2026-08-09 жило опцией профиля и не
+    # дотиражировалось: intc-002 src-locks собрал BSDocument/*/… без
+    # профиля, 2026-08-15)
+    strip_path_wildcards: bool = True
 
     @staticmethod
     def load(path: Path) -> "Profile":
@@ -246,7 +250,7 @@ class Profile:
             ladder=bool(data.get("ladder", False)),
             blocks=bool(data.get("blocks", False)),
             path_block=int(data.get("path_block", 0)),
-            strip_path_wildcards=bool(data.get("strip_path_wildcards", False)),
+            strip_path_wildcards=bool(data.get("strip_path_wildcards", True)),
         )
 
 
@@ -587,6 +591,11 @@ def _looks_like_cardinality_logical(v: str) -> bool:
 
 def _looks_like_path(v: str) -> bool:
     v = v.strip()
+    # внутренний сегмент «*» («BSDocument/*/DOCUMENTDATE») — оформление
+    # контейнеров исходника в пути листа: не XML-путь, брак (intc-002
+    # src-locks, 2026-08-15); контейнерная строка «X/*» — наследие, терпима
+    if "/*/" in v:
+        return False
     if not v:
         return True
     if _SENTENCE_RE.search(v):        # три слова подряд — это предложение, не путь
