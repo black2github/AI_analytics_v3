@@ -1459,3 +1459,48 @@ class TestHistoryTableNotRequired:
                 "#### Канал и получатели: SMS, Пользователи Клиента\n\nтекст\n")
         report, ok = check_notification_structure(text)
         assert not ok and any("без префикса" in r for r in report)
+
+
+class TestCriticAttrsNotLiterals:
+    """Значения HTML-атрибутов внутри тега (CriticMarkup: class="critic-del",
+    data-task="GBO-…") — разметка, не кавычечные литералы источника;
+    присваивание в тексте (= "O2PLUS") — литерал (финальный прогон locks)."""
+
+    SRC = ('---\ntitle: x\n---\n'
+           'Ячейка: <span class="critic-del" data-task="GBO-104711">старый'
+           '</span> <span class="critic-ins" data-task="GBO-104711">новый'
+           '</span>\n\nТема: "Сообщение о блокировке Н2Н"\n'
+           'Параметр {Код} = "O2PLUS" обязателен.\n')
+
+    def test_attr_values_skipped_content_kept(self):
+        from app.scripts.CI.normalize_tables import quoted_literals
+        lits = quoted_literals(self.SRC)
+        assert "critic-del" not in lits and "critic-ins" not in lits
+        assert "GBO-104711" not in lits
+        assert "Сообщение о блокировке Н2Н" in lits
+        assert "O2PLUS" in lits  # тест на НЕсрабатывание фильтра
+
+
+class TestPlaceholderLinkFlagged:
+    """Ссылка-заглушка [текст](#) в карточке NTF — суррогат вместо правила
+    трёх случаев (финальный прогон locks 2026-08-15)."""
+
+    BASE = ("---\nid: NTF-01\ntype: notification\n---\n\n"
+            "## Каналы и адреса доставки\n\n"
+            "### Канал и получатели: E-mail, Пользователи Банка\n\nправила\n"
+            "\n## Сообщения нотификации\n\n"
+            "### NTF-01.E01. Событие А\n\n"
+            "#### Канал и получатели: E-mail, Пользователи Банка\n\n")
+
+    def test_stub_link_flagged(self):
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        report, ok = check_notification_structure(
+            self.BASE + "Статус: [Сущность](../e.md)[.<Статус>](#)\n")
+        assert not ok and any("](#)" in r for r in report)
+
+    def test_real_links_clean(self):
+        # тест на НЕсрабатывание: обычные относительные ссылки легальны
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        report, ok = check_notification_structure(
+            self.BASE + "Статус: [Сущность](../e.md).<Статус>\n")
+        assert ok, report
