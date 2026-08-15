@@ -80,6 +80,29 @@ def test_oq_order_ok_and_missing_file(tmp_path):
     assert ok2 and not r2
 
 
+def test_config_param_missing_caught(tmp_path):
+    from app.scripts.CI.link_debts import check_config_params
+    docs = tmp_path / "docs"
+    make(docs / "srs/agents/chd-01.md",
+         "Значение параметра [Настраиваемые параметры] БлокН2Н.h2h_in_path\n")
+    make(docs / "srs/data-model/dictionaries.md",
+         "## Настраиваемые параметры\n\n| Ключ | Значение |\n|---|---|\n")
+    report, ok = check_config_params(docs)
+    assert not ok and "h2h_in_path" in report[0]
+
+
+def test_config_param_present_ok(tmp_path):
+    # тест на НЕсрабатывание: ключ зафиксирован в справочнике
+    from app.scripts.CI.link_debts import check_config_params
+    docs = tmp_path / "docs"
+    make(docs / "srs/agents/chd-01.md",
+         "Значение параметра [Настраиваемые параметры] БлокН2Н.h2h_in_path\n")
+    make(docs / "srs/data-model/dictionaries.md",
+         "## Настраиваемые параметры\n\n| h2h_in_path | |\n")
+    report, ok = check_config_params(docs)
+    assert ok and not report
+
+
 def test_range_expansion_checks_both(tmp_path):
     # диапазон FUN-BNK-01…02: имя ищется в ОБОИХ ожидателях
     docs = tmp_path / "docs"

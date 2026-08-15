@@ -169,6 +169,37 @@ def check(matrix_path: Path, docs_root: Path):
 
 _OQ_NUM_RE = re.compile(r"^##\s+OQ-(\d+)\b", re.M)
 
+# Настраиваемые параметры: упоминание «[Настраиваемые параметры]
+# <сервис>.<ключ>» в документах комплекта требует строки с этим ключом в
+# разделе параметров data-model/dictionaries.md (conventions §5.2 —
+# параметры фиксируются вместе со значениями; инцидент src-locks
+# 2026-08-15: h2h_in_path/h2h_path_polling_time упоминались агентом и
+# процессом, в справочнике отсутствовали, долг не заводился).
+_PARAM_MENTION_RE = re.compile(
+    r"Настраиваемые параметры\W{0,4}\s+[\w.-]+\.(\w+)")
+
+
+def check_config_params(docs_root: Path) -> Tuple[List[str], bool]:
+    dicts = docs_root / "srs" / "data-model" / "dictionaries.md"
+    dict_text = (dicts.read_text(encoding="utf-8", errors="replace")
+                 if dicts.is_file() else "")
+    missing: Dict[str, List[str]] = {}
+    for p in docs_root.rglob("*.md"):
+        if "data-model" in p.parts:
+            continue
+        text = p.read_text(encoding="utf-8", errors="replace")
+        for m in _PARAM_MENTION_RE.finditer(text):
+            key = m.group(1)
+            if key not in dict_text:
+                missing.setdefault(key, []).append(p.name)
+    if missing:
+        return [f"настраиваемые параметры без строки в dictionaries "
+                f"(conventions §5.2): "
+                + "; ".join(f"{k} ({', '.join(sorted(set(v))[:2])})"
+                            for k, v in sorted(missing.items()))
+                + " ✗ — требуется дозаход create-data-model"], False
+    return [], True
+
 
 def check_oq_order(oq_path: Path) -> Tuple[List[str], bool]:
     """Реестр open-questions — append-only: номера записей монотонно
@@ -202,6 +233,9 @@ def main() -> int:
     oq_report, oq_ok = check_oq_order(args.docs / "open-questions.md")
     report.extend(oq_report)
     ok = ok and oq_ok
+    cp_report, cp_ok = check_config_params(args.docs)
+    report.extend(cp_report)
+    ok = ok and cp_ok
     for ln in report:
         print(f"# {ln}")
     return 0 if ok or not args.strict else 2
