@@ -31,7 +31,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import link_debts as ld  # noqa: E402
 import normalize_tables as nt  # noqa: E402
+import source_coverage as sc  # noqa: E402
 
 # служебные реестры комплекта — сверке нормализатора не подлежат
 # (их сторожа — link_debts, срез 2)
@@ -83,13 +85,17 @@ def index_sources(root: Path):
     return idx, dups
 
 
-def _run(files: List[Path], src: Optional[Path]) -> Tuple[List[str], bool]:
-    """Вызов связки проверок с изоляцией краша (правило 1)."""
+def _safe(fn, *args) -> Tuple[List[str], bool]:
+    """Изоляция краша (правило 1): исключение = брак проверяемой
+    единицы, прогон продолжается."""
     try:
-        return nt.run_check(files, src)
-    except Exception as e:  # краш = брак карточки, прогон продолжается
-        return [f"КРАШ проверки: {e!r} — брак карточки, прогон "
-                "продолжен"], False
+        return fn(*args)
+    except Exception as e:
+        return [f"КРАШ проверки: {e!r} — брак, прогон продолжен"], False
+
+
+def _run(files: List[Path], src: Optional[Path]) -> Tuple[List[str], bool]:
+    return _safe(nt.run_check, files, src)
 
 
 def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
@@ -170,6 +176,44 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         report.append(f"{mark} {names} ← {src.name}")
         if not ok:
             report.extend(f"   {ln}" for ln in rep)
+
+    # --- комплект-уровневые сторожа (срез 2) ---
+    matrix = docs / "traceability-matrix.md"
+    if matrix.is_file():
+        rep, ok = _safe(ld.check, matrix, docs)
+        mark = "✓" if ok else "✗"
+        all_ok = all_ok and ok
+        report.append(f"{mark} долги ссылок (link_debts):")
+        report.extend(f"   {ln}" for ln in rep)
+    else:
+        all_ok = False
+        report.append("✗ traceability-matrix.md: матрица не найдена — "
+                      "комплект без реестра ID (обязательна, conventions "
+                      "§5.3)")
+    oq = docs / "open-questions.md"
+    if not oq.is_file():
+        oq = docs.parent / "open-questions.md"
+    rep, ok = _safe(ld.check_oq_order, oq)
+    all_ok = all_ok and ok
+    if rep:
+        report.append(("✓" if ok else "✗") + " реестр открытых вопросов:")
+        report.extend(f"   {ln}" for ln in rep)
+    rep, ok = _safe(ld.check_config_params, docs)
+    all_ok = all_ok and ok
+    if not ok:
+        report.append("✗ настраиваемые параметры:")
+        report.extend(f"   {ln}" for ln in rep)
+    if sources is not None:
+        # миграционный гейт покрытия — информационный: непокрытое —
+        # остаток конвейера (судьба фиксируется долгами), не дефект
+        # проверяемых карточек; на вердикт не влияет
+        try:
+            cov_lines, _n_unc = sc.coverage_report(sources, docs)
+        except Exception as e:
+            cov_lines = [f"КРАШ проверки: {e!r} — покрытие не оценено"]
+        report.append("i покрытие выгрузки (миграционный гейт, "
+                      "информационно):")
+        report.extend(f"   {ln}" for ln in cov_lines)
 
     total = sum(counts.values())
     report.append(f"ИТОГО: файлов {total} — ✓ {counts['✓']}, "

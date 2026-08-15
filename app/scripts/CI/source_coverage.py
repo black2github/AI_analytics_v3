@@ -126,6 +126,39 @@ def collect(sources: Path, output: Path):
     return pages, parents, covered, no_id, orphan_dirs
 
 
+def coverage_report(sources: Path, output: Path):
+    """(строки отчёта, число непокрытых) — единая точка формата для CLI
+    и selfcheck-диспетчера."""
+    pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
+    uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
+    lines: List[str] = []
+    lines.append(f"страниц с page_id: {len(pages)}; "
+                 f"покрыто артефактами: {len(pages) - len(uncovered)}; "
+                 f"НЕ покрыто: {len(uncovered)}")
+    for pid, p in sorted(uncovered.items(), key=lambda kv: str(kv[1])):
+        par = parents.get(pid)
+        mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
+                if par and par in covered else "")
+        ttl = source_title(p)
+        name = f" ({ttl})" if ttl else ""
+        lines.append(f"  - [{pid}] {p.relative_to(sources)}{name}{mark}")
+    if no_id:
+        lines.append(f"страниц БЕЗ confluence_page_id (дефект выгрузки): "
+                     f"{len(no_id)}")
+        for p in no_id[:10]:
+            lines.append(f"  - {p.relative_to(sources)}")
+    if orphan_dirs:
+        lines.append(f"каталогов без парной страницы fileN.md "
+                     f"(нарушение инварианта имён выгрузки): "
+                     f"{len(orphan_dirs)}")
+        for d in orphan_dirs:
+            lines.append(f"  - {d.relative_to(sources)}/")
+    if not uncovered and not no_id and not orphan_dirs:
+        lines.append("OK: выгрузка покрыта полностью, целостность "
+                     "иерархии не нарушена.")
+    return lines, len(uncovered)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Покрытие страниц выгрузки артефактами комплекта "
@@ -138,32 +171,10 @@ def main() -> int:
                     help="код 2, если есть непокрытые страницы")
     args = ap.parse_args()
 
-    pages, parents, covered, no_id, orphan_dirs = collect(
-        args.sources, args.output)
-    uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
-
-    print(f"# страниц с page_id: {len(pages)}; "
-          f"покрыто артефактами: {len(pages) - len(uncovered)}; "
-          f"НЕ покрыто: {len(uncovered)}")
-    for pid, p in sorted(uncovered.items(), key=lambda kv: str(kv[1])):
-        par = parents.get(pid)
-        mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
-                if par and par in covered else "")
-        ttl = source_title(p)
-        name = f" ({ttl})" if ttl else ""
-        print(f"  - [{pid}] {p.relative_to(args.sources)}{name}{mark}")
-    if no_id:
-        print(f"# страниц БЕЗ confluence_page_id (дефект выгрузки): {len(no_id)}")
-        for p in no_id[:10]:
-            print(f"  - {p.relative_to(args.sources)}")
-    if orphan_dirs:
-        print(f"# каталогов без парной страницы fileN.md "
-              f"(нарушение инварианта имён выгрузки): {len(orphan_dirs)}")
-        for d in orphan_dirs:
-            print(f"  - {d.relative_to(args.sources)}/")
-    if not uncovered and not no_id and not orphan_dirs:
-        print("# OK: выгрузка покрыта полностью, целостность иерархии не нарушена.")
-    return 2 if (args.strict and uncovered) else 0
+    lines, n_uncovered = coverage_report(args.sources, args.output)
+    for i, ln in enumerate(lines):
+        print(ln if ln.startswith("  ") else f"# {ln}")
+    return 2 if (args.strict and n_uncovered) else 0
 
 
 if __name__ == "__main__":

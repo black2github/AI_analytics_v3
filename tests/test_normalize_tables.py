@@ -1504,3 +1504,33 @@ class TestPlaceholderLinkFlagged:
         report, ok = check_notification_structure(
             self.BASE + "Статус: [Сущность](../e.md).<Статус>\n")
         assert ok, report
+
+
+class TestReadmeRegistryTitle:
+    """README-реестры: title собственный (реестр объединяет несколько
+    страниц), дословная сверка с источником не применяется —
+    генерализация правила NTF-000 (2026-08-16, инцидент intc-README)."""
+
+    SRC = "---\ntitle: '[X] Методы сервиса'\n---\n\nтекст\n"
+
+    def test_readme_title_not_checked(self, tmp_path):
+        from app.scripts.CI.normalize_tables import run_check
+        readme = tmp_path / "README.md"
+        readme.write_text(
+            "---\ntitle: '[X] Методы и файловые контракты сервиса'\n---\n\n# Р\n",
+            encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, ok = run_check([readme], src)
+        assert ok and any("собственный title" in r for r in rep)
+
+    def test_regular_card_title_still_checked(self, tmp_path):
+        # тест на НЕсрабатывание исключения: обычная карточка сверяется
+        from app.scripts.CI.normalize_tables import run_check
+        cardf = tmp_path / "card.md"
+        cardf.write_text("---\ntitle: 'Другое имя'\n---\n\n# К\n",
+                         encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, ok = run_check([cardf], src)
+        assert not ok and any("расходится" in r for r in rep)

@@ -24,14 +24,21 @@ def source(title: str, pid: str, body: str = "текст\n") -> str:
             + body)
 
 
+def make_matrix(docs: Path, extra: str = "") -> None:
+    make(docs / "traceability-matrix.md",
+         "# Матрица\n\n| ID | Тип | Наименование | Файл |\n"
+         "|---|---|---|---|\n" + extra)
+
+
 def test_happy_mapping_and_census(tmp_path):
     docs, srcs = tmp_path / "docs", tmp_path / "conf"
     make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
     make(srcs / "стр1.md", source("[X] Ф1", "111222"))
     report, ok = selfcheck.run(docs, srcs)
-    assert ok
+    assert ok, report
     assert any(ln.startswith("✓") and "стр1.md" in ln for ln in report)
-    assert any("ИТОГО: файлов 1 — ✓ 1, ✗ 0, ⚠ 0" in ln for ln in report)
+    assert any("ИТОГО: файлов 2 — ✓ 1, ✗ 0, ⚠ 1" in ln for ln in report)
 
 
 def test_unmapped_reverse_card_is_defect(tmp_path):
@@ -47,8 +54,9 @@ def test_unmapped_reverse_card_is_defect(tmp_path):
 def test_forward_card_internal_checks_only(tmp_path):
     docs = tmp_path / "docs"
     make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
     report, ok = selfcheck.run(docs, None)
-    assert ok
+    assert ok, report
     assert any("page_ids нет" in ln for ln in report)
 
 
@@ -102,6 +110,7 @@ def test_multicard_union_single_call(tmp_path):
          card("[X] К1", "555555").replace("текст", "A1 Боевой код"))
     make(docs / "srs/data-model/k2.md",
          card("[X] К2", "555555").replace("текст", "B2 Второй код"))
+    make_matrix(docs)
     report, ok = selfcheck.run(docs, srcs)
     assert ok, report
     assert any("k1.md" in ln and "k2.md" in ln and ln.startswith("✓")
@@ -113,6 +122,7 @@ def test_duplicate_source_pid_warned(tmp_path):
     make(srcs / "a.md", source("[X] Ф1", "111222"))
     make(srcs / "b.md", source("[X] Ф1", "111222"))
     make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
     report, ok = selfcheck.run(docs, srcs)
     assert ok
     assert any(ln.startswith("i") and "111222" in ln for ln in report)
@@ -123,5 +133,54 @@ def test_brackets_in_paths(tmp_path):
     docs, srcs = tmp_path / "docs", tmp_path / "conf"
     make(srcs / "[БлокН2Н]-Стр.md", source("[Б] Ф1", "777777"))
     make(docs / "srs/functions/f1.md", card("[Б] Ф1", "777777"))
+    make_matrix(docs)
     report, ok = selfcheck.run(docs, srcs)
     assert ok and any("[БлокН2Н]-Стр.md" in ln for ln in report)
+
+
+def test_matrix_missing_flagged(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    report, ok = selfcheck.run(docs, None)
+    assert not ok and any("матрица не найдена" in ln for ln in report)
+
+
+def test_overdue_debt_propagates(tmp_path):
+    # link_debts в диспетчере: просроченный долг = брак прогона
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф1'\ntype: function\n---\n\n"
+         "шаг процесса Процесс обработки заявки на выпуск\n")
+    make(docs / "srs/process/prc-001.md",
+         "---\nid: PRC-001\ntitle: '[X] Процесс обработки заявки на "
+         "выпуск'\ntype: process\n---\n\n# П\n")
+    make_matrix(docs,
+                "| FUN-BNK-01 | function | Ф1 | srs/functions/f1.md |\n"
+                "| FUN-BNK-01 | — | нет целевого артефакта PRC «Процесс "
+                "обработки заявки на выпуск» — требуется заход "
+                "create-process |\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok and any("ПРОСРОЧЕН" in ln for ln in report)
+
+
+def test_oq_disorder_propagates(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    make(docs / "open-questions.md",
+         "## OQ-001. А\n\n## OQ-003. Б\n\n## OQ-002. В\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok and any("порядок реестра нарушен" in ln
+                          for ln in report)
+
+
+def test_coverage_informational_not_blocking(tmp_path):
+    # непокрытая страница — информация (остаток конвейера), не брак
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    make(srcs / "стр2.md", source("[X] Другая", "333333"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert any("НЕ покрыто: 1" in ln for ln in report)
