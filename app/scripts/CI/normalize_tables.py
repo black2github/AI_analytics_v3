@@ -1714,16 +1714,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
     ok = ok and ntf_ok
     if src_text is not None:
         src_report, src_ok = check_source_tables(combined, src_text)
-        # README-реестры каталогов: title собственный (реестр объединяет
-        # несколько страниц; правило NTF-000 генерализовано, решение
-        # 2026-08-16 — инцидент: title реестра internal-contracts
-        # «Методы и файловые контракты сервиса» шире страницы источника)
-        if main_file.name.lower() == "readme.md":
-            ttl_report, ttl_ok = (["title: README-реестр — собственный "
-                                   "title, дословная сверка не "
-                                   "применяется"], True)
-        else:
-            ttl_report, ttl_ok = check_title(card_text, src_text)
+        # title сверяется и у README-реестров: он дословный из главной
+        # страницы-оглавления, раз она есть (решение 2026-08-16 v2:
+        # title — трассировка к источнику, «собственный» — только у
+        # файлов БЕЗ страницы-источника, а такие сюда не попадают;
+        # расширенное наименование реестра живёт в H1)
+        ttl_report, ttl_ok = check_title(card_text, src_text)
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = check_step_markers(combined, src_text)
         ql_report, ql_ok = check_quoted_literals(combined, src_text)
