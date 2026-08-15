@@ -1324,6 +1324,90 @@ def _frontmatter_title(text: str) -> Optional[str]:
     return None
 
 
+# Нотификации (тип notification): внутренняя согласованность карточки.
+# Составной ключ «канал, получатели»: подраздел канала у события
+# (#### <ключ>) обязан иметь карточку канала (### <ключ>) в разделе
+# «Каналы и адреса доставки» — инцидент [КК_ВК]: канал «Уведомление в
+# Экосистеме» использовался событиями, но в разделе каналов страницы
+# отсутствовал. Плюс: упомянутый общий шаблон M-NN обязан существовать,
+# E-номера событий монотонны (append-only, как OQ).
+_NTF_EVENT_H_RE = re.compile(r"^###\s+NTF-\d+\.E(\d+)\.", re.M)
+_NTF_TMPL_REF_RE = re.compile(r"общ\w+\s+шаблон\w*\s+(M-\d+)", re.I)
+_NTF_TMPL_H_RE = re.compile(r"^###\s+(M-\d+)\.", re.M)
+
+
+def _ntf_key(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def check_notification_structure(card_text: str) -> Tuple[List[str], bool]:
+    """Согласованность карточки нотификаций; на прочих типах молчит
+    (срабатывает только при обоих обязательных разделах шаблона)."""
+    sections: Dict[str, List[str]] = {}
+    current = ""
+    for ln in card_text.splitlines():
+        if ln.startswith("## ") and not ln.startswith("###"):
+            current = _ntf_key(ln[3:])
+            sections.setdefault(current, [])
+        elif current:
+            sections[current].append(ln)
+    chan_lines = sections.get("Каналы и адреса доставки")
+    evt_lines = sections.get("Сообщения нотификации")
+    if chan_lines is None or evt_lines is None:
+        return [], True
+    chan_keys = {_ntf_key(ln[4:]) for ln in chan_lines
+                 if ln.startswith("### ")}
+    evt_keys = [_ntf_key(ln[5:]) for ln in evt_lines
+                if ln.startswith("#### ")]
+    report: List[str] = []
+    ok = True
+    missing = sorted({k for k in evt_keys if k not in chan_keys})
+    if missing:
+        report.append("нотификации: ключ «канал, получатели» события без "
+                      "карточки в «Каналы и адреса доставки»: "
+                      + "; ".join(missing[:5])
+                      + " ✗ — карточку не синтезировать, нужен открытый "
+                        "вопрос по источнику")
+        ok = False
+    tmpl_defined = set(_NTF_TMPL_H_RE.findall(card_text))
+    tmpl_missing = sorted({m for m in _NTF_TMPL_REF_RE.findall(card_text)
+                           if m not in tmpl_defined})
+    if tmpl_missing:
+        report.append("нотификации: упомянутый общий шаблон отсутствует: "
+                      + ", ".join(tmpl_missing[:5]) + " ✗")
+        ok = False
+    e_raw = _NTF_EVENT_H_RE.findall(card_text)
+    e_nums = [int(m) for m in e_raw]
+    bad = [(a, b) for a, b in zip(e_nums, e_nums[1:]) if b <= a]
+    if bad:
+        report.append("нотификации: E-номера событий не монотонны "
+                      "(append-only): "
+                      + ", ".join(f"E{b:02d} после E{a:02d}"
+                                  for a, b in bad[:3]) + " ✗")
+        ok = False
+    narrow = sorted({m for m in e_raw if len(m) < 2})
+    if narrow:
+        report.append("нотификации: формат E-номера — минимум две цифры "
+                      "(E01…): " + ", ".join(f"E{m}" for m in narrow[:5])
+                      + " ✗")
+        ok = False
+    # <br>-простыня: текст сообщения перенесён одной строкой из ячейки
+    # источника вместо построчного разворачивания (рендеримость; в
+    # таблицах (строки на «|») <br> легален — реестр событий)
+    flat = [ln for ln in evt_lines
+            if "<br>" in ln and not ln.lstrip().startswith("|")]
+    if flat:
+        report.append(f"нотификации: <br> вне таблиц в «Сообщения "
+                      f"нотификации» ({len(flat)} строк) ✗ — тексты "
+                      "разворачиваются построчно (правило шаблона)")
+        ok = False
+    if ok:
+        report.append(f"нотификации: ключи каналов ({len(chan_keys)}), "
+                      f"шаблоны, порядок событий ({len(e_nums)}) "
+                      "согласованы ✓")
+    return report, ok
+
+
 def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     """Дословный перенос title источника во frontmatter карточки.
 
@@ -1607,6 +1691,9 @@ def main() -> int:
         num_report, num_ok = check_behavior_numbering(card_text)
         report.extend(num_report)
         ok = ok and num_ok
+        ntf_report, ntf_ok = check_notification_structure(card_text)
+        report.extend(ntf_report)
+        ok = ok and ntf_ok
         if src_text is not None:
             src_report, src_ok = check_source_tables(combined, src_text)
             ttl_report, ttl_ok = check_title(card_text, src_text)

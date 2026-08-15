@@ -1330,3 +1330,95 @@ class TestTitleDetectorPurposeMarkers:
         from app.scripts.CI.normalize_tables import _title_suspicious
         assert not _title_suspicious("Ссылки документа")     # не «ссылка на»
         assert not _title_suspicious("Секция подписи")       # не «секция для»
+
+
+class TestNotificationStructure:
+    """Сторож карточки нотификаций (NTF): ключ «канал, получатели» события
+    обязан иметь карточку канала (инцидент [КК_ВК]: «Уведомление в
+    Экосистеме» использовался событиями, в разделе каналов отсутствовал);
+    упомянутый общий шаблон M-NN существует; E-номера монотонны."""
+
+    def make(self, channels, events, tail=""):
+        return ("---\nid: NTF-01\ntype: notification\n---\n\n"
+                "## Каналы и адреса доставки\n\n" + channels +
+                "\n## Сообщения нотификации\n\n" + events + tail)
+
+    def test_missing_channel_card_caught(self):
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### E-mail, Пользователи Клиента\n\nправила\n",
+            "### NTF-01.E01. Событие А\n\n"
+            "#### Уведомление в Экосистеме, Пользователи Клиента\n\nтекст\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and "Уведомление в Экосистеме" in report[0]
+
+    def test_consistent_card_clean(self):
+        # тест на НЕсрабатывание: ключи, шаблон и порядок согласованы
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### E-mail, Пользователи Банка\n\nправила\n",
+            "### NTF-01.E01. Событие А\n\n"
+            "#### E-mail, Пользователи Банка\n\n"
+            "- **Сообщение:** общий шаблон M-01\n\n"
+            "### NTF-01.E02. Событие Б\n\n"
+            "#### E-mail, Пользователи Банка\n\nтекст\n",
+            "\n## Общие шаблоны сообщений\n\n### M-01. E-mail — ошибки\n")
+        report, ok = check_notification_structure(text)
+        assert ok and "согласованы ✓" in report[0]
+
+    def test_missing_template_caught(self):
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### E-mail, Пользователи Банка\n\nправила\n",
+            "### NTF-01.E01. Событие А\n\n"
+            "#### E-mail, Пользователи Банка\n\n"
+            "- **Сообщение:** общий шаблон M-02\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and any("M-02" in r for r in report)
+
+    def test_non_monotonic_events_caught(self):
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### SMS, Пользователи Клиента\n\nправила\n",
+            "### NTF-01.E03. Событие В\n\n"
+            "#### SMS, Пользователи Клиента\n\nтекст\n\n"
+            "### NTF-01.E02. Событие Б\n\n"
+            "#### SMS, Пользователи Клиента\n\nтекст\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and any("E02 после E03" in r for r in report)
+
+    def test_other_card_types_untouched(self):
+        # тест на НЕсрабатывание: не-нотификация (нет обоих разделов)
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        report, ok = check_notification_structure(
+            "---\nid: FUN-BNK-01\n---\n\n## Поведение\n\n#### Подраздел\n")
+        assert ok and not report
+
+    def test_single_digit_event_number_flagged(self):
+        # формат E-номера: минимум две цифры (прогон B выдал E1/E2)
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### SMS, Пользователи Клиента\n\nправила\n",
+            "### NTF-01.E1. Событие А\n\n"
+            "#### SMS, Пользователи Клиента\n\nтекст\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and any("минимум две цифры" in r for r in report)
+
+    def test_br_flat_message_flagged_table_allowed(self):
+        # <br>-простыня в абзаце сообщения — брак; <br> в ячейке
+        # реестра (строка на «|») — легален
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = self.make(
+            "### SMS, Пользователи Клиента\n\nправила\n",
+            "| ID | Событие | Каналы, получатели |\n|---|---|---|\n"
+            "| NTF-01.E01 | Событие А | SMS,<br>Пользователи Клиента |\n\n"
+            "### NTF-01.E01. Событие А\n\n"
+            "#### SMS, Пользователи Клиента\n\n"
+            "**Сообщение:**\n\nТема:<br>\"X\"<br>Текст:<br>\"Y\"\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and any("<br> вне таблиц" in r for r in report)
+        unrolled = text.replace(
+            "Тема:<br>\"X\"<br>Текст:<br>\"Y\"",
+            "Тема:\n\n\"X\"\n\nТекст:\n\n\"Y\"")
+        report2, ok2 = check_notification_structure(unrolled)
+        assert ok2, report2
