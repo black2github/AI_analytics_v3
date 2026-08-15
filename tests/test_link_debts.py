@@ -103,6 +103,18 @@ def test_config_param_present_ok(tmp_path):
     assert ok and not report
 
 
+def test_config_param_space_before_dot_caught(tmp_path):
+    # дефект набора источника: «БлокН2Н .h2h_out_path» (пробел перед
+    # точкой) прятал параметр от сторожа
+    from app.scripts.CI.link_debts import check_config_params
+    docs = tmp_path / "docs"
+    make(docs / "srs/process/prc-002.md",
+         "путь из [Настраиваемые параметры] БлокН2Н .h2h_out_path. Если отчет\n")
+    make(docs / "srs/data-model/dictionaries.md", "| Ключ | |\n")
+    report, ok = check_config_params(docs)
+    assert not ok and "h2h_out_path" in report[0]
+
+
 def test_range_expansion_checks_both(tmp_path):
     # диапазон FUN-BNK-01…02: имя ищется в ОБОИХ ожидателях
     docs = tmp_path / "docs"
