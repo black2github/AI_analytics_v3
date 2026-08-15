@@ -1690,6 +1690,43 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     return report, ok
 
 
+def run_check(files: List[Path], source_path: Optional[Path],
+              min_valid_pct: float = 95.0) -> Tuple[List[str], bool]:
+    """Полная связка режима --check одной функцией — ЕДИНАЯ точка
+    подключения проверок для CLI и selfcheck-диспетчера (двойной
+    монтаж проверок расходится). Первая карточка — основная (title,
+    поведение, колонки); значения источника ищутся в объединении."""
+    main_file = files[0]
+    src_text = (source_path.read_text(encoding="utf-8")
+                if source_path is not None else None)
+    report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
+                            source_text=src_text)
+    card_text = main_file.read_text(encoding="utf-8")
+    # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
+    # карточек (пример: каталог статусов в dictionaries + переходы в
+    # status-model); title/поведение/колонки — по первой (основной)
+    combined = "\n\n".join(f.read_text(encoding="utf-8") for f in files)
+    num_report, num_ok = check_behavior_numbering(card_text)
+    report.extend(num_report)
+    ok = ok and num_ok
+    ntf_report, ntf_ok = check_notification_structure(card_text)
+    report.extend(ntf_report)
+    ok = ok and ntf_ok
+    if src_text is not None:
+        src_report, src_ok = check_source_tables(combined, src_text)
+        ttl_report, ttl_ok = check_title(card_text, src_text)
+        bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
+        st_report, st_ok = check_step_markers(combined, src_text)
+        ql_report, ql_ok = check_quoted_literals(combined, src_text)
+        report.extend(src_report)
+        report.extend(ttl_report)
+        report.extend(bh_report)
+        report.extend(st_report)
+        report.extend(ql_report)
+        ok = ok and src_ok and ttl_ok and bh_ok and st_ok and ql_ok
+    return report, ok
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Нормализатор сырых HTML-таблиц в .md (проход 1). "
@@ -1725,34 +1762,8 @@ def main() -> int:
               f"использую {main_file}", file=sys.stderr)
 
     if args.check:
-        src_text = (args.source.read_text(encoding="utf-8")
-                    if args.source is not None else None)
-        report, ok = check_file(main_file, min_valid_pct=args.min_valid,
-                                source_text=src_text)
-        card_text = main_file.read_text(encoding="utf-8")
-        # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
-        # карточек (пример: каталог статусов в dictionaries + переходы в
-        # status-model); title/поведение/колонки — по первой (основной)
-        combined = "\n\n".join(f.read_text(encoding="utf-8")
-                               for f in args.file)
-        num_report, num_ok = check_behavior_numbering(card_text)
-        report.extend(num_report)
-        ok = ok and num_ok
-        ntf_report, ntf_ok = check_notification_structure(card_text)
-        report.extend(ntf_report)
-        ok = ok and ntf_ok
-        if src_text is not None:
-            src_report, src_ok = check_source_tables(combined, src_text)
-            ttl_report, ttl_ok = check_title(card_text, src_text)
-            bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
-            st_report, st_ok = check_step_markers(combined, src_text)
-            ql_report, ql_ok = check_quoted_literals(combined, src_text)
-            report.extend(src_report)
-            report.extend(ttl_report)
-            report.extend(bh_report)
-            report.extend(st_report)
-            report.extend(ql_report)
-            ok = ok and src_ok and ttl_ok and bh_ok and st_ok and ql_ok
+        report, ok = run_check(list(args.file), args.source,
+                               min_valid_pct=args.min_valid)
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:
