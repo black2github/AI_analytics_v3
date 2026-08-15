@@ -1334,6 +1334,10 @@ def _frontmatter_title(text: str) -> Optional[str]:
 _NTF_EVENT_H_RE = re.compile(r"^###\s+NTF-\d+\.E(\d+)\.", re.M)
 _NTF_TMPL_REF_RE = re.compile(r"общ\w+\s+шаблон\w*\s+(M-\d+)", re.I)
 _NTF_TMPL_H_RE = re.compile(r"^###\s+(M-\d+)\.", re.M)
+# заголовок-ключ — с фиксированным префиксом (решение пользователя
+# 2026-08-15: префикс — «привязка к местности», показывает, что карточка
+# разворачивает строку реестра; в ячейках реестров ключи без префикса)
+_NTF_KEY_PREFIX_RE = re.compile(r"^Канал и получатели:\s*")
 
 
 def _ntf_key(s: str) -> str:
@@ -1355,12 +1359,30 @@ def check_notification_structure(card_text: str) -> Tuple[List[str], bool]:
     evt_lines = sections.get("Сообщения нотификации")
     if chan_lines is None or evt_lines is None:
         return [], True
-    chan_keys = {_ntf_key(ln[4:]) for ln in chan_lines
-                 if ln.startswith("### ")}
-    evt_keys = [_ntf_key(ln[5:]) for ln in evt_lines
-                if ln.startswith("#### ")]
     report: List[str] = []
     ok = True
+    unprefixed: List[str] = []
+
+    def _keys(lines: List[str], marker: str) -> List[str]:
+        out = []
+        for ln in lines:
+            if not ln.startswith(marker):
+                continue
+            raw = _ntf_key(ln[len(marker):])
+            m = _NTF_KEY_PREFIX_RE.match(raw)
+            if m:
+                out.append(_ntf_key(raw[m.end():]))
+            else:
+                unprefixed.append(raw)
+        return out
+
+    chan_keys = set(_keys(chan_lines, "### "))
+    evt_keys = _keys(evt_lines, "#### ")
+    if unprefixed:
+        report.append("нотификации: заголовок-ключ без префикса "
+                      "«Канал и получатели: »: "
+                      + "; ".join(unprefixed[:5]) + " ✗")
+        ok = False
     missing = sorted({k for k in evt_keys if k not in chan_keys})
     if missing:
         report.append("нотификации: ключ «канал, получатели» события без "
@@ -1446,6 +1468,12 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
         # Служебная секция «Документация» страницы (реестр док-файлов) —
         # в контракт не переносится, сверке не подлежит.
         if "документ" in hdr_norm and "дата" in hdr_norm:
+            continue
+        # История изменений страницы («Дата | Описание | Автор [| Задача]»)
+        # — по канону в чистовик не переносится; гейт требовал её значения
+        # (ретро-перегон [КК_ВК] 2026-08-15, конфликт гейт↔шаблон — агент
+        # честно сдал «НЕ ГОТОВО» вместо маскировки таблицей).
+        if "дата" in hdr_norm and "описани" in hdr_norm and "автор" in hdr_norm:
             continue
         # Таблица макетов ЭФ (размерности экрана + ссылки на Figma) —
         # служебная: шаблон screen-form запрещает Figma/Confluence-URL в
@@ -1709,9 +1737,8 @@ def main() -> int:
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:
-            print("# БРАК: колонка ниже порога — литералы якорных колонок "
-                  "(кратность, обязательность) переписаны при переносе. "
-                  "Исправьте карточку по выходу утилиты.", file=sys.stderr)
+            print("# БРАК: см. строки ✗ выше — исправьте карточку по "
+                  "выходу утилиты.", file=sys.stderr)
             return 2
         print("# OK: все распознанные колонки выше порога.", file=sys.stderr)
         return 0

@@ -1346,9 +1346,9 @@ class TestNotificationStructure:
     def test_missing_channel_card_caught(self):
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### E-mail, Пользователи Клиента\n\nправила\n",
+            "### Канал и получатели: E-mail, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
-            "#### Уведомление в Экосистеме, Пользователи Клиента\n\nтекст\n")
+            "#### Канал и получатели: Уведомление в Экосистеме, Пользователи Клиента\n\nтекст\n")
         report, ok = check_notification_structure(text)
         assert not ok and "Уведомление в Экосистеме" in report[0]
 
@@ -1356,12 +1356,12 @@ class TestNotificationStructure:
         # тест на НЕсрабатывание: ключи, шаблон и порядок согласованы
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### E-mail, Пользователи Банка\n\nправила\n",
+            "### Канал и получатели: E-mail, Пользователи Банка\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
-            "#### E-mail, Пользователи Банка\n\n"
+            "#### Канал и получатели: E-mail, Пользователи Банка\n\n"
             "- **Сообщение:** общий шаблон M-01\n\n"
             "### NTF-01.E02. Событие Б\n\n"
-            "#### E-mail, Пользователи Банка\n\nтекст\n",
+            "#### Канал и получатели: E-mail, Пользователи Банка\n\nтекст\n",
             "\n## Общие шаблоны сообщений\n\n### M-01. E-mail — ошибки\n")
         report, ok = check_notification_structure(text)
         assert ok and "согласованы ✓" in report[0]
@@ -1369,9 +1369,9 @@ class TestNotificationStructure:
     def test_missing_template_caught(self):
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### E-mail, Пользователи Банка\n\nправила\n",
+            "### Канал и получатели: E-mail, Пользователи Банка\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
-            "#### E-mail, Пользователи Банка\n\n"
+            "#### Канал и получатели: E-mail, Пользователи Банка\n\n"
             "- **Сообщение:** общий шаблон M-02\n")
         report, ok = check_notification_structure(text)
         assert not ok and any("M-02" in r for r in report)
@@ -1379,11 +1379,11 @@ class TestNotificationStructure:
     def test_non_monotonic_events_caught(self):
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### SMS, Пользователи Клиента\n\nправила\n",
+            "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E03. Событие В\n\n"
-            "#### SMS, Пользователи Клиента\n\nтекст\n\n"
+            "#### Канал и получатели: SMS, Пользователи Клиента\n\nтекст\n\n"
             "### NTF-01.E02. Событие Б\n\n"
-            "#### SMS, Пользователи Клиента\n\nтекст\n")
+            "#### Канал и получатели: SMS, Пользователи Клиента\n\nтекст\n")
         report, ok = check_notification_structure(text)
         assert not ok and any("E02 после E03" in r for r in report)
 
@@ -1398,9 +1398,9 @@ class TestNotificationStructure:
         # формат E-номера: минимум две цифры (прогон B выдал E1/E2)
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### SMS, Пользователи Клиента\n\nправила\n",
+            "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E1. Событие А\n\n"
-            "#### SMS, Пользователи Клиента\n\nтекст\n")
+            "#### Канал и получатели: SMS, Пользователи Клиента\n\nтекст\n")
         report, ok = check_notification_structure(text)
         assert not ok and any("минимум две цифры" in r for r in report)
 
@@ -1409,11 +1409,11 @@ class TestNotificationStructure:
         # реестра (строка на «|») — легален
         from app.scripts.CI.normalize_tables import check_notification_structure
         text = self.make(
-            "### SMS, Пользователи Клиента\n\nправила\n",
+            "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "| ID | Событие | Каналы, получатели |\n|---|---|---|\n"
             "| NTF-01.E01 | Событие А | SMS,<br>Пользователи Клиента |\n\n"
             "### NTF-01.E01. Событие А\n\n"
-            "#### SMS, Пользователи Клиента\n\n"
+            "#### Канал и получатели: SMS, Пользователи Клиента\n\n"
             "**Сообщение:**\n\nТема:<br>\"X\"<br>Текст:<br>\"Y\"\n")
         report, ok = check_notification_structure(text)
         assert not ok and any("<br> вне таблиц" in r for r in report)
@@ -1422,3 +1422,40 @@ class TestNotificationStructure:
             "Тема:\n\n\"X\"\n\nТекст:\n\n\"Y\"")
         report2, ok2 = check_notification_structure(unrolled)
         assert ok2, report2
+
+
+class TestHistoryTableNotRequired:
+    """История изменений страницы («Дата | Описание | Автор») по канону не
+    переносится — гейт значений не должен требовать её в карточке
+    (ретро-перегон [КК_ВК] 2026-08-15, конфликт гейт↔шаблон)."""
+
+    SRC = ("# История изменений\n\n"
+           "| Дата | Описание | Автор | Задача в JIRA |\n|---|---|---|---|\n"
+           "| 2024-02-14 | Разделение нотификаций | Иванов | GBO-1 |\n"
+           "| 2023-09-14 | Добавлены нотификации | Петров | GBO-2 |\n\n"
+           "| Код | Значение |\n|---|---|\n"
+           "| A1 | Боевой код |\n| B2 | Второй код |\n")
+
+    def test_history_not_required(self):
+        from app.scripts.CI.normalize_tables import check_source_tables
+        card = "| Код | Значение |\n|---|---|\n| A1 | Боевой код |\n| B2 | Второй код |\n"
+        rep, ok = check_source_tables(card, self.SRC)
+        assert ok, rep
+
+    def test_real_table_still_guarded(self):
+        # тест на НЕсрабатывание фильтра: потеря обычной таблицы ловится
+        from app.scripts.CI.normalize_tables import check_source_tables
+        rep, ok = check_source_tables("# пустая карточка\n", self.SRC)
+        assert not ok and any("Код" in r or "A1" in r for r in rep)
+
+    def test_unprefixed_key_heading_flagged(self):
+        # заголовок-ключ без префикса «Канал и получатели: » — брак
+        from app.scripts.CI.normalize_tables import check_notification_structure
+        text = ("---\nid: NTF-01\ntype: notification\n---\n\n"
+                "## Каналы и адреса доставки\n\n"
+                "### SMS, Пользователи Клиента\n\nправила\n"
+                "\n## Сообщения нотификации\n\n"
+                "### NTF-01.E01. Событие А\n\n"
+                "#### Канал и получатели: SMS, Пользователи Клиента\n\nтекст\n")
+        report, ok = check_notification_structure(text)
+        assert not ok and any("без префикса" in r for r in report)
