@@ -233,10 +233,25 @@ def main() -> int:
     ap.add_argument("--sources", type=Path, default=None,
                     help="каталог выгрузки Confluence (reverse); без него "
                          "выполняются только внутренние сторожа карточек")
+    ap.add_argument("--out", type=Path, default=None,
+                    help="записать полный отчёт в файл (UTF-8) — вместо "
+                         "самодельных лаунчеров и shell-редиректов "
+                         "(PowerShell `>` пишет UTF-16)")
     args = ap.parse_args()
+    # Windows-консоль cp1251 падает на ✓/✗ — печатаем с заменой, файл
+    # отчёта (--out) всегда полный UTF-8 (три самодельных лаунчера
+    # агентов решали ровно эту проблему — теперь она решена утилитой)
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     report, ok = run(args.docs, args.sources)
-    for ln in report:
-        print(f"# {ln}")
+    lines = [f"# {ln}" for ln in report]
+    if args.out is not None:
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    for ln in lines:
+        print(ln)
     return 0 if ok else 2
 
 

@@ -184,3 +184,21 @@ def test_coverage_informational_not_blocking(tmp_path):
     report, ok = selfcheck.run(docs, srcs)
     assert ok, report
     assert any("НЕ покрыто: 1" in ln for ln in report)
+
+
+def test_out_writes_full_utf8_report(tmp_path, monkeypatch, capsys):
+    # --out: отчёт пишет сама утилита в UTF-8 (замена самодельных
+    # лаунчеров и PowerShell-редиректов с UTF-16)
+    import sys
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    out = tmp_path / "sandbox" / "selfcheck.txt"
+    monkeypatch.setattr(sys, "argv",
+                        ["selfcheck.py", "--docs", str(docs),
+                         "--out", str(out)])
+    rc = selfcheck.main()
+    assert rc == 0
+    text = out.read_text(encoding="utf-8")
+    assert "ИТОГО" in text and "✓" in text
+    assert "ИТОГО" in capsys.readouterr().out
