@@ -1578,3 +1578,37 @@ class TestStepMarkersTypeScoped:
         src.write_text(self.SRC, encoding="utf-8")
         rep, ok = run_check([cardf], src)
         assert not ok and any("маркеры шагов" in r for r in rep)
+
+
+class TestExamCalibrations:
+    """К-2/К-3 экзамена inkasso: обрезки текстового CriticMarkup — не
+    значения источника; одиночный латинский идентификатор — легитимное
+    имя параметра, не «тип»."""
+
+    def test_latin_identifier_name_not_suspicious(self):
+        from app.scripts.CI.normalize_tables import _title_suspicious
+        assert not _title_suspicious("TraceID")
+        assert not _title_suspicious("SessionID")
+
+    def test_dictionary_types_still_suspicious(self):
+        # тест на НЕсрабатывание послабления: словарные типы — брак
+        from app.scripts.CI.normalize_tables import _title_suspicious
+        assert _title_suspicious("GUID")
+        assert _title_suspicious("Строка(20)")
+
+    def test_critic_scraps_not_required_values(self):
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| Доступность функции | Условие |\n|---|---|\n"
+               "| Роль Банка | СТАТУС |\n| ++} | {++ |\n")
+        card = "Роль Банка и СТАТУС перенесены\n"
+        rep, ok = check_source_tables(card, src)
+        assert ok, rep
+
+    def test_content_inside_critic_still_required(self):
+        # тест на НЕсрабатывание: содержимое правок остаётся значением
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| Доступность функции | Условие |\n|---|---|\n"
+               "| Роль Банка | {++Новое условие++} |\n"
+               "| Вторая строка | Ещё значение |\n")
+        rep, ok = check_source_tables("Роль Банка, Вторая строка, Ещё значение\n", src)
+        assert not ok and any("Новое условие" in r for r in rep)

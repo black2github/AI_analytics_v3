@@ -656,7 +656,13 @@ def _title_suspicious(v: str) -> bool:
         return True
     if any(rx.search(v) for rx in _TITLE_SUSPECT_RES):
         return True
-    return _looks_like_type(v)          # чистый тип данных — не название
+    # чистый СЛОВАРНЫЙ тип данных — не название; одиночный латинский
+    # идентификатор (TraceID, SessionID) — легитимное имя параметра
+    # (К-3 экзамена inkasso: generic-латиница ложно бракавала имена)
+    vv = re.sub(r"\s+\(", "(", v)
+    if not vv or " " in vv or len(vv) > 24:
+        return False
+    return re.sub(r"[\d()\[\]]+$", "", vv).lower() in _TYPE_TOKENS
 
 
 def validate_columns(headers: List[str], rows: List[List[str]],
@@ -1517,6 +1523,11 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 continue
             for cell in row:
                 cv = _norm_cell(cell)
+                # обрезки текстового CriticMarkup («++}», «{++», «~~}») —
+                # разметка правок, не содержимое: вход с невлитыми
+                # правками (Вх-1 экзамена inkasso, страницы-draft)
+                if re.fullmatch(r"[{}+~\-\s|]*", cell.strip()):
+                    continue
                 if cv and cv not in card_norm:
                     missing.append(cell.strip()[:60])
         if missing:
