@@ -1528,6 +1528,13 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 # правками (Вх-1 экзамена inkasso, страницы-draft)
                 if re.fullmatch(r"[{}+~\-\s|]*", cell.strip()):
                     continue
+                # ячейки-изображения (<img …> — скриншоты/эскизы макетов):
+                # шаблоны запрещают перенос изображений в комплект, гейт
+                # их не требует (К-6 экзамена inkasso: журнальный README —
+                # гейт требовал скриншоты и провоцировал их перенос)
+                if re.fullmatch(r"(?:\s*<img\b[^>]*>\s*)+",
+                                cell.strip(), re.I):
+                    continue
                 if cv and cv not in card_norm:
                     missing.append(cell.strip()[:60])
         if missing:
@@ -1640,6 +1647,23 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
             report.append(
                 f"маркер сокращения «{marker}» ×{cnt}: справочники и перечни "
                 f"источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА")
+    # Отсылки к страницам источника в ТЕЛЕ карточки — запрещены (чистовик
+    # без ссылок на Confluence/выгрузку; законный носитель page_id —
+    # только frontmatter confluence_page_ids и матрица трассировки).
+    # К-7 экзамена inkasso: «Статика и источники — по таблице полей
+    # источника page 2169849859» ×40 — отсылка ВМЕСТО переноса
+    # содержимого, словарь маркеров сокращения её не покрывал.
+    body_wo_fm = text.split("---", 2)[-1] if text.lstrip("﻿")\
+        .startswith("---") else text
+    page_refs = re.findall(r"(?i)confluence|page[ _]?id|page\s+\d{6,}",
+                           body_wo_fm)
+    if page_refs:
+        ok = False
+        report.append(
+            f"отсылки к страницам источника в теле карточки ×{len(page_refs)} "
+            f"({', '.join(sorted(set(page_refs))[:3])}) ✗ НИЖЕ ПОРОГА — "
+            "содержимое переносится, а не адресуется; page_id живёт только "
+            "во frontmatter и матрице")
     tables = list(parse_md_tables(text))
     if not column_roles and tables:
         # README-реестры: навигационные таблицы, роли параметрических

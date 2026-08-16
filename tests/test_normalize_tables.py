@@ -1689,3 +1689,49 @@ class TestApplyCritic:
                             encoding="utf-8")
             rep, ok = run_check([card], src)
             assert not ok and any("важное новое правило" in r for r in rep)
+
+
+class TestExamCalibrationsK6K7:
+    """К-6: ячейки-изображения не требуются гейтом значений (шаблоны
+    запрещают перенос скриншотов); К-7: отсылки к страницам источника
+    в теле карточки — брак (отсылка вместо переноса, инцидент ×40)."""
+
+    def test_k6_img_cells_not_required(self):
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| № | Desktop (S-XL) | Наименование блока |\n|---|---|---|\n"
+               '| 1 | <img src="img/a.png" width="473"> | Общие элементы |\n'
+               '| 2 | <img src="img/b.png"><img src="img/c.png"> | Фильтры |\n')
+        card = ("| № | Desktop (S-XL) | Наименование блока |\n|---|---|---|\n"
+                "| 1 | Desktop (S-XL) | Общие элементы |\n"
+                "| 2 | 2 варианта | Фильтры |\n")
+        rep, ok = check_source_tables(card, src)
+        assert ok, rep
+
+    def test_k6_text_cells_still_required(self):
+        # тест на НЕсрабатывание: текстовые ячейки обязаны переноситься
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| № | Desktop (S-XL) | Наименование блока |\n|---|---|---|\n"
+               '| 1 | <img src="img/a.png"> | Уникальный блок настроек |\n'
+               "| 2 | текстовая ячейка | Второй блок |\n")
+        rep, ok = check_source_tables("Второй блок, текстовая ячейка\n", src)
+        assert not ok and any("Уникальный блок" in r for r in rep)
+
+    def test_k7_page_refs_in_body_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "card.md"
+        p.write_text("---\ntitle: 'К'\nconfluence_page_ids: [2169849859]\n"
+                     "---\n\nСтатика и источники — по таблице полей "
+                     "источника page 2169849859;\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("отсылки к страницам источника" in r
+                              for r in rep)
+
+    def test_k7_frontmatter_only_is_clean(self, tmp_path):
+        # тест на НЕсрабатывание: page_ids во frontmatter легальны
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "card.md"
+        p.write_text("---\ntitle: 'К'\nconfluence_page_ids: [2169849859]\n"
+                     "---\n\nОбычное содержимое карточки без отсылок.\n",
+                     encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
