@@ -1735,3 +1735,38 @@ class TestExamCalibrationsK6K7:
                      encoding="utf-8")
         rep, ok = check_file(p)
         assert ok, rep
+
+
+class TestStripHistory:
+    """К-9: история изменений источника вырезается до всех сверок —
+    её кавычечные литералы не требуются в карточках."""
+
+    def test_history_literals_not_required(self, tmp_path):
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text(
+            '---\ntitle: "С"\n---\n\n'
+            "<table><tr><th>Дата</th><th>Описание</th><th>Автор</th></tr>"
+            '<tr><td>2024-01-01</td><td>исключен реквизит "Наименование '
+            'клиента"</td><td>И.</td></tr></table>\n\n'
+            'Контроль: значение "Сумма документа" обязательно.\n',
+            encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text('---\ntitle: "С"\ntype: control\n---\n\n'
+                        'Контроль: значение "Сумма документа" обязательно.\n',
+                        encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert ok, rep
+
+    def test_content_literals_still_required(self, tmp_path):
+        # тест на НЕсрабатывание: литералы вне истории требуются
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text('---\ntitle: "С"\n---\n\n'
+                       'Контроль: значение "Сумма документа" обязательно.\n',
+                       encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text('---\ntitle: "С"\ntype: control\n---\n\nпусто\n',
+                        encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert not ok and any("Сумма документа" in r for r in rep)

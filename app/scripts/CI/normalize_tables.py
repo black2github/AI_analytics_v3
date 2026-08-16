@@ -1753,15 +1753,30 @@ def apply_critic(text: str) -> str:
     return text
 
 
+_HISTORY_TABLE_RE = re.compile(
+    r"<table\b(?:(?!</table>).)*?<th[^>]*>\s*(?:Дата|Автор)\b"
+    r"(?:(?!</table>).)*?</table>", re.S | re.I)
+
+
+def strip_history(text: str) -> str:
+    """Вырезает HTML-таблицы истории изменений страницы (шапка с
+    «Дата»/«Автор») до всех сверок: история по канону не переносится,
+    а её кавычечные литералы («исключен реквизит "X"») ложно
+    требовались в карточках (К-9 экзамена inkasso, страница контролей).
+    Md-таблицы истории режет фильтр check_source_tables."""
+    return _HISTORY_TABLE_RE.sub("", text)
+
+
 def run_check(files: List[Path], source_path: Optional[Path],
               min_valid_pct: float = 95.0) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
     поведение, колонки); значения источника ищутся в объединении.
-    Источник сверяется в ЦЕЛЕВОМ виде (apply_critic)."""
+    Источник сверяется в ЦЕЛЕВОМ виде (strip_history + apply_critic)."""
     main_file = files[0]
-    src_text = (apply_critic(source_path.read_text(encoding="utf-8"))
+    src_text = (apply_critic(strip_history(
+        source_path.read_text(encoding="utf-8")))
                 if source_path is not None else None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
                             source_text=src_text,
