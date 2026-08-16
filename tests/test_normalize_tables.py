@@ -1612,3 +1612,23 @@ class TestExamCalibrations:
                "| Вторая строка | Ещё значение |\n")
         rep, ok = check_source_tables("Роль Банка, Вторая строка, Ещё значение\n", src)
         assert not ok and any("Новое условие" in r for r in rep)
+
+    TBL = ("| Краткое название формы (элемент) | Действие |\n|---|---|\n"
+           "| Журнал/Список | х |\n| Панель записи шаблонов | х |\n"
+           "| Форма ввода названия | х |\n| А/Б | х |\n")
+
+    def test_k4_readme_column_roles_skipped(self, tmp_path):
+        # К-4: README-реестр — колонные роли не применяются
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "README.md"
+        p.write_text("---\ntitle: 'Р'\n---\n\n" + self.TBL, encoding="utf-8")
+        rep, ok = check_file(p, column_roles=False)
+        assert ok and any("колонные роли" in r for r in rep)
+
+    def test_k4_regular_card_roles_still_apply(self, tmp_path):
+        # тест на НЕсрабатывание: у обычной карточки роли работают
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "card.md"
+        p.write_text("---\ntitle: 'К'\n---\n\n" + self.TBL, encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok

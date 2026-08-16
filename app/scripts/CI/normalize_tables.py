@@ -1591,7 +1591,8 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
 
 
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
-               source_text: Optional[str] = None) -> Tuple[List[str], bool]:
+               source_text: Optional[str] = None,
+               column_roles: bool = True) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -1639,7 +1640,16 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
             report.append(
                 f"маркер сокращения «{marker}» ×{cnt}: справочники и перечни "
                 f"источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА")
-    for i, (headers, rows) in enumerate(parse_md_tables(text)):
+    tables = list(parse_md_tables(text))
+    if not column_roles and tables:
+        # README-реестры: навигационные таблицы, роли параметрических
+        # колонок к ним неприменимы (К-4 экзамена inkasso: колонка
+        # «Краткое название формы (элемент…)» ложно распознана «путём»);
+        # полноту реестра держит сверка значений источника
+        report.append("README-реестр: колонные роли к навигационным "
+                      "таблицам не применяются")
+        tables = []
+    for i, (headers, rows) in enumerate(tables):
         low0 = _title_key(headers[0]) if headers else ""
         # «Код параметра» — каноническая колонка путей (XML через /, JSON
         # через .); именно «код параметра» — «Код отказа» путём не является
@@ -1711,7 +1721,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
     src_text = (source_path.read_text(encoding="utf-8")
                 if source_path is not None else None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
-                            source_text=src_text)
+                            source_text=src_text,
+                            column_roles=main_file.name.lower() != "readme.md")
     card_text = main_file.read_text(encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
