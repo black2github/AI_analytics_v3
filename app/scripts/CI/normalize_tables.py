@@ -1713,6 +1713,15 @@ def run_check(files: List[Path], source_path: Optional[Path],
     report.extend(ntf_report)
     ok = ok and ntf_ok
     if src_text is not None:
+        # сторож маркеров шагов — только для типов с таблицей шагов /
+        # поведением (process, agent, function, notification): на
+        # страницах прочих типов составные номера — нумерация секций и
+        # строк, не шаги (экзамен inkasso 2026-08-16: сущности МД с
+        # секциями 1.1… дали ложные «отсутствуют 72 из 72»). Тип не
+        # распознан — консервативно применяем.
+        m_type = re.search(r"^type:\s*([\w-]+)", card_text[:2000], re.M)
+        steps_apply = (m_type is None or m_type.group(1) in
+                       {"process", "agent", "function", "notification"})
         src_report, src_ok = check_source_tables(combined, src_text)
         # title сверяется и у README-реестров: он дословный из главной
         # страницы-оглавления, раз она есть (решение 2026-08-16 v2:
@@ -1721,7 +1730,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
         # расширенное наименование реестра живёт в H1)
         ttl_report, ttl_ok = check_title(card_text, src_text)
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
-        st_report, st_ok = check_step_markers(combined, src_text)
+        st_report, st_ok = (check_step_markers(combined, src_text)
+                            if steps_apply else ([], True))
         ql_report, ql_ok = check_quoted_literals(combined, src_text)
         report.extend(src_report)
         report.extend(ttl_report)

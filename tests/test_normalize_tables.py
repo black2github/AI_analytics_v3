@@ -1546,3 +1546,35 @@ class TestReadmeRegistryTitle:
         src.write_text(self.SRC, encoding="utf-8")
         rep, ok = run_check([cardf], src)
         assert not ok and any("расходится" in r for r in rep)
+
+
+class TestStepMarkersTypeScoped:
+    """Сторож маркеров шагов — только для типов с таблицей шагов;
+    на data-model составные номера — нумерация секций, не шаги
+    (экзамен inkasso 2026-08-16: ложные «отсутствуют 72 из 72»)."""
+
+    SRC = ("---\ntitle: 'С'\n---\n\n<table><tr><th>№</th><th>Атрибут</th>"
+           "</tr><tr><td><strong>1.1</strong></td><td>Поле А</td></tr>"
+           "<tr><td><strong>1.2</strong></td><td>Поле Б</td></tr>"
+           "<tr><td><strong>1.3</strong></td><td>Поле В</td></tr></table>\n")
+
+    def test_data_model_sections_not_steps(self, tmp_path):
+        from app.scripts.CI.normalize_tables import run_check
+        cardf = tmp_path / "ent-001.md"
+        cardf.write_text("---\nid: ENT-001\ntitle: 'С'\ntype: data-model\n"
+                         "---\n\nПоле А, Поле Б, Поле В\n", encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, ok = run_check([cardf], src)
+        assert ok, rep
+
+    def test_process_type_still_guarded(self, tmp_path):
+        # тест на НЕсрабатывание фильтра: у процессов маркеры сторожатся
+        from app.scripts.CI.normalize_tables import run_check
+        cardf = tmp_path / "prc-001.md"
+        cardf.write_text("---\nid: PRC-001\ntitle: 'С'\ntype: process\n"
+                         "---\n\nшаги потеряны\n", encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, ok = run_check([cardf], src)
+        assert not ok and any("маркеры шагов" in r for r in rep)
