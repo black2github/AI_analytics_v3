@@ -1790,3 +1790,43 @@ class TestK11LinkUrlParens:
         from app.scripts.CI.normalize_tables import _strip_markdown_links
         assert _strip_markdown_links("[текст](a.md) и [1] рядом") == \
             "текст и [1] рядом"
+
+
+class TestPrivilegeWarning:
+    """Волна A (Э-12): FUN-CL/BNK без привилегий в «Доступности» —
+    ПРЕДУПРЕЖДЕНИЕ (не брак); SYS-формула и карточки с привилегиями —
+    чисто."""
+
+    def _card(self, fid, dostup):
+        return (f"---\nid: {fid}\ntitle: 'Ф'\ntype: function\n---\n\n"
+                f"## Доступность\n\n{dostup}\n\n## Поведение\n\nтекст\n")
+
+    def test_cl_without_privileges_warned_not_failed(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card("FUN-CL-01", "Доступна всегда."),
+                     encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok
+        assert any(r.startswith("предупреждение") for r in rep)
+
+    def test_bnk_with_privilege_clean(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card(
+            "FUN-BNK-02",
+            "- **Роль и привилегия.** Код привилегии `X.VIEW`."),
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok and not any(r.startswith("предупреждение") for r in rep)
+
+    def test_sys_not_warned(self, tmp_path):
+        # тест на НЕсрабатывание: FUN-SYS сторож не трогает
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card(
+            "FUN-SYS-01",
+            "Системная функция; вызов с ТУЗ; роли и привилегии не "
+            "применяются."), encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok and not any(r.startswith("предупреждение") for r in rep)

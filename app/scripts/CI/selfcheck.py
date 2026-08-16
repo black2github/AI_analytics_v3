@@ -151,6 +151,11 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
                               f"({len(pids) - 1}) механически не сверяются "
                               "(сверка — по главной, первой в списке)")
 
+    def _warns(rep: List[str]) -> List[str]:
+        # предупреждения видимы и при ✓ (софт-сигналы, не влияют на
+        # вердикт: сторож привилегий Э-12 и будущие)
+        return [ln for ln in rep if ln.startswith("предупреждение")]
+
     for p, note in solo:
         rep, ok = _run([p], None)
         mark = "✓" if ok else "✗"
@@ -159,6 +164,8 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         report.append(f"{mark} {p.relative_to(docs)}: {note}")
         if not ok:
             report.extend(f"   {ln}" for ln in rep)
+        else:
+            report.extend(f"   {ln}" for ln in _warns(rep))
 
     for pid, files in sorted(groups.items()):
         src = idx[pid]
@@ -176,6 +183,8 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         report.append(f"{mark} {names} ← {src.name}")
         if not ok:
             report.extend(f"   {ln}" for ln in rep)
+        else:
+            report.extend(f"   {ln}" for ln in _warns(rep))
 
     # --- комплект-уровневые сторожа (срез 2) ---
     matrix = docs / "traceability-matrix.md"

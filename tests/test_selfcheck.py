@@ -202,3 +202,15 @@ def test_out_writes_full_utf8_report(tmp_path, monkeypatch, capsys):
     text = out.read_text(encoding="utf-8")
     assert "ИТОГО" in text and "✓" in text
     assert "ИТОГО" in capsys.readouterr().out
+
+
+def test_warning_visible_on_ok_file(tmp_path):
+    # предупреждения печатаются и при ✓ (софт-сигнал Э-12)
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/bank/f1.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф1'\ntype: function\n---\n\n"
+         "## Доступность\n\nДоступна всегда.\n")
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, None)
+    assert ok
+    assert any("предупреждение" in ln for ln in report)
