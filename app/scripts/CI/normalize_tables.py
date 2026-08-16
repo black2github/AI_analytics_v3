@@ -1711,14 +1711,33 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     return report, ok
 
 
+def apply_critic(text: str) -> str:
+    """ЦЕЛЕВОЙ текст источника: CriticMarkup-правки применяются —
+    добавления остаются содержимым (без маркеров и префикса задачи
+    «GBO-NNNNN: »), удаления выпадают, замены — новым текстом; обе
+    формы разметки (текстовая и HTML-span). К-5 экзамена inkasso:
+    гейт, требующий сырую разметку, провоцировал перенос маркеров в
+    чистовик (fun-sys-08 — «markup сохранён для прохождения гейта»)."""
+    text = re.sub(r"\{\+\+\s*(?:[A-ZА-Я]+-\d+(?:/\d+)*:?\s*)?(.*?)\+\+\}",
+                  r"\1", text, flags=re.S)
+    text = re.sub(r"\{--.*?--\}", "", text, flags=re.S)
+    text = re.sub(r"\{~~.*?~>(.*?)~~\}", r"\1", text, flags=re.S)
+    text = re.sub(r"<span[^>]*critic-del[^>]*>.*?</span>", "", text,
+                  flags=re.S | re.I)
+    text = re.sub(r"<span[^>]*critic-ins[^>]*>(.*?)</span>", r"\1", text,
+                  flags=re.S | re.I)
+    return text
+
+
 def run_check(files: List[Path], source_path: Optional[Path],
               min_valid_pct: float = 95.0) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
-    поведение, колонки); значения источника ищутся в объединении."""
+    поведение, колонки); значения источника ищутся в объединении.
+    Источник сверяется в ЦЕЛЕВОМ виде (apply_critic)."""
     main_file = files[0]
-    src_text = (source_path.read_text(encoding="utf-8")
+    src_text = (apply_critic(source_path.read_text(encoding="utf-8"))
                 if source_path is not None else None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
                             source_text=src_text,

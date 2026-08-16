@@ -1632,3 +1632,60 @@ class TestExamCalibrations:
         p.write_text("---\ntitle: 'К'\n---\n\n" + self.TBL, encoding="utf-8")
         rep, ok = check_file(p)
         assert not ok
+
+
+class TestApplyCritic:
+    """К-5: гейты сверяют ЦЕЛЕВОЙ текст источника — правки применены,
+    разметка не требуется в карточке (инцидент fun-sys-08: «markup
+    сохранён для прохождения гейта»)."""
+
+    def test_textual_forms_applied(self):
+        from app.scripts.CI.normalize_tables import apply_critic
+        s = ("до {++GBO-118742: добавлено++} середина {--удалено--} "
+             "конец {~~старое~>новое~~}")
+        assert apply_critic(s) == "до добавлено середина  конец новое"
+
+    def test_html_forms_applied(self):
+        from app.scripts.CI.normalize_tables import apply_critic
+        s = ('a <span class="critic-del" data-task="GBO-1">старый</span>'
+             '<span class="critic-ins" data-task="GBO-1">новый</span> b')
+        assert apply_critic(s) == "a новый b"
+
+    def test_gate_requires_target_not_markup(self):
+        from app.scripts.CI.normalize_tables import run_check
+        import pathlib, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d)
+            src = p / "src.md"
+            src.write_text(
+                "---\ntitle: 'С'\n---\n\n| Реквизит | Правило |\n|---|---|\n"
+                "| Поле А | {++GBO-118742: **Если** согласие есть++} |\n"
+                "| Поле Б | {--устаревшее правило--} обычный текст |\n",
+                encoding="utf-8")
+            card = p / "card.md"
+            card.write_text(
+                "---\ntitle: 'С'\ntype: function\n---\n\n"
+                "Поле А: **Если** согласие есть. Поле Б: обычный текст\n",
+                encoding="utf-8")
+            rep, ok = run_check([card], src)
+            assert ok, rep
+
+    def test_missing_target_content_still_caught(self):
+        # тест на НЕсрабатывание: целевое содержимое добавления обязано
+        # присутствовать — К-5 не превращается в дыру
+        from app.scripts.CI.normalize_tables import run_check
+        import pathlib, tempfile
+        with tempfile.TemporaryDirectory() as d:
+            p = pathlib.Path(d)
+            src = p / "src.md"
+            src.write_text(
+                "---\ntitle: 'С'\n---\n\n| Реквизит | Правило |\n|---|---|\n"
+                "| Поле А | {++GBO-118742: важное новое правило++} |\n"
+                "| Поле Б | второе значение строки |\n",
+                encoding="utf-8")
+            card = p / "card.md"
+            card.write_text("---\ntitle: 'С'\ntype: function\n---\n\n"
+                            "Поле А и Поле Б: второе значение строки\n",
+                            encoding="utf-8")
+            rep, ok = run_check([card], src)
+            assert not ok and any("важное новое правило" in r for r in rep)
