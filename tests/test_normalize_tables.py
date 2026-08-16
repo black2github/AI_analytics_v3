@@ -1770,3 +1770,23 @@ class TestStripHistory:
                         encoding="utf-8")
         rep, ok = run_check([card], src)
         assert not ok and any("Сумма документа" in r for r in rep)
+
+
+class TestK11LinkUrlParens:
+    """К-11: скобки внутри URL ссылки («(исходящее)», «(2).xsd») — URL
+    закрывается балансом, хвосты путей не остаются в тексте ячейки
+    (OQ-033 экзамена: EXTINT-001, «Применение»/«Форматы»)."""
+
+    def test_parens_in_url_no_tails(self):
+        from app.scripts.CI.normalize_tables import _strip_markdown_links
+        v = ('см. [Функция выгрузки](../[РРКО_ИПИ]-Инкассовое-поручение-'
+             '(исходящее)/функция.md) и файл '
+             '[схема](xsd/pain.013.001.08(2).xsd) конец')
+        assert _strip_markdown_links(v) == \
+            "см. Функция выгрузки и файл схема конец"
+
+    def test_plain_links_and_cardinality_unchanged(self):
+        # тест на НЕсрабатывание: обычные ссылки и кратность [1] как раньше
+        from app.scripts.CI.normalize_tables import _strip_markdown_links
+        assert _strip_markdown_links("[текст](a.md) и [1] рядом") == \
+            "текст и [1] рядом"

@@ -906,7 +906,22 @@ def _strip_markdown_links(v: str) -> str:
                     break
             j += 1
         if j < n and j + 1 < n and v[j + 1] == "(":
-            url_end = v.find(")", j + 2)
+            # закрывающая скобка URL — тоже БАЛАНСОМ: пути и имена
+            # файлов Confluence несут внутренние скобки («(исходящее)»,
+            # «(2).xsd») — поиск первой «)» резал URL и оставлял хвосты
+            # в тексте ячейки (К-11 экзамена inkasso, OQ-033: EXTINT-001)
+            pdepth = 0
+            k = j + 1
+            url_end = -1
+            while k < n:
+                if v[k] == "(":
+                    pdepth += 1
+                elif v[k] == ")":
+                    pdepth -= 1
+                    if pdepth == 0:
+                        url_end = k
+                        break
+                k += 1
             if url_end != -1:
                 out.append(v[i + 1:j])
                 i = url_end + 1
