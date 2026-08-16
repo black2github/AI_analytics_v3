@@ -1832,6 +1832,31 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestStruckMarkerGuard:
+    """Н-7 (волна C): «%зачёркнуто%» — постфиксный маркер выгрузки, в
+    чистовике ему не место (инцидент scr-cl-02: инверсия смысла шага)."""
+
+    def test_marker_in_card_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "Шаг № 3 исключается %зачёркнуто%\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("%зачёркнуто%" in r for r in rep)
+
+    def test_tilde_strike_legal(self, tmp_path):
+        # тест на НЕсрабатывание: перенесённая семантика (~~…~~) — не брак
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "~~Шаг № 3 исключается~~ (зачёркнуто источником — "
+            "неактуально).\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+
 class TestK10DuplicateHeaders:
     """К-10 (волна B): повторяющийся непустой заголовок шапки — сетка
     нормализатора как формат, брак; протяжки в данных легальны."""
