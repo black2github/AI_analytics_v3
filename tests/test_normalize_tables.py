@@ -1830,3 +1830,41 @@ class TestPrivilegeWarning:
             "применяются."), encoding="utf-8")
         rep, ok = check_file(p)
         assert ok and not any(r.startswith("предупреждение") for r in rep)
+
+
+class TestK10DuplicateHeaders:
+    """К-10 (волна B): повторяющийся непустой заголовок шапки — сетка
+    нормализатора как формат, брак; протяжки в данных легальны."""
+
+    def test_duplicate_headers_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-20\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| № | Название параметра | Название параметра | Тип |\n"
+            "|---|---|---|---|\n| 1 | Секция | Секция | Структура |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("повторяющиеся заголовки" in r for r in rep)
+
+    def test_data_row_spans_legal(self, tmp_path):
+        # тест на НЕсрабатывание: протяжка в данных — не брак
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-20\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| № | Наименование параметра | Тип |\n|---|---|---|\n"
+            "| 1 | Секция | Секция |\n| 1.1 | Поле | GUID |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+    def test_readme_registry_not_checked(self, tmp_path):
+        # README-реестры — вне колонных проверок (К-4), дубли не флагуются
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "README.md"
+        p.write_text("---\ntitle: 'Р'\n---\n\n"
+                     "| Ա | X | X |\n|---|---|---|\n| 1 | а | б |\n",
+                     encoding="utf-8")
+        rep, ok = check_file(p, column_roles=False)
+        assert ok, rep
