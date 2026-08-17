@@ -1645,6 +1645,19 @@ class TestApplyCritic:
              "конец {~~старое~>новое~~}")
         assert apply_critic(s) == "до добавлено середина  конец новое"
 
+    def test_unknown_task_prefix_stripped(self):
+        # К-15: экспортёрский префикс правки без номера задачи
+        # (UNKNOWN-<hex-цвет>:) — тоже разметка, не текст
+        from app.scripts.CI.normalize_tables import apply_critic
+        s = "{++UNKNOWN-ff0000: Статус документа. Ссылка++}"
+        assert apply_critic(s) == "Статус документа. Ссылка"
+
+    def test_unknown_like_content_not_stripped(self):
+        # тест на НЕсрабатывание: UNKNOWN вне разметки — содержимое
+        from app.scripts.CI.normalize_tables import apply_critic
+        s = "плейсхолдер UNKNOWN-ff0000: остаётся текстом"
+        assert apply_critic(s) == s
+
     def test_html_forms_applied(self):
         from app.scripts.CI.normalize_tables import apply_critic
         s = ('a <span class="critic-del" data-task="GBO-1">старый</span>'
@@ -1830,6 +1843,42 @@ class TestPrivilegeWarning:
             "применяются."), encoding="utf-8")
         rep, ok = check_file(p)
         assert ok and not any(r.startswith("предупреждение") for r in rep)
+
+
+class TestK16BlankLineBreaksTable:
+    """К-16: пустая строка внутри pipe-таблицы = разрыв (хвост рендерится
+    плоско); пустая строка между СОСЕДНИМИ таблицами легальна."""
+
+    def test_blank_after_separator_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
+            "| Параметр | Значение |\n|---|---|\n\n"
+            "| Таблица БД | `x` |\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("разрывает таблицу" in r for r in rep)
+
+    def test_blank_between_data_rows_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
+            "| А | Б |\n|---|---|\n| 1 | 2 |\n\n| 3 | 4 |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("разрывает таблицу" in r for r in rep)
+
+    def test_adjacent_tables_legal(self, tmp_path):
+        # тест на НЕсрабатывание: две таблицы подряд через пустую строку
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
+            "| А | Б |\n|---|---|\n| 1 | 2 |\n\n"
+            "| В | Г |\n|---|---|\n| 3 | 4 |\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
 
 
 class TestCleanDocumentGuard:
