@@ -174,6 +174,31 @@ def test_oq_disorder_propagates(tmp_path):
                           for ln in report)
 
 
+def test_oq_page_refs_warned_softly(tmp_path):
+    # К-17: page_id в тексте OQ — предупреждение при ✓-вердикте
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    make(docs / "open-questions.md",
+         "## OQ-001\n\n**Вопрос:** страница 2169849344 не перенесена.\n")
+    report, ok = selfcheck.run(docs, None)
+    assert ok, report
+    assert any("предупреждение" in ln and "2169849344" in ln
+               for ln in report)
+
+
+def test_feedback_register_order_wired(tmp_path):
+    # цикл обратной связи: реестр FB-NN сторожится диспетчером
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    make(tmp_path / "feedback.md",
+         "## FB-001. А\n\n## FB-003. Б\n\n## FB-002. В\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("реестр замечаний команды" in ln for ln in report)
+
+
 def test_coverage_informational_not_blocking(tmp_path):
     # непокрытая страница — информация (остаток конвейера), не брак
     docs, srcs = tmp_path / "docs", tmp_path / "conf"

@@ -1647,6 +1647,32 @@ def blank_table_breaks(lines: List[str]) -> List[int]:
     return out
 
 
+_OQ_PAGE_WORD_RE = re.compile(r"page[_ ]?id|confluence", re.I)
+_OQ_PAGE_NUM_RE = re.compile(r"(?<![-\w.])\d{9,10}(?![-\w.])")
+
+
+def check_oq_page_refs(md_path: Path) -> Tuple[List[str], bool]:
+    """К-17 (2026-08-17): page_id в ТЕКСТАХ open-questions — носители
+    page_id только frontmatter карточек и матрица; страница источника в
+    OQ именуется title дословно + файлом выгрузки. ПРЕДУПРЕЖДЕНИЕ, не
+    брак: легаси-фон старых записей (locks 23, file-storage 18 строк)
+    вычищается при будущих касаниях, жёсткий брак заставил бы
+    переписывать историю реестров разом (ужесточение — после вычистки
+    фона, по механике серой зоны волны D)."""
+    if not md_path.is_file():
+        return [], True
+    warns: List[str] = []
+    for i, ln in enumerate(
+            md_path.read_text(encoding="utf-8",
+                              errors="replace").splitlines(), 1):
+        if _OQ_PAGE_WORD_RE.search(ln) or _OQ_PAGE_NUM_RE.search(ln):
+            warns.append(
+                f"предупреждение: строка {i}: page_id/отсылка к Confluence "
+                "в тексте реестра — страница источника именуется title + "
+                f"файлом выгрузки: {ln.strip()[:60]!r}")
+    return warns[:20], True
+
+
 def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
     """Структурная целостность таблиц СЛУЖЕБНОГО реестра (матрица,
     open-questions): только К-16 (разрывы пустой строкой) — колонные

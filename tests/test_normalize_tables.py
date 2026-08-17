@@ -1845,6 +1845,35 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK17OqPageRefs:
+    """К-17: page_id/отсылки к Confluence в текстах open-questions —
+    предупреждение (носители page_id — frontmatter и матрица)."""
+
+    def test_page_id_and_bare_number_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_oq_page_refs
+        p = tmp_path / "open-questions.md"
+        p.write_text(
+            "## OQ-001\n\n**Вопрос:** страница confluence_page_id "
+            "2169849344 не перенесена.\n\n- 2169849965 — Функция X\n",
+            encoding="utf-8")
+        rep, ok = check_oq_page_refs(p)
+        assert ok  # софт-сигнал, вердикт не меняет
+        assert len(rep) == 2
+        assert all(r.startswith("предупреждение") for r in rep)
+
+    def test_task_ids_dates_titles_clean(self, tmp_path):
+        # тест на НЕсрабатывание: GBO-номера, даты, title + файл выгрузки
+        from app.scripts.CI.normalize_tables import check_oq_page_refs
+        p = tmp_path / "open-questions.md"
+        p.write_text(
+            "## OQ-002\n\n**Вопрос:** задача GBO-79044 от 2026-08-17; "
+            "страница «[X] Функция импорта» "
+            "(sources/выгрузка/страница.md) не покрыта.\n",
+            encoding="utf-8")
+        rep, ok = check_oq_page_refs(p)
+        assert ok and not rep, rep
+
+
 class TestK16BlankLineBreaksTable:
     """К-16: пустая строка внутри pipe-таблицы = разрыв (хвост рендерится
     плоско); пустая строка между СОСЕДНИМИ таблицами легальна."""

@@ -216,8 +216,19 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         oq = docs.parent / "open-questions.md"
     rep, ok = _safe(ld.check_oq_order, oq)
     all_ok = all_ok and ok
-    if rep:
+    # К-17: page_id в текстах OQ — софт-сигнал (носители page_id — только
+    # frontmatter и матрица; ужесточение после вычистки легаси-фона)
+    wrep, _ = _safe(nt.check_oq_page_refs, oq)
+    if rep or wrep:
         report.append(("✓" if ok else "✗") + " реестр открытых вопросов:")
+        report.extend(f"   {ln}" for ln in rep)
+        report.extend(f"   {ln}" for ln in wrep)
+    # реестр замечаний команды (цикл обратной связи, модель 2026-08-17):
+    # feedback.md живёт в КОРНЕ репозитория отдачи; файла нет — ок
+    rep, ok = _safe(ld.check_feedback_order, docs.parent / "feedback.md")
+    all_ok = all_ok and ok
+    if rep:
+        report.append(("✓" if ok else "✗") + " реестр замечаний команды:")
         report.extend(f"   {ln}" for ln in rep)
     rep, ok = _safe(ld.check_config_params, docs)
     all_ok = all_ok and ok

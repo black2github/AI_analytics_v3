@@ -132,16 +132,22 @@ def coverage_report(sources: Path, output: Path):
     pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
     uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
     lines: List[str] = []
-    lines.append(f"страниц с page_id: {len(pages)}; "
+    lines.append(f"страниц выгрузки: {len(pages)}; "
                  f"покрыто артефактами: {len(pages) - len(uncovered)}; "
                  f"НЕ покрыто: {len(uncovered)}")
+    # К-17 (2026-08-17): блок непокрытых печатается БЕЗ page_id — в
+    # формате, пригодном для прямого копирования в open-questions
+    # («title — файл выгрузки»). Язык прибора диктует язык документа:
+    # прежний формат «page_id — title» исполнители копировали в OQ как
+    # есть, а page_id в текстах документов запрещён (носители — только
+    # frontmatter и матрица). page_id страницы остаётся в её frontmatter.
     for pid, p in sorted(uncovered.items(), key=lambda kv: str(kv[1])):
         par = parents.get(pid)
         mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
                 if par and par in covered else "")
         ttl = source_title(p)
-        name = f" ({ttl})" if ttl else ""
-        lines.append(f"  - [{pid}] {p.relative_to(sources)}{name}{mark}")
+        name = ttl if ttl else p.stem
+        lines.append(f"  - {name} — {p.relative_to(sources)}{mark}")
     if no_id:
         lines.append(f"страниц БЕЗ confluence_page_id (дефект выгрузки): "
                      f"{len(no_id)}")

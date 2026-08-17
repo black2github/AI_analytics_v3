@@ -56,6 +56,22 @@ def test_source_title(tmp_path):
     assert source_title(r).endswith("блокировках Н2Н")
 
 
+def test_report_uncovered_without_page_id(tmp_path):
+    # К-17: блок непокрытых — «title — файл выгрузки», БЕЗ page_id
+    # (язык прибора диктует язык документа: прежний формат копировался
+    # исполнителями в open-questions как есть)
+    from app.scripts.CI.source_coverage import coverage_report
+    src = tmp_path / "src"; out = tmp_path / "out"; out.mkdir()
+    make(src / "стр.md",
+         "---\ntitle: '[X] Функция импорта'\n"
+         "confluence_page_id: '2169849965'\n---\n# с\n")
+    lines, n = coverage_report(src, out)
+    assert n == 1
+    joined = "\n".join(lines)
+    assert "[X] Функция импорта — стр.md" in joined
+    assert "2169849965" not in joined
+
+
 def test_full_coverage_ok(tmp_path):
     # тест на НЕсрабатывание: всё покрыто — пусто во всех списках
     src = tmp_path / "src"; out = tmp_path / "out"
