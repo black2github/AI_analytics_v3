@@ -203,22 +203,39 @@ def check_config_params(docs_root: Path) -> Tuple[List[str], bool]:
     return [], True
 
 
-def check_oq_order(oq_path: Path) -> Tuple[List[str], bool]:
-    """Реестр open-questions — append-only: номера записей монотонно
-    возрастают по позиции в файле (вставка в середину и перемещение
-    записей при правке — брак; трёхкратный инцидент, третий —
-    src-locks 2026-08-15: закрытая запись переехала в конец)."""
-    if not oq_path.is_file():
+_FB_NUM_RE = re.compile(r"^##\s+FB-(\d+)\b", re.M)
+
+
+def _check_register_order(path: Path, num_re, prefix: str,
+                          name: str) -> Tuple[List[str], bool]:
+    """Общий сторож append-only реестров записей «## <PREFIX>-NN»:
+    номера монотонно возрастают по позиции в файле; вставка в середину
+    и перемещение записей при правке — брак."""
+    if not path.is_file():
         return [], True
-    nums = [int(m.group(1)) for m in _OQ_NUM_RE.finditer(
-        oq_path.read_text(encoding="utf-8", errors="replace"))]
+    nums = [int(m.group(1)) for m in num_re.finditer(
+        path.read_text(encoding="utf-8", errors="replace"))]
     bad = [(a, b) for a, b in zip(nums, nums[1:]) if b < a]
     if bad:
-        return [f"open-questions: порядок реестра нарушен (append-only): "
-                + ", ".join(f"OQ-{b:03d} стоит после OQ-{a:03d}"
+        return [f"{name}: порядок реестра нарушен (append-only): "
+                + ", ".join(f"{prefix}-{b:03d} стоит после {prefix}-{a:03d}"
                             for a, b in bad[:3]) + " ✗"], False
-    return [f"open-questions: порядок реестра append-only соблюдён "
+    return [f"{name}: порядок реестра append-only соблюдён "
             f"({len(nums)} записей) ✓"], True
+
+
+def check_oq_order(oq_path: Path) -> Tuple[List[str], bool]:
+    """Реестр open-questions — append-only (трёхкратный инцидент,
+    третий — src-locks 2026-08-15: закрытая запись переехала в конец)."""
+    return _check_register_order(oq_path, _OQ_NUM_RE, "OQ",
+                                 "open-questions")
+
+
+def check_feedback_order(fb_path: Path) -> Tuple[List[str], bool]:
+    """Реестр замечаний команды feedback.md (цикл обратной связи,
+    модель принята 2026-08-17) — та же дисциплина, что у OQ: записи
+    FB-NN append-only, статусы правятся на месте."""
+    return _check_register_order(fb_path, _FB_NUM_RE, "FB", "feedback")
 
 
 def main() -> int:
@@ -232,9 +249,17 @@ def main() -> int:
     ap.add_argument("--strict", action="store_true")
     args = ap.parse_args()
     report, ok = check(args.matrix, args.docs)
-    oq_report, oq_ok = check_oq_order(args.docs / "open-questions.md")
+    oq = args.docs / "open-questions.md"
+    if not oq.is_file():
+        oq = args.docs.parent / "open-questions.md"
+    oq_report, oq_ok = check_oq_order(oq)
     report.extend(oq_report)
     ok = ok and oq_ok
+    # feedback.md живёт в корне репозитория (уровень сервиса, вне docs/)
+    fb_report, fb_ok = check_feedback_order(
+        args.docs.parent / "feedback.md")
+    report.extend(fb_report)
+    ok = ok and fb_ok
     cp_report, cp_ok = check_config_params(args.docs)
     report.extend(cp_report)
     ok = ok and cp_ok

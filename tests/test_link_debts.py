@@ -125,3 +125,24 @@ def test_range_expansion_checks_both(tmp_path):
          "---\nid: B\ntitle: 'Ф2'\n---\nдругой текст\n")
     report, ok = check(docs / "traceability-matrix.md", docs)
     assert not ok and any("fun-bnk-02" in r for r in report)
+
+
+def test_feedback_order_violation_caught(tmp_path):
+    # feedback.md — та же append-only дисциплина, что у OQ (цикл
+    # обратной связи команд, модель принята 2026-08-17)
+    from app.scripts.CI.link_debts import check_feedback_order
+    p = tmp_path / "feedback.md"
+    make(p, "## FB-01. А\n\n## FB-03. Б\n\n## FB-02. В\n")
+    report, ok = check_feedback_order(p)
+    assert not ok and "FB-002 стоит после FB-003" in report[0]
+
+
+def test_feedback_order_ok_and_missing_file(tmp_path):
+    # тест на НЕсрабатывание: порядок соблюдён; файла нет — не брак
+    from app.scripts.CI.link_debts import check_feedback_order
+    p = tmp_path / "feedback.md"
+    make(p, "## FB-01. А\n\n## FB-02. Б\n")
+    report, ok = check_feedback_order(p)
+    assert ok and "feedback" in report[0] and "соблюдён" in report[0]
+    r2, ok2 = check_feedback_order(tmp_path / "нет.md")
+    assert ok2 and not r2
