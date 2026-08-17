@@ -1619,6 +1619,47 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
     return lits
 
 
+_TABLE_SEP_RE = re.compile(r"^\|[\s\-:|]+\|?\s*$")
+
+
+def blank_table_breaks(lines: List[str]) -> List[int]:
+    """Номера (1-based) пустых строк, разрывающих pipe-таблицу: markdown
+    рендерит хвост плоским текстом, содержимое при этом цело и сверка
+    значений молчит (К-16: ent-002 «Привязка к реализации»; матрица
+    exam-run1 — разрыв внесён LLM-исполнителем захода 4 при дописывании
+    блока строк реестра с ведущей пустой строкой). Легальна пустая
+    строка МЕЖДУ соседними таблицами — следующий блок начинается своей
+    шапкой (строка + разделитель |---|)."""
+    out: List[int] = []
+    for k in range(1, len(lines) - 1):
+        if lines[k].strip():
+            continue
+        prev = lines[k - 1].strip()
+        nxt = next((lines[j].strip() for j in range(k + 1, len(lines))
+                    if lines[j].strip()), "")
+        if not (prev.startswith("|") and nxt.startswith("|")):
+            continue
+        j = next(j for j in range(k + 1, len(lines)) if lines[j].strip())
+        nxt2 = lines[j + 1].strip() if j + 1 < len(lines) else ""
+        if _TABLE_SEP_RE.match(nxt2):
+            continue  # новая таблица с собственной шапкой — легально
+        out.append(k + 1)
+    return out
+
+
+def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
+    """Структурная целостность таблиц СЛУЖЕБНОГО реестра (матрица,
+    open-questions): только К-16 (разрывы пустой строкой) — колонные
+    роли и литералы к реестрам не применяются (К-4)."""
+    lines = md_path.read_text(encoding="utf-8").splitlines()
+    breaks = blank_table_breaks(lines)
+    if not breaks:
+        return [], True
+    return [f"строка {k}: пустая строка разрывает таблицу реестра — "
+            "хвост рендерится плоским текстом ✗ НИЖЕ ПОРОГА"
+            for k in breaks], False
+
+
 # --- Сторож чистовика (волна D, Э-6) ---------------------------------
 # Карточка комплекта не должна нести: битые относительные ссылки, ссылки
 # вне docs/ (в т.ч. на выгрузку sources/), изображения, critic-маркеры,
@@ -1779,28 +1820,13 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                 f"✗ НИЖЕ ПОРОГА: {s[:70]!r}")
 
     # К-16 (2026-08-17): ПУСТАЯ строка внутри pipe-таблицы рвёт её —
-    # markdown рендерит хвост плоским текстом (ent-002 «Привязка к
-    # реализации»: пустая строка после |---| оторвала строку данных;
-    # найдено глазами пользователя — содержимое цело, сверка значений
-    # молчит, ломается только структура). Легальный случай: пустая
-    # строка МЕЖДУ соседними таблицами — следующий блок начинается
-    # валидной шапкой (строка + разделитель |---|).
-    _SEP_RE = re.compile(r"^\|[\s\-:|]+\|?\s*$")
-    for k in range(1, len(lines) - 1):
-        if lines[k].strip():
-            continue
-        prev = lines[k - 1].strip()
-        nxt = next((lines[j].strip() for j in range(k + 1, len(lines))
-                    if lines[j].strip()), "")
-        if not (prev.startswith("|") and nxt.startswith("|")):
-            continue
-        j = next(j for j in range(k + 1, len(lines)) if lines[j].strip())
-        nxt2 = lines[j + 1].strip() if j + 1 < len(lines) else ""
-        if _SEP_RE.match(nxt2):
-            continue  # новая таблица с собственной шапкой — легально
+    # общий скан blank_table_breaks (используется и для служебных
+    # реестров: матрица inkasso несла разрыв с захода 4 — служебные
+    # файлы шли мимо check_file, находка пользователя 2026-08-17).
+    for k in blank_table_breaks(lines):
         ok = False
         report.append(
-            f"строка {k + 1}: пустая строка разрывает таблицу — хвост "
+            f"строка {k}: пустая строка разрывает таблицу — хвост "
             "рендерится плоским текстом (продолжение таблицы — без "
             "пустых строк) ✗ НИЖЕ ПОРОГА")
     # Порядок колонок справочников НЕ проверяется: решение пользователя

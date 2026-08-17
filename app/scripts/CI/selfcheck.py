@@ -118,9 +118,20 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if p.name in _SERVICE_FILES:
-            counts["⚠"] += 1
-            report.append(f"⚠ {rel}: служебный реестр — сторож среза 2 "
-                          "(link_debts), сверке нормализатора не подлежит")
+            # содержательно реестр сторожит link_debts (срез 2), но
+            # структурную целостность таблиц проверяем и здесь: разрыв
+            # матрицы жил с захода 4 незамеченным (К-16, 2026-08-17)
+            rep, ok = _safe(nt.check_service_table_integrity, p)
+            if ok:
+                counts["⚠"] += 1
+                report.append(f"⚠ {rel}: служебный реестр — сторож среза 2 "
+                              "(link_debts), сверке нормализатора не "
+                              "подлежит")
+            else:
+                counts["✗"] += 1
+                all_ok = False
+                report.append(f"✗ {rel}: служебный реестр — таблицы битые")
+                report.extend(f"   {ln}" for ln in rep)
             continue
         fm = read_frontmatter(p)
         if fm is None:

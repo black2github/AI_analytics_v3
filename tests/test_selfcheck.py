@@ -204,6 +204,20 @@ def test_out_writes_full_utf8_report(tmp_path, monkeypatch, capsys):
     assert "ИТОГО" in capsys.readouterr().out
 
 
+def test_service_registry_broken_table_flagged(tmp_path):
+    # К-16 на служебных реестрах: разрыв таблицы матрицы = брак (жил
+    # незамеченным — служебные файлы шли мимо нормализатора)
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make(docs / "traceability-matrix.md",
+         "# Матрица\n\n| ID | Тип | Наименование | Файл |\n"
+         "|---|---|---|---|\n| A-1 | function | Ф1 | f1.md |\n\n"
+         "| A-2 | function | Ф2 | f2.md |\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("таблицы битые" in ln for ln in report)
+
+
 def test_clean_document_guard_wired(tmp_path):
     # волна D: сторож чистовика доезжает через диспетчер — битая ссылка
     # в карточке = брак файла; серая http-ссылка = предупреждение при ✓
