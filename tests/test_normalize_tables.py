@@ -1845,6 +1845,49 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK19ExampleValuesAbsent:
+    """К-19 (data-model): значения примеров источника НЕ должны попадать
+    в карточку — ловится и частичный вырез (хвост примера); в function
+    примеры легитимны, сторож не применяется."""
+
+    _SRC = ('---\ntitle: X\n---\n\n'
+            '<td><p>Назначение платежа с указанием ФЗ</p>'
+            '<p>Пример: Оплата просроченного лизингового платежа по '
+            'договору лизинга № 1122р/2л от 10.03.2022</p>'
+            '<p>Реквизит №24 в 762-П.</p></td>\n')
+
+    def test_example_tail_in_card_flagged(self):
+        from app.scripts.CI.normalize_tables import (
+            check_example_values_absent)
+        card = ("Назначение платежа с указанием ФЗ лизингового платежа "
+                "по договору лизинга № 1122р/2л Реквизит №24 в 762-П.")
+        rep, ok = check_example_values_absent(card, self._SRC)
+        assert not ok and any("значения примеров" in r for r in rep)
+
+    def test_clean_card_ok(self):
+        # тест на НЕсрабатывание: пример вырезан целиком
+        from app.scripts.CI.normalize_tables import (
+            check_example_values_absent)
+        card = "Назначение платежа с указанием ФЗ Реквизит №24 в 762-П."
+        rep, ok = check_example_values_absent(card, self._SRC)
+        assert ok, rep
+
+    def test_function_type_not_guarded(self, tmp_path):
+        # тест на НЕсрабатывание: у function примеры переносятся легитимно
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text(self._SRC, encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text(
+            "---\nid: FUN-CL-01\ntitle: 'X'\ntype: function\n---\n\n"
+            "Назначение платежа с указанием ФЗ\n"
+            "Пример: Оплата просроченного лизингового платежа по "
+            "договору лизинга № 1122р/2л от 10.03.2022\n"
+            "Реквизит №24 в 762-П.\n", encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert not any("значения примеров" in r for r in rep), rep
+
+
 class TestK18FlkAndExamples:
     """К-18 (Э-3): колонки ФЛК/«Пример» и значения внутри «Пример: …»
     гейтами не требуются (их судьба — долг create-controls / шаблонное

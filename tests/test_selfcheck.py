@@ -174,6 +174,39 @@ def test_oq_disorder_propagates(tmp_path):
                           for ln in report)
 
 
+def test_toc_as_main_page_flagged(tmp_path):
+    # К-20: README + карточки с доп. страницами в одной группе главного
+    # page_id = карточкам главной поставлено оглавление — брак мэппинга
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(srcs / "оглавление.md", source("[X] МД", "100000"))
+    make(srcs / "сущность.md", source("[X] Сущность", "200000"))
+    make(docs / "srs/data-model/README.md",
+         card("[X] МД", "100000").replace("X-01", "DM-000"))
+    make(docs / "srs/data-model/ent-001.md",
+         card("[X] Сущность", "'100000', '200000'"))
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, srcs)
+    assert not ok
+    assert any("главной указана страница-оглавление" in ln
+               for ln in report)
+
+
+def test_shared_main_without_readme_legal(tmp_path):
+    # тест на НЕсрабатывание К-20: межтиповая страница без README в
+    # группе (вкладки/пары карточек) — легитимная множественность
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    body = "| Код | Значение |\n|---|---|\n| A1 | Боевой код |\n"
+    make(srcs / "стр.md", source("[X] К1", "555555", body))
+    make(docs / "srs/data-model/k1.md",
+         card("[X] К1", "'555555', '777777'").replace("текст",
+                                                      "A1 Боевой код"))
+    make(docs / "srs/data-model/k2.md",
+         card("[X] К2", "555555").replace("текст", "A1 Боевой код"))
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+
+
 def test_oq_page_refs_warned_softly(tmp_path):
     # К-17: page_id в тексте OQ — предупреждение при ✓-вердикте
     docs = tmp_path / "docs"

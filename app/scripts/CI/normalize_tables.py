@@ -1190,6 +1190,52 @@ def _flk_example_cells(body: str) -> List[str]:
     return out
 
 
+def _example_value_segments(body: str) -> List[str]:
+    """Нормализованные ЗНАЧЕНИЯ примеров источника: текст после маркера
+    «Пример:» до конца абзаца/ячейки (сегменты короче 15 знаков — шум)."""
+    out: List[str] = []
+    for m in _EXAMPLE_MARK_RE.finditer(body):
+        tail = body[m.end():m.end() + 1200]
+        cut = len(tail)
+        for b in ("</p>", "</td>", "\n\n", "|", "</li>"):
+            i = tail.find(b)
+            if i != -1:
+                cut = min(cut, i)
+        seg = _norm_cell(tail[:cut])
+        if len(seg) >= 15:
+            out.append(seg)
+    return out
+
+
+def check_example_values_absent(card_text: str,
+                                source_text: str) -> Tuple[List[str], bool]:
+    """К-19 (2026-08-18, data-model): значения примеров источника НЕ
+    должны присутствовать в карточке — шаблон велит «значения из примера
+    не переносить», ПД в примерах обезличены. Ловит и ЧАСТИЧНЫЙ вырез
+    (хвост примера, вклеенный в описание: обрывок ФЗ в ent-001,
+    необезличенный «Выпискин О. О.» в ent-006 — найдено глазами
+    пользователя, прогон inkasso-run1): проверяются скользящие фрагменты
+    сегмента по 20 знаков."""
+    segs = _example_value_segments(source_text.split("---", 2)[-1])
+    if not segs:
+        return [], True
+    card_norm = _norm_cell(card_text)
+    hits: List[str] = []
+    for seg in segs:
+        for i in range(0, max(1, len(seg) - 19), 10):
+            frag = seg[i:i + 20]
+            if len(frag) >= 15 and frag in card_norm:
+                hits.append(frag)
+                break
+    if hits:
+        return [f"значения примеров источника перенесены в карточку "
+                f"×{len(hits)} — шаблон data-model: «значения из примера "
+                "не переносить» (абзац примера удаляется ЦЕЛИКОМ, ПД "
+                "обезличиваются) ✗ НИЖЕ ПОРОГА; фрагменты: "
+                + "; ".join(repr(h) for h in hits[:3])], False
+    return [], True
+
+
 def quoted_literals(source_text: str) -> List[str]:
     body = source_text.split("---", 2)[-1]
     headings = _source_headings(body)
@@ -2178,6 +2224,14 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
+        # (в screen-form/function примеры форматов переносятся легитимно)
+        ex_report, ex_ok = (check_example_values_absent(combined, src_text)
+                            if m_type is not None
+                            and m_type.group(1) == "data-model"
+                            else ([], True))
+        report.extend(ex_report)
+        ok = ok and ex_ok
         ql_report, ql_ok = check_quoted_literals(combined, src_text)
         report.extend(src_report)
         report.extend(ttl_report)

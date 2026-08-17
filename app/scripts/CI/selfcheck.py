@@ -115,6 +115,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     # перепись файлов комплекта (правило 2: каждый — ровно одна категория)
     groups: Dict[str, List[Path]] = {}
     solo: List[Tuple[Path, str]] = []  # (файл, пометка)
+    extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if p.name in _SERVICE_FILES:
@@ -158,6 +159,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
                           "в выгрузке — reverse-карточка без сверки, брак")
         else:
             groups.setdefault(pids[0], []).append(p)
+            extra_pids[p] = len(pids) - 1
             if len(pids) > 1:
                 report.append(f"i {rel}: доп. страницы-источники "
                               f"({len(pids) - 1}) механически не сверяются "
@@ -181,6 +183,31 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
 
     for pid, files in sorted(groups.items()):
         src = idx[pid]
+        # К-20 (2026-08-18): паразитирование на «доп. страницы не
+        # сверяются» — если группу по ОДНОМУ главному page_id делят
+        # README-реестр и карточки, у которых есть СВОИ доп. страницы,
+        # то карточкам главной поставлено оглавление каталога: их
+        # собственные страницы выпадают из сверки целиком (прогон
+        # inkasso-run1: 12 карточек «сверялись» против оглавления МД —
+        # фиктивная зелень). Главная страница карточки — та, чьим
+        # переносом она является; оглавление — главная только у README.
+        has_readme = any(f.name.lower() == "readme.md" for f in files)
+        misordered = [f for f in files
+                      if f.name.lower() != "readme.md"
+                      and extra_pids.get(f, 0) > 0] if has_readme else []
+        if misordered:
+            all_ok = False
+            for f in misordered:
+                counts["✗"] += 1
+                report.append(
+                    f"✗ {f.relative_to(docs)}: главной указана "
+                    f"страница-оглавление ({src.name}) — карточка не "
+                    "сверяется со СВОЕЙ страницей; порядок "
+                    "confluence_page_ids: главная страница карточки "
+                    "ПЕРВОЙ, оглавление — главная только у README")
+            files = [f for f in files if f not in misordered]
+            if not files:
+                continue
         rep, ok = _run(files, src, docs)
         # внутренние сторожа неглавных карточек группы — отдельно
         for extra in files[1:]:
