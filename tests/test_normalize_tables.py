@@ -1832,6 +1832,96 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK13HtmlCommentGuard:
+    """К-13 (анти-маскировка): HTML-коммент в чистовике = брак; значения
+    внутри комментов сверкой значений не «находятся» (контрольный
+    дозаход: обход гейта через <!-- selfcheck-coverage: … -->)."""
+
+    def test_comment_in_card_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "текст\n\n<!-- selfcheck-coverage: Назад · WEB · PDF -->\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("HTML-коммент" in r for r in rep)
+
+    def test_no_comment_clean(self, tmp_path):
+        # тест на НЕсрабатывание
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "обычный текст без комментов\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+    def test_value_only_in_comment_is_loss(self, tmp_path):
+        # интеграция: значение источника, спрятанное в коммент, потерей
+        # и остаётся — сверка значений комменты не видит
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text(
+            "---\ntitle: 'Э'\nconfluence_page_id: '111'\n---\n\n"
+            "| Код | Значение |\n|---|---|\n"
+            "| A1 | Боевой код |\n| B2 | Второй код |\n",
+            encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text(
+            "---\nid: X-01\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "A1 Боевой код упомянут честно\n\n"
+            "<!-- coverage: B2 · Второй код -->\n", encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert not ok
+        assert any("отсутствуют" in r for r in rep), rep
+
+
+class TestK12SurrogateParamCode:
+    """К-12: номера строк в колонке «Код параметра» — суррогат (правило
+    волны B: без технических имён источника код ПУСТОЙ)."""
+
+    def test_numeric_codes_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| Код параметра | Наименование параметра | Тип |\n"
+            "|---|---|---|\n"
+            "| 1 | ID \"Пользователь\" | GUID |\n"
+            "| 2.1 | Идентификатор объекта | GUID |\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("номера строк" in r for r in rep)
+
+    def test_paths_and_empty_clean(self, tmp_path):
+        # тест на НЕсрабатывание: пути и пустые коды легальны
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| Код параметра | Наименование параметра | Тип |\n"
+            "|---|---|---|\n"
+            "| `body.filter.date_from` | Дата с | Дата |\n"
+            "|  | ID \"Пользователь\" | GUID |\n"
+            "| `Тело запроса.file_id` | Файл | Строка |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+    def test_registry_number_column_untouched(self, tmp_path):
+        # тест на НЕсрабатывание: «№» реестра полей — не «Код параметра»
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: SCR-CL-02.1\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "| № | Блок | Поле | Тип | Обяз. |\n|---|---|---|---|---|\n"
+            "| 1 | — | FLD-1 «Заголовок» | Текст | — |\n"
+            "| 2.1 | Счёт | FLD-2 «Счёт» | Список | Да |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+
 class TestStruckMarkerGuard:
     """Н-7 (волна C): «%зачёркнуто%» — постфиксный маркер выгрузки, в
     чистовике ему не место (инцидент scr-cl-02: инверсия смысла шага)."""
