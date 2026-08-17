@@ -1845,6 +1845,66 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK18FlkAndExamples:
+    """К-18 (Э-3): колонки ФЛК/«Пример» и значения внутри «Пример: …»
+    гейтами не требуются (их судьба — долг create-controls / шаблонное
+    обезличивание ПД); прочие колонки и литералы — требуются."""
+
+    def test_flk_column_not_required_md(self):
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("---\ntitle: X\n---\n\n"
+               "| Атрибут | Тип | ФЛК |\n|---|---|---|\n"
+               "| Номер | Число | не более 6 знаков |\n"
+               "| Дата | Дата | только рабочие дни |\n")
+        card = "| Номер | Число |\n| Дата | Дата |\n"
+        rep, ok = check_source_tables(card, src)
+        assert ok, rep
+
+    def test_other_columns_still_required(self):
+        # тест на НЕсрабатывание фильтра: потеря типа — брак по-прежнему
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("---\ntitle: X\n---\n\n"
+               "| Атрибут | Тип | ФЛК |\n|---|---|---|\n"
+               "| Номер | Число | не более 6 знаков |\n"
+               "| Дата | Дата и время | — |\n")
+        card = "| Номер | Число |\n| Дата |  |\n"
+        rep, ok = check_source_tables(card, src)
+        assert not ok and any("отсутствуют" in r for r in rep)
+
+    def test_literal_inside_example_not_required(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<td><p>Запрос</p><p><strong>Пример:</strong> '
+               '{"userFio":"Выпискин О. О."}</p></td>\n'
+               'кнопка "Сохранить" обязательна\n')
+        card = "перенесено: кнопка Сохранить\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert ok, rep
+
+    def test_literal_in_next_cell_after_example_required(self):
+        # тест на НЕсрабатывание: граница ячейки после «Пример:» —
+        # следующий литерал снова требуется
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<td><strong>Пример:</strong> просто текст примера</td>\n'
+               '<td>статус "Отклонено банком" обязателен</td>\n')
+        card = "карточка без статуса\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert not ok and any("отсутствуют" in r for r in rep)
+
+    def test_flk_cell_quotes_not_required_html(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<table><tbody>'
+               '<tr><th>Атрибут</th><th>ФЛК</th></tr>'
+               '<tr><td>Номер</td><td>Формат "000001" по правилам '
+               'УФЭБС</td></tr>'
+               '</tbody></table>\n')
+        card = "Номер\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert ok, rep
+
+
 class TestK17OqPageRefs:
     """К-17: page_id/отсылки к Confluence в текстах open-questions —
     предупреждение (носители page_id — frontmatter и матрица)."""

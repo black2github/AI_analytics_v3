@@ -1163,9 +1163,37 @@ def _source_headings(body: str) -> set:
     return hs
 
 
+_FLK_EXAMPLE_HDR_RE = re.compile(r"\s*(флк|пример)")
+_EXAMPLE_MARK_RE = re.compile(r"(?<![а-яё])пример[ы]?\s*[:.]", re.I)
+
+
+def _flk_example_cells(body: str) -> List[str]:
+    """Нормализованные тексты ячеек колонок «ФЛК» / «Пример(ы)» всех
+    таблиц источника (md и HTML-сетки) — их содержимое в модель не
+    переносится (К-18, Э-3), кавычечный сторож его не требует."""
+    out: List[str] = []
+
+    def take(headers: List[str], rows: List[List[str]]) -> None:
+        idx = [i for i, h in enumerate(headers)
+               if _FLK_EXAMPLE_HDR_RE.match(_norm_cell(h))]
+        for r in rows:
+            for i in idx:
+                if i < len(r) and r[i].strip():
+                    out.append(_norm_cell(r[i]))
+
+    for hdr, rows in parse_md_tables(body):
+        take(hdr, rows)
+    for t in find_top_tables(body):
+        grid = expand_grid(t)
+        if len(grid) > 1:
+            take(grid[0], grid[1:])
+    return out
+
+
 def quoted_literals(source_text: str) -> List[str]:
     body = source_text.split("---", 2)[-1]
     headings = _source_headings(body)
+    flk_cells = _flk_example_cells(body)
     seen, out = set(), []
     for m in _QUOTED_RE.finditer(body):
         v = m.group(1).strip()
@@ -1188,6 +1216,22 @@ def quoted_literals(source_text: str) -> List[str]:
         # вписать мусорный токен из якоря ради гейта)
         lp = pre.rfind("](")
         if lp != -1 and ")" not in pre[lp:]:
+            continue
+        # К-18 (2026-08-18, Э-3): значение ВНУТРИ примера — по шаблону
+        # «значения из примера не переносить», ПД в примерах обезличены
+        # (чек-лист data-model); маркер «Пример:» перед литералом без
+        # границы ячейки/абзаца ('userFio':'Выпискин О. О.' в JSON)
+        tail = pre[-600:]
+        marks = list(_EXAMPLE_MARK_RE.finditer(tail))
+        if marks:
+            after = tail[marks[-1].end():]
+            if ("</td>" not in after and "</p>" not in after
+                    and "\n\n" not in after and "|" not in after):
+                continue
+        # К-18: ячейка колонки ФЛК/Пример — содержимое не переносится,
+        # судьба — обязательный долг create-controls (шаблон data-model)
+        nv = _norm_cell(v)
+        if any(nv and nv in c for c in flk_cells):
             continue
         # структурная отсылка «см. раздел "..."» — навигация по источнику,
         # карточка переструктурирована по шаблону: не требуется
@@ -1529,6 +1573,11 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
         # 2026-08-14, конфликт шаблон↔гейт).
         if "figma" in hdr_norm or "размерност" in hdr_norm:
             continue
+        # К-18 (2026-08-18, Э-3): колонки ФЛК и «Пример(ы)» страниц МД в
+        # модель не переносятся (их судьба — обязательный долг
+        # create-controls по шаблону) — их ячейки гейт не требует
+        skip_cols = {i for i, h in enumerate(hdr)
+                     if re.match(r"\s*(флк|пример)", _norm_cell(h))}
         missing: List[str] = []
         for row in rows:
             # Строка с вложением (пример Запрос.xml/Ответ.xml) — целиком в
@@ -1543,7 +1592,9 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
             # (решение по шаблону agent, 2026-08-15).
             if any(re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
                 continue
-            for cell in row:
+            for ci, cell in enumerate(row):
+                if ci in skip_cols:
+                    continue
                 cv = _norm_cell(cell)
                 # обрезки текстового CriticMarkup («++}», «{++», «~~}») —
                 # разметка правок, не содержимое: вход с невлитыми
