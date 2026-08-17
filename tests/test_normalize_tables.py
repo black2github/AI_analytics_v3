@@ -1832,6 +1832,93 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestCleanDocumentGuard:
+    """Сторож чистовика (волна D, Э-6): битые ссылки, цели вне docs/,
+    изображения, critic-маркеры — брак; внешние http вне белого списка —
+    предупреждение (софт-сигнал)."""
+
+    def _docs(self, tmp_path):
+        docs = tmp_path / "docs"
+        (docs / "srs").mkdir(parents=True)
+        (docs / "srs" / "target.md").write_text("# Цель\n", encoding="utf-8")
+        return docs
+
+    def _check(self, docs, body):
+        from app.scripts.CI.normalize_tables import check_clean_document
+        p = docs / "srs" / "card.md"
+        p.write_text("---\nid: X-01\ntitle: 'К'\ntype: function\n---\n\n"
+                     + body, encoding="utf-8")
+        return check_clean_document(p, docs)
+
+    def test_valid_relative_link_clean(self, tmp_path):
+        # тест на НЕсрабатывание: живая ссылка внутрь docs + якорь
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(
+            docs, "см. [цель](target.md) и [якорь](target.md#раздел) "
+                  "и [внутрифайловый](#ff-1-сохранить)\n")
+        assert ok and not rep, rep
+
+    def test_broken_link_flagged(self, tmp_path):
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(docs, "[нет цели](missing.md)\n")
+        assert not ok and any("битая" in r for r in rep)
+
+    def test_link_outside_docs_flagged(self, tmp_path):
+        docs = self._docs(tmp_path)
+        (tmp_path / "sources").mkdir()
+        (tmp_path / "sources" / "стр.md").write_text("x", encoding="utf-8")
+        rep, ok = self._check(docs, "[выгрузка](../../sources/стр.md)\n")
+        assert not ok and any("ВНЕ docs" in r for r in rep)
+
+    def test_grey_http_is_warning_not_failure(self, tmp_path):
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(
+            docs, "[макет](https://www.figma.com/file/XYZ)\n")
+        assert ok
+        assert any(r.startswith("предупреждение") for r in rep)
+
+    def test_whitelist_http_clean(self, tmp_path):
+        # тест на НЕсрабатывание: конвенции eco-techbook легальны
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(
+            docs, "[conventions](https://gitlab.gboteam.ru/ED/eco-techbook"
+                  "/-/blob/master/standards/analytics/conventions.md)\n")
+        assert ok and not rep, rep
+
+    def test_img_and_critic_and_stub_flagged(self, tmp_path):
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(
+            docs, '<img src="img/x.png"> и {++вставка++} и [заглушка](#)\n')
+        assert not ok
+        assert any("изображение" in r for r in rep)
+        assert any("critic-маркер" in r for r in rep)
+        assert any("заглушка" in r for r in rep)
+
+
+class TestK14AnchorQuotesNotLiterals:
+    """К-14: кавычки внутри адреса markdown-ссылки (якоря Confluence) —
+    навигация, не литерал; тот же текст вне ссылки — литерал."""
+
+    def test_quote_inside_anchor_not_required(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               'см. [Дополнительные действия]'
+               '(#id-[РРКО_ИПИ]ЭФКлиента"Журналдокументов"-Действия);\n'
+               'и текст с литералом "Боевой код" в предложении.\n')
+        card = "карточка несёт Боевой код и больше ничего\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert ok, rep
+
+    def test_same_quote_outside_link_required(self):
+        # тест на НЕсрабатывание фильтра: литерал вне ссылки обязателен
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               'кнопка "Журнал документов" отображается всегда.\n')
+        card = "карточка без текста кнопки\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert not ok and any("отсутствуют" in r for r in rep)
+
+
 class TestK13HtmlCommentGuard:
     """К-13 (анти-маскировка): HTML-коммент в чистовике = брак; значения
     внутри комментов сверкой значений не «находятся» (контрольный

@@ -1182,6 +1182,13 @@ def quoted_literals(source_text: str) -> List[str]:
         if (lt != -1 and ">" not in pre[lt:]
                 and re.search(r"[\w-]+\s*=\s*$", pre)):
             continue
+        # К-14 (2026-08-17): кавычки ВНУТРИ адреса markdown-ссылки —
+        # якоря Confluence вида #id-…"Журналдокументов"-… — навигация,
+        # не литерал текста (контрольный прогон: агент был вынужден
+        # вписать мусорный токен из якоря ради гейта)
+        lp = pre.rfind("](")
+        if lp != -1 and ")" not in pre[lp:]:
+            continue
         # структурная отсылка «см. раздел "..."» — навигация по источнику,
         # карточка переструктурирована по шаблону: не требуется
         if re.search(r"(?:раздел[еа]?|см\.)\s*$", body[:m.start()][-24:],
@@ -1612,6 +1619,125 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
     return lits
 
 
+# --- Сторож чистовика (волна D, Э-6) ---------------------------------
+# Карточка комплекта не должна нести: битые относительные ссылки, ссылки
+# вне docs/ (в т.ч. на выгрузку sources/), изображения, critic-маркеры,
+# ссылки-заглушки «](#)». Внешние http(s) вне белого списка — ПРЕДУПРЕЖДЕНИЕ
+# (софт-сигнал; решение аналитика 2026-08-17: фон не промерен — жёсткий
+# брак спровоцировал бы агента «чинить» легитимные ссылки; ужесточение —
+# после описи кросс-стендового прогона D4).
+_HTTP_WHITELIST = ("https://gitlab.gboteam.ru/ED/eco-techbook",)
+
+
+def _md_link_targets(text: str) -> List[Tuple[int, str]]:
+    """Адреса markdown-ссылок [текст](адрес) с позициями; скобки текста и
+    адреса — балансом (те же инциденты, что у _strip_markdown_links)."""
+    out: List[Tuple[int, str]] = []
+    i, n = 0, len(text)
+    while i < n:
+        if text[i] != "[":
+            i += 1
+            continue
+        depth, j = 0, i
+        while j < n:
+            if text[j] == "[":
+                depth += 1
+            elif text[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        if j + 1 < n and text[j + 1] == "(":
+            pdepth, k = 0, j + 1
+            while k < n:
+                if text[k] == "(":
+                    pdepth += 1
+                elif text[k] == ")":
+                    pdepth -= 1
+                    if pdepth == 0:
+                        break
+                k += 1
+            if k < n:
+                out.append((i, text[j + 2:k].strip()))
+                i = k + 1
+                continue
+        i = j + 1
+    return out
+
+
+def check_clean_document(md_path: Path,
+                         docs_root: Optional[Path] = None
+                         ) -> Tuple[List[str], bool]:
+    """Сторож чистовика: (а) битые относительные ссылки, (б) цели вне
+    docs/, (в) изображения, (г) critic-маркеры — брак; внешние http(s)
+    вне белого списка — предупреждение (видимо и при ✓)."""
+    from urllib.parse import unquote
+    text = md_path.read_text(encoding="utf-8")
+    report: List[str] = []
+    ok = True
+    # (г) critic-маркеры в чистовике — разметка правок источника
+    for pat in ("{++", "{--", "{~~", 'class="critic-'):
+        cnt = text.count(pat)
+        if cnt:
+            ok = False
+            report.append(
+                f"critic-маркер «{pat}» ×{cnt} в чистовике: разметка правок "
+                "в карточку не переносится — переносится ЦЕЛЕВОЙ текст "
+                "(правило create-artifact) ✗ НИЖЕ ПОРОГА")
+    # (в) изображения: бинарники в комплект не переносятся
+    cnt = len(re.findall(r"<img\b", text)) + len(re.findall(r"!\[", text))
+    if cnt:
+        ok = False
+        report.append(
+            f"изображение (<img>/![…]) ×{cnt} в чистовике: изображения в "
+            "комплект не переносятся (факт макетов — строкой паспорта) "
+            "✗ НИЖЕ ПОРОГА")
+    # (а)/(б) ссылки
+    warns: List[str] = []
+    root = docs_root.resolve() if docs_root is not None else None
+    for pos, target in _md_link_targets(text):
+        if not target or target == "#":
+            ok = False
+            report.append(
+                f"ссылка-заглушка «](#)» (позиция {pos}): цель обязана "
+                "существовать или ссылка снимается ✗ НИЖЕ ПОРОГА")
+            continue
+        if target.startswith("#"):
+            continue  # внутрифайловый якорь: файловая часть отсутствует
+        if target.startswith(("http://", "https://")):
+            if not target.startswith(_HTTP_WHITELIST):
+                warns.append(
+                    f"предупреждение: внешняя ссылка вне белого списка — "
+                    f"{target[:80]} (опись серой зоны; решение об "
+                    "ужесточении — после кросс-стендового прогона)")
+            continue
+        if target.startswith("mailto:"):
+            continue
+        fpath = unquote(target.split("#", 1)[0])
+        if not fpath:
+            continue
+        try:
+            resolved = (md_path.parent / fpath).resolve()
+        except OSError:
+            resolved = None
+        if resolved is None or not resolved.exists():
+            ok = False
+            report.append(
+                f"битая относительная ссылка: {target[:80]} — цель не "
+                "существует ✗ НИЖЕ ПОРОГА")
+            continue
+        if root is not None:
+            try:
+                resolved.relative_to(root)
+            except ValueError:
+                ok = False
+                report.append(
+                    f"ссылка ведёт ВНЕ docs/: {target[:80]} — карточки "
+                    "ссылаются только внутрь комплекта (выгрузка/sources — "
+                    "источник, не цель) ✗ НИЖЕ ПОРОГА")
+    return report + warns, ok
+
+
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True) -> Tuple[List[str], bool]:
@@ -1864,7 +1990,8 @@ def strip_history(text: str) -> str:
 
 
 def run_check(files: List[Path], source_path: Optional[Path],
-              min_valid_pct: float = 95.0) -> Tuple[List[str], bool]:
+              min_valid_pct: float = 95.0,
+              docs_root: Optional[Path] = None) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -1887,6 +2014,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
         r"<!--.*?-->", " ",
         "\n\n".join(f.read_text(encoding="utf-8") for f in files),
         flags=re.S)
+    # сторож чистовика (волна D): по КАЖДОЙ карточке вызова, не только
+    # главной (неглавные в selfcheck прогоняются отдельными вызовами,
+    # здесь files>1 встречается в CLI)
+    cl_report, cl_ok = check_clean_document(main_file, docs_root)
+    report.extend(cl_report)
+    ok = ok and cl_ok
     num_report, num_ok = check_behavior_numbering(card_text)
     report.extend(num_report)
     ok = ok and num_ok
@@ -1943,6 +2076,10 @@ def main() -> int:
                     help="для --check: файл-источник — markdown-таблицы "
                          "источника сверяются с карточкой по значениям "
                          "(потеря справочника = брак)")
+    ap.add_argument("--docs-root", type=Path, default=None,
+                    help="для --check: корень docs/ комплекта — включает "
+                         "проверку «ссылка ведёт вне docs/» сторожа "
+                         "чистовика (selfcheck передаёт сам)")
     ap.add_argument("--sidecar", action="store_true",
                     help="записать результат в <файл>.tables.md рядом (иначе stdout)")
     ap.add_argument("--min-valid", type=float, default=95.0,
@@ -1959,7 +2096,8 @@ def main() -> int:
 
     if args.check:
         report, ok = run_check(list(args.file), args.source,
-                               min_valid_pct=args.min_valid)
+                               min_valid_pct=args.min_valid,
+                               docs_root=args.docs_root)
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:

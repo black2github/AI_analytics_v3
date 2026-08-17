@@ -204,6 +204,22 @@ def test_out_writes_full_utf8_report(tmp_path, monkeypatch, capsys):
     assert "ИТОГО" in capsys.readouterr().out
 
 
+def test_clean_document_guard_wired(tmp_path):
+    # волна D: сторож чистовика доезжает через диспетчер — битая ссылка
+    # в карточке = брак файла; серая http-ссылка = предупреждение при ✓
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md",
+         card("[X] Ф1").replace("текст", "[нет цели](missing.md)"))
+    make(docs / "srs/functions/f2.md",
+         card("[X] Ф2").replace(
+             "текст", "[фигма](https://www.figma.com/file/QQ)"))
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("битая" in ln for ln in report)
+    assert any("предупреждение" in ln and "figma" in ln for ln in report)
+
+
 def test_warning_visible_on_ok_file(tmp_path):
     # предупреждения печатаются и при ✓ (софт-сигнал Э-12)
     docs = tmp_path / "docs"

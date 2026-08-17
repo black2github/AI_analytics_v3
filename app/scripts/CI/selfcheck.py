@@ -94,8 +94,9 @@ def _safe(fn, *args) -> Tuple[List[str], bool]:
         return [f"КРАШ проверки: {e!r} — брак, прогон продолжен"], False
 
 
-def _run(files: List[Path], src: Optional[Path]) -> Tuple[List[str], bool]:
-    return _safe(nt.run_check, files, src)
+def _run(files: List[Path], src: Optional[Path],
+         docs_root: Optional[Path] = None) -> Tuple[List[str], bool]:
+    return _safe(lambda: nt.run_check(files, src, docs_root=docs_root))
 
 
 def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
@@ -157,7 +158,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         return [ln for ln in rep if ln.startswith("предупреждение")]
 
     for p, note in solo:
-        rep, ok = _run([p], None)
+        rep, ok = _run([p], None, docs)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         all_ok = all_ok and ok
@@ -169,10 +170,10 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
 
     for pid, files in sorted(groups.items()):
         src = idx[pid]
-        rep, ok = _run(files, src)
+        rep, ok = _run(files, src, docs)
         # внутренние сторожа неглавных карточек группы — отдельно
         for extra in files[1:]:
-            rep2, ok2 = _run([extra], None)
+            rep2, ok2 = _run([extra], None, docs)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
         mark = "✓" if ok else "✗"
