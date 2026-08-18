@@ -1605,14 +1605,31 @@ def check_heavy_pair_structure(card_text: str,
         if len(expected) < 3:
             continue
         plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "", md, flags=re.M))
-        probe = plain[:40]
-        if len(probe) < 30:
+        probes = [p for p in (plain[:40], plain[40:80],
+                              plain[len(plain) // 2:len(plain) // 2 + 40])
+                  if len(p) >= 30]
+        if not probes:
             continue
-        start = next((i for i, ln in enumerate(lines)
-                      if not ln.lstrip().startswith("|")
-                      and probe in _norm_cell(ln)), None)
+        start = None
+        probe = probes[0]
+        for pr in probes:
+            start = next((i for i, ln in enumerate(lines)
+                          if not ln.lstrip().startswith("|")
+                          and pr in _norm_cell(ln)), None)
+            if start is not None:
+                probe = pr
+                break
         if start is None:
-            continue  # не вынесено секцией — предмет check_heavy_cells
+            # ни одна проба не найдена вне таблиц: либо контент в
+            # |-строке (зона check_heavy_cells), либо ПОТЕРЯН
+            in_table = any(pr in tl for pr in probes
+                           for tl in (_norm_cell(ln)
+                                      for ln in lines
+                                      if ln.lstrip().startswith("|")))
+            if not in_table:
+                bad += 1
+                sample = probes[0]
+            continue
         # граница секции — только заголовок или таблица: строки «**…**»
         # НЕ граница (внутри секций легитимны жирные «**ИНАЧЕ**» и
         # т.п. — ложная граница усекала профиль и спровоцировала обход
@@ -1628,9 +1645,10 @@ def check_heavy_pair_structure(card_text: str,
             bad += 1
             sample = probe
     if bad:
-        return ([f"структура лейбл-секций расходится с эталоном "
+        return ([f"содержимое/структура тяжёлых пар расходится с эталоном "
                  f"конвертера ×{bad} (пример: …{sample[:45]!r}…) — "
-                 "абзацы и уровни ячейки переносятся КАК В ЭТАЛОНЕ "
+                 "содержимое ячейки раскладывается в соответствующий "
+                 "раздел шаблона с абзацами и уровнями КАК В ЭТАЛОНЕ "
                  "(--cell-to-md «<лейбл>») ✗ НИЖЕ ПОРОГА"], False)
     return [], True
 
@@ -2696,39 +2714,14 @@ def run_check(files: List[Path], source_path: Optional[Path],
             nd_report, nd_ok = check_nesting_depth(combined, src_text)
             report.extend(nd_report)
             ok = ok and nd_ok
-            if "Что делает функция" in src_text:
-                if "Что делает функция" not in combined:
-                    ok = False
-                    report.append(
-                        "паспортная строка «Что делает функция» источника "
-                        "не перенесена — паспорт переносится дословно, "
-                        "сценарий ячейки — слой поведения ✗ НИЖЕ ПОРОГА")
-                else:
-                    # К-24b (2026-08-18): md-таблица не может нести
-                    # многоуровневые списки — структурная ячейка паспорта
-                    # выносится ЛЕЙБЛ-СЕКЦИЕЙ после таблицы (лейбл
-                    # дословно + полноценный markdown), иначе шесть
-                    # уровней склеиваются в строку-простыню (fun-bnk-08)
-                    wdf_cell = passport_cell_html(src_text)
-                    structured = bool(wdf_cell and "<ul>" in wdf_cell)
-                    in_table = any(
-                        "Что делает функция" in ln
-                        and ln.lstrip().startswith("|")
-                        for ln in combined.splitlines())
-                    if structured and in_table:
-                        ok = False
-                        report.append(
-                            "структурная ячейка «Что делает функция» "
-                            "расплющена строкой md-таблицы — переносится "
-                            "ЛЕЙБЛ-СЕКЦИЕЙ после паспорта (лейбл дословно "
-                            "+ полноценный markdown со всеми уровнями) "
-                            "✗ НИЖЕ ПОРОГА")
-                    elif structured:
-                        # К-25: секция сверяется с эталонной конвертацией
-                        cs_report, cs_ok = check_passport_cell_structure(
-                            combined, src_text)
-                        report.extend(cs_report)
-                        ok = ok and cs_ok
+            # К-24-лейбл и лейбл-секции СНЯТЫ (2026-08-18, аудит
+            # fun-sys-03 с аналитиком): шаблон function не имеет слота
+            # «паспорт» — содержимое ячеек раскладывается по разделам
+            # шаблона (Поведение/Вызов/Доступность); требование
+            # дословного лейбла толкало исполнителей в двойную
+            # структуру. Содержимое и структуру ячеек держат К-29
+            # (не в |-строке) и check_heavy_pair_structure (профиль +
+            # потеря), лейбло-независимо.
         # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
         # (в screen-form/function примеры форматов переносятся легитимно)
         ex_report, ex_ok = (check_example_values_absent(combined, src_text)
