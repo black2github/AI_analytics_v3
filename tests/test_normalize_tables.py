@@ -1845,6 +1845,51 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK29HeavyCellInvariant:
+    """К-29: тяжёлая ячейка (в т.ч. p-абзацами без ul) не коллапсирует
+    в |-строку карточки; короткие правило-ячейки в таблицах легальны."""
+
+    _CELL = ("<p>Функция публикует в очереди сервиса сообщение об "
+             "удалении документа и связанных с ним сущностей учёта.</p>"
+             "<p>При вызове функции выполняется проверка возможности "
+             "удаления по статусной модели документа и организации.</p>"
+             "<p>После успешного удаления формируется запись истории "
+             "операций и уведомление администратору системы банка.</p>")
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<td><strong>Описание работы:</strong></td>"
+            "<td>" + _CELL + "</td></tr></tbody></table>\n")
+
+    def test_collapsed_heavy_cell_flagged(self):
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_cells, html_fragment_to_markdown)
+        flat = html_fragment_to_markdown(self._CELL).replace("\n", " ")
+        card = f"| **Описание работы:** | {flat} |\n"
+        rep, ok = check_heavy_cells(card, self._SRC)
+        assert not ok and any("расплющена" in r for r in rep)
+
+    def test_label_section_clean(self):
+        # тест на НЕсрабатывание: содержимое вынесено секцией
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_cells, html_fragment_to_markdown)
+        card = ("| Поле | Значение |\n|---|---|\n| **Alias** | /x |\n\n"
+                "**Описание работы:**\n\n"
+                + html_fragment_to_markdown(self._CELL) + "\n")
+        rep, ok = check_heavy_cells(card, self._SRC)
+        assert ok, rep
+
+    def test_short_rule_cell_in_table_legal(self):
+        # тест на НЕсрабатывание: короткая правило-ячейка в таблице
+        from app.scripts.CI.normalize_tables import check_heavy_cells
+        src = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+               "<td>Источник вызова</td>"
+               "<td><p>Если пусто, то = 0 (Создание), иначе = 1 "
+               "(Редактирование).</p></td></tr></tbody></table>\n")
+        card = ("| Источник вызова | Если пусто, то = 0 (Создание), "
+                "иначе = 1 (Редактирование). |\n")
+        rep, ok = check_heavy_cells(card, src)
+        assert ok, rep
+
+
 class TestK26StepBodyStructure:
     """К-26: ранговый профиль тела каждого шага сверяется с источником;
     HTML-тела без md-разметки — честный skip."""

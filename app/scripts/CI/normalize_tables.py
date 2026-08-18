@@ -1517,6 +1517,76 @@ def passport_cell_html(src_text: str,
     return m.group(1) if m else None
 
 
+# К-29 (2026-08-18): ИНВАРИАНТ вместо детекторов макета. Три обойдённых
+# вариации обкладки за день (th / td+двоеточие / структура p-абзацами
+# без ul) показали: перечислять макеты кодом — гонка вооружений
+# (решение аналитика: сторожа — от инвариантов; семантика поиска полей —
+# у исполнителя, он находит их безошибочно). Инвариант: ТЯЖЁЛАЯ ячейка
+# источника не коллапсирует в |-строку карточки, каков бы ни был её
+# лейбл и разметка. Порог тяжести — рычаг «строгость/скорость»:
+# короткие правило-ячейки параметрических таблиц легитимно живут в
+# строках и не флагуются.
+_HEAVY_LEN = 600
+_HEAVY_BLOCKS = 3
+
+
+def heavy_source_cells(src_text: str) -> List[str]:
+    """Тяжёлые ЗНАЧЕНИЯ ПАР «лейбл → значение»: строка <tr> ровно из
+    двух ячеек (паспорт и подобные), второе — структурное/длинное.
+    Ячейки многоколонных таблиц ДАННЫХ (описания параметров) легитимно
+    живут в строках карточек и не собираются (боевой контроль: 26
+    флагов первой версии — ложняки на колонках «Описание»)."""
+    out: List[str] = []
+    for m in re.finditer(
+            r"<tr[^>]*>\s*<t[hd][^>]*>(?:(?!</?t[dr]).)*?</t[hd]>\s*"
+            r"<td[^>]*>((?:(?!</td>).)*)</td>\s*</tr>",
+            src_text, re.S):
+        cell = m.group(1)
+        blocks = len(re.findall(r"<(?:p|ul|ol)\b", cell))
+        if ("<ul" in cell or "<ol" in cell or len(cell) > _HEAVY_LEN
+                or blocks >= _HEAVY_BLOCKS):
+            out.append(cell)
+    return out
+
+
+def check_heavy_cells(card_text: str,
+                      src_text: str) -> Tuple[List[str], bool]:
+    """К-29: начало/середина содержимого тяжёлой ячейки не должны жить
+    внутри одной |-строки карточки (пробы по трём смещениям — замена
+    текста ссылки в одной из зон не прячет коллапс)."""
+    heavy = heavy_source_cells(src_text)
+    if not heavy:
+        return [], True
+    table_lines = [_norm_cell(ln) for ln in card_text.splitlines()
+                   if ln.lstrip().startswith("|")]
+    if not table_lines:
+        return [], True
+    bad = 0
+    sample = ""
+    for cell in heavy:
+        plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "",
+                                  html_fragment_to_markdown(cell),
+                                  flags=re.M))
+        if len(plain) < 120:
+            continue
+        probes = [plain[0:40], plain[40:80],
+                  plain[len(plain) // 2:len(plain) // 2 + 40]]
+        for probe in probes:
+            if len(probe) < 30:
+                continue
+            if any(probe in tl for tl in table_lines):
+                bad += 1
+                sample = probe
+                break
+    if bad:
+        return ([f"тяжёлая ячейка источника расплющена строкой md-таблицы "
+                 f"×{bad} (фрагмент: …{sample[:50]!r}…) — структурное "
+                 "содержимое переносится ЛЕЙБЛ-СЕКЦИЕЙ, эталон даёт "
+                 "конвертер (--cell-to-md «<лейбл ячейки>») ✗ НИЖЕ ПОРОГА"],
+                False)
+    return [], True
+
+
 def check_passport_cell_structure(card_text: str,
                                   src_text: str) -> Tuple[List[str], bool]:
     """К-25: лейбл-секция «Что делает функция» обязана структурно
@@ -2545,6 +2615,10 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый
+        hc_report, hc_ok = check_heavy_cells(combined, src_text)
+        report.extend(hc_report)
+        ok = ok and hc_ok
         # К-26: по-шаговая структура тел (типы с поведением)
         if steps_apply:
             sb_report, sb_ok = check_step_body_structure(combined, src_text)
