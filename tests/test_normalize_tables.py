@@ -1845,6 +1845,41 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK24NestingDepth:
+    """К-24: уплощение многоуровневых списков источника = брак;
+    маловложенный источник (HTML-ul без md-отступов) — skip."""
+
+    _SRC = ("---\ntitle: X\n---\n\n"
+            "* Выполняется процесс:\n"
+            "    + Содержимое файла формируется по правилу\n"
+            "        - NNN - номер АС\n"
+            "            - уточнение поля\n")
+
+    def test_flattened_card_flagged(self):
+        from app.scripts.CI.normalize_tables import check_nesting_depth
+        card = ("- Выполняется процесс:\n- Содержимое файла формируется "
+                "по правилу\n- NNN - номер АС\n- уточнение поля\n")
+        rep, ok = check_nesting_depth(card, self._SRC)
+        assert not ok and any("уплощена" in r for r in rep)
+
+    def test_structured_card_clean(self):
+        # тест на НЕсрабатывание: уровни перенесены отступами
+        from app.scripts.CI.normalize_tables import check_nesting_depth
+        card = ("- Выполняется процесс:\n"
+                "  + Содержимое файла формируется по правилу\n"
+                "    - NNN - номер АС\n"
+                "      - уточнение поля\n")
+        rep, ok = check_nesting_depth(card, self._SRC)
+        assert ok, rep
+
+    def test_shallow_source_skipped(self):
+        # тест на НЕсрабатывание: источник без глубокой вложенности
+        from app.scripts.CI.normalize_tables import check_nesting_depth
+        src = "---\ntitle: X\n---\n\n- один\n- два\n"
+        rep, ok = check_nesting_depth("- один\n- два\n", src)
+        assert ok, rep
+
+
 class TestK23StepHeadings:
     """К-23: шаги, объявленные md-заголовками «#### Шаг №N.», обязаны
     присутствовать в карточке — полная потеря поведения (мешок литералов

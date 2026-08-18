@@ -1400,6 +1400,32 @@ def check_step_markers(card_text: str, source_text: str) -> Tuple[List[str], boo
     return [f"маркеры шагов источника: все {len(markers)} на месте ✓"], True
 
 
+# К-24 (2026-08-18): уплощение вложенности шагов. Источник ведёт
+# многоуровневые списки (отступы 4/8/12/16 — правила, подусловия,
+# расшифровки полей); правило шаблона «вложенность переносится
+# структурой» без сторожа нарушалось молча (fun-bnk-08: 6 уровней
+# источника → 2 в карточке, блоки-вставки выпали из своих шагов —
+# находка пользователя). Формула переноса (решение 2026-08-18):
+# процессные разделы источника переносятся КАК ЕСТЬ, без склейки.
+def _list_indent_widths(lines: List[str]) -> set:
+    """Множество ширин отступов списочных строк (маркеры -,+,*)."""
+    return {len(m.group(1)) for ln in lines
+            if (m := re.match(r"^( *)[-+*]\s", ln))}
+
+
+def check_nesting_depth(card_text: str,
+                        source_text: str) -> Tuple[List[str], bool]:
+    src_w = _list_indent_widths(source_text.split("---", 2)[-1].splitlines())
+    card_w = _list_indent_widths(card_text.splitlines())
+    if len(src_w) >= 4 and len(card_w) <= 2:
+        return [f"вложенность шагов уплощена: источник ведёт "
+                f"{len(src_w)} уровней списков, карточка — {len(card_w)} "
+                "— уровни переносятся отступами (правило шаблона "
+                "«вложенность — структурой», процессные разделы — КАК "
+                "ЕСТЬ) ✗ НИЖЕ ПОРОГА"], False
+    return [], True
+
+
 def check_behavior_numbering(card_text: str) -> Tuple[List[str], bool]:
     """Самосогласованность карточки (работает и без --source):
     (1) каждая строка-шаг «Поведения» обязана быть элементом
@@ -2265,6 +2291,19 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-24: уплощение вложенности + потеря паспортного слоя «Что
+        # делает функция» (типы с поведением — как у маркеров шагов)
+        if steps_apply:
+            nd_report, nd_ok = check_nesting_depth(combined, src_text)
+            report.extend(nd_report)
+            ok = ok and nd_ok
+            if ("Что делает функция" in src_text
+                    and "Что делает функция" not in combined):
+                ok = False
+                report.append(
+                    "паспортная строка «Что делает функция» источника не "
+                    "перенесена — паспорт переносится дословно, сценарий "
+                    "ячейки — слой поведения ✗ НИЖЕ ПОРОГА")
         # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
         # (в screen-form/function примеры форматов переносятся легитимно)
         ex_report, ex_ok = (check_example_values_absent(combined, src_text)
