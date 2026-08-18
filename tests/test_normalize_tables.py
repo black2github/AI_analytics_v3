@@ -1845,6 +1845,36 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK30InvisibleChars:
+    """К-30: zero-width/BOM в чистовике = брак (обход границы секций
+    дозаходом 5.3)."""
+
+    def test_zwsp_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-08\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "**ИНАЧЕ​**\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("невидимые символы" in r for r in rep)
+
+    def test_bold_content_line_not_section_boundary(self):
+        # фикс границы: «**ИНАЧЕ**» внутри секции не рвёт профиль
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        cell = ("<p>Функция проверяет возможность отклонения документа "
+                "администратором банка по статусной модели заявки.</p>"
+                "<p><strong>ИНАЧЕ</strong></p>"
+                "<p><strong>завершение процесса.</strong></p>")
+        src = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+               "<td><strong>Что делает функция:</strong></td>"
+               "<td>" + cell + "</td></tr></tbody></table>\n")
+        card = ("**Что делает функция:**\n\n"
+                + html_fragment_to_markdown(cell) + "\n")
+        rep, ok = check_heavy_pair_structure(card, src)
+        assert ok, rep
+
+
 class TestK25dPairSectionProfiles:
     """К-25d: p-абзацная секция сверяется профилем (склейка шести
     абзацев в один — усечение профиля); корректная секция чиста."""
