@@ -1845,6 +1845,69 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK25CellConverterAndStructure:
+    """К-25: детерминированная конвертация ячейки (чередование абзацев и
+    уровней) + сверка секции со структурным профилем эталона."""
+
+    _CELL = ("<p>Инициируется процесс.</p>"
+             "<p>Создается Задача с атрибутами:</p>"
+             "<ul><li><ul><li>Идентификатор задачи</li>"
+             "<li>Статус = \"NEW\"</li></ul></li></ul>"
+             "<p>Документы отбираются:</p>"
+             "<ul><li>по условиям фильтрации</li></ul>")
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<th>Что делает функция</th><td>" + _CELL + "</td>"
+            "</tr></tbody></table>\n")
+
+    def test_converter_keeps_alternation(self):
+        from app.scripts.CI.normalize_tables import html_fragment_to_markdown
+        md = html_fragment_to_markdown(self._CELL)
+        lines = [ln for ln in md.splitlines() if ln.strip()]
+        assert lines[0] == "Инициируется процесс."
+        assert lines[1] == "Создается Задача с атрибутами:"
+        assert lines[2].startswith("  - Идентификатор")
+        assert lines[4] == "Документы отбираются:"  # абзац ВЕРНУЛСЯ наверх
+        assert lines[5] == "- по условиям фильтрации"
+
+    def test_section_matching_profile_clean(self, tmp_path):
+        from app.scripts.CI.normalize_tables import (
+            check_passport_cell_structure, html_fragment_to_markdown)
+        card = ("**Что делает функция**\n\n"
+                + html_fragment_to_markdown(self._CELL) + "\n")
+        rep, ok = check_passport_cell_structure(card, self._SRC)
+        assert ok, rep
+
+    def test_section_broken_profile_flagged(self):
+        # всё уехало под список — принадлежность уровней сломана
+        from app.scripts.CI.normalize_tables import (
+            check_passport_cell_structure)
+        card = ("**Что делает функция**\n\n"
+                "Инициируется процесс.\n\n"
+                "- Создается Задача с атрибутами:\n"
+                "  - Идентификатор задачи\n"
+                "  - Статус = \"NEW\"\n"
+                "  - Документы отбираются:\n"
+                "  - по условиям фильтрации\n")
+        rep, ok = check_passport_cell_structure(card, self._SRC)
+        assert not ok and any("расходится" in r for r in rep)
+
+    def test_link_replacement_does_not_flag(self, tmp_path):
+        # тест на НЕсрабатывание: замена текста ссылки (правило трёх
+        # случаев) не меняет структурный профиль
+        from app.scripts.CI.normalize_tables import (
+            check_passport_cell_structure)
+        card = ("**Что делает функция**\n\n"
+                "Инициируется процесс.\n\n"
+                "Создается Задача с атрибутами "
+                "[ENT-009 Задача](../ent-009.md):\n\n"
+                "  - Идентификатор задачи\n"
+                "  - Статус = \"NEW\"\n\n"
+                "Документы отбираются:\n\n"
+                "- по условиям фильтрации\n")
+        rep, ok = check_passport_cell_structure(card, self._SRC)
+        assert ok, rep
+
+
 class TestK24bPassportCellFormat:
     """К-24b: структурная ячейка «Что делает функция» (вложенные списки
     в источнике) не заталкивается в строку md-таблицы — лейбл-секцией."""

@@ -1400,6 +1400,143 @@ def check_step_markers(card_text: str, source_text: str) -> Tuple[List[str], boo
     return [f"маркеры шагов источника: все {len(markers)} на месте ✓"], True
 
 
+# К-25 (2026-08-18): конвертация HTML-фрагмента (структурная ячейка
+# паспорта) в markdown — ЧИСТАЯ ГРАММАТИКА, работа прибора, не LLM
+# (архитектура нормализатора: «понимание — LLM, массовое переписывание —
+# скрипт»). Кривые ручные конвертеры исполнителей теряли чередование
+# абзацев и принадлежность уровней (fun-bnk-08, три итерации дозаходов).
+def html_fragment_to_markdown(html: str) -> str:
+    """Детерминированная конвертация содержимого ячейки/фрагмента:
+    <p> — абзацы, <ul>/<ol>/<li> — списки с уровнями (пустые li-обёртки
+    Confluence углубляют уровень без печати), <strong> — **жирный**."""
+    soup = BeautifulSoup(protect_token_tags(html), "html.parser")
+    lines: List[str] = []
+
+    def text_of(el) -> str:
+        parts: List[str] = []
+        for c in el.children:
+            name = getattr(c, "name", None)
+            if name in ("ul", "ol"):
+                continue
+            if name == "strong":
+                t = c.get_text(" ", strip=True)
+                if t:
+                    parts.append(f"**{t}**")
+            elif name == "br":
+                parts.append(" ")
+            elif hasattr(c, "get_text"):
+                t = c.get_text(" ", strip=True)
+                if t:
+                    parts.append(t)
+            else:
+                t = str(c).strip()
+                if t:
+                    parts.append(t)
+        return re.sub(r"\s+", " ", " ".join(parts)).strip()
+
+    def blank() -> None:
+        if lines and lines[-1] != "":
+            lines.append("")
+
+    def walk_list(lst, depth: int) -> None:
+        for li in lst.find_all("li", recursive=False):
+            t = text_of(li)
+            if t:
+                lines.append("  " * depth + "- " + t)
+                child_depth = depth + 1
+            else:
+                child_depth = depth + 1  # пустая обёртка: уровень растёт
+            for sub in li.find_all(["ul", "ol"], recursive=False):
+                walk_list(sub, child_depth)
+
+    for el in soup.children:
+        name = getattr(el, "name", None)
+        if name == "p":
+            t = text_of(el)
+            if t:
+                blank()
+                lines.append(t)
+                blank()
+        elif name in ("ul", "ol"):
+            walk_list(el, 0)
+        elif name in ("td", "div", "span", "body"):
+            # обёртка: рекурсивно тем же правилом
+            inner = html_fragment_to_markdown(el.decode_contents())
+            if inner:
+                blank()
+                lines.append(inner)
+                blank()
+        elif hasattr(el, "get_text"):
+            t = el.get_text(" ", strip=True)
+            if t:
+                blank()
+                lines.append(t)
+                blank()
+        else:
+            t = str(el).strip()
+            if t:
+                blank()
+                lines.append(t)
+                blank()
+    return "\n".join(lines).strip("\n")
+
+
+def _fragment_profile(html: str) -> List[str]:
+    """Структурный профиль фрагмента: ['p', 'li0', 'li1', …] — типы и
+    глубины в порядке следования (замены текстов ссылок профиль не
+    меняют — сверка структуры без ложняков на правиле трёх случаев)."""
+    md = html_fragment_to_markdown(html)
+    return _md_profile(md.splitlines())
+
+
+def _md_profile(lines: List[str]) -> List[str]:
+    out: List[str] = []
+    for ln in lines:
+        if not ln.strip():
+            continue
+        m = re.match(r"^( *)[-+*]\s", ln)
+        if m:
+            out.append(f"li{len(m.group(1)) // 2}")
+        else:
+            out.append("p")
+    return out
+
+
+def check_passport_cell_structure(card_text: str,
+                                  src_text: str) -> Tuple[List[str], bool]:
+    """К-25: лейбл-секция «Что делает функция» обязана структурно
+    совпадать с эталонной конвертацией ячейки источника (профиль
+    «абзац/пункт@уровень» в порядке следования)."""
+    m_cell = re.search(r"Что делает функция\s*(?:</strong>)?\s*</th>\s*"
+                       r"<td>(.*?)</td>", src_text, re.S)
+    if not m_cell or "<ul>" not in m_cell.group(1):
+        return [], True
+    # секция: от отдельной строки-лейбла до следующего заголовка/таблицы
+    lines = card_text.splitlines()
+    start = next((i for i, ln in enumerate(lines)
+                  if "Что делает функция" in ln
+                  and not ln.lstrip().startswith("|")), None)
+    if start is None:
+        return [], True  # отсутствие/таблица — ветки К-24/К-24b
+    section: List[str] = []
+    for ln in lines[start + 1:]:
+        if ln.startswith("#") or ln.lstrip().startswith("|"):
+            break
+        section.append(ln)
+    expected = _fragment_profile(m_cell.group(1))
+    actual = _md_profile(section)
+    if expected != actual:
+        def _short(p: List[str]) -> str:
+            s = ",".join(p[:12])
+            return s + ("…" if len(p) > 12 else "")
+        return [f"структура секции «Что делает функция» расходится с "
+                f"ячейкой источника: эталон {len(expected)} элементов "
+                f"[{_short(expected)}], в карточке {len(actual)} "
+                f"[{_short(actual)}] — эталон даёт конвертер "
+                "нормализатора (--cell-to-md) ✗ НИЖЕ ПОРОГА"], False
+    return [], True
+
+
 # К-24 (2026-08-18): уплощение вложенности шагов. Источник ведёт
 # многоуровневые списки (отступы 4/8/12/16 — правила, подусловия,
 # расшифровки полей); правило шаблона «вложенность переносится
@@ -2325,6 +2462,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             "ЛЕЙБЛ-СЕКЦИЕЙ после паспорта (лейбл дословно "
                             "+ полноценный markdown со всеми уровнями) "
                             "✗ НИЖЕ ПОРОГА")
+                    elif structured:
+                        # К-25: секция сверяется с эталонной конвертацией
+                        cs_report, cs_ok = check_passport_cell_structure(
+                            combined, src_text)
+                        report.extend(cs_report)
+                        ok = ok and cs_ok
         # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
         # (в screen-form/function примеры форматов переносятся легитимно)
         ex_report, ex_ok = (check_example_values_absent(combined, src_text)
@@ -2363,6 +2506,11 @@ def main() -> int:
                     help="для --check: файл-источник — markdown-таблицы "
                          "источника сверяются с карточкой по значениям "
                          "(потеря справочника = брак)")
+    ap.add_argument("--cell-to-md", metavar="ЛЕЙБЛ", default=None,
+                    help="напечатать эталонную markdown-конвертацию "
+                         "содержимого ячейки паспорта с данным лейблом "
+                         "(например «Что делает функция») из файла-"
+                         "источника — для лейбл-секций карточек (К-25)")
     ap.add_argument("--docs-root", type=Path, default=None,
                     help="для --check: корень docs/ комплекта — включает "
                          "проверку «ссылка ведёт вне docs/» сторожа "
@@ -2380,6 +2528,18 @@ def main() -> int:
     if len(args.file) > 1 and not args.check:
         print("# несколько файлов поддерживаются только в --check; "
               f"использую {main_file}", file=sys.stderr)
+
+    if args.cell_to_md:
+        text = main_file.read_text(encoding="utf-8")
+        m = re.search(re.escape(args.cell_to_md)
+                      + r"\s*(?:</strong>)?\s*</th>\s*<td>(.*?)</td>",
+                      text, re.S)
+        if not m:
+            print(f"# ячейка с лейблом {args.cell_to_md!r} не найдена",
+                  file=sys.stderr)
+            return 2
+        print(html_fragment_to_markdown(m.group(1)))
+        return 0
 
     if args.check:
         report, ok = run_check(list(args.file), args.source,
