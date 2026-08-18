@@ -1540,6 +1540,82 @@ def check_passport_cell_structure(card_text: str,
     return [], True
 
 
+# К-26 (2026-08-18): структура ТЕЛ шагов — по-шаговая сверка ранговых
+# профилей с источником (fun-bnk-07: «Шаг №10 и все последующие
+# предложения — один список», принадлежность уровней потеряна при
+# зелёных гейтах; формула «процессные разделы — КАК ЕСТЬ»).
+_STEP_DECL_RE = re.compile(
+    r"^\s*(?:[-+*]\s+)?(?:#{1,6}\s*)?\*{0,2}\s*Шаг\s*№?\s*"
+    r"(\d+(?:\.\d+)*)", re.I)
+_TOP_HEADING_RE = re.compile(r"^#{1,4}\s+(?!Шаг)")
+
+
+def _ranked_profile(lines: List[str]) -> List[str]:
+    """Профиль тела: 'p' — абзац, 'liR' — пункт с РАНГОМ отступа
+    (ширины отступов нормализуются в ранги: 0/4/8 и 0/2/4 сравнимы)."""
+    raw: List[Tuple[str, int]] = []
+    widths = set()
+    for ln in lines:
+        s = ln.strip()
+        if not s:
+            continue
+        m = re.match(r"^( *)[-+*]\s", ln)
+        if m:
+            widths.add(len(m.group(1)))
+            raw.append(("li", len(m.group(1))))
+        else:
+            raw.append(("p", -1))
+    rank = {w: i for i, w in enumerate(sorted(widths))}
+    return [t if t == "p" else f"li{rank[w]}" for t, w in raw]
+
+
+def _step_bodies(lines: List[str]) -> Dict[str, List[str]]:
+    """Тела шагов текста: от объявления «Шаг №N» до следующего
+    объявления или верхнеуровневого заголовка."""
+    out: Dict[str, List[str]] = {}
+    cur: Optional[str] = None
+    for ln in lines:
+        m = _STEP_DECL_RE.match(ln)
+        if m:
+            cur = m.group(1)
+            out.setdefault(cur, [])
+            continue
+        if _TOP_HEADING_RE.match(ln):
+            cur = None
+            continue
+        if cur is not None:
+            out[cur].append(ln)
+    return out
+
+
+def check_step_body_structure(card_text: str,
+                              source_text: str) -> Tuple[List[str], bool]:
+    """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
+    совпадать с телом того же шага источника (md-источники; HTML-тела
+    без md-разметки дают пустые профили — честный skip). Замены текстов
+    ссылок профиль не меняют."""
+    src_bodies = _step_bodies(
+        source_text.split("---", 2)[-1].splitlines())
+    if len(src_bodies) < 2:
+        return [], True
+    card_bodies = _step_bodies(card_text.splitlines())
+    bad: List[str] = []
+    for num, body in src_bodies.items():
+        prof_src = _ranked_profile(body)
+        if num not in card_bodies or not prof_src:
+            continue  # полноту шагов держит К-23
+        prof_card = _ranked_profile(card_bodies[num])
+        if prof_src != prof_card:
+            bad.append(num)
+    if bad:
+        return [f"структура тел шагов расходится с источником "
+                f"(уровни/принадлежность): шаги №{', №'.join(bad[:5])}"
+                + ("…" if len(bad) > 5 else "")
+                + " — тело шага переносится КАК ЕСТЬ с ранговыми "
+                "уровнями отступов ✗ НИЖЕ ПОРОГА"], False
+    return [], True
+
+
 # К-24 (2026-08-18): уплощение вложенности шагов. Источник ведёт
 # многоуровневые списки (отступы 4/8/12/16 — правила, подусловия,
 # расшифровки полей); правило шаблона «вложенность переносится
@@ -2193,6 +2269,33 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                 f"×{len(bad)} ({', '.join(bad[:3])}) — суррогат: источник "
                 "технических имён не даёт → код ПУСТОЙ, нумерация "
                 "источника — отдельной дословной колонкой ✗ НИЖЕ ПОРОГА")
+    # К-28 (2026-08-18): артефакты интерфейса Confluence из выгрузки
+    # («Развернуть исходный код» — кнопка сворачивания код-блока) — не
+    # содержимое, в чистовик не переносятся (fun-bnk-07: втянут в
+    # простыню шага). Список расширяемый.
+    for ui in ("Развернуть исходный код", "Скрыть исходный код"):
+        cnt = text.count(ui)
+        if cnt:
+            ok = False
+            report.append(
+                f"артефакт интерфейса Confluence «{ui}» ×{cnt} в "
+                "чистовике — элемент UI выгрузки, не содержимое "
+                "✗ НИЖЕ ПОРОГА")
+    # К-27 (2026-08-18): карточка-заглушка вне правил. Заглушки канон
+    # разрешает только EXTINT (contract-calls) и записям PLT; ЭФ — по
+    # своему шаблону. Рецидив rbac: дозаход пересоздал заглушку и вписал
+    # RBAC-001 в матрицу — легализация обошла К-21/К-22 (решение
+    # аналитика из разового промпта не персистентно, сторожим класс).
+    m_t = re.search(r"^type:\s*([\w-]+)", text[:600], re.M)
+    if (m_t and m_t.group(1) not in
+            ("external-integration", "screen-form")
+            and re.search(r"(?mi)^\s*(?:документ-)?заглушка"
+                          r"(?:\s+комплекта)?\s*[:.]", text)):
+        ok = False
+        report.append(
+            "карточка-заглушка вне правил: заглушки предписаны только "
+            "EXTINT/PLT/ЭФ — отсутствующая цель фиксируется долгом в "
+            "матрице, артефакт чужого типа не заводится ✗ НИЖЕ ПОРОГА")
     # К-21 (2026-08-18): отсылка к OQ в ТЕЛЕ карточки — брак (правило
     # create-artifact «отсылок к OQ в документах не делай» было без
     # сторожа: дозаход 3.1 inkasso-run1 создал rbac-заглушку со
@@ -2431,6 +2534,11 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-26: по-шаговая структура тел (типы с поведением)
+        if steps_apply:
+            sb_report, sb_ok = check_step_body_structure(combined, src_text)
+            report.extend(sb_report)
+            ok = ok and sb_ok
         # К-24: уплощение вложенности + потеря паспортного слоя «Что
         # делает функция» (типы с поведением — как у маркеров шагов)
         if steps_apply:

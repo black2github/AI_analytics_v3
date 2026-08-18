@@ -1845,6 +1845,108 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK26StepBodyStructure:
+    """К-26: ранговый профиль тела каждого шага сверяется с источником;
+    HTML-тела без md-разметки — честный skip."""
+
+    _SRC = ("---\ntitle: X\n---\n\n"
+            "#### Шаг №10. Печать\n\n"
+            "    * Выполняется печать по правилам:\n"
+            "        + правило раз\n"
+            "        + правило два\n\n"
+            "#### Шаг №11. Завершение\n\n"
+            "    * Процесс завершён\n")
+
+    def test_flattened_body_flagged(self):
+        from app.scripts.CI.normalize_tables import check_step_body_structure
+        card = ("- **Шаг №10.** Печать\n"
+                "- Выполняется печать по правилам:\n"
+                "- правило раз\n"
+                "- правило два\n"
+                "- **Шаг №11.** Завершение\n"
+                "- Процесс завершён\n")
+        rep, ok = check_step_body_structure(card, self._SRC)
+        assert not ok and any("№10" in r for r in rep)
+
+    def test_ranked_levels_clean(self):
+        # тест на НЕсрабатывание: ранги совпадают при другом шаге отступа
+        from app.scripts.CI.normalize_tables import check_step_body_structure
+        card = ("- **Шаг №10.** Печать\n"
+                "  - Выполняется печать по правилам:\n"
+                "    - правило раз\n"
+                "    - правило два\n"
+                "- **Шаг №11.** Завершение\n"
+                "  - Процесс завершён\n")
+        rep, ok = check_step_body_structure(card, self._SRC)
+        assert ok, rep
+
+    def test_html_source_skipped(self):
+        # тест на НЕсрабатывание: HTML-тела без md-маркеров — skip
+        from app.scripts.CI.normalize_tables import check_step_body_structure
+        src = ("---\ntitle: X\n---\n\n<td><strong>Шаг №1.</strong> "
+               "текст</td><td><strong>Шаг №2.</strong> текст</td>\n")
+        rep, ok = check_step_body_structure("текст", src)
+        assert ok, rep
+
+
+class TestK28UiArtifacts:
+    """К-28: элементы UI Confluence из выгрузки в чистовике = брак."""
+
+    def test_expand_source_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-BNK-07\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "Пример запроса Развернуть исходный код ``` {} ```\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("артефакт интерфейса" in r for r in rep)
+
+    def test_clean_card_ok(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-BNK-07\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "Пример запроса:\n\n```\n{}\n```\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+
+class TestK27StubGuard:
+    """К-27: карточка-заглушка чужого типа = брак; слово «заглушка» в
+    прозе и заглушки ЭФ — легальны."""
+
+    def test_stub_card_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "rbac.md"
+        p.write_text(
+            "---\nid: RBAC-001\ntitle: 'Р'\ntype: rbac\n---\n\n"
+            "# Ролевая модель\n\nЗаглушка комплекта: полное описание "
+            "требует целевого захода create-rbac.\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("заглушка вне правил" in r for r in rep)
+
+    def test_word_in_prose_clean(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "при отсутствии данных отображается заглушка экрана\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+    def test_screen_form_stub_legal(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "scr.md"
+        p.write_text(
+            "---\nid: SCR-CL-09\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "## Назначение\n\nДокумент-заглушка: страница вне партии.\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+
 class TestK25CellConverterAndStructure:
     """К-25: детерминированная конвертация ячейки (чередование абзацев и
     уровней) + сверка секции со структурным профилем эталона."""
