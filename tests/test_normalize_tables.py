@@ -1905,6 +1905,18 @@ class TestK25dPairSectionProfiles:
         rep, ok = check_heavy_pair_structure(card, self._SRC)
         assert ok, rep
 
+    def test_naznachenie_duplicate_head_not_flagged(self):
+        # дубль начала ячейки в «Назначении» (первые предложения
+        # дословно) легитимен: сверка идёт с ЛУЧШИМ вхождением
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        md = html_fragment_to_markdown(self._CELL)
+        first_para = md.split("\n\n")[0]
+        card = ("## Назначение\n\n" + first_para + "\n\n"
+                "## Поведение\n\n" + md + "\n")
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert ok, rep
+
 
 class TestK29HeavyCellInvariant:
     """К-29: тяжёлая ячейка (в т.ч. p-абзацами без ul) не коллапсирует
@@ -2066,6 +2078,20 @@ class TestK25CellConverterAndStructure:
     _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
             "<th>Что делает функция</th><td>" + _CELL + "</td>"
             "</tr></tbody></table>\n")
+
+    def test_margin_left_paragraph_level(self):
+        # вложенность абзацев инлайн-стилем Confluence (margin-left)
+        # переносится blockquote-уровнем; профиль различает уровни
+        from app.scripts.CI.normalize_tables import (
+            html_fragment_to_markdown, _md_profile)
+        cell = ('<p><strong>ТОГДА</strong></p>'
+                '<p style="margin-left: 40.0px"><strong>Выполнение '
+                'функции возможно</strong> новый статус "DELETED"</p>'
+                '<p><strong>ИНАЧЕ</strong></p>')
+        md = html_fragment_to_markdown(cell)
+        lines = [ln for ln in md.splitlines() if ln.strip()]
+        assert lines[1].startswith("> **Выполнение функции возможно**")
+        assert _md_profile(lines) == ["p", "q1", "p"]
 
     def test_converter_keeps_alternation(self):
         from app.scripts.CI.normalize_tables import html_fragment_to_markdown

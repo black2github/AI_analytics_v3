@@ -1452,13 +1452,22 @@ def html_fragment_to_markdown(html: str) -> str:
             for sub in li.find_all(["ul", "ol"], recursive=False):
                 walk_list(sub, child_depth)
 
+    def p_level(el) -> int:
+        # Confluence выражает вложенность АБЗАЦЕВ инлайн-стилем
+        # margin-left (40px = уровень); markdown-представление —
+        # blockquote «>» на уровень (отступ пробелами дал бы code-блок).
+        # Находка пользователя: «Выполнение функции возможно» (пилот 5.5)
+        m = re.search(r"margin-left:\s*([\d.]+)px",
+                      el.get("style", "") or "")
+        return round(float(m.group(1)) / 40) if m else 0
+
     for el in soup.children:
         name = getattr(el, "name", None)
         if name == "p":
             t = text_of(el)
             if t:
                 blank()
-                lines.append(t)
+                lines.append("> " * p_level(el) + t)
                 blank()
         elif name in ("ul", "ol"):
             walk_list(el, 0)
@@ -1496,6 +1505,10 @@ def _md_profile(lines: List[str]) -> List[str]:
     out: List[str] = []
     for ln in lines:
         if not ln.strip():
+            continue
+        mq = re.match(r"^((?:>\s*)+)", ln)
+        if mq:
+            out.append(f"q{mq.group(1).count('>')}")
             continue
         m = re.match(r"^( *)[-+*]\s", ln)
         if m:
@@ -1610,15 +1623,15 @@ def check_heavy_pair_structure(card_text: str,
                   if len(p) >= 30]
         if not probes:
             continue
-        start = None
-        probe = probes[0]
-        for pr in probes:
-            start = next((i for i, ln in enumerate(lines)
-                          if not ln.lstrip().startswith("|")
-                          and pr in _norm_cell(ln)), None)
-            if start is not None:
-                probe = pr
-                break
+        # сверка с ЛУЧШИМ вхождением, не с первым: начало ячейки
+        # легитимно дублируется в «Назначении» (первые предложения
+        # дословно — решение аналитика), полное содержимое — в
+        # «Поведении»; сверка с первым вхождением флагала дубль и
+        # спровоцировала подстройку формы (пилот 5.5, fun-sys-03)
+        starts = [i for i, ln in enumerate(lines)
+                  if not ln.lstrip().startswith("|")
+                  and any(pr in _norm_cell(ln) for pr in probes)]
+        start = starts[0] if starts else None
         if start is None:
             # ни одна проба не найдена вне таблиц: либо контент в
             # |-строке (зона check_heavy_cells), либо ПОТЕРЯН
@@ -1634,16 +1647,21 @@ def check_heavy_pair_structure(card_text: str,
         # НЕ граница (внутри секций легитимны жирные «**ИНАЧЕ**» и
         # т.п. — ложная граница усекала профиль и спровоцировала обход
         # невидимым U+200B; сравнение префиксное, лишний хвост безвреден)
-        section: List[str] = []
-        for ln in lines[start:]:
-            if ln.startswith("#") or ln.lstrip().startswith("|"):
+        matched = False
+        for st in starts:
+            section: List[str] = []
+            for ln in lines[st:]:
+                if ln.startswith("#") or ln.lstrip().startswith("|"):
+                    break
+                section.append(ln)
+            actual = _md_profile(section)
+            if (len(actual) >= len(expected)
+                    and actual[:len(expected)] == expected):
+                matched = True
                 break
-            section.append(ln)
-        actual = _md_profile(section)
-        if (len(actual) < len(expected)
-                or actual[:len(expected)] != expected):
+        if not matched:
             bad += 1
-            sample = probe
+            sample = probes[0]
     if bad:
         return ([f"содержимое/структура тяжёлых пар расходится с эталоном "
                  f"конвертера ×{bad} (пример: …{sample[:45]!r}…) — "
