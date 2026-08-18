@@ -62,6 +62,62 @@ def test_unfulfillable_debt_caught(tmp_path):
     assert not ok and any("НЕИСПОЛНИМ" in r for r in report)
 
 
+def test_registry_variant_columns_parsed(tmp_path):
+    # реальные реестры матрицы разноколонны и пишут файл ссылкой:
+    # «| ID | Название | Файл-ссылка |», «| ID | page_id | Файл |» —
+    # жёсткая 4-колонная форма их не видела (пилот-3: первый именованный
+    # долг от FUN-ID дал ложное «ID отсутствует в реестре»)
+    docs = tmp_path / "docs"
+    make(docs / "traceability-matrix.md", """# Матрица
+
+## Реестр ID (модель данных)
+
+| ID | Название | Файл |
+|---|---|---|
+| ENT-001 | Поручение | [srs/data-model/ent-001.md](srs/data-model/ent-001.md) |
+
+## Реестр ID (функции)
+
+| ID | page_id | Файл |
+|---|---|---|
+| FUN-SYS-03 | 2169849256 | [srs/functions/fun-sys-03.md](srs/functions/fun-sys-03.md) |
+
+## Долги
+
+| Источник | — | Долг |
+|---|---|---|
+| FUN-SYS-03 | — | нет целевого артефакта function «[РРКО_ИПИ] Система: Функция сохранения статуса» — требуется заход create-function |
+""")
+    make(docs / "srs/data-model/ent-001.md",
+         "---\nid: ENT-001\ntitle: 'Поручение'\n---\n# Е\n")
+    make(docs / "srs/functions/fun-sys-03.md",
+         "---\nid: FUN-SYS-03\ntitle: 'Ф'\n---\nвызов функции "
+         "[РРКО_ИПИ] Система: Функция сохранения статуса, далее\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, report
+    assert not any("ID отсутствует в реестре" in r for r in report)
+
+
+def test_registry_id_still_missing_caught(tmp_path):
+    # НЕсрабатывание наоборот: долг от ID, которого в реестрах
+    # действительно нет, — по-прежнему брак
+    docs = tmp_path / "docs"
+    make(docs / "traceability-matrix.md", """# Матрица
+
+| ID | Название | Файл |
+|---|---|---|
+| ENT-001 | Поручение | [srs/data-model/ent-001.md](srs/data-model/ent-001.md) |
+
+| Источник | — | Долг |
+|---|---|---|
+| FUN-SYS-99 | — | нет целевого артефакта function «Функция призрачная где-то там» — требуется заход create-function |
+""")
+    make(docs / "srs/data-model/ent-001.md",
+         "---\nid: ENT-001\ntitle: 'Поручение'\n---\n# Е\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok and any("ID отсутствует в реестре" in r for r in report)
+
+
 def test_oq_order_violation_caught(tmp_path):
     from app.scripts.CI.link_debts import check_oq_order
     p = tmp_path / "open-questions.md"

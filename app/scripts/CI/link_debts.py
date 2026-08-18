@@ -104,10 +104,23 @@ def parse_matrix(matrix_text: str):
             debts.append((_expand_from(cells[0]), m.group(1),
                           m.group(2), ln.strip()))
             continue
-        # реестр ID: | ID | Тип | Наименование | Файл |
-        if (len(cells) >= 4 and re.match(r"^[A-ZА-Я]{2,}[-\w]*-?\d*$", cells[0])
-                and cells[3].endswith(".md")):
-            registry[cells[0]] = (cells[1], cells[3])
+        # реестр ID: первая ячейка — ID, любая другая несёт путь .md
+        # (голый или внутри markdown-ссылки). Жёсткая 4-колонная форма
+        # «| ID | Тип | Наименование | Файл |» видела 7 записей из ~40:
+        # реальные реестры матрицы разноколонны («| ID | Название |
+        # Файл |», у функций «| ID | page_id | Файл |») и пишут файл
+        # ссылкой — слепая зона жила до первого именованного долга от
+        # FUN-ID (пилот-3, 2026-08-19). Тип — только если ячейка после
+        # ID выглядит словом типа (латиница с дефисом: data-model, rbac).
+        if (len(cells) >= 2
+                and re.match(r"^[A-ZА-Я]{2,}[-\w]*-?\d*$", cells[0])):
+            fpath = next((fm.group(0) for c in cells[1:]
+                          for fm in [re.search(r"[\w./-]+\.md\b", c)]
+                          if fm), None)
+            if fpath:
+                typ = (cells[1]
+                       if re.fullmatch(r"[a-z][a-z-]*", cells[1]) else "")
+                registry.setdefault(cells[0], (typ, fpath))
     return registry, debts
 
 
