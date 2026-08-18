@@ -1869,6 +1869,13 @@ class TestK25CellConverterAndStructure:
         assert lines[4] == "Документы отбираются:"  # абзац ВЕРНУЛСЯ наверх
         assert lines[5] == "- по условиям фильтрации"
 
+    def test_inline_strong_inside_word_glued(self):
+        # имена файлов с жирным куском внутри слова остаются слитными
+        from app.scripts.CI.normalize_tables import html_fragment_to_markdown
+        md = html_fragment_to_markdown(
+            "<ul><li>767_610412_<strong>13_9</strong>_1.xml</li></ul>")
+        assert "767_610412_**13_9**_1.xml" in md
+
     def test_section_matching_profile_clean(self, tmp_path):
         from app.scripts.CI.normalize_tables import (
             check_passport_cell_structure, html_fragment_to_markdown)

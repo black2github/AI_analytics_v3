@@ -1413,6 +1413,9 @@ def html_fragment_to_markdown(html: str) -> str:
     lines: List[str] = []
 
     def text_of(el) -> str:
+        # инлайн-узлы клеятся БЕЗ принудительных пробелов: пробельность
+        # несёт сам текст источника (иначе «700_<strong>13_9</strong>_1»
+        # разваливался в «700_ **13_9** _1» — имена файлов дословны)
         parts: List[str] = []
         for c in el.children:
             name = getattr(c, "name", None)
@@ -1425,14 +1428,14 @@ def html_fragment_to_markdown(html: str) -> str:
             elif name == "br":
                 parts.append(" ")
             elif hasattr(c, "get_text"):
-                t = c.get_text(" ", strip=True)
+                t = c.get_text(" ")
                 if t:
                     parts.append(t)
             else:
-                t = str(c).strip()
+                t = str(c)
                 if t:
                     parts.append(t)
-        return re.sub(r"\s+", " ", " ".join(parts)).strip()
+        return re.sub(r"\s+", " ", "".join(parts)).strip()
 
     def blank() -> None:
         if lines and lines[-1] != "":
