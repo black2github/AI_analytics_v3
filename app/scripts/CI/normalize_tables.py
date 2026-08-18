@@ -2528,6 +2528,116 @@ def check_target_mentions(card_text: str, md_path: Path,
     return warns, True
 
 
+# --- К-32 (2026-08-19): анти-дефейс теговых упоминаний источника ---
+#
+# Пилот-2: агент «погасил» предупреждения сторожа упоминаний удалением
+# тегов из дословного текста («см в [РРКО_ИПИ] Методы» → «см в Методы»)
+# — упоминание ушло из зоны видимости, дословность и трассировка
+# потеряны, долгов ноль. Закон обходов: инвариант — теговое упоминание
+# ИСТОЧНИКА (целевой вид) сохраняется в карточке: тег на месте ЛИБО
+# упоминание внутри markdown-ссылки (в ссылке тег легитимно заменяется
+# на ID карточки: «[ENT-001 Инкассовое…](…)»). Слова без тега вне
+# ссылки = дефейс, брак (доказуем текстом карточки). Полное отсутствие
+# упоминания — предупреждение (зона могла легитимно не переноситься).
+
+
+def _md_link_texts(text: str) -> str:
+    """Конкатенация текстов-названий всех markdown-ссылок (балансом,
+    как _strip_markdown_links)."""
+    parts: List[str] = []
+    i, n = 0, len(text)
+    while i < n:
+        if text[i] != "[":
+            i += 1
+            continue
+        depth, j = 0, i
+        while j < n:
+            if text[j] == "[":
+                depth += 1
+            elif text[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        if j + 1 < n and text[j + 1] == "(":
+            pdepth, k = 0, j + 1
+            while k < n:
+                if text[k] == "(":
+                    pdepth += 1
+                elif text[k] == ")":
+                    pdepth -= 1
+                    if pdepth == 0:
+                        break
+                k += 1
+            if k < n:
+                parts.append(text[i + 1:j])
+                i = k + 1
+                continue
+        i = j + 1
+    return "\n".join(parts)
+
+
+def check_source_tag_mentions(card_text: str, src_text: str,
+                              docs_root: Optional[Path] = None
+                              ) -> Tuple[List[str], bool]:
+    """К-32: каждое теговое упоминание источника — в карточке с тегом
+    или ссылкой; слова без тега вне ссылки = дефейс (✗), отсутствие —
+    предупреждение (⚠, вердикт не трогает).
+
+    Исключение (реестровая конвенция, прецедент README функций и
+    матрицы): имя СУЩЕСТВУЮЩЕЙ карточки без тега легитимно, когда файл
+    ссылается на файл этой карточки (реестры пишут имена без тегов со
+    ссылкой рядом; ссылка с ID-переименованием «[FUN-CL-05 …]» дисплеем
+    иглу не несёт). Цели БЕЗ карточки исключения не имеют."""
+    plain = re.sub(r"<[^>]+>", " ", src_text)
+    mentions: Dict[str, str] = {}  # игла (норм.) -> «[ТЕГ] ядро» для отчёта
+    for m in _MENTION_TAG_RE.finditer(plain):
+        tail = plain[m.end():m.end() + 120]
+        e = _MENTION_END_RE.search(tail)
+        core = (tail[:e.start()] if e else tail).strip().rstrip(".,;:")
+        if not core:
+            continue
+        needle = _norm_ws(" ".join(core.split()[:3]))
+        tag = plain[m.start():m.end()].strip()
+        mentions.setdefault(needle, re.sub(r"\s+", " ", f"{tag} {core}")[:70])
+    if not mentions:
+        return [], True
+    card_nolinks = _norm_ws(_blank_md_links(card_text))
+    card_links = _norm_ws(_md_link_texts(card_text))
+    # реестровое исключение: базовые имена файлов, на которые ссылается
+    # карточка, и титулы существующих карточек без тега
+    linked_names = {t.split("#", 1)[0].replace("\\", "/").rsplit("/", 1)[-1]
+                    for _, t in _md_link_targets(card_text)}
+    titled_cards = ([(t, r) for t, r in _docs_card_titles(docs_root)]
+                    if docs_root is not None else [])
+    report: List[str] = []
+    ok = True
+    for needle, shown in sorted(mentions.items()):
+        if any(_norm_ws(t.split("]", 1)[-1]).startswith(needle)
+               and r.rsplit("/", 1)[-1] in linked_names
+               for t, r in titled_cards):
+            continue  # имя существующей карточки, файл на неё ссылается
+        # тег на месте: «[тег] игла» встречается вне ссылок или в ссылке
+        tagged = _norm_ws(shown.split("]")[0] + "] " + needle)
+        if tagged in card_nolinks or tagged in card_links:
+            continue
+        if needle in card_links:
+            continue  # оформлено ссылкой (тег в ссылке легитимно → ID)
+        if needle in card_nolinks:
+            ok = False
+            report.append(
+                f"К-32 дефейс тегового упоминания источника: «{shown}» — "
+                "в карточке те же слова БЕЗ тега вне ссылки: тег — часть "
+                "дословного текста и трассировка; возврат тега + ссылка "
+                "на карточку или долг в матрице ✗ НИЖЕ ПОРОГА")
+        else:
+            report.append(
+                f"предупреждение: теговое упоминание источника «{shown}» "
+                "в карточке не найдено — если зона переносилась, "
+                "упоминание обязано сохраниться (тег/ссылка)")
+    return report, ok
+
+
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True) -> Tuple[List[str], bool]:
@@ -2635,6 +2745,23 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
         report.append(
             f"невидимые символы (zero-width/BOM) ×{inv} в чистовике — "
             "не содержимое и типовой обход сторожей ✗ НИЖЕ ПОРОГА")
+    # К-31 (2026-08-19): гомоглифы — латиница внутри кириллического
+    # слова (и наоборот) невидима читателю и тихо выключает
+    # распознавание (пилот-2: «Kратность» с латинской K лишила колонку
+    # роли «кратн» и валидации). Класс К-30: невидимая подмена.
+    # Источники чистые (проверено), в честных переносах смешанных слов
+    # нет; дефис/цифры слово разделяют — «md-файл», «Ф1» легитимны.
+    mixed = sorted({m.group(0) for m in re.finditer(r"[^\W\d_]+", text)
+                    if re.search(r"[а-яёА-ЯЁ]", m.group(0))
+                    and re.search(r"[a-zA-Z]", m.group(0))})
+    if mixed:
+        ok = False
+        report.append(
+            f"гомоглифы/смешанное письмо в словах ×{len(mixed)} "
+            f"({', '.join(repr(w) for w in mixed[:5])}) — латиница внутри "
+            "кириллического слова (или наоборот) невидима читателю и "
+            "выключает распознавание — класс невидимых подмен К-30 "
+            "✗ НИЖЕ ПОРОГА")
     # К-28 (2026-08-18): артефакты интерфейса Confluence из выгрузки
     # («Развернуть исходный код» — кнопка сворачивания код-блока) — не
     # содержимое, в чистовик не переносятся (fun-bnk-07: втянут в
@@ -2909,6 +3036,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-32: анти-дефейс теговых упоминаний источника (пилот-2:
+        # теги удалялись, чтобы увести упоминания от сторожа)
+        sm_report, sm_ok = check_source_tag_mentions(combined, src_text,
+                                                     docs_root)
+        report.extend(sm_report)
+        ok = ok and sm_ok
         # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый
         hc_report, hc_ok = check_heavy_cells(combined, src_text)
         report.extend(hc_report)

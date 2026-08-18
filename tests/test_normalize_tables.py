@@ -1944,6 +1944,96 @@ class TestTuzFormulaAndTargetMentions:
         assert warns == []
 
 
+class TestK31Homoglyphs:
+    """К-31: латиница внутри кириллического слова (и наоборот) = брак
+    (пилот-2: «Kратность» с латинской K выключила роль колонки)."""
+
+    def test_latin_k_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| Обяз. | Kратность |\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("гомоглифы" in r and "Kратность" in r
+                              for r in rep)
+
+    def test_clean_scripts_not_flagged(self, tmp_path):
+        # НЕсрабатывание: чистые слова, коды, дефисные пары, Ф1
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "Кратность и DELETED, md-файл, АБС Ф1, `q_eco_d_inks`, "
+            "ISO20022.01, ЭФ Клиента.\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok and not any("гомоглифы" in r for r in rep)
+
+
+class TestK32SourceTagMentions:
+    """К-32: теговое упоминание источника сохраняется в карточке —
+    тег на месте или ссылка; слова без тега вне ссылки = дефейс."""
+
+    _SRC = ("<h1>[РРКО_ИПИ] Система: Функция удаления документа</h1>"
+            "<table><tr><td>Что делает функция:</td><td>Проверки см в "
+            "[РРКО_ИПИ] Методы для конкретной функции; далее работа "
+            "</td></tr></table>")
+
+    def _card(self, poведение):
+        return ("---\nid: FUN-SYS-03\n"
+                "title: '[РРКО_ИПИ] Система: Функция удаления документа'\n"
+                "type: function\n---\n\n## Поведение\n\n" + poведение)
+
+    def test_defaced_tag_flagged(self):
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        rep, ok = check_source_tag_mentions(
+            self._card("Проверки см в Методы для конкретной функции\n"),
+            self._SRC)
+        assert not ok and any("дефейс" in r and "Методы" in r for r in rep)
+
+    def test_tag_intact_ok(self):
+        # НЕсрабатывание: тег на месте
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        rep, ok = check_source_tag_mentions(
+            self._card("Проверки см в [РРКО_ИПИ] Методы для конкретной "
+                       "функции\n"), self._SRC)
+        assert ok and not any("дефейс" in r for r in rep)
+
+    def test_linked_mention_ok(self):
+        # НЕсрабатывание: оформлено ссылкой, тег в ссылке заменён на ID
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        rep, ok = check_source_tag_mentions(
+            self._card("Проверки см в [FUN-SYS-99 Методы для конкретной "
+                       "функции](../fun-sys-99.md)\n"), self._SRC)
+        assert ok and not any("дефейс" in r for r in rep)
+
+    def test_registry_style_name_with_link_exempt(self, tmp_path):
+        # НЕсрабатывание: имя существующей карточки без тега + ссылка
+        # на её файл (реестровая конвенция README/матрицы; дисплей
+        # ссылки с ID-переименованием иглу не несёт)
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        docs = tmp_path / "docs"
+        (docs / "client").mkdir(parents=True)
+        (docs / "client" / "fun-cl-99-methods.md").write_text(
+            "---\nid: FUN-CL-99\n"
+            "title: '[РРКО_ИПИ] Методы для конкретной функции'\n"
+            "type: function\n---\n", encoding="utf-8")
+        card = self._card(
+            "| FUN-CL-99 | Методы для конкретной функции | "
+            "[client/fun-cl-99-methods.md](client/fun-cl-99-methods.md) |\n")
+        rep, ok = check_source_tag_mentions(card, self._SRC, docs)
+        assert ok and not any("Методы" in r for r in rep)
+
+    def test_absent_mention_warns_not_flags(self):
+        # отсутствие целиком — предупреждение, не брак
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        rep, ok = check_source_tag_mentions(
+            self._card("Совсем другой текст.\n"), self._SRC)
+        assert ok and any(r.startswith("предупреждение") and "Методы" in r
+                          for r in rep)
+
+
 class TestK30InvisibleChars:
     """К-30: zero-width/BOM в чистовике = брак (обход границы секций
     дозаходом 5.3)."""
