@@ -1587,13 +1587,62 @@ def check_heavy_cells(card_text: str,
     return [], True
 
 
+def check_heavy_pair_structure(card_text: str,
+                               src_text: str) -> Tuple[List[str], bool]:
+    """К-25d (обобщение): профиль КАЖДОЙ лейбл-секции тяжёлой пары
+    (найденной по началу содержимого, лейбл безразличен) обязан
+    начинаться профилем эталона конвертера — склейка абзацев в
+    простыню видна как усечение профиля."""
+    heavy = heavy_source_cells(src_text)
+    if not heavy:
+        return [], True
+    lines = card_text.splitlines()
+    bad = 0
+    sample = ""
+    for cell in heavy:
+        md = html_fragment_to_markdown(cell)
+        expected = _md_profile(md.splitlines())
+        if len(expected) < 3:
+            continue
+        plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "", md, flags=re.M))
+        probe = plain[:40]
+        if len(probe) < 30:
+            continue
+        start = next((i for i, ln in enumerate(lines)
+                      if not ln.lstrip().startswith("|")
+                      and probe in _norm_cell(ln)), None)
+        if start is None:
+            continue  # не вынесено секцией — предмет check_heavy_cells
+        section: List[str] = []
+        for ln in lines[start:]:
+            if (ln.startswith("#") or ln.lstrip().startswith("|")
+                    or re.match(r"^\*\*[^*]+\*\*\s*$", ln)
+                    and section):
+                break
+            section.append(ln)
+        actual = _md_profile(section)
+        if (len(actual) < len(expected)
+                or actual[:len(expected)] != expected):
+            bad += 1
+            sample = probe
+    if bad:
+        return ([f"структура лейбл-секций расходится с эталоном "
+                 f"конвертера ×{bad} (пример: …{sample[:45]!r}…) — "
+                 "абзацы и уровни ячейки переносятся КАК В ЭТАЛОНЕ "
+                 "(--cell-to-md «<лейбл>») ✗ НИЖЕ ПОРОГА"], False)
+    return [], True
+
+
 def check_passport_cell_structure(card_text: str,
                                   src_text: str) -> Tuple[List[str], bool]:
     """К-25: лейбл-секция «Что делает функция» обязана структурно
     совпадать с эталонной конвертацией ячейки источника (профиль
     «абзац/пункт@уровень» в порядке следования)."""
+    # К-25d (2026-08-18): ul-ограничение снято — p-абзацные ячейки
+    # сверяются тоже (fun-sys-03: шесть абзацев источника склеены в
+    # один; профиль [p×6] vs [p×1] ловит склейку тривиально)
     cell = passport_cell_html(src_text)
-    if cell is None or "<ul>" not in cell:
+    if cell is None:
         return [], True
     # секция: от отдельной строки-лейбла до следующего заголовка/таблицы
     lines = card_text.splitlines()
@@ -2619,6 +2668,10 @@ def run_check(files: List[Path], source_path: Optional[Path],
         hc_report, hc_ok = check_heavy_cells(combined, src_text)
         report.extend(hc_report)
         ok = ok and hc_ok
+        # К-25d: профили вынесенных лейбл-секций против эталона
+        hp_report, hp_ok = check_heavy_pair_structure(combined, src_text)
+        report.extend(hp_report)
+        ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)
         if steps_apply:
             sb_report, sb_ok = check_step_body_structure(combined, src_text)

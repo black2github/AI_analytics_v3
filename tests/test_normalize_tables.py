@@ -1845,6 +1845,37 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK25dPairSectionProfiles:
+    """К-25d: p-абзацная секция сверяется профилем (склейка шести
+    абзацев в один — усечение профиля); корректная секция чиста."""
+
+    _CELL = ("<p>Функция вызывается в рамках метода обработки заявки "
+             "клиента банка на удаление платёжного документа.</p>"
+             "<p>При вызове осуществляется проверка возможности смены "
+             "статуса для текущего документа по модели статусов.</p>"
+             "<p>Сохранение нового статуса выполняется функцией "
+             "сохранения статуса при работе стейт-машины сервиса.</p>")
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<td><strong>Что делает функция:</strong></td>"
+            "<td>" + _CELL + "</td></tr></tbody></table>\n")
+
+    def test_glued_paragraphs_flagged(self):
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        glued = html_fragment_to_markdown(self._CELL).replace("\n\n", " ")
+        card = "**Что делает функция:**\n\n" + glued + "\n"
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert not ok and any("расходится с эталоном" in r for r in rep)
+
+    def test_etalon_section_clean(self):
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        card = ("**Что делает функция:**\n\n"
+                + html_fragment_to_markdown(self._CELL) + "\n")
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert ok, rep
+
+
 class TestK29HeavyCellInvariant:
     """К-29: тяжёлая ячейка (в т.ч. p-абзацами без ul) не коллапсирует
     в |-строку карточки; короткие правило-ячейки в таблицах легальны."""
