@@ -1845,6 +1845,41 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK24bPassportCellFormat:
+    """К-24b: структурная ячейка «Что делает функция» (вложенные списки
+    в источнике) не заталкивается в строку md-таблицы — лейбл-секцией."""
+
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<th>Что делает функция</th>"
+            "<td><p>Процесс.</p><ul><li>Задача<ul><li>Идентификатор"
+            "</li></ul></li></ul></td>"
+            "</tr></tbody></table>\n")
+
+    def _run(self, tmp_path, card_body):
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text(self._SRC, encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text(
+            "---\nid: FUN-BNK-08\ntitle: 'X'\ntype: function\n---\n\n"
+            + card_body, encoding="utf-8")
+        return run_check([card], src)
+
+    def test_cell_in_table_row_flagged(self, tmp_path):
+        rep, ok = self._run(
+            tmp_path,
+            "| **Что делает функция** | Процесс. Задача Идентификатор |\n")
+        assert any("расплющена" in r for r in rep)
+
+    def test_label_section_clean(self, tmp_path):
+        # тест на НЕсрабатывание: лейбл-секция с полноценным markdown
+        rep, ok = self._run(
+            tmp_path,
+            "**Что делает функция**\n\nПроцесс.\n\n- Задача\n"
+            "  - Идентификатор\n")
+        assert not any("расплющена" in r for r in rep), rep
+
+
 class TestK24NestingDepth:
     """К-24: уплощение многоуровневых списков источника = брак;
     маловложенный источник (HTML-ul без md-отступов) — skip."""

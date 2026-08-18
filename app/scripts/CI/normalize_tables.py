@@ -2297,13 +2297,34 @@ def run_check(files: List[Path], source_path: Optional[Path],
             nd_report, nd_ok = check_nesting_depth(combined, src_text)
             report.extend(nd_report)
             ok = ok and nd_ok
-            if ("Что делает функция" in src_text
-                    and "Что делает функция" not in combined):
-                ok = False
-                report.append(
-                    "паспортная строка «Что делает функция» источника не "
-                    "перенесена — паспорт переносится дословно, сценарий "
-                    "ячейки — слой поведения ✗ НИЖЕ ПОРОГА")
+            if "Что делает функция" in src_text:
+                if "Что делает функция" not in combined:
+                    ok = False
+                    report.append(
+                        "паспортная строка «Что делает функция» источника "
+                        "не перенесена — паспорт переносится дословно, "
+                        "сценарий ячейки — слой поведения ✗ НИЖЕ ПОРОГА")
+                else:
+                    # К-24b (2026-08-18): md-таблица не может нести
+                    # многоуровневые списки — структурная ячейка паспорта
+                    # выносится ЛЕЙБЛ-СЕКЦИЕЙ после таблицы (лейбл
+                    # дословно + полноценный markdown), иначе шесть
+                    # уровней склеиваются в строку-простыню (fun-bnk-08)
+                    m_cell = re.search(r"Что делает функция.*?</td>",
+                                       src_text, re.S)
+                    structured = bool(m_cell and "<ul>" in m_cell.group(0))
+                    in_table = any(
+                        "Что делает функция" in ln
+                        and ln.lstrip().startswith("|")
+                        for ln in combined.splitlines())
+                    if structured and in_table:
+                        ok = False
+                        report.append(
+                            "структурная ячейка «Что делает функция» "
+                            "расплющена строкой md-таблицы — переносится "
+                            "ЛЕЙБЛ-СЕКЦИЕЙ после паспорта (лейбл дословно "
+                            "+ полноценный markdown со всеми уровнями) "
+                            "✗ НИЖЕ ПОРОГА")
         # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
         # (в screen-form/function примеры форматов переносятся легитимно)
         ex_report, ex_ok = (check_example_values_absent(combined, src_text)
