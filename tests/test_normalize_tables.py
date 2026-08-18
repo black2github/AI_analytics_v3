@@ -1845,6 +1845,47 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK23StepHeadings:
+    """К-23: шаги, объявленные md-заголовками «#### Шаг №N.», обязаны
+    присутствовать в карточке — полная потеря поведения (мешок литералов
+    вместо шагов) больше не проходит зелёной."""
+
+    _SRC = ("---\ntitle: X\n---\n\n"
+            "#### Шаг №1. Валидация запроса\n\nтекст\n\n"
+            "#### Шаг №2. Создание задачи\n\nтекст\n\n"
+            "##### Шаг №2.1. Подшаг\n\nтекст\n")
+
+    def test_lost_steps_flagged(self):
+        from app.scripts.CI.normalize_tables import check_step_markers
+        card = "- Выгрузить в xml\n- NEW\n- FAILED\n- SEQ\n"
+        rep, ok = check_step_markers(card, self._SRC)
+        assert not ok and any("маркеры шагов" in r for r in rep)
+
+    def test_steps_present_clean(self):
+        # тест на НЕсрабатывание: шаги перенесены
+        from app.scripts.CI.normalize_tables import check_step_markers
+        card = ("- **Шаг №1.** Валидация запроса …\n"
+                "- **Шаг №2.** Создание задачи …\n"
+                "- **Шаг №2.1.** Подшаг …\n")
+        rep, ok = check_step_markers(card, self._SRC)
+        assert ok, rep
+
+    def test_strong_declared_steps_collected(self):
+        # объявления «**Шаг №N.**» (markdown-strong) тоже собираются
+        from app.scripts.CI.normalize_tables import check_step_markers
+        src = ("---\ntitle: X\n---\n\n**Шаг №1.** Проверка\n\n"
+               "**Шаг №2.** Изменение статуса\n")
+        rep, ok = check_step_markers("текст без шагов вовсе", src)
+        assert not ok and any("маркеры шагов" in r for r in rep)
+
+    def test_single_step_source_skipped(self):
+        # тест на НЕсрабатывание: <2 шагов — сверять нечего
+        from app.scripts.CI.normalize_tables import check_step_markers
+        src = "---\ntitle: X\n---\n\n#### Шаг №1. Единственный\n"
+        rep, ok = check_step_markers("текст без шагов", src)
+        assert ok, rep
+
+
 class TestK21OqRefsInCard:
     """К-21: отсылка к OQ в теле карточки = брак; слово
     «open-questions» без номера — легально."""

@@ -1328,6 +1328,26 @@ _STEP_TOKEN_RE = re.compile(r"^(?:шаг\s*№?\s*)?(\d+\.\d+(?:\.\d+)*)\)?\.?$"
                             re.IGNORECASE)
 
 
+# К-23 (2026-08-18): объявление шага фразой «Шаг №N» — в markdown-
+# заголовках (#### Шаг №1.), strong и первых колонках; прежний сборщик
+# брал только СОСТАВНЫЕ номера из strong/таблиц — партия «Функции
+# Банка» вела шаги md-заголовками, и потеря ВСЕГО поведения (12 шагов
+# fun-bnk-08) прошла зелёной, замаскированная мешком литералов.
+_STEP_HEADING_RE = re.compile(
+    r"^\s*(?:#{1,6}\s*)?\*{0,2}\s*Шаг\s*№\s*(\d+(?:\.\d+)*)", re.I)
+
+
+def step_phrases(source_text: str) -> List[str]:
+    """Номера шагов, объявленных фразой «Шаг №N» (заголовки/начала строк)."""
+    seen, out = set(), []
+    for ln in source_text.splitlines():
+        m = _STEP_HEADING_RE.match(ln)
+        if m and m.group(1) not in seen:
+            seen.add(m.group(1))
+            out.append(m.group(1))
+    return out
+
+
 def step_markers_from_html(source_text: str) -> List[str]:
     """Составные номера шагов из HTML источника (strong + первые колонки)."""
     soup = BeautifulSoup(protect_token_tags(source_text), "html.parser")
@@ -1357,12 +1377,21 @@ def check_step_markers(card_text: str, source_text: str) -> Tuple[List[str], boo
     перенумерация и слияние шагов — потеря; инцидент src-locks:
     29 шагов источника «упакованы» в 22 своих при зелёном гейте)."""
     markers = step_markers_from_html(source_text)
-    if len(markers) < 2:
+    phrases = step_phrases(source_text)
+    if len(markers) < 2 and len(phrases) < 2:
         return [], True
     norm_card = _norm_cell(card_text)
     # границы токена: «1.2» не должен «находиться» внутри «1.22»
     lost = [m for m in markers
             if not re.search(re.escape(m) + r"(?![.\d])", norm_card)]
+    # шаги-фразы (К-23): в карточке обязано жить «шаг №N» (объявлением
+    # или переходом) — полная потеря поведения даёт ноль вхождений
+    if len(phrases) >= 2:
+        # граница: «шаг №1» не должен находиться внутри «шаг №1.2», но
+        # «шаг №1.» (точка-конец) — легален
+        lost += [f"Шаг №{n}" for n in phrases
+                 if not re.search(r"шаг\s*№?\s*" + re.escape(n)
+                                  + r"(?!\.?\d)", norm_card)]
     if lost:
         return [f"маркеры шагов источника: в карточке отсутствуют "
                 f"{len(lost)} из {len(markers)} ✗ НИЖЕ ПОРОГА (номера шагов — "
