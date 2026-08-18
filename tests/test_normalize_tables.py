@@ -2043,6 +2043,24 @@ class TestK24bPassportCellFormat:
             "| **Что делает функция** | Процесс. Задача Идентификатор |\n")
         assert any("расплющена" in r for r in rep)
 
+    def test_td_strong_colon_variant_detected(self, tmp_path):
+        # К-25c: лейбл в <td><strong>…:</strong> (макет системных
+        # функций) детектится так же, как <th>
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text(
+            "---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<td><strong>Что делает функция:</strong></td>"
+            "<td><p>Процесс.</p><ul><li>Задача</li></ul></td>"
+            "</tr></tbody></table>\n", encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text(
+            "---\nid: FUN-SYS-01\ntitle: 'X'\ntype: function\n---\n\n"
+            "| **Что делает функция:** | Процесс. Задача |\n",
+            encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert any("расплющена" in r for r in rep)
+
     def test_label_section_clean(self, tmp_path):
         # тест на НЕсрабатывание: лейбл-секция с полноценным markdown
         rep, ok = self._run(

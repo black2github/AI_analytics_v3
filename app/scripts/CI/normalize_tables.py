@@ -1505,14 +1505,25 @@ def _md_profile(lines: List[str]) -> List[str]:
     return out
 
 
+def passport_cell_html(src_text: str,
+                       label: str = "Что делает функция") -> Optional[str]:
+    """HTML-содержимое ячейки паспорта по лейблу. К-25c: макеты команд
+    различаются — лейбл живёт в <th> ИЛИ <td><strong>…:</strong>
+    (системные функции inkasso: td + двоеточие; банковские: th без) —
+    единый детект для К-24b/К-25/CLI."""
+    m = re.search(re.escape(label)
+                  + r"\s*:?\s*(?:</strong>)?\s*</t[hd]>\s*"
+                  r"<td[^>]*>(.*?)</td>", src_text, re.S)
+    return m.group(1) if m else None
+
+
 def check_passport_cell_structure(card_text: str,
                                   src_text: str) -> Tuple[List[str], bool]:
     """К-25: лейбл-секция «Что делает функция» обязана структурно
     совпадать с эталонной конвертацией ячейки источника (профиль
     «абзац/пункт@уровень» в порядке следования)."""
-    m_cell = re.search(r"Что делает функция\s*(?:</strong>)?\s*</th>\s*"
-                       r"<td>(.*?)</td>", src_text, re.S)
-    if not m_cell or "<ul>" not in m_cell.group(1):
+    cell = passport_cell_html(src_text)
+    if cell is None or "<ul>" not in cell:
         return [], True
     # секция: от отдельной строки-лейбла до следующего заголовка/таблицы
     lines = card_text.splitlines()
@@ -1526,7 +1537,7 @@ def check_passport_cell_structure(card_text: str,
         if ln.startswith("#") or ln.lstrip().startswith("|"):
             break
         section.append(ln)
-    expected = _fragment_profile(m_cell.group(1))
+    expected = _fragment_profile(cell)
     actual = _md_profile(section)
     if expected != actual:
         def _short(p: List[str]) -> str:
@@ -2558,9 +2569,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                     # выносится ЛЕЙБЛ-СЕКЦИЕЙ после таблицы (лейбл
                     # дословно + полноценный markdown), иначе шесть
                     # уровней склеиваются в строку-простыню (fun-bnk-08)
-                    m_cell = re.search(r"Что делает функция.*?</td>",
-                                       src_text, re.S)
-                    structured = bool(m_cell and "<ul>" in m_cell.group(0))
+                    wdf_cell = passport_cell_html(src_text)
+                    structured = bool(wdf_cell and "<ul>" in wdf_cell)
                     in_table = any(
                         "Что делает функция" in ln
                         and ln.lstrip().startswith("|")
@@ -2642,14 +2652,12 @@ def main() -> int:
 
     if args.cell_to_md:
         text = main_file.read_text(encoding="utf-8")
-        m = re.search(re.escape(args.cell_to_md)
-                      + r"\s*(?:</strong>)?\s*</th>\s*<td>(.*?)</td>",
-                      text, re.S)
-        if not m:
+        cell = passport_cell_html(text, args.cell_to_md)
+        if cell is None:
             print(f"# ячейка с лейблом {args.cell_to_md!r} не найдена",
                   file=sys.stderr)
             return 2
-        print(html_fragment_to_markdown(m.group(1)))
+        print(html_fragment_to_markdown(cell))
         return 0
 
     if args.check:
