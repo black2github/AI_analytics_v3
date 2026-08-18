@@ -1845,6 +1845,30 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestK21OqRefsInCard:
+    """К-21: отсылка к OQ в теле карточки = брак; слово
+    «open-questions» без номера — легально."""
+
+    def test_oq_ref_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: RBAC-001\ntitle: 'Р'\ntype: rbac\n---\n\n"
+            "Заглушка: полное описание — см. OQ-014.\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("открытым вопросам" in r for r in rep)
+
+    def test_no_numbered_ref_clean(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "нерешённое фиксируется в open-questions комплекта\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
+
 class TestK19ExampleValuesAbsent:
     """К-19 (data-model): значения примеров источника НЕ должны попадать
     в карточку — ловится и частичный вырез (хвост примера); в function

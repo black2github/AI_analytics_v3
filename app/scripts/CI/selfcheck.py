@@ -116,6 +116,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     groups: Dict[str, List[Path]] = {}
     solo: List[Tuple[Path, str]] = []  # (файл, пометка)
     extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
+    card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if p.name in _SERVICE_FILES:
@@ -146,6 +147,8 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
             report.append(f"⚠ {rel}: без frontmatter — вне сверки "
                           "(для документов комплекта frontmatter обязателен)")
             continue
+        if fm.get("id"):
+            card_ids[p] = fm["id"]
         pids = page_ids(fm)
         if not pids:
             solo.append((p, "без источника (page_ids нет — forward/реестр)"))
@@ -228,6 +231,21 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     # --- комплект-уровневые сторожа (срез 2) ---
     matrix = docs / "traceability-matrix.md"
     if matrix.is_file():
+        # К-22 (2026-08-18): id из frontmatter каждой карточки обязан
+        # состоять в реестре ID матрицы — фантомный/авансовый ID вне
+        # реестра невидим сверкам и ломает правило выдачи ID (дозаход
+        # 3.1: rbac-заглушка с RBAC-001, которого нет в матрице)
+        mtext = matrix.read_text(encoding="utf-8", errors="replace")
+        ghosts = sorted((p, cid) for p, cid in card_ids.items()
+                        if cid not in mtext)
+        if ghosts:
+            all_ok = False
+            report.append("✗ реестр ID матрицы: фантомные id карточек "
+                          "(в реестре матрицы отсутствуют — ID выдаются "
+                          "по реестру, авансовые запрещены):")
+            report.extend(
+                f"   {p.relative_to(docs)}: id {cid} ✗"
+                for p, cid in ghosts[:10])
         rep, ok = _safe(ld.check, matrix, docs)
         mark = "✓" if ok else "✗"
         all_ok = all_ok and ok

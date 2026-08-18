@@ -25,9 +25,11 @@ def source(title: str, pid: str, body: str = "текст\n") -> str:
 
 
 def make_matrix(docs: Path, extra: str = "") -> None:
+    # X-01 в реестре по умолчанию: фикстурные карточки card() несут этот
+    # id, а К-22 требует состояния каждого id в реестре матрицы
     make(docs / "traceability-matrix.md",
          "# Матрица\n\n| ID | Тип | Наименование | Файл |\n"
-         "|---|---|---|---|\n" + extra)
+         "|---|---|---|---|\n| X-01 | function | Ф | f.md |\n" + extra)
 
 
 def test_happy_mapping_and_census(tmp_path):
@@ -71,7 +73,7 @@ def test_broken_frontmatter_flagged(tmp_path):
 def test_service_files_and_census_complete(tmp_path):
     # каждый файл комплекта попадает ровно в одну категорию
     docs = tmp_path / "docs"
-    make(docs / "traceability-matrix.md", "# Матрица\n")
+    make(docs / "traceability-matrix.md", "# Матрица\n\nX-01\n")
     make(docs / "open-questions.md", "## OQ-001. В\n")
     make(docs / "README.md", "# Комплект\n")  # без frontmatter
     make(docs / "srs/functions/f1.md", card("[X] Ф1"))
@@ -220,6 +222,19 @@ def test_oq_page_refs_warned_softly(tmp_path):
                for ln in report)
 
 
+def test_ghost_id_not_in_matrix_flagged(tmp_path):
+    # К-22: id карточки вне реестра матрицы = фантомный ID, брак
+    docs = tmp_path / "docs"
+    make(docs / "srs/rbac.md",
+         "---\nid: RBAC-001\ntitle: 'Р'\ntype: rbac\n---\n\n# Р\n\nтекст\n")
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("фантомные id" in ln for ln in report)
+    assert any("RBAC-001" in ln for ln in report)
+
+
 def test_feedback_register_order_wired(tmp_path):
     # цикл обратной связи: реестр FB-NN сторожится диспетчером
     docs = tmp_path / "docs"
@@ -298,7 +313,7 @@ def test_warning_visible_on_ok_file(tmp_path):
     make(docs / "srs/functions/bank/f1.md",
          "---\nid: FUN-BNK-01\ntitle: 'Ф1'\ntype: function\n---\n\n"
          "## Доступность\n\nДоступна всегда.\n")
-    make_matrix(docs)
+    make_matrix(docs, "| FUN-BNK-01 | function | Ф1 | f1.md |\n")
     report, ok = selfcheck.run(docs, None)
     assert ok
     assert any("предупреждение" in ln for ln in report)
