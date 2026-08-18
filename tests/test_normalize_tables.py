@@ -1845,6 +1845,105 @@ class TestPrivilegeWarning:
         assert ok and not any(r.startswith("предупреждение") for r in rep)
 
 
+class TestTuzFormulaAndTargetMentions:
+    """Сторожа триады по решениям 2026-08-19: формула ТУЗ обычным
+    шрифтом (шаблон function §2) и теговые упоминания целей
+    (ссылка на карточку или долг в матрице)."""
+
+    def _docs(self, tmp_path):
+        docs = tmp_path / "docs"
+        (docs / "srs").mkdir(parents=True)
+        (docs / "srs" / "ent-001.md").write_text(
+            "---\nid: ENT-001\n"
+            "title: '[РРКО_ИПИ] Инкассовое поручение исходящее'\n"
+            "type: data-model\n---\n\n# ENT-001\n", encoding="utf-8")
+        (docs / "traceability-matrix.md").write_text(
+            "# Матрица\n\n| Источник | Долг |\n|---|---|\n"
+            "| FUN-SYS-03 | Страница «Методы» — требуется заход "
+            "create-function |\n", encoding="utf-8")
+        return docs
+
+    def test_tuz_bold_flagged(self):
+        from app.scripts.CI.normalize_tables import check_tuz_formula
+        rep, ok = check_tuz_formula(
+            "- **Системная функция; вызов с ТУЗ; роли и привилегии "
+            "не применяются.**\n")
+        assert not ok and "формула ТУЗ" in rep[0]
+
+    def test_tuz_plain_ok(self):
+        # НЕсрабатывание: обычный шрифт легитимен
+        from app.scripts.CI.normalize_tables import check_tuz_formula
+        rep, ok = check_tuz_formula(
+            "- Системная функция; вызов с ТУЗ; роли и привилегии "
+            "не применяются.\n")
+        assert ok and rep == []
+
+    def test_existing_title_without_link_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = self._docs(tmp_path)
+        card = docs / "srs" / "fun-sys-03.md"
+        card.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| ID \"[РРКО_ИПИ] Инкассовое поручение исходящее\" | GUID |\n",
+            encoding="utf-8")
+        warns, ok = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert ok  # софт: вердикт не трогает
+        assert any("имя существующей карточки без ссылки" in w
+                   and "ent-001.md" in w for w in warns)
+
+    def test_linked_title_not_warned(self, tmp_path):
+        # НЕсрабатывание: оформленная ссылка сторожу не видна
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = self._docs(tmp_path)
+        card = docs / "srs" / "fun-sys-03.md"
+        card.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "см. [[РРКО_ИПИ] Инкассовое поручение исходящее]"
+            "(ent-001.md)\n", encoding="utf-8")
+        warns, _ = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert warns == []
+
+    def test_unknown_target_without_debt_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = self._docs(tmp_path)
+        card = docs / "srs" / "fun-sys-03.md"
+        card.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "вызов функции [РРКО_ИПИ] Система: Функция сохранения "
+            "статуса, вызываемой при работе.\n", encoding="utf-8")
+        warns, _ = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert any("упоминание цели" in w and "следа в матрице" in w
+                   for w in warns)
+
+    def test_debt_in_matrix_not_warned(self, tmp_path):
+        # НЕсрабатывание: игла (без тега, ≤3 слова) находит долг
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = self._docs(tmp_path)
+        card = docs / "srs" / "fun-sys-03.md"
+        card.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "проверки см. в [РРКО_ИПИ] Методы.\n",
+            encoding="utf-8")
+        warns, _ = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert warns == []
+
+    def test_cardinality_brackets_not_mentions(self, tmp_path):
+        # НЕсрабатывание: [1], [0..1], [x] — не теговые упоминания
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = self._docs(tmp_path)
+        card = docs / "srs" / "fun-sys-03.md"
+        card.write_text(
+            "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+            "| Кратность [1] | Массив [0..1] Да |\n", encoding="utf-8")
+        warns, _ = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert warns == []
+
+
 class TestK30InvisibleChars:
     """К-30: zero-width/BOM в чистовике = брак (обход границы секций
     дозаходом 5.3)."""

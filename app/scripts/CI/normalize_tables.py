@@ -2341,6 +2341,193 @@ def check_clean_document(md_path: Path,
     return report + warns, ok
 
 
+# --- сторож формулы ТУЗ (решение аналитика 2026-08-19) ---
+#
+# Правило и образец — шаблон function §2 «Доступность»; здесь третий
+# элемент триады (правило+образец+сторож): без него правка шаблона не
+# персистентна для дозаходов (прецедент rbac → К-27).
+
+_TUZ_BOLD_RE = re.compile(r"\*\*[^*\n]*вызов с ТУЗ[^*\n]*\*\*", re.I)
+
+
+def check_tuz_formula(card_text: str) -> Tuple[List[str], bool]:
+    hits = _TUZ_BOLD_RE.findall(card_text)
+    if not hits:
+        return [], True
+    return [f"формула ТУЗ обёрнута в жирный ×{len(hits)}: фиксированная "
+            "формула доступности FUN-SYS пишется ОБЫЧНЫМ шрифтом "
+            "(шаблон function §2, решение 2026-08-19) ✗ НИЖЕ ПОРОГА"], False
+
+
+# --- сторож упоминаний целей (кандидат волны E, вытянут 2026-08-19) ---
+#
+# Инвариант контура: титул Confluence-страницы несёт квадратно-скобочный
+# тег сервиса («[РРКО_ИПИ] …», «[ПЭД] …») — маркер упоминания цели сам
+# ТЕГ, а не перечень известных имён (имена заранее не перечислимы).
+# Требование: упоминание в теле карточки — ЛИБО markdown-ссылка на
+# существующую карточку комплекта, ЛИБО долг в матрице трассировки.
+# Слепые зоны (честно): упоминания без тега; коллективные долги матрицы
+# со свободной формулировкой могут не совпасть с иглой — потому уровень
+# ПРЕДУПРЕЖДЕНИЕ (⚠, вердикт не трогает): по асимметрии ошибок шум
+# лучше молчаливой потери; ужесточение — после боевой статистики.
+
+_MENTION_TAG_RE = re.compile(
+    r"\[(?=[^\]\n]*[А-ЯЁA-Z])[А-ЯЁA-Z0-9_]{2,20}\]\s+(?=[«\"(А-ЯЁA-Z])")
+# границы хвоста упоминания: конец строки/ячейки, жирный, кавычки,
+# точка с пробелом, запятая, точка с запятой (внутренние скобки —
+# часть титулов: «…(стейт-машина)» — НЕ граница)
+_MENTION_END_RE = re.compile(r"\n|\||\*\*|[»\"”;,]|\.\s")
+
+_TARGET_INDEX_CACHE: Dict[str, List[Tuple[str, str]]] = {}
+
+
+def _blank_md_links(text: str) -> str:
+    """Заменить спаны [текст](адрес) ЦЕЛИКОМ пробелами: ссылочное
+    упоминание уже оформлено и сторожу не видно (в отличие от
+    _strip_markdown_links, сохраняющего текст-название). Скобки —
+    балансом (инциденты intc-014 / К-11)."""
+    out: List[str] = []
+    i, n = 0, len(text)
+    while i < n:
+        if text[i] != "[":
+            out.append(text[i])
+            i += 1
+            continue
+        depth, j = 0, i
+        while j < n:
+            if text[j] == "[":
+                depth += 1
+            elif text[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        if j + 1 < n and text[j + 1] == "(":
+            pdepth, k = 0, j + 1
+            while k < n:
+                if text[k] == "(":
+                    pdepth += 1
+                elif text[k] == ")":
+                    pdepth -= 1
+                    if pdepth == 0:
+                        break
+                k += 1
+            if k < n:
+                out.append(" " * (k + 1 - i))
+                i = k + 1
+                continue
+        out.append(text[i])
+        i += 1
+    return "".join(out)
+
+
+def _norm_ws(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip().casefold()
+
+
+def _docs_card_titles(docs_root: Path) -> List[Tuple[str, str]]:
+    """[(title, отн. путь)] карточек комплекта с ТЕГОВЫМ титулом из
+    frontmatter (без тега прозовые коллизии неизбежны — слепая зона).
+    Кэш на процесс: селфчек зовёт по каждой карточке."""
+    key = str(docs_root.resolve())
+    if key in _TARGET_INDEX_CACHE:
+        return _TARGET_INDEX_CACHE[key]
+    out: List[Tuple[str, str]] = []
+    for p in sorted(docs_root.rglob("*.md")):
+        try:
+            head = p.read_text(encoding="utf-8", errors="replace")[:2000]
+        except OSError:
+            continue
+        if not head.lstrip("﻿").startswith("---"):
+            continue
+        m = re.search(r"^title:\s*(.+)$", head, re.M)
+        if not m:
+            continue
+        title = m.group(1).strip().strip("'\"").strip()
+        if re.match(r"^\[[^\]]+\]\s+\S", title):
+            out.append((title, str(p.relative_to(docs_root)).replace(
+                "\\", "/")))
+    _TARGET_INDEX_CACHE[key] = out
+    return out
+
+
+def check_target_mentions(card_text: str, md_path: Path,
+                          docs_root: Path) -> Tuple[List[str], bool]:
+    """Софт-сторож: теговые упоминания целей вне markdown-ссылок.
+    Существующая карточка → «оформить ссылкой»; неизвестная цель без
+    следа в матрице → «ссылка или долг». Вердикт не меняет (⚠)."""
+    body = card_text
+    if body.lstrip("﻿").startswith("---"):
+        m = re.search(r"\n---\s*\n", body)
+        if m:
+            body = body[m.end():]
+    body = re.sub(r"<!--.*?-->", " ", body, flags=re.S)
+    body = _blank_md_links(body)
+    warns: List[str] = []
+    # (а) дословные титулы существующих карточек вне ссылок
+    try:
+        self_rel = str(md_path.resolve().relative_to(
+            docs_root.resolve())).replace("\\", "/")
+    except (OSError, ValueError):
+        self_rel = ""
+    # регистр и переносы строк СОХРАНЯЮТСЯ: теговый регекс различает
+    # регистр, а \n — граница упоминания (схлопывание пробелов до скана
+    # протаскивало хвост упоминания через заголовки соседних разделов);
+    # титулы поперёк переносов ловятся паттерном с \s+ между словами
+    flat = body
+    titles = sorted(_docs_card_titles(docs_root),
+                    key=lambda t: -len(t[0]))  # длинный титул раньше:
+    # вложенный короткий не двоит счёт (вычёркивание по месту)
+    for title, rel in titles:
+        if rel == self_rel:
+            continue
+        pat = re.compile(
+            r"\s+".join(re.escape(w) for w in title.split()), re.I)
+        cnt = 0
+        m = pat.search(flat)
+        while m:
+            cnt += 1
+            flat = (flat[:m.start()] + " " * (m.end() - m.start())
+                    + flat[m.end():])
+            m = pat.search(flat)
+        if cnt:
+            warns.append(
+                f"предупреждение: имя существующей карточки без ссылки — "
+                f"«{title[:70]}» ×{cnt} → {rel} (упоминание оформляется "
+                "markdown-ссылкой на карточку)")
+    # (б) остальные теговые упоминания: след в матрице обязателен
+    matrix = docs_root / "traceability-matrix.md"
+    try:
+        mtext = _norm_ws(matrix.read_text(encoding="utf-8",
+                                          errors="replace"))
+    except OSError:
+        mtext = ""
+    seen: Dict[str, Tuple[str, int]] = {}
+    for m in _MENTION_TAG_RE.finditer(flat):
+        tail = flat[m.end():m.end() + 120]
+        e = _MENTION_END_RE.search(tail)
+        core = (tail[:e.start()] if e else tail).strip().rstrip(".,;:")
+        if not core:
+            continue
+        # игла — БЕЗ тега, первые ≤3 слова: реестр ID и долги матрицы
+        # пишут имена без тегов; свободные формулировки длиннее иглы
+        words = core.split()
+        needle = " ".join(words[:3]).casefold()
+        mention = re.sub(r"\s+", " ",
+                         flat[m.start():m.end()] + core)[:70]
+        if needle in mtext:
+            continue
+        key, (mm, cnt) = needle, seen.get(needle, (mention, 0))
+        seen[key] = (mm, cnt + 1)
+    for needle, (mention, cnt) in sorted(seen.items()):
+        warns.append(
+            f"предупреждение: упоминание цели «{mention}» ×{cnt} — "
+            "карточки в комплекте нет и следа в матрице не найдено: "
+            "либо markdown-ссылка на карточку, либо долг в матрице "
+            "(правило долгов канона)")
+    return warns, True
+
+
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True) -> Tuple[List[str], bool]:
@@ -2687,6 +2874,15 @@ def run_check(files: List[Path], source_path: Optional[Path],
     cl_report, cl_ok = check_clean_document(main_file, docs_root)
     report.extend(cl_report)
     ok = ok and cl_ok
+    # формула ТУЗ обычным шрифтом (решение 2026-08-19, шаблон §2)
+    tz_report, tz_ok = check_tuz_formula(card_text)
+    report.extend(tz_report)
+    ok = ok and tz_ok
+    # теговые упоминания целей: ссылка или долг (софт, вердикт не трогает)
+    if docs_root is not None:
+        tm_report, _ = check_target_mentions(card_text, main_file,
+                                             docs_root)
+        report.extend(tm_report)
     num_report, num_ok = check_behavior_numbering(card_text)
     report.extend(num_report)
     ok = ok and num_ok
