@@ -2045,6 +2045,61 @@ class TestK32SourceTagMentions:
                           for r in rep)
 
 
+class TestK34LabelSections:
+    """К-34: лейблы двухъячеечных пар источника не переносятся в
+    карточку функции ни жирной строкой, ни парой-таблицей; жирный
+    текст внутри значения ячейки («ПРИМЕЧАНИЯ!») — контент."""
+
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody>"
+            "<tr><td><strong>Что делает функция:</strong></td>"
+            "<td><p>Проверки при вызове метода выполняются штатно.</p>"
+            "<p><strong>ПРИМЕЧАНИЯ!</strong></p>"
+            "<p>исходим из одного документа</p></td></tr>"
+            "<tr><td>Доступность функции</td>"
+            "<td>Доступ к функции не ограничен (ТУЗ)</td></tr>"
+            "</tbody></table>\n")
+
+    def test_bold_label_line_flagged(self):
+        from app.scripts.CI.normalize_tables import check_label_sections
+        rep, ok = check_label_sections(
+            "## Назначение\n\n**Что делает функция:**\n\nПроверки при "
+            "вызове метода выполняются штатно.\n", self._SRC)
+        assert not ok and "К-34" in rep[0] and "Что делает функция" in rep[0]
+
+    def test_passport_pair_table_flagged(self):
+        from app.scripts.CI.normalize_tables import check_label_sections
+        rep, ok = check_label_sections(
+            "| **Доступность функции** | Доступ к функции не ограничен "
+            "(ТУЗ) |\n| --- | --- |\n", self._SRC)
+        assert not ok and "Доступность функции" in rep[0]
+
+    def test_bold_content_not_flagged(self):
+        # НЕсрабатывание: «ПРИМЕЧАНИЯ!» — жирный текст ВНУТРИ значения
+        # ячейки, не лейбл пары — переносится как есть
+        from app.scripts.CI.normalize_tables import check_label_sections
+        rep, ok = check_label_sections(
+            "## Поведение\n\nПроверки при вызове метода выполняются "
+            "штатно.\n\n**ПРИМЕЧАНИЯ!**\n\nисходим из одного "
+            "документа\n", self._SRC)
+        assert ok and rep == []
+
+    def test_data_model_passport_not_flagged(self, tmp_path):
+        # НЕсрабатывание: у data-model паспорт-таблица — слот шаблона;
+        # гейт по type в run_check
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "s.md"
+        src.write_text("---\nconfluence_page_id: 1\ntitle: '[Т] С'\n"
+                       "---\n\n<h1>[Т] С</h1>" + self._SRC.split(
+                           "---\n\n", 1)[1], encoding="utf-8")
+        card = tmp_path / "ent.md"
+        card.write_text(
+            "---\nid: ENT-001\ntitle: '[Т] С'\ntype: data-model\n---\n\n"
+            "# ENT-001\n\n| **Доступность функции** | Доступ к функции "
+            "не ограничен (ТУЗ) |\n|---|---|\n", encoding="utf-8")
+        rep, _ = run_check([card], src)
+        assert not any("К-34" in r for r in rep)
+
+
 class TestK33NestedLinks:
     """К-33: ссылка внутри текста другой ссылки / обёртка ссылки в
     скобки = брак (след генераторной правки 5.5; двойная обёртка

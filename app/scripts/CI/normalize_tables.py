@@ -2628,6 +2628,61 @@ def check_nested_links(card_text: str) -> Tuple[List[str], bool]:
             "текстом ✗ НИЖЕ ПОРОГА"], False
 
 
+# --- К-34 (2026-08-19): лейбл-секции паспорта в карточках функций ---
+#
+# Решение аудита 2026-08-18: у шаблона function нет слота «паспорт» —
+# лейблы ячеек источника («Что делает функция», «Как вызывается
+# функция», «Доступность функции»…) НЕ переносятся, содержимое
+# раскладывается по штатным разделам шаблона. Сторожа содержимого
+# (пробы/профиль) размещение не видели — карточки со свалкой паспорта
+# в «Назначении» стояли зелёными (вопрос аналитика по fun-sys-02).
+# Инвариант — ПРОИСХОЖДЕНИЕ, не жирность: флагуется строка, дословно
+# совпадающая с лейблом двухъячеечной пары источника (жирным абзацем
+# или парой-таблицей); жирный текст ВНУТРИ значения ячейки
+# («ПРИМЕЧАНИЯ!») — контент, переносится как есть и не флагуется.
+# Только type: function — у data-model паспорт-таблица легитимна (Э-1).
+
+_PAIR_LABEL_RE = re.compile(
+    r"<tr[^>]*>\s*<t[hd][^>]*>((?:(?!</?t[dr]).)*?)</t[hd]>\s*<td",
+    re.S | re.I)
+
+
+def source_pair_labels(src_text: str) -> set:
+    labels = set()
+    for m in _PAIR_LABEL_RE.finditer(src_text):
+        lbl = re.sub(r"<[^>]+>", " ", m.group(1))
+        lbl = re.sub(r"\s+", " ", lbl).strip().strip(":").strip()
+        if len(lbl) >= 6:
+            labels.add(lbl)
+    return labels
+
+
+def check_label_sections(card_text: str,
+                         src_text: str) -> Tuple[List[str], bool]:
+    labels = source_pair_labels(src_text)
+    if not labels:
+        return [], True
+    bad: List[str] = []
+    for ln in card_text.splitlines():
+        s = ln.strip()
+        m = re.fullmatch(r"\*\*([^*]+?)\*\*", s)
+        if m is None:
+            m = re.match(r"\|\s*\*\*([^*|]+?)\*\*\s*\|", s)
+        if m is None:
+            continue
+        t = m.group(1).strip().strip(":").strip()
+        if t in labels:
+            bad.append(t)
+    if not bad:
+        return [], True
+    uniq = sorted(set(bad))
+    return [f"К-34 лейбл-секции паспорта источника ×{len(bad)} "
+            f"({', '.join(repr(t) for t in uniq[:4])}) — лейблы ячеек "
+            "источника в карточку функции не переносятся (ни жирной "
+            "строкой, ни парой-таблицей): содержимое раскладывается в "
+            "соответствующий РАЗДЕЛ ШАБЛОНА ✗ НИЖЕ ПОРОГА"], False
+
+
 # --- К-32 (2026-08-19): анти-дефейс теговых упоминаний источника ---
 #
 # Пилот-2: агент «погасил» предупреждения сторожа упоминаний удалением
@@ -3160,6 +3215,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
+        # К-34: лейбл-секции паспорта — только функции (у data-model
+        # паспорт-таблица — легитимный слот шаблона)
+        if m_type is not None and m_type.group(1) == "function":
+            ls_report, ls_ok = check_label_sections(combined, src_text)
+            report.extend(ls_report)
+            ok = ok and ls_ok
         # К-32: анти-дефейс теговых упоминаний источника (пилот-2:
         # теги удалялись, чтобы увести упоминания от сторожа)
         sm_report, sm_ok = check_source_tag_mentions(combined, src_text,
