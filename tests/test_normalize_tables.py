@@ -1959,6 +1959,17 @@ class TestK31Homoglyphs:
         assert not ok and any("гомоглифы" in r and "Kратность" in r
                               for r in rep)
 
+    def test_plantuml_escape_not_flagged(self, tmp_path):
+        # НЕсрабатывание: «\nИПИ» в метке PlantUML — эскейп, не гомоглиф
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: PRC-01\ntitle: 'П'\ntype: process\n---\n\n"
+            "```plantuml\n:1.1 Начальное событие:\\nИнициировано "
+            "создание ИПИ;\n```\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok and not any("гомоглифы" in r for r in rep)
+
     def test_clean_scripts_not_flagged(self, tmp_path):
         # НЕсрабатывание: чистые слова, коды, дефисные пары, Ф1
         from app.scripts.CI.normalize_tables import check_file
