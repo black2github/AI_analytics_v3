@@ -336,6 +336,25 @@ def test_delta_report_no_changes_and_missing_baseline(tmp_path):
     assert any("не прочитан" in ln for ln in out2)
 
 
+def test_journal_appends_timestamped_itogo(tmp_path, monkeypatch, capsys):
+    # хронометраж этапов: время штампует прибор (у LLM нет часов)
+    import re as _re
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "a.md", card("[Т] А"))
+    make_matrix(docs)
+    j = tmp_path / "sandbox" / "journal.txt"
+    argv = ["selfcheck.py", "--docs", str(docs), "--journal", str(j)]
+    monkeypatch.setattr("sys.argv", argv)
+    sc.main()
+    sc.main()
+    lines = j.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 2  # дозапись, не перезапись
+    assert all(_re.match(
+        r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \| ИТОГО", ln)
+        for ln in lines)
+
+
 def test_root_junk_flagged(tmp_path):
     # чистота корня: скрипты правок/кэши рядом с docs — брак
     from app.scripts.CI import selfcheck as sc

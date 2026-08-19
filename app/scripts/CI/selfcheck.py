@@ -406,6 +406,11 @@ def main() -> int:
                     help="сравнить вердикты с ранее сохранённым отчётом "
                          "(--out в начале дозахода): дельта закрытых и "
                          "НОВЫХ ✗ — блок обязателен в сдаче")
+    ap.add_argument("--journal", type=Path, default=None,
+                    help="дописать строку «таймстемп | ИТОГО…» в файл "
+                         "журнала (хронометраж этапов дозахода: время "
+                         "штампует прибор, не исполнитель — у LLM нет "
+                         "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
     # Windows-консоль cp1251 падает на ✓/✗ — печатаем с заменой, файл
     # отчёта (--out) всегда полный UTF-8 (три самодельных лаунчера
@@ -417,6 +422,17 @@ def main() -> int:
     report, ok = run(args.docs, args.sources)
     if args.baseline is not None:
         report.extend(delta_report(args.baseline, report))
+    if args.journal is not None:
+        from datetime import datetime
+        itogo = next((ln for ln in report if ln.startswith("ИТОГО")),
+                     "ИТОГО: ?")
+        stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        try:
+            args.journal.parent.mkdir(parents=True, exist_ok=True)
+            with open(args.journal, "a", encoding="utf-8") as jf:
+                jf.write(f"{stamp} | {itogo}\n")
+        except OSError as e:
+            report.append(f"i журнал не записан: {e!r}")
     lines = [f"# {ln}" for ln in report]
     if args.out is not None:
         args.out.parent.mkdir(parents=True, exist_ok=True)
