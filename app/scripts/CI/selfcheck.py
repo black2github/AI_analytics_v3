@@ -327,6 +327,66 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     return report, all_ok
 
 
+# --- дельта против базлайна (протокол сдачи, 2026-08-19) ---
+#
+# «Монотонно падать» — неверный инвариант: честный рост находок бывает
+# (снятие маскировки/починка frontmatter раскрывает скрытое — пилот-3:
+# возврат тегов добавил ⚠). Верный инвариант сдачи: каждый ✗ на момент
+# сдачи погашен или объяснён блокером, НОВЫЕ ✗ квалифицированы
+# (раскрытие в зоне правок либо ПОРЧА вне зоны = брак дозахода —
+# авария достройки 5.5: правки функций ломали prc-файлы молча).
+# Протокол: старт дозахода — «--out sandbox/baseline.txt», сдача —
+# «--baseline sandbox/baseline.txt», дельта-блок в сдаче дословно.
+
+_MARKS = ("✓", "✗", "⚠")
+
+
+def _verdict_map(lines) -> Dict[str, str]:
+    """вердикт по единице отчёта: файл (в группах «a.md, b.md ← src» —
+    каждый) или комплект-уровневый гейт (текст до двоеточия)."""
+    out: Dict[str, str] = {}
+    for ln in lines:
+        s = ln.strip()
+        if not s or s[0] not in _MARKS:
+            continue
+        mark, rest = s[0], s[1:].strip()
+        rest = rest.split(" ← ")[0].split(":")[0].strip()
+        for name in rest.split(", "):
+            if name:
+                out[name] = mark
+    return out
+
+
+def delta_report(baseline_path: Path, cur_lines: List[str]) -> List[str]:
+    try:
+        raw = baseline_path.read_text(encoding="utf-8", errors="replace")
+    except OSError as e:
+        return [f"i дельта: базлайн не прочитан ({e!r}) — сравнение "
+                "пропущено"]
+    base = _verdict_map(ln.lstrip("# ").rstrip()
+                        for ln in raw.splitlines())
+    cur = _verdict_map(cur_lines)
+    n_base = sum(1 for v in base.values() if v == "✗")
+    n_cur = sum(1 for v in cur.values() if v == "✗")
+    closed = sorted(k for k, v in cur.items()
+                    if v != "✗" and base.get(k) == "✗")
+    opened = sorted(k for k, v in cur.items()
+                    if v == "✗" and base.get(k) != "✗")
+    out = [f"дельта против базлайна {baseline_path.name}: "
+           f"✗ было {n_base} → стало {n_cur}"]
+    if closed:
+        out.append(f"   закрыто ✗→✓ ×{len(closed)}: "
+                   + ", ".join(closed[:10]))
+    if opened:
+        out.append(f"   НОВЫЕ ✗ ×{len(opened)}: " + ", ".join(opened[:10])
+                   + " — каждый квалифицировать в сдаче: раскрытие в "
+                   "зоне правок (в работу или блокер) либо ПОРЧА вне "
+                   "зоны правок (брак дозахода)")
+    if not closed and not opened:
+        out.append("   изменений вердиктов нет")
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Единый диспетчер самопроверки комплекта: сам находит "
@@ -342,6 +402,10 @@ def main() -> int:
                     help="записать полный отчёт в файл (UTF-8) — вместо "
                          "самодельных лаунчеров и shell-редиректов "
                          "(PowerShell `>` пишет UTF-16)")
+    ap.add_argument("--baseline", type=Path, default=None,
+                    help="сравнить вердикты с ранее сохранённым отчётом "
+                         "(--out в начале дозахода): дельта закрытых и "
+                         "НОВЫХ ✗ — блок обязателен в сдаче")
     args = ap.parse_args()
     # Windows-консоль cp1251 падает на ✓/✗ — печатаем с заменой, файл
     # отчёта (--out) всегда полный UTF-8 (три самодельных лаунчера
@@ -351,6 +415,8 @@ def main() -> int:
     except Exception:
         pass
     report, ok = run(args.docs, args.sources)
+    if args.baseline is not None:
+        report.extend(delta_report(args.baseline, report))
     lines = [f"# {ln}" for ln in report]
     if args.out is not None:
         args.out.parent.mkdir(parents=True, exist_ok=True)

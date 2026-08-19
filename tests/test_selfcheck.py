@@ -307,6 +307,35 @@ def test_clean_document_guard_wired(tmp_path):
     assert any("предупреждение" in ln and "figma" in ln for ln in report)
 
 
+def test_delta_report_closed_and_opened(tmp_path):
+    # дельта против базлайна: закрытые и НОВЫЕ ✗ по именам; «монотонно
+    # падать» не требуется — новые квалифицируются (раскрытие/порча)
+    from app.scripts.CI.selfcheck import delta_report
+    base = tmp_path / "baseline.txt"
+    base.write_text(
+        "# ✗ srs\\a.md: источник page_id 1 НЕ НАЙДЕН\n"
+        "# ✓ srs\\b.md ← стр1.md\n"
+        "# ✓ долги ссылок (link_debts):\n", encoding="utf-8")
+    cur = ["✓ srs\\a.md ← стр1.md",
+           "✗ srs\\b.md: frontmatter не распознан",
+           "✓ долги ссылок (link_debts):"]
+    out = delta_report(base, cur)
+    assert any("было 1 → стало 1" in ln for ln in out)
+    assert any("закрыто ✗→✓ ×1" in ln and "a.md" in ln for ln in out)
+    assert any("НОВЫЕ ✗ ×1" in ln and "b.md" in ln
+               and "квалифицировать" in ln for ln in out)
+
+
+def test_delta_report_no_changes_and_missing_baseline(tmp_path):
+    from app.scripts.CI.selfcheck import delta_report
+    base = tmp_path / "baseline.txt"
+    base.write_text("# ✓ srs\\a.md ← стр1.md\n", encoding="utf-8")
+    out = delta_report(base, ["✓ srs\\a.md ← стр1.md"])
+    assert any("изменений вердиктов нет" in ln for ln in out)
+    out2 = delta_report(tmp_path / "нет.txt", ["✓ srs\\a.md ← стр1.md"])
+    assert any("не прочитан" in ln for ln in out2)
+
+
 def test_root_junk_flagged(tmp_path):
     # чистота корня: скрипты правок/кэши рядом с docs — брак
     from app.scripts.CI import selfcheck as sc
