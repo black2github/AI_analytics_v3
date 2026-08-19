@@ -2528,6 +2528,75 @@ def check_target_mentions(card_text: str, md_path: Path,
     return warns, True
 
 
+# --- К-33 (2026-08-19): вложенные/обёрнутые markdown-ссылки ---
+#
+# След генераторных правок дозахода 5.5: скрипт массовой простановки
+# ссылок оборачивал уже олинкованные упоминания второй раз
+# («[[[[…] …](fun-cl-08…)]](fun-cl-08…)» в fun-sys-02 прошло ВСЕ
+# сторожа — цели валидны, К-32 доволен) и вкладывал ссылку внутрь
+# title. Инвариант: внутри текста-названия ссылки не бывает другой
+# ссылки; ссылка не оборачивается в дополнительные квадратные скобки.
+# Легитимно: скобочный ТЕГ в дисплее («[[РРКО_ИПИ] Имя](file.md)») —
+# внешняя скобка там принадлежит самой ссылке, сосед-скобок нет.
+
+
+def _link_spans(text: str) -> List[Tuple[int, int, str]]:
+    """(начало, конец, текст-название) каждой ссылки [текст](адрес);
+    скобки балансом; шаг на 1 символ при не-ссылке — иначе внутренняя
+    ссылка в «[[x](y)]» пропускается."""
+    out: List[Tuple[int, int, str]] = []
+    i, n = 0, len(text)
+    while i < n:
+        if text[i] != "[":
+            i += 1
+            continue
+        depth, j = 0, i
+        while j < n:
+            if text[j] == "[":
+                depth += 1
+            elif text[j] == "]":
+                depth -= 1
+                if depth == 0:
+                    break
+            j += 1
+        if j + 1 < n and text[j + 1] == "(":
+            pdepth, k = 0, j + 1
+            while k < n:
+                if text[k] == "(":
+                    pdepth += 1
+                elif text[k] == ")":
+                    pdepth -= 1
+                    if pdepth == 0:
+                        break
+                k += 1
+            if k < n:
+                out.append((i, k, text[i + 1:j]))
+                i = k + 1
+                continue
+        i += 1
+    return out
+
+
+def check_nested_links(card_text: str) -> Tuple[List[str], bool]:
+    bad: List[str] = []
+    for start, end, disp in _link_spans(card_text):
+        nested = bool(_link_spans(disp))
+        wrapped = ((start > 0 and card_text[start - 1] == "[")
+                   or (end + 1 < len(card_text)
+                       and card_text[end + 1] == "]"))
+        if nested or wrapped:
+            frag = re.sub(r"\s+", " ", card_text[
+                max(0, start - 1):end + 2])[:60]
+            bad.append(frag)
+    if not bad:
+        return [], True
+    return [f"К-33 вложенная/обёрнутая markdown-ссылка ×{len(bad)} "
+            f"(фрагмент: …{bad[0]!r}…) — след генераторной правки: "
+            "ссылка не вкладывается в текст другой ссылки и не "
+            "оборачивается в скобки; оставить ОДНУ ссылку с дословным "
+            "текстом ✗ НИЖЕ ПОРОГА"], False
+
+
 # --- К-32 (2026-08-19): анти-дефейс теговых упоминаний источника ---
 #
 # Пилот-2: агент «погасил» предупреждения сторожа упоминаний удалением
@@ -2762,6 +2831,11 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
             "кириллического слова (или наоборот) невидима читателю и "
             "выключает распознавание — класс невидимых подмен К-30 "
             "✗ НИЖЕ ПОРОГА")
+    # К-33 (2026-08-19): вложенные/обёрнутые ссылки — след генераторных
+    # правок (двойная обёртка проходила все сторожа: цели валидны)
+    nl_report, nl_ok = check_nested_links(text)
+    report.extend(nl_report)
+    ok = ok and nl_ok
     # К-28 (2026-08-18): артефакты интерфейса Confluence из выгрузки
     # («Развернуть исходный код» — кнопка сворачивания код-блока) — не
     # содержимое, в чистовик не переносятся (fun-bnk-07: втянут в

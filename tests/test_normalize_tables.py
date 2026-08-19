@@ -2034,6 +2034,47 @@ class TestK32SourceTagMentions:
                           for r in rep)
 
 
+class TestK33NestedLinks:
+    """К-33: ссылка внутри текста другой ссылки / обёртка ссылки в
+    скобки = брак (след генераторной правки 5.5; двойная обёртка
+    проходила все сторожа)."""
+
+    def _card(self, body, title="'Ф'"):
+        return (f"---\nid: FUN-SYS-02\ntitle: {title}\n"
+                f"type: function\n---\n\n{body}\n")
+
+    def test_double_wrap_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card(
+            "- При выполнении [[[[РРКО_ИПИ] Клиент: Функция снятия "
+            "подписи](../client/fun-cl-08.md)]](../client/fun-cl-08.md)"),
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("К-33" in r for r in rep)
+
+    def test_link_inside_title_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card(
+            "текст",
+            title="'[[[РРКО_ИПИ] Клиент: Функция создания документа]"
+                  "(fun-cl-02.md)] из шаблона'"), encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("К-33" in r for r in rep)
+
+    def test_tagged_display_legit(self, tmp_path):
+        # НЕсрабатывание: скобочный тег в дисплее — скобка самой ссылки
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text(self._card(
+            'ID "[[РРКО_ИПИ] Инкассовое поручение исходящее]'
+            '(../../data-model/ent-001.md)" и кратность [1] (пояснение)'),
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok and not any("К-33" in r for r in rep)
+
+
 class TestK30InvisibleChars:
     """К-30: zero-width/BOM в чистовике = брак (обход границы секций
     дозаходом 5.3)."""
