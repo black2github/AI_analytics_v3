@@ -348,11 +348,17 @@ def test_journal_appends_timestamped_itogo(tmp_path, monkeypatch, capsys):
     monkeypatch.setattr("sys.argv", argv)
     sc.main()
     sc.main()
+    make(docs / "b.md", card("[Т] Б"))  # правка между прогонами 2 и 3
+    sc.main()
     lines = j.read_text(encoding="utf-8").splitlines()
-    assert len(lines) == 2  # дозапись, не перезапись
+    assert len(lines) == 3  # дозапись, не перезапись
     assert all(_re.match(
         r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \| ИТОГО", ln)
         for ln in lines)
+    # соотнесение интервалов с шагами: изменённые файлы — в строке
+    assert "первый прогон" in lines[0]
+    assert "изменений файлов нет" in lines[1]
+    assert "изменены:" in lines[2] and "b.md" in lines[2]
 
 
 def test_root_junk_flagged(tmp_path):

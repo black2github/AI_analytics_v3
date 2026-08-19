@@ -423,14 +423,39 @@ def main() -> int:
     if args.baseline is not None:
         report.extend(delta_report(args.baseline, report))
     if args.journal is not None:
+        import json
         from datetime import datetime
         itogo = next((ln for ln in report if ln.startswith("ИТОГО")),
                      "ИТОГО: ?")
         stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         try:
+            # изменённые с ПРОШЛОГО прогона файлы (mtime-скан docs):
+            # интервал журнала и его содержимое — в одной строке,
+            # повторные правки одного файла видны по-прогонно (вопрос
+            # аналитика о соотнесении тихих интервалов с шагами)
+            state_p = args.journal.with_suffix(
+                args.journal.suffix + ".state")
+            cur_mt = {str(p.relative_to(args.docs)):
+                      round(p.stat().st_mtime, 2)
+                      for p in sorted(args.docs.rglob("*.md"))}
+            try:
+                prev_mt = json.loads(state_p.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                prev_mt = None
+            if prev_mt is None:
+                changed_note = "первый прогон (точка отсчёта)"
+            else:
+                changed = sorted(f for f, mt in cur_mt.items()
+                                 if prev_mt.get(f) != mt)
+                changed_note = ("изменены: " + ", ".join(changed[:12])
+                                + (f" (+{len(changed) - 12})"
+                                   if len(changed) > 12 else "")
+                                if changed else "изменений файлов нет")
             args.journal.parent.mkdir(parents=True, exist_ok=True)
             with open(args.journal, "a", encoding="utf-8") as jf:
-                jf.write(f"{stamp} | {itogo}\n")
+                jf.write(f"{stamp} | {itogo} | {changed_note}\n")
+            state_p.write_text(json.dumps(cur_mt, ensure_ascii=False),
+                               encoding="utf-8")
         except OSError as e:
             report.append(f"i журнал не записан: {e!r}")
     lines = [f"# {ln}" for ln in report]
