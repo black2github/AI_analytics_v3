@@ -307,6 +307,35 @@ def test_clean_document_guard_wired(tmp_path):
     assert any("предупреждение" in ln and "figma" in ln for ln in report)
 
 
+def test_root_junk_flagged(tmp_path):
+    # чистота корня: скрипты правок/кэши рядом с docs — брак
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "a.md", card("[Т] А"))
+    make_matrix(docs)
+    make(tmp_path / "_fix_links.py", "print('x')\n")
+    (tmp_path / "__pycache__").mkdir()
+    report, ok = sc.run(docs, None)
+    assert not ok
+    assert any("корень репозитория" in ln and "_fix_links.py" in ln
+               and "__pycache__" in ln for ln in report)
+
+
+def test_root_markdown_and_std_dirs_ok(tmp_path):
+    # НЕсрабатывание: md-файлы, точечные файлы и штатные каталоги
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "a.md", card("[Т] А"))
+    make_matrix(docs)
+    make(tmp_path / "README.md", "# о\n")
+    make(tmp_path / "open-questions.md", "# OQ\n")
+    make(tmp_path / ".gitattributes", "* text\n")
+    (tmp_path / "sandbox").mkdir()
+    (tmp_path / "sources").mkdir()
+    report, ok = sc.run(docs, None)
+    assert not any("корень репозитория" in ln for ln in report)
+
+
 def test_warning_visible_on_ok_file(tmp_path):
     # предупреждения печатаются и при ✓ (софт-сигнал Э-12)
     docs = tmp_path / "docs"

@@ -229,6 +229,34 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
             report.extend(f"   {ln}" for ln in _warns(rep))
 
     # --- комплект-уровневые сторожа (срез 2) ---
+    # чистота корня репозитория отдачи (2026-08-19): дозаход 5.5 оставил
+    # в корне 7 скриптов массовых правок и __pycache__ — прибор корень
+    # не видел, устное «удали» не персистентно. Инвариант: корень несёт
+    # штатные каталоги (docs/sources/sandbox/.git) и markdown/точечные
+    # файлы; исполняемое и кэши = брак.
+    root = docs.parent
+    _ok_dirs = {"docs", "sources", "sandbox", ".git"}
+    if sources is not None:
+        # каталог выгрузки задаётся аргументом и не обязан зваться
+        # «sources» — если он внутри корня, его вершина легитимна
+        try:
+            _ok_dirs.add(
+                sources.resolve().relative_to(root.resolve()).parts[0])
+        except (ValueError, IndexError, OSError):
+            pass
+    junk = sorted(
+        p.name for p in root.iterdir()
+        if (p.is_dir() and p.name not in _ok_dirs)
+        or (p.is_file() and not p.name.startswith(".")
+            and p.suffix.lower() not in (".md", ".markdown")))
+    if junk:
+        all_ok = False
+        report.append(
+            f"✗ корень репозитория: посторонние файлы ×{len(junk)} "
+            f"({', '.join(junk[:8])}) — в корне только штатные каталоги "
+            "(docs/sources/sandbox) и markdown; рабочие скрипты и кэши "
+            "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
+            "вовсе; read-only анализ — в sandbox)")
     matrix = docs / "traceability-matrix.md"
     if matrix.is_file():
         # К-22 (2026-08-18): id из frontmatter каждой карточки обязан
