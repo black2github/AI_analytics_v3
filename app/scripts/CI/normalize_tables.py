@@ -1593,9 +1593,10 @@ def check_heavy_cells(card_text: str,
                 break
     if bad:
         return ([f"тяжёлая ячейка источника расплющена строкой md-таблицы "
-                 f"×{bad} (фрагмент: …{sample[:50]!r}…) — структурное "
-                 "содержимое переносится ЛЕЙБЛ-СЕКЦИЕЙ, эталон даёт "
-                 "конвертер (--cell-to-md «<лейбл ячейки>») ✗ НИЖЕ ПОРОГА"],
+                 f"×{bad} (фрагмент: …{sample[:50]!r}…) — содержимое "
+                 "разворачивается в соответствующий РАЗДЕЛ ШАБЛОНА по "
+                 "эталону конвертера (--cell-to-md «<лейбл ячейки>»), не "
+                 "строкой таблицы ✗ НИЖЕ ПОРОГА"],
                 False)
     return [], True
 
@@ -1610,6 +1611,27 @@ def check_heavy_pair_structure(card_text: str,
     if not heavy:
         return [], True
     lines = card_text.splitlines()
+    # пробы режутся по СХЛОПНУТОМУ содержимому ячейки и могут пересекать
+    # границы абзацев эталона («Функция вызывается:» + список — проба
+    # склейка двух блоков): построчный поиск требовал склеивать первые
+    # строки секций и противоречил профилю — исполнитель подгонял текст
+    # под прибор (дозаход 5.5-фикс, 2026-08-19). Ищем в конкатенате
+    # не-табличных строк с маппингом позиции → строка старта.
+    _offs: List[Tuple[int, int]] = []
+    _parts: List[str] = []
+    _pos = 0
+    for _i, _ln in enumerate(lines):
+        if _ln.lstrip().startswith("|"):
+            continue
+        # маркеры списков срезаются как при нарезке проб — иначе
+        # проба «p+li» не совпадает со строкой «- …»
+        _t = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "", _ln))
+        if not _t:
+            continue
+        _offs.append((_pos, _i))
+        _parts.append(_t)
+        _pos += len(_t) + 1
+    flat_body = " ".join(_parts)
     bad = 0
     sample = ""
     for cell in heavy:
@@ -1628,9 +1650,16 @@ def check_heavy_pair_structure(card_text: str,
         # дословно — решение аналитика), полное содержимое — в
         # «Поведении»; сверка с первым вхождением флагала дубль и
         # спровоцировала подстройку формы (пилот 5.5, fun-sys-03)
-        starts = [i for i, ln in enumerate(lines)
-                  if not ln.lstrip().startswith("|")
-                  and any(pr in _norm_cell(ln) for pr in probes)]
+        starts: List[int] = []
+        for pr in probes:
+            j = flat_body.find(pr)
+            while j != -1:
+                k = max((idx for off, idx in _offs if off <= j),
+                        default=None)
+                if k is not None and k not in starts:
+                    starts.append(k)
+                j = flat_body.find(pr, j + 1)
+        starts.sort()
         start = starts[0] if starts else None
         if start is None:
             # ни одна проба не найдена вне таблиц: либо контент в
@@ -2832,6 +2861,19 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
             f"({', '.join(repr(w) for w in mixed[:5])}) — латиница внутри "
             "кириллического слова (или наоборот) невидима читателю и "
             "выключает распознавание — класс невидимых подмен К-30 "
+            "✗ НИЖЕ ПОРОГА")
+    # пустая pipe-таблица-заглушка («| | |» без содержимого) — мусор
+    # генераторных правок (Назначение fun-sys-07, 5.5-фикс): читателю
+    # не видна, содержимого не несёт
+    empty_tables = sum(
+        1 for ln in lines
+        if re.fullmatch(r"\|[\s|]*\|", ln.strip())
+        and not re.fullmatch(r"\|[\s:|-]*-[\s:|-]*\|", ln.strip()))
+    if empty_tables:
+        ok = False
+        report.append(
+            f"пустая строка-заглушка pipe-таблицы ×{empty_tables} "
+            "(«| | |» без содержимого) — мусор правок, убрать "
             "✗ НИЖЕ ПОРОГА")
     # К-33 (2026-08-19): вложенные/обёрнутые ссылки — след генераторных
     # правок (двойная обёртка проходила все сторожа: цели валидны)

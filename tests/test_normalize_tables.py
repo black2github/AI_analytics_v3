@@ -2105,6 +2105,38 @@ class TestK30InvisibleChars:
         assert ok, rep
 
 
+class TestProbeAcrossBlockBoundary:
+    """Проба, пересекающая границу абзацев эталона («Функция
+    вызывается:» + список), находится в правильно разложенной карточке
+    (фикс 5.5-фикс: построчный поиск требовал склейки строк и
+    противоречил профилю — исполнитель подгонял текст под прибор)."""
+
+    _CELL = ("<p>Функция вызывается:</p><ul>"
+             "<li>При выполнении Клиент: Функция отправки документа "
+             "на обработку в банк по клиентскому сценарию</li>"
+             "<li>Автоматически при переходе документа в статус SIGNED "
+             "по статусной модели сервиса обработки</li></ul>")
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<td><strong>Что делает функция:</strong></td>"
+            "<td>" + _CELL + "</td></tr></tbody></table>\n")
+
+    def test_correct_layout_not_flagged(self):
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        card = ("## Вызов функции\n\n"
+                + html_fragment_to_markdown(self._CELL) + "\n")
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert ok, rep
+
+    def test_loss_still_flagged(self):
+        # НЕсрабатывание наоборот: содержимого нет — потеря видна
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure)
+        card = "## Вызов функции\n\nСовсем другой текст.\n"
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert not ok
+
+
 class TestK25dPairSectionProfiles:
     """К-25d: p-абзацная секция сверяется профилем (склейка шести
     абзацев в один — усечение профиля); корректная секция чиста."""
