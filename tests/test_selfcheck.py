@@ -479,3 +479,21 @@ def test_nav_readme_exempt_from_frontmatter_warning(tmp_path):
     assert any("README" in ln and "освобождён" in ln for ln in report)
     assert not any("README" in ln and "обязателен" in ln for ln in report)
     assert any("notes.md" in ln and "обязателен" in ln for ln in report)
+
+
+def test_solo_fail_names_real_culprit(tmp_path):
+    # пометка режима «без источника…» читалась причиной ✗ (вопрос
+    # аналитика 2026-08-22): у ✗-файла первая строка называет брак
+    # внутренних сторожей, пометка режима — после; у ✓ — как раньше
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "srs/function/bad.md",
+         card("[X] Плохая").replace("текст", "текст заявкаID"))
+    make(docs / "srs/function/good.md", card("[X] Хорошая"))
+    make_matrix(docs)
+    report, ok = sc.run(docs, None)
+    bad = next(ln for ln in report if "bad.md" in ln)
+    good = next(ln for ln in report if "good.md" in ln)
+    assert bad.startswith("✗") and "брак внутренних сторожей" in bad
+    assert "причины ниже" in bad and "без источника" in bad
+    assert good.startswith("✓") and "брак" not in good

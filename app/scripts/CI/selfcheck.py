@@ -193,11 +193,16 @@ def run(docs: Path, sources: Optional[Path],
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         all_ok = all_ok and ok
-        report.append(f"{mark} {p.relative_to(docs)}: {note}")
-        if not ok:
-            report.extend(f"   {ln}" for ln in rep)
-        else:
+        if ok:
+            report.append(f"✓ {p.relative_to(docs)}: {note}")
             report.extend(f"   {ln}" for ln in _warns(rep))
+        else:
+            # Формулировка причины ✗ (2026-08-22): пометка режима сверки
+            # («без источника…») читалась причиной брака — брак всегда
+            # у внутренних сторожей, их строки ниже.
+            report.append(f"✗ {p.relative_to(docs)}: брак внутренних "
+                          f"сторожей (причины ниже); {note}")
+            report.extend(f"   {ln}" for ln in rep)
 
     for pid, files in sorted(groups.items()):
         src = idx[pid]

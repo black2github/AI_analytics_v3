@@ -39,7 +39,7 @@
 # ✓ srs\contract-call\external\call-ext-002-knosis-egrul.md: без источника (page_ids нет — forward/реестр)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/knosis/extin (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/knosis/examp (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
-# ✗ srs\contract-call\external\call-ext-003-esk-request-115.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\contract-call\external\call-ext-003-esk-request-115.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: call-ext-003-esk-request-115.md
 #    маркер сокращения «фрагмент» ×1: справочники и перечни источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА
 #    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
@@ -64,7 +64,7 @@
 # ✓ srs\contract-call\external\call-ext-005-tessa-upload.md: без источника (page_ids нет — forward/реестр)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/tessa/extint (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/tessa/exampl (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
-# ✗ srs\contract-call\external\call-ext-006-f1-open-account.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\contract-call\external\call-ext-006-f1-open-account.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: call-ext-006-f1-open-account.md
 #    гомоглифы/смешанное письмо в словах ×4 ('IDДоговораБС', 'заявкаID', 'заявкаIDЕСК', 'ркоID') — латиница внутри кириллического слова (или наоборот) невидима читателю и выключает распознавание — класс невидимых подмен К-30 ✗ НИЖЕ ПОРОГА
 #    таблица 0 (1 строк): ролей не распознано — пропущена
@@ -78,7 +78,7 @@
 #    таблица 4 (4 строк): ролей не распознано — пропущена
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/f1/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
-# ✗ srs\contract-call\external\call-ext-007-bsk-igk-check.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\contract-call\external\call-ext-007-bsk-igk-check.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: call-ext-007-bsk-igk-check.md
 #    гомоглифы/смешанное письмо в словах ×1 ('IDДоговораБС') — латиница внутри кириллического слова (или наоборот) невидима читателю и выключает распознавание — класс невидимых подмен К-30 ✗ НИЖЕ ПОРОГА
 #    таблица 0 (1 строк): ролей не распознано — пропущена
@@ -99,7 +99,7 @@
 # ✓ srs\contract-call\external\call-ext-011-esk-signing-authority.md: без источника (page_ids нет — forward/реестр)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
 #    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/esk/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
-# ✗ srs\contract-call\external\call-ext-012-sbp-qr-registration.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\contract-call\external\call-ext-012-sbp-qr-registration.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: call-ext-012-sbp-qr-registration.md
 #    таблица 0 (3 строк): ролей не распознано — пропущена
 #    таблица 1 (10 строк):
@@ -147,7 +147,7 @@
 # ✓ srs\data-model\ent-003-documents.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\data-model\ent-005-signature.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\data-model\ent-006-qrc-commission-payment.md: без источника (page_ids нет — forward/реестр)
-# ✗ srs\data-model\README.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\data-model\README.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: README.md
 #    маркер сокращения «и т. д.» ×1: справочники и перечни источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА
 #    README-реестр: колонные роли к навигационным таблицам не применяются
@@ -164,7 +164,7 @@
 # ✓ srs\function\client\fun-cl-03-create-request.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\function\client\fun-cl-04-edit-request.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\function\client\fun-cl-05-delete-request.md: без источника (page_ids нет — forward/реестр)
-# ✗ srs\function\client\fun-cl-06-sign-request.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\function\client\fun-cl-06-sign-request.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: fun-cl-06-sign-request.md
 #    маркер сокращения «фрагмент» ×1: справочники и перечни источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА
 #    таблица 0 (10 строк):
@@ -183,7 +183,7 @@
 # ✓ srs\function\README.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\function\system\fun-sys-09-save-request.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\ntf-notification.md: без источника (page_ids нет — forward/реестр)
-# ✗ srs\platform-functions.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\platform-functions.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: platform-functions.md
 #    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
 #    таблица 0 (16 строк):
@@ -204,7 +204,7 @@
 # ✓ srs\process\proc-009-f1-export.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\process\proc-010-esk-account-info.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\process\proc-011-tessa-pf-load.md: без источника (page_ids нет — forward/реестр)
-# ✗ srs\process\README.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\process\README.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: README.md
 #    README-реестр: колонные роли к навигационным таблицам не применяются
 #    битая относительная ссылка: … — цель не существует ✗ НИЖЕ ПОРОГА
@@ -217,7 +217,7 @@
 # ✓ srs\screen-form\client\scr-cl-03-request-edit\README.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.1-account.md: без источника (page_ids нет — forward/реестр)
 # ✓ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.2-gk-details.md: без источника (page_ids нет — forward/реестр)
-# ✗ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.3-confirmation.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.3-confirmation.md: брак внутренних сторожей (причины ниже); без источника (page_ids нет — forward/реестр)
 #    проверка карточки: scr-cl-03.3-confirmation.md
 #    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
 #    таблица 0 (27 строк):
