@@ -425,3 +425,57 @@ def test_cli_survives_cp1251_console(tmp_path):
                         capture_output=True, env=env)
     assert r2.returncode == 0, r2.stderr.decode("utf-8", "replace")
     assert "ИТОГО".encode("utf-8") in r2.stdout
+
+
+def test_root_komplekt_v_korne(tmp_path):
+    # топология «комплект в корне репозитория» (эталон
+    # docs-account-opening-request): brd/, srs/, CODEOWNERS,
+    # gpb-manifest.json — штатные; --docs указывает на сам корень.
+    # С «--docs .» docs.parent == docs — прежний код флаговал brd/srs.
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path
+    make(docs / "srs/function/f1.md", card("[X] Ф1"))
+    (docs / "brd").mkdir()
+    make_matrix(docs)
+    make(docs / "README.md", "# о\n")
+    (docs / "CODEOWNERS").write_text("* @lead\n", encoding="utf-8")
+    (docs / "gpb-manifest.json").write_text("{}\n", encoding="utf-8")
+    report, ok = sc.run(docs, None)
+    assert not any("корень репозитория" in ln for ln in report), report
+    # тест на НЕсрабатывание послабления: скрипт в корне — по-прежнему брак
+    (docs / "fix_all.py").write_text("print()\n", encoding="utf-8")
+    report2, ok2 = sc.run(docs, None)
+    assert any("корень репозитория" in ln and "fix_all.py" in ln
+               for ln in report2)
+
+
+def test_profiles_markers_soft_vs_strict(tmp_path):
+    # Р-8: командный профиль (по умолчанию) — маркер сокращения =
+    # предупреждение; полный (--strict) — брак, как раньше
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "srs/function/f1.md",
+         card("[X] Ф1").replace("текст", "текст: коды A, B и т.д."))
+    make_matrix(docs)
+    rep_soft, ok_soft = sc.run(docs, None)
+    assert ok_soft, rep_soft
+    assert any("предупреждение: маркер сокращения" in ln for ln in rep_soft)
+    rep_strict, ok_strict = sc.run(docs, None, strict=True)
+    assert not ok_strict
+    assert any("маркер сокращения" in ln and "ЦЕЛИКОМ" in ln
+               for ln in rep_strict)
+
+
+def test_nav_readme_exempt_from_frontmatter_warning(tmp_path):
+    # Р-9: README без frontmatter — освобождён (нейтральная строка),
+    # прочие файлы без frontmatter — прежнее предупреждение
+    from app.scripts.CI import selfcheck as sc
+    docs = tmp_path / "docs"
+    make(docs / "srs/function/f1.md", card("[X] Ф1"))
+    make(docs / "srs/README.md", "# Навигация\n")
+    make(docs / "srs/notes.md", "# Заметки без frontmatter\n")
+    make_matrix(docs)
+    report, ok = sc.run(docs, None)
+    assert any("README" in ln and "освобождён" in ln for ln in report)
+    assert not any("README" in ln and "обязателен" in ln for ln in report)
+    assert any("notes.md" in ln and "обязателен" in ln for ln in report)

@@ -561,9 +561,16 @@ def _looks_like_obligation_strict(v: str) -> bool:
 
 def _looks_like_obligation(v: str) -> bool:
     # О/Н/У в кириллице и латинские омоглифы O/H/Y; «Да/Нет/Усл.» (словарь
-    # карточек, режим --check); прочерк; пусто
-    return v.strip().strip(".").upper() in {
-        "", "-", "—", "О", "Н", "У", "O", "H", "Y", "ДА", "НЕТ", "УСЛ", "M", "М"}
+    # карточек, режим --check); прочерк; пусто. Расширение по нотации
+    # эталона docs-account-opening-request (разбор ✗ эталона 2026-08-21):
+    # «обязателен»/«необязателен» и «Да/Нет (вход|исход)» — направление
+    # параметра автор пишет в скобках той же ячейки. Строгий якорь
+    # раскроя HTML (_strict) не трогаем — он держит сетки.
+    u = v.strip().strip(".").upper()
+    if u in {"", "-", "—", "О", "Н", "У", "O", "H", "Y", "ДА", "НЕТ",
+             "УСЛ", "M", "М", "ОБЯЗАТЕЛЕН", "НЕОБЯЗАТЕЛЕН"}:
+        return True
+    return bool(re.match(r"^(ДА|НЕТ)\s*\((ВХОД|ИСХОД)\)$", u))
 
 
 # Логическая кратность связей модели данных (шаблон data-model, раздел
@@ -2810,7 +2817,8 @@ def check_source_tag_mentions(card_text: str, src_text: str,
 
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
-               column_roles: bool = True) -> Tuple[List[str], bool]:
+               column_roles: bool = True,
+               soft_markers: bool = False) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -2833,14 +2841,29 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # Голый текст, зажатый МЕЖДУ строками таблицы, — разорванная ячейка:
     # перенос строки внутри ячейки (вместо <br>) выталкивает её хвост из
     # таблицы (инцидент 6-дец: агент разнёс название и разрезал строку).
+    # Fenced-блоки — вне зоны действия (notation §«вне зоны»): PlantUML
+    # activity внутри ``` несёт свимлейны «|Система|» и шаги «:6 …;» —
+    # для сторожа они выглядели таблицей с зажатым текстом (4 ложняка
+    # process-файлов эталона, разбор ✗ 2026-08-21).
     lines = text.splitlines()
+    _in_fence = False
+    _fenced = set()
     for k, ln in enumerate(lines):
+        if ln.lstrip().startswith("```"):
+            _in_fence = not _in_fence
+            _fenced.add(k)
+        elif _in_fence:
+            _fenced.add(k)
+    for k, ln in enumerate(lines):
+        if k in _fenced:
+            continue
         s = ln.strip()
         if not s or s.startswith("|") or s.startswith("#"):
             continue
-        prev_is_pipe = k > 0 and lines[k - 1].strip().startswith("|")
+        prev_is_pipe = (k > 0 and k - 1 not in _fenced
+                        and lines[k - 1].strip().startswith("|"))
         nxt = next((lines[j].strip() for j in range(k + 1, len(lines))
-                    if lines[j].strip()), "")
+                    if lines[j].strip() and j not in _fenced), "")
         if prev_is_pipe and nxt.startswith("|"):
             ok = False
             report.append(
@@ -2861,13 +2884,24 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # Порядок колонок справочников НЕ проверяется: решение пользователя
     # 2026-08-09 — переносится как в источнике (дословность; целевое
     # переформатирование — работа поздних слоёв, не миграции).
+    # Р-8 (2026-08-22): в командном профиле (selfcheck по умолчанию)
+    # маркеры — предупреждение: на эталоне детектор дал 3/3 ложняков
+    # («и т. д.» в описании колонки README, «фрагмент текста ПФ»,
+    # scope-примечание). В полном профиле (--strict, наши прогоны) — ✗.
     for marker in ("фрагмент", "см. источник", "и т.д.", "и т. д."):
         cnt = text.lower().count(marker)
         if cnt:
-            ok = False
-            report.append(
-                f"маркер сокращения «{marker}» ×{cnt}: справочники и перечни "
-                f"источника переносятся ЦЕЛИКОМ, без «фрагментов» ✗ НИЖЕ ПОРОГА")
+            if soft_markers:
+                report.append(
+                    f"предупреждение: маркер сокращения «{marker}» ×{cnt} — "
+                    f"проверьте, что справочники и перечни источника "
+                    f"перенесены целиком")
+            else:
+                ok = False
+                report.append(
+                    f"маркер сокращения «{marker}» ×{cnt}: справочники и "
+                    f"перечни источника переносятся ЦЕЛИКОМ, без «фрагментов» "
+                    f"✗ НИЖЕ ПОРОГА")
     # К-13 (2026-08-17, анти-маскировка): HTML-коммент в чистовике.
     # Контрольный дозаход вскрыл обход гейта значений: агент экзамена
     # спрятал значения источника в <!-- selfcheck-coverage: … --> — сверка
@@ -2969,19 +3003,21 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                 "чистовике — элемент UI выгрузки, не содержимое "
                 "✗ НИЖЕ ПОРОГА")
     # К-27 (2026-08-18): карточка-заглушка вне правил. Заглушки канон
-    # разрешает только EXTINT (contract-calls) и записям PLT; ЭФ — по
-    # своему шаблону. Рецидив rbac: дозаход пересоздал заглушку и вписал
-    # RBAC-001 в матрицу — легализация обошла К-21/К-22 (решение
-    # аналитика из разового промпта не персистентно, сторожим класс).
+    # разрешает только карточкам вызова чужих контрактов (contract-call;
+    # legacy-тип external-integration — стенды до модели CALL 2026-08-20)
+    # и записям PLT; ЭФ — по своему шаблону. Рецидив rbac: дозаход
+    # пересоздал заглушку и вписал RBAC-001 в матрицу — легализация
+    # обошла К-21/К-22 (решение аналитика из разового промпта не
+    # персистентно, сторожим класс).
     m_t = re.search(r"^type:\s*([\w-]+)", text[:600], re.M)
     if (m_t and m_t.group(1) not in
-            ("external-integration", "screen-form")
+            ("contract-call", "external-integration", "screen-form")
             and re.search(r"(?mi)^\s*(?:документ-)?заглушка"
                           r"(?:\s+комплекта)?\s*[:.]", text)):
         ok = False
         report.append(
             "карточка-заглушка вне правил: заглушки предписаны только "
-            "EXTINT/PLT/ЭФ — отсутствующая цель фиксируется долгом в "
+            "CALL/PLT/ЭФ — отсутствующая цель фиксируется долгом в "
             "матрице, артефакт чужого типа не заводится ✗ НИЖЕ ПОРОГА")
     # К-21 (2026-08-18): отсылка к OQ в ТЕЛЕ карточки — брак (правило
     # create-artifact «отсылок к OQ в документах не делай» было без
@@ -3166,7 +3202,8 @@ def strip_history(text: str) -> str:
 
 def run_check(files: List[Path], source_path: Optional[Path],
               min_valid_pct: float = 95.0,
-              docs_root: Optional[Path] = None) -> Tuple[List[str], bool]:
+              docs_root: Optional[Path] = None,
+              soft_markers: bool = False) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -3178,7 +3215,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                 if source_path is not None else None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
                             source_text=src_text,
-                            column_roles=main_file.name.lower() != "readme.md")
+                            column_roles=main_file.name.lower() != "readme.md",
+                            soft_markers=soft_markers)
     card_text = main_file.read_text(encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в

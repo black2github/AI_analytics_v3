@@ -319,9 +319,37 @@ class TestCheckMode:
         assert not ok
 
     def test_rewritten_obligation_caught(self, tmp_path):
-        # «Да» → произвольный текст: якорная колонка переписана
-        _report, ok = self._check(self.GOOD.replace("| Да |", "| обязателен |"),
-                                  tmp_path)
+        # «Да» → произвольный текст-предложение: якорная колонка переписана.
+        # («обязателен» из теста убран: нотация эталона узаконила токен —
+        # разбор ✗ эталона 2026-08-21, см. test_etalon_obligation_tokens)
+        _report, ok = self._check(
+            self.GOOD.replace("| Да |", "| заполняется всегда |"), tmp_path)
+        assert not ok
+
+    def test_etalon_obligation_tokens_ok(self, tmp_path):
+        # нотация эталона docs-account-opening-request: «обязателен» /
+        # «необязателен» / «Да (вход)» / «Нет (исход)» — валидные значения
+        good = (
+            "# Карточка\n\n"
+            "| Параметр | Обязательность |\n"
+            "|---|---|\n"
+            "| Идентификатор организации | необязателен |\n"
+            "| Валюта | обязателен |\n"
+            "| «Заявка» | Да (вход) |\n"
+            "| «Признак» | Нет (исход) |\n"
+        )
+        report, ok = self._check(good, tmp_path)
+        assert ok, report
+
+    def test_obligation_sentence_still_caught(self, tmp_path):
+        # тест на НЕсрабатывание расширения: предложение — по-прежнему брак
+        bad = (
+            "# Карточка\n\n"
+            "| Параметр | Обязательность |\n"
+            "|---|---|\n"
+            "| Валюта | при наличии блока параметры обязательны |\n"
+        )
+        _report, ok = self._check(bad, tmp_path)
         assert not ok
 
     def test_roleless_table_skipped(self, tmp_path):
@@ -2455,6 +2483,18 @@ class TestK27StubGuard:
         rep, ok = check_file(p)
         assert ok, rep
 
+    def test_contract_call_stub_legal(self, tmp_path):
+        # модель CALL (2026-08-20): заглушка карточки вызова чужого
+        # контракта — легальна, как прежний тип external-integration
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "call.md"
+        p.write_text(
+            "---\nid: CALL-003\ntitle: 'В'\ntype: contract-call\n---\n\n"
+            "## Назначение\n\nЗаглушка: страница метода вне выгрузки.\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert ok, rep
+
 
 class TestK25CellConverterAndStructure:
     """К-25: детерминированная конвертация ячейки (чередование абзацев и
@@ -3110,3 +3150,46 @@ class TestK10DuplicateHeaders:
                      encoding="utf-8")
         rep, ok = check_file(p, column_roles=False)
         assert ok, rep
+
+
+class TestFencedBlocksOutOfTornCellGuard:
+    """Fenced-блоки — вне зоны сторожа «разорванная ячейка»: PlantUML
+    activity несёт свимлейны «|Система|» и шаги «:6 …;» — сторож видел
+    таблицу с зажатым голым текстом (4 ложняка process-файлов эталона,
+    разбор ✗ 2026-08-21)."""
+
+    def _check(self, text, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "card.md"
+        p.write_text(text, encoding="utf-8")
+        return check_file(p)
+
+    def test_plantuml_swimlanes_not_flagged(self, tmp_path):
+        md = (
+            "# Процесс\n\n"
+            "```plantuml\n"
+            "@startuml\n"
+            "|Система|\n"
+            "  :5 Информировать пользователей банка;\n"
+            "|Пользователь Банка|\n"
+            "  :6 Обработать ошибку;\n"
+            "|Система|\n"
+            "@enduml\n"
+            "```\n"
+        )
+        report, ok = self._check(md, tmp_path)
+        assert ok, report
+        assert not any("разорванная ячейка" in l for l in report)
+
+    def test_real_torn_cell_still_caught(self, tmp_path):
+        # тест на НЕсрабатывание фильтра: разрыв ВНЕ fenced-блока ловится
+        md = (
+            "# Карточка\n\n"
+            "| Параметр | Описание |\n"
+            "|---|---|\n"
+            "| A | начало описания |\n"
+            "хвост разорванной ячейки\n"
+            "| B | следующая строка |\n"
+        )
+        report, ok = self._check(md, tmp_path)
+        assert any("разорванная ячейка" in l for l in report)

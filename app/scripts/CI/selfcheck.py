@@ -95,11 +95,17 @@ def _safe(fn, *args) -> Tuple[List[str], bool]:
 
 
 def _run(files: List[Path], src: Optional[Path],
-         docs_root: Optional[Path] = None) -> Tuple[List[str], bool]:
-    return _safe(lambda: nt.run_check(files, src, docs_root=docs_root))
+         docs_root: Optional[Path] = None,
+         soft_markers: bool = True) -> Tuple[List[str], bool]:
+    return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
+                                      soft_markers=soft_markers))
 
 
-def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
+def run(docs: Path, sources: Optional[Path],
+        strict: bool = False) -> Tuple[List[str], bool]:
+    # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
+    # сокращения предупреждением (3/3 ложняков на эталоне); полный
+    # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
     report: List[str] = []
     counts = {"✓": 0, "✗": 0, "⚠": 0}
     all_ok = True
@@ -144,8 +150,17 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
             continue
         if not fm:
             counts["⚠"] += 1
-            report.append(f"⚠ {rel}: без frontmatter — вне сверки "
-                          "(для документов комплекта frontmatter обязателен)")
+            # Р-9 (2026-08-22): навигационные README освобождены от
+            # требования frontmatter — в эталоне их 5, техдолг осознан
+            # и будет закрыт по всем сервисам одной волной. Файл остаётся
+            # в переписи (правило 2: молчаливых пропусков нет).
+            if p.name.lower() == "readme.md":
+                report.append(f"⚠ {rel}: навигационный README без "
+                              "frontmatter — вне сверки (освобождён, Р-9)")
+            else:
+                report.append(f"⚠ {rel}: без frontmatter — вне сверки "
+                              "(для документов комплекта frontmatter "
+                              "обязателен)")
             continue
         if fm.get("id"):
             card_ids[p] = fm["id"]
@@ -174,7 +189,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         return [ln for ln in rep if ln.startswith("предупреждение")]
 
     for p, note in solo:
-        rep, ok = _run([p], None, docs)
+        rep, ok = _run([p], None, docs, soft_markers=not strict)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         all_ok = all_ok and ok
@@ -211,10 +226,10 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
             files = [f for f in files if f not in misordered]
             if not files:
                 continue
-        rep, ok = _run(files, src, docs)
+        rep, ok = _run(files, src, docs, soft_markers=not strict)
         # внутренние сторожа неглавных карточек группы — отдельно
         for extra in files[1:]:
-            rep2, ok2 = _run([extra], None, docs)
+            rep2, ok2 = _run([extra], None, docs, soft_markers=not strict)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
         mark = "✓" if ok else "✗"
@@ -234,8 +249,22 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
     # не видел, устное «удали» не персистентно. Инвариант: корень несёт
     # штатные каталоги (docs/sources/sandbox/.git) и markdown/точечные
     # файлы; исполняемое и кэши = брак.
-    root = docs.parent
-    _ok_dirs = {"docs", "sources", "sandbox", ".git"}
+    # Две топологии комплекта: стендовая (--docs = <root>/docs, root =
+    # родитель) и «комплект в корне репозитория» (эталон
+    # docs-account-opening-request: brd/, srs/ и корневые документы лежат
+    # прямо в корне; --docs = корень). Признак второй — srs/ или brd/
+    # внутри docs; тогда root = сам docs, а brd/srs — штатные каталоги.
+    # С «--docs .» docs.parent == docs («.».parent == «.») — прежний код
+    # молча мерил сам комплект и флаговал brd/srs как мусор.
+    _docs_r = docs.resolve()
+    if (docs / "srs").is_dir() or (docs / "brd").is_dir():
+        root = docs
+    else:
+        root = _docs_r.parent
+    _ok_dirs = {"docs", "sources", "sandbox", ".git", "brd", "srs",
+                _docs_r.name}
+    # штатные не-markdown файлы GitLab-репозитория комплекта
+    _ok_files = {"CODEOWNERS", "gpb-manifest.json"}
     if sources is not None:
         # каталог выгрузки задаётся аргументом и не обязан зваться
         # «sources» — если он внутри корня, его вершина легитимна
@@ -248,6 +277,7 @@ def run(docs: Path, sources: Optional[Path]) -> Tuple[List[str], bool]:
         p.name for p in root.iterdir()
         if (p.is_dir() and p.name not in _ok_dirs)
         or (p.is_file() and not p.name.startswith(".")
+            and p.name not in _ok_files
             and p.suffix.lower() not in (".md", ".markdown")))
     if junk:
         all_ok = False
@@ -415,13 +445,17 @@ def main() -> int:
                     help="сравнить вердикты с ранее сохранённым отчётом "
                          "(--out в начале дозахода): дельта закрытых и "
                          "НОВЫХ ✗ — блок обязателен в сдаче")
+    ap.add_argument("--strict", action="store_true",
+                    help="полный профиль (держатели канона): маркеры "
+                         "сокращения — брак; без флага — командный "
+                         "профиль, маркеры — предупреждение (Р-8)")
     ap.add_argument("--journal", type=Path, default=None,
                     help="дописать строку «таймстемп | ИТОГО…» в файл "
                          "журнала (хронометраж этапов дозахода: время "
                          "штампует прибор, не исполнитель — у LLM нет "
                          "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
-    report, ok = run(args.docs, args.sources)
+    report, ok = run(args.docs, args.sources, strict=args.strict)
     if args.baseline is not None:
         report.extend(delta_report(args.baseline, report))
     if args.journal is not None:

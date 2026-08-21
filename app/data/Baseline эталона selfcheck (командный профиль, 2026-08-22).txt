@@ -1,0 +1,223 @@
+# ⚠ brd\features\README.md: навигационный README без frontmatter — вне сверки (освобождён, Р-9)
+# ⚠ brd\README.md: навигационный README без frontmatter — вне сверки (освобождён, Р-9)
+# ⚠ brd\use-cases\README.md: навигационный README без frontmatter — вне сверки (освобождён, Р-9)
+# ⚠ brd\use-cases\traceability-matrix.md: служебный реестр — сторож среза 2 (link_debts), сверке нормализатора не подлежит
+# ⚠ README.md: навигационный README без frontmatter — вне сверки (освобождён, Р-9)
+# ✗ srs\function\bank\fun-bnk-09-export-request-list.md: frontmatter не распознан (блок не закрыт или файл нечитаем) — брак
+# ✗ srs\process\proc-012-pay-commission-qr.md: frontmatter не распознан (блок не закрыт или файл нечитаем) — брак
+# ⚠ srs\README.md: навигационный README без frontmatter — вне сверки (освобождён, Р-9)
+# ⚠ traceability-matrix.md: служебный реестр — сторож среза 2 (link_debts), сверке нормализатора не подлежит
+# ✓ brd\business-rules.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-01-prosmotr.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-02-istoriya.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-03-upravlenie-obrabotkoy.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-04-vygruzka-dokumentov.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-05-vygruzka-ep.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-06-kopirovanie.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-bnk-07-uvedomleniya.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-01-podacha.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-02-prosmotr.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-03-podpisanie.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-04-proverka-podpisi.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-05-oplata-komissii.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-06-pechat.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-07-kopirovanie.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\features\f-cl-08-uvedomleniya.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\use-cases\uc-01-podacha-zayavki.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\use-cases\uc-02-obrabotka-zayavki.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\use-cases\uc-03-rabota-banka.md: без источника (page_ids нет — forward/реестр)
+# ✓ brd\use-cases\uc-04-oplata-komissii.md: без источника (page_ids нет — forward/реестр)
+# ✓ glossary.md: без источника (page_ids нет — forward/реестр)
+# ✓ service-vision.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: упоминание цели «[ТЕССА] BSK[БСК]» ×1 — карточки в комплекте нет и следа в матрице не найдено: либо markdown-ссылка на карточку, либо долг в матрице (правило долгов канона)
+#    предупреждение: упоминание цели «[КНОСИС] F1[АБС Ф1]» ×1 — карточки в комплекте нет и следа в матрице не найдено: либо markdown-ссылка на карточку, либо долг в матрице (правило долгов канона)
+#    предупреждение: упоминание цели «[ЕСК] KNO[КНОСИС]» ×1 — карточки в комплекте нет и следа в матрице не найдено: либо markdown-ссылка на карточку, либо долг в матрице (правило долгов канона)
+#    предупреждение: упоминание цели «[БСК] SUV[СУВ]» ×1 — карточки в комплекте нет и следа в матрице не найдено: либо markdown-ссылка на карточку, либо долг в матрице (правило долгов канона)
+# ✓ srs\contract-call\external\call-ext-001-knosis-egrip.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/knosis/extin (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/knosis/examp (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-002-knosis-egrul.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/knosis/extin (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/knosis/examp (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✗ srs\contract-call\external\call-ext-003-esk-request-115.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: call-ext-003-esk-request-115.md
+#    предупреждение: маркер сокращения «фрагмент» ×1 — проверьте, что справочники и перечни источника перенесены целиком
+#    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
+#    таблица 0 (3 строк): ролей не распознано — пропущена
+#    таблица 1 (22 строк):
+#       колонка «Параметр XML» (роль: путь): валидных 86.4% [19/22] ✗ НИЖЕ ПОРОГА
+#          пример брака: 'ProcessName` / `QueryItem/Name'
+#          пример брака: 'ContactInfo` (email)'
+#          пример брака: 'ContactInfo` (телефон)'
+#    таблица 2 (3 строк):
+#       колонка «Параметр XML» (роль: путь): валидных 100.0% [3/3] ✓
+#    таблица 3 (9 строк):
+#       колонка «Параметр XML» (роль: путь): валидных 100.0% [9/9] ✓
+#    таблица 4 (6 строк): ролей не распознано — пропущена
+#    таблица 5 (10 строк): ролей не распознано — пропущена
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/esk/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: упоминание цели «[КК_ВК] Заявка на выпуск карты…» ×1 — карточки в комплекте нет и следа в матрице не найдено: либо markdown-ссылка на карточку, либо долг в матрице (правило долгов канона)
+# ✓ srs\contract-call\external\call-ext-004-esk-check-relevance.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/esk/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-005-tessa-upload.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/tessa/extint (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/tessa/exampl (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✗ srs\contract-call\external\call-ext-006-f1-open-account.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: call-ext-006-f1-open-account.md
+#    гомоглифы/смешанное письмо в словах ×4 ('IDДоговораБС', 'заявкаID', 'заявкаIDЕСК', 'ркоID') — латиница внутри кириллического слова (или наоборот) невидима читателю и выключает распознавание — класс невидимых подмен К-30 ✗ НИЖЕ ПОРОГА
+#    таблица 0 (1 строк): ролей не распознано — пропущена
+#    таблица 1 (11 строк):
+#       колонка «Параметр» (роль: название): валидных 90.9% [10/11] ✗ НИЖЕ ПОРОГА
+#          пример брака: 'ProcessDetails/ProcessGUID'
+#    таблица 2 (3 строк):
+#       колонка «Параметр» (роль: название): валидных 100.0% [3/3] ✓
+#    таблица 3 (10 строк):
+#       колонка «Параметр» (роль: название): валидных 100.0% [10/10] ✓
+#    таблица 4 (4 строк): ролей не распознано — пропущена
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/f1/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✗ srs\contract-call\external\call-ext-007-bsk-igk-check.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: call-ext-007-bsk-igk-check.md
+#    гомоглифы/смешанное письмо в словах ×1 ('IDДоговораБС') — латиница внутри кириллического слова (или наоборот) невидима читателю и выключает распознавание — класс невидимых подмен К-30 ✗ НИЖЕ ПОРОГА
+#    таблица 0 (1 строк): ролей не распознано — пропущена
+#    таблица 1 (3 строк):
+#       колонка «Параметр контракта» (роль: название): валидных 100.0% [3/3] ✓
+#    таблица 2 (3 строк): ролей не распознано — пропущена
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/bsk/extint-b (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/bsk/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-008-f1-dbs-list.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/f1/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-009-f1-balance-check.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/f1/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-010-f1-commission-calc.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/f1/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-011-esk-signing-authority.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/esk/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✗ srs\contract-call\external\call-ext-012-sbp-qr-registration.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: call-ext-012-sbp-qr-registration.md
+#    таблица 0 (3 строк): ролей не распознано — пропущена
+#    таблица 1 (10 строк):
+#       колонка «Параметр метода O2+» (роль: название): валидных 100.0% [10/10] ✓
+#       колонка «Обяз.» (роль: обязат): валидных 100.0% [10/10] ✓
+#    таблица 2 (21 строк):
+#       колонка «Параметр» (роль: название): валидных 85.7% [18/21] ✗ НИЖЕ ПОРОГА
+#          пример брака: 'additionalData/acc'
+#          пример брака: 'additionalData/sum'
+#          пример брака: 'additionalData/purp'
+#       колонка «Обяз.» (роль: обязат): валидных 100.0% [21/21] ✓
+#    таблица 3 (2 строк):
+#       колонка «Параметр» (роль: название): валидных 100.0% [2/2] ✓
+#       колонка «Обяз.» (роль: обязат): валидных 100.0% [2/2] ✓
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/sbp/extint-s (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/tree/master/sbp/examples (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\external\call-ext-014-tessa-file-get.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\contract-call\external\README.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/knosis/extin (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/knosis/extin (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/tessa/extint (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/bsk/extint-b (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/f1/extint-f1 (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/esk/extint-e (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/master/sbp/extint-s (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\contract-call\internal\call-int-001-ep-sign-verify.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\contract-call\internal\call-int-002-filestorage-upload.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\contract-call\internal\call-int-003-filestorage-one-time-download.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\contract-call\internal\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\contract-call\README.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: внешняя ссылка вне белого списка — https://gitlab.gboteam.ru/EAN/docs-external-contracts (опись серой зоны; решение об ужесточении — после кросс-стендового прогона)
+# ✓ srs\control\cards-account.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\control\cards-gk.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\control\cards-signing.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\control\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\dictionaries.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\ent-001-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\ent-002-history.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\ent-003-documents.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\ent-005-signature.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\ent-006-qrc-commission-payment.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\data-model\README.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: маркер сокращения «и т. д.» ×1 — проверьте, что справочники и перечни источника перенесены целиком
+# ✓ srs\function\bank\fun-bnk-01-view-request-list.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-02-view-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-03-export-documents.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-04-view-history.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-05-change-status.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-06-retry-export.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-07-export-signature.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\bank\fun-bnk-10-copy-details.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-01-view-request-list.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-02-view-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-03-create-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-04-edit-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-05-delete-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-06-sign-request.md: без источника (page_ids нет — forward/реестр)
+#    предупреждение: маркер сокращения «фрагмент» ×1 — проверьте, что справочники и перечни источника перенесены целиком
+# ✓ srs\function\client\fun-cl-07-send-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-08-check-sign.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-09-export-documents.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-10-copy-details.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-11-commission-payment-document.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-12-commission-qr-code.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\client\fun-cl-13-qr-payment.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\function\system\fun-sys-09-save-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\ntf-notification.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\platform-functions.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: platform-functions.md
+#    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
+#    таблица 0 (16 строк):
+#       колонка «Название» (роль: название): валидных 100.0% [16/16] ✓
+# ✓ srs\print-form\prn-001-dbs-account-opening.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-002-procurement-account.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-003-account-existing-dbs.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-004-goz-rules-accession.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-005-account-opened-notice.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-006-commission-receipt.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\prn-007-commission-qr-code.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\print-form\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-001-request-lifecycle.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-002-create-sign-send.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-003-accept-verify.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-004-knosis-extract.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-005-esk-create-request.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-009-f1-export.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-010-esk-account-info.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\process\proc-011-tessa-pf-load.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\process\README.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: README.md
+#    README-реестр: колонные роли к навигационным таблицам не применяются
+#    битая относительная ссылка: … — цель не существует ✗ НИЖЕ ПОРОГА
+# ✓ srs\process\status-model.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\rbac.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\bank\scr-bnk-01-request-list.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\bank\scr-bnk-02-request-read.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-01-request-list.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-02-request-read.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-03-request-edit\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.1-account.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.2-gk-details.md: без источника (page_ids нет — forward/реестр)
+# ✗ srs\screen-form\client\scr-cl-03-request-edit\scr-cl-03.3-confirmation.md: без источника (page_ids нет — forward/реестр)
+#    проверка карточки: scr-cl-03.3-confirmation.md
+#    отсылки к страницам источника в теле карточки ×1 (Confluence) ✗ НИЖЕ ПОРОГА — содержимое переносится, а не адресуется; page_id живёт только во frontmatter и матрице
+#    таблица 0 (27 строк):
+#       колонка «Обяз.» (роль: обязат): валидных 100.0% [27/27] ✓
+#    таблица 1 (1 строк): ролей не распознано — пропущена
+#    таблица 2 (4 строк): ролей не распознано — пропущена
+# ✓ srs\screen-form\client\scr-cl-05-commission-payment.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\client\scr-cl-07-account-opening.md: без источника (page_ids нет — forward/реестр)
+# ✓ srs\screen-form\README.md: без источника (page_ids нет — forward/реестр)
+# ✓ долги ссылок (link_debts):
+#    OK: долгов 0, просроченных нет, все имена находятся в документах-ожидателях ✓
+# ИТОГО: файлов 116 — ✓ 100, ✗ 9, ⚠ 7; вердикт: БРАК
