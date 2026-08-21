@@ -400,3 +400,28 @@ def test_warning_visible_on_ok_file(tmp_path):
     report, ok = selfcheck.run(docs, None)
     assert ok
     assert any("предупреждение" in ln for ln in report)
+
+
+def test_cli_survives_cp1251_console(tmp_path):
+    # Windows-консоль cp1251: перестройка stdout в UTF-8 стоит ДО argparse —
+    # текст --help содержит «✗» и падал UnicodeEncodeError до перестройки
+    # (ловилось на живом прогоне по эталону). Субпроцесс с PYTHONIOENCODING=
+    # cp1251 честно воспроизводит консоль.
+    import os
+    import subprocess
+    import sys
+    script = (Path(__file__).resolve().parents[1]
+              / "app" / "scripts" / "CI" / "selfcheck.py")
+    env = {**os.environ, "PYTHONIOENCODING": "cp1251"}
+    r = subprocess.run([sys.executable, str(script), "--help"],
+                       capture_output=True, env=env)
+    assert r.returncode == 0, r.stderr.decode("utf-8", "replace")
+    assert b"UnicodeEncodeError" not in r.stderr
+    # и штатный прогон: вердикт печатается, не падает
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    r2 = subprocess.run([sys.executable, str(script), "--docs", str(docs)],
+                        capture_output=True, env=env)
+    assert r2.returncode == 0, r2.stderr.decode("utf-8", "replace")
+    assert "ИТОГО".encode("utf-8") in r2.stdout

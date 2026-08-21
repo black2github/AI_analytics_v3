@@ -388,6 +388,15 @@ def delta_report(baseline_path: Path, cur_lines: List[str]) -> List[str]:
 
 
 def main() -> int:
+    # Windows-консоль cp1251 падает на ✓/✗ — печатаем с заменой, файл
+    # отчёта (--out) всегда полный UTF-8 (три самодельных лаунчера
+    # агентов решали ровно эту проблему — теперь она решена утилитой).
+    # До argparse: текст --help тоже содержит «✗» и падал до перестройки.
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
     ap = argparse.ArgumentParser(
         description="Единый диспетчер самопроверки комплекта: сам находит "
                     "карточки, сопоставляет источники по confluence_page_id "
@@ -412,13 +421,6 @@ def main() -> int:
                          "штампует прибор, не исполнитель — у LLM нет "
                          "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
-    # Windows-консоль cp1251 падает на ✓/✗ — печатаем с заменой, файл
-    # отчёта (--out) всегда полный UTF-8 (три самодельных лаунчера
-    # агентов решали ровно эту проблему — теперь она решена утилитой)
-    try:
-        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    except Exception:
-        pass
     report, ok = run(args.docs, args.sources)
     if args.baseline is not None:
         report.extend(delta_report(args.baseline, report))
