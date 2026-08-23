@@ -305,6 +305,7 @@ def save_page_file(
         page, service_code, source, doc_id,
         include_unapproved=include_unapproved or critic,  # критик — полное содержимое
         has_unapproved=has_unapproved,
+        unapproved_jira=page_data.get("_forced_unapproved", "") or "",
     )
     write_md_file(filepath, frontmatter, content_md)
 

@@ -59,6 +59,7 @@ def page_to_frontmatter(
     doc_id: str,
     include_unapproved: bool = False,
     has_unapproved: bool = False,
+    unapproved_jira: str = "",
 ) -> Dict:
     """Строит frontmatter из метаданных Confluence-страницы.
 
@@ -124,6 +125,12 @@ def page_to_frontmatter(
     # здесь автоматически.
     if req_type == "integration":
         fm["target_system"] = page.get("target_system", "")
+
+    # Страничный флаг неутверждённого состава: ВСЯ страница принадлежит этой задаче
+    # (в ПРОМ её нет). По нему critic reject опустошает файл целиком, не полагаясь
+    # на маркеры — они не покрывают fenced-код макросов (см. critic.apply_page_flag).
+    if unapproved_jira:
+        fm["unapproved_jira"] = unapproved_jira
 
     return fm
 
