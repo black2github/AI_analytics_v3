@@ -89,6 +89,25 @@ def test_check_catches_script_column_edit(tmp_path):
     assert not ok and any("ИЗМЕНЕНЫ скриптовые" in ln for ln in report)
 
 
+def test_truncated_title_marked(tmp_path):
+    # дефект экспортёра: title с незакрытой кавычкой = обрезан — маркер
+    # «⋯» и счётчик в ИТОГО (ложные «дубли» v.2.1/v.2.2 объяснимы)
+    src = setup_src(tmp_path)
+    p = src / "Функции" / "cut.md"
+    p.write_text(
+        "---\ntitle: '[Т] Очень длинный обрезанный титул без хвоста\n"
+        "requirement_type: function\nconfluence_page_id: '333'\n---\n\n"
+        "тело\n", encoding="utf-8")
+    rows, _ = scan(src)
+    cut = next(r for r in rows if r["page_id"] == "333")
+    assert cut["title"].endswith("⋯")
+    lines = build(src)
+    assert any("титулов обрезано экспортёром 1" in ln for ln in lines)
+    # НЕсрабатывание: нормальные закрытые титулы без маркера
+    assert not any(r["title"].endswith("⋯") for r in rows
+                   if r["page_id"] in ("111", "222"))
+
+
 def test_duplicate_page_id_flagged(tmp_path):
     src = setup_src(tmp_path)
     make_page(src, "Функции/f3.md", "111", "[Т] Функция три")

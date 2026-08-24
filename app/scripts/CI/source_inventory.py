@@ -57,12 +57,21 @@ def scan(sources: Path):
         text = p.read_text(encoding="utf-8", errors="replace")
         head = text[:4000]
         pid = _PID_RE.search(head)
-        title = _TITLE_RE.search(head)
+        t_m = _TITLE_RE.search(head)
         rtype = _RTYPE_RE.search(head)
+        # дефект экспортёра (выгрузка КК, 2026-08-25): title обрезается
+        # по длине с НЕзакрытой кавычкой — хвосты титулов теряются и
+        # порождают ложные «дубли» (v.2.1/v.2.2 съедены). Детект:
+        # открывающая кавычка без парной закрывающей; маркер «⋯» в
+        # описи, полный титул — в имени файла выгрузки.
+        raw_t = t_m.group(1).strip() if t_m else None
+        truncated = bool(raw_t) and raw_t[:1] in "'\"" and (
+            len(raw_t) < 2 or raw_t[-1] != raw_t[0])
         rows.append({
             "page_id": pid.group(1) if pid else "—",
-            "title": (title.group(1).strip().strip("'\"")
-                      if title else p.stem),
+            "title": ((raw_t.strip("'\"").strip() + (" ⋯" if truncated
+                                                     else ""))
+                      if raw_t else p.stem),
             "родитель": p.parent.name if p.parent != sources else "(корень)",
             "req_type": rtype.group(1) if rtype else "—",
             "строк": str(text.count("\n") + 1),
@@ -100,10 +109,13 @@ def build(sources: Path) -> List[str]:
     dup_pid = _dupes(rows, "page_id")
     dup_title = _dupes(rows, "title")
     no_pid = sum(1 for r in rows if r["page_id"] == "—")
+    n_trunc = sum(1 for r in rows if r["title"].endswith("⋯"))
     out.append(f"ИТОГО: страниц {len(rows)}; навигационных index.md "
                f"{n_index} (в опись не входят); без page_id {no_pid}; "
                f"дублей page_id {len(dup_pid)}; дублей title "
-               f"{len(dup_title)}")
+               f"{len(dup_title)}; титулов обрезано экспортёром "
+               f"{n_trunc} (маркер ⋯; полный титул — в имени файла "
+               "выгрузки)")
     if dup_pid:
         out.append(f"⚠ дубли page_id: {', '.join(dup_pid[:10])}")
     if dup_title:
