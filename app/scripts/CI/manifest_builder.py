@@ -202,5 +202,7 @@ def render_manifest(result: ManifestBuildResult) -> str:
         "elements": [e.as_dict() for e in result.entries],
     }
     if yaml is not None:
-        return yaml.dump(doc, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        # width — длинные значения одной строкой (см. write_md_file)
+        return yaml.dump(doc, allow_unicode=True, default_flow_style=False,
+                         sort_keys=False, width=10 ** 9)
     return json.dumps(doc, ensure_ascii=False, indent=2)  # pragma: no cover

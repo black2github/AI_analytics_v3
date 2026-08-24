@@ -98,7 +98,11 @@ def _build_card_frontmatter(meta: Dict) -> Dict:
 def _render_frontmatter(fm: Dict) -> str:
     """Сериализует frontmatter в YAML-блок между '---'."""
     if yaml is not None:
-        body = yaml.dump(fm, allow_unicode=True, default_flow_style=False, sort_keys=False)
+        # width — чтобы длинные значения не сворачивались на вторую строку
+        # (см. write_md_file в migrate_confluence_page): построчные читатели
+        # видят обрезанное значение с незакрытой кавычкой.
+        body = yaml.dump(fm, allow_unicode=True, default_flow_style=False,
+                         sort_keys=False, width=10 ** 9)
     else:  # pragma: no cover — на проде yaml есть
         body = "".join(f"{k}: {v}\n" for k, v in fm.items())
     return f"---\n{body}---\n"
