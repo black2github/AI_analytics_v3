@@ -29,6 +29,37 @@ _PID_RE = re.compile(r"^confluence_page_id:\s*['\"]?(\d+)['\"]?", re.M)
 _TITLE_RE = re.compile(r"^title:\s*(.+)$", re.M)
 _RTYPE_RE = re.compile(r"^requirement_type:\s*(\S+)", re.M)
 
+
+def _full_title(head: str):
+    """(титул, обрезан?). Длинный title экспортёр переносит по стандарту
+    YAML (продолжение — строки с отступом); grep-подход видел только
+    первую строку и ловил «обрезку» (уточнение аналитика 2026-08-26 —
+    это легальный YAML, не дефект). Склеиваем перенос, как в
+    link_debts/_doc_title; маркер обрезки остаётся только для титулов,
+    у которых продолжение не нашлось (кавычка так и не закрылась)."""
+    m = _TITLE_RE.search(head)
+    if not m:
+        return None, False
+    v = m.group(1).strip()
+    q = v[0] if v[:1] in "'\"" else None
+    closed = (q is None
+              or (len(v) >= 2 and v.endswith(q) and not v.endswith(q * 2)))
+    if not closed:
+        rest = head[m.end():].lstrip("\r\n").splitlines()
+        for ln in rest:
+            if not ln.startswith(" "):
+                break
+            v += " " + ln.strip()
+            if v.endswith(q) and not v.endswith(q * 2):
+                closed = True
+                break
+    if q and closed and len(v) >= 2:
+        v = v[1:-1] if v.endswith(q) else v
+        if q == "'":
+            v = v.replace("''", "'")
+        return v.strip(), False
+    return v.strip("'\"").strip(), not closed
+
 # колонки скелета (заполняет скрипт; правка = брак --check)
 _SCRIPT_COLS = ("page_id", "title", "родитель", "req_type", "строк")
 # колонки LLM (скелет оставляет пустыми)
@@ -57,21 +88,12 @@ def scan(sources: Path):
         text = p.read_text(encoding="utf-8", errors="replace")
         head = text[:4000]
         pid = _PID_RE.search(head)
-        t_m = _TITLE_RE.search(head)
         rtype = _RTYPE_RE.search(head)
-        # дефект экспортёра (выгрузка КК, 2026-08-25): title обрезается
-        # по длине с НЕзакрытой кавычкой — хвосты титулов теряются и
-        # порождают ложные «дубли» (v.2.1/v.2.2 съедены). Детект:
-        # открывающая кавычка без парной закрывающей; маркер «⋯» в
-        # описи, полный титул — в имени файла выгрузки.
-        raw_t = t_m.group(1).strip() if t_m else None
-        truncated = bool(raw_t) and raw_t[:1] in "'\"" and (
-            len(raw_t) < 2 or raw_t[-1] != raw_t[0])
+        title, truncated = _full_title(head)
         rows.append({
             "page_id": pid.group(1) if pid else "—",
-            "title": ((raw_t.strip("'\"").strip() + (" ⋯" if truncated
-                                                     else ""))
-                      if raw_t else p.stem),
+            "title": ((title + (" ⋯" if truncated else ""))
+                      if title else p.stem),
             "родитель": p.parent.name if p.parent != sources else "(корень)",
             "req_type": rtype.group(1) if rtype else "—",
             "строк": str(text.count("\n") + 1),
