@@ -191,9 +191,14 @@ def check(sources: Path, inv_path: Path) -> Tuple[List[str], bool]:
         report.append(f"ЛИШНИЕ строки описи ×{len(extra)} (в выгрузке "
                       "таких страниц нет): " + ", ".join(extra[:10]) + " ✗")
     changed = []
+    # сравнение — в нормальной форме записи ячейки (пробелы жмутся):
+    # титулы источника несут двойные пробелы, которые ячейка legitимно
+    # сжала — это не правка (ложняк 38/162 на inkasso, 2026-08-26)
+    def norm(v: str) -> str:
+        return re.sub(r"\s+", " ", v).strip()
     for k in set(fresh_m) & set(inv_m):
         for c in _SCRIPT_COLS:
-            if _uncell(inv_m[k].get(c, "")) != fresh_m[k][c]:
+            if norm(_uncell(inv_m[k].get(c, ""))) != norm(fresh_m[k][c]):
                 changed.append(f"{k}.{c}")
     if changed:
         ok = False

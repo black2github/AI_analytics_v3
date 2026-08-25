@@ -124,6 +124,18 @@ def test_truncated_title_marked(tmp_path):
                    if r["page_id"] in ("111", "222"))
 
 
+def test_double_space_title_roundtrip_ok(tmp_path):
+    # титул с двойным пробелом (реальные источники): ячейка жмёт
+    # пробелы — --check не считает это правкой скриптовой колонки
+    src = setup_src(tmp_path)
+    make_page(src, "Функции/dbl.md", "444", "[Т]  Агенты  источника")
+    inv = tmp_path / "inventory.md"
+    inv.write_text("\n".join(build(src)) + "\n", encoding="utf-8")
+    report, ok = check(src, inv)
+    assert ok, report
+    assert any("правок скриптовых колонок 0" in ln for ln in report)
+
+
 def test_duplicate_page_id_flagged(tmp_path):
     src = setup_src(tmp_path)
     make_page(src, "Функции/f3.md", "111", "[Т] Функция три")
