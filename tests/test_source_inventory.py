@@ -136,6 +136,31 @@ def test_double_space_title_roundtrip_ok(tmp_path):
     assert any("правок скриптовых колонок 0" in ln for ln in report)
 
 
+def test_refresh_keeps_llm_columns(tmp_path):
+    # сканер улучшился после заполнения — refresh обновляет скриптовые
+    # колонки, сохраняя работу LLM; --check после него OK
+    from app.scripts.CI.source_inventory import refresh
+    src = setup_src(tmp_path)
+    inv = tmp_path / "inventory.md"
+    lines = build(src)
+    # эмуляция старого скелета: титул записан с отъеденной кавычкой
+    lines = [ln.replace("[Т] Функция один", "[Т] Функция один'")
+             if "| 111 |" in ln else ln for ln in lines]
+    # LLM заполнила свои колонки
+    lines = [ln.rstrip()[:-len("|  |  |")] + "| function | сигналы согласны |"
+             if "| 222 |" in ln else ln for ln in lines]
+    inv.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    report, ok = check(src, inv)
+    assert not ok  # расхождение титула видно
+    out = refresh(src, inv)
+    inv.write_text("\n".join(out) + "\n", encoding="utf-8")
+    assert any("сохранено 1/2" in ln for ln in out)
+    report, ok = check(src, inv)
+    assert ok, report
+    text = inv.read_text(encoding="utf-8")
+    assert "| function | сигналы согласны |" in text
+
+
 def test_duplicate_page_id_flagged(tmp_path):
     src = setup_src(tmp_path)
     make_page(src, "Функции/f3.md", "111", "[Т] Функция три")

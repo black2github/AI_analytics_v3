@@ -146,6 +146,38 @@ def build(sources: Path) -> List[str]:
     return out
 
 
+def refresh(sources: Path, inv_path: Path) -> List[str]:
+    """--refresh: перегенерировать скриптовые колонки описи свежим
+    сканом, СОХРАНИВ колонки LLM по ключу (page_id, для строк без него
+    — title). Нужен, когда сканер улучшился после заполнения описи
+    (прецедент 2026-08-26: фикс извлечения титулов с конечной кавычкой
+    дал 72 ложных «правки скриптовых колонок» на честной описи)."""
+    inv = _parse_inventory(
+        inv_path.read_text(encoding="utf-8", errors="replace"))
+    def key(r):
+        pid = r.get("page_id", "—")
+        return pid if pid != "—" else "t:" + r.get("title", "")
+    old_llm = {key(r): [r.get(c, "") for c in _LLM_COLS] for r in inv}
+    lines = build(sources)
+    fresh, _ = scan(sources)
+    kept = 0
+    out: List[str] = []
+    fi = iter(fresh)
+    for ln in lines:
+        if ln.startswith("| ") and not ln.startswith("| " + _SCRIPT_COLS[0]):
+            r = next(fi)
+            llm = old_llm.get(key(r))
+            if llm and any(v.strip() for v in llm):
+                assert ln.rstrip().endswith("|  |  |")
+                ln = (ln.rstrip()[:-len("|  |  |")]
+                      + "| " + _cell(llm[0]) + " | " + _cell(llm[1]) + " |")
+                kept += 1
+        out.append(ln)
+    out.append(f"ОБНОВЛЕНИЕ ОПИСИ: скриптовые колонки перегенерированы; "
+               f"колонок LLM сохранено {kept}/{len(fresh)}")
+    return out
+
+
 def _parse_inventory(text: str) -> List[Dict[str, str]]:
     rows: List[Dict[str, str]] = []
     hdr: Optional[List[str]] = None
@@ -222,13 +254,22 @@ def main() -> int:
     ap.add_argument("--sources", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--check", type=Path, default=None)
+    ap.add_argument("--refresh", type=Path, default=None,
+                    help="перегенерировать скриптовые колонки описи "
+                         "свежим сканом, сохранив колонки LLM (после "
+                         "улучшений сканера)")
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     except Exception:
         pass
-    if args.out is None and args.check is None:
-        ap.error("нужен --out (скелет) или --check (валидация)")
+    if args.out is None and args.check is None and args.refresh is None:
+        ap.error("нужен --out (скелет), --check (валидация) или "
+                 "--refresh (обновление скелета с сохранением LLM)")
+    if args.refresh is not None:
+        lines = refresh(args.sources, args.refresh)
+        args.refresh.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        print(lines[-1])
     if args.out is not None:
         lines = build(args.sources)
         args.out.parent.mkdir(parents=True, exist_ok=True)
