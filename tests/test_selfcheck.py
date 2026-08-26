@@ -361,6 +361,64 @@ def test_journal_appends_timestamped_itogo(tmp_path, monkeypatch, capsys):
     assert "изменены:" in lines[2] and "b.md" in lines[2]
 
 
+def _sub_fixture(tmp_path, card_rel: str):
+    # сервис с таблицей разметки подсервисов в профиле источников
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(srcs / "Ветка-ЛК" / "стр1.md", source("[Т_ЛК] Функция лимитов",
+                                               "111222"))
+    make(docs / card_rel, card("[Т_ЛК] Функция лимитов", "111222"))
+    make_matrix(docs)
+    make(tmp_path / "README.md",
+         "# Профиль\n\n## Разметка подсервисов\n\n"
+         "| Матчер (тег или ветвь) | Зона |\n|---|---|\n"
+         "| [Т_ЛК] | подсервис limits |\n"
+         "| [Т_Виджет] | вне Экосистемы |\n")
+    return docs, srcs
+
+
+def test_subservice_mapping_ok(tmp_path):
+    from app.scripts.CI import selfcheck as sc
+    docs, srcs = _sub_fixture(tmp_path, "srs/limits/function/f1.md")
+    report, ok = sc.run(docs, srcs)
+    assert any("разметка подсервисов: соответствие" in ln
+               for ln in report), report
+
+
+def test_subservice_mapping_wrong_path_flagged(tmp_path):
+    # карточка подсервиса легла в корень srs — брак с ожидаемым путём
+    from app.scripts.CI import selfcheck as sc
+    docs, srcs = _sub_fixture(tmp_path, "srs/function/f1.md")
+    report, ok = sc.run(docs, srcs)
+    assert not ok
+    assert any("✗ разметка" in ln and "srs/limits/" in ln
+               for ln in report), report
+
+
+def test_subservice_external_zone_in_docs_flagged(tmp_path):
+    # источник «вне Экосистемы» получил карточку в docs — брак
+    from app.scripts.CI import selfcheck as sc
+    docs, srcs = _sub_fixture(tmp_path, "srs/limits/function/f1.md")
+    make(srcs / "Ветка-Виджеты" / "в1.md",
+         source("[Т_Виджет] Скрипт ПИН", "333444"))
+    make(docs / "srs" / "function" / "w1.md",
+         card("[Т_Виджет] Скрипт ПИН", "333444"))
+    report, ok = sc.run(docs, srcs)
+    assert not ok
+    assert any("вне Экосистемы" in ln and "не место" in ln
+               for ln in report), report
+
+
+def test_no_subservice_table_silent(tmp_path):
+    # обычный сервис без таблицы — сторож молчит (ни строки о разметке)
+    from app.scripts.CI import selfcheck as sc
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    report, ok = sc.run(docs, srcs)
+    assert not any("разметка" in ln for ln in report)
+
+
 def test_root_junk_flagged(tmp_path):
     # чистота корня: скрипты правок/кэши рядом с docs — брак
     from app.scripts.CI import selfcheck as sc

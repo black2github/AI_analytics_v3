@@ -344,6 +344,13 @@ def run(docs: Path, sources: Optional[Path],
         report.append("✗ настраиваемые параметры:")
         report.extend(f"   {ln}" for ln in rep)
     if sources is not None:
+        # сторож разметки подсервисов (П-4): без таблицы в профиле
+        # возвращает пусто и молчит
+        sm_rep, sm_ok = _safe(check_subservice_mapping, docs, sources,
+                              {pid: fs[0] for pid, fs in groups.items()})
+        all_ok = all_ok and sm_ok
+        report.extend(sm_rep)
+    if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
         # проверяемых карточек; на вердикт не влияет
@@ -360,6 +367,130 @@ def run(docs: Path, sources: Optional[Path],
                   f"✗ {counts['✗']}, ⚠ {counts['⚠']}; вердикт: "
                   + ("OK" if all_ok else "БРАК"))
     return report, all_ok
+
+
+# --- сторож разметки подсервисов (П-4 песочницы, 2026-08-26) ---
+#
+# Крупный сервис из подсервисов (conventions §3.1): таблица «Разметка
+# подсервисов» в профиле источников (sources/README.md) декларирует
+# «тег/ветвь выгрузки → подсервис <слаг> | core <слаг> | общая часть |
+# вне Экосистемы»; путь карточки — srs/[<слаг>/]<тип>/. Сторож держит
+# соответствие «источник → путь» механически (иначе разметка — устная
+# договорённость). Гейт МОЛЧИТ без таблицы (обычные сервисы не
+# затронуты); матчер — тег-префикс титула источника или имя
+# верхнеуровневой ветви выгрузки, первая подошедшая строка выигрывает.
+
+_KNOWN_TYPES = {
+    "function", "screen-form", "control", "process", "data-model",
+    "contract-call", "internal-contract", "print-form", "notification",
+    "agent", "brd",
+}
+_ZONE_RE = re.compile(
+    r"^(?:(подсервис|core)\s+([\w-]+)|общая часть|вне Экосистемы.*)$",
+    re.I)
+
+
+def _load_subservice_map(profile: Path):
+    """[(матчер, слаг|None, зона)]; None — таблицы/файла нет."""
+    try:
+        text = profile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    m = re.search(r"^#+\s*Разметка подсервисов.*$", text, re.M)
+    if not m:
+        return None
+    rows = []
+    for ln in text[m.end():].splitlines():
+        s = ln.strip()
+        if s.startswith("#"):
+            break
+        if not s.startswith("|"):
+            continue
+        cells = [c.strip() for c in s.strip("|").split("|")]
+        if len(cells) < 2 or cells[0].lower() in ("матчер (тег или ветвь)",
+                                                  "матчер"):
+            continue
+        if all(re.fullmatch(r":?-+:?", c) for c in cells if c):
+            continue
+        zm = _ZONE_RE.match(cells[1])
+        if not zm:
+            continue
+        zone = cells[1].lower()
+        slug = zm.group(2)
+        kind = ("slug" if zm.group(1) else
+                "common" if zone.startswith("общая") else "external")
+        rows.append((cells[0], slug, kind))
+    return rows or None
+
+
+def check_subservice_mapping(docs: Path, sources: Path,
+                             card_files: Dict[str, Path]):
+    """(отчёт, ok). card_files: page_id -> карточка docs. Зона источника
+    определяется по титулу/ветви его файла выгрузки; путь карточки
+    обязан начинаться srs/<слаг>/ (подсервис/core), не иметь слага
+    (общая часть) или карточки не должно быть вовсе (вне Экосистемы)."""
+    profile = sources.parent / "README.md"
+    if not profile.is_file():
+        profile = sources / "README.md"
+    smap = _load_subservice_map(profile)
+    if not smap:
+        return [], True
+    report: List[str] = []
+    ok = True
+    slugs = {slug for _, slug, kind in smap if kind == "slug"}
+    for src_file in sorted(sources.rglob("*.md")):
+        if src_file.name.lower() == "index.md":
+            continue
+        head = src_file.read_text(encoding="utf-8",
+                                  errors="replace")[:2000]
+        pid_m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)",
+                          head, re.M)
+        if not pid_m or pid_m.group(1) not in card_files:
+            continue
+        title_m = re.search(r"^title:\s*(.+)$", head, re.M)
+        title = title_m.group(1).strip().strip("'\"") if title_m else ""
+        try:
+            branch = src_file.relative_to(sources).parts[0]
+        except ValueError:
+            branch = ""
+        zone = next(((slug, kind) for matcher, slug, kind in smap
+                     if title.startswith(matcher)
+                     or matcher.strip("[]") == branch
+                     or matcher == branch), None)
+        if zone is None:
+            continue
+        slug, kind = zone
+        card = card_files[pid_m.group(1)]
+        rel = card.relative_to(docs).as_posix()
+        parts = rel.split("/")
+        seg = (parts[1] if len(parts) > 2 and parts[0] == "srs"
+               and parts[1] not in _KNOWN_TYPES else None)
+        if kind == "external":
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
+                "«вне Экосистемы», карточке в docs/ не место "
+                "(мини-комплект вне комплекта, conventions §3.1)")
+        elif kind == "slug" and seg != slug:
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
+                f"в подсервис «{slug}», ожидался путь srs/{slug}/… "
+                f"(фактический сегмент: {seg or 'нет — корень srs'})")
+        elif kind == "common" and seg is not None:
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
+                f"«общая часть», карточка лежит в подсервисе «{seg}»")
+        elif seg is not None and seg not in slugs:
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — сегмент «{seg}» отсутствует в "
+                "таблице разметки профиля (самодеятельный подкаталог)")
+    if not report:
+        report.append("разметка подсервисов: соответствие "
+                      "«источник → путь» выдержано ✓")
+    return report, ok
 
 
 # --- дельта против базлайна (протокол сдачи, 2026-08-19) ---
