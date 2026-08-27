@@ -217,8 +217,12 @@ def run(docs: Path, sources: Optional[Path],
 
     def _warns(rep: List[str]) -> List[str]:
         # предупреждения видимы и при ✓ (софт-сигналы, не влияют на
-        # вердикт: сторож привилегий Э-12 и будущие)
-        return [ln for ln in rep if ln.startswith("предупреждение")]
+        # вердикт: сторож привилегий Э-12 и будущие); итог сторожа
+        # полноты ячеек виден и при ✓ — иначе приёмщику не отличить
+        # «сторож прошёл» от «сторож не запускался» (ложная тревога
+        # приёмки COM-01-fix, 2026-08-27)
+        return [ln for ln in rep if ln.startswith("предупреждение")
+                or ln.startswith("полнота ячеек источника")]
 
     for p, note in solo:
         rep, ok = _run([p], None, docs, soft_markers=not strict)
