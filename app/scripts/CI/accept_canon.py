@@ -14,8 +14,14 @@
 # selfcheck, normalize_tables и read-only диагностика) — отдельная
 # утилита, а не флаг selfcheck, чтобы сохранить его read-only инвариант.
 #
+# Основание вехи: --reason опционален — по умолчанию собирается
+# АВТОМАТИЧЕСКИ из тем принимаемых коммитов канона (git log old..new):
+# причина обновления уже записана в каноне, дублировать её руками —
+# лишняя работа команд (10 команд параллельно принимают один и тот же
+# фикс). Фолбэк, когда диапазон не вычислить, — «обновление канона до
+# <hash> от <дата коммита>» (дата коммита, не «сегодня»).
+#
 # Ограничители:
-#   - --reason обязателен: веха без основания не фиксируется;
 #   - коммитится ТОЛЬКО файл профиля; профиль с незакоммиченными
 #     правками до запуска — отказ (чистая веха, чужое не захватывается);
 #   - HEAD канона не определился — отказ, не угадывание;
@@ -51,8 +57,26 @@ def canon_head(canon_root: Path) -> Optional[str]:
     return _git(canon_root, "rev-parse", "--short", "HEAD")
 
 
+def _auto_reason(canon_root: Path, old: Optional[str],
+                 head: str) -> str:
+    """Основание вехи из истории канона: темы коммитов old..head;
+    фолбэк — дата коммита HEAD."""
+    if old:
+        log = _git(canon_root, "log", "--oneline", "--no-decorate",
+                   f"{old}..{head}")
+        if log:
+            subjects = [ln.split(" ", 1)[-1][:70]
+                        for ln in log.splitlines() if ln.strip()]
+            shown = "; ".join(subjects[:3])
+            more = (f"; и ещё {len(subjects) - 3} правок"
+                    if len(subjects) > 3 else "")
+            return f"принято из канона: {shown}{more}"
+    date = _git(canon_root, "show", "-s", "--format=%cs", head) or "?"
+    return f"обновление канона до {head} от {date}"
+
+
 def accept(profile: Path, canon_root: Path,
-           reason: str) -> Tuple[str, bool]:
+           reason: Optional[str] = None) -> Tuple[str, bool]:
     """Обновить срез в профиле и закоммитить. (сообщение, ok)."""
     head = canon_head(canon_root)
     if not head:
@@ -89,6 +113,9 @@ def accept(profile: Path, canon_root: Path,
         f.write(new_text)
     if _git(src_root, "add", "--", profile.name) is None:
         return "отказ: git add профиля не удался", False
+    if not reason:
+        reason = _auto_reason(canon_root, m.group(1) if m else None,
+                              head)
     msg = f"Срез канона обновлён на {head}: {reason}"
     if _git(src_root, "commit", "-m", msg) is None:
         return "отказ: git commit профиля не удался", False
@@ -105,8 +132,10 @@ def main() -> int:
     ap.add_argument("--profile", type=Path, required=True,
                     help="путь к профилю источников (README.md "
                          "src-репозитория)")
-    ap.add_argument("--reason", required=True,
-                    help="основание вехи (что принято из канона)")
+    ap.add_argument("--reason", default=None,
+                    help="основание вехи; по умолчанию собирается из "
+                         "тем принимаемых коммитов канона "
+                         "(git log old..new)")
     ap.add_argument("--canon", type=Path, default=None,
                     help="корень клона канона (по умолчанию — "
                          "репозиторий, в котором лежит утилита)")

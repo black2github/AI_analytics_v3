@@ -93,3 +93,29 @@ def test_non_repo_canon_refused(tmp_path):
     src = make_src(tmp_path, "| **Срез канона** | `0000000` |\n")
     msg, ok = accept(src / "README.md", tmp_path / "nowhere", "тест")
     assert not ok and "HEAD канона" in msg
+
+
+def test_auto_reason_from_canon_log(tmp_path):
+    # --reason опционален: основание собирается из тем принимаемых
+    # коммитов канона (git log old..new)
+    canon = make_canon(tmp_path)
+    old = _git(canon, "rev-parse", "--short", "HEAD")
+    (canon / "f.txt").write_text("y", encoding="utf-8")
+    _git(canon, "add", "-A")
+    _git(canon, "commit", "-q", "-m", "П-99: тестовая калибровка")
+    src = make_src(tmp_path, f"| **Срез канона** | `{old}` |\n")
+    msg, ok = accept(src / "README.md", canon)
+    assert ok, msg
+    last = _git(src, "log", "-1", "--format=%s")
+    assert "принято из канона" in last
+    assert "П-99: тестовая калибровка" in last
+
+
+def test_auto_reason_fallback_when_no_range(tmp_path):
+    # строки не было → диапазона нет → фолбэк с датой коммита канона
+    canon = make_canon(tmp_path)
+    src = make_src(tmp_path)
+    msg, ok = accept(src / "README.md", canon)
+    assert ok, msg
+    last = _git(src, "log", "-1", "--format=%s")
+    assert "обновление канона до" in last
