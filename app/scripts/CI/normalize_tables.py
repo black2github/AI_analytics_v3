@@ -573,6 +573,21 @@ def _looks_like_obligation(v: str) -> bool:
     return bool(re.match(r"^(ДА|НЕТ)\s*\((ВХОД|ИСХОД)\)$", u))
 
 
+def _looks_like_obligation_pair(v: str) -> bool:
+    """КОМБИНИРОВАННАЯ колонка «Обязательность / Уникальность» (источники
+    Корпоративных Карт; блокер COM-01 2026-08-27: «Да / Да» давало 0%
+    валидности и отказ нормализатора): значение — пара токенов через «/»,
+    каждый по словарю обязательности; одиночный токен тоже легален.
+    Валидатор выбирается ТОЛЬКО по комбинированной шапке (оба ключа) —
+    в обычной колонке «Обязательность» пара остаётся браком (защита от
+    съехавших ролей). Скобочное пояснение хвостом («Да / Да<br>(код ЭФ +
+    Наименование)» — автор уточняет состав ключа уникальности) валидности
+    не ломает: перенос всё равно дословный, валидатор лишь узнаёт роль."""
+    v = _BR_RE.sub(" ", v)
+    v = re.sub(r"\([^()]*\)\s*$", "", v.strip())
+    return all(_looks_like_obligation(p) for p in v.split("/"))
+
+
 # Логическая кратность связей модели данных (шаблон data-model, раздел
 # «Связи»): «1 : N», «1 : 1», «0..1», «N : M». Расширение словаря, а не
 # замена (--check; строгий якорь разбора HTML _strict не трогаем — он
@@ -672,6 +687,37 @@ def _title_suspicious(v: str) -> bool:
     return re.sub(r"[\d()\[\]]+$", "", vv).lower() in _TYPE_TOKENS
 
 
+def _is_section_row(row: List[str]) -> bool:
+    """Строка-раздел внутри таблицы («<td colspan=5>Реквизиты операции»):
+    протяжка colspan повторяет одно значение на всю ширину сетки. Из СЕТКИ
+    такие строки не удаляются (содержимое автора), но в подсчёт валидности
+    ролей не входят — это заголовок группы, а не данные (блокер COM-01
+    Корпкарт 2026-08-27: заголовки групп 2FA считались строками данных).
+    Признак — доминирующее БУКВЕННОЕ значение, занявшее ≥3 ячеек и не
+    меньше половины ширины строки (след протяжки colspan); кроме него
+    допустима максимум одна непустая ячейка — авторский номер раздела
+    (2FA: «1 | Реквизиты операции ×5 | пусто»). Ограничители (все — с
+    тестами на НЕсрабатывание): строка с единственным заполненным
+    значением — данные, не раздел (иначе маскировался бы съехавший
+    профиль — гейт test_refuses_below_threshold); повторы токенов
+    обязательности («Нет» в булевых колонках) и небуквенных значений
+    (прочерки, числа) — данные."""
+    if len(row) < 3:
+        return False
+    non_empty = [_norm_cell(v) for v in row if _norm_cell(v)]
+    if len(non_empty) < 3:
+        return False
+    val = max(set(non_empty), key=non_empty.count)
+    cnt = non_empty.count(val)
+    if cnt < 3 or 2 * cnt < len(row):
+        return False
+    if len(non_empty) - cnt > 1:
+        return False
+    if _looks_like_obligation(val) or not re.search(r"[а-яёa-z]", val):
+        return False
+    return True
+
+
 def validate_columns(headers: List[str], rows: List[List[str]],
                      path_index: Optional[int] = 0,
                      source_literals: Optional[Dict[str, set]] = None) -> List[dict]:
@@ -692,12 +738,18 @@ def validate_columns(headers: List[str], rows: List[List[str]],
     hdr_keys = [_title_key(h) for h in headers]
     links_table = any("связ" in h for h in hdr_keys) and any(
         "сущност" in h for h in hdr_keys)
+    # строки-разделы (протяжка colspan на всю ширину) — не данные:
+    # исключаются из подсчёта валидности, из сетки не удаляются
+    data_rows = [r for r in rows if not _is_section_row(r)]
     for i, title in enumerate(headers):
         low = _title_key(title)
         check = None
         role = None
         if path_index is not None and i == path_index:
             role, check = "путь", _looks_like_path
+        elif "обяз" in low and "уник" in low:
+            # комбинированная шапка «Обязательность / Уникальность»
+            role, check = "обязат", _looks_like_obligation_pair
         else:
             for key, fn in _COLUMN_RULES:
                 # key[:4] — сокращённые заголовки карточек («Обяз.», «Крат.»)
@@ -711,18 +763,18 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                 role, check = "название", _no_xml_path
         if check is None:
             continue
-        bad = [r[i] for r in rows if i < len(r) and not check(r[i])]
+        bad = [r[i] for r in data_rows if i < len(r) and not check(r[i])]
         wl = (source_literals or {}).get(role) or set()
         pardoned = [v for v in bad if _norm_cell(v) and _norm_cell(v) in wl]
         bad = [v for v in bad if not (_norm_cell(v) and _norm_cell(v) in wl)]
-        total = len(rows) or 1
-        suspicious = ([r[i] for r in rows if i < len(r) and r[i].strip()
+        total = len(data_rows) or 1
+        suspicious = ([r[i] for r in data_rows if i < len(r) and r[i].strip()
                        and _title_suspicious(r[i])]
                       if role == "название" else [])
         report.append({
             "column": title, "role": role, "index": i,
-            "bad": len(bad), "total": len(rows),
-            "valid_pct": round(100 * (len(rows) - len(bad)) / total, 1),
+            "bad": len(bad), "total": len(data_rows),
+            "valid_pct": round(100 * (len(data_rows) - len(bad)) / total, 1),
             "suspicious": suspicious[:5], "suspicious_count": len(suspicious),
             "samples": bad[:3],
             "pardoned": pardoned[:3], "pardoned_count": len(pardoned),

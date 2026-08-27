@@ -1097,6 +1097,125 @@ class TestColumnValidators:
         assert report[0]["valid_pct"] == 100.0
 
 
+class TestCombinedObligationUniqueness:
+    """Блокер COM-01 Корпкарт (2026-08-27): комбинированная колонка
+    «Обязательность / Уникальность» («Да / Да») и строки-разделы
+    (<td colspan=5>Реквизиты операции) давали 0% валидности и отказ."""
+
+    def test_pair_values_valid(self):
+        headers = ["Атрибут", "Тип", "Обязательность / Уникальность"]
+        rows = [["code", "Строка", "Да / Да"],
+                ["name", "Строка", "Да / Нет"],
+                ["ref", "Строка", "Нет/Да"],
+                ["opt", "Строка", "—"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_reversed_header_order(self):
+        # источники пишут и «Уникальность/Обязательность»
+        headers = ["Атрибут", "Уникальность/Обязательность"]
+        rows = [["a", "Да / Нет"], ["b", "Нет/Да"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_plain_obligation_column_still_strict(self):
+        # НЕсрабатывание: в ОБЫЧНОЙ колонке «Обязательность» пара — брак
+        # (защита от съехавших ролей не ослаблена)
+        headers = ["Атрибут", "Обязательность"]
+        rows = [["a", "Да / Да"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] < 100
+
+    def test_section_rows_excluded_from_validation(self):
+        # заголовок группы протянут colspan'ом на всю ширину — не данные
+        headers = ["Атрибут", "Тип", "Обязательность / Уникальность"]
+        rows = [["Реквизиты операции", "Реквизиты операции",
+                 "Реквизиты операции"],
+                ["code", "Строка", "Да / Да"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+        assert report["обязат"]["total"] == 1
+
+    def test_data_row_not_treated_as_section(self):
+        # НЕсрабатывание: строка с РАЗНЫМИ значениями остаётся данными,
+        # и брак в ней по-прежнему виден
+        headers = ["Атрибут", "Тип", "Обязательность / Уникальность"]
+        rows = [["code", "Строка", "текст вместо обязательности"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] < 100
+
+    def test_narrow_table_not_section(self):
+        # НЕсрабатывание: в узкой таблице (2 колонки) повтор значения —
+        # не строка-раздел (порог ширины ≥3)
+        headers = ["Название", "Обязательность"]
+        rows = [["Да", "Да"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["total"] == 1
+
+    def test_pair_with_parenthetical_tail(self):
+        # «Набор фильтров» КК: автор дописал состав ключа уникальности
+        # скобками со второй строки ячейки — валидность не ломается
+        headers = ["Атрибут", "Тип", "Обязательность / Уникальность"]
+        rows = [["a", "Строка",
+                 "Да / Да<br>(код экранной формы + Наименование)"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_section_row_with_empty_edges(self):
+        # 2FA КК: секция colspan=5 при 7 колонках сетки — крайние пустые;
+        # повтор ≥3 раз распознаётся как раздел
+        headers = ["№", "Тех", "Рус", "Уникальность/Обязательность",
+                   "Тип", "Формат", "Прим"]
+        rows = [["", "Реквизиты операции", "Реквизиты операции",
+                 "Реквизиты операции", "Реквизиты операции",
+                 "Реквизиты операции", ""],
+                ["1", "code", "Код", "Да / Нет", "Строка", "", ""]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+        assert report["обязат"]["total"] == 1
+
+    def test_section_row_with_section_number(self):
+        # 2FA КК фактическая форма: номер раздела в первой колонке +
+        # протяжка ×5 — тоже раздел
+        headers = ["№", "Тех", "Рус", "Уникальность/Обязательность",
+                   "Тип", "Формат", "Прим"]
+        rows = [["1", "Реквизиты операции", "Реквизиты операции",
+                 "Реквизиты операции", "Реквизиты операции",
+                 "Реквизиты операции", ""],
+                ["1.1", "code", "Код", "Да / Нет", "Строка", "", ""]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] == 100.0
+        assert report["обязат"]["total"] == 1
+
+    def test_boolean_repeats_stay_data(self):
+        # НЕсрабатывание: повтор «Нет» в булевых колонках — данные,
+        # не раздел (токены обязательности исключены из признака)
+        headers = ["Атрибут", "Видимость", "Редактируемость",
+                   "Обязательность"]
+        rows = [["a", "Нет", "Нет", "Нет"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["total"] == 1
+
+    def test_single_filled_cell_row_stays_data(self):
+        # НЕсрабатывание (гейт качества): строка с одним заполненным
+        # значением и пустым хвостом — данные, съехавший профиль виден
+        headers = ["Путь", "Название", "Обязательность"]
+        rows = [["все поля внутри блока передаются строкой", "", ""]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0)}
+        assert report["путь"]["valid_pct"] < 100
+
+
 class TestQualityGate:
     def test_refuses_below_threshold(self, tmp_path):
         # Профиль по индексам на блочной таблице — заведомо съедет
