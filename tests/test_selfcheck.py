@@ -598,3 +598,49 @@ def test_forward_card_without_key_still_legal(tmp_path):
     report, ok = selfcheck.run(docs, srcs)
     assert ok, report
     assert any("без источника" in ln for ln in report)
+
+
+class TestCanonCut:
+    """Сторож среза канона (П-5b): строка «срез канона: <hash>» профиля
+    против фактического HEAD selfcheck; без строки молчит."""
+
+    def _profile(self, tmp_path, line):
+        srcs = tmp_path / "conf"
+        srcs.mkdir()
+        make(tmp_path / "README.md",
+             f"# Профиль\n\n| Поле | Значение |\n|---|---|\n{line}\n")
+        return srcs
+
+    def test_match_ok(self, tmp_path):
+        srcs = self._profile(tmp_path,
+                             "| **Срез канона** | `e2b6971` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, "e2b6971")
+        assert ok and any("✓ срез канона" in ln for ln in rep)
+
+    def test_mismatch_defect(self, tmp_path):
+        srcs = self._profile(tmp_path,
+                             "| **Срез канона** | `e2b6971` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, "deadbee")
+        assert not ok
+        assert any("✗ срез канона" in ln and "deadbee" in ln
+                   for ln in rep)
+
+    def test_no_line_silent(self, tmp_path):
+        # НЕсрабатывание: профиль без строки среза — сторож молчит
+        srcs = self._profile(tmp_path, "| **service-id** | `CC` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, "deadbee")
+        assert ok and rep == []
+
+    def test_dev_copy_warns_not_fails(self, tmp_path):
+        # dev-копия selfcheck вне канона (head=None) — ⚠, не ✗
+        srcs = self._profile(tmp_path,
+                             "| **Срез канона** | `e2b6971` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, None)
+        assert ok and any(ln.startswith("⚠") for ln in rep)
+
+    def test_prefix_lengths_tolerated(self, tmp_path):
+        # короткий/длинный хэш одного коммита — совпадение
+        srcs = self._profile(tmp_path,
+                             "| **Срез канона** | `e2b69712abc` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, "e2b6971")
+        assert ok, rep

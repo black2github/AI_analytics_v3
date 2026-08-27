@@ -26,6 +26,7 @@
 
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
@@ -386,6 +387,10 @@ def run(docs: Path, sources: Optional[Path],
                               {pid: fs[0] for pid, fs in groups.items()})
         all_ok = all_ok and sm_ok
         report.extend(sm_rep)
+        # сторож среза канона (П-5b): без строки в профиле молчит
+        cut_rep, cut_ok = _safe(check_canon_cut, sources, canon_head())
+        all_ok = all_ok and cut_ok
+        report.extend(cut_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -527,6 +532,65 @@ def check_subservice_mapping(docs: Path, sources: Path,
         report.append("разметка подсервисов: соответствие "
                       "«источник → путь» выдержано ✓")
     return report, ok
+
+
+# --- сторож среза канона (П-5b, 2026-08-27) ---
+# Профиль src-репозитория несёт строку «срез канона: <hash>» — источник
+# истины о том, на каком каноне должен работать стенд. selfcheck знает
+# свой фактический HEAD (он лежит в каноне) и сверяет сам: промпты
+# заходов хэш не носят (дважды за пилот он устаревал между генерацией
+# и запуском); обновление строки — осознанное действие владельца при
+# приёмке правки канона, а забытое обновление — громкий ✗, не
+# молчаливая работа на старом срезе. Без строки сторож молчит (мягкое
+# включение, как у сторожа разметки). Dev-копия selfcheck вне канона
+# (analyzer) или недоступный git — ⚠, не ✗.
+
+_CANON_CUT_RE = re.compile(r"срез\s+канона\D{0,40}?([0-9a-f]{7,40})",
+                           re.I)
+
+
+def canon_head() -> Optional[str]:
+    """Фактический HEAD репозитория, из которого запущен selfcheck;
+    None — dev-копия вне канона или git недоступен."""
+    tool_dir = Path(__file__).resolve().parent
+    if tool_dir.name != "tools" or tool_dir.parent.name != "_meta":
+        return None
+    root = tool_dir.parent.parent
+    try:
+        out = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=15)
+        if out.returncode == 0 and out.stdout.strip():
+            return out.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def check_canon_cut(sources: Path,
+                    head: Optional[str]) -> Tuple[List[str], bool]:
+    """Сверка строки «срез канона: <hash>» профиля с фактическим HEAD."""
+    profile = sources.parent / "README.md"
+    if not profile.is_file():
+        profile = sources / "README.md"
+    try:
+        text = profile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], True
+    m = _CANON_CUT_RE.search(text)
+    if not m:
+        return [], True
+    want = m.group(1).lower()
+    if head is None:
+        return [f"⚠ срез канона: профиль требует {want}, но фактический "
+                "HEAD канона не определён (dev-копия selfcheck вне "
+                "канона или git недоступен) — сверка не выполнена"], True
+    have = head.lower()
+    if have.startswith(want) or want.startswith(have):
+        return [f"✓ срез канона: профиль {want} = HEAD канона {have}"], True
+    return [f"✗ срез канона: профиль требует {want}, фактический HEAD "
+            f"канона {have} — обновите клон канона либо строку «срез "
+            "канона» профиля (решение владельца)"], False
 
 
 # --- дельта против базлайна (протокол сдачи, 2026-08-19) ---
