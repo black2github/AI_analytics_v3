@@ -391,6 +391,10 @@ def run(docs: Path, sources: Optional[Path],
         cut_rep, cut_ok = _safe(check_canon_cut, sources, canon_head())
         all_ok = all_ok and cut_ok
         report.extend(cut_rep)
+        # сторож полноты промптов этапов (П-5b): информационный,
+        # без строки «план миграции» в профиле молчит
+        sp_rep, _ = _safe(check_stage_prompts, sources)
+        report.extend(sp_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -591,6 +595,69 @@ def check_canon_cut(sources: Path,
     return [f"✗ срез канона: профиль требует {want}, фактический HEAD "
             f"канона {have} — обновите клон канона либо строку «срез "
             "канона» профиля (решение владельца)"], False
+
+
+# --- сторож полноты промптов этапов (П-5b, 2026-08-28) ---
+# План обязан иметь промпт-файл prompts/<ЭТАП>.md на КАЖДЫЙ этап
+# (план-промпт v2.2 п.10); неполный пакет промптов обнаруживался
+# только внимательностью приёмщика (кейс: «дособери с ISS-02 и далее»
+# прочитано планировщиком как «без COM-03+»). Сторож делает неполноту
+# видимой на каждом прогоне. Мягкое включение: активен только при
+# строке «план миграции: <файл>» в профиле источников; этапы, чьи
+# отчёты уже лежат в sandbox/ (selfcheck-<ЭТАП>*.txt), считаются
+# выполненными — промпт для них не требуется. Информационный гейт:
+# вердикт не трогает (неполнота пакета — не дефект комплекта docs).
+
+_PLAN_LINE_RE = re.compile(r"план\s+миграции\D{0,40}?`?([\w.\- ]+\.md)`?",
+                           re.I)
+_STAGE_ROW_RE = re.compile(r"^\|\s*`([A-ZА-Я]{2,4}-\d{2})`\s*\|", re.M)
+
+
+def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
+    """⚠-строки о этапах плана без файла промпта; ok всегда True."""
+    root = sources.parent
+    profile = root / "README.md"
+    if not profile.is_file():
+        profile = sources / "README.md"
+        root = sources
+    try:
+        ptext = profile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], True
+    m = _PLAN_LINE_RE.search(ptext)
+    if not m:
+        return [], True
+    plan = root / m.group(1).strip()
+    if not plan.is_file():
+        return [f"⚠ промпты этапов: план «{m.group(1).strip()}» из "
+                "профиля не найден — сверка пакета не выполнена"], True
+    stages = set(_STAGE_ROW_RE.findall(
+        plan.read_text(encoding="utf-8", errors="replace")))
+    if not stages:
+        return ["⚠ промпты этапов: в плане не распознаны коды этапов "
+                "(таблица с `КОД-NN` первой ячейкой) — сверка пакета "
+                "не выполнена"], True
+    pdir = root / "prompts"
+    have = ({f.stem for f in pdir.glob("*.md")} if pdir.is_dir()
+            else set())
+    sandbox = root / "sandbox"
+    done = {s for s in stages
+            if sandbox.is_dir() and any(sandbox.glob(f"selfcheck-{s}*"))}
+    missing = sorted(stages - have - done)
+    orphans = sorted(have - stages)
+    lines: List[str] = []
+    if missing:
+        lines.append(f"⚠ промпты этапов: без файла prompts/<ЭТАП>.md — "
+                     f"{len(missing)} из {len(stages)} этапов плана: "
+                     + ", ".join(missing[:12])
+                     + (" …" if len(missing) > 12 else ""))
+    else:
+        lines.append(f"✓ промпты этапов: файлы либо выполненные отчёты "
+                     f"есть для всех {len(stages)} этапов плана")
+    for s in orphans[:6]:
+        lines.append(f"i промпт prompts/{s}.md не соответствует ни "
+                     "одному коду этапа плана")
+    return lines, True
 
 
 # --- дельта против базлайна (протокол сдачи, 2026-08-19) ---

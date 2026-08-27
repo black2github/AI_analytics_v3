@@ -644,3 +644,57 @@ class TestCanonCut:
                              "| **Срез канона** | `e2b69712abc` |")
         rep, ok = selfcheck.check_canon_cut(srcs, "e2b6971")
         assert ok, rep
+
+
+class TestStagePrompts:
+    """Сторож полноты промптов этапов (П-5b): каждый этап плана имеет
+    prompts/<ЭТАП>.md либо выполненный отчёт в sandbox/; без строки
+    «план миграции» в профиле молчит; информационный (ok всегда)."""
+
+    def _stand(self, tmp_path, plan_line=True):
+        srcs = tmp_path / "conf"
+        srcs.mkdir()
+        extra = ("| **План миграции** | `plan.md` |\n" if plan_line
+                 else "")
+        make(tmp_path / "README.md",
+             "# Профиль\n\n| Поле | Значение |\n|---|---|\n"
+             "| **service-id** | `CC` |\n" + extra)
+        make(tmp_path / "plan.md",
+             "# План\n\n| Этап | Тип |\n|---|---|\n"
+             "| `PRE-00` | инфраструктура |\n"
+             "| `COM-01` | data-model |\n"
+             "| `COM-02` | control |\n")
+        return srcs
+
+    def test_missing_prompts_reported(self, tmp_path):
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "prompts" / "COM-02.md", "промпт")
+        rep, ok = selfcheck.check_stage_prompts(srcs)
+        assert ok
+        line = next(ln for ln in rep if ln.startswith("⚠ промпты"))
+        assert "PRE-00" in line and "COM-01" in line
+        assert "COM-02" not in line
+
+    def test_done_stages_not_required(self, tmp_path):
+        # выполненный этап (отчёт в sandbox/) промпта не требует
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "prompts" / "COM-02.md", "промпт")
+        make(tmp_path / "sandbox" / "selfcheck-PRE-00.txt", "отчёт")
+        make(tmp_path / "sandbox" / "selfcheck-COM-01-fix.txt", "отчёт")
+        rep, _ = selfcheck.check_stage_prompts(srcs)
+        assert any(ln.startswith("✓ промпты этапов") for ln in rep), rep
+
+    def test_silent_without_profile_line(self, tmp_path):
+        # НЕсрабатывание: без строки «план миграции» — молчание
+        srcs = self._stand(tmp_path, plan_line=False)
+        rep, ok = selfcheck.check_stage_prompts(srcs)
+        assert ok and rep == []
+
+    def test_orphan_prompt_noted(self, tmp_path):
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "sandbox" / "selfcheck-PRE-00.txt", "x")
+        make(tmp_path / "sandbox" / "selfcheck-COM-01.txt", "x")
+        make(tmp_path / "prompts" / "COM-02.md", "промпт")
+        make(tmp_path / "prompts" / "XXX-99.md", "сирота")
+        rep, _ = selfcheck.check_stage_prompts(srcs)
+        assert any("XXX-99" in ln and ln.startswith("i ") for ln in rep)
