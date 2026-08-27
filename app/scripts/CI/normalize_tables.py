@@ -1237,14 +1237,18 @@ _COVER_REF_STOP = frozenset({
 def _cover_fragments(cell: str) -> List[str]:
     """Нарезка ячейки: по <br>, затем по границам предложений и «:»;
     хвосты-примеры отрезаются до нарезки (шаблон предписывает их
-    удаление из карточек)."""
+    удаление из карточек). НОРМАЛИЗАЦИЯ — ДО нарезки: markdown-ссылка
+    с двоеточием в тексте («[[СпрВал] Модель данных: Валюта](url)»)
+    резалась пополам, и правая половина тащила сырой URL в требуемые
+    фрагменты — гейт требовал то, что запрещает правило чистовика
+    (блокер ISS-01, найден исполнителем, 2026-08-27)."""
     frags: List[str] = []
     for chunk in _BR_RE.split(cell):
-        chunk = _COVER_EXAMPLE_RE.sub("", chunk)
+        chunk = _COVER_EXAMPLE_RE.sub("", _cover_norm(chunk))
         for part in _COVER_SPLIT_RE.split(chunk):
-            n = _cover_norm(part)
-            if len(n) >= _COVER_MIN:
-                frags.append(n)
+            part = part.strip(" .,;:-")
+            if len(part) >= _COVER_MIN:
+                frags.append(part)
     return frags
 
 

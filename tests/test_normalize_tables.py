@@ -1411,6 +1411,19 @@ class TestCellCoverage:
         report, ok = check_cell_coverage(src, corpus)
         assert not ok
 
+    def test_markdown_link_with_colon_not_split(self):
+        # блокер ISS-01: ссылка с «:» в тексте резалась пополам ДО
+        # снятия markdown — правая половина требовала сырой URL
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
+               "<tr><td>Валюта</td><td>Справочник "
+               "[[СпрВал] Модель данных: Валюта]"
+               "(https://confluence.x/pages/123)</td></tr></table>")
+        report, ok = check_cell_coverage(
+            src, "| Валюта | Справочник [СпрВал] Модель данных: Валюта |")
+        assert ok, "\n".join(report)
+        assert not any("https" in ln for ln in report)
+
     def test_section_rows_and_alien_tables_skipped(self):
         # НЕсрабатывание: секционные строки и таблицы без целевых
         # колонок (перечни кодов) не проверяются
