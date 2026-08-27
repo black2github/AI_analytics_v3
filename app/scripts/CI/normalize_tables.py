@@ -566,9 +566,15 @@ def _looks_like_obligation(v: str) -> bool:
     # «обязателен»/«необязателен» и «Да/Нет (вход|исход)» — направление
     # параметра автор пишет в скобках той же ячейки. Строгий якорь
     # раскроя HTML (_strict) не трогаем — он держит сетки.
-    u = v.strip().strip(".").upper()
+    # разметка снимается (_plain): авторы КК_ВК пишут «**Да**» жирным —
+    # словарь сверяется с содержимым, не с оформлением (ISS-01 2026-08-27)
+    u = _plain(v).strip().strip(".").upper()
     if u in {"", "-", "—", "О", "Н", "У", "O", "H", "Y", "ДА", "НЕТ",
              "УСЛ", "M", "М", "ОБЯЗАТЕЛЕН", "НЕОБЯЗАТЕЛЕН"}:
+        return True
+    if re.match(r"^(ДА|НЕТ)\s*,\s*ЕСЛИ\b", u):
+        # условная обязательность авторским текстом («Да, если не
+        # заполнен Адрес пребывания» — КК_ВК, ISS-01 2026-08-27)
         return True
     return bool(re.match(r"^(ДА|НЕТ)\s*\((ВХОД|ИСХОД)\)$", u))
 
@@ -599,16 +605,25 @@ _LOGICAL_CARD_RE = re.compile(
 
 
 def _looks_like_cardinality(v: str) -> bool:
-    return not v.strip() or bool(_CARDINALITY_RE.match(v.strip()))
+    v = _plain(v).strip()
+    return not v or bool(_CARDINALITY_RE.match(v))
 
 
 def _looks_like_cardinality_logical(v: str) -> bool:
-    """Роль кратн в ТАБЛИЦЕ СВЯЗЕЙ модели данных: допускает и скобочную,
-    и логическую нотацию. В таблицах параметров НЕ применяется —
-    раскавычивание [1] → 1 там остаётся браком (защита литералов)."""
-    v = v.strip()
+    """Роль кратн в ТАБЛИЦЕ СВЯЗЕЙ модели данных и при нормализации
+    ИСТОЧНИКА: допускает и скобочную, и логическую нотацию (КК_ВК пишет
+    кратность голой: «1», «0..1», бывает жирной — разметка снимается).
+    В --check таблиц параметров карточки НЕ применяется — раскавычивание
+    [1] → 1 там остаётся браком (защита литералов)."""
+    v = _plain(v).strip()
     return (not v or bool(_CARDINALITY_RE.match(v))
             or bool(_LOGICAL_CARD_RE.match(v)))
+
+
+def _is_cardinality_title(low: str) -> bool:
+    """Заголовок роли кратность: «Кратность», «Крат.» — но НЕ «Краткое
+    описание» (ложный матч по префиксу, справочник продуктов КК_ВК)."""
+    return "кратн" in low or ("крат" in low and "кратк" not in low)
 
 
 def _looks_like_path(v: str) -> bool:
@@ -720,7 +735,8 @@ def _is_section_row(row: List[str]) -> bool:
 
 def validate_columns(headers: List[str], rows: List[List[str]],
                      path_index: Optional[int] = 0,
-                     source_literals: Optional[Dict[str, set]] = None) -> List[dict]:
+                     source_literals: Optional[Dict[str, set]] = None,
+                     source_mode: bool = False) -> List[dict]:
     """Проверка СМЫСЛА колонок (инвариант строк её не заменяет — урок
     разжалования итерации 3): для каждой колонки с распознанной ролью считает
     долю валидных значений. Возвращает список отчётов по колонкам.
@@ -751,15 +767,24 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             # комбинированная шапка «Обязательность / Уникальность»
             role, check = "обязат", _looks_like_obligation_pair
         else:
-            for key, fn in _COLUMN_RULES:
-                # key[:4] — сокращённые заголовки карточек («Обяз.», «Крат.»)
-                if key in low or key[:4] in low:
-                    role, check = key, fn
-                    break
-            if links_table and role == "кратн":
+            # сокращённые заголовки карточек («Обяз.», «Крат.») — по
+            # префиксу; «Краткое описание» кратностью НЕ является
+            if "обяз" in low:
+                role, check = "обязат", _looks_like_obligation
+            elif _is_cardinality_title(low):
+                role, check = "кратн", _looks_like_cardinality
+            if role == "кратн" and (links_table or source_mode):
+                # source_mode (нормализация ИСТОЧНИКА, ISS-01 2026-08-27):
+                # авторская нотация кратности КК_ВК — голая логическая
+                # («1», «0..1»); защита от раскавычивания [1] → 1 живёт
+                # в --check КАРТОЧКИ (source_mode=False) и не ослаблена
                 check = _looks_like_cardinality_logical
             if check is None and ("назван" in low or "наимен" in low
-                                  or "параметр" in low):
+                                  or "параметр" in low) \
+                    and "бд" not in low and "dev" not in low:
+                # «[DEV] Название поля в таблице БД» — колонка физимён,
+                # роль «название» ей не назначается (ложные
+                # «подозрительные названия» на путях eco_*, ISS-01)
                 role, check = "название", _no_xml_path
         if check is None:
             continue
@@ -888,7 +913,22 @@ def normalize_file(md_path: Path, profile: Optional[Profile],
             path_index = min(prof.path_block, max(len(headers) - 1, 0)) if applied else None
         else:
             path_index = 0
-        for col in validate_columns(headers, rows, path_index=path_index):
+        # таблица без якорных ролей в шапке (свойства страницы, мета-строки
+        # над атрибутной шапкой, справочники продуктов) — валидаторы не
+        # применяются: их защита — от съехавшего профиля атрибутных таблиц,
+        # а сетку и здесь держит инвариант строк (ISS-01 КК_ВК, 2026-08-27)
+        _hdr_low = [_title_key(h) for h in headers]
+        if not any("обяз" in h or _is_cardinality_title(h)
+                   for h in _hdr_low):
+            report.append("   таблица без якорных ролей (обязательность/"
+                          "кратность) — колонные валидаторы не "
+                          "применяются, сетка отдана как есть")
+            chunks.append(f"## Таблица {i} (профиль: {prof.name}; сетка "
+                          "без сборки путей)\n\n"
+                          + render_markdown(headers, rows))
+            continue
+        for col in validate_columns(headers, rows, path_index=path_index,
+                                    source_mode=True):
             mark = "✓" if col["valid_pct"] >= min_valid_pct else "✗ НИЖЕ ПОРОГА"
             report.append(
                 f"   колонка «{col['column'][:28]}» (роль: {col['role']}): "

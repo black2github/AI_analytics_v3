@@ -1216,6 +1216,81 @@ class TestCombinedObligationUniqueness:
         assert report["путь"]["valid_pct"] < 100
 
 
+class TestSourceModeValidators:
+    """Калибровка ISS-01 (КК_ВК, 2026-08-27): жирная обязательность,
+    голая логическая кратность источника, колонка физимён БД."""
+
+    def test_bold_obligation_valid(self):
+        headers = ["Путь", "Обязательность"]
+        rows = [["A/B", "**Да**"], ["A/C", "**Нет**"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_bare_cardinality_valid_in_source_mode(self):
+        headers = ["Путь", "Кратность"]
+        rows = [["A/B", "1"], ["A/C", "0..1"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0,
+                                   source_mode=True)}
+        assert report["кратн"]["valid_pct"] == 100.0
+
+    def test_bare_cardinality_still_defect_in_card_check(self):
+        # НЕсрабатывание ослабления: защита от раскавычивания [1] → 1
+        # в проверке КАРТОЧКИ не тронута
+        headers = ["Путь", "Кратность"]
+        rows = [["A/B", "1"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0)}
+        assert report["кратн"]["valid_pct"] < 100
+
+    def test_db_field_column_gets_no_name_role(self):
+        # «[DEV] Название поля в таблице БД» — физимена, не названия
+        headers = ["Путь", "[DEV] Название поля в таблице БД"]
+        rows = [["A/B", "eco_card_request.user_id"]]
+        report = validate_columns(headers, rows, path_index=0)
+        assert all(c["role"] != "название" for c in report)
+
+    def test_bold_cardinality_valid(self):
+        # КК_ВК пишет кратность жирной: «**1**», «**0..1**»
+        headers = ["Путь", "Кратность"]
+        rows = [["A/B", "**1**"], ["A/C", "**0..1**"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0,
+                                   source_mode=True)}
+        assert report["кратн"]["valid_pct"] == 100.0
+
+    def test_conditional_obligation_valid(self):
+        # условная обязательность авторским текстом
+        headers = ["Путь", "Обязательность"]
+        rows = [["A/B", "Да, если не заполнен Адрес пребывания"]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=0)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_short_description_not_cardinality(self):
+        # «Краткое описание» — не роль кратность (ложный префикс-матч)
+        headers = ["Код", "Краткое описание"]
+        rows = [["X1", "Бесплатный выпуск за 5 минут"]]
+        report = validate_columns(headers, rows, path_index=None)
+        assert all(c["role"] != "кратн" for c in report)
+
+    def test_table_without_anchor_roles_not_validated(self, tmp_path):
+        # мета-таблица свойств страницы («Назначение | …») не валидируется
+        # и не блокирует sidecar; сетка отдана как есть
+        from app.scripts.CI.normalize_tables import normalize_file
+        f = tmp_path / "page.md"
+        f.write_text(
+            "<table><tr><th>Назначение</th><th>Описание</th></tr>"
+            "<tr><td>Когда создается запись</td>"
+            "<td>Запись может быть создана</td></tr></table>\n",
+            encoding="utf-8")
+        out, report, ok = normalize_file(f, None, None)
+        assert ok, "\n".join(report)
+        assert any("без якорных ролей" in ln for ln in report)
+        assert "Когда создается запись" in out
+
+
 class TestCellCoverage:
     """Сторож полноты ячеек (COM-01 Корпкарт 2026-08-27): хвосты ячеек
     Тип/Описание источника обязаны быть покрыты текстом комплекта в
