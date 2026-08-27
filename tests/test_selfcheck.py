@@ -555,3 +555,46 @@ def test_solo_fail_names_real_culprit(tmp_path):
     assert bad.startswith("✗") and "брак внутренних сторожей" in bad
     assert "причины ниже" in bad and "без источника" in bad
     assert good.startswith("✓") and "брак" not in good
+
+
+def test_multiline_page_ids_parsed_with_notice(tmp_path):
+    # П-8 (COM-01 Корпкарт 2026-08-27): многострочный YAML-список
+    # confluence_page_ids парсится (карточка НЕ выпадает из сверки),
+    # формат помечается строкой-сигналом
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md",
+         "---\nid: X-01\ntitle: '[X] Ф1'\ntype: function\n"
+         "confluence_page_ids:\n  - '111222'\n  - '333444'\n---\n\n"
+         "# Т\n\nтекст\n")
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert any(ln.startswith("✓") and "стр1.md" in ln for ln in report)
+    assert any("многострочным" in ln for ln in report)
+    assert not any("без источника" in ln and "f1.md" in ln
+                   for ln in report)
+
+
+def test_unparseable_page_ids_is_defect(tmp_path):
+    # П-8: ключ задан, id не распознаны — брак, а не молчаливый forward
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md",
+         "---\nid: X-01\ntitle: '[X] Ф1'\ntype: function\n"
+         "confluence_page_ids: [TBD]\n---\n\n# Т\n\nтекст\n")
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert not ok
+    assert any("id не распознаны" in ln for ln in report)
+
+
+def test_forward_card_without_key_still_legal(tmp_path):
+    # НЕсрабатывание П-8: forward-карточка БЕЗ ключа — по-прежнему норма
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert any("без источника" in ln for ln in report)

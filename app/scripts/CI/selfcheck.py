@@ -52,12 +52,23 @@ def read_frontmatter(path: Path) -> Optional[Dict[str, str]]:
     if not body.startswith("---"):
         return {}
     fm: Dict[str, str] = {}
+    last = None
     for ln in body.splitlines()[1:200]:
         if ln.strip() == "---":
             return fm
         m = re.match(r"^(\w[\w-]*):\s*(.*)$", ln)
         if m:
             fm[m.group(1)] = m.group(2).strip()
+            last = m.group(1)
+        elif last and re.match(r"^\s+-\s+\S", ln):
+            # многострочный YAML-список (COM-01 Корпкарт, 2026-08-27):
+            # шаблон предписывает inline, но данные ВАЖНЕЕ формата —
+            # элементы подклеиваются к значению ключа, чтобы карточка
+            # не выпадала из сверки с источником молча; факт помечается
+            # служебным ключом для ⚠ в отчёте
+            fm[last] = (fm[last] + " "
+                        + ln.strip().lstrip("-").strip()).strip()
+            fm["__multiline-" + last] = "1"
     return None
 
 
@@ -165,7 +176,28 @@ def run(docs: Path, sources: Optional[Path],
         if fm.get("id"):
             card_ids[p] = fm["id"]
         pids = page_ids(fm)
+        pid_key_present = ("confluence_page_ids" in fm
+                           or "confluence_page_id" in fm)
+        if fm.get("__multiline-confluence_page_ids") \
+                or fm.get("__multiline-confluence_page_id"):
+            # строка-сигнал без счётчика: файл получит свой ✓/✗ ниже,
+            # инвариант «один файл — одна отметка» не ломаем
+            report.append(f"i {rel}: confluence_page_ids многострочным "
+                          "YAML — шаблон предписывает inline-список; "
+                          "сверка выполняется, формат привести")
         if not pids:
+            if pid_key_present:
+                # П-8 (COM-01 Корпкарт, 2026-08-27): ключ есть, а id не
+                # распознаны — раньше карточка МОЛЧА становилась
+                # «forward» и теряла всю сверку с источником (девять
+                # карточек первой сдачи COM-01, фиктивная зелень)
+                counts["✗"] += 1
+                all_ok = False
+                report.append(f"✗ {rel}: confluence_page_ids задан, но "
+                              "id не распознаны — reverse-карточка "
+                              "выпала бы из сверки с источником; формат "
+                              "по шаблону: inline-список")
+                continue
             solo.append((p, "без источника (page_ids нет — forward/реестр)"))
         elif sources is None:
             solo.append((p, f"источник page_id {pids[0]} не сверялся — "
