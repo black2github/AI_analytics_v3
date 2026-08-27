@@ -1150,6 +1150,174 @@ def behavior_steps_from_card(card_text: str) -> List[Tuple[str, int]]:
     return _rank_levels(steps)
 
 
+# ── Сторож полноты ячеек источника (COM-01 Корпкарт, 2026-08-27) ──
+# Класс тихой потери: при выносе перечислений в справочник исполнитель
+# отбрасывал ХВОСТ ячейки («допустимый алфавит…», «входит в составной
+# ключ», определение атрибута), заменяя его ссылкой. Дословность —
+# механический прокси сохранения смысла: иерархия и разметка при
+# переносе свободны (HTML-ячейка легально расщепляется на карточку и
+# справочник), но каждый фрагмент исходной ячейки обязан найтись в
+# тексте комплекта в нормальной форме.
+
+_COVER_HDR_KEYS = ("тип", "описан", "коммент")
+_COVER_SPLIT_RE = re.compile(r"(?<=[.;:])\s+")
+_COVER_QUOTES_RE = re.compile(r"[\"'«»„“”]")
+_COVER_DASH_RE = re.compile(r"[–—−]")
+# пара «CODE - расшифровка»: значение перечисления, разложенное автором
+# прямо в ячейке; в комплекте живёт строкой таблицы справочника
+_COVER_PAIR_RE = re.compile(r"^([a-z0-9_./-]+)\s*[-:]\s*(.+)$")
+_COVER_LATIN_RE = re.compile(r"^[a-z0-9_./\- ]+$")
+_COVER_MIN = 6  # нормализованных символов; короче — «да», «—», обрывки
+
+
+def _cover_norm(v: str) -> str:
+    """Нормальная форма сверки полноты: поверх _norm_cell гасятся
+    типографские кавычки и тире (карточка вправе печатать «…», источник
+    — "…"; лексика важна, типографика — нет)."""
+    v = _COVER_QUOTES_RE.sub(" ", _norm_cell(v))
+    v = _COVER_DASH_RE.sub("-", v)
+    return re.sub(r"\s+", " ", v).strip(" .,;:-")
+
+
+# Хвост-пример удаляется из карточек ПО ПРАВИЛУ шаблона — его отсутствие
+# в комплекте потерей не считается (иначе гейт зажимал бы исполнителя
+# между правилом и сверкой — прецедент OQ-029)
+_COVER_EXAMPLE_RE = re.compile(
+    r"(?<![а-яёa-z])(пример[ы]?|например)\b.*$", re.I | re.S)
+# Ссылочная конструкция источника («Ссылка на идентификатор записи
+# справочника X», «Объект типа X») в карточке легально становится
+# EXT/ENT-ссылкой — служебные слова конструкции не сверяются, сверяется
+# название цели
+_COVER_REF_HEAD_RE = re.compile(r"^(ссылка на|объект типа)\b")
+_COVER_REF_STOP = frozenset({
+    "ссылка", "на", "идентификатор", "записи", "запись", "справочника",
+    "справочник", "сущности", "сущность", "объект", "типа", "тип"})
+
+
+def _cover_fragments(cell: str) -> List[str]:
+    """Нарезка ячейки: по <br>, затем по границам предложений и «:»;
+    хвосты-примеры отрезаются до нарезки (шаблон предписывает их
+    удаление из карточек)."""
+    frags: List[str] = []
+    for chunk in _BR_RE.split(cell):
+        chunk = _COVER_EXAMPLE_RE.sub("", chunk)
+        for part in _COVER_SPLIT_RE.split(chunk):
+            n = _cover_norm(part)
+            if len(n) >= _COVER_MIN:
+                frags.append(n)
+    return frags
+
+
+def _window_covered(frag: str, corpus: str) -> bool:
+    """Все слова фрагмента по порядку в ОДНОЙ ячейке/абзаце корпуса:
+    терпит вставку служебных слов переносом («…в соответствии СО
+    СТАТУСНОЙ МОДЕЛЬЮ „X“»), но не россыпь слов по разным местам —
+    окно обрезается ближайшей границей ячейки « | »."""
+    tokens = [t for t in frag.split() if len(t) >= 3]
+    if len(tokens) < 2:
+        return False
+    first = tokens[0]
+    start, hits = 0, 0
+    while hits < 20:
+        pos = corpus.find(first, start)
+        if pos < 0:
+            return False
+        hits += 1
+        start = pos + 1
+        window = corpus[pos:pos + len(frag) + 80]
+        cell_end = window.find(" | ")
+        if cell_end != -1:
+            window = window[:cell_end]
+        wpos = 0
+        for t in tokens:
+            i = window.find(t, wpos)
+            if i < 0:
+                break
+            wpos = i + len(t)
+        else:
+            return True
+    return False
+
+
+def _fragment_covered(frag: str, corpus: str, corpus_ns: str) -> bool:
+    if frag in corpus or frag.replace(" ", "") in corpus_ns:
+        return True
+    if _COVER_REF_HEAD_RE.match(frag):
+        rest = [t for t in re.findall(r"[\wёа-я-]+", frag)
+                if len(t) >= 3 and t not in _COVER_REF_STOP]
+        if rest and all(t in corpus for t in rest):
+            return True
+    if _window_covered(frag, corpus):
+        return True
+    # фрагмент из запятых-частей: каждая часть — подстрокой, парой
+    # «код - расшифровка» (разложено в таблицу справочника) или
+    # латинским перечнем значений (разложено по строкам)
+    for part in (p.strip(" .,;:-") for p in frag.split(",")):
+        if len(part) < _COVER_MIN or part in corpus \
+                or part.replace(" ", "") in corpus_ns:
+            continue
+        m = _COVER_PAIR_RE.match(part)
+        if m and _cover_norm(m.group(1)) in corpus \
+                and _cover_norm(m.group(2)) in corpus:
+            continue
+        if _COVER_LATIN_RE.match(part) and all(
+                t in corpus for t in part.split() if len(t) >= 2):
+            continue
+        if _window_covered(part, corpus):
+            continue
+        return False
+    return True
+
+
+def check_cell_coverage(source_text: str,
+                        corpus_text: str) -> Tuple[List[str], bool]:
+    """Каждый фрагмент непустых ячеек «Тип»/«Описание»/«Комментарии»
+    строк данных источника должен быть покрыт текстом комплекта в
+    нормальной форме. Секционные строки и повторы шапки — не данные."""
+    corpus = _cover_norm(corpus_text)
+    corpus_ns = corpus.replace(" ", "")
+    lost: List[str] = []
+    checked = 0
+    for t in find_top_tables(source_text):
+        grid = expand_grid(t)
+        if len(grid) < 2:
+            continue
+        header = grid[0]
+        hdr_keys = [_title_key(h) for h in header]
+        cols = [i for i, h in enumerate(hdr_keys)
+                if any(k in h for k in _COVER_HDR_KEYS)]
+        if not cols:
+            continue
+        name_idx = next((i for i, h in enumerate(hdr_keys)
+                         if "наимен" in h or "назван" in h or "атрибут" in h
+                         or "параметр" in h or "поле" in h), None)
+        hdr_norm = [_cover_norm(c) for c in header]
+        for r in grid[1:]:
+            if _is_section_row(r) or [_cover_norm(c) for c in r] == hdr_norm:
+                continue
+            label = (_norm_cell(r[name_idx])[:40]
+                     if name_idx is not None and name_idx < len(r) else "?")
+            for i in cols:
+                if i >= len(r) or not r[i].strip():
+                    continue
+                for frag in _cover_fragments(r[i]):
+                    checked += 1
+                    if not _fragment_covered(frag, corpus, corpus_ns):
+                        lost.append(f"строка «{label}», колонка "
+                                    f"«{_norm_cell(header[i])[:24]}»: "
+                                    f"не покрыт фрагмент {frag[:90]!r}")
+    if lost:
+        return ([f"полнота ячеек источника: потеряно {len(lost)} из "
+                 f"{checked} фрагментов ✗ НИЖЕ ПОРОГА (хвост ячейки "
+                 "Тип/Описание обязан быть покрыт текстом комплекта "
+                 "дословно; ссылка на справочник дополняет, не заменяет)"]
+                + [f"   {ln}" for ln in lost[:12]]
+                + ([f"   … и ещё {len(lost) - 12}"] if len(lost) > 12
+                   else []), False)
+    return ([f"полнота ячеек источника: фрагментов {checked}, "
+             "потерь 0 ✓"], True)
+
+
 def check_behavior_nesting(card_text: str,
                            source_text: str) -> Tuple[List[str], bool]:
     """Профиль вложенности «Поведения» карточки против источника."""
@@ -3289,6 +3457,22 @@ def run_check(files: List[Path], source_path: Optional[Path],
     tz_report, tz_ok = check_tuz_formula(card_text)
     report.extend(tz_report)
     ok = ok and tz_ok
+    # полнота ячеек источника — reverse-карточки модели данных
+    # (COM-01 Корпкарт 2026-08-27: хвосты ячеек Тип/Описание терялись
+    # при выносе перечислений в справочник); корпус поиска — группа
+    # карточек + весь каталог модели данных (фрагмент вправе уехать
+    # в dictionaries/README по шаблону)
+    if src_text is not None and re.search(
+            r"^type:\s*data-model\s*$", card_text[:500], re.M):
+        sib = "\n\n".join(
+            f.read_text(encoding="utf-8")
+            for f in sorted(main_file.parent.glob("*.md"))
+            if f not in files)
+        corpus_txt = combined + "\n\n" + re.sub(r"<!--.*?-->", " ", sib,
+                                                flags=re.S)
+        cov_rep, cov_ok = check_cell_coverage(src_text, corpus_txt)
+        report.extend(cov_rep)
+        ok = ok and cov_ok
     # теговые упоминания целей: ссылка или долг (софт, вердикт не трогает)
     if docs_root is not None:
         tm_report, _ = check_target_mentions(card_text, main_file,

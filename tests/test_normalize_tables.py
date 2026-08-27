@@ -1216,6 +1216,147 @@ class TestCombinedObligationUniqueness:
         assert report["путь"]["valid_pct"] < 100
 
 
+class TestCellCoverage:
+    """Сторож полноты ячеек (COM-01 Корпкарт 2026-08-27): хвосты ячеек
+    Тип/Описание источника обязаны быть покрыты текстом комплекта в
+    нормальной форме; иерархия и разметка при переносе свободны."""
+
+    SOURCE = (
+        "# Постановка\n\n"
+        "<table>\n"
+        "<tr><th>№</th><th>Наименование поля</th><th>Тип</th>"
+        "<th>Обязательность / Уникальность</th><th>Описание</th></tr>\n"
+        "<tr><td>1</td><td>Идентификатор операции</td>"
+        "<td>Строка (36)<br>допустимый алфавит: цифры, английские буквы"
+        "</td><td>Да / Нет</td>"
+        "<td>Уникальный идентификатор операции. Совместно с \"Каналом\" "
+        "входит в составной ключ.</td></tr>\n"
+        "<tr><td>2</td><td>Канал</td>"
+        "<td>Строка с одним из значений: OMNI</td><td>Да / Нет</td>"
+        "<td>Код системы. OMNI - универсальный сервис \"Реквизиты карты\""
+        "</td></tr>\n"
+        "<tr><td>3</td><td>Тип адреса</td>"
+        "<td>Строка с одним из значений: SMS PUSH EMAIL</td>"
+        "<td>Нет / Нет</td><td>Канал доставки кода</td></tr>\n"
+        "</table>\n"
+    )
+
+    FULL_CORPUS = (
+        "| Идентификатор операции | | Строка (36), допустимый алфавит: "
+        "цифры, английские буквы | Да | Нет | Уникальный идентификатор "
+        "операции. Совместно с «Каналом» входит в составной ключ |\n"
+        "| Канал | | Строка с одним из значений | Да | Нет | Код системы. "
+        "Допустимые значения — справочник |\n"
+        "| Тип адреса | | Строка с одним из значений | Нет | Нет | "
+        "Канал доставки кода |\n"
+        "### Каналы\n| Код | Название |\n|---|---|\n"
+        "| `OMNI` | Универсальный сервис «Реквизиты карты» |\n"
+        "### Типы адреса\n| Код |\n|---|\n| `SMS` |\n| `PUSH` |\n"
+        "| `EMAIL` |\n"
+    )
+
+    def test_full_transfer_covered(self):
+        # НЕсрабатывание: канонные трансформации — enum в справочник
+        # (пары «код - расшифровка» строками таблицы, латинский перечень
+        # по строкам), типографские кавычки, ссылка вместо перечня
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        report, ok = check_cell_coverage(self.SOURCE, self.FULL_CORPUS)
+        assert ok, "\n".join(report)
+        assert any("потерь 0" in ln for ln in report)
+
+    def test_lost_tail_caught(self):
+        # срабатывание: потеряны алфавит (Тип), составной ключ (Описание)
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        corpus = (self.FULL_CORPUS
+                  .replace(", допустимый алфавит: цифры, английские буквы",
+                           "")
+                  .replace(" Совместно с «Каналом» входит в составной "
+                           "ключ", ""))
+        report, ok = check_cell_coverage(self.SOURCE, corpus)
+        assert not ok
+        text = "\n".join(report)
+        assert "алфавит" in text and "составной ключ" in text
+
+    def test_lost_enum_meaning_caught(self):
+        # срабатывание: расшифровка значения выброшена из справочника
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        corpus = self.FULL_CORPUS.replace(
+            "| `OMNI` | Универсальный сервис «Реквизиты карты» |",
+            "| `OMNI` |  |")
+        report, ok = check_cell_coverage(self.SOURCE, corpus)
+        assert not ok
+        assert any("универсальный сервис" in ln for ln in report)
+
+    def test_example_tail_not_required(self):
+        # НЕсрабатывание: «Пример: …» удаляется из карточек ПО ШАБЛОНУ —
+        # его отсутствие в комплекте не потеря
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = ("<table><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>"
+               "<tr><td>Код</td><td>Строка</td>"
+               "<td>Код колонки.<br>Пример: CC_ORG_NAME</td></tr>"
+               "</table>")
+        report, ok = check_cell_coverage(
+            src, "| Код | Строка | Код колонки |")
+        assert ok, "\n".join(report)
+
+    def test_reference_construction_pardoned(self):
+        # НЕсрабатывание: «Ссылка на идентификатор записи справочника
+        # "Пользователь"» в карточке легально становится EXT-ссылкой
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
+               "<tr><td>Логин</td><td>Ссылка на идентификатор записи "
+               "справочника \"Пользователь\"</td></tr></table>")
+        report, ok = check_cell_coverage(
+            src, "| Логин | [EXT-001 Пользователь](dictionaries.md) |")
+        assert ok, "\n".join(report)
+
+    def test_inserted_service_words_pardoned(self):
+        # НЕсрабатывание: вставка служебных слов переносом («в
+        # соответствии СО СТАТУСНОЙ МОДЕЛЬЮ „X“») — слова фрагмента по
+        # порядку в одном окне корпуса
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
+               "<tr><td>Статус</td><td>Текущий статус в соответствии с "
+               "[КК] Статусы операции</td></tr></table>")
+        report, ok = check_cell_coverage(
+            src, "| Статус | Текущий статус запроса в соответствии со "
+                 "статусной моделью «[КК] Статусы операции» |")
+        assert ok, "\n".join(report)
+
+    def test_scattered_words_still_lost(self):
+        # срабатывание: слова фрагмента есть в корпусе РОССЫПЬЮ по разным
+        # местам — окно не милует, потеря видна
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
+               "<tr><td>Тип</td><td>Тип операции для которой выполняется "
+               "подтверждение</td></tr></table>")
+        corpus = ("| Тип операции | значения из справочника |\n"
+                  "| Другое | для карты которой выполняется операция |\n"
+                  "| Третье | требует подтверждение |")
+        report, ok = check_cell_coverage(src, corpus)
+        assert not ok
+
+    def test_section_rows_and_alien_tables_skipped(self):
+        # НЕсрабатывание: секционные строки и таблицы без целевых
+        # колонок (перечни кодов) не проверяются
+        from app.scripts.CI.normalize_tables import check_cell_coverage
+        src = (
+            "<table>\n"
+            "<tr><th>№</th><th>Поле</th><th>Тип</th><th>Описание</th></tr>\n"
+            "<tr><td>1</td><td colspan=\"3\"><strong>Реквизиты операции"
+            "</strong></td></tr>\n"
+            "<tr><td>2</td><td>Код</td><td>Строка</td><td>Код записи"
+            "</td></tr>\n"
+            "</table>\n"
+            "<table>\n<tr><th>Код отказа</th><th>Причина</th></tr>\n"
+            "<tr><td>E01</td><td>Совсем непереносимый текст</td></tr>\n"
+            "</table>\n"
+        )
+        report, ok = check_cell_coverage(
+            src, "| Код | | Строка | Код записи |")
+        assert ok, "\n".join(report)
+
+
 class TestQualityGate:
     def test_refuses_below_threshold(self, tmp_path):
         # Профиль по индексам на блочной таблице — заведомо съедет
