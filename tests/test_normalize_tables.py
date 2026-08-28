@@ -3541,3 +3541,26 @@ class TestFencedBlocksOutOfTornCellGuard:
         )
         report, ok = self._check(md, tmp_path)
         assert any("разорванная ячейка" in l for l in report)
+
+
+class TestEscapedBracketsInLinks:
+    """Блокер z01-fix ISS-03: экранированные \[ \] в тексте ссылки —
+    текст, не скобки баланса; кривая конструкция выгрузки
+    «[КК_ВК\] Банк: …](url)» должна терять URL при нормализации."""
+
+    def test_escaped_bracket_link_stripped(self):
+        from app.scripts.CI.normalize_tables import _norm_cell
+        v = ("[КК_ВК\] Банк: Функция изменения статуса]"
+             "(../../[КК_ВК]-Функции/файл.md)")
+        n = _norm_cell(v)
+        assert "функции/файл" not in n and "../" not in n
+        assert "[кк_вк] банк: функция изменения статуса" in n
+
+    def test_wellformed_escaped_label_still_stripped(self):
+        # НЕсрабатывание: корректная ссылка с \[тегом\] в ярлыке
+        from app.scripts.CI.normalize_tables import _norm_cell
+        v = ("[\[КК_ВК\] Банк: Функция]"
+             "(../../[КК_ВК]-Функции/файл.md)")
+        n = _norm_cell(v)
+        assert "../" not in n
+        assert "[кк_вк] банк: функция" in n

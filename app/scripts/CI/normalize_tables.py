@@ -997,6 +997,13 @@ def _strip_markdown_links(v: str) -> str:
         depth = 0
         j = i
         while j < n:
+            # экранированные \[ и \] — текст, не скобки баланса:
+            # конструкция выгрузки «[КК_ВК\] Банк: …](url)» иначе
+            # рвалась на \] и URL оставался хвостом в эталоне сверки
+            # (блокер z01-fix ISS-03, диагноз исполнителя)
+            if v[j] in "[]" and j > 0 and v[j - 1] == "\\":
+                j += 1
+                continue
             if v[j] == "[":
                 depth += 1
             elif v[j] == "]":
@@ -1022,7 +1029,12 @@ def _strip_markdown_links(v: str) -> str:
                         break
                 k += 1
             if url_end != -1:
-                out.append(v[i + 1:j])
+                label = v[i + 1:j]
+                if "\\]" in label and not label.startswith("\\["):
+                    # кривой формат выгрузки «[КК_ВК\] Банк: …](url)»:
+                    # ведущая «[» — текст тега, не разметка ссылки
+                    label = "[" + label
+                out.append(label)
                 i = url_end + 1
                 continue
         out.append(v[i])
