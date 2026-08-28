@@ -620,6 +620,12 @@ def _looks_like_cardinality_logical(v: str) -> bool:
             or bool(_LOGICAL_CARD_RE.match(v)))
 
 
+# Ярлык структурного ряда ЭФ-таблицы полей (протяжка в колонку
+# обязательности при нормализации источника)
+_STRUCT_LABEL_RE = re.compile(
+    r'^(раздел|блок|вкладка|кнопка|шаг|секция)\s*["«№]', re.I)
+
+
 def _is_cardinality_title(low: str) -> bool:
     """Заголовок роли кратность: «Кратность», «Крат.» — но НЕ «Краткое
     описание» (ложный матч по префиксу, справочник продуктов КК_ВК)."""
@@ -773,6 +779,16 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                 role, check = "обязат", _looks_like_obligation
             elif _is_cardinality_title(low):
                 role, check = "кратн", _looks_like_cardinality
+            if role == "обязат" and source_mode:
+                # структурный ряд ЭФ-таблицы полей («Раздел "…"»,
+                # «Блок "…"», «Вкладка "…"») протягивается источником
+                # в колонку обязательности — это ярлык ряда, не
+                # значение (отказы z01/z03 ISS-03 на 2166860242 и
+                # 2166860176); в --check карточек послабления нет
+                base_obl = check
+                check = (lambda v, _b=base_obl:
+                         _b(v) or bool(_STRUCT_LABEL_RE.match(
+                             _plain(v).strip())))
             if role == "кратн" and (links_table or source_mode):
                 # source_mode (нормализация ИСТОЧНИКА, ISS-01 2026-08-27):
                 # авторская нотация кратности КК_ВК — голая логическая
@@ -3240,6 +3256,22 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                     if (m.start() == 0 or text[m.start() - 1] != "\\")
                     and re.search(r"[а-яёА-ЯЁ]", m.group(0))
                     and re.search(r"[a-zA-Z]", m.group(0))})
+    # помилование (z03 ISS-03, кнопка «ОK» с кириллической О): слово,
+    # ДОСЛОВНО пришедшее из кавычечного литерала источника, — данные
+    # автора, не подмена; дословность сильнее гигиены (тот же принцип,
+    # что source_literals у колонных ролей). Обход разметкой («О**K**»)
+    # больше не нужен и не легален.
+    if mixed and source_text:
+        src_words = {w.group(0)
+                     for lit in quoted_literals(source_text)
+                     for w in re.finditer(r"[^\W\d_]+", lit)}
+        pardoned = [w for w in mixed if w in src_words]
+        mixed = [w for w in mixed if w not in src_words]
+        if pardoned:
+            report.append(
+                f"i гомоглифы ×{len(pardoned)} помилованы — дословно из "
+                f"кавычечных литералов источника "
+                f"({', '.join(repr(w) for w in pardoned[:3])})")
     if mixed:
         ok = False
         report.append(

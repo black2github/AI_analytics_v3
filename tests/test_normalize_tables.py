@@ -3564,3 +3564,48 @@ class TestEscapedBracketsInLinks:
         n = _norm_cell(v)
         assert "../" not in n
         assert "[кк_вк] банк: функция" in n
+
+
+class TestStructRowsAndHomoglyphPardon:
+    """Калибровки z01/z03 ISS-03: структурные ряды ЭФ-таблиц в колонке
+    обязательности (source_mode) и помилование гомоглифов, дословно
+    пришедших из кавычечных литералов источника."""
+
+    def test_struct_label_valid_in_source_mode(self):
+        headers = ["Название поля", "Обязательность"]
+        rows = [["Поле А", "Да"],
+                ["**Раздел \"Основная информация\"**",
+                 "**Раздел \"Основная информация\"**"],
+                ["Вкладка \"Параметры заявки\"",
+                 "Вкладка \"Параметры заявки\""]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None,
+                                   source_mode=True)}
+        assert report["обязат"]["valid_pct"] == 100.0
+
+    def test_struct_label_still_defect_in_card_check(self):
+        # НЕсрабатывание: в --check карточек послабления нет
+        headers = ["Название поля", "Обязательность"]
+        rows = [["Поле", "Раздел \"Х\""]]
+        report = {c["role"]: c for c in
+                  validate_columns(headers, rows, path_index=None)}
+        assert report["обязат"]["valid_pct"] < 100
+
+    def test_homoglyph_from_source_literal_pardoned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        src = 'Кнопка "ОK" закрывает сообщение.'  # кириллическая О
+        card = tmp_path / "c.md"
+        card.write_text('# К\n\nКнопка "ОK" — закрыть.\n',
+                        encoding="utf-8")
+        rep, ok = check_file(card, source_text=src)
+        assert ok, "\n".join(rep)
+        assert any("помилованы" in ln for ln in rep)
+
+    def test_homoglyph_not_in_source_still_defect(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text('# К\n\nСтатус "Aктивен" установлен.\n',
+                        encoding="utf-8")  # латинская A
+        rep, ok = check_file(card, source_text='Литералы: "другое".')
+        assert not ok
+        assert any("К-30" in ln for ln in rep)
