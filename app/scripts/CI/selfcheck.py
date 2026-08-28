@@ -142,6 +142,11 @@ def run(docs: Path, sources: Optional[Path],
             # структурную целостность таблиц проверяем и здесь: разрыв
             # матрицы жил с захода 4 незамеченным (К-16, 2026-08-17)
             rep, ok = _safe(nt.check_service_table_integrity, p)
+            if p.name == "traceability-matrix.md":
+                rd_rep, rd_ok = _safe(check_registry_duplicates, p)
+                if not rd_ok:
+                    all_ok = False
+                    report.extend(rd_rep)
             if ok:
                 counts["⚠"] += 1
                 report.append(f"⚠ {rel}: служебный реестр — сторож среза 2 "
@@ -725,6 +730,65 @@ def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
     return lines, True
 
 
+# --- сторожа П-5d (2026-08-28) ---
+# 1) Имя журнала: §4 фиксирует sandbox/journal.txt — самодельные имена
+#    расщепляют историю стенда (два живых случая: selfcheck-journal.md
+#    у слабого исполнителя d05b, дрейф имён первой редакции COM-01).
+#    Замечание владельца лечит один прогон — сторож лечит класс.
+# 2) Дубли реестровых ID: два CTL-000 прошли мимо всех гейтов (d01
+#    ISS-02). Сторож — по секции «Реестр ID» матрицы: строки покрытия
+#    легально повторяют ID и не проверяются.
+
+def check_journal_name(journal: Path,
+                       sources: Path) -> Optional[str]:
+    """Строка-✗, если журнал прогона не sandbox/journal.txt стенда."""
+    expected = sources.resolve().parent / "sandbox" / "journal.txt"
+    if journal.resolve() == expected:
+        return None
+    return (f"✗ протокол §4: журнал прогона «{journal}» — единый журнал "
+            "стенда ФИКСИРОВАН: sandbox/journal.txt; самодельные имена "
+            "расщепляют историю (запись выполнена, но прогон "
+            "аннулирован — повтори с правильным журналом)")
+
+
+_REGISTRY_HDR_RE = re.compile(r"^#+\s*(?:\d+\.\s*)?Реестр\s+ID",
+                              re.I | re.M)
+
+
+def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
+    """Дубли ID в секции «Реестр ID» матрицы — ✗ (реестровый ID
+    уникален; кейс: два CTL-000 у общего и подсервисного README)."""
+    try:
+        text = matrix_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], True
+    m = _REGISTRY_HDR_RE.search(text)
+    if not m:
+        return [], True
+    sect = text[m.end():]
+    nxt = re.search(r"^#+\s", sect, re.M)
+    if nxt:
+        sect = sect[:nxt.start()]
+    seen: Dict[str, str] = {}
+    report: List[str] = []
+    ok = True
+    for ln in sect.splitlines():
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+        if len(cells) < 2 or not re.match(r"^[A-ZА-Я]{2,}[-\w]*\d$",
+                                          cells[0]):
+            continue
+        rid = cells[0]
+        if rid in seen:
+            ok = False
+            report.append(f"✗ реестр ID: дубль {rid} в «Реестре ID» "
+                          f"матрицы — реестровый ID уникален "
+                          f"(строки: «{seen[rid][:60]}» и "
+                          f"«{ln.strip()[:60]}»)")
+        else:
+            seen[rid] = ln.strip()
+    return report, ok
+
+
 # --- дельта против базлайна (протокол сдачи, 2026-08-19) ---
 #
 # «Монотонно падать» — неверный инвариант: честный рост находок бывает
@@ -824,6 +888,11 @@ def main() -> int:
                          "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
     report, ok = run(args.docs, args.sources, strict=args.strict)
+    if args.journal is not None and args.sources is not None:
+        jwarn = check_journal_name(args.journal, args.sources)
+        if jwarn:
+            report.append(jwarn)
+            ok = False
     if args.baseline is not None:
         report.extend(delta_report(args.baseline, report))
     if args.journal is not None:

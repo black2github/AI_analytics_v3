@@ -748,3 +748,54 @@ class TestProtocolDiscipline:
         make(tmp_path / "sandbox" / "hack.py", "print(1)")
         rep, ok = selfcheck.check_protocol_discipline(srcs)
         assert ok and rep == []
+
+
+class TestJournalName:
+    """Сторож имени журнала (П-5d): единый sandbox/journal.txt."""
+
+    def test_custom_name_rejected(self, tmp_path):
+        srcs = tmp_path / "conf"
+        srcs.mkdir()
+        w = selfcheck.check_journal_name(
+            tmp_path / "sandbox" / "selfcheck-journal.md", srcs)
+        assert w and "§4" in w
+
+    def test_canonical_name_ok(self, tmp_path):
+        srcs = tmp_path / "conf"
+        srcs.mkdir()
+        w = selfcheck.check_journal_name(
+            tmp_path / "sandbox" / "journal.txt", srcs)
+        assert w is None
+
+
+class TestRegistryDuplicates:
+    """Сторож дублей реестровых ID (П-5d): по секции «Реестр ID»."""
+
+    def _matrix(self, tmp_path, body):
+        p = tmp_path / "traceability-matrix.md"
+        make(p, "# Матрица\n\n## 1. Покрытие\n\n"
+                "| FUN-01 | Ф | [SCR-01](s.md) |\n\n"
+                "## 4. Реестр ID\n\n| ID | Название | Файл |\n"
+                "|---|---|---|\n" + body)
+        return p
+
+    def test_duplicate_with_two_files_defect(self, tmp_path):
+        p = self._matrix(tmp_path,
+                         "| CTL-000 | Общие | `srs/control/README.md` |\n"
+                         "| CTL-000 | Подсервис | `srs/cc/README.md` |\n")
+        rep, ok = selfcheck.check_registry_duplicates(p)
+        assert not ok and any("дубль CTL-000" in ln for ln in rep)
+
+    def test_coverage_repeat_not_flagged(self, tmp_path):
+        # НЕсрабатывание: повтор ID в разделах ПОКРЫТИЯ — легален,
+        # сторож смотрит только секцию «Реестр ID»
+        p = self._matrix(tmp_path,
+                         "| FUN-01 | Функция | `srs/f.md` |\n")
+        rep, ok = selfcheck.check_registry_duplicates(p)
+        assert ok and rep == []
+
+    def test_no_registry_section_silent(self, tmp_path):
+        p = tmp_path / "traceability-matrix.md"
+        make(p, "# Матрица\n\n| X-01 | а | b.md |\n| X-01 | а | c.md |\n")
+        rep, ok = selfcheck.check_registry_duplicates(p)
+        assert ok and rep == []
