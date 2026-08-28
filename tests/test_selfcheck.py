@@ -721,12 +721,20 @@ class TestProtocolDiscipline:
         assert not ok
         assert any("§3" in ln and "build_controls.py" in ln for ln in rep)
 
-    def test_retry_over_limit_defect(self, tmp_path):
+    def test_retry_3_warns_not_fails(self, tmp_path):
+        # retry-3 — легален при параллельных ✗ (кейс z01): ⚠ приёмке
         srcs = self._stand(tmp_path)
         make(tmp_path / "sandbox" / "selfcheck-ISS-02-retry-3.txt", "x")
         rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert ok
+        assert any(ln.startswith("⚠") and "retry-3" in ln for ln in rep)
+
+    def test_retry_5_defect(self, tmp_path):
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "sandbox" / "selfcheck-X-retry-5.txt", "x")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
         assert not ok
-        assert any("§6" in ln and "retry-3" in ln for ln in rep)
+        assert any("§6" in ln and "retry-5" in ln for ln in rep)
 
     def test_retry_2_legal(self, tmp_path):
         # НЕсрабатывание: retry-1/2 — в лимите
