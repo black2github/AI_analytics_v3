@@ -3511,18 +3511,33 @@ def strip_history(text: str) -> str:
 def run_check(files: List[Path], source_path: Optional[Path],
               min_valid_pct: float = 95.0,
               docs_root: Optional[Path] = None,
-              soft_markers: bool = False) -> Tuple[List[str], bool]:
+              soft_markers: bool = False,
+              pardon_source: Optional[Path] = None) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
     поведение, колонки); значения источника ищутся в объединении.
-    Источник сверяется в ЦЕЛЕВОМ виде (strip_history + apply_critic)."""
+    Источник сверяется в ЦЕЛЕВОМ виде (strip_history + apply_critic).
+
+    pardon_source — источник ТОЛЬКО для помилований (z03 ISS-03,
+    «ОK» в неглавной карточке группы): неглавные карточки selfcheck
+    гоняет без source_path — полная сверка части против главной
+    страницы группы ложна по построению (title, литералы и шаги части
+    не её) — но дословные помилования check_file (К-30 гомоглифы,
+    source_literals колонных ролей) наследуются от той же страницы.
+    Действует лишь при source_path is None; сверочные блоки run_check
+    (`src_text is not None`) от него не включаются."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         source_path.read_text(encoding="utf-8")))
                 if source_path is not None else None)
+    pardon_text = (apply_critic(strip_history(
+        pardon_source.read_text(encoding="utf-8")))
+                   if src_text is None and pardon_source is not None
+                   else None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
-                            source_text=src_text,
+                            source_text=(src_text if src_text is not None
+                                         else pardon_text),
                             column_roles=main_file.name.lower() != "readme.md",
                             soft_markers=soft_markers)
     card_text = main_file.read_text(encoding="utf-8")

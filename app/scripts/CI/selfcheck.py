@@ -108,9 +108,11 @@ def _safe(fn, *args) -> Tuple[List[str], bool]:
 
 def _run(files: List[Path], src: Optional[Path],
          docs_root: Optional[Path] = None,
-         soft_markers: bool = True) -> Tuple[List[str], bool]:
+         soft_markers: bool = True,
+         pardon_src: Optional[Path] = None) -> Tuple[List[str], bool]:
     return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
-                                      soft_markers=soft_markers))
+                                      soft_markers=soft_markers,
+                                      pardon_source=pardon_src))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -274,9 +276,14 @@ def run(docs: Path, sources: Optional[Path],
             if not files:
                 continue
         rep, ok = _run(files, src, docs, soft_markers=not strict)
-        # внутренние сторожа неглавных карточек группы — отдельно
+        # внутренние сторожа неглавных карточек группы — отдельно;
+        # источник группы передаётся ТОЛЬКО каналом помилований
+        # (pardon_source): без него честное «ОK» из литерала источника
+        # бракует часть формы гомоглифом К-30, хотя главную карточку
+        # та же страница милует (z03 ISS-03, scr-cl-01.4)
         for extra in files[1:]:
-            rep2, ok2 = _run([extra], None, docs, soft_markers=not strict)
+            rep2, ok2 = _run([extra], None, docs, soft_markers=not strict,
+                             pardon_src=src)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
         mark = "✓" if ok else "✗"

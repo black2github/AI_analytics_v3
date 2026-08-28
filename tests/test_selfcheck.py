@@ -843,3 +843,39 @@ class TestSimilarGroupPoints:
              "| CTL-GRP-2 | При нажатии «Сохранить» на ЭФ B |\n")
         rep = selfcheck.check_similar_group_points(docs)
         assert rep == []
+
+
+class TestGroupPartPardonSource:
+    """z03 ISS-03 (scr-cl-01.4): неглавные карточки группы гоняются без
+    source_path — источник группы обязан доезжать до них каналом
+    помилований (pardon_source), иначе честное «ОK» из кавычечного
+    литерала источника бракует часть формы гомоглифом К-30."""
+
+    def _stand(self, tmp_path, part_body):
+        docs, srcs = tmp_path / "docs", tmp_path / "conf"
+        make(docs / "srs/ef/01-main.md",
+             "---\nid: X-01\ntitle: '[X] Ф1'\ntype: function\n"
+             "confluence_page_ids: ['111222']\n---\n\n# Т\n\nтекст\n")
+        make(docs / "srs/ef/02-part.md",
+             "---\nid: X-02\ntitle: '[X] Ф1 — вкладка'\ntype: function\n"
+             "confluence_page_ids: ['111222']\n---\n\n# Т\n\n"
+             + part_body)
+        make_matrix(docs, "| X-02 | function | Ф2 | f2.md |\n")
+        return docs, srcs
+
+    def test_part_homoglyph_from_group_source_pardoned(self, tmp_path):
+        docs, srcs = self._stand(tmp_path, 'Кнопка "ОK" — закрыть.\n')
+        make(srcs / "стр1.md",
+             source("[X] Ф1", "111222",
+                    'текст\n\nКнопка "ОK" закрывает.\n'))
+        report, ok = selfcheck.run(docs, srcs)
+        assert ok, report
+
+    def test_part_alien_homoglyph_still_defect(self, tmp_path):
+        # НЕсрабатывание помилования: гомоглифа нет в литералах
+        # источника группы — часть бракуется как раньше
+        docs, srcs = self._stand(tmp_path, 'Статус "Aктивен".\n')
+        make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+        report, ok = selfcheck.run(docs, srcs)
+        assert not ok
+        assert any("02-part.md" in ln and "К-30" in ln for ln in report)

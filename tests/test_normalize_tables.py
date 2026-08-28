@@ -3609,3 +3609,34 @@ class TestStructRowsAndHomoglyphPardon:
         rep, ok = check_file(card, source_text='Литералы: "другое".')
         assert not ok
         assert any("К-30" in ln for ln in rep)
+
+    def test_run_check_pardon_source_channel(self, tmp_path):
+        # z03 ISS-03 (scr-cl-01.4): источник группы доезжает до
+        # НЕглавной карточки каналом помилований — гомоглиф «ОK»
+        # милуется, а сверочные блоки (литералы, title) НЕ включаются
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text('# Другой title\n\nКнопка "ОK" закрывает. '
+                       'Литерал "Иной".\n', encoding="utf-8")
+        part = tmp_path / "part.md"
+        part.write_text('# Часть\n\nКнопка "ОK" — закрыть.\n',
+                        encoding="utf-8")
+        rep, ok = run_check([part], None, pardon_source=src)
+        assert ok, "\n".join(rep)
+        assert any("помилованы" in ln for ln in rep)
+        # «Иной» в части отсутствует — при полной сверке был бы брак
+        assert not any("отсутств" in ln for ln in rep)
+
+    def test_run_check_pardon_does_not_mute_alien_homoglyph(self, tmp_path):
+        # НЕсрабатывание: гомоглиф НЕ из литералов источника группы —
+        # брак части остаётся
+        from app.scripts.CI.normalize_tables import run_check
+        src = tmp_path / "src.md"
+        src.write_text('# С\n\nКнопка "ОК" закрывает.\n',
+                       encoding="utf-8")  # чистая кириллица
+        part = tmp_path / "part.md"
+        part.write_text('# Часть\n\nСтатус "Aктивен".\n',
+                        encoding="utf-8")  # латинская A
+        rep, ok = run_check([part], None, pardon_source=src)
+        assert not ok
+        assert any("К-30" in ln for ln in rep)
