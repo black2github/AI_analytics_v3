@@ -3627,6 +3627,98 @@ class TestStructRowsAndHomoglyphPardon:
         # «Иной» в части отсутствует — при полной сверке был бы брак
         assert not any("отсутств" in ln for ln in rep)
 
+    def test_flattened_attr_logic_defect(self, tmp_path):
+        # z04 ISS-03 (FLD-29): ≥2 «если» в однострочном значении
+        # атрибута — вложенное ветвление источника выпрямлено
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### FLD-1. «Поле»\n\n"
+            "- **Логика установки значения:**<br>Если держатель из "
+            "справочника, то: если атрибут не пустой, то поле "
+            "заполняется, иначе не заполняется. Если реестр загружен, "
+            "то поле не заполняется.\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("сплющенный атрибут" in ln
+                   and "Логика установки значения" in ln for ln in rep)
+
+    def test_flattened_attr_not_fired_on_list_or_single(self, tmp_path):
+        # НЕсрабатывание: одно «если» одной строкой; значение,
+        # разложенное подсписком; «если» в кавычках и скобках
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### FLD-1. «Поле»\n\n"
+            "- **Видимость:** **Если** переключатель == \"А\", **то** "
+            "показывается, **иначе** скрывается.\n"
+            "- **Логика установки значения:**\n"
+            "  - **Если** держатель из справочника, **то**:\n"
+            "    - **если** атрибут не пустой, **то** заполняется,\n"
+            "    - **иначе** не заполняется.\n"
+            "  - **Если** реестр загружен, **то** не заполняется.\n"
+            "- **По умолчанию:** пусто (если очищено, если сброшено — "
+            "текст в скобках) с подсказкой \"если адрес не найден, "
+            "если пусто\"\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("сплющенный атрибут" in ln for ln in rep)
+
+    def test_bare_html_tagish_placeholder_defect(self, tmp_path):
+        # z04 ISS-03 (B-5): <S>/<XS> — HTML-теги в рендере
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n- **Видимость:** **Если** Метод определения "
+            "размерности экрана.<S> = true или <XS> = true.\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("HTML-теговидные" in ln and "<S>" in ln
+                   for ln in rep)
+
+    def test_tagish_pardons_br_backticks_cyrillic(self, tmp_path):
+        # НЕсрабатывание: <br> легален, `<S>` в бэктиках, кириллический
+        # <Атрибут> тегом не парсится
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n- **Логика:**<br>значение `<S>` = true, атрибут "
+            "<Адрес одной строкой> для <Тип адреса> == LEGAL\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("HTML-теговидные" in ln for ln in rep)
+
+    def test_condition_notation_warning(self, tmp_path):
+        # голое «если» в секции FLD — предупреждение, вердикт не валит
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### FLD-1. «Поле»\n\n"
+            "- **Видимость:** Если экран узкий, скрывается.\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert any(ln.startswith("предупреждение: нотация условий")
+                   for ln in rep)
+
+    def test_condition_notation_not_fired(self, tmp_path):
+        # НЕсрабатывание: жирная нотация; «если» в кавычках/скобках/
+        # обязательности; «если» вне зон FLD/EV/B/MSG
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\nТекст: если применимо — вне зоны.\n\n"
+            "### FLD-1. «Поле»\n\n"
+            "- **Видимость:** **Если** А, **то** Б, **иначе** В.\n"
+            "- **Обязательность:** Да, если не заполнено поле \"Х\"\n"
+            "- **Логика:** очищается (если было заполнено), подсказка "
+            "\"если адрес не найден\"\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("нотация условий" in ln for ln in rep)
+
     def test_run_check_pardon_does_not_mute_alien_homoglyph(self, tmp_path):
         # НЕсрабатывание: гомоглиф НЕ из литералов источника группы —
         # брак части остаётся
