@@ -3719,6 +3719,75 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("нотация условий" in ln for ln in rep)
 
+    def test_quote_parity_survives_html_attributes(self):
+        # z04 ISS-03: кавычки href=«…» сбивали рамки _QUOTED_RE — маска
+        # "+7 (ХXX) XXX-XX-XX" после атрибутного тега не распознавалась
+        # литералом вовсе (терялись и сверка, и К-30-помилование)
+        from app.scripts.CI.normalize_tables import quoted_literals
+        src = ('<p>Алфавит: <a href="../Стандартные-наборы.md">Цифры</a>'
+               '</p><p>Отображение по маске: "+7 (ХXX) XXX-XX-XX", '
+               'где X - цифра</p>')
+        lits = quoted_literals(src)
+        assert "+7 (ХXX) XXX-XX-XX" in lits
+        # НЕсрабатывание: значение href литералом не становится
+        assert not any("Стандартные" in l for l in lits)
+
+    def test_quote_parity_keeps_example_boundaries(self):
+        # НЕсрабатывание К-18: </p> (тег без кавычек) сохраняется как
+        # граница — литерал ПОСЛЕ закрытого примера по-прежнему требуется
+        from app.scripts.CI.normalize_tables import quoted_literals
+        src = ('<p>Пример: значение примера</p>'
+               '<p>Кнопка "Продолжить" доступна.</p>')
+        assert "Продолжить" in quoted_literals(src)
+
+    def test_mixed_img_cell_skipped_with_warning(self, tmp_path):
+        # z04 ISS-03 («Выход с ЭФ» view): ячейка с <img> внутри текста —
+        # дословная сверка пропущена, сигнал приёмке вместо ✗
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| № | Поле | Логика |\n|---|---|---|\n"
+               '| 1 | Выход | **Если** экран узкий, **то** иконка '
+               '<img src="img/a.png" width="20" alt="x.png"> **Иначе** '
+               "текст |\n"
+               "| 2 | Заголовок | Наименование экранной формы заявки |\n")
+        card = ("# К\n\n1. Перенос с перефразированной подписью иконки. "
+                "Выход. 2. Заголовок. Наименование экранной формы "
+                "заявки.\n")
+        rep, ok = check_source_tables(card, src)
+        assert ok, "\n".join(rep)
+        assert any("смешанным текстом и изображениями" in ln
+                   for ln in rep)
+
+    def test_textonly_cell_still_guarded(self, tmp_path):
+        # НЕсрабатывание послабления: ячейка БЕЗ img сверяется как раньше
+        from app.scripts.CI.normalize_tables import check_source_tables
+        src = ("| № | Поле | Логика |\n|---|---|---|\n"
+               "| 1 | Выход | Дословный текст ячейки без картинок |\n"
+               "| 2 | Заголовок | Наименование экранной формы заявки |\n")
+        rep, ok = check_source_tables("# К\n\nдругое\n", src)
+        assert not ok
+        assert any("отсутствуют" in ln for ln in rep)
+
+    def test_literal_relocated_to_sibling_is_signal_not_defect(self):
+        # z04 ISS-03: точка применения «Подписать и отправить» живёт в
+        # README реестра, не в cards-файле группы — i-сигнал, не ✗
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        src = 'При нажатии кнопки "Подписать и отправить" на ЭФ.'
+        rep, ok = check_quoted_literals(
+            "# Карточка\n\nбез кнопки\n", src,
+            sibling_text='README: группа «При нажатии "Подписать и '
+                         'отправить"»')
+        assert ok, "\n".join(rep)
+        assert any(ln.startswith("i кавычечные литералы") for ln in rep)
+
+    def test_literal_missing_everywhere_still_defect(self):
+        # НЕсрабатывание фолбэка: литерала нет и у соседей — ✗ как раньше
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        rep, ok = check_quoted_literals(
+            "# К\n\nтекст\n", 'Кнопка "Продолжить" доступна.',
+            sibling_text="соседи без кнопки")
+        assert not ok
+        assert any("отсутствуют" in ln for ln in rep)
+
     def test_run_check_pardon_does_not_mute_alien_homoglyph(self, tmp_path):
         # НЕсрабатывание: гомоглиф НЕ из литералов источника группы —
         # брак части остаётся

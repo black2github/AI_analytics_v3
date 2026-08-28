@@ -1539,8 +1539,18 @@ def quoted_literals(source_text: str) -> List[str]:
     body = source_text.split("---", 2)[-1]
     headings = _source_headings(body)
     flk_cells = _flk_example_cells(body)
+    # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
+    # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
+    # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
+    # кавычкой атрибута и открывающей кавычкой честного литерала
+    # (отсеивается как разметка), а сам литерал остаётся без
+    # открывающей кавычки и не распознаётся ВОВСЕ — молчаливая потеря
+    # и сверки, и К-30-помилования. Теги С КАВЫЧКАМИ вырезаются до
+    # матчинга; теги без атрибутов (</p>, </td>, <br>) сохраняются —
+    # они несут границы ячеек/абзацев для контекстных фильтров ниже.
+    scan = re.sub(r"</?[A-Za-z][^>\n\"]*\"[^>\n]*>", " ", body)
     seen, out = set(), []
-    for m in _QUOTED_RE.finditer(body):
+    for m in _QUOTED_RE.finditer(scan):
         v = m.group(1).strip()
         if (not v or _QUOTED_SKIP_RE.search(v)
                 or _QUOTED_MARKUP_RE.search(v)):
@@ -1550,7 +1560,7 @@ def quoted_literals(source_text: str) -> List[str]:
         # «<тег … attr=» перед кавычкой без закрывающей «>» (финальный
         # прогон locks 2026-08-15: CriticMarkup-атрибуты ложно требовались
         # в карточке; содержимое-присваивание `= "O2PLUS"` вне тега — текст)
-        pre = body[:m.start()]
+        pre = scan[:m.start()]
         lt = pre.rfind("<")
         if (lt != -1 and ">" not in pre[lt:]
                 and re.search(r"[\w-]+\s*=\s*$", pre)):
@@ -1580,11 +1590,12 @@ def quoted_literals(source_text: str) -> List[str]:
             continue
         # структурная отсылка «см. раздел "..."» — навигация по источнику,
         # карточка переструктурирована по шаблону: не требуется
-        if re.search(r"(?:раздел[еа]?|см\.)\s*$", body[:m.start()][-24:],
+        if re.search(r"(?:раздел[еа]?|см\.)\s*$", scan[:m.start()][-24:],
                      re.IGNORECASE):
             continue
-        # захват должен быть словом, а не межкавычечным обрезком («, то …»)
-        if not re.match(r"^[\wА-Яа-яЁё]", v) or not re.search(
+        # захват должен быть словом, а не межкавычечным обрезком («, то …»);
+        # «+» — легальное начало литерала-маски («+7 (ХXX) XXX-XX-XX»)
+        if not re.match(r"^[+\wА-Яа-яЁё]", v) or not re.search(
                 r"[\wА-Яа-яЁё).%]$", v):
             continue
         # имена файлов-вложений (Имя_файла_1.8_28.08.2024.vsdx) — служебные
@@ -1600,20 +1611,45 @@ def quoted_literals(source_text: str) -> List[str]:
 
 
 def check_quoted_literals(card_text: str,
-                          source_text: str) -> Tuple[List[str], bool]:
+                          source_text: str,
+                          sibling_text: Optional[str] = None
+                          ) -> Tuple[List[str], bool]:
     """Каждый кавычечный литерал источника обязан присутствовать в карточке
-    (сравнение нормализованное, кавычки не требуются)."""
+    (сравнение нормализованное, кавычки не требуются).
+
+    sibling_text — объединение соседних карточек каталога главной
+    (z04 ISS-03, «Подписать и отправить» страницы контролей держателя):
+    содержимое страницы законно расходится по нескольким карточкам
+    одного реестра — точки применения живут в README реестра, не в
+    cards-файлах группы. Литерал, найденный у соседей, — не потеря:
+    i-сигнал приёмке вместо ✗ (тот же принцип корпуса, что у полноты
+    ячеек data-model)."""
     lits = quoted_literals(source_text)
     if not lits:
         return [], True
     norm_card = _norm_cell(card_text)
     lost = [v for v in lits if _norm_cell(v) not in norm_card]
+    report: List[str] = []
+    if lost and sibling_text:
+        sib_norm = _norm_cell(sibling_text)
+        relocated = [v for v in lost if _norm_cell(v) in sib_norm]
+        if relocated:
+            lost = [v for v in lost if v not in relocated]
+            report.append(
+                f"i кавычечные литералы ×{len(relocated)} найдены в "
+                "соседних карточках каталога, не в группе сверки "
+                f"({'; '.join(repr(v[:40]) for v in relocated[:3])}) — "
+                "разложение по реестру, принадлежность проверить приёмкой")
     if lost:
-        return [f"кавычечные литералы источника: в карточке отсутствуют "
-                f"{len(lost)} из {len(lits)} ✗ НИЖЕ ПОРОГА (тексты сообщений, "
-                "кнопок и значений переносятся дословно); примеры: "
-                + "; ".join(repr(v[:50]) for v in lost[:4])], False
-    return [f"кавычечные литералы источника: все {len(lits)} на месте ✓"], True
+        report.append(
+            f"кавычечные литералы источника: в карточке отсутствуют "
+            f"{len(lost)} из {len(lits)} ✗ НИЖЕ ПОРОГА (тексты сообщений, "
+            "кнопок и значений переносятся дословно); примеры: "
+            + "; ".join(repr(v[:50]) for v in lost[:4]))
+        return report, False
+    report.append(f"кавычечные литералы источника: все {len(lits)} "
+                  "на месте ✓")
+    return report, True
 
 
 # Маркеры шагов процесса: составные номера с подшагом (1.1 … 1.29) и
@@ -2407,6 +2443,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                         if r and any(c.strip() for c in r))):
             skip_cols.add(0)
         missing: List[str] = []
+        img_mixed: List[str] = []
         for row in rows:
             # Строка с вложением (пример Запрос.xml/Ответ.xml) — целиком в
             # sidecar examples/, в карточке её значений законно нет.
@@ -2436,6 +2473,16 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 if re.fullmatch(r"(?:\s*<img\b[^>]*>\s*)+",
                                 cell.strip(), re.I):
                     continue
+                # смешанная ячейка с <img> ВНУТРИ текста (z04 ISS-03,
+                # «Выход с ЭФ» view): изображения не переносятся (К-6),
+                # и дословность вокруг вырезанных картинок разрушена по
+                # построению — легитимный перенос перефразирует подписи
+                # («отображается иконка <img>» → «иконка «назад»»).
+                # Дословная сверка пропускается с сигналом приёмке;
+                # кавычечные литералы ячейки сверяет штатный сторож.
+                if re.search(r"<img\b", cell, re.I):
+                    img_mixed.append(cell.strip()[:50])
+                    continue
                 if cv and cv not in card_norm:
                     missing.append(cell.strip()[:60])
         if missing:
@@ -2446,6 +2493,13 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 f"отсутствуют {len(missing)} значений ✗ НИЖЕ ПОРОГА")
             for v in missing[:3]:
                 report.append(f"      пример потери: {v!r}")
+        if img_mixed:
+            title = " | ".join(h.strip() for h in hdr[:3])
+            report.append(
+                f"предупреждение: таблица источника «{title}» — ячейки со "
+                f"смешанным текстом и изображениями ×{len(img_mixed)}: "
+                "дословная сверка пропущена (изображения не переносятся), "
+                "полноту переноса проверить приёмкой")
     # Полнота HTML-таблиц источника: каждое имя параметра из раскрытых
     # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
     # file_id/upload_token потеряны при зелёном гейте).
@@ -3722,7 +3776,18 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             else ([], True))
         report.extend(ex_report)
         ok = ok and ex_ok
-        ql_report, ql_ok = check_quoted_literals(combined, src_text)
+        # sibling-корпус — только внутри комплекта (docs_root задан:
+        # selfcheck-режим): в CLI-прогоне рядом с карточкой может лежать
+        # что угодно, включая сам источник, — фолбэк глушил бы сверку
+        sib_txt = (re.sub(
+            r"<!--.*?-->", " ",
+            "\n\n".join(f.read_text(encoding="utf-8")
+                        for f in sorted(main_file.parent.glob("*.md"))
+                        if f not in files),
+            flags=re.S)
+            if docs_root is not None else None)
+        ql_report, ql_ok = check_quoted_literals(combined, src_text,
+                                                 sibling_text=sib_txt)
         report.extend(src_report)
         report.extend(ttl_report)
         report.extend(bh_report)
