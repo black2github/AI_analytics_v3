@@ -698,3 +698,53 @@ class TestStagePrompts:
         make(tmp_path / "prompts" / "XXX-99.md", "сирота")
         rep, _ = selfcheck.check_stage_prompts(srcs)
         assert any("XXX-99" in ln and ln.startswith("i ") for ln in rep)
+
+
+class TestProtocolDiscipline:
+    """Сторожа протокольной дисциплины (П-5c): посторонние скрипты в
+    src-репо (§3) и retry сверх лимита (§6); активны только на
+    протокольном стенде (строка «срез канона» в профиле)."""
+
+    def _stand(self, tmp_path, cut_line=True):
+        srcs = tmp_path / "conf"
+        srcs.mkdir(exist_ok=True)
+        cut = ("| **Срез канона** | `abc1234` |\n" if cut_line else "")
+        make(tmp_path / "README.md",
+             "# Профиль\n\n| Поле | Значение |\n|---|---|\n"
+             "| **service-id** | `CC` |\n" + cut)
+        return srcs
+
+    def test_foreign_script_defect(self, tmp_path):
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "sandbox" / "build_controls.py", "print(1)")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert not ok
+        assert any("§3" in ln and "build_controls.py" in ln for ln in rep)
+
+    def test_retry_over_limit_defect(self, tmp_path):
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "sandbox" / "selfcheck-ISS-02-retry-3.txt", "x")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert not ok
+        assert any("§6" in ln and "retry-3" in ln for ln in rep)
+
+    def test_retry_2_legal(self, tmp_path):
+        # НЕсрабатывание: retry-1/2 — в лимите
+        srcs = self._stand(tmp_path)
+        make(tmp_path / "sandbox" / "selfcheck-COM-02-retry-2.txt", "x")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert ok and rep == []
+
+    def test_source_scripts_ignored(self, tmp_path):
+        # НЕсрабатывание: скрипт среди ДАННЫХ источника — не нарушение
+        srcs = self._stand(tmp_path)
+        make(srcs / "вложение" / "example.py", "print(1)")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert ok and rep == []
+
+    def test_silent_without_protocol_stand(self, tmp_path):
+        # НЕсрабатывание: стенд без строки среза — сторож молчит
+        srcs = self._stand(tmp_path, cut_line=False)
+        make(tmp_path / "sandbox" / "hack.py", "print(1)")
+        rep, ok = selfcheck.check_protocol_discipline(srcs)
+        assert ok and rep == []

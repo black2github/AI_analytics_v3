@@ -395,6 +395,10 @@ def run(docs: Path, sources: Optional[Path],
         # без строки «план миграции» в профиле молчит
         sp_rep, _ = _safe(check_stage_prompts, sources)
         report.extend(sp_rep)
+        # сторожа протокольной дисциплины (П-5c): скрипты и retry-лимит
+        pd_rep, pd_ok = _safe(check_protocol_discipline, sources)
+        all_ok = all_ok and pd_ok
+        report.extend(pd_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -597,7 +601,68 @@ def check_canon_cut(sources: Path,
             "канона» профиля (решение владельца)"], False
 
 
-# --- сторож полноты промптов этапов (П-5b, 2026-08-28) ---
+# --- сторожа протокольной дисциплины (П-5c, 2026-08-28) ---
+# Замер «слабый исполнитель × компактный промпт» (ISS-02): модель
+# написала генерирующий скрипт и сделала третий retry — оба прямых
+# запрета протокола (§3, §6) потерялись из её внимания за два часа
+# работы. Правило и образец есть — не было сторожа; закон обходов:
+# ненаблюдаемое правило со временем нарушается любым исполнителем,
+# вопрос лишь ёмкости. Мягкое включение: только на протокольном
+# стенде (в профиле есть строка «срез канона»). confluence/ исключён
+# из скана — это данные источника, не рабочие файлы исполнителя.
+
+_SCRIPT_EXT = {".py", ".ps1", ".psm1", ".sh", ".bat", ".cmd", ".js"}
+_RETRY_RE = re.compile(r"-retry-(\d+)", re.I)
+
+
+def check_protocol_discipline(sources: Path) -> Tuple[List[str], bool]:
+    """✗ на следы нарушений протокола: посторонние скрипты в src-репо
+    (§3) и отчёты попыток сверх лимита двух (§6)."""
+    root = sources.parent
+    profile = root / "README.md"
+    if not profile.is_file():
+        profile = sources / "README.md"
+        root = sources
+    try:
+        ptext = profile.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], True
+    if not _CANON_CUT_RE.search(ptext):
+        return [], True
+    report: List[str] = []
+    ok = True
+    try:
+        src_rel = sources.resolve().relative_to(root.resolve()).parts[0]
+    except ValueError:
+        src_rel = None
+    scripts = []
+    for p in root.rglob("*"):
+        if p.suffix.lower() not in _SCRIPT_EXT:
+            continue
+        parts = p.relative_to(root).parts
+        if ".git" in parts or (src_rel and parts[0] == src_rel):
+            continue
+        scripts.append(p.relative_to(root))
+    for s in scripts[:6]:
+        ok = False
+        report.append(f"✗ протокол §3: посторонний скрипт в src-репо — "
+                      f"{s} (файлы комплекта правятся пофайлово; "
+                      "скрипты исполнителю запрещены, разрешены только "
+                      "канонические инструменты)")
+    if len(scripts) > 6:
+        report.append(f"   … и ещё {len(scripts) - 6} скриптов")
+    sandbox = root / "sandbox"
+    if sandbox.is_dir():
+        over = sorted({f.name for f in sandbox.iterdir()
+                       if (m := _RETRY_RE.search(f.name))
+                       and int(m.group(1)) >= 3})
+        for name in over[:4]:
+            ok = False
+            report.append(f"✗ протокол §6: отчёт {name} — попыток "
+                          "исправления больше двух; лимит исчерпан, "
+                          "требуется исход «СТОП по лимиту» и решение "
+                          "человека")
+    return report, ok
 # План обязан иметь промпт-файл prompts/<ЭТАП>.md на КАЖДЫЙ этап
 # (план-промпт v2.2 п.10); неполный пакет промптов обнаруживался
 # только внимательностью приёмщика (кейс: «дособери с ISS-02 и далее»
