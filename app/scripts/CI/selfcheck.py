@@ -404,6 +404,10 @@ def run(docs: Path, sources: Optional[Path],
         pd_rep, pd_ok = _safe(check_protocol_discipline, sources)
         all_ok = all_ok and pd_ok
         report.extend(pd_rep)
+    # детектор похожих точек применения групп (П-5e): i-сигналы,
+    # вердикт не трогают — решение о консолидации только человеческое
+    sg_rep, _ = _safe(lambda: (check_similar_group_points(docs), True))
+    report.extend(sg_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -787,6 +791,49 @@ def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
         else:
             seen[rid] = ln.strip()
     return report, ok
+
+
+# --- детектор похожих точек применения групп (П-5e, 2026-08-28) ---
+# Механический перенос «страница × группа → GRP» размножает одну точку
+# применения, описанную разными страницами с разных сторон (живой кейс:
+# три группы «Подписать и отправить» GRP-7/9/16 в cc-card-issue нашёл
+# вопрос владельца, не прибор). Детектор — НЕ решатель: пары групп
+# одного реестра с общим цитируемым литералом (кнопка «…», статус
+# `…`) поднимаются i-строкой; решение «слить/различить как фазы» —
+# только человеческое (шаг консолидации этапа). Скоуп — ОДИН реестровый
+# README: совпадение кнопок между подсервисами — разные ЭФ, не дубль.
+
+_GRP_ROW_RE = re.compile(r"^\|\s*\[?(CTL-GRP-\d+)\]?[^|]*\|\s*([^|]+)")
+_QUOTE_TOKEN_RE = re.compile(r"«([^»]{3,60})»|`([A-Za-z_]{3,30})`")
+
+
+def check_similar_group_points(docs: Path) -> List[str]:
+    """i-строки о парах групп с общим цитируемым литералом точки."""
+    report: List[str] = []
+    for readme in sorted(docs.rglob("control/README.md")):
+        try:
+            text = readme.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        toks: Dict[str, List[Tuple[str, str]]] = {}
+        for ln in text.splitlines():
+            m = _GRP_ROW_RE.match(ln.strip())
+            if not m:
+                continue
+            gid, desc = m.group(1), m.group(2).strip()
+            for qm in _QUOTE_TOKEN_RE.finditer(desc):
+                tok = (qm.group(1) or qm.group(2)).strip().lower()
+                toks.setdefault(tok, []).append((gid, desc[:50]))
+        rel = readme.relative_to(docs)
+        for tok, grps in sorted(toks.items()):
+            ids = sorted({g for g, _ in grps})
+            if len(ids) > 1:
+                report.append(
+                    f"i похожие точки применения [{rel}]: "
+                    f"{' ↔ '.join(ids)} — общий литерал «{tok}»; "
+                    "кандидат на консолидацию (решение владельца, "
+                    "шаг консолидации этапа)")
+    return report
 
 
 # --- дельта против базлайна (протокол сдачи, 2026-08-19) ---

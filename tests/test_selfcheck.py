@@ -799,3 +799,39 @@ class TestRegistryDuplicates:
         make(p, "# Матрица\n\n| X-01 | а | b.md |\n| X-01 | а | c.md |\n")
         rep, ok = selfcheck.check_registry_duplicates(p)
         assert ok and rep == []
+
+
+class TestSimilarGroupPoints:
+    """Детектор похожих точек применения (П-5e): i-сигналы по общему
+    цитируемому литералу ВНУТРИ одного реестра групп."""
+
+    def test_shared_button_flagged(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/cc/control/README.md",
+             "| ID | Точка применения |\n|---|---|\n"
+             "| CTL-GRP-7 | При нажатии «Подписать и отправить» на ЭФ |\n"
+             "| CTL-GRP-9 | При нажатии «Подписать и отправить», фаза 2 |\n"
+             "| CTL-GRP-8 | При нажатии «Сохранить» |\n")
+        rep = selfcheck.check_similar_group_points(docs)
+        assert any("CTL-GRP-7 ↔ CTL-GRP-9" in ln
+                   and "подписать и отправить" in ln for ln in rep)
+        assert not any("CTL-GRP-8" in ln for ln in rep)
+
+    def test_status_backtick_flagged(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/cc/control/README.md",
+             "| CTL-GRP-14 | Контроли статуса `DRAFT` со стороны ЭФ |\n"
+             "| CTL-GRP-24 | Контроли статуса `DRAFT` модели данных |\n")
+        rep = selfcheck.check_similar_group_points(docs)
+        assert any("draft" in ln for ln in rep)
+
+    def test_cross_registry_not_compared(self, tmp_path):
+        # НЕсрабатывание: одинаковая кнопка в РАЗНЫХ реестрах
+        # (подсервисах) — разные ЭФ, не сравниваются
+        docs = tmp_path / "docs"
+        make(docs / "srs/cc-a/control/README.md",
+             "| CTL-GRP-1 | При нажатии «Сохранить» на ЭФ A |\n")
+        make(docs / "srs/cc-b/control/README.md",
+             "| CTL-GRP-2 | При нажатии «Сохранить» на ЭФ B |\n")
+        rep = selfcheck.check_similar_group_points(docs)
+        assert rep == []
