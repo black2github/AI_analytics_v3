@@ -3664,6 +3664,88 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("сплющенный атрибут" in ln for ln in rep)
 
+    def test_glued_steps_in_button_action_defect(self, tmp_path):
+        # замечание владельца (дозаход z01-z04): «При нажатии» со
+        # склеенными шагами одной строкой
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### B-1. «Удалить все анкеты»\n\n"
+            "- **При нажатии:** **Шаг 1.** Модальное окно MSG-1. "
+            "**Шаг 2.** Удаление всех блоков. **Шаг 3.** Snackbar.\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("склеены одной строкой" in ln for ln in rep)
+
+    def test_steps_on_own_lines_not_fired(self, tmp_path):
+        # НЕсрабатывание: шаги разложены по строкам списка
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### B-1. «Кнопка»\n\n"
+            "- **При нажатии:**\n"
+            "  - **Шаг 1.** Модальное окно MSG-1.\n"
+            "  - **Шаг 2.** Удаление всех блоков.\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("сплющенный" in ln for ln in rep)
+
+    def test_long_flat_value_defect(self, tmp_path):
+        # замечание владельца: «Формат» FLD-13 — простыня одной строкой
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### FLD-13. «Офис получения»\n\n"
+            "- **Формат:** " + "Очень длинное описание формата. " * 12
+            + "\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("видимой длиной" in ln for ln in rep)
+
+    def test_links_dont_inflate_length(self, tmp_path):
+        # НЕсрабатывание: длина считается по видимому тексту — URL
+        # markdown-ссылок строку не раздувают
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        link = "[EXT-004](../../../../data-model/dictionaries.md#реестр)"
+        card.write_text(
+            "# К\n\n### FLD-1. «Поле»\n\n"
+            f"- **Формат:** {link}.<Населенный пункт> + {link}.<Адрес> "
+            f"+ {link}.<Номер>\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("видимой длиной" in ln for ln in rep)
+
+    def test_flattened_list_item_defect(self, tmp_path):
+        # замечание владельца: разложен только первый блок — элемент
+        # списка с ветвлением (в т.ч. в ДЛИННОЙ скобке) остался строкой
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### FLD-29. «Поле»\n\n"
+            "- **Логика установки значения:**\n"
+            "  - **Если** поле ЕСК заполнено, **то** заполняются "
+            "атрибуты: A, B, C (список из справочника; **Если** номер "
+            "дома заполнен, **то** FALSE, **иначе** TRUE — вложенное "
+            "условие внутри длинной скобки).\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("сплющенный элемент списка" in ln for ln in rep)
+
+    def test_short_paren_insert_in_item_not_fired(self, tmp_path):
+        # НЕсрабатывание: короткая скобочная оговорка «(если было
+        # заполнено)» — не второе условие
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### EV-3. «Переключение»\n\n"
+            "- **Если** выбран режим, **то** поле очищается (если было "
+            "заполнено) и скрывается.\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("сплющенный элемент" in ln for ln in rep)
+
     def test_bare_html_tagish_placeholder_defect(self, tmp_path):
         # z04 ISS-03 (B-5): <S>/<XS> — HTML-теги в рендере
         from app.scripts.CI.normalize_tables import check_file
