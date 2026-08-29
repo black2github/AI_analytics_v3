@@ -3731,7 +3731,33 @@ class TestStructRowsAndHomoglyphPardon:
             "условие внутри длинной скобки).\n", encoding="utf-8")
         rep, ok = check_file(card)
         assert not ok
-        assert any("сплющенный элемент списка" in ln for ln in rep)
+        assert any("сплющенная строка" in ln for ln in rep)
+
+    def test_lazy_continuation_paragraph_defect(self, tmp_path):
+        # закон обходов (z05, B-1 scr-bnk-02): пустой ярлык + абзац-
+        # продолжение с ≥2 «если» — та же простыня вне маркера списка
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n### B-1. Кнопка \"Применить\"\n\n"
+            "- **При нажатии:**\n"
+            "  После нажатия ЭФ закрывается. **Если** статус выпущен, "
+            "**то** открывается форма, **иначе** изменение статуса. "
+            "**Если** заполнены поля, **то** они сохраняются.\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("сплющенная строка" in ln for ln in rep)
+
+    def test_norm_cell_ignores_list_markers(self):
+        # разложение ячейки списком не рвёт нормализованную сверку —
+        # маркеры «- » вычищаются (снят конфликт сторож↔дословность)
+        from app.scripts.CI.normalize_tables import _norm_cell
+        src_cell = "После нажатия ЭФ закрывается. **Если** статус, **то** форма"
+        card = ("- **При нажатии:**\n"
+                "  - После нажатия ЭФ закрывается.\n"
+                "  - **Если** статус, **то** форма\n")
+        assert _norm_cell(src_cell) in _norm_cell(card)
 
     def test_short_paren_insert_in_item_not_fired(self, tmp_path):
         # НЕсрабатывание: короткая скобочная оговорка «(если было
