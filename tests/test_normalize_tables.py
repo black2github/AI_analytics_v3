@@ -3772,6 +3772,58 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("сплющенный элемент" in ln for ln in rep)
 
+    def test_long_body_line_defect(self, tmp_path):
+        # решение 2026-08-29 (README SCR-CL-01 «Части»): перечень одной
+        # строкой вне таблицы длиннее 500 видимых символов
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text("# К\n\nОбщие для экрана: "
+                        + "; ".join(f"элемент номер {i}" for i in range(40))
+                        + ".\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("видимой длиной" in ln and "вне таблицы" in ln
+                   for ln in rep)
+
+    def test_long_table_row_and_quote_not_flagged(self, tmp_path):
+        # НЕсрабатывание: строка таблицы и длинная дословная цитата
+        from app.scripts.CI.normalize_tables import check_file
+        long_quote = '"' + "текст сообщения пользователю " * 25 + '"'
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n| ID | Содержание |\n|---|---|\n| MSG-1 | "
+            + "содержимое ячейки " * 40 + " |\n\n"
+            f"Текст информера: {long_quote} дословно.\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("вне таблицы" in ln for ln in rep)
+
+    def test_screen_form_without_figma_warns(self, tmp_path):
+        # решение 2026-08-29: URL макетов Figma обязаны переноситься
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### Макеты ЭФ\n\n"
+            "Размер XL - ссылка\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert any("Figma" in ln and ln.startswith("предупреждение")
+                   for ln in rep)
+
+    def test_screen_form_with_figma_silent(self, tmp_path):
+        # НЕсрабатывание: ссылка на макет есть
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### Макеты ЭФ\n\n"
+            "[Размер XL](https://www.figma.com/file/abc)\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("Figma" in ln and "предупреждение" in ln
+                       for ln in rep)
+
     def test_bare_html_tagish_placeholder_defect(self, tmp_path):
         # z04 ISS-03 (B-5): <S>/<XS> — HTML-теги в рендере
         from app.scripts.CI.normalize_tables import check_file

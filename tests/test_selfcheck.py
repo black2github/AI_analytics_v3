@@ -879,3 +879,42 @@ class TestGroupPartPardonSource:
         report, ok = selfcheck.run(docs, srcs)
         assert not ok
         assert any("02-part.md" in ln and "К-30" in ln for ln in report)
+
+
+class TestBareEntityMentions:
+    """Сторож голых атрибутных обращений (2026-08-29): «Название.<Атрибут>»
+    без ссылки при существующей карточке реестра; матчинг по
+    наименованиям матрицы, не по тегам [XX]."""
+
+    def _docs(self, tmp_path, card_body):
+        docs = tmp_path / "docs"
+        make(docs / "traceability-matrix.md",
+             "# Матрица\n\n## 4. Реестр ID\n\n"
+             "| ID | Название | Файл |\n|---|---|---|\n"
+             "| EXT-002 | Клиент Банка | `srs/dm/d.md` |\n"
+             "| ENT-003 | Фильтр | `srs/dm/f.md` |\n")
+        make(docs / "srs/ef/card.md", card_body)
+        return docs
+
+    def test_bare_attribute_access_flagged(self, tmp_path):
+        docs = self._docs(tmp_path,
+                          "# К\n\nЕсли Клиент Банка.<ОГРН> пусто, то...\n")
+        rep = selfcheck.check_bare_entity_mentions(docs)
+        assert any("клиент банка" in ln and "EXT-002" in ln for ln in rep)
+
+    def test_linked_access_not_flagged(self, tmp_path):
+        # НЕсрабатывание: обращение оформлено ссылкой
+        docs = self._docs(
+            tmp_path,
+            "# К\n\n[EXT-002 Клиент Банка](../dm/d.md).<ОГРН> пусто.\n")
+        rep = selfcheck.check_bare_entity_mentions(docs)
+        assert rep == []
+
+    def test_short_name_and_plain_mention_not_flagged(self, tmp_path):
+        # НЕсрабатывание: односложное имя («Фильтр») и упоминание БЕЗ
+        # атрибутного обращения — не флагаются
+        docs = self._docs(
+            tmp_path,
+            "# К\n\nФильтр.<Тип> задан. Просто Клиент Банка в тексте.\n")
+        rep = selfcheck.check_bare_entity_mentions(docs)
+        assert rep == []

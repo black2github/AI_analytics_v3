@@ -415,6 +415,10 @@ def run(docs: Path, sources: Optional[Path],
     # вердикт не трогают — решение о консолидации только человеческое
     sg_rep, _ = _safe(lambda: (check_similar_group_points(docs), True))
     report.extend(sg_rep)
+    # голые атрибутные обращения к сущностям реестра (2026-08-29):
+    # ⚠-сигналы, вердикт не трогают
+    bm_rep, _ = _safe(lambda: (check_bare_entity_mentions(docs), True))
+    report.extend(bm_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -825,6 +829,58 @@ def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
 
 _GRP_ROW_RE = re.compile(r"^\|\s*\[?(CTL-GRP-\d+)\]?[^|]*\|\s*([^|]+)")
 _QUOTE_TOKEN_RE = re.compile(r"«([^»]{3,60})»|`([A-Za-z_]{3,30})`")
+
+
+def check_bare_entity_mentions(docs: Path) -> List[str]:
+    """Голые атрибутные обращения «Название.<Атрибут>» к сущностям
+    реестра ID без ссылки на карточку (решение владельца 2026-08-29,
+    README SCR-CL-01: «Клиент Банка.<Краткое наименование>» голым
+    текстом при существующей EXT-002 в комплекте).
+
+    Матчинг — по НАИМЕНОВАНИЯМ реестра ID матрицы, не по тегам [XX]:
+    теги в титулах Confluence — частая рекомендация, не требование
+    (платформенные страницы почти без них), теговый сторож упоминаний
+    этот класс не видит. Флагается только обращение к атрибуту
+    («Название.<…>») — место, где ссылка на модель данных обязательна;
+    прочие голые упоминания имён не флагаются (шум: имена встречаются
+    в каждом абзаце). ⚠-сигнал, вердикт не трогает — оформление ссылок
+    закрывается дозаходом."""
+    matrix = docs / "traceability-matrix.md"
+    if not matrix.exists():
+        return []
+    text = matrix.read_text(encoding="utf-8", errors="replace")
+    m = re.search(r"^#{1,3}\s.*Реестр ID\s*$", text, re.M)
+    names: dict = {}
+    for ln in (text[m.end():] if m else "").splitlines():
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+        if len(cells) < 3 or not re.fullmatch(r"[A-Z]+-[\w.]+", cells[0]):
+            continue
+        name = re.sub(r"^\[[^\]]+\]\s*", "", cells[1]).strip()
+        # короткие/односложные имена — шум («Фильтр», «Заявка»)
+        if len(name) >= 10 and " " in name:
+            names[name.lower()] = cells[0]
+    if not names:
+        return []
+    report: List[str] = []
+    for p in sorted(docs.rglob("*.md")):
+        if p == matrix:
+            continue
+        body = p.read_text(encoding="utf-8", errors="replace")
+        # ссылки вырезаются целиком: ярлык со ссылкой — оформлено верно
+        bare = re.sub(r"\[[^\]]*\]\([^)]*\)", " ", body)
+        hits: dict = {}
+        for am in re.finditer(r"([^\n<>|]{3,80}?)\.<", bare):
+            cand = am.group(1).strip().lower()
+            for name, rid in names.items():
+                if cand.endswith(name):
+                    hits[name] = hits.get(name, 0) + 1
+                    break
+        for name, cnt in sorted(hits.items()):
+            report.append(
+                f"⚠ {p.relative_to(docs)}: голое обращение "
+                f"«{name}.<…>» ×{cnt} — карточка {names[name]} есть в "
+                "реестре, обращение к атрибуту оформляется ссылкой")
+    return report
 
 
 def check_similar_group_points(docs: Path) -> List[str]:
