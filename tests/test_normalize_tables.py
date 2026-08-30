@@ -3685,6 +3685,27 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("сплющенный атрибут" in ln for ln in rep)
 
+    def test_separator_column_mismatch_defect(self, tmp_path):
+        # находка владельца 2026-08-29 (реестр контролей после d10):
+        # сепаратор с числом колонок ≠ заголовку — GFM таблицу не рендерит
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text("# К\n\n| A | B |\n|---|---|---|\n| 1 | 2 |\n",
+                        encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("сепаратор таблицы" in ln for ln in rep)
+
+    def test_separator_match_clean(self, tmp_path):
+        # НЕсрабатывание: колонки совпадают
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text("# К\n\n| A | B |\n|---|---|\n| 1 | 2 |\n",
+                        encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("сепаратор таблицы" in ln for ln in rep)
+
     def test_glued_steps_in_button_action_defect(self, tmp_path):
         # замечание владельца (дозаход z01-z04): «При нажатии» со
         # склеенными шагами одной строкой
