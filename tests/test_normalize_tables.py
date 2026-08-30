@@ -3876,6 +3876,33 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("вне таблицы" in ln for ln in rep)
 
+    def test_content_readme_of_ef_group_warns(self, tmp_path):
+        # решение 2026-08-30: README группы ЭФ с предметными секциями —
+        # старая структура, содержимое уровня страницы уходит в frame
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "README.md"
+        card.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Выход»\n\n"
+            "- **Видимость:** всегда\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert any("переезжает в" in ln and "frame" in ln for ln in rep)
+
+    def test_nav_readme_and_frame_card_not_warned(self, tmp_path):
+        # НЕсрабатывание: README без frontmatter (навигация) и frame-
+        # карточка с секциями — целевая структура
+        from app.scripts.CI.normalize_tables import check_file
+        nav = tmp_path / "README.md"
+        nav.write_text("# Форма\n\nЧасти: [SCR-X-01.0](x.md)\n",
+                       encoding="utf-8")
+        frame = tmp_path / "scr-x-01.0-frame.md"
+        frame.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Выход»\n\n"
+            "- **Видимость:** всегда\n", encoding="utf-8")
+        for f in (nav, frame):
+            rep, ok = check_file(f)
+            assert not any("переезжает в" in ln for ln in rep), f.name
+
     def test_pseudo_screen_form_warns(self, tmp_path):
         # z06 (SCR-CL-05): все поля «не отображается» — операционная
         # функция в шаблоне формы, кандидат на смену типа
