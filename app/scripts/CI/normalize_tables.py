@@ -1977,6 +1977,7 @@ def check_heavy_pair_structure(card_text: str,
     flat_body = " ".join(_parts)
     bad = 0
     sample = ""
+    report_notes: List[str] = []
     for cell in heavy:
         md = html_fragment_to_markdown(cell)
         expected = _md_profile(md.splitlines())
@@ -2020,6 +2021,7 @@ def check_heavy_pair_structure(card_text: str,
         # т.п. — ложная граница усекала профиль и спровоцировала обход
         # невидимым U+200B; сравнение префиксное, лишний хвост безвреден)
         matched = False
+        listy = False
         for st in starts:
             section: List[str] = []
             for ln in lines[st:]:
@@ -2031,16 +2033,35 @@ def check_heavy_pair_structure(card_text: str,
                     and actual[:len(expected)] == expected):
                 matched = True
                 break
+            # раскладка markdown-списком (решение владельца 2026-08-29,
+            # README SCR-CL-01): канонная форма вложенности — списки с
+            # жирной нотацией, а эталон конвертера несёт quote-абзацы
+            # (перевод margin-left выгрузки) — профили расходятся
+            # ЗАКОННО. Профильная сверка уступает: склейку в простыню
+            # теперь ловят сторожа сплющивания (≥2 «если»/шаги/длина),
+            # содержимое — сверка ячеек и литералов.
+            if (sum(1 for a in actual[:max(len(expected), 1)]
+                    if a.startswith("li")) >= len(expected) // 2):
+                listy = True
+        if listy and not matched:
+            report_notes.append(
+                "i тяжёлая пара разложена markdown-списком — профиль "
+                "эталона конвертера (quote-абзацы) не требуется "
+                "(решение 2026-08-29: канонная форма вложенности — "
+                "списки); полноту держат сторожа содержимого")
+            continue
         if not matched:
             bad += 1
             sample = probes[0]
     if bad:
-        return ([f"содержимое/структура тяжёлых пар расходится с эталоном "
-                 f"конвертера ×{bad} (пример: …{sample[:45]!r}…) — "
-                 "содержимое ячейки раскладывается в соответствующий "
-                 "раздел шаблона с абзацами и уровнями КАК В ЭТАЛОНЕ "
-                 "(--cell-to-md «<лейбл>») ✗ НИЖЕ ПОРОГА"], False)
-    return [], True
+        return (report_notes
+                + [f"содержимое/структура тяжёлых пар расходится с "
+                   f"эталоном конвертера ×{bad} (пример: "
+                   f"…{sample[:45]!r}…) — содержимое ячейки "
+                   "раскладывается в соответствующий раздел шаблона с "
+                   "абзацами и уровнями КАК В ЭТАЛОНЕ "
+                   "(--cell-to-md «<лейбл>») ✗ НИЖЕ ПОРОГА"], False)
+    return report_notes, True
 
 
 def check_passport_cell_structure(card_text: str,
@@ -2634,7 +2655,10 @@ def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
 # (софт-сигнал; решение аналитика 2026-08-17: фон не промерен — жёсткий
 # брак спровоцировал бы агента «чинить» легитимные ссылки; ужесточение —
 # после описи кросс-стендового прогона D4).
-_HTTP_WHITELIST = ("https://gitlab.gboteam.ru/ED/eco-techbook",)
+# figma.com — решение владельца 2026-08-29: URL макетов Figma обязаны
+# переноситься (единственная связь аналитики с макетами)
+_HTTP_WHITELIST = ("https://gitlab.gboteam.ru/ED/eco-techbook",
+                   "https://www.figma.com/")
 
 
 def _md_link_targets(text: str) -> List[Tuple[int, str]]:

@@ -2672,6 +2672,19 @@ class TestK25dPairSectionProfiles:
         rep, ok = check_heavy_pair_structure(card, self._SRC)
         assert ok, rep
 
+    def test_list_layout_is_signal_not_defect(self):
+        # решение 2026-08-29 (README SCR-CL-01): раскладка тяжёлой пары
+        # markdown-СПИСКОМ легальна — профиль эталона (quote-абзацы
+        # конвертера) не требуется, i-сигнал вместо ✗
+        from app.scripts.CI.normalize_tables import (
+            check_heavy_pair_structure, html_fragment_to_markdown)
+        md = html_fragment_to_markdown(self._CELL)
+        as_list = "\n".join("- " + p for p in md.split("\n\n") if p.strip())
+        card = "**Что делает функция:**\n\n" + as_list + "\n"
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert ok, rep
+        assert any(r.startswith("i тяжёлая пара разложена") for r in rep)
+
     def test_naznachenie_duplicate_head_not_flagged(self):
         # дубль начала ячейки в «Назначении» (первые предложения
         # дословно) легитимен: сверка идёт с ЛУЧШИМ вхождением
@@ -3301,9 +3314,17 @@ class TestCleanDocumentGuard:
     def test_grey_http_is_warning_not_failure(self, tmp_path):
         docs = self._docs(tmp_path)
         rep, ok = self._check(
-            docs, "[макет](https://www.figma.com/file/XYZ)\n")
+            docs, "[макет](https://zeplin.io/project/XYZ)\n")
         assert ok
         assert any(r.startswith("предупреждение") for r in rep)
+
+    def test_figma_whitelisted(self, tmp_path):
+        # решение 2026-08-29: URL макетов Figma легальны и обязательны
+        docs = self._docs(tmp_path)
+        rep, ok = self._check(
+            docs, "[макет](https://www.figma.com/design/XYZ/page)\n")
+        assert ok
+        assert not any(r.startswith("предупреждение") for r in rep)
 
     def test_whitelist_http_clean(self, tmp_path):
         # тест на НЕсрабатывание: конвенции eco-techbook легальны

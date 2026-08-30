@@ -299,12 +299,12 @@ def test_clean_document_guard_wired(tmp_path):
          card("[X] Ф1").replace("текст", "[нет цели](missing.md)"))
     make(docs / "srs/functions/f2.md",
          card("[X] Ф2").replace(
-             "текст", "[фигма](https://www.figma.com/file/QQ)"))
+             "текст", "[зеплин](https://zeplin.io/project/QQ)"))
     make_matrix(docs)
     report, ok = selfcheck.run(docs, None)
     assert not ok
     assert any("битая" in ln for ln in report)
-    assert any("предупреждение" in ln and "figma" in ln for ln in report)
+    assert any("предупреждение" in ln and "zeplin" in ln for ln in report)
 
 
 def test_delta_report_closed_and_opened(tmp_path):
