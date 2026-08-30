@@ -202,3 +202,73 @@ def test_feedback_order_ok_and_missing_file(tmp_path):
     assert ok and "feedback" in report[0] and "соблюдён" in report[0]
     r2, ok2 = check_feedback_order(tmp_path / "нет.md")
     assert ok2 and not r2
+
+
+MATRIX_CROSS = """# Матрица
+
+## Реестр ID
+
+| ID | Тип | Наименование | Файл |
+|---|---|---|---|
+| FUN-BNK-01 | function | Функция изменения статуса | srs/functions/fun-bnk-01.md |
+
+## Связи
+
+| От | К | Связь |
+|---|---|---|
+| FUN-BNK-01 | — | нет целевого артефакта internal-contract «Метод получения данных о блокировках» у владельца file-storage — требуется публикация владельцем |
+"""
+
+
+def test_cross_service_debt_skips_local_overdue(tmp_path):
+    # межсервисный долг («у владельца <service-id>»): локальный документ
+    # с совпадающим title НЕ делает долг просроченным — цель в чужом репо
+    docs = tmp_path / "docs"
+    make(docs / "traceability-matrix.md", MATRIX_CROSS)
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф1'\n---\n"
+         "вызов Метод получения данных о блокировках\n")
+    make(docs / "srs/internal-contract/intc-001.md",
+         "---\nid: INTC-001\ntitle: '[ФС] Метод получения данных о "
+         "блокировках'\n---\n# М\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, report
+    assert not any("ПРОСРОЧЕН" in r for r in report)
+    assert any("межсервисных долгов 1" in r and "file-storage" in r
+               for r in report)
+
+
+def test_cross_service_debt_unfulfillable_still_caught(tmp_path):
+    # исполнимость имени для межсервисного долга проверяется как обычно
+    docs = tmp_path / "docs"
+    make(docs / "traceability-matrix.md", MATRIX_CROSS)
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф1'\n---\nпересказ без имени\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok and any("НЕИСПОЛНИМ" in r for r in report)
+
+
+def test_dotted_sub_id_in_registry_resolved(tmp_path):
+    # FRAME-01 (2026-08-31): суб-ID с точкой — легальный ID реестра;
+    # долг от SCR-CL-01.0 резолвится в его файл-ожидатель
+    docs = tmp_path / "docs"
+    make(docs / "traceability-matrix.md",
+         "# Матрица\n\n## Реестр ID\n\n"
+         "| ID | Тип | Наименование | Файл |\n|---|---|---|---|\n"
+         "| SCR-CL-01.0 | screen-form | Главная карточка | "
+         "srs/screen-form/scr-cl-01-main.md |\n\n"
+         "## Связи\n\n| От | К | Связь |\n|---|---|---|\n"
+         "| SCR-CL-01.0 | — | нет целевого артефакта function «Функция "
+         "создания заявки» — требуется заход create-function |\n")
+    make(docs / "srs/screen-form/scr-cl-01-main.md",
+         "---\nid: SCR-CL-01.0\ntitle: 'Гл'\n---\n"
+         "Вызов: Функция создания заявки.\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, report
+
+    # НЕсрабатывание послабления: имени нет в ожидателе — брак виден
+    make(docs / "srs/screen-form/scr-cl-01-main.md",
+         "---\nid: SCR-CL-01.0\ntitle: 'Гл'\n---\nпусто\n")
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok
+    assert any("не найдено дословно" in ln for ln in report)

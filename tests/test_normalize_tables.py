@@ -3886,7 +3886,7 @@ class TestStructRowsAndHomoglyphPardon:
             "- **Видимость:** всегда\n", encoding="utf-8")
         rep, ok = check_file(card)
         assert ok, "\n".join(rep)
-        assert any("переезжает в" in ln and "frame" in ln for ln in rep)
+        assert any("чистое оглавление" in ln and "main" in ln for ln in rep)
 
     def test_nav_readme_and_frame_card_not_warned(self, tmp_path):
         # НЕсрабатывание: README без frontmatter (навигация) и frame-
@@ -3901,7 +3901,7 @@ class TestStructRowsAndHomoglyphPardon:
             "- **Видимость:** всегда\n", encoding="utf-8")
         for f in (nav, frame):
             rep, ok = check_file(f)
-            assert not any("переезжает в" in ln for ln in rep), f.name
+            assert not any("чистое оглавление" in ln for ln in rep), f.name
 
     def test_pseudo_screen_form_warns(self, tmp_path):
         # z06 (SCR-CL-05): все поля «не отображается» — операционная

@@ -29,6 +29,12 @@ from typing import Dict, List, Optional, Tuple
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
+# Межсервисный долг: цель принадлежит другому сервису Экосистемы —
+# владелец указывается в строке долга («…«имя» у владельца <service-id>…»,
+# create-artifact «Недостающая цель ссылки», микро-волна 2026-08-23).
+# Локальная просрочка для таких долгов не проверяется (цель живёт в
+# чужом репозитории), исполнимость имени — как обычно.
+_OWNER_RE = re.compile(r"»\s+у\s+владельца\s+([\w.-]+)", re.IGNORECASE)
 _ROW_RE = re.compile(r"^\|(.+)\|\s*$")
 _RANGE_RE = re.compile(r"^(.*?)(\d+)\s*(?:…|\.\.\.)\s*(\d+)$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
@@ -90,9 +96,10 @@ def _doc_title(path: Path) -> Optional[str]:
 
 
 def parse_matrix(matrix_text: str):
-    """(реестр: ID -> (тип, файл), долги: [(from_ids, тип, имя|None, строка)])."""
+    """(реестр: ID -> (тип, файл),
+    долги: [(from_ids, тип, имя|None, владелец|None, строка)])."""
     registry: Dict[str, Tuple[str, str]] = {}
-    debts: List[Tuple[List[str], str, Optional[str], str]] = []
+    debts: List[Tuple[List[str], str, Optional[str], Optional[str], str]] = []
     for ln in matrix_text.splitlines():
         row = _ROW_RE.match(ln)
         if not row:
@@ -101,8 +108,9 @@ def parse_matrix(matrix_text: str):
         joined = " ".join(cells)
         m = _DEBT_RE.search(joined)
         if m:
-            debts.append((_expand_from(cells[0]), m.group(1),
-                          m.group(2), ln.strip()))
+            owner = _OWNER_RE.search(joined)
+            debts.append((_expand_from(cells[0]), m.group(1), m.group(2),
+                          owner.group(1) if owner else None, ln.strip()))
             continue
         # реестр ID: первая ячейка — ID, любая другая несёт путь .md
         # (голый или внутри markdown-ссылки). Жёсткая 4-колонная форма
@@ -112,8 +120,12 @@ def parse_matrix(matrix_text: str):
         # ссылкой — слепая зона жила до первого именованного долга от
         # FUN-ID (пилот-3, 2026-08-19). Тип — только если ячейка после
         # ID выглядит словом типа (латиница с дефисом: data-model, rbac).
+        # суб-ID с точкой (SCR-CL-01.0, SCR-BNK-05.1) — легальные ID
+        # реестра (FRAME-01 2026-08-31: парсер их не принимал, и долги
+        # групп нельзя было переписать на карточку-носитель); точка —
+        # только перед цифрами, чтобы не принять имя файла за ID
         if (len(cells) >= 2
-                and re.match(r"^[A-ZА-Я]{2,}[-\w]*-?\d*$", cells[0])):
+                and re.match(r"^[A-ZА-Я]{2,}[-\w]*(?:\.\d+)*$", cells[0])):
             fpath = next((fm.group(0) for c in cells[1:]
                           for fm in [re.search(r"[\w./-]+\.md\b", c)]
                           if fm), None)
@@ -136,20 +148,27 @@ def check(matrix_path: Path, docs_root: Path):
     types_present = {t for t, _f in registry.values()}
     report: List[str] = []
     ok = True
-    for from_ids, typ, name, raw in debts:
-        # 1) просрочка: цель существует?
-        target = None
-        if name and len(_norm(name)) >= 10:
-            nname = _norm(name)
-            target = next((p for p, t in titles.items() if nname in t), None)
-        elif not name:
-            target = typ if typ.lower() in {t.lower() for t in types_present} \
-                else None
-        if target:
-            report.append(f"ПРОСРОЧЕН долг: цель существует "
-                          f"({target if isinstance(target, str) else target.name}), "
-                          f"ссылка не проставлена ✗ — {raw[:100]}")
-            ok = False
+    cross: Dict[str, int] = {}
+    for from_ids, typ, name, owner, raw in debts:
+        # 1) просрочка: цель существует? (межсервисный долг — цель в
+        # чужом репозитории, локальная просрочка не проверяется)
+        if owner is not None:
+            cross[owner] = cross.get(owner, 0) + 1
+        else:
+            target = None
+            if name and len(_norm(name)) >= 10:
+                nname = _norm(name)
+                target = next((p for p, t in titles.items() if nname in t),
+                              None)
+            elif not name:
+                target = typ if typ.lower() in {t.lower()
+                                                for t in types_present} \
+                    else None
+            if target:
+                report.append(f"ПРОСРОЧЕН долг: цель существует "
+                              f"({target if isinstance(target, str) else target.name}), "
+                              f"ссылка не проставлена ✗ — {raw[:100]}")
+                ok = False
         # 2) исполнимость: имя находится в документах-ожидателях
         if not name:
             continue
@@ -174,6 +193,12 @@ def check(matrix_path: Path, docs_root: Path):
                     f"{reg[1]} ✗ (замена «имя → ссылка» невозможна — "
                     "дословность упоминания нарушена)")
                 ok = False
+    if cross:
+        report.append(
+            f"межсервисных долгов {sum(cross.values())} "
+            f"(владельцы: {', '.join(sorted(cross))}) — локальная "
+            "просрочка не проверяется, дозакрытие при появлении "
+            "комплекта владельца ✓")
     if ok:
         report.append(f"OK: долгов {len(debts)}, просроченных нет, "
                       "все имена находятся в документах-ожидателях ✓")
