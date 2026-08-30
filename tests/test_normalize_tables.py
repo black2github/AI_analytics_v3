@@ -4091,3 +4091,28 @@ class TestStructRowsAndHomoglyphPardon:
         rep, ok = run_check([part], None, pardon_source=src)
         assert not ok
         assert any("К-30" in ln for ln in rep)
+
+
+class TestLayoutCellExcludedFromHeavyPairs:
+    """2026-08-31 (модель README/main): ячейка макетов не входит в
+    сверку тяжёлых пар — её ссылки живут в несверяемом README."""
+
+    def test_layout_cell_skipped(self):
+        from app.scripts.CI.normalize_tables import heavy_source_cells
+        src = ('<table><tr><td>Макеты ЭФ</td><td>'
+               '<p>Моментальная карта - <a href="https://www.figma.com/'
+               'design/a">макеты</a></p><p>Размер XL - <a href='
+               '"https://www.figma.com/design/b">ссылка</a></p>'
+               '<p>Размер L, M - ссылка</p><p>Размер S, XS - ссылка</p>'
+               '</td></tr></table>')
+        assert heavy_source_cells(src) == []
+
+    def test_ordinary_heavy_cell_still_collected(self):
+        # НЕсрабатывание послабления: обычная тяжёлая пара собирается
+        from app.scripts.CI.normalize_tables import heavy_source_cells
+        src = ('<table><tr><td>Что делает функция</td><td>'
+               '<p>Первый абзац текста подлиннее про поведение.</p>'
+               '<ul><li>шаг один</li><li>шаг два</li></ul>'
+               '<p>Третий абзац с завершением описания.</p>'
+               '</td></tr></table>')
+        assert len(heavy_source_cells(src)) == 1

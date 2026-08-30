@@ -1898,6 +1898,13 @@ def heavy_source_cells(src_text: str) -> List[str]:
             r"<td[^>]*>((?:(?!</td>).)*)</td>\s*</tr>",
             src_text, re.S):
         cell = m.group(1)
+        # ячейка макетов (Figma/размерности) — структурная сверка не
+        # применяется (решение 2026-08-31, README/main): ссылки макетов
+        # живут в НЕсверяемом README-оглавлении группы, дословные ярлыки
+        # («Размер XL - ссылка») ценности не несут; НАЛИЧИЕ ссылок в
+        # README держит сторож figma-ссылок группы (selfcheck)
+        if _LAYOUT_ROW_RE.search(cell):
+            continue
         blocks = len(re.findall(r"<(?:p|ul|ol)\b", cell))
         if ("<ul" in cell or "<ol" in cell or len(cell) > _HEAVY_LEN
                 or blocks >= _HEAVY_BLOCKS):

@@ -276,6 +276,22 @@ def run(docs: Path, sources: Optional[Path],
             if not files:
                 continue
         rep, ok = _run(files, src, docs, soft_markers=not strict)
+        # макеты Figma группы (решение 2026-08-31, модель README/main):
+        # ссылки макетов живут в НЕсверяемом README-оглавлении — их
+        # наличие сторожится здесь (сверка ячейки макетов отключена)
+        try:
+            _src_t = src.read_text(encoding="utf-8", errors="replace")
+            _rd = files[0].parent / "README.md"
+            if ("figma.com" in _src_t.lower() and _rd.exists()
+                    and files[0].name.endswith("-main.md")
+                    and "figma.com" not in _rd.read_text(
+                        encoding="utf-8", errors="replace").lower()):
+                rep = rep + ["предупреждение: источник несёт ссылки "
+                             "Figma, а README-оглавление группы — нет: "
+                             "макеты живут в README (решение "
+                             "2026-08-31), вернуть ссылки"]
+        except OSError:
+            pass
         # внутренние сторожа неглавных карточек группы — отдельно;
         # источник группы передаётся ТОЛЬКО каналом помилований
         # (pardon_source): без него честное «ОK» из литерала источника

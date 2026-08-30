@@ -983,3 +983,37 @@ class TestGroupContours:
             "фаза 2 | — |\n")
         rep = selfcheck.check_similar_group_points(docs)
         assert any("CTL-GRP-7 ↔ CTL-GRP-9" in ln for ln in rep)
+
+
+class TestGroupFigmaInReadme:
+    """Макеты Figma группы (2026-08-31): живут в несверяемом README —
+    наличие держит сторож группы."""
+
+    def _stand(self, tmp_path, readme_body):
+        docs, srcs = tmp_path / "docs", tmp_path / "conf"
+        make(docs / "srs/ef/g/scr-x-01-main.md",
+             "---\nid: X-01\ntitle: '[X] Ф1'\ntype: screen-form\n"
+             "confluence_page_ids: ['111222']\n---\n\n# Т\n\nтекст\n")
+        make(docs / "srs/ef/g/README.md", readme_body)
+        make_matrix(docs)
+        make(srcs / "стр1.md", source(
+            "[X] Ф1", "111222",
+            'текст\n\nМакет: <a href="https://www.figma.com/design/'
+            'x">ссылка</a>\n'))
+        return docs, srcs
+
+    def test_readme_without_figma_warned(self, tmp_path):
+        docs, srcs = self._stand(tmp_path, "# Ф\n\nоглавление\n")
+        report, ok = selfcheck.run(docs, srcs)
+        assert ok, report
+        assert any("README-оглавление группы — нет" in ln
+                   for ln in report)
+
+    def test_readme_with_figma_silent(self, tmp_path):
+        docs, srcs = self._stand(
+            tmp_path,
+            "# Ф\n\n[макет](https://www.figma.com/design/x)\n")
+        report, ok = selfcheck.run(docs, srcs)
+        assert ok, report
+        assert not any("README-оглавление группы — нет" in ln
+                       for ln in report)
