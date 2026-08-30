@@ -2743,6 +2743,41 @@ class TestK29HeavyCellInvariant:
         assert ok, rep
 
 
+class TestK26TableBodiesExcluded:
+    """z06-fix ISS-03 (FUN-CL-01): строки таблиц не входят в ранговый
+    профиль тел шагов — md-таблица карточки против HTML-таблицы
+    источника несопоставима по числу строк по построению."""
+
+    def test_md_table_in_step_body_ok(self):
+        from app.scripts.CI.normalize_tables import (
+            check_step_body_structure)
+        src = ("---\ntitle: X\n---\n\n"
+               "**Шаг 1.** Маппинг полей:\n\n"
+               "<table><tr><td>Поле</td><td>Атрибут</td></tr>"
+               "<tr><td>Организация</td><td>Ссылка</td></tr></table>\n\n"
+               "**Шаг 2.** Отправка слепка заявки в очередь.\n")
+        card = ("# Ф\n\n**Шаг 1.** Маппинг полей:\n\n"
+                "| Поле | Атрибут |\n|---|---|\n"
+                "| Организация | Ссылка |\n\n"
+                "**Шаг 2.** Отправка слепка заявки в очередь.\n")
+        rep, ok = check_step_body_structure(card, src)
+        assert ok, rep
+
+    def test_flattened_lists_still_caught(self):
+        # НЕсрабатывание послабления: уплощение СПИСКОВ тела ловится
+        from app.scripts.CI.normalize_tables import (
+            check_step_body_structure)
+        src = ("---\ntitle: X\n---\n\n"
+               "**Шаг 1.** Проверки:\n\n- правило один\n  - подусловие\n\n"
+               "**Шаг 2.** Конец.\n")
+        card = ("# Ф\n\n**Шаг 1.** Проверки:\n\n"
+                "- правило один\n- подусловие\n\n"
+                "**Шаг 2.** Конец.\n")
+        rep, ok = check_step_body_structure(card, src)
+        assert not ok
+        assert any("структура тел шагов" in r for r in rep)
+
+
 class TestK26StepBodyStructure:
     """К-26: ранговый профиль тела каждого шага сверяется с источником;
     HTML-тела без md-разметки — честный skip."""
