@@ -3841,6 +3841,32 @@ class TestStructRowsAndHomoglyphPardon:
         assert ok, "\n".join(rep)
         assert not any("вне таблицы" in ln for ln in rep)
 
+    def test_pseudo_screen_form_warns(self, tmp_path):
+        # z06 (SCR-CL-05): все поля «не отображается» — операционная
+        # функция в шаблоне формы, кандидат на смену типа
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Алгоритм»\n\n"
+            "- **Тип:** Текст\n"
+            "- **Видимость:** не отображается (серверная процедура)\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert any("кандидат на смену типа" in ln for ln in rep)
+
+    def test_real_screen_form_not_warned(self, tmp_path):
+        # НЕсрабатывание: есть отображаемые поля
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Поле»\n\n"
+            "- **Видимость:** всегда\n\n### FLD-2. «Скрытое»\n\n"
+            "- **Видимость:** не отображается\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("кандидат на смену типа" in ln for ln in rep)
+
     def test_screen_form_without_figma_warns(self, tmp_path):
         # решение 2026-08-29: URL макетов Figma обязаны переноситься
         from app.scripts.CI.normalize_tables import check_file
