@@ -918,3 +918,68 @@ class TestBareEntityMentions:
             "# К\n\nФильтр.<Тип> задан. Просто Клиент Банка в тексте.\n")
         rep = selfcheck.check_bare_entity_mentions(docs)
         assert rep == []
+
+
+class TestGroupContours:
+    """Сторож контура групп (полигон 2026-08-29): явная колонка FE/BE
+    сверяется с формулировкой привязки; BE без UI-мест (API First)."""
+
+    def _readme(self, tmp_path, rows):
+        docs = tmp_path / "docs"
+        make(docs / "srs/cc/control/README.md",
+             "# Реестр\n\n| ID | Контур | Привязка | Где |\n"
+             "|---|---|---|---|\n" + rows)
+        return docs
+
+    def test_consistent_rows_silent(self, tmp_path):
+        docs = self._readme(
+            tmp_path,
+            "| CTL-GRP-6 | FE | При нажатии кнопки «Продолжить» | — |\n"
+            "| CTL-GRP-15 | BE | Переход заявки в статус `NEW` | — |\n"
+            "| CTL-GRP-18 | BE | При выполнении функции импорта | — |\n")
+        assert selfcheck.check_group_contours(docs) == []
+
+    def test_be_with_ui_markers_flagged(self, tmp_path):
+        docs = self._readme(
+            tmp_path,
+            "| CTL-GRP-15 | BE | Попытка сохранения в статус `NEW` при "
+            "нажатии кнопки «Продолжить» на ЭФ | — |\n")
+        rep = selfcheck.check_group_contours(docs)
+        assert any("CTL-GRP-15" in ln and "UI-маркеры" in ln
+                   for ln in rep)
+
+    def test_fe_with_status_markers_flagged(self, tmp_path):
+        docs = self._readme(
+            tmp_path,
+            "| CTL-GRP-6 | FE | При нажатии «Продолжить» и переходе "
+            "заявки в статус NEW | — |\n")
+        rep = selfcheck.check_group_contours(docs)
+        assert any("CTL-GRP-6" in ln and "расщепить" in ln for ln in rep)
+
+    def test_undetermined_binding_flagged(self, tmp_path):
+        # «забыли упомянуть статусы» — вопрос аналитику, не догадка
+        docs = self._readme(
+            tmp_path,
+            "| CTL-GRP-9 | BE | Проверки данных держателя | — |\n")
+        rep = selfcheck.check_group_contours(docs)
+        assert any("CTL-GRP-9" in ln and "вопрос аналитику" in ln
+                   for ln in rep)
+
+    def test_registry_without_contour_column_flagged_once(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/cc/control/README.md",
+             "# Реестр\n\n| ID | Точка применения | Где |\n|---|---|---|\n"
+             "| CTL-GRP-1 | При нажатии «X» | — |\n"
+             "| CTL-GRP-2 | При нажатии «Y» | — |\n")
+        rep = selfcheck.check_group_contours(docs)
+        assert len(rep) == 1 and "без колонки «Контур»" in rep[0]
+
+    def test_similar_points_reads_third_column(self, tmp_path):
+        # детектор похожих точек понимает формат с колонкой «Контур»
+        docs = self._readme(
+            tmp_path,
+            "| CTL-GRP-7 | FE | При нажатии «Подписать и отправить» | — |\n"
+            "| CTL-GRP-9 | FE | При нажатии «Подписать и отправить», "
+            "фаза 2 | — |\n")
+        rep = selfcheck.check_similar_group_points(docs)
+        assert any("CTL-GRP-7 ↔ CTL-GRP-9" in ln for ln in rep)
