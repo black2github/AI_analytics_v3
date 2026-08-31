@@ -4170,3 +4170,49 @@ class TestBlockquoteAndIndentedCode:
         rep, ok = check_file(card)
         assert ok, "\n".join(rep)
         assert not any("отступный код-блок" in ln for ln in rep)
+
+
+class TestControlsEntitySlicing:
+    """Нарезка карточных файлов контролей по сущности (2026-08-31):
+    frontmatter entity + сверка «Проверяемого атрибута» карточек."""
+
+    def _card(self, tmp_path, name, fm_extra, body):
+        p = tmp_path / name
+        p.write_text("---\npartOf: CTL-000\ntype: control\n"
+                     + fm_extra + "---\n\n# Контроли\n\n" + body,
+                     encoding="utf-8")
+        return p
+
+    def test_no_entity_warned_once(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(tmp_path, "cards-request-main-1.md", "",
+                       "### CTL-001. Проверка\n\n"
+                       "- **Проверяемый атрибут:** [ENT-016](x.md).«А».\n")
+        rep, ok = check_file(p)
+        assert ok, "\n".join(rep)
+        assert sum(1 for ln in rep if "без entity" in ln) == 1
+
+    def test_alien_card_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(
+            tmp_path, "cards-ent-016-request.md", "entity: ENT-016\n",
+            "### CTL-001. Своя\n\n"
+            "- **Проверяемый атрибут:** [ENT-016](x.md).«А».\n\n"
+            "### CTL-002. Чужая\n\n"
+            "- **Проверяемый атрибут:** [ENT-012](y.md).«Б».\n")
+        rep, ok = check_file(p)
+        assert ok, "\n".join(rep)
+        assert any("чужой сущности" in ln and "CTL-002" in ln
+                   for ln in rep)
+
+    def test_homogeneous_file_silent(self, tmp_path):
+        # НЕсрабатывание: все карточки своей сущности
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(
+            tmp_path, "cards-ent-016-request.md", "entity: ENT-016\n",
+            "### CTL-001. Своя\n\n"
+            "- **Проверяемый атрибут:** [ENT-016](x.md).«А».\n")
+        rep, ok = check_file(p)
+        assert ok, "\n".join(rep)
+        assert not any("чужой сущности" in ln or "без entity" in ln
+                       for ln in rep)
