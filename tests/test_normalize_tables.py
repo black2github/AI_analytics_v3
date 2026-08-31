@@ -4116,3 +4116,57 @@ class TestLayoutCellExcludedFromHeavyPairs:
                '<p>Третий абзац с завершением описания.</p>'
                '</td></tr></table>')
         assert len(heavy_source_cells(src)) == 1
+
+
+class TestBlockquoteAndIndentedCode:
+    """Рецидив CALL-INT-001 (2026-08-31): цитаты «>» и отступные
+    код-блоки конвертера в чистовике — «заметки» и код в рендере."""
+
+    def test_blockquote_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n**Шаг 1.**\n\n> **Если** статус равен:\n\n"
+            "> > **то,** отправляется в очередь.\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("blockquote" in ln for ln in rep)
+
+    def test_indented_code_with_text_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\nАбзац перед блоком.\n\n"
+            "      - ИЛИ \"Черновик\";\n"
+            "      - ИЛИ \"Новый\";\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert not ok
+        assert any("отступный код-блок" in ln for ln in rep)
+
+    def test_nested_list_after_parent_li_not_flagged(self, tmp_path):
+        # НЕсрабатывание: вложенный список после родительского li —
+        # легальная вложенность, не код-блок
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\n- **Если** статус равен:\n\n"
+            "    - «Черновик»;\n"
+            "    - «Новый».\n", encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("отступный код-блок" in ln or "blockquote" in ln
+                       for ln in rep)
+
+    def test_mermaid_fenced_block_not_flagged(self, tmp_path):
+        # НЕсрабатывание: отступные строки ВНУТРИ fenced-блока (mermaid
+        # статусной модели: «[*] --> NONE : создание через ЭФ») — код
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "# К\n\nДиаграмма.\n\n```mermaid\nstateDiagram-v2\n"
+            "    [*] --> NONE : создание через ЭФ\n"
+            "    NONE --> DRAFT : сохранить черновик\n```\n",
+            encoding="utf-8")
+        rep, ok = check_file(card)
+        assert ok, "\n".join(rep)
+        assert not any("отступный код-блок" in ln for ln in rep)
