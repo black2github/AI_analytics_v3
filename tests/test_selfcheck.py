@@ -1017,3 +1017,17 @@ class TestGroupFigmaInReadme:
         assert ok, report
         assert not any("README-оглавление группы — нет" in ln
                        for ln in report)
+
+
+def test_stray_sidecar_in_sources_flagged(tmp_path):
+    # §5 (STS-01): sidecar рядом с источниками — нормализатор гоняли
+    # по выгрузке, а не по копии
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(tmp_path / "README.md", "| **Срез канона** | `abc1234` |")
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    make(srcs / "стр1.md.tables.md", "| sidecar |")
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, srcs)
+    assert not ok
+    assert any("§5" in ln and "sidecar" in ln for ln in report)

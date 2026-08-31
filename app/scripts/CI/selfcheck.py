@@ -675,6 +675,18 @@ def check_protocol_discipline(sources: Path) -> Tuple[List[str], bool]:
         return [], True
     report: List[str] = []
     ok = True
+    # §5: нормализация только на КОПИЯХ в sandbox/normalized —
+    # sidecar рядом с источниками = нормализатор гоняли по выгрузке
+    # (STS-01 2026-08-31: два *.tables.md легли в confluence/,
+    # копий в sandbox не было вовсе)
+    stray = sorted(sources.rglob("*.tables.md"))
+    if stray:
+        ok = False
+        for s in stray[:5]:
+            report.append(
+                f"✗ протокол §5: sidecar в выгрузке — {s.relative_to(root)}"
+                " (нормализация только на копиях в sandbox/normalized; "
+                "файл удалить, прогон нормализатора повторить по копии)")
     try:
         src_rel = sources.resolve().relative_to(root.resolve()).parts[0]
     except ValueError:

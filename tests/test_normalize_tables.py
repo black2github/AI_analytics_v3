@@ -4216,3 +4216,36 @@ class TestControlsEntitySlicing:
         assert ok, "\n".join(rep)
         assert not any("чужой сущности" in ln or "без entity" in ln
                        for ln in rep)
+
+
+class TestFabricatedAttributes:
+    """STS-01 ENT-022 (2026-08-31): таблица атрибутов в карточке при
+    источнике без таблиц — кандидат на фабрикацию «по аналогии»."""
+
+    def test_attrs_without_source_table_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: data-model\n---\n\n# С\n\n"
+            "| Атрибут | Тип | Обяз. |\n|---|---|---|\n"
+            "| Статус документа | Строка (255) | Да |\n",
+            encoding="utf-8")
+        rep, ok = check_file(card, source_text="Сущность хранит историю. "
+                             "Таблица БД eco_history.")
+        assert ok, "\n".join(rep)
+        assert any("фабрикаци" in ln for ln in rep)
+
+    def test_attrs_backed_by_source_table_silent(self, tmp_path):
+        # НЕсрабатывание: у источника есть таблица
+        from app.scripts.CI.normalize_tables import check_file
+        card = tmp_path / "c.md"
+        card.write_text(
+            "---\ntype: data-model\n---\n\n# С\n\n"
+            "| Атрибут | Тип | Обяз. |\n|---|---|---|\n"
+            "| Статус документа | Строка (255) | Да |\n",
+            encoding="utf-8")
+        src = ("<table><tr><th>Атрибут</th><th>Тип</th></tr>"
+               "<tr><td>Статус документа</td><td>Строка (255)</td></tr>"
+               "</table>")
+        rep, ok = check_file(card, source_text=src)
+        assert not any("фабрикаци" in ln for ln in rep)
