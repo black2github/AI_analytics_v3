@@ -4249,3 +4249,78 @@ class TestFabricatedAttributes:
                "</table>")
         rep, ok = check_file(card, source_text=src)
         assert not any("фабрикаци" in ln for ln in rep)
+
+
+class TestSTS03Calibrations:
+    """Калибровки по ложнякам STS-03 z03/z04 (2026-09-01): ярлык
+    структурного ряда без кавычек, размерный маркер <S>, скобочный
+    хвост упоминаний. Каждая — парой срабатывание/НЕсрабатывание."""
+
+    # --- ярлык структурного ряда без кавычек («Блок подтверждение») ---
+
+    def test_bare_block_label_pardoned(self):
+        from app.scripts.CI.normalize_tables import (
+            _STRUCT_LABEL_BARE_RE, _STRUCT_LABEL_RE)
+        assert _STRUCT_LABEL_BARE_RE.match("Блок подтверждение")
+        assert _STRUCT_LABEL_BARE_RE.match("Вкладка Карты")
+        assert _STRUCT_LABEL_RE.match('Блок "Информация"')  # старый путь жив
+
+    def test_bare_label_limiter_not_fired(self):
+        # НЕсрабатывание: фраза-продолжение и обычные значения — не ярлык
+        from app.scripts.CI.normalize_tables import _STRUCT_LABEL_BARE_RE
+        assert not _STRUCT_LABEL_BARE_RE.match(
+            "Блок отображается, если заявка подписана")
+        assert not _STRUCT_LABEL_BARE_RE.match("Да")
+        assert not _STRUCT_LABEL_BARE_RE.match("Блок один два три")
+
+    # --- размерный маркер <S> (глотался как зачёркивание) ---
+
+    def test_size_marker_S_escaped(self):
+        from app.scripts.CI.normalize_tables import protect_token_tags
+        assert protect_token_tags("до <S> после") == "до &lt;S&gt; после"
+        assert "&lt;XS&gt;" in protect_token_tags("<XS>")  # как было
+
+    def test_lowercase_strike_kept(self):
+        # НЕсрабатывание: строчный <s> — настоящее HTML-зачёркивание
+        from app.scripts.CI.normalize_tables import protect_token_tags
+        assert protect_token_tags("<s>снято</s>") == "<s>снято</s>"
+
+    def test_size_marker_tail_not_swallowed(self):
+        # ячейка с <S>: хвост после маркера доезжает до сетки
+        from app.scripts.CI.normalize_tables import find_top_tables
+        html = ("<table><tbody><tr><td>Заголовок</td></tr>"
+                "<tr><td>текст <S> хвост</td></tr></tbody></table>")
+        cell = find_top_tables(html)[0].find_all("td")[1] \
+            .get_text(" ", strip=True)
+        assert "хвост" in cell and "<S>" in cell
+
+    # --- скобочный хвост упоминаний ---
+
+    def test_mention_paren_tail_cut(self):
+        from app.scripts.CI.normalize_tables import _mention_core
+        assert (_mention_core("Ролевая модель клиента) и статусом заявки")
+                == "Ролевая модель клиента")
+
+    def test_mention_paired_paren_kept(self):
+        # НЕсрабатывание: скобка ВНУТРИ имени парна и не режет
+        from app.scripts.CI.normalize_tables import _mention_core
+        assert (_mention_core(
+            "Изменение статуса карты (Блокировка/Закрытие) хвост")
+            == "Изменение статуса карты (Блокировка/Закрытие) хвост")
+
+    def test_mention_paren_debt_found(self, tmp_path):
+        # долг в матрице находится иглой без скобочного хвоста
+        from app.scripts.CI.normalize_tables import check_target_mentions
+        docs = tmp_path / "docs"
+        (docs / "srs").mkdir(parents=True)
+        (docs / "traceability-matrix.md").write_text(
+            "| SCR-CL-09 | — | нет целевого артефакта "
+            "«[ЦРМ] Ролевая модель клиента» |\n", encoding="utf-8")
+        card = docs / "srs" / "scr.md"
+        card.write_text(
+            "---\nid: SCR-CL-09\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "связано с ролями (см. [ЦРМ] Ролевая модель клиента) и "
+            "статусом заявки см. журнал.\n", encoding="utf-8")
+        warns, _ = check_target_mentions(
+            card.read_text(encoding="utf-8"), card, docs)
+        assert not any("упоминание цели" in w for w in warns)

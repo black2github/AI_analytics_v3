@@ -192,6 +192,12 @@ def protect_token_tags(md_text: str) -> str:
     (тихая потеря данных). Кириллические токены (<ФИО …>) парсер и так
     считает текстом — правка их не касается."""
     def esc(m: "re.Match[str]") -> str:
+        if m.group(1) == "S" and not m.group(2).strip():
+            # прописной <S> без атрибутов — авторский размерный маркер
+            # экрана (ряд S/XS/M/L/XL; STS-03 z03 2026-08-31: парсер
+            # считал его зачёркиванием и глотал хвост ячейки). Строчный
+            # <s> остаётся HTML-зачёркиванием
+            return m.group(0).replace("<", "&lt;").replace(">", "&gt;")
         if m.group(1).lower() in _KNOWN_HTML_TAGS:
             return m.group(0)
         return m.group(0).replace("<", "&lt;").replace(">", "&gt;")
@@ -624,6 +630,13 @@ def _looks_like_cardinality_logical(v: str) -> bool:
 # обязательности при нормализации источника)
 _STRUCT_LABEL_RE = re.compile(
     r'^(раздел|блок|вкладка|кнопка|шаг|секция)\s*["«№]', re.I)
+# Ярлык без кавычек: «Блок подтверждение» (2166860586, STS-03 z03 —
+# ложный отказ полноты 93.8%). Ограничитель: ≤2 слова после ключевого
+# и конец строки — фраза с запятой/продолжением («Блок отображается,
+# если…») ярлыком не считается
+_STRUCT_LABEL_BARE_RE = re.compile(
+    r'^(раздел|блок|вкладка|секция)\s+[\w«»"-]+(?:\s+[\w«»"-]+)?\s*$',
+    re.I)
 
 
 def _is_cardinality_title(low: str) -> bool:
@@ -788,6 +801,8 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                 base_obl = check
                 check = (lambda v, _b=base_obl:
                          _b(v) or bool(_STRUCT_LABEL_RE.match(
+                             _plain(v).strip()))
+                         or bool(_STRUCT_LABEL_BARE_RE.match(
                              _plain(v).strip())))
             if role == "кратн" and (links_table or source_mode):
                 # source_mode (нормализация ИСТОЧНИКА, ISS-01 2026-08-27):
@@ -2825,6 +2840,19 @@ _MENTION_TAG_RE = re.compile(
 # часть титулов: «…(стейт-машина)» — НЕ граница)
 _MENTION_END_RE = re.compile(r"\n|\||\*\*|[»\"”;,]|\.\s")
 
+
+def _mention_core(tail: str) -> str:
+    """Ядро имени цели после тега. Непарная закрывающая скобка режет
+    хвост — упоминание жило в скобках источника («…(см. [ЦРМ] Ролевая
+    модель клиента) и статусом…», ложняк STS-03 z03/z04); скобка ВНУТРИ
+    имени («…(Блокировка/Закрытие…)») парна и не режет."""
+    e = _MENTION_END_RE.search(tail)
+    core = (tail[:e.start()] if e else tail).strip().rstrip(".,;:")
+    p = core.find(")")
+    if p != -1 and "(" not in core[:p]:
+        core = core[:p].strip().rstrip(".,;:")
+    return core
+
 _TARGET_INDEX_CACHE: Dict[str, List[Tuple[str, str]]] = {}
 
 
@@ -2954,8 +2982,7 @@ def check_target_mentions(card_text: str, md_path: Path,
     seen: Dict[str, Tuple[str, int]] = {}
     for m in _MENTION_TAG_RE.finditer(flat):
         tail = flat[m.end():m.end() + 120]
-        e = _MENTION_END_RE.search(tail)
-        core = (tail[:e.start()] if e else tail).strip().rstrip(".,;:")
+        core = _mention_core(tail)
         if not core:
             continue
         # игла — БЕЗ тега, первые ≤3 слова: реестр ID и долги матрицы
@@ -3166,8 +3193,7 @@ def check_source_tag_mentions(card_text: str, src_text: str,
     mentions: Dict[str, str] = {}  # игла (норм.) -> «[ТЕГ] ядро» для отчёта
     for m in _MENTION_TAG_RE.finditer(plain):
         tail = plain[m.end():m.end() + 120]
-        e = _MENTION_END_RE.search(tail)
-        core = (tail[:e.start()] if e else tail).strip().rstrip(".,;:")
+        core = _mention_core(tail)
         if not core:
             continue
         needle = _norm_ws(" ".join(core.split()[:3]))
