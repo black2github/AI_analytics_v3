@@ -84,3 +84,45 @@ class TestMarkersUnchanged:
         report = _report(_page(TWO_LINKS))
         colors = {c["color"]: c for c in report["color_summary"]}
         assert colors["#ff00ff"]["task"] == "DBOCORPESPLN-59857"
+
+
+class TestWinnerIsFirstMentionInText:
+    """
+    Правило выбора победителя (решение владельца 2026-09-02): задачей цвета
+    становится ключ, упомянутый в ТЕКСТЕ ячейки первым. Раньше побеждала первая
+    ссылка в разметке — в разобранной ячейке это давало не тот ключ, который
+    автор написал первым обычным текстом.
+    """
+
+    TEXT_FIRST = (
+        '<p><span style="color: rgb(23,43,77);">TEAMECO-5354</span></p>'
+        '<p><a href="https://jira.example/jira/browse/DBOCORPESPLN-59857">'
+        'DBOCORPESPLN-59857</a></p>'
+        '<p><a href="https://jira.example/jira/browse/TEAMECO-5354">TEAMECO-5354</a></p>'
+    )
+
+    def test_text_mention_beats_link_order(self):
+        """Разметка инцидента: ключ текстом выше, его ссылка ниже — берётся он."""
+        report = _report(_page(self.TEXT_FIRST))
+        colors = {c["color"]: c for c in report["color_summary"]}
+        assert colors["#ff00ff"]["task"] == "TEAMECO-5354"
+
+        row = report["multi_task_rows"][0]
+        assert row["chosen"] == "TEAMECO-5354"
+        assert row["dropped"] == ["DBOCORPESPLN-59857"]
+
+    def test_link_order_wins_when_text_order_matches(self):
+        """Обычный случай: порядок ссылок и текста совпадает — ничего не меняется."""
+        cell = ('<a href="https://jira.example/jira/browse/GBO-1">GBO-1</a> '
+                '<a href="https://jira.example/jira/browse/GBO-2">GBO-2</a>')
+        row = _report(_page(cell))["multi_task_rows"][0]
+        assert row["chosen"] == "GBO-1" and row["dropped"] == ["GBO-2"]
+
+    def test_id_absent_from_text_goes_last(self):
+        """Ключ виден только в href — не теряем, но и первенства не даём."""
+        cell = ('<p>GBO-7</p>'
+                '<a href="https://jira.example/jira/browse/GBO-9">карточка задачи</a> '
+                '<a href="https://jira.example/jira/browse/GBO-7">GBO-7</a>')
+        row = _report(_page(cell))["multi_task_rows"][0]
+        assert row["chosen"] == "GBO-7"
+        assert "GBO-9" in row["dropped"]
