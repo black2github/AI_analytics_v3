@@ -28,6 +28,7 @@ import argparse
 import re
 import subprocess
 import sys
+from urllib.parse import unquote
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -443,6 +444,11 @@ def run(docs: Path, sources: Optional[Path],
     # ⚠-сигналы, вердикт не трогают — решения о контуре человеческие
     gc_rep, _ = _safe(lambda: (check_group_contours(docs), True))
     report.extend(gc_rep)
+    # сторож не-markdown артефактов files/ (сироты и битые ссылки —
+    # брак: потеря приложения молчаливая)
+    fa_rep, fa_ok = _safe(check_file_artifacts, docs)
+    all_ok = all_ok and fa_ok
+    report.extend(fa_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -873,6 +879,57 @@ _UI_MARK_RE = re.compile(
     r"кнопк|нажат|\bэф\b|экранн|вкладк|дровер|фокус", re.I)
 _ST_MARK_RE = re.compile(r"статус|переход", re.I)
 _OP_MARK_RE = re.compile(r"при выполнении|функц", re.I)
+
+
+_ART_LINK_RE = re.compile(r"\]\(([^)\s]+?)(?:\s+\"[^\"]*\")?\)")
+
+
+def check_file_artifacts(docs: Path) -> Tuple[List[str], bool]:
+    """Сторож не-markdown артефактов комплекта (files/): приложение
+    источника (XSD/JSON-схема и т.п.) живёт в подкаталоге files/ рядом
+    с карточкой-владельцем, и карточка ОБЯЗАНА на него ссылаться.
+    Файл в files/ без входящей ссылки — «сирота» (✗): артефакт, о
+    котором комплект молчит. Ссылка карточки в files/ на несуществующий
+    файл — тоже ✗ (потеря артефакта). Каталоги img/ — вне сторожа:
+    перенос картинок — отдельная существующая конвенция."""
+    arts = {p.resolve() for p in docs.rglob("*")
+            if p.is_file() and "files" in p.relative_to(docs).parts
+            and "img" not in p.relative_to(docs).parts}
+    linked: set = set()
+    broken: List[Tuple[str, str]] = []
+    for md in sorted(docs.rglob("*.md")):
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for m in _ART_LINK_RE.finditer(text):
+            tgt = unquote(m.group(1)).split("#", 1)[0]
+            if not tgt or "://" in tgt or tgt.startswith("mailto:"):
+                continue
+            norm_t = tgt.replace("\\", "/")
+            if "files/" not in norm_t and not norm_t.startswith("files/"):
+                continue
+            try:
+                rp = (md.parent / Path(norm_t)).resolve()
+            except OSError:
+                continue
+            if rp.is_file():
+                linked.add(rp)
+            else:
+                broken.append((md.relative_to(docs).as_posix(), tgt))
+    rep: List[str] = []
+    ok = True
+    for a in sorted(arts - linked):
+        ok = False
+        rep.append("✗ файл-артефакт без ссылающейся карточки (сирота "
+                   "files/): "
+                   + Path(a).relative_to(docs.resolve()).as_posix()
+                   + " — артефакт, о котором комплект молчит")
+    for rel, tgt in broken:
+        ok = False
+        rep.append(f"✗ битая ссылка на files-артефакт: {rel} → {tgt} "
+                   "(файла нет — потеря артефакта)")
+    return rep, ok
 
 
 def check_group_contours(docs: Path) -> List[str]:

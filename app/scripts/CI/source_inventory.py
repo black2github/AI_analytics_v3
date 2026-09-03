@@ -64,6 +64,8 @@ def _full_title(head: str):
 _SCRIPT_COLS = ("page_id", "title", "родитель", "req_type", "строк")
 # колонки LLM (скелет оставляет пустыми)
 _LLM_COLS = ("целевой тип (гипотеза)", "основание")
+# колонки таблицы приложений (вся таблица скриптовая; правка = брак)
+_ATT_COLS = ("файл", "страница-владелец (page_id)", "байт")
 
 
 def _cell(v: str) -> str:
@@ -99,6 +101,47 @@ def scan(sources: Path):
             "строк": str(text.count("\n") + 1),
         })
     return rows, n_index
+
+
+def _owner_pid(f: Path, sources: Path) -> str:
+    """page_id страницы-владельца вложения: по конвенции экспортёра
+    вложения лежат в каталогах страницы (files/, img/), а сама страница
+    — md-сосед своего каталога уровнем выше. Поднимаемся от файла вверх
+    до первого каталога, у которого есть md-сосед с page_id."""
+    cur = f.parent
+    while cur != sources and cur != cur.parent:
+        md = cur.parent / (cur.name + ".md")
+        if md.is_file():
+            head = md.read_text(encoding="utf-8", errors="replace")[:4000]
+            m = _PID_RE.search(head)
+            return m.group(1) if m else "—"
+        cur = cur.parent
+    return "—"
+
+
+def scan_attachments(sources: Path):
+    """(строки приложений, число изображений). Приложение — любой
+    не-markdown файл выгрузки вне каталогов img/ (изображения считаются
+    числом: их перенос — существующая конвенция картинок карточек, в
+    таблицу они не раздуваются). Файл без определимого владельца НЕ
+    теряется — строка со страницей «—» (асимметрия: молчаливая потеря
+    приложения хуже шума; мотив — приложенные XSD/JSON-схемы, которые
+    опись страниц не видела вовсе)."""
+    rows: List[Dict[str, str]] = []
+    n_img = 0
+    for p in sorted(sources.rglob("*")):
+        if not p.is_file() or p.suffix.lower() == ".md":
+            continue
+        parts = p.relative_to(sources).parts
+        if "img" in parts:
+            n_img += 1
+            continue
+        rows.append({
+            _ATT_COLS[0]: p.relative_to(sources).as_posix(),
+            _ATT_COLS[1]: _owner_pid(p, sources),
+            _ATT_COLS[2]: str(p.stat().st_size),
+        })
+    return rows, n_img
 
 
 def _dupes(rows: List[Dict[str, str]], col: str) -> List[str]:
@@ -143,6 +186,23 @@ def build(sources: Path) -> List[str]:
     if dup_title:
         out.append("⚠ дубли title (ключом быть не могут): "
                    + "; ".join(dup_title[:5]))
+    att, n_img = scan_attachments(sources)
+    out.append("")
+    out.append("## Приложения (не-markdown файлы выгрузки)")
+    out.append("")
+    if att:
+        out.append("| " + " | ".join(_ATT_COLS) + " |")
+        out.append("|" + "---|" * len(_ATT_COLS))
+        for r in att:
+            out.append("| " + " | ".join(_cell(r[c]) for c in _ATT_COLS)
+                       + " |")
+        out.append("")
+    no_owner = sum(1 for r in att if r[_ATT_COLS[1]] == "—")
+    out.append(f"ИТОГО ПРИЛОЖЕНИЙ: файлов {len(att)}; изображений "
+               f"{n_img} (каталоги img/ — конвенция картинок, в "
+               "таблицу не входят)"
+               + (f"; без страницы-владельца {no_owner}"
+                  if no_owner else ""))
     return out
 
 
@@ -163,9 +223,12 @@ def refresh(sources: Path, inv_path: Path) -> List[str]:
     kept = 0
     out: List[str] = []
     fi = iter(fresh)
-    for ln in lines:
-        if ln.startswith("| ") and not ln.startswith("| " + _SCRIPT_COLS[0]):
+    remaining = len(fresh)  # строки ПРИЛОЖЕНИЙ ниже таблицы страниц
+    for ln in lines:        # LLM-колонок не имеют и не трогаются
+        if remaining > 0 and ln.startswith("| ") \
+                and not ln.startswith("| " + _SCRIPT_COLS[0]):
             r = next(fi)
+            remaining -= 1
             llm = old_llm.get(key(r))
             if llm and any(v.strip() for v in llm):
                 assert ln.rstrip().endswith("|  |  |")
@@ -178,31 +241,63 @@ def refresh(sources: Path, inv_path: Path) -> List[str]:
     return out
 
 
+def _parse_tables(text: str) -> List[Tuple[List[str], List[Dict[str, str]]]]:
+    """Все pipe-таблицы файла: [(заголовки, строки)]. Опись стала
+    многотабличной (страницы + приложения) — однотабличный парсер
+    смешивал бы строки второй таблицы со строками первой."""
+    tables: List[Tuple[List[str], List[Dict[str, str]]]] = []
+    lines = text.splitlines()
+    i = 0
+
+    def _cells(s: str) -> List[str]:
+        return [_uncell(c) for c in re.split(r"(?<!\\)\|", s.strip("|"))]
+
+    def _is_sep(s: str) -> bool:
+        return (s.startswith("|") and bool(s.strip("|").strip()) and
+                all(re.fullmatch(r":?-+:?", c.strip())
+                    for c in s.strip("|").split("|") if c.strip()))
+
+    while i < len(lines):
+        s = lines[i].strip()
+        if s.startswith("|") and i + 1 < len(lines) \
+                and _is_sep(lines[i + 1].strip()):
+            hdr = [c.strip() for c in _cells(s)]
+            i += 2
+            rows: List[Dict[str, str]] = []
+            while i < len(lines) and lines[i].strip().startswith("|"):
+                cells = _cells(lines[i].strip())
+                if len(cells) < len(hdr):
+                    cells += [""] * (len(hdr) - len(cells))
+                rows.append({hdr[j]: cells[j].strip()
+                             for j in range(len(hdr))})
+                i += 1
+            tables.append((hdr, rows))
+            continue
+        i += 1
+    return tables
+
+
 def _parse_inventory(text: str) -> List[Dict[str, str]]:
-    rows: List[Dict[str, str]] = []
-    hdr: Optional[List[str]] = None
-    for ln in text.splitlines():
-        s = ln.strip()
-        if not s.startswith("|"):
-            continue
-        cells = [_uncell(c) for c in
-                 re.split(r"(?<!\\)\|", s.strip("|"))]
-        if hdr is None:
-            hdr = [c.strip() for c in cells]
-            continue
-        if all(re.fullmatch(r":?-+:?", c.strip()) for c in cells if c.strip()):
-            continue
-        if len(cells) < len(hdr):
-            cells += [""] * (len(hdr) - len(cells))
-        rows.append({hdr[i].strip(): cells[i].strip()
-                     for i in range(len(hdr))})
-    return rows
+    """Строки таблицы СТРАНИЦ (первая таблица с колонкой page_id)."""
+    for hdr, rows in _parse_tables(text):
+        if "page_id" in hdr:
+            return rows
+    return []
+
+
+def _parse_attachments(text: str) -> List[Dict[str, str]]:
+    """Строки таблицы ПРИЛОЖЕНИЙ (таблица с первой колонкой «файл»);
+    в старых описях таблицы нет — пустой список (совместимость)."""
+    for hdr, rows in _parse_tables(text):
+        if hdr and hdr[0] == _ATT_COLS[0]:
+            return rows
+    return []
 
 
 def check(sources: Path, inv_path: Path) -> Tuple[List[str], bool]:
     fresh, _ = scan(sources)
-    inv = _parse_inventory(
-        inv_path.read_text(encoding="utf-8", errors="replace"))
+    inv_text = inv_path.read_text(encoding="utf-8", errors="replace")
+    inv = _parse_inventory(inv_text)
     report: List[str] = []
     ok = True
     # ключ сравнения: page_id, для строк без него — title
@@ -237,6 +332,38 @@ def check(sources: Path, inv_path: Path) -> Tuple[List[str], bool]:
         report.append(f"ИЗМЕНЕНЫ скриптовые колонки ×{len(changed)} "
                       "(правке подлежат только колонки LLM): "
                       + ", ".join(sorted(changed)[:10]) + " ✗")
+    # приложения (Д-24 по-самодостаточному: не-markdown файлы выгрузки
+    # учитываются описью — потерянное приложение видимый брак, не тихая
+    # дыра; вся таблица скриптовая, LLM-колонок нет)
+    att_fresh, _n_img = scan_attachments(sources)
+    att_inv = _parse_attachments(inv_text)
+    af = {r[_ATT_COLS[0]]: r for r in att_fresh}
+    ai = {r.get(_ATT_COLS[0], ""): r for r in att_inv}
+    a_lost = sorted(set(af) - set(ai))
+    a_extra = sorted(set(ai) - set(af))
+    a_changed: List[str] = []
+    for k in set(af) & set(ai):
+        for c in _ATT_COLS[1:]:
+            if norm(_uncell(ai[k].get(c, ""))) != norm(af[k][c]):
+                a_changed.append(f"{k}.{c}")
+    if a_lost:
+        ok = False
+        report.append(f"ПОТЕРЯНЫ приложения ×{len(a_lost)} — не-markdown "
+                      "файлы выгрузки без строки описи (молчаливая "
+                      "потеря): " + ", ".join(a_lost[:10]) + " ✗")
+    if a_extra:
+        ok = False
+        report.append(f"ЛИШНИЕ строки приложений ×{len(a_extra)} (в "
+                      "выгрузке таких файлов нет): "
+                      + ", ".join(a_extra[:10]) + " ✗")
+    if a_changed:
+        ok = False
+        report.append(f"ИЗМЕНЕНЫ колонки приложений ×{len(a_changed)} "
+                      "(таблица приложений скриптовая целиком): "
+                      + ", ".join(sorted(a_changed)[:10]) + " ✗")
+    report.append(f"ПРОВЕРКА ПРИЛОЖЕНИЙ: файлов {len(att_fresh)}, строк "
+                  f"{len(att_inv)}, потеряно {len(a_lost)}, лишних "
+                  f"{len(a_extra)}, правок {len(a_changed)}")
     empty = sum(1 for r in inv
                 if not r.get(_LLM_COLS[0], "").strip())
     report.append(f"ПРОВЕРКА ОПИСИ: страниц {len(fresh)}, строк описи "

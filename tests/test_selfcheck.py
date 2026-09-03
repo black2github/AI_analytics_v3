@@ -1031,3 +1031,66 @@ def test_stray_sidecar_in_sources_flagged(tmp_path):
     report, ok = selfcheck.run(docs, srcs)
     assert not ok
     assert any("§5" in ln and "sidecar" in ln for ln in report)
+
+
+class TestFileArtifacts:
+    """Сторож не-markdown артефактов files/ (Д-24): сирота и битая
+    ссылка — ✗; связанный файл и img/ — не срабатывает."""
+
+    def _docs(self, tmp_path):
+        docs = tmp_path / "docs"
+        (docs / "srs" / "contract" / "files").mkdir(parents=True)
+        return docs
+
+    def test_linked_artifact_ok(self, tmp_path):
+        from selfcheck import check_file_artifacts
+        docs = self._docs(tmp_path)
+        (docs / "srs" / "contract" / "files" / "req.xsd").write_bytes(
+            b"<xs:schema/>")
+        (docs / "srs" / "contract" / "card.md").write_text(
+            "---\nid: EXTINT-001\n---\n\n"
+            "Нормативная схема: [req.xsd](files/req.xsd)\n",
+            encoding="utf-8")
+        rep, ok = check_file_artifacts(docs)
+        assert ok and rep == []
+
+    def test_orphan_artifact_flagged(self, tmp_path):
+        from selfcheck import check_file_artifacts
+        docs = self._docs(tmp_path)
+        (docs / "srs" / "contract" / "files" / "orphan.xsd").write_bytes(
+            b"<xs:schema/>")
+        rep, ok = check_file_artifacts(docs)
+        assert not ok
+        assert any("сирота" in ln and "orphan.xsd" in ln for ln in rep)
+
+    def test_broken_files_link_flagged(self, tmp_path):
+        from selfcheck import check_file_artifacts
+        docs = self._docs(tmp_path)
+        (docs / "srs" / "contract" / "card.md").write_text(
+            "---\nid: EXTINT-001\n---\n\n"
+            "[схема](files/missing.xsd)\n", encoding="utf-8")
+        rep, ok = check_file_artifacts(docs)
+        assert not ok
+        assert any("битая ссылка" in ln and "missing.xsd" in ln
+                   for ln in rep)
+
+    def test_img_not_guarded(self, tmp_path):
+        # НЕсрабатывание: img/ — конвенция картинок, сторож молчит
+        from selfcheck import check_file_artifacts
+        docs = self._docs(tmp_path)
+        (docs / "srs" / "img").mkdir(parents=True)
+        (docs / "srs" / "img" / "pic.png").write_bytes(b"\x89PNG")
+        rep, ok = check_file_artifacts(docs)
+        assert ok and rep == []
+
+    def test_url_encoded_link_resolves(self, tmp_path):
+        # НЕсрабатывание: имя с пробелом, ссылка с %20 — файл связан
+        from selfcheck import check_file_artifacts
+        docs = self._docs(tmp_path)
+        (docs / "srs" / "contract" / "files" / "req 1.xsd").write_bytes(
+            b"<xs:schema/>")
+        (docs / "srs" / "contract" / "card.md").write_text(
+            "---\nid: EXTINT-001\n---\n\n"
+            "[схема](files/req%201.xsd)\n", encoding="utf-8")
+        rep, ok = check_file_artifacts(docs)
+        assert ok, rep

@@ -167,3 +167,81 @@ def test_duplicate_page_id_flagged(tmp_path):
     lines = build(src)
     assert any("дублей page_id 1" in ln for ln in lines)
     assert any(ln.startswith("⚠ дубли page_id") for ln in lines)
+
+
+# --- приложения выгрузки (Д-24: не-markdown файлы учитываются описью) ---
+
+def _add_attachment(src: Path, page_rel: str, fname: str,
+                    data: bytes = b"<xs:schema/>") -> Path:
+    d = src / page_rel / "files"
+    d.mkdir(parents=True, exist_ok=True)
+    p = d / fname
+    p.write_bytes(data)
+    return p
+
+
+def test_attachments_rowed_images_counted(tmp_path):
+    src = setup_src(tmp_path)
+    _add_attachment(src, "Функции/f1", "req.xsd")
+    img = src / "Функции/f1/img"
+    img.mkdir(parents=True, exist_ok=True)
+    (img / "pic.png").write_bytes(b"\x89PNG")
+    lines = build(src)
+    assert any("| Функции/f1/files/req.xsd | 111 |" in ln
+               for ln in lines), lines
+    assert any("ИТОГО ПРИЛОЖЕНИЙ: файлов 1; изображений 1" in ln
+               for ln in lines)
+
+
+def test_attachments_check_roundtrip_ok(tmp_path):
+    # НЕсрабатывание: свежая опись с приложением проходит --check
+    src = setup_src(tmp_path)
+    _add_attachment(src, "Функции/f1", "req.xsd")
+    inv = tmp_path / "inventory.md"
+    inv.write_text("\n".join(build(src)) + "\n", encoding="utf-8")
+    report, ok = check(src, inv)
+    assert ok, report
+    assert any("ПРОВЕРКА ПРИЛОЖЕНИЙ: файлов 1, строк 1, потеряно 0"
+               in ln for ln in report)
+
+
+def test_attachment_lost_is_brak(tmp_path):
+    # срабатывание: файл появился после генерации описи (или опись
+    # старого формата без секции) — молчаливая потеря запрещена
+    src = setup_src(tmp_path)
+    inv = tmp_path / "inventory.md"
+    inv.write_text("\n".join(build(src)) + "\n", encoding="utf-8")
+    _add_attachment(src, "Функции/f1", "late.xsd")
+    report, ok = check(src, inv)
+    assert not ok
+    assert any("ПОТЕРЯНЫ приложения" in ln and "late.xsd" in ln
+               for ln in report)
+
+
+def test_no_attachments_old_inventory_ok(tmp_path):
+    # НЕсрабатывание: выгрузка без files/ и опись без секции — OK
+    src = setup_src(tmp_path)
+    inv = tmp_path / "inventory.md"
+    lines = [ln for ln in build(src)
+             if "ПРИЛОЖЕНИЙ" not in ln and "## Приложения" not in ln]
+    inv.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    report, ok = check(src, inv)
+    assert ok, report
+
+
+def test_refresh_keeps_llm_with_attachments(tmp_path):
+    from app.scripts.CI.source_inventory import refresh
+    src = setup_src(tmp_path)
+    _add_attachment(src, "Функции/f1", "req.xsd")
+    inv = tmp_path / "inventory.md"
+    inv.write_text("\n".join(build(src)) + "\n", encoding="utf-8")
+    lines = inv.read_text(encoding="utf-8").splitlines()
+    for i, ln in enumerate(lines):
+        if "| 222 |" in ln:
+            lines[i] = ln.rstrip()[:-len("|  |  |")] + \
+                "| function | сигналы согласны |"
+    inv.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    out = refresh(src, inv)
+    assert any("сигналы согласны" in ln for ln in out)
+    assert any("| Функции/f1/files/req.xsd | 111 |" in ln for ln in out)
+    assert any("колонок LLM сохранено 1/" in ln for ln in out)
