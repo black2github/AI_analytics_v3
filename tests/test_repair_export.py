@@ -342,3 +342,88 @@ class TestUnfenceHtml:
         before = _read(path)
         assert main([str(tmp_path), "--unfence-html", "--dry-run"]) == 0
         assert _read(path) == before
+
+
+class TestFlagPage:
+    """
+    Замороженное поддерево (2026-09-06): у страниц нет таблицы «История изменений»,
+    значит нет карты «цвет → задача» и нет ни одного маркера — весь текст считается
+    чёрным и переживает reject. При этом требования не исключены, а заморожены: их
+    нужно держать в git и уметь вернуть, когда задача выйдет на ПРОМ.
+    Ключ --unapproved-jira тут бессилен (он берёт задачу из маркеров в теле),
+    поэтому флаг проставляется по пути напрямую.
+    """
+
+    FROZEN = "---\ntitle: Заморожено\nstatus: draft\n---\n\n# Цели\n\nТекст требований.\n"
+    WITH_MARKER = "---\ntitle: Живая\nstatus: draft\n---\n\n{++GBO-52119: правка++}\n"
+
+    def test_flag_set_on_page_without_markers(self, tmp_path):
+        path = _write(tmp_path, self.FROZEN)
+        rep = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        assert rep["changed"] and rep["flagged"] == "GBO-52119"
+        assert "unapproved_jira: GBO-52119" in rep["new_text"]
+        assert rep["new_text"].endswith("# Цели\n\nТекст требований.\n")   # тело не тронуто
+
+    def test_idempotent(self, tmp_path):
+        path = _write(tmp_path, self.FROZEN)
+        first = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        _write(tmp_path, first["new_text"])
+        second = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        assert not second["changed"]
+
+    def test_foreign_flag_not_overwritten(self, tmp_path):
+        text = self.FROZEN.replace("status: draft\n", "status: draft\nunapproved_jira: GBO-1\n")
+        path = _write(tmp_path, text)
+        rep = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        assert not rep["changed"]
+        assert "уже стоит флаг другой задачи" in rep["skipped"]
+
+    def test_reject_empties_flagged_page(self, tmp_path):
+        """Ради чего всё: страница уходит из ПРОМ-среза, но остаётся в архиве."""
+        from app.scripts.CI.critic import process_file
+        path = _write(tmp_path, self.FROZEN)
+        rep = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        _write(tmp_path, rep["new_text"])
+        assert process_file(path, "reject", None) == 1
+        assert "Текст требований" not in _read(path)
+
+    def test_apply_returns_the_page(self, tmp_path):
+        from app.scripts.CI.critic import process_file
+        path = _write(tmp_path, self.FROZEN)
+        rep = repair_file(path, unfold=False, unapproved=None, flag_page="GBO-52119")
+        _write(tmp_path, rep["new_text"])
+        assert process_file(path, "apply", "GBO-52119") == 1
+        text = _read(path)
+        assert "Текст требований" in text and "unapproved_jira" not in text
+
+
+class TestFlagPageGuard:
+    """Сторож: флаг задачи, которой нет в дереве, невидим для `critic list`."""
+
+    def test_unknown_task_refused(self, tmp_path, capsys):
+        _write(tmp_path, TestFlagPage.FROZEN)
+        assert main([str(tmp_path), "--flag-page", "GBO-99999"]) == 2
+        out = capsys.readouterr().out
+        assert "не встречается" in out
+        assert "unapproved_jira" not in _read(tmp_path / "страница.md")   # ничего не записано
+
+    def test_task_present_as_marker_accepted(self, tmp_path):
+        _write(tmp_path, TestFlagPage.FROZEN, name="заморожено.md")
+        _write(tmp_path, TestFlagPage.WITH_MARKER, name="живая.md")
+        assert main([str(tmp_path), "--flag-page", "GBO-52119"]) == 0
+        assert "unapproved_jira: GBO-52119" in _read(tmp_path / "заморожено.md")
+
+    def test_task_from_manifest_accepted(self, tmp_path):
+        _write(tmp_path, TestFlagPage.FROZEN)
+        (tmp_path / "migration-manifest.yaml").write_text(
+            "tasks:\n  GBO-52119:\n    color: black\n", encoding="utf-8")
+        assert main([str(tmp_path), "--flag-page", "GBO-52119"]) == 0
+        assert "unapproved_jira: GBO-52119" in _read(tmp_path / "страница.md")
+
+    def test_garbage_id_rejected(self, tmp_path):
+        try:
+            main([str(tmp_path), "--flag-page", "не-джира"])
+        except SystemExit as e:
+            assert e.code == 2
+        else:
+            raise AssertionError("мусорный идентификатор должен отвергаться")
