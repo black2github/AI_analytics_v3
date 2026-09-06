@@ -130,3 +130,33 @@ class TestLintCli:
         payload = json.loads(capsys.readouterr().out)
         assert any(item["rule"] == "E3" for item in payload)
         assert all({"path", "line", "level", "rule", "message"} <= set(item) for item in payload)
+
+
+class TestE9LiteralNesting:
+    """
+    E9 — литеральная вложенность маркеров (инцидент 2026-09-05). Проверка стояла
+    только в _validate_inline: apply/reject падали жёстко на первом же файле и
+    обрывали весь прогон, а сколько таких мест в дереве — оставалось неизвестным.
+    Линтер обязан показать их все сразу.
+    """
+
+    NESTED = "{++GBO-70412: список \n- {++DBOCORPESPLN-104756: врезка++} хвост++}"
+
+    def _rules(self, text):
+        return [f.rule for f in lint_text(text)]
+
+    def test_nesting_reported(self):
+        findings = [f for f in lint_text(self.NESTED) if f.rule == "E9"]
+        assert findings, "вложенность не найдена"
+        assert findings[0].level == "error"
+        assert "GBO-70412" in findings[0].message
+        assert "DBOCORPESPLN-104756" in findings[0].message
+
+    def test_clean_markup_has_no_e9(self):
+        clean = "{++GBO-70412: обычная вставка++} и {++DBOCORPESPLN-104756: соседняя++}"
+        assert "E9" not in self._rules(clean)
+
+    def test_nesting_inside_fenced_code_ignored(self):
+        """Внутри кода разметка не разбирается — это не наша вложенность."""
+        fenced = "```\n" + self.NESTED + "\n```"
+        assert "E9" not in self._rules(fenced)

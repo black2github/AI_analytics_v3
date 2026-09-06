@@ -14,6 +14,7 @@ import json
 import yaml
 
 from app.scripts.repair_export import (
+    flatten_nested, strip_markers,
     load_unapproved_ids, main, marker_tasks, repair_file,
     set_page_flag, split_frontmatter, unfold_frontmatter,
 )
@@ -32,6 +33,10 @@ FOLDED = (
     "\n"
     "Тело страницы.\n"
 )
+
+
+# Frontmatter без страничного флага — для проверок, где важен только текст.
+FM_NO_FLAG = "---" + "\n" + "status: active" + "\n" + "---" + "\n"
 
 
 def _write(tmp_path, text, name="страница.md"):
@@ -189,3 +194,64 @@ class TestCli:
             assert e.code == 2
         else:
             raise AssertionError("без флагов починки запуск должен отвергаться")
+
+
+class TestFlattenNested:
+    """
+    Уплощение литеральной вложенности (инцидент 2026-09-05): экспортёр обернул
+    блочным маркером список, внутри которого были врезки других задач. Нотация
+    вложенность запрещает, apply/reject падали жёстко и обрывали весь прогон.
+    """
+
+    def test_simple_nesting_flattened(self):
+        src = "{++GBO-1: раз {++TEAMTB-2: два++} три++}"
+        out, count = flatten_nested(src)
+        assert count == 1
+        assert out == "{++GBO-1: раз ++}{++TEAMTB-2: два++}{++GBO-1:  три++}"
+
+    def test_text_is_never_touched(self):
+        """Главный инвариант: переставляется только разметка."""
+        src = "{++GBO-1: список\n- пункт {++TEAMTB-2: врезка++}\n- ещё++}"
+        out, _ = flatten_nested(src)
+        assert strip_markers(out) == strip_markers(src)
+
+    def test_whitespace_chunk_not_wrapped(self):
+        """Переводы строк и маркеры списка — структура, маркером не накрываем."""
+        src = "{++GBO-1: текст {++TEAMTB-2: врезка++}\n++}"
+        out, _ = flatten_nested(src)
+        assert out.endswith("\n") and not out.endswith("{++GBO-1: \n++}")
+
+    def test_clean_markup_untouched(self):
+        for src in ("{++GBO-1: без вложенности++}", "обычный текст", ""):
+            out, count = flatten_nested(src)
+            assert count == 0 and out == src
+
+    def test_unbalanced_markup_left_alone(self):
+        """Разметка не сходится — не гадаем, отдаём линтеру как есть."""
+        for src in ("{++GBO-1: незакрытый", "лишний закрыватель ++}",
+                    "{++GBO-1: раз {++TEAMTB-2: два++}"):
+            out, count = flatten_nested(src)
+            assert count == 0 and out == src
+
+    def test_substitution_not_split(self):
+        """У подстановки два тела — безопасного дробления нет."""
+        src = "{~~GBO-1: было {++TEAMTB-2: врезка++}~>стало~~}"
+        out, count = flatten_nested(src)
+        assert count == 0 and out == src
+
+    def test_fenced_code_untouched(self):
+        src = "```\n{++GBO-1: раз {++TEAMTB-2: два++} три++}\n```"
+        out, count = flatten_nested(src)
+        assert count == 0 and out == src
+
+    def test_through_repair_file(self, tmp_path):
+        body = "\n{++GBO-1: список\n- {++TEAMTB-2: врезка++} хвост++}\n"
+        path = _write(tmp_path, FM_NO_FLAG + body)
+        rep = repair_file(path, unfold=False, unapproved=None, flatten=True)
+        assert rep["changed"] and rep["flattened"] == 1
+        assert strip_markers(rep["new_text"]) == strip_markers(FM_NO_FLAG + body)
+
+    def test_cli_flatten_writes_file(self, tmp_path):
+        path = _write(tmp_path, FM_NO_FLAG + "\n{++GBO-1: раз {++TEAMTB-2: два++}++}\n")
+        assert main([str(tmp_path), "--flatten-nested"]) == 0
+        assert "{++GBO-1: раз ++}{++TEAMTB-2: два++}" in _read(path)
