@@ -225,6 +225,41 @@ class TestSoftDataFiles:
         assert (bundle / "app/data/services.json").read_text(encoding="utf-8") == '["канон"]\n'
 
 
+class TestCanonCommit:
+    """Штамп «+dirty» обязан означать «в пакет уехало неподтверждённое»."""
+
+    def _repo(self, tmp_path, monkeypatch):
+        import subprocess
+        from app.scripts.build_bundle import canon_commit
+
+        repo = tmp_path / "canon"
+        (repo / "app").mkdir(parents=True)
+        (repo / "app/version.py").write_text(VERSION_PY, encoding="utf-8")
+        run = lambda *a: subprocess.run(["git", *a], cwd=repo, capture_output=True, text=True)
+        run("init", "-q")
+        run("config", "user.email", "t@t")
+        run("config", "user.name", "t")
+        run("add", "app/version.py")
+        run("commit", "-qm", "первый")
+        monkeypatch.setattr("app.scripts.build_bundle.BUNDLE_FILES", ("app/version.py",))
+        return repo, run, canon_commit
+
+    def test_clean_tree_has_no_mark(self, tmp_path, monkeypatch):
+        repo, _run, canon_commit = self._repo(tmp_path, monkeypatch)
+        assert "+dirty" not in canon_commit(repo)
+
+    def test_unrelated_junk_does_not_dirty_the_stamp(self, tmp_path, monkeypatch):
+        """В каноне всегда лежит несвязанный мусор — он в пакет не уезжает."""
+        repo, _run, canon_commit = self._repo(tmp_path, monkeypatch)
+        (repo / "app/заметка.md").write_text("черновик\n", encoding="utf-8")
+        assert "+dirty" not in canon_commit(repo)
+
+    def test_edited_manifest_file_dirties_the_stamp(self, tmp_path, monkeypatch):
+        repo, _run, canon_commit = self._repo(tmp_path, monkeypatch)
+        (repo / "app/version.py").write_text(VERSION_PY + "# правка\n", encoding="utf-8")
+        assert canon_commit(repo).endswith("+dirty")
+
+
 class TestZip:
     def test_git_service_files_excluded(self):
         entries = zip_entries(["README.md", ".gitignore", ".gitattributes", "app/version.py"])

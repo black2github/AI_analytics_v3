@@ -277,13 +277,19 @@ def build_zip(bundle: Path) -> Tuple[Path, int]:
 # --------------------------------------------------------------------------------------
 
 def canon_commit(canon: Path) -> str:
-    """Короткий хеш канона + пометка о незакоммиченных правках."""
+    """Короткий хеш канона + пометка о незакоммиченных правках.
+
+    Смотрим ТОЛЬКО файлы манифеста: в рабочем каталоге канона всегда лежит
+    несвязанный untracked-мусор (рабочие заметки, выгрузки), и по нему сборка
+    метилась бы +dirty всегда — признак, который срабатывает постоянно, ничего
+    не значит. Помечать надо ровно то, что уехало в пакет неподтверждённым.
+    """
     head = subprocess.run(["git", "rev-parse", "--short", "HEAD"],
                           cwd=canon, capture_output=True, text=True)
     if head.returncode != 0:
         return "unknown"
     commit = head.stdout.strip()
-    dirty = subprocess.run(["git", "status", "--porcelain", "--", "app"],
+    dirty = subprocess.run(["git", "status", "--porcelain", "--", *BUNDLE_FILES],
                            cwd=canon, capture_output=True, text=True)
     return commit + ("+dirty" if dirty.stdout.strip() else "")
 
