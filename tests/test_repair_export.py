@@ -14,7 +14,7 @@ import json
 import yaml
 
 from app.scripts.repair_export import (
-    flatten_nested, strip_markers,
+    flatten_nested, strip_markers, unfence_html,
     load_unapproved_ids, main, marker_tasks, repair_file,
     set_page_flag, split_frontmatter, unfold_frontmatter,
 )
@@ -255,3 +255,90 @@ class TestFlattenNested:
         path = _write(tmp_path, FM_NO_FLAG + "\n{++GBO-1: раз {++TEAMTB-2: два++}++}\n")
         assert main([str(tmp_path), "--flatten-nested"]) == 0
         assert "{++GBO-1: раз ++}{++TEAMTB-2: два++}" in _read(path)
+
+
+class TestUnfenceHtml:
+    """
+    Ограждения кода внутри HTML-таблицы (инцидент 2026-09-06). Экспортёр заворачивал
+    JSON-подобный абзац в ```…``` прямо внутри ячейки, отданной сырым HTML: как код
+    это не рендерится нигде, а содержимое между ограждениями считается кодом и
+    переносится байт-в-байт — apply/reject не видят маркеры внутри, и неутверждённые
+    требования молча остаются в «чистом ПРОМ». Замена ограничителей на <pre> вскрывает
+    их, не трогая ни байта содержимого.
+    """
+
+    ISLAND = (
+        "<table><tbody>\n"
+        "<tr><td>\n"
+        "```\n"
+        "{++GBO-1: требование, спрятанное блоком++}\n"
+        "```\n"
+        "</td></tr>\n"
+        "</tbody></table>\n"
+    )
+
+    def test_fences_become_pre(self):
+        out, count = unfence_html(self.ISLAND)
+        assert count == 1
+        assert "<pre>" in out and "</pre>" in out and "```" not in out
+
+    def test_content_untouched(self):
+        out, _ = unfence_html(self.ISLAND)
+        assert "{++GBO-1: требование, спрятанное блоком++}" in out
+
+    def test_marker_becomes_visible_to_reject(self):
+        """Смысл починки: маркер внутри бывшего блока теперь снимается."""
+        from app.scripts.CI.critic import process_text
+        assert process_text(self.ISLAND, "reject", None)[1] == 0     # до починки не виден
+        out, _ = unfence_html(self.ISLAND)
+        cleaned, count = process_text(out, "reject", None)
+        assert count == 1 and "спрятанное блоком" not in cleaned
+
+    def test_fence_outside_island_untouched(self):
+        """Настоящий блок кода в тексте страницы — не наше дело."""
+        text = "# Заголовок\n\n```\nprint(1)\n```\n"
+        assert unfence_html(text) == (text, 0)
+
+    def test_odd_number_of_fences_left_alone(self):
+        """Пары не сходятся — не гадаем, отдаём линтеру."""
+        text = "<table><tbody>\n<tr><td>\n```\nтекст\n</td></tr>\n</tbody></table>\n"
+        assert unfence_html(text) == (text, 0)
+
+    def test_glued_fence_handled(self):
+        """Ограждение, приклеенное к содержимому — реальная форма из выгрузки."""
+        text = "<table><tbody>\n<tr><td>x++}```\nтело\n```\n</td></tr></tbody></table>\n"
+        out, count = unfence_html(text)
+        assert count == 1 and "x++}<pre>" in out
+
+    def test_idempotent(self):
+        once, _ = unfence_html(self.ISLAND)
+        assert unfence_html(once) == (once, 0)
+
+    def test_only_delimiters_change(self):
+        """Инвариант: между ограничителями не меняется ни байта."""
+        import re
+        text = ("<table><tbody><tr><td>\n```\nтело с `обратными` кавычками\n```\n"
+                "</td></tr></tbody></table>\n\n```\nнастоящий блок\n```\n")
+        out, count = unfence_html(text)
+        assert count == 1
+        drop = lambda s: re.sub(r"`{3,}|</?pre>", "", s)
+        assert drop(out) == drop(text)
+        assert "```\nнастоящий блок\n```" in out          # вне острова не тронуто
+
+    def test_through_repair_file(self, tmp_path):
+        path = _write(tmp_path, FM_NO_FLAG + "\n" + self.ISLAND)
+        rep = repair_file(path, unfold=False, unapproved=None, unfence=True)
+        assert rep["changed"] and rep["unfenced"] == 1
+        assert "```" not in rep["new_text"]
+
+    def test_cli_reports_and_writes(self, tmp_path, capsys):
+        path = _write(tmp_path, FM_NO_FLAG + "\n" + self.ISLAND)
+        assert main([str(tmp_path), "--unfence-html"]) == 0
+        assert "<pre>" in _read(path)
+        assert "ограждений распаковано" in capsys.readouterr().out
+
+    def test_cli_dry_run_writes_nothing(self, tmp_path):
+        path = _write(tmp_path, FM_NO_FLAG + "\n" + self.ISLAND)
+        before = _read(path)
+        assert main([str(tmp_path), "--unfence-html", "--dry-run"]) == 0
+        assert _read(path) == before

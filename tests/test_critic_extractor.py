@@ -367,3 +367,46 @@ class TestDropStrikethroughInCriticMode:
         out = self._extract(
             "<p>Текст <s>старое удаление</s> хвост.</p>", monkeypatch, drop=False)
         assert "старое удаление" in out
+
+
+class TestCodeBlockInsideTableCell:
+    """
+    Инцидент 2026-09-06. Экспортёр ставил markdown-ограждение ```…``` внутри ячейки
+    таблицы. Ни в строке `| … |`, ни внутри сырого HTML-острова это не рендерится
+    как код, а для конвейера последствия тяжелее: содержимое между ограждениями
+    считается кодом и переносится байт-в-байт — apply/reject не видят маркеры
+    внутри, и неутверждённые требования молча остаются в «чистом ПРОМ»
+    (204 фрагмента в 8 файлах дерева [КК]). В ячейке должен быть <pre>,
+    в обычном тексте — ограждение как прежде.
+    """
+
+    CELL_JSON = '<table><tbody><tr><td><p>{"поле": "значение"}</p></td></tr></tbody></table>'
+
+    def test_cell_gets_pre_not_fence(self):
+        out = _critic(self.CELL_JSON)
+        assert "```" not in out
+        assert "<pre>" in out and "</pre>" in out
+
+    def test_content_preserved(self):
+        assert '{"поле": "значение"}' in _critic(self.CELL_JSON)
+
+    def test_plain_paragraph_still_fenced(self):
+        """Вне таблицы поведение прежнее — обычный fenced-блок."""
+        out = _critic('<p>{"поле": "значение"}</p>')
+        assert "```" in out and "<pre>" not in out
+
+    def test_multiline_code_in_cell(self):
+        html = ("<table><tbody><tr><td><code>строка1" + chr(10)
+                + "строка2</code></td></tr></tbody></table>")
+        out = _critic(html)
+        assert "```" not in out and "строка1" in out
+
+    def test_marker_in_cell_stays_visible_to_critic(self):
+        """Смысл правки: разметка в ячейке остаётся доступной apply/reject."""
+        html = ('<table><tbody><tr><td>'
+                '<p>{"поле": <span style="color: rgb(153,102,255);">"значение"</span>}</p>'
+                '</td></tr></tbody></table>')
+        out = _critic(html)
+        assert "```" not in out
+        if "{++" in out:
+            assert process_text(out, "reject", None)[1] >= 1

@@ -69,6 +69,53 @@ class TestReport:
         assert start >= 0 and "_нет_" in md[start:start + 200]
 
 
+class TestCodeBlockGate:
+    """
+    Второй случай той же природы (инцидент 2026-09-06): блок кода накрыл маркеры.
+    Переносится он байт-в-байт, поэтому apply/reject внутрь не заглядывают —
+    неутверждённое молча остаётся в «чистом ПРОМ». Конвейер обязан это назвать.
+    """
+
+    IN_CODE = "```\n{++GBO-70412: требование внутри блока++}\n```\n"
+
+    def _rows(self, text, page="Страница"):
+        from app.scripts.CI.critic import find_markers_in_code
+        return [{"page": page, "line": b["line"], "chars": b["chars"],
+                 "markers": b["markers"], "tasks": b["tasks"]}
+                for b in find_markers_in_code(text)]
+
+    def _report_with(self, rows):
+        acc = new_accumulator()
+        acc["pages"] = 1
+        acc["markers_in_code"].extend(rows)
+        _manifest, report = finalize(acc, service="KK", migrated_at="2026-09-06")
+        return report
+
+    def test_gate_sees_markers_in_code(self):
+        rows = self._rows(self.IN_CODE)
+        assert len(rows) == 1 and rows[0]["tasks"] == ["GBO-70412"]
+
+    def test_json_section_carries_case(self):
+        report = self._report_with(self._rows(self.IN_CODE))
+        assert report["markers_in_code"][0]["markers"] == 1
+
+    def test_counted_as_manual_review_position(self):
+        with_case = self._report_with(self._rows(self.IN_CODE))["stats"]["positions_manual_review"]
+        without = self._report_with([])["stats"]["positions_manual_review"]
+        assert with_case == without + 1
+
+    def test_markdown_names_page_and_remedy(self):
+        md = render_report_md(self._report_with(self._rows(self.IN_CODE)))
+        assert "## Маркеры внутри блока кода" in md
+        assert "GBO-70412" in md
+        assert "unapproved_jira" in md          # чем закрывать, если разбирать нечем
+
+    def test_section_present_when_clean(self):
+        md = render_report_md(self._report_with([]))
+        start = md.find("## Маркеры внутри блока кода")
+        assert start >= 0 and "_нет_" in md[start:start + 200]
+
+
 class TestRepairClosesTheCase:
     def test_flatten_makes_content_pass_the_gate(self):
         """Починка из отчёта действительно снимает находку гейта."""
