@@ -117,3 +117,108 @@ class TestEndToEnd:
         a = _git(r, "show", "src/GBO-1:chron/стр.md").stdout
         b = _git(r, "show", "src/GBO-7:chron/стр.md").stdout
         assert a == b
+
+
+class TestAccumulatedTree:
+    """
+    Накопительное дерево (2026-09-07): каждая задача применяется один раз в дерево
+    «архив + принятые», срез — копия с reject-all. Главное свойство, которое здесь
+    закрепляется: срезы ПОБАЙТНО совпадают с пересборкой из архива, где на каждой
+    итерации заново применяются все принятые. Разница только в работе: линейно
+    против квадратично (на 148 задачах — 148 проходов apply вместо 11 026).
+    """
+
+    def _repo_with_tasks(self, tmp_path, name):
+        """Репозиторий и архив с тремя задачами, у которых правки на разных страницах."""
+        r = tmp_path / name
+        r.mkdir()
+        _git(r, "init", "-q")
+        _git(r, "config", "user.email", "t@t")
+        _git(r, "config", "user.name", "t")
+        raw = tmp_path / (name + "-raw")
+        raw.mkdir()
+        (raw / "а.md").write_text(
+            "---\nstatus: draft\n---\n\nБаза.\n"
+            "{++GBO-1: правка первой++}\n{--GBO-2: удалено второй--}\n",
+            encoding="utf-8")
+        (raw / "б.md").write_text(
+            "---\nstatus: draft\nunapproved_jira: GBO-3\n---\n\n"
+            "Страница целиком третьей задачи.\n",
+            encoding="utf-8")
+        (raw / "в.md").write_text(
+            "| текст | status |\n| --- | --- |\n| строка второй | +GBO-2 |\n"
+            "| строка первой | +GBO-1 |\n",
+            encoding="utf-8")
+        (r / "README.md").write_text("init\n", encoding="utf-8")
+        _git(r, "add", "-A")
+        _git(r, "commit", "-q", "-m", "init")
+        return r, raw
+
+    def _tasks(self, tmp_path, name):
+        f = tmp_path / (name + "-tasks.txt")
+        f.write_text("GBO-1\nGBO-2\nGBO-3\n", encoding="utf-8")
+        return f
+
+    def _slices(self, r):
+        """Содержимое всех файлов среза по каждому тегу — для побайтного сравнения."""
+        out = {}
+        for tag in _git(r, "tag").stdout.split():
+            files = _git(r, "ls-tree", "-r", "--name-only", tag).stdout.split("\n")
+            out[tag] = {f: _git(r, "show", f"{tag}:{f}").stdout
+                        for f in files if f.startswith("chron/")}
+        return out
+
+    def test_slices_identical_to_refill_method(self, tmp_path, monkeypatch):
+        results = {}
+        for name, extra in (("refill", ["--refill-each"]), ("accum", [])):
+            r, raw = self._repo_with_tasks(tmp_path, name)
+            monkeypatch.chdir(r)
+            rc = main([str(raw), str(r), str(self._tasks(tmp_path, name)),
+                       "--target-subdir", "chron", *extra])
+            assert rc == 0, name
+            results[name] = self._slices(r)
+        assert set(results["accum"]) == {"src/GBO-1", "src/GBO-2", "src/GBO-3"}
+        assert results["accum"] == results["refill"]       # побайтно, по каждому тегу
+
+    def test_slice_semantics_hold(self, tmp_path, monkeypatch):
+        r, raw = self._repo_with_tasks(tmp_path, "sem")
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, "sem")),
+                     "--target-subdir", "chron"]) == 0
+        s1 = _git(r, "show", "src/GBO-1:chron/а.md").stdout
+        assert "правка первой" in s1 and "удалено второй" in s1     # удаление ещё не принято
+        s2 = _git(r, "show", "src/GBO-2:chron/а.md").stdout
+        assert "удалено второй" not in s2                            # принято — строки нет
+        assert "{" not in s2
+        assert "Страница целиком" not in _git(r, "show", "src/GBO-2:chron/б.md").stdout
+        assert "Страница целиком" in _git(r, "show", "src/GBO-3:chron/б.md").stdout
+
+    def test_working_tree_clean_between_slices(self, tmp_path, monkeypatch):
+        """Накопительное дерево живёт вне репозитория — летопись не грязнит дерево."""
+        r, raw = self._repo_with_tasks(tmp_path, "clean")
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, "clean")),
+                     "--target-subdir", "chron"]) == 0
+        assert _git(r, "status", "--porcelain").stdout.strip() == ""
+        assert not any(p.name.startswith("base") for p in r.iterdir())
+
+    def test_base_dir_used_and_cleaned(self, tmp_path, monkeypatch):
+        """--base-dir: дерево кладётся туда, куда указано, и убирается после прогона."""
+        r, raw = self._repo_with_tasks(tmp_path, "bd")
+        base_dir = tmp_path / "fast-disk"
+        base_dir.mkdir()
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, "bd")),
+                     "--target-subdir", "chron", "--base-dir", str(base_dir)]) == 0
+        assert not (base_dir / "onix-history-base").exists()          # прибрано
+        assert _git(r, "tag").stdout.split() == ["src/GBO-1", "src/GBO-2", "src/GBO-3"]
+
+    def test_base_dir_inside_repo_refused(self, tmp_path, monkeypatch, capsys):
+        """Дерево внутри репозитория грязнило бы летопись — отказ до первого изменения."""
+        r, raw = self._repo_with_tasks(tmp_path, "inside")
+        monkeypatch.chdir(r)
+        rc = main([str(raw), str(r), str(self._tasks(tmp_path, "inside")),
+                   "--target-subdir", "chron", "--base-dir", str(r / "tmp")])
+        assert rc == 2
+        assert "внутри репозитория" in capsys.readouterr().err
+        assert _git(r, "tag").stdout.strip() == ""
