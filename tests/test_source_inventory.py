@@ -245,3 +245,39 @@ def test_refresh_keeps_llm_with_attachments(tmp_path):
     assert any("сигналы согласны" in ln for ln in out)
     assert any("| Функции/f1/files/req.xsd | 111 |" in ln for ln in out)
     assert any("колонок LLM сохранено 1/" in ln for ln in out)
+
+
+def test_frozen_flag_surfaced_in_req_type(tmp_path):
+    # склейка с CriticMarkup-конвейером: страничный флаг unapproved_jira
+    # (замороженное поддерево, содержимое отклонено reject-all) обязан
+    # доехать до планировщика — иначе решение о заморозке теряется молча
+    src = setup_src(tmp_path)
+    p = src / "Заморожено/frozen1.md"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(
+        "---\ntitle: '[Т] Замороженная'\nunapproved_jira: GBO-55269\n"
+        "confluence_page_id: '333'\n---\n", encoding="utf-8")
+    rows, _ = scan(src)
+    frozen = [r for r in rows if r["page_id"] == "333"]
+    assert frozen and frozen[0]["req_type"] == "frozen:GBO-55269"
+
+
+def test_frozen_flag_appends_to_existing_rtype(tmp_path):
+    # заморозка дополняет сигнал, не замещает (исходный req_type цел)
+    src = setup_src(tmp_path)
+    p = src / "Заморожено/frozen2.md"
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(
+        "---\ntitle: '[Т] Замороженная ЭФ'\nrequirement_type: screenItemForm\n"
+        "unapproved_jira: 'GBO-52119'\nconfluence_page_id: '444'\n---\n",
+        encoding="utf-8")
+    rows, _ = scan(src)
+    frozen = [r for r in rows if r["page_id"] == "444"]
+    assert frozen and frozen[0]["req_type"] == "screenItemForm+frozen:GBO-52119"
+
+
+def test_no_flag_no_frozen_marker(tmp_path):
+    # НЕсрабатывание: обычные страницы маркера не получают
+    src = setup_src(tmp_path)
+    rows, _ = scan(src)
+    assert all("frozen" not in r["req_type"] for r in rows)

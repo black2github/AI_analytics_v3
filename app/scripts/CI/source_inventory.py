@@ -28,6 +28,11 @@ from typing import Dict, List, Optional, Tuple
 _PID_RE = re.compile(r"^confluence_page_id:\s*['\"]?(\d+)['\"]?", re.M)
 _TITLE_RE = re.compile(r"^title:\s*(.+)$", re.M)
 _RTYPE_RE = re.compile(r"^requirement_type:\s*(\S+)", re.M)
+# Страничный флаг замороженного поддерева (ставит critic --flag-page:
+# содержимое отклонено reject-all до утверждения Jira-задачи, страница
+# в выгрузке пустая). Опись обязана донести причину пустоты до
+# планировщика — иначе решение о заморозке теряется молча.
+_UNAPPROVED_RE = re.compile(r"^unapproved_jira:\s*['\"]?([\w-]+)['\"]?", re.M)
 
 
 def _full_title(head: str):
@@ -92,12 +97,19 @@ def scan(sources: Path):
         pid = _PID_RE.search(head)
         rtype = _RTYPE_RE.search(head)
         title, truncated = _full_title(head)
+        # заморозка дополняет сигнал, не замещает (асимметрия: исходный
+        # req_type не теряется)
+        rtype_val = rtype.group(1) if rtype else "—"
+        frozen = _UNAPPROVED_RE.search(head)
+        if frozen:
+            rtype_val = (f"frozen:{frozen.group(1)}" if rtype_val == "—"
+                         else f"{rtype_val}+frozen:{frozen.group(1)}")
         rows.append({
             "page_id": pid.group(1) if pid else "—",
             "title": ((title + (" ⋯" if truncated else ""))
                       if title else p.stem),
             "родитель": p.parent.name if p.parent != sources else "(корень)",
-            "req_type": rtype.group(1) if rtype else "—",
+            "req_type": rtype_val,
             "строк": str(text.count("\n") + 1),
         })
     return rows, n_index
