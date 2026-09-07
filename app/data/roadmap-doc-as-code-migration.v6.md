@@ -168,8 +168,8 @@ confluence-tree-exporter), Git, GitLab.
 confluence-tree-exporter — все шаги ниже он выполняет сам, задача за задачей:
 
 ```
-run-history.bat <репозиторий>\sourcesaw <репозиторий> apply-order.txt --dry-run
-run-history.bat <репозиторий>\sourcesaw <репозиторий> apply-order.txt --base-dir <каталог вне репозитория>
+run-history.bat <репозиторий>\sources\raw <репозиторий> apply-order.txt --dry-run
+run-history.bat <репозиторий>\sources\raw <репозиторий> apply-order.txt --base-dir <каталог вне репозитория>
 ```
 
 Сначала `--dry-run` — он печатает план (задачи по порядку, какой тег получит
