@@ -4324,3 +4324,26 @@ class TestSTS03Calibrations:
         warns, _ = check_target_mentions(
             card.read_text(encoding="utf-8"), card, docs)
         assert not any("упоминание цели" in w for w in warns)
+
+
+class TestBs4Dependency:
+    """Единственная сторонняя зависимость прибора: без beautifulsoup4 —
+    понятное сообщение и код 2, а не трассировка (инцидент команды на v1:
+    инструкция обещала «стандартную библиотеку»)."""
+
+    def test_missing_bs4_gives_clear_message(self):
+        import subprocess, sys
+        code = ("import sys; sys.modules['bs4'] = None; "
+                "import app.scripts.CI.normalize_tables")
+        r = subprocess.run([sys.executable, "-c", code], capture_output=True,
+                           text=True, encoding="utf-8", errors="replace")
+        assert r.returncode == 2
+        assert "beautifulsoup4" in r.stderr and "pip install" in r.stderr
+        assert "Traceback" not in r.stderr
+
+    def test_with_bs4_import_is_silent(self):
+        # НЕсрабатывание: при установленном пакете импорт штатный
+        import importlib
+        import app.scripts.CI.normalize_tables as m
+        importlib.reload(m)
+        assert hasattr(m, "BeautifulSoup")

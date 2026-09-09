@@ -38,7 +38,18 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from bs4 import BeautifulSoup, NavigableString, Tag
+try:
+    from bs4 import BeautifulSoup, NavigableString, Tag
+except ImportError:  # окружение команды: единственная сторонняя зависимость прибора
+    sys.stderr.write(
+        "Не установлен пакет beautifulsoup4 (модуль bs4) — он нужен "
+        "инструментам проверки (normalize_tables, selfcheck).\n"
+        "Установка: python -m pip install beautifulsoup4\n"
+        "Офлайн (закрытый контур): на машине с доступом "
+        "python -m pip download beautifulsoup4 -d <каталог>, затем "
+        "python -m pip install --no-index --find-links <каталог> beautifulsoup4\n"
+        "Список зависимостей: _meta/tools/requirements.txt\n")
+    raise SystemExit(2)
 
 
 # ---------- слой 1: сетка ----------
