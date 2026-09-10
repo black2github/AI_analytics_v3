@@ -78,13 +78,14 @@ class TestEndToEnd:
         assert "правка первой задачи" in s2 and "правка второй задачи" in s2
 
     def test_existing_tag_stops_before_changes(self, repo, tmp_path, monkeypatch):
+        # тег на ветке = задача уже введена: пропуск; список пуст — код 2, без изменений
         r, raw = repo
         monkeypatch.chdir(r)
         _git(r, "tag", "src/GBO-1")
         head = _git(r, "rev-parse", "HEAD").stdout.strip()
         rc = main([str(raw), str(r), str(self._tasks_file(tmp_path, ["GBO-1"])),
                    "--target-subdir", "chron"])
-        assert rc == 2                            # preflight: тег существует
+        assert rc == 2
         assert _git(r, "rev-parse", "HEAD").stdout.strip() == head   # ничего не внесено
 
     def test_dirty_tree_stops(self, repo, tmp_path, monkeypatch):
@@ -262,3 +263,85 @@ class TestServiceFilesAndCommitPrefix:
     def test_commit_message_archive_prefix(self):
         from app.scripts.apply_history import commit_message
         assert commit_message("Срез летописи", "GBO-2", 0).startswith("Срез летописи: GBO-2")
+
+
+class TestPriorFromTags:
+    """Модель «master = ПРОМ» (2026-09-10): введённые ранее задачи скрипт берёт из
+    тегов ветки, файл задач содержит только вводимые; порядок ввода произвольный."""
+
+    def _tasks(self, tmp_path, ids, name="t"):
+        f = tmp_path / f"{name}.txt"
+        f.write_text("\n".join(ids) + "\n", encoding="utf-8")
+        return f
+
+    @pytest.mark.parametrize("extra", [[], ["--refill-each"]])
+    def test_second_intro_builds_on_prior_tags(self, repo, tmp_path, monkeypatch, extra):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron", *extra]) == 0
+        # второй ввод: в файле только новая задача
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-2"], "b")),
+                     "--target-subdir", "chron", *extra]) == 0
+        s2 = _git(r, "show", "src/GBO-2:chron/стр.md").stdout
+        assert "правка первой задачи" in s2 and "правка второй задачи" in s2
+        assert "1 ранее принятых" in _git(r, "log", "-1", "--format=%s").stdout
+        assert sorted(_git(r, "tag").stdout.split()) == ["src/GBO-1", "src/GBO-2"]
+
+    def test_prior_order_is_branch_order_not_alphabetic(self, repo, tmp_path, monkeypatch):
+        from app.scripts.apply_history import introduced_tasks
+        r, raw = repo
+        monkeypatch.chdir(r)
+        _git(r, "tag", "src/PROM")                      # не задача — не считается
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-2"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "b")),
+                     "--target-subdir", "chron"]) == 0
+        assert introduced_tasks(r, "src/") == ["GBO-2", "GBO-1"]
+
+    def test_already_introduced_in_list_skipped_with_warning(self, repo, tmp_path,
+                                                             monkeypatch, capsys):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        rc = main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1", "GBO-2"], "b")),
+                   "--target-subdir", "chron"])
+        assert rc == 0
+        err = capsys.readouterr().err
+        assert "GBO-1 уже введена" in err
+        assert "src/GBO-2" in _git(r, "tag").stdout
+        # GBO-1 второй раз не коммитился: ровно три коммита (init + два ввода)
+        assert len(_git(r, "rev-list", "HEAD").stdout.split()) == 3
+
+    def test_tag_outside_branch_is_error(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        _git(r, "checkout", "-q", "-b", "other")
+        (r / "x.md").write_text("x\n", encoding="utf-8")
+        _git(r, "add", "x.md"); _git(r, "commit", "-q", "-m", "other")
+        _git(r, "tag", "src/GBO-1")
+        _git(r, "checkout", "-q", "master") if _git(r, "rev-parse", "--verify", "-q", "master").returncode == 0 \
+            else _git(r, "checkout", "-q", "main")
+        head = _git(r, "rev-parse", "HEAD").stdout.strip()
+        rc = main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"])),
+                   "--target-subdir", "chron"])
+        assert rc == 2                                   # тег занят, но не на ветке
+        assert _git(r, "rev-parse", "HEAD").stdout.strip() == head
+
+    def test_dry_run_runs_preflight_and_shows_prior(self, repo, tmp_path, monkeypatch, capsys):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        rc = main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-2"], "b")),
+                   "--target-subdir", "chron", "--dry-run"])
+        err = capsys.readouterr().err
+        assert rc == 0 and "введено ранее" in err and "GBO-1" in err
+        assert "поверх ПРОМ + 1 ранее принятых" in err
+        # грязное дерево: dry-run сообщает об ошибке preflight и возвращает 2
+        (r / "README.md").write_text("dirty\n", encoding="utf-8")
+        rc = main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-2"], "c")),
+                   "--target-subdir", "chron", "--dry-run"])
+        assert rc == 2 and "preflight" in capsys.readouterr().err
+        assert "src/GBO-2" not in _git(r, "tag").stdout
