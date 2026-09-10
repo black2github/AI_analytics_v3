@@ -86,7 +86,7 @@ class TestEndToEnd:
         rc = main([str(raw), str(r), str(self._tasks_file(tmp_path, ["GBO-1"])),
                    "--target-subdir", "chron"])
         assert rc == 0
-        assert _git(r, "log", "-1", "--format=%s").stdout.startswith("Выгрузка")
+        assert _git(r, "log", "-1", "--format=%s").stdout.startswith("ПРОМ-срез")  # первый сбор
         assert _git(r, "tag").stdout.split() == ["src/GBO-1"]          # новых тегов нет
         # повтор без изменений архива: делать нечего — код 2, HEAD на месте
         head = _git(r, "rev-parse", "HEAD").stdout.strip()
@@ -397,7 +397,8 @@ class TestEventChain:
         subjects = _git(r, "log", "--format=%s").stdout.strip().split("\n")
         # ровно один коммит выгрузки — начальный ПРОМ (целевого каталога в init не
         # было); между вводами архив не менялся, второго нет
-        assert [x.startswith("Выгрузка") for x in subjects] == [False, False, True, False]
+        assert [x.startswith("ПРОМ-срез") for x in subjects] == [False, False, True, False]
+        assert not any(x.startswith("Выгрузка") for x in subjects)
         assert len(subjects) == 4
 
     def test_tail_from_manifest(self, repo, tmp_path, monkeypatch, capsys):
