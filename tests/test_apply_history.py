@@ -1,6 +1,6 @@
 # tests/test_apply_history.py
 #
-# Автоматизация этапа 4 (летопись): позадачное вливание истории (2026-08-10).
+# Автоматизация этапа 4 (хронология): позадачное вливание истории (2026-08-10).
 # Сквозной сценарий на настоящем временном git-репозитории.
 
 import subprocess
@@ -77,16 +77,21 @@ class TestEndToEnd:
         s2 = _git(r, "show", "src/GBO-2:chron/стр.md").stdout
         assert "правка первой задачи" in s2 and "правка второй задачи" in s2
 
-    def test_existing_tag_stops_before_changes(self, repo, tmp_path, monkeypatch):
-        # тег на ветке = задача уже введена: пропуск; список пуст — код 2, без изменений
+    def test_existing_tag_means_introduced(self, repo, tmp_path, monkeypatch):
+        # тег на ветке = задача уже введена: пропуск, ввода нет; остаётся только
+        # событие «выгрузка» (целевого каталога в init не было → коммит ПРОМ без тега)
         r, raw = repo
         monkeypatch.chdir(r)
         _git(r, "tag", "src/GBO-1")
-        head = _git(r, "rev-parse", "HEAD").stdout.strip()
         rc = main([str(raw), str(r), str(self._tasks_file(tmp_path, ["GBO-1"])),
                    "--target-subdir", "chron"])
-        assert rc == 2
-        assert _git(r, "rev-parse", "HEAD").stdout.strip() == head   # ничего не внесено
+        assert rc == 0
+        assert _git(r, "log", "-1", "--format=%s").stdout.startswith("Выгрузка")
+        assert _git(r, "tag").stdout.split() == ["src/GBO-1"]          # новых тегов нет
+        # повтор без изменений архива: делать нечего — код 2, HEAD на месте
+        head = _git(r, "rev-parse", "HEAD").stdout.strip()
+        rc = main([str(raw), str(r), "--target-subdir", "chron"])        # без файла задач
+        assert rc == 2 and _git(r, "rev-parse", "HEAD").stdout.strip() == head
 
     def test_dirty_tree_stops(self, repo, tmp_path, monkeypatch):
         r, raw = repo
@@ -195,7 +200,7 @@ class TestAccumulatedTree:
         assert "Страница целиком" in _git(r, "show", "src/GBO-3:chron/б.md").stdout
 
     def test_working_tree_clean_between_slices(self, tmp_path, monkeypatch):
-        """Накопительное дерево живёт вне репозитория — летопись не грязнит дерево."""
+        """Накопительное дерево живёт вне репозитория — хронология не грязнит дерево."""
         r, raw = self._repo_with_tasks(tmp_path, "clean")
         monkeypatch.chdir(r)
         assert main([str(raw), str(r), str(self._tasks(tmp_path, "clean")),
@@ -215,7 +220,7 @@ class TestAccumulatedTree:
         assert _git(r, "tag").stdout.split() == ["src/GBO-1", "src/GBO-2", "src/GBO-3"]
 
     def test_base_dir_inside_repo_refused(self, tmp_path, monkeypatch, capsys):
-        """Дерево внутри репозитория грязнило бы летопись — отказ до первого изменения."""
+        """Дерево внутри репозитория грязнило бы хронология — отказ до первого изменения."""
         r, raw = self._repo_with_tasks(tmp_path, "inside")
         monkeypatch.chdir(r)
         rc = main([str(raw), str(r), str(self._tasks(tmp_path, "inside")),
@@ -227,7 +232,7 @@ class TestAccumulatedTree:
 
 class TestServiceFilesAndCommitPrefix:
     """Модель «master = ПРОМ» (2026-09-10): служебные файлы экспортёра не
-    попадают в целевой каталог; сообщение коммита — ввод, а не летопись."""
+    попадают в целевой каталог; сообщение коммита — ввод, а не хронология."""
 
     def test_refill_target_skips_service_files(self, tmp_path):
         from app.scripts.apply_history import refill_target
@@ -262,7 +267,7 @@ class TestServiceFilesAndCommitPrefix:
 
     def test_commit_message_archive_prefix(self):
         from app.scripts.apply_history import commit_message
-        assert commit_message("Срез летописи", "GBO-2", 0).startswith("Срез летописи: GBO-2")
+        assert commit_message("Срез хронологии", "GBO-2", 0).startswith("Срез хронологии: GBO-2")
 
 
 class TestPriorFromTags:
@@ -311,8 +316,8 @@ class TestPriorFromTags:
         err = capsys.readouterr().err
         assert "GBO-1 уже введена" in err
         assert "src/GBO-2" in _git(r, "tag").stdout
-        # GBO-1 второй раз не коммитился: ровно три коммита (init + два ввода)
-        assert len(_git(r, "rev-list", "HEAD").stdout.split()) == 3
+        # GBO-1 второй раз не коммитился: init + ПРОМ (выгрузка) + два ввода
+        assert len(_git(r, "rev-list", "HEAD").stdout.split()) == 4
 
     def test_tag_outside_branch_is_error(self, repo, tmp_path, monkeypatch):
         r, raw = repo
@@ -345,3 +350,100 @@ class TestPriorFromTags:
                    "--target-subdir", "chron", "--dry-run"])
         assert rc == 2 and "preflight" in capsys.readouterr().err
         assert "src/GBO-2" not in _git(r, "tag").stdout
+
+
+class TestEventChain:
+    """Цепочка событий (2026-09-10): новая выгрузка → коммит «Выгрузка» перед
+    новыми задачами; хвост — по манифесту архива; пустой ввод — с причиной."""
+
+    def _tasks(self, tmp_path, ids, name="t"):
+        f = tmp_path / f"{name}.txt"
+        f.write_text("\n".join(ids) + "\n", encoding="utf-8")
+        return f
+
+    @pytest.mark.parametrize("extra", [[], ["--refill-each"]])
+    def test_new_export_gets_own_commit_before_new_task(self, repo, tmp_path,
+                                                        monkeypatch, extra):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron", *extra]) == 0
+        # новая выгрузка: чёрный текст изменился и появилась задача GBO-3
+        (raw / "стр.md").write_text(
+            "База (уточнена выгрузкой).\n"
+            "{++GBO-1: правка первой задачи++}\n"
+            "{++GBO-2: правка второй задачи++}\n"
+            "{++GBO-3: правка третьей++}\n", encoding="utf-8")
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-3"], "b")),
+                     "--target-subdir", "chron", *extra]) == 0
+        subjects = _git(r, "log", "--format=%s", "-3").stdout.strip().split("\n")
+        assert subjects[0].startswith("Ввод в эксплуатацию: GBO-3")
+        assert subjects[1].startswith("Выгрузка: архив обновлён")
+        assert "ранее принятых: 1" in subjects[1]
+        # дифф коммита задачи — только её строка; механика выгрузки — в своём коммите
+        d = _git(r, "diff", "-U0", "src/GBO-3~1", "src/GBO-3", "--", "chron").stdout
+        assert "правка третьей" in d and "уточнена выгрузкой" not in d
+        d0 = _git(r, "diff", "-U0", "src/GBO-3~2", "src/GBO-3~1", "--", "chron").stdout
+        assert "уточнена выгрузкой" in d0
+        assert "src/" not in _git(r, "tag", "--points-at", "src/GBO-3~1").stdout  # без тега
+
+    def test_unchanged_export_makes_no_refresh_commit(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-2"], "b")),
+                     "--target-subdir", "chron"]) == 0
+        subjects = _git(r, "log", "--format=%s").stdout.strip().split("\n")
+        # ровно один коммит выгрузки — начальный ПРОМ (целевого каталога в init не
+        # было); между вводами архив не менялся, второго нет
+        assert [x.startswith("Выгрузка") for x in subjects] == [False, False, True, False]
+        assert len(subjects) == 4
+
+    def test_tail_from_manifest(self, repo, tmp_path, monkeypatch, capsys):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        (raw / "migration-manifest.yaml").write_text(
+            "migrated_at: '2026-09-10'\nservice: x\ntasks:\n"
+            "  GBO-1:\n    color: red\n  GBO-2:\n    color: blue\n  GBO-9:\n    color: g\n",
+            encoding="utf-8")
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        err = capsys.readouterr().err
+        assert "не введено (по манифесту архива): 2 из 3" in err
+        assert "GBO-2, GBO-9" in err
+        assert not (r / "chron" / "migration-manifest.yaml").exists()   # служебный — не в срезе
+
+    def test_empty_intro_explains_foreign_flag(self, tmp_path, monkeypatch, capsys):
+        from app.scripts.apply_history import empty_reason
+        r = tmp_path / "repo"; r.mkdir()
+        _git(r, "init", "-q"); _git(r, "config", "user.email", "t@t"); _git(r, "config", "user.name", "t")
+        raw = tmp_path / "raw"; raw.mkdir()
+        (raw / "стр.md").write_text(
+            "---\nstatus: draft\nunapproved_jira: GBO-76041\n---\n\n"
+            "Страница задачи 76041.\n{++GBO-30312: правка поверх++}\n", encoding="utf-8")
+        (r / "README.md").write_text("init\n", encoding="utf-8")
+        _git(r, "add", "-A"); _git(r, "commit", "-q", "-m", "init")
+        monkeypatch.chdir(r)
+        assert "GBO-76041 (1 стр.)" in empty_reason(raw, "GBO-30312")
+        assert empty_reason(raw, "GBO-76041") == ""                  # свой флаг — не причина
+        f = tmp_path / "t.txt"; f.write_text("GBO-30312\n", encoding="utf-8")
+        assert main([str(raw), str(r), str(f), "--target-subdir", "chron"]) == 0
+        err = capsys.readouterr().err
+        assert "пустой срез" in err and "GBO-76041" in err
+        assert "src/GBO-30312" in _git(r, "tag").stdout
+
+    def test_refresh_only_without_tasks_file(self, repo, tmp_path, monkeypatch):
+        # выгрузка без вводов: файл задач не задан, архив изменился → один коммит «Выгрузка»
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert main([str(raw), str(r), str(self._tasks(tmp_path, ["GBO-1"], "a")),
+                     "--target-subdir", "chron"]) == 0
+        (raw / "стр.md").write_text("База (новая выгрузка).\n{++GBO-1: правка первой задачи++}\n",
+                                   encoding="utf-8")
+        assert main([str(raw), str(r), "--target-subdir", "chron"]) == 0
+        assert _git(r, "log", "-1", "--format=%s").stdout.startswith("Выгрузка")
+        assert "ранее принятых: 1" in _git(r, "log", "-1", "--format=%s").stdout
+        assert "новая выгрузка" in (r / "chron" / "стр.md").read_text(encoding="utf-8")
+        assert "правка первой задачи" in (r / "chron" / "стр.md").read_text(encoding="utf-8")
+        assert _git(r, "tag").stdout.split() == ["src/GBO-1"]
