@@ -448,3 +448,204 @@ class TestEventChain:
         assert "новая выгрузка" in (r / "chron" / "стр.md").read_text(encoding="utf-8")
         assert "правка первой задачи" in (r / "chron" / "стр.md").read_text(encoding="utf-8")
         assert _git(r, "tag").stdout.split() == ["src/GBO-1"]
+
+
+class TestReviewFixes:
+    """Исправления по код-ревью 2026-09-10. Пары: срабатывание / НЕсрабатывание
+    (асимметрия ошибок: молчаливая потеря ПРОМ хуже остановки)."""
+
+    def _tasks(self, tmp_path, ids, name="t"):
+        f = tmp_path / f"{name}.txt"
+        f.write_text("\n".join(ids) + "\n", encoding="utf-8")
+        return f
+
+    def _intro(self, r, raw, tmp_path, ids, name, *extra):
+        return main([str(raw), str(r), str(self._tasks(tmp_path, ids, name)),
+                     "--target-subdir", "chron", *extra])
+
+    # п.1 — аннотированный тег считается введённым (и ПРОМ не откатывается)
+    def test_annotated_tag_counts_as_introduced(self, repo, tmp_path, monkeypatch):
+        from app.scripts.apply_history import introduced_tasks
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 0
+        _git(r, "tag", "-d", "src/GBO-1")
+        _git(r, "tag", "-a", "-m", "аннотированный", "src/GBO-1", "HEAD")
+        assert introduced_tasks(r, "src/") == ["GBO-1"]
+        assert self._intro(r, raw, tmp_path, ["GBO-2"], "b") == 0
+        assert "Выгрузка" not in _git(r, "log", "--format=%s").stdout
+        s2 = _git(r, "show", "src/GBO-2:chron/стр.md").stdout
+        assert "правка первой задачи" in s2 and "правка второй задачи" in s2
+
+    # п.2 — тег, достижимый через merge, введён; без файла задач — нет отката
+    def test_tag_reachable_via_merge_is_introduced(self, repo, tmp_path, monkeypatch):
+        from app.scripts.apply_history import introduced_tasks
+        r, raw = repo
+        monkeypatch.chdir(r)
+        main_branch = _git(r, "branch", "--show-current").stdout.strip()
+        _git(r, "checkout", "-q", "-b", "feat")
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 0
+        _git(r, "checkout", "-q", main_branch)
+        _git(r, "merge", "-q", "--no-ff", "-m", "merge feat", "feat")
+        assert introduced_tasks(r, "src/") == ["GBO-1"]
+        head = _git(r, "rev-parse", "HEAD").stdout.strip()
+        rc = main([str(raw), str(r), "--target-subdir", "chron"])   # только «выгрузка»
+        assert rc == 2 and _git(r, "rev-parse", "HEAD").stdout.strip() == head
+        assert "правка первой задачи" in (r / "chron" / "стр.md").read_text(encoding="utf-8")
+
+    # п.3 — префикс без слэша
+    def test_tag_prefix_without_slash(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a", "--tag-prefix", "src-") == 0
+        assert self._intro(r, raw, tmp_path, ["GBO-2"], "b", "--tag-prefix", "src-") == 0
+        assert "Выгрузка" not in _git(r, "log", "--format=%s").stdout
+        assert sorted(_git(r, "tag").stdout.split()) == ["src-GBO-1", "src-GBO-2"]
+
+    # п.4 — целевой каталог внутри .git запрещён
+    def test_target_inside_git_dir_refused(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        rc = self._intro(r, raw, tmp_path, ["GBO-1"], "a", "--target-subdir", ".git/chron")
+        assert rc == 2
+        assert _git(r, "rev-parse", "--git-dir").returncode == 0      # репозиторий цел
+        rc = self._intro(r, raw, tmp_path, ["GBO-1"], "b", "--target-subdir", "sources/../.git")
+        assert rc == 2
+
+    # п.10 — detached HEAD
+    def test_detached_head_refused(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        _git(r, "checkout", "-q", "--detach")
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 2
+        assert "src/GBO-1" not in _git(r, "tag").stdout
+
+    # п.8 — невалидное имя тега ловится до изменений
+    def test_invalid_tag_name_refused_before_changes(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        head = _git(r, "rev-parse", "HEAD").stdout.strip()
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a", "--tag-prefix", "src:") == 2
+        assert _git(r, "rev-parse", "HEAD").stdout.strip() == head
+        assert not (r / "chron").exists()
+
+    # п.7 — сверка с манифестом: опечатка — стоп; --allow-unlisted — обход; нет манифеста — как раньше
+    def test_unknown_task_vs_manifest(self, repo, tmp_path, monkeypatch, capsys):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        (raw / "migration-manifest.yaml").write_text(
+            "migrated_at: '2026-09-10'\ntasks:\n  GBO-1:\n    color: red\n  GBO-2:\n    color: b\n",
+            encoding="utf-8")
+        head = _git(r, "rev-parse", "HEAD").stdout.strip()
+        assert self._intro(r, raw, tmp_path, ["GBO-10"], "a") == 2
+        assert "нет в манифесте" in capsys.readouterr().err
+        assert _git(r, "rev-parse", "HEAD").stdout.strip() == head
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "b") == 0            # известная — ок
+        assert self._intro(r, raw, tmp_path, ["GBO-10"], "c", "--allow-unlisted") == 0
+        assert "src/GBO-10" in _git(r, "tag").stdout
+
+    # п.5 — сбой git add: без тега, без коммита, дерево возвращено к HEAD
+    def test_git_add_failure_stops_without_tag(self, repo, tmp_path, monkeypatch):
+        import app.scripts.apply_history as ah
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 0
+        real = ah._git
+        def flaky(repo_, *args):
+            if args and args[0] == "add":
+                return subprocess.CompletedProcess(args, 128, "", "fatal: index.lock")
+            return real(repo_, *args)
+        monkeypatch.setattr(ah, "_git", flaky)
+        rc = self._intro(r, raw, tmp_path, ["GBO-2"], "b")
+        monkeypatch.setattr(ah, "_git", real)
+        assert rc == 1
+        assert "src/GBO-2" not in _git(r, "tag").stdout
+        assert _git(r, "log", "-1", "--format=%s").stdout.startswith("Ввод в эксплуатацию: GBO-1")
+        assert _git(r, "status", "--porcelain").stdout.strip() == ""      # откат
+
+    # п.6 — файлы среза под .gitignore: стоп; без правила — вложение в дереве тега
+    def test_ignored_slice_files_stop(self, repo, tmp_path, monkeypatch, capsys):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        (raw / "img").mkdir(); (raw / "img" / "a.png").write_bytes(b"png")
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 0
+        assert "chron/img/a.png" in _git(r, "ls-tree", "-r", "--name-only", "src/GBO-1").stdout
+        # уже отслеживаемый a.png правило не задевает; НОВОЕ вложение под правилом
+        # git add пропустил бы молча — это и есть стоп
+        (r / ".gitignore").write_text("*.png\n", encoding="utf-8")
+        _git(r, "add", ".gitignore"); _git(r, "commit", "-q", "-m", "ignore png")
+        (raw / "img" / "b.png").write_bytes(b"png2")
+        rc = self._intro(r, raw, tmp_path, ["GBO-2"], "b")
+        err = capsys.readouterr().err
+        assert rc == 1 and ".gitignore" in err and "b.png" in err
+        assert "src/GBO-2" not in _git(r, "tag").stdout
+        assert _git(r, "status", "--porcelain").stdout.strip() == ""
+
+    # п.9/14 — ошибка critic после наполнения: каталог возвращён к HEAD, повтор проходит
+    def test_failure_after_refill_rolls_back_and_resumes(self, repo, tmp_path, monkeypatch):
+        import app.scripts.apply_history as ah
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a") == 0
+        real = ah._critic
+        def failing(repo_, *args):
+            if args and args[0] == "reject-all":
+                return subprocess.CompletedProcess(args, 3, "", "сломалось")
+            return real(repo_, *args)
+        monkeypatch.setattr(ah, "_critic", failing)
+        assert self._intro(r, raw, tmp_path, ["GBO-2"], "b") == 1
+        monkeypatch.setattr(ah, "_critic", real)
+        assert _git(r, "status", "--porcelain").stdout.strip() == ""
+        assert "src/GBO-2" not in _git(r, "tag").stdout
+        assert self._intro(r, raw, tmp_path, ["GBO-2"], "c") == 0          # повтор с места останова
+        assert "src/GBO-2" in _git(r, "tag").stdout
+
+    # п.11 — --base-dir внутри архива
+    def test_base_dir_inside_raw_refused(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a", "--base-dir", str(raw)) == 2
+        assert not (raw / "onix-history-base").exists()
+
+    # п.12 — BOM в файле задач
+    def test_task_list_with_bom(self, tmp_path):
+        f = tmp_path / "bom.txt"
+        f.write_bytes("\ufeffREM run-critic.bat apply GBO-5 --path .\nGBO-1\n".encode("utf-8"))
+        ids, _ = read_task_list(f)
+        assert ids == ["GBO-1"]
+
+    # п.13 — manifest: tasks: первой строкой
+    def test_manifest_tasks_first_line(self, tmp_path):
+        from app.scripts.apply_history import manifest_tasks
+        raw = tmp_path / "raw"; raw.mkdir()
+        (raw / "migration-manifest.yaml").write_text("tasks:\n  GBO-1:\n    x: 1\n  GBO-2:\n    x: 2\n",
+                                                     encoding="utf-8")
+        assert manifest_tasks(raw) == ["GBO-1", "GBO-2"]
+        (raw / "migration-manifest.yaml").write_text("service: x\n", encoding="utf-8")
+        assert manifest_tasks(raw) == []
+
+    # п.14 — причина пустого ввода: ID не подстрока, флаг только во frontmatter
+    def test_empty_reason_exact_id_and_frontmatter_only(self, tmp_path):
+        from app.scripts.apply_history import empty_reason
+        raw = tmp_path / "raw"; raw.mkdir()
+        (raw / "a.md").write_text("---\nunapproved_jira: GBO-77\n---\n\n{++GBO-12: x++}\n",
+                                  encoding="utf-8")
+        (raw / "b.md").write_text("---\nstatus: draft\n---\n\nтело\nunapproved_jira: GBO-88\n{++GBO-1: y++}\n",
+                                  encoding="utf-8")
+        assert empty_reason(raw, "GBO-1") == ""                    # GBO-12 ≠ GBO-1; флаг в теле не считается
+        assert "GBO-77 (1 стр.)" in empty_reason(raw, "GBO-12")
+
+    # п.16 — --push отправляет ветку и только теги этого прогона
+    def test_push_sends_only_run_tags(self, repo, tmp_path, monkeypatch):
+        r, raw = repo
+        monkeypatch.chdir(r)
+        bare = tmp_path / "remote.git"
+        _git(r, "init", "-q", "--bare", str(bare))
+        branch = _git(r, "branch", "--show-current").stdout.strip()
+        _git(r, "remote", "add", "origin", str(bare))
+        _git(r, "push", "-q", "-u", "origin", branch)
+        _git(r, "tag", "scratch")
+        assert self._intro(r, raw, tmp_path, ["GBO-1"], "a", "--push") == 0
+        remote_tags = _git(r, "ls-remote", "--tags", "origin").stdout
+        assert "refs/tags/src/GBO-1" in remote_tags and "scratch" not in remote_tags
+        assert _git(r, "rev-parse", f"origin/{branch}").stdout == _git(r, "rev-parse", "HEAD").stdout
