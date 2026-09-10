@@ -222,3 +222,43 @@ class TestAccumulatedTree:
         assert rc == 2
         assert "внутри репозитория" in capsys.readouterr().err
         assert _git(r, "tag").stdout.strip() == ""
+
+
+class TestServiceFilesAndCommitPrefix:
+    """Модель «master = ПРОМ» (2026-09-10): служебные файлы экспортёра не
+    попадают в целевой каталог; сообщение коммита — ввод, а не летопись."""
+
+    def test_refill_target_skips_service_files(self, tmp_path):
+        from app.scripts.apply_history import refill_target
+        raw = tmp_path / "raw"; raw.mkdir()
+        (raw / "стр.md").write_text("# страница\n", encoding="utf-8")
+        (raw / "migration-manifest.yaml").write_text("x: 1\n", encoding="utf-8")
+        (raw / "migration-apply-order.md").write_text("# порядок\n", encoding="utf-8")
+        sub = raw / "Раздел"; sub.mkdir()
+        (sub / "migration-colors-report.md").write_text("# отчёт\n", encoding="utf-8")
+        (sub / "вложенная.md").write_text("# в\n", encoding="utf-8")
+        target = tmp_path / "confluence"
+        refill_target(raw, target)
+        got = sorted(p.relative_to(target).as_posix() for p in target.rglob("*") if p.is_file())
+        assert got == ["Раздел/вложенная.md", "стр.md"]
+
+    def test_refill_target_keeps_ordinary_files(self, tmp_path):
+        # НЕсрабатывание: обычные файлы с похожими именами не режутся
+        from app.scripts.apply_history import refill_target
+        raw = tmp_path / "raw"; raw.mkdir()
+        (raw / "миграция-карт.md").write_text("# ок\n", encoding="utf-8")
+        (raw / "img").mkdir(); (raw / "img" / "a.png").write_bytes(b"x")
+        target = tmp_path / "confluence"
+        refill_target(raw, target)
+        assert (target / "миграция-карт.md").exists()
+        assert (target / "img" / "a.png").exists()
+
+    def test_commit_message_default_is_intro(self):
+        from app.scripts.apply_history import commit_message, DEFAULT_COMMIT_PREFIX
+        m = commit_message(DEFAULT_COMMIT_PREFIX, "GBO-1", 3)
+        assert m.startswith("Ввод в эксплуатацию: GBO-1")
+        assert "3 ранее принятых" in m
+
+    def test_commit_message_archive_prefix(self):
+        from app.scripts.apply_history import commit_message
+        assert commit_message("Срез летописи", "GBO-2", 0).startswith("Срез летописи: GBO-2")
