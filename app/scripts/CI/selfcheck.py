@@ -533,15 +533,46 @@ def _load_subservice_map(profile: Path):
     return rows or None
 
 
+def _stand_root(sources: Path) -> Path:
+    """Корень стенда/репозитория источника по каталогу выгрузки.
+
+    Две топологии: пилотный стенд ``<root>/confluence`` и репозиторий
+    источника линии 2.x ``<src>/sources/confluence`` (track-manual,
+    гид «Файлы репозитория»). Прежний признак «родитель выгрузки» на
+    второй топологии давал ``<src>/sources``: гейт требовал журнал
+    ``sources/sandbox/journal.txt``, искал профиль в ``sources/README.md``
+    и молча пропускал сверку среза канона — первый исполнитель v2.x
+    (PRE-01, 2026-09-11) создал ``sources/sandbox/`` по подсказке
+    прибора, координатор велел удалить, круг замкнулся (FB-03; класс
+    тот же, что FB-01 — прибор молчаливо предполагает топологию пилота).
+    Признак: родитель ``sources`` без собственного ``.git`` — контейнер
+    выгрузок, корень выше на уровень; иначе — родитель (пилот, тесты).
+    """
+    s = sources.resolve()
+    parent = s.parent
+    if parent.name == "sources" and not (parent / ".git").exists():
+        return parent.parent
+    return parent
+
+
+def _profile_path(sources: Path) -> Tuple[Path, Path]:
+    """(корень, профиль источников): ``<root>/README.md``; фолбэк —
+    README внутри выгрузки (корень = выгрузка), прежнее поведение."""
+    root = _stand_root(sources)
+    profile = root / "README.md"
+    if not profile.is_file():
+        profile = sources / "README.md"
+        root = sources
+    return root, profile
+
+
 def check_subservice_mapping(docs: Path, sources: Path,
                              card_files: Dict[str, Path]):
     """(отчёт, ok). card_files: page_id -> карточка docs. Зона источника
     определяется по титулу/ветви его файла выгрузки; путь карточки
     обязан начинаться srs/<слаг>/ (подсервис/core), не иметь слага
     (общая часть) или карточки не должно быть вовсе (вне Экосистемы)."""
-    profile = sources.parent / "README.md"
-    if not profile.is_file():
-        profile = sources / "README.md"
+    _, profile = _profile_path(sources)
     smap = _load_subservice_map(profile)
     if not smap:
         return [], True
@@ -639,9 +670,7 @@ def canon_head() -> Optional[str]:
 def check_canon_cut(sources: Path,
                     head: Optional[str]) -> Tuple[List[str], bool]:
     """Сверка строки «срез канона: <hash>» профиля с фактическим HEAD."""
-    profile = sources.parent / "README.md"
-    if not profile.is_file():
-        profile = sources / "README.md"
+    _, profile = _profile_path(sources)
     try:
         text = profile.read_text(encoding="utf-8", errors="replace")
     except OSError:
@@ -679,11 +708,7 @@ _RETRY_RE = re.compile(r"-retry-(\d+)", re.I)
 def check_protocol_discipline(sources: Path) -> Tuple[List[str], bool]:
     """✗ на следы нарушений протокола: посторонние скрипты в src-репо
     (§3) и отчёты попыток сверх лимита двух (§6)."""
-    root = sources.parent
-    profile = root / "README.md"
-    if not profile.is_file():
-        profile = sources / "README.md"
-        root = sources
+    root, profile = _profile_path(sources)
     try:
         ptext = profile.read_text(encoding="utf-8", errors="replace")
     except OSError:
@@ -766,11 +791,7 @@ _STAGE_ROW_RE = re.compile(r"^\|\s*`([A-ZА-Я]{2,4}-\d{2})`\s*\|", re.M)
 
 def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
     """⚠-строки о этапах плана без файла промпта; ok всегда True."""
-    root = sources.parent
-    profile = root / "README.md"
-    if not profile.is_file():
-        profile = sources / "README.md"
-        root = sources
+    root, profile = _profile_path(sources)
     try:
         ptext = profile.read_text(encoding="utf-8", errors="replace")
     except OSError:
@@ -823,7 +844,7 @@ def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
 def check_journal_name(journal: Path,
                        sources: Path) -> Optional[str]:
     """Строка-✗, если журнал прогона не sandbox/journal.txt стенда."""
-    expected = sources.resolve().parent / "sandbox" / "journal.txt"
+    expected = _stand_root(sources) / "sandbox" / "journal.txt"
     if journal.resolve() == expected:
         return None
     return (f"✗ протокол §4: журнал прогона «{journal}» — единый журнал "
