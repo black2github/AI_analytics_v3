@@ -1100,6 +1100,7 @@ def test_root_prompts_dir_is_legit_and_junk_still_flagged(tmp_path):
     # prompts/ — промпты этапов (протокол §10): штатный каталог корня,
     # не «посторонний»; каталог скриптов/кэш по-прежнему брак (пара)
     docs = tmp_path / "docs"
+    (tmp_path / ".git").mkdir()             # стендовая топология: репозиторий = родитель docs
     make(docs / "srs/functions/f1.md", card("[X] Ф1"))
     make_matrix(docs)
     make(tmp_path / "prompts/PRE-01.md", "# промпт этапа\n")

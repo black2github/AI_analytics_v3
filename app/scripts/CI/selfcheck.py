@@ -336,7 +336,11 @@ def run(docs: Path, sources: Optional[Path],
     # С «--docs .» docs.parent == docs («.».parent == «.») — тот же случай.
     _docs_r = docs.resolve()
     if (_docs_r / ".git").exists() or _docs_r.parent == _docs_r:
-        root = _docs_r
+        root = _docs_r                      # комплект = корень репозитория
+    elif (_docs_r.parent / ".git").exists():
+        root = _docs_r.parent               # стендовая: <root>/docs
+    elif (docs / "srs").is_dir() or (docs / "brd").is_dir():
+        root = _docs_r                      # вне git (тесты): прежний признак
     else:
         root = _docs_r.parent
     # prompts/ — промпты этапов планировщика (протокол §10, инструкции
