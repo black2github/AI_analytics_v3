@@ -327,16 +327,23 @@ def run(docs: Path, sources: Optional[Path],
     # Две топологии комплекта: стендовая (--docs = <root>/docs, root =
     # родитель) и «комплект в корне репозитория» (эталон
     # docs-account-opening-request: brd/, srs/ и корневые документы лежат
-    # прямо в корне; --docs = корень). Признак второй — srs/ или brd/
-    # внутри docs; тогда root = сам docs, а brd/srs — штатные каталоги.
-    # С «--docs .» docs.parent == docs («.».parent == «.») — прежний код
-    # молча мерил сам комплект и флаговал brd/srs как мусор.
+    # прямо в корне; --docs = корень). Признак второй — сам docs является
+    # корнем git-репозитория (.git внутри; у worktree это файл). Прежний
+    # признак «srs/ или brd/ внутри docs» был ложным: в стендовой
+    # топологии docs/srs — норма, и прибор молча мерил сам комплект, а
+    # на свежей миграции (srs/ ещё нет) — корень репозитория; отсюда
+    # ✗ на prompts/ у первого исполнителя v2.x (2026-09-11).
+    # С «--docs .» docs.parent == docs («.».parent == «.») — тот же случай.
     _docs_r = docs.resolve()
-    if (docs / "srs").is_dir() or (docs / "brd").is_dir():
-        root = docs
+    if (_docs_r / ".git").exists() or _docs_r.parent == _docs_r:
+        root = _docs_r
     else:
         root = _docs_r.parent
-    _ok_dirs = {"docs", "sources", "sandbox", ".git", "brd", "srs",
+    # prompts/ — промпты этапов планировщика (протокол §10, инструкции
+    # треков): штатный артефакт репозитория источника, не мусор
+    # (инцидент 2026-09-11: первый исполнитель по плану v2.x получил
+    # ✗ на PRE-01 из-за prompts/ и встал на вопрос владельцу).
+    _ok_dirs = {"docs", "sources", "sandbox", "prompts", ".git", "brd", "srs",
                 _docs_r.name}
     # штатные не-markdown файлы GitLab-репозитория комплекта
     _ok_files = {"CODEOWNERS", "gpb-manifest.json"}
@@ -359,7 +366,7 @@ def run(docs: Path, sources: Optional[Path],
         report.append(
             f"✗ корень репозитория: посторонние файлы ×{len(junk)} "
             f"({', '.join(junk[:8])}) — в корне только штатные каталоги "
-            "(docs/sources/sandbox) и markdown; рабочие скрипты и кэши "
+            "(docs/sources/sandbox/prompts) и markdown; рабочие скрипты и кэши "
             "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
             "вовсе; read-only анализ — в sandbox)")
     matrix = docs / "traceability-matrix.md"

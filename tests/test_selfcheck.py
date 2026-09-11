@@ -1094,3 +1094,40 @@ class TestFileArtifacts:
             "[схема](files/req%201.xsd)\n", encoding="utf-8")
         rep, ok = check_file_artifacts(docs)
         assert ok, rep
+
+
+def test_root_prompts_dir_is_legit_and_junk_still_flagged(tmp_path):
+    # prompts/ — промпты этапов (протокол §10): штатный каталог корня,
+    # не «посторонний»; каталог скриптов/кэш по-прежнему брак (пара)
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    make(tmp_path / "prompts/PRE-01.md", "# промпт этапа\n")
+    make(tmp_path / "sandbox/journal.txt", "")
+    report, ok = selfcheck.run(docs, None)
+    assert ok, report
+    assert not any("посторонние файлы" in ln for ln in report)
+    make(tmp_path / "__pycache__/x.pyc", "")
+    make(tmp_path / "fix_all.py", "print(1)\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    junk = [ln for ln in report if "посторонние файлы" in ln]
+    assert junk and "__pycache__" in junk[0] and "fix_all.py" in junk[0]
+    assert "prompts" not in junk[0].split(" — ")[0]      # не в перечне мусора
+
+
+def test_root_topology_repo_root_as_docs(tmp_path):
+    # эталонная топология: --docs = корень репозитория (есть .git):
+    # brd/srs штатны, а мусор в корне флагуется
+    docs = tmp_path
+    (docs / ".git").mkdir()
+    make(docs / "srs/functions/f1.md", card("[X] Ф1"))
+    make(docs / "brd/b.md", "# brd\n")
+    make_matrix(docs)
+    report, ok = selfcheck.run(docs, None)
+    assert ok, report
+    make(docs / "build.py", "print(1)\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    junk = [ln for ln in report if "посторонние файлы" in ln]
+    assert junk and "build.py" in junk[0] and "srs" not in junk[0]
