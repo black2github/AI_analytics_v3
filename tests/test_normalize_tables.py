@@ -2065,12 +2065,23 @@ class TestExamCalibrations:
         assert ok and any("колонные роли" in r for r in rep)
 
     def test_k4_regular_card_roles_still_apply(self, tmp_path):
-        # тест на НЕсрабатывание: у обычной карточки роли работают
+        # тест на НЕсрабатывание: у обычной карточки роли работают.
+        # Фикстура — настоящая роль «обязат» с невалидным значением:
+        # прежняя TBL держалась на ложном срабатывании («Краткое название»
+        # считалось кратностью), снятом калибровкой master канона
+        # 2026-08-28 (слито в analyzer 2026-09-29)
         from app.scripts.CI.normalize_tables import check_file
         p = tmp_path / "card.md"
-        p.write_text("---\ntitle: 'К'\n---\n\n" + self.TBL, encoding="utf-8")
+        tbl = ("| Поле | Обязательность |\n|---|---|\n"
+               "| Номер | Да |\n| Сумма | иногда |\n")
+        p.write_text("---\ntitle: 'К'\n---\n\n" + tbl, encoding="utf-8")
         rep, ok = check_file(p)
         assert not ok
+        # прежняя TBL у обычной карточки больше не даёт ложного брака
+        p2 = tmp_path / "card2.md"
+        p2.write_text("---\ntitle: 'К'\n---\n\n" + self.TBL, encoding="utf-8")
+        _, ok2 = check_file(p2)
+        assert ok2
 
 
 class TestApplyCritic:
