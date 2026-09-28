@@ -412,6 +412,12 @@ def run(docs: Path, sources: Optional[Path],
         report.append(("✓" if ok else "✗") + " реестр открытых вопросов:")
         report.extend(f"   {ln}" for ln in rep)
         report.extend(f"   {ln}" for ln in wrep)
+    # слот части сервиса в ID (2026-09-28): таблица кодов в README комплекта
+    rep, ok = _safe(check_id_slots, docs, card_ids)
+    all_ok = all_ok and ok
+    if rep:
+        report.append(("✓" if ok else "✗") + " слот части сервиса в ID:")
+        report.extend(f"   {ln}" for ln in rep)
     # реестр замечаний команды (цикл обратной связи, модель 2026-08-17):
     # feedback.md живёт в КОРНЕ репозитория отдачи; файла нет — ок
     rep, ok = _safe(ld.check_feedback_order, docs.parent / "feedback.md")
@@ -631,6 +637,149 @@ def check_subservice_mapping(docs: Path, sources: Path,
     if not report:
         report.append("разметка подсервисов: соответствие "
                       "«источник → путь» выдержано ✓")
+    return report, ok
+
+
+# --- сторож слота части сервиса в ID (2026-09-28) ---
+#
+# Сервис из подсервисов (conventions §3.1, схема ID «Слот части сервиса»):
+# идентификатор нумерованного артефакта несёт слот части сразу после
+# префикса — `FUN-DS-SYS-01`, `ENT-SHR-001`, `NTF-DS-000`. Коды частей
+# объявляются один раз таблицей в README корня комплекта (колонки «Код»
+# и «Каталог»); общая часть — каталог `srs/shared/`, код `SHR`. Сторож
+# держит три инварианта механически: слот только у сервиса с таблицей;
+# слот карточки в `srs/<каталог>/…` равен коду этого каталога по
+# таблице; документ вне каталогов подсервисов (уровень сервиса, корень
+# `srs/`) слота не несёт. Без таблицы и без каталогов подсервисов сторож
+# молчит — обычные сервисы не затронуты. Прецедент: docs-sign (слот в
+# каждом ID, таблица кодов в README) против §3.1 «подсервис в ID не
+# кодируется» — решение владельца 2026-09-28 в пользу объявляемого слота.
+
+_PART_TABLE_HEAD_RE = re.compile(
+    r"^#+\s*.*(?:слот|подсервис|част[иь] сервиса|коды частей).*$", re.I | re.M)
+_PART_CODE_RE = re.compile(r"^[A-Z]{2,4}$")
+# контуры и служебные сегменты ID — не слоты частей
+_NOT_SLOT = {"CL", "BNK", "SYS", "GRP", "EXT", "INT"}
+# каталоги типов в старой (множественной) раскладке — не подсервисы
+_LEGACY_TYPE_DIRS = {"functions", "screen-forms", "controls", "print-forms",
+                     "contract-calls", "internal-contracts",
+                     "external-integrations", "processes"}
+
+
+def _load_part_codes(readme: Path):
+    """{код: каталог} по таблице кодов частей в README корня комплекта.
+    None — таблицы нет; {} — таблица есть, но без колонки «Каталог»."""
+    try:
+        text = readme.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    m = _PART_TABLE_HEAD_RE.search(text)
+    if not m:
+        return None
+    header: Optional[List[str]] = None
+    codes: Dict[str, str] = {}
+    for ln in text[m.end():].splitlines():
+        st = ln.strip()
+        if st.startswith("#"):
+            break
+        if not st.startswith("|"):
+            continue
+        cells = [c.strip() for c in st.strip("|").split("|")]
+        if all(re.fullmatch(r":?-+:?", c) for c in cells if c):
+            continue
+        if header is None:
+            header = [c.lower() for c in cells]
+            continue
+        try:
+            icode = next(i for i, h in enumerate(header) if "код" in h)
+        except StopIteration:
+            return None
+        idir = next((i for i, h in enumerate(header) if "каталог" in h), None)
+        if idir is None:
+            return {}
+        if len(cells) <= max(icode, idir):
+            continue
+        code = cells[icode].strip("*` ")
+        folder = cells[idir].strip("*` /")
+        if _PART_CODE_RE.fullmatch(code) and folder:
+            codes[code] = folder
+    if header is None:
+        return None
+    return codes
+
+
+def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
+    """(отчёт, ok). card_ids: карточка docs -> id из frontmatter."""
+    report: List[str] = []
+    ok = True
+
+    def seg_of(p: Path) -> Optional[str]:
+        parts = p.relative_to(docs).as_posix().split("/")
+        if (len(parts) > 2 and parts[0] == "srs"
+                and parts[1] not in _KNOWN_TYPES
+                and parts[1] not in _LEGACY_TYPE_DIRS):
+            return parts[1]
+        return None
+
+    def slot_like(cid: str) -> Optional[str]:
+        tokens = cid.split("-")
+        if len(tokens) >= 3 and _PART_CODE_RE.fullmatch(tokens[1])                 and tokens[1] not in _NOT_SLOT:
+            return tokens[1]
+        return None
+
+    codes = _load_part_codes(docs / "README.md")
+    if codes is None:
+        # без таблицы сторож молчит, кроме явного признака слота: карточка в
+        # каталоге подсервиса с id вида <PREFIX>-<КОД>-… (обычные сервисы и
+        # старая раскладка с каталогами типов во множественном числе не задеты)
+        hits = sorted((p.relative_to(docs).as_posix(), cid)
+                      for p, cid in card_ids.items()
+                      if seg_of(p) and slot_like(cid))
+        if hits:
+            ok = False
+            report.append(
+                "✗ слот части: идентификаторы со слотом части без таблицы "
+                "кодов частей в README корня комплекта (колонки «Код», "
+                "«Каталог»; conventions §3.1): "
+                + ", ".join(f"{rel} ({cid})" for rel, cid in hits[:5])
+                + (" …" if len(hits) > 5 else ""))
+        return report, ok
+    if not codes:
+        ok = False
+        report.append(
+            "✗ слот части: в таблице кодов частей README нет колонки "
+            "«Каталог» — соответствие «слот ↔ каталог» непроверяемо "
+            "(conventions §3.1)")
+        return report, ok
+    dir2code = {folder: code for code, folder in codes.items()}
+    for p, cid in sorted(card_ids.items()):
+        rel = p.relative_to(docs).as_posix()
+        seg = seg_of(p)
+        tokens = cid.split("-")
+        slot = tokens[1] if len(tokens) >= 3 and tokens[1] in codes else None
+        if seg is None:
+            if slot is not None:
+                ok = False
+                report.append(
+                    f"✗ слот части: {rel} — id {cid} несёт слот «{slot}», "
+                    "а документ лежит вне каталогов подсервисов (уровень "
+                    "сервиса / корень srs/ слота не несут)")
+            continue
+        expected = dir2code.get(seg)
+        if expected is None:
+            ok = False
+            report.append(
+                f"✗ слот части: {rel} — каталог «{seg}» не объявлен в "
+                "таблице кодов частей README")
+        elif slot != expected:
+            ok = False
+            report.append(
+                f"✗ слот части: {rel} — id {cid} "
+                + (f"несёт слот «{slot}»" if slot else "без слота")
+                + f", каталог «{seg}» объявлен с кодом «{expected}»")
+    if not report:
+        report.append(f"слоты частей: {len(codes)} кодов по таблице README, "
+                      "соответствие «слот ↔ каталог» выдержано ✓")
     return report, ok
 
 

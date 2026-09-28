@@ -1132,3 +1132,77 @@ def test_root_topology_repo_root_as_docs(tmp_path):
     assert not ok
     junk = [ln for ln in report if "посторонние файлы" in ln]
     assert junk and "build.py" in junk[0] and "srs" not in junk[0]
+
+
+def _slot_card(cid: str, typ: str = "function") -> str:
+    return f"---\nid: {cid}\ntype: {typ}\n---\n\n# {cid}\n\nтекст\n"
+
+
+_PART_TABLE = ("# Комплект\n\n### Подсервисы (слот в ID)\n\n"
+               "| Код | Каталог | Подсервис |\n|---|---|---|\n"
+               "| **SHR** | `shared` | Общая часть |\n"
+               "| **DS** | `document-signing` | Подпись документов |\n")
+
+
+def test_id_slots_silent_without_parts(tmp_path):
+    # сервис без подсервисов и без таблицы: сторож молчит
+    docs = tmp_path / "docs"
+    make(docs / "srs/function/f1.md", card("[X] Ф1"))
+    make_matrix(docs)
+    report, _ = selfcheck.run(docs, None)
+    assert not any("слот части" in ln for ln in report)
+
+
+def test_id_slots_dirs_without_table_flagged(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "srs/document-signing/function/f1.md", _slot_card("FUN-DS-SYS-01"))
+    make_matrix(docs, "| FUN-DS-SYS-01 | function | Ф | f1.md |\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("без таблицы кодов частей" in ln and "FUN-DS-SYS-01" in ln for ln in report)
+
+
+def test_id_slots_table_without_folder_column_flagged(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "README.md", "# К\n\n### Подсервисы (слот в ID)\n\n| Код | Подсервис |\n|---|---|\n| **DS** | Подпись |\n")
+    make(docs / "srs/document-signing/function/f1.md", _slot_card("FUN-DS-SYS-01"))
+    make_matrix(docs, "| FUN-DS-SYS-01 | function | Ф | f1.md |\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    assert any("нет колонки «Каталог»" in ln for ln in report)
+
+
+def test_id_slots_happy_layout(tmp_path):
+    # раскладка docs-sign: слоты по таблице, общая часть в shared/, корень без слота
+    docs = tmp_path / "docs"
+    make(docs / "README.md", _PART_TABLE)
+    make(docs / "srs/document-signing/function/f1.md", _slot_card("FUN-DS-SYS-01"))
+    make(docs / "srs/document-signing/ntf-notification.md", _slot_card("NTF-DS-000", "notification"))
+    make(docs / "srs/shared/data-model/e1.md", _slot_card("ENT-SHR-001", "data-model"))
+    make(docs / "srs/platform-functions.md", _slot_card("PLT-000", "platform-function"))
+    make(docs / "srs/control/README.md", _slot_card("CTL-000", "control"))
+    make_matrix(docs, "| FUN-DS-SYS-01 | function | Ф | f1.md |\n| NTF-DS-000 | notification | Н | n.md |\n"
+                      "| ENT-SHR-001 | data-model | С | e1.md |\n| PLT-000 | platform-function | П | p.md |\n"
+                      "| CTL-000 | control | К | c.md |\n")
+    report, _ = selfcheck.run(docs, None)
+    assert any("слоты частей: 2 кодов" in ln for ln in report), report
+    assert not any(ln.strip().startswith("✗ слот части") for ln in report)
+
+
+def test_id_slots_violations_each_flagged(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "README.md", _PART_TABLE)
+    make(docs / "srs/document-signing/function/f1.md", _slot_card("FUN-SHR-SYS-01"))   # чужой слот
+    make(docs / "srs/document-signing/function/f2.md", _slot_card("FUN-SYS-02"))       # без слота
+    make(docs / "srs/rbac.md", _slot_card("RBAC-DS-001", "rbac"))                       # слот у корня
+    make(docs / "srs/multi-bank/function/f3.md", _slot_card("FUN-MB-SYS-01"))          # каталог не объявлен
+    make_matrix(docs, "| FUN-SHR-SYS-01 | function | Ф | f1.md |\n| FUN-SYS-02 | function | Ф | f2.md |\n"
+                      "| RBAC-DS-001 | rbac | Р | rbac.md |\n| FUN-MB-SYS-01 | function | Ф | f3.md |\n")
+    report, ok = selfcheck.run(docs, None)
+    assert not ok
+    lines = [ln for ln in report if ln.strip().startswith("✗ слот части:")]
+    assert len(lines) == 4, lines
+    assert any("несёт слот «SHR»" in ln and "«DS»" in ln for ln in lines)
+    assert any("без слота" in ln for ln in lines)
+    assert any("вне каталогов подсервисов" in ln for ln in lines)
+    assert any("«multi-bank» не объявлен" in ln for ln in lines)
