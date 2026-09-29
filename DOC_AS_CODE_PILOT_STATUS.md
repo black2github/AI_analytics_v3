@@ -20,7 +20,7 @@
 |---|---|---|
 | requirements-analyzer-v3 (этот) | main | инструменты (app/scripts/CI), рабочие документы (app/data), тесты |
 | docs-o2new (gitlab EAS) | **master** (одна линия с 2026-09-29: ветка ext/extension-points влита в master) | канон: _meta/ (гид, протокол, шаблоны, скиллы, инструменты, комплект миграции) |
-| eco-techbook (gitlab ED) | **ext/extension-points** (пока; после MR 205 и §3.1 под Д-27 — вливание в master) | conventions.md (политика ID, §3.1 подсервисы) |
+| eco-techbook (gitlab ED) | **master** (одна линия с 2026-09-29: вклад ext/extension-points перенесён MR-ом) | conventions.md (политика ID, §3.1 подсервисы под слот части) |
 | docs-account-opening-request | trunk | эталон O2+ |
 | src-business-cards (локальный, БЕЗ remote) | master | референс-стенд КК; передаётся копией каталога |
 | src-business-cards (gitlab EAS, C:\doc-as-code\EAS\) | **master = ПРОМ** | репозиторий сервиса КК: `sources/raw/` архив, `sources/confluence/` источник, `docs/` пуст; тег `src/PROM`, ветка `future` = снимок apply-all, `src/raw-import` |
@@ -213,7 +213,55 @@
     master, стандарты пока ext; живой прогон bat; 2949fdf), MR ветки в
     master СОЗДАН И ВЛИТ владельцем 2026-09-29. Поле `repo` в
     services.json уже в master (19 сервисов, приехало слиянием) — MR
-    meta/cross-service-links влит ранее.
+    meta/cross-service-links влит ранее. ВЕЧЕР: хвост адресации
+    («Действует с 2026-09-29») — MR meta/addressing-repo-active влит
+    (master канона защищён, прямой push отклонён → только MR).
+    ECO-TECHBOOK НА ОДНОЙ ЛИНИИ: MR 205 влит (43aa403); вместо слияния
+    master→ext (45 расходящихся участков — выравнивание таблиц) вклад
+    ветки перенесён на ветку от master: §3.1 подсервисы под Д-27
+    (srs/<подсервис>/, srs/shared/, коды в README, слот в ID, SM/NTF-
+    слоты уровня части, разметка в профиле, плоский список частей для
+    иерархий), строка «Разметка частей» в профиле, политика снятых ID и
+    номеров из трассировок, gitlab-settings §3 (master src-*), термин
+    «хронология»; MR analytics/ext-subservices-sync влит (2b5f54d).
+    Канон: п.6/п.8 промпта, track-*.md, clone-workspace.bat — стандарты
+    на master (переменная EXT снята; живой прогон bat), MR
+    meta/one-line-standards влит (ccf6763). Стенд accept 552d2d4 на
+    ccf6763; гейт на стенде инструментами master: 160 файлов, ✗ 0, ⚠ 18,
+    OK, вердикты без изменений. ЧУЖАЯ ПРАВКА в master канона: 8cb4ba5
+    (Андрей Дмитричев, ветка addedServicesMike) — поле repo у четырёх
+    платформенных сервисов (src-common-dictionary ×3 с подпутями
+    output/<...>/docs, src-invite); JSON валиден, 145 записей; формат
+    отклоняется от документа адресации: имя ветки `master` и
+    `?ref_type=heads` вместо `/-/tree/HEAD/<путь>` — замечание автору
+    при случае (не блокер).
+16. 2026-09-29 (вечер): КЛОН КОЛЛЕГИ КК ПЕРЕВЕДЁН НА master (п.14 закрыт).
+    Обнаружено при коммите перенумерации: клон стоял на ветке prom (89
+    коммитов заходов PRE-01…LMT-02, не пушились три недели, основание —
+    устаревший ПРОМ без 2c829a1/235e326), локальный master — старая
+    летопись (148 коммитов). Сделано: страховочный push prom на сервер;
+    слияние origin/master в prom в клоне владельца (конфликт feedback.md:
+    FB-01…03 владельца + запись координатора как FB-04), ff master, push
+    master 29d3907; у коллеги — stash захода LMT-02, master →
+    master-old-letopis (страховка), master от сервера, stash pop, prom
+    удалена локально (на сервере оставлена до конца недели). Д-28 в
+    реестре. КОНТРАКТЫ: коллега коммитил базовые контракты Ф1 в trunk
+    docs-external-contracts локально (f429efb): перенесено в ветку
+    docs/business-cards-extint-f1-svfe, перебазировано на trunk в клоне
+    владельца — EXTINT-F1-007 занят КиА → контракты КК сдвинуты на +1
+    (008…016, README собран из 4 конфликтных блоков), force-with-lease;
+    в комплекте КК номера сдвинуты скриптом (45 замен в 12 файлах +
+    три диапазона руками), гейт без новых замечаний (5/2/3 «ниже порога»
+    с CMP-FIX-z08), коммит ddee5b9. MR контрактов ждёт апрува. Дела
+    переданы координатору (задачи A–G: prom в промптах, выравнивание
+    ветки контрактов, адреса потребителей, accept_canon по санкции,
+    базлайн, FB-05…07). Найдено по дороге: шаблон contract-call и скилл
+    строят адреса через /-/blob/master/ в репозитории с trunk и по старой
+    топологии output/<service>; в чек-листе переезда комплекта нет шага
+    «обновить repo в каталоге и строки Потребители у владельцев»; в
+    trunk контрактов чужие дубли F1-005/F1-006; базлайн гейта у КК не
+    обновлялся с PRE-01; FB-04 (сторож OQ при пустом файле) ждёт
+    проверки прибора.
 
 ## Очередь (следующие шаги на выбор владельца)
 
@@ -249,21 +297,22 @@
     ext-sandbox: accept до eaba873 при случае. Поставка: шесть .bat в
     CP866 показывают мусор в редакторах — перевести на UTF-8 + chcp
     65001 по образцу clone-workspace.bat (по отмашке).
-12. СДЕЛАНО: поле `repo` в services.json в master канона (19 сервисов).
-    Хвост: в `cross-service-addressing.md` абзац «Подготовлено и ожидает
-    вливания» → «действует» (правка на master канона после обновления
-    клона); клон C:\doc-as-code\EAN\docs-o2new (ветка
-    meta/cross-service-links) больше не нужен.
-13. ПОСЛЕ ОДНОЙ ЛИНИИ КАНОНА (2026-09-29): (а) локальный клон канона
-    переключить на master, ветку ext/extension-points удалить локально и
-    на GitLab (по решению владельца); ext/migration-kit — тоже (влита
-    в ext ещё 09.09); (б) стенд ext-sandbox: accept среза master канона
-    при случае (профиль стоит на eb2e940); (в) eco-techbook: дождаться
-    вливания MR 205 → master→ext/extension-points (конфликты развожу по
-    материализованным файлам, partial clone) → §3.1 переписать под Д-27
-    (слот части, `srs/shared/`, ссылка на блок схемы ID вместо
-    «подсервис в ID не кодируется») → MR ext→master → п.6/п.8 промпта,
-    track-*.md, clone-workspace.bat на master eco-techbook; (г) MR 198
+12. СДЕЛАНО: поле `repo` в services.json в master канона (19 сервисов);
+    в `cross-service-addressing.md` абзац «Подготовлено» → «Действует с
+    2026-09-29» (MR meta/addressing-repo-active влит 29.09; master канона
+    защищён — правки только через MR). Клон C:\doc-as-code\EAN\docs-o2new
+    (ветка meta/cross-service-links) больше не нужен.
+13. ПОСЛЕ ОДНОЙ ЛИНИИ (2026-09-29): (а) ЖДЁМ КОЛЛЕГУ (КК): перевести
+    клон канона на master (команды выданы) и прогнать новый
+    clone-workspace.bat (стандарты на master); после подтверждения —
+    удалить на GitLab и локально: канон `ext/extension-points`,
+    `ext/migration-kit`; eco-techbook `ext/extension-points` (локально в
+    клоне ещё analytics/chd-call-singular-dirs и
+    analytics/conventions-practice-sync — влиты, `branch -d`); (б)
+    СДЕЛАНО: accept стенда 552d2d4 = ccf6763; (в) СДЕЛАНО: eco-techbook на
+    master (2b5f54d), канон на стандарты master (ccf6763); (ж) замечание
+    Андрею Дмитричеву по формату `repo` (HEAD вместо master, без
+    `?ref_type=heads`) — при случае; (г) MR 198
     пересобрать поверх свежего master eco-techbook, сократить до фразы в
     §5.1.3; MR 104 перенести поверх master канона и править по сводной
     таблице review-consumers; (д) замечания команде docs-sign: колонка
@@ -287,7 +336,7 @@
   гид reference.md, промпты), `_meta/tools/step-protocol.md`
   (протокол, нормативный словарь), `_meta/templates/`, `_meta/skills/`,
   `_meta/services.json` (+ атрибут repo).
-- Analyzer: `app/data/Реестр решений по ядру скиллов.md` (Д-1…Д-27),
+- Analyzer: `app/data/Реестр решений по ядру скиллов.md` (Д-1…Д-28),
   `app/scripts/CI/{selfcheck,normalize_tables,link_debts,source_inventory}.py`
   + tests; `app/scripts/apply_history.py` (канон run-history бандла
   confluence-tree-exporter, сборка build_bundle.py); `app/data/Промпт генерации плана миграции сервиса к
@@ -310,7 +359,7 @@
 | Правила совместной работы агента | `WORKING_AGREEMENTS.md` (+ гейты в `CLAUDE.md`) | память working-agreements |
 | Межсервисная адресация и каталог сервисов | канон `_meta/migration/cross-service-addressing.md` | реестр Д-15/Д-18 (история), два исторических документа в app/data (указатель), конвенции §5.1 (нормы слоя, не модель) |
 | Адреса репозиториев GitLab (группы EAN/EAS) | prompt-plan пп.4–7 (клонирование) | гид «Обозначения путей», чекпоинт, memory |
-| Ветки клонов рабочего набора (канон master; стандарты ext/extension-points до вливания; эталон и контракты trunk) | prompt-plan п.4/п.6/п.8 + `clone-workspace.bat` (шапка, шаги, проверка веток) | track-manual п.2, track-coordinator п.3, таблица «Репозитории» этого файла, memory; при смене ветки eco-techbook обойти все |
+| Ветки клонов рабочего набора (канон и стандарты master; эталон и контракты trunk; сервис master) | prompt-plan п.4/п.6/п.8 + `clone-workspace.bat` (шапка, шаги, проверка веток) | track-manual п.2, track-coordinator п.3, таблица «Репозитории» этого файла, memory; при смене любой ветки обойти все |
 | Схема ID с частью сервиса (слот части, таблица кодов в README, `srs/shared/`) | eco-techbook conventions §3.1 (после MR ext→master) + реестр Д-27 | гид «Постоянные правила», шаблон status-model, сторож `check_id_slots` в selfcheck, чекпоинт п.15 |
 
 ## Незакрытые технические мелочи
