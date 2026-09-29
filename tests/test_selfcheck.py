@@ -1206,3 +1206,115 @@ def test_id_slots_violations_each_flagged(tmp_path):
     assert any("без слота" in ln for ln in lines)
     assert any("вне каталогов подсервисов" in ln for ln in lines)
     assert any("«multi-bank» не объявлен" in ln for ln in lines)
+
+
+# --- сторож каталога сервисов (2026-09-29) ---
+
+def _catalog(tmp_path, items) -> Path:
+    import json
+    cat = tmp_path / "services.json"
+    cat.write_text(json.dumps(items, ensure_ascii=False), encoding="utf-8")
+    return cat
+
+
+def _docs_with_service(tmp_path, code: str, n: int = 2) -> Path:
+    docs = tmp_path / "docs"; docs.mkdir(exist_ok=True)
+    for i in range(n):
+        (docs / f"fun-cl-0{i + 1}-x.md").write_text(
+            f"---\nid: FUN-CL-0{i + 1}\ntitle: 'x'\ntype: function\n"
+            f"service: {code}\n---\n\n# x\n", encoding="utf-8")
+    return docs
+
+
+def test_catalog_guard_silent_without_catalog(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards")
+    rep, ok = selfcheck.check_service_catalog(None, docs)
+    assert rep == [] and ok
+
+
+def test_catalog_guard_own_code_found_with_repo(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards")
+    cat = _catalog(tmp_path, [
+        {"code": "business-cards", "key": "CORP_CARDS", "name": "[КК]",
+         "is_platform": False,
+         "repo": "https://gitlab.gboteam.ru/EAS/src-business-cards/-/tree/HEAD/docs"},
+        {"code": "locks", "key": "LK", "name": "Блокировки", "is_platform": True,
+         "repo": "https://gitlab.gboteam.ru/EAS/src-locks"},
+    ])
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok and len(rep) == 1
+    assert rep[0].startswith("✓ каталог сервисов: код `business-cards` (2 файлов)")
+    assert "tree/HEAD/docs" in rep[0]
+
+
+def test_catalog_guard_duplicates_code_and_key(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards")
+    cat = _catalog(tmp_path, [
+        {"code": "business-cards", "key": "CORP_CARDS", "name": "[КК]"},
+        {"code": "EPR", "key": "EP", "name": "[ЕПР] Сервис распознавания", "is_platform": True},
+        {"code": "EPR", "key": "EP", "name": "АС ЕПР", "is_platform": False},
+    ])
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok
+    warns = [l for l in rep if l.startswith("⚠")]
+    assert len(warns) == 2
+    assert "код `EPR` у 2 записей" in warns[0] and "АС ЕПР" in warns[0]
+    assert "ключ `EP` у 2 записей" in warns[1]
+
+
+def test_catalog_guard_repo_formats(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards")
+    cat = _catalog(tmp_path, [
+        {"code": "business-cards", "key": "K1", "name": "n1",
+         "repo": "https://gitlab.gboteam.ru/EAS/src-business-cards/-/tree/HEAD/docs"},
+        {"code": "a", "key": "K2", "name": "n2",
+         "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/master/output/types_doc/docs?ref_type=heads"},
+        {"code": "b", "key": "K3", "name": "n3",
+         "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/master/output/okfs/docs"},
+        {"code": "c", "key": "K4", "name": "n4",
+         "repo": "https://gitlab.gboteam.ru/EAN/docs-o2new/-/blob/master/output/x/docs"},
+        {"code": "d", "key": "K5", "name": "n5",
+         "repo": "https://github.com/x/y"},
+        {"code": "e", "key": "K6", "name": "n6",
+         "repo": "https://gitlab.gboteam.ru/EAS/src-invite"},
+    ])
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok
+    warns = [l for l in rep if l.startswith("⚠")]
+    assert [w.split("`")[1] for w in warns] == ["a", "b", "c", "d"]
+    assert "?ref_type=heads" in warns[0] and "хвост запроса" in warns[0]
+    assert "имя ветки `master`" in warns[1]
+    assert "`/-/blob/`" in warns[2]
+    assert "не в GitLab контура" in warns[3]
+    # тест на НЕсрабатывание: e (корень репозитория) и business-cards (HEAD) — без ⚠
+    assert not any("`e`" in w or "`business-cards`" in w for w in warns)
+
+
+def test_catalog_guard_own_code_missing_is_warning_not_defect(tmp_path):
+    # референс-стенд КК: frontmatter `service: CC`, в каталоге `business-cards`
+    docs = _docs_with_service(tmp_path, "CC", n=3)
+    cat = _catalog(tmp_path, [{"code": "business-cards", "key": "CORP_CARDS", "name": "[КК]"}])
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok  # вердикт не трогает (решение о ✗ — после приведения frontmatter пилота)
+    assert len(rep) == 1 and rep[0].startswith("⚠ каталог сервисов: код `CC` из frontmatter 3 файлов не найден")
+
+
+def test_catalog_guard_broken_json(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards")
+    cat = tmp_path / "services.json"; cat.write_text("[{\"code\": ", encoding="utf-8")
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok and len(rep) == 1 and rep[0].startswith("⚠ каталог сервисов: services.json не читается")
+
+
+def test_catalog_guard_wired_into_run(tmp_path):
+    docs = _docs_with_service(tmp_path, "business-cards", n=1)
+    cat = _catalog(tmp_path, [
+        {"code": "business-cards", "key": "K", "name": "[КК]"},
+        {"code": "EPR", "key": "E1", "name": "a"}, {"code": "EPR", "key": "E2", "name": "b"},
+    ])
+    report, _ok = selfcheck.run(docs, None, catalog=cat)
+    assert any(l.startswith("⚠ каталог сервисов: код `EPR` у 2 записей") for l in report)
+    assert any(l.startswith("✓ каталог сервисов: код `business-cards`") for l in report)
+    # без каталога и вне канона (dev-копия) — ни строки
+    report2, _ = selfcheck.run(docs, None)
+    assert not any("каталог сервисов" in l for l in report2)

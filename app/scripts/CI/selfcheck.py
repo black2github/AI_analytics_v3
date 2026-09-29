@@ -117,7 +117,8 @@ def _run(files: List[Path], src: Optional[Path],
 
 
 def run(docs: Path, sources: Optional[Path],
-        strict: bool = False) -> Tuple[List[str], bool]:
+        strict: bool = False,
+        catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -449,6 +450,12 @@ def run(docs: Path, sources: Optional[Path],
         pd_rep, pd_ok = _safe(check_protocol_discipline, sources)
         all_ok = all_ok and pd_ok
         report.extend(pd_rep)
+    # сторож каталога сервисов (2026-09-29): ⚠-сигналы, вердикт не
+    # трогают; без каталога (dev-копия вне канона, без --catalog) молчит
+    cat_rep, _ = _safe(check_service_catalog,
+                       catalog if catalog is not None
+                       else canon_catalog_path(), docs)
+    report.extend(cat_rep)
     # детектор похожих точек применения групп (П-5e): i-сигналы,
     # вердикт не трогают — решение о консолидации только человеческое
     sg_rep, _ = _safe(lambda: (check_similar_group_points(docs), True))
@@ -838,6 +845,125 @@ def check_canon_cut(sources: Path,
     return [f"✗ срез канона: профиль требует {want}, фактический HEAD "
             f"канона {have} — обновите клон канона либо строку «срез "
             "канона» профиля (решение владельца)"], False
+
+
+# --- сторож каталога сервисов (2026-09-29) ---
+# Каталог `_meta/services.json` — единственный дом адресации чужих
+# сервисов (документ cross-service-addressing): по `code` ищут запись,
+# по `repo` строят абсолютные ссылки на чужие комплекты. За один день
+# 29.09 каталог правили три команды: поле repo в формате
+# `…/-/tree/master/…?ref_type=heads` вместо `/-/tree/HEAD/…`,
+# переименование кода (ломает `service:` во frontmatter комплекта и
+# чужие ссылки), давний дубль кода EPR у двух записей. Прибор каталог не
+# читал вовсе. Сторож: целостность каталога — ⚠-строки уровня отчёта
+# (вердикт команды не трогают: каталог чинит владелец канона, а не
+# команда, но сигнал виден в каждом отчёте); код документируемого
+# сервиса (`service:` во frontmatter) не найден в каталоге — тоже ⚠
+# (решение о переводе в ✗ — после приведения frontmatter пилота КК к
+# коду каталога). Без каталога (dev-копия selfcheck вне канона и без
+# --catalog) сторож молчит.
+
+_REPO_HOST = "https://gitlab.gboteam.ru/"
+_REPO_TREE_RE = re.compile(r"/-/(tree|blob|raw)/([^/?#]+)")
+
+
+def canon_catalog_path() -> Optional[Path]:
+    """`_meta/services.json` канона, из которого запущен selfcheck;
+    None — dev-копия вне канона."""
+    tool_dir = Path(__file__).resolve().parent
+    if tool_dir.name != "tools" or tool_dir.parent.name != "_meta":
+        return None
+    cat = tool_dir.parent / "services.json"
+    return cat if cat.is_file() else None
+
+
+def _repo_format_issue(url: str) -> Optional[str]:
+    """Отклонение адреса `repo` от правила адресации; None — норма."""
+    if not url.startswith(_REPO_HOST):
+        return f"адрес не в GitLab контура ({_REPO_HOST})"
+    if "?" in url or "#" in url:
+        return "хвост запроса/якоря (например `?ref_type=heads`) — " \
+               "адрес должен оканчиваться путём"
+    m = _REPO_TREE_RE.search(url)
+    if m and m.group(1) != "tree":
+        return f"сегмент `/-/{m.group(1)}/` — корень комплекта " \
+               "адресуется через `/-/tree/HEAD/<путь>`"
+    if m and m.group(2) != "HEAD":
+        return f"имя ветки `{m.group(2)}` в адресе — вместо него `HEAD`" \
+               " (адрес переживает переименование ветки)"
+    return None
+
+
+def _service_codes(docs: Path) -> Dict[str, int]:
+    """Коды `service:` из frontmatter карточек комплекта → число файлов."""
+    codes: Dict[str, int] = {}
+    for f in sorted(docs.rglob("*.md")):
+        fm = read_frontmatter(f) or {}
+        code = fm.get("service", "").strip().strip("'\"")
+        if code:
+            codes[code] = codes.get(code, 0) + 1
+    return codes
+
+
+def check_service_catalog(catalog: Optional[Path],
+                          docs: Path) -> Tuple[List[str], bool]:
+    """Целостность каталога сервисов и наличие в нём кода комплекта.
+    Все сигналы — ⚠ (вердикт не трогают); ok всегда True."""
+    if catalog is None:
+        return [], True
+    import json
+    try:
+        data = json.loads(catalog.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError) as e:
+        return [f"⚠ каталог сервисов: {catalog.name} не читается "
+                f"({e.__class__.__name__}: {e}) — адресация чужих "
+                "сервисов по каталогу невозможна"], True
+    items = data if isinstance(data, list) else data.get("services")
+    if not isinstance(items, list):
+        return [f"⚠ каталог сервисов: {catalog.name} — ожидался список "
+                "записей"], True
+    lines: List[str] = []
+    by_code: Dict[str, List[str]] = {}
+    by_key: Dict[str, List[str]] = {}
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        name = str(it.get("name", "")).strip() or "<без имени>"
+        code = str(it.get("code", "")).strip()
+        key = str(it.get("key", "")).strip()
+        if code:
+            by_code.setdefault(code, []).append(name)
+        if key:
+            by_key.setdefault(key, []).append(name)
+        repo = it.get("repo")
+        if isinstance(repo, str) and repo.strip():
+            issue = _repo_format_issue(repo.strip())
+            if issue:
+                lines.append(f"⚠ каталог сервисов: repo у `{code or name}` — "
+                             f"{issue}: {repo.strip()}")
+    for code, names in sorted(by_code.items()):
+        if len(names) > 1:
+            lines.append(f"⚠ каталог сервисов: код `{code}` у {len(names)} "
+                         f"записей ({'; '.join(names)}) — по коду нельзя "
+                         "однозначно найти сервис")
+    for key, names in sorted(by_key.items()):
+        if len(names) > 1:
+            lines.append(f"⚠ каталог сервисов: ключ `{key}` у {len(names)} "
+                         f"записей ({'; '.join(names)})")
+    for code, n in sorted(_service_codes(docs).items()):
+        if code in by_code:
+            entry = next((it for it in items if isinstance(it, dict)
+                          and str(it.get("code", "")).strip() == code), {})
+            repo = str(entry.get("repo", "")).strip()
+            lines.append(f"✓ каталог сервисов: код `{code}` ({n} файлов) — "
+                         f"запись найдена" + (f", repo {repo}" if repo
+                                              else ", поле repo не заполнено"))
+        else:
+            lines.append(f"⚠ каталог сервисов: код `{code}` из frontmatter "
+                         f"{n} файлов не найден в каталоге — по коду ищут "
+                         "запись сервиса при адресации; привести `service:` "
+                         "к коду каталога или завести запись")
+    return lines, True
 
 
 # --- сторожа протокольной дисциплины (П-5c, 2026-08-28) ---
@@ -1352,13 +1478,18 @@ def main() -> int:
                     help="полный профиль (держатели канона): маркеры "
                          "сокращения — брак; без флага — командный "
                          "профиль, маркеры — предупреждение (Р-8)")
+    ap.add_argument("--catalog", type=Path, default=None,
+                    help="каталог сервисов services.json для сторожа "
+                         "каталога; по умолчанию — _meta/services.json "
+                         "канона, из которого запущен selfcheck")
     ap.add_argument("--journal", type=Path, default=None,
                     help="дописать строку «таймстемп | ИТОГО…» в файл "
                          "журнала (хронометраж этапов дозахода: время "
                          "штампует прибор, не исполнитель — у LLM нет "
                          "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
-    report, ok = run(args.docs, args.sources, strict=args.strict)
+    report, ok = run(args.docs, args.sources, strict=args.strict,
+                     catalog=args.catalog)
     if args.journal is not None and args.sources is not None:
         jwarn = check_journal_name(args.journal, args.sources)
         if jwarn:
