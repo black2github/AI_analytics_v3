@@ -69,6 +69,7 @@ BUNDLE_FILES: Tuple[str, ...] = (
     "app/scripts/CI/critic_manual.md",
     "app/scripts/__init__.py",
     "app/scripts/apply_history.py",
+    "app/scripts/audit_page_flags.py",
     "app/scripts/dump_confluence_page.py",
     "app/scripts/migrate_colors.py",
     "app/scripts/migrate_confluence_page.py",
