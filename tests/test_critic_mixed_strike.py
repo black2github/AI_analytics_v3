@@ -12,6 +12,14 @@
 # Стало: частично зачёркнутый цветной элемент режется на чередование
 # {--…--}/{++…++} одной задачи; ячейка с таким содержимым не считается удалением
 # строки целиком, а размечается inline.
+#
+# Три пути разметки экстрактора — любая правка поведения маркеров проверяется на
+# каждом (урок 1.9.2 → 1.9.3: HTML-острова были пропущены):
+#   1. проза и простые таблицы — текстовые маркеры {++…++}/{--…--} (_process_element);
+#   2. строка таблицы целиком — столбец status «±ID» / <tr class="critic-row-*">
+#      (_cell_uniform_critic, _row_uniform_critic);
+#   3. HTML-острова (вложенные таблицы) — <span class="critic-ins|critic-del">
+#      (_process_nested_table_cell_content).
 
 from app.content_extractor import create_critic_extractor
 from app.scripts.CI.critic import process_text_until_stable
