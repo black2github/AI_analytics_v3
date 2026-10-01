@@ -30,7 +30,7 @@ def _apply(md):
 
 
 def _reject_all(md):
-    return process_text_until_stable(md, "reject-all", None)[0]
+    return process_text_until_stable(md, "reject", None)[0]
 
 
 class TestInline:
@@ -100,3 +100,46 @@ class TestTableCell:
                 '</tr></tbody></table>')
         md = _critic(html)
         assert f"| Удаляемая | -{TASK} |" in md      # удаление строки через столбец status
+
+
+class TestHtmlIsland:
+    """Третий путь разметки — HTML-нотация внутри сырых HTML-ячеек (ТЗ п. 4.7,
+    вложенная таблица): <span class="critic-ins|critic-del">. Та же ошибка
+    и то же лекарство (2026-10-01)."""
+
+    @staticmethod
+    def _island(cell_html):
+        inner = f"<table><tbody><tr><td>{cell_html}</td></tr></tbody></table>"
+        return f"<table><tbody><tr><td>внешняя</td><td>{inner}</td></tr></tbody></table>"
+
+    def test_mixed_strike_alternates_del_and_ins_spans(self):
+        md = _critic(self._island(f'В пол<span style="color: {RED};"><s>е</s>ях</span> тело.'))
+        assert (f'В пол<span class="critic-del" data-task="{TASK}">е</span>'
+                f'<span class="critic-ins" data-task="{TASK}">ях</span> тело.') in md
+        assert "В полях тело." in _apply(md)
+        assert "В поле тело." in _reject_all(md)
+
+    def test_plain_then_struck_in_island(self):
+        md = _critic(self._island(
+            f'"<span style="color: {RED};">Тело запроса JSON <s>Тело JSON</s></span>" тело.'))
+        assert '"Тело запроса JSON " тело.' in _apply(md)
+        assert '"Тело JSON" тело.' in _reject_all(md)
+        assert "critic-del" not in _apply(md) and "critic-ins" not in _reject_all(md)
+
+    def test_fully_struck_in_island_is_single_del(self):
+        # НЕсрабатывание: целиком зачёркнутый фрагмент — один critic-del
+        md = _critic(self._island(f'Текст <span style="color: {RED};"><s>старое</s></span> конец.'))
+        assert md.count("critic-del") == 1 and "critic-ins" not in md
+        assert "Текст  конец." in _apply(md) and "старое" in _reject_all(md)
+
+    def test_unstruck_in_island_is_single_ins(self):
+        md = _critic(self._island(f'Текст <span style="color: {RED};">новое</span> конец.'))
+        assert md.count("critic-ins") == 1 and "critic-del" not in md
+
+    def test_nested_mixed_child_in_island(self):
+        md = _critic(self._island(
+            f'А <span style="color: {RED};">x <em>y <s>z</s> w</em> v</span> Б.'))
+        a, r = _apply(md), _reject_all(md)
+        assert "z" not in a and "z" in r
+        for ch in "xywv":
+            assert ch in a and ch not in r
