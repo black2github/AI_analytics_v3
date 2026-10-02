@@ -4358,3 +4358,30 @@ class TestBs4Dependency:
         import app.scripts.CI.normalize_tables as m
         importlib.reload(m)
         assert hasattr(m, "BeautifulSoup")
+
+
+class TestConsumerPlaceholderPageId:
+    """Заготовка регистрации потребителя `page_id:<ID>` в таблице
+    «Потребители» (решение владельца 2026-10-03) — не отсылка к источнику."""
+
+    def _card(self, tmp_path, body):
+        p = tmp_path / "libc-001-x.md"
+        p.write_text("---\nid: LIBC-001\ntitle: 'x'\ntype: lib-contract\n"
+                     "service: signature\n---\n\n# LIBC-001. x\n\n" + body,
+                     encoding="utf-8")
+        return p
+
+    def test_placeholder_token_not_flagged(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(tmp_path, "## 7. Потребители\n\n| Сервис | Локальный ID | Карточка вызова |\n|---|---|---|\n"
+                       "| business-cards | page_id:2184429392 | Клиент: Функция подписи — до регистрации |\n")
+        rep, _ = check_file(p)
+        assert not any("отсылки к страницам источника" in r for r in rep), rep
+
+    def test_other_page_references_still_flagged(self, tmp_path):
+        # тест на НЕсрабатывание исключения: обычная отсылка «page 2169849859»
+        # и слово page_id без ключа-двоеточия по-прежнему брак
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(tmp_path, "## 1. Описание\n\nСтатика — по таблице источника page 2169849859 (см. page_id во frontmatter).\n")
+        rep, _ = check_file(p)
+        assert any("отсылки к страницам источника в теле карточки ×2" in r for r in rep), rep

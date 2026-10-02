@@ -509,7 +509,7 @@ def run(docs: Path, sources: Optional[Path],
 
 _KNOWN_TYPES = {
     "function", "screen-form", "control", "process", "data-model",
-    "contract-call", "internal-contract", "print-form", "notification",
+    "contract-call", "internal-contract", "lib-contract", "print-form", "notification",
     "agent", "brd",
 }
 _ZONE_RE = re.compile(
@@ -673,7 +673,7 @@ _PART_CODE_RE = re.compile(r"^[A-Z]{2,4}$")
 _NOT_SLOT = {"CL", "BNK", "SYS", "GRP", "EXT", "INT"}
 # каталоги типов в старой (множественной) раскладке — не подсервисы
 _LEGACY_TYPE_DIRS = {"functions", "screen-forms", "controls", "print-forms",
-                     "contract-calls", "internal-contracts",
+                     "contract-calls", "internal-contracts", "lib-contracts",
                      "external-integrations", "processes"}
 
 

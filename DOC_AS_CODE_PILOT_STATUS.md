@@ -395,7 +395,7 @@
   гид reference.md, промпты), `_meta/tools/step-protocol.md`
   (протокол, нормативный словарь), `_meta/templates/`, `_meta/skills/`,
   `_meta/services.json` (+ атрибут repo).
-- Analyzer: `app/data/Реестр решений по ядру скиллов.md` (Д-1…Д-28),
+- Analyzer: `app/data/Реестр решений по ядру скиллов.md` (Д-1…Д-29),
   `app/scripts/CI/{selfcheck,normalize_tables,link_debts,source_inventory}.py`
   + tests; `app/scripts/apply_history.py` (канон run-history бандла
   confluence-tree-exporter, сборка build_bundle.py); `app/data/Промпт генерации плана миграции сервиса к
