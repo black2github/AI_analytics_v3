@@ -74,6 +74,7 @@ BUNDLE_FILES: Tuple[str, ...] = (
     "app/scripts/migrate_colors.py",
     "app/scripts/migrate_confluence_page.py",
     "app/scripts/migrate_confluence_tree.py",
+    "app/scripts/pick_pages.py",
     "app/scripts/repair_export.py",
     "app/service_registry.py",
     "app/services/__init__.py",
