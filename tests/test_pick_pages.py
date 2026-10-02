@@ -236,3 +236,63 @@ class TestLinkCheck:
             _page(root, "Сервис/А.md", "2", tag + " А, см. [ЕСК](../../esk/ЕСК.md)" + chr(10))
         plan = build_plan(new, arc, ["2"])
         assert plan["pages"][0]["status"] == REPLACED and plan["warnings"] == []
+
+
+class TestExtract:
+    """Извлечение: каталога назначения нет или он пуст — страницы из списка
+    складываются туда в той же структуре (2026-10-02, исходная задача владельца:
+    «забрать файлы с указанными идентификаторами в отдельный каталог»)."""
+
+    def test_extract_into_missing_directory(self, tmp_path, capsys):
+        _arc, new = _stand(tmp_path)
+        out = tmp_path / "выборка" / "вложенный"
+        assert main([str(new), str(out), "--pages", str(_ids(tmp_path, "2 4"))]) == 0
+        got = _snapshot(out)
+        assert sorted(got) == ["Сервис/А.md", "Сервис/Раздел/img/pic.png",
+                               "Сервис/Раздел/В.md"]
+        assert got["Сервис/Раздел/В.md"] == (new / "Сервис/Раздел/В.md").read_bytes()
+        text = capsys.readouterr().out
+        assert "извлечение" in text and "добавлена: 2" in text
+        assert "⚠" not in text                    # ссылки на соседей — не шум
+
+    def test_extract_into_empty_directory(self, tmp_path):
+        _arc, new = _stand(tmp_path)
+        out = tmp_path / "пусто"
+        out.mkdir()
+        assert main([str(new), str(out), "--pages", str(_ids(tmp_path, "3"))]) == 0
+        assert sorted(_snapshot(out)) == ["Сервис/Б-(v2).md"]
+
+    def test_extract_dry_run_creates_nothing(self, tmp_path):
+        _arc, new = _stand(tmp_path)
+        out = tmp_path / "выборка"
+        assert main([str(new), str(out), "--pages", str(_ids(tmp_path, "2")),
+                     "--dry-run"]) == 0
+        assert not out.exists()
+
+    def test_extract_with_missing_id_creates_nothing(self, tmp_path):
+        _arc, new = _stand(tmp_path)
+        out = tmp_path / "выборка"
+        assert main([str(new), str(out), "--pages", str(_ids(tmp_path, "2 999"))]) == 1
+        assert not out.exists()
+
+    def test_source_is_not_modified(self, tmp_path):
+        _arc, new = _stand(tmp_path)
+        before = _snapshot(new)
+        assert main([str(new), str(tmp_path / "выборка"), "--pages",
+                     str(_ids(tmp_path, "2 3 4"))]) == 0
+        assert _snapshot(new) == before
+
+    def test_extracted_set_then_replaces_pages_in_archive(self, tmp_path):
+        # два шага: извлечь набор, затем этим набором заменить страницы архива
+        arc, new = _stand(tmp_path)
+        out = tmp_path / "выборка"
+        assert main([str(new), str(out), "--pages", str(_ids(tmp_path, "2 4"))]) == 0
+        assert main([str(out), str(arc), "--pages", str(_ids(tmp_path, "2 4"))]) == 0
+        assert (arc / "Сервис/А.md").read_bytes() == (new / "Сервис/А.md").read_bytes()
+        assert (arc / "Сервис/Раздел/img/pic.png").read_bytes() == "новый".encode("utf-8")
+
+    def test_destination_that_is_a_file_is_usage_error(self, tmp_path):
+        _arc, new = _stand(tmp_path)
+        f = tmp_path / "файл.txt"
+        f.write_text("x", encoding="utf-8")
+        assert main([str(new), str(f), "--pages", str(_ids(tmp_path, "2"))]) == 2
