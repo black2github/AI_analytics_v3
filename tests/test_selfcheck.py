@@ -1318,3 +1318,98 @@ def test_catalog_guard_wired_into_run(tmp_path):
     # без каталога и вне канона (dev-копия) — ни строки
     report2, _ = selfcheck.run(docs, None)
     assert not any("каталог сервисов" in l for l in report2)
+
+
+# --- сторож ссылок-названий на сущности (2026-10-02) ---
+
+_ENT16 = "../data-model/ent-016-card-issue-request.md"
+
+
+def _card_with_body(tmp_path, body: str, name: str = "fun-cl-01-x.md") -> Path:
+    docs = tmp_path / "docs"; (docs / "function").mkdir(parents=True, exist_ok=True)
+    (docs / "function" / name).write_text(
+        "---\nid: FUN-CL-01\ntitle: 'x'\ntype: function\nservice: business-cards\n---\n\n"
+        "# FUN-CL-01. x\n\n" + body + "\n", encoding="utf-8")
+    return docs
+
+
+def test_named_link_after_full_link_is_ok(tmp_path):
+    docs = _card_with_body(tmp_path,
+        f"Создаётся [ENT-016 Заявка на выпуск карты]({_ENT16}). В [Заявке на выпуск карты]({_ENT16}) "
+        f"заполняется [ENT-016]({_ENT16}).«ИНН клиента».")
+    assert selfcheck.check_named_entity_links(docs) == []
+
+
+def test_named_link_without_full_link_flagged(tmp_path):
+    docs = _card_with_body(tmp_path,
+        f"В [Заявке на выпуск карты]({_ENT16}) заполняется ИНН. [Заявка]({_ENT16}) сохраняется.")
+    rep = selfcheck.check_named_entity_links(docs)
+    assert len(rep) == 1 and "ENT-016 названием без ID ×2" in rep[0]
+    assert "полной ссылки `[ENT-016 <название>]`" in rep[0] and "документе нет" in rep[0]
+
+
+def test_named_link_before_full_link_flagged(tmp_path):
+    docs = _card_with_body(tmp_path,
+        f"В [Заявке на выпуск карты]({_ENT16}) заполняется ИНН. "
+        f"Затем [ENT-016 Заявка на выпуск карты]({_ENT16}) сохраняется.")
+    rep = selfcheck.check_named_entity_links(docs)
+    assert len(rep) == 1 and "стоит раньше полной ссылки" in rep[0]
+
+
+def test_named_links_guard_silent_on_old_form(tmp_path):
+    # тест на НЕсрабатывание: старая форма (одни короткие ссылки, даже без
+    # полной) сторожем не затрагивается — остаётся допустимой
+    docs = _card_with_body(tmp_path,
+        f"Значение = [ENT-016]({_ENT16}).«Фамилия» + [ENT-016]({_ENT16}).«Имя».")
+    assert selfcheck.check_named_entity_links(docs) == []
+
+
+def test_named_links_guard_nested_brackets_tag_and_part_slot(tmp_path):
+    ent20 = "../data-model/ent-020-card-status-change-request.md"
+    shr = "../../shared/data-model/ent-shr-012-signature-profile.md"
+    docs = _card_with_body(tmp_path,
+        f"Создаётся [ENT-020 [КК_БК] Заявка на изменение статуса карты]({ent20}); в [заявке]({ent20}) "
+        f"указывается [профиль подписи]({shr}).")
+    rep = selfcheck.check_named_entity_links(docs)
+    # полная ссылка с тегом в квадратных скобках распознана — по ENT-020 тихо;
+    # слот части в имени файла даёт ID ENT-SHR-012, полной ссылки на него нет
+    assert len(rep) == 1 and "ENT-SHR-012 названием без ID ×1" in rep[0]
+
+
+def test_named_links_guard_skips_filenames_code_and_registries(tmp_path):
+    docs = _card_with_body(tmp_path,
+        f"Файл: [ent-016-card-issue-request.md]({_ENT16}).\n\n```markdown\n[Заявка]({_ENT16})\n```\n")
+    (docs / "function" / "README.md").write_text(
+        f"| ID | Файл |\n|---|---|\n| ENT-016 | [Заявка]({_ENT16}) |\n", encoding="utf-8")
+    assert selfcheck.check_named_entity_links(docs) == []
+
+
+def test_named_links_guard_title_hint_does_not_replace_full_link(tmp_path):
+    # ID в подсказке ссылки — не видимый текст: полная ссылка всё равно нужна
+    docs = _card_with_body(tmp_path, f'В [Заявке на выпуск карты]({_ENT16} "ENT-016") заполняется ИНН.')
+    rep = selfcheck.check_named_entity_links(docs)
+    assert len(rep) == 1 and "ENT-016 названием без ID ×1" in rep[0]
+
+
+def test_named_links_guard_wired_into_run_as_warning(tmp_path):
+    docs = _card_with_body(tmp_path, f"В [Заявке на выпуск карты]({_ENT16}) заполняется ИНН.")
+    report, _ok = selfcheck.run(docs, None)
+    lines = [l for l in report if "названием без ID" in l]
+    assert len(lines) == 1 and lines[0].startswith("⚠ ")
+
+
+def test_named_links_guard_tagged_source_name_counts_as_full(tmp_path):
+    # тест на НЕсрабатывание: дословное имя источника с тегом сервиса —
+    # полноценное упоминание (практика reverse-переноса, стенд КК);
+    # экранированная и неэкранированная запись тега
+    esc = "[\\[КК_ВК\\] Заявка на выпуск карты](" + _ENT16 + ")"
+    raw = "[[КК_ВК] Заявка на выпуск карты](" + _ENT16 + ")"
+    free = "[заявке](" + _ENT16 + ")"
+    docs = _card_with_body(tmp_path, f"Создаётся запись {esc}; далее в {free} заполняется ИНН.")
+    assert selfcheck.check_named_entity_links(docs) == []
+    docs2 = _card_with_body(tmp_path / "b", f"Создаётся запись {raw}; далее в {free} ИНН.")
+    assert selfcheck.check_named_entity_links(docs2) == []
+    # свободное название раньше дословного с тегом — сигнал порядка
+    docs3 = _card_with_body(tmp_path / "c", f"В {free} ИНН. Затем {esc}.")
+    rep = selfcheck.check_named_entity_links(docs3)
+    assert len(rep) == 1 and "стоит раньше полной ссылки" in rep[0]

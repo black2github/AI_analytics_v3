@@ -464,6 +464,10 @@ def run(docs: Path, sources: Optional[Path],
     # ⚠-сигналы, вердикт не трогают
     bm_rep, _ = _safe(lambda: (check_bare_entity_mentions(docs), True))
     report.extend(bm_rep)
+    # ссылки-названия на сущности без более ранней полной ссылки с ID
+    # (2026-10-02): ⚠-сигналы, вердикт не трогают
+    ne_rep, _ = _safe(lambda: (check_named_entity_links(docs), True))
+    report.extend(ne_rep)
     # согласованность контура групп контролей (полигон 2026-08-29):
     # ⚠-сигналы, вердикт не трогают — решения о контуре человеческие
     gc_rep, _ = _safe(lambda: (check_group_contours(docs), True))
@@ -1350,6 +1354,88 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
                 f"⚠ {p.relative_to(docs)}: голое обращение "
                 f"«{name}.<…>» ×{cnt} — карточка {names[name]} есть в "
                 "реестре, обращение к атрибуту оформляется ссылкой")
+    return report
+
+
+# --- сторож ссылок-названий на сущности (решение владельца 2026-10-02) ---
+# Конвенции §5: первое упоминание сущности в документе — полная ссылка
+# `[ENT-NNN <название>](…)`; повторное в прозе — короткой ссылкой
+# `[ENT-NNN](…)` ЛИБО ссылкой с названием без ID
+# `[Заявке на выпуск карты](…/ent-016-….md)` (читаемость прозы; текст
+# ссылки свободный — слова в падеже предложения, совпадение с названием
+# не требуется и не проверяется: морфологии в приборе нет). Обращения к
+# атрибутам, формулы и таблицы связей — по-прежнему короткой ссылкой.
+# Инвариант, который держит сторож: у ссылки-названия в ТОМ ЖЕ документе
+# есть полная ссылка с ID на ту же цель, и она стоит раньше — иначе
+# идентификатор сущности в видимом тексте документа не встречается ни
+# разу. ID сущности берётся из имени файла цели (`ent-016-…`,
+# `ent-shr-012-…`), поэтому правило действует только для ENT: у EXT цель
+# общая (`dictionaries.md`), ID в адресе нет — там повторное упоминание
+# только с ID. Документ со старой формой (одни короткие ссылки) сторож
+# не трогает. Дословное наименование источника С ТЕГОМ сервиса
+# (`[[КК_ВК] Заявка на выпуск карты](…)`) считается полноценным
+# упоминанием наравне с полной ссылкой: тег с названием однозначно
+# определяет сущность, а дословность reverse-переноса запрещает
+# вставлять в текст источника ID (живой прогон 2026-10-02: на стенде
+# КК ~540 таких ссылок в 65 принятых документах — первая редакция
+# сторожа флаговала их все). ⚠-сигнал, вердикт не меняет —
+# оформление ссылок, как у сторожа голых обращений.
+
+_MD_LINK_RE = re.compile(
+    r"\[((?:[^\[\]\n]|\[[^\[\]\n]*\])+)\]"       # текст, один уровень [..]
+    r"\(\s*([^)\s]+)(?:\s+\"[^\"\n]*\")?\s*\)")       # адрес и подсказка
+_ENT_FILE_RE = re.compile(r"^(ent(?:-[a-z]{1,4})?-\d+(?:\.\d+)?)[-.]", re.I)
+_NAMED_LINK_SKIP = {"readme.md", "dictionaries.md"} | _SERVICE_FILES
+# тег сервиса в начале текста ссылки, экранированный или нет:
+# `\[КК_ВК\] Название` / `[КК_ВК] Название`
+_TAGGED_NAME_RE = re.compile(r"^\\?\[[^\[\]\\\n]{2,14}\\?\]\s*\S")
+
+
+def check_named_entity_links(docs: Path) -> List[str]:
+    """Ссылки на сущности ENT названием без ID: в документе должна быть
+    более ранняя полная ссылка `[ENT-NNN <название>]` на ту же цель либо
+    ссылка с дословным наименованием источника с тегом сервиса."""
+    report: List[str] = []
+    for p in sorted(docs.rglob("*.md")):
+        if p.name.lower() in _NAMED_LINK_SKIP:
+            continue
+        body = p.read_text(encoding="utf-8", errors="replace")
+        body = re.sub(r"```.*?```", " ", body, flags=re.S)   # примеры кода
+        first_full: Dict[str, int] = {}
+        named: Dict[str, List[int]] = {}
+        for m in _MD_LINK_RE.finditer(body):
+            text, target = m.group(1).strip(), m.group(2)
+            fname = unquote(target.split("#", 1)[0]).replace("\\", "/")
+            fname = fname.rsplit("/", 1)[-1]
+            fm = _ENT_FILE_RE.match(fname)
+            if not fm or fname.lower() == p.name.lower():
+                continue
+            ent_id = fm.group(1).upper()
+            if text.lower().endswith(".md"):       # ссылка именем файла
+                continue
+            if re.search(rf"(?<![\w-]){re.escape(ent_id)}(?![\w-])", text):
+                rest = re.sub(re.escape(ent_id), "", text)
+                if len(re.sub(r"[\W_]+", "", rest)) >= 3:
+                    first_full.setdefault(ent_id, m.start())
+            elif _TAGGED_NAME_RE.match(text):
+                # дословное имя источника с тегом — полноценное упоминание
+                first_full.setdefault(ent_id, m.start())
+            else:
+                named.setdefault(ent_id, []).append(m.start())
+        rel = p.relative_to(docs)
+        for ent_id, poss in sorted(named.items()):
+            if ent_id not in first_full:
+                report.append(
+                    f"⚠ {rel}: ссылка на {ent_id} названием без ID "
+                    f"×{len(poss)}, а полной ссылки `[{ent_id} <название>]` "
+                    "(или дословного наименования источника с тегом) в "
+                    "документе нет — первое упоминание сущности "
+                    "оформляется полной ссылкой с ID")
+            elif poss[0] < first_full[ent_id]:
+                report.append(
+                    f"⚠ {rel}: ссылка на {ent_id} названием без ID стоит "
+                    f"раньше полной ссылки `[{ent_id} <название>]` — "
+                    "полная ссылка с ID ставится при первом упоминании")
     return report
 
 
