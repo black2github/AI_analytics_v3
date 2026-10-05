@@ -1422,20 +1422,38 @@ def _frozen_source(title: str, pid: str) -> str:
             f"unapproved_jira: GBO-143661\n---\n")
 
 
-def test_empty_frozen_source_gives_warning_not_ok(tmp_path):
+def test_empty_frozen_source_is_defect(tmp_path):
     # страница заморожена: после reject-all от неё один frontmatter —
-    # карточка раньше получала ✓ без сверки
+    # карточка раньше получала ✓ без сверки; с 2026-10-05 это ✗
+    # (решение владельца по FB-08: предупреждение не остановило бы сборку
+    # карточек из архива raw)
     docs, srcs = tmp_path / "docs", tmp_path / "conf"
     make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
     make_matrix(docs)
     make(srcs / "стр1.md", _frozen_source("[X] Ф1", "111222"))
     report, ok = selfcheck.run(docs, srcs)
-    assert ok, report  # вердикт не меняется
-    assert any(ln.startswith("⚠") and "стр1.md" in ln for ln in report)
+    assert not ok
+    assert any(ln.startswith("✗") and "стр1.md" in ln for ln in report)
     assert any("источник пуст: страница заморожена флагом unapproved_jira "
                "(GBO-143661)" in ln for ln in report)
-    assert not any(ln.startswith("✓") and "стр1.md" in ln for ln in report)
-    assert any("ИТОГО: файлов 2 — ✓ 0, ✗ 0, ⚠ 2" in ln for ln in report)
+    assert not any(ln.startswith(("✓", "⚠")) and "стр1.md" in ln
+                   for ln in report)
+    assert any("ИТОГО: файлов 2 — ✓ 0, ✗ 1, ⚠ 1" in ln and "БРАК" in ln
+               for ln in report)
+
+
+def test_frozen_flag_with_text_is_not_empty_source(tmp_path):
+    # тест на НЕсрабатывание: флаг заморозки есть, но тело страницы не
+    # пусто (страница разморожена частично либо флаг снят не до конца) —
+    # сторож пустого источника молчит, идёт обычная сверка
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md",
+         _frozen_source("[X] Ф1", "111222") + "\nтекст\n")
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert not any("источник пуст" in ln for ln in report)
 
 
 def test_empty_source_without_flag_gives_warning(tmp_path):

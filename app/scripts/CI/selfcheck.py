@@ -98,8 +98,9 @@ def index_sources(root: Path):
     return idx, dups
 
 
-def _empty_source_note(src: Path) -> Optional[str]:
-    """Пояснение, если тело страницы-источника пусто; иначе None.
+def _empty_source_note(src: Path) -> Tuple[Optional[str], bool]:
+    """(пояснение, заморожена) — если тело страницы-источника пусто;
+    иначе (None, False).
 
     Пустой источник (2026-10-05, миграция «Корпоративных карт»): страница
     с флагом заморозки `unapproved_jira` после reject-all несёт один
@@ -108,11 +109,19 @@ def _empty_source_note(src: Path) -> Optional[str]:
     так прошли гейт, а после перевыгрузки страниц в них не хватило 23
     значений таблицы и 6 фрагментов. Пустота определяется строго — в
     теле нет ни одного непробельного символа; страница с заголовком или
-    одной строкой пустой не считается."""
+    одной строкой пустой не считается.
+
+    Ужесточение (решение владельца 2026-10-05, FB-08 «Корпоративных
+    карт»): страница с флагом заморозки — ✗, а не ⚠. Разбор показал, что
+    карточки по замороженным страницам были собраны из архива raw по
+    записанному в промпте решению акцептующего, и предупреждение их не
+    остановило бы. Теперь принять архив источником можно только осознанно
+    приняв БРАК. Пустая страница БЕЗ флага остаётся ⚠: причина
+    неизвестна, решение человеческое."""
     try:
         text = src.read_text(encoding="utf-8", errors="replace")
     except OSError:
-        return None
+        return None, False
     body = text.lstrip("\ufeff")
     fm_text = ""
     if body.startswith("---"):
@@ -120,17 +129,18 @@ def _empty_source_note(src: Path) -> Optional[str]:
         if len(parts) == 3:
             fm_text, body = parts[1], parts[2]
     if body.strip():
-        return None
+        return None, False
     m = re.search(r"^unapproved_jira:\s*(.+)$", fm_text, re.M)
     if m:
         task = m.group(1).strip().strip("'\"[]")
         return ("источник пуст: страница заморожена флагом unapproved_jira "
                 f"({task}) — сверка с источником не выполнялась, перенос "
                 "не подтверждён; по замороженной странице карточка не "
-                "создаётся, содержимое из архива raw основанием не служит")
+                "создаётся, содержимое из архива raw основанием не служит "
+                "✗"), True
     return ("источник пуст: в теле страницы-источника нет текста — сверка "
             "с источником не выполнялась, перенос не подтверждён; "
-            "открытый вопрос акцептующему")
+            "открытый вопрос акцептующему"), False
 
 
 def _safe(fn, *args) -> Tuple[List[str], bool]:
@@ -345,13 +355,18 @@ def run(docs: Path, sources: Optional[Path],
             ok = ok and ok2
         mark = "✓" if ok else "✗"
         # пустой источник (2026-10-05): ✓ без сверки — фиктивная зелень.
-        # Карточка получает ⚠ (вердикт не меняется: решение о судьбе
-        # карточки человеческое). README-оглавление на странице-контейнере
-        # без собственного текста — норма, не трогается.
-        empty_note = _empty_source_note(src)
+        # Замороженная страница (флаг unapproved_jira) — ✗: карточка по
+        # ней не создаётся. Пустая без флага — ⚠ (вердикт не меняется:
+        # причина неизвестна, решение человеческое). README-оглавление
+        # на странице-контейнере без собственного текста — норма, не
+        # трогается.
+        empty_note, frozen = _empty_source_note(src)
         if empty_note and all(f.name.lower() == "readme.md" for f in files):
-            empty_note = None
-        if ok and empty_note:
+            empty_note, frozen = None, False
+        if empty_note and frozen:
+            ok = False
+            mark = "✗"
+        elif ok and empty_note:
             mark = "⚠"
         for f in files:
             counts[mark] += 1
