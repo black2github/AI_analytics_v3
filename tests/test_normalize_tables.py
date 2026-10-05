@@ -4385,3 +4385,33 @@ class TestConsumerPlaceholderPageId:
         p = self._card(tmp_path, "## 1. Описание\n\nСтатика — по таблице источника page 2169849859 (см. page_id во frontmatter).\n")
         rep, _ = check_file(p)
         assert any("отсылки к страницам источника в теле карточки ×2" in r for r in rep), rep
+
+
+class TestVisibleLengthWording:
+    """Замечания о длине называют, что именно считается (2026-10-05:
+    координатор дважды счёл причиной длинные адреса ссылок)."""
+
+    def _card(self, tmp_path, body):
+        p = tmp_path / "scr-cl-01-x.md"
+        p.write_text("---\nid: SCR-CL-01\ntitle: 'x'\ntype: screen-form\n"
+                     "service: s\n---\n\n# SCR-CL-01. x\n\n" + body,
+                     encoding="utf-8")
+        return p
+
+    def test_attribute_message_names_visible_length(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(tmp_path, "### B-1. Кнопка\n\n- **При нажатии:** "
+                       + "слово " * 60 + "\n")
+        rep, _ = check_file(p)
+        ln = next(r for r in rep if "сплющенный атрибут" in r)
+        assert "длина видимая — без адресов ссылок; порог 300" in ln
+
+    def test_long_link_urls_do_not_trigger(self, tmp_path):
+        # тест на НЕсрабатывание: три ссылки с длинными адресами, видимого
+        # текста мало — замечаний о длине нет
+        from app.scripts.CI.normalize_tables import check_file
+        url = "../../../data-model/ent-019-limit-management-request-with-very-long-name.md"
+        p = self._card(tmp_path, "### FLD-1. Поле\n\n- **Логика установки значения:** = "
+                       + " + ".join(f"[ENT-019]({url}).«Атрибут {i}»" for i in range(3)) + "\n")
+        rep, _ = check_file(p)
+        assert not any("видимой длиной" in r for r in rep), rep

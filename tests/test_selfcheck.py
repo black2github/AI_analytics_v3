@@ -1494,3 +1494,15 @@ def test_empty_source_keeps_defect_and_adds_note(tmp_path):
     assert not ok
     assert any(ln.startswith("✗") and "стр1.md" in ln for ln in report)
     assert any("источник пуст" in ln for ln in report)
+
+
+def test_delta_report_explains_counting(tmp_path):
+    # в дельту входят файлы (каждый файл группы отдельно) и ✗ сторожей
+    # уровня комплекта: два файла + «срез канона» = 3, тогда как ИТОГО
+    # по тем же строкам насчитал бы 2 файла
+    base = tmp_path / "base.txt"
+    base.write_text("# ✓ a.md ← s.md\n# ИТОГО: файлов 1 — ✓ 1, ✗ 0, ⚠ 0\n", encoding="utf-8")
+    out = selfcheck.delta_report(base, ["✗ a.md, b.md ← s.md", "✗ срез канона: x"])
+    assert out[0].endswith("✗ было 0 → стало 3")
+    assert "в счёт дельты входят и ✗ сторожей уровня комплекта" in out[1]
+    assert any("НОВЫЕ ✗ ×3" in ln for ln in out)
