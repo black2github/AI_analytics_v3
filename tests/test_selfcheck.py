@@ -1413,3 +1413,66 @@ def test_named_links_guard_tagged_source_name_counts_as_full(tmp_path):
     docs3 = _card_with_body(tmp_path / "c", f"В {free} ИНН. Затем {esc}.")
     rep = selfcheck.check_named_entity_links(docs3)
     assert len(rep) == 1 and "стоит раньше полной ссылки" in rep[0]
+
+
+# --- пустой источник (2026-10-05) ---
+
+def _frozen_source(title: str, pid: str) -> str:
+    return (f"---\ntitle: '{title}'\nconfluence_page_id: '{pid}'\n"
+            f"unapproved_jira: GBO-143661\n---\n")
+
+
+def test_empty_frozen_source_gives_warning_not_ok(tmp_path):
+    # страница заморожена: после reject-all от неё один frontmatter —
+    # карточка раньше получала ✓ без сверки
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", _frozen_source("[X] Ф1", "111222"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report  # вердикт не меняется
+    assert any(ln.startswith("⚠") and "стр1.md" in ln for ln in report)
+    assert any("источник пуст: страница заморожена флагом unapproved_jira "
+               "(GBO-143661)" in ln for ln in report)
+    assert not any(ln.startswith("✓") and "стр1.md" in ln for ln in report)
+    assert any("ИТОГО: файлов 2 — ✓ 0, ✗ 0, ⚠ 2" in ln for ln in report)
+
+
+def test_empty_source_without_flag_gives_warning(tmp_path):
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222", body="\n  \n"))
+    report, _ = selfcheck.run(docs, srcs)
+    assert any("источник пуст: в теле страницы-источника нет текста" in ln
+               for ln in report)
+    assert any(ln.startswith("⚠") and "стр1.md" in ln for ln in report)
+
+
+def test_nonempty_source_and_readme_container_not_flagged(tmp_path):
+    # тесты на НЕсрабатывание: (1) источник с одной строкой текста — не
+    # пуст; (2) README-оглавление на странице-контейнере без текста — норма
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make(docs / "srs/functions/README.md", card("[X] Функции", "333444"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222", body="текст\n"))
+    make(srcs / "оглавление.md", source("[X] Функции", "333444", body=""))
+    report, _ = selfcheck.run(docs, srcs)
+    assert not any("источник пуст" in ln for ln in report), report
+    assert any(ln.startswith("✓") and "стр1.md" in ln for ln in report)
+    assert any(ln.startswith("✓") and "оглавление.md" in ln for ln in report)
+
+
+def test_empty_source_keeps_defect_and_adds_note(tmp_path):
+    # карточка с браком внутренних сторожей остаётся ✗, пояснение о
+    # пустом источнике добавляется строкой
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    bad = card("[X] Ф1", "111222").replace("текст\n", "см. page 2169849859\n")
+    make(docs / "srs/functions/f1.md", bad)
+    make_matrix(docs)
+    make(srcs / "стр1.md", _frozen_source("[X] Ф1", "111222"))
+    report, ok = selfcheck.run(docs, srcs)
+    assert not ok
+    assert any(ln.startswith("✗") and "стр1.md" in ln for ln in report)
+    assert any("источник пуст" in ln for ln in report)

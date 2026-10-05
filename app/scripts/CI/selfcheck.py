@@ -98,6 +98,41 @@ def index_sources(root: Path):
     return idx, dups
 
 
+def _empty_source_note(src: Path) -> Optional[str]:
+    """Пояснение, если тело страницы-источника пусто; иначе None.
+
+    Пустой источник (2026-10-05, миграция «Корпоративных карт»): страница
+    с флагом заморозки `unapproved_jira` после reject-all несёт один
+    frontmatter. Карточка, ссылающаяся на неё, получала ✓: сверять не с
+    чем, все сторожа полноты проходят вхолостую. Шесть карточек лимитов
+    так прошли гейт, а после перевыгрузки страниц в них не хватило 23
+    значений таблицы и 6 фрагментов. Пустота определяется строго — в
+    теле нет ни одного непробельного символа; страница с заголовком или
+    одной строкой пустой не считается."""
+    try:
+        text = src.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    body = text.lstrip("\ufeff")
+    fm_text = ""
+    if body.startswith("---"):
+        parts = body.split("---", 2)
+        if len(parts) == 3:
+            fm_text, body = parts[1], parts[2]
+    if body.strip():
+        return None
+    m = re.search(r"^unapproved_jira:\s*(.+)$", fm_text, re.M)
+    if m:
+        task = m.group(1).strip().strip("'\"[]")
+        return ("источник пуст: страница заморожена флагом unapproved_jira "
+                f"({task}) — сверка с источником не выполнялась, перенос "
+                "не подтверждён; по замороженной странице карточка не "
+                "создаётся, содержимое из архива raw основанием не служит")
+    return ("источник пуст: в теле страницы-источника нет текста — сверка "
+            "с источником не выполнялась, перенос не подтверждён; "
+            "открытый вопрос акцептующему")
+
+
 def _safe(fn, *args) -> Tuple[List[str], bool]:
     """Изоляция краша (правило 1): исключение = брак проверяемой
     единицы, прогон продолжается."""
@@ -309,11 +344,22 @@ def run(docs: Path, sources: Optional[Path],
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
         mark = "✓" if ok else "✗"
+        # пустой источник (2026-10-05): ✓ без сверки — фиктивная зелень.
+        # Карточка получает ⚠ (вердикт не меняется: решение о судьбе
+        # карточки человеческое). README-оглавление на странице-контейнере
+        # без собственного текста — норма, не трогается.
+        empty_note = _empty_source_note(src)
+        if empty_note and all(f.name.lower() == "readme.md" for f in files):
+            empty_note = None
+        if ok and empty_note:
+            mark = "⚠"
         for f in files:
             counts[mark] += 1
         all_ok = all_ok and ok
         names = ", ".join(str(f.relative_to(docs)) for f in files)
         report.append(f"{mark} {names} ← {src.name}")
+        if empty_note:
+            report.append(f"   {empty_note}")
         if not ok:
             report.extend(f"   {ln}" for ln in rep)
         else:
