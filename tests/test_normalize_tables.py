@@ -2494,6 +2494,47 @@ class TestK32SourceTagMentions:
         assert ok and any(r.startswith("предупреждение") and "Методы" in r
                           for r in rep)
 
+    # FB-10 «Корпоративных карт»: служебные поля выгрузки — не текст
+    # страницы
+    _FM = ("---\ndoc_id: '{{corp-cards: [КК_ЛК] Лимит по карте}}'\n"
+           "title: '[КК_ЛК] Лимит по карте'\nconfluence_page_id: '1'\n"
+           "---\n")
+
+    def test_source_frontmatter_is_not_a_mention(self):
+        # doc_id давал «[КК_ЛК] Лимит по карте}}'» — неустранимое ⚠
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        card = ("---\nid: ENT-023\ntitle: '[КК_ЛК] Лимит по карте'\n"
+                "type: data-model\n---\n\n# ENT-023. Лимит по карте\n")
+        rep, ok = check_source_tag_mentions(
+            card, self._FM + "<p>Текст без упоминаний.</p>\n")
+        assert ok and rep == [], rep
+
+    def test_body_mentions_after_frontmatter_still_checked(self):
+        # НЕсрабатывание исключения: упоминание в ТЕЛЕ страницы с
+        # frontmatter по-прежнему сторожится — и дефейс, и отсутствие
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        src = self._FM + self._SRC
+        rep, ok = check_source_tag_mentions(
+            self._card("Проверки см в Методы для конкретной функции\n"), src)
+        assert not ok and any("дефейс" in r and "Методы" in r for r in rep)
+        rep, ok = check_source_tag_mentions(
+            self._card("Совсем другой текст.\n"), src)
+        assert ok and any(r.startswith("предупреждение") and "Методы" in r
+                          for r in rep)
+
+    def test_unclosed_or_inner_rule_not_stripped(self):
+        # НЕсрабатывание исключения: без закрывающей «---» ничего не
+        # снимается; разделитель «---» в теле страницы текст не съедает
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        card = self._card("Совсем другой текст.\n")
+        rep, _ = check_source_tag_mentions(
+            card, "---\ntitle: x\nсм. [РРКО_ИПИ] Методы для конкретной\n")
+        assert any("Методы" in r for r in rep)
+        rep, _ = check_source_tag_mentions(
+            card, "Вступление.\n\n---\n\nсм. [РРКО_ИПИ] Методы для "
+                  "конкретной\n\n---\n\nХвост.\n")
+        assert any("Методы" in r for r in rep)
+
 
 class TestK34LabelSections:
     """К-34: лейблы двухъячеечных пар источника не переносятся в
