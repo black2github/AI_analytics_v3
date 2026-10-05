@@ -31,6 +31,7 @@
 # нерегулярность rowspan/colspan).
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -2884,7 +2885,10 @@ _MENTION_TAG_RE = re.compile(
 # границы хвоста упоминания: конец строки/ячейки, жирный, кавычки,
 # точка с пробелом, запятая, точка с запятой (внутренние скобки —
 # часть титулов: «…(стейт-машина)» — НЕ граница)
-_MENTION_END_RE = re.compile(r"\n|\||\*\*|[»\"”;,]|\.\s")
+_MENTION_END_RE = re.compile(r"\n|\||\*\*|[»\"”;,]|\.\s|&[a-z]+;?")
+# &[a-z]+;? — HTML-сущность выгрузки (&lt;атрибут&gt; после имени):
+# без границы игла несла хвост «.&lt» и упоминание не находилось
+# (отчёт КК 2026-10-05: «[КК] ТЕССА_Входящие параметры &lt» ×5)
 
 
 def _mention_core(tail: str) -> str:
@@ -3296,6 +3300,72 @@ def check_source_tag_mentions(card_text: str, src_text: str,
     return report, ok
 
 
+_ENTITY_ID_RE = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-\d+$")
+
+
+def _frontmatter_entity(text: str) -> str:
+    """Значение entity из frontmatter карточного файла контролей без
+    обрамляющих кавычек; '' — ключа нет или значение пустое."""
+    m = re.search(r"^entity:[ \t]*(.*?)[ \t]*$", text[:800], re.M)
+    if not m:
+        return ""
+    val = m.group(1).strip()
+    if len(val) >= 2 and val[0] == val[-1] and val[0] in "'\"":
+        val = val[1:-1].strip()
+    return val
+
+
+_MARKER_CONTEXT_WORDS = 3
+
+
+def _marker_hits_verbatim_in_source(card_text: str, marker: str,
+                                    source_text: str) -> int:
+    """Сколько вхождений маркера в карточке стоят в источнике дословно
+    вместе с контекстом — соседними словами той же строки (до
+    _MARKER_CONTEXT_WORDS перед маркером и столько же после; суммарно
+    не меньше _MARKER_CONTEXT_WORDS, иначе не милуется — консервативно:
+    «- и т.д.» отдельным пунктом списка остаётся замечанием). Вид
+    кавычек («» / "") в сравнении не различается — чистовик меняет их
+    по конвенциям, текст от этого не становится сокращением."""
+    def _n(s: str) -> str:
+        return _norm_ws(re.sub(r"[«»“”„]", '"', s))
+    # снимаются только HTML-теги (имя с латинской буквы): подстановка
+    # «<Текст ошибки не пройденного контроля>» в источнике — текст, он
+    # есть и в карточке (proc-002 стенда)
+    src = _n(html.unescape(re.sub(r"</?[A-Za-z][^>]*>", " ", source_text)))
+    hits = 0
+    low = card_text.casefold()
+    for m in re.finditer(re.escape(marker), low):
+        line_start = low.rfind("\n", 0, m.start()) + 1
+        line_end = low.find("\n", m.end())
+        line_end = len(low) if line_end == -1 else line_end
+        strip_md = lambda s: re.sub(  # noqa: E731
+            r"^\s*(?:[-*+]|\d+[.)])\s+", " ", re.sub(r"[*_`|]", " ", s))
+        before = strip_md(card_text[line_start:m.start()]).split()
+        after = strip_md(card_text[m.end():line_end]).split()
+        if not before:
+            # маркер открывает пункт списка («- и т.д.» после «- Ошибка 2:
+            # <…>», proc-002 стенда): в источнике он продолжает ту же
+            # ячейку — контекст берётся из предыдущей непустой строки
+            prev = [ln for ln in card_text[:line_start].splitlines()
+                    if ln.strip()]
+            if prev:
+                before = strip_md(prev[-1]).split()
+        before, after = (before[-_MARKER_CONTEXT_WORDS:],
+                         after[:_MARKER_CONTEXT_WORDS])
+        # два кандидата: только слова ДО (маркер закрывает ячейку —
+        # дальше в карточке уже соседняя ячейка) и ДО+ПОСЛЕ (маркер в
+        # начале строки)
+        cands = []
+        if len(before) >= _MARKER_CONTEXT_WORDS:
+            cands.append(before + [marker])
+        if len(before) + len(after) >= _MARKER_CONTEXT_WORDS:
+            cands.append(before + [marker] + after)
+        if any(_n(" ".join(c)) in src for c in cands):
+            hits += 1
+    return hits
+
+
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True,
@@ -3369,8 +3439,24 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # маркеры — предупреждение: на эталоне детектор дал 3/3 ложняков
     # («и т. д.» в описании колонки README, «фрагмент текста ПФ»,
     # scope-примечание). В полном профиле (--strict, наши прогоны) — ✗.
+    # FB-09 «Корпоративных карт» (2026-10-05): маркер, стоящий в
+    # источнике дословно («…отличного от месяца/квартала и т.д.» в
+    # ячейке описания), — текст спецификации, а не сокращение
+    # переносчика; без помилования карточке предъявлялись два
+    # взаимоисключающих требования (полнота ячеек ✗ ↔ маркер ⚠/✗).
+    # Помилование — по КОНТЕКСТУ (слова перед маркером в той же
+    # строке), а не по счёту: «и т.д.» источника в одном месте не
+    # покрывает сокращение перечня в другом.
     for marker in ("фрагмент", "см. источник", "и т.д.", "и т. д."):
         cnt = text.lower().count(marker)
+        if cnt and source_text:
+            pardoned = _marker_hits_verbatim_in_source(text, marker,
+                                                       source_text)
+            if pardoned:
+                report.append(
+                    f"маркер «{marker}» ×{pardoned} дословно из источника "
+                    "(контекст совпадает) — сокращением не считается")
+                cnt -= pardoned
         if cnt:
             if soft_markers:
                 report.append(
@@ -3670,16 +3756,21 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # файлам). Сторож: «Проверяемый атрибут» каждой карточки содержит
     # ID из entity файла; карточка-чужак → ⚠; файл без entity → один ⚠
     # «разметить» (старые файлы до перенарезки/перегона — легальны).
+    # FB-11 «Корпоративных карт» (2026-10-05): значение entity бывает
+    # и ИМЕНЕМ формы в кавычках (карточки формы в комплекте ещё нет —
+    # шаблон controls.md); прежняя маска [\w.-]+ не видела кавычек,
+    # пробелов и кириллицы и рапортовала «без entity» при заполненном
+    # поле. Сверка «чужих» карточек — только для значения-ID: имени
+    # формы в «Проверяемом атрибуте» сравнивать не с чем.
     if (md_path.name.lower().startswith("cards-")
             and re.search(r"^type:\s*control\s*$", text[:500], re.M)):
-        _em = re.search(r"^entity:\s*([\w.-]+)\s*$", text[:800], re.M)
-        if not _em:
+        _eid = _frontmatter_entity(text)
+        if not _eid:
             report.append(
                 "предупреждение: карточный файл контролей без entity во "
                 "frontmatter — файл = сущность/форма (решение "
                 "2026-08-31), разметить при перенарезке или перегоне")
-        else:
-            _eid = _em.group(1)
+        elif _ENTITY_ID_RE.match(_eid):
             _aliens = []
             for cm in re.finditer(
                     r"^###\s+(CTL-\d+)\..*?\n(.*?)(?=^###\s|\Z)",
@@ -4075,6 +4166,24 @@ def run_check(files: List[Path], source_path: Optional[Path],
     cl_report, cl_ok = check_clean_document(main_file, docs_root)
     report.extend(cl_report)
     ok = ok and cl_ok
+    # FB-11: entity-имя формы законно, пока карточки формы в комплекте
+    # нет; появилась карточка с таким title — имя заменяется на её ID.
+    # Сигнал не зависит от порядка этапов плана (формы раньше или позже
+    # контролей): срабатывает, когда есть оба условия сразу.
+    if (docs_root is not None
+            and main_file.name.lower().startswith("cards-")
+            and re.search(r"^type:\s*control\s*$", card_text[:500], re.M)):
+        _ename = _frontmatter_entity(card_text)
+        if _ename and not _ENTITY_ID_RE.match(_ename):
+            _want = _norm_ws(_ename)
+            _hit = next((rel for t, rel in _docs_card_titles(docs_root)
+                         if _norm_ws(t) == _want), None)
+            if _hit:
+                report.append(
+                    f"предупреждение: entity файла — имя формы, а карточка "
+                    f"формы в комплекте уже есть ({_hit}) — заменить имя "
+                    "на её ID (шаблон controls.md: имя допустимо только "
+                    "до появления карточки)")
     # формула ТУЗ обычным шрифтом (решение 2026-08-19, шаблон §2)
     tz_report, tz_ok = check_tuz_formula(card_text)
     report.extend(tz_report)

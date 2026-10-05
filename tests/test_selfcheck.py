@@ -460,6 +460,28 @@ def test_warning_visible_on_ok_file(tmp_path):
     assert any("предупреждение" in ln for ln in report)
 
 
+def test_pardoned_marker_visible_on_ok_file(tmp_path):
+    # FB-09: помилованный маркер («и т.д.» дословно из источника) виден
+    # при ✓ — исчезновение ⚠ должно быть отличимо от «не проверялось»
+    docs = tmp_path / "docs"
+    src = tmp_path / "confluence"
+    make(src / "page.md",
+         "---\ndoc_id: x\ntitle: '[КК] Лимит'\nconfluence_page_id: '2166859948'\n"
+         "---\n<p>Описание.</p>\n<p>Может использоваться для контроля "
+         "периода, отличного от месяца/квартала и т.д.</p>\n")
+    make(docs / "srs/data-model/ent-001-limit.md",
+         "---\nid: ENT-001\ntitle: '[КК] Лимит'\ntype: data-model\n"
+         "confluence_page_ids: ['2166859948']\n---\n\n# ENT-001. Лимит\n\n"
+         "Может использоваться для контроля периода, отличного от "
+         "месяца/квартала и т.д.\n")
+    make_matrix(docs, "| ENT-001 | data-model | Лимит | ent-001-limit.md |\n")
+    report, _ = selfcheck.run(docs, src)
+    assert any("ent-001-limit.md" in ln and ln.startswith("✓")
+               for ln in report), "\n".join(report)
+    assert any("дословно из источника" in ln for ln in report)
+    assert not any("маркер сокращения" in ln for ln in report)
+
+
 def test_cli_survives_cp1251_console(tmp_path):
     # Windows-консоль cp1251: перестройка stdout в UTF-8 стоит ДО argparse —
     # текст --help содержит «✗» и падал UnicodeEncodeError до перестройки

@@ -1593,6 +1593,85 @@ class TestCheckTruncationMarkers:
         _rep, ok = self._check(self.BASE, tmp_path)
         assert ok
 
+    # FB-09 «Корпоративных карт»: маркер, стоящий в источнике дословно
+    # с тем же контекстом, — текст спецификации, не сокращение
+    _SRC = ("<table><tr><td>Число периодов</td><td>Может использоваться "
+            "для контроля длительности периода, отличного от "
+            "месяца/квартала и т.д.</td></tr></table>")
+
+    def _check_src(self, text, tmp_path, soft=False):
+        p = tmp_path / "card.md"
+        p.write_text(text, encoding="utf-8")
+        return check_file(p, source_text=self._SRC, soft_markers=soft)
+
+    def test_marker_verbatim_from_source_pardoned(self, tmp_path):
+        rep, ok = self._check_src(
+            self.BASE + "| `A/C` | Число периодов | int | Нет | [1] | "
+            "Может использоваться для контроля длительности периода, "
+            "отличного от месяца/квартала и т.д. |\n", tmp_path)
+        assert ok, "\n".join(rep)
+        assert not any("маркер сокращения" in l for l in rep)
+        assert any("дословно из источника" in l and "×1" in l for l in rep)
+
+    def test_marker_in_other_context_still_flagged(self, tmp_path):
+        # НЕсрабатывание помилования: «и т.д.» в источнике есть, но в
+        # карточке маркер стоит в другом месте — перечень сокращён
+        rep, ok = self._check_src(
+            self.BASE + "| Коды | 01, 02, 03 и т.д. |\n", tmp_path)
+        assert not ok
+        assert any("маркер сокращения «и т.д.»" in l for l in rep)
+        assert not any("дословно из источника" in l for l in rep)
+
+    def test_marker_mixed_counts_only_unpardoned(self, tmp_path):
+        # одно вхождение дословное, второе — сокращение: в замечании ×1
+        rep, ok = self._check_src(
+            self.BASE + "| `A/C` | Число периодов | int | Нет | [1] | "
+            "Может использоваться для контроля длительности периода, "
+            "отличного от месяца/квартала и т.д. |\n"
+            "| `A/D` | Коды | string | Нет | [1] | 01, 02 и т.д. |\n",
+            tmp_path, soft=True)
+        assert ok
+        assert any("маркер сокращения «и т.д.» ×1" in l for l in rep)
+
+    def test_short_context_not_pardoned(self, tmp_path):
+        # маркер в начале строки — контекста нет, не милуется
+        rep, ok = self._check_src(self.BASE + "\nи т.д.\n", tmp_path)
+        assert not ok
+
+    def test_quotes_style_and_trailing_context(self, tmp_path):
+        # кавычки «» в чистовике против "" источника — то же дословное
+        # место (scr-cl-01.1 КК); маркер в начале строки милуется по
+        # словам ПОСЛЕ него («Фрагмент примера блока tariffs», ent-019
+        # стенда); НЕсрабатывание — одиночный пункт «- и т.д.» остаётся
+        p = tmp_path / "card.md"
+        src = ('<p>включение/выключение кнопки "Выбрать все" и т.д.</p>'
+               "<p>Фрагмент примера блока tariffs:</p>"
+               "<ul><li>Ошибка 1</li><li>и т.д.</li></ul>")
+        p.write_text(self.BASE + "\nвключение/выключение кнопки «Выбрать "
+                     "все» и т.д.\n\nФрагмент примера блока `tariffs`:\n\n"
+                     "- Ошибка 1\n- и т.д.\n", encoding="utf-8")
+        rep, ok = check_file(p, source_text=src, soft_markers=True)
+        assert ok
+        assert any("маркер «и т.д.» ×1 дословно" in l for l in rep)
+        assert any("маркер «фрагмент» ×1 дословно" in l for l in rep)
+        assert any("маркер сокращения «и т.д.» ×1" in l for l in rep)
+        assert not any("маркер сокращения «фрагмент»" in l for l in rep)
+
+    def test_list_item_marker_with_placeholder_pardoned(self, tmp_path):
+        # proc-002 стенда: «- и т.д.» пунктом списка после «- Ошибка 2:
+        # <Текст …>» — контекст из предыдущей строки; подстановка в
+        # угловых скобках в источнике — текст, а не HTML-тег
+        p = tmp_path / "card.md"
+        src = ("<ul><li>Ошибка 1: <Текст ошибки не пройденного контроля>"
+               "</li><li>Ошибка 2: <Текст ошибки не пройденного контроля>"
+               "</li><li>и т.д.</li></ul>")
+        p.write_text(self.BASE + "\n- Ошибка 1: <Текст ошибки не пройденного "
+                     "контроля>\n- Ошибка 2: <Текст ошибки не пройденного "
+                     "контроля>\n- и т.д.\n", encoding="utf-8")
+        rep, ok = check_file(p, source_text=src)
+        assert ok, "\n".join(rep)
+        assert any("маркер «и т.д.» ×1 дословно" in l for l in rep)
+
 
 class TestNoteRowsGoToRules:
     """Замечания по 6-окт (2026-08-09): строка-пояснение без пути (проза в
@@ -2521,6 +2600,20 @@ class TestK32SourceTagMentions:
             self._card("Совсем другой текст.\n"), src)
         assert ok and any(r.startswith("предупреждение") and "Методы" in r
                           for r in rep)
+
+    def test_html_entity_after_name_is_boundary(self):
+        # отчёт КК 2026-10-05: «[КК] ТЕССА_Входящие параметры &lt;атрибут&gt;»
+        # давал иглу с хвостом «&lt» и ложное «не найдено»; НЕсрабатывание —
+        # то же имя без хвоста в карточке с тегом принимается
+        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        src = ("<p>см. [КК] ТЕССА_Входящие параметры &lt;атрибут&gt; "
+               "заполняются</p>")
+        rep, ok = check_source_tag_mentions(
+            self._card("см. [КК] ТЕССА_Входящие параметры <атрибут>\n"), src)
+        assert ok and rep == [], rep
+        rep, ok = check_source_tag_mentions(
+            self._card("Другой текст.\n"), src)
+        assert any("ТЕССА_Входящие параметры»" in r for r in rep), rep
 
     def test_unclosed_or_inner_rule_not_stripped(self):
         # НЕсрабатывание исключения: без закрывающей «---» ничего не
@@ -4268,6 +4361,63 @@ class TestControlsEntitySlicing:
         assert ok, "\n".join(rep)
         assert not any("чужой сущности" in ln or "без entity" in ln
                        for ln in rep)
+
+    # FB-11 «Корпоративных карт»: entity — имя формы в кавычках
+    _FORM = ("entity: '[КК_ЛК] ЭФ Клиента: \"Заявка на управление "
+             "лимитами карты\" в режиме создания/редактирования'\n")
+
+    def test_named_form_entity_recognized(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(
+            tmp_path, "cards-ef-request.md", self._FORM,
+            "### CTL-058. Поле\n\n"
+            "- **Проверяемое поле:** поле «Значение лимита».\n")
+        rep, ok = check_file(p)
+        assert ok, "\n".join(rep)
+        assert not any("без entity" in ln or "чужой сущности" in ln
+                       for ln in rep)
+
+    def test_named_entity_skips_alien_check(self, tmp_path):
+        # НЕсрабатывание: для имени формы сравнивать не с чем —
+        # «Проверяемый атрибут» с ID не считается чужим
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(
+            tmp_path, "cards-ef-request.md", self._FORM,
+            "### CTL-001. Поле\n\n"
+            "- **Проверяемый атрибут:** [ENT-019](x.md).«А».\n")
+        rep, _ = check_file(p)
+        assert not any("чужой сущности" in ln for ln in rep)
+
+    def test_empty_entity_value_warned(self, tmp_path):
+        # НЕсрабатывание расширения: ключ есть, значение пустое — «без entity»
+        from app.scripts.CI.normalize_tables import check_file
+        p = self._card(tmp_path, "cards-ef-request.md", "entity: ''\n",
+                       "### CTL-001. Поле\n\n- **Проверяемое поле:** п.\n")
+        rep, _ = check_file(p)
+        assert sum(1 for ln in rep if "без entity" in ln) == 1
+
+    def test_named_entity_with_existing_form_card_warns(self, tmp_path):
+        # карточка формы с таким title появилась — напомнить заменить на ID;
+        # НЕсрабатывание — пока карточки нет, замечания нет
+        from app.scripts.CI.normalize_tables import run_check
+        docs = tmp_path / "docs"
+        (docs / "control").mkdir(parents=True)
+        p = self._card(
+            docs / "control", "cards-ef-request.md", self._FORM,
+            "### CTL-058. Поле\n\n- **Проверяемое поле:** поле «З».\n")
+        rep, ok = run_check([p], None, docs_root=docs)
+        assert ok and not any("заменить имя на её ID" in ln for ln in rep)
+        (docs / "screen-form").mkdir()
+        (docs / "screen-form" / "scr-cl-07-limits.md").write_text(
+            "---\nid: SCR-CL-07\ntitle: '[КК_ЛК] ЭФ Клиента: \"Заявка на "
+            "управление лимитами карты\" в режиме создания/редактирования'\n"
+            "type: screen-form\n---\n", encoding="utf-8")
+        from app.scripts.CI import normalize_tables as nt
+        nt._TARGET_INDEX_CACHE.clear()
+        rep, ok = run_check([p], None, docs_root=docs)
+        assert ok
+        assert any("заменить имя на её ID" in ln and "scr-cl-07" in ln
+                   for ln in rep), "\n".join(rep)
 
 
 class TestFabricatedAttributes:
