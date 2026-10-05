@@ -251,8 +251,12 @@ def _check_register_order(path: Path, num_re, prefix: str,
     и перемещение записей при правке — брак."""
     if not path.is_file():
         return [], True
-    nums = [int(m.group(1)) for m in num_re.finditer(
-        path.read_text(encoding="utf-8", errors="replace"))]
+    text = path.read_text(encoding="utf-8", errors="replace")
+    # заголовок-образец внутри блока кода записью не является (FB-04
+    # «Корпоративных карт», 2026-09-15: пересозданный скелет с примером
+    # формата давал «1 записей ✓» при нуле настоящих записей)
+    text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
+    nums = [int(m.group(1)) for m in num_re.finditer(text)]
     bad = [(a, b) for a, b in zip(nums, nums[1:]) if b < a]
     if bad:
         return [f"{name}: порядок реестра нарушен (append-only): "

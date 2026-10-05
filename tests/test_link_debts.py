@@ -272,3 +272,29 @@ def test_dotted_sub_id_in_registry_resolved(tmp_path):
     report, ok = check(docs / "traceability-matrix.md", docs)
     assert not ok
     assert any("не найдено дословно" in ln for ln in report)
+
+
+class TestRegisterCountSkipsCodeBlocks:
+    """FB-04: заголовок-образец в блоке кода не считается записью реестра."""
+
+    def test_example_heading_in_code_block_not_counted(self, tmp_path):
+        from app.scripts.CI import link_debts as ld
+        p = tmp_path / "open-questions.md"
+        p.write_text("# Открытые вопросы\n\nФормат записи:\n\n```markdown\n"
+                     "## OQ-01 — <дата> — <тема>\n```\n", encoding="utf-8")
+        rep, ok = ld.check_oq_order(p)
+        assert ok and "(0 записей)" in rep[0], rep
+
+    def test_real_entries_still_counted_and_order_checked(self, tmp_path):
+        # тест на НЕсрабатывание исключения: настоящие записи вне блоков
+        # кода считаются, нарушение порядка по-прежнему брак
+        from app.scripts.CI import link_debts as ld
+        p = tmp_path / "open-questions.md"
+        p.write_text("# Открытые вопросы\n\n```markdown\n## OQ-09 — пример\n```\n\n"
+                     "## OQ-01 — 2026-09-11 — тема\n\n## OQ-02 — 2026-09-15 — тема\n",
+                     encoding="utf-8")
+        rep, ok = ld.check_oq_order(p)
+        assert ok and "(2 записей)" in rep[0], rep
+        p.write_text("## OQ-02 — тема\n\n## OQ-01 — тема\n", encoding="utf-8")
+        rep, ok = ld.check_oq_order(p)
+        assert not ok and "порядок реестра нарушен" in rep[0]
