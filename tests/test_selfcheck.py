@@ -1528,3 +1528,93 @@ def test_delta_report_explains_counting(tmp_path):
     assert out[0].endswith("✗ было 0 → стало 3")
     assert "в счёт дельты входят и ✗ сторожей уровня комплекта" in out[1]
     assert any("НОВЫЕ ✗ ×3" in ln for ln in out)
+
+
+class TestApiSpecInCodeRepo:
+    """Решение 2026-10-06: контракты OpenAPI/AsyncAPI — в api-specification/
+    репозитория кода; каталог api/ и YAML в комплекте — ⚠; ссылки матрицы
+    «API ↔ SRS» — через HEAD, явный ref только по шапке раздела; поле api
+    каталога — для исключений."""
+
+    def test_api_dir_and_yaml_warned_not_failed(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/x/api/rest/a.yaml", "openapi: 3.0.0\n")
+        make(docs / "srs/y/b-asyncapi.yaml", "asyncapi: 3.0.0\n")
+        make(docs / "srs/z/notes.yaml", "foo: bar\n")  # не контракт
+        rep, ok = selfcheck.check_no_api_in_bundle(docs)
+        assert ok
+        assert any("каталог srs/x/api/ (1 файлов)" in l for l in rep), rep
+        assert any("YAML OpenAPI/AsyncAPI ×1 (srs/y/b-asyncapi.yaml)" in l for l in rep), rep
+        assert not any("notes.yaml" in l for l in rep)
+
+    def test_clean_bundle_silent(self, tmp_path):
+        # НЕсрабатывание: комплект без api/ и без контрактов — ни строки
+        docs = tmp_path / "docs"
+        make(docs / "srs/f.md", "x\n")
+        assert selfcheck.check_no_api_in_bundle(docs) == ([], True)
+
+    def _matrix(self, tmp_path, header, rows):
+        docs = tmp_path / "docs"
+        make(docs / "traceability-matrix.md",
+             "# Матрица\n\n## 1. Покрытие\n\n| a |\n|---|\n\n"
+             "## 3. Покрытие: API ↔ SRS\n\n" + header +
+             "| Операция | Артефакты SRS |\n| --- | --- |\n" + rows +
+             "\n## 4. Реестр ID\n\n| ID |\n|---|\n")
+        return docs
+
+    def test_head_links_silent(self, tmp_path):
+        docs = self._matrix(tmp_path, "", "| POST /a | FUN-01 — Источник: https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/HEAD/api-specification/x.yaml |\n")
+        assert selfcheck.check_api_matrix_refs(docs) == ([], True)
+        assert selfcheck.check_api_matrix_refs(docs, strict=True) == ([], True)
+
+    def test_default_branch_warn_soft_fail_strict(self, tmp_path):
+        docs = self._matrix(tmp_path, "", "| POST /a | https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/master/api-specification/x.yaml |\n| POST /b | https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/master/api-specification/x.yaml |\n")
+        rep, ok = selfcheck.check_api_matrix_refs(docs)
+        assert ok and rep[0].startswith("⚠ матрица «API ↔ SRS»: ссылки с именем ветки по умолчанию `master` ×2")
+        rep, ok = selfcheck.check_api_matrix_refs(docs, strict=True)
+        assert not ok and rep[0].startswith("✗ матрица")
+
+    def test_declared_ref_in_header_accepted_other_ref_warned(self, tmp_path):
+        header = "Комплект описывает промышленный срез: ссылки на тег `v2.4.0` (основная ветка — разработка).\n\n"
+        docs = self._matrix(tmp_path, header,
+                            "| POST /a | https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/v2.4.0/api-specification/x.yaml |\n"
+                            "| POST /b | https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/release-1/api-specification/x.yaml |\n")
+        rep, ok = selfcheck.check_api_matrix_refs(docs, strict=True)
+        assert ok, rep
+        assert any(l.startswith("⚠ матрица «API ↔ SRS»: ссылки с явным ref `release-1` ×1") for l in rep)
+        assert any(l.startswith("i матрица «API ↔ SRS»: в шапке раздела назван ref v2.4.0") for l in rep)
+        assert not any("v2.4.0` ×" in l for l in rep)
+
+    def test_subsections_inside_and_prose_backticks_not_refs(self, tmp_path):
+        # docs-sign: подразделы «### 3.1 …» входят в раздел; кавычки прозы
+        # шапки (пути, ID) не считаются объявленным ref
+        header = ("Собственные методы — карточки `srs/shared/internal-contract/`, "
+                  "ID `INTC`.\n\n### 3.1. REST\n\n")
+        docs = self._matrix(tmp_path, header,
+                            "| POST /a | https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/master/api-specification/x.yaml |\n")
+        rep, ok = selfcheck.check_api_matrix_refs(docs, strict=True)
+        assert not ok and rep[0].startswith("✗ матрица «API ↔ SRS»: ссылки с именем ветки по умолчанию `master` ×1")
+        assert not any(l.startswith("i матрица") for l in rep)
+
+    def test_refs_outside_section_ignored(self, tmp_path):
+        # НЕсрабатывание: ссылка с веткой в другом разделе матрицы — не этот сторож
+        docs = tmp_path / "docs"
+        make(docs / "traceability-matrix.md",
+             "# Матрица\n\n## 6. Долги\n\n| x | https://gitlab.gboteam.ru/EAN/docs-o2new/-/blob/master/a.md |\n")
+        assert selfcheck.check_api_matrix_refs(docs, strict=True) == ([], True)
+
+    def test_catalog_api_field_format_and_redundancy(self, tmp_path):
+        docs = _docs_with_service(tmp_path, "cards-core", n=1)
+        cat = _catalog(tmp_path, [
+            {"code": "cards-core", "key": "CC", "name": "a",
+             "api": "https://gitlab.gboteam.ru/ECO_BE/ms-cards-core/-/tree/HEAD/api-specification"},
+            {"code": "other", "key": "O", "name": "b",
+             "api": "https://gitlab.gboteam.ru/ECO_BE/ms-other-core/-/tree/master/api-specification"},
+            {"code": "third", "key": "T", "name": "c",
+             "api": "https://gitlab.gboteam.ru/ECO_BE/ms-third-a/-/tree/HEAD/api-specification"},
+        ])
+        rep, ok = selfcheck.check_service_catalog(cat, docs)
+        assert ok
+        assert any(l.startswith("⚠ каталог сервисов: api у `cards-core` совпадает с адресом по правилу") for l in rep)
+        assert any(l.startswith("⚠ каталог сервисов: api у `other` — имя ветки `master`") for l in rep)
+        assert not any("`third`" in l and "⚠" in l for l in rep)

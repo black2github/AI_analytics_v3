@@ -520,6 +520,14 @@ def run(docs: Path, sources: Optional[Path],
                        catalog if catalog is not None
                        else canon_catalog_path(), docs)
     report.extend(cat_rep)
+    # контракты OpenAPI/AsyncAPI — в репозитории кода (2026-10-06):
+    # каталог api/ и YAML в комплекте — ⚠ до удаления владельцем;
+    # ссылки матрицы «API ↔ SRS» — через HEAD, явный ref по правилу
+    na_rep, _ = _safe(check_no_api_in_bundle, docs)
+    report.extend(na_rep)
+    ar_rep, ar_ok = _safe(check_api_matrix_refs, docs, strict)
+    all_ok = all_ok and ar_ok
+    report.extend(ar_rep)
     # детектор похожих точек применения групп (П-5e): i-сигналы,
     # вердикт не трогают — решение о консолидации только человеческое
     sg_rep, _ = _safe(lambda: (check_similar_group_points(docs), True))
@@ -945,6 +953,108 @@ def canon_catalog_path() -> Optional[Path]:
     return cat if cat.is_file() else None
 
 
+# адрес каталога контрактов чужого сервиса по коду (документ адресации
+# §5.2): код сервиса = имя репозитория кода без префикса ms-
+_API_SPEC_RULE = ("https://gitlab.gboteam.ru/ECO_BE/ms-{code}"
+                  "/-/tree/HEAD/api-specification")
+
+
+def check_no_api_in_bundle(docs: Path) -> Tuple[List[str], bool]:
+    """Контракты OpenAPI/AsyncAPI живут в api-specification/ репозитория
+    кода (решение 2026-10-06): каталог `api/` и YAML-контракты в
+    комплекте — унаследованное состояние, ⚠ до удаления владельцем;
+    вердикт не трогает (docs-sign, docs-file-storage на момент решения
+    такие каталоги несли)."""
+    lines: List[str] = []
+    dirs = sorted(p for p in docs.rglob("api") if p.is_dir())
+    for d in dirs:
+        n = sum(1 for f in d.rglob("*") if f.is_file())
+        lines.append(f"⚠ контракты в комплекте: каталог "
+                     f"{d.relative_to(docs).as_posix()}/ ({n} файлов) — "
+                     "контракты OpenAPI/AsyncAPI живут в api-specification/ "
+                     "репозитория кода, в комплекте каталог api/ не "
+                     "создаётся (унаследованное состояние: убрать при "
+                     "ближайшей правке)")
+    yamls = []
+    for f in sorted(docs.rglob("*.y*ml")):
+        if f.suffix.lower() not in (".yaml", ".yml"):
+            continue
+        if any(p.name == "api" for p in f.relative_to(docs).parents):
+            continue  # уже учтён каталогом
+        try:
+            head = f.read_text(encoding="utf-8", errors="replace")[:2000]
+        except OSError:
+            continue
+        if re.search(r"^(openapi|asyncapi):", head, re.M):
+            yamls.append(f.relative_to(docs).as_posix())
+    if yamls:
+        lines.append(f"⚠ контракты в комплекте: YAML OpenAPI/AsyncAPI ×"
+                     f"{len(yamls)} ({', '.join(yamls[:3])}"
+                     f"{'…' if len(yamls) > 3 else ''}) — копий контрактов "
+                     "в комплекте нет, единственная копия — "
+                     "api-specification/ репозитория кода")
+    return lines, True
+
+
+_DEFAULT_BRANCHES = {"master", "main", "trunk", "develop"}
+_API_SECTION_RE = re.compile(r"^#{1,3}\s+(?:\d+\.\s*)?Покрытие:\s*API\s*↔\s*SRS",
+                             re.M)
+_LINK_REF_RE = re.compile(r"https?://[^\s)]+?/-/(?:blob|tree|raw)/([^/\s)]+)/")
+
+
+def check_api_matrix_refs(docs: Path, strict: bool = False
+                          ) -> Tuple[List[str], bool]:
+    """Ссылки раздела матрицы «Покрытие: API ↔ SRS» ведут в репозиторий
+    кода через HEAD (решение 2026-10-06, вариант В по вопросу 1):
+    явный ref допустим, только если комплект описывает не основную
+    линию кода — тогда ref назван в шапке раздела (между заголовком и
+    таблицей, в обратных кавычках) с причиной, и ссылки с ним ✓. Иной
+    явный ref — ⚠; имя ветки по умолчанию (master/main/trunk/develop)
+    — ✗ в строгом профиле, ⚠ в командном."""
+    matrix = docs / "traceability-matrix.md"
+    if not matrix.is_file():
+        return [], True
+    text = matrix.read_text(encoding="utf-8", errors="replace")
+    m = _API_SECTION_RE.search(text)
+    if not m:
+        return [], True
+    level = len(m.group(0)) - len(m.group(0).lstrip("#"))
+    rest = text[m.end():]
+    # раздел тянется до следующего заголовка того же или верхнего уровня
+    # (подразделы «### 3.1. REST …» — внутри; docs-sign)
+    nxt = re.search(r"^#{1,%d}\s" % level, rest, re.M)
+    section = rest[:nxt.start()] if nxt else rest
+    first_row = re.search(r"^\|", section, re.M)
+    header = section[:first_row.start()] if first_row else section
+    used = _LINK_REF_RE.findall(section)
+    # объявленный ref — токен в обратных кавычках шапки, который реально
+    # стоит в ссылках раздела (прочие кавычки шапки — пути, ID — не ref)
+    declared = set(re.findall(r"`([^`\s]+)`", header)) & set(used)
+    lines: List[str] = []
+    ok = True
+    refs: Dict[str, int] = {}
+    for ref in used:
+        if ref == "HEAD" or ref in declared:
+            continue
+        refs[ref] = refs.get(ref, 0) + 1
+    for ref, n in sorted(refs.items()):
+        if ref in _DEFAULT_BRANCHES:
+            mark = "✗" if strict else "⚠"
+            ok = ok and not strict
+            lines.append(f"{mark} матрица «API ↔ SRS»: ссылки с именем ветки "
+                         f"по умолчанию `{ref}` ×{n} — вместо него HEAD "
+                         "(адрес переживает переименование ветки)")
+        else:
+            lines.append(f"⚠ матрица «API ↔ SRS»: ссылки с явным ref "
+                         f"`{ref}` ×{n} — допустимо только для комплекта "
+                         "не основной линии кода: назвать ref в шапке "
+                         "раздела с причиной (conventions §5.3 п. 7)")
+    if declared:
+        lines.append("i матрица «API ↔ SRS»: в шапке раздела назван ref "
+                     f"{', '.join(sorted(declared))} — ссылки с ним приняты")
+    return lines, ok
+
+
 def _repo_format_issue(url: str) -> Optional[str]:
     """Отклонение адреса `repo` от правила адресации; None — норма."""
     if not url.startswith(_REPO_HOST):
@@ -1009,6 +1119,20 @@ def check_service_catalog(catalog: Optional[Path],
             if issue:
                 lines.append(f"⚠ каталог сервисов: repo у `{code or name}` — "
                              f"{issue}: {repo.strip()}")
+        # поле api — адрес каталога контрактов ТОЛЬКО для исключений из
+        # правила «ECO_BE/ms-<code>/-/tree/HEAD/api-specification»
+        # (документ адресации §5.2, решение 2026-10-06); форма та же,
+        # что у repo
+        api = it.get("api")
+        if isinstance(api, str) and api.strip():
+            issue = _repo_format_issue(api.strip())
+            if issue:
+                lines.append(f"⚠ каталог сервисов: api у `{code or name}` — "
+                             f"{issue}: {api.strip()}")
+            elif api.strip() == _API_SPEC_RULE.format(code=code):
+                lines.append(f"⚠ каталог сервисов: api у `{code}` совпадает "
+                             "с адресом по правилу — поле для исключений, "
+                             "здесь лишнее")
     for code, names in sorted(by_code.items()):
         if len(names) > 1:
             lines.append(f"⚠ каталог сервисов: код `{code}` у {len(names)} "
