@@ -4663,3 +4663,49 @@ class TestBareTypeNamePardonedBySource:
             "<tr><td>Дата</td><td>op_date</td></tr></table>")
         assert "дата" in {v.lower() for v in lits.get("название", set())}
         assert not any("op_date" in v for v in lits.get("название", set()))
+
+
+class TestHomoglyphFoldInSourceComparison:
+    """OQ-134 «Корпоративных карт» (2026-10-07): гомоглиф источника,
+    исправленный в карточке по политике OQ-22, не читается сверками
+    значений как потеря; настоящая потеря по-прежнему ловится; К-31 на
+    смешанное письмо в карточке не ослаблен."""
+
+    # источник — markdown-таблица (как в выгрузке КК); «С» в СLOSE — кириллическая
+    SRC = ("Текст.\n\n| N блока | Значение блоков строки |\n|---|---|\n"
+           "| 5 | Если статус == СLOSE то закрыть |\n| 6 | Иначе продолжить |\n")
+
+    def test_corrected_homoglyph_counts_as_transferred(self):
+        from app.scripts.CI.normalize_tables import check_source_tables
+        card = ("| N блока | Значение блоков строки |\n|---|---|\n"
+                "| 5 | Если статус == CLOSE то закрыть |\n| 6 | Иначе продолжить |\n")
+        rep, ok = check_source_tables(card, self.SRC)
+        assert ok, rep
+        assert any("все значения на месте" in r for r in rep), rep  # таблица найдена
+        assert not any("отсутствуют" in r for r in rep)
+
+    def test_real_loss_still_reported(self):
+        # НЕсрабатывание свёртки: строки 6 в карточке нет — потеря остаётся
+        from app.scripts.CI.normalize_tables import check_source_tables
+        card = ("| N блока | Значение блоков строки |\n|---|---|\n"
+                "| 5 | Если статус == CLOSE то закрыть |\n")
+        rep, ok = check_source_tables(card, self.SRC)
+        assert not ok and any("отсутствуют 2 значений" in r for r in rep), rep
+        assert any("Иначе продолжить" in r for r in rep)
+
+    def test_quoted_literal_with_homoglyph_matches(self):
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        rep, ok = check_quoted_literals(
+            "Статус «CLOSE» закрывает заявку.\n",
+            "<p>Статус «СLOSE» закрывает заявку.</p>")
+        assert ok, rep
+
+    def test_mixed_script_in_card_still_defect(self, tmp_path):
+        # К-31 не ослаблен: латиница внутри кириллического слова карточки —
+        # брак, когда литерала с ним в источнике нет
+        from app.scripts.CI.normalize_tables import check_file
+        p = tmp_path / "f.md"
+        p.write_text("---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
+                     "Проверка cтатуса заявки.\n", encoding="utf-8")  # c латинская
+        rep, ok = check_file(p, source_text="<p>Проверка статуса заявки.</p>")
+        assert not ok and any("гомоглифы" in r for r in rep)

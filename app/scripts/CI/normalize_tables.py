@@ -1128,6 +1128,28 @@ def _norm_cell(v: str) -> str:
     return re.sub(r"\s+", " ", v).strip().lower()
 
 
+# Буквы-двойники кириллицы и латиницы (после приведения к нижнему регистру;
+# н/в/т/м/к — от прописных Н/В/Т/М/К). Сверки «значение источника есть в
+# карточке» (таблицы источника, кавычечные литералы, полнота ячеек) их не
+# различают — свёртка применяется к ОБЕИМ сторонам только в момент
+# сравнения, роли колонок и тексты замечаний видят исходные буквы
+# (OQ-134 «Корпоративных карт», 2026-10-07): по политике помилования
+# гомоглифов (OQ-22 КК, 2026-09-24) гомоглиф источника исправляется в
+# карточке по алфавиту-носителю слова, источник не правится — и дословная
+# сверка таблиц читала исправленную ячейку «== CLOSE» как потерю строки
+# «== СLOSE». Детектор смешанного письма К-31 этим не ослабляется: он
+# смотрит на сам текст карточки.
+_HOMOGLYPH_FOLD = str.maketrans({
+    "а": "a", "е": "e", "о": "o", "р": "p", "с": "c", "у": "y", "х": "x",
+    "к": "k", "н": "h", "в": "b", "т": "t", "м": "m", "і": "i", "ј": "j",
+    "ѕ": "s", "ё": "e",
+})
+
+
+def _fold_homoglyphs(s: str) -> str:
+    return s.translate(_HOMOGLYPH_FOLD)
+
+
 # Значение-вложение: markdown-ссылка на приложенный файл Confluence. В base-
 # карточку такие ссылки легитимно НЕ переносятся (место примеров — sidecar
 # examples/, конвенция скилла) — сверка наличия их пропускает.
@@ -1366,30 +1388,35 @@ def _window_covered(frag: str, corpus: str) -> bool:
 
 
 def _fragment_covered(frag: str, corpus: str, corpus_ns: str) -> bool:
-    if frag in corpus or frag.replace(" ", "") in corpus_ns:
+    # корпус свёрнут по буквам-двойникам при построении (OQ-134); фрагмент
+    # сворачивается ТОЛЬКО в момент сравнения — разбор его формы
+    # (конструкция «ссылка на …», пары «код - расшифровка») идёт по
+    # исходным буквам
+    f = _fold_homoglyphs
+    if f(frag) in corpus or f(frag).replace(" ", "") in corpus_ns:
         return True
     if _COVER_REF_HEAD_RE.match(frag):
         rest = [t for t in re.findall(r"[\wёа-я-]+", frag)
                 if len(t) >= 3 and t not in _COVER_REF_STOP]
-        if rest and all(t in corpus for t in rest):
+        if rest and all(f(t) in corpus for t in rest):
             return True
-    if _window_covered(frag, corpus):
+    if _window_covered(f(frag), corpus):
         return True
     # фрагмент из запятых-частей: каждая часть — подстрокой, парой
     # «код - расшифровка» (разложено в таблицу справочника) или
     # латинским перечнем значений (разложено по строкам)
     for part in (p.strip(" .,;:-") for p in frag.split(",")):
-        if len(part) < _COVER_MIN or part in corpus \
-                or part.replace(" ", "") in corpus_ns:
+        if len(part) < _COVER_MIN or f(part) in corpus \
+                or f(part).replace(" ", "") in corpus_ns:
             continue
         m = _COVER_PAIR_RE.match(part)
-        if m and _cover_norm(m.group(1)) in corpus \
-                and _cover_norm(m.group(2)) in corpus:
+        if m and f(_cover_norm(m.group(1))) in corpus \
+                and f(_cover_norm(m.group(2))) in corpus:
             continue
         if _COVER_LATIN_RE.match(part) and all(
-                t in corpus for t in part.split() if len(t) >= 2):
+                f(t) in corpus for t in part.split() if len(t) >= 2):
             continue
-        if _window_covered(part, corpus):
+        if _window_covered(f(part), corpus):
             continue
         return False
     return True
@@ -1400,7 +1427,7 @@ def check_cell_coverage(source_text: str,
     """Каждый фрагмент непустых ячеек «Тип»/«Описание»/«Комментарии»
     строк данных источника должен быть покрыт текстом комплекта в
     нормальной форме. Секционные строки и повторы шапки — не данные."""
-    corpus = _cover_norm(corpus_text)
+    corpus = _fold_homoglyphs(_cover_norm(corpus_text))
     corpus_ns = corpus.replace(" ", "")
     lost: List[str] = []
     checked = 0
@@ -1681,12 +1708,14 @@ def check_quoted_literals(card_text: str,
     lits = quoted_literals(source_text)
     if not lits:
         return [], True
-    norm_card = _norm_cell(card_text)
-    lost = [v for v in lits if _norm_cell(v) not in norm_card]
+    norm_card = _fold_homoglyphs(_norm_cell(card_text))
+    lost = [v for v in lits
+            if _fold_homoglyphs(_norm_cell(v)) not in norm_card]
     report: List[str] = []
     if lost and sibling_text:
-        sib_norm = _norm_cell(sibling_text)
-        relocated = [v for v in lost if _norm_cell(v) in sib_norm]
+        sib_norm = _fold_homoglyphs(_norm_cell(sibling_text))
+        relocated = [v for v in lost
+                     if _fold_homoglyphs(_norm_cell(v)) in sib_norm]
         if relocated:
             lost = [v for v in lost if v not in relocated]
             report.append(
@@ -2525,7 +2554,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     слова. Таблицы из 1 колонки или <2 строк не сверяются (служебные)."""
     report: List[str] = []
     ok = True
-    card_norm = _norm_cell(card_text)
+    card_norm = _fold_homoglyphs(_norm_cell(card_text))
     for hdr, rows in parse_md_tables(source_text):
         if len(hdr) < 2 or len(rows) < 2:
             continue
@@ -2608,7 +2637,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 if re.search(r"<img\b", cell, re.I):
                     img_mixed.append(cell.strip()[:50])
                     continue
-                if cv and cv not in card_norm:
+                if cv and _fold_homoglyphs(cv) not in card_norm:
                     missing.append(cell.strip()[:60])
         if missing:
             ok = False
@@ -2629,7 +2658,8 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
     # file_id/upload_token потеряны при зелёном гейте).
     html_names = html_param_names(source_text)
-    lost = sorted(n for n in html_names if _norm_cell(n) not in card_norm)
+    lost = sorted(n for n in html_names
+                  if _fold_homoglyphs(_norm_cell(n)) not in card_norm)
     if lost:
         ok = False
         report.append(
