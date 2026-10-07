@@ -4606,3 +4606,60 @@ class TestVisibleLengthWording:
                        + " + ".join(f"[ENT-019]({url}).«Атрибут {i}»" for i in range(3)) + "\n")
         rep, _ = check_file(p)
         assert not any("видимой длиной" in r for r in rep), rep
+
+
+class TestBareTypeNamePardonedBySource:
+    """OQ-128 «Корпоративных карт» (2026-10-07): имя поля «Дата» —
+    словарный тип, но дословно из колонки названий источника — не брак;
+    без источника и для пояснений в ячейке — брак как прежде."""
+
+    CARD = ("| Название поля | Тип | Обяз. | Кратность | Правила |\n"
+            "|---|---|---|---|---|\n"
+            "| Дата | Дата | Да | [1] | дата операции |\n"
+            "| Сумма операции | Число | Да | [1] | — |\n")
+    SRC_WITH = ("<table><tr><th>Название поля</th><th>Тип</th></tr>"
+                "<tr><td>Дата</td><td>Дата</td></tr>"
+                "<tr><td>Сумма операции</td><td>Число</td></tr></table>")
+    SRC_WITHOUT = ("<table><tr><th>Название поля</th><th>Тип</th></tr>"
+                   "<tr><td>Дата операции</td><td>Дата</td></tr></table>")
+
+    def _check(self, tmp_path, card, src):
+        p = tmp_path / "scr.md"
+        p.write_text(card, encoding="utf-8")
+        return check_file(p, source_text=src)
+
+    def test_bare_type_name_verbatim_in_source_passes(self, tmp_path):
+        rep, ok = self._check(tmp_path, self.CARD, self.SRC_WITH)
+        assert ok, "\n".join(rep)
+        assert any("словарный тип как имя, дословно из источника — принято (1)" in l
+                   and "'Дата'" in l for l in rep)
+        assert not any("несёт пояснения/значения/тип" in l for l in rep)
+
+    def test_bare_type_name_absent_in_source_still_fails(self, tmp_path):
+        # НЕсрабатывание помилования: в источнике поле зовётся иначе
+        rep, ok = self._check(tmp_path, self.CARD, self.SRC_WITHOUT)
+        assert not ok
+        assert any("несёт пояснения/значения/тип" in l for l in rep)
+
+    def test_no_source_still_fails(self, tmp_path):
+        p = tmp_path / "scr.md"; p.write_text(self.CARD, encoding="utf-8")
+        _rep, ok = check_file(p)
+        assert not ok
+
+    def test_explanation_in_name_not_pardoned_even_if_verbatim(self, tmp_path):
+        # пояснение в ячейке названия разносится, дословность не оправдание
+        card = self.CARD.replace("| Дата | Дата |", "| Дата — обязателен | Дата |")
+        src = self.SRC_WITH.replace("<td>Дата</td><td>Дата</td>",
+                                    "<td>Дата — обязателен</td><td>Дата</td>")
+        rep, ok = self._check(tmp_path, card, src)
+        assert not ok
+        assert any("несёт пояснения/значения/тип" in l for l in rep)
+
+    def test_source_name_literals_skip_db_columns(self):
+        # колонка физимён БД в литералы названий не попадает
+        from app.scripts.CI.normalize_tables import source_role_literals
+        lits = source_role_literals(
+            "<table><tr><th>Название поля</th><th>[DEV] Название поля в таблице БД</th></tr>"
+            "<tr><td>Дата</td><td>op_date</td></tr></table>")
+        assert "дата" in {v.lower() for v in lits.get("название", set())}
+        assert not any("op_date" in v for v in lits.get("название", set()))

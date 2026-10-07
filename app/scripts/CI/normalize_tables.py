@@ -730,7 +730,16 @@ def _title_suspicious(v: str) -> bool:
     # чистый СЛОВАРНЫЙ тип данных — не название; одиночный латинский
     # идентификатор (TraceID, SessionID) — легитимное имя параметра
     # (К-3 экзамена inkasso: generic-латиница ложно бракавала имена)
-    vv = re.sub(r"\s+\(", "(", v)
+    return _bare_type_name(v)
+
+
+def _bare_type_name(v: str) -> bool:
+    """Ячейка названия — голый словарный тип данных («Дата», «Строка»),
+    без пояснений. Единственный класс подозрительных названий, который
+    милуется дословным совпадением с источником (OQ-128 «Корпоративных
+    карт», 2026-10-07: поле скроллера по имени «Дата»); пояснения и
+    правила в ячейке названия не милуются — их разносят."""
+    vv = re.sub(r"\s+\(", "(", _plain(v).strip())
     if not vv or " " in vv or len(vv) > 24:
         return False
     return re.sub(r"[\d()\[\]]+$", "", vv).lower() in _TYPE_TOKENS
@@ -842,11 +851,18 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         suspicious = ([r[i] for r in data_rows if i < len(r) and r[i].strip()
                        and _title_suspicious(r[i])]
                       if role == "название" else [])
+        # OQ-128: голый словарный тип как имя, дословно стоящий в колонке
+        # названий ИСТОЧНИКА, — его содержимое, не дефект переноса
+        susp_pardoned = [v for v in suspicious
+                         if _bare_type_name(v) and _norm_cell(v) in wl]
+        suspicious = [v for v in suspicious if v not in susp_pardoned]
         report.append({
             "column": title, "role": role, "index": i,
             "bad": len(bad), "total": len(data_rows),
             "valid_pct": round(100 * (len(data_rows) - len(bad)) / total, 1),
             "suspicious": suspicious[:5], "suspicious_count": len(suspicious),
+            "suspicious_pardoned": susp_pardoned[:3],
+            "suspicious_pardoned_count": len(susp_pardoned),
             "samples": bad[:3],
             "pardoned": pardoned[:3], "pardoned_count": len(pardoned),
         })
@@ -2644,13 +2660,24 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
     def add(headers: List[str], rows: List[List[str]]) -> None:
         for i, h in enumerate(headers):
             low = _title_key(h)
-            for key, _fn in _COLUMN_RULES:
-                if key in low or key[:4] in low:
-                    vals = lits.setdefault(key, set())
-                    for r in rows:
-                        if i < len(r) and _norm_cell(r[i]):
-                            vals.add(_norm_cell(r[i]))
+            key = None
+            for k, _fn in _COLUMN_RULES:
+                if k in low or k[:4] in low:
+                    key = k
                     break
+            # колонка названий — по тому же распознаванию, что роль
+            # «название» в validate_columns (OQ-128: имя «Дата» из
+            # источника); колонки физимён БД/DEV — не названия
+            if key is None and ("назван" in low or "наимен" in low
+                                or "параметр" in low) \
+                    and "бд" not in low and "dev" not in low:
+                key = "название"
+            if key is None:
+                continue
+            vals = lits.setdefault(key, set())
+            for r in rows:
+                if i < len(r) and _norm_cell(r[i]):
+                    vals.add(_norm_cell(r[i]))
 
     for hdr, rows in parse_md_tables(source_text):
         add(hdr, rows)
@@ -4052,6 +4079,11 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                     f"      вне словаря роли, но дословно из источника — "
                     f"принято ({col['pardoned_count']}): "
                     + ", ".join(repr(s[:30]) for s in col["pardoned"]))
+            if col.get("suspicious_pardoned_count"):
+                report.append(
+                    f"      «Название» — словарный тип как имя, дословно из "
+                    f"источника — принято ({col['suspicious_pardoned_count']}): "
+                    + ", ".join(repr(s[:30]) for s in col["suspicious_pardoned"]))
             if col.get("suspicious_count"):
                 # В ГОТОВОЙ карточке подозрительное название — брак: проход 2
                 # обязан был разнести (название дословно, пояснения — в правила).
