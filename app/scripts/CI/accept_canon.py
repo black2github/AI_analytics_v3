@@ -152,6 +152,21 @@ def main() -> int:
     msg, ok = accept(args.profile.resolve(), canon_root.resolve(),
                      args.reason)
     print(msg)
+    # сторож реестра структурных фактов (2026-10-09): отчёт печатается
+    # при каждом приёме среза, приём не блокирует — расхождение видно
+    # владельцу в тот день, когда файл с сигнатурой попал в канон
+    try:
+        from app.scripts.CI.structural_facts import check as _sf_check
+    except ImportError:  # копия в канонe лежит рядом, без пакета app
+        try:
+            sys.path.insert(0, str(Path(__file__).resolve().parent))
+            from structural_facts import check as _sf_check  # type: ignore
+        except ImportError:
+            _sf_check = None
+    if _sf_check is not None and (canon_root / "_meta" /
+                                  "structural-facts.md").is_file():
+        for ln in _sf_check(canon_root.resolve())[0]:
+            print(f"  {ln}")
     return 0 if ok else 2
 
 
