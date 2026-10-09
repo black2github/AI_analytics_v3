@@ -490,6 +490,13 @@ def run(docs: Path, sources: Optional[Path],
     if rep:
         report.append(("✓" if ok else "✗") + " реестр замечаний команды:")
         report.extend(f"   {ln}" for ln in rep)
+    # журнал координации (трек с координатором): длина записи — ⚠
+    # (решение 2026-10-09: журнал должен читаться следующей сессией)
+    rep, _ = _safe(ld.check_coordination_log,
+                   docs.parent / "coordination-log.md")
+    if rep:
+        report.append("i журнал координации:")
+        report.extend(f"   {ln}" for ln in rep)
     rep, ok = _safe(ld.check_config_params, docs)
     all_ok = all_ok and ok
     if not ok:

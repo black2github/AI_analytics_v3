@@ -298,3 +298,58 @@ class TestRegisterCountSkipsCodeBlocks:
         p.write_text("## OQ-02 — тема\n\n## OQ-01 — тема\n", encoding="utf-8")
         rep, ok = ld.check_oq_order(p)
         assert not ok and "порядок реестра нарушен" in rep[0]
+
+
+class TestCoordinationLogEntryLength:
+    """Д-34 (2026-10-09): запись журнала координации длиннее 600 знаков — ⚠;
+    вердикт не трогает; файла нет — пусто."""
+
+    def _log(self, tmp_path, entries):
+        p = tmp_path / "coordination-log.md"
+        p.write_text("# Журнал\n\n---\n\n" + "\n".join(entries) + "\n",
+                     encoding="utf-8")
+        return p
+
+    def test_short_entries_ok(self, tmp_path):
+        from app.scripts.CI import link_debts as ld
+        p = self._log(tmp_path, [
+            "- 2026-10-09 | прогноз z02 | ожидаю: журнал; риск: натяжка",
+            "- 2026-10-09 | приёмка z02 | принято; FB-03 заведён",
+            "  - подробность с отступом — часть записи",
+        ])
+        rep, ok = ld.check_coordination_log(p)
+        assert ok and rep == ["coordination-log: записей 2, сверх лимита 600 знаков — 0 ✓"]
+
+    def test_long_entry_warned_with_date_and_topic(self, tmp_path):
+        from app.scripts.CI import link_debts as ld
+        p = self._log(tmp_path, [
+            "- 2026-10-09 | короткая | ок",
+            "- 2026-10-09 | техприёмка STS-02 | " + "дословный вывод " * 60,
+        ])
+        rep, ok = ld.check_coordination_log(p)
+        assert ok  # вердикт не трогает
+        assert rep[0].startswith("coordination-log: записей 2, сверх лимита 600 знаков — 1")
+        assert any(l.startswith("предупреждение: запись журнала «2026-10-09 | техприёмка STS-02» — ")
+                   and "(лимит 600)" in l for l in rep), rep
+
+    def test_continuation_lines_count_into_entry(self, tmp_path):
+        from app.scripts.CI import link_debts as ld
+        p = self._log(tmp_path, ["- 2026-10-09 | заход | старт"]
+                      + ["  - пункт " + "x" * 80 for _ in range(10)])
+        rep, _ = ld.check_coordination_log(p)
+        assert "сверх лимита 600 знаков — 1" in rep[0]
+
+    def test_missing_file_silent(self, tmp_path):
+        from app.scripts.CI import link_debts as ld
+        assert ld.check_coordination_log(tmp_path / "coordination-log.md") == ([], True)
+
+    def test_wired_into_selfcheck(self, tmp_path):
+        from app.scripts.CI import selfcheck
+        docs = tmp_path / "docs"; docs.mkdir()
+        (docs / "traceability-matrix.md").write_text(
+            "# Матрица\n\n| ID | Тип | Наименование | Файл |\n|---|---|---|---|\n",
+            encoding="utf-8")
+        self._log(tmp_path, ["- 2026-10-09 | длинная | " + "y" * 700])
+        report, _ = selfcheck.run(docs, None)
+        assert any(l.startswith("i журнал координации:") for l in report)
+        assert any("запись журнала «2026-10-09 | длинная»" in l for l in report)

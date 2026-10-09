@@ -280,6 +280,63 @@ def check_feedback_order(fb_path: Path) -> Tuple[List[str], bool]:
     return _check_register_order(fb_path, _FB_NUM_RE, "FB", "feedback")
 
 
+# Журнал координации (трек с координатором): запись — строка «- YYYY-MM-DD |
+# тема | …» плюс её продолжения с отступом. Лимит длины записи — решение
+# владельца 2026-10-09: четвёртая сессия координатора КК, журнал 340
+# записей / 700 КБ (средняя 2 060 знаков, максимум 10 535) — «новая сессия
+# поднимется с журнала» невыполнимо на любом окне контекста. Доказательства
+# (выводы прибора, команд, диффы) живут в sandbox/ и файлах сдачи, запись на
+# них ссылается. Сигнал — ⚠ (вердикт не трогает): журнал ведёт агент по
+# отмашке, брак здесь не остановил бы ничего, а длинные записи до решения
+# были нормой.
+COORD_LOG_ENTRY_LIMIT = 600
+_COORD_ENTRY_RE = re.compile(r"^- \d{4}-\d{2}-\d{2} \|")
+
+
+def check_coordination_log(log_path: Path,
+                           limit: int = COORD_LOG_ENTRY_LIMIT
+                           ) -> Tuple[List[str], bool]:
+    """Длина записей coordination-log.md: запись длиннее limit знаков —
+    ⚠ с датой и темой; итог — число записей и сколько сверх лимита.
+    Файла нет (трек без координатора) — пусто."""
+    if not log_path.is_file():
+        return [], True
+    text = log_path.read_text(encoding="utf-8", errors="replace")
+    text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
+    entries: List[Tuple[str, int]] = []
+    cur: Optional[str] = None
+    size = 0
+    for ln in text.splitlines():
+        if _COORD_ENTRY_RE.match(ln):
+            if cur is not None:
+                entries.append((cur, size))
+            cur, size = ln, len(ln)
+        elif cur is not None and (ln.startswith(" ") or ln.startswith("\t")):
+            size += len(ln.strip()) + 1
+        elif cur is not None and ln.strip():
+            # непустая строка без отступа — запись кончилась
+            entries.append((cur, size))
+            cur, size = None, 0
+    if cur is not None:
+        entries.append((cur, size))
+    if not entries:
+        return [], True
+    long = [(head, n) for head, n in entries if n > limit]
+    out = [f"coordination-log: записей {len(entries)}, сверх лимита "
+           f"{limit} знаков — {len(long)}" + (" ✓" if not long else "")]
+    for head, n in long[-5:]:
+        parts = [x.strip() for x in head.split("|")]
+        who = " | ".join(parts[:2]).lstrip("- ")[:60]
+        out.append(f"предупреждение: запись журнала «{who}» — {n} знаков "
+                   f"(лимит {limit}): факты и решение — в запись, "
+                   "доказательства — ссылкой на отчёт в sandbox/ или файл "
+                   "сдачи")
+    if len(long) > 5:
+        out.append(f"предупреждение: … и ещё {len(long) - 5} записей сверх "
+                   "лимита (показаны последние пять)")
+    return out, True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Сторож долгов ссылок: просрочка (цель существует, "
