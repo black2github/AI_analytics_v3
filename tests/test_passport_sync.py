@@ -80,20 +80,22 @@ def test_check_reports_known_drifts(tmp_path):
     (contracts / "cdn").mkdir(parents=True)
     (contracts / "f1").mkdir()
     rep = ps.check_passport(canon, make_passport(tmp_path, md, yml), contracts)
-    lines = rep.render()
-    txt = "\n".join(lines)
-    assert any(l.startswith("≠ место AsyncAPI") and "строка 4" in l for l in lines), txt
-    assert any(l.startswith("≠ реф ссылки на код") and "строка 7" in l for l in lines), txt
-    assert any(l.startswith("≠ префиксы ID: в yaml паспорта нет префиксов канона: CHD, EXTINT, GLO, LIBC, VIS")
-               for l in lines), txt
-    assert "i префиксы ID: в паспорте сверх канона: INS, SCRP" in txt
-    assert "i type internal-contract" in txt and "i frontmatter title" in txt
-    assert "= README «Условные обозначения»" in txt and "= README «Подсервисы»" in txt
-    assert any(l.startswith("≠ путь → навык: srs/control/: паспорт validations | канон controls") for l in lines)
-    assert any(l.startswith("≠ коды внешних АС: паспорт: ausn, cdn | docs-external-contracts: cdn, f1") for l in lines)
-    assert "i реестр ID матрицы" in txt
-    assert lines[-1].startswith("ИТОГ: расхождений 5,"), lines[-1]
+    rows = {(m, t): (pp, c, h) for m, t, pp, c, h in rep.rows}
+    assert "строка 4" in rows[("≠", "Место AsyncAPI")][0]
+    assert "строка 7" in rows[("≠", "Реф в ссылке на репозиторий кода")][0]
+    assert rows[("≠", "Префиксы ID в yaml")][0] == "нет CHD, EXTINT, GLO, LIBC, VIS"
+    assert rows[("i", "Префиксы сверх канона")][0].startswith("INS, SCRP")
+    assert ("i", "Тип `internal-contract`") in rows and ("i", "Поле frontmatter `title`") in rows
+    assert ("=", "README «Условные обозначения»") in rows and ("=", "README «Подсервисы»") in rows
+    assert rows[("≠", "Путь → навык `srs/control/`")][:2] == ("validations", "controls")
+    assert rows[("≠", "Коды внешних АС")][0] == "ausn, cdn"
+    assert ("i", "Реестр ID матрицы") in rows
     assert rep.diffs == 5
+    lines = rep.render()
+    assert lines[0].startswith("| Статус | Тема | В паспорте платформы | В стандарте ЭКО и каноне миграции | Дом факта |")
+    statuses = [l.split("|")[1].strip()[0] for l in lines[2:] if l.startswith("|")]
+    assert statuses == sorted(statuses, key={"≠": 0, "i": 1, "=": 2}.get)
+    assert lines[-1].startswith("ИТОГ: расхождений 5, объявленных отличий"), lines[-1]
 
 
 def test_check_clean_passport(tmp_path):
@@ -108,4 +110,4 @@ def test_check_clean_passport(tmp_path):
 def test_missing_passport(tmp_path):
     canon = make_canon(tmp_path)
     rep = ps.check_passport(canon, tmp_path / "nope")
-    assert rep.diffs == 1 and "нет docs-kit-layout.md" in rep.render()[0]
+    assert rep.diffs == 1 and "нет docs-kit-layout.md" in rep.rows[0][2]

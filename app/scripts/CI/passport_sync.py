@@ -47,10 +47,13 @@
 #                              домам фактов (место AsyncAPI, реф ссылки на
 #                              код, набор типов и префиксов, поля
 #                              frontmatter, имена разделов README и матрицы).
-#                              Выход: строки «≠» (расхождение: паспорт /
-#                              стандарт / дом факта), «=» (совпадает),
-#                              «i» (объявленное отличие, не расхождение);
-#                              код возврата 1 при расхождениях.
+#                              Выход: markdown-таблица «Статус | Тема | В
+#                              паспорте платформы | В стандарте ЭКО и каноне
+#                              миграции | Дом факта», строки сгруппированы:
+#                              ≠ расхождения, затем i объявленные отличия
+#                              (не расхождения), затем = совпадения; итоговая
+#                              строка со счётом; код возврата 1 при
+#                              расхождениях.
 #   --canon <путь>             корень клона канона (по умолчанию — канон,
 #                              в котором лежит утилита; из analyzer —
 #                              обязателен)
@@ -289,23 +292,46 @@ def dump_layout(layout: dict) -> str:
 # --- проверка -------------------------------------------------------------------
 
 class Report:
-    def __init__(self) -> None:
-        self.lines: List[Tuple[str, str, str]] = []  # (знак, тема, текст)
+    """Структурные записи сверки: (статус, тема, в паспорте, в стандарте, дом факта).
+    Выводится таблицей с группировкой: сначала расхождения, затем объявленные
+    отличия, затем совпадения — человек видит отличия в привычном виде."""
 
-    def add(self, mark: str, topic: str, text: str) -> None:
-        self.lines.append((mark, topic, text))
+    _ORDER = {"≠": 0, "i": 1, "=": 2}
+    _LABEL = {"≠": "расхождение", "i": "объявленное отличие", "=": "совпадает"}
+
+    def __init__(self) -> None:
+        self.rows: List[Tuple[str, str, str, str, str]] = []
+
+    def add(self, mark: str, topic: str, passport: str, canon: str, home: str = "") -> None:
+        self.rows.append((mark, topic, passport, canon, home))
 
     @property
     def diffs(self) -> int:
-        return sum(1 for m, _, _ in self.lines if m == "≠")
+        return sum(1 for r in self.rows if r[0] == "≠")
+
+    def sorted_rows(self) -> List[Tuple[str, str, str, str, str]]:
+        return sorted(self.rows, key=lambda r: self._ORDER.get(r[0], 9))
+
+    def summary(self) -> str:
+        same = sum(1 for r in self.rows if r[0] == "=")
+        info = sum(1 for r in self.rows if r[0] == "i")
+        return (f"ИТОГ: расхождений {self.diffs}, объявленных отличий {info}, "
+                f"совпадений {same}")
 
     def render(self) -> List[str]:
-        out = [f"{m} {t}: {x}" for m, t, x in self.lines]
-        same = sum(1 for m, _, _ in self.lines if m == "=")
-        info = sum(1 for m, _, _ in self.lines if m == "i")
-        out.append(f"ИТОГ: расхождений {self.diffs}, совпадений {same}, "
-                   f"объявленных отличий {info}")
+        """Markdown-таблица с группировкой и итоговой строкой."""
+        esc = lambda s: s.replace("|", "\\|").replace("\n", " ")  # noqa: E731
+        out = ["| Статус | Тема | В паспорте платформы | В стандарте ЭКО и каноне миграции | Дом факта |",
+               "|---|---|---|---|---|"]
+        for m, t, p, c, h in self.sorted_rows():
+            out.append(f"| {m} {self._LABEL[m]} | {esc(t)} | {esc(p)} | {esc(c)} | {esc(h)} |")
+        out.append("")
+        out.append(self.summary())
         return out
+
+    def as_dicts(self) -> List[dict]:
+        return [{"status": m, "topic": t, "passport": p, "canon": c, "home": h}
+                for m, t, p, c, h in self.sorted_rows()]
 
 
 def _find(text: str, pattern: str) -> Optional[str]:
@@ -328,126 +354,147 @@ def check_passport(canon: Path, passport_dir: Path,
         try:
             their = yaml.safe_load(yml_path.read_text(encoding="utf-8")) or {}
         except yaml.YAMLError as e:
-            rep.add("≠", "yaml паспорта", f"не разбирается: {e}")
+            rep.add("≠", "yaml паспорта", f"не разбирается: {e}", "разбираемый yaml", "—")
     if not md and not their:
-        rep.add("≠", "паспорт", f"в {passport_dir} нет docs-kit-layout.md / .yaml")
+        rep.add("≠", "паспорт", f"в {passport_dir} нет docs-kit-layout.md / .yaml",
+                "паспорт из двух файлов", "—")
         return rep
 
-    # 1. место AsyncAPI (дом: документ адресации §2/§5.2, SF-01; техбук api-first-async-yojo)
+    # 1. место AsyncAPI
     hit = _find(md, r".*(lib-api-<service>|asyncapi/jms\.yaml).*")
-    y_async = any(l.get("path") == "asyncapi/" for l in their.get("layers", []))
+    y_async = any(l.get("path") == "asyncapi/" for l in their.get("layers", []) or [])
     if hit or y_async:
-        rep.add("≠", "место AsyncAPI",
-                "паспорт — репозиторий `lib-api-<service>`, файл `asyncapi/jms.yaml`"
-                + (f" ({hit})" if hit else "") + ("; yaml: слой asyncapi/" if y_async else "")
-                + " | стандарт — `api-specification/` репозитория `ms-<service>` рядом с OpenAPI"
-                " (дом: cross-service-addressing §2, §5.2; техбук concepts/api-first-async-yojo,"
-                " прежняя концепция api-first-async помечена deprecated)")
+        rep.add("≠", "Место AsyncAPI",
+                "отдельный репозиторий `ECO_BE/lib-api-<service>`, файл `asyncapi/jms.yaml`"
+                + (f" ({hit})" if hit else "") + ("; в yaml — слой `asyncapi/`" if y_async else ""),
+                "`api-specification/<service>-<surface>-asyncapi.yaml` в репозитории "
+                "`ECO_BE/ms-<service>` рядом с OpenAPI",
+                "cross-service-addressing §2, §5.2 (SF-01); техбук concepts/api-first-async-yojo "
+                "(прежняя api-first-async — deprecated)")
     else:
-        rep.add("=", "место AsyncAPI", "api-specification/ репозитория сервиса")
+        rep.add("=", "Место AsyncAPI", "api-specification/ репозитория сервиса",
+                "api-specification/ репозитория сервиса", "SF-01")
 
-    # 2. реф ссылки на репозиторий кода (дом: conventions 102–103, §5.3 п.7; selfcheck)
+    # 2. реф ссылки на репозиторий кода
     hit = _find(md, r".*(blob/develop/|явная ветка).*")
     if hit:
-        rep.add("≠", "реф ссылки на код",
-                f"паспорт — явная ветка ({hit}) | стандарт — `HEAD`, явный ref только для"
-                " комплекта не основной линии, назван в шапке раздела матрицы"
-                " (дом: conventions §5.3 п. 7; repo-topology «согласованный merge: код — в"
-                " default branch»; ADR-0017)")
+        rep.add("≠", "Реф в ссылке на репозиторий кода",
+                f"явная ветка, пример `develop` ({hit})",
+                "`HEAD`; явный ref только у комплекта не основной линии, назван один раз в "
+                "шапке раздела матрицы «Покрытие: API ↔ SRS»",
+                "conventions §5.3 п. 7 (строки 102–103, 605–610); repo-topology 412–416 "
+                "«согласованный merge: код — в default branch»; ADR-0017")
     else:
-        rep.add("=", "реф ссылки на код", "HEAD")
+        rep.add("=", "Реф в ссылке на репозиторий кода", "HEAD", "HEAD", "conventions §5.3 п. 7")
 
     # 3. адрес контрактов
     if "ECO_BE/ms-<service>" in md or "ECO_BE/ms-" in json.dumps(their, ensure_ascii=False):
-        rep.add("=", "репозиторий контрактов", "ECO_BE/ms-<service>/api-specification/")
+        rep.add("=", "Адрес контрактов OpenAPI", "`ECO_BE/ms-<service>/api-specification/`",
+                "`ECO_BE/ms-<service-id>/-/tree/HEAD/api-specification`",
+                "cross-service-addressing §5.2; selfcheck")
     else:
-        rep.add("≠", "репозиторий контрактов",
-                "паспорт не называет ECO_BE/ms-<service>/api-specification/ | стандарт —"
-                f" {built['links']['code_contracts']}")
+        rep.add("≠", "Адрес контрактов OpenAPI", "не назван",
+                built["links"]["code_contracts"], "cross-service-addressing §5.2")
 
-    # 4. префиксы (дом: шаблон README, таблица типов)
+    # 4. префиксы
     ours = set(built["ids"]["prefixes"])
     theirs = {str(p).lower() for p in (their.get("ids", {}) or {}).get("prefixes", [])}
     if theirs:
         missing = sorted(ours - theirs)
         extra = sorted(theirs - ours)
         if missing:
-            rep.add("≠", "префиксы ID", "в yaml паспорта нет префиксов канона: "
-                    + ", ".join(p.upper() for p in missing)
-                    + " (дом: шаблон docs-readme.md, таблица «Типы артефактов»)")
+            rep.add("≠", "Префиксы ID в yaml",
+                    "нет " + ", ".join(p.upper() for p in missing),
+                    "семейства " + ", ".join(p.upper() for p in built["ids"]["prefixes"]),
+                    "шаблон docs-readme.md, таблица «Типы артефактов» (Д-35)")
         else:
-            rep.add("=", "префиксы ID", "все префиксы канона есть в паспорте")
+            rep.add("=", "Префиксы ID в yaml", "все префиксы канона есть", "—",
+                    "шаблон docs-readme.md")
         if extra:
-            rep.add("i", "префиксы ID", "в паспорте сверх канона: "
-                    + ", ".join(p.upper() for p in extra)
-                    + " — наблюдения платформы по существующим комплектам, не типы канона"
-                    " (ins — практика docs-sign вне srs/, scrp/prc/dm — старая нотация)")
-    # 5. набор type (дом: шаблоны типов — type в frontmatter)
+            rep.add("i", "Префиксы сверх канона",
+                    ", ".join(p.upper() for p in extra) + " — наблюдения платформы по "
+                    "существующим комплектам",
+                    "не типы канона: INS — практика docs-sign вне srs/; SCRP, PRC, DM — "
+                    "старая нотация", "решение 2026-09-28 (Д-27 п. 5)")
+    # 5. набор type
+    closed = re.search(r"Закрытый набор `type`.*?\n(?:.*\n){0,4}", md)
+    closed_txt = closed.group(0) if closed else ""
     for t, where in (("internal-contract", "srs/internal-contract/"),
                      ("lib-contract", "srs/lib-contract/"),
                      ("agent", "srs/agent/")):
-        in_closed = re.search(r"Закрытый набор `type`.*?\n(?:.*\n){0,4}", md)
-        closed_txt = in_closed.group(0) if in_closed else ""
         if f"`{t}`" in closed_txt and "читай как есть" not in closed_txt:
-            rep.add("=", f"type {t}", "в закрытом наборе платформы")
+            rep.add("=", f"Тип `{t}`", "в закрытом наборе", "тип канона", "шаблон типа")
         else:
-            rep.add("i", f"type {t}", f"тип канона миграции ({where}) вне закрытого набора"
-                    " платформы — читается как документ без навыка; включение в паспорт —"
-                    " вопрос 3 письма")
+            rep.add("i", f"Тип `{t}`",
+                    "вне закрытого набора: «документ без навыка», читается как источник",
+                    f"тип канона миграции, каталог `{where}`, объявлен в README комплекта",
+                    "шаблон типа; канон платформы §10; письмо платформе, вопрос 3")
 
-    # 6. поля frontmatter (дом: шаблон README «Поля frontmatter»)
+    # 6. поля frontmatter
     if re.search(r"`title`[^\n]*не добавлять", md):
-        rep.add("i", "frontmatter title", "паспорт: в новые документы не добавлять | канон:"
-                " `title` — провенанс reverse (дословное наименование страницы источника),"
-                " объявлен в README комплекта; для forward-документов не требуется")
+        rep.add("i", "Поле frontmatter `title`", "в новые документы не добавлять",
+                "провенанс reverse: дословное наименование страницы источника; у forward-"
+                "документов не требуется; объявлено в README комплекта",
+                "шаблон docs-readme.md «Поля frontmatter»")
     if re.search(r"`version`[^\n]*историческ", md):
-        rep.add("=", "frontmatter version", "историческое, не добавлять и не трогать (Д-27)")
+        rep.add("=", "Поле frontmatter `version`", "историческое: не добавлять, не трогать",
+                "необязательно, старые комплекты не трогаются", "Д-27 п. 4")
     if "confluence_page_ids" not in md:
-        rep.add("i", "frontmatter confluence_page_ids", "паспорт не знает поля | канон:"
-                " привязка карточки к страницам источника, объявлено в README комплекта")
+        rep.add("i", "Поле frontmatter `confluence_page_ids`", "паспорт поля не знает",
+                "привязка карточки к страницам источника на время переноса и доработки "
+                "задач; объявлено в README комплекта", "шаблон docs-readme.md «Поля frontmatter»")
 
-    # 7. имена разделов README (дом: SF-02)
+    # 7. имена разделов README
     for name in ("Условные обозначения", "Подсервисы"):
         if name in md:
-            rep.add("=", f"README «{name}»", "паспорт читает раздел под этим именем")
+            rep.add("=", f"README «{name}»", "читает раздел под этим именем",
+                    "дом контуров, частей, типов, статусной модели, полей", "SF-02")
         else:
-            rep.add("≠", f"README «{name}»", "паспорт не называет раздел, который канон делает"
-                    " домом контуров/частей (SF-02)")
+            rep.add("≠", f"README «{name}»", "раздел не назван",
+                    "дом контуров/частей комплекта", "SF-02")
 
     # 8. матрица
     tr = their.get("traceability", {}) or {}
     if tr.get("file", "traceability-matrix.md") != "traceability-matrix.md":
-        rep.add("≠", "имя матрицы", f"паспорт {tr.get('file')} | канон traceability-matrix.md")
+        rep.add("≠", "Имя матрицы", str(tr.get("file")), "traceability-matrix.md", "conventions §5.3")
     else:
-        rep.add("=", "имя матрицы", "traceability-matrix.md")
+        rep.add("=", "Имя матрицы", "traceability-matrix.md", "traceability-matrix.md",
+                "conventions §5.3")
     if tr.get("api_coverage_section") == "Покрытие: API ↔ SRS":
-        rep.add("=", "раздел матрицы API", "«Покрытие: API ↔ SRS»")
+        rep.add("=", "Раздел матрицы API", "«Покрытие: API ↔ SRS»", "«Покрытие: API ↔ SRS»",
+                "selfcheck; conventions §5.3 п. 7")
     elif tr:
-        rep.add("≠", "раздел матрицы API", f"паспорт «{tr.get('api_coverage_section')}» |"
-                " канон «Покрытие: API ↔ SRS»")
+        rep.add("≠", "Раздел матрицы API", f"«{tr.get('api_coverage_section')}»",
+                "«Покрытие: API ↔ SRS»", "selfcheck")
     if tr.get("business_registry_section"):
-        rep.add("i", "реестр ID матрицы", f"паспорт ждёт раздел «{tr['business_registry_section']}»"
-                " | канон: один раздел «Реестр ID» для всех слоёв (мигрированные комплекты без"
-                " brd/); у комплекта с бизнес-слоем раздел появляется при деривации BRD")
-    # 9. соответствие путь → навык
+        rep.add("i", "Реестр ID матрицы", f"ждёт раздел «{tr['business_registry_section']}»",
+                "один раздел «Реестр ID» для всех слоёв; у мигрированных комплектов brd/ нет, "
+                "раздел бизнес-слоя появляется при деривации BRD", "шаблоны матрицы; Д-27 п. 3")
+
+    # 9. путь → навык
     their_map: Dict[str, set] = {}
     for s in their.get("skills_by_path", []) or []:
         their_map.setdefault(s.get("path"), set()).add(s.get("skill"))
+    mism = 0
     for s in built["skills_by_path"]:
         p, sk = s["path"], s["skill"]
         if p in their_map and sk not in their_map[p] and sk != "api-asyncapi":
-            rep.add("≠", "путь → навык",
-                    f"{p}: паспорт {', '.join(sorted(str(x) for x in their_map[p]))} | канон {sk}")
-    if their_map and not any(m == "≠" and t == "путь → навык" for m, t, _ in rep.lines):
-        rep.add("=", "путь → навык", "пути типов совпадают")
-    # 10. сегменты АС
+            mism += 1
+            rep.add("≠", f"Путь → навык `{p}`",
+                    ", ".join(sorted(str(x) for x in their_map[p])), sk,
+                    "passport_sync TYPE_TO_SKILL (имена навыков — платформы)")
+    if their_map and not mism:
+        rep.add("=", "Путь → навык", "пути типов совпадают", "—", "TYPE_TO_SKILL")
+
+    # 10. коды внешних АС
     if contracts is not None:
         ours_as = set(as_codes(contracts))
         theirs_as = {str(s).lower() for s in (their.get("ids", {}) or {}).get("segments", [])}
         theirs_as -= set(_CONTOURS + _SEGMENTS_FIXED)
         if ours_as and ours_as != theirs_as:
-            rep.add("≠", "коды внешних АС", "паспорт: " + ", ".join(sorted(theirs_as))
-                    + " | docs-external-contracts: " + ", ".join(sorted(ours_as)))
+            rep.add("≠", "Коды внешних АС", ", ".join(sorted(theirs_as)),
+                    ", ".join(sorted(ours_as)) + " (папки корня docs-external-contracts)",
+                    "репозиторий docs-external-contracts")
     return rep
 
 
@@ -481,8 +528,7 @@ def main() -> int:
         for ln in rep.render():
             print(ln)
         if a.json:
-            print(json.dumps([{"mark": m, "topic": t, "text": x} for m, t, x in rep.lines],
-                             ensure_ascii=False, indent=1))
+            print(json.dumps(rep.as_dicts(), ensure_ascii=False, indent=1))
         return 1 if rep.diffs else 0
     if a.build is None:
         ap.print_help()
