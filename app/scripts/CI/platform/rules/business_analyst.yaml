@@ -1,0 +1,3 @@
+kind: role-marker
+role: business_analyst
+description: Маркер роли CLI; validator выполняет общий набор структурных проверок, ролевые различия пока не активированы.

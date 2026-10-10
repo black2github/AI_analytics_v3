@@ -1,0 +1,8 @@
+version: 1
+kind: role-registry
+description: Реестр допустимых ролей CLI; поведение portable-core задаёт скрипт validator.
+roleAliases:
+  BA: business_analyst
+  BUSINESS_ANALYST: business_analyst
+  SA: system_analyst
+  SYSTEM_ANALYST: system_analyst
