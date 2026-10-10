@@ -1618,3 +1618,206 @@ class TestApiSpecInCodeRepo:
         assert any(l.startswith("⚠ каталог сервисов: api у `cards-core` совпадает с адресом по правилу") for l in rep)
         assert any(l.startswith("⚠ каталог сервисов: api у `other` — имя ветки `master`") for l in rep)
         assert not any("`third`" in l and "⚠" in l for l in rep)
+
+
+# --- сторож условных обозначений README (самоописание комплекта, 2026-10-10) ---
+
+_LEGEND_README = (
+    "# К\n\n## Условные обозначения\n\n### Контуры (суффиксы в ID)\n\n"
+    "| Код | Значение |\n|---|---|\n| **CL** | Клиентский |\n\n"
+    "### Типы артефактов (префиксы ID)\n\n| Префикс | Что | Где |\n|---|---|---|\n"
+    "| **FUN** | Функция | `srs/function/` |\n"
+    "| **CTL / CTL-GRP** | Контроль | `srs/control/` |\n"
+    "| **INTC** | Описание метода | `srs/internal-contract/` |\n"
+    "| **SM** | Статусная модель `SM-000` | `srs/process/` |\n\n"
+    "### Поля frontmatter\n\n| Поле | Назначение |\n|---|---|\n"
+    "| `title` | наименование страницы источника |\n"
+    "| `confluence_page_ids` | привязка к странице источника |\n\n"
+    "## Границы\n")
+
+
+def _typed(cid: str, typ: str, extra: str = "") -> str:
+    return f"---\nid: {cid}\ntitle: 'Т'\ntype: {typ}\n{extra}---\n\n# Т\n\nтекст\n"
+
+
+class TestReadmeLegend:
+    def _run(self, tmp_path, readme):
+        docs = tmp_path / "docs"
+        if readme is not None:
+            make(docs / "README.md", readme)
+        make(docs / "srs/function/f1.md", _typed("FUN-CL-01", "function", "confluence_page_ids: [1234]\n"))
+        make(docs / "srs/internal-contract/i1.md", _typed("INTC-001", "internal-contract"))
+        make(docs / "srs/process/status-model.md", _typed("SM-000", "process"))
+        make_matrix(docs, "| FUN-CL-01 | function | Ф | f1.md |\n| INTC-001 | internal-contract | К | i1.md |\n"
+                          "| SM-000 | process | С | status-model.md |\n")
+        report, ok = selfcheck.run(docs, None)
+        legend = [ln.strip() for ln in report if "условные обозначения" in ln.lower()
+                  or ln.startswith("   ")]
+        return report, ok, legend
+
+    def test_complete_legend_silent(self, tmp_path):
+        report, ok, _ = self._run(tmp_path, _LEGEND_README)
+        assert not any("условные обозначения README" in ln for ln in report), report
+
+    def test_missing_readme_single_warning_not_verdict(self, tmp_path):
+        report, ok, _ = self._run(tmp_path, None)
+        assert any("README комплекта отсутствует" in ln for ln in report)
+        assert any("вердикт: OK" in ln for ln in report)
+
+    def test_missing_section_warned(self, tmp_path):
+        report, _, _ = self._run(tmp_path, "# К\n\n## Разделы\n")
+        assert any("нет раздела «Условные обозначения»" in ln for ln in report)
+
+    def test_undeclared_prefix_status_model_and_fields_warned(self, tmp_path):
+        readme = ("# К\n\n## Условные обозначения\n\n| Префикс | Что |\n|---|---|\n"
+                  "| **FUN** | Функция |\n\n## Границы\n")
+        report, ok, _ = self._run(tmp_path, readme)
+        assert ok
+        assert any("префиксы ID комплекта не описаны" in ln and "INTC ×1" in ln and "SM ×1" in ln
+                   and "FUN" not in ln.split(":")[-1] for ln in report), report
+        assert any("статусной модели не назван: SM-000" in ln for ln in report)
+        assert any("поля frontmatter комплекта не описаны" in ln and "confluence_page_ids" in ln
+                   and "title" in ln for ln in report)
+
+    def test_part_table_name_warned(self, tmp_path):
+        readme = _LEGEND_README.replace("## Границы\n",
+                                        "### Коды частей (слот в ID)\n\n| Код | Каталог |\n|---|---|\n"
+                                        "| **DS** | `document-signing` |\n\n## Границы\n")
+        report, _, _ = self._run(tmp_path, readme)
+        assert any("ищут её по имени «Подсервисы»" in ln for ln in report), report
+
+    def test_part_table_named_subservices_silent(self, tmp_path):
+        readme = _LEGEND_README.replace("## Границы\n",
+                                        "### Подсервисы\n\n| Код | Каталог |\n|---|---|\n"
+                                        "| **DS** | `document-signing` |\n\n## Границы\n")
+        report, _, _ = self._run(tmp_path, readme)
+        assert not any("по имени «Подсервисы»" in ln for ln in report)
+
+    def test_declared_prefixes_parsing(self):
+        sec = "| **F-CL / F-BNK** | | |\n| **CTL / CTL-GRP** | | |\n`DM` для реестров, **US / FR / NFR** |"
+        assert selfcheck._declared_prefixes(sec) == {"F", "CTL", "DM", "US", "FR", "NFR"}
+
+
+# --- структурные сторожа: sidecar-примеры и относительные ссылки (P-20, 2026-10-10) ---
+
+_INTC_CARD = ("---\nid: INTC-001\ntitle: 'Метод'\ntype: internal-contract\n"
+              "confluence_page_ids: ['5551']\n---\n\n# Метод\n\n"
+              "| Сценарий | Файл |\n|---|---|\n"
+              "| Пример ответа | [r.json](examples/r.json) |\n")
+_GOOD = '{"data": [{"accountid": "ba2105e0-4f89", "number": "40702810000260002215"}]}'
+_BAD = '{"data": [{"accountid": "ba2105e0-4f89", "number: 40702810000260002215, }]}'
+
+
+class TestStructuredExamples:
+    def _docs(self, tmp_path, example: str, bom: bool = False):
+        docs = tmp_path / "docs"
+        make(docs / "srs/internal-contract/intc-001.md", _INTC_CARD)
+        p = docs / "srs/internal-contract/examples/r.json"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_bytes((b"\xef\xbb\xbf" if bom else b"") + example.encode("utf-8"))
+        make_matrix(docs, "| INTC-001 | internal-contract | М | intc-001.md |\n")
+        return docs
+
+    def test_valid_example_counted(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert ok and rep == ["структурные файлы: 1 разбираются ✓"]
+
+    def test_bom_is_transfer_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD, bom=True)
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok and any("BOM в начале — брак переноса" in l for l in rep)
+
+    def test_invalid_without_sources_is_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok
+        assert any(l.startswith("✗ структурный файл srs/internal-contract/examples/r.json")
+                   and "источника нет" in l for l in rep)
+
+    def test_source_parses_is_transfer_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        src = tmp_path / "confluence/p.md"
+        make(src, source("Метод", "5551", "Пример ответа\n\n```\n" + _GOOD + "\n```\n"))
+        rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
+        assert not ok and any("в источнике тот же пример разбирается — брак переноса" in l for l in rep)
+
+    def test_source_invalid_is_analytics_debt_warning(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        src = tmp_path / "confluence/p.md"
+        # в источнике пример живёт в ячейке таблицы и тоже не разбирается
+        cell = _BAD.replace("|", r"\|")
+        make(src, source("Метод", "5551", "| Поле | Значение |\n|---|---|\n| Пример ответа | `" + cell + "` |\n"))
+        rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
+        assert ok, rep
+        assert any(l.startswith("⚠ структурный файл") and "дефект аналитики" in l
+                   and "сохранить как .txt" in l for l in rep)
+
+    def test_source_table_cell_parses_is_transfer_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        src = tmp_path / "confluence/p.md"
+        make(src, source("Метод", "5551", "| Поле | Значение |\n|---|---|\n| Пример ответа | `" + _GOOD + "` |\n"))
+        rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
+        assert not ok and any("тот же пример разбирается" in l for l in rep)
+
+    def test_orphan_example_warned(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        (docs / "srs/internal-contract/examples/orphan.json").write_text("{}", encoding="utf-8")
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert ok and any("orphan.json без ссылающейся карточки" in l for l in rep)
+
+    def test_yaml_and_xml_parsed(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        make(docs / "srs/internal-contract/intc-001.md",
+             _INTC_CARD + "| Схема | [s.xml](examples/s.xml) |\n| Конфиг | [c.yaml](examples/c.yaml) |\n")
+        (docs / "srs/internal-contract/examples/s.xml").write_text("<a><b/></a", encoding="utf-8")
+        (docs / "srs/internal-contract/examples/c.yaml").write_text("a: 1\nb: [1, 2\n", encoding="utf-8")
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok
+        assert sum(1 for l in rep if l.startswith("✗ структурный файл")) == 2
+
+    def test_wired_into_run_with_sources(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        src_root = tmp_path / "confluence"
+        make(src_root / "p.md", source("Метод", "5551", "```\n" + _GOOD + "\n```\n"))
+        report, ok = selfcheck.run(docs, src_root)
+        assert not ok and any("брак переноса, чинится по источнику" in l for l in report)
+
+
+class TestRelativeLinks:
+    def test_ok_links_counted(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/function/f1.md", card("Ф1").replace("текст", "см. [сущность](../data-model/e1.md#поля) и [каталог](../data-model/)"))
+        make(docs / "srs/data-model/e1.md", card("С1"))
+        rep, ok = selfcheck.check_relative_links(docs)
+        assert ok and rep == ["относительные ссылки: 2 ведут на существующие файлы ✓"]
+
+    def test_broken_link_is_defect_and_lists_target(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/function/f1.md", card("Ф1").replace("текст", "[матрица](../../traceability-matrix.md) и [нет](../data-model/none.md)"))
+        make_matrix(docs)
+        rep, ok = selfcheck.check_relative_links(docs)
+        assert not ok
+        assert rep[0].startswith("✗ битые относительные ссылки: 1 из 2")
+        assert any("srs/function/f1.md → ../data-model/none.md" in l for l in rep)
+
+    def test_anchors_external_and_code_blocks_skipped(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "f1.md", card("Ф1").replace(
+            "текст", "[як](#раздел) [внеш](https://x.y/z.md) [почта](mailto:a@b.c)\n\n```\n[пример](нет-такого.md)\n```\n"))
+        rep, ok = selfcheck.check_relative_links(docs)
+        assert ok and rep == []
+
+    def test_percent_encoded_and_cyrillic_targets(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "f1.md", card("Ф1").replace("текст", "[а](%D1%81%D1%85%D0%B5%D0%BC%D0%B0.md) [б](схема.md)"))
+        make(docs / "схема.md", "# с\n")
+        rep, ok = selfcheck.check_relative_links(docs)
+        assert ok
+
+    def test_wired_into_run(self, tmp_path):
+        docs = tmp_path / "docs"
+        make(docs / "srs/function/f1.md", card("Ф1").replace("текст", "[нет](none.md)"))
+        make_matrix(docs)
+        report, ok = selfcheck.run(docs, None)
+        assert not ok and any(l.startswith("✗ битые относительные ссылки") for l in report)

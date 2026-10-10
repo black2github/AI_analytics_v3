@@ -483,6 +483,13 @@ def run(docs: Path, sources: Optional[Path],
     if rep:
         report.append(("✓" if ok else "✗") + " слот части сервиса в ID:")
         report.extend(f"   {ln}" for ln in rep)
+    # условные обозначения README (2026-10-10): самоописание комплекта
+    # для внешних читателей — ⚠-сигналы, вердикт не трогают
+    lg_rep, _ = _safe(lambda: (check_readme_legend(docs, card_ids), True))
+    if lg_rep:
+        report.append("⚠ условные обозначения README (самоописание "
+                      "комплекта):")
+        report.extend(f"   {ln}" for ln in lg_rep)
     # реестр замечаний команды (цикл обратной связи, модель 2026-08-17):
     # feedback.md живёт в КОРНЕ репозитория отдачи; файла нет — ок
     rep, ok = _safe(ld.check_feedback_order, docs.parent / "feedback.md")
@@ -556,6 +563,15 @@ def run(docs: Path, sources: Optional[Path],
     fa_rep, fa_ok = _safe(check_file_artifacts, docs)
     all_ok = all_ok and fa_ok
     report.extend(fa_rep)
+    # структурные сторожа (2026-10-10): sidecar-примеры разбираются
+    # (брак переноса ✗ / дефект источника ⚠), относительные ссылки
+    # ведут на существующие файлы (✗)
+    se_rep, se_ok = _safe(check_structured_examples, docs, idx)
+    all_ok = all_ok and se_ok
+    report.extend(se_rep)
+    rl_rep, rl_ok = _safe(check_relative_links, docs)
+    all_ok = all_ok and rl_ok
+    report.extend(rl_rep)
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -871,6 +887,292 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         report.append(f"слоты частей: {len(codes)} кодов по таблице README, "
                       "соответствие «слот ↔ каталог» выдержано ✓")
     return report, ok
+
+
+# --- сторож условных обозначений README комплекта (2026-10-10) ---
+# README комплекта — самоописание: внешние читатели (агенты платформы
+# AI Factory по её паспорту ЭКО «Как читать» п. 2) берут из раздела
+# «Условные обозначения» контуры, коды частей (таблица «Подсервисы»),
+# префиксы ID и идентификатор статусной модели; где README молчит,
+# действует их паспорт, а не канон миграции. Сторож держит самоописание
+# полным: каждый префикс ID, встречающийся в комплекте, описан; статусная
+# модель названа; поля frontmatter объяснены; таблица частей носит имя,
+# по которому её ищут. Только ⚠ — действующие комплекты не ломаются;
+# без README сторож называет это одним предупреждением.
+
+_LEGEND_HEAD_RE = re.compile(r"^(#+)\s*Условные обозначения.*$", re.M)
+_LEGEND_TOKEN_RE = re.compile(r"\*\*([^*\n]{1,40})\*\*|`([A-Z][A-Z0-9-]{0,12})`")
+_PREFIX_RE = re.compile(r"^[A-Z]{1,6}$")
+_FM_DESCRIBED = ("title", "confluence_page_ids", "version")
+
+
+def _legend_section(text: str) -> Optional[str]:
+    """Текст раздела «Условные обозначения» README (до заголовка того же
+    или более высокого уровня); None — раздела нет."""
+    m = _LEGEND_HEAD_RE.search(text)
+    if not m:
+        return None
+    level = len(m.group(1))
+    body: List[str] = []
+    for ln in text[m.end():].splitlines():
+        hm = re.match(r"^(#+)\s", ln)
+        if hm and len(hm.group(1)) <= level:
+            break
+        body.append(ln)
+    return "\n".join(body)
+
+
+def _declared_prefixes(section: str) -> set:
+    """Префиксы ID, описанные в разделе: жирные ячейки таблиц (`**CTL /
+    CTL-GRP**`, `**F-CL / F-BNK**` → CTL, F) и токены в обратных кавычках."""
+    out: set = set()
+    for m in _LEGEND_TOKEN_RE.finditer(section):
+        raw = m.group(1) or m.group(2) or ""
+        for tok in re.split(r"\s*[/,]\s*", raw):
+            head = tok.strip("` ").split("-")[0]
+            if _PREFIX_RE.fullmatch(head):
+                out.add(head)
+    return out
+
+
+def check_readme_legend(docs: Path, card_ids: Dict[Path, str]) -> List[str]:
+    """⚠-сигналы о неполном самоописании комплекта в README."""
+    readme = docs / "README.md"
+    if not readme.is_file():
+        return ["README комплекта отсутствует — внешние читатели берут "
+                "контуры, части и префиксы ID из его раздела «Условные "
+                "обозначения» (шаблон docs-readme.md)"]
+    text = readme.read_text(encoding="utf-8", errors="replace")
+    section = _legend_section(text)
+    if section is None:
+        return ["README: нет раздела «Условные обозначения» — контуры, "
+                "части, префиксы ID и поля frontmatter комплекта не "
+                "объявлены (шаблон docs-readme.md)"]
+    report: List[str] = []
+    declared = _declared_prefixes(section)
+    used: Dict[str, int] = {}
+    for cid in card_ids.values():
+        head = cid.split("-")[0]
+        if _PREFIX_RE.fullmatch(head):
+            used[head] = used.get(head, 0) + 1
+    missing = sorted(p for p in used if p not in declared)
+    if missing:
+        report.append(
+            "префиксы ID комплекта не описаны в таблице типов: "
+            + ", ".join(f"{p} ×{used[p]}" for p in missing))
+    sm_missing = sorted(cid for cid in card_ids.values()
+                        if cid.startswith("SM-") and cid not in section)
+    if sm_missing:
+        report.append("идентификатор статусной модели не назван: "
+                      + ", ".join(sm_missing))
+    fields: set = set()
+    for p in card_ids:
+        fm = read_frontmatter(p) or {}
+        fields.update(f for f in _FM_DESCRIBED if f in fm)
+    fm_missing = sorted(f for f in fields if f not in section)
+    if fm_missing:
+        report.append("поля frontmatter комплекта не описаны (таблица "
+                      "«Поля frontmatter»): " + ", ".join(fm_missing))
+    pm = _PART_TABLE_HEAD_RE.search(text)
+    if pm and "подсервис" not in pm.group(0).lower():
+        report.append(f"таблица кодов частей озаглавлена «{pm.group(0).strip('# ')}» "
+                      "— внешние читатели ищут её по имени «Подсервисы»")
+    return report
+
+
+# --- структурные сторожа (2026-10-10, решение владельца P-20) ---
+# Два свойства комплекта, которых прибор не проверял, а валидатор
+# платформы AI Factory блокирует на входе (E_STRUCTURED_FILE_INVALID,
+# E_LOCAL_LINK_MISSING): sidecar-примеры JSON/YAML/XML разбираются;
+# относительные ссылки в документах ведут на существующие файлы. Замер
+# 2026-10-07 на КК: три невалидных JSON-примера (BOM; синтаксис), две
+# битые ссылки — гейт миграции их не видел. Сторож обнаруживает, не
+# лечит, и разводит причину по источнику: пример испорчен переносом
+# (BOM, обрезка, склейка — в источнике тот же текст разбирается или
+# пример в источнике не найден) — брак миграции ✗, чинится; пример
+# невалиден уже в источнике — дефект аналитики ⚠: файл сохраняется как
+# `.txt` с пометкой в карточке и записью в вопросы, не правится.
+
+_STRUCT_EXT = {".json", ".yaml", ".yml", ".xml"}
+_BOM = b"\xef\xbb\xbf"
+_FENCE_RE = re.compile(r"```[^\n]*\n(.*?)```", re.S)
+_TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_\-.]{7,}")
+
+
+def _parse_structured(raw: bytes, ext: str) -> Optional[str]:
+    """None — разбирается; иначе короткое описание ошибки."""
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as e:
+        return f"не UTF-8 ({e.reason})"
+    try:
+        if ext == ".json":
+            import json
+            json.loads(text)
+        elif ext in (".yaml", ".yml"):
+            try:
+                import yaml  # noqa: WPS433 — есть в окружении прибора
+            except ImportError:
+                return None  # без PyYAML YAML не проверяем (молчим)
+            yaml.safe_load(text)
+        elif ext == ".xml":
+            import xml.etree.ElementTree as ET
+            ET.fromstring(text)
+    except Exception as e:  # noqa: BLE001 — любой сбой разбора — находка
+        return str(e).splitlines()[0][:120]
+    return None
+
+
+def _source_candidates(text: str) -> List[str]:
+    """Фрагменты страницы источника, которые могли быть примером:
+    блоки кода и ячейки таблиц (инлайн-код в ячейке склеивается, `<br>`
+    — перевод строки)."""
+    out = list(_FENCE_RE.findall(text))
+    for ln in text.splitlines():
+        if ln.lstrip().startswith("|"):
+            for cell in ln.strip().strip("|").split("|"):
+                c = re.sub(r"<br\s*/?>", "\n", cell)
+                c = c.replace("`", "").replace("\\|", "|").strip()
+                if len(c) > 10:
+                    out.append(c)
+    return out
+
+
+def _struct_tokens(raw: bytes) -> List[str]:
+    text = raw.decode("utf-8", errors="replace")
+    seen: List[str] = []
+    for t in _TOKEN_RE.findall(text):
+        if t not in seen and not t.isdigit():
+            seen.append(t)
+        if len(seen) >= 6:
+            break
+    return seen
+
+
+def check_structured_examples(docs: Path, idx: Dict[str, Path]
+                              ) -> Tuple[List[str], bool]:
+    """(отчёт, ok). idx: page_id -> файл выгрузки (пусто без источников)."""
+    files = sorted(p for p in docs.rglob("*")
+                   if p.is_file() and p.suffix.lower() in _STRUCT_EXT)
+    if not files:
+        return [], True
+    owners: Dict[Path, List[Path]] = {}
+    for md in sorted(docs.rglob("*.md")):
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        for m in _ART_LINK_RE.finditer(text):
+            tgt = unquote(m.group(1)).split("#", 1)[0].replace("\\", "/")
+            if not tgt or "://" in tgt:
+                continue
+            try:
+                rp = (md.parent / Path(tgt)).resolve()
+            except OSError:
+                continue
+            if rp.suffix.lower() in _STRUCT_EXT:
+                owners.setdefault(rp, []).append(md)
+    rep: List[str] = []
+    ok = True
+    n_ok = 0
+    for f in files:
+        rel = f.relative_to(docs).as_posix()
+        raw = f.read_bytes()
+        ext = f.suffix.lower()
+        if raw.startswith(_BOM):
+            ok = False
+            rep.append(f"✗ структурный файл {rel}: BOM в начале — брак "
+                       "переноса (источник BOM не несёт); снять BOM")
+            continue
+        err = _parse_structured(raw, ext)
+        if err is None:
+            n_ok += 1
+            continue
+        # развод причины по источнику
+        cards = owners.get(f.resolve(), [])
+        pages: List[Path] = []
+        for c in cards:
+            for pid in page_ids(read_frontmatter(c) or {}):
+                if pid in idx and idx[pid] not in pages:
+                    pages.append(idx[pid])
+        tokens = _struct_tokens(raw)
+        located = None
+        src_parses = False
+        for pg in pages:
+            try:
+                ptext = pg.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            hits = sum(1 for t in tokens if t in ptext)
+            if tokens and hits >= max(2, len(tokens) // 2):
+                located = pg
+                for cand in _source_candidates(ptext):
+                    if sum(1 for t in tokens if t in cand) >= 2 and \
+                            _parse_structured(cand.encode("utf-8"),
+                                              ext) is None:
+                        src_parses = True
+                        break
+                break
+        if located is not None and not src_parses:
+            rep.append(f"⚠ структурный файл {rel} не разбирается ({err}); "
+                       "в источнике пример тоже не разбирается — дефект "
+                       "аналитики: сохранить как .txt с пометкой в карточке "
+                       "и записью в вопросы, не чинить "
+                       f"(источник: {located.name})")
+            continue
+        ok = False
+        why = ("в источнике тот же пример разбирается" if src_parses
+               else "в источнике пример не найден" if pages
+               else "источника нет")
+        rep.append(f"✗ структурный файл {rel} не разбирается ({err}); "
+                   f"{why} — брак переноса, чинится по источнику")
+    for f in files:
+        if f.resolve() not in owners:
+            rep.append(f"⚠ структурный файл {f.relative_to(docs).as_posix()} "
+                       "без ссылающейся карточки — пример, о котором "
+                       "комплект молчит")
+    if n_ok and ok:
+        rep.insert(0, f"структурные файлы: {n_ok} разбираются ✓")
+    return rep, ok
+
+
+def check_relative_links(docs: Path) -> Tuple[List[str], bool]:
+    """Относительные ссылки документов комплекта ведут на существующие
+    файлы или каталоги; якоря и внешние адреса не проверяются; блоки кода
+    вырезаются (в них ссылки — иллюстрации)."""
+    broken: List[Tuple[str, str]] = []
+    total = 0
+    for md in sorted(docs.rglob("*.md")):
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        text = re.sub(r"```.*?```", " ", text, flags=re.S)
+        for m in _MD_LINK_RE.finditer(text):
+            raw_t = m.group(2).strip()
+            if not raw_t or raw_t.startswith("#") or "://" in raw_t \
+                    or raw_t.startswith(("mailto:", "<")):
+                continue
+            tgt = unquote(raw_t).split("#", 1)[0].replace("\\", "/")
+            if not tgt:
+                continue
+            total += 1
+            try:
+                rp = (md.parent / Path(tgt)).resolve()
+            except OSError:
+                broken.append((md.relative_to(docs).as_posix(), raw_t))
+                continue
+            if not rp.exists():
+                broken.append((md.relative_to(docs).as_posix(), raw_t))
+    if not broken:
+        return ([f"относительные ссылки: {total} ведут на существующие "
+                 "файлы ✓"] if total else []), True
+    rep = [f"✗ битые относительные ссылки: {len(broken)} из {total} "
+           "(цели нет — читатель и агент теряют переход):"]
+    rep.extend(f"   {rel} → {tgt}" for rel, tgt in broken[:20])
+    if len(broken) > 20:
+        rep.append(f"   … ещё {len(broken) - 20}")
+    return rep, False
 
 
 # --- сторож среза канона (П-5b, 2026-08-27) ---
