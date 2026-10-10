@@ -1,0 +1,156 @@
+# Машинная раскладка комплекта документов проекта `eco` (Экосистема).
+# СОБРАНО ИНСТРУМЕНТОМ passport_sync.py из канона миграции и каталога сервисов —
+# не редактировать руками: правка значения делается в доме факта (шаблон README,
+# документ адресации, каталог сервисов), затем сборка повторяется.
+# Ключи canon_types, repos, links, frontmatter, ids.widths — расширения канона;
+# скрипты платформы их не читают.
+
+schema: 1
+kit: eco
+traceability:
+  file: traceability-matrix.md
+  api_coverage_section: 'Покрытие: API ↔ SRS'
+  registry_section: Реестр ID
+  debts_section: Долги по ссылкам
+business_layer:
+  marker_dir: brd
+layers:
+- path: brd/
+  sublayers: false
+- path: srs/
+  sublayers: true
+- path: api-specification/
+  sublayers: false
+  note: репозиторий кода ECO_BE/ms-<service>, не комплект
+skills_by_path:
+- path: srs/data-model/dictionaries.md
+  skill: data-model
+- path: srs/process/status-model.md
+  skill: status-model
+- path: srs/ntf-notification.md
+  skill: ntf-notification
+- path: brd/business-rules.md
+  skill: business-rules
+- path: service-vision.md
+  skill: service-vision
+- path: glossary.md
+  skill: glossary
+- path: srs/rbac.md
+  skill: rbac
+- path: srs/contract-call/
+  skill: contract-call
+- path: srs/screen-form/
+  skill: screen-forms
+- path: srs/data-model/
+  skill: data-model
+- path: srs/print-form/
+  skill: print-forms
+- path: brd/use-cases/
+  skill: use-case
+- path: brd/features/
+  skill: feature-spec
+- path: srs/function/
+  skill: functions
+- path: srs/process/
+  skill: process
+- path: srs/control/
+  skill: controls
+- path: api-specification/
+  skill: api-openapi
+- path: api-specification/
+  skill: api-asyncapi
+  note: AsyncAPI лежит рядом с OpenAPI в api-specification/ репозитория сервиса (техбук api-first-async-yojo);
+    отдельного каталога asyncapi/ и репозитория lib-api-* нет
+ids:
+  prefixes:
+  - vis
+  - glo
+  - f
+  - uc
+  - proc
+  - sm
+  - ent
+  - ext
+  - fun
+  - scr
+  - ctl
+  - prn
+  - ntf
+  - intc
+  - libc
+  - call
+  - plt
+  - chd
+  - rbac
+  - extint
+  segments:
+  - cl
+  - bnk
+  - sys
+  - grp
+  - ext
+  - int
+  - bsk
+  - cdn
+  - esk
+  - f1
+  - knosis
+  - mflash
+  - sbp
+  - tessa
+  parts: readme
+  constant:
+    status_model: SM-000
+  widths:
+    br: 3
+    chd: 2
+    ctl: 3
+    dm: 3
+    ent: 3
+    extint: 3
+    f: 2
+    glo: 3
+    intc: 3
+    libc: 3
+    ntf: 3
+    plt: 3
+    proc: 3
+    rbac: 3
+    sm: 3
+    uc: 2
+    vis: 3
+links:
+  code_ref: HEAD
+  code_contracts: https://gitlab.gboteam.ru/ECO_BE/ms-<service-id>/-/tree/HEAD/api-specification
+  docs_ref: HEAD
+canon_types:
+- path: srs/platform-functions.md
+  skill: null
+  note: тип канона миграции; у платформы навыка нет — документ без навыка (канон §10)
+- path: srs/internal-contract/
+  skill: null
+  note: тип канона миграции; у платформы навыка нет — документ без навыка (канон §10)
+- path: srs/lib-contract/
+  skill: null
+  note: тип канона миграции; у платформы навыка нет — документ без навыка (канон §10)
+- path: srs/agent/
+  skill: null
+  note: тип канона миграции; у платформы навыка нет — документ без навыка (канон §10)
+repos:
+  code_group: ECO_BE
+  docs_group: EAN
+  src_group: EAS
+  external_contracts: EAN/docs-external-contracts
+  code: ECO_BE/ms-<service-id>
+  docs: EAN/docs-<service-id>
+  src: EAS/src-<service-id>
+frontmatter:
+  required:
+  - id|partOf
+  - type
+  - service
+  provenance:
+  - title
+  - confluence_page_ids
+  historical:
+  - version
