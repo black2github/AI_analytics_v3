@@ -52,7 +52,7 @@ def test_ready_without_validator(tmp_path):
     assert lines[-1].startswith("ИТОГ: READY — блокеров 0")
     assert data["verdict"] == "READY"
     assert any("[CORE-20] открытых вопросов нет" in l for l in lines)
-    assert any("[SDLC-04] матрица: раздел «Покрытие: API ↔ SRS» есть" in l for l in lines)
+    assert any("[SDLC-04] раздел есть" in l for l in lines)
     assert any("[ВАЛИДАТОР] валидатор платформы отключён" in l for l in lines)
 
 
@@ -67,7 +67,7 @@ def test_missing_api_section_blocks(tmp_path):
     m = _MATRIX.split("## 3.")[0]
     lines, ready, _ = _run(make_src(tmp_path, matrix=m))
     assert not ready
-    assert any(l.startswith("✗ [SDLC-04] матрица без раздела «Покрытие: API ↔ SRS»") for l in lines)
+    assert any(l.startswith("✗ [SDLC-04] раздела нет") for l in lines)
 
 
 def test_api_dir_blocks(tmp_path):
@@ -140,17 +140,18 @@ _HAS_GIT = shutil.which("git") is not None and tg._DEFAULT_VALIDATOR.is_file()
 def test_validator_clean_kit_and_bom_example(tmp_path):
     lines, ready, _ = _run(make_src(tmp_path), no_validator=False)
     assert ready, "\n".join(lines)
-    assert any("[ВАЛИДАТОР] валидатор платформы: ошибок нет" in l for l in lines)
+    assert any("[ВАЛИДАТОР] ошибок нет" in l for l in lines)
     src = make_src(tmp_path / "b")
     _w(src / "docs/srs/function/f1.md",
        _CARD.replace("см.", "пример [r](examples/r.json); см."))
     p = src / "docs/srs/function/examples/r.json"
     p.parent.mkdir(parents=True)
     p.write_bytes(b"\xef\xbb\xbf{}")
-    lines, ready, _ = _run(src, no_validator=False)
+    lines, ready, data = _run(src, no_validator=False)
     assert not ready
     assert any(l.startswith("✗ [FMT-01] структурный файл") and "BOM" in l for l in lines)
-    assert any("E_STRUCTURED_FILE_INVALID" in l and "[FMT-01]" in l for l in lines)
+    assert any(r["criterion"] == "FMT-01" and r["check"] == "валидатор E_STRUCTURED_FILE_INVALID"
+               for r in data["lines"])
 
 
 _DEBT_ROW = ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
@@ -177,3 +178,25 @@ def test_debts_require_reading_rule_in_readme(tmp_path):
 def test_no_debts_no_line(tmp_path):
     lines, ready, _ = _run(make_src(tmp_path))
     assert ready and not any("перенесённые долги" in l for l in lines)
+
+
+def test_table_format_grouped_with_legend(tmp_path):
+    lines, ready, data = _run(make_src(tmp_path, oq=_OQ_OPEN), fmt="table")
+    assert lines[0] == "| Статус | Критерий | Проверка | Результат |"
+    rows = [l for l in lines[2:] if l.startswith("|")]
+    statuses = [r.split("|")[1].strip()[0] for r in rows]
+    assert statuses == sorted(statuses, key={"✗": 0, "⚠": 1, "i": 2, "✓": 3}.get)
+    assert rows[0].startswith("| ✗ блокер | CORE-20 | открытые вопросы |")
+    assert any(l.startswith("ИТОГ: NOT READY") for l in lines)
+    assert lines[-1].startswith("Критерии — чек-лист DoR") and "ПЕРЕНОС —" in lines[-1]
+    assert data["lines"][0]["check"] == "комплект в целевой раскладке"
+
+
+def test_report_file(tmp_path):
+    src = make_src(tmp_path)
+    lines, ready, data = _run(src, fmt="table")
+    rep = tmp_path / "out" / "gate.md"
+    tg.write_report(rep, src, lines, data)
+    txt = rep.read_text(encoding="utf-8")
+    assert txt.startswith("# Гейт переноса: src-x") and "| Статус | Критерий |" in txt
+    assert "Срез канона по профилю: `не указан`" in txt

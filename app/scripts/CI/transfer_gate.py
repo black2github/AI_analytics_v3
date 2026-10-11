@@ -56,10 +56,14 @@
 #          README обязан объяснять, как читать строку долга как поручение
 #          (подраздел «Долги по ссылкам» в «Условных обозначениях») —
 #          иначе блокер: внешний читатель долгов не поймёт — CORE-20.
-#   5. Печатает отчёт, где каждая строка помечена критерием чек-листа
-#      DoR v1.2 (раздел 1) — отчёт прилагается к протоколу самопроверки
-#      как доказательство по этим критериям. Итог — READY / NOT READY,
-#      код возврата 0 / 1 (2 — гейт не смог отработать).
+#   5. Печатает отчёт таблицей «Статус | Критерий | Проверка | Результат»:
+#      критерий — из чек-листа DoR v1.2 (раздел 1), служебные метки —
+#      ПЕРЕНОС (условия самого переноса, которых в чек-листе нет), ПРИБОР
+#      (сводка и несопоставленные находки прибора), ВАЛИДАТОР (то же для
+#      валидатора платформы); легенда печатается под таблицей. Отчёт
+#      прилагается к протоколу самопроверки как доказательство по
+#      критериям. Итог — READY / NOT READY, код возврата 0 / 1 (2 — гейт
+#      не смог отработать).
 #   6. По ключу --out при READY копирует собранный комплект в клон
 #      docs-репозитория (существующие файлы перезаписываются, чужие не
 #      удаляются); коммит и MR делает человек. При NOT READY --out
@@ -87,8 +91,14 @@
 #   --sources <путь>    каталог выгрузки источников для прибора (по
 #                       умолчанию ищется в src: sources/confluence, confluence)
 #   --strict            полный профиль прибора (маркеры сокращения — ✗)
-#   --json              дополнительно вывести результат в JSON (вердикт,
-#                       строки по критериям) — для протокола и CI
+#   --log               журнал в порядке проверок вместо таблицы (по умолчанию —
+#                       markdown-таблица «Статус | Критерий | Проверка | Результат»,
+#                       строки сгруппированы: блокеры → предупреждения → причины →
+#                       пройдено; под таблицей ИТОГ и легенда служебных меток)
+#   --report <файл.md>  записать таблицу с шапкой (сервис, срез канона, источники,
+#                       профиль прибора) — готовое приложение к протоколу чек-листа
+#   --json              дополнительно вывести результат в JSON (вердикт, строки:
+#                       знак, критерий, проверка, результат) — для CI
 #
 # ПРИМЕР.
 #   python _meta/tools/transfer_gate.py --src C:\doc-as-code\EAS\src-business-cards
@@ -155,18 +165,51 @@ _VALIDATOR_CRITERIA = {
 }
 
 
+# проверка по умолчанию для критерия (когда строка не задаёт свою)
+_DEFAULT_CHECK = {
+    "SDLC-04": "матрица трассировки", "SDLC-05": "концепция и глоссарий",
+    "SDLC-08": "README комплекта", "SDLC-09": "идентификаторы и frontmatter",
+    "CORE-06": "относительные ссылки", "CORE-09": "ссылки и артефакты",
+    "CORE-20": "открытые вопросы и долги", "FMT-01": "структурные файлы",
+    "ПЕРЕНОС": "условия переноса", "ПРИБОР": "прибор selfcheck",
+    "ВАЛИДАТОР": "валидатор платформы",
+}
+_LEGEND = ("Критерии — чек-лист DoR v1.2, раздел «Технологическая совместимость». Служебные метки: "
+           "ПЕРЕНОС — условия самого переноса, которых в чек-листе нет (сборка в целевой раскладке, нет "
+           "api/ и YAML-контрактов, нет обёртки docs/); ПРИБОР — сводная строка прибора миграции "
+           "selfcheck и его находки без сопоставленного критерия; ВАЛИДАТОР — сводная строка валидатора "
+           "платформы AI Factory и его находки без сопоставленного критерия.")
+_STATUS_LABEL = {"✗": "✗ блокер", "⚠": "⚠ предупреждение", "i": "i причина", "✓": "✓ пройдено"}
+_STATUS_ORDER = {"✗": 0, "⚠": 1, "i": 2, "✓": 3}
+
+
 class Gate:
+    """Записи гейта: (знак, критерий, проверка, результат). Таблица — по умолчанию,
+    сгруппирована блокеры → предупреждения → причины → пройдено; журнал (--log) —
+    в порядке выполнения проверок."""
+
     def __init__(self) -> None:
-        self.lines: List[Tuple[str, str, str]] = []  # (знак, критерий, текст)
+        self.lines: List[Tuple[str, str, str, str]] = []
         self.blockers = 0
 
-    def add(self, mark: str, crit: str, text: str) -> None:
+    def add(self, mark: str, crit: str, text: str, check: Optional[str] = None) -> None:
         if mark == "✗":
             self.blockers += 1
-        self.lines.append((mark, crit, text))
+        self.lines.append((mark, crit, check or _DEFAULT_CHECK.get(crit, crit.lower()), text))
 
     def render(self) -> List[str]:
-        return [f"{m} [{c}] {t}" for m, c, t in self.lines]
+        """Журнал: знак [критерий] результат — в порядке проверок."""
+        return [f"{m} [{c}] {t}" for m, c, _, t in self.lines]
+
+    def render_table(self) -> List[str]:
+        esc = lambda x: x.replace("|", "\\|").replace("\n", " ")  # noqa: E731
+        out = ["| Статус | Критерий | Проверка | Результат |", "|---|---|---|---|"]
+        for m, c, k, t in sorted(self.lines, key=lambda r: _STATUS_ORDER.get(r[0], 9)):
+            out.append(f"| {_STATUS_LABEL.get(m, m)} | {esc(c)} | {esc(k)} | {esc(t)} |")
+        return out
+
+    def as_dicts(self) -> List[dict]:
+        return [{"mark": m, "criterion": c, "check": k, "text": t} for m, c, k, t in self.lines]
 
 
 # --- шаг 1: сборка комплекта в целевой раскладке ---------------------------
@@ -217,24 +260,26 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     oq_file, opened = open_questions(src_root, docs)
     if oq_file is None:
         gate.add("⚠", "CORE-20", "журнал open-questions.md не найден — открытые "
-                 "вопросы не проверены (у комплекта без журнала это норма)")
+                 "вопросы не проверены (у комплекта без журнала это норма)",
+                 check="открытые вопросы")
     elif opened:
         gate.add("✗", "CORE-20", f"открытые вопросы: {len(opened)} "
                  f"({', '.join(opened[:8])}{'…' if len(opened) > 8 else ''}) — "
                  "платформа журнал src не читает, нерешённый вопрос переедет "
-                 "молча; закрыть или перевести в долг матрицы")
+                 "молча; закрыть или перевести в долг матрицы", check="открытые вопросы")
     else:
-        gate.add("✓", "CORE-20", f"открытых вопросов нет ({oq_file.name})")
+        gate.add("✓", "CORE-20", f"открытых вопросов нет ({oq_file.name})", check="открытые вопросы")
 
     matrix = staged / "traceability-matrix.md"
     mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
     if matrix.is_file():
         if sc._API_SECTION_RE.search(mtext):
-            gate.add("✓", "SDLC-04", "матрица: раздел «Покрытие: API ↔ SRS» есть")
+            gate.add("✓", "SDLC-04", "раздел есть", check="матрица: раздел «Покрытие: API ↔ SRS»")
         else:
-            gate.add("✗", "SDLC-04", "матрица без раздела «Покрытие: API ↔ SRS» — "
+            gate.add("✗", "SDLC-04", "раздела нет — "
                      "планировщик платформы определяет по нему репозитории кода; "
-                     "раздел обязателен даже пустым (шаблон матрицы)")
+                     "раздел обязателен даже пустым (шаблон матрицы)",
+                     check="матрица: раздел «Покрытие: API ↔ SRS»")
     # (отсутствие матрицы — ✗ прибора, здесь не дублируем)
 
     api_dirs = [p for p in staged.rglob("api") if p.is_dir()]
@@ -249,31 +294,33 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                          + yamls[:3])
         gate.add("✗", "ПЕРЕНОС", f"контракты в комплекте ({what}) — OpenAPI/AsyncAPI "
                  "живут в api-specification/ репозитория кода, копии в "
-                 "docs-репозиторий не переносятся")
+                 "docs-репозиторий не переносятся", check="контракты в комплекте")
     else:
-        gate.add("✓", "ПЕРЕНОС", "каталога api/ и YAML-контрактов в комплекте нет")
+        gate.add("✓", "ПЕРЕНОС", "каталога api/ и YAML-контрактов нет", check="контракты в комплекте")
 
     readme = staged / "README.md"
     rtext = readme.read_text(encoding="utf-8", errors="replace") if readme.is_file() else ""
     if not readme.is_file():
         gate.add("✗", "SDLC-08", "README.md комплекта отсутствует — точка входа "
-                 "внешних читателей (шаблон docs-readme.md)")
+                 "внешних читателей (шаблон docs-readme.md)", check="README комплекта")
     else:
         if sc._LEGEND_HEAD_RE.search(rtext):
-            gate.add("✓", "SDLC-08", "README.md с разделом «Условные обозначения»")
+            gate.add("✓", "SDLC-08", "README.md есть, раздел «Условные обозначения» есть",
+                     check="README комплекта")
         else:
             gate.add("⚠", "SDLC-08", "README.md без раздела «Условные обозначения» — "
-                     "внешние читатели не узнают контуры, части и типы комплекта")
+                     "внешние читатели не узнают контуры, части и типы комплекта",
+                     check="README комплекта")
     for name, crit in (("service-vision.md", "SDLC-05"), ("glossary.md", "SDLC-05")):
         if (staged / name).is_file():
-            gate.add("✓", crit, f"{name} есть")
+            gate.add("✓", crit, f"{name} есть", check=name)
         else:
             gate.add("⚠", crit, f"{name} отсутствует (у платформы обязателен только "
-                     "для нового сервиса; чек-лист DoR требует)")
+                     "для нового сервиса; чек-лист DoR требует)", check=name)
     nested = [p for p in staged.rglob("docs") if p.is_dir()]
     if nested:
         gate.add("✗", "ПЕРЕНОС", "внутри комплекта есть каталог docs/ — обёртка "
-                 "недопустима (валидатор платформы: E_KIT_DOCS_WRAPPER)")
+                 "недопустима (валидатор платформы: E_KIT_DOCS_WRAPPER)", check="обёртка docs/")
     # долги, переживающие перенос (решение 2026-10-10, P-18): строки
     # раздела «Долги по ссылкам» едут как есть, а правило их чтения как
     # поручений объявляет README («Условные обозначения» → «Долги по
@@ -288,7 +335,8 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                      f"перенесённые долги: {len(debts)}, из них межсервисных {cross}"
                      + (" — правило чтения объявлено в README" if has_rule else
                         " — README не объясняет раздел «Долги по ссылкам» "
-                        "(подраздел «Условных обозначений», шаблон docs-readme.md)"))
+                        "(подраздел «Условных обозначений», шаблон docs-readme.md)"),
+                     check="перенесённые долги")
 
 
 # --- шаг 2: прибор миграции -----------------------------------------------------
@@ -307,7 +355,7 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
     except Exception as e:  # noqa: BLE001
         gate.add("✗", "ПРИБОР", f"selfcheck упал: {e!r} — комплект не проверен")
         return
-    block: Optional[Tuple[str, str]] = None  # (знак для подстрок, критерий)
+    block: Optional[Tuple[str, str, str]] = None  # (знак подстрок, критерий, проверка)
     for ln in report:
         s = ln.rstrip()
         st = s.strip()
@@ -315,7 +363,7 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
             block = None
             continue
         if block is not None and s.startswith("   "):
-            gate.add(block[0], block[1], st)  # подстроки заголовка — причины
+            gate.add(block[0], block[1], st, check=block[2])  # подстроки — причины
             continue
         block = None
         if st.startswith(("✓", "✗", "⚠")):
@@ -324,14 +372,14 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
             if mark == "✗":
                 gate.add(mark, crit, st[1:].strip())
                 if st.endswith(":"):
-                    block = ("i", crit)  # причины ниже — информационно, не второй ✗
+                    block = ("i", crit, st[1:].strip().rstrip(":"))  # причины — информационно
             elif mark == "⚠" and "условные обозначения README" in st:
-                block = ("⚠", "SDLC-08")  # подстроки ниже — сами сигналы
+                block = ("⚠", "SDLC-08", "самоописание README")  # подстроки — сами сигналы
     total = next((ln for ln in report if ln.startswith("ИТОГО")), "")
     mode = ("полный профиль" if strict else "командный профиль") + (
         f", источники {sources.as_posix()}" if sources else ", БЕЗ источников")
     gate.add("✓" if ok else "✗", "ПРИБОР",
-             f"selfcheck ({mode}): {total.replace('ИТОГО: ', '')}")
+             f"{total.replace('ИТОГО: ', '')}", check=f"selfcheck ({mode})")
 
 
 # --- шаг 3: валидатор платформы -------------------------------------------------
@@ -390,11 +438,11 @@ def run_validator(gate: Gate, staged: Path, validator: Path,
         code = f.get("code", "E_?")
         crit = _VALIDATOR_CRITERIA.get(code, "ВАЛИДАТОР")
         where = f.get("path", "?") + (f":{f['line']}" if f.get("line") else "")
-        gate.add("✗", crit, f"{code} {where}: {f.get('detail', '')}"[:300])
+        gate.add("✗", crit, f"{where}: {f.get('detail', '')}"[:300], check=f"валидатор {code}")
     summary = data.get("summary", {})
     errors = summary.get("errors", len(findings))
     if errors == 0:
-        gate.add("✓", "ВАЛИДАТОР", "валидатор платформы: ошибок нет")
+        gate.add("✓", "ВАЛИДАТОР", "ошибок нет", check="валидатор платформы")
     elif summary.get("truncated"):
         gate.add("✗", "ВАЛИДАТОР", f"валидатор платформы: ошибок {errors}, показаны "
                  f"первые {len(findings)}")
@@ -423,8 +471,10 @@ def copy_out(staged: Path, out: Path) -> Tuple[int, str]:
 def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None,
              keep: Optional[Path] = None, validator: Optional[Path] = None,
              layout: Optional[Path] = None, no_validator: bool = False,
-             sources: Optional[Path] = None, strict: bool = False
-             ) -> Tuple[List[str], bool, dict]:
+             sources: Optional[Path] = None, strict: bool = False,
+             fmt: str = "log") -> Tuple[List[str], bool, dict]:
+    """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
+    тестов); "table" — markdown-таблица с группировкой и легендой меток."""
     gate = Gate()
     docs = src_root / docs_name
     if not docs.is_dir():
@@ -442,9 +492,10 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         staged = Path(tmp)
     try:
         copied, skipped = stage_kit(docs, staged)
-        gate.add("✓", "ПЕРЕНОС", f"комплект собран в целевой раскладке: {copied} файлов; "
+        gate.add("✓", "ПЕРЕНОС", f"собран: {copied} файлов; "
                  f"служебных пропущено {len(skipped)}"
-                 + (f" ({', '.join(skipped[:4])})" if skipped else ""))
+                 + (f" ({', '.join(skipped[:4])})" if skipped else ""),
+                 check="комплект в целевой раскладке")
         if sources is None:
             sources = find_sources(src_root)
         if sources is None:
@@ -459,10 +510,15 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         else:
             run_validator(gate, staged, validator or _DEFAULT_VALIDATOR, layout)
         ready = gate.blockers == 0
-        lines = gate.render()
-        n_warn = sum(1 for m, _, _ in gate.lines if m == "⚠")
+        n_warn = sum(1 for m, _, _, _ in gate.lines if m == "⚠")
+        lines = gate.render_table() if fmt == "table" else gate.render()
+        if fmt == "table":
+            lines.append("")
         lines.append(f"ИТОГ: {'READY' if ready else 'NOT READY'} — блокеров {gate.blockers}, "
                      f"предупреждений {n_warn}")
+        if fmt == "table":
+            lines.append("")
+            lines.append(_LEGEND)
         if out is not None:
             if ready:
                 n, err = copy_out(staged, out)
@@ -476,11 +532,46 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
             lines.append(f"i собранный комплект оставлен в {keep}")
         return lines, ready, {"verdict": "READY" if ready else "NOT READY",
                               "blockers": gate.blockers, "warnings": n_warn,
-                              "lines": [{"mark": m, "criterion": c, "text": t}
-                                        for m, c, t in gate.lines]}
+                              "lines": gate.as_dicts(),
+                              "src": str(src_root), "sources": str(sources) if sources else None,
+                              "strict": strict}
     finally:
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+def canon_cut_of(src_root: Path) -> str:
+    """Срез канона из строки профиля источников (README.md src-репозитория)."""
+    for cand in (src_root / "README.md", src_root / "sources" / "README.md"):
+        if cand.is_file():
+            m = sc._CANON_CUT_RE.search(cand.read_text(encoding="utf-8", errors="replace"))
+            if m:
+                return m.group(1)
+    return "не указан"
+
+
+def run_gate_table_lines(data: dict) -> List[str]:
+    """Таблица из уже собранных данных (когда на экран печатался журнал)."""
+    g = Gate()
+    for r in data.get("lines", []):
+        g.add(r["mark"], r["criterion"], r["text"], r.get("check"))
+    lines = g.render_table()
+    lines += ["", f"ИТОГ: {data.get('verdict')} — блокеров {data.get('blockers', 0)}, "
+                  f"предупреждений {data.get('warnings', 0)}", "", _LEGEND]
+    return lines
+
+
+def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict) -> None:
+    import datetime as _dt
+    head = [f"# Гейт переноса: {src_root.name}", "",
+            f"Дата: {_dt.date.today().isoformat()}. Рабочий репозиторий: `{src_root}`. "
+            f"Срез канона по профилю: `{canon_cut_of(src_root)}`. "
+            f"Источники: `{data.get('sources') or 'не найдены'}`; профиль прибора: "
+            f"{'полный' if data.get('strict') else 'командный'}. Инструмент — `transfer_gate.py`; "
+            "таблица — приложение к протоколу самопроверки чек-листа DoR (раздел «Технологическая "
+            "совместимость»).", ""]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(head + table_lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def main() -> int:
@@ -502,19 +593,28 @@ def main() -> int:
                     help="каталог выгрузки источников (по умолчанию ищется в src)")
     ap.add_argument("--strict", action="store_true",
                     help="полный профиль прибора (маркеры сокращения — брак)")
+    ap.add_argument("--log", action="store_true",
+                    help="журнал в порядке проверок вместо таблицы (терминал, CI)")
+    ap.add_argument("--report", type=Path, default=None,
+                    help="записать таблицу с шапкой в markdown-файл (приложение к протоколу)")
     ap.add_argument("--json", action="store_true", help="дополнительно вывести JSON")
     a = ap.parse_args()
+    fmt = "log" if a.log else "table"
     try:
         lines, ready, data = run_gate(a.src.resolve(), a.docs, a.out, a.keep,
                                       a.validator, a.layout, a.no_validator,
                                       a.sources.resolve() if a.sources else None,
-                                      a.strict)
+                                      a.strict, fmt)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     for ln in lines:
         print(ln)
+    if a.report is not None:
+        write_report(a.report, a.src.resolve(), lines if fmt == "table" else
+                     run_gate_table_lines(data), data)
+        print(f"i отчёт записан: {a.report}")
     if a.json:
         print(json.dumps(data, ensure_ascii=False, indent=1))
     return 0 if ready else 1
