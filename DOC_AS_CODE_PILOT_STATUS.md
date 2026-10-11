@@ -714,7 +714,10 @@
    гармонизации ждёт платформу: канон §7 (HEAD), паспорт, типы,
    сопровождающий проектного слоя.
    ИТОГ ДНЯ 10.10 (точка возврата сессии «AI Factory»): канон master
-   f57a0ab (11.10: + meta/readme-no-dangling-links — скилл README без
+   fcf320d (11.10: transfer_gate — отчёт таблицей, --log/--report, гид
+   «Перенос» и prompt-plan шаг 0 про окружение и валидатор в клоне;
+   стенд 021e210; analyzer 47b4ea1b; пример отчёта гейта в app/data);
+   до того f57a0ab (11.10: + meta/readme-no-dangling-links — скилл README без
    ссылок на несуществующие vision/glossary; стенд d23fdf7; P-21 «сторож
    дрейфа ядра скиллов» предложен, не начат); до того 2c3088f (шесть срезов: 0ea0b7f README-самоописание, ef0eea7
    структурные сторожа, 2d58e9a transfer_gate + platform/, 92707a9
