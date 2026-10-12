@@ -1821,3 +1821,121 @@ class TestRelativeLinks:
         make_matrix(docs)
         report, ok = selfcheck.run(docs, None)
         assert not ok and any(l.startswith("✗ битые относительные ссылки") for l in report)
+
+
+
+# --- домен сервисов (решение владельца 2026-10-11) ---
+
+_SERVICE_TABLE = ("# Домен\n\n## Сервисы домена\n\n"
+                  "| Код | Каталог | Слот | Название |\n|---|---|---|---|\n"
+                  "| SHR | shared | SHR | Общие модули |\n"
+                  "| REG | reg | REG | Онбординг |\n"
+                  "| PAY | pay | нет | Платежи (включён без перенумерации) |\n")
+
+
+def _domain(tmp_path):
+    """Доменный репо: корень с README-таблицей сервисов, рамкой и .git."""
+    root = tmp_path / "docs-dom"
+    make(root / "README.md", _SERVICE_TABLE)
+    make(root / "domain-vision.md", "---\nid: VIS-000\ntitle: 'Д'\ntype: vision\n---\n\n# Д\n")
+    make(root / "glossary.md", "---\nid: GLO-000\ntitle: 'Г'\ntype: glossary\n---\n\n# Г\n")
+    (root / ".git").mkdir()
+    return root
+
+
+def test_domain_root_service_dirs_legit_and_unknown_flagged(tmp_path):
+    root = _domain(tmp_path)
+    reg = root / "reg"
+    make(reg / "srs/function/f1.md", _slot_card("FUN-REG-SYS-01"))
+    make_matrix(reg, "| FUN-REG-SYS-01 | function | Ф | f1.md |\n")
+    make(root / "shared/srs/function/f2.md", _slot_card("FUN-SHR-CL-01"))
+    (root / "tmp-cache").mkdir()
+    report, ok = selfcheck.run(reg, None)
+    assert any(ln.startswith("i домен: корень docs-dom, сервис «REG»") for ln in report), report
+    junk = [ln for ln in report if ln.startswith("✗ корень репозитория")]
+    assert len(junk) == 1 and "tmp-cache" in junk[0] and "shared" not in junk[0], junk
+
+
+def test_domain_id_slots_happy_with_parts_and_without(tmp_path):
+    root = _domain(tmp_path)
+    reg = root / "reg"
+    make(reg / "README.md", _PART_TABLE)
+    make(reg / "service-vision.md", _slot_card("VIS-REG-001", "vision"))
+    make(reg / "srs/document-signing/function/f1.md", _slot_card("FUN-REG-DS-SYS-01"))
+    make(reg / "srs/shared/data-model/e1.md", _slot_card("ENT-REG-SHR-001", "data-model"))
+    make_matrix(reg, "| VIS-REG-001 | vision | В | service-vision.md |\n"
+                     "| FUN-REG-DS-SYS-01 | function | Ф | f1.md |\n"
+                     "| ENT-REG-SHR-001 | data-model | С | e1.md |\n")
+    report, _ = selfcheck.run(reg, None)
+    assert not any(ln.strip().startswith("✗ слот") for ln in report), report
+    assert any("слот сервиса «REG» ✓" in ln for ln in report), report
+    shared = root / "shared"
+    make(shared / "srs/function/f2.md", _slot_card("FUN-SHR-CL-01"))
+    make_matrix(shared, "| FUN-SHR-CL-01 | function | Ф | f2.md |\n")
+    report, _ = selfcheck.run(shared, None)
+    assert not any(ln.strip().startswith("✗ слот") for ln in report), report
+    assert any("слот сервиса «SHR»: по таблице сервисов корневого README, частей нет ✓" in ln
+               for ln in report), report
+
+
+def test_domain_id_slots_violations(tmp_path):
+    root = _domain(tmp_path)
+    reg = root / "reg"
+    make(reg / "README.md", _PART_TABLE)
+    make(reg / "srs/document-signing/function/f1.md", _slot_card("FUN-DS-SYS-01"))      # без слота сервиса
+    make(reg / "srs/document-signing/function/f2.md", _slot_card("FUN-SHR-DS-SYS-02"))  # чужой слот сервиса
+    make(reg / "srs/document-signing/function/f3.md", _slot_card("FUN-REG-SHR-SYS-03")) # чужой слот части
+    make_matrix(reg, "| FUN-DS-SYS-01 | function | Ф | f1.md |\n| FUN-SHR-DS-SYS-02 | function | Ф | f2.md |\n"
+                     "| FUN-REG-SHR-SYS-03 | function | Ф | f3.md |\n")
+    report, ok = selfcheck.run(reg, None)
+    assert not ok
+    svc = [ln for ln in report if ln.strip().startswith("✗ слот сервиса")]
+    assert len(svc) == 2, svc
+    assert any("без слота сервиса" in ln and "FUN-DS-SYS-01" in ln for ln in svc)
+    assert any("несёт слот «SHR»" in ln and "FUN-SHR-DS-SYS-02" in ln for ln in svc)
+    part = [ln for ln in report if ln.strip().startswith("✗ слот части:")]
+    assert len(part) == 1 and "FUN-REG-SHR-SYS-03" in part[0] and "«DS»" in part[0], part
+
+
+def test_domain_service_without_slot(tmp_path):
+    # «Слот: нет»: сервис включён в домен без перенумерации
+    root = _domain(tmp_path)
+    pay = root / "pay"
+    make(pay / "srs/function/f1.md", _slot_card("FUN-CL-01"))
+    make(pay / "srs/function/f2.md", _slot_card("FUN-PAY-CL-02"))
+    make_matrix(pay, "| FUN-CL-01 | function | Ф | f1.md |\n| FUN-PAY-CL-02 | function | Ф | f2.md |\n")
+    report, ok = selfcheck.run(pay, None)
+    assert any("(слот: нет)" in ln for ln in report), report
+    bad = [ln for ln in report if ln.strip().startswith("✗ слот сервиса")]
+    assert len(bad) == 1 and "FUN-PAY-CL-02" in bad[0] and "«Слот: нет»" in bad[0], bad
+
+
+def test_domain_zone_service_in_profile(tmp_path):
+    # разметка «ветвь → сервис»: страница чужого сервиса в этом комплекте — ✗
+    root = _domain(tmp_path)
+    reg = root / "reg"
+    src = tmp_path / "src"
+    make(src / "README.md",
+         "# src\n\n## Разметка подсервисов\n\n| Матчер | Зона |\n|---|---|\n"
+         "| [REG] | сервис reg |\n| [SHR] | сервис shared, общая часть |\n")
+    srcs = src / "sources" / "confluence"
+    make(srcs / "a.md", source("[REG] Ф1", "111222"))
+    make(srcs / "b.md", source("[SHR] Ф2", "333444"))
+    make(reg / "srs/function/f1.md", card("[REG] Ф1", "111222").replace("X-01", "FUN-REG-CL-01"))
+    make(reg / "srs/function/f2.md", card("[SHR] Ф2", "333444").replace("X-01", "FUN-REG-CL-02"))
+    make_matrix(reg, "| FUN-REG-CL-01 | function | Ф | f1.md |\n| FUN-REG-CL-02 | function | Ф | f2.md |\n")
+    report, ok = selfcheck.run(reg, srcs)
+    bad = [ln for ln in report if ln.startswith("✗ разметка")]
+    assert len(bad) == 1 and "сервис «shared»" in bad[0] and "f2.md" in bad[0], bad
+
+
+def test_catalog_domain_field_format(tmp_path):
+    docs = _docs_with_service(tmp_path, "reg", n=1)
+    cat = _catalog(tmp_path, [
+        {"code": "reg", "key": "R", "name": "a", "domain": "digital-ruble"},
+        {"code": "pay", "key": "P", "name": "b", "domain": "Digital Ruble"},
+    ])
+    rep, ok = selfcheck.check_service_catalog(cat, docs)
+    assert ok
+    assert any("domain у `pay` — не kebab-case" in l for l in rep), rep
+    assert not any("domain у `reg`" in l for l in rep)

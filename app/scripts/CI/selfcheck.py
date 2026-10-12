@@ -414,6 +414,15 @@ def run(docs: Path, sources: Optional[Path],
     # ✗ на PRE-01 из-за prompts/ и встал на вопрос владельцу).
     _ok_dirs = {"docs", "sources", "sandbox", "prompts", ".git", "brd", "srs",
                 _docs_r.name}
+    # корень домена: каталоги сервисов из таблицы корневого README законны
+    # (решение владельца 2026-10-11); domain-vision.md и glossary.md —
+    # markdown, он разрешён и так
+    _dom = domain_context(docs)
+    if _dom is not None and _dom[0] == root.resolve():
+        _ok_dirs |= set(_dom[1].keys())
+        report.append(f"i домен: корень {root.name}, сервис «{_dom[2][0]}» "
+                      f"по таблице сервисов корневого README"
+                      + ("" if _dom[2][1] else " (слот: нет)"))
     # штатные не-markdown файлы GitLab-репозитория комплекта
     _ok_files = {"CODEOWNERS", "gpb-manifest.json"}
     if sources is not None:
@@ -610,6 +619,9 @@ _KNOWN_TYPES = {
 _ZONE_RE = re.compile(
     r"^(?:(подсервис|core)\s+([\w-]+)|общая часть|вне Экосистемы.*)$",
     re.I)
+# домен: «сервис <service-id>» и необязательная зона части через запятую
+# («сервис registration, подсервис idn»; «сервис shared, общая часть»)
+_SERVICE_ZONE_RE = re.compile(r"^сервис\s+([\w-]+)\s*(?:,\s*(.+))?$", re.I)
 
 
 def _load_subservice_map(profile: Path):
@@ -634,14 +646,23 @@ def _load_subservice_map(profile: Path):
             continue
         if all(re.fullmatch(r":?-+:?", c) for c in cells if c):
             continue
-        zm = _ZONE_RE.match(cells[1])
+        service = None
+        zone_text = cells[1]
+        sm = _SERVICE_ZONE_RE.match(zone_text)
+        if sm:
+            service = sm.group(1)
+            zone_text = sm.group(2) or ""
+            if not zone_text:
+                rows.append((cells[0], None, "service", service))
+                continue
+        zm = _ZONE_RE.match(zone_text)
         if not zm:
             continue
-        zone = cells[1].lower()
+        zone = zone_text.lower()
         slug = zm.group(2)
         kind = ("slug" if zm.group(1) else
                 "common" if zone.startswith("общая") else "external")
-        rows.append((cells[0], slug, kind))
+        rows.append((cells[0], slug, kind, service))
     return rows or None
 
 
@@ -690,7 +711,9 @@ def check_subservice_mapping(docs: Path, sources: Path,
         return [], True
     report: List[str] = []
     ok = True
-    slugs = {slug for _, slug, kind in smap if kind == "slug"}
+    slugs = {row[1] for row in smap if row[2] == "slug"}
+    dom = domain_context(docs)
+    my_service = docs.resolve().name if dom is not None else None
     for src_file in sorted(sources.rglob("*.md")):
         if src_file.name.lower() == "index.md":
             continue
@@ -706,15 +729,25 @@ def check_subservice_mapping(docs: Path, sources: Path,
             branch = src_file.relative_to(sources).parts[0]
         except ValueError:
             branch = ""
-        zone = next(((slug, kind) for matcher, slug, kind in smap
-                     if title.startswith(matcher)
-                     or matcher.strip("[]") == branch
-                     or matcher == branch), None)
+        zone = next(((row[1], row[2], row[3]) for row in smap
+                     if title.startswith(row[0])
+                     or row[0].strip("[]") == branch
+                     or row[0] == branch), None)
         if zone is None:
             continue
-        slug, kind = zone
+        slug, kind, service = zone
         card = card_files[pid_m.group(1)]
         rel = card.relative_to(docs).as_posix()
+        if service is not None and my_service is not None \
+                and service != my_service:
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
+                f"в сервис «{service}», карточка лежит в комплекте "
+                f"«{my_service}» (домен: страница → свой сервис)")
+            continue
+        if kind == "service":
+            continue            # только сервис, зоны части не заданы
         parts = rel.split("/")
         seg = (parts[1] if len(parts) > 2 and parts[0] == "srs"
                and parts[1] not in _KNOWN_TYPES else None)
@@ -763,6 +796,87 @@ def check_subservice_mapping(docs: Path, sources: Path,
 
 _PART_TABLE_HEAD_RE = re.compile(
     r"^#+\s*.*(?:слот|подсервис|част[иь] сервиса|коды частей).*$", re.I | re.M)
+
+
+# --- домен сервисов (решение владельца 2026-10-11) ---
+#
+# Доменный docs-репозиторий: в корне README с ТАБЛИЦЕЙ СЕРВИСОВ (колонки
+# «Код», «Каталог» (или «service-id»), необязательно «Слот» — код либо
+# «нет»), domain-vision.md и glossary.md домена; комплекты сервисов — в
+# `<service-id>/`, общий сервис — `shared/`. Идентификатор артефакта
+# комплекта домена несёт слот сервиса сразу после префикса
+# (`FUN-REG-IDN-CL-01`, `ENT-SHR-001`), слот части — следом, как прежде.
+# Без таблицы сервисов в README родителя комплекта прибор ведёт себя как
+# раньше: одиночные сервисы и сервисы с частями не затронуты.
+
+def _cell_plain(cell: str) -> str:
+    """Текст ячейки без markdown: ссылка → её текст, без бэктиков/жирного."""
+    cell = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", cell)
+    return cell.strip().strip("*`").strip()
+
+
+def _load_service_table(readme: Path):
+    """{каталог: (код, слот_в_id)} по таблице сервисов корневого README
+    домена; None — таблицы нет. Таблица узнаётся по шапке: колонка «Код»
+    и колонка «Каталог» либо «service-id» (так в докс-репо «Цифрового
+    рубля»). Колонка «Слот» необязательна: «нет» — сервис включён без
+    перенумерации, идентификаторы без слота сервиса."""
+    try:
+        text = readme.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    header: Optional[List[str]] = None
+    out: Dict[str, Tuple[str, bool]] = {}
+    for ln in text.splitlines():
+        st = ln.strip()
+        if not st.startswith("|"):
+            if header is not None and out:
+                break               # таблица закончилась
+            header = None
+            continue
+        cells = [c.strip() for c in st.strip("|").split("|")]
+        if all(re.fullmatch(r":?-+:?", c) for c in cells if c):
+            continue
+        low = [c.lower() for c in cells]
+        if header is None:
+            if any("код" in h for h in low) and any(
+                    "каталог" in h or "service-id" in h for h in low):
+                header = low
+            continue
+        icode = next(i for i, h in enumerate(header) if "код" in h)
+        idir = next((i for i, h in enumerate(header) if "каталог" in h), None)
+        if idir is None:
+            idir = next(i for i, h in enumerate(header) if "service-id" in h)
+        islot = next((i for i, h in enumerate(header) if "слот" in h), None)
+        if len(cells) <= max(icode, idir):
+            continue
+        code = _cell_plain(cells[icode])
+        folder = _cell_plain(cells[idir]).strip("/")
+        if folder.endswith("/README.md"):
+            folder = folder[:-len("/README.md")]
+        folder = folder.strip("/").split("/")[0]
+        if not folder:
+            continue
+        has_slot = True
+        if islot is not None and len(cells) > islot:
+            has_slot = _cell_plain(cells[islot]).lower() not in ("нет", "no", "-", "—", "")
+        if _PART_CODE_RE.fullmatch(code):
+            out[folder] = (code, has_slot)
+    return out or None
+
+
+def domain_context(docs: Path):
+    """(корень домена, таблица сервисов, запись этого комплекта) либо None:
+    родитель комплекта несёт README с таблицей сервисов, в которой есть
+    каталог комплекта."""
+    d = docs.resolve()
+    parent = d.parent
+    if parent == d:
+        return None
+    table = _load_service_table(parent / "README.md")
+    if not table or d.name not in table:
+        return None
+    return parent, table, table[d.name]
 _PART_CODE_RE = re.compile(r"^[A-Z]{2,4}$")
 # контуры и служебные сегменты ID — не слоты частей
 _NOT_SLOT = {"CL", "BNK", "SYS", "GRP", "EXT", "INT"}
@@ -833,8 +947,51 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
             return tokens[1]
         return None
 
+    # слот сервиса (домен): срезается с идентификатора ДО проверки слота
+    # части; у сервиса со «Слот: нет» слота сервиса в ID быть не должно
+    dom = domain_context(docs)
+    svc_code = dom[2][0] if dom is not None and dom[2][1] else None
+    orig_ids = dict(card_ids)       # для сообщений — исходный id, не срезанный
+    svc_codes = {c for c, _ in dom[1].values()} if dom is not None else set()
+    if dom is not None:
+        stripped: Dict[Path, str] = {}
+        for p, cid in sorted(card_ids.items()):
+            rel = p.relative_to(docs).as_posix()
+            tokens = cid.split("-")
+            if svc_code:
+                if len(tokens) >= 3 and tokens[1] == svc_code:
+                    stripped[p] = "-".join([tokens[0]] + tokens[2:])
+                else:
+                    ok = False
+                    if len(tokens) >= 3 and tokens[1] in svc_codes:
+                        what = f"несёт слот «{tokens[1]}»"
+                    elif svc_code in tokens[2:]:
+                        what = (f"несёт слот «{svc_code}» не на месте "
+                                "(слот сервиса стоит сразу после префикса: "
+                                f"{tokens[0]}-{svc_code}-…)")
+                    else:
+                        what = "без слота сервиса"
+                    report.append(
+                        f"✗ слот сервиса: {rel} — id {cid} {what}, комплект "
+                        f"«{docs.name}» объявлен в таблице сервисов домена с "
+                        f"кодом «{svc_code}»")
+            else:
+                if (len(tokens) >= 3 and tokens[1] in svc_codes
+                        and tokens[1] not in (_load_part_codes(
+                            docs / "README.md") or {})):
+                    ok = False
+                    report.append(
+                        f"✗ слот сервиса: {rel} — id {cid} несёт слот "
+                        f"сервиса «{tokens[1]}», а комплект «{docs.name}» "
+                        "объявлен в таблице сервисов домена со «Слот: нет»")
+                else:
+                    stripped[p] = cid
+        card_ids = stripped
     codes = _load_part_codes(docs / "README.md")
     if codes is None:
+        if svc_code and not any(ln.startswith("✗") for ln in report):
+            report.append(f"слот сервиса «{svc_code}»: по таблице сервисов "
+                          "корневого README, частей нет ✓")
         # без таблицы сторож молчит, кроме явного признака слота: карточка в
         # каталоге подсервиса с id вида <PREFIX>-<КОД>-… (обычные сервисы и
         # старая раскладка с каталогами типов во множественном числе не задеты)
@@ -847,7 +1004,7 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
                 "✗ слот части: идентификаторы со слотом части без таблицы "
                 "кодов частей в README корня комплекта (колонки «Код», "
                 "«Каталог»; conventions §3.1): "
-                + ", ".join(f"{rel} ({cid})" for rel, cid in hits[:5])
+                + ", ".join(f"{rel} ({orig_ids.get(docs / rel, cid)})" for rel, cid in hits[:5])
                 + (" …" if len(hits) > 5 else ""))
         return report, ok
     if not codes:
@@ -862,12 +1019,13 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         rel = p.relative_to(docs).as_posix()
         seg = seg_of(p)
         tokens = cid.split("-")
+        shown = orig_ids.get(p, cid)
         slot = tokens[1] if len(tokens) >= 3 and tokens[1] in codes else None
         if seg is None:
             if slot is not None:
                 ok = False
                 report.append(
-                    f"✗ слот части: {rel} — id {cid} несёт слот «{slot}», "
+                    f"✗ слот части: {rel} — id {shown} несёт слот «{slot}», "
                     "а документ лежит вне каталогов подсервисов (уровень "
                     "сервиса / корень srs/ слота не несут)")
             continue
@@ -880,12 +1038,13 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         elif slot != expected:
             ok = False
             report.append(
-                f"✗ слот части: {rel} — id {cid} "
+                f"✗ слот части: {rel} — id {shown} "
                 + (f"несёт слот «{slot}»" if slot else "без слота")
                 + f", каталог «{seg}» объявлен с кодом «{expected}»")
-    if not report:
+    if not any(ln.startswith("✗") for ln in report):
         report.append(f"слоты частей: {len(codes)} кодов по таблице README, "
-                      "соответствие «слот ↔ каталог» выдержано ✓")
+                      "соответствие «слот ↔ каталог» выдержано ✓"
+                      + (f"; слот сервиса «{svc_code}» ✓" if svc_code else ""))
     return report, ok
 
 
@@ -1432,6 +1591,11 @@ def check_service_catalog(catalog: Optional[Path],
         # правила «ECO_BE/ms-<code>/-/tree/HEAD/api-specification»
         # (документ адресации §5.2, решение 2026-10-06); форма та же,
         # что у repo
+        dom_field = it.get("domain")
+        if isinstance(dom_field, str) and dom_field.strip() \
+                and not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", dom_field.strip()):
+            lines.append(f"⚠ каталог сервисов: domain у `{code or name}` — "
+                         f"не kebab-case ({dom_field.strip()})")
         api = it.get("api")
         if isinstance(api, str) and api.strip():
             issue = _repo_format_issue(api.strip())
