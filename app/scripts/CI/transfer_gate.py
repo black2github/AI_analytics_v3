@@ -311,9 +311,17 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
             gate.add("⚠", "SDLC-08", "README.md без раздела «Условные обозначения» — "
                      "внешние читатели не узнают контуры, части и типы комплекта",
                      check="README комплекта")
+    # домен (решение владельца 2026-10-12): при режиме «Глоссарий: доменный»,
+    # объявленном в README домена (в docs-репо — корень, в src — профиль),
+    # глоссария в комплекте нет по правилу, не по недосмотру
+    gmode = (sc.domain_glossary_mode(docs.parent / "README.md")
+             or sc.domain_glossary_mode(src_root / "README.md"))
     for name, crit in (("service-vision.md", "SDLC-05"), ("glossary.md", "SDLC-05")):
         if (staged / name).is_file():
             gate.add("✓", crit, f"{name} есть", check=name)
+        elif name == "glossary.md" and gmode == "domain":
+            gate.add("✓", crit, "glossary.md в комплекте нет по правилу: режим "
+                     "«Глоссарий: доменный» объявлен в README домена", check=name)
         else:
             gate.add("⚠", crit, f"{name} отсутствует (у платформы обязателен только "
                      "для нового сервиса; чек-лист DoR требует)", check=name)

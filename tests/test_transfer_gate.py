@@ -200,3 +200,17 @@ def test_report_file(tmp_path):
     txt = rep.read_text(encoding="utf-8")
     assert txt.startswith("# Гейт переноса: src-x") and "| Статус | Критерий |" in txt
     assert "Срез канона по профилю: `не указан`" in txt
+
+
+
+def test_glossary_absent_ok_in_domain_mode(tmp_path):
+    # домен с режимом «Глоссарий: доменный» (объявлен в профиле src): отсутствие
+    # glossary.md в комплекте — ✓, не ⚠; без объявления — ⚠ как прежде
+    src = make_src(tmp_path)
+    (src / "docs/glossary.md").unlink()
+    lines, _ok, _ = _run(src)
+    assert any("glossary.md отсутствует" in ln for ln in lines), lines
+    _w(src / "README.md", "# src\n\nГлоссарий: доменный\n")
+    lines, _ok, _ = _run(src)
+    assert any("glossary.md в комплекте нет по правилу" in ln for ln in lines), lines
+    assert not any("glossary.md отсутствует" in ln for ln in lines)

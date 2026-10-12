@@ -420,9 +420,13 @@ def run(docs: Path, sources: Optional[Path],
     _dom = domain_context(docs)
     if _dom is not None and _dom[0] == root.resolve():
         _ok_dirs |= set(_dom[1].keys())
-        report.append(f"i домен: корень {root.name}, сервис «{_dom[2][0]}» "
-                      f"по таблице сервисов корневого README"
-                      + ("" if _dom[2][1] else " (слот: нет)"))
+        _gm = domain_glossary_mode(root / "README.md")
+        report.append(f"i домен: корень {root.name}, сервис "
+                      + (f"«{_dom[2][0]}»" if _dom[2][1] else "без слота")
+                      + " по таблице сервисов корневого README"
+                      + ("; глоссарий доменный" if _gm == "domain" else
+                         "; глоссарий доменный + указатели" if _gm == "pointers"
+                         else ""))
     # штатные не-markdown файлы GitLab-репозитория комплекта
     _ok_files = {"CODEOWNERS", "gpb-manifest.json"}
     if sources is not None:
@@ -821,11 +825,13 @@ def _cell_plain(cell: str) -> str:
 
 
 def _load_service_table(readme: Path):
-    """{каталог: (код, слот_в_id)} по таблице сервисов корневого README
-    домена; None — таблицы нет. Таблица узнаётся по шапке: колонка «Код»
-    и колонка «Каталог» либо «service-id» (так в докс-репо «Цифрового
-    рубля»). Колонка «Слот» необязательна: «нет» — сервис включён без
-    перенумерации, идентификаторы без слота сервиса."""
+    """{каталог: (слот, слот_в_id)} по таблице сервисов корневого README
+    домена; None — таблицы нет. Таблица узнаётся по шапке: колонка
+    каталога («Каталог» либо «service-id») и колонка слота («Слот» либо
+    «Код» — «Код в ID» у «Цифрового рубля»). Значение «нет» в колонке
+    слота — сервис включён в домен без перенумерации (решение владельца
+    2026-10-12: термины `service-id` и «слот сервиса» разведены, таблица
+    `service-id | Слот | Название | Вход`)."""
     try:
         text = readme.read_text(encoding="utf-8", errors="replace")
     except OSError:
@@ -844,30 +850,49 @@ def _load_service_table(readme: Path):
             continue
         low = [c.lower() for c in cells]
         if header is None:
-            if any("код" in h for h in low) and any(
+            if any("слот" in h or "код" in h for h in low) and any(
                     "каталог" in h or "service-id" in h for h in low):
                 header = low
             continue
-        icode = next(i for i, h in enumerate(header) if "код" in h)
         idir = next((i for i, h in enumerate(header) if "каталог" in h), None)
         if idir is None:
             idir = next(i for i, h in enumerate(header) if "service-id" in h)
         islot = next((i for i, h in enumerate(header) if "слот" in h), None)
-        if len(cells) <= max(icode, idir):
+        if islot is None:
+            islot = next(i for i, h in enumerate(header) if "код" in h)
+        if len(cells) <= max(islot, idir):
             continue
-        code = _cell_plain(cells[icode])
+        slot = _cell_plain(cells[islot])
         folder = _cell_plain(cells[idir]).strip("/")
         if folder.endswith("/README.md"):
             folder = folder[:-len("/README.md")]
         folder = folder.strip("/").split("/")[0]
         if not folder:
             continue
-        has_slot = True
-        if islot is not None and len(cells) > islot:
-            has_slot = _cell_plain(cells[islot]).lower() not in ("нет", "no", "-", "—", "")
-        if _PART_CODE_RE.fullmatch(code):
-            out[folder] = (code, has_slot)
+        if slot.lower() in ("нет", "no", "-", "—", ""):
+            out[folder] = ("", False)
+        elif _PART_CODE_RE.fullmatch(slot):
+            out[folder] = (slot, True)
     return out or None
+
+
+_GLOSSARY_MODE_RE = re.compile(r"Глоссарий\s*[:—-]\s*(доменный(?:\s*\+\s*указатели)?)",
+                               re.I)
+
+
+def domain_glossary_mode(readme: Path) -> Optional[str]:
+    """Режим глоссария, объявленный в README домена (решение владельца
+    2026-10-12): «доменный» — один файл домена, в комплектах глоссария нет;
+    «доменный + указатели» — в каждом комплекте указатель. None — не
+    объявлен (одиночный сервис либо режим не выбран)."""
+    try:
+        text = readme.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    m = _GLOSSARY_MODE_RE.search(text)
+    if not m:
+        return None
+    return "pointers" if "указател" in m.group(1).lower() else "domain"
 
 
 def domain_context(docs: Path):
@@ -957,7 +982,8 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
     dom = domain_context(docs)
     svc_code = dom[2][0] if dom is not None and dom[2][1] else None
     orig_ids = dict(card_ids)       # для сообщений — исходный id, не срезанный
-    svc_codes = {c for c, _ in dom[1].values()} if dom is not None else set()
+    svc_codes = ({c for c, has in dom[1].values() if has}
+                 if dom is not None else set())
     if dom is not None:
         stripped: Dict[Path, str] = {}
         for p, cid in sorted(card_ids.items()):
@@ -978,8 +1004,8 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
                         what = "без слота сервиса"
                     report.append(
                         f"✗ слот сервиса: {rel} — id {cid} {what}, комплект "
-                        f"«{docs.name}» объявлен в таблице сервисов домена с "
-                        f"кодом «{svc_code}»")
+                        f"«{docs.name}» объявлен в таблице сервисов домена со "
+                        f"слотом «{svc_code}»")
             else:
                 if (len(tokens) >= 3 and tokens[1] in svc_codes
                         and tokens[1] not in (_load_part_codes(

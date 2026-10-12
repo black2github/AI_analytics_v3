@@ -1826,11 +1826,11 @@ class TestRelativeLinks:
 
 # --- домен сервисов (решение владельца 2026-10-11) ---
 
-_SERVICE_TABLE = ("# Домен\n\n## Сервисы домена\n\n"
-                  "| Код | Каталог | Слот | Название |\n|---|---|---|---|\n"
-                  "| SHR | shared | SHR | Общие модули |\n"
-                  "| REG | reg | REG | Онбординг |\n"
-                  "| PAY | pay | нет | Платежи (включён без перенумерации) |\n")
+_SERVICE_TABLE = ("# Домен\n\nГлоссарий: доменный.\n\n## Сервисы домена\n\n"
+                  "| service-id | Слот | Название |\n|---|---|---|\n"
+                  "| `shared` | SHR | Общие модули |\n"
+                  "| `reg` | REG | Онбординг |\n"
+                  "| `pay` | нет | Платежи (включён без перенумерации) |\n")
 
 
 def _domain(tmp_path):
@@ -1851,7 +1851,8 @@ def test_domain_root_service_dirs_legit_and_unknown_flagged(tmp_path):
     make(root / "shared/srs/function/f2.md", _slot_card("FUN-SHR-CL-01"))
     (root / "tmp-cache").mkdir()
     report, ok = selfcheck.run(reg, None)
-    assert any(ln.startswith("i домен: корень docs-dom, сервис «REG»") for ln in report), report
+    assert any(ln.startswith("i домен: корень docs-dom, сервис «REG» по таблице сервисов корневого README; глоссарий доменный")
+               for ln in report), report
     junk = [ln for ln in report if ln.startswith("✗ корень репозитория")]
     assert len(junk) == 1 and "tmp-cache" in junk[0] and "shared" not in junk[0], junk
 
@@ -1902,12 +1903,13 @@ def test_domain_service_without_slot(tmp_path):
     root = _domain(tmp_path)
     pay = root / "pay"
     make(pay / "srs/function/f1.md", _slot_card("FUN-CL-01"))
-    make(pay / "srs/function/f2.md", _slot_card("FUN-PAY-CL-02"))
-    make_matrix(pay, "| FUN-CL-01 | function | Ф | f1.md |\n| FUN-PAY-CL-02 | function | Ф | f2.md |\n")
+    # чужой слот сервиса (REG из таблицы) в ID сервиса без слота — ✗
+    make(pay / "srs/function/f2.md", _slot_card("FUN-REG-CL-02"))
+    make_matrix(pay, "| FUN-CL-01 | function | Ф | f1.md |\n| FUN-REG-CL-02 | function | Ф | f2.md |\n")
     report, ok = selfcheck.run(pay, None)
-    assert any("(слот: нет)" in ln for ln in report), report
+    assert any(ln.startswith("i домен: корень docs-dom, сервис без слота") for ln in report), report
     bad = [ln for ln in report if ln.strip().startswith("✗ слот сервиса")]
-    assert len(bad) == 1 and "FUN-PAY-CL-02" in bad[0] and "«Слот: нет»" in bad[0], bad
+    assert len(bad) == 1 and "FUN-REG-CL-02" in bad[0] and "«Слот: нет»" in bad[0], bad
 
 
 def test_domain_zone_service_in_profile(tmp_path):
@@ -1968,3 +1970,19 @@ def test_delta_report_composition_line(tmp_path):
                for ln in out), out
     out2 = selfcheck.delta_report(base, ["✓ a.md ← s.md"])
     assert any("состав: единиц в отчёте было 1 → стало 1 (дельта" in ln for ln in out2), out2
+
+
+
+def test_domain_service_table_cr_form_and_glossary_modes(tmp_path):
+    # форма ЦР «service-id | Код в ID | Название | Вход» читается; режимы глоссария
+    root = tmp_path / "docs-dom"
+    make(root / "README.md",
+         "# Д\n\nГлоссарий: доменный + указатели\n\n| service-id | Код в ID | Название | Вход |\n"
+         "|---|---|---|---|\n| `shared` | `SHR` | Общие | [shared/README.md](shared/README.md) |\n")
+    (root / ".git").mkdir()
+    table = selfcheck._load_service_table(root / "README.md")
+    assert table == {"shared": ("SHR", True)}, table
+    assert selfcheck.domain_glossary_mode(root / "README.md") == "pointers"
+    make(tmp_path / "r2.md", "Глоссарий: доменный\n")
+    assert selfcheck.domain_glossary_mode(tmp_path / "r2.md") == "domain"
+    assert selfcheck.domain_glossary_mode(tmp_path / "nope.md") is None
