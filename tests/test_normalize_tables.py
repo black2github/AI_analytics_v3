@@ -4709,3 +4709,30 @@ class TestHomoglyphFoldInSourceComparison:
                      "Проверка cтатуса заявки.\n", encoding="utf-8")  # c латинская
         rep, ok = check_file(p, source_text="<p>Проверка статуса заявки.</p>")
         assert not ok and any("гомоглифы" in r for r in rep)
+
+
+class TestHttpWhitelistContourGroups:
+    """2026-10-12: ссылки через HEAD в репозитории контура (контракты
+    EAN/docs-external-contracts, комплекты EAS/EAN, код ECO_BE) — не «вне
+    белого списка»; чужой хост по-прежнему ⚠."""
+
+    def _card(self, tmp_path, body):
+        p = tmp_path / "call-ext-001-x.md"
+        p.write_text("---\nid: CALL-EXT-001\ntitle: 'x'\ntype: contract-call\n"
+                     "service: s\n---\n\n# CALL-EXT-001. x\n\n" + body, encoding="utf-8")
+        return p
+
+    def test_contour_links_not_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_clean_document
+        p = self._card(tmp_path,
+                       "[EXTINT-T-001](https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/HEAD/tessa/extint-t-001.md)\n"
+                       "[INTC-004](https://gitlab.gboteam.ru/EAS/src-x/-/blob/HEAD/docs/srs/internal-contract/intc-004.md)\n"
+                       "[x.yaml](https://gitlab.gboteam.ru/ECO_BE/ms-x/-/blob/HEAD/api-specification/x.yaml)\n")
+        rep, _ = check_clean_document(p, None)
+        assert not any("вне белого списка" in r for r in rep), rep
+
+    def test_foreign_host_still_warned(self, tmp_path):
+        from app.scripts.CI.normalize_tables import check_clean_document
+        p = self._card(tmp_path, "[реестр](https://passport.example.ru/registration)\n")
+        rep, _ = check_clean_document(p, None)
+        assert any("вне белого списка" in r for r in rep), rep

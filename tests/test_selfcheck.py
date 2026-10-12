@@ -1939,3 +1939,32 @@ def test_catalog_domain_field_format(tmp_path):
     assert ok
     assert any("domain у `pay` — не kebab-case" in l for l in rep), rep
     assert not any("domain у `reg`" in l for l in rep)
+
+
+def test_root_guard_ignores_dot_dirs(tmp_path):
+    # FB-01 lk-mp: пустой .cursor (обёртка IDE) — не мусор корня; обычный
+    # посторонний каталог по-прежнему ✗
+    docs = tmp_path / "docs"
+    make(docs / "srs/f.md", "---\nid: X-01\ntitle: 'Ф'\ntype: function\n---\n\n# Т\n\nтекст\n")
+    make_matrix(docs)
+    (tmp_path / ".git").mkdir()
+    (tmp_path / ".cursor").mkdir()
+    (tmp_path / ".claude" / "skills").mkdir(parents=True)
+    report, _ = selfcheck.run(docs, None)
+    assert not any("посторонние файлы" in ln for ln in report), report
+    (tmp_path / "tmp-scripts").mkdir()
+    report, _ = selfcheck.run(docs, None)
+    assert any("посторонние файлы ×1 (tmp-scripts)" in ln for ln in report), report
+
+
+def test_delta_report_composition_line(tmp_path):
+    # FB-02 lk-mp: при неизменных вердиктах дельта показывает изменение состава
+    base = tmp_path / "base.txt"
+    base.write_text("# ✓ a.md ← s.md\n# ИТОГО: файлов 1 — ✓ 1, ✗ 0, ⚠ 0\n", encoding="utf-8")
+    out = selfcheck.delta_report(base, ["✓ a.md ← s.md", "✓ b.md ← s.md", "✓ c.md ← s.md"])
+    assert out[0].endswith("✗ было 0 → стало 0")
+    assert any("изменений вердиктов нет" in ln for ln in out)
+    assert any("состав: единиц в отчёте было 1 → стало 3; новых ×2: b.md, c.md" in ln
+               for ln in out), out
+    out2 = selfcheck.delta_report(base, ["✓ a.md ← s.md"])
+    assert any("состав: единиц в отчёте было 1 → стало 1 (дельта" in ln for ln in out2), out2

@@ -2794,7 +2794,15 @@ def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
 # после описи кросс-стендового прогона D4).
 # figma.com — решение владельца 2026-08-29: URL макетов Figma обязаны
 # переноситься (единственная связь аналитики с макетами)
-_HTTP_WHITELIST = ("https://gitlab.gboteam.ru/ED/eco-techbook",
+# группы GitLab контура — адресаты межсервисных ссылок (документ адресации:
+# базовые контракты EAN/docs-external-contracts, комплекты сервисов EAS/EAN,
+# контракты API в ECO_BE/ms-<service-id>); до 2026-10-12 в списке был
+# только техбук, и законные ссылки через HEAD давали ⚠ «вне белого списка»
+# (отчёт FIN-01 lk-mp: 8 строк на docs-external-contracts)
+_HTTP_WHITELIST = ("https://gitlab.gboteam.ru/ED/",
+                   "https://gitlab.gboteam.ru/EAN/",
+                   "https://gitlab.gboteam.ru/EAS/",
+                   "https://gitlab.gboteam.ru/ECO_BE/",
                    "https://www.figma.com/")
 
 

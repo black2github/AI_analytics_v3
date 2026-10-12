@@ -433,9 +433,14 @@ def run(docs: Path, sources: Optional[Path],
                 sources.resolve().relative_to(root.resolve()).parts[0])
         except (ValueError, IndexError, OSError):
             pass
+    # точечные каталоги (.cursor, .claude, .vscode, .idea) — обёртки IDE,
+    # в комплект не входят и в git не пушатся (гид: «только локально»);
+    # как и точечные файлы, мусором не считаются (FB-01 lk-mp 2026-10-09:
+    # пустой .cursor от IDE давал ✗ корня на первом же прогоне PRE-01)
     junk = sorted(
         p.name for p in root.iterdir()
-        if (p.is_dir() and p.name not in _ok_dirs)
+        if (p.is_dir() and p.name not in _ok_dirs
+            and not p.name.startswith("."))
         or (p.is_file() and not p.name.startswith(".")
             and p.name not in _ok_files
             and p.suffix.lower() not in (".md", ".markdown")))
@@ -2196,6 +2201,20 @@ def delta_report(baseline_path: Path, cur_lines: List[str]) -> List[str]:
                    "зоны правок (брак дозахода)")
     if not closed and not opened:
         out.append("   изменений вердиктов нет")
+    # FB-02 lk-mp (2026-10-09): «✗ было 0 → стало 0» читалось как «ничего
+    # не сделано» — дельта сравнивает ВЕРДИКТЫ, не содержание; строка
+    # состава показывает, что единицы отчёта прибавились/убыли; изменение
+    # внутри уже существовавших файлов — по строке «изменены:» журнала
+    # гейта (sandbox/journal.txt) и git-скоупу сдачи
+    added = sorted(k for k in cur if k not in base)
+    gone = sorted(k for k in base if k not in cur)
+    comp = (f"   состав: единиц в отчёте было {len(base)} → стало {len(cur)}"
+            + (f"; новых ×{len(added)}: " + ", ".join(added[:6])
+               + (" …" if len(added) > 6 else "") if added else "")
+            + (f"; исчезло ×{len(gone)}: " + ", ".join(gone[:6])
+               + (" …" if len(gone) > 6 else "") if gone else ""))
+    out.append(comp + " (дельта сравнивает вердикты; изменения внутри "
+               "прежних файлов — строка «изменены:» журнала гейта)")
     return out
 
 
