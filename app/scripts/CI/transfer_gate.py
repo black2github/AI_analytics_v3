@@ -746,10 +746,32 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
                               "strict": strict, "debts": debts_rows,
-                              "src_git": src_git_state(src_root)}
+                              "src_git": src_git_state(src_root),
+                              "validator": validator_origin(validator or _DEFAULT_VALIDATOR,
+                                                            layout, no_validator)}
     finally:
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+def validator_origin(validator: Path, layout: Optional[Path], disabled: bool) -> str:
+    """Происхождение копии валидатора для шапки отчёта (ответ платформы 13.10: отчёту
+    нужны версии инструмента и раскладки). Берётся из README рядом с копией; режим —
+    временный git-репозиторий от пустого коммита, поэтому все находки считаются новыми."""
+    if disabled:
+        return "отключён ключом --no-validator"
+    readme = validator.parent.parent / "README.md"
+    origin = "копия без README о происхождении"
+    if readme.is_file():
+        txt = readme.read_text(encoding="utf-8", errors="replace")
+        m = re.search(r"снимок[^\n]*?от (\d{4}-\d{2}-\d{2})", txt)
+        sha = re.search(r"коммит\s+`([0-9a-f]{7,40})`", txt)
+        ver = re.search(r"artifact-consistency`?\s*v(\d+(?:\.\d+)*)", txt)
+        origin = ("копия от " + (m.group(1) if m else "?")
+                  + (f", eco-config `{sha.group(1)[:7]}`" if sha else "")
+                  + (f", artifact-consistency v{ver.group(1)}" if ver else ""))
+    lay = f"раскладка `{layout}`" if layout else "раскладка — умолчания валидатора (ЭКО)"
+    return f"{origin}; {lay}; режим — временный git-репозиторий от пустого коммита, все находки новые"
 
 
 def src_git_state(src_root: Path) -> dict:
@@ -801,7 +823,8 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
                if git.get("dirty") else "") + ". "
             f"Срез канона по профилю: `{canon_cut_of(src_root)}`. "
             f"Источники: `{data.get('sources') or 'не найдены'}`; профиль прибора: "
-            f"{'полный' if data.get('strict') else 'командный'}. Инструмент — `transfer_gate.py`; "
+            f"{'полный' if data.get('strict') else 'командный'}. Валидатор платформы: "
+            f"{data.get('validator') or 'не запускался'}. Инструмент — `transfer_gate.py`; "
             "таблица — приложение к протоколу самопроверки чек-листа DoR (раздел «Технологическая "
             "совместимость»).", ""]
     body = list(table_lines)
