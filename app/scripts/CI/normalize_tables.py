@@ -4301,7 +4301,27 @@ def run_check(files: List[Path], source_path: Optional[Path],
         # title — трассировка к источнику, «собственный» — только у
         # файлов БЕЗ страницы-источника, а такие сюда не попадают;
         # расширенное наименование реестра живёт в H1)
-        ttl_report, ttl_ok = check_title(card_text, src_text)
+        # карточка-часть группы (partOf без title по шаблону controls:
+        # README с id несёт title, части — partOf): наименование ищется
+        # в файле группы с `id:` — иначе прибор бракует «ПОТЕРЯ
+        # НАИМЕНОВАНИЯ» там, где title дословно перенесён в README
+        # (прогон гейта lk-mp 2026-10-13, две группы контролей).
+        # Расхождение title держателя с источником — по-прежнему брак.
+        ttl_text, ttl_holder = card_text, None
+        if (_frontmatter_title(card_text) is None
+                and re.search(r"^partOf:", card_text[:600], re.M)):
+            for f in files[1:]:
+                t = f.read_text(encoding="utf-8")
+                if (re.search(r"^id:", t[:600], re.M)
+                        and _frontmatter_title(t) is not None):
+                    ttl_text, ttl_holder = t, f
+                    break
+        ttl_report, ttl_ok = check_title(ttl_text, src_text)
+        if ttl_holder is not None:
+            ttl_report = [
+                ln.replace("title:", f"title (часть partOf без title, "
+                           f"держатель — {ttl_holder.name}):", 1)
+                for ln in ttl_report]
         bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))

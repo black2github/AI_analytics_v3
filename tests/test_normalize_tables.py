@@ -2024,6 +2024,51 @@ class TestPlaceholderLinkFlagged:
         assert ok, report
 
 
+class TestPartOfTitleHolder:
+    """Карточка-часть группы (partOf без title по шаблону controls):
+    title сверяется по файлу группы с `id:` (README), а не бракуется как
+    «ПОТЕРЯ НАИМЕНОВАНИЯ» (гейт lk-mp 2026-10-13, две группы контролей)."""
+
+    SRC = "---\ntitle: '[X] Контроли заявки'\n---\n\nтекст\n"
+
+    def _group(self, tmp_path, readme_title):
+        part = tmp_path / "cards-ent-001-request.md"
+        part.write_text("---\npartOf: CTL-000\ntype: control\n"
+                        "entity: ENT-001\n---\n\n# Контроли\n\nтекст\n",
+                        encoding="utf-8")
+        readme = tmp_path / "README.md"
+        readme.write_text(f"---\nid: CTL-000\ntitle: '{readme_title}'\n"
+                          "type: control\n---\n\n# Контроли заявки\n",
+                          encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        return part, readme, src
+
+    def test_title_taken_from_readme_holder(self, tmp_path):
+        # НЕсрабатывание: title дословно в README группы — часть не бракуется
+        from app.scripts.CI.normalize_tables import run_check
+        part, readme, src = self._group(tmp_path, "[X] Контроли заявки")
+        rep, ok = run_check([part, readme], src)
+        assert not any("ПОТЕРЯ НАИМЕНОВАНИЯ" in r for r in rep), "\n".join(rep)
+        assert any("держатель — README.md" in r and "дословно" in r
+                   for r in rep), "\n".join(rep)
+
+    def test_holder_title_diverging_still_flagged(self, tmp_path):
+        # срабатывание: title держателя расходится с источником — брак
+        from app.scripts.CI.normalize_tables import run_check
+        part, readme, src = self._group(tmp_path, "[X] Контроли заявок")
+        rep, ok = run_check([part, readme], src)
+        assert not ok and any("расходится" in r and "держатель — README.md"
+                              in r for r in rep), "\n".join(rep)
+
+    def test_part_without_holder_still_loss(self, tmp_path):
+        # срабатывание: части без файла с id — потеря наименования как прежде
+        from app.scripts.CI.normalize_tables import run_check
+        part, _readme, src = self._group(tmp_path, "[X] Контроли заявки")
+        rep, ok = run_check([part], src)
+        assert not ok and any("ПОТЕРЯ НАИМЕНОВАНИЯ" in r for r in rep)
+
+
 class TestReadmeRegistryTitle:
     """README-реестры: title дословный из главной страницы-оглавления,
     как у всех документов с источником (решение 2026-08-16 v2 —
