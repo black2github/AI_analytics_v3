@@ -37,6 +37,63 @@ def setup_docs(tmp_path, fun_text):
     return docs
 
 
+_ISSUE_ROW_OK = ("| FUN-001 | — | долг открытый вопрос: «Что такое сегмент» — причина: процессы и "
+                 "статусы называют сегмент, определения нет; ответственный: аналитик lk-mp; "
+                 "ограничение: шаги предоставления доступа к сегменту; закрытие: определение в "
+                 "глоссарии; источник: OQ-033 |\n")
+
+
+def _issue_docs(tmp_path, row):
+    docs = tmp_path / "docs"
+    make(docs / "srs/function/fun-001.md",
+         "---\nid: FUN-001\ntitle: 'Ф'\n---\n# Ф\n\nшаг процесса\n")
+    make(docs / "traceability-matrix.md",
+         "# М\n\n## 1. Реестр ID\n\n| ID | Тип | Наименование | Файл |\n|---|---|---|---|\n"
+         "| FUN-001 | function | Ф | srs/function/fun-001.md |\n\n"
+         "## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n" + row)
+    return docs
+
+
+def test_issue_debt_complete_parsed_and_clean(tmp_path):
+    # НЕсрабатывание: долг без цели со всеми полями — разобран, брака нет
+    from app.scripts.CI.link_debts import parse_matrix, issue_fields
+    docs = _issue_docs(tmp_path, _ISSUE_ROW_OK)
+    _reg, debts = parse_matrix((docs / "traceability-matrix.md").read_text(encoding="utf-8"))
+    assert len(debts) == 1 and debts[0][1] == "долг:открытый вопрос"
+    assert debts[0][2] == "Что такое сегмент" and debts[0][3] is None
+    f = issue_fields(debts[0][4])
+    assert f["source"] == "OQ-033" and f["responsible"] == "аналитик lk-mp" and f["missing"] == []
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, "\n".join(report)
+    assert any("долгов без отсутствующей цели 1" in r for r in report)
+
+
+def test_issue_debt_incomplete_caught(tmp_path):
+    # срабатывание: нет ограничения и закрытия, у открытого вопроса нет источника
+    row = ("| FUN-001 | — | долг открытый вопрос: «Что такое сегмент» — причина: нет определения; "
+           "ответственный: аналитик lk-mp |\n")
+    docs = _issue_docs(tmp_path, row)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok
+    bad = [r for r in report if "НЕПОЛОН" in r]
+    assert bad and "ограничение" in bad[0] and "закрытие" in bad[0] and "OQ-NNN" in bad[0]
+
+
+def test_issue_debt_unknown_from_id_caught(tmp_path):
+    # срабатывание: FROM-ID вне реестра — как у долгов по ссылкам
+    docs = _issue_docs(tmp_path, _ISSUE_ROW_OK.replace("| FUN-001 |", "| FUN-999 |"))
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok and any("FUN-999: ID отсутствует" in r for r in report)
+
+
+def test_issue_kind_outside_list_not_a_debt(tmp_path):
+    # НЕсрабатывание: вид вне закрытого перечня — строкой долга не считается (как и прежде)
+    from app.scripts.CI.link_debts import parse_matrix
+    docs = _issue_docs(tmp_path, "| FUN-001 | — | долг пожелание: «сделать красиво» |\n")
+    _reg, debts = parse_matrix((docs / "traceability-matrix.md").read_text(encoding="utf-8"))
+    assert debts == []
+
+
 def test_pending_debt_clean(tmp_path):
     # цель не существует, имя находится дословно — долг легален
     docs = setup_docs(tmp_path,

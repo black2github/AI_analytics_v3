@@ -236,6 +236,59 @@ def test_oq_translated_to_debt_not_blocker(tmp_path):
     assert data["debts"][0]["oq"] == "OQ-002" and data["debts"][0]["owner"] == "аналитик сервиса"
 
 
+_ISSUE_ROW = ("| FUN-CL-01 | — | долг открытый вопрос: «Что такое сегмент» — причина: определения нет; "
+              "ответственный: аналитик сервиса X; ограничение: шаги доступа к сегменту; "
+              "закрытие: определение в глоссарии; источник: OQ-002 |\n")
+_DEBT_HEAD = "\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
+
+
+def test_oq_translated_to_issue_debt_with_fields(tmp_path):
+    # НЕсрабатывание: открытый вопрос переведён строкой второго формата со всеми полями
+    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX + _DEBT_HEAD + _ISSUE_ROW)
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
+    lines, ready, data = _run(src)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("i [CORE-20] переведены в долги матрицы: 1 (OQ-002)") for l in lines)
+    assert any(l.startswith("✓ [CORE-20] перенесённые долги: 1, из них межсервисных 0, без отсутствующей цели 1")
+               for l in lines), "\n".join(lines)
+    d = data["debts"][0]
+    assert d["kind"] == "открытый вопрос" and d["owner"] == "аналитик сервиса X"
+    assert d["closure"] == "определение в глоссарии" and d["oq"] == "OQ-002"
+
+
+def test_oq_issue_debt_incomplete_blocks(tmp_path):
+    # срабатывание: строка второго формата без ограничения и закрытия — блокер с перечнем полей
+    row = ("| FUN-CL-01 | — | долг открытый вопрос: «Что такое сегмент» — причина: нет; "
+           "ответственный: аналитик; источник: OQ-002 |\n")
+    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=_MATRIX + _DEBT_HEAD + row)
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
+    lines, ready, _ = _run(src)
+    assert not ready
+    bad = [l for l in lines if l.startswith("✗ [CORE-20] строки долга из вопроса неполны")]
+    assert bad and "OQ-002 — нет полей ограничение, закрытие" in bad[0], "\n".join(lines)
+    assert not any("открытые вопросы без долга" in l for l in lines)
+
+
+def test_debt_register_affected_and_closure(tmp_path):
+    # «Затронуто»: карточка, ссылающаяся на FROM-ID, попадает в реестр; условие закрытия по виду
+    src = make_src(tmp_path, matrix=_MATRIX.replace(
+        "| VIS-001 |", "| FUN-CL-02 | function | Ф2 | srs/function/f2.md |\n| VIS-001 |") + _DEBT_ROW)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/srs/function/f2.md",
+       "---\nid: FUN-CL-02\ntitle: 'Ф2'\ntype: function\nservice: X\n---\n\n# Ф2\n\nсм. [Ф](f1.md)\n")
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
+    lines, ready, data = _run(src, fmt="table")
+    assert ready, "\n".join(lines)
+    rep = tmp_path / "r.md"
+    tg.write_report(rep, src, lines, data)
+    assert data["debts"][0]["affected"] == ["FUN-CL-02"]
+    assert data["debts"][0]["kind"] == "нет цели" and "содержание цели проверено" in data["debts"][0]["closure"]
+    text = rep.read_text(encoding="utf-8")
+    assert "| Затронуто (ссылаются на FROM-ID) | Условие закрытия |" in text
+    assert "| 1: FUN-CL-02 |" in text and "без отсутствующей цели 0" in text
+    assert "Автор проверки:" in text
+
+
 def test_types_outside_platform_set_listed(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/internal-contract/README.md", "---\nid: INTC-000\ntype: internal-contract\nservice: X\n---\n# Р\n")

@@ -16,6 +16,19 @@
 # Имя опционально для однофайловых типов (rbac): существование проверяется
 # по типу в реестре ID. Диапазоны FROM («FUN-BNK-01…05») разворачиваются.
 #
+# Второй формат (решение 2026-10-14, комментарии платформы AI Factory: реестр
+# долгов должен включать все известные проблемы, не только отсутствующие
+# ссылки) — долг БЕЗ отсутствующей цели:
+#   | <FROM-ID[, …]> | — | долг <вид>: «<формулировка>» — причина: <…>; ответственный: <кто>;
+#     ограничение: <какое поведение нельзя разрабатывать>; закрытие: <условие>[; источник: OQ-NNN] |
+# Виды — закрытый перечень: открытый вопрос, противоречие, правило на
+# изображении, источник недоступен. Поля ответственный / ограничение /
+# закрытие обязательны; у вида «открытый вопрос» обязателен источник OQ-NNN
+# (журнал open-questions.md в docs-репозиторий не переезжает — вопрос должен
+# жить в строке целиком). Просрочка и исполнимость к таким строкам не
+# применяются (цели нет); сторожится полнота полей и наличие FROM-ID в
+# реестре. Раньше такие строки раздел тихо игнорировал.
+#
 # Стадии запуска (одна утилита, три рубежа): самопроверка агента в заходе →
 # приёмка эксперта → CI docs-репо (после переезда комплекта).
 #
@@ -36,6 +49,38 @@ _DEBT_RE = re.compile(
 # чужом репозитории), исполнимость имени — как обычно.
 _OWNER_RE = re.compile(r"»\s+у\s+владельца\s+([\w.-]+)", re.IGNORECASE)
 _ROW_RE = re.compile(r"^\|(.+)\|\s*$")
+ISSUE_KINDS = ("открытый вопрос", "противоречие", "правило на изображении",
+               "источник недоступен")
+_ISSUE_RE = re.compile(
+    r"долг\s+(" + "|".join(ISSUE_KINDS) + r")\s*:\s*«([^»]+)»", re.IGNORECASE)
+_ISSUE_FIELD_RES = {
+    "cause": re.compile(r"причина:\s*([^;|]+)", re.IGNORECASE),
+    "responsible": re.compile(r"ответственный:\s*([^;|]+)", re.IGNORECASE),
+    "constraint": re.compile(r"ограничение:\s*([^;|]+)", re.IGNORECASE),
+    "closure": re.compile(r"закрытие:\s*([^;|]+)", re.IGNORECASE),
+    "source": re.compile(r"источник:\s*(OQ-\d+)", re.IGNORECASE),
+}
+ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
+                  "closure": "закрытие"}
+
+
+def issue_fields(row: str) -> Optional[dict]:
+    """Поля строки долга без цели (None — строка не этого формата):
+    kind, statement, cause, responsible, constraint, closure, source, missing
+    (перечень обязательных полей, которых нет, русскими именами)."""
+    m = _ISSUE_RE.search(row)
+    if not m:
+        return None
+    out = {"kind": m.group(1).lower(), "statement": m.group(2).strip()}
+    for key, rx in _ISSUE_FIELD_RES.items():
+        fm = rx.search(row)
+        out[key] = fm.group(1).strip() if fm else None
+    missing = [name for key, name in ISSUE_REQUIRED.items() if not out[key]]
+    if out["kind"] == "открытый вопрос" and not out["source"]:
+        missing.append("источник OQ-NNN")
+    out["missing"] = missing
+    return out
+
 _RANGE_RE = re.compile(r"^(.*?)(\d+)\s*(?:…|\.\.\.)\s*(\d+)$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
 
@@ -106,6 +151,13 @@ def parse_matrix(matrix_text: str):
             continue
         cells = [c.strip() for c in row.group(1).split("|")]
         joined = " ".join(cells)
+        issue = issue_fields(joined)
+        if issue:
+            # долг без цели: тип — «долг:<вид>», имя — формулировка,
+            # владелец — ответственный (межсервисным не считается)
+            debts.append((_expand_from(cells[0]), "долг:" + issue["kind"],
+                          issue["statement"], None, ln.strip()))
+            continue
         m = _DEBT_RE.search(joined)
         if m:
             owner = _OWNER_RE.search(joined)
@@ -149,7 +201,23 @@ def check(matrix_path: Path, docs_root: Path):
     report: List[str] = []
     ok = True
     cross: Dict[str, int] = {}
+    n_issue = 0
     for from_ids, typ, name, owner, raw in debts:
+        if typ.startswith("долг:"):
+            # долг без цели: полнота полей и FROM-ID в реестре; просрочка
+            # и исполнимость не применяются — цели нет
+            n_issue += 1
+            fields = issue_fields(raw) or {"missing": []}
+            if fields["missing"]:
+                report.append(f"долг без цели НЕПОЛОН: нет полей "
+                              f"{', '.join(fields['missing'])} ✗ — {raw[:100]}")
+                ok = False
+            for fid in from_ids:
+                if fid not in registry:
+                    report.append(f"долг от {fid}: ID отсутствует в реестре "
+                                  f"матрицы ✗ — {raw[:80]}")
+                    ok = False
+            continue
         # 1) просрочка: цель существует? (межсервисный долг — цель в
         # чужом репозитории, локальная просрочка не проверяется)
         if owner is not None:
@@ -193,6 +261,10 @@ def check(matrix_path: Path, docs_root: Path):
                     f"{reg[1]} ✗ (замена «имя → ссылка» невозможна — "
                     "дословность упоминания нарушена)")
                 ok = False
+    if n_issue:
+        report.append(f"долгов без отсутствующей цели {n_issue} (открытые "
+                      "вопросы, противоречия, правила на изображении, "
+                      "недоступные источники) — сторожится полнота полей")
     if cross:
         report.append(
             f"межсервисных долгов {sum(cross.values())} "

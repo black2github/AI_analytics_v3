@@ -232,7 +232,9 @@ _LEGEND = ("Критерии — чек-лист DoR v1.2, раздел «Тех
            "служебные файлы не перенесены, нет контрактов в комплекте, типы объявлены, межрепозиторные "
            "ссылки по стандарту) — до решения рабочей группы коды предварительные. ПРИБОР — сводная "
            "строка прибора миграции selfcheck и его находки без сопоставленного критерия; ВАЛИДАТОР — "
-           "то же для валидатора платформы AI Factory.")
+           "то же для валидатора платформы AI Factory. Статусы: ✗ блокер и ⚠ предупреждение — проверено "
+           "автоматически; i к сведению — автоматически НЕ проверено, нужна ручная проверка с "
+           "доказательством (не считать пройденным); «не применяется» пишется словами с причиной.")
 _STATUS_LABEL = {"✗": "✗ блокер", "⚠": "⚠ предупреждение", "i": "i к сведению", "✓": "✓ пройдено"}
 _STATUS_ORDER = {"✗": 0, "⚠": 1, "i": 2, "✓": 3}
 
@@ -316,28 +318,46 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     # правило переноса (решение владельца 2026-10-13): открытый вопрос либо
     # закрыт, либо переведён в строку долга матрицы, которая ссылается на
     # вопрос (OQ-NNN) и называет владельца; такой вопрос платформе виден
-    debt_text = ""
+    # две формы перевода (решение 2026-10-14): (а) ответ на вопрос — отсутствующая
+    # цель → строка «нет целевого артефакта…» с упоминанием OQ-NNN; (б) иначе →
+    # строка «долг открытый вопрос: «…» … источник: OQ-NNN» с обязательными полями
+    # ответственный / ограничение / закрытие — журнал в docs-репозиторий не
+    # переезжает, вопрос должен жить в строке целиком (комментарий платформы 13.10)
+    translated: set = set()
+    incomplete: dict = {}
     if mtext:
-        dm = re.search(r"^#+\s*(?:\d+\.\s*)?Долги по ссылкам.*$", mtext, re.M)
-        if dm:
-            tail = mtext[dm.end():]
-            nxt = re.search(r"^#{1,2}\s", tail, re.M)
-            debt_text = tail[:nxt.start()] if nxt else tail
-    translated = set(_OQ_REF_RE.findall(debt_text))
+        for _from, typ, _name, _owner, row in ld.parse_matrix(mtext)[1]:
+            if typ.startswith("долг:"):
+                f = ld.issue_fields(row) or {}
+                if f.get("source"):
+                    if f.get("missing"):
+                        incomplete[f["source"]] = f["missing"]
+                    else:
+                        translated.add(f["source"])
+            else:
+                translated.update(_OQ_REF_RE.findall(row))
     oq_file, opened = open_questions(src_root, docs)
     if oq_file is None:
         gate.add("⚠", "CORE-20", "журнал open-questions.md не найден — открытые "
                  "вопросы не проверены (у комплекта без журнала это норма)",
                  check="открытые вопросы")
     else:
-        still_open = [o for o in opened if o.split(" ")[0] not in translated]
+        still_open = [o for o in opened if o.split(" ")[0] not in translated
+                      and o.split(" ")[0] not in incomplete]
         moved = [o for o in opened if o.split(" ")[0] in translated]
+        partial = [o.split(" ")[0] for o in opened if o.split(" ")[0] in incomplete]
+        if partial:
+            gate.add("✗", "CORE-20", "строки долга из вопроса неполны: "
+                     + "; ".join(f"{q} — нет полей {', '.join(incomplete[q])}" for q in partial[:6])
+                     + " — вопрос должен жить в строке целиком: формулировка, причина, "
+                       "ответственный, ограничение, закрытие (журнал в docs-репозиторий не переезжает)",
+                     check="открытые вопросы")
         if still_open:
             gate.add("✗", "CORE-20", f"открытые вопросы без долга в матрице: {len(still_open)} "
                      f"({', '.join(still_open[:8])}{'…' if len(still_open) > 8 else ''}) — "
                      "платформа журнал src не читает; закрыть либо перевести в строку долга "
                      "матрицы со ссылкой на вопрос и владельцем", check="открытые вопросы")
-        else:
+        elif not partial:
             gate.add("✓", "CORE-20", f"открытых вопросов без долга нет ({oq_file.name})",
                      check="открытые вопросы")
         if moved:
@@ -357,9 +377,10 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                        if (sc.read_frontmatter(f) or {}).get("type") == "internal-contract")
             if ops == 0 and intc:
                 gate.add("⚠", "SDLC-04", f"раздел есть, но пуст, а в комплекте {intc} описаний "
-                         "собственных методов (internal-contract) — покрытие API не подтверждено; "
-                         "после перехода на API First строки обязательны (комментарий платформы: пустой "
-                         "раздел допустим только при отсутствии операций)",
+                         "собственных методов (internal-contract) — проверьте, есть ли у сервиса "
+                         "API-операции и указаны ли их связи с требованиями: описание метода ещё не "
+                         "означает, что для него есть API-контракт (пустой раздел допустим только при "
+                         "отсутствии операций)",
                          check="матрица: раздел «Покрытие: API ↔ SRS»")
             else:
                 gate.add("✓", "SDLC-04", "раздел есть" + (f", операций {ops}" if ops else
@@ -452,8 +473,9 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
             no_readme.append(d.relative_to(staged).as_posix())
     if no_readme:
         gate.add("⚠", "SDLC-08", f"каталоги с карточками без README-реестра: {len(no_readme)} "
-                 f"({', '.join(no_readme[:6])}{'…' if len(no_readme) > 6 else ''}) — реестр может "
-                 "быть общим в родительском каталоге, тогда укажите это в README комплекта",
+                 f"({', '.join(no_readme[:6])}{'…' if len(no_readme) > 6 else ''}) — подключению не "
+                 "мешает (обязателен README корня); реестр может быть общим в родительском каталоге, "
+                 "тогда укажите это в README комплекта",
                  check="README каталогов")
     # FMT-01: защита от обхода — файл .txt в examples/, который разбирается как
     # JSON/YAML/XML, был рабочим примером, переименованным ради PASS
@@ -469,8 +491,9 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                 break
     if parse_txt:
         gate.add("⚠", "FMT-01", f"пример помечен фрагментом (.txt), но разбирается: "
-                 f"{', '.join(parse_txt[:5])}{'…' if len(parse_txt) > 5 else ''} — вернуть "
-                 "расширение формата; .txt — только для примеров, невалидных в источнике",
+                 f"{', '.join(parse_txt[:5])}{'…' if len(parse_txt) > 5 else ''} — проверьте "
+                 "назначение файла, ожидаемый формат и источник: готовый рабочий пример несёт "
+                 "расширение формата, .txt — только для фрагментов и примеров, невалидных в источнике",
                  check="структурные файлы")
     # CORE-09: внешние ссылки — доступность для платформы проверяется человеком
     hosts: Dict[str, int] = {}
@@ -492,10 +515,12 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
         _, debts = ld.parse_matrix(mtext)
         if debts:
             cross = sum(1 for d in debts if d[3])
+            n_issue = sum(1 for d in debts if d[1].startswith("долг:"))
             has_rule = readme.is_file() and "Долги по ссылкам" in rtext
             mark = "✓" if has_rule else "✗"
             gate.add(mark, "CORE-20",
                      f"перенесённые долги: {len(debts)}, из них межсервисных {cross}"
+                     + (f", без отсутствующей цели {n_issue}" if n_issue else "")
                      + (" — правило чтения объявлено в README" if has_rule else
                         " — README не объясняет раздел «Долги по ссылкам» "
                         "(подраздел «Условных обозначений», шаблон docs-readme.md)"),
@@ -736,11 +761,19 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         mpath = staged / "traceability-matrix.md"
         if mpath.is_file():
             _, debts = ld.parse_matrix(mpath.read_text(encoding="utf-8", errors="replace"))
+            referrers = card_referrers(staged) if debts else {}
             for from_ids, typ, name, owner, row in debts:
                 oq = ", ".join(sorted(set(_OQ_REF_RE.findall(row))))
-                debts_rows.append({"from": ", ".join(from_ids) or "—", "type": typ,
-                                   "name": name or "—", "owner": owner or "аналитик сервиса",
-                                   "cross": bool(owner), "oq": oq or "—"})
+                issue = ld.issue_fields(row) if typ.startswith("долг:") else None
+                kind = issue["kind"] if issue else "нет цели"
+                affected = sorted({r for fid in from_ids for r in referrers.get(fid, ())})
+                debts_rows.append({
+                    "from": ", ".join(from_ids) or "—", "type": typ,
+                    "name": name or "—",
+                    "owner": (issue.get("responsible") if issue else owner) or "аналитик сервиса",
+                    "cross": bool(owner), "oq": oq or "—", "kind": kind,
+                    "affected": affected,
+                    "closure": (issue.get("closure") if issue else None) or _CLOSURE_BY_KIND[kind]})
         return lines, ready, {"verdict": "READY" if ready else "NOT READY",
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
@@ -752,6 +785,46 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
     finally:
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+# условие закрытия долга по виду (решение 2026-10-14; дом правила — README комплекта,
+# «Долги по ссылкам»); поле «закрытие:» строки второго формата уточняет его для долга
+_CLOSURE_BY_KIND = {
+    "нет цели": "цель появилась, имя заменено ссылкой, содержание цели проверено (не заглушка)",
+    "открытый вопрос": "ответ записан ответственным в карточке FROM-ID, строка снята",
+    "противоречие": "осталась одна формулировка, вторая исправлена ответственным",
+    "правило на изображении": "правило записано текстом в карточке по подтверждению владельца",
+    "источник недоступен": "доступ получен либо материал перенесён с указанием источника",
+}
+_MD_LINK_RE = re.compile(r"\]\(([^)\s#]+\.md)(?:#[^)]*)?\)")
+
+
+def card_referrers(staged: Path) -> Dict[str, List[str]]:
+    """ID карточки → ID карточек, ссылающихся на неё относительной ссылкой («Затронуто»
+    долгом шире FROM-ID — комментарий платформы 13.10; считает прибор, не человек).
+    Матрица и README-реестры не считаются: они ссылаются на всё."""
+    id_of: Dict[Path, str] = {}
+    for f in staged.rglob("*.md"):
+        fid = (sc.read_frontmatter(f) or {}).get("id")
+        if fid and f.name.lower() != "readme.md":
+            id_of[f.resolve()] = str(fid)
+    out: Dict[str, set] = {}
+    for f in staged.rglob("*.md"):
+        if f.name.lower() in ("readme.md", "traceability-matrix.md"):
+            continue
+        src_id = id_of.get(f.resolve())
+        if not src_id:
+            continue
+        text = f.read_text(encoding="utf-8", errors="replace")
+        for rel in _MD_LINK_RE.findall(text):
+            try:
+                target = (f.parent / rel).resolve()
+            except OSError:
+                continue
+            tid = id_of.get(target)
+            if tid and tid != src_id:
+                out.setdefault(tid, set()).add(src_id)
+    return {k: sorted(v) for k, v in out.items()}
 
 
 def validator_origin(validator: Path, layout: Optional[Path], disabled: bool) -> str:
@@ -787,7 +860,10 @@ def src_git_state(src_root: Path) -> dict:
     commit = g("rev-parse", "--short", "HEAD")
     return {"commit": commit or "не git-репозиторий",
             "branch": g("rev-parse", "--abbrev-ref", "HEAD") or "—",
-            "dirty": bool(g("status", "--porcelain")) if commit else False}
+            "dirty": bool(g("status", "--porcelain")) if commit else False,
+            # автор проверки — из git-конфигурации того, кто запустил гейт
+            # (комментарий платформы 13.10: отчёту нужны автор, дата, версии)
+            "author": g("config", "user.name") or "не указан"}
 
 
 def canon_cut_of(src_root: Path) -> str:
@@ -821,6 +897,7 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
             f"`{git.get('branch', '?')}`"
             + (", **есть незакоммиченные изменения** — проверено рабочее дерево, не коммит"
                if git.get("dirty") else "") + ". "
+            f"Автор проверки: {git.get('author', 'не указан')}. "
             f"Срез канона по профилю: `{canon_cut_of(src_root)}`. "
             f"Источники: `{data.get('sources') or 'не найдены'}`; профиль прибора: "
             f"{'полный' if data.get('strict') else 'командный'}. Валидатор платформы: "
@@ -833,16 +910,25 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
     debts = data.get("debts") or []
     body += ["", "## Реестр долгов", ""]
     if debts:
+        n_issue = sum(1 for d in debts if d.get("kind", "нет цели") != "нет цели")
         body += [f"Строк в разделе матрицы «Долги по ссылкам»: {len(debts)}, из них межсервисных "
-                 f"{sum(1 for d in debts if d['cross'])}. Правило чтения — README комплекта, "
-                 "«Условные обозначения» → «Долги по ссылкам». Долг ограничивает использование карточки "
-                 "FROM-ID: до появления цели задача, реализующая или меняющая её поведение, допускается к "
-                 "разработке только по записанному решению владельца документации.", "",
-                 "| FROM-ID | Тип цели | Цель | Владелец долга | Из вопроса |", "|---|---|---|---|---|"]
+                 f"{sum(1 for d in debts if d['cross'])}, без отсутствующей цели {n_issue} (имя раздела "
+                 "историческое: раздел содержит все долги комплекта). Правило чтения — README комплекта, "
+                 "«Условные обозначения» → «Долги по ссылкам». Долг ограничивает использование затронутых "
+                 "карточек: карточки FROM-ID и карточек, которые на неё ссылаются; до закрытия задача, "
+                 "реализующая или меняющая их поведение, допускается к разработке только по записанному "
+                 "решению владельца документации. Условие закрытия — по виду долга; поле «закрытие» строки "
+                 "уточняет его.", "",
+                 "| FROM-ID | Вид | Цель или формулировка | Ответственный | Затронуто (ссылаются на FROM-ID) "
+                 "| Условие закрытия | Из вопроса |", "|---|---|---|---|---|---|---|"]
         esc = lambda x: str(x).replace("|", "\\|")  # noqa: E731
         for d in debts:
-            body.append(f"| {esc(d['from'])} | {esc(d['type'])} | {esc(d['name'])} | {esc(d['owner'])} | "
-                        f"{esc(d['oq'])} |")
+            kind = d.get("kind", "нет цели")
+            kind_txt = f"нет цели: {d['type']}" if kind == "нет цели" else kind
+            aff = d.get("affected") or []
+            aff_txt = (f"{len(aff)}: " + ", ".join(aff[:6]) + ("…" if len(aff) > 6 else "")) if aff else "—"
+            body.append(f"| {esc(d['from'])} | {esc(kind_txt)} | {esc(d['name'])} | {esc(d['owner'])} | "
+                        f"{esc(aff_txt)} | {esc(d.get('closure', ''))} | {esc(d['oq'])} |")
     else:
         body.append("Долгов в матрице нет.")
     body += ["", "## Ручная часть протокола до подключения", "",
