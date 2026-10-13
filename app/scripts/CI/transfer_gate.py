@@ -40,9 +40,10 @@
 #      (ключ --no-validator осознанно отключает эту половину гейта).
 #   4. Проверяет условия самого переноса, которых нет ни у прибора, ни у
 #      валидатора:
-#        - открытых вопросов в `open-questions.md` src-репозитория нет
-#          (запись со статусом «открыт» блокирует: платформа этот журнал
-#          не увидит, нерешённый вопрос переедет молча) — CORE-20;
+#        - открытых вопросов в `open-questions.md` src-репозитория нет,
+#          либо каждый открытый переведён в строку долга матрицы со ссылкой
+#          на вопрос (OQ-NNN) и владельцем (решение владельца 2026-10-13):
+#          платформа журнал src не увидит, а долг в матрице — увидит — CORE-20;
 #        - матрица трассировки несёт раздел «Покрытие: API ↔ SRS» (хоть
 #          пустой: по нему планировщик платформы находит репозитории
 #          кода; нет раздела — нет API-слоя в задачах) — SDLC-04;
@@ -52,13 +53,23 @@
 #          SDLC-08; раздел «Условные обозначения» — предупреждение;
 #        - `service-vision.md`, `glossary.md` — предупреждение, если нет
 #          (у платформы обязательны только для нового сервиса) — SDLC-05;
+#        - типы документов вне закрытого набора платформы перечисляются как
+#          исключения к согласованию (TRF-04 / SDLC-01); пустой раздел API при
+#          наличии описаний методов — предупреждение (SDLC-04); .txt-пример,
+#          который разбирается, — предупреждение (FMT-01, защита от обхода);
+#          каталоги карточек без README-реестра — предупреждение (SDLC-08);
+#          внешние ссылки — перечень хостов для ручной проверки (CORE-09);
+#          при --out — CODEOWNERS непустой (CORE-04, ✗) и gpb-manifest.json
+#          разбирается, поля печатаются (SDLC-07);
 #        - долги раздела матрицы «Долги по ссылкам» переезжают как есть;
 #          README обязан объяснять, как читать строку долга как поручение
 #          (подраздел «Долги по ссылкам» в «Условных обозначениях») —
 #          иначе блокер: внешний читатель долгов не поймёт — CORE-20.
 #   5. Печатает отчёт таблицей «Статус | Критерий | Проверка | Результат»:
 #      критерий — из чек-листа DoR v1.2 (раздел 1), служебные метки —
-#      ПЕРЕНОС (условия самого переноса, которых в чек-листе нет), ПРИБОР
+#      TRF-01…05 (предложенный блок «Условия переноса»: корень без docs/,
+#      служебные файлы не перенесены, нет контрактов в комплекте, типы
+#      объявлены, межрепозиторные ссылки по стандарту), ПРИБОР
 #      (сводка и несопоставленные находки прибора), ВАЛИДАТОР (то же для
 #      валидатора платформы); легенда печатается под таблицей. Отчёт
 #      прилагается к протоколу самопроверки как доказательство по
@@ -95,8 +106,11 @@
 #                       markdown-таблица «Статус | Критерий | Проверка | Результат»,
 #                       строки сгруппированы: блокеры → предупреждения → причины →
 #                       пройдено; под таблицей ИТОГ и легенда служебных меток)
-#   --report <файл.md>  записать таблицу с шапкой (сервис, срез канона, источники,
-#                       профиль прибора) — готовое приложение к протоколу чек-листа
+#   --report <файл.md>  записать отчёт: шапка (вид допуска, коммит и ветка src,
+#                       срез канона, источники, профиль прибора), таблица, раздел
+#                       «Реестр долгов» (FROM-ID, цель, владелец, вопрос) и «Ручная
+#                       часть протокола до подключения» — готовое приложение к
+#                       протоколу чек-листа
 #   --json              дополнительно вывести результат в JSON (вердикт, строки:
 #                       знак, критерий, проверка, результат) — для CI
 #
@@ -147,8 +161,8 @@ _SELFCHECK_CRITERIA = (
     ("структурные файлы", "FMT-01"),
     ("относительные ссылки", "CORE-06"),
     ("условные обозначения README", "SDLC-08"),
-    ("матрица «API ↔ SRS»", "SDLC-04"),
-    ("контракты в комплекте", "ПЕРЕНОС"),
+    ("матрица «API ↔ SRS»", "TRF-05"),
+    ("контракты в комплекте", "TRF-03"),
     ("файл-артефакт", "CORE-09"),
     ("битая ссылка на files", "CORE-09"),
     ("frontmatter", "SDLC-09"),
@@ -161,8 +175,44 @@ _VALIDATOR_CRITERIA = {
     "E_STRUCTURED_FILE_INVALID": "FMT-01", "E_OPERATION_ID_DUPLICATE": "SDLC-04",
     "E_PATH_PARAMETER_UNBOUND": "SDLC-04", "E_PATH_OUTSIDE_REPOSITORY": "CORE-09",
     "E_TRACEABILITY_MISSING": "SDLC-04", "E_TRACEABILITY_DUPLICATE": "SDLC-04",
-    "E_KIT_DOCS_WRAPPER": "ПЕРЕНОС",
+    "E_KIT_DOCS_WRAPPER": "TRF-01",
 }
+
+# закрытый набор `type` платформы (канон платформы §8 / паспорт ЭКО §8); типы комплекта
+# вне набора платформа читает «как документ без навыка» — их перечень идёт в отчёт как
+# исключения к согласованию (комментарий платформы к SDLC-01, 13.10.2026)
+_PLATFORM_TYPES = {"vision", "glossary", "feature", "use-case", "business-rules", "process",
+                   "data-model", "function", "screen-form", "control", "print-form",
+                   "contract-call", "notification", "rbac", "platform-function",
+                   "external-integration"}
+_SERVICE_DIRS = {"examples", "files", "img", "assets", "images"}
+_EXT_LINK_RE = re.compile(r"\]\((https?://[^)\s]+)")
+_OQ_REF_RE = re.compile(r"\bOQ-\d+\b")
+# критерии раздела 1, у которых автоматической проверки нет — ручная с доказательством
+_MANUAL_SECTION1 = (
+    ("SDLC-02", "внешние контракты в docs-external-contracts и обратные ссылки — наличие ссылок из "
+                "карточек CALL-EXT и строки «Потребители» в контракте"),
+    ("SDLC-03", "справочники в Git и связь в обе стороны — до решения канона о владельце общих "
+                "справочников и обратном индексе"),
+    ("CORE-09", "внешние ссылки (http) — доступность для платформы и агентов; гейт даёт только "
+                "перечень хостов"),
+    ("SDLC-07", "CODEOWNERS и gpb-manifest.json — проверяются гейтом только при --out; "
+                "обязательные поля манифеста определяет владелец платформы"),
+)
+# ручные пункты протокола до технического подключения (комментарии платформы 13.10.2026),
+# которые гейт закрыть не может
+_MANUAL_BEFORE_CONNECT = (
+    ("CORE-01, CORE-02", "назначение сервиса, потребители, перечень подключаемых возможностей и "
+                         "исключения — разделы README «О сервисе» и «Границы комплекта» либо "
+                         "service-vision.md; подтверждает владелец документации"),
+    ("CORE-10", "термины назначения и границ определены (глоссарий или README)"),
+    ("CORE-18", "происхождение правил — confluence_page_ids и дословность у мигрированного "
+                "комплекта по построению; подтверждение правил задачи — до разработки, платформа"),
+    ("SDLC-10", "оценка качества заявленного объёма по разделу 2 чек-листа и реестр долгов "
+                "(приложен ниже) — отчёт, не READY"),
+    ("SDLC-01", "типы и поля вне набора платформы (перечень в таблице гейта, TRF-04) — "
+                "согласовать как исключения по стандарту платформы"),
+)
 
 
 # проверка по умолчанию для критерия (когда строка не задаёт свою)
@@ -171,21 +221,25 @@ _DEFAULT_CHECK = {
     "SDLC-08": "README комплекта", "SDLC-09": "идентификаторы и frontmatter",
     "CORE-06": "относительные ссылки", "CORE-09": "ссылки и артефакты",
     "CORE-20": "открытые вопросы и долги", "FMT-01": "структурные файлы",
-    "ПЕРЕНОС": "условия переноса", "ПРИБОР": "прибор selfcheck",
+    "TRF-01": "корень без обёртки docs/", "TRF-02": "служебные файлы миграции",
+    "TRF-03": "контракты в комплекте", "TRF-04": "типы документов объявлены",
+    "TRF-05": "межрепозиторные ссылки", "ПРИБОР": "прибор selfcheck",
     "ВАЛИДАТОР": "валидатор платформы",
 }
-_LEGEND = ("Критерии — чек-лист DoR v1.2, раздел «Технологическая совместимость». Служебные метки: "
-           "ПЕРЕНОС — условия самого переноса, которых в чек-листе нет (сборка в целевой раскладке, нет "
-           "api/ и YAML-контрактов, нет обёртки docs/); ПРИБОР — сводная строка прибора миграции "
-           "selfcheck и его находки без сопоставленного критерия; ВАЛИДАТОР — сводная строка валидатора "
-           "платформы AI Factory и его находки без сопоставленного критерия.")
-_STATUS_LABEL = {"✗": "✗ блокер", "⚠": "⚠ предупреждение", "i": "i причина", "✓": "✓ пройдено"}
+_LEGEND = ("Критерии — чек-лист DoR v1.2, раздел «Технологическая совместимость»; проверка "
+           "автоматическая там, где реализована, остальные критерии раздела — ручная с доказательством "
+           "(перечень в отчёте). TRF-01…05 — предложенный блок «Условия переноса» (корень без docs/, "
+           "служебные файлы не перенесены, нет контрактов в комплекте, типы объявлены, межрепозиторные "
+           "ссылки по стандарту) — до решения рабочей группы коды предварительные. ПРИБОР — сводная "
+           "строка прибора миграции selfcheck и его находки без сопоставленного критерия; ВАЛИДАТОР — "
+           "то же для валидатора платформы AI Factory.")
+_STATUS_LABEL = {"✗": "✗ блокер", "⚠": "⚠ предупреждение", "i": "i к сведению", "✓": "✓ пройдено"}
 _STATUS_ORDER = {"✗": 0, "⚠": 1, "i": 2, "✓": 3}
 
 
 class Gate:
     """Записи гейта: (знак, критерий, проверка, результат). Таблица — по умолчанию,
-    сгруппирована блокеры → предупреждения → причины → пройдено; журнал (--log) —
+    сгруппирована блокеры → предупреждения → к сведению → пройдено; журнал (--log) —
     в порядке выполнения проверок."""
 
     def __init__(self) -> None:
@@ -257,24 +311,60 @@ def open_questions(src_root: Path, docs: Path) -> Tuple[Optional[Path], List[str
 
 def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                               staged: Path) -> None:
+    matrix = staged / "traceability-matrix.md"
+    mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
+    # правило переноса (решение владельца 2026-10-13): открытый вопрос либо
+    # закрыт, либо переведён в строку долга матрицы, которая ссылается на
+    # вопрос (OQ-NNN) и называет владельца; такой вопрос платформе виден
+    debt_text = ""
+    if mtext:
+        dm = re.search(r"^#+\s*(?:\d+\.\s*)?Долги по ссылкам.*$", mtext, re.M)
+        if dm:
+            tail = mtext[dm.end():]
+            nxt = re.search(r"^#{1,2}\s", tail, re.M)
+            debt_text = tail[:nxt.start()] if nxt else tail
+    translated = set(_OQ_REF_RE.findall(debt_text))
     oq_file, opened = open_questions(src_root, docs)
     if oq_file is None:
         gate.add("⚠", "CORE-20", "журнал open-questions.md не найден — открытые "
                  "вопросы не проверены (у комплекта без журнала это норма)",
                  check="открытые вопросы")
-    elif opened:
-        gate.add("✗", "CORE-20", f"открытые вопросы: {len(opened)} "
-                 f"({', '.join(opened[:8])}{'…' if len(opened) > 8 else ''}) — "
-                 "платформа журнал src не читает, нерешённый вопрос переедет "
-                 "молча; закрыть или перевести в долг матрицы", check="открытые вопросы")
     else:
-        gate.add("✓", "CORE-20", f"открытых вопросов нет ({oq_file.name})", check="открытые вопросы")
-
-    matrix = staged / "traceability-matrix.md"
-    mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
+        still_open = [o for o in opened if o.split(" ")[0] not in translated]
+        moved = [o for o in opened if o.split(" ")[0] in translated]
+        if still_open:
+            gate.add("✗", "CORE-20", f"открытые вопросы без долга в матрице: {len(still_open)} "
+                     f"({', '.join(still_open[:8])}{'…' if len(still_open) > 8 else ''}) — "
+                     "платформа журнал src не читает; закрыть либо перевести в строку долга "
+                     "матрицы со ссылкой на вопрос и владельцем", check="открытые вопросы")
+        else:
+            gate.add("✓", "CORE-20", f"открытых вопросов без долга нет ({oq_file.name})",
+                     check="открытые вопросы")
+        if moved:
+            gate.add("i", "CORE-20", f"переведены в долги матрицы: {len(moved)} "
+                     f"({', '.join(moved[:8])}{'…' if len(moved) > 8 else ''}) — вопрос не решён, "
+                     "но виден платформе с владельцем", check="открытые вопросы")
     if matrix.is_file():
-        if sc._API_SECTION_RE.search(mtext):
-            gate.add("✓", "SDLC-04", "раздел есть", check="матрица: раздел «Покрытие: API ↔ SRS»")
+        am = sc._API_SECTION_RE.search(mtext)
+        if am:
+            tail = mtext[am.end():]
+            nxt = re.search(r"^#{1,2}\s", tail, re.M)
+            sect = tail[:nxt.start()] if nxt else tail
+            rows = [ln for ln in sect.splitlines()
+                    if ln.strip().startswith("|") and not re.match(r"^\|[\s:|-]+\|?$", ln.strip())]
+            ops = max(0, len(rows) - 1)  # минус шапка
+            intc = sum(1 for f in staged.rglob("*.md")
+                       if (sc.read_frontmatter(f) or {}).get("type") == "internal-contract")
+            if ops == 0 and intc:
+                gate.add("⚠", "SDLC-04", f"раздел есть, но пуст, а в комплекте {intc} описаний "
+                         "собственных методов (internal-contract) — покрытие API не подтверждено; "
+                         "после перехода на API First строки обязательны (комментарий платформы: пустой "
+                         "раздел допустим только при отсутствии операций)",
+                         check="матрица: раздел «Покрытие: API ↔ SRS»")
+            else:
+                gate.add("✓", "SDLC-04", "раздел есть" + (f", операций {ops}" if ops else
+                                                        " (пуст — API-слой не ведётся)"),
+                         check="матрица: раздел «Покрытие: API ↔ SRS»")
         else:
             gate.add("✗", "SDLC-04", "раздела нет — "
                      "планировщик платформы определяет по нему репозитории кода; "
@@ -292,11 +382,11 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     if api_dirs or yamls:
         what = ", ".join([d.relative_to(staged).as_posix() + "/" for d in api_dirs]
                          + yamls[:3])
-        gate.add("✗", "ПЕРЕНОС", f"контракты в комплекте ({what}) — OpenAPI/AsyncAPI "
+        gate.add("✗", "TRF-03", f"контракты в комплекте ({what}) — OpenAPI/AsyncAPI "
                  "живут в api-specification/ репозитория кода, копии в "
                  "docs-репозиторий не переносятся", check="контракты в комплекте")
     else:
-        gate.add("✓", "ПЕРЕНОС", "каталога api/ и YAML-контрактов нет", check="контракты в комплекте")
+        gate.add("✓", "TRF-03", "каталога api/ и YAML-контрактов нет", check="контракты в комплекте")
 
     readme = staged / "README.md"
     rtext = readme.read_text(encoding="utf-8", errors="replace") if readme.is_file() else ""
@@ -327,8 +417,73 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                      "для нового сервиса; чек-лист DoR требует)", check=name)
     nested = [p for p in staged.rglob("docs") if p.is_dir()]
     if nested:
-        gate.add("✗", "ПЕРЕНОС", "внутри комплекта есть каталог docs/ — обёртка "
+        gate.add("✗", "TRF-01", "внутри комплекта есть каталог docs/ — обёртка "
                  "недопустима (валидатор платформы: E_KIT_DOCS_WRAPPER)", check="обёртка docs/")
+    # TRF-04 / SDLC-01: типы документов вне закрытого набора платформы — перечень
+    # исключений к согласованию (комментарий платформы: объявление в README не равно
+    # согласованию, если стандарт требует согласования)
+    types: Dict[str, int] = {}
+    for f in staged.rglob("*.md"):
+        t = (sc.read_frontmatter(f) or {}).get("type")
+        if t:
+            types[t] = types.get(t, 0) + 1
+    outside = {t: n for t, n in types.items() if t not in _PLATFORM_TYPES}
+    if outside:
+        prefix_of = {"internal-contract": "INTC", "lib-contract": "LIBC", "agent": "CHD",
+                     "platform-function": "PLT", "status-model": "SM", "instruction": "INS",
+                     "script": "SCRP"}
+        declared = bool(rtext) and all(
+            t in rtext or f"**{prefix_of.get(t, '')}**" in rtext for t in outside)
+        gate.add("i", "TRF-04", "типы вне закрытого набора платформы: "
+                 + ", ".join(f"{t} ×{n}" for t, n in sorted(outside.items()))
+                 + (" — объявлены в README комплекта; согласование исключений — по стандарту "
+                    "платформы (SDLC-01)" if declared else
+                    " — в README комплекта не описаны (таблица типов «Условных обозначений»)"),
+                 check="типы документов")
+    elif types:
+        gate.add("✓", "TRF-04", "все типы комплекта в закрытом наборе платформы",
+                 check="типы документов")
+    # SDLC-08: каталоги карточек без README-реестра
+    no_readme: List[str] = []
+    for d in sorted({f.parent for f in staged.rglob("*.md") if (sc.read_frontmatter(f) or {}).get("id")}):
+        if d == staged or d.name in _SERVICE_DIRS:
+            continue
+        if not (d / "README.md").is_file():
+            no_readme.append(d.relative_to(staged).as_posix())
+    if no_readme:
+        gate.add("⚠", "SDLC-08", f"каталоги с карточками без README-реестра: {len(no_readme)} "
+                 f"({', '.join(no_readme[:6])}{'…' if len(no_readme) > 6 else ''}) — реестр может "
+                 "быть общим в родительском каталоге, тогда укажите это в README комплекта",
+                 check="README каталогов")
+    # FMT-01: защита от обхода — файл .txt в examples/, который разбирается как
+    # JSON/YAML/XML, был рабочим примером, переименованным ради PASS
+    parse_txt: List[str] = []
+    for f in staged.rglob("*.txt"):
+        if "examples" not in f.relative_to(staged).parts:
+            continue
+        raw = f.read_bytes()
+        for ext in (".json", ".xml", ".yaml"):
+            if raw.strip() and sc._parse_structured(raw.lstrip(b"\xef\xbb\xbf"), ext) is None \
+                    and (ext != ".yaml" or raw.lstrip().startswith((b"{", b"[", b"<"))):
+                parse_txt.append(f.relative_to(staged).as_posix())
+                break
+    if parse_txt:
+        gate.add("⚠", "FMT-01", f"пример помечен фрагментом (.txt), но разбирается: "
+                 f"{', '.join(parse_txt[:5])}{'…' if len(parse_txt) > 5 else ''} — вернуть "
+                 "расширение формата; .txt — только для примеров, невалидных в источнике",
+                 check="структурные файлы")
+    # CORE-09: внешние ссылки — доступность для платформы проверяется человеком
+    hosts: Dict[str, int] = {}
+    for f in staged.rglob("*.md"):
+        text = f.read_text(encoding="utf-8", errors="replace")
+        for u in _EXT_LINK_RE.findall(text):
+            h = re.sub(r"^https?://([^/]+).*$", r"\1", u)
+            hosts[h] = hosts.get(h, 0) + 1
+    if hosts:
+        gate.add("i", "CORE-09", "внешних ссылок " + str(sum(hosts.values())) + ": "
+                 + ", ".join(f"{h} ×{n}" for h, n in sorted(hosts.items(), key=lambda x: -x[1])[:6])
+                 + " — доступность для платформы и агентов проверяется вручную",
+                 check="внешние ссылки")
     # долги, переживающие перенос (решение 2026-10-10, P-18): строки
     # раздела «Долги по ссылкам» едут как есть, а правило их чтения как
     # поручений объявляет README («Условные обозначения» → «Долги по
@@ -474,6 +629,42 @@ def copy_out(staged: Path, out: Path) -> Tuple[int, str]:
     return n, ""
 
 
+def check_target_repo(gate: Gate, out: Optional[Path]) -> None:
+    """CORE-04 / SDLC-07: владельцы и манифест живут в репозитории назначения —
+    проверяются только при --out; поля манифеста определяет владелец платформы,
+    поэтому они печатаются для ручной сверки, а не сверяются."""
+    if out is None:
+        gate.add("i", "SDLC-07", "CODEOWNERS и gpb-manifest.json проверяются в репозитории "
+                 "назначения — запустите гейт с --out <клон docs-репозитория>",
+                 check="CODEOWNERS и манифест")
+        return
+    if not out.is_dir():
+        gate.add("✗", "TRF-01", f"--out: каталог назначения не существует: {out}",
+                 check="репозиторий назначения")
+        return
+    co = out / "CODEOWNERS"
+    if co.is_file() and any(ln.strip() and not ln.strip().startswith("#")
+                            for ln in co.read_text(encoding="utf-8", errors="replace").splitlines()):
+        gate.add("✓", "CORE-04", "CODEOWNERS в репозитории назначения есть и непустой",
+                 check="владельцы документации")
+    else:
+        gate.add("✗", "CORE-04", f"CODEOWNERS в {out} отсутствует или пуст — владелец "
+                 "документации не назначен (чек-лист: обязательно до подключения)",
+                 check="владельцы документации")
+    mf = out / "gpb-manifest.json"
+    if not mf.is_file():
+        gate.add("⚠", "SDLC-07", f"gpb-manifest.json в {out} нет — обязателен по стандарту "
+                 "repo-topology §3; поля — по требованиям платформы", check="манифест")
+        return
+    try:
+        data = json.loads(mf.read_text(encoding="utf-8-sig"))
+        keys = ", ".join(sorted(data.keys())) if isinstance(data, dict) else type(data).__name__
+        gate.add("✓", "SDLC-07", f"gpb-manifest.json разбирается; поля: {keys} — обязательный "
+                 "состав сверить вручную по требованиям платформы", check="манифест")
+    except (OSError, ValueError) as e:
+        gate.add("✗", "SDLC-07", f"gpb-manifest.json не разбирается как JSON: {e}", check="манифест")
+
+
 # --- оркестровка ----------------------------------------------------------------
 
 def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None,
@@ -486,7 +677,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
     gate = Gate()
     docs = src_root / docs_name
     if not docs.is_dir():
-        gate.add("✗", "ПЕРЕНОС", f"каталог комплекта не найден: {docs}")
+        gate.add("✗", "TRF-01", f"каталог комплекта не найден: {docs}")
         lines = gate.render() + ["ИТОГ: NOT READY"]
         return lines, False, {"verdict": "NOT READY", "lines": gate.lines}
     tmp = None
@@ -500,10 +691,12 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         staged = Path(tmp)
     try:
         copied, skipped = stage_kit(docs, staged)
-        gate.add("✓", "ПЕРЕНОС", f"собран: {copied} файлов; "
-                 f"служебных пропущено {len(skipped)}"
-                 + (f" ({', '.join(skipped[:4])})" if skipped else ""),
+        gate.add("✓", "TRF-01", f"собран в корне без обёртки docs/: {copied} файлов",
                  check="комплект в целевой раскладке")
+        gate.add("✓", "TRF-02", f"служебных файлов миграции не перенесено: {len(skipped)}"
+                 + (f" ({', '.join(skipped[:4])}{'…' if len(skipped) > 4 else ''})" if skipped
+                    else " (в docs/ их не было)"),
+                 check="служебные файлы миграции")
         if sources is None:
             sources = find_sources(src_root)
         if sources is None:
@@ -512,6 +705,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      "с источником; задайте --sources")
         run_selfcheck(gate, staged, sources, strict)
         check_transfer_conditions(gate, src_root, docs, staged)
+        check_target_repo(gate, out)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
                      "--no-validator — структурная половина гейта не выполнена")
@@ -538,14 +732,40 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                 lines.append("✗ --out пропущен: при NOT READY гейт не переносит")
         if keep is not None:
             lines.append(f"i собранный комплект оставлен в {keep}")
+        debts_rows: List[dict] = []
+        mpath = staged / "traceability-matrix.md"
+        if mpath.is_file():
+            _, debts = ld.parse_matrix(mpath.read_text(encoding="utf-8", errors="replace"))
+            for from_ids, typ, name, owner, row in debts:
+                oq = ", ".join(sorted(set(_OQ_REF_RE.findall(row))))
+                debts_rows.append({"from": ", ".join(from_ids) or "—", "type": typ,
+                                   "name": name or "—", "owner": owner or "аналитик сервиса",
+                                   "cross": bool(owner), "oq": oq or "—"})
         return lines, ready, {"verdict": "READY" if ready else "NOT READY",
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
-                              "strict": strict}
+                              "strict": strict, "debts": debts_rows,
+                              "src_git": src_git_state(src_root)}
     finally:
         if tmp is not None:
             shutil.rmtree(tmp, ignore_errors=True)
+
+
+def src_git_state(src_root: Path) -> dict:
+    """Коммит, ветка и признак незакоммиченных изменений src-репозитория (CORE-05/07):
+    отчёт фиксирует, какая версия документации проверена."""
+    def g(*args: str) -> str:
+        try:
+            r = subprocess.run(["git", "-C", str(src_root), *args], capture_output=True,
+                               text=True, encoding="utf-8", errors="replace", timeout=30)
+            return r.stdout.strip() if r.returncode == 0 else ""
+        except Exception:  # noqa: BLE001
+            return ""
+    commit = g("rev-parse", "--short", "HEAD")
+    return {"commit": commit or "не git-репозиторий",
+            "branch": g("rev-parse", "--abbrev-ref", "HEAD") or "—",
+            "dirty": bool(g("status", "--porcelain")) if commit else False}
 
 
 def canon_cut_of(src_root: Path) -> str:
@@ -571,15 +791,47 @@ def run_gate_table_lines(data: dict) -> List[str]:
 
 def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict) -> None:
     import datetime as _dt
+    git = data.get("src_git") or {}
     head = [f"# Гейт переноса: {src_root.name}", "",
-            f"Дата: {_dt.date.today().isoformat()}. Рабочий репозиторий: `{src_root}`. "
+            f"Дата: {_dt.date.today().isoformat()}. Вид допуска: **техническое подключение сервиса** "
+            "(допуск задач к разработке — платформа). "
+            f"Рабочий репозиторий: `{src_root}`, коммит `{git.get('commit', '?')}`, ветка "
+            f"`{git.get('branch', '?')}`"
+            + (", **есть незакоммиченные изменения** — проверено рабочее дерево, не коммит"
+               if git.get("dirty") else "") + ". "
             f"Срез канона по профилю: `{canon_cut_of(src_root)}`. "
             f"Источники: `{data.get('sources') or 'не найдены'}`; профиль прибора: "
             f"{'полный' if data.get('strict') else 'командный'}. Инструмент — `transfer_gate.py`; "
             "таблица — приложение к протоколу самопроверки чек-листа DoR (раздел «Технологическая "
             "совместимость»).", ""]
+    body = list(table_lines)
+    # реестр долгов (комментарии платформы 13.10: до подключения обязателен реестр долгов с
+    # владельцем; долг ограничивает использование карточки FROM-ID до закрытия)
+    debts = data.get("debts") or []
+    body += ["", "## Реестр долгов", ""]
+    if debts:
+        body += [f"Строк в разделе матрицы «Долги по ссылкам»: {len(debts)}, из них межсервисных "
+                 f"{sum(1 for d in debts if d['cross'])}. Правило чтения — README комплекта, "
+                 "«Условные обозначения» → «Долги по ссылкам». Долг ограничивает использование карточки "
+                 "FROM-ID: до появления цели задача, реализующая или меняющая её поведение, допускается к "
+                 "разработке только по записанному решению владельца документации.", "",
+                 "| FROM-ID | Тип цели | Цель | Владелец долга | Из вопроса |", "|---|---|---|---|---|"]
+        esc = lambda x: str(x).replace("|", "\\|")  # noqa: E731
+        for d in debts:
+            body.append(f"| {esc(d['from'])} | {esc(d['type'])} | {esc(d['name'])} | {esc(d['owner'])} | "
+                        f"{esc(d['oq'])} |")
+    else:
+        body.append("Долгов в матрице нет.")
+    body += ["", "## Ручная часть протокола до подключения", "",
+             "Гейт закрывает автоматические критерии раздела 1. До технического подключения человек "
+             "дополнительно подтверждает (комментарии платформы к DoR v1.2, 13.10.2026):", ""]
+    body += [f"- **{c}** — {t}" for c, t in _MANUAL_BEFORE_CONNECT]
+    body += ["", "Критерии раздела 1 без автоматической проверки (ручная с доказательством):", ""]
+    body += [f"- **{c}** — {t}" for c, t in _MANUAL_SECTION1]
+    body += ["", "Поля решения (заполняет владелец): разрешённый объём разработки; запрещённый или "
+             "непроверенный объём; решение и подтвердивший владелец."]
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("\n".join(head + table_lines) + "\n", encoding="utf-8", newline="\n")
+    path.write_text("\n".join(head + body) + "\n", encoding="utf-8", newline="\n")
 
 
 def main() -> int:

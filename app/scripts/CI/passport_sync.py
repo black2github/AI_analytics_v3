@@ -433,7 +433,7 @@ def check_passport(canon: Path, passport_dir: Path,
     # 6. поля frontmatter
     if re.search(r"`title`[^\n]*не добавлять", md):
         rep.add("i", "Поле frontmatter `title`", "в новые документы не добавлять",
-                "провенанс reverse: дословное наименование страницы источника; у forward-"
+                "след источника (reverse): дословное наименование страницы источника; у forward-"
                 "документов не требуется; объявлено в README комплекта",
                 "шаблон docs-readme.md «Поля frontmatter»")
     if re.search(r"`version`[^\n]*историческ", md):

@@ -51,7 +51,7 @@ def test_ready_without_validator(tmp_path):
     assert ready, "\n".join(lines)
     assert lines[-1].startswith("ИТОГ: READY — блокеров 0")
     assert data["verdict"] == "READY"
-    assert any("[CORE-20] открытых вопросов нет" in l for l in lines)
+    assert any("[CORE-20] открытых вопросов без долга нет" in l for l in lines)
     assert any("[SDLC-04] раздел есть" in l for l in lines)
     assert any("[ВАЛИДАТОР] валидатор платформы отключён" in l for l in lines)
 
@@ -59,7 +59,7 @@ def test_ready_without_validator(tmp_path):
 def test_open_question_blocks(tmp_path):
     lines, ready, _ = _run(make_src(tmp_path, oq=_OQ_OPEN))
     assert not ready
-    assert any(l.startswith("✗ [CORE-20] открытые вопросы: 1 (OQ-002)") for l in lines)
+    assert any(l.startswith("✗ [CORE-20] открытые вопросы без долга в матрице: 1 (OQ-002)") for l in lines)
     assert lines[-1].startswith("ИТОГ: NOT READY")
 
 
@@ -75,7 +75,7 @@ def test_api_dir_blocks(tmp_path):
     _w(src / "docs/api/x-openapi.yaml", "openapi: 3.0.1\n")
     lines, ready, _ = _run(src)
     assert not ready
-    assert any(l.startswith("✗ [ПЕРЕНОС] контракты в комплекте (api/") for l in lines)
+    assert any(l.startswith("✗ [TRF-03] контракты в комплекте (api/") for l in lines)
 
 
 def test_service_files_not_staged(tmp_path):
@@ -90,14 +90,21 @@ def test_service_files_not_staged(tmp_path):
     assert not (keep / "srs/function/f1.filled.md").exists()
     assert not (keep / "prompts").exists()
     assert (keep / "srs/function/f1.md").is_file() and (keep / "README.md").is_file()
-    assert any("служебных пропущено 3" in l for l in lines)
+    assert any("служебных файлов миграции не перенесено: 3" in l for l in lines)
+
+
+def _target(tmp_path: Path) -> Path:
+    out = tmp_path / "docs-x"
+    out.mkdir()
+    _w(out / "CODEOWNERS", "# владельцы\n* @team-cc\n")
+    _w(out / "gpb-manifest.json", '{"service-id": "x", "owner": "team-cc"}')
+    return out
 
 
 def test_out_only_when_ready(tmp_path):
-    out = tmp_path / "docs-x"
-    out.mkdir()
+    out = _target(tmp_path)
     lines, ready, _ = _run(make_src(tmp_path, oq=_OQ_OPEN), out=out)
-    assert not ready and not any(out.iterdir())
+    assert not ready and not (out / "traceability-matrix.md").exists()
     assert any(l.startswith("✗ --out пропущен") for l in lines)
     lines, ready, _ = _run(make_src(tmp_path / "b"), out=out)
     assert ready and (out / "traceability-matrix.md").is_file()
@@ -106,7 +113,7 @@ def test_out_only_when_ready(tmp_path):
 
 def test_out_missing_dir_fails(tmp_path):
     lines, ready, _ = _run(make_src(tmp_path), out=tmp_path / "nope")
-    assert not ready and any("--out: каталог не существует" in l for l in lines)
+    assert not ready and any("каталог назначения не существует" in l for l in lines)
 
 
 def test_missing_readme_blocks_and_legend_warns(tmp_path):
@@ -188,8 +195,9 @@ def test_table_format_grouped_with_legend(tmp_path):
     assert statuses == sorted(statuses, key={"✗": 0, "⚠": 1, "i": 2, "✓": 3}.get)
     assert rows[0].startswith("| ✗ блокер | CORE-20 | открытые вопросы |")
     assert any(l.startswith("ИТОГ: NOT READY") for l in lines)
-    assert lines[-1].startswith("Критерии — чек-лист DoR") and "ПЕРЕНОС —" in lines[-1]
+    assert lines[-1].startswith("Критерии — чек-лист DoR") and "TRF-01…05 —" in lines[-1]
     assert data["lines"][0]["check"] == "комплект в целевой раскладке"
+    assert data["lines"][0]["criterion"] == "TRF-01" and data["lines"][1]["criterion"] == "TRF-02"
 
 
 def test_report_file(tmp_path):
@@ -214,3 +222,76 @@ def test_glossary_absent_ok_in_domain_mode(tmp_path):
     lines, _ok, _ = _run(src)
     assert any("glossary.md в комплекте нет по правилу" in ln for ln in lines), lines
     assert not any("glossary.md отсутствует" in ln for ln in lines)
+
+
+def test_oq_translated_to_debt_not_blocker(tmp_path):
+    matrix = _MATRIX + ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
+                        "| FUN-CL-01 | — | нет целевого артефакта process «Выпуск» — требуется заход create-process; вопрос OQ-002 |\n")
+    src = make_src(tmp_path, oq=_OQ_OPEN, matrix=matrix)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Выпуск»; см."))
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", "### Долги по ссылкам\n\nправило\n\n## Разделы\n"))
+    lines, ready, data = _run(src)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("i [CORE-20] переведены в долги матрицы: 1 (OQ-002)") for l in lines)
+    assert data["debts"][0]["oq"] == "OQ-002" and data["debts"][0]["owner"] == "аналитик сервиса"
+
+
+def test_types_outside_platform_set_listed(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/internal-contract/README.md", "---\nid: INTC-000\ntype: internal-contract\nservice: X\n---\n# Р\n")
+    _w(src / "docs/srs/internal-contract/intc-001.md", "---\nid: INTC-001\ntype: internal-contract\nservice: X\n---\n# М\n")
+    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| INTC-000 | internal-contract | Р | srs/internal-contract/README.md |\n| INTC-001 | internal-contract | М | srs/internal-contract/intc-001.md |\n| VIS-001 |"))
+    _w(src / "docs/README.md", _README.replace("| **FUN** | Функция |", "| **FUN** | Функция |\n| **INTC** | Метод |"))
+    lines, ready, _ = _run(src)
+    assert any(l.startswith("i [TRF-04] типы вне закрытого набора платформы: internal-contract ×2 — объявлены в README") for l in lines), "\n".join(lines)
+    # пустой раздел API при наличии INTC — предупреждение SDLC-04
+    assert any(l.startswith("⚠ [SDLC-04] раздел есть, но пуст, а в комплекте 2 описаний") for l in lines)
+
+
+def test_txt_example_that_parses_is_warned(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/examples/r.txt", '{"a": 1}')
+    _w(src / "docs/srs/function/examples/frag.txt", '{"a": 1,')
+    lines, _, _ = _run(src)
+    hits = [l for l in lines if l.startswith("⚠ [FMT-01] пример помечен фрагментом")]
+    assert len(hits) == 1 and "examples/r.txt" in hits[0] and "frag.txt" not in hits[0]
+
+
+def test_catalog_without_readme_warned(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/data-model/e1.md", "---\nid: ENT-001\ntype: data-model\nservice: X\n---\n# С\n")
+    _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| ENT-001 | data-model | С | srs/data-model/e1.md |\n| VIS-001 |"))
+    lines, _, _ = _run(src)
+    assert any(l.startswith("⚠ [SDLC-08] каталоги с карточками без README-реестра: 2 (srs/data-model, srs/function)") for l in lines), "\n".join(lines)
+
+
+def test_external_links_listed(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "[рег](https://cbr.ru/x) [рег2](https://cbr.ru/y) см."))
+    lines, _, _ = _run(src)
+    assert any(l.startswith("i [CORE-09] внешних ссылок 2: cbr.ru ×2") for l in lines)
+
+
+def test_out_target_without_codeowners_blocks(tmp_path):
+    out = tmp_path / "docs-x"
+    out.mkdir()
+    lines, ready, _ = _run(make_src(tmp_path), out=out)
+    assert not ready and any(l.startswith("✗ [CORE-04] CODEOWNERS") for l in lines)
+    assert any(l.startswith("⚠ [SDLC-07] gpb-manifest.json") for l in lines)
+
+
+def test_without_out_target_checks_are_informational(tmp_path):
+    lines, ready, _ = _run(make_src(tmp_path))
+    assert ready and any(l.startswith("i [SDLC-07] CODEOWNERS и gpb-manifest.json проверяются") for l in lines)
+
+
+def test_report_sections(tmp_path):
+    src = make_src(tmp_path)
+    lines, ready, data = _run(src, fmt="table")
+    rep = tmp_path / "gate.md"
+    tg.write_report(rep, src, lines, data)
+    txt = rep.read_text(encoding="utf-8")
+    assert "Вид допуска: **техническое подключение сервиса**" in txt
+    assert "## Реестр долгов" in txt and "Долгов в матрице нет." in txt
+    assert "## Ручная часть протокола до подключения" in txt and "**CORE-01, CORE-02**" in txt
+    assert "Критерии раздела 1 без автоматической проверки" in txt and "**SDLC-03**" in txt
