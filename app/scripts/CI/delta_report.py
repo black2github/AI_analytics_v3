@@ -50,7 +50,7 @@
 # Ключи:
 #   --repo <путь>    корень клона репозитория документации (комплект в корне;
 #                    если есть docs/, а матрицы в корне нет — комплект в docs/)
-#   --base <ref>     база дельты (по умолчанию master, иначе main, иначе HEAD)
+#   --base <ref>     база дельты (по умолчанию master, иначе main, иначе trunk, иначе HEAD)
 #   --task <JIRA-ID> задача; без ключа — из единственной постановки в дельте
 #   --out <файл.md>  записать отчёт в файл (UTF-8, переводы строк \n)
 #   --json           дополнительно напечатать данные отчёта в JSON
@@ -114,12 +114,13 @@ def _ref_exists(top: Path, ref: str) -> bool:
 def resolve_base(top: Path, base: Optional[str]) -> Tuple[Optional[str], List[str]]:
     """(ref базы или None — только рабочее дерево против HEAD, замечания).
     Явно заданная, но отсутствующая база — замечание, затем та же цепочка
-    умолчаний master → main → HEAD."""
+    умолчаний master → main → trunk → HEAD (целевые docs-репозитории
+    GitLab живут на `trunk` — полигон docs-account-opening-request, 15.10)."""
     notes: List[str] = []
     chain: List[str] = []
     if base:
         chain.append(base)
-    chain.extend(r for r in ("master", "main") if r not in chain)
+    chain.extend(r for r in ("master", "main", "trunk") if r not in chain)
     for ref in chain:
         if _ref_exists(top, ref):
             if base and ref != base:
@@ -356,7 +357,11 @@ def collect_ids(kit: Path, files: List[dict], matrix_now: str, matrix_base: Opti
         notes.append(f"дубль ID в реестре матрицы: `{rid}` ({seen[rid]} строки)")
     missing_files = []
     for rid, (_typ, fpath) in reg_now.items():
-        if not (kit / fpath.replace("\\", "/").lstrip("./")).is_file():
+        # колонка «Файл» бывает markdown-ссылкой «[label](path)»: parse_matrix
+        # берёт первый путь (ярлык), а на диске лежит цель ссылки — проверяем
+        # все пути строки реестра (полигон docs-account-opening-request, 15.10)
+        cands = [fpath] + _row_paths(matrix_now, rid)
+        if not any((kit / c.replace("\\", "/").lstrip("./")).is_file() for c in cands):
             missing_files.append(rid)
             notes.append(f"ID реестра без файла на диске: `{rid}` → `{fpath}`")
     return {"new": new_ids, "removed": removed_ids, "created_cards": created,
@@ -415,6 +420,16 @@ def collect_matrix(top: Path, base: Optional[str], matrix_rec: Optional[dict]) -
             "removed": _classify_rows(_split_matrix_rows(removed))}
 
 
+def _row_paths(matrix_text: str, rid: str) -> List[str]:
+    """Все пути `.md` во всех строках матрицы с данным ID в первой колонке (реестр и
+    покрытие; ярлык и цель ссылки) — ID встречается и в разделах покрытия без путей."""
+    out: List[str] = []
+    for ln in matrix_text.splitlines():
+        if re.match(r"^\|\s*" + re.escape(rid) + r"\s*\|", ln):
+            out.extend(re.findall(r"[\w./-]+\.md\b", ln))
+    return out
+
+
 def collect_affected(kit: Path, files: List[dict]) -> List[dict]:
     """Раздел «Затронуто»: для каждой изменённой/созданной карточки — кто на
     неё ссылается относительной ссылкой и изменён ли ссылающийся в этой же
@@ -422,9 +437,15 @@ def collect_affected(kit: Path, files: List[dict]) -> List[dict]:
     referrers = tg.card_referrers(kit)
     changed_ids = {f["id"] for f in files if f["kind"] == "card" and f["id"]}
     out: List[dict] = []
+    done: set = set()
     for f in files:
         if f["kind"] != "card" or not f["id"] or f["action"] == "снят":
             continue
+        if f["id"] in done:
+            # несколько файлов одной карточки (README с id + части с partOf) —
+            # одна запись «Затронуто» на ID, не на файл
+            continue
+        done.add(f["id"])
         refs = referrers.get(f["id"], [])
         out.append({"id": f["id"], "action": f["action"],
                     "referrers": [{"id": r, "changed": r in changed_ids} for r in refs]})

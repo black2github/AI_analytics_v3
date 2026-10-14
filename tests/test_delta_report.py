@@ -159,6 +159,40 @@ def test_duplicate_registry_id_noted(tmp_path):
     assert any("дубль ID в реестре матрицы: `CTL-CL-001`" in n for n in data["notes"])
 
 
+def test_registry_file_as_markdown_link_label_not_noted(tmp_path):
+    # колонка «Файл» — ссылка «[ярлык](цель)»: ярлыка на диске нет, цель есть — замечания нет
+    row = '| PRN-001 | print-form | Печать | [print-form/prn-001.md](srs/print-form/prn-001.md) |' + chr(10)
+    repo = make_repo(tmp_path)
+    _w(repo / 'traceability-matrix.md', _MATRIX.replace(
+        '| PRN-001 | print-form | Печать | srs/print-form/prn-001.md |' + chr(10), row))
+    _git(repo, 'commit', '-qam', 'link label')
+    data = _build(make_delta(repo))
+    assert 'PRN-001' not in data['ids']['missing_files']
+    assert not any('без файла на диске: `PRN-001`' in n for n in data['notes'])
+
+
+def test_registry_file_found_when_id_also_in_coverage_rows(tmp_path):
+    # ID встречается раньше в разделе покрытия (без путей), реестр — ниже: путь берётся из реестра
+    repo = make_repo(tmp_path)
+    cov = '# Матрица' + chr(10) + chr(10) + '## 1. Покрытие' + chr(10) + chr(10) + '| ID | Экраны |' + chr(10) + '|---|---|' + chr(10) + '| PRN-001 | SCR-CL-02 |' + chr(10) + chr(10)
+    row = '| PRN-001 | print-form | Печать | [prn-001.md](srs/print-form/prn-001.md) |' + chr(10)
+    _w(repo / 'traceability-matrix.md', cov + _MATRIX.replace('# Матрица' + chr(10) + chr(10), '').replace(
+        '| PRN-001 | print-form | Печать | srs/print-form/prn-001.md |' + chr(10), row))
+    _git(repo, 'commit', '-qam', 'coverage first')
+    data = _build(make_delta(repo))
+    assert 'PRN-001' not in data['ids']['missing_files'], data['notes']
+
+
+def test_affected_one_entry_per_card_id(tmp_path):
+    # README с id и часть с partOf того же ID, обе изменены — одна запись «Затронуто»
+    repo = make_delta(make_repo(tmp_path))
+    fm = lambda head: '---' + chr(10) + head + chr(10) + 'type: control' + chr(10) + 'service: x' + chr(10) + '---' + chr(10) + chr(10)
+    _w(repo / 'srs/control/README.md', fm('id: CTL-000') + '# Реестр' + chr(10) + chr(10) + 'изменён' + chr(10))
+    _w(repo / 'srs/control/cards-x.md', fm('partOf: CTL-000') + '### CTL-CL-009. Новый' + chr(10))
+    data = _build(repo)
+    assert sum(1 for a in data['affected'] if a['id'] == 'CTL-000') == 1
+
+
 def test_registry_id_without_file_noted(tmp_path):
     row = "| ENT-002 | data-model | Призрак | srs/data-model/ent-002.md |\n"
     data = _build(make_delta(make_repo(tmp_path), registry_row=_CTL_ROW + row))
@@ -342,6 +376,13 @@ def test_no_task_in_delta_noted_not_fatal(tmp_path):
 
 
 # 8. база ------------------------------------------------------------------------------------
+
+def test_base_falls_back_to_trunk(tmp_path):
+    # целевой docs-репозиторий GitLab живёт на trunk (полигон docs-account-opening-request)
+    data = _build(make_delta(make_repo(tmp_path, branch="trunk")))
+    assert data["base"] == "trunk" and data["branch"] == "trunk"
+    assert not any("не найдена" in n for n in data["notes"])
+
 
 def test_base_falls_back_to_main(tmp_path):
     data = _build(make_delta(make_repo(tmp_path, branch="main")))

@@ -58,7 +58,9 @@ _ISSUE_FIELD_RES = {
     "responsible": re.compile(r"ответственный:\s*([^;|]+)", re.IGNORECASE),
     "constraint": re.compile(r"ограничение:\s*([^;|]+)", re.IGNORECASE),
     "closure": re.compile(r"закрытие:\s*([^;|]+)", re.IGNORECASE),
-    "source": re.compile(r"источник:\s*(OQ-\d+)", re.IGNORECASE),
+    # OQ-NNN — журнал рабочего репозитория; T-<JIRA-ID>[-NN] — постановка
+    # tasks/<JIRA-ID>.md режима C (в docs-репозитории журнала нет; полигон 15.10)
+    "source": re.compile(r"источник:\s*(OQ-\d+|T-[A-Z][A-Z0-9]*-\d+(?:-\d+)?)", re.IGNORECASE),
 }
 ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
                   "closure": "закрытие"}
@@ -85,7 +87,7 @@ def issue_fields(row: str) -> Optional[dict]:
         out[key] = fm.group(1).strip() if fm else None
     missing = [name for key, name in ISSUE_REQUIRED.items() if not out[key]]
     if out["kind"] == "открытый вопрос" and not out["source"]:
-        missing.append("источник OQ-NNN")
+        missing.append("источник OQ-NNN или T-<JIRA-ID>")
     out["missing"] = missing
     return out
 

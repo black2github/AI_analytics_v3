@@ -69,6 +69,16 @@ def test_issue_debt_complete_parsed_and_clean(tmp_path):
     assert any("долгов без отсутствующей цели 1" in r for r in report)
 
 
+def test_issue_debt_source_task_line_accepted(tmp_path):
+    # источник — строка постановки режима C (docs-репозиторий без журнала OQ)
+    row = _ISSUE_ROW_OK.replace("источник: OQ-033", "источник: T-TEAMTB-4567890")
+    docs = _issue_docs(tmp_path, row)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, chr(10).join(report)
+    from app.scripts.CI.link_debts import issue_fields
+    assert issue_fields(row)["source"] == "T-TEAMTB-4567890"
+
+
 def test_issue_debt_incomplete_caught(tmp_path):
     # срабатывание: нет ограничения и закрытия, у открытого вопроса нет источника
     row = ("| FUN-001 | — | долг открытый вопрос: «Что такое сегмент» — причина: нет определения; "
