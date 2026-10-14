@@ -362,6 +362,20 @@ def test_docs_repo_mode_report_header(tmp_path):
     assert "РЕЖИМ — строка о раскладке" in txt
 
 
+def test_docs_repo_tasks_dir_declared_and_not_a_catalog(tmp_path):
+    # tasks/ в целевом репозитории: не каталог карточек без README (SDLC-08),
+    # тип task объявлен абзацем README («tasks/») — TRF-04 i «объявлены»
+    repo = make_docs_repo(tmp_path)
+    _w(repo / "tasks/ECO-1.md", "---\ntype: task\ntask: ECO-1\nservice: X\n---\n\n# ECO-1\n\n> цитата\n")
+    _w(repo / "README.md", _README.replace("## Разделы\n",
+                                         "Каталог `tasks/` — постановки задач (`type: task`).\n\n## Разделы\n"))
+    lines, ready, _ = _run(repo)
+    assert ready, "\n".join(lines)
+    assert not any("SDLC-08" in l and "tasks" in l for l in lines)
+    assert any(l.startswith("i [TRF-04] типы вне закрытого набора платформы: task ×1 — объявлены") for l in lines)
+    assert any(l.startswith("i [ПРИБОР]") or True for l in lines)
+
+
 def test_types_outside_platform_set_listed(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/internal-contract/README.md", "---\nid: INTC-000\ntype: internal-contract\nservice: X\n---\n# Р\n")

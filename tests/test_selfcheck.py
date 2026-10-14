@@ -32,6 +32,26 @@ def make_matrix(docs: Path, extra: str = "") -> None:
          "|---|---|---|---|\n| X-01 | function | Ф | f.md |\n" + extra)
 
 
+def test_task_files_outside_check(tmp_path):
+    # tasks/<JIRA-ID>.md — постановка forward (решение 2026-10-15): дословный текст
+    # аналитика с цитатой и битой ссылкой не бракуется, файл отмечен строкой i
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    make(docs / "tasks/ECO-123.md",
+         "---\ntype: task\ntask: ECO-123\nservice: x\n---\n\n# ECO-123. Поле\n\n"
+         "## Постановка (дословно)\n\n- **T-ECO-123-01**: добавить поле, см. [там](../nope.md)\n\n"
+         "> цитата аналитика\n")
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert any(ln.startswith("i tasks") and "постановка задачи" in ln for ln in report)
+    assert not any("tasks" in ln and ln.startswith("✗") for ln in report)
+    assert any("ИТОГО: файлов 2 — ✓ 1, ✗ 0, ⚠ 1" in ln for ln in report)
+    assert selfcheck.is_task_file(docs / "tasks/ECO-123.md", docs)
+    assert not selfcheck.is_task_file(docs / "srs/functions/f1.md", docs)
+
+
 def test_happy_mapping_and_census(tmp_path):
     docs, srcs = tmp_path / "docs", tmp_path / "conf"
     make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))

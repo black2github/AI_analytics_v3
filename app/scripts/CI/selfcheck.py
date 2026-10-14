@@ -358,6 +358,19 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
     return report, ok
 
 
+def is_task_file(p: Path, docs: Path) -> bool:
+    """Постановка задачи forward-режима: `tasks/<JIRA-ID>.md` в корне комплекта
+    (решение 2026-10-15, режим «изменение по постановке»). Текст аналитика
+    хранится дословно и источником правок является сам — сверке как
+    карточка не подлежит (ни внутренние сторожа, ни ссылки, ни структурные
+    файлы); в матрицу не входит, карточного id не несёт."""
+    try:
+        rel = p.relative_to(docs)
+    except ValueError:
+        return False
+    return len(rel.parts) >= 2 and rel.parts[0] == "tasks" and p.suffix == ".md"
+
+
 def run(docs: Path, sources: Optional[Path],
         strict: bool = False,
         catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
@@ -383,6 +396,12 @@ def run(docs: Path, sources: Optional[Path],
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
+        if is_task_file(p, docs):
+            # строка-сигнал без счётчика: постановка — источник правок,
+            # а не документ комплекта (молчаливых пропусков нет)
+            report.append(f"i {rel}: постановка задачи (type: task) — "
+                          "источник правок forward, вне сверки")
+            continue
         if p.name in _SERVICE_FILES:
             # содержательно реестр сторожит link_debts (срез 2), но
             # структурную целостность таблиц проверяем и здесь: разрыв
@@ -612,8 +631,10 @@ def run(docs: Path, sources: Optional[Path],
     # nfr/ — каталог НФТ рядом с docs/ (шаблон nfr.md). На комплекте без
     # srs/ и brd корень проверки — папка сервиса, и без этого имени
     # каталог НФТ читается как посторонний.
+    # tasks/ — постановки задач forward-режима «изменение по постановке»
+    # (решение 2026-10-15): штатный каталог целевого docs-репозитория
     _ok_dirs = {"docs", "sources", "sandbox", "prompts", ".git", "brd", "srs",
-                "nfr", _docs_r.name}
+                "nfr", "tasks", _docs_r.name}
     # корень домена: каталоги сервисов из таблицы корневого README законны
     # (решение владельца 2026-10-11); domain-vision.md и glossary.md —
     # markdown, он разрешён и так
@@ -653,7 +674,7 @@ def run(docs: Path, sources: Optional[Path],
         report.append(
             f"✗ корень репозитория: посторонние файлы ×{len(junk)} "
             f"({', '.join(junk[:8])}) — в корне только штатные каталоги "
-            "(docs/sources/sandbox/prompts) и markdown; рабочие скрипты и кэши "
+            "(docs/sources/sandbox/prompts/nfr/tasks) и markdown; рабочие скрипты и кэши "
             "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
             "вовсе; read-only анализ — в sandbox)")
     matrix = docs / "traceability-matrix.md"
@@ -1442,6 +1463,11 @@ def _struct_tokens(raw: bytes) -> List[str]:
     return seen
 
 
+def _kit_md(docs: Path):
+    """Документы комплекта для обходов сторожей — без постановок `tasks/`."""
+    return [p for p in sorted(docs.rglob("*.md")) if not is_task_file(p, docs)]
+
+
 def check_structured_examples(docs: Path, idx: Dict[str, Path]
                               ) -> Tuple[List[str], bool]:
     """(отчёт, ok). idx: page_id -> файл выгрузки (пусто без источников)."""
@@ -1450,7 +1476,7 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
     if not files:
         return [], True
     owners: Dict[Path, List[Path]] = {}
-    for md in sorted(docs.rglob("*.md")):
+    for md in _kit_md(docs):
         try:
             text = md.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -1535,7 +1561,7 @@ def check_relative_links(docs: Path) -> Tuple[List[str], bool]:
     вырезаются (в них ссылки — иллюстрации)."""
     broken: List[Tuple[str, str]] = []
     total = 0
-    for md in sorted(docs.rglob("*.md")):
+    for md in _kit_md(docs):
         try:
             text = md.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -1777,7 +1803,7 @@ def _repo_format_issue(url: str) -> Optional[str]:
 def _service_codes(docs: Path) -> Dict[str, int]:
     """Коды `service:` из frontmatter карточек комплекта → число файлов."""
     codes: Dict[str, int] = {}
-    for f in sorted(docs.rglob("*.md")):
+    for f in _kit_md(docs):
         fm = read_frontmatter(f) or {}
         code = fm.get("service", "").strip().strip("'\"")
         if code:
@@ -2103,7 +2129,7 @@ def check_file_artifacts(docs: Path) -> Tuple[List[str], bool]:
             and "img" not in p.relative_to(docs).parts}
     linked: set = set()
     broken: List[Tuple[str, str]] = []
-    for md in sorted(docs.rglob("*.md")):
+    for md in _kit_md(docs):
         try:
             text = md.read_text(encoding="utf-8", errors="replace")
         except OSError:
@@ -2231,7 +2257,7 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
     if not names:
         return []
     report: List[str] = []
-    for p in sorted(docs.rglob("*.md")):
+    for p in _kit_md(docs):
         if p == matrix:
             continue
         body = p.read_text(encoding="utf-8", errors="replace")
@@ -2291,7 +2317,7 @@ def check_named_entity_links(docs: Path) -> List[str]:
     более ранняя полная ссылка `[ENT-NNN <название>]` на ту же цель либо
     ссылка с дословным наименованием источника с тегом сервиса."""
     report: List[str] = []
-    for p in sorted(docs.rglob("*.md")):
+    for p in _kit_md(docs):
         if p.name.lower() in _NAMED_LINK_SKIP:
             continue
         body = p.read_text(encoding="utf-8", errors="replace")

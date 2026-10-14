@@ -198,7 +198,8 @@ _PLATFORM_TYPES = {"vision", "glossary", "feature", "use-case", "business-rules"
                    "data-model", "function", "screen-form", "control", "print-form",
                    "contract-call", "notification", "rbac", "platform-function",
                    "external-integration"}
-_SERVICE_DIRS = {"examples", "files", "img", "assets", "images"}
+_SERVICE_DIRS = {"examples", "files", "img", "assets", "images",
+                 "tasks"}  # постановки задач forward (type: task) — не карточки
 _EXT_LINK_RE = re.compile(r"\]\((https?://[^)\s]+)")
 _OQ_REF_RE = re.compile(r"\bOQ-\d+\b")
 # критерии раздела 1, у которых автоматической проверки нет — ручная с доказательством
