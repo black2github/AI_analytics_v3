@@ -38,6 +38,12 @@
 #      увидеть ВСЕ находки, а не дельту. Любая ошибка `E_*` — NOT READY.
 #      Валидатор не найден или не запустился — NOT READY с объяснением
 #      (ключ --no-validator осознанно отключает эту половину гейта).
+#   Режим репозитория документации (2026-10-14): --src — целевой
+#      docs-<service-id>, комплект в корне (docs/ нет, матрица в корне, либо
+#      --docs .). Комплект проверяется на месте: CODEOWNERS и манифест — в
+#      самом репозитории, журнал вопросов не ожидается, служебные файлы
+#      миграции в корне — блокер, --out отклоняется. Отчёт — расстояние до
+#      действующего стандарта, не проверка переноса.
 #   4. Проверяет условия самого переноса, которых нет ни у прибора, ни у
 #      валидатора:
 #        - открытых вопросов в `open-questions.md` src-репозитория нет,
@@ -148,6 +154,11 @@ _SKIP_NAMES = {"open-questions.md", "feedback.md", "coordination-log.md",
 _SKIP_SUFFIXES = (".filled.md", ".tables.md")
 _SKIP_DIRS = {"prompts", "sandbox", "sources", "confluence", "__pycache__",
               ".git"}
+# файлы корня docs-репозитория, которые не являются комплектом (режим репозитория
+# документации): владельцы и манифест проверяются на месте (CORE-04 / SDLC-07), а
+# не копируются во временную сборку
+_REPO_ROOT_FILES = {"CODEOWNERS", "gpb-manifest.json", ".gitignore", ".gitlab-ci.yml",
+                    ".gitattributes"}
 
 _OQ_ENTRY_RE = re.compile(r"^##\s+(OQ-\d+)\b.*$", re.M)
 _OQ_STATUS_RE = re.compile(r"^\s*-\s*\*\*Статус:?\*\*:?\s*([^\n]+)$", re.M)
@@ -234,7 +245,8 @@ _LEGEND = ("Критерии — чек-лист DoR v1.2, раздел «Тех
            "служебные файлы не перенесены, нет контрактов в комплекте, типы объявлены, межрепозиторные "
            "ссылки по стандарту) — до решения рабочей группы коды предварительные. ПРИБОР — сводная "
            "строка прибора миграции selfcheck и его находки без сопоставленного критерия; ВАЛИДАТОР — "
-           "то же для валидатора платформы AI Factory. Статусы: ✗ блокер и ⚠ предупреждение — проверено "
+           "то же для валидатора платформы AI Factory; РЕЖИМ — строка о раскладке, когда гейт "
+           "проверяет репозиторий документации на месте (комплект в корне --src). Статусы: ✗ блокер и ⚠ предупреждение — проверено "
            "автоматически; i к сведению — автоматически НЕ проверено, нужна ручная проверка с "
            "доказательством (не считать пройденным); «не применяется» пишется словами с причиной.")
 _STATUS_LABEL = {"✗": "✗ блокер", "⚠": "⚠ предупреждение", "i": "i к сведению", "✓": "✓ пройдено"}
@@ -285,6 +297,8 @@ def stage_kit(docs: Path, target: Path) -> Tuple[int, List[str]]:
         if p.name in _SKIP_NAMES or p.name.endswith(_SKIP_SUFFIXES):
             skipped.append(rel.as_posix())
             continue
+        if len(rel.parts) == 1 and p.name in _REPO_ROOT_FILES:
+            continue
         dst = target / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(p, dst)
@@ -314,7 +328,7 @@ def open_questions(src_root: Path, docs: Path) -> Tuple[Optional[Path], List[str
 
 
 def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
-                              staged: Path) -> None:
+                              staged: Path, docs_repo: bool = False) -> None:
     matrix = staged / "traceability-matrix.md"
     mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
     # правило переноса (решение владельца 2026-10-13): открытый вопрос либо
@@ -339,7 +353,12 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
             else:
                 translated.update(_OQ_REF_RE.findall(row))
     oq_file, opened = open_questions(src_root, docs)
-    if oq_file is None:
+    if oq_file is None and docs_repo:
+        gate.add("i", "CORE-20", "режим репозитория документации: журнал open-questions.md "
+                 "сюда не переезжает (TRF-02), открытые вопросы комплекта — строки долга вида "
+                 "«открытый вопрос» в матрице (реестр долгов отчёта)",
+                 check="открытые вопросы")
+    elif oq_file is None:
         gate.add("⚠", "CORE-20", "журнал open-questions.md не найден — открытые "
                  "вопросы не проверены (у комплекта без журнала это норма)",
                  check="открытые вопросы")
@@ -660,10 +679,11 @@ def copy_out(staged: Path, out: Path) -> Tuple[int, str]:
     return n, ""
 
 
-def check_target_repo(gate: Gate, out: Optional[Path]) -> None:
+def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -> None:
     """CORE-04 / SDLC-07: владельцы и манифест живут в репозитории назначения —
-    проверяются только при --out; поля манифеста определяет владелец платформы,
-    поэтому они печатаются для ручной сверки, а не сверяются."""
+    проверяются при --out либо на месте (in_place: режим репозитория документации,
+    когда --src и есть репозиторий назначения); поля манифеста определяет владелец
+    платформы, поэтому они печатаются для ручной сверки, а не сверяются."""
     if out is None:
         gate.add("i", "SDLC-07", "CODEOWNERS и gpb-manifest.json проверяются в репозитории "
                  "назначения — запустите гейт с --out <клон docs-репозитория>",
@@ -673,10 +693,11 @@ def check_target_repo(gate: Gate, out: Optional[Path]) -> None:
         gate.add("✗", "TRF-01", f"--out: каталог назначения не существует: {out}",
                  check="репозиторий назначения")
         return
+    where = "в репозитории документации" if in_place else "в репозитории назначения"
     co = out / "CODEOWNERS"
     if co.is_file() and any(ln.strip() and not ln.strip().startswith("#")
                             for ln in co.read_text(encoding="utf-8", errors="replace").splitlines()):
-        gate.add("✓", "CORE-04", "CODEOWNERS в репозитории назначения есть и непустой",
+        gate.add("✓", "CORE-04", f"CODEOWNERS {where} есть и непустой",
                  check="владельцы документации")
     else:
         gate.add("✗", "CORE-04", f"CODEOWNERS в {out} отсутствует или пуст — владелец "
@@ -698,17 +719,47 @@ def check_target_repo(gate: Gate, out: Optional[Path]) -> None:
 
 # --- оркестровка ----------------------------------------------------------------
 
+def detect_layout(src_root: Path, docs_name: str) -> Tuple[Optional[Path], bool]:
+    """(каталог комплекта, режим репозитория документации). Рабочий репозиторий
+    миграции несёт комплект в `docs/`; репозиторий документации (целевой,
+    `docs-<service-id>`) — в корне: там есть матрица трассировки, а `docs/` нет.
+    Ключ --docs . включает режим явно."""
+    docs = src_root / docs_name
+    if docs_name in (".", "") or docs.resolve() == src_root.resolve():
+        return src_root, True
+    if docs.is_dir():
+        return docs, False
+    if (src_root / "traceability-matrix.md").is_file():
+        return src_root, True
+    return None, False
+
+
 def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None,
              keep: Optional[Path] = None, validator: Optional[Path] = None,
              layout: Optional[Path] = None, no_validator: bool = False,
              sources: Optional[Path] = None, strict: bool = False,
              fmt: str = "log") -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
-    тестов); "table" — markdown-таблица с группировкой и легендой меток."""
+    тестов); "table" — markdown-таблица с группировкой и легендой меток.
+
+    Режим репозитория документации (2026-10-14): если комплект лежит в корне
+    --src (целевой `docs-<service-id>`), гейт проверяет его на месте — без
+    сборки «из docs/», без ожидания журнала вопросов, с проверкой CODEOWNERS и
+    манифеста в самом репозитории; --out в этом режиме не имеет смысла и
+    отклоняется. Отчёт читается как расстояние комплекта до действующего
+    стандарта, а не как проверка переноса."""
     gate = Gate()
-    docs = src_root / docs_name
-    if not docs.is_dir():
-        gate.add("✗", "TRF-01", f"каталог комплекта не найден: {docs}")
+    docs, docs_repo = detect_layout(src_root, docs_name)
+    if docs is None:
+        gate.add("✗", "TRF-01", f"каталог комплекта не найден: {src_root / docs_name} "
+                 "(рабочий репозиторий несёт комплект в docs/; у репозитория документации "
+                 "матрица трассировки лежит в корне — тогда гейт сам включает режим "
+                 "репозитория документации)")
+        lines = gate.render() + ["ИТОГ: NOT READY"]
+        return lines, False, {"verdict": "NOT READY", "lines": gate.lines}
+    if docs_repo and out is not None:
+        gate.add("✗", "TRF-01", "--out не применим в режиме репозитория документации: "
+                 "--src уже является репозиторием назначения")
         lines = gate.render() + ["ИТОГ: NOT READY"]
         return lines, False, {"verdict": "NOT READY", "lines": gate.lines}
     tmp = None
@@ -722,21 +773,40 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         staged = Path(tmp)
     try:
         copied, skipped = stage_kit(docs, staged)
-        gate.add("✓", "TRF-01", f"собран в корне без обёртки docs/: {copied} файлов",
-                 check="комплект в целевой раскладке")
-        gate.add("✓", "TRF-02", f"служебных файлов миграции не перенесено: {len(skipped)}"
-                 + (f" ({', '.join(skipped[:4])}{'…' if len(skipped) > 4 else ''})" if skipped
-                    else " (в docs/ их не было)"),
-                 check="служебные файлы миграции")
+        if docs_repo:
+            gate.add("i", "РЕЖИМ", "репозиторий документации: комплект проверяется на месте "
+                     "(в корне --src); условия переноса читаются как соответствие действующей "
+                     "раскладке, а не как проверка переноса", check="раскладка")
+            gate.add("✓", "TRF-01", f"комплект в корне репозитория документации: {copied} файлов",
+                     check="комплект в целевой раскладке")
+            if skipped:
+                gate.add("✗", "TRF-02", f"служебные файлы миграции лежат в репозитории "
+                         f"документации: {', '.join(skipped[:6])}{'…' if len(skipped) > 6 else ''} "
+                         "— удалить (журналы и черновики остаются в рабочем репозитории)",
+                         check="служебные файлы миграции")
+            else:
+                gate.add("✓", "TRF-02", "служебных файлов миграции в репозитории нет",
+                         check="служебные файлы миграции")
+        else:
+            gate.add("✓", "TRF-01", f"собран в корне без обёртки docs/: {copied} файлов",
+                     check="комплект в целевой раскладке")
+            gate.add("✓", "TRF-02", f"служебных файлов миграции не перенесено: {len(skipped)}"
+                     + (f" ({', '.join(skipped[:4])}{'…' if len(skipped) > 4 else ''})" if skipped
+                        else " (в docs/ их не было)"),
+                     check="служебные файлы миграции")
         if sources is None:
             sources = find_sources(src_root)
-        if sources is None:
+        if sources is None and docs_repo:
+            gate.add("i", "ПРИБОР", "режим репозитория документации: выгрузки источников здесь "
+                     "нет по построению — прибор идёт по внутренним сторожам; сверка с "
+                     "источником — в рабочем репозитории (--sources, если нужна)")
+        elif sources is None:
             gate.add("⚠", "ПРИБОР", "каталог выгрузки источников не найден "
                      "(sources/confluence, confluence) — прибор идёт без сверки "
                      "с источником; задайте --sources")
         run_selfcheck(gate, staged, sources, strict)
-        check_transfer_conditions(gate, src_root, docs, staged)
-        check_target_repo(gate, out)
+        check_transfer_conditions(gate, src_root, docs, staged, docs_repo)
+        check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
                      "--no-validator — структурная половина гейта не выполнена")
@@ -784,7 +854,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
-                              "strict": strict, "debts": debts_rows,
+                              "strict": strict, "debts": debts_rows, "docs_repo": docs_repo,
                               "src_git": src_git_state(src_root),
                               "validator": validator_origin(validator or _DEFAULT_VALIDATOR,
                                                             layout, no_validator)}
@@ -896,10 +966,12 @@ def run_gate_table_lines(data: dict) -> List[str]:
 def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict) -> None:
     import datetime as _dt
     git = data.get("src_git") or {}
+    repo_kind = ("Репозиторий документации (режим проверки на месте: комплект в корне, перенос не "
+                 "выполняется)" if data.get("docs_repo") else "Рабочий репозиторий")
     head = [f"# Гейт переноса: {src_root.name}", "",
             f"Дата: {_dt.date.today().isoformat()}. Вид допуска: **техническое подключение сервиса** "
             "(допуск задач к разработке — платформа). "
-            f"Рабочий репозиторий: `{src_root}`, коммит `{git.get('commit', '?')}`, ветка "
+            f"{repo_kind}: `{src_root}`, коммит `{git.get('commit', '?')}`, ветка "
             f"`{git.get('branch', '?')}`"
             + (", **есть незакоммиченные изменения** — проверено рабочее дерево, не коммит"
                if git.get("dirty") else "") + ". "
@@ -953,7 +1025,10 @@ def main() -> int:
     ap = argparse.ArgumentParser(
         description="Гейт переноса комплекта src-<service> → docs-<service>: READY / NOT READY")
     ap.add_argument("--src", required=True, type=Path, help="корень клона src-репозитория")
-    ap.add_argument("--docs", default="docs", help="каталог комплекта внутри src (docs)")
+    ap.add_argument("--docs", default="docs",
+                    help="каталог комплекта внутри src (docs); «.» — комплект в корне (режим "
+                         "репозитория документации; включается и сам, если docs/ нет, а матрица "
+                         "трассировки лежит в корне)")
     ap.add_argument("--out", type=Path, default=None,
                     help="клон docs-репозитория: при READY сюда копируется комплект")
     ap.add_argument("--keep", type=Path, default=None,

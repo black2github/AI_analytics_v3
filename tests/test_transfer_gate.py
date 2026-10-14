@@ -289,6 +289,79 @@ def test_debt_register_affected_and_closure(tmp_path):
     assert "Автор проверки:" in text
 
 
+def make_docs_repo(tmp_path: Path, codeowners: bool = True) -> Path:
+    """Целевой репозиторий документации: комплект в корне, docs/ нет."""
+    repo = tmp_path / "docs-x"
+    _w(repo / "README.md", _README)
+    _w(repo / "service-vision.md", "---\nid: VIS-001\ntype: vision\n---\n# В\n")
+    _w(repo / "glossary.md", "---\nid: GLO-001\ntype: glossary\n---\n# Г\n")
+    _w(repo / "traceability-matrix.md", _MATRIX)
+    _w(repo / "srs/function/f1.md", _CARD)
+    if codeowners:
+        _w(repo / "CODEOWNERS", "* @team-x\n")
+    _w(repo / "gpb-manifest.json", '{"name": "docs-x", "owner": "team-x"}\n')
+    return repo
+
+
+def test_docs_repo_mode_detected_and_checked_in_place(tmp_path):
+    # комплект в корне, docs/ нет → режим репозитория документации: строка РЕЖИМ,
+    # CODEOWNERS и манифест проверены на месте, журнал вопросов не ожидается (i, не ⚠)
+    repo = make_docs_repo(tmp_path)
+    lines, ready, data = _run(repo)
+    assert ready, "\n".join(lines)
+    assert data["docs_repo"] is True
+    assert any(l.startswith("i [РЕЖИМ] репозиторий документации") for l in lines)
+    assert any(l.startswith("✓ [TRF-01] комплект в корне репозитория документации: 5 файлов") for l in lines)
+    assert any(l.startswith("✓ [CORE-04] CODEOWNERS в репозитории документации есть и непустой") for l in lines)
+    assert any(l.startswith("✓ [SDLC-07] gpb-manifest.json разбирается; поля: name, owner") for l in lines)
+    assert any(l.startswith("i [CORE-20] режим репозитория документации: журнал") for l in lines)
+    assert not any("журнал open-questions.md не найден" in l for l in lines)
+    assert not any("запустите гейт с --out" in l for l in lines)
+
+
+def test_docs_repo_mode_missing_codeowners_blocks(tmp_path):
+    repo = make_docs_repo(tmp_path, codeowners=False)
+    lines, ready, _ = _run(repo)
+    assert not ready
+    assert any(l.startswith("✗ [CORE-04] CODEOWNERS в") and "отсутствует или пуст" in l for l in lines)
+
+
+def test_docs_repo_mode_service_files_block_and_out_refused(tmp_path):
+    # служебный файл миграции в корне целевого репозитория — блокер TRF-02; --out отклоняется
+    repo = make_docs_repo(tmp_path)
+    _w(repo / "open-questions.md", _OQ_CLOSED)
+    lines, ready, _ = _run(repo)
+    assert not ready
+    assert any(l.startswith("✗ [TRF-02] служебные файлы миграции лежат в репозитории документации: "
+                            "open-questions.md") for l in lines), "\n".join(lines)
+    out = tmp_path / "out"; out.mkdir()
+    lines, ready, _ = _run(repo, out=out)
+    assert not ready and any("--out не применим в режиме репозитория документации" in l for l in lines)
+
+
+def test_docs_repo_mode_explicit_dot_and_src_mode_unchanged(tmp_path):
+    # --docs . включает режим явно; у рабочего репозитория режим не включается
+    repo = make_docs_repo(tmp_path)
+    lines, ready, data = _run(repo, docs_name=".")
+    assert ready and data["docs_repo"] is True
+    src = make_src(tmp_path)
+    lines, ready, data = _run(src)
+    assert ready and data["docs_repo"] is False
+    assert any(l.startswith("✓ [TRF-01] собран в корне без обёртки docs/") for l in lines)
+    assert any(l.startswith("i [SDLC-07] CODEOWNERS и gpb-manifest.json проверяются в репозитории назначения")
+               for l in lines)
+
+
+def test_docs_repo_mode_report_header(tmp_path):
+    repo = make_docs_repo(tmp_path)
+    lines, ready, data = _run(repo, fmt="table")
+    rep = tmp_path / "r.md"
+    tg.write_report(rep, repo, lines, data)
+    txt = rep.read_text(encoding="utf-8")
+    assert "Репозиторий документации (режим проверки на месте" in txt
+    assert "РЕЖИМ — строка о раскладке" in txt
+
+
 def test_types_outside_platform_set_listed(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/internal-contract/README.md", "---\nid: INTC-000\ntype: internal-contract\nservice: X\n---\n# Р\n")
