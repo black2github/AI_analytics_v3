@@ -113,7 +113,7 @@ TYPE_TO_SKILL: Dict[str, Optional[str]] = {
     "srs/agent/": None,
 }
 # префиксы, которые не нумеруют документы (внутренние элементы карточек)
-_INNER_PREFIXES = {"US", "FR", "NFR", "RR", "FLD", "EV", "B", "MSG", "BR", "ТР"}
+_INNER_PREFIXES = {"US", "FR", "RR", "FLD", "EV", "B", "MSG", "BR", "ТР"}
 _CONTOURS = ["cl", "bnk", "sys"]
 _SEGMENTS_FIXED = ["grp", "ext", "int"]
 

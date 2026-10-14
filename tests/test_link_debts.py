@@ -2,9 +2,10 @@
 """Сторож долгов ссылок: просрочка (цель существует — ссылка не
 проставлена) и исполнимость (дословное имя находится в ожидателе)."""
 
+import re
 from pathlib import Path
 
-from app.scripts.CI.link_debts import check
+from app.scripts.CI.link_debts import check, parse_matrix
 
 MATRIX = """# Матрица
 
@@ -410,3 +411,99 @@ class TestCoordinationLogEntryLength:
         report, _ = selfcheck.run(docs, None)
         assert any(l.startswith("i журнал координации:") for l in report)
         assert any("запись журнала «2026-10-09 | длинная»" in l for l in report)
+
+
+def test_overdue_not_triggered_by_word_in_other_title(tmp_path):
+    # FB-02 common-dictionary: долг data-model «Пользователь» — функция с
+    # «пользователь» в заголовке целью не является
+    docs = setup_docs(tmp_path, "сущность Пользователь")
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8").replace(
+        "PRC «Процесс обработки сообщения о блокировке»",
+        "data-model «Пользователь»"), encoding="utf-8")
+    make(docs / "srs/function/client/fun-cl-01-hint.md",
+         "---\nid: FUN-CL-01\ntitle: '[УЛ] Клиент: Функция получения подсказки, "
+         "что пользователь является УЛ'\n---\n# Ф\n")
+    report, ok = check(mx, docs)
+    assert ok and not any("ПРОСРОЧЕН" in r for r in report), report
+
+
+def test_overdue_requires_same_type_when_known(tmp_path):
+    # карточка с тем же заголовком, но другого типа (по реестру) — не цель;
+    # того же типа — просрочка
+    docs = setup_docs(tmp_path, "сущность Пользователь")
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8").replace(
+        "PRC «Процесс обработки сообщения о блокировке»",
+        "data-model «Пользователь»"), encoding="utf-8")
+    make(docs / "srs/screen-form/scr-bnk-01-user.md",
+         "---\nid: SCR-BNK-01\ntitle: '[УЛ] Пользователь'\n---\n# Э\n")
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8")
+                  + "| SCR-BNK-01 | screen-form | Пользователь | srs/screen-form/scr-bnk-01-user.md |\n",
+                  encoding="utf-8")
+    report, ok = check(mx, docs)
+    assert ok and not any("ПРОСРОЧЕН" in r for r in report), report
+    make(docs / "srs/data-model/ent-009-user.md",
+         "---\nid: ENT-009\ntitle: '[УЛ] Пользователь'\n---\n# С\n")
+    mx.write_text(mx.read_text(encoding="utf-8")
+                  + "| ENT-009 | data-model | Пользователь | srs/data-model/ent-009-user.md |\n",
+                  encoding="utf-8")
+    report, ok = check(mx, docs)
+    assert not ok and any("ПРОСРОЧЕН" in r and "ent-009-user.md" in r for r in report), report
+
+
+
+NFR_PAGE = """---
+id: nfr-prf
+type: nfr
+nfr_type: Производительность
+ingress: reverse
+confluence_page_ids: 123
+---
+# Производительность
+
+| ID | Показатель | Норма | Не задано |
+|---|---|---|---|
+| nfr-prf-001 | Время отклика | ≤ 2 с | окно измерения |
+"""
+
+
+def _nfr_docs(tmp_path, gap_text):
+    docs = setup_docs(tmp_path, "функция")
+    make(tmp_path / "nfr/nfr-prf.md", NFR_PAGE)
+    mx = docs / "traceability-matrix.md"
+    # строка долга фикстуры целиком → запись реестра страницы типа + пробел
+    mx.write_text(re.sub(
+        r"(?m)^\| FUN-BNK-01…02 \|.*$",
+        "| nfr-prf | nfr | Производительность | ../nfr/nfr-prf.md |\n"
+        f"| nfr-prf | — | «{gap_text}» |",
+        mx.read_text(encoding="utf-8")), encoding="utf-8")
+    return docs, mx
+
+
+def test_nfr_gap_is_not_overdue(tmp_path):
+    # пробел НФТ: страница типа существует, но это не «цель существует»
+    docs, mx = _nfr_docs(tmp_path, "окно измерения")
+    report, ok = check(mx, docs)
+    assert ok, report
+    assert not any("ПРОСРОЧЕН" in r for r in report), report
+    assert any("пробелов НФТ 1" in r for r in report), report
+
+
+def test_nfr_gap_quote_must_be_on_page(tmp_path):
+    # цитата пробела не на странице — долг неисполним
+    docs, mx = _nfr_docs(tmp_path, "доля запросов")
+    report, ok = check(mx, docs)
+    assert not ok and any("НЕИСПОЛНИМ" in r and "доля запросов" in r
+                          for r in report), report
+
+
+def test_nfr_lowercase_ids_in_registry(tmp_path):
+    # строчные nfr-ID реестра читаются как записи реестра
+    registry, debts = parse_matrix(
+        "| nfr | nfr | Реестр НФТ | ../nfr/README.md |\n"
+        "| nfr-prf | nfr | Производительность | ../nfr/nfr-prf.md |\n"
+        "| nfr-prf-001 | nfr | Время отклика | ../nfr/nfr-prf.md |\n"
+        "| nfr-xx | nfr | мусор | ../nfr/x.md |\n")
+    assert set(registry) == {"nfr", "nfr-prf", "nfr-prf-001"}, registry

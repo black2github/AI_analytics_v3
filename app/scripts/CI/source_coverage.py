@@ -20,6 +20,10 @@
 # артефакты — покрытие «страница ↔ артефакт» перестаёт быть инвариантом.
 #
 # Мягкий гейт: код 0 и отчёт; --strict — код 2 при непокрытых страницах.
+#
+# Страницы НФТ лежат в output/<service>/nfr/, рядом с docs/, не внутри
+# него. Обход корня комплекта (output/<service>) их уже видит. Если
+# передан корень docs/, дополнительно читается соседний каталог nfr/.
 
 import argparse
 import re
@@ -120,9 +124,15 @@ def collect(sources: Path, output: Path):
                 orphan_dirs.append(d)
 
     covered: Dict[str, List[Path]] = {}
-    for p in sorted(output.rglob("*.md")):
-        for pid in artifact_page_ids(p):
-            covered.setdefault(pid, []).append(p)
+    roots = [output]
+    if output.name == "docs":
+        sibling = output.parent / "nfr"
+        if sibling.is_dir():
+            roots.append(sibling)
+    for root in roots:
+        for p in sorted(root.rglob("*.md")):
+            for pid in artifact_page_ids(p):
+                covered.setdefault(pid, []).append(p)
     return pages, parents, covered, no_id, orphan_dirs
 
 

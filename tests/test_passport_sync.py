@@ -13,7 +13,7 @@ _README_TPL = (
     "# Шаблон\n\n## Условные обозначения\n\n### Контуры (суффиксы в ID)\n\n| Код | З |\n|---|---|\n"
     "| **CL** | К |\n\n### Типы артефактов (префиксы ID)\n\n| Префикс | Что обозначает | Где лежит |\n"
     "|---|---|---|\n| **VIS** | Концепция | `service-vision.md` |\n| **GLO** | Глоссарий | `glossary.md` |\n"
-    "| **F-CL / F-BNK** | Фича | `brd/features/` |\n| **US / FR / NFR / RR** | внутри | внутри фич |\n"
+    "| **F-CL / F-BNK** | Фича | `brd/features/` |\n| **US / FR / RR** | внутри | внутри фич |\n"
     "| **PROC** | Процесс | `srs/process/` |\n| **SM** | Статусная модель | `srs/process/status-model.md` |\n"
     "| **FUN** | Функция | `srs/function/` |\n| **CTL / CTL-GRP** | Контроль | `srs/control/` |\n"
     "| **INTC** | Метод | `srs/internal-contract/` |\n| **LIBC** | Библиотека | `srs/lib-contract/` |\n"

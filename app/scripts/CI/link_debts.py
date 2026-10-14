@@ -63,6 +63,14 @@ _ISSUE_FIELD_RES = {
 ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
                   "closure": "закрытие"}
 
+# Третий формат — пробел НФТ (шаблон nfr.md, скилл create-nfr): это не
+# отсутствующий артефакт, а названное в колонке «Не задано» значение:
+#   | nfr-<код> | — | «<текст пробела>» |
+# Просрочка «цель уже существует» к пробелу не применяется — тексту и
+# положено стоять на странице. Исполнимость та же: цитата находится в
+# файле страницы типа.
+_GAP_RE = re.compile(r"—\s+«([^»]+)»\s*$")
+
 
 def issue_fields(row: str) -> Optional[dict]:
     """Поля строки долга без цели (None — строка не этого формата):
@@ -158,6 +166,11 @@ def parse_matrix(matrix_text: str):
             debts.append((_expand_from(cells[0]), "долг:" + issue["kind"],
                           issue["statement"], None, ln.strip()))
             continue
+        gap = _GAP_RE.search(joined)
+        if gap and cells[0].lower().startswith("nfr"):
+            debts.append((_expand_from(cells[0]), "nfr-gap", gap.group(1),
+                          None, ln.strip()))
+            continue
         m = _DEBT_RE.search(joined)
         if m:
             owner = _OWNER_RE.search(joined)
@@ -177,7 +190,15 @@ def parse_matrix(matrix_text: str):
         # групп нельзя было переписать на карточку-носитель); точка —
         # только перед цифрами, чтобы не принять имя файла за ID
         if (len(cells) >= 2
-                and re.match(r"^[A-ZА-Я]{2,}[-\w]*(?:\.\d+)*$", cells[0])):
+                and re.match(
+                    # nfr / nfr-<код> / nfr-<код>-<номер> — строчные ID
+                    # каталога НФТ (шаблон nfr.md); прежний класс [A-Z…]
+                    # их не видел, и долг от страницы типа не находил свой
+                    # файл в реестре
+                    r"^(?:[A-ZА-Я]{2,}[-\w]*"
+                    r"|nfr(?:-[a-z]{3}(?:-\d{3})?)?)"
+                    r"(?:\.\d+)*$",
+                    cells[0])):
             fpath = next((fm.group(0) for c in cells[1:]
                           for fm in [re.search(r"[\w./-]+\.md\b", c)]
                           if fm), None)
@@ -197,11 +218,22 @@ def check(matrix_path: Path, docs_root: Path):
         t = _doc_title(p)
         if t:
             titles[p] = _norm(t)
+    # тип карточки по файлу (из реестра матрицы) — для сверки с типом долга
+    type_of: Dict[str, str] = {}
+    for _id, (typ, fpath) in registry.items():
+        if typ:
+            type_of[fpath.replace("\\", "/").lstrip("./")] = typ.lower()
+
+    def _card_type(path: Path) -> str:
+        rel = path.relative_to(docs_root).as_posix()
+        return next((t for f, t in type_of.items()
+                     if rel == f or rel.endswith("/" + f)), "")
     types_present = {t for t, _f in registry.values()}
     report: List[str] = []
     ok = True
     cross: Dict[str, int] = {}
     n_issue = 0
+    n_gap = 0
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
@@ -219,15 +251,31 @@ def check(matrix_path: Path, docs_root: Path):
                     ok = False
             continue
         # 1) просрочка: цель существует? (межсервисный долг — цель в
-        # чужом репозитории, локальная просрочка не проверяется)
-        if owner is not None:
+        # чужом репозитории, локальная просрочка не проверяется; пробел
+        # НФТ — цели-артефакта нет, цитата обязана быть на странице)
+        if typ == "nfr-gap":
+            n_gap += 1
+        elif owner is not None:
             cross[owner] = cross.get(owner, 0) + 1
         else:
             target = None
-            if name and len(_norm(name)) >= 10:
+            if name:
+                # FB-02 common-dictionary (2026-10-14): «цель существует» —
+                # карточка с ТЕМ ЖЕ заголовком (с тегом или без) и, если тип
+                # известен, того же типа; поиск подстрокой ловил чужой
+                # заголовок («…что пользователь является УЛ» для долга
+                # data-model «Пользователь») и останавливал приёмку этапа
                 nname = _norm(name)
-                target = next((p for p, t in titles.items() if nname in t),
-                              None)
+                want = typ.lower()
+                for p, t in titles.items():
+                    tagless = re.sub(r"^\[[^\]]+\]\s*", "", t)
+                    if t != nname and tagless != nname:
+                        continue
+                    ct = _card_type(p)
+                    if ct and want and ct != want:
+                        continue
+                    target = p
+                    break
             elif not name:
                 target = typ if typ.lower() in {t.lower()
                                                 for t in types_present} \
@@ -265,6 +313,9 @@ def check(matrix_path: Path, docs_root: Path):
         report.append(f"долгов без отсутствующей цели {n_issue} (открытые "
                       "вопросы, противоречия, правила на изображении, "
                       "недоступные источники) — сторожится полнота полей")
+    if n_gap:
+        report.append(f"пробелов НФТ {n_gap} («Не задано» на страницах типов) "
+                      "— просрочка не применяется, цитата сторожится")
     if cross:
         report.append(
             f"межсервисных долгов {sum(cross.values())} "
