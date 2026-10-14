@@ -435,3 +435,39 @@ def test_report_sections(tmp_path):
     assert "## Реестр долгов" in txt and "Долгов в матрице нет." in txt
     assert "## Ручная часть протокола до подключения" in txt and "**CORE-01, CORE-02**" in txt
     assert "Критерии раздела 1 без автоматической проверки" in txt and "**SDLC-03**" in txt
+
+
+def test_out_target_with_tasks_dir_blocks_transfer(tmp_path):
+    # сторож forward (Д-43): в репозитории назначения есть tasks/ — развитие по
+    # постановкам начато, повторный перенос поверх запрещён: ✗ TRF-02, копирования нет
+    out = _target(tmp_path)
+    _w(out / "tasks/ECO-1.md", "---\ntype: task\ntask: ECO-1\n---\n\n# ECO-1\n")
+    lines, ready, data = _run(make_src(tmp_path), out=out)
+    assert not ready and data["verdict"] == "NOT READY"
+    assert any(l.startswith("✗ [TRF-02] в репозитории назначения есть каталог tasks/") for l in lines)
+    assert any("повторный перенос поверх запрещён" in l for l in lines)
+    assert any(l.startswith("✗ --out пропущен") for l in lines)
+    assert not (out / "traceability-matrix.md").exists()
+    # прочие проверки назначения выполнены как прежде
+    assert any(l.startswith("✓ [CORE-04] CODEOWNERS в репозитории назначения") for l in lines)
+
+
+def test_out_target_without_tasks_dir_unchanged(tmp_path):
+    # НЕсрабатывание: tasks/ нет (в том числе файл tasks, а не каталог) — переносится
+    out = _target(tmp_path)
+    _w(out / "tasks", "не каталог\n")
+    lines, ready, _ = _run(make_src(tmp_path), out=out)
+    assert ready, "\n".join(lines)
+    assert not any("TRF-02" in l and "tasks/" in l for l in lines)
+    assert (out / "traceability-matrix.md").is_file()
+
+
+def test_docs_repo_mode_tasks_dir_not_a_transfer_block(tmp_path):
+    # режим репозитория документации (in_place): tasks/ — штатный каталог, не сторож
+    repo = make_docs_repo(tmp_path)
+    _w(repo / "tasks/ECO-1.md", "---\ntype: task\ntask: ECO-1\nservice: X\n---\n\n# ECO-1\n")
+    _w(repo / "README.md", _README.replace("## Разделы\n",
+                                         "Каталог `tasks/` — постановки задач (`type: task`).\n\n## Разделы\n"))
+    lines, ready, _ = _run(repo)
+    assert ready, "\n".join(lines)
+    assert not any("повторный перенос" in l for l in lines)

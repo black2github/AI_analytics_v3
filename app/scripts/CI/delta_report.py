@@ -1,0 +1,772 @@
+# app/scripts/CI/delta_report.py
+#
+# ОТЧЁТ ДЕЛЬТЫ для режима «изменение по постановке» (решение владельца
+# 2026-10-15, Д-43; трек «Forward без платформы», срез С2). После миграции
+# комплект в репозитории документации `docs-<service-id>` развивается
+# задачами аналитика без платформы: постановка хранится в
+# `tasks/<JIRA-ID>.md` (frontmatter `type: task`, `task: <JIRA-ID>`;
+# строки `T-<JIRA-ID>-NN`), агент правит карточки по правилам, объект
+# акцепта — отчёт дельты в описании MR (шаблон канона
+# `_meta/templates/delta-report.md`).
+#
+# ЗАЧЕМ ПРИБОР. Детерминированную часть отчёта (файлы, идентификаторы,
+# матрица, затронутые карточки, заготовка фактов, открытые вопросы) должен
+# собирать прибор, а не агент по памяти: что изменено — читается из git,
+# что в реестре — из матрицы. Агент дописывает только происхождение
+# фактов (колонка «Происхождение») и результаты прогона проверок.
+#
+# ЧТО ДЕЛАЕТ. По изменениям рабочего дерева репозитория документации
+# относительно базы (`--base`, по умолчанию `master` → `main` → только
+# рабочее дерево против `HEAD`) собирает markdown-отчёт по шаблону:
+#   1. Изменённые файлы: `git diff --name-status <base>` плюс незакоммиченные
+#      и неотслеживаемые файлы (`git status --porcelain`); для карточек —
+#      `id`/`partOf` и `type` из frontmatter; постановки `tasks/*.md` —
+#      отдельной строкой, в таблицу карточек не входят.
+#   2. Идентификаторы: новые — `id` созданных карточек плюс новые строки
+#      реестра матрицы; снятые — ID удалённых карточек и снятых строк
+#      реестра. Сверка: новая карточка есть в реестре, дублей ID нет, у ID
+#      реестра есть файл на диске. Внутренние идентификаторы (FLD-N, EV-N,
+#      B-N, MSG-N, CTL-NNN) — добавленные заголовки `### <ID>.` в диффе.
+#   3. Матрица трассировки: добавленные и снятые строки реестра, связей и
+#      долгов (обе формы строки долга — через `link_debts.parse_matrix`).
+#   4. Затронуто: карточки, ссылающиеся относительной ссылкой на изменённые
+#      (`transfer_gate.card_referrers`), с пометкой «изменена в этой дельте».
+#   5. Факты и происхождение: заготовка из добавленных строк диффа карточек
+#      (строки таблиц, пункты списков `- **…**`, заголовки `### `); колонка
+#      «Происхождение» пустая — её дописывает агент. Не больше 200 строк.
+#   6. Открытые вопросы: строки «Вопросы и ответы» постановки с ответом «—»
+#      и добавленные долги вида «открытый вопрос».
+#   7. Проверки: блок-заглушка (selfcheck / link_debts / гейт) — результаты
+#      вписывает агент после прогона; прибор лишь проверяет, что постановка
+#      существует и её frontmatter несёт `type: task` и `task: <JIRA-ID>`.
+#
+# ОГРАНИЧИТЕЛИ. Утилита read-only: в репозитории ничего не меняет, пишет в
+# stdout и/или в файл `--out`. Это вход для человека, не гейт: замечания
+# (дубль ID, карточка вне реестра, нечитаемый файл) не роняют сборку — они
+# собираются в блок «Замечания прибора» в конце, код выхода остаётся 0.
+# Асимметрия ошибок: лучше лишняя строка в отчёте, чем молчаливый пропуск.
+# Зависимости — только стандартная библиотека и `git` в PATH.
+#
+# Ключи:
+#   --repo <путь>    корень клона репозитория документации (комплект в корне;
+#                    если есть docs/, а матрицы в корне нет — комплект в docs/)
+#   --base <ref>     база дельты (по умолчанию master, иначе main, иначе HEAD)
+#   --task <JIRA-ID> задача; без ключа — из единственной постановки в дельте
+#   --out <файл.md>  записать отчёт в файл (UTF-8, переводы строк \n)
+#   --json           дополнительно напечатать данные отчёта в JSON
+#
+# Код выхода: 0 — отчёт собран; 2 — собрать нельзя (не git-репозиторий,
+# матрицы нет, постановка в дельте неоднозначна).
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import link_debts as ld  # noqa: E402
+import selfcheck as sc  # noqa: E402
+import transfer_gate as tg  # noqa: E402
+
+FACTS_LIMIT = 200
+
+# действие по статусу git (diff --name-status / status --porcelain)
+_ACTION_BY_STATUS = {"A": "создан", "M": "изменён", "D": "снят", "R": "переименован",
+                     "C": "создан", "T": "изменён", "?": "создан"}
+# внутренний идентификатор карточки в заголовке: `### FLD-3. …`, `### EV-2.1 …`,
+# `### CTL-012.` — латинский префикс (с дефисами), номер, суб-номера через точку
+_INNER_ID_RE = re.compile(r"^#{3,}\s+([A-Z]{1,6}(?:-[A-Z]{1,6})*-\d+(?:\.\d+)*)\b")
+_TABLE_ROW_RE = re.compile(r"^\|.*\|\s*$")
+_TABLE_SEP_RE = re.compile(r"^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$")
+_LIST_FACT_RE = re.compile(r"^\s*[-*]\s+\*\*")
+_HEADING_FACT_RE = re.compile(r"^###\s+\S")
+_TASK_TITLE_RE = re.compile(r"^#\s+([A-Za-z][\w-]*-\d+)\s*[.:—-]\s*(.+?)\s*$", re.M)
+_QA_HEAD_RE = re.compile(r"^##\s+Вопросы\s+и\s+ответы", re.I | re.M)
+
+
+# --- git ---------------------------------------------------------------------
+
+def _git(cwd: Path, *args: str) -> subprocess.CompletedProcess:
+    """git без пейджера и без экранирования кириллицы в путях."""
+    return subprocess.run(["git", "-c", "core.quotepath=false", "--no-pager", *args],
+                          cwd=str(cwd), capture_output=True, encoding="utf-8",
+                          errors="replace")
+
+
+def git_toplevel(repo: Path) -> Optional[Path]:
+    """Корень рабочего дерева git; None — не git-репозиторий (или git нет)."""
+    try:
+        r = _git(repo, "rev-parse", "--show-toplevel")
+    except OSError:
+        return None
+    if r.returncode != 0 or not r.stdout.strip():
+        return None
+    return Path(r.stdout.strip()).resolve()
+
+
+def _ref_exists(top: Path, ref: str) -> bool:
+    return _git(top, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").returncode == 0
+
+
+def resolve_base(top: Path, base: Optional[str]) -> Tuple[Optional[str], List[str]]:
+    """(ref базы или None — только рабочее дерево против HEAD, замечания).
+    Явно заданная, но отсутствующая база — замечание, затем та же цепочка
+    умолчаний master → main → HEAD."""
+    notes: List[str] = []
+    chain: List[str] = []
+    if base:
+        chain.append(base)
+    chain.extend(r for r in ("master", "main") if r not in chain)
+    for ref in chain:
+        if _ref_exists(top, ref):
+            if base and ref != base:
+                notes.append(f"база `{base}` в репозитории не найдена — дельта считается от `{ref}`")
+            return ref, notes
+    if _ref_exists(top, "HEAD"):
+        notes.append("веток master/main нет — дельта считается от HEAD (только рабочее дерево)")
+        return "HEAD", notes
+    notes.append("в репозитории нет коммитов — дельта: только рабочее дерево")
+    return None, notes
+
+
+def changed_files(top: Path, base: Optional[str]) -> Tuple[List[dict], List[str]]:
+    """Изменённые файлы рабочего дерева против базы: [{path, status, action,
+    old}] (path — относительно корня git, POSIX; status — буква git; old —
+    прежний путь при переименовании). Источники: `git diff --name-status -M
+    <base>` (закоммиченное и незакоммиченное против базы) плюс
+    неотслеживаемые файлы из `git status --porcelain`."""
+    notes: List[str] = []
+    found: Dict[str, dict] = {}
+    if base is not None:
+        r = _git(top, "diff", "--name-status", "-M", "-z", base, "--")
+        if r.returncode != 0:
+            notes.append(f"git diff против `{base}` не отработал: {r.stderr.strip()[:200]}")
+        else:
+            parts = r.stdout.split("\0")
+            i = 0
+            while i < len(parts):
+                st = parts[i]
+                if not st:
+                    i += 1
+                    continue
+                letter = st[0]
+                if letter in ("R", "C") and i + 2 < len(parts):
+                    old, new = parts[i + 1], parts[i + 2]
+                    i += 3
+                    found[new] = {"path": new, "status": letter, "old": old,
+                                  "action": _ACTION_BY_STATUS.get(letter, "изменён")}
+                elif i + 1 < len(parts):
+                    p = parts[i + 1]
+                    i += 2
+                    found[p] = {"path": p, "status": letter, "old": None,
+                                "action": _ACTION_BY_STATUS.get(letter, "изменён")}
+                else:
+                    break
+    r = _git(top, "status", "--porcelain", "-uall", "-z", "--")
+    if r.returncode != 0:
+        notes.append(f"git status не отработал: {r.stderr.strip()[:200]}")
+    else:
+        parts = r.stdout.split("\0")
+        i = 0
+        while i < len(parts):
+            ent = parts[i]
+            if not ent or len(ent) < 4:
+                i += 1
+                continue
+            xy, p = ent[:2], ent[3:]
+            i += 1
+            if xy[0] in ("R", "C"):
+                i += 1  # прежний путь — отдельной записью
+            if xy == "??" and p not in found:
+                found[p] = {"path": p, "status": "?", "old": None, "action": "создан"}
+            elif base is None and xy != "!!" and p not in found:
+                # нет коммитов: вся картина — из status
+                letter = (xy.strip() or "M")[0]
+                found[p] = {"path": p, "status": letter, "old": None,
+                            "action": _ACTION_BY_STATUS.get(letter, "изменён")}
+    return [found[k] for k in sorted(found)], notes
+
+
+def _show_base(top: Path, base: Optional[str], rel: str) -> Optional[str]:
+    """Текст файла в базе; None — в базе файла нет."""
+    if base is None:
+        return None
+    r = _git(top, "show", f"{base}:{rel}")
+    return r.stdout if r.returncode == 0 else None
+
+
+def added_removed_lines(top: Path, base: Optional[str], rec: dict) -> Tuple[List[str], List[str]]:
+    """Добавленные и снятые строки файла против базы. Неотслеживаемый или
+    отсутствующий в базе файл — все его строки добавлены; снятый — все
+    строки базы сняты. Строки с «@@» (границы ханков) сохраняются в
+    добавленных как маркер «@@», чтобы потребитель мог сбросить контекст."""
+    path = top / rec["path"]
+    if rec["status"] == "D":
+        old = _show_base(top, base, rec["old"] or rec["path"]) or ""
+        return [], old.splitlines()
+    if rec["status"] == "?" or base is None:
+        try:
+            return path.read_text(encoding="utf-8", errors="replace").splitlines(), []
+        except OSError:
+            return [], []
+    paths = [rec["path"]] + ([rec["old"]] if rec.get("old") else [])
+    r = _git(top, "diff", "-M", "--no-color", "-U0", base, "--", *paths)
+    if r.returncode != 0 or not r.stdout.strip():
+        # отслеживаемый файл, которого в базе не было: diff пуст лишь если
+        # файл тождествен базе — тогда и строк нет; иначе считаем все строки
+        if _show_base(top, base, rec["old"] or rec["path"]) is None and path.is_file():
+            return path.read_text(encoding="utf-8", errors="replace").splitlines(), []
+        return [], []
+    added: List[str] = []
+    removed: List[str] = []
+    for ln in r.stdout.splitlines():
+        if ln.startswith("+++") or ln.startswith("---"):
+            continue
+        if ln.startswith("@@"):
+            added.append("@@")
+        elif ln.startswith("+"):
+            added.append(ln[1:])
+        elif ln.startswith("-"):
+            removed.append(ln[1:])
+    return added, removed
+
+
+# --- комплект --------------------------------------------------------------------
+
+def kit_root(repo: Path) -> Tuple[Optional[Path], Optional[str]]:
+    """(корень комплекта, причина отказа). Как transfer_gate.detect_layout:
+    комплект в корне (матрица там) либо в docs/ рабочего репозитория."""
+    docs, _docs_repo = tg.detect_layout(repo, "docs")
+    if docs is None:
+        return None, f"матрица трассировки не найдена ни в {repo}, ни в {repo / 'docs'}"
+    if not (docs / "traceability-matrix.md").is_file():
+        return None, f"матрица трассировки не найдена: {docs / 'traceability-matrix.md'}"
+    return docs, None
+
+
+def _rel_kit(top: Path, kit: Path, git_rel: str) -> Optional[str]:
+    """Путь git (от корня git) → путь относительно корня комплекта (POSIX);
+    None — файл вне комплекта."""
+    try:
+        return (top / git_rel).resolve().relative_to(kit.resolve()).as_posix()
+    except ValueError:
+        return None
+
+
+def _registry_rows(text: str) -> List[str]:
+    """ID строк реестра в порядке появления, с дублями (parse_matrix дубли
+    схлопывает — для сверки «дублей нет» нужны все вхождения)."""
+    ids: List[str] = []
+    for ln in text.splitlines():
+        reg, debts = ld.parse_matrix(ln)
+        if reg and not debts:
+            ids.extend(reg.keys())
+    return ids
+
+
+def _card_type_file(path: Path) -> Tuple[Optional[Dict[str, str]], str, str]:
+    """(frontmatter | None, ID карточки, тип). ID — `id` или `partOf`."""
+    fm = sc.read_frontmatter(path)
+    if not fm:
+        return fm, "", ""
+    cid = str(fm.get("id") or fm.get("partOf") or "").strip()
+    return fm, cid, str(fm.get("type", "")).strip()
+
+
+_ID_LINE_RE = re.compile(r"^(?:id|partOf):\s*(.+?)\s*$", re.M)
+
+
+def _id_from_text(text: str) -> str:
+    """ID из frontmatter текста (для файлов, которых на диске уже нет)."""
+    body = text.lstrip("﻿")
+    if not body.startswith("---"):
+        return ""
+    head = body.split("\n---", 1)[0]
+    m = _ID_LINE_RE.search(head)
+    return m.group(1).strip() if m else ""
+
+
+# --- разделы отчёта --------------------------------------------------------------
+
+def collect_files(top: Path, kit: Path, base: Optional[str], changed: List[dict],
+                  base_registry: Dict[str, Tuple[str, str]], notes: List[str]) -> dict:
+    """Раздел «Изменённые файлы»: карточки (с ID и типом), постановки, прочие
+    файлы. Каждому изменённому файлу — своя запись: files[*] = {path, action,
+    id, type, kind ∈ card|task|matrix|other, old}."""
+    out: List[dict] = []
+    for rec in changed:
+        rel = _rel_kit(top, kit, rec["path"])
+        entry = {"path": rel if rel is not None else rec["path"], "git_path": rec["path"],
+                 "action": rec["action"], "status": rec["status"], "old": rec["old"],
+                 "id": "", "type": "", "kind": "other", "in_kit": rel is not None}
+        abs_path = top / rec["path"]
+        if rel is not None and rel == "traceability-matrix.md":
+            entry["kind"] = "matrix"
+        elif rel is not None and sc.is_task_file(abs_path, kit):
+            entry["kind"] = "task"
+            fm = sc.read_frontmatter(abs_path) if abs_path.is_file() else {}
+            entry["id"] = str((fm or {}).get("task", "")).strip()
+            entry["type"] = str((fm or {}).get("type", "")).strip()
+        elif abs_path.suffix.lower() == ".md":
+            if rec["status"] == "D":
+                text = _show_base(top, base, rec["path"]) or ""
+                cid = _id_from_text(text)
+                if not cid:
+                    cid = next((i for i, (_t, f) in base_registry.items()
+                                if rel is not None and f.replace("\\", "/").lstrip("./") == rel), "")
+                entry["id"], entry["kind"] = cid, "card" if cid else "other"
+            elif abs_path.is_file():
+                fm, cid, typ = _card_type_file(abs_path)
+                if fm is None:
+                    notes.append(f"frontmatter не разбирается (блок не закрыт): `{entry['path']}`")
+                entry["id"], entry["type"] = cid, typ
+                entry["kind"] = "card" if cid else "other"
+            else:
+                notes.append(f"файл из дельты не найден на диске: `{entry['path']}`")
+        out.append(entry)
+    return {"files": out}
+
+
+def collect_ids(kit: Path, files: List[dict], matrix_now: str, matrix_base: Optional[str],
+                inner: Dict[str, List[str]], notes: List[str]) -> dict:
+    """Раздел «Идентификаторы» и сверка с реестром матрицы."""
+    reg_now, _ = ld.parse_matrix(matrix_now)
+    reg_base, _ = ld.parse_matrix(matrix_base or "")
+    created = [f["id"] for f in files if f["kind"] == "card" and f["action"] == "создан" and f["id"]]
+    deleted = [f["id"] for f in files if f["kind"] == "card" and f["action"] == "снят" and f["id"]]
+    new_rows = [i for i in reg_now if i not in reg_base]
+    gone_rows = [i for i in reg_base if i not in reg_now]
+    new_ids = sorted(set(created) | set(new_rows))
+    removed_ids = sorted(set(deleted) | set(gone_rows))
+    outside: List[str] = []
+    for f in files:
+        if f["kind"] != "card" or f["action"] == "снят" or not f["id"] or f["id"] in reg_now:
+            continue
+        outside.append(f["id"])
+        notes.append(f"карточка вне реестра: `{f['id']}` (`{f['path']}`, {f['action']}) — "
+                     "строки в «Реестре ID» матрицы нет")
+    seen: Dict[str, int] = {}
+    for rid in _registry_rows(matrix_now):
+        seen[rid] = seen.get(rid, 0) + 1
+    dups = sorted(i for i, n in seen.items() if n > 1)
+    for rid in dups:
+        notes.append(f"дубль ID в реестре матрицы: `{rid}` ({seen[rid]} строки)")
+    missing_files = []
+    for rid, (_typ, fpath) in reg_now.items():
+        if not (kit / fpath.replace("\\", "/").lstrip("./")).is_file():
+            missing_files.append(rid)
+            notes.append(f"ID реестра без файла на диске: `{rid}` → `{fpath}`")
+    return {"new": new_ids, "removed": removed_ids, "created_cards": created,
+            "deleted_cards": deleted, "new_registry": new_rows, "removed_registry": gone_rows,
+            "outside_registry": outside, "duplicates": dups, "missing_files": missing_files,
+            "inner": inner}
+
+
+def _split_matrix_rows(lines: List[str]) -> List[str]:
+    """Строки таблиц из набора строк диффа: шапки (строка перед разделителем)
+    и разделители отбрасываются, маркеры ханков — тоже."""
+    rows: List[str] = []
+    for i, ln in enumerate(lines):
+        s = ln.strip()
+        if not _TABLE_ROW_RE.match(s) or _TABLE_SEP_RE.match(s):
+            continue
+        nxt = lines[i + 1].strip() if i + 1 < len(lines) else ""
+        if _TABLE_SEP_RE.match(nxt):
+            continue  # шапка таблицы
+        rows.append(s)
+    return rows
+
+
+def _classify_rows(rows: List[str]) -> dict:
+    """Строки матрицы → реестр / связи / долги (через link_debts.parse_matrix)."""
+    out = {"registry": [], "links": [], "debts": []}
+    for row in rows:
+        reg, debts = ld.parse_matrix(row)
+        if debts:
+            from_ids, typ, name, owner, raw = debts[0]
+            d = {"from": from_ids, "type": typ, "name": name, "owner": owner, "row": raw,
+                 "kind": None, "responsible": None, "source": None}
+            if typ.startswith("долг:"):
+                fields = ld.issue_fields(raw) or {}
+                d["kind"] = fields.get("kind")
+                d["responsible"] = fields.get("responsible")
+                d["source"] = fields.get("source")
+            else:
+                d["kind"] = "нет цели"
+            out["debts"].append(d)
+        elif reg:
+            rid, (typ, fpath) = next(iter(reg.items()))
+            out["registry"].append({"id": rid, "type": typ, "file": fpath, "row": row})
+        else:
+            out["links"].append(row)
+    return out
+
+
+def collect_matrix(top: Path, base: Optional[str], matrix_rec: Optional[dict]) -> dict:
+    """Раздел «Матрица трассировки»: добавленные и снятые строки по группам."""
+    if matrix_rec is None:
+        return {"changed": False, "added": _classify_rows([]), "removed": _classify_rows([])}
+    added, removed = added_removed_lines(top, base, matrix_rec)
+    return {"changed": True,
+            "added": _classify_rows(_split_matrix_rows(added)),
+            "removed": _classify_rows(_split_matrix_rows(removed))}
+
+
+def collect_affected(kit: Path, files: List[dict]) -> List[dict]:
+    """Раздел «Затронуто»: для каждой изменённой/созданной карточки — кто на
+    неё ссылается относительной ссылкой и изменён ли ссылающийся в этой же
+    дельте. Матрица и README не считаются (card_referrers)."""
+    referrers = tg.card_referrers(kit)
+    changed_ids = {f["id"] for f in files if f["kind"] == "card" and f["id"]}
+    out: List[dict] = []
+    for f in files:
+        if f["kind"] != "card" or not f["id"] or f["action"] == "снят":
+            continue
+        refs = referrers.get(f["id"], [])
+        out.append({"id": f["id"], "action": f["action"],
+                    "referrers": [{"id": r, "changed": r in changed_ids} for r in refs]})
+    return out
+
+
+def _fact_text(line: str) -> str:
+    """Текст факта для ячейки таблицы: без крайних «|», с экранированием."""
+    s = line.strip()
+    if s.startswith("|"):
+        s = s.strip("|").strip()
+    s = re.sub(r"^(?:#{1,6}\s+|[-*]\s+)", "", s)
+    s = s.replace("|", "\\|")
+    return s if len(s) <= 200 else s[:197] + "…"
+
+
+def collect_facts(top: Path, base: Optional[str], files: List[dict],
+                  notes: List[str]) -> Tuple[List[dict], Dict[str, List[str]], int]:
+    """Заготовка «Факты и происхождение» и новые внутренние идентификаторы:
+    по добавленным строкам диффа карточек — строки таблиц, пункты `- **…**`,
+    заголовки `### `; frontmatter, разделители и шапки таблиц не входят.
+    Возвращает (факты, {ID карточки: [внутренние ID]}, сколько строк сверх
+    лимита не вошло)."""
+    facts: List[dict] = []
+    inner: Dict[str, List[str]] = {}
+    overflow = 0
+    for f in files:
+        if f["kind"] != "card" or f["action"] == "снят" or not f["id"]:
+            continue
+        added, _ = added_removed_lines(top, base, {"path": f["git_path"], "status": f["status"],
+                                                  "old": f["old"]})
+        # frontmatter созданной карточки — не факты
+        if added and added[0].lstrip("﻿").strip() == "---":
+            end = next((i for i, ln in enumerate(added[1:], start=1) if ln.strip() == "---"), None)
+            if end is not None:
+                added = added[end + 1:]
+        current_inner: Optional[str] = None
+        for i, ln in enumerate(added):
+            if ln == "@@":
+                current_inner = None
+                continue
+            s = ln.rstrip()
+            if not s.strip():
+                continue
+            m = _INNER_ID_RE.match(s.strip())
+            if m:
+                current_inner = m.group(1)
+                inner.setdefault(f["id"], []).append(m.group(1))
+            is_row = bool(_TABLE_ROW_RE.match(s.strip())) and not _TABLE_SEP_RE.match(s.strip())
+            if is_row:
+                nxt = added[i + 1].strip() if i + 1 < len(added) else ""
+                if _TABLE_SEP_RE.match(nxt):
+                    continue  # шапка таблицы
+            if not (is_row or _LIST_FACT_RE.match(s) or _HEADING_FACT_RE.match(s.strip())):
+                continue
+            where = f"`{f['id']}`" + (f", {current_inner}" if current_inner and not m else "")
+            if len(facts) >= FACTS_LIMIT:
+                overflow += 1
+                continue
+            facts.append({"fact": _fact_text(s), "where": where, "card": f["id"],
+                          "inner": None if m else current_inner, "file": f["path"],
+                          "origin": ""})
+    return facts, inner, overflow
+
+
+def task_questions(task_text: str) -> List[dict]:
+    """Строки таблицы «Вопросы и ответы» постановки с ответом «—»."""
+    m = _QA_HEAD_RE.search(task_text)
+    if not m:
+        return []
+    sect = task_text[m.end():]
+    nxt = re.search(r"^#{1,2}\s", sect, re.M)
+    if nxt:
+        sect = sect[:nxt.start()]
+    out: List[dict] = []
+    for row in _split_matrix_rows(sect.splitlines()):
+        cells = [c.strip() for c in row.strip().strip("|").split("|")]
+        if len(cells) < 3:
+            continue
+        answer = cells[2]
+        if answer == "—" or answer.startswith("— ") or answer.startswith("—("):
+            out.append({"n": cells[0], "question": cells[1], "answer": answer})
+    return out
+
+
+def collect_questions(task_text: Optional[str], matrix: dict) -> dict:
+    """Раздел «Открытые вопросы»: вопросы постановки без ответа и
+    добавленные долги вида «открытый вопрос»."""
+    qs = task_questions(task_text) if task_text else []
+    debts = [d for d in matrix["added"]["debts"] if d["kind"] == "открытый вопрос"]
+    return {"questions": qs, "debts": debts}
+
+
+def pick_task(files: List[dict], task_arg: Optional[str]) -> Tuple[Optional[str], Optional[str]]:
+    """(JIRA-ID, ошибка). Без --task — из единственной изменённой или новой
+    постановки в дельте; несколько — ошибка (код 2); ни одной — None."""
+    if task_arg:
+        return task_arg.strip(), None
+    tasks = [f for f in files if f["kind"] == "task" and f["action"] != "снят"]
+    if len(tasks) > 1:
+        names = ", ".join(f"`{t['path']}`" for t in tasks)
+        return None, (f"в дельте несколько постановок ({names}) — задайте --task <JIRA-ID>")
+    if tasks:
+        return Path(tasks[0]["path"]).stem, None
+    return None, None
+
+
+def check_task_file(kit: Path, task_id: Optional[str], notes: List[str]) -> Tuple[Optional[str], str]:
+    """(текст постановки | None, имя задачи). Сторожит существование файла
+    и frontmatter `type: task`, `task: <JIRA-ID>`."""
+    if not task_id:
+        notes.append("постановка в дельте не найдена и --task не задан — разделы по постановке пусты")
+        return None, ""
+    path = kit / "tasks" / f"{task_id}.md"
+    if not path.is_file():
+        notes.append(f"файл постановки не найден: `tasks/{task_id}.md`")
+        return None, ""
+    fm = sc.read_frontmatter(path)
+    if fm is None:
+        notes.append(f"frontmatter постановки `tasks/{task_id}.md` не разбирается (блок не закрыт)")
+        fm = {}
+    if fm.get("type") != "task":
+        notes.append(f"постановка `tasks/{task_id}.md`: в frontmatter нет `type: task`")
+    if fm.get("task") != task_id:
+        notes.append(f"постановка `tasks/{task_id}.md`: frontmatter `task:` = "
+                     f"«{fm.get('task', '')}», ожидается `{task_id}`")
+    text = path.read_text(encoding="utf-8", errors="replace")
+    m = _TASK_TITLE_RE.search(text)
+    name = m.group(2).strip() if m else ""
+    if not name:
+        notes.append(f"постановка `tasks/{task_id}.md`: заголовок `# {task_id}. <имя>` не найден")
+    return text, name
+
+
+def find_service(kit: Path, task_text: Optional[str], files: List[dict]) -> str:
+    """service — из frontmatter постановки, иначе изменённой карточки, иначе
+    любой карточки комплекта."""
+    if task_text:
+        m = re.search(r"^service:\s*(.+?)\s*$", task_text.split("\n---", 1)[0], re.M)
+        if m:
+            return m.group(1).strip().strip("'\"")
+    candidates = [kit / f["path"] for f in files if f["kind"] == "card" and f["action"] != "снят"]
+    for p in candidates:
+        fm = sc.read_frontmatter(p) if p.is_file() else {}
+        if fm and fm.get("service"):
+            return str(fm["service"]).strip().strip("'\"")
+    for p in sorted(kit.rglob("*.md")):
+        if sc.is_task_file(p, kit):
+            continue
+        fm = sc.read_frontmatter(p)
+        if fm and fm.get("service"):
+            return str(fm["service"]).strip().strip("'\"")
+    return ""
+
+
+# --- сборка ----------------------------------------------------------------------
+
+def build(repo: Path, base_arg: Optional[str] = None,
+          task_arg: Optional[str] = None) -> Tuple[Optional[dict], Optional[str]]:
+    """(данные отчёта, ошибка). Ошибка — отчёт собрать нельзя (код 2)."""
+    repo = repo.resolve()
+    top = git_toplevel(repo)
+    if top is None:
+        return None, f"не git-репозиторий: {repo}"
+    kit, why = kit_root(repo)
+    if kit is None:
+        return None, why
+    notes: List[str] = []
+    base, base_notes = resolve_base(top, base_arg)
+    notes.extend(base_notes)
+    changed, git_notes = changed_files(top, base)
+    notes.extend(git_notes)
+    matrix_path = kit / "traceability-matrix.md"
+    matrix_now = matrix_path.read_text(encoding="utf-8", errors="replace")
+    matrix_git_rel = matrix_path.resolve().relative_to(top).as_posix()
+    matrix_base = _show_base(top, base, matrix_git_rel)
+    base_registry, _ = ld.parse_matrix(matrix_base or "")
+
+    files = collect_files(top, kit, base, changed, base_registry, notes)["files"]
+    task_id, err = pick_task(files, task_arg)
+    if err:
+        return None, err
+    task_text, task_name = check_task_file(kit, task_id, notes)
+    matrix_rec = next((f for f in files if f["kind"] == "matrix"), None)
+    matrix = collect_matrix(top, base, {"path": matrix_rec["git_path"], "status": matrix_rec["status"],
+                                        "old": matrix_rec["old"]} if matrix_rec else None)
+    facts, inner, overflow = collect_facts(top, base, files, notes)
+    ids = collect_ids(kit, files, matrix_now, matrix_base, inner, notes)
+    affected = collect_affected(kit, files)
+    questions = collect_questions(task_text, matrix)
+    branch = _git(top, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip() or "—"
+    base_sha = (_git(top, "rev-parse", "--short", base).stdout.strip() if base else "") or "—"
+    data = {"task": task_id or "", "task_name": task_name,
+            "service": find_service(kit, task_text, files),
+            "branch": branch, "base": base or "", "base_sha": base_sha,
+            "repo": str(repo), "kit": str(kit),
+            "files": files, "ids": ids, "matrix": matrix, "affected": affected,
+            "facts": facts, "facts_overflow": overflow, "questions": questions,
+            "notes": notes}
+    return data, None
+
+
+# --- рендер ----------------------------------------------------------------------
+
+def _debt_line(d: dict) -> str:
+    frm = ", ".join(d["from"]) or "—"
+    if d["kind"] == "нет цели":
+        name = f" «{d['name']}»" if d["name"] else ""
+        owner = f" у владельца {d['owner']}" if d["owner"] else ""
+        return f"нет целевого артефакта {d['type']}{name}{owner} (от {frm})"
+    resp = f"; ответственный: {d['responsible']}" if d["responsible"] else ""
+    src = f"; источник: {d['source']}" if d["source"] else ""
+    return f"долг «{d['kind']}»: «{d['name']}» (от {frm}{resp}{src})"
+
+
+def render(data: dict) -> str:
+    """Markdown-отчёт по шаблону канона `_meta/templates/delta-report.md`."""
+    tid = data["task"] or "задача не определена"
+    name = data["task_name"] or "—"
+    L: List[str] = [f"# Отчёт дельты: {tid} — {name}", ""]
+    task_ref = f"`tasks/{data['task']}.md`, строки `T-{data['task']}-NN`" if data["task"] else "не задана"
+    L.append(f"Постановка: {task_ref}. Комплект `{data['service'] or '—'}`, ветка "
+             f"`{data['branch']}`, база `{data['base'] or 'рабочее дерево'}` ({data['base_sha']}).")
+    L += ["", "## Изменённые файлы", ""]
+    cards = [f for f in data["files"] if f["kind"] != "task"]
+    if cards:
+        L += ["| Файл | Действие | Карточка |", "|---|---|---|"]
+        for f in cards:
+            action = f["action"] + (f" (из `{f['old']}`)" if f["old"] else "")
+            card = f"`{f['id']}`" if f["id"] else "—"
+            if f["type"]:
+                card += f" ({f['type']})"
+            if f["kind"] == "matrix":
+                card = "матрица"
+            if not f["in_kit"]:
+                action += ", вне комплекта"
+            L.append(f"| `{f['path']}` | {action} | {card} |")
+    else:
+        L.append("Изменённых файлов, кроме постановки, нет.")
+    tasks = [f for f in data["files"] if f["kind"] == "task"]
+    for t in tasks:
+        L += ["", f"Постановка: `{t['path']}` — {t['action']}" + (f", `{t['id']}`" if t["id"] else "") + "."]
+    ids = data["ids"]
+    L += ["", "## Идентификаторы", ""]
+    new = ", ".join(f"`{i}`" for i in ids["new"]) or "`—`"
+    removed = ", ".join(f"`{i}`" for i in ids["removed"]) or "`—`"
+    ok = ("дублей и пропусков нет"
+          if not (ids["duplicates"] or ids["outside_registry"] or ids["missing_files"])
+          else "есть замечания — см. «Замечания прибора»")
+    L.append(f"Новые: {new} (по реестру матрицы, {ok}). Снятые: {removed}.")
+    if ids["inner"]:
+        L += ["", "Новые внутренние идентификаторы: "
+              + "; ".join(f"`{cid}`: {', '.join(v)}" for cid, v in ids["inner"].items()) + "."]
+    m = data["matrix"]
+    L += ["", "## Матрица трассировки", ""]
+    if not m["changed"]:
+        L.append("Матрица не изменена.")
+    else:
+        a, r = m["added"], m["removed"]
+        L.append("Новые строки реестра: "
+                 + (", ".join(f"`{x['id']}` ({x['type'] or 'тип не указан'}, `{x['file']}`)"
+                              for x in a["registry"]) or "нет") + ".")
+        if r["registry"]:
+            L.append("Снятые строки реестра: " + ", ".join(f"`{x['id']}`" for x in r["registry"]) + ".")
+        L += ["", "Связи (добавлено):"] + ([f"- `{x}`" for x in a["links"]] or ["- нет"])
+        if r["links"]:
+            L += ["", "Связи (снято):"] + [f"- `{x}`" for x in r["links"]]
+        L += ["", "Долги (добавлено):"] + ([f"- {_debt_line(d)}" for d in a["debts"]] or ["- нет"])
+        if r["debts"]:
+            L += ["", "Долги (снято):"] + [f"- {_debt_line(d)}" for d in r["debts"]]
+    L += ["", "## Затронуто", ""]
+    if not data["affected"]:
+        L.append("Изменённых карточек нет.")
+    for a in data["affected"]:
+        if a["referrers"]:
+            refs = ", ".join(f"`{x['id']}`" + (" (изменена в этой дельте)" if x["changed"]
+                                                else " (не изменена — почему: …)")
+                             for x in a["referrers"])
+            L.append(f"- `{a['id']}` ({a['action']}): ссылаются {refs}.")
+        else:
+            L.append(f"- `{a['id']}` ({a['action']}): ссылающихся карточек нет.")
+    L += ["", "## Факты и происхождение", "",
+          "| Факт (что записано) | Где | Происхождение |", "|---|---|---|"]
+    for f in data["facts"]:
+        L.append(f"| {f['fact']} | {f['where']} | {f['origin']} |")
+    if not data["facts"]:
+        L.append("| — | — | — |")
+    if data["facts_overflow"]:
+        L.append(f"| …ещё {data['facts_overflow']} | | |")
+    L += ["", "Происхождение — одно из четырёх: `T-NN` (постановка), ID карточки (комплект), "
+          "адрес внешнего доказательства, номер вопроса. Колонку заполняет агент; строк без "
+          "происхождения в таблице быть не должно."]
+    q = data["questions"]
+    L += ["", "## Открытые вопросы", ""]
+    if not q["questions"] and not q["debts"]:
+        L.append("нет")
+    for x in q["questions"]:
+        L.append(f"- вопрос {x['n']}: {x['question']} — ответ: {x['answer']}")
+    for d in q["debts"]:
+        L.append(f"- долг: {_debt_line(d)}")
+    L += ["", "## Проверки", "",
+          "`selfcheck`: …; `link_debts`: …; гейт переноса (режим репозитория документации): "
+          "`READY` / `NOT READY` — отчёт приложен."]
+    if data["notes"]:
+        L += ["", "## Замечания прибора", ""] + [f"- {n}" for n in data["notes"]]
+    return "\n".join(L) + "\n"
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(
+        description="Отчёт дельты комплекта документации по изменениям рабочего дерева "
+                    "относительно базы (режим «изменение по постановке»)")
+    ap.add_argument("--repo", required=True, type=Path,
+                    help="корень клона репозитория документации (комплект в корне или в docs/)")
+    ap.add_argument("--base", default=None,
+                    help="ref базы дельты (по умолчанию master, иначе main, иначе HEAD)")
+    ap.add_argument("--task", default=None,
+                    help="JIRA-ID задачи; без ключа — из единственной постановки tasks/ в дельте")
+    ap.add_argument("--out", type=Path, default=None, help="записать отчёт в файл (UTF-8, \\n)")
+    ap.add_argument("--json", action="store_true", help="дополнительно вывести данные в JSON")
+    a = ap.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    try:
+        data, err = build(a.repo, a.base, a.task)
+    except Exception as e:  # noqa: BLE001
+        print(f"✗ отчёт дельты не собран: {e!r}")
+        return 2
+    if err:
+        print(f"✗ отчёт дельты не собран: {err}")
+        return 2
+    text = render(data)
+    if a.out is not None:
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        with open(a.out, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(text)
+        print(f"i отчёт дельты записан: {a.out}")
+    else:
+        print(text, end="")
+    if a.json:
+        print(json.dumps(data, ensure_ascii=False, indent=1))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
