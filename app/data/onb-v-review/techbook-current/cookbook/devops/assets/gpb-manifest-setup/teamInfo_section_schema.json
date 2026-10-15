@@ -1,0 +1,68 @@
+{
+  "definitions": {
+    "teamInfo": {
+      "type": "object",
+      "description": "Секция ECO. Определяет принадлежность артефакта команде и тип проекта.",
+      "required": [
+        "team",
+        "projectType",
+        "platform"
+      ],
+      "properties": {
+        "team": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Ответственная команда-владелец артефакта."
+        },
+        "projectType": {
+          "type": "string",
+          "enum": [
+            "ECO_BE",
+            "ECO_FE"
+          ],
+          "description": "Тип проекта: backend или frontend."
+        },
+        "platform": {
+          "type": "boolean",
+          "description": "Признак платформенного артефакта (true/false)."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "microservice",
+            "library"
+          ],
+          "nullable": true,
+          "description": "Тип backend‑проекта: микросервис или библиотека. Необязательно для FE."
+        },
+        "layer": {
+          "type": "string",
+          "enum": [
+            "Transport",
+            "Gateway",
+            "Security",
+            "Dictionaries",
+            "Platform_Services",
+            "Integration_Adapters",
+            "Infrastructure"
+          ],
+          "description": "Архитектурный уровень платформенного артефакта."
+        },
+        "deploymentSegment": {
+          "type": "string",
+          "enum": [
+            "DMZ",
+            "LAN",
+            "DMZ/LAN"
+          ],
+          "description": "Сегмент размещения: DMZ, LAN или оба."
+        },
+        "externalSystem": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Внешняя автоматизированная система (обязательно для Integration_Adapters)."
+        }
+      }
+    }
+  }
+}

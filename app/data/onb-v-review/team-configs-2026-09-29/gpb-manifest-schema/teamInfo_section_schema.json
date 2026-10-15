@@ -1,0 +1,43 @@
+{
+  "definitions": {
+    "teamInfo": {
+      "type": "object",
+      "description": "Секция ECO. Определяет принадлежность артефакта команде и тип проекта.",
+      "required": [
+        "team",
+        "projectType",
+        "platform"
+      ],
+      "properties": {
+        "team": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Ответственная команда-владелец артефакта."
+        },
+        "projectType": {
+          "type": "string",
+          "enum": [
+            "ECO_BE",
+            "ECO_FE",
+            "ECO_QA",
+            "ECO_AN"
+          ],
+          "description": "Тип проекта: backend, frontend, QA или аналитика."
+        },
+        "platform": {
+          "type": "boolean",
+          "description": "Признак платформенного артефакта (true/false)."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "microservice",
+            "library"
+          ],
+          "nullable": true,
+          "description": "Тип backend‑проекта: микросервис или библиотека. Необязательно для FE."
+        }
+      }
+    }
+  }
+}

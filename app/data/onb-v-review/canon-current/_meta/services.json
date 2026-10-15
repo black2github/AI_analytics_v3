@@ -1,0 +1,981 @@
+[
+  {
+    "code": "roleModel",
+    "key": "RM",
+    "name": "[ЦРМ] Роли и Ролевая модель (Концепция)",
+    "is_platform": true
+  },
+  {
+    "code": "biometrics",
+    "key": "BM",
+    "name": "[БПО] Сервис биометрической идентификации",
+    "is_platform": true
+  },
+  {
+    "code": "io-client",
+    "key": "KO",
+    "name": "[ИО Клиент] Сервис по обработке сообщения ИО Клиент",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-io-client"
+  },
+  {
+    "code": "SUV",
+    "key": "SV",
+    "name": "[СУВ] Сервис по работе с сообщениями СУВ",
+    "is_platform": true
+  },
+  {
+    "code": "signature",
+    "key": "SG",
+    "name": "[ЭП] Сервис по работе с электронной подписью",
+    "is_platform": true
+  },
+  {
+    "code": "notifications",
+    "key": "NT",
+    "name": "[Уведомления] Сервис работы с уведомлениями",
+    "is_platform": true
+  },
+  {
+    "code": "information",
+    "key": "NN",
+    "name": "[Информ] Сервис информирования",
+    "is_platform": true
+  },
+  {
+    "code": "notices",
+    "key": "NC",
+    "name": "[Нотификация] Сервис по работе с нотификациями",
+    "is_platform": true
+  },
+  {
+    "code": "dataModel",
+    "key": "DM",
+    "name": "Модель данных",
+    "is_platform": true
+  },
+  {
+    "code": "integrations",
+    "key": "INT",
+    "name": "Интеграция",
+    "is_platform": true
+  },
+  {
+    "code": "UAA",
+    "key": "UAA",
+    "name": "[UAA] Сервис аутентификации и авторизации",
+    "is_platform": true
+  },
+  {
+    "code": "userProfile",
+    "key": "UP",
+    "name": "[Профиль] Сервис по работе с профилем пользователя",
+    "is_platform": true
+  },
+  {
+    "code": "client-dictionary",
+    "key": "CLIENT_BANK",
+    "name": "[Клиент] Справочник Клиентов Банка",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-bank-client"
+  },
+  {
+    "code": "branches",
+    "key": "BR",
+    "name": "[Подразделение] Справочник филиалов и подразделений",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-branches"
+  },
+  {
+    "code": "settings",
+    "key": "SYS_SETTINGS",
+    "name": "[Настройки системы] Сервис настроек",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-settings"
+  },
+  {
+    "code": "svetofor",
+    "key": "SM",
+    "name": "[Свет] Сервис \"Светофор\"",
+    "is_platform": true
+  },
+  {
+    "code": "statementImport",
+    "key": "SI",
+    "name": "[Импорт выписки] Сервис импорта выписки",
+    "is_platform": true
+  },
+  {
+    "code": "accounts",
+    "key": "SF",
+    "name": "[Счета РКО Ф1] Сервис получения счетов из РКО Ф1",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-accounts"
+  },
+  {
+    "code": "background-tasks",
+    "key": "SFP",
+    "name": "[СФП] Сервис фоновых процессов",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-background-tasks"
+  },
+  {
+    "code": "epr-integration",
+    "key": "EPR",
+    "name": "[ЕПР] Сервис распознавания паспортных данных",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-epr-integration"
+  },
+  {
+    "code": "userAdministration",
+    "key": "UR",
+    "name": "[АППС] Администрирование прав пользователей системы",
+    "is_platform": true
+  },
+  {
+    "code": "accountCard",
+    "key": "AK",
+    "name": "[КС] Карточка счета",
+    "is_platform": true
+  },
+  {
+    "code": "SBP",
+    "key": "SBP",
+    "name": "[СБП] Система быстрых платежей",
+    "is_platform": false
+  },
+  {
+    "code": "contractorVerification",
+    "key": "CV",
+    "name": "[Контрагенты] Сервис проверки контрагентов",
+    "is_platform": false
+  },
+  {
+    "code": "ONC",
+    "key": "KC",
+    "name": "[ОНК] Сервис Онлайн-кассы",
+    "is_platform": false
+  },
+  {
+    "code": "business-cards",
+    "key": "CORP_CARDS",
+    "name": "[КК] Корпоративные Карты",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-business-cards/-/tree/HEAD/docs"
+  },
+  {
+    "code": "DSF",
+    "key": "DS",
+    "name": "[ДСФ] Сервис писем",
+    "is_platform": false
+  },
+  {
+    "code": "ADM",
+    "key": "ADM",
+    "name": "[АДМ] Сервис Онлайн Инкассация",
+    "is_platform": false
+  },
+  {
+    "code": "calendar",
+    "key": "DEALS_CALENDAR",
+    "name": "[Календарь] Сервис \"Календарь сделок ЮЛ\"",
+    "is_platform": false
+  },
+  {
+    "code": "mainPage",
+    "key": "MAIN_PAGE",
+    "name": "[ГС 2.0] Главная страница",
+    "is_platform": false
+  },
+  {
+    "code": "ONB_KZ",
+    "key": "ONB_KZ",
+    "name": "[ОНБ_КЗ] Сервис открытия 1го счёта клиентам МСБ",
+    "is_platform": false
+  },
+  {
+    "code": "ONB",
+    "key": "ONB2",
+    "name": "[ОНБ_2021] Сервис открытия 1-го счета клиента (онбординг)",
+    "is_platform": false
+  },
+  {
+    "code": "employees",
+    "key": "EMPLOYEES",
+    "name": "[Сотрудники] Сервис управления перечнем сотрудников организации",
+    "is_platform": false
+  },
+  {
+    "code": "customerInfoUpdate",
+    "key": "CU",
+    "name": "[Обнов_Свед] Обновление сведений о клиенте",
+    "is_platform": false
+  },
+  {
+    "code": "account-reservation",
+    "key": "RESERVATION",
+    "name": "[Резерв] Сервис резервирования счетов",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-account-reservation"
+  },
+  {
+    "code": "account-reserv-release",
+    "key": "ARR",
+    "name": "[СнРезСч] Сервис снятия резерва со счёта",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-account-reserv-release"
+  },
+  {
+    "code": "clientContactNeed",
+    "key": "CCS",
+    "name": "[НСК] Сервис \"Необходимо связаться с клиентом\"",
+    "is_platform": false
+  },
+  {
+    "code": "onboarding-fo",
+    "key": "ONB_FO",
+    "name": "[ОНБ_ФО] Сервис открытия 1-го счета клиента в офисе Банка",
+    "is_platform": false
+  },
+  {
+    "code": "onboarding-external",
+    "key": "ONB_E",
+    "name": "[ОНБ_В] Сервис открытия 1-го счета и регистрации клиента во внешней части сайта",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-onboarding-external"
+  },
+  {
+    "code": "ONB_FNS",
+    "key": "ONB_FNS",
+    "name": "[ОНБ_ФНС] Сервис открытия 1-го счета клиента через сервис ФНС",
+    "is_platform": false
+  },
+  {
+    "code": "visiting-manager",
+    "key": "VM",
+    "name": "[ВМ] Выездной менеджер",
+    "is_platform": false
+  },
+  {
+    "code": "open-add-account",
+    "key": "O2PLUS",
+    "name": "[O2+NEW] Сервис заключения ДБС и открытия дополнительного счета",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-o2new/-/tree/HEAD/output/open-add-account"
+  },
+  {
+    "code": "bank-form-code",
+    "key": "BFC",
+    "name": "[ИБФ] Сервис генерации уникальных идентификаторов банковских форм",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-bank-form-code"
+  },
+  {
+    "code": "offerAcceptance",
+    "key": "AO_RKO",
+    "name": "[АО_РКО] Сервис акцепта оферты",
+    "is_platform": false
+  },
+  {
+    "code": "rko-service-management",
+    "key": "RKO",
+    "name": "[РКО] Сервис услуг РКО",
+    "is_platform": false
+  },
+  {
+    "code": "referenceRequest",
+    "key": "REF",
+    "name": "[Справки] Сервис запроса справок для ЮЛ",
+    "is_platform": false
+  },
+  {
+    "code": "lk-mp",
+    "key": "LM",
+    "name": "[АО_МП] Сервис подключения к ЛК МП",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-lk-mp/-/tree/HEAD/docs"
+  },
+  {
+    "code": "lk-uved",
+    "key": "LK_UVED",
+    "name": "[АО_УВЭД] Сервис подключения к ЛК УВЭД",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-lk-uved.git"
+  },
+  {
+    "code": "FNS",
+    "key": "FNS",
+    "name": "[ФНС] Сервис по работе с ФНС",
+    "is_platform": false
+  },
+  {
+    "code": "brokerage",
+    "key": "BROKERAGE_BS",
+    "name": "[БРК] Брокеридж",
+    "is_platform": false
+  },
+  {
+    "code": "visaOfDocuments",
+    "key": "APPROVAL_SIGN",
+    "name": "[Визирование] Сервис Визирования",
+    "is_platform": false
+  },
+  {
+    "code": "ruble-payment-order",
+    "key": "RN",
+    "name": "[РРКО_ПП_NEW] Рублевое платежное поручение",
+    "is_platform": false
+  },
+  {
+    "code": "payment-request-accept",
+    "key": "RT",
+    "name": "[РРКО_Акцепт ПТ] Сервис Акцепта Платежного Требования",
+    "is_platform": false
+  },
+  {
+    "code": "inkasso-outgoing",
+    "key": "KP",
+    "name": "[РРКО_ИПИ] Инкассовое поручение (исходящее)",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-inkasso-outgoing"
+  },
+  {
+    "code": "inkasso-incoming",
+    "key": "KG",
+    "name": "[РРКО_ИПВ] Инкассовое поручение (входящее)",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-inkasso-incoming"
+  },
+  {
+    "code": "payment-request-outgoing",
+    "key": "SD",
+    "name": "[РРКО_ПТИ] Сервис Платежного Требования Исходящего",
+    "is_platform": false
+  },
+  {
+    "code": "rrko-dictionaries",
+    "key": "RD",
+    "name": "[СпрРРКО] Справочники рублёвого РКО",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-rrko-dictionaries"
+  },
+  {
+    "code": "payment-request-incoming",
+    "key": "SP",
+    "name": "[РРКО_ПТВ] Сервис Платежного Требования Входящего",
+    "is_platform": false
+  },
+  {
+    "code": "currency-transfer",
+    "key": "CUR_TRANS",
+    "name": "[ВРКО_ВП] Поручение на перевод валюты",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-currency-transfer"
+  },
+  {
+    "code": "transit-account-debit",
+    "key": "TAD",
+    "name": "[ВРКО_ППТС] Поручение на списание средств с транзитного валютного счета",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-transit-account-debit"
+  },
+  {
+    "code": "currency-conversion",
+    "key": "CONV",
+    "name": "[ВРКО_Конв] Поручения на покупку/продажу валюты",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-currency-conversion"
+  },
+  {
+    "code": "msg-cco",
+    "key": "SVK1",
+    "name": "[ДВК_СВК1] Сообщение валютному контролеру",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-msg-cco"
+  },
+  {
+    "code": "svk-in",
+    "key": "SVK2",
+    "name": "[ДВК_СВК2] Сообщение валютного контролера",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-svk-in"
+  },
+  {
+    "code": "dvk",
+    "key": "DVK",
+    "name": "[ДВК] Документы валютного контроля",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-dvk"
+  },
+  {
+    "code": "dio",
+    "key": "DIO",
+    "name": "[ДВК_ДИО] Документы и информация к операции",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-dio"
+  },
+  {
+    "code": "VRKO_Import",
+    "key": "VG",
+    "name": "[ВРКО_Импорт] Импорт",
+    "is_platform": false
+  },
+  {
+    "code": "currency-conversion-autoquoting",
+    "key": "AUQ",
+    "name": "[ВРКО_АК] Автокотирование",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-currency-conversion-autoquoting"
+  },
+  {
+    "code": "ped",
+    "key": "PE",
+    "name": "[ПЭД] Сервисы работы с Платежными Электронными Документами",
+    "is_platform": false
+  },
+  {
+    "code": "payment-document-import",
+    "key": "JI",
+    "name": "[ЖИП] Журнал импорта платёжных документов",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-payment-document-import"
+  },
+  {
+    "code": "single-window",
+    "key": "SW",
+    "name": "[ИС Одно окно] Сервис Одно Окно",
+    "is_platform": false
+  },
+  {
+    "code": "tnf-integration",
+    "key": "TI",
+    "name": "[Адпт ТНФ] Адаптер ТНФ",
+    "is_platform": true
+  },
+  {
+    "code": "limit",
+    "key": "LI",
+    "name": "[Лимиты] Сервис лимитов",
+    "is_platform": false
+  },
+  {
+    "code": "paymentDocumentsRevocationRequest",
+    "key": "DR",
+    "name": "[Отзыв ПЭД] Запрос на отзыв",
+    "is_platform": false
+  },
+  {
+    "code": "blockings",
+    "key": "BL",
+    "name": "[Блокировки ОЭП] Сервис по работе с блокировками",
+    "is_platform": false
+  },
+  {
+    "code": "accountStatement",
+    "key": "AS",
+    "name": "[Выписки] Сервис работы с выпиской",
+    "is_platform": false
+  },
+  {
+    "code": "scheduledAccountStatement",
+    "key": "SS",
+    "name": "[ВПР_new] Выписка по расписанию",
+    "is_platform": false
+  },
+  {
+    "code": "chatBot",
+    "key": "HB",
+    "name": "[ЧБ] Сервисы Чат-бота",
+    "is_platform": false
+  },
+  {
+    "code": "cashRequest",
+    "key": "RV",
+    "name": "[Заказ наличных] Сервис обработки заявок на выдачу и внесение наличных денежных средств",
+    "is_platform": false
+  },
+  {
+    "code": "cloudAndUnqualifiedSignatureGeneration",
+    "key": "SK",
+    "name": "[ГЭП] Сервис генерации ОЭП/НЭП",
+    "is_platform": false
+  },
+  {
+    "code": "signatureRegistration",
+    "key": "SR",
+    "name": "[РЭП] Сервис регистрации НЭП/КЭП",
+    "is_platform": false
+  },
+  {
+    "code": "leasing",
+    "key": "LEASING_BS",
+    "name": "[Лизинг] Сервис лизинга",
+    "is_platform": false
+  },
+  {
+    "code": "payment-control-and-accept",
+    "key": "PA",
+    "name": "[КиА] Контроль и акцепт платежей",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-payment-control-and-accept"
+  },
+  {
+    "code": "account-blocking",
+    "key": "AB",
+    "name": "[БлокСч] Сервис блокировок счетов",
+    "is_platform": false
+  },
+  {
+    "code": "accountClosing",
+    "key": "ACCOUNT_CLOSING",
+    "name": "[ЗакрСчета] Сервис закрытия счета",
+    "is_platform": false
+  },
+  {
+    "code": "document-copy-request",
+    "key": "DOC_COPY",
+    "name": "[КопииДок] Сервис предоставления копий документов",
+    "is_platform": false
+  },
+  {
+    "code": "1CDirectBank",
+    "key": "DB",
+    "name": "[DirectBank] Сервис \"1C:DirectBank\"",
+    "is_platform": false
+  },
+  {
+    "code": "operationsFeed",
+    "key": "LO",
+    "name": "[ЛО] Сервис Лента операций",
+    "is_platform": false
+  },
+  {
+    "code": "DPP",
+    "key": "DP",
+    "name": "[ДПП] Сервис динамических продуктовых предложений",
+    "is_platform": false
+  },
+  {
+    "code": "counterparty-directory",
+    "key": "PD",
+    "name": "[СпрКА] Справочник контрагентов",
+    "is_platform": false
+  },
+  {
+    "code": "openApi",
+    "key": "MB",
+    "name": "[Мультибанкинг] Сервис обмена данными через openApi",
+    "is_platform": false
+  },
+  {
+    "code": "pending-payments",
+    "key": "RQ",
+    "name": "[Очереди РКО] Сервис очереди распоряжений",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-pending-payments/"
+  },
+  {
+    "code": "requestWidget",
+    "key": "RW",
+    "name": "[Виджет_Заявки]",
+    "is_platform": false
+  },
+  {
+    "code": "safeBusiness",
+    "key": "BB",
+    "name": "[ББ] Безопасный бизнес",
+    "is_platform": false
+  },
+  {
+    "code": "OTP",
+    "key": "OT",
+    "name": "[OTP] OTP - Сервис",
+    "is_platform": false
+  },
+  {
+    "code": "BRK",
+    "key": "CR",
+    "name": "CRM БРК",
+    "is_platform": false
+  },
+  {
+    "code": "as-epr",
+    "key": "EP",
+    "name": "АС ЕПР",
+    "is_platform": false
+  },
+  {
+    "code": "EFR",
+    "key": "EF",
+    "name": "АС ЕФР",
+    "is_platform": false
+  },
+  {
+    "code": "STP",
+    "key": "ST",
+    "name": "АС СТОПЛИСТ",
+    "is_platform": false
+  },
+  {
+    "code": "BSK",
+    "key": "BSK",
+    "name": "БСК",
+    "is_platform": false
+  },
+  {
+    "code": "ESIA",
+    "key": "ES",
+    "name": "ЕСИА",
+    "is_platform": false
+  },
+  {
+    "code": "ESK",
+    "key": "EK",
+    "name": "ЕСК (ЦФТ ГО)",
+    "is_platform": false
+  },
+  {
+    "code": "KNOSIS",
+    "key": "KN",
+    "name": "КНОСИС",
+    "is_platform": false
+  },
+  {
+    "code": "PC",
+    "key": "PC",
+    "name": "ПЦ SVFE",
+    "is_platform": false
+  },
+  {
+    "code": "F1",
+    "key": "F1",
+    "name": "РКО Ф1",
+    "is_platform": false
+  },
+  {
+    "code": "TESSA",
+    "key": "TS",
+    "name": "ТЕССА",
+    "is_platform": false
+  },
+  {
+    "code": "SBPG",
+    "key": "SG",
+    "name": "АС СБП",
+    "is_platform": false
+  },
+  {
+    "code": "file-storage",
+    "key": "FM2",
+    "name": "[Файловый сервис] Сервис по работе с файлами 2",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/docs-file-storage/-/tree/HEAD/output/file-service"
+  },
+  {
+    "code": "locks-h2h",
+    "key": "lckh2h",
+    "name": "[БлокН2Н] Сервис блокировок доступа Н2Н",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-locks/locks-h2h"
+  },
+  {
+    "code": "dfm-block",
+    "key": "dfmblck",
+    "name": "[БлокДФМ] Сервис блокировок ДФМ",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-locks/dfm-block"
+  },
+  {
+    "code": "mwqueue",
+    "key": "MW",
+    "name": "[ОчередьМО] Очередь показа модальных окон",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAN/src_mwqueue"
+  },
+  {
+    "code": "wl-performer-search",
+    "key": "wlperformersearch",
+    "name": "[Встраивания WL] Сервис Поиск исполнителей",
+    "is_platform": false
+  },
+  {
+    "code": "wl-egrul-egrip",
+    "key": "wlegrulegrip",
+    "name": "[Встраивания WL] Сервис Внесение изменений в ООО/ИП",
+    "is_platform": false
+  },
+  {
+    "code": "wl-reference-legal",
+    "key": "wlreflegal",
+    "name": "[Встраивания WL] Справочно-правовой сервис",
+    "is_platform": false
+  },
+  {
+    "code": "wl-customer-search",
+    "key": "wlcustomersearch",
+    "name": "[Встраивания WL] Сервис Поиск клиентов",
+    "is_platform": false
+  },
+  {
+    "code": "wl-clients-support",
+    "key": "wlclientssupport",
+    "name": "[Встраивания WL] Сервис Поддержка клиентов",
+    "is_platform": false
+  },
+  {
+    "code": "wl-trademark",
+    "key": "wltrademark",
+    "name": "[Встраивания WL] Сервис Товарный знак",
+    "is_platform": false
+  },
+  {
+    "code": "wl-loyalty-programs",
+    "key": "wlloyaltyprograms",
+    "name": "[Встраивания WL] Сервис Программы лояльности",
+    "is_platform": false
+  },
+  {
+    "code": "wl-website-builder",
+    "key": "wlwebsite-builder",
+    "name": "[Встраивания WL] Сервис Конструктор сайтов",
+    "is_platform": false
+  },
+  {
+    "code": "wl-online-cashbox",
+    "key": "wlonlinecashbox",
+    "name": "[Встраивания WL] Сервис Онлайн касса",
+    "is_platform": false
+  },
+  {
+    "code": "wl-edo",
+    "key": "wledo",
+    "name": "[Встраивания WL] Сервис Электронный документооборот",
+    "is_platform": false
+  },
+  {
+    "code": "wl-verification-individual",
+    "key": "wlverificationindividual",
+    "name": "[Встраивания WL] Сервис Проверка физических лиц",
+    "is_platform": false
+  },
+  {
+    "code": "wl-eus",
+    "key": "wleus",
+    "name": "[Встраивания WL] Сервис Юридическая поддержка",
+    "is_platform": false
+  },
+  {
+    "code": "wl-knopka",
+    "key": "wlknopka",
+    "name": "[Встраивания WL] Сервис Бухгалтерское обслуживание",
+    "is_platform": false
+  },
+  {
+    "code": "wl-online-accounting",
+    "key": "wlonlineaccounting",
+    "name": "[Встраивания WL] Сервис Онлайн-бухгалтерия",
+    "is_platform": false
+  },
+  {
+    "code": "wl-partner-check",
+    "key": "wlpartnercheck",
+    "name": "[Проверка контрагентов] Сервис Проверка контрагентов",
+    "is_platform": false
+  },
+  {
+    "code": "wl-safe-business",
+    "key": "wlsafebusiness",
+    "name": "[Безопасный бизнес] Сервис Безопасный бизнес",
+    "is_platform": false
+  },
+  {
+    "code": "wl-lights",
+    "key": "wllights",
+    "name": "[Светофор] Сервис Светофор",
+    "is_platform": true
+  },
+  {
+    "code": "wl-qazprom-bonus",
+    "key": "wlqazprombonus",
+    "name": "[Встраивания WL] Сервис Газпром Бонус Бизнес",
+    "is_platform": false
+  },
+  {
+    "code": "wl-edo-trucking",
+    "key": "wledotrucking",
+    "name": "[Встраивания WL] ЭДО для грузоперевозчиков",
+    "is_platform": false
+  },
+  {
+    "code": "featureToggling",
+    "key": "FT",
+    "name": "[Feature toggling] Feature toggling",
+    "is_platform": true
+  },
+  {
+    "code": "country-directory",
+    "key": "CN",
+    "name": "[СпрСтраны] Справочник \"Страны\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/countries/docs"
+  },
+  {
+    "code": "unit-service-classifier",
+    "key": "KUP",
+    "name": "[КлУслПодр] Справочник \"Классификатор услуг подразделения\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/branch_services_classifier/docs"
+  },
+  {
+    "code": "contextual-search",
+    "key": "CTX",
+    "name": "[Конт_поиск] Контекстный поиск",
+    "is_platform": true
+  },
+  {
+    "code": "document-types-directory",
+    "key": "DTS",
+    "name": "[ТипыДок] Справочник Типы документа",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/types_doc/docs"
+  },
+  {
+    "code": "document-type-directory",
+    "key": "DTP",
+    "name": "[ТипДок] Справочник Тип документа",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/document_type/docs"
+  },
+  {
+    "code": "okfs-directory",
+    "key": "OKFS",
+    "name": "[СпрОКФС] Справочник \"Общероссийский классификатор форм собственности\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/okfs/docs"
+  },
+  {
+    "code": "ctx-search",
+    "key": "FULL_TEXT_SEARCH",
+    "name": "[ПТП] Полнотекстовой поиск",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-ctx-search"
+  },
+  {
+    "code": "gpb-bol-localization",
+    "key": "LOC",
+    "name": "Локализация ГПБ БОЛ",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-localization"
+  },
+  {
+    "code": "invite",
+    "key": "INV",
+    "name": "[Инвайты] Справочник инвайтов",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-invite"
+  },
+  {
+    "code": "goz-activity-type-directory",
+    "key": "VDG",
+    "name": "[СпрВДГОЗ] Справочник \"Вид деятельности для ГОЗ\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/goz_activity_type/docs"
+  },
+  {
+    "code": "okopf-directory",
+    "key": "OKOPF",
+    "name": "[СпрОКОПФ] Справочник \"Общероссийский классификатор организационно-правовых форм\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/okopf/docs"
+  },
+  {
+    "code": "client-error-text-directory",
+    "key": "CET",
+    "name": "[СпрОшибок] Справочник текстов ошибок отображаемых клиентам",
+    "is_platform": true
+  },
+  {
+    "code": "phone-country-code-directory",
+    "key": "PCC",
+    "name": "[Телефонные коды стран] Справочник телефонных кодов стран",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/country_call_codes/docs"
+  },
+  {
+    "code": "short-link",
+    "key": "SKS",
+    "name": "[СКС] Справочник коротких ссылок",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-short-link"
+  },
+  {
+    "code": "feedback",
+    "key": "5_STAR",
+    "name": "[Оценка 5] Сервис оценки 5 звезд",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-feedback"
+  },
+  {
+    "code": "mobile-app",
+    "key": "MAP",
+    "name": "[MП] Мобильное приложение",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/mobile_app/docs"
+  },
+  {
+    "code": "mdm-integration",
+    "key": "MDM",
+    "name": "[Адапт-MDM]-Адаптер-MDM",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-mdm-integration"
+  },
+  {
+    "code": "smev-integration",
+    "key": "SMV",
+    "name": "[Адапт СМЭВ] Интеграция с ГПБ СМЭВ",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-smev-integration"
+  },
+  {
+    "code": "skvo-integration",
+    "key": "SKV",
+    "name": "[Адпт_СКВО] Адаптер СКВО",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-skvo-integration"
+  },
+  {
+    "code": "lkuved-integration",
+    "key": "UVI",
+    "name": "[Адпт_ЛК_УВЭД] Адаптер ЛК УВЭД",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-lkuved-integration"
+  },
+  {
+    "code": "accounts-access",
+    "key": "UFDS",
+    "name": "[ДоступыКСчетам] УФДС",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-accounts-access"
+  },
+  {
+    "code": "crm-brk-adapter",
+    "key": "CBA",
+    "name": "[Адпт_БРК] Адаптер CRM БРК",
+    "is_platform": false,
+    "repo": "https://gitlab.gboteam.ru/EAN/docs-crm-brk-adapter"
+  },
+  {
+    "code": "authorized-person",
+    "key": "AP",
+    "name": "[УЛ] Справочник \"Уполномоченные лица\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/authorized-person"
+  },
+{
+    "code": "role-template",
+    "key": "RTM",
+    "name": "[СпрШблнРолей] Справочник \"Шаблоны ролей\"",
+    "is_platform": true,
+    "repo": "https://gitlab.gboteam.ru/EAS/src-common-dictionary/-/tree/HEAD/output/role-template"
+  }
+]

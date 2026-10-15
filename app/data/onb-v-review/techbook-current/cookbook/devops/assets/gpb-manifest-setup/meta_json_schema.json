@@ -1,0 +1,537 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://bitbucket.gazprombank.ru/quality-gates/gpb-manifest/schema",
+  "type": "object",
+  "title": "Манифест проекта ГПБ",
+  "description": "",
+  "properties": {
+    "automatedSystemCode": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Z][A-Z0-9][A-Z0-9]$",
+      "description": "Мнемокод АС из Реестра АС",
+      "examples": [
+        "PRJ"
+      ]
+    },
+    "projectCodeDevOps": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Код проектной области в АС DevOps, единый для Bitbucket, TeamCity, Nexus, SonarQube",
+      "examples": [
+        "PRJT"
+      ]
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Имя компонента. Должно совпадать с именем проекта в gradle и именем репозитория.",
+      "examples": [
+        "sample-service"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "description": "Тип компонента. Принимает значение из справочника.",
+      "examples": [
+        "module"
+      ],
+      "enum": [
+        "application",
+        "module",
+        "configuration",
+        "generic",
+        "library",
+        "plugin",
+        "database",
+        "documentation",
+        "ui",
+        "static",
+        "tests",
+        "job",
+        null
+      ]
+    },
+    "frontend": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Является ли приложение frontend-приложением"
+    },
+    "modulePath": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Для type=module, путь к корневому каталогу с исходным кодом модуля в рамках монорепозитория",
+      "examples": [
+        "./module-directory/root"
+      ]
+    },
+    "valueStreamMaintainer": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "CVM МСБ [PGLDRB-21]",
+        "Daily Banking [PGTKLP-6408]",
+        "Stream Единое информационное пространство по обмену данными и документами клиентов Группы ГПБ 2024 [PGONBO-3223]",
+        "Stream Интегрированный МДМ 2025 [PGONBO-4547]",
+        "Stream Развитие Сервисной организации (Фаза 5) [XXXX]",
+        "Value Stream Collection [PGCLRE-3918]",
+        "Value Stream CVM 2024 [PGNOPE-7979]",
+        "Value Stream CVM_2023 [PGCLRE-6738]",
+        "Value Stream Daily banking (вне программ) [PGTKLP-4205]",
+        "Value Stream Daily Banking_2024 [PGNOPE-7974]",
+        "Value Stream Digital Business Platform (вне программ) [PGNOPE-2291]",
+        "Value Stream Gazprom Pay_2024 [PGNOPE-8017]",
+        "Value Stream Payroll 2023 [PGTKLP-7178]",
+        "Value Stream Premium banking 2021 (вне программ) [PGNOPE-1816]",
+        "Value Stream Premium banking 2023 (вне программ) [PGNOPE-6902]",
+        "Value Stream «ИТ решение для клиентов ЦИОВК» [PGTKLP-8209]",
+        "Value Stream «Инвестиции» 2022 [PGCLRE-6766]",
+        "Value Stream «Инвестиции» [PGTKLP-6410]",
+        "Value Stream «Платформа 5NT Retail» [PGOMNI-7941]",
+        "Value Stream «Платформа ИКАР» (вне программ) [PGOMNI-7916]",
+        "Value Stream «Розничный Middle» (вне программ) [PGOMNI-7495]",
+        "Value Stream «Ядро Процессинг» [PGOMNI-6960]",
+        "Value Stream Авто 2022 [PGCLRE-6414]",
+        "Value Stream Авто_2024 [PGNOPE-8001]",
+        "Value Stream Автоматизация КЦ [PGTKLP-7683]",
+        "Value Stream Автоматизация Контактного центра [PGTKLP-7683]",
+        "Value Stream Безопасный банк [PGNOPE-7985]",
+        "Value Stream ГПБ Мобайл [PGSPAR-110]",
+        "Value stream Газпром Бонус [PGSPAR-24]",
+        "Value stream Газпром Бонус [XXXX]",
+        "Value Stream Государственные проекты_2024 [PGCLRE-10922]",
+        "Value Stream Дашборд 360 [PGTKLP-7180]",
+        "Value Stream Дашборд 360_2024 [PGNOPE-7972]",
+        "Value Stream Единый модуль андеррайтинга (вне программ)",
+        "Value Stream Жалоб.NET [XXXX]",
+        "Value Stream Инновационные риск сервисы",
+        "Value Stream Интернет банк [PGNOPE-7987]",
+        "Value Stream Ипотека 2023 [PGTKLP-6434]",
+        "Value Stream Ипотека_2024 [PGNOPE-8002]",
+        "Value stream Качество [PGTECH2-675]",
+        "Value Stream Кредитно-документарные продукты МСБ_2025 [PGLDRB-10]",
+        "Value Stream Кредитные карты 2023 [PGTKLP-6435]",
+        "Value Stream Кредитные карты_2024 [PGNOPE-7996]",
+        "Value Stream Личные финансы (вне программ) [PGOMNI-7450]",
+        "Value Stream Общебанковская Платформа лояльности [PGTKLP-7211]",
+        "Value Stream Платежи и переводы_2024 [PGNOPE-7977]",
+        "Value Stream Платформа CRM 2024 [PGNOPE-7993]",
+        "Value Stream Платформа CRM [PGCLRE-8215]",
+        "Value Stream Платформа Брокер_2024 [PGNOPE-7978]",
+        "Value Stream Платформа ИКАР_2024 [PGNOPE-7981]",
+        "Value Stream Платформа ПЦ 2023 [PGOMNI-8151]",
+        "Value Stream Платформа ПЦ_2024 [PGNOPE-8003]",
+        "Value Stream Платформа РКК (вне программ) [PGRETC-4252]",
+        "Value Stream Потребительское кредитование 2023 [PGTKLP-6436]",
+        "Value Stream Потребительское кредитование_2024 [PGNOPE-8005]",
+        "Value Stream Развитие казначейских продуктов 2024 [PR_20000_949]",
+        "Value Stream Розничный Middle [PGOMNI-7495]",
+        "Value Stream Розничный бэк-офис [PGOPER-9546]",
+        "Value Stream Сайт [PGNOPE-7990]",
+        "Value Stream Сайт_2024",
+        "Value Stream Сегменты (Пенсионеры) [PGCLRE-7628]",
+        "Value Stream Сервисная цифровая платформа [PGOMNI-6962]",
+        "Value Stream Сквозные бизнес компоненты [PGNOPE-7988]",
+        "Value Stream Удаленные продажи 2023 [PGTKLP-6142]",
+        "Value Stream Цифровой рубль [PGTPRC-2]",
+        "Value Stream Цифровые продажи 2023 [PGTKLP-6433]",
+        "Value Stream Цифровые продажи_2024",
+        "Value Stream ЭБГ_2025 [PGLDRB-9]",
+        "Value Stream Эквайринг и Платежи 2022 [PGCLRE-7084]",
+        "Value Stream Эквайринг и Платежи 2023 [PGCLRE-8400]",
+        "Value Stream Эквайринг_2024 [PGNOPE-7984]",
+        "Value Stream Эффективность МСБ и oCRM",
+        "Value Stream частного-банковского бизнеса (вне программ) [PGTCBB-2]",
+        "Value Stream Автоматизация КЦ [PGTKLP-7683]",
+        "Аппарат Правления [SSP]",
+        "ДБО (Цифровые каналы МСБ) [TEAMMSBMOB-5555]",
+        "Дашборд 360 [PGTKLP-7682]",
+        "Департамент автоматизации внутренних сервисов [SSP]",
+        "Департамент анализа данных и моделирования [SSP]",
+        "Департамент банковских процессов [SSP]",
+        "Департамент инженерной экспертизы малого и среднего бизнеса [SSP]",
+        "Департамент информационных технологий инвестиционного бизнеса [SSP]",
+        "Департамент информационных технологий инвестиционного бизнеса",
+        "Департамент информационных технологий корпоративного кредитнования и рисков [SSP]",
+        "Департамент информационных технологий корпоративного кредитования и рисков [SSP]",
+        "Департамент развития общебанковских и собственных платформенных решений [SSP]",
+        "Департамент развития платформ корпоративного бизнеса [SSP]",
+        "Департамент развития платформы данных [SSP]",
+        "Департамент развития сервисов и инфраструктуры платформы данных [SSP]",
+        "Департамент развития технологий защиты информации [SSP]",
+        "Департамент развития цифровых систем [SSP]",
+        "Департамент сопровождения процедур онбординга клиентов [SSP]",
+        "Департамент технологий кредитных продуктов малого и среднего бизнеса [SSP]",
+        "Департамент управления данными [SSP]",
+        "Департамент финансового мониторинга [SSP]",
+        "Зарплатные проекты [PGTKLP-6409]",
+        "ИТ решение для клиентов ЦИОВК [PGTKLP-8209]",
+        "Импортозамещение АС ИКАР, АС АСОПТ (Этап 1) [PGTECH2-5312]",
+        "КХД+BI МСБ [PGLDRB-23]",
+        "Кредитно-документарные продукты МСБ [PGLDRB-19]",
+        "Кредитные карты [PGTKLP-6405]",
+        "Личные финансы [PGOMNI-7933]",
+        "Пассивные продукты МСБ [PGLDRB-17]",
+        "Платформа 5NT [PGOMNI-7934]",
+        "Платформа Процессинга [PGOMNI-7938]",
+        "Развитие расчетных продуктов МСБ [PGLDRB-20]",
+        "Розничный бэк-офис [PGOPER-10111]",
+        "СЗОФ",
+        "СИП",
+        "СТРИМ - Домен Розничные данные",
+        "Стрим «Внедрение инженерных практик в ТПР» [PGRISK2-6770]",
+        "Стрим «Интегрированный риск-менеджмент» [PGRISK2-4344]",
+        "Стрим «Корпоративные Кредитные Риски 2024» [PGRISK2-6383]",
+        "Стрим «Корпоративные Кредитные Риски» (вне программ) [PGTKLP-4724]",
+        "Стрим «Корпоративные Кредитные Риски» (вне программ)",
+        "Стрим «Развитие Сервисной организации (Фаза 3)» [XXXX]",
+        "Стрим «Риски операций на финансовых рынках» [PGRISK2-4343]",
+        "Стрим «Розничные риски» (вне программ) [PGRISK2-3239]",
+        "Стрим ГИД [PGSPAR-3596]",
+        "Стрим Развитие Сервисной организации (Фаза 4) [XXXX]",
+        "Управление развития кредитной платформы [SSP]",
+        "Цифровые каналы МСБ [PGLDRB-15]",
+        "ЧББ [PGTCBB-211]",
+        "ЭБГ [PGLDRB-18]",
+        "ЭМИС [PGLDRB-22]",
+        null
+      ],
+      "description": "Для Value Stream - официальное название Value Stream, являющимся владельцем сервиса/приложения. В справочнике данные хранятся в формате 'Название VS [задача JiraDev]', например: 'Value Stream Кредитные карты 2022 (вне программ) [PGTKLP-4724]'. Для остальных - название ССП, являющегося владельцем сервиса.",
+      "examples": [
+        "Value Stream Потребительское кредитование 2023 [PGTKLP-6436]"
+      ]
+    },
+    "valueStreamContributors": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "enum": [
+          "CVM МСБ [PGLDRB-21]",
+          "Daily Banking [PGTKLP-6408]",
+          "Stream Единое информационное пространство по обмену данными и документами клиентов Группы ГПБ 2024 [PGONBO-3223]",
+          "Stream Интегрированный МДМ 2025 [PGONBO-4547]",
+          "Stream Развитие Сервисной организации (Фаза 5) [XXXX]",
+          "Value Stream Collection [PGCLRE-3918]",
+          "Value Stream CVM 2024 [PGNOPE-7979]",
+          "Value Stream CVM_2023 [PGCLRE-6738]",
+          "Value Stream Daily banking (вне программ) [PGTKLP-4205]",
+          "Value Stream Daily Banking_2024 [PGNOPE-7974]",
+          "Value Stream Digital Business Platform (вне программ) [PGNOPE-2291]",
+          "Value Stream Gazprom Pay_2024 [PGNOPE-8017]",
+          "Value Stream Payroll 2023 [PGTKLP-7178]",
+          "Value Stream Premium banking 2021 (вне программ) [PGNOPE-1816]",
+          "Value Stream Premium banking 2023 (вне программ) [PGNOPE-6902]",
+          "Value Stream «ИТ решение для клиентов ЦИОВК» [PGTKLP-8209]",
+          "Value Stream «Инвестиции» 2022 [PGCLRE-6766]",
+          "Value Stream «Инвестиции» [PGTKLP-6410]",
+          "Value Stream «Платформа 5NT Retail» [PGOMNI-7941]",
+          "Value Stream «Платформа ИКАР» (вне программ) [PGOMNI-7916]",
+          "Value Stream «Розничный Middle» (вне программ) [PGOMNI-7495]",
+          "Value Stream «Ядро Процессинг» [PGOMNI-6960]",
+          "Value Stream Авто 2022 [PGCLRE-6414]",
+          "Value Stream Авто_2024 [PGNOPE-8001]",
+          "Value Stream Автоматизация КЦ [PGTKLP-7683]",
+          "Value Stream Автоматизация Контактного центра [PGTKLP-7683]",
+          "Value Stream Безопасный банк [PGNOPE-7985]",
+          "Value Stream ГПБ Мобайл [PGSPAR-110]",
+          "Value stream Газпром Бонус [PGSPAR-24]",
+          "Value stream Газпром Бонус [XXXX]",
+          "Value Stream Государственные проекты_2024 [PGCLRE-10922]",
+          "Value Stream Дашборд 360 [PGTKLP-7180]",
+          "Value Stream Дашборд 360_2024 [PGNOPE-7972]",
+          "Value Stream Единый модуль андеррайтинга (вне программ)",
+          "Value Stream Жалоб.NET [XXXX]",
+          "Value Stream Инновационные риск сервисы",
+          "Value Stream Интернет банк [PGNOPE-7987]",
+          "Value Stream Ипотека 2023 [PGTKLP-6434]",
+          "Value Stream Ипотека_2024 [PGNOPE-8002]",
+          "Value stream Качество [PGTECH2-675]",
+          "Value Stream Кредитно-документарные продукты МСБ_2025 [PGLDRB-10]",
+          "Value Stream Кредитные карты 2023 [PGTKLP-6435]",
+          "Value Stream Кредитные карты_2024 [PGNOPE-7996]",
+          "Value Stream Личные финансы (вне программ) [PGOMNI-7450]",
+          "Value Stream Общебанковская Платформа лояльности [PGTKLP-7211]",
+          "Value Stream Платежи и переводы_2024 [PGNOPE-7977]",
+          "Value Stream Платформа CRM 2024 [PGNOPE-7993]",
+          "Value Stream Платформа CRM [PGCLRE-8215]",
+          "Value Stream Платформа Брокер_2024 [PGNOPE-7978]",
+          "Value Stream Платформа ИКАР_2024 [PGNOPE-7981]",
+          "Value Stream Платформа ПЦ 2023 [PGOMNI-8151]",
+          "Value Stream Платформа ПЦ_2024 [PGNOPE-8003]",
+          "Value Stream Платформа РКК (вне программ) [PGRETC-4252]",
+          "Value Stream Потребительское кредитование 2023 [PGTKLP-6436]",
+          "Value Stream Потребительское кредитование_2024 [PGNOPE-8005]",
+          "Value Stream Развитие казначейских продуктов 2024 [PR_20000_949]",
+          "Value Stream Розничный Middle [PGOMNI-7495]",
+          "Value Stream Розничный бэк-офис [PGOPER-9546]",
+          "Value Stream Сайт [PGNOPE-7990]",
+          "Value Stream Сайт_2024",
+          "Value Stream Сегменты (Пенсионеры) [PGCLRE-7628]",
+          "Value Stream Сервисная цифровая платформа [PGOMNI-6962]",
+          "Value Stream Сквозные бизнес компоненты [PGNOPE-7988]",
+          "Value Stream Удаленные продажи 2023 [PGTKLP-6142]",
+          "Value Stream Цифровой рубль [PGTPRC-2]",
+          "Value Stream Цифровые продажи 2023 [PGTKLP-6433]",
+          "Value Stream Цифровые продажи_2024",
+          "Value Stream ЭБГ_2025 [PGLDRB-9]",
+          "Value Stream Эквайринг и Платежи 2022 [PGCLRE-7084]",
+          "Value Stream Эквайринг и Платежи 2023 [PGCLRE-8400]",
+          "Value Stream Эквайринг_2024 [PGNOPE-7984]",
+          "Value Stream Эффективность МСБ и oCRM",
+          "Value Stream частного-банковского бизнеса (вне программ) [PGTCBB-2]",
+          "Аппарат Правления [SSP]",
+          "ДБО (Цифровые каналы МСБ) [TEAMMSBMOB-5555]",
+          "Дашборд 360 [PGTKLP-7682]",
+          "Департамент автоматизации внутренних сервисов [SSP]",
+          "Департамент анализа данных и моделирования [SSP]",
+          "Департамент банковских процессов [SSP]",
+          "Департамент инженерной экспертизы малого и среднего бизнеса [SSP]",
+          "Департамент информационных технологий инвестиционного бизнеса [SSP]",
+          "Департамент информационных технологий инвестиционного бизнеса",
+          "Департамент информационных технологий корпоративного кредитнования и рисков [SSP]",
+          "Департамент информационных технологий корпоративного кредитования и рисков [SSP]",
+          "Департамент развития общебанковских и собственных платформенных решений [SSP]",
+          "Департамент развития платформ корпоративного бизнеса [SSP]",
+          "Департамент развития платформы данных [SSP]",
+          "Департамент развития сервисов и инфраструктуры платформы данных [SSP]",
+          "Департамент развития технологий защиты информации [SSP]",
+          "Департамент развития цифровых систем [SSP]",
+          "Департамент сопровождения процедур онбординга клиентов [SSP]",
+          "Департамент технологий кредитных продуктов малого и среднего бизнеса [SSP]",
+          "Департамент управления данными [SSP]",
+          "Департамент финансового мониторинга [SSP]",
+          "Зарплатные проекты [PGTKLP-6409]",
+          "ИТ решение для клиентов ЦИОВК [PGTKLP-8209]",
+          "Импортозамещение АС ИКАР, АС АСОПТ (Этап 1) [PGTECH2-5312]",
+          "КХД+BI МСБ [PGLDRB-23]",
+          "Кредитно-документарные продукты МСБ [PGLDRB-19]",
+          "Кредитные карты [PGTKLP-6405]",
+          "Личные финансы [PGOMNI-7933]",
+          "Пассивные продукты МСБ [PGLDRB-17]",
+          "Платформа 5NT [PGOMNI-7934]",
+          "Платформа Процессинга [PGOMNI-7938]",
+          "Развитие расчетных продуктов МСБ [PGLDRB-20]",
+          "Розничный бэк-офис [PGOPER-10111]",
+          "СЗОФ",
+          "СИП",
+          "СТРИМ - Домен Розничные данные",
+          "Стрим «Внедрение инженерных практик в ТПР» [PGRISK2-6770]",
+          "Стрим «Интегрированный риск-менеджмент» [PGRISK2-4344]",
+          "Стрим «Корпоративные Кредитные Риски 2024» [PGRISK2-6383]",
+          "Стрим «Корпоративные Кредитные Риски» (вне программ) [PGTKLP-4724]",
+          "Стрим «Корпоративные Кредитные Риски» (вне программ)",
+          "Стрим «Развитие Сервисной организации (Фаза 3)» [XXXX]",
+          "Стрим «Риски операций на финансовых рынках» [PGRISK2-4343]",
+          "Стрим «Розничные риски» (вне программ) [PGRISK2-3239]",
+          "Стрим ГИД [PGSPAR-3596]",
+          "Стрим Развитие Сервисной организации (Фаза 4) [XXXX]",
+          "Управление развития кредитной платформы [SSP]",
+          "Цифровые каналы МСБ [PGLDRB-15]",
+          "ЧББ [PGTCBB-211]",
+          "ЭБГ [PGLDRB-18]",
+          "ЭМИС [PGLDRB-22]",
+          null
+        ]
+      },
+      "description": "Для Value Stream - список всех Value Stream (список через запятую), дорабатывающих сервис;Для остальных - список всех ССП, дорабатывающих сервис.",
+      "examples": [
+        [
+          "Value Stream Sample1 2023 [PGTKLP-45678]",
+          "Value Stream Sample2 2023 [PGTKLP-91011]"
+        ]
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Название приложения на русском языке"
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Краткое описание функционала сервиса"
+    },
+    "jiraDevProject": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Название проектной области Jira Dev (PLN, TEAMxxx)",
+      "pattern": "^TEAM.*|.*PLN$|^ASKPLAN$|^OPA.*",
+      "default": "TEAMXXX or ХХХХPLN"
+    },
+    "jiraDevComponent": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Название компоненты в проекте JiraDev",
+      "examples": [
+        "sample-service"
+      ]
+    },
+    "confluenceUrl": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Ссылка на область Confluence с описанием сервиса",
+      "examples": [
+        "https://confluence.int.gazprombank.ru/pages/viewpage.action?spaceKey=devops&title=Service+Manifest"
+      ]
+    },
+    "emailItLeader": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты IT лидера в домене @gazprombank.ru",
+      "examples": [
+        "lead@gazprombank.ru"
+      ]
+    },
+    "emailTechDevLeader": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты Тех-лида в домене @gazprombank.ru",
+      "examples": [
+        "tech_lead@gazprombank.ru"
+      ]
+    },
+    "emailDevOps": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты DevOps-инженера(-ов) или список рассылки DevOps-инженеров в домене @gazprombank.ru",
+      "examples": [
+        "dev_ops@gazprombank.ru"
+      ]
+    },
+    "emailSolutionArchitect": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты Solution архитектор в домене @gazprombank.ru",
+      "examples": [
+        "sol_arch@gazprombank.ru"
+      ]
+    },
+    "emailEnterpriseArchitect": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты Еnterprise архитектор в домене @gazprombank.ru",
+      "examples": [
+        "ent_arch@gazprombank.ru"
+      ]
+    },
+    "emailOperations": {
+      "pattern": ".+@gazprombank.ru",
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Адрес электронной почты команды, обеспечивающей сопровождения сервиса/приложения.В домене @gazprombank.ru ",
+      "examples": [
+        "oper@gazprombank.ru"
+      ]
+    },
+    "start_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Дата начала использования сервиса в формате YYYY-MM-DD",
+      "examples": [
+        "2025-02-03"
+      ]
+    },
+    "end_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Дата вывода из эксплуатации сервиса в формате YYYY-MM-DD",
+      "examples": [
+        "2026-12-31"
+      ]
+    },
+    "isCumulativeDeployType": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Накопительный тип элемента в очереди (false = Последовательный)"
+    },
+    "downtimeMin": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Планируемая длительность проведения работ в минутах"
+    },
+    "autoDeployProd": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "description": "Использование/игнорирование практики автодеплоя"
+    },
+    "teamInfo": {
+      "$ref": "teamInfo_section_schema.json#/definitions/teamInfo"
+    }
+  },
+  "required": [
+    "automatedSystemCode",
+    "projectCodeDevOps",
+    "name",
+    "title",
+    "type",
+    "valueStreamMaintainer",
+    "jiraDevProject",
+    "jiraDevComponent",
+    "confluenceUrl",
+    "emailItLeader",
+    "emailTechDevLeader",
+    "emailOperations",
+    "description",
+    "teamInfo"
+  ],
+  "additionalProperties": true
+}

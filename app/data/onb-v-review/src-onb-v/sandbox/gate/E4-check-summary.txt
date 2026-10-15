@@ -1,0 +1,4 @@
+scr-cl-01 exit=2 card=True src=True bytes=896
+scr-cl-02 exit=2 card=True src=True bytes=1183
+scr-cl-03 exit=2 card=True src=True bytes=1303
+scr-cl-04 exit=2 card=True src=True bytes=768

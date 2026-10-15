@@ -1,0 +1,5 @@
+SCR-CL-01  2188264108  srs/screen-form/client/scr-cl-01-org-data.md  [ОНБ_В] ЭФ Клиента "Ввод данных организации/ИП с внешнего сайта"
+SCR-CL-02  2188264123  srs/screen-form/client/scr-cl-02-org-data-no-dadata.md  [ОНБ_В] ЭФ Клиента "Ввод данных организации/ИП с внешнего сайта. Нет данных из DADATA"
+SCR-CL-03  2188264146  srs/screen-form/client/scr-cl-03-applicant.md  [ОНБ_В] ЭФ Клиента "Ввод данных заявителя с внешнего сайта"
+SCR-CL-04  2188264158  srs/screen-form/client/scr-cl-04-phone-confirm.md  [ОНБ_В] ЭФ Клиента "Подтверждение номера телефона"
+SCR-000    —           srs/screen-form/README.md  реестр (page_ids пусты)
