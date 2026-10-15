@@ -371,6 +371,16 @@ def is_task_file(p: Path, docs: Path) -> bool:
     return len(rel.parts) >= 2 and rel.parts[0] == "tasks" and p.suffix == ".md"
 
 
+def in_dot_dir(p: Path, docs: Path) -> bool:
+    """Файл внутри точечного каталога (.cursor, .claude, .vscode…) — локальная
+    обёртка IDE, к комплекту не относится (решение 2026-10-15, шаблон cursor/)."""
+    try:
+        rel = p.relative_to(docs)
+    except ValueError:
+        return False
+    return any(part.startswith(".") for part in rel.parts[:-1])
+
+
 def run(docs: Path, sources: Optional[Path],
         strict: bool = False,
         catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
@@ -396,6 +406,8 @@ def run(docs: Path, sources: Optional[Path],
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
+        if in_dot_dir(p, docs):
+            continue
         if is_task_file(p, docs):
             # строка-сигнал без счётчика: постановка — источник правок,
             # а не документ комплекта (молчаливых пропусков нет)
@@ -1465,7 +1477,8 @@ def _struct_tokens(raw: bytes) -> List[str]:
 
 def _kit_md(docs: Path):
     """Документы комплекта для обходов сторожей — без постановок `tasks/`."""
-    return [p for p in sorted(docs.rglob("*.md")) if not is_task_file(p, docs)]
+    return [p for p in sorted(docs.rglob("*.md"))
+            if not is_task_file(p, docs) and not in_dot_dir(p, docs)]
 
 
 def check_structured_examples(docs: Path, idx: Dict[str, Path]

@@ -52,6 +52,19 @@ def test_task_files_outside_check(tmp_path):
     assert not selfcheck.is_task_file(docs / "srs/functions/f1.md", docs)
 
 
+def test_dot_dir_ide_files_outside_check(tmp_path):
+    # .cursor/skills/*/SKILL.md — обёртка IDE: не карточка, не считается, не бракуется
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))
+    make_matrix(docs)
+    make(srcs / "стр1.md", source("[X] Ф1", "111222"))
+    make(docs / ".cursor/skills/change/SKILL.md", "---\nname: change\ndescription: x\n---\n\n> цитата\n\nсм. [нет](../../nope.md)\n")
+    report, ok = selfcheck.run(docs, srcs)
+    assert ok, report
+    assert not any(".cursor" in ln for ln in report)
+    assert any("ИТОГО: файлов 2 — ✓ 1, ✗ 0, ⚠ 1" in ln for ln in report)
+
+
 def test_happy_mapping_and_census(tmp_path):
     docs, srcs = tmp_path / "docs", tmp_path / "conf"
     make(docs / "srs/functions/f1.md", card("[X] Ф1", "111222"))

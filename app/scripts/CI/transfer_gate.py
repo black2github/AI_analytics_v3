@@ -301,7 +301,9 @@ def stage_kit(docs: Path, target: Path) -> Tuple[int, List[str]]:
     skipped: List[str] = []
     for p in sorted(docs.rglob("*")):
         rel = p.relative_to(docs)
-        if any(part in _SKIP_DIRS for part in rel.parts):
+        # точечные каталоги (.cursor, .claude, .vscode) — локальные обёртки IDE,
+        # в комплект не входят (гид «Перенос комплекта», шаблон cursor/)
+        if any(part in _SKIP_DIRS or part.startswith(".") for part in rel.parts):
             continue
         if p.is_dir():
             continue

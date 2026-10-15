@@ -319,6 +319,16 @@ def test_docs_repo_mode_detected_and_checked_in_place(tmp_path):
     assert not any("запустите гейт с --out" in l for l in lines)
 
 
+def test_docs_repo_dot_dirs_not_staged(tmp_path):
+    # .cursor/ и .claude/ — обёртки IDE: в сборку комплекта не попадают, валидатору не видны
+    repo = make_docs_repo(tmp_path)
+    _w(repo / '.cursor/skills/change/SKILL.md', '---' + chr(10) + 'name: change' + chr(10) + 'description: x' + chr(10) + '---' + chr(10) + chr(10) + '> цитата' + chr(10))
+    _w(repo / '.claude/skills/change/SKILL.md', '---' + chr(10) + 'name: change' + chr(10) + 'description: x' + chr(10) + '---' + chr(10))
+    lines, ready, _ = _run(repo)
+    assert ready, chr(10).join(lines)
+    assert any(l.startswith('✓ [TRF-01] комплект в корне репозитория документации: 5 файлов') for l in lines)
+
+
 def test_docs_repo_mode_missing_codeowners_blocks(tmp_path):
     repo = make_docs_repo(tmp_path, codeowners=False)
     lines, ready, _ = _run(repo)
