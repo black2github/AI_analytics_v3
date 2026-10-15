@@ -539,3 +539,18 @@ def test_explicit_questions_path(tmp_path):
     assert not ready
     assert any(l.startswith("✗ [CORE-20] открытые вопросы без долга в матрице: 1 (OQ-002")
                for l in lines), lines
+
+
+def test_unrecognized_debt_row_blocks_transfer(tmp_path):
+    # ЗК-29 ОНБ-В: нераспознанная строка раздела долгов — непроверенное
+    # обязательство, READY подтвердить нельзя (в самопроверке — ⚠, в гейте — ✗)
+    rows = (_DEBT_ROW.rstrip("\n")
+            + "\n| FUN-CL-01 | — | уточнить у владельца формат (свободный текст) |\n")
+    src = make_src(tmp_path, matrix=_MATRIX + rows)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
+    lines, ready, _ = _run(src)
+    assert not ready
+    assert any(l.startswith("✗ [CORE-20] строк раздела «Долги по ссылкам» не распознано: 1")
+               for l in lines), "\n".join(lines)
+

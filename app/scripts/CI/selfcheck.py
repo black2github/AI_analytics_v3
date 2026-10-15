@@ -25,6 +25,7 @@
 # страницы) в срезе 1 не сверяются — честная пометка в отчёте.
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -488,8 +489,14 @@ def run(docs: Path, sources: Optional[Path],
         elif pids[0] not in idx:
             counts["✗"] += 1
             all_ok = False
+            # ЗК-12 ОНБ-В: у карточек вызова первым ставили page_id страницы
+            # владельца метода (вне выгрузки) — 9 постоянных ✗ обесценили гейт
+            hint = (" (карточка вызова: первым — page_id страницы ЭТОГО сервиса, "
+                    "где описан вызов; страница метода владельца — не источник, "
+                    "её page_id — в open-questions/долге; шаблон contract-call.md)"
+                    if "contract-call" in p.parts else "")
             report.append(f"✗ {rel}: источник page_id {pids[0]} НЕ НАЙДЕН "
-                          "в выгрузке — reverse-карточка без сверки, брак")
+                          "в выгрузке — reverse-карточка без сверки, брак" + hint)
         else:
             groups.setdefault(pids[0], []).append(p)
             extra_pids[p] = len(pids) - 1
@@ -706,7 +713,7 @@ def run(docs: Path, sources: Optional[Path],
             report.extend(
                 f"   {p.relative_to(docs)}: id {cid} ✗"
                 for p, cid in ghosts[:10])
-        rep, ok = _safe(ld.check, matrix, docs)
+        rep, ok = _safe(ld.check, matrix, docs, catalog_codes())
         mark = "✓" if ok else "✗"
         all_ok = all_ok and ok
         report.append(f"{mark} долги ссылок (link_debts):")
@@ -1682,6 +1689,19 @@ def check_canon_cut(sources: Path,
 
 _REPO_HOST = "https://gitlab.gboteam.ru/"
 _REPO_TREE_RE = re.compile(r"/-/(tree|blob|raw)/([^/?#]+)")
+
+
+def catalog_codes() -> Optional[set]:
+    """Коды сервисов каталога канона для сторожа владельцев долгов
+    (link_debts); None — каталог недоступен (dev-копия вне канона)."""
+    cat = canon_catalog_path()
+    if cat is None:
+        return None
+    try:
+        data = json.loads(cat.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return {s.get("code") for s in data if isinstance(s, dict) and s.get("code")}
 
 
 def canon_catalog_path() -> Optional[Path]:

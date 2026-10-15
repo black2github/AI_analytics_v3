@@ -5,7 +5,7 @@
 import re
 from pathlib import Path
 
-from app.scripts.CI.link_debts import check, parse_matrix
+from app.scripts.CI.link_debts import check, parse_matrix, parse_matrix_full
 
 MATRIX = """# Матрица
 
@@ -517,3 +517,69 @@ def test_nfr_lowercase_ids_in_registry(tmp_path):
         "| nfr-prf-001 | nfr | Время отклика | ../nfr/nfr-prf.md |\n"
         "| nfr-xx | nfr | мусор | ../nfr/x.md |\n")
     assert set(registry) == {"nfr", "nfr-prf", "nfr-prf-001"}, registry
+
+
+def _debts_matrix(rows: str) -> str:
+    return ("# Матрица\n\n## Реестр ID\n\n| ID | Тип | Наименование | Файл |\n|---|---|---|---|\n"
+            "| FUN-BNK-01 | function | Ф | srs/functions/fun-bnk-01.md |\n\n"
+            "## Покрытие: процессы → артефакты\n\n| Процесс | — | Артефакты |\n|---|---|---|\n"
+            "| PRC-001 | — | FUN-BNK-01 |\n\n"
+            "## 6. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n" + rows)
+
+
+def test_unrecognized_debt_row_is_warning_not_silent(tmp_path):
+    # ЗК-29 ОНБ-В: строка раздела долгов иного формата раньше молча пропускалась;
+    # строка «—» в разделе покрытия — не долг и не предупреждение
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф'\n---\nиспользует «Процесс выпуска»\n")
+    mx = docs / "traceability-matrix.md"
+    make(mx, _debts_matrix(
+        "| FUN-BNK-01 | — | нет целевого артефакта process «Процесс выпуска» — требуется заход |\n"
+        "| FUN-BNK-01 | — | нужно уточнить формат у владельца (свободный текст) |\n"))
+    reg, debts, unrec = parse_matrix_full(mx.read_text(encoding="utf-8"))
+    assert len(debts) == 1 and unrec == [
+        "| FUN-BNK-01 | — | нужно уточнить формат у владельца (свободный текст) |"]
+    # закрытый долг (во второй колонке — ID появившейся цели) — не долг и не
+    # нераспознанная строка (форма lk-mp и ОНБ-В)
+    closed = _debts_matrix("| FUN-BNK-01 | PRC-001 | Процесс выпуска |\n"
+                           "| FUN-BNK-01, ENT-001 | EXT-002 | — |\n")
+    _r, d2, u2 = parse_matrix_full(closed)
+    assert d2 == [] and u2 == []
+    report, ok = check(mx, docs)
+    assert ok, report  # предупреждение, вердикт самопроверки не меняет
+    assert any(r.startswith("⚠ строка раздела «Долги по ссылкам» не распознана") for r in report)
+    assert any("нераспознанных строк раздела долгов 1" in r for r in report)
+
+
+def test_param_debt_recognized_and_overdue_by_dictionaries(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф'\n---\nсрок хранения = onb.ttl_hours\n")
+    mx = docs / "traceability-matrix.md"
+    make(mx, _debts_matrix(
+        "| FUN-BNK-01 | — | параметр onb.ttl_hours не зафиксирован — требуется дозаход create-data-model |\n"))
+    _reg, debts, unrec = parse_matrix_full(mx.read_text(encoding="utf-8"))
+    assert unrec == [] and debts[0][1] == "параметр" and debts[0][2] == "onb.ttl_hours"
+    report, ok = check(mx, docs)
+    assert ok and any("долгов параметров 1" in r for r in report), report
+    make(docs / "srs/data-model/dictionaries.md", "# Справочники\n\n| onb.ttl_hours | 24 |\n")
+    report, ok = check(mx, docs)
+    assert not ok and any("ПРОСРОЧЕН долг: параметр «onb.ttl_hours»" in r for r in report), report
+
+
+def test_owner_code_checked_against_catalog(tmp_path):
+    # ЗК-11 ОНБ-В: каталог переименовал код — долг адресуется в никуда
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф'\n---\nвызывает «Метод ссылки»\n")
+    mx = docs / "traceability-matrix.md"
+    make(mx, _debts_matrix(
+        "| FUN-BNK-01 | — | нет целевого артефакта internal-contract «Метод ссылки» у владельца shortLinkDirectory — требуется публикация |\n"))
+    report, ok = check(mx, docs)
+    assert ok and not any("⚠ владелец" in r for r in report)  # без каталога — не сверяется
+    report, ok = check(mx, docs, catalog_codes={"short-link", "ONB"})
+    assert ok and any(r.startswith("⚠ владелец «shortLinkDirectory» ×1") for r in report), report
+    report, ok = check(mx, docs, catalog_codes={"shortLinkDirectory"})
+    assert ok and not any("⚠ владелец" in r for r in report)
+

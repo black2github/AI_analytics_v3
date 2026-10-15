@@ -383,8 +383,10 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     # переезжает, вопрос должен жить в строке целиком (комментарий платформы 13.10)
     translated: set = set()
     incomplete: dict = {}
+    unrecognized: List[str] = []
     if mtext:
-        for _from, typ, _name, _owner, row in ld.parse_matrix(mtext)[1]:
+        _reg, _debts, unrecognized = ld.parse_matrix_full(mtext)
+        for _from, typ, _name, _owner, row in _debts:
             if typ.startswith("долг:"):
                 f = ld.issue_fields(row) or {}
                 if f.get("source"):
@@ -394,6 +396,14 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                         translated.add(f["source"])
             else:
                 translated.update(_OQ_REF_RE.findall(row))
+    if unrecognized:
+        # нераспознанный долг — непроверенное обязательство: READY с ним
+        # подтвердить нельзя (ЗК-29 ОНБ-В; в самопроверке это ⚠, здесь ✗)
+        gate.add("✗", "CORE-20",
+                 f"строк раздела «Долги по ссылкам» не распознано: {len(unrecognized)} — "
+                 "каждая строка раздела обязана быть одного из форматов долга "
+                 "(см. link_debts); первая: " + unrecognized[0][:100],
+                 check="нераспознанные долги")
     oq_file, opened = open_questions(src_root, docs, sources, questions)
     if oq_file is None and docs_repo:
         gate.add("i", "CORE-20", "режим репозитория документации: журнал open-questions.md "

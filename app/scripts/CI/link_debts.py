@@ -73,6 +73,17 @@ ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "о
 # файле страницы типа.
 _GAP_RE = re.compile(r"—\s+«([^»]+)»\s*$")
 
+# Четвёртый формат — обязательный долг настраиваемого параметра (скилл
+# create-artifact: «параметр <ключ> не зафиксирован — требуется дозаход
+# create-data-model»). До 2026-10-15 раздел такие строки молча пропускал
+# (ЗК-29 реестра замечаний ОНБ-В: матрица ОНБ-В:227). Просрочка — ключ уже
+# есть в data-model/dictionaries.md; исполнимость — ключ назван в
+# документе-ожидателе.
+_PARAM_DEBT_RE = re.compile(r"параметр\s+(.+?)\s+не\s+зафиксирован", re.IGNORECASE)
+_DEBTS_HEADING = "Долги по ссылкам"
+_SEP_CELL_RE = re.compile(r"^:?-{3,}:?$")
+_CLOSED_TARGET_RE = re.compile(r"^(?:[A-ZА-Я]{2,}[-\w]*|nfr(?:-[a-z]{3}(?:-\d{3})?)?)(?:\.\d+)*$")
+
 
 def issue_fields(row: str) -> Optional[dict]:
     """Поля строки долга без цели (None — строка не этого формата):
@@ -153,14 +164,43 @@ def _doc_title(path: Path) -> Optional[str]:
 def parse_matrix(matrix_text: str):
     """(реестр: ID -> (тип, файл),
     долги: [(from_ids, тип, имя|None, владелец|None, строка)])."""
+    registry, debts, _unrec = parse_matrix_full(matrix_text)
+    return registry, debts
+
+
+def parse_matrix_full(matrix_text: str):
+    """То же плюс третий элемент — строки раздела «Долги по ссылкам», не
+    подошедшие ни под один формат долга (без заголовка таблицы и
+    разделителя). Раздел узнаётся по заголовку (имя раздела — структурный
+    факт SF-02); вне раздела нераспознанные строки не собираются: в других
+    разделах матрицы ячейка «—» законна (покрытие процессов). Молчаливый
+    пропуск строки долга — потеря обязательства (ЗК-29 ОНБ-В, 2026-10-15)."""
     registry: Dict[str, Tuple[str, str]] = {}
     debts: List[Tuple[List[str], str, Optional[str], Optional[str], str]] = []
+    unrecognized: List[str] = []
+    in_debts = False
+    header_seen = False
     for ln in matrix_text.splitlines():
+        if ln.startswith("#"):
+            in_debts = _DEBTS_HEADING.lower() in ln.lower()
+            header_seen = False
+            continue
         row = _ROW_RE.match(ln)
         if not row:
             continue
         cells = [c.strip() for c in row.group(1).split("|")]
         joined = " ".join(cells)
+        if in_debts:
+            if all(_SEP_CELL_RE.match(c) for c in cells if c):
+                continue
+            if not header_seen:
+                header_seen = True
+                continue
+            # закрытый долг: во второй колонке — ID появившейся цели
+            # (lk-mp, ОНБ-В: «| ENT-001 | FUN-CL-03 | <название> |»), долга
+            # больше нет — строка не сторожится и не считается нераспознанной
+            if len(cells) >= 2 and cells[1] != "—" and _CLOSED_TARGET_RE.match(cells[1]):
+                continue
         issue = issue_fields(joined)
         if issue:
             # долг без цели: тип — «долг:<вид>», имя — формулировка,
@@ -178,6 +218,14 @@ def parse_matrix(matrix_text: str):
             owner = _OWNER_RE.search(joined)
             debts.append((_expand_from(cells[0]), m.group(1), m.group(2),
                           owner.group(1) if owner else None, ln.strip()))
+            continue
+        pm = _PARAM_DEBT_RE.search(joined)
+        if pm:
+            debts.append((_expand_from(cells[0]), "параметр", pm.group(1).strip(),
+                          None, ln.strip()))
+            continue
+        if in_debts:
+            unrecognized.append(ln.strip())
             continue
         # реестр ID: первая ячейка — ID, любая другая несёт путь .md
         # (голый или внутри markdown-ссылки). Жёсткая 4-колонная форма
@@ -208,12 +256,18 @@ def parse_matrix(matrix_text: str):
                 typ = (cells[1]
                        if re.fullmatch(r"[a-z][a-z-]*", cells[1]) else "")
                 registry.setdefault(cells[0], (typ, fpath))
-    return registry, debts
+    return registry, debts, unrecognized
 
 
-def check(matrix_path: Path, docs_root: Path):
-    registry, debts = parse_matrix(
+def check(matrix_path: Path, docs_root: Path,
+          catalog_codes: Optional[set] = None):
+    """catalog_codes — коды сервисов каталога (`code` в services.json);
+    None — каталог недоступен, владелец долга не сверяется."""
+    registry, debts, unrecognized = parse_matrix_full(
         matrix_path.read_text(encoding="utf-8", errors="replace"))
+    dict_text = ""
+    for dp in docs_root.rglob("dictionaries.md"):
+        dict_text += _norm(dp.read_text(encoding="utf-8", errors="replace"))
     # титулы и типы существующих артефактов комплекта
     titles: Dict[Path, str] = {}
     for p in docs_root.rglob("*.md"):
@@ -236,6 +290,8 @@ def check(matrix_path: Path, docs_root: Path):
     cross: Dict[str, int] = {}
     n_issue = 0
     n_gap = 0
+    n_param = 0
+    unknown_owners: Dict[str, int] = {}
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
@@ -257,8 +313,16 @@ def check(matrix_path: Path, docs_root: Path):
         # НФТ — цели-артефакта нет, цитата обязана быть на странице)
         if typ == "nfr-gap":
             n_gap += 1
+        elif typ == "параметр":
+            n_param += 1
+            if name and _norm(name) in dict_text:
+                report.append(f"ПРОСРОЧЕН долг: параметр «{name}» уже зафиксирован в "
+                              f"dictionaries.md, долг не снят ✗ — {raw[:100]}")
+                ok = False
         elif owner is not None:
             cross[owner] = cross.get(owner, 0) + 1
+            if catalog_codes is not None and owner not in catalog_codes:
+                unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
             target = None
             if name:
@@ -318,6 +382,21 @@ def check(matrix_path: Path, docs_root: Path):
     if n_gap:
         report.append(f"пробелов НФТ {n_gap} («Не задано» на страницах типов) "
                       "— просрочка не применяется, цитата сторожится")
+    if n_param:
+        report.append(f"долгов параметров {n_param} («параметр … не зафиксирован») "
+                      "— просрочка по dictionaries.md")
+    for owner_code, n in sorted(unknown_owners.items()):
+        # переименование кода в каталоге без уведомления (ЗК-11 ОНБ-В:
+        # shortLinkDirectory → short-link) оставляет долги на несуществующий код
+        report.append(f"⚠ владелец «{owner_code}» ×{n}: кода нет в каталоге сервисов "
+                      "(переименован или опечатка) — долг не адресуется")
+    for ln_ in unrecognized:
+        report.append(f"⚠ строка раздела «{_DEBTS_HEADING}» не распознана ни одним "
+                      f"форматом долга — не сторожится: {ln_[:120]}")
+    if unrecognized:
+        report.append(f"нераспознанных строк раздела долгов {len(unrecognized)} — "
+                      "форматы: «нет целевого артефакта …», «долг <вид>: …», "
+                      "«параметр … не зафиксирован», пробел НФТ «| nfr-<код> | — | «…» |»")
     if cross:
         report.append(
             f"межсервисных долгов {sum(cross.values())} "
