@@ -111,6 +111,14 @@
 #                       отключена осознанно; в отчёте это отмечается)
 #   --sources <путь>    каталог выгрузки источников для прибора (по
 #                       умолчанию ищется в src: sources/confluence, confluence)
+#   --questions <файл>  журнал открытых вопросов комплекта; без ключа ищется:
+#                       <docs>/open-questions.md, <src>/open-questions.md,
+#                       рядом с выгрузкой (родитель --sources, если это
+#                       confluence/), sources/<имя комплекта>/open-questions.md
+#                       (общий репозиторий нескольких комплектов, FB-04
+#                       common-dictionary 2026-10-15). В рабочем репозитории
+#                       ненайденный журнал — блокер CORE-20 (открытые вопросы
+#                       не проверены — READY подтвердить нельзя)
 #   --strict            полный профиль прибора (маркеры сокращения — ✗)
 #   --log               журнал в порядке проверок вместо таблицы (по умолчанию —
 #                       markdown-таблица «Статус | Критерий | Проверка | Результат»,
@@ -311,9 +319,36 @@ def stage_kit(docs: Path, target: Path) -> Tuple[int, List[str]]:
 
 # --- шаг 4: условия переноса --------------------------------------------------
 
-def open_questions(src_root: Path, docs: Path) -> Tuple[Optional[Path], List[str]]:
+def question_candidates(src_root: Path, docs: Path,
+                        sources: Optional[Path] = None,
+                        explicit: Optional[Path] = None) -> List[Path]:
+    """Где гейт ищет журнал open-questions.md, по порядку. Явный путь — первый;
+    далее комплект и корень src; рядом с выгрузкой (sources/<service-id>/ —
+    родитель каталога confluence/); sources/<имя комплекта>/ — общий
+    репозиторий нескольких комплектов, где комплект лежит в
+    output/<service-id>/, а журнал — в sources/<service-id>/ (FB-04
+    common-dictionary 2026-10-15: оба прежних кандидата были пусты, гейт
+    выдал READY при 13 открытых вопросах без долга)."""
+    cands: List[Path] = []
+    if explicit is not None:
+        cands.append(explicit)
+    cands += [docs / "open-questions.md", src_root / "open-questions.md"]
+    if sources is not None:
+        near = sources.parent if sources.name == "confluence" else sources
+        cands.append(near / "open-questions.md")
+    if docs.name and docs.name not in ("docs", "."):
+        cands.append(src_root / "sources" / docs.name / "open-questions.md")
+    out: List[Path] = []
+    for c in cands:
+        if c not in out:
+            out.append(c)
+    return out
+
+
+def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
+                   explicit: Optional[Path] = None) -> Tuple[Optional[Path], List[str]]:
     """Файл журнала и список открытых OQ (пусто — открытых нет)."""
-    for cand in (docs / "open-questions.md", src_root / "open-questions.md"):
+    for cand in question_candidates(src_root, docs, sources, explicit):
         if cand.is_file():
             text = cand.read_text(encoding="utf-8", errors="replace")
             text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
@@ -331,7 +366,9 @@ def open_questions(src_root: Path, docs: Path) -> Tuple[Optional[Path], List[str
 
 
 def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
-                              staged: Path, docs_repo: bool = False) -> None:
+                              staged: Path, docs_repo: bool = False,
+                              sources: Optional[Path] = None,
+                              questions: Optional[Path] = None) -> None:
     matrix = staged / "traceability-matrix.md"
     mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
     # правило переноса (решение владельца 2026-10-13): открытый вопрос либо
@@ -355,15 +392,24 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                         translated.add(f["source"])
             else:
                 translated.update(_OQ_REF_RE.findall(row))
-    oq_file, opened = open_questions(src_root, docs)
+    oq_file, opened = open_questions(src_root, docs, sources, questions)
     if oq_file is None and docs_repo:
         gate.add("i", "CORE-20", "режим репозитория документации: журнал open-questions.md "
                  "сюда не переезжает (TRF-02), открытые вопросы комплекта — строки долга вида "
                  "«открытый вопрос» в матрице (реестр долгов отчёта)",
                  check="открытые вопросы")
     elif oq_file is None:
-        gate.add("⚠", "CORE-20", "журнал open-questions.md не найден — открытые "
-                 "вопросы не проверены (у комплекта без журнала это норма)",
+        # FB-04 common-dictionary (2026-10-15): предупреждение давало READY
+        # при 13 открытых вопросах без долга — журнал просто лежал в
+        # sources/<service-id>/. Непроверенные вопросы — не подтверждённый
+        # CORE-20, READY подтвердить нельзя (асимметрия ошибок)
+        looked = ", ".join(
+            c.relative_to(src_root).as_posix() if c.is_relative_to(src_root)
+            else c.as_posix()
+            for c in question_candidates(src_root, docs, sources, questions))
+        gate.add("✗", "CORE-20", "журнал open-questions.md не найден — открытые "
+                 f"вопросы не проверены, READY подтвердить нельзя (искали: {looked}); "
+                 "укажите --questions <файл> или положите журнал в одно из этих мест",
                  check="открытые вопросы")
     else:
         still_open = [o for o in opened if o.split(" ")[0] not in translated
@@ -749,7 +795,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
              keep: Optional[Path] = None, validator: Optional[Path] = None,
              layout: Optional[Path] = None, no_validator: bool = False,
              sources: Optional[Path] = None, strict: bool = False,
-             fmt: str = "log") -> Tuple[List[str], bool, dict]:
+             fmt: str = "log",
+             questions: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
     тестов); "table" — markdown-таблица с группировкой и легендой меток.
 
@@ -816,7 +863,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      "(sources/confluence, confluence) — прибор идёт без сверки "
                      "с источником; задайте --sources")
         run_selfcheck(gate, staged, sources, strict)
-        check_transfer_conditions(gate, src_root, docs, staged, docs_repo)
+        check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
+                                  sources, questions)
         check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
@@ -1052,6 +1100,9 @@ def main() -> int:
                     help="не запускать валидатор платформы (осознанно)")
     ap.add_argument("--sources", type=Path, default=None,
                     help="каталог выгрузки источников (по умолчанию ищется в src)")
+    ap.add_argument("--questions", type=Path, default=None,
+                    help="журнал открытых вопросов комплекта (по умолчанию ищется: "
+                         "<docs>/, <src>/, рядом с выгрузкой, sources/<имя комплекта>/)")
     ap.add_argument("--strict", action="store_true",
                     help="полный профиль прибора (маркеры сокращения — брак)")
     ap.add_argument("--log", action="store_true",
@@ -1065,7 +1116,8 @@ def main() -> int:
         lines, ready, data = run_gate(a.src.resolve(), a.docs, a.out, a.keep,
                                       a.validator, a.layout, a.no_validator,
                                       a.sources.resolve() if a.sources else None,
-                                      a.strict, fmt)
+                                      a.strict, fmt,
+                                      a.questions.resolve() if a.questions else None)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2

@@ -471,3 +471,61 @@ def test_docs_repo_mode_tasks_dir_not_a_transfer_block(tmp_path):
     lines, ready, _ = _run(repo)
     assert ready, "\n".join(lines)
     assert not any("повторный перенос" in l for l in lines)
+
+
+
+def _make_shared_src(tmp_path: Path, oq: str) -> Path:
+    # общий репозиторий нескольких комплектов: комплект в output/<service-id>/,
+    # выгрузка и журнал — в sources/<service-id>/ (FB-04 common-dictionary)
+    src = tmp_path / "src-shared"
+    for rel, text in (("output/svc/README.md", _README),
+                      ("output/svc/service-vision.md",
+                       "---\nid: VIS-001\ntype: vision\n---\n# В\n"),
+                      ("output/svc/glossary.md",
+                       "---\nid: GLO-001\ntype: glossary\n---\n# Г\n"),
+                      ("output/svc/traceability-matrix.md", _MATRIX),
+                      ("output/svc/srs/function/f1.md", _CARD),
+                      ("sources/svc/confluence/p1.md", "---\ntitle: 'Ф'\n---\nтекст\n")):
+        _w(src / rel, text)
+    if oq:
+        _w(src / "sources/svc/open-questions.md", oq)
+    return src
+
+
+def test_shared_repo_journal_found_near_sources(tmp_path):
+    # журнал в sources/<service-id>/ найден по каталогу выгрузки; открытый
+    # вопрос без долга — блокер (раньше: «не найден» ⚠ и ложный READY)
+    src = _make_shared_src(tmp_path, _OQ_OPEN)
+    lines, ready, _ = _run(src, docs_name="output/svc",
+                           sources=src / "sources/svc/confluence")
+    assert not ready
+    assert any(l.startswith("✗ [CORE-20] открытые вопросы без долга в матрице: 1 (OQ-002")
+               for l in lines), lines
+    assert not any("журнал open-questions.md не найден" in l for l in lines)
+
+
+def test_shared_repo_journal_found_by_kit_name_without_sources(tmp_path):
+    # без --sources журнал находится по имени комплекта: sources/<имя>/
+    src = _make_shared_src(tmp_path, _OQ_CLOSED)
+    lines, ready, _ = _run(src, docs_name="output/svc")
+    assert not any("журнал open-questions.md не найден" in l for l in lines), lines
+    assert any("[CORE-20] открытых вопросов без долга нет" in l for l in lines)
+
+
+def test_journal_missing_in_working_repo_is_blocker(tmp_path):
+    # рабочий репозиторий без журнала — READY подтвердить нельзя
+    src = _make_shared_src(tmp_path, "")
+    lines, ready, _ = _run(src, docs_name="output/svc")
+    assert not ready
+    bad = [l for l in lines if l.startswith("✗ [CORE-20] журнал open-questions.md не найден")]
+    assert bad and "--questions" in bad[0] and "sources/svc/open-questions.md" in bad[0], lines
+
+
+def test_explicit_questions_path(tmp_path):
+    src = _make_shared_src(tmp_path, "")
+    _w(tmp_path / "elsewhere/oq.md", _OQ_OPEN)
+    lines, ready, _ = _run(src, docs_name="output/svc",
+                           questions=tmp_path / "elsewhere/oq.md")
+    assert not ready
+    assert any(l.startswith("✗ [CORE-20] открытые вопросы без долга в матрице: 1 (OQ-002")
+               for l in lines), lines
