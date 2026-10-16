@@ -417,6 +417,7 @@ def run(docs: Path, sources: Optional[Path],
     extra_page_ids: Dict[Path, List[str]] = {}  # карточка -> доп. page_ids
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
+    fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
@@ -469,6 +470,10 @@ def run(docs: Path, sources: Optional[Path],
                               "(для документов комплекта frontmatter "
                               "обязателен)")
             continue
+        bad_fields, has_version = frontmatter_schema_issues(fm)
+        if bad_fields or has_version:
+            fm_schema_issues.append((rel.as_posix() if hasattr(rel, "as_posix") else str(rel),
+                                     bad_fields, has_version))
         if fm.get("id"):
             card_ids[p] = fm["id"]
             if fm.get("title") and fm.get("type"):
@@ -764,6 +769,8 @@ def run(docs: Path, sources: Optional[Path],
     # одинаковые названия разных артефактов одного типа (ПР-08 разбора
     # замечаний ОНБ-В, 2026-10-16) — читатель не различит их по названию;
     # ⚠, вердикт не трогает
+    fs_rep = format_frontmatter_schema(fm_schema_issues)
+    report.extend(fs_rep)
     tu_rep = check_title_uniqueness(docs, card_titles)
     if tu_rep:
         report.append("⚠ одинаковые названия разных артефактов одного типа:")
@@ -771,6 +778,13 @@ def run(docs: Path, sources: Optional[Path],
     # пробелы постановки (conventions §6 п.5, ПР-12 разбора ОНБ-В): ⚠
     ss_rep, _ = _safe(lambda: (check_source_silent(docs), True))
     report.extend(ss_rep)
+    # обязательные разделы шаблона (пакет 2 задача 7, ПР-05, ЗК-23): нет раздела — ⚠,
+    # раздел вне шаблона — i; вердикт не трогают
+    rs_rep, _ = _safe(lambda: (check_required_sections(docs), True))
+    report.extend(rs_rep)
+    # шаг процесса ↔ карточка вызова (пакет 2 задача 8, ЗК-13) — ⚠
+    pc_rep, _ = _safe(lambda: (check_process_call_consistency(docs), True))
+    report.extend(pc_rep)
     # условные обозначения README (2026-10-10): самоописание комплекта
     # для внешних читателей — ⚠-сигналы, вердикт не трогают
     lg_rep, _ = _safe(lambda: (check_readme_legend(docs, card_ids), True))
@@ -821,6 +835,10 @@ def run(docs: Path, sources: Optional[Path],
     cat_rep, _ = _safe(check_service_catalog,
                        catalog if catalog is not None
                        else canon_catalog_path(), docs)
+    # H1 без названия сервиса (conventions §5; пакет 2 задача 9, ЗК-26) — ⚠
+    h1_rep, _ = _safe(lambda: (check_h1_service(
+        docs, catalog if catalog is not None else canon_catalog_path()), True))
+    report.extend(h1_rep)
     report.extend(cat_rep)
     # контракты OpenAPI/AsyncAPI — в репозитории кода (2026-10-06):
     # каталог api/ и YAML в комплекте — ⚠ до удаления владельцем;
@@ -1235,6 +1253,72 @@ def _load_part_codes(readme: Path):
     return codes
 
 
+# Схема шапки (техбук conventions §5, «Состав полей шапки — закрытый по типу
+# документа»): общие поля + поля отдельных типов. Пакет 2 задача 6 / ПР-04.
+_FM_COMMON = frozenset({"id", "type", "service", "title", "confluence_page_ids"})
+_FM_BY_TYPE = {
+    "kind": {"function"},
+    "entity": {"control"},
+    "partOf": None,  # файл-часть многофайлового документа любого типа
+    "origin": {"feature", "use-case", "business-rules", "vision"},
+}
+# ВРЕМЕННЫЕ исключения — до схемы техбука §5 волны 5: поля, которые задают
+# шаблоны канона, но которых пока нет в yaml-схеме стандарта (domain —
+# domain-vision и доменный glossary; ingress, nfr_type — nfr; task, created —
+# task); после вливания волны 5 техбука убрать одной правкой вместе с
+# _FM_VERSION_EXEMPT (version уходит из шаблона nfr.md)
+_FM_TEMPLATE_EXTRA = {
+    "domain": {"domain-vision", "glossary", "vision"},
+    "ingress": {"nfr"},
+    "nfr_type": {"nfr"},
+    "task": {"task"},
+    "created": {"task"},
+}
+_FM_VERSION_EXEMPT = {"nfr"}  # ВРЕМЕННО: до схемы техбука §5 волны 5
+
+
+def frontmatter_schema_issues(fm: Dict[str, str]) -> Tuple[List[str], bool]:
+    """(поля вне схемы типа, есть ли устаревшее `version`). Служебные ключи
+    разбора (`__…`) не считаются."""
+    typ = str(fm.get("type", "")).strip().strip("'\"")
+    bad: List[str] = []
+    has_version = False
+    for k in fm:
+        if k.startswith("__") or k in _FM_COMMON:
+            continue
+        if k == "version":
+            has_version = typ not in _FM_VERSION_EXEMPT
+            continue
+        allowed = _FM_BY_TYPE.get(k, _FM_TEMPLATE_EXTRA.get(k, set()))
+        if allowed is None or typ in allowed:
+            continue
+        bad.append(k)
+    return sorted(bad), has_version
+
+
+def format_frontmatter_schema(issues: List[Tuple[str, List[str], bool]]) -> List[str]:
+    """Строки отчёта сторожа состава шапки (⚠, вердикт не меняют)."""
+    out: List[str] = []
+    bad = [(f, b) for f, b, _v in issues if b]
+    ver = [f for f, _b, v in issues if v]
+    if bad:
+        out.append(f"⚠ поля шапки вне схемы типа (conventions §5, состав закрыт по типу): "
+                   f"файлов {len(bad)}")
+        out.extend(f"   {f}: {', '.join(b)}" for f, b in bad[:30])
+        if len(bad) > 30:
+            out.append(f"   … и ещё {len(bad) - 30}")
+        by_field: Dict[str, int] = {}
+        for _f, b in bad:
+            for k in b:
+                by_field[k] = by_field.get(k, 0) + 1
+        out.append("   по полям: " + ", ".join(f"{k} ×{n}" for k, n in
+                                                 sorted(by_field.items(), key=lambda x: -x[1])))
+    if ver:
+        out.append(f"⚠ поле шапки version устарело (в новых комплектах не используется, "
+                   f"conventions §2): файлов {len(ver)} — убрать ближайшим заходом")
+    return out
+
+
 def _norm_title(t: str) -> str:
     return re.sub(r"\s+", " ", t.strip().strip("'\"")).lower().replace("ё", "е")
 
@@ -1313,6 +1397,279 @@ def check_source_silent(docs: Path) -> List[str]:
         out.extend(f"   {x}" for x in other[:30])
         if len(other) > 30:
             out.append(f"   … и ещё {len(other) - 30}")
+    return out
+
+
+# Обязательные разделы по шаблонам канона (пакет 2, задача 7, ПР-05, ЗК-23; решения
+# владельца канона 2026-10-16). Только шаблоны с явной пометкой «(обязательный)»;
+# H2 образцов карточек обязательными не считаются. Сравнение — без номеров,
+# ID-префикса («NTF-AGR-01. …»), пометки в скобках, регистра и ё/е; раздел
+# совпадает и по началу имени («Как перейти на страницу» ~ «как перейти»).
+# Условные разделы ЭФ («Видимость блоков» — если блоков больше одного, «События»,
+# «Кнопки», «Сообщения», «Функции формы») не требуются: условие по тексту не
+# проверяемо. Раздел, где только формула «в постановке не задано», — законный:
+# проверяется наличие заголовка, не содержимое.
+_REQ_SECTIONS: Dict[str, Tuple[str, ...]] = {
+    "agent": ("описание агента", "описание процесса"),
+    "control": ("назначение", "группы контролей", "реестр контролей",
+                "карточки контролей"),
+    "function": ("назначение", "доступность", "вызов функции", "поведение"),
+    "notification": ("каналы и адреса доставки", "сообщения нотификации"),
+    "screen-form": ("назначение", "реестр полей", "правила полей"),
+}
+# Все разделы шаблона (для строки «вне шаблона», i). Функция — None: шаблон
+# разрешает дополнительные H2 («Дополнительные разделы»). ЭФ — с разделами
+# README группы и главной карточки из описания ролей файлов шаблона.
+_KNOWN_SECTIONS: Dict[str, Optional[Tuple[str, ...]]] = {
+    "agent": ("описание агента", "схема", "описание процесса"),
+    "control": _REQ_SECTIONS["control"],
+    "function": None,
+    "notification": ("вводное описание", "каналы и адреса доставки",
+                     "сообщения нотификации", "общие шаблоны сообщений"),
+    "screen-form": ("назначение", "реестр полей", "видимость блоков",
+                    "правила полей", "события", "кнопки", "сообщения",
+                    "функции формы", "боковая часть", "части", "макеты",
+                    "как перейти", "структура экрана", "дополнительные действия",
+                    "группы контролей", "определения"),
+}
+# заглушка ЭФ (шаблон screen-form): frontmatter + «Назначение» + строка
+# «Документ-заглушка: …» — прочие обязательные разделы не требуются
+_STUB_MARK = "документ-заглушка"
+_SECTION_ID_RE = re.compile(r"^[A-ZА-ЯЁ]{2,}(?:-[A-ZА-ЯЁ0-9]+)+(?:\.[A-Z0-9]+)*\.?\s+")
+
+
+def _section_key(heading: str) -> str:
+    h = re.sub(r"^#+\s*", "", heading).strip()
+    h = re.sub(r"^\d+(?:\.\d+)*\.?\s*", "", h)
+    h = _SECTION_ID_RE.sub("", h)
+    h = re.sub(r"\s*\([^)]*\)\s*$", "", h)
+    return h.lower().replace("ё", "е").strip(" .:")
+
+
+def _h2_keys(text: str) -> List[str]:
+    out: List[str] = []
+    in_code = False
+    for ln in text.splitlines():
+        st = ln.strip()
+        if st.startswith(("```", "~~~")):
+            in_code = not in_code
+            continue
+        if not in_code and re.match(r"^##\s", ln):
+            out.append(_section_key(ln))
+    return out
+
+
+def _has_section(keys: List[str], name: str) -> bool:
+    return any(k == name or k.startswith(name) for k in keys)
+
+
+def check_required_sections(docs: Path) -> List[str]:
+    """⚠ «нет обязательного раздела» и i «раздел вне шаблона» для типов agent,
+    control, function, notification, screen-form. Единица проверки: файл;
+    документ контролей — каталог (README CTL-000 и файлы карточек); экранная
+    форма — группа по ID без суб-номера (README группы без шапки, главная
+    карточка, части), частям отдельного сигнала нет. README-реестры каталогов
+    (README функций, ID ЭФ на «-00»/«-000») не проверяются."""
+    units: Dict[Tuple[str, str], List[Path]] = {}
+    for md in _kit_md(docs):
+        fm = read_frontmatter(md) or {}
+        typ = str(fm.get("type", "")).strip("'\"")
+        fid = str(fm.get("id", "")).strip("'\"")
+        if not typ and md.name.lower() == "readme.md":
+            mains = sorted(md.parent.glob("*-main.md"))
+            if mains:
+                mfm = read_frontmatter(mains[0]) or {}
+                typ = str(mfm.get("type", "")).strip("'\"")
+                fid = str(mfm.get("id", "")).strip("'\"")
+        if typ not in _REQ_SECTIONS or md.name == "status-model.md":
+            continue
+        if typ == "screen-form":
+            if not fid or re.search(r"-0+$", fid):
+                continue
+            key = re.sub(r"(?:\.\d+)+$", "", fid)
+        elif typ == "control":
+            key = md.parent.relative_to(docs).as_posix() + "/"
+        else:
+            if md.name.lower() == "readme.md":
+                continue
+            key = md.relative_to(docs).as_posix()
+        units.setdefault((typ, key), []).append(md)
+    missing: List[str] = []
+    extra: Dict[Tuple[str, str], int] = {}
+    for (typ, key), files in sorted(units.items()):
+        keys: List[str] = []
+        stub = False
+        for f in files:
+            try:
+                text = f.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            keys.extend(_h2_keys(text))
+            stub = stub or _STUB_MARK in text.lower()
+        req = ("назначение",) if typ == "screen-form" and stub else _REQ_SECTIONS[typ]
+        lost = [r for r in req if not _has_section(keys, r)]
+        if lost:
+            where = key if typ != "screen-form" else (
+                f"{key} ({sorted(files)[0].relative_to(docs).as_posix()})")
+            missing.append(f"{where} [{typ}]: " + ", ".join(
+                f"«{r.capitalize()}»" for r in lost))
+        known = _KNOWN_SECTIONS[typ]
+        if known is None:
+            continue
+        for k in sorted(set(keys)):
+            if k and not any(k == n or k.startswith(n) for n in known):
+                extra[(typ, k)] = extra.get((typ, k), 0) + 1
+    out: List[str] = []
+    if missing:
+        out.append(f"⚠ нет обязательного раздела шаблона (пометка «(обязательный)» "
+                   f"в _meta/templates; раздел с одной формулой «{_SILENT_FORMULA}» "
+                   f"законен): единиц {len(missing)}")
+        out.extend(f"   {x}" for x in missing[:30])
+        if len(missing) > 30:
+            out.append(f"   … и ещё {len(missing) - 30}")
+    if extra:
+        top = sorted(extra.items(), key=lambda kv: (-kv[1], kv[0]))
+        out.append(f"i разделы вне шаблона (к сведению): имён {len(extra)}, "
+                   f"вхождений {sum(extra.values())} — "
+                   + "; ".join(f"{t}: «{k}» ×{n}" for (t, k), n in top[:12])
+                   + (" …" if len(top) > 12 else ""))
+    return out
+
+
+# Шаг процесса ↔ карточка вызова (пакет 2, задача 8, ЗК-13). Норма: шаг через
+# вызов чужого контракта ссылается на карточку CALL-* (шаблон process, «Таблица
+# шагов»); карточка вызова в разделе «Использование в сервисе» ссылается на
+# процессы и шаги (шаблон contract-call). Номер шага — литерал; диапазон
+# «1.4–1.5» / «3–7» с общим префиксом раскрывается в перечень номеров.
+_STEP_NUM_RE = re.compile(r"\d+(?:\.\d+)*")
+_STEP_CELL_RE = re.compile(r"\**\d+(?:\.\d+)*\.?\**")
+_STEP_HEAD_RE = re.compile(r"^#{3,4}\s+(?:Шаг\s+)?(\d+(?:\.\d+)*)\b")
+_STEP_RANGE_RE = re.compile(r"(\d+(?:\.\d+)*)\s*[–—-]\s*(\d+(?:\.\d+)*)")
+_CALL_USAGE_RE = re.compile(r"^##\s+(?:\d+\.\s*)?(?:Использование в сервисе|Где используется)",
+                            re.I)
+
+
+def _step_literals(cell: str) -> set:
+    """Номера шагов ячейки «Шаг / место»: литералы и раскрытые диапазоны."""
+    out = set(_STEP_NUM_RE.findall(cell))
+    for a, b in _STEP_RANGE_RE.findall(cell):
+        pa, pb = a.rsplit(".", 1) if "." in a else ("", a), \
+            b.rsplit(".", 1) if "." in b else ("", b)
+        if pa[0] == pb[0] and int(pa[1]) < int(pb[1]) <= int(pa[1]) + 50:
+            pre = pa[0] + "." if pa[0] else ""
+            out |= {f"{pre}{n}" for n in range(int(pa[1]), int(pb[1]) + 1)}
+    return out
+
+
+def _link_targets(md: Path, text: str):
+    for m in _MD_LINK_RE.finditer(text):
+        raw_t = m.group(2).strip()
+        if "://" in raw_t or raw_t.startswith(("mailto:", "<")):
+            continue
+        path_part = unquote(raw_t).partition("#")[0].replace("\\", "/")
+        if not path_part:
+            continue
+        try:
+            yield (md.parent / path_part).resolve()
+        except OSError:
+            continue
+
+
+def check_process_call_consistency(docs: Path) -> List[str]:
+    """⚠ при расхождении прямой и обратной ссылок «PROC шаг N → CALL» /
+    «CALL → PROC, шаг N»: нет обратной, нет прямой, номер шага расходится.
+    Строки карточки вызова, ведущие на FUN/SCR, не сверяются (норма — процессы);
+    ячейка места без номера («Отображение») номер не сверяет."""
+    ids: Dict[Path, str] = {}
+    meta: Dict[Path, Tuple[str, str, str]] = {}
+    for md in _kit_md(docs):
+        fm = read_frontmatter(md) or {}
+        cid = str(fm.get("id", "")).strip("'\"")
+        if cid:
+            ids[md.resolve()] = cid
+        meta[md] = (str(fm.get("type", "")).strip("'\""), cid,
+                    md.relative_to(docs).as_posix())
+    fwd: Dict[Tuple[str, str], set] = {}
+    back: Dict[Tuple[str, str], Tuple[set, str]] = {}
+    for md, (typ, cid, _rel) in meta.items():
+        if typ == "process" and cid.startswith("PROC") \
+                and md.name.lower() not in ("readme.md", "status-model.md"):
+            try:
+                lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+            except OSError:
+                continue
+            in_code, head_step = False, ""
+            for ln in lines:
+                st = ln.strip()
+                if st.startswith(("```", "~~~")):
+                    in_code = not in_code
+                    continue
+                if in_code:
+                    continue
+                if st.startswith("#"):
+                    hm = _STEP_HEAD_RE.match(st)
+                    head_step = hm.group(1) if hm else ""
+                    continue
+                step = ""
+                if st.startswith("|"):
+                    cells = [c.strip() for c in st.strip("|").split("|")]
+                    if cells and _STEP_CELL_RE.fullmatch(cells[0]):
+                        step = _STEP_NUM_RE.search(cells[0]).group(0)
+                elif head_step:
+                    step = head_step
+                if not step:
+                    continue
+                for t in _link_targets(md, ln):
+                    tid = ids.get(t, "")
+                    if tid.startswith("CALL-"):
+                        fwd.setdefault((cid, tid), set()).add(step)
+        elif typ == "contract-call" and cid.startswith("CALL-"):
+            try:
+                text = md.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            sec, on = [], False
+            for ln in text.splitlines():
+                if ln.startswith("## "):
+                    on = bool(_CALL_USAGE_RE.match(ln))
+                    continue
+                if on:
+                    sec.append(ln)
+            for ln in sec:
+                if not ln.strip().startswith("|"):
+                    continue
+                cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+                if len(cells) < 2:
+                    continue
+                for t in _link_targets(md, cells[0]):
+                    pid = ids.get(t, "")
+                    if pid.startswith("PROC"):
+                        steps, cell = back.get((pid, cid), (set(), ""))
+                        back[(pid, cid)] = (steps | _step_literals(cells[1]),
+                                            (cell + "; " if cell else "") + cells[1])
+    rel_of = {cid: rel for _md, (_t, cid, rel) in meta.items() if cid}
+    issues: List[str] = []
+    for (pid, cid), steps in sorted(fwd.items()):
+        st = ", ".join(sorted(steps))
+        if (pid, cid) not in back:
+            issues.append(f"нет обратной: {pid} шаг {st} → {cid}; в карточке {cid} "
+                          f"({rel_of.get(cid, '?')}) нет строки процесса {pid}")
+        else:
+            bsteps, cell = back[(pid, cid)]
+            if bsteps and not (steps & bsteps):
+                issues.append(f"номер шага расходится: {pid} шаг {st} → {cid}; "
+                              f"в карточке {cid} — «{cell[:40]}»")
+    for (pid, cid), (_bs, cell) in sorted(back.items()):
+        if (pid, cid) not in fwd:
+            issues.append(f"нет прямой: {cid} → {pid} «{cell[:40]}»; в шагах {pid} "
+                          f"({rel_of.get(pid, '?')}) нет ссылки на {cid}")
+    if not issues:
+        return []
+    out = [f"⚠ шаг процесса ↔ карточка вызова (шаблоны process и contract-call: шаг "
+           f"ссылается на CALL, карточка — на процесс и шаг): расхождений {len(issues)}"]
+    out.extend(f"   {x}" for x in issues[:30])
+    if len(issues) > 30:
+        out.append(f"   … и ещё {len(issues) - 30}")
     return out
 
 
@@ -1918,6 +2275,62 @@ def catalog_codes() -> Optional[set]:
     except (OSError, ValueError):
         return None
     return {s.get("code") for s in data if isinstance(s, dict) and s.get("code")}
+
+
+_H1_QUOTED_RE = re.compile(r'«[^»\n]*»|"[^"\n]*"|“[^”\n]*”')
+
+
+def _service_names(code: str, catalog: Optional[Path]) -> List[str]:
+    """Названия сервиса для поиска в H1: `code` и `name` каталога без тега."""
+    names = [code]
+    if catalog is not None:
+        try:
+            data = json.loads(catalog.read_text(encoding="utf-8-sig"))
+        except (OSError, ValueError):
+            data = []
+        for rec in data if isinstance(data, list) else []:
+            if isinstance(rec, dict) and rec.get("code") == code and rec.get("name"):
+                names.append(re.sub(r"^\[[^\]]*\]\s*", "", rec["name"]).strip())
+    return [n for n in names if n and len(n) > 3]
+
+
+def check_h1_service(docs: Path, catalog: Optional[Path]) -> List[str]:
+    """⚠: H1 документа содержит название сервиса (conventions §5 — сервис
+    задают поле `service` и путь комплекта). Название внутри кавычек —
+    часть дословного названия артефакта из источника, не приписка.
+    Исключения: README корня комплекта, доменный глоссарий и концепция
+    домена (у них H1 называет домен)."""
+    hits: List[str] = []
+    for md in _kit_md(docs):
+        if md.parent == docs and md.name.lower() == "readme.md":
+            continue
+        fm = read_frontmatter(md) or {}
+        typ = str(fm.get("type", "")).strip("'\"")
+        if typ == "domain-vision" or (typ == "glossary" and fm.get("domain")):
+            continue
+        code = str(fm.get("service", "")).strip("'\"")
+        if not code:
+            continue
+        try:
+            lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        h1 = next((ln[2:].strip() for ln in lines if ln.startswith("# ")), "")
+        if not h1:
+            continue
+        bare = _H1_QUOTED_RE.sub(" ", re.sub(r"\[[^\]]*\]", " ", h1)).lower()
+        for nm in _service_names(code, catalog):
+            if re.search(r"(?<![\w-])" + re.escape(nm.lower()) + r"(?![\w-])", bare):
+                hits.append(f"{md.relative_to(docs).as_posix()}: «{h1[:70]}»")
+                break
+    if not hits:
+        return []
+    out = [f"⚠ H1 с названием сервиса (conventions §5: сервис задают поле service и путь "
+           f"комплекта, H1 — название артефакта): файлов {len(hits)}"]
+    out.extend(f"   {h}" for h in hits[:30])
+    if len(hits) > 30:
+        out.append(f"   … и ещё {len(hits) - 30}")
+    return out
 
 
 def canon_catalog_path() -> Optional[Path]:

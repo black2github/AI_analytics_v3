@@ -60,3 +60,18 @@ def test_ui_type_outside_dictionary_warned_messages_table_not():
     rep = check_notation_hints(text)
     assert len(rep) == 1 and "вне словаря UI-типов ×1" in rep[0] and "Логическое" in rep[0], rep
 
+
+def test_bare_angle_name_warned_dotted_counted():
+    rep = check_notation_hints("# Ф\n\nЕсли <Статус заявки> равен черновику, "
+                               "[ENT-001 Заявка](e.md).<Номер> не меняется.\n")
+    assert len(rep) == 1, rep
+    assert "без сущности ×1" in rep[0] and "[Сущность].<…> ×1" in rep[0], rep
+
+
+def test_angle_not_warned_in_literals_code_html_and_param_tables():
+    text = ("# Ф\n\nСообщение «Счёт <номер счёта> закрыт».\n"
+            "Код `Метод.<XS>` и тег <br> и <img src=\"a.png\">; условие a <= b > c.\n"
+            "| Код параметра | Наименование параметра |\n|---|---|\n| id | <Идентификатор> |\n"
+            "```\n<Имя>\n```\n")
+    assert check_notation_hints(text) == [], check_notation_hints(text)
+

@@ -1155,6 +1155,9 @@ _NOT_COND_START_RE = re.compile(r"\*\*(?:Если|ЕСЛИ|если|Иначе �
 _NOT_COND_END_RE = re.compile(r"\*\*(?:то|ТО|То)\b|,\s*то\b")
 _NOT_NEXT_RE = re.compile(r"\*\*Далее:?\*\*:?(.*)")
 _NOT_ARROW_OK_RE = re.compile(r"по ключу|найти|запис|Далее", re.I)
+# (д) угловые скобки: HTML-теги (латинское имя тега) — не имена; имя начинается с буквы
+_NOT_HTML_TAG_RE = re.compile(r"</?[a-zA-Z][a-zA-Z0-9]*(?:\s[^<>]*)?/?>")
+_NOT_ANGLE_RE = re.compile(r"<([^<>\n]{1,80})>")
 # закрытый словарь UI-типов полей (notation §4, базовый набор); «Тип» реестра
 # полей ЭФ сверяется без уточнения в скобках и без регистра
 _UI_TYPES = frozenset((
@@ -1174,6 +1177,8 @@ def check_notation_hints(text: str) -> List[str]:
     back_hits: List[str] = []
     fwd_hits: List[str] = []
     type_hits: List[str] = []
+    angle_bare: List[str] = []
+    angle_dotted = 0
     in_code = False
     hdr: Optional[List[str]] = None
     for ln in body.splitlines():
@@ -1203,6 +1208,18 @@ def check_notation_hints(text: str) -> List[str]:
         clean = _NOT_LINK_URL_RE.sub("]", _NOT_QUOTED_RE.sub(" ", ln))
         if "←" in clean:
             back_hits.append(st[:60])
+        # (д) угловые скобки — только подстановки в дословных текстах (§7);
+        # строки таблиц параметров (заголовок с «параметр») не проверяются
+        if not (st.startswith("|") and hdr and any("параметр" in h for h in hdr)):
+            ang = _NOT_HTML_TAG_RE.sub(" ", clean)
+            for m in _NOT_ANGLE_RE.finditer(ang):
+                inner = m.group(1).strip()
+                if not re.match(r"[A-Za-zА-Яа-яЁё]", inner):
+                    continue
+                if ang[:m.start()].rstrip().endswith("."):
+                    angle_dotted += 1  # [Сущность].<Атрибут> — к замене на «…»
+                else:
+                    angle_bare.append(f"<{inner[:40]}>")
         # (в) «→» — только поиск записи по ключу («→ [Сущность]…») и переходы
         # «Далее»; исключение — таблица связей шаблона модели данных
         # (колонка «Связь»: «Заявка → История изменений») — противоречие
@@ -1239,6 +1256,13 @@ def check_notation_hints(text: str) -> List[str]:
         out.append(f"предупреждение: нотация — стрелка «→» вне поиска записи по ключу ×{len(fwd_hits)} "
                    "(notation §3: последовательность — шагами, переход между экранами — «=>», "
                    "маппинг — «=» или словами); первые: " + "; ".join(repr(x) for x in fwd_hits[:3]))
+    if angle_bare:
+        out.append(f"предупреждение: нотация — имя в угловых скобках без сущности ×{len(angle_bare)} "
+                   "(§7: угловые скобки — только подстановки в дословных текстах; атрибут — "
+                   "[ENT-…](…).«Атрибут»)"
+                   + (f"; ещё в форме [Сущность].<…> ×{angle_dotted} — к замене на «…»"
+                      if angle_dotted else "")
+                   + "; первые: " + "; ".join(repr(x) for x in angle_bare[:3]))
     if type_hits:
         out.append(f"предупреждение: нотация — «Тип» реестра полей вне словаря UI-типов ×{len(type_hits)} "
                    "(notation §4: Текст, Число, Дата, Список, Чекбокс, Гиперссылка…); первые: "
