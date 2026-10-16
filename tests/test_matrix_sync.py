@@ -163,3 +163,16 @@ def test_write_refuses_cell_id_missing_from_kit(tmp_path):
     before = mx.read_bytes()
     report, code = ms.write(docs)
     assert code == 2 and mx.read_bytes() == before and "SCR-CL-01.0" in "\n".join(report), report
+
+
+def test_part_name_title_with_tab_tail_own_title_and_forward():
+    """Название части: title главной + хвост H1; свой title — как есть; без title — H1."""
+    base_t, base_h = '[КК_ВК] ЭФ Банка: "Просмотр заявки"', 'ЭФ Банка: «Просмотр заявки»'
+    assert ms.part_name(base_t, base_h + " — вкладка «Анкеты»", base_t, base_h) \
+        == base_t + " — вкладка «Анкеты»"
+    assert ms.part_name(base_t + " — вкладка «Анкеты»", base_h + " — вкладка «Анкеты»",
+                        base_t, base_h) == base_t + " — вкладка «Анкеты»"
+    own = "[КК_ЛК] Карты на ЭФ Банка «Просмотр заявки»"
+    assert ms.part_name(own, base_h + " — «Карты»", base_t, base_h) == own
+    assert ms.part_name("", base_h + " — вкладка «Реквизиты»", "", base_h) \
+        == base_h + " — вкладка «Реквизиты»"

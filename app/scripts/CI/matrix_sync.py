@@ -26,8 +26,11 @@
   первой ячейке строки таблицы, записанный без ссылки (справочники EXT,
   группы CTL-GRP); локальные ID экранных форм и нотификаций (FLD, B, EV, FF,
   M, MSG, US) в реестр не входят; название документа — title (conventions §5:
-  собственное наименование), без title — H1 без ID; строки с файлом «—» ручные — снятые
-  (пометка «снят …») и плановые (conventions §5, §5.3 п.4–5);
+  собственное наименование), без title — H1 без ID; у части документа (суб-ID)
+  с title главной карточки — title и через тире хвост H1 части («… — вкладка
+  «Анкеты»»); старое название без тега остаётся, пока оно уникально; строки с
+  файлом «—» ручные — снятые (пометка «снят …») и плановые (conventions §5,
+  §5.3 п.4–5);
 - покрытие: связь — markdown-ссылка в любую сторону; ID связи — ID из текста
   ссылки, если он определён в целевом файле, иначе ID заголовка по якорю,
   иначе ID файла; голая ссылка на документ-контейнер (справочник, документ
@@ -103,6 +106,27 @@ def yaml_scalar(v: str) -> str:
         v = v[1:-1]
         v = v.replace("''", "'") if v and "'" in v else v
     return v
+
+
+def part_name(title: str, h1: str, base_title: str, base_h1: str) -> str:
+    """Название части документа (суб-ID «.N»). Свой title (своя страница
+    источника) — как есть; title главной карточки — с хвостом H1 части через
+    тире («… — вкладка «Анкеты»»), если title им ещё не кончается; без title —
+    H1. Title уникален (название страницы), хвост различает части — названия
+    вкладок разных форм не совпадают."""
+    if not title:
+        return h1
+    if title != base_title:
+        return title
+    if base_h1 and h1.startswith(base_h1):
+        suf = h1[len(base_h1):]
+    else:
+        m = re.search(r"\s[—–]\s(.+)$", h1)
+        suf = m.group(1) if m else ""
+    suf = re.sub(r"^\s*[—–-]\s*", "", suf).strip()
+    if suf and not title.endswith(suf):
+        return f"{title} — {suf}"
+    return title
 
 
 def id_prefix(i: str) -> str:
@@ -270,6 +294,7 @@ class Kit:
         self.defs_in: Dict[Path, Set[str]] = {}            # файл → определённые в нём ID
         self.table_defs: Set[str] = set()                  # ID, заданные строкой таблицы
         self.h1: Dict[str, str] = {}                       # id документа → H1 без ID
+        self.title_of: Dict[str, str] = {}                 # id документа → title
         self.id_of_file: Dict[Path, str] = {}
         self.registry_ids: Set[str] = set()                # ID README-реестров
         self.readme_rows: Set[str] = set()                 # ID документов-README
@@ -295,15 +320,20 @@ class Kit:
                            if ln.startswith("# ")), "")
                 h1 = re.sub(r"^" + re.escape(fid) + r"\.?\s*", "", h1)
                 self.h1[fid] = h1
-                # часть документа (суб-ID «.N») несёт title главной страницы — различает
-                # части только H1
-                part = bool(re.search(r"\.\d+$", fid))
-                self.fm[fid] = (p.relative_to(docs).as_posix(),
-                                (h1 or title) if part else (title or h1),
+                self.title_of[fid] = title
+                self.fm[fid] = (p.relative_to(docs).as_posix(), title or h1,
                                 str(fms[p].get("type", "")).strip("'\""))
                 # README-реестр — навигация; README контролей (CTL-000) — документ
                 if _is_registry_file(p) and self.fm[fid][2] != "control":
                     self.registry_ids.add(fid)
+        # названия частей документа (суб-ID «.N») — когда известны главные карточки
+        for fid in list(self.fm):
+            base = re.sub(r"(?:\.\d+)+$", "", fid)
+            if base != fid:
+                rel, _n, typ = self.fm[fid]
+                self.fm[fid] = (rel, part_name(self.title_of.get(fid, ""), self.h1.get(fid, ""),
+                                               self.title_of.get(base, ""), self.h1.get(base, "")),
+                                typ)
         for p, t in texts.items():
             fm = fms[p]
             rel = p.relative_to(docs).as_posix()
@@ -664,6 +694,10 @@ def _same_name(a: str, b: str) -> bool:
     return n(a) == n(b)
 
 
+def _norm_title(x: str) -> str:
+    return re.sub(r"\s+", " ", x.replace("\\|", "|")).strip().lower().replace("ё", "е")
+
+
 def _old_rows(sec: Section, lines: List[str]) -> Dict[str, List[str]]:
     t0, t1 = sec.tables[0]
     out: Dict[str, List[str]] = {}
@@ -692,7 +726,8 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
     # Название ID из строки таблицы выводится ненадёжно (вторая ячейка бывает
     # контуром «BE» или текстом со ссылками) — сохраняется название из реестра.
     old = _old_rows(sec, lines)
-    rows = {}
+    cells: Dict[str, List[str]] = {}
+    kept_by_tag: Set[str] = set()
     for i, (rel, name) in derived.items():
         o = old.get(i)
         nm = _esc(name)
@@ -701,12 +736,23 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
             # существующее название остаётся, если это title или H1 документа;
             # у внутреннего ID (заголовок, строка таблицы) — всегда
             if i in kit.defs or _same_name(o[1], name) or _same_name(o[1], kit.h1.get(i, "")):
+                if o[1] != nm and i not in kit.defs:
+                    kept_by_tag.add(i)
                 nm = o[1]
             if _file_cell(o[2]) == rel:
                 fl = o[2]
         elif i in kit.table_defs and i in old_name:
             nm = old_name[i]
-        rows[i] = _row([i, nm, fl])
+        cells[i] = [i, nm, fl]
+    # допуск без тега — пока название уникально: «[КК_ВК] Текст Согласия №1» и
+    # «[КК_БК] Текст Согласия №1» различает только тег — тогда ставится title
+    seen: Dict[str, int] = {}
+    for i, c in cells.items():
+        seen[_norm_title(c[1])] = seen.get(_norm_title(c[1]), 0) + 1
+    for i in kept_by_tag:
+        if seen[_norm_title(cells[i][1])] > 1:
+            cells[i][1] = _esc(derived[i][1])
+    rows = {i: _row(c) for i, c in cells.items()}
     rows.update(manual)
     return _table(SECTION_COLS["registry"], [rows[i] for i in sorted(rows, key=id_sort_key)])
 
