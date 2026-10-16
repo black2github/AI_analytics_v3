@@ -1146,6 +1146,106 @@ _HOMOGLYPH_FOLD = str.maketrans({
 })
 
 
+# нотация §2–§3, кандидаты автопроверок §9 — предупреждения, не авто-фикс
+# (выбор между присваиванием и сравнением — смысловое решение)
+_NOT_QUOTED_RE = re.compile(r'«[^»\n]*»|"[^"\n]*"|`[^`\n]*`')
+_NOT_LINK_URL_RE = re.compile(r"\]\([^)]*\)")
+_NOT_SINGLE_EQ_RE = re.compile(r"(?<![=!<>:])=(?![=>])")
+_NOT_COND_START_RE = re.compile(r"\*\*(?:Если|ЕСЛИ|если|Иначе если|ИНАЧЕ ЕСЛИ|иначе если)\*\*")
+_NOT_COND_END_RE = re.compile(r"\*\*(?:то|ТО|То)\b|,\s*то\b")
+_NOT_NEXT_RE = re.compile(r"\*\*Далее:?\*\*:?(.*)")
+_NOT_ARROW_OK_RE = re.compile(r"по ключу|найти|запис|Далее", re.I)
+# закрытый словарь UI-типов полей (notation §4, базовый набор); «Тип» реестра
+# полей ЭФ сверяется без уточнения в скобках и без регистра
+_UI_TYPES = frozenset((
+    "текст", "число", "пароль", "поиск", "дата", "список",
+    "список с множественным выбором", "переключатель", "чекбокс",
+    "блок загрузки", "сумма", "иконка", "гиперссылка", "текст со ссылками",
+    "заголовок"))
+
+
+def check_notation_hints(text: str) -> List[str]:
+    """Предупреждения нотации (ПР-02 разбора замечаний ОНБ-В): одиночный «=»
+    в условии — ожидается «==» (§2); обратная стрелка «←» — не используется
+    ни в одном значении (§3). Дословные литералы в кавычках, inline-код,
+    блоки кода и адреса ссылок не проверяются."""
+    body = text.split("---", 2)[-1] if text.startswith("---") else text
+    eq_hits: List[str] = []
+    back_hits: List[str] = []
+    fwd_hits: List[str] = []
+    type_hits: List[str] = []
+    in_code = False
+    hdr: Optional[List[str]] = None
+    for ln in body.splitlines():
+        st = ln.strip()
+        if st.startswith("```") or st.startswith("~~~"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        # таблицы: заголовок запоминается, строка-разделитель пропускается
+        if st.startswith("|"):
+            cells = [c.strip() for c in st.strip("|").split("|")]
+            if hdr is None:
+                hdr = [re.sub(r"\*\*", "", c).strip().lower() for c in cells]
+                continue
+            if all(re.fullmatch(r":?-{3,}:?", c) for c in cells if c):
+                continue
+            # (г) «Тип» реестра полей ЭФ — словарь нотации §4; таблица
+            # сообщений («ID | Тип | Показ») — не реестр полей
+            if "тип" in hdr and "поле" in hdr and len(cells) == len(hdr):
+                v = re.sub(r"\*\*|`", "", cells[hdr.index("тип")]).strip().strip(".")
+                vn = re.sub(r"\s*\([^)]*\)\s*$", "", v).strip().lower().replace("ё", "е")
+                if vn and vn not in ("—", "-") and vn not in _UI_TYPES:
+                    type_hits.append(v[:40])
+        else:
+            hdr = None
+        clean = _NOT_LINK_URL_RE.sub("]", _NOT_QUOTED_RE.sub(" ", ln))
+        if "←" in clean:
+            back_hits.append(st[:60])
+        # (в) «→» — только поиск записи по ключу («→ [Сущность]…») и переходы
+        # «Далее»; исключение — таблица связей шаблона модели данных
+        # (колонка «Связь»: «Заявка → История изменений») — противоречие
+        # шаблона и нотации на решении владельца канона
+        if ("→" in clean and not _NOT_ARROW_OK_RE.search(clean)
+                and not (st.startswith("|") and hdr and "связь" in hdr)):
+            if any(not clean[m.end():].lstrip().startswith("[")
+                   for m in re.finditer("→", clean)):
+                fwd_hits.append(st[:60])
+        hit = False
+        for m in _NOT_COND_START_RE.finditer(clean):
+            seg = clean[m.end():]
+            e = _NOT_COND_END_RE.search(seg)
+            if _NOT_SINGLE_EQ_RE.search(seg[:e.start()] if e else seg):
+                hit = True
+                break
+        if not hit:
+            nm = _NOT_NEXT_RE.search(clean)
+            if nm:
+                hit = any("→" in part and _NOT_SINGLE_EQ_RE.search(part.split("→")[0])
+                          for part in nm.group(1).split(";"))
+        if hit:
+            eq_hits.append(st[:60])
+    out: List[str] = []
+    if eq_hits:
+        out.append(f"предупреждение: нотация — одиночный «=» в условии ×{len(eq_hits)} "
+                   "(в условиях сравнение — «==», notation §2); первые: "
+                   + "; ".join(repr(x) for x in eq_hits[:3]))
+    if back_hits:
+        out.append(f"предупреждение: нотация — обратная стрелка «←» ×{len(back_hits)} "
+                   "(не используется ни в одном значении, notation §3; присваивание — «=» "
+                   "с источником справа); первые: " + "; ".join(repr(x) for x in back_hits[:3]))
+    if fwd_hits:
+        out.append(f"предупреждение: нотация — стрелка «→» вне поиска записи по ключу ×{len(fwd_hits)} "
+                   "(notation §3: последовательность — шагами, переход между экранами — «=>», "
+                   "маппинг — «=» или словами); первые: " + "; ".join(repr(x) for x in fwd_hits[:3]))
+    if type_hits:
+        out.append(f"предупреждение: нотация — «Тип» реестра полей вне словаря UI-типов ×{len(type_hits)} "
+                   "(notation §4: Текст, Число, Дата, Список, Чекбокс, Гиперссылка…); первые: "
+                   + "; ".join(repr(x) for x in type_hits[:3]))
+    return out
+
+
 _CONFLUENCE_URL_RE = re.compile(r"https?://[^\s)\]]*confluence[^\s)\]]*", re.I)
 
 
@@ -3637,6 +3737,8 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                 f"×{len(bad)} ({', '.join(bad[:3])}) — суррогат: источник "
                 "технических имён не даёт → код ПУСТОЙ, нумерация "
                 "источника — отдельной дословной колонкой ✗ НИЖЕ ПОРОГА")
+    # нотация (ПР-02 разбора замечаний ОНБ-В, 2026-10-16): предупреждения
+    report.extend(check_notation_hints(text))
     # К-30 (2026-08-18): невидимые символы в чистовике — брак. Дозаход
     # 5.3 вставил U+200B в «**ИНАЧЕ**», чтобы обойти ложную границу
     # секций сторожа (граница починена, но класс «невидимый юникод как

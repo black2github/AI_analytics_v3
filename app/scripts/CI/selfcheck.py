@@ -416,6 +416,7 @@ def run(docs: Path, sources: Optional[Path],
     extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
     extra_page_ids: Dict[Path, List[str]] = {}  # карточка -> доп. page_ids
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
+    card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
@@ -470,6 +471,8 @@ def run(docs: Path, sources: Optional[Path],
             continue
         if fm.get("id"):
             card_ids[p] = fm["id"]
+            if fm.get("title") and fm.get("type"):
+                card_titles[p] = (fm["type"], fm["title"], fm["id"])
         pids = page_ids(fm)
         pid_key_present = ("confluence_page_ids" in fm
                            or "confluence_page_id" in fm)
@@ -758,6 +761,16 @@ def run(docs: Path, sources: Optional[Path],
     if rep:
         report.append(("✓" if ok else "✗") + " слот части сервиса в ID:")
         report.extend(f"   {ln}" for ln in rep)
+    # одинаковые названия разных артефактов одного типа (ПР-08 разбора
+    # замечаний ОНБ-В, 2026-10-16) — читатель не различит их по названию;
+    # ⚠, вердикт не трогает
+    tu_rep = check_title_uniqueness(docs, card_titles)
+    if tu_rep:
+        report.append("⚠ одинаковые названия разных артефактов одного типа:")
+        report.extend(f"   {ln}" for ln in tu_rep)
+    # пробелы постановки (conventions §6 п.5, ПР-12 разбора ОНБ-В): ⚠
+    ss_rep, _ = _safe(lambda: (check_source_silent(docs), True))
+    report.extend(ss_rep)
     # условные обозначения README (2026-10-10): самоописание комплекта
     # для внешних читателей — ⚠-сигналы, вердикт не трогают
     lg_rep, _ = _safe(lambda: (check_readme_legend(docs, card_ids), True))
@@ -847,6 +860,10 @@ def run(docs: Path, sources: Optional[Path],
     rl_rep, rl_ok = _safe(check_relative_links, docs)
     all_ok = all_ok and rl_ok
     report.extend(rl_rep)
+    # якоря ссылок и упоминание карточки без ID (ПР-06 разбора замечаний
+    # ОНБ-В, 2026-10-16) — ⚠, вердикт не трогают
+    la_rep, _ = _safe(lambda: (check_link_anchors_and_ids(docs), True))
+    report.extend(la_rep)
     nfr_rep, nfr_ok = _safe(check_nfr_catalog, docs)
     all_ok = all_ok and nfr_ok
     report.extend(nfr_rep)
@@ -1218,6 +1235,87 @@ def _load_part_codes(readme: Path):
     return codes
 
 
+def _norm_title(t: str) -> str:
+    return re.sub(r"\s+", " ", t.strip().strip("'\"")).lower().replace("ё", "е")
+
+
+def check_title_uniqueness(docs: Path,
+                           card_titles: Dict[Path, Tuple[str, str, str]]) -> List[str]:
+    """Строки отчёта (пусто — дублей нет). Ключ — тип + нормализованный
+    title (регистр и пробелы не различаются, тег «[…]» входит в название).
+    Не дубль: README-реестры (навигация) и части одной группы с общим
+    базовым ID (`SCR-CL-01.1…01.5` законно несут название экрана)."""
+    groups: Dict[Tuple[str, str], List[Tuple[Path, str, str]]] = {}
+    for p, (typ, title, cid) in card_titles.items():
+        if p.name.lower() == "readme.md":
+            continue
+        groups.setdefault((typ.strip().lower(), _norm_title(title)), []).append(
+            (p, title, str(cid).strip()))
+    out: List[str] = []
+    for (typ, _t), items in sorted(groups.items()):
+        bases = {re.sub(r"\.\d+$", "", cid) for _p, _ti, cid in items}
+        if len(bases) < 2:
+            continue
+        ids = ", ".join(sorted(cid for _p, _ti, cid in items))
+        files = ", ".join(sorted(p.relative_to(docs).as_posix() for p, _ti, _c in items))
+        out.append(f"{typ}: {ids} — «{items[0][1].strip().strip(chr(39) + chr(34))}» "
+                   f"×{len(items)} ({files})")
+    return out
+
+
+_SILENT_FORMULA = "в постановке не задано"
+_GAP_MARK_RE = re.compile(r"не задано|вне выгрузки|в срезе|уточняется|\bTBD\b", re.I)
+_GAP_QUOTED_RE = re.compile(r'«[^»\n]*»|"[^"\n]*"|`[^`\n]*`')
+
+
+def check_source_silent(docs: Path) -> List[str]:
+    """Перечень пробелов постановки (conventions §6 п.5, ПР-12 разбора
+    замечаний ОНБ-В): вхождения формулы «в постановке не задано» с адресами
+    и пометки о пробеле не по формуле («не задано», «вне выгрузки», «в
+    срезе», «уточняется», «TBD») вне формулы, frontmatter, кода и
+    кавычечных литералов (дословная цитата источника — данные). Только ⚠."""
+    found: List[str] = []
+    other: List[str] = []
+    for md in _kit_md(docs):
+        try:
+            lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        rel = md.relative_to(docs).as_posix()
+        in_fm = bool(lines) and lines[0].strip() == "---"
+        in_code = False
+        for i, ln in enumerate(lines, 1):
+            st = ln.strip()
+            if in_fm:
+                if i > 1 and st == "---":
+                    in_fm = False
+                continue
+            if st.startswith(("```", "~~~")):
+                in_code = not in_code
+                continue
+            if in_code:
+                continue
+            low = ln.lower()
+            if _SILENT_FORMULA in low:
+                found.append(f"{rel}:{i}: {st[:80]}")
+            rest = _GAP_QUOTED_RE.sub(" ", low.replace(_SILENT_FORMULA, " "))
+            if _GAP_MARK_RE.search(rest):
+                other.append(f"{rel}:{i}: {st[:80]}")
+    out: List[str] = []
+    if found:
+        out.append(f"⚠ формула «{_SILENT_FORMULA}» ×{len(found)} — перечень пробелов постановки:")
+        out.extend(f"   {x}" for x in found[:30])
+        if len(found) > 30:
+            out.append(f"   … и ещё {len(found) - 30}")
+    if other:
+        out.append(f"⚠ пометка о пробеле не по формуле ×{len(other)} (conventions §6 п.5: "
+                   f"единственная допустимая пометка — «{_SILENT_FORMULA}»):")
+        out.extend(f"   {x}" for x in other[:30])
+        if len(other) > 30:
+            out.append(f"   … и ещё {len(other) - 30}")
+    return out
+
+
 def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
     """(отчёт, ok). card_ids: карточка docs -> id из frontmatter."""
     report: List[str] = []
@@ -1503,6 +1601,107 @@ def _kit_md(docs: Path):
     """Документы комплекта для обходов сторожей — без постановок `tasks/`."""
     return [p for p in sorted(docs.rglob("*.md"))
             if not is_task_file(p, docs) and not in_dot_dir(p, docs)]
+
+
+def gitlab_slug(heading: str) -> str:
+    """Якорь заголовка, как его строит GitLab: нижний регистр, без
+    разметки ссылок и HTML, всё, кроме букв, цифр, «_», «-» и пробела,
+    удаляется, пробел → «-», повторные дефисы схлопываются."""
+    t = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", heading.strip())
+    t = re.sub(r"<[^>]+>", "", t).lower()
+    t = re.sub(r"[^\w\- ]", "", t).replace(" ", "-")
+    return re.sub(r"-{2,}", "-", t)
+
+
+def _anchors_of(path: Path, cache: Dict[Path, set]) -> set:
+    if path in cache:
+        return cache[path]
+    out: set = set()
+    seen: Dict[str, int] = {}
+    in_code = False
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        lines = []
+    for ln in lines:
+        if ln.strip().startswith(("```", "~~~")):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        m = re.match(r"^#{1,6}\s+(.*?)\s*#*\s*$", ln)
+        if m:
+            sl = gitlab_slug(m.group(1))
+            n = seen.get(sl, 0)
+            seen[sl] = n + 1
+            out.add(sl if n == 0 else f"{sl}-{n}")
+        out.update(a.lower() for a in re.findall(r'<a\s+(?:id|name)="([^"]+)"', ln))
+        out.update(a.lower() for a in re.findall(r"\{#([\w-]+)\}", ln))
+    cache[path] = out
+    return out
+
+
+_CARD_ID_HEAD_RE = re.compile(
+    r"^\s*\\?\[?(?:CTL-GRP-[\w-]*\d+|CTL-[\w-]*\d+|CALL-[\w-]*\d+|PLT-[\w-]*\d+)\b")
+
+
+def check_link_anchors_and_ids(docs: Path) -> List[str]:
+    """Предупреждения (ПР-06 разбора замечаний ОНБ-В): (1) якорь ссылки
+    на md-файл комплекта не совпадает ни с одним заголовком цели по
+    правилам GitLab; (2) упоминание конкретной карточки вызова, контроля
+    или платформенной функции без ID в тексте ссылки (conventions §5:
+    «всегда ID + название»). Навигационные ссылки на файл целиком
+    (README, матрица, `platform-functions.md` без якоря) — не упоминание
+    карточки."""
+    cache: Dict[Path, set] = {}
+    bad_anchor: List[Tuple[str, str]] = []
+    no_id: List[Tuple[str, str]] = []
+    for md in _kit_md(docs):
+        try:
+            text = md.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        text = re.sub(r"```.*?```", " ", text, flags=re.S)
+        src_nav = md.name.lower() in ("readme.md", "traceability-matrix.md")
+        for m in _MD_LINK_RE.finditer(text):
+            label, raw_t = m.group(1), m.group(2).strip()
+            if "://" in raw_t or raw_t.startswith(("mailto:", "<")):
+                continue
+            path_part, _, anchor = unquote(raw_t).partition("#")
+            path_part = path_part.replace("\\", "/")
+            try:
+                tgt = (md.parent / path_part).resolve() if path_part else md
+            except OSError:
+                continue
+            if anchor and tgt.suffix.lower() == ".md" and tgt.is_file():
+                if anchor.lower() not in _anchors_of(tgt, cache):
+                    bad_anchor.append((md.relative_to(docs).as_posix(), raw_t))
+            if src_nav:
+                continue
+            low = path_part.lower()
+            name = low.rsplit("/", 1)[-1]
+            card_ref = (("/contract-call/" in "/" + low and name.startswith("call-"))
+                        or (anchor and "/control/" in "/" + low
+                            and anchor.lower().startswith("ctl-"))
+                        or (anchor and name == "platform-functions.md"
+                            and anchor.lower().startswith("plt-")))
+            if card_ref and not _CARD_ID_HEAD_RE.match(label):
+                no_id.append((md.relative_to(docs).as_posix(), label[:50]))
+    out: List[str] = []
+    if bad_anchor:
+        out.append(f"⚠ якоря ссылок: {len(bad_anchor)} не совпадают с заголовками цели "
+                   "(якорь строится как в GitLab: нижний регистр, без знаков, повторные "
+                   "дефисы схлопываются; якорь в стиле GitHub с «--» в GitLab не работает):")
+        out.extend(f"   {rel} → {t}" for rel, t in bad_anchor[:15])
+        if len(bad_anchor) > 15:
+            out.append(f"   … ещё {len(bad_anchor) - 15}")
+    if no_id:
+        out.append(f"⚠ ссылки на карточку вызова, контроля или платформенной функции "
+                   f"без ID в тексте: {len(no_id)} (conventions §5: всегда «ID + название»):")
+        out.extend(f"   {rel}: [{lab}]" for rel, lab in no_id[:15])
+        if len(no_id) > 15:
+            out.append(f"   … ещё {len(no_id) - 15}")
+    return out
 
 
 def check_structured_examples(docs: Path, idx: Dict[str, Path]
