@@ -25,6 +25,7 @@
 # страницы) в срезе 1 не сверяются — честная пометка в отчёте.
 
 import argparse
+from dataclasses import dataclass
 import json
 import re
 import subprocess
@@ -53,6 +54,10 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         gitlab_slug, in_dot_dir, is_task_file,
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK)
+try:
+    from kitcheck.core import Check, run_checks  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck.core import Check, run_checks  # type: ignore  # noqa: E402
 
 # служебные реестры комплекта — сверке нормализатора не подлежат
 # (их сторожа — link_debts, срез 2)
@@ -608,6 +613,46 @@ def _run_impl(docs: Path, sources: Optional[Path],
         else:
             report.extend(f"   {ln}" for ln in _warns(rep))
 
+    # проверки уровня комплекта и репозитория — реестр KIT_CHECKS (ядро kitcheck.core):
+    # порядок реестра — порядок строк отчёта; вердикт — в run_checks
+    _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
+                    card_ids=card_ids, card_titles=card_titles,
+                    fm_schema_issues=fm_schema_issues, groups=groups, idx=idx)
+    _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
+    report.extend(_k_lines)
+    all_ok = all_ok and _k_ok
+
+    total = sum(counts.values())
+    report.append(f"ИТОГО: файлов {total} — ✓ {counts['✓']}, "
+                  f"✗ {counts['✗']}, ⚠ {counts['⚠']}; вердикт: "
+                  + ("OK" if all_ok else "БРАК"))
+    return report, all_ok
+
+
+# --- проверки уровня комплекта и репозитория (этап 2 рефакторинга) ---
+#
+# Перенесены из _run_impl дословно: каждый фрагмент — функция-проверка с
+# локальными report/all_ok; реестр KIT_CHECKS задаёт порядок строк отчёта.
+# Новая проверка уровня комплекта — функция и строка в реестре.
+
+@dataclass
+class _KitCtx:
+    """Контекст проверок уровня комплекта — итоги переписи файлов прогона."""
+    docs: Path
+    sources: Optional[Path]
+    strict: bool
+    catalog: Optional[Path]
+    card_ids: Dict[Path, str]
+    card_titles: Dict[Path, Tuple[str, str, str]]
+    fm_schema_issues: List[Tuple[str, List[str], bool]]
+    groups: Dict[str, List[Path]]
+    idx: Dict[str, Path]
+
+
+def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, sources = ctx.docs, ctx.sources
+    report: List[str] = []
+    all_ok = True
     # --- комплект-уровневые сторожа (срез 2) ---
     # чистота корня репозитория отдачи (2026-08-19): дозаход 5.5 оставил
     # в корне 7 скриптов массовых правок и __pycache__ — прибор корень
@@ -686,6 +731,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
             "(docs/sources/sandbox/prompts/nfr/tasks) и markdown; рабочие скрипты и кэши "
             "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
             "вовсе; read-only анализ — в sandbox)")
+    return report, all_ok
+
+
+def _kc_matrix_registry_and_debts(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, card_ids = ctx.docs, ctx.card_ids
+    report: List[str] = []
+    all_ok = True
     matrix = docs / "traceability-matrix.md"
     if matrix.is_file():
         # К-22 (2026-08-18): id из frontmatter каждой карточки обязан
@@ -713,6 +765,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
         report.append("✗ traceability-matrix.md: матрица не найдена — "
                       "комплект без реестра ID (обязательна, conventions "
                       "§5.3)")
+    return report, all_ok
+
+
+def _kc_open_questions(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     oq = docs / "open-questions.md"
     if not oq.is_file():
         oq = docs.parent / "open-questions.md"
@@ -725,31 +784,80 @@ def _run_impl(docs: Path, sources: Optional[Path],
         report.append(("✓" if ok else "✗") + " реестр открытых вопросов:")
         report.extend(f"   {ln}" for ln in rep)
         report.extend(f"   {ln}" for ln in wrep)
+    return report, all_ok
+
+
+def _kc_id_slots(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, card_ids = ctx.docs, ctx.card_ids
+    report: List[str] = []
+    all_ok = True
     # слот части сервиса в ID (2026-09-28): таблица кодов в README комплекта
     rep, ok = _safe(check_id_slots, docs, card_ids)
     all_ok = all_ok and ok
     if rep:
         report.append(("✓" if ok else "✗") + " слот части сервиса в ID:")
         report.extend(f"   {ln}" for ln in rep)
+    return report, all_ok
+
+
+def _kc_frontmatter_schema(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    fm_schema_issues, = ctx.fm_schema_issues,
+    report: List[str] = []
+    all_ok = True
     # одинаковые названия разных артефактов одного типа (ПР-08 разбора
     # замечаний ОНБ-В, 2026-10-16) — читатель не различит их по названию;
     # ⚠, вердикт не трогает
     fs_rep = format_frontmatter_schema(fm_schema_issues)
     report.extend(fs_rep)
+    return report, all_ok
+
+
+def _kc_title_uniqueness(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, card_titles = ctx.docs, ctx.card_titles
+    report: List[str] = []
+    all_ok = True
     tu_rep = check_title_uniqueness(docs, card_titles)
     if tu_rep:
         report.append("⚠ одинаковые названия разных артефактов одного типа:")
         report.extend(f"   {ln}" for ln in tu_rep)
+    return report, all_ok
+
+
+def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # пробелы постановки (conventions §6 п.5, ПР-12 разбора ОНБ-В): ⚠
     ss_rep, _ = _safe(lambda: (check_source_silent(docs), True))
     report.extend(ss_rep)
+    return report, all_ok
+
+
+def _kc_required_sections(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # обязательные разделы шаблона (пакет 2 задача 7, ПР-05, ЗК-23): нет раздела — ⚠,
     # раздел вне шаблона — i; вердикт не трогают
     rs_rep, _ = _safe(lambda: (check_required_sections(docs), True))
     report.extend(rs_rep)
+    return report, all_ok
+
+
+def _kc_process_call(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # шаг процесса ↔ карточка вызова (пакет 2 задача 8, ЗК-13) — ⚠
     pc_rep, _ = _safe(lambda: (check_process_call_consistency(docs), True))
     report.extend(pc_rep)
+    return report, all_ok
+
+
+def _kc_readme_legend(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, card_ids = ctx.docs, ctx.card_ids
+    report: List[str] = []
+    all_ok = True
     # условные обозначения README (2026-10-10): самоописание комплекта
     # для внешних читателей — ⚠-сигналы, вердикт не трогают
     lg_rep, _ = _safe(lambda: (check_readme_legend(docs, card_ids), True))
@@ -757,6 +865,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
         report.append("⚠ условные обозначения README (самоописание "
                       "комплекта):")
         report.extend(f"   {ln}" for ln in lg_rep)
+    return report, all_ok
+
+
+def _kc_feedback_order(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # реестр замечаний команды (цикл обратной связи, модель 2026-08-17):
     # feedback.md живёт в КОРНЕ репозитория отдачи; файла нет — ок
     rep, ok = _safe(ld.check_feedback_order, docs.parent / "feedback.md")
@@ -764,6 +879,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
     if rep:
         report.append(("✓" if ok else "✗") + " реестр замечаний команды:")
         report.extend(f"   {ln}" for ln in rep)
+    return report, all_ok
+
+
+def _kc_coordination_log(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # журнал координации (трек с координатором): длина записи — ⚠
     # (решение 2026-10-09: журнал должен читаться следующей сессией)
     rep, _ = _safe(ld.check_coordination_log,
@@ -771,11 +893,25 @@ def _run_impl(docs: Path, sources: Optional[Path],
     if rep:
         report.append("i журнал координации:")
         report.extend(f"   {ln}" for ln in rep)
+    return report, all_ok
+
+
+def _kc_config_params(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     rep, ok = _safe(ld.check_config_params, docs)
     all_ok = all_ok and ok
     if not ok:
         report.append("✗ настраиваемые параметры:")
         report.extend(f"   {ln}" for ln in rep)
+    return report, all_ok
+
+
+def _kc_sources_protocol(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, sources, groups = ctx.docs, ctx.sources, ctx.groups
+    report: List[str] = []
+    all_ok = True
     if sources is not None:
         # сторож разметки подсервисов (П-4): без таблицы в профиле
         # возвращает пусто и молчит
@@ -795,6 +931,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
         pd_rep, pd_ok = _safe(check_protocol_discipline, sources)
         all_ok = all_ok and pd_ok
         report.extend(pd_rep)
+    return report, all_ok
+
+
+def _kc_service_catalog_and_h1(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, catalog = ctx.docs, ctx.catalog
+    report: List[str] = []
+    all_ok = True
     # сторож каталога сервисов (2026-09-29): ⚠-сигналы, вердикт не
     # трогают; без каталога (dev-копия вне канона, без --catalog) молчит
     cat_rep, _ = _safe(check_service_catalog,
@@ -805,51 +948,135 @@ def _run_impl(docs: Path, sources: Optional[Path],
         docs, catalog if catalog is not None else canon_catalog_path()), True))
     report.extend(h1_rep)
     report.extend(cat_rep)
+    return report, all_ok
+
+
+def _kc_no_api_in_bundle(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # контракты OpenAPI/AsyncAPI — в репозитории кода (2026-10-06):
     # каталог api/ и YAML в комплекте — ⚠ до удаления владельцем;
     # ссылки матрицы «API ↔ SRS» — через HEAD, явный ref по правилу
     na_rep, _ = _safe(check_no_api_in_bundle, docs)
     report.extend(na_rep)
+    return report, all_ok
+
+
+def _kc_api_matrix_refs(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, strict = ctx.docs, ctx.strict
+    report: List[str] = []
+    all_ok = True
     ar_rep, ar_ok = _safe(check_api_matrix_refs, docs, strict)
     all_ok = all_ok and ar_ok
     report.extend(ar_rep)
+    return report, all_ok
+
+
+def _kc_similar_group_points(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # детектор похожих точек применения групп (П-5e): i-сигналы,
     # вердикт не трогают — решение о консолидации только человеческое
     sg_rep, _ = _safe(lambda: (check_similar_group_points(docs), True))
     report.extend(sg_rep)
+    return report, all_ok
+
+
+def _kc_bare_entity_mentions(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # голые атрибутные обращения к сущностям реестра (2026-08-29):
     # ⚠-сигналы, вердикт не трогают
     bm_rep, _ = _safe(lambda: (check_bare_entity_mentions(docs), True))
     report.extend(bm_rep)
+    return report, all_ok
+
+
+def _kc_named_entity_links(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # ссылки-названия на сущности без более ранней полной ссылки с ID
     # (2026-10-02): ⚠-сигналы, вердикт не трогают
     ne_rep, _ = _safe(lambda: (check_named_entity_links(docs), True))
     report.extend(ne_rep)
+    return report, all_ok
+
+
+def _kc_group_contours(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # согласованность контура групп контролей (полигон 2026-08-29):
     # ⚠-сигналы, вердикт не трогают — решения о контуре человеческие
     gc_rep, _ = _safe(lambda: (check_group_contours(docs), True))
     report.extend(gc_rep)
+    return report, all_ok
+
+
+def _kc_file_artifacts(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # сторож не-markdown артефактов files/ (сироты и битые ссылки —
     # брак: потеря приложения молчаливая)
     fa_rep, fa_ok = _safe(check_file_artifacts, docs)
     all_ok = all_ok and fa_ok
     report.extend(fa_rep)
+    return report, all_ok
+
+
+def _kc_structured_examples(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, idx = ctx.docs, ctx.idx
+    report: List[str] = []
+    all_ok = True
     # структурные сторожа (2026-10-10): sidecar-примеры разбираются
     # (брак переноса ✗ / дефект источника ⚠), относительные ссылки
     # ведут на существующие файлы (✗)
     se_rep, se_ok = _safe(check_structured_examples, docs, idx)
     all_ok = all_ok and se_ok
     report.extend(se_rep)
+    return report, all_ok
+
+
+def _kc_relative_links(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     rl_rep, rl_ok = _safe(check_relative_links, docs)
     all_ok = all_ok and rl_ok
     report.extend(rl_rep)
+    return report, all_ok
+
+
+def _kc_link_anchors_and_ids(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     # якоря ссылок и упоминание карточки без ID (ПР-06 разбора замечаний
     # ОНБ-В, 2026-10-16) — ⚠, вердикт не трогают
     la_rep, _ = _safe(lambda: (check_link_anchors_and_ids(docs), True))
     report.extend(la_rep)
+    return report, all_ok
+
+
+def _kc_nfr_catalog(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, = ctx.docs,
+    report: List[str] = []
+    all_ok = True
     nfr_rep, nfr_ok = _safe(check_nfr_catalog, docs)
     all_ok = all_ok and nfr_ok
     report.extend(nfr_rep)
+    return report, all_ok
+
+
+def _kc_source_coverage(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    docs, sources = ctx.docs, ctx.sources
+    report: List[str] = []
+    all_ok = True
     if sources is not None:
         # миграционный гейт покрытия — информационный: непокрытое —
         # остаток конвейера (судьба фиксируется долгами), не дефект
@@ -861,12 +1088,38 @@ def _run_impl(docs: Path, sources: Optional[Path],
         report.append("i покрытие выгрузки (миграционный гейт, "
                       "информационно):")
         report.extend(f"   {ln}" for ln in cov_lines)
-
-    total = sum(counts.values())
-    report.append(f"ИТОГО: файлов {total} — ✓ {counts['✓']}, "
-                  f"✗ {counts['✗']}, ⚠ {counts['⚠']}; вердикт: "
-                  + ("OK" if all_ok else "БРАК"))
     return report, all_ok
+
+
+KIT_CHECKS: List[Check] = [
+    Check("repo_root", _kc_repo_root, affects_verdict=True),
+    Check("matrix_registry_and_debts", _kc_matrix_registry_and_debts, affects_verdict=True),
+    Check("open_questions", _kc_open_questions, affects_verdict=True),
+    Check("id_slots", _kc_id_slots, affects_verdict=True),
+    Check("frontmatter_schema", _kc_frontmatter_schema, affects_verdict=False),
+    Check("title_uniqueness", _kc_title_uniqueness, affects_verdict=False),
+    Check("source_silent", _kc_source_silent, affects_verdict=False),
+    Check("required_sections", _kc_required_sections, affects_verdict=False),
+    Check("process_call", _kc_process_call, affects_verdict=False),
+    Check("readme_legend", _kc_readme_legend, affects_verdict=False),
+    Check("feedback_order", _kc_feedback_order, affects_verdict=True),
+    Check("coordination_log", _kc_coordination_log, affects_verdict=False),
+    Check("config_params", _kc_config_params, affects_verdict=True),
+    Check("sources_protocol", _kc_sources_protocol, affects_verdict=True),
+    Check("service_catalog_and_h1", _kc_service_catalog_and_h1, affects_verdict=False),
+    Check("no_api_in_bundle", _kc_no_api_in_bundle, affects_verdict=False),
+    Check("api_matrix_refs", _kc_api_matrix_refs, affects_verdict=True),
+    Check("similar_group_points", _kc_similar_group_points, affects_verdict=False),
+    Check("bare_entity_mentions", _kc_bare_entity_mentions, affects_verdict=False),
+    Check("named_entity_links", _kc_named_entity_links, affects_verdict=False),
+    Check("group_contours", _kc_group_contours, affects_verdict=False),
+    Check("file_artifacts", _kc_file_artifacts, affects_verdict=True),
+    Check("structured_examples", _kc_structured_examples, affects_verdict=True),
+    Check("relative_links", _kc_relative_links, affects_verdict=True),
+    Check("link_anchors_and_ids", _kc_link_anchors_and_ids, affects_verdict=False),
+    Check("nfr_catalog", _kc_nfr_catalog, affects_verdict=True),
+    Check("source_coverage", _kc_source_coverage, affects_verdict=False),
+]
 
 
 # --- сторож разметки подсервисов (П-4 песочницы, 2026-08-26) ---
