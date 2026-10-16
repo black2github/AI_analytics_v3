@@ -87,6 +87,11 @@ def index_sources(root: Path):
     idx: Dict[str, Path] = {}
     dups: Dict[str, List[Path]] = {}
     for p in sorted(root.rglob("*.md")):
+        # FB-21 КК (2026-10-14): --sources на родительский каталог
+        # индексировал и sources/raw/ (нетронутый архив выгрузки) —
+        # 615 дублей page_id; архив — не область сверки
+        if "raw" in p.relative_to(root).parts[:-1]:
+            continue
         fm = read_frontmatter(p) or {}
         ids = _PID_RE.findall(fm.get("confluence_page_id", ""))
         if not ids:
@@ -156,10 +161,12 @@ def _safe(fn, *args) -> Tuple[List[str], bool]:
 def _run(files: List[Path], src: Optional[Path],
          docs_root: Optional[Path] = None,
          soft_markers: bool = True,
-         pardon_src: Optional[Path] = None) -> Tuple[List[str], bool]:
+         pardon_src: Optional[Path] = None,
+         amnesty: Optional[List[Path]] = None) -> Tuple[List[str], bool]:
     return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
-                                      pardon_source=pardon_src))
+                                      pardon_source=pardon_src,
+                                      amnesty_sources=amnesty))
 
 
 # написание как в таблице шаблона nfr.md (без «ё»)
@@ -395,6 +402,9 @@ def run(docs: Path, sources: Optional[Path],
     idx: Dict[str, Path] = {}
     if sources is not None:
         idx, dups = index_sources(sources)
+        if any(d.is_dir() for d in sources.rglob("raw")):
+            report.append("i выгрузка: каталоги raw/ (архив) при индексации "
+                          "источников пропущены — область сверки sources/confluence")
         for pid, paths in sorted(dups.items()):
             report.append(f"i выгрузка: page_id {pid} у нескольких файлов "
                           f"({', '.join(p.name for p in paths[:3])}) — "
@@ -404,6 +414,7 @@ def run(docs: Path, sources: Optional[Path],
     groups: Dict[str, List[Path]] = {}
     solo: List[Tuple[Path, str]] = []  # (файл, пометка)
     extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
+    extra_page_ids: Dict[Path, List[str]] = {}  # карточка -> доп. page_ids
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
@@ -500,6 +511,7 @@ def run(docs: Path, sources: Optional[Path],
         else:
             groups.setdefault(pids[0], []).append(p)
             extra_pids[p] = len(pids) - 1
+            extra_page_ids[p] = list(pids[1:])
             if len(pids) > 1:
                 report.append(f"i {rel}: доп. страницы-источники "
                               f"({len(pids) - 1}) механически не сверяются "
@@ -564,7 +576,12 @@ def run(docs: Path, sources: Optional[Path],
             files = [f for f in files if f not in misordered]
             if not files:
                 continue
-        rep, ok = _run(files, src, docs, soft_markers=not strict)
+        # FB-19 КК: дословные абзацы дочерних страниц карточки — амнистия
+        # длинных строк по всем её page_ids (файлы выгрузки доп. страниц)
+        amnesty = [idx[x] for x in extra_page_ids.get(files[0], [])
+                   if x in idx and idx[x] != src]
+        rep, ok = _run(files, src, docs, soft_markers=not strict,
+                       amnesty=amnesty or None)
         # макеты Figma группы (решение 2026-08-31, модель README/main):
         # ссылки макетов живут в НЕсверяемом README-оглавлении — их
         # наличие сторожится здесь (сверка ячейки макетов отключена)

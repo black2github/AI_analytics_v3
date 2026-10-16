@@ -1146,6 +1146,9 @@ _HOMOGLYPH_FOLD = str.maketrans({
 })
 
 
+_CONFLUENCE_URL_RE = re.compile(r"https?://[^\s)\]]*confluence[^\s)\]]*", re.I)
+
+
 def _fold_homoglyphs(s: str) -> str:
     return s.translate(_HOMOGLYPH_FOLD)
 
@@ -2252,6 +2255,32 @@ def _step_bodies(lines: List[str]) -> Dict[str, List[str]]:
     return out
 
 
+def _shift_profile(prof: List[str]) -> List[str]:
+    """Ранговый профиль с базовым уровнем списка, приведённым к нулю
+    (li1,li2 → li0,li1): сдвиг всех уровней на константу — артефакт
+    конвертации выгрузки, не структура."""
+    # базовый уровень — свой у каждого непрерывного блока списка: выгрузка
+    # ведёт вложенный блок с отступом 4 (в markdown это код), а соседний
+    # список в том же шаге — с нуля; карточка оба ведёт от нуля
+    out: List[str] = []
+    block: List[int] = []
+
+    def flush() -> None:
+        if block:
+            base = min(block)
+            out.extend(f"li{lvl - base}" for lvl in block)
+            block.clear()
+
+    for p in prof:
+        if p.startswith("li") and p[2:].isdigit():
+            block.append(int(p[2:]))
+        else:
+            flush()
+            out.append(p)
+    flush()
+    return out
+
+
 def check_step_body_structure(card_text: str,
                               source_text: str) -> Tuple[List[str], bool]:
     """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
@@ -2264,20 +2293,37 @@ def check_step_body_structure(card_text: str,
         return [], True
     card_bodies = _step_bodies(card_text.splitlines())
     bad: List[str] = []
+    levels_only: List[str] = []
     for num, body in src_bodies.items():
         prof_src = _ranked_profile(body)
         if num not in card_bodies or not prof_src:
             continue  # полноту шагов держит К-23
         prof_card = _ranked_profile(card_bodies[num])
         if prof_src != prof_card:
-            bad.append(num)
+            # FB-16 КК (2026-10-09): конвертированная HTML-выгрузка несёт
+            # список с базовым отступом (li1 вместо li0) — сдвиг ВСЕХ
+            # уровней на константу не меняет структуры; сравнение после
+            # нормализации к нулевому базовому уровню. Уплощение
+            # вложенности (li1 → li0 при соседях li0) структуру меняет и
+            # ловится по-прежнему (К-24).
+            if _shift_profile(prof_src) == _shift_profile(prof_card):
+                levels_only.append(num)
+            else:
+                bad.append(num)
+    report: List[str] = []
+    if levels_only:
+        report.append(
+            f"i структура тел шагов: базовый уровень отступа списка расходится "
+            f"с источником при той же вложенности — шаги №{', №'.join(levels_only[:5])}"
+            + ("…" if len(levels_only) > 5 else "")
+            + " (ранговые уровни конвертированной выгрузки, не дефект)")
     if bad:
-        return [f"структура тел шагов расходится с источником "
-                f"(уровни/принадлежность): шаги №{', №'.join(bad[:5])}"
-                + ("…" if len(bad) > 5 else "")
-                + " — тело шага переносится КАК ЕСТЬ с ранговыми "
-                "уровнями отступов ✗ НИЖЕ ПОРОГА"], False
-    return [], True
+        return report + [f"структура тел шагов расходится с источником "
+                         f"(уровни/принадлежность): шаги №{', №'.join(bad[:5])}"
+                         + ("…" if len(bad) > 5 else "")
+                         + " — тело шага переносится КАК ЕСТЬ с ранговыми "
+                         "уровнями отступов ✗ НИЖЕ ПОРОГА"], False
+    return report, True
 
 
 # К-24 (2026-08-18): уплощение вложенности шагов. Источник ведёт
@@ -2598,6 +2644,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
             skip_cols.add(0)
         missing: List[str] = []
         img_mixed: List[str] = []
+        url_cells: List[str] = []
         for row in rows:
             # Строка с вложением (пример Запрос.xml/Ответ.xml) — целиком в
             # sidecar examples/, в карточке её значений законно нет.
@@ -2637,6 +2684,18 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 if re.search(r"<img\b", cell, re.I):
                     img_mixed.append(cell.strip()[:50])
                     continue
+                # FB-16 КК (2026-10-09): значение-ссылка на Confluence
+                # («Cм. внутр. Сonfluence [https://confluence…») — перенос
+                # живых URL запрещён правилами, требовать его полнотой
+                # нельзя; такая ячейка — не потеря, а отсылка источника
+                if cv and _CONFLUENCE_URL_RE.search(cell):
+                    rest = _norm_cell(re.sub(
+                        r"\[([^\]]*)\]\([^)]*\)|https?://\S+", " ", cell))
+                    if (len(rest) <= 40
+                            and ("confluence" in rest.lower()
+                                 or rest.lower().startswith(("см", "cм")))):
+                        url_cells.append(cell.strip()[:50])
+                        continue
                 if cv and _fold_homoglyphs(cv) not in card_norm:
                     missing.append(cell.strip()[:60])
         if missing:
@@ -2654,6 +2713,13 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 f"смешанным текстом и изображениями ×{len(img_mixed)}: "
                 "дословная сверка пропущена (изображения не переносятся), "
                 "полноту переноса проверить приёмкой")
+        if url_cells:
+            title = " | ".join(h.strip() for h in hdr[:3])
+            report.append(
+                f"i таблица источника «{title}»: ячейки-ссылки на Confluence "
+                f"×{len(url_cells)} полнотой не считаются (живые URL не "
+                "переносятся); содержимое по ссылке — отдельная страница "
+                "или долг")
     # Полнота HTML-таблиц источника: каждое имя параметра из раскрытых
     # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
     # file_id/upload_token потеряны при зелёном гейте).
@@ -3434,7 +3500,8 @@ def _marker_hits_verbatim_in_source(card_text: str, marker: str,
 def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True,
-               soft_markers: bool = False) -> Tuple[List[str], bool]:
+               soft_markers: bool = False,
+               amnesty_text: Optional[str] = None) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -3602,16 +3669,21 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # что source_literals у колонных ролей). Обход разметкой («О**K**»)
     # больше не нужен и не легален.
     if mixed and source_text:
+        # FB-16/FB-20 КК (2026-10-09/14): слово с гомоглифом, дословно
+        # стоящее в ТЕКСТЕ источника (тег «[КК_BК]», литерал
+        # getCardFeeСounters), — данные автора, не подмена; раньше
+        # миловались только слова из кавычечных литералов, и дословный
+        # перенос бракуется за дословность. Сторож дефейса тега (К-32)
+        # не ослабляется: он сверяет тег с источником отдельно.
         src_words = {w.group(0)
-                     for lit in quoted_literals(source_text)
-                     for w in re.finditer(r"[^\W\d_]+", lit)}
+                     for w in re.finditer(r"[^\W\d_]+",
+                                          source_text.split("---", 2)[-1])}
         pardoned = [w for w in mixed if w in src_words]
         mixed = [w for w in mixed if w not in src_words]
         if pardoned:
             report.append(
                 f"i гомоглифы ×{len(pardoned)} помилованы — дословно из "
-                f"кавычечных литералов источника "
-                f"({', '.join(repr(w) for w in pardoned[:3])})")
+                f"источника ({', '.join(repr(w) for w in pardoned[:3])})")
     if mixed:
         ok = False
         report.append(
@@ -3728,7 +3800,12 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     # заголовки и код пропускаются; атрибутные строки покрыты своим
     # порогом выше.
     in_code = False
-    src_norm_full = _norm_cell(source_text) if source_text else None
+    # FB-19 КК (2026-10-13): амнистия дословности — по ОБЪЕДИНЕНИЮ всех
+    # страниц карточки (amnesty_text), не только главной: дословные
+    # абзацы дочерних страниц мультистраничной карточки бракуются иначе
+    src_norm_full = _norm_cell(
+        (source_text or "") + "\n" + (amnesty_text or "")) \
+        if (source_text or amnesty_text) else None
     for ln in lines:
         s = ln.strip()
         if s.startswith("```"):
@@ -4175,7 +4252,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               min_valid_pct: float = 95.0,
               docs_root: Optional[Path] = None,
               soft_markers: bool = False,
-              pardon_source: Optional[Path] = None) -> Tuple[List[str], bool]:
+              pardon_source: Optional[Path] = None,
+              amnesty_sources: Optional[List[Path]] = None) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -4198,11 +4276,15 @@ def run_check(files: List[Path], source_path: Optional[Path],
         pardon_source.read_text(encoding="utf-8")))
                    if src_text is None and pardon_source is not None
                    else None)
+    amnesty_text = ("\n".join(
+        apply_critic(strip_history(p.read_text(encoding="utf-8", errors="replace")))
+        for p in (amnesty_sources or []) if p.is_file()) or None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
                             source_text=(src_text if src_text is not None
                                          else pardon_text),
                             column_roles=main_file.name.lower() != "readme.md",
-                            soft_markers=soft_markers)
+                            soft_markers=soft_markers,
+                            amnesty_text=amnesty_text)
     card_text = main_file.read_text(encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
@@ -4347,7 +4429,15 @@ def run_check(files: List[Path], source_path: Optional[Path],
         ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)
         if steps_apply:
-            sb_report, sb_ok = check_step_body_structure(combined, src_text)
+            # FB-16 КК (fun-sys-16): вторая карточка группы (intc) несёт
+            # свои абзацы под теми же номерами шагов — объединение группы
+            # ложно расходится с источником; сначала главная карточка,
+            # объединение — только если главная не прошла (шаги могли
+            # быть разложены по карточкам группы)
+            sb_report, sb_ok = check_step_body_structure(
+                re.sub(r"<!--.*?-->", " ", card_text, flags=re.S), src_text)
+            if not sb_ok:
+                sb_report, sb_ok = check_step_body_structure(combined, src_text)
             report.extend(sb_report)
             ok = ok and sb_ok
         # К-24: уплощение вложенности + потеря паспортного слоя «Что

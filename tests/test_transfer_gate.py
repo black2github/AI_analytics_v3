@@ -554,3 +554,13 @@ def test_unrecognized_debt_row_blocks_transfer(tmp_path):
     assert any(l.startswith("✗ [CORE-20] строк раздела «Долги по ссылкам» не распознано: 1")
                for l in lines), "\n".join(lines)
 
+
+def test_nonstandard_debts_heading_blocks_transfer(tmp_path):
+    rows = _DEBT_ROW.replace("## 5. Долги по ссылкам", "## Долги ссылок")
+    src = make_src(tmp_path, matrix=_MATRIX + rows)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
+    lines, ready, _ = _run(src)
+    assert not ready
+    assert any(l.startswith("✗ [CORE-20] раздел долгов назван «Долги ссылок»") for l in lines), "\n".join(lines)
+

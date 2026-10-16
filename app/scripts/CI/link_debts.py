@@ -81,8 +81,41 @@ _GAP_RE = re.compile(r"—\s+«([^»]+)»\s*$")
 # документе-ожидателе.
 _PARAM_DEBT_RE = re.compile(r"параметр\s+(.+?)\s+не\s+зафиксирован", re.IGNORECASE)
 _DEBTS_HEADING = "Долги по ссылкам"
+# раздел узнаётся и под нестандартным именем («Долги ссылок» у КК, 16.10):
+# иначе строки не сторожатся и гейт показывает ложную чистоту; отклонение
+# имени от нормы — отдельное предупреждение (имя раздела — структурный факт,
+# по нему раздел читают гейт переноса и платформа)
+_DEBTS_HEADING_RE = re.compile(r"долг\w*\s+(?:по\s+)?ссыл", re.IGNORECASE)
 _SEP_CELL_RE = re.compile(r"^:?-{3,}:?$")
-_CLOSED_TARGET_RE = re.compile(r"^(?:[A-ZА-Я]{2,}[-\w]*|nfr(?:-[a-z]{3}(?:-\d{3})?)?)(?:\.\d+)*$")
+# закрытый долг: во 2-й колонке ID появившейся цели — голый или markdown-ссылкой
+# «[ID](путь)» / «[ID Название](путь)» (форма 5; КК 16.10 — 43 строки ссылками)
+_CLOSED_TARGET_RE = re.compile(
+    r"^\[?(?:[A-ZА-Я]{2,}[-\w]*|nfr(?:-[a-z]{3}(?:-\d{3})?)?)(?:\.\d+)*(?:\.\.\d+)?(?:[^\]]*\])?(?:\([^)]*\))?$")
+_LINK_ONLY_RE = re.compile(r"^(?:\[[^\]]+\]\([^)]+\)\s*,?\s*)+$")
+
+
+def _closed_debt(cells: List[str]) -> bool:
+    """Закрытый долг (цель появилась): во 2-й колонке ID цели — голый, ссылкой,
+    перечнем или диапазоном (`FUN-SYS-07, FUN-SYS-08`, `EXTINT-F1-008..013`);
+    либо «—» во 2-й и только ссылки на карточки в 3-й (КК, 16.10)."""
+    if len(cells) < 2:
+        return False
+    if cells[1] != "—":
+        toks = [t.strip() for t in cells[1].split(",") if t.strip()]
+        return bool(toks) and all(_CLOSED_TARGET_RE.match(t) for t in toks)
+    return len(cells) >= 3 and bool(_LINK_ONLY_RE.match(cells[2]))
+# базовый контракт внешней АС (docs-external-contracts): «нет базового контракта
+# «<имя>» [у владельца <код АС>] — требуется контур base» — форма 1 с типом
+# base-contract; владелец — внешняя система, в каталоге сервисов её нет
+_BASE_DEBT_RE = re.compile(r"нет\s+базового\s+контракта\s+«([^»]+)»", re.IGNORECASE)
+
+
+def debts_heading(matrix_text: str) -> Optional[str]:
+    """Фактический заголовок раздела долгов (текст без «#» и номера) или None."""
+    for ln in matrix_text.splitlines():
+        if ln.startswith("#") and _DEBTS_HEADING_RE.search(ln):
+            return re.sub(r"^#+\s*(?:\d+\.\s*)?", "", ln).strip()
+    return None
 
 
 def issue_fields(row: str) -> Optional[dict]:
@@ -182,7 +215,7 @@ def parse_matrix_full(matrix_text: str):
     header_seen = False
     for ln in matrix_text.splitlines():
         if ln.startswith("#"):
-            in_debts = _DEBTS_HEADING.lower() in ln.lower()
+            in_debts = bool(_DEBTS_HEADING_RE.search(ln))
             header_seen = False
             continue
         row = _ROW_RE.match(ln)
@@ -199,7 +232,7 @@ def parse_matrix_full(matrix_text: str):
             # закрытый долг: во второй колонке — ID появившейся цели
             # (lk-mp, ОНБ-В: «| ENT-001 | FUN-CL-03 | <название> |»), долга
             # больше нет — строка не сторожится и не считается нераспознанной
-            if len(cells) >= 2 and cells[1] != "—" and _CLOSED_TARGET_RE.match(cells[1]):
+            if _closed_debt(cells):
                 continue
         issue = issue_fields(joined)
         if issue:
@@ -218,6 +251,12 @@ def parse_matrix_full(matrix_text: str):
             owner = _OWNER_RE.search(joined)
             debts.append((_expand_from(cells[0]), m.group(1), m.group(2),
                           owner.group(1) if owner else None, ln.strip()))
+            continue
+        bm = _BASE_DEBT_RE.search(joined)
+        if bm:
+            owner = _OWNER_RE.search(joined)
+            debts.append((_expand_from(cells[0]), "base-contract", bm.group(1).strip(),
+                          owner.group(1) if owner else "внешняя АС", ln.strip()))
             continue
         pm = _PARAM_DEBT_RE.search(joined)
         if pm:
@@ -321,7 +360,8 @@ def check(matrix_path: Path, docs_root: Path,
                 ok = False
         elif owner is not None:
             cross[owner] = cross.get(owner, 0) + 1
-            if catalog_codes is not None and owner not in catalog_codes:
+            if (catalog_codes is not None and owner not in catalog_codes
+                    and typ != "base-contract"):
                 unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
             target = None
@@ -390,6 +430,10 @@ def check(matrix_path: Path, docs_root: Path,
         # shortLinkDirectory → short-link) оставляет долги на несуществующий код
         report.append(f"⚠ владелец «{owner_code}» ×{n}: кода нет в каталоге сервисов "
                       "(переименован или опечатка) — долг не адресуется")
+    heading = debts_heading(matrix_path.read_text(encoding="utf-8", errors="replace"))
+    if heading is not None and heading.lower() != _DEBTS_HEADING.lower():
+        report.append(f"⚠ раздел долгов назван «{heading}» — норма «{_DEBTS_HEADING}» "
+                      "(имя раздела читают гейт переноса и платформа; шаблон матрицы)")
     for ln_ in unrecognized:
         report.append(f"⚠ строка раздела «{_DEBTS_HEADING}» не распознана ни одним "
                       f"форматом долга — не сторожится: {ln_[:120]}")

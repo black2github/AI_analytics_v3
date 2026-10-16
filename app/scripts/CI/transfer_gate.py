@@ -396,6 +396,12 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                         translated.add(f["source"])
             else:
                 translated.update(_OQ_REF_RE.findall(row))
+    heading = ld.debts_heading(mtext) if mtext else None
+    if heading is not None and heading.lower() != ld._DEBTS_HEADING.lower():
+        gate.add("✗", "CORE-20",
+                 f"раздел долгов назван «{heading}» — норма «{ld._DEBTS_HEADING}»: по этому "
+                 "имени раздел читают гейт и платформа (правило чтения долгов в README)",
+                 check="имя раздела долгов")
     if unrecognized:
         # нераспознанный долг — непроверенное обязательство: READY с ним
         # подтвердить нельзя (ЗК-29 ОНБ-В; в самопроверке это ⚠, здесь ✗)

@@ -583,3 +583,38 @@ def test_owner_code_checked_against_catalog(tmp_path):
     report, ok = check(mx, docs, catalog_codes={"shortLinkDirectory"})
     assert ok and not any("⚠ владелец" in r for r in report)
 
+
+def test_debts_section_recognized_under_nonstandard_name(tmp_path):
+    # КК 16.10: раздел «Долги ссылок» прибор не видел — ложная чистота
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф'\n---\nиспользует «Процесс выпуска»\n")
+    mx = docs / "traceability-matrix.md"
+    make(mx, _debts_matrix("| FUN-BNK-01 | — | нужно уточнить формат (свободный текст) |\n")
+         .replace("## 6. Долги по ссылкам", "## Долги ссылок"))
+    from app.scripts.CI.link_debts import debts_heading
+    assert debts_heading(mx.read_text(encoding="utf-8")) == "Долги ссылок"
+    _r, debts, unrec = parse_matrix_full(mx.read_text(encoding="utf-8"))
+    assert len(unrec) == 1
+    report, ok = check(mx, docs)
+    assert ok and any(r.startswith("⚠ раздел долгов назван «Долги ссылок»") for r in report), report
+
+
+def test_closed_debt_with_markdown_link_and_base_contract(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "srs/functions/fun-bnk-01.md",
+         "---\nid: FUN-BNK-01\ntitle: 'Ф'\n---\nвызывает «Метод СВФЕ»\n")
+    mx = docs / "traceability-matrix.md"
+    make(mx, _debts_matrix(
+        "| FUN-BNK-01 | [ENT-024](srs/data-model/ent-024.md) | содержимое перенесено, долг закрыт |\n"
+        "| FUN-BNK-01 | [PRN-11 Печатная форма](srs/print-form/prn-11.md) | закрыт |\n"
+        "| FUN-BNK-01 | — | [SCR-BNK-03](srs/screen-form/scr-bnk-03.md) |\n"
+        "| FUN-BNK-01 | FUN-SYS-07, FUN-SYS-08 | [FUN-SYS-07](srs/f7.md), [FUN-SYS-08](srs/f8.md) |\n"
+        "| CALL-EXT-001..006 | EXTINT-F1-008..013 | базовые контракты перенесены в [внешний репо](https://x/f1/) |\n"
+        "| FUN-BNK-01 | — | нет базового контракта «Метод СВФЕ» у владельца svfe — требуется контур base |\n"))
+    _r, debts, unrec = parse_matrix_full(mx.read_text(encoding="utf-8"))
+    assert unrec == [] and len(debts) == 1
+    assert debts[0][1] == "base-contract" and debts[0][3] == "svfe"
+    report, ok = check(mx, docs, catalog_codes={"ONB"})
+    assert ok and not any("⚠ владелец" in r for r in report), report
+
