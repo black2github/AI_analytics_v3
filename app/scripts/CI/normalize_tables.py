@@ -38,6 +38,10 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+try:
+    from kitcheck import fs as _fs  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 
 try:
     from bs4 import BeautifulSoup, NavigableString, Tag
@@ -257,7 +261,7 @@ class Profile:
 
     @staticmethod
     def load(path: Path) -> "Profile":
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(_fs.read_text(path, encoding="utf-8"))
         return Profile(
             name=data.get("name", path.stem),
             header_rows=int(data.get("header_rows", 1)),
@@ -955,7 +959,7 @@ def normalize_file(md_path: Path, profile: Optional[Profile],
     иначе он утекает в прогон агента и размножается (разжалование
     итерации 3, 2026-08-06).
     """
-    text = md_path.read_text(encoding="utf-8")
+    text = _fs.read_text(md_path, encoding="utf-8")
     tables = find_top_tables(text)
     report: List[str] = [f"файл: {md_path.name}; верхнеуровневых таблиц: {len(tables)}"]
     chunks: List[str] = []
@@ -2952,7 +2956,7 @@ def check_oq_page_refs(md_path: Path) -> Tuple[List[str], bool]:
         return [], True
     warns: List[str] = []
     for i, ln in enumerate(
-            md_path.read_text(encoding="utf-8",
+            _fs.read_text(md_path, encoding="utf-8",
                               errors="replace").splitlines(), 1):
         if _OQ_PAGE_WORD_RE.search(ln) or _OQ_PAGE_NUM_RE.search(ln):
             warns.append(
@@ -2966,7 +2970,7 @@ def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
     """Структурная целостность таблиц СЛУЖЕБНОГО реестра (матрица,
     open-questions): только К-16 (разрывы пустой строкой) — колонные
     роли и литералы к реестрам не применяются (К-4)."""
-    lines = md_path.read_text(encoding="utf-8").splitlines()
+    lines = _fs.read_text(md_path, encoding="utf-8").splitlines()
     breaks = blank_table_breaks(lines)
     if not breaks:
         return [], True
@@ -3039,7 +3043,7 @@ def check_clean_document(md_path: Path,
     docs/, (в) изображения, (г) critic-маркеры — брак; внешние http(s)
     вне белого списка — предупреждение (видимо и при ✓)."""
     from urllib.parse import unquote
-    text = md_path.read_text(encoding="utf-8")
+    text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = []
     ok = True
     # (г) critic-маркеры в чистовике — разметка правок источника
@@ -3215,7 +3219,7 @@ def _docs_card_titles(docs_root: Path) -> List[Tuple[str, str]]:
     out: List[Tuple[str, str]] = []
     for p in sorted(docs_root.rglob("*.md")):
         try:
-            head = p.read_text(encoding="utf-8", errors="replace")[:2000]
+            head = _fs.read_text(p, encoding="utf-8", errors="replace")[:2000]
         except OSError:
             continue
         if not head.lstrip("﻿").startswith("---"):
@@ -3280,7 +3284,7 @@ def check_target_mentions(card_text: str, md_path: Path,
     # (б) остальные теговые упоминания: след в матрице обязателен
     matrix = docs_root / "traceability-matrix.md"
     try:
-        mtext = _norm_ws(matrix.read_text(encoding="utf-8",
+        mtext = _norm_ws(_fs.read_text(matrix, encoding="utf-8",
                                           errors="replace"))
     except OSError:
         mtext = ""
@@ -3640,7 +3644,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     правило, сверку и образец (итерации 6-секст/6-септ/6-окт, 2026-08-09) —
     текстовая доставка не доехала, ловим инструментом. В честных переносах
     этих слов нет (проверено по источнику и чистым прогонам)."""
-    text = md_path.read_text(encoding="utf-8")
+    text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
     src_literals = source_role_literals(source_text) if source_text else None
@@ -4396,14 +4400,14 @@ def run_check(files: List[Path], source_path: Optional[Path],
     (`src_text is not None`) от него не включаются."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
-        source_path.read_text(encoding="utf-8")))
+        _fs.read_text(source_path, encoding="utf-8")))
                 if source_path is not None else None)
     pardon_text = (apply_critic(strip_history(
-        pardon_source.read_text(encoding="utf-8")))
+        _fs.read_text(pardon_source, encoding="utf-8")))
                    if src_text is None and pardon_source is not None
                    else None)
     amnesty_text = ("\n".join(
-        apply_critic(strip_history(p.read_text(encoding="utf-8", errors="replace")))
+        apply_critic(strip_history(_fs.read_text(p, encoding="utf-8", errors="replace")))
         for p in (amnesty_sources or []) if p.is_file()) or None)
     report, ok = check_file(main_file, min_valid_pct=min_valid_pct,
                             source_text=(src_text if src_text is not None
@@ -4411,7 +4415,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             column_roles=main_file.name.lower() != "readme.md",
                             soft_markers=soft_markers,
                             amnesty_text=amnesty_text)
-    card_text = main_file.read_text(encoding="utf-8")
+    card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
     # status-model); title/поведение/колонки — по первой (основной).
@@ -4419,7 +4423,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
     # коммента невидимо читателю — «найденное» там значение не перенесено.
     combined = re.sub(
         r"<!--.*?-->", " ",
-        "\n\n".join(f.read_text(encoding="utf-8") for f in files),
+        "\n\n".join(_fs.read_text(f, encoding="utf-8") for f in files),
         flags=re.S)
     # Sidecar-образцы §5 — часть карточки: шаблон предписывает держать
     # payload (JSON/XML/XSD/WSDL/curl) в <as>/examples/, а не в теле.
@@ -4434,8 +4438,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                     and side.suffix.lower() in {
                         ".json", ".xml", ".xsd", ".wsdl", ".sh", ".txt",
                         ".html", ".yaml", ".yml"}):
-                combined += "\n\n" + side.read_text(
-                    encoding="utf-8", errors="replace")
+                combined += "\n\n" + _fs.read_text(side, encoding="utf-8", errors="replace")
         except OSError:
             continue
     # сторож чистовика (волна D): по КАЖДОЙ карточке вызова, не только
@@ -4474,7 +4477,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
     if src_text is not None and re.search(
             r"^type:\s*data-model\s*$", card_text[:500], re.M):
         sib = "\n\n".join(
-            f.read_text(encoding="utf-8")
+            _fs.read_text(f, encoding="utf-8")
             for f in sorted(main_file.parent.glob("*.md"))
             if f not in files)
         corpus_txt = combined + "\n\n" + re.sub(r"<!--.*?-->", " ", sib,
@@ -4519,7 +4522,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
         if (_frontmatter_title(card_text) is None
                 and re.search(r"^partOf:", card_text[:600], re.M)):
             for f in files[1:]:
-                t = f.read_text(encoding="utf-8")
+                t = _fs.read_text(f, encoding="utf-8")
                 if (re.search(r"^id:", t[:600], re.M)
                         and _frontmatter_title(t) is not None):
                     ttl_text, ttl_holder = t, f
@@ -4593,7 +4596,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
         # что угодно, включая сам источник, — фолбэк глушил бы сверку
         sib_txt = (re.sub(
             r"<!--.*?-->", " ",
-            "\n\n".join(f.read_text(encoding="utf-8")
+            "\n\n".join(_fs.read_text(f, encoding="utf-8")
                         for f in sorted(main_file.parent.glob("*.md"))
                         if f not in files),
             flags=re.S)
@@ -4653,7 +4656,7 @@ def main() -> int:
               f"использую {main_file}", file=sys.stderr)
 
     if args.cell_to_md:
-        text = main_file.read_text(encoding="utf-8")
+        text = _fs.read_text(main_file, encoding="utf-8")
         cell = passport_cell_html(text, args.cell_to_md)
         if cell is None:
             print(f"# ячейка с лейблом {args.cell_to_md!r} не найдена",
@@ -4676,7 +4679,7 @@ def main() -> int:
         return 0
 
     if args.sample:
-        text = main_file.read_text(encoding="utf-8")
+        text = _fs.read_text(main_file, encoding="utf-8")
         tables = find_top_tables(text)
         for i, t in enumerate(tables):
             if args.table is not None and i != args.table:

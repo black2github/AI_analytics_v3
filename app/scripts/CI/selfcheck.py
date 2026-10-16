@@ -37,6 +37,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import link_debts as ld  # noqa: E402
 import normalize_tables as nt  # noqa: E402
 import source_coverage as sc  # noqa: E402
+try:
+    from kitcheck import fs as _fs  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 
 # служебные реестры комплекта — сверке нормализатора не подлежат
 # (их сторожа — link_debts, срез 2)
@@ -48,7 +52,7 @@ def read_frontmatter(path: Path) -> Optional[Dict[str, str]]:
     """Плоский frontmatter файла; None — блок не закрыт (битый),
     {} — блока нет вовсе."""
     try:
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(path, encoding="utf-8", errors="replace")
     except OSError:
         return None
     body = text.lstrip("﻿")
@@ -125,7 +129,7 @@ def _empty_source_note(src: Path) -> Tuple[Optional[str], bool]:
     приняв БРАК. Пустая страница БЕЗ флага остаётся ⚠: причина
     неизвестна, решение человеческое."""
     try:
-        text = src.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(src, encoding="utf-8", errors="replace")
     except OSError:
         return None, False
     body = text.lstrip("\ufeff")
@@ -214,7 +218,7 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
     if features.is_dir():
         for p in sorted(features.rglob("*.md")):
             try:
-                text = p.read_text(encoding="utf-8", errors="replace")
+                text = _fs.read_text(p, encoding="utf-8", errors="replace")
             except OSError:
                 continue
             if re.search(r"(?m)^## Нефункциональные требования\s*$", text):
@@ -316,7 +320,7 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
                     report.append(
                         f"✗ {rel}: source_artifacts не файл: {tok}")
         try:
-            text = p.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(p, encoding="utf-8", errors="replace")
         except OSError:
             text = ""
         seen_rows = set()
@@ -349,7 +353,7 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
                 "✗ traceability-matrix.md: нет матрицы при каталоге НФТ")
             brd_rows: set = set()
         else:
-            mtext = matrix.read_text(encoding="utf-8", errors="replace")
+            mtext = _fs.read_text(matrix, encoding="utf-8", errors="replace")
             sec = re.search(
                 r"^## BRD-6\.2\..*?(?=^## |\Z)", mtext, re.S | re.M)
             brd_rows = set(re.findall(
@@ -392,6 +396,17 @@ def in_dot_dir(p: Path, docs: Path) -> bool:
 def run(docs: Path, sources: Optional[Path],
         strict: bool = False,
         catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
+    """Прогон самопроверки комплекта: (строки отчёта, вердикт OK).
+
+    Файлы комплекта и выгрузки читаются с диска один раз за прогон — через
+    кэш `kitcheck.fs` (сессия на время прогона)."""
+    with _fs.session():
+        return _run_impl(docs, sources, strict, catalog)
+
+
+def _run_impl(docs: Path, sources: Optional[Path],
+              strict: bool = False,
+              catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -594,12 +609,11 @@ def run(docs: Path, sources: Optional[Path],
         # ссылки макетов живут в НЕсверяемом README-оглавлении — их
         # наличие сторожится здесь (сверка ячейки макетов отключена)
         try:
-            _src_t = src.read_text(encoding="utf-8", errors="replace")
+            _src_t = _fs.read_text(src, encoding="utf-8", errors="replace")
             _rd = files[0].parent / "README.md"
             if ("figma.com" in _src_t.lower() and _rd.exists()
                     and files[0].name.endswith("-main.md")
-                    and "figma.com" not in _rd.read_text(
-                        encoding="utf-8", errors="replace").lower()):
+                    and "figma.com" not in _fs.read_text(_rd, encoding="utf-8", errors="replace").lower()):
                 rep = rep + ["предупреждение: источник несёт ссылки "
                              "Figma, а README-оглавление группы — нет: "
                              "макеты живут в README (решение "
@@ -727,7 +741,7 @@ def run(docs: Path, sources: Optional[Path],
         # состоять в реестре ID матрицы — фантомный/авансовый ID вне
         # реестра невидим сверкам и ломает правило выдачи ID (дозаход
         # 3.1: rbac-заглушка с RBAC-001, которого нет в матрице)
-        mtext = matrix.read_text(encoding="utf-8", errors="replace")
+        mtext = _fs.read_text(matrix, encoding="utf-8", errors="replace")
         ghosts = sorted((p, cid) for p, cid in card_ids.items()
                         if cid not in mtext)
         if ghosts:
@@ -931,7 +945,7 @@ _SERVICE_ZONE_RE = re.compile(r"^сервис\s+([\w-]+)\s*(?:,\s*(.+))?$", re.I
 def _load_subservice_map(profile: Path):
     """[(матчер, слаг|None, зона)]; None — таблицы/файла нет."""
     try:
-        text = profile.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(profile, encoding="utf-8", errors="replace")
     except OSError:
         return None
     m = re.search(r"^#+\s*Разметка подсервисов.*$", text, re.M)
@@ -1021,7 +1035,7 @@ def check_subservice_mapping(docs: Path, sources: Path,
     for src_file in sorted(sources.rglob("*.md")):
         if src_file.name.lower() == "index.md":
             continue
-        head = src_file.read_text(encoding="utf-8",
+        head = _fs.read_text(src_file, encoding="utf-8",
                                   errors="replace")[:2000]
         pid_m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)",
                           head, re.M)
@@ -1128,7 +1142,7 @@ def _load_service_table(readme: Path):
     2026-10-12: термины `service-id` и «слот сервиса» разведены, таблица
     `service-id | Слот | Название | Вход`)."""
     try:
-        text = readme.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(readme, encoding="utf-8", errors="replace")
     except OSError:
         return None
     header: Optional[List[str]] = None
@@ -1181,7 +1195,7 @@ def domain_glossary_mode(readme: Path) -> Optional[str]:
     «доменный + указатели» — в каждом комплекте указатель. None — не
     объявлен (одиночный сервис либо режим не выбран)."""
     try:
-        text = readme.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(readme, encoding="utf-8", errors="replace")
     except OSError:
         return None
     m = _GLOSSARY_MODE_RE.search(text)
@@ -1215,7 +1229,7 @@ def _load_part_codes(readme: Path):
     """{код: каталог} по таблице кодов частей в README корня комплекта.
     None — таблицы нет; {} — таблица есть, но без колонки «Каталог»."""
     try:
-        text = readme.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(readme, encoding="utf-8", errors="replace")
     except OSError:
         return None
     m = _PART_TABLE_HEAD_RE.search(text)
@@ -1362,7 +1376,7 @@ def check_source_silent(docs: Path) -> List[str]:
     other: List[str] = []
     for md in _kit_md(docs):
         try:
-            lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+            lines = _fs.read_text(md, encoding="utf-8", errors="replace").splitlines()
         except OSError:
             continue
         rel = md.relative_to(docs).as_posix()
@@ -1501,7 +1515,7 @@ def check_required_sections(docs: Path) -> List[str]:
         stub = False
         for f in files:
             try:
-                text = f.read_text(encoding="utf-8", errors="replace")
+                text = _fs.read_text(f, encoding="utf-8", errors="replace")
             except OSError:
                 continue
             keys.extend(_h2_keys(text))
@@ -1595,7 +1609,7 @@ def check_process_call_consistency(docs: Path) -> List[str]:
         if typ == "process" and cid.startswith("PROC") \
                 and md.name.lower() not in ("readme.md", "status-model.md"):
             try:
-                lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+                lines = _fs.read_text(md, encoding="utf-8", errors="replace").splitlines()
             except OSError:
                 continue
             in_code, head_step = False, ""
@@ -1625,7 +1639,7 @@ def check_process_call_consistency(docs: Path) -> List[str]:
                         fwd.setdefault((cid, tid), set()).add(step)
         elif typ == "contract-call" and cid.startswith("CALL-"):
             try:
-                text = md.read_text(encoding="utf-8", errors="replace")
+                text = _fs.read_text(md, encoding="utf-8", errors="replace")
             except OSError:
                 continue
             sec, on = [], False
@@ -1847,7 +1861,7 @@ def check_readme_legend(docs: Path, card_ids: Dict[Path, str]) -> List[str]:
         return ["README комплекта отсутствует — внешние читатели берут "
                 "контуры, части и префиксы ID из его раздела «Условные "
                 "обозначения» (шаблон docs-readme.md)"]
-    text = readme.read_text(encoding="utf-8", errors="replace")
+    text = _fs.read_text(readme, encoding="utf-8", errors="replace")
     section = _legend_section(text)
     if section is None:
         return ["README: нет раздела «Условные обозначения» — контуры, "
@@ -1977,7 +1991,7 @@ def _anchors_of(path: Path, cache: Dict[Path, set]) -> set:
     seen: Dict[str, int] = {}
     in_code = False
     try:
-        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        lines = _fs.read_text(path, encoding="utf-8", errors="replace").splitlines()
     except OSError:
         lines = []
     for ln in lines:
@@ -2015,7 +2029,7 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
     no_id: List[Tuple[str, str]] = []
     for md in _kit_md(docs):
         try:
-            text = md.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
         text = re.sub(r"```.*?```", " ", text, flags=re.S)
@@ -2071,7 +2085,7 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
     owners: Dict[Path, List[Path]] = {}
     for md in _kit_md(docs):
         try:
-            text = md.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
         for m in _ART_LINK_RE.finditer(text):
@@ -2089,7 +2103,7 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
     n_ok = 0
     for f in files:
         rel = f.relative_to(docs).as_posix()
-        raw = f.read_bytes()
+        raw = _fs.read_bytes(f)
         ext = f.suffix.lower()
         if raw.startswith(_BOM):
             ok = False
@@ -2112,7 +2126,7 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
         src_parses = False
         for pg in pages:
             try:
-                ptext = pg.read_text(encoding="utf-8", errors="replace")
+                ptext = _fs.read_text(pg, encoding="utf-8", errors="replace")
             except OSError:
                 continue
             hits = sum(1 for t in tokens if t in ptext)
@@ -2156,7 +2170,7 @@ def check_relative_links(docs: Path) -> Tuple[List[str], bool]:
     total = 0
     for md in _kit_md(docs):
         try:
-            text = md.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
         text = re.sub(r"```.*?```", " ", text, flags=re.S)
@@ -2225,7 +2239,7 @@ def check_canon_cut(sources: Path,
     """Сверка строки «срез канона: <hash>» профиля с фактическим HEAD."""
     _, profile = _profile_path(sources)
     try:
-        text = profile.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(profile, encoding="utf-8", errors="replace")
     except OSError:
         return [], True
     m = _CANON_CUT_RE.search(text)
@@ -2271,7 +2285,7 @@ def catalog_codes() -> Optional[set]:
     if cat is None:
         return None
     try:
-        data = json.loads(cat.read_text(encoding="utf-8"))
+        data = json.loads(_fs.read_text(cat, encoding="utf-8"))
     except (OSError, ValueError):
         return None
     return {s.get("code") for s in data if isinstance(s, dict) and s.get("code")}
@@ -2285,7 +2299,7 @@ def _service_names(code: str, catalog: Optional[Path]) -> List[str]:
     names = [code]
     if catalog is not None:
         try:
-            data = json.loads(catalog.read_text(encoding="utf-8-sig"))
+            data = json.loads(_fs.read_text(catalog, encoding="utf-8-sig"))
         except (OSError, ValueError):
             data = []
         for rec in data if isinstance(data, list) else []:
@@ -2312,7 +2326,7 @@ def check_h1_service(docs: Path, catalog: Optional[Path]) -> List[str]:
         if not code:
             continue
         try:
-            lines = md.read_text(encoding="utf-8", errors="replace").splitlines()
+            lines = _fs.read_text(md, encoding="utf-8", errors="replace").splitlines()
         except OSError:
             continue
         h1 = next((ln[2:].strip() for ln in lines if ln.startswith("# ")), "")
@@ -2372,7 +2386,7 @@ def check_no_api_in_bundle(docs: Path) -> Tuple[List[str], bool]:
         if any(p.name == "api" for p in f.relative_to(docs).parents):
             continue  # уже учтён каталогом
         try:
-            head = f.read_text(encoding="utf-8", errors="replace")[:2000]
+            head = _fs.read_text(f, encoding="utf-8", errors="replace")[:2000]
         except OSError:
             continue
         if re.search(r"^(openapi|asyncapi):", head, re.M):
@@ -2404,7 +2418,7 @@ def check_api_matrix_refs(docs: Path, strict: bool = False
     matrix = docs / "traceability-matrix.md"
     if not matrix.is_file():
         return [], True
-    text = matrix.read_text(encoding="utf-8", errors="replace")
+    text = _fs.read_text(matrix, encoding="utf-8", errors="replace")
     m = _API_SECTION_RE.search(text)
     if not m:
         return [], True
@@ -2481,7 +2495,7 @@ def check_service_catalog(catalog: Optional[Path],
         return [], True
     import json
     try:
-        data = json.loads(catalog.read_text(encoding="utf-8-sig"))
+        data = json.loads(_fs.read_text(catalog, encoding="utf-8-sig"))
     except (OSError, ValueError) as e:
         return [f"⚠ каталог сервисов: {catalog.name} не читается "
                 f"({e.__class__.__name__}: {e}) — адресация чужих "
@@ -2572,7 +2586,7 @@ def check_protocol_discipline(sources: Path) -> Tuple[List[str], bool]:
     (§3) и отчёты попыток сверх лимита двух (§6)."""
     root, profile = _profile_path(sources)
     try:
-        ptext = profile.read_text(encoding="utf-8", errors="replace")
+        ptext = _fs.read_text(profile, encoding="utf-8", errors="replace")
     except OSError:
         return [], True
     if not _CANON_CUT_RE.search(ptext):
@@ -2655,7 +2669,7 @@ def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
     """⚠-строки о этапах плана без файла промпта; ok всегда True."""
     root, profile = _profile_path(sources)
     try:
-        ptext = profile.read_text(encoding="utf-8", errors="replace")
+        ptext = _fs.read_text(profile, encoding="utf-8", errors="replace")
     except OSError:
         return [], True
     m = _PLAN_LINE_RE.search(ptext)
@@ -2666,7 +2680,7 @@ def check_stage_prompts(sources: Path) -> Tuple[List[str], bool]:
         return [f"⚠ промпты этапов: план «{m.group(1).strip()}» из "
                 "профиля не найден — сверка пакета не выполнена"], True
     stages = set(_STAGE_ROW_RE.findall(
-        plan.read_text(encoding="utf-8", errors="replace")))
+        _fs.read_text(plan, encoding="utf-8", errors="replace")))
     if not stages:
         return ["⚠ промпты этапов: в плане не распознаны коды этапов "
                 "(таблица с `КОД-NN` первой ячейкой) — сверка пакета "
@@ -2723,7 +2737,7 @@ def check_registry_duplicates(matrix_path: Path) -> Tuple[List[str], bool]:
     """Дубли ID в секции «Реестр ID» матрицы — ✗ (реестровый ID
     уникален; кейс: два CTL-000 у общего и подсервисного README)."""
     try:
-        text = matrix_path.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(matrix_path, encoding="utf-8", errors="replace")
     except OSError:
         return [], True
     m = _REGISTRY_HDR_RE.search(text)
@@ -2793,7 +2807,7 @@ def check_file_artifacts(docs: Path) -> Tuple[List[str], bool]:
     broken: List[Tuple[str, str]] = []
     for md in _kit_md(docs):
         try:
-            text = md.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
         for m in _ART_LINK_RE.finditer(text):
@@ -2838,7 +2852,7 @@ def check_group_contours(docs: Path) -> List[str]:
     report: List[str] = []
     for readme in sorted(docs.rglob("control/README.md")):
         try:
-            text = readme.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(readme, encoding="utf-8", errors="replace")
         except OSError:
             continue
         rel = readme.relative_to(docs)
@@ -2905,7 +2919,7 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
     matrix = docs / "traceability-matrix.md"
     if not matrix.exists():
         return []
-    text = matrix.read_text(encoding="utf-8", errors="replace")
+    text = _fs.read_text(matrix, encoding="utf-8", errors="replace")
     m = re.search(r"^#{1,3}\s.*Реестр ID\s*$", text, re.M)
     names: dict = {}
     for ln in (text[m.end():] if m else "").splitlines():
@@ -2922,7 +2936,7 @@ def check_bare_entity_mentions(docs: Path) -> List[str]:
     for p in _kit_md(docs):
         if p == matrix:
             continue
-        body = p.read_text(encoding="utf-8", errors="replace")
+        body = _fs.read_text(p, encoding="utf-8", errors="replace")
         # ссылки вырезаются целиком: ярлык со ссылкой — оформлено верно
         bare = re.sub(r"\[[^\]]*\]\([^)]*\)", " ", body)
         hits: dict = {}
@@ -2982,7 +2996,7 @@ def check_named_entity_links(docs: Path) -> List[str]:
     for p in _kit_md(docs):
         if p.name.lower() in _NAMED_LINK_SKIP:
             continue
-        body = p.read_text(encoding="utf-8", errors="replace")
+        body = _fs.read_text(p, encoding="utf-8", errors="replace")
         body = re.sub(r"```.*?```", " ", body, flags=re.S)   # примеры кода
         first_full: Dict[str, int] = {}
         named: Dict[str, List[int]] = {}
@@ -3027,7 +3041,7 @@ def check_similar_group_points(docs: Path) -> List[str]:
     report: List[str] = []
     for readme in sorted(docs.rglob("control/README.md")):
         try:
-            text = readme.read_text(encoding="utf-8", errors="replace")
+            text = _fs.read_text(readme, encoding="utf-8", errors="replace")
         except OSError:
             continue
         toks: Dict[str, List[Tuple[str, str]]] = {}
@@ -3087,7 +3101,7 @@ def _verdict_map(lines) -> Dict[str, str]:
 
 def delta_report(baseline_path: Path, cur_lines: List[str]) -> List[str]:
     try:
-        raw = baseline_path.read_text(encoding="utf-8", errors="replace")
+        raw = _fs.read_text(baseline_path, encoding="utf-8", errors="replace")
     except OSError as e:
         return [f"i дельта: базлайн не прочитан ({e!r}) — сравнение "
                 "пропущено"]
@@ -3203,7 +3217,7 @@ def main() -> int:
                       round(p.stat().st_mtime, 2)
                       for p in sorted(args.docs.rglob("*.md"))}
             try:
-                prev_mt = json.loads(state_p.read_text(encoding="utf-8"))
+                prev_mt = json.loads(_fs.read_text(state_p, encoding="utf-8"))
             except (OSError, ValueError):
                 prev_mt = None
             if prev_mt is None:
