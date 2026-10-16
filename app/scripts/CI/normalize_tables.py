@@ -42,6 +42,10 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
+try:
+    from kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # type: ignore  # noqa: E402
 
 try:
     from bs4 import BeautifulSoup, NavigableString, Tag
@@ -1187,14 +1191,14 @@ def check_notation_hints(text: str) -> List[str]:
     hdr: Optional[List[str]] = None
     for ln in body.splitlines():
         st = ln.strip()
-        if st.startswith("```") or st.startswith("~~~"):
+        if is_fence(st):
             in_code = not in_code
             continue
         if in_code:
             continue
         # таблицы: заголовок запоминается, строка-разделитель пропускается
         if st.startswith("|"):
-            cells = [c.strip() for c in st.strip("|").split("|")]
+            cells = table_cells(st)
             if hdr is None:
                 hdr = [re.sub(r"\*\*", "", c).strip().lower() for c in cells]
                 continue
@@ -3660,7 +3664,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     _in_fence = False
     _fenced = set()
     for k, ln in enumerate(lines):
-        if ln.lstrip().startswith("```"):
+        if is_fence(ln.lstrip(), FENCE_BACKTICK):
             _in_fence = not _in_fence
             _fenced.add(k)
         elif _in_fence:
@@ -3938,7 +3942,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
         if (source_text or amnesty_text) else None
     for ln in lines:
         s = ln.strip()
-        if s.startswith("```"):
+        if is_fence(s, FENCE_BACKTICK):
             in_code = not in_code
             continue
         if (in_code or not s or s.startswith("|") or s.startswith("#")
@@ -4077,7 +4081,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     _fenced = False
     for _i in range(1, len(lines)):
         ln = lines[_i]
-        if ln.lstrip().startswith("```"):
+        if is_fence(ln.lstrip(), FENCE_BACKTICK):
             _fenced = not _fenced
             continue
         if _fenced:
