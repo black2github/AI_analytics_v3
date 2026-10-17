@@ -11,9 +11,11 @@ from typing import Tuple
 import re
 try:
     from kitcheck import fs as _fs
+    from kitcheck.md import frontmatter_split
     from kitcheck.md import read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
+    from ..md import frontmatter_split  # type: ignore
     from ..md import read_frontmatter  # type: ignore
 
 
@@ -183,11 +185,9 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
                 report.append(f"✗ {rel}: повтор номера {token}")
             seen_rows.add(token)
         page_rows.update(seen_rows)
-        body = text
-        if body.startswith("---"):
-            end = body.find("\n---", 3)
-            if end != -1:
-                body = body[end + 4:]
+        # тело — по общей границе шапки: с BOM шапка прежде оставалась в
+        # теле, и её `status:` давал ложный ✗
+        body = frontmatter_split(text)[1]
         if re.search(
                 r"OQ-|TODO|sources/|pageId|confluence|_meta/|REJ-|nfr_profile"
                 r"|\]\([^)]*srs/|^status:",

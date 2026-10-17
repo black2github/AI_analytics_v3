@@ -14,11 +14,13 @@ import re
 try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
+    from kitcheck.md import frontmatter_end
     from kitcheck.md import is_fence
     from kitcheck.md import read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
+    from ..md import frontmatter_end  # type: ignore
     from ..md import is_fence  # type: ignore
     from ..md import read_frontmatter  # type: ignore
 
@@ -146,13 +148,13 @@ def check_source_silent(docs: Path) -> List[str]:
         except OSError:
             continue
         rel = md.relative_to(docs).as_posix()
-        in_fm = bool(lines) and lines[0].strip() == "---"
+        # шапка — общая граница (BOM снимается; незакрытая шапка не прячет
+        # файл: прежде его строки молча пропускались до конца)
+        body_from = frontmatter_end(lines)
         in_code = False
         for i, ln in enumerate(lines, 1):
             st = ln.strip()
-            if in_fm:
-                if i > 1 and st == "---":
-                    in_fm = False
+            if i <= body_from:
                 continue
             if is_fence(st):
                 in_code = not in_code

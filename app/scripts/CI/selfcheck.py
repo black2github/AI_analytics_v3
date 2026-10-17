@@ -47,13 +47,13 @@ try:
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,  # сохраняются в selfcheck для
         gitlab_slug, in_dot_dir, is_task_file,  # утилит и тестов, которые зовут их
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,  # как selfcheck.*
-        FENCE_BACKTICK)
+        FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402,F401
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,
         gitlab_slug, in_dot_dir, is_task_file,
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
-        FENCE_BACKTICK)
+        FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 try:
     from kitcheck.core import Check, is_soft_signal, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -149,12 +149,8 @@ def _empty_source_note(src: Path) -> Tuple[Optional[str], bool]:
         text = _fs.read_text(src, encoding="utf-8", errors="replace")
     except OSError:
         return None, False
-    body = text.lstrip("\ufeff")
-    fm_text = ""
-    if body.startswith("---"):
-        parts = body.split("---", 2)
-        if len(parts) == 3:
-            fm_text, body = parts[1], parts[2]
+    fm_head, body = frontmatter_split(text)
+    fm_text = fm_head or ""
     if body.strip():
         return None, False
     m = re.search(r"^unapproved_jira:\s*(.+)$", fm_text, re.M)
