@@ -108,3 +108,12 @@ def test_table_cells_and_fences():
     assert md.table_cells("| a |") == ["a"]
     assert md.is_fence("```python") and md.is_fence("~~~")
     assert not md.is_fence("~~~", md.FENCE_BACKTICK)
+
+
+def test_soft_signal_contract():
+    """Контракт начала строки: какие строки проверок карточки видны при ✓."""
+    for ln in ("предупреждение: нотация …", "[scr-cl-01.2.md] предупреждение: …",
+               "полнота ячеек источника: 12/12", "маркер «и т.д.» помилован"):
+        assert core.is_soft_signal(ln), ln
+    for ln in ("✗ брак", "проверка карточки: x.md", "Предупреждение с большой буквы"):
+        assert not core.is_soft_signal(ln), ln

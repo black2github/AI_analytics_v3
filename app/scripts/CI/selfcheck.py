@@ -55,9 +55,9 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK)
 try:
-    from kitcheck.core import Check, run_checks  # noqa: E402
+    from kitcheck.core import Check, is_soft_signal, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.core import Check, run_checks  # type: ignore  # noqa: E402
+    from .kitcheck.core import Check, is_soft_signal, run_checks  # type: ignore  # noqa: E402
 try:
     from kitcheck.checks._common import (  # noqa: E402,F401 — этап 3
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -349,9 +349,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         # помилованный маркер (FB-09: «и т.д.» дословно из источника)
         # тоже виден при ✓ — иначе исчезновение ⚠ неотличимо от
         # «сторож не запускался»
-        return [ln for ln in rep
-                if re.match(r"^(?:\[[^\]]+\]\s+)?(?:предупреждение|"
-                            r"полнота ячеек источника|маркер «)", ln)]
+        # контракт начала строки — kitcheck.core.SOFT_SIGNAL_RE
+        return [ln for ln in rep if is_soft_signal(ln)]
 
     for p, note in solo:
         rep, ok = _run([p], None, docs, soft_markers=not strict)
