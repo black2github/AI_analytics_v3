@@ -55,6 +55,10 @@ from urllib.parse import unquote
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as scx  # noqa: E402
+try:
+    from kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # type: ignore  # noqa: E402
 
 MATRIX = "traceability-matrix.md"
 
@@ -214,7 +218,7 @@ class Section:
 
 
 def _split_row(ln: str) -> List[str]:
-    return [c.strip() for c in ln.strip().strip("|").split("|")]
+    return table_cells(ln)
 
 
 def parse_matrix(text: str) -> List[Section]:
@@ -237,7 +241,7 @@ def parse_matrix(text: str) -> List[Section]:
                 tstart = None
             if j >= end:
                 break
-            if st.startswith(("```", "~~~")):
+            if is_fence(st):
                 in_code = not in_code
                 continue
             if in_code or not st.startswith("|"):
@@ -346,7 +350,7 @@ class Kit:
             local_doc = str(fm.get("type", "")).strip("'\"") == "screen-form"
             in_code = False
             for ln in t.splitlines():
-                if ln.strip().startswith(("```", "~~~")):
+                if is_fence(ln.strip()):
                     in_code = not in_code
                     continue
                 if in_code:
@@ -394,7 +398,7 @@ class Kit:
             spec: Set[Tuple[str, str]] = set()
             in_code = False
             for ln in t.splitlines():
-                if ln.strip().startswith(("```", "~~~")):
+                if is_fence(ln.strip()):
                     in_code = not in_code
                     continue
                 if in_code:

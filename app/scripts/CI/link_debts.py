@@ -39,6 +39,10 @@ import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+try:
+    from kitcheck import fs as _fs  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -164,7 +168,7 @@ def _expand_from(cell: str) -> List[str]:
 def _doc_title(path: Path) -> Optional[str]:
     """title из frontmatter; YAML-перенос длинного значения склеивается."""
     try:
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(path, encoding="utf-8", errors="replace")
     except OSError:
         return None
     body = text.lstrip("﻿")
@@ -303,10 +307,10 @@ def check(matrix_path: Path, docs_root: Path,
     """catalog_codes — коды сервисов каталога (`code` в services.json);
     None — каталог недоступен, владелец долга не сверяется."""
     registry, debts, unrecognized = parse_matrix_full(
-        matrix_path.read_text(encoding="utf-8", errors="replace"))
+        _fs.read_text(matrix_path, encoding="utf-8", errors="replace"))
     dict_text = ""
     for dp in docs_root.rglob("dictionaries.md"):
-        dict_text += _norm(dp.read_text(encoding="utf-8", errors="replace"))
+        dict_text += _norm(_fs.read_text(dp, encoding="utf-8", errors="replace"))
     # титулы и типы существующих артефактов комплекта
     titles: Dict[Path, str] = {}
     for p in docs_root.rglob("*.md"):
@@ -408,7 +412,7 @@ def check(matrix_path: Path, docs_root: Path,
                               f"({reg[1]}) ✗")
                 ok = False
                 continue
-            body = _norm(doc.read_text(encoding="utf-8", errors="replace"))
+            body = _norm(_fs.read_text(doc, encoding="utf-8", errors="replace"))
             if nname not in body:
                 report.append(
                     f"долг НЕИСПОЛНИМ: имя «{name}» не найдено дословно в "
@@ -430,7 +434,7 @@ def check(matrix_path: Path, docs_root: Path,
         # shortLinkDirectory → short-link) оставляет долги на несуществующий код
         report.append(f"⚠ владелец «{owner_code}» ×{n}: кода нет в каталоге сервисов "
                       "(переименован или опечатка) — долг не адресуется")
-    heading = debts_heading(matrix_path.read_text(encoding="utf-8", errors="replace"))
+    heading = debts_heading(_fs.read_text(matrix_path, encoding="utf-8", errors="replace"))
     if heading is not None and heading.lower() != _DEBTS_HEADING.lower():
         report.append(f"⚠ раздел долгов назван «{heading}» — норма «{_DEBTS_HEADING}» "
                       "(имя раздела читают гейт переноса и платформа; шаблон матрицы)")
@@ -469,13 +473,13 @@ _PARAM_MENTION_RE = re.compile(
 
 def check_config_params(docs_root: Path) -> Tuple[List[str], bool]:
     dicts = docs_root / "srs" / "data-model" / "dictionaries.md"
-    dict_text = (dicts.read_text(encoding="utf-8", errors="replace")
+    dict_text = (_fs.read_text(dicts, encoding="utf-8", errors="replace")
                  if dicts.is_file() else "")
     missing: Dict[str, List[str]] = {}
     for p in docs_root.rglob("*.md"):
         if "data-model" in p.parts:
             continue
-        text = p.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(p, encoding="utf-8", errors="replace")
         for m in _PARAM_MENTION_RE.finditer(text):
             key = m.group(1)
             if key not in dict_text:
@@ -499,7 +503,7 @@ def _check_register_order(path: Path, num_re, prefix: str,
     и перемещение записей при правке — брак."""
     if not path.is_file():
         return [], True
-    text = path.read_text(encoding="utf-8", errors="replace")
+    text = _fs.read_text(path, encoding="utf-8", errors="replace")
     # заголовок-образец внутри блока кода записью не является (FB-04
     # «Корпоративных карт», 2026-09-15: пересозданный скелет с примером
     # формата давал «1 записей ✓» при нуле настоящих записей)
@@ -549,7 +553,7 @@ def check_coordination_log(log_path: Path,
     Файла нет (трек без координатора) — пусто."""
     if not log_path.is_file():
         return [], True
-    text = log_path.read_text(encoding="utf-8", errors="replace")
+    text = _fs.read_text(log_path, encoding="utf-8", errors="replace")
     text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
     entries: List[Tuple[str, int]] = []
     cur: Optional[str] = None

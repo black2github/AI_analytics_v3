@@ -30,6 +30,10 @@ import re
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional
+try:
+    from kitcheck import fs as _fs  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 
 _FM_BOUND = re.compile(r"^---\s*$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
@@ -41,7 +45,7 @@ _ID_TOKEN_RE = re.compile(r"\d+")
 def read_frontmatter_lines(path: Path, limit: int = 60) -> List[str]:
     """Строки frontmatter (между первыми двумя ---); [] если его нет."""
     try:
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = _fs.read_text(path, encoding="utf-8", errors="replace")
     except OSError:
         return []
     # BOM: PowerShell-редиректы пишут UTF-8-sig — иначе '---' не распознать
