@@ -37,9 +37,14 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # каталог утилит прибора
+try:
+    from kitcheck.fence import blocks, code_flags  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck.fence import blocks, code_flags  # type: ignore  # noqa: E402
+
 DEFAULT_PATHS = ("_meta", "AGENTS.md", "README.md", ".cursor", ".claude")
 _HEADING_RE = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
-_FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 
 
 def _git(root: Path, *args: str) -> str:
@@ -56,28 +61,25 @@ def headings(text: str) -> Tuple[List[str], List[str]]:
     заголовки внутри блоков кода). Второй список — структура образца:
     шаблоны держат тело карточки в ````markdown, и раздел, исчезнувший
     из образца (14.10 — «Нефункциональные требования» шаблона фичи),
-    так же важен, как раздел самого документа. Вложенные блоки
-    (```gherkin внутри ````markdown) закрываются только ограждением той
-    же длины или длиннее (CommonMark)."""
+    так же важен, как раздел самого документа. Границы блоков — общее
+    правило прибора (kitcheck/fence.py): вложенные блоки (```gherkin
+    внутри ````markdown) закрываются только ограждением того же вида и
+    не короче (CommonMark)."""
     outside: List[str] = []
     inside: List[str] = []
-    fence_char: Optional[str] = None
-    fence_len = 0
-    for ln in text.splitlines():
-        ln = ln.rstrip("\r")
-        f = _FENCE_RE.match(ln)
-        if f:
-            tok = f.group(1)
-            if fence_char is None:
-                fence_char, fence_len = tok[0], len(tok)
-                continue
-            if tok[0] == fence_char and len(tok) >= fence_len \
-                    and not ln.strip()[len(tok):].strip():
-                fence_char, fence_len = None, 0
-                continue
+    lines = [ln.rstrip("\r") for ln in text.splitlines()]
+    code = code_flags(lines)
+    fences = set()
+    for b in blocks(lines):
+        fences.add(b.start)
+        if b.closed:
+            fences.add(b.end)
+    for k, ln in enumerate(lines):
+        if k in fences:
+            continue
         m = _HEADING_RE.match(ln)
         if m:
-            (inside if fence_char else outside).append(f"{m.group(1)} {m.group(2)}")
+            (inside if code[k] else outside).append(f"{m.group(1)} {m.group(2)}")
     return outside, inside
 
 

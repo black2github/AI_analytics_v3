@@ -41,9 +41,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
+    from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
+    from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
@@ -498,6 +500,19 @@ def check_config_params(docs_root: Path) -> Tuple[List[str], bool]:
 _FB_NUM_RE = re.compile(r"^##\s+FB-(\d+)\b", re.M)
 
 
+def _fence_warnings(text: str, name: str) -> List[str]:
+    """Предупреждения о блоках кода журнала, не закрытых по правилам GitLab
+    (правило kitcheck/fence.py, решение владельца 2026-10-17): журнал читают
+    люди, в платформу он не переезжает — сигнал, не брак."""
+    out: List[str] = []
+    for i in fence_issues(text.split("\n")):
+        what = (f"закрыт ограждением с инфо-строкой (строка {i.close_line})"
+                if i.kind == "close-with-info" else "не закрыт до конца файла")
+        out.append(f"предупреждение: {name}: строка {i.line} — блок кода {what}: "
+                   "в GitLab дальше всё код; закрыть голым ``` того же вида и длины")
+    return out
+
+
 def _check_register_order(path: Path, num_re, prefix: str,
                           name: str) -> Tuple[List[str], bool]:
     """Общий сторож append-only реестров записей «## <PREFIX>-NN»:
@@ -506,6 +521,7 @@ def _check_register_order(path: Path, num_re, prefix: str,
     if not path.is_file():
         return [], True
     text = _fs.read_text(path, encoding="utf-8", errors="replace")
+    warns = _fence_warnings(text, name)
     # заголовок-образец внутри блока кода записью не является (FB-04
     # «Корпоративных карт», 2026-09-15: пересозданный скелет с примером
     # формата давал «1 записей ✓» при нуле настоящих записей); границы
@@ -516,9 +532,9 @@ def _check_register_order(path: Path, num_re, prefix: str,
     if bad:
         return [f"{name}: порядок реестра нарушен (append-only): "
                 + ", ".join(f"{prefix}-{b:03d} стоит после {prefix}-{a:03d}"
-                            for a, b in bad[:3]) + " ✗"], False
+                            for a, b in bad[:3]) + " ✗"] + warns, False
     return [f"{name}: порядок реестра append-only соблюдён "
-            f"({len(nums)} записей) ✓"], True
+            f"({len(nums)} записей) ✓"] + warns, True
 
 
 def check_oq_order(oq_path: Path) -> Tuple[List[str], bool]:
@@ -557,6 +573,7 @@ def check_coordination_log(log_path: Path,
     if not log_path.is_file():
         return [], True
     text = _fs.read_text(log_path, encoding="utf-8", errors="replace")
+    warns = _fence_warnings(text, "coordination-log")
     text = blank_code(text, repl="", inline=False)
     entries: List[Tuple[str, int]] = []
     cur: Optional[str] = None
@@ -575,7 +592,7 @@ def check_coordination_log(log_path: Path,
     if cur is not None:
         entries.append((cur, size))
     if not entries:
-        return [], True
+        return warns, True
     long = [(head, n) for head, n in entries if n > limit]
     out = [f"coordination-log: записей {len(entries)}, сверх лимита "
            f"{limit} знаков — {len(long)}" + (" ✓" if not long else "")]
@@ -589,7 +606,7 @@ def check_coordination_log(log_path: Path,
     if len(long) > 5:
         out.append(f"предупреждение: … и ещё {len(long) - 5} записей сверх "
                    "лимита (показаны последние пять)")
-    return out, True
+    return out + warns, True
 
 
 def main() -> int:

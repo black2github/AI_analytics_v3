@@ -14,14 +14,14 @@ import re
 try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
+    from kitcheck.md import code_line_flags
     from kitcheck.md import frontmatter_end
-    from kitcheck.md import is_fence
     from kitcheck.md import read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
+    from ..md import code_line_flags  # type: ignore
     from ..md import frontmatter_end  # type: ignore
-    from ..md import is_fence  # type: ignore
     from ..md import read_frontmatter  # type: ignore
 
 
@@ -151,15 +151,10 @@ def check_source_silent(docs: Path) -> List[str]:
         # шапка — общая граница (BOM снимается; незакрытая шапка не прячет
         # файл: прежде его строки молча пропускались до конца)
         body_from = frontmatter_end(lines)
-        in_code = False
+        code = [False] * body_from + code_line_flags(lines[body_from:])
         for i, ln in enumerate(lines, 1):
             st = ln.strip()
-            if i <= body_from:
-                continue
-            if is_fence(st):
-                in_code = not in_code
-                continue
-            if in_code:
+            if i <= body_from or code[i - 1]:
                 continue
             low = ln.lower()
             if _SILENT_FORMULA in low:
@@ -236,12 +231,10 @@ def _section_key(heading: str) -> str:
 
 def _h2_keys(text: str) -> List[str]:
     out: List[str] = []
-    in_code = False
-    for ln in text.splitlines():
-        st = ln.strip()
-        if is_fence(st):
-            in_code = not in_code
-            continue
+    lines = text.splitlines()
+    # заголовок образца в блоке кода — не раздел карточки (вложенный
+    # образец ````markdown с ``` внутри — тоже код целиком)
+    for ln, in_code in zip(lines, code_line_flags(lines)):
         if not in_code and re.match(r"^##\s", ln):
             out.append(_section_key(ln))
     return out

@@ -43,12 +43,14 @@ try:
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 try:
+    from kitcheck import fence as _fence  # noqa: E402
     from kitcheck.md import (  # noqa: E402
-        blank_code, code_line_flags, count_cells, frontmatter_split, is_fence,
+        blank_code, code_line_flags, count_cells, frontmatter_split,
         split_cells, strip_row, table_cells)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck import fence as _fence  # type: ignore  # noqa: E402
     from .kitcheck.md import (  # type: ignore  # noqa: E402
-        blank_code, code_line_flags, count_cells, frontmatter_split, is_fence,
+        blank_code, code_line_flags, count_cells, frontmatter_split,
         split_cells, strip_row, table_cells)
 
 
@@ -1210,13 +1212,10 @@ def check_notation_hints(text: str) -> List[str]:
     type_hits: List[str] = []
     angle_bare: List[str] = []
     angle_dotted = 0
-    in_code = False
     hdr: Optional[List[str]] = None
-    for ln in body.splitlines():
+    body_lines = body.splitlines()
+    for ln, in_code in zip(body_lines, code_line_flags(body_lines)):
         st = ln.strip()
-        if is_fence(st):
-            in_code = not in_code
-            continue
         if in_code:
             continue
         # таблицы: заголовок запоминается, строка-разделитель пропускается
@@ -3735,14 +3734,7 @@ def _fc_torn_table_cells(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # activity внутри ``` несёт свимлейны «|Система|» и шаги «:6 …;» —
     # для сторожа они выглядели таблицей с зажатым текстом (4 ложняка
     # process-файлов эталона, разбор ✗ 2026-08-21).
-    _in_fence = False
-    _fenced = set()
-    for k, ln in enumerate(lines):
-        if is_fence(ln.lstrip()):
-            _in_fence = not _in_fence
-            _fenced.add(k)
-        elif _in_fence:
-            _fenced.add(k)
+    _fenced = {k for k, c in enumerate(code_line_flags(lines)) if c}
     for k, ln in enumerate(lines):
         if k in _fenced:
             continue
@@ -4070,18 +4062,14 @@ def _fc_long_lines(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # кавычечные цитаты (тексты сообщений) не считаются; строки таблиц,
     # заголовки и код пропускаются; атрибутные строки покрыты своим
     # порогом выше.
-    in_code = False
     # FB-19 КК (2026-10-13): амнистия дословности — по ОБЪЕДИНЕНИЮ всех
     # страниц карточки (amnesty_text), не только главной: дословные
     # абзацы дочерних страниц мультистраничной карточки бракуются иначе
     src_norm_full = _norm_cell(
         (source_text or "") + "\n" + (amnesty_text or "")) \
         if (source_text or amnesty_text) else None
-    for ln in lines:
+    for ln, in_code in zip(lines, code_line_flags(lines)):
         s = ln.strip()
-        if is_fence(s):
-            in_code = not in_code
-            continue
         if (in_code or not s or s.startswith("|") or s.startswith("#")
                 or _attr_line_re.match(ln)):
             continue
@@ -4249,7 +4237,8 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # решение 2026-08-29/31). Эталон конвертера — эталон СОДЕРЖИМОГО,
     # не формы (сторож тяжёлых пар li-раскладку принимает).
     # строки внутри блока кода — текст примера, не цитата
-    _bq = sum(1 for ln, code in zip(lines, code_line_flags(lines))
+    _code = code_line_flags(lines)
+    _bq = sum(1 for ln, code in zip(lines, _code)
               if not code and ln.lstrip().startswith(">"))
     if _bq:
         ok = False
@@ -4259,13 +4248,9 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
             "списками с жирной нотацией (эталон --cell-to-md — эталон "
             "содержимого, не формы) ✗ НИЖЕ ПОРОГА")
     _codey = 0
-    _fenced = False
     for _i in range(1, len(lines)):
         ln = lines[_i]
-        if is_fence(ln.lstrip()):
-            _fenced = not _fenced
-            continue
-        if _fenced:
+        if _code[_i]:
             continue  # fenced-блоки (mermaid и пр.) — легальный код
         if (re.match(r"^ {4,}\S", ln)
                 and re.search(r"[а-яА-ЯёЁ]|\*\*", ln)
@@ -4281,6 +4266,33 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
             "отступом ≥4 вне списка рендерятся моноширинным кодом, "
             "разметка внутри не работает; переложить списками "
             "✗ НИЖЕ ПОРОГА")
+    return report, ok
+
+
+def _fc_unclosed_code_blocks(fx: "_FileCtx") -> Tuple[List[str], bool]:
+    lines, = fx.lines,
+    report: List[str] = []
+    ok = True
+    # Блок кода, не закрытый по правилам GitLab (решение владельца
+    # 2026-10-17, правило kitcheck/fence.py): закрывающее ограждение с
+    # инфо-строкой (опечатка ```text … ```text) прибор засчитывает закрытием,
+    # чтобы текст ниже оставался под проверками, но в рендере GitLab блок не
+    # закрыт — дальше всё код; незакрытый блок прячет хвост карточки так же.
+    # Структура в байтах расходится со структурой в рендере — брак, как у
+    # цитат и голых HTML-тегов.
+    for i in _fence.issues(lines):
+        ok = False
+        if i.kind == "close-with-info":
+            report.append(
+                f"строка {i.line}: блок кода закрыт ограждением с инфо-строкой "
+                f"(строка {i.close_line}) — в GitLab это не закрытие, дальше "
+                "всё код; закрыть голым ``` того же вида и длины, вложенный "
+                "пример обернуть внешним ```` ✗ НИЖЕ ПОРОГА")
+        else:
+            report.append(
+                f"строка {i.line}: блок кода не закрыт до конца файла — в "
+                "GitLab дальше всё код; закрыть ограждением того же вида и "
+                "длины ✗ НИЖЕ ПОРОГА")
     return report, ok
 
 
@@ -4616,6 +4628,7 @@ FILE_CHECKS: List[Check] = [
     Check("fabricated_attributes", _fc_fabricated_attributes, scope="file"),
     Check("control_cards_by_entity", _fc_control_cards_by_entity, scope="file"),
     Check("blockquote_indented_code", _fc_blockquote_indented_code, scope="file"),
+    Check("unclosed_code_blocks", _fc_unclosed_code_blocks, scope="file"),
     Check("invisible_html_tags", _fc_invisible_html_tags, scope="file"),
     Check("screen_form_condition_notation", _fc_screen_form_condition_notation, scope="file"),
     Check("nested_links", _fc_nested_links, scope="file"),

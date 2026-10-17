@@ -9,55 +9,39 @@
 - `table_cells` (и `split_cells`, `strip_row`, `count_cells`) режет строку по
   неэкранированным «|»: «\\|» внутри ячейки — часть текста (дефект Д-1
   исправлен 2026-10-17); на строках без «\\|» результат прежний;
-- `is_fence` — правило ограждения блока кода общего кода бандла
-  confluence-tree-exporter (`critic._FENCE_RE`), одно для всех мест прибора
-  (решение владельца 2026-10-17, исследование «Прибор — распознавание блоков
-  кода и ограждений»); `code_line_flags` и `blank_code` — границы блоков по
-  тому же правилу для мест, где блоки вырезались регулярками.
+- границы блоков кода — правило `kitcheck/fence.py`, одно для прибора и для
+  разметки CriticMarkup (`critic.py`, бандл confluence-tree-exporter):
+  вложенность по виду и длине ограждения (решение владельца 2026-10-17);
+  `is_fence` — строка-ограждение, `code_line_flags` — разметка строк,
+  `blank_code` и `code_blocks` — для мест, где блоки вырезались регулярками.
 """
 import re
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 try:
+    from kitcheck import fence as _fence
     from kitcheck import fs as _fs
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from . import fence as _fence  # type: ignore
     from . import fs as _fs  # type: ignore
 
 FENCE_BOTH: Tuple[str, ...] = ("```", "~~~")
 FENCE_BACKTICK: Tuple[str, ...] = ("```",)
 
 
-# Ограждение блока кода — правило `critic._FENCE_RE` (общий код бандла
-# confluence-tree-exporter, выбор миграции 2026-09-06): строка целиком —
-# ``` или ~~~ (3+) с любым отступом; у ``` инфо-строка без «`» (CommonMark):
-# строка ```"filter"``: { — склеенный инлайн-код выгрузки, а не ограждение
-# (такие строки открывали мнимую код-зону, накрывавшую требования). Вид и
-# длина не учитываются: любое ограждение и открывает, и закрывает блок;
-# незакрытый блок — код до конца файла. Копия держится равной critic
-# тестом (tests/test_kitcheck_core.py).
-_FENCE_LINE_RE = re.compile(r"^[ \t]*(?:`{3,}[^`\n]*|~{3,}[^\n]*)\r?\n?$")
-
-
 def is_fence(stripped_line: str, markers: Tuple[str, ...] = FENCE_BOTH) -> bool:
-    """Строка открывает или закрывает блок кода (правило `_FENCE_LINE_RE`).
-    Строку обрезает вызывающий (`strip()` или `lstrip()`); `markers` сужает
-    набор маркеров (места прибора зовут с обоими)."""
+    """Строка — ограждение блока кода (правило `fence.fence_of`). Открывает
+    она блок или закрывает, решает разметка строк (`code_line_flags`), а не
+    эта функция. Строку обрезает вызывающий; `markers` сужает набор."""
     return (stripped_line.startswith(markers)
-            and _FENCE_LINE_RE.match(stripped_line) is not None)
+            and _fence.fence_of(stripped_line) is not None)
 
 
 def code_line_flags(lines: List[str]) -> List[bool]:
-    """По строке: True — ограждение или строка внутри блока кода."""
-    out: List[bool] = []
-    inside = False
-    for ln in lines:
-        if is_fence(ln.strip()):
-            inside = not inside
-            out.append(True)
-        else:
-            out.append(inside)
-    return out
+    """По строке: True — ограждение или строка внутри блока кода. Вложенность
+    по виду и длине: ``` внутри ```` — содержимое (`fence.code_flags`)."""
+    return _fence.code_flags(lines)
 
 
 _INLINE_TRIPLE_RE = re.compile(r"```.*?```")
@@ -71,16 +55,13 @@ def blank_code(text: str, repl: str = " ", inline: bool = True) -> str:
     спаривается со следующим блоком: прежняя регулярка ```.*?``` по всему
     тексту вырезала всё между ними, и ссылки и теги там не проверялись."""
     lines = text.split("\n")
-    flags = code_line_flags(lines)
+    end_of = {b.start: b.end for b in _fence.blocks(lines)}
     out: List[str] = []
     k = 0
     while k < len(lines):
-        if flags[k]:
-            j = k + 1
-            while j < len(lines) and not is_fence(lines[j].strip()):
-                j += 1
+        if k in end_of:
             out.append(repl)
-            k = j + 1
+            k = end_of[k] + 1
             continue
         ln = lines[k]
         if inline and "```" in ln:
@@ -91,21 +72,11 @@ def blank_code(text: str, repl: str = " ", inline: bool = True) -> str:
 
 
 def code_blocks(text: str) -> List[str]:
-    """Содержимое блоков кода (без строк-ограждений) по правилу `is_fence`;
-    незакрытый блок — до конца текста."""
+    """Содержимое блоков кода (без строк-ограждений) по правилу
+    `kitcheck/fence.py`; незакрытый блок — до конца текста."""
     lines = text.split("\n")
-    out: List[str] = []
-    k = 0
-    while k < len(lines):
-        if is_fence(lines[k].strip()):
-            j = k + 1
-            while j < len(lines) and not is_fence(lines[j].strip()):
-                j += 1
-            out.append("\n".join(lines[k + 1:j]))
-            k = j + 1
-            continue
-        k += 1
-    return out
+    return ["\n".join(lines[b.start + 1:b.end if b.closed else len(lines)])
+            for b in _fence.blocks(lines)]
 
 
 def _escaped_at(s: str, i: int) -> bool:
@@ -261,15 +232,11 @@ def _anchors_of(path: Path, cache: Dict[Path, set]) -> set:
         return cache[path]
     out: set = set()
     seen: Dict[str, int] = {}
-    in_code = False
     try:
         lines = _fs.read_text(path, encoding="utf-8", errors="replace").splitlines()
     except OSError:
         lines = []
-    for ln in lines:
-        if is_fence(ln.strip()):
-            in_code = not in_code
-            continue
+    for ln, in_code in zip(lines, code_line_flags(lines)):
         if in_code:
             continue
         m = re.match(r"^#{1,6}\s+(.*?)\s*#*\s*$", ln)

@@ -67,6 +67,10 @@ BUNDLE_FILES: Tuple[str, ...] = (
     "app/scripts/CI/__init__.py",
     "app/scripts/CI/critic.py",
     "app/scripts/CI/critic_manual.md",
+    # правило границ блоков кода — общее с прибором самопроверки (1.9.6, 2026-10-17);
+    # пакет kitcheck в поставке — только эти два файла без зависимостей
+    "app/scripts/CI/kitcheck/__init__.py",
+    "app/scripts/CI/kitcheck/fence.py",
     "app/scripts/__init__.py",
     "app/scripts/apply_history.py",
     "app/scripts/audit_page_flags.py",
