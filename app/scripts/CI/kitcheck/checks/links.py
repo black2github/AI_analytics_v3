@@ -16,7 +16,7 @@ try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
     from kitcheck.md import blank_code
-    from kitcheck.md import is_fence
+    from kitcheck.md import code_line_flags
     from kitcheck.md import read_frontmatter
     from kitcheck.md import table_cells
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -25,7 +25,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
     from ..md import blank_code  # type: ignore
-    from ..md import is_fence  # type: ignore
+    from ..md import code_line_flags  # type: ignore
     from ..md import read_frontmatter  # type: ignore
     from ..md import table_cells  # type: ignore
 
@@ -105,12 +105,9 @@ def check_process_call_consistency(docs: Path) -> List[str]:
                 lines = _fs.read_text(md, encoding="utf-8", errors="replace").splitlines()
             except OSError:
                 continue
-            in_code, head_step = False, ""
-            for ln in lines:
+            head_step = ""
+            for ln, in_code in zip(lines, code_line_flags(lines)):
                 st = ln.strip()
-                if is_fence(st):
-                    in_code = not in_code
-                    continue
                 if in_code:
                     continue
                 if st.startswith("#"):

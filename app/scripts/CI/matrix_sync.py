@@ -56,9 +56,9 @@ from urllib.parse import unquote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as scx  # noqa: E402
 try:
-    from kitcheck.md import is_fence, table_cells  # noqa: E402
+    from kitcheck.md import code_line_flags, table_cells  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.md import is_fence, table_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import code_line_flags, table_cells  # type: ignore  # noqa: E402
 
 MATRIX = "traceability-matrix.md"
 
@@ -228,11 +228,13 @@ def parse_matrix(text: str) -> List[Section]:
     for n, (i, title) in enumerate(heads):
         end = heads[n + 1][0] if n + 1 < len(heads) else len(lines)
         s = Section(title, section_key(title), i, end)
-        in_code = False
+        # блоки кода — в пределах раздела (как прежде: разбор с каждого «## »)
+        code = code_line_flags(lines[i + 1:end])
         tstart = None
         for j in range(i + 1, end + 1):
             ln = lines[j] if j < end else ""
             st = ln.strip()
+            in_code = j < end and code[j - i - 1]
             is_row = j < end and not in_code and st.startswith("|")
             if is_row and tstart is None:
                 tstart = j
@@ -241,9 +243,6 @@ def parse_matrix(text: str) -> List[Section]:
                 tstart = None
             if j >= end:
                 break
-            if is_fence(st):
-                in_code = not in_code
-                continue
             if in_code or not st.startswith("|"):
                 continue
             cells = _split_row(st)
@@ -348,11 +347,8 @@ class Kit:
             amap: Dict[str, str] = {}
             here: Set[str] = set()
             local_doc = str(fm.get("type", "")).strip("'\"") == "screen-form"
-            in_code = False
-            for ln in t.splitlines():
-                if is_fence(ln.strip()):
-                    in_code = not in_code
-                    continue
+            t_lines = t.splitlines()
+            for ln, in_code in zip(t_lines, code_line_flags(t_lines)):
                 if in_code:
                     continue
                 hid, name = "", ""
@@ -396,11 +392,8 @@ class Kit:
             cur = src_file_id
             pend: List[Tuple[str, str, str]] = []
             spec: Set[Tuple[str, str]] = set()
-            in_code = False
-            for ln in t.splitlines():
-                if is_fence(ln.strip()):
-                    in_code = not in_code
-                    continue
+            t_lines = t.splitlines()
+            for ln, in_code in zip(t_lines, code_line_flags(t_lines)):
                 if in_code:
                     continue
                 if ln.startswith("#"):

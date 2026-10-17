@@ -8,7 +8,7 @@
 
 from pathlib import Path
 
-from app.scripts.CI import critic, link_debts as ld, selfcheck, transfer_gate as tg
+from app.scripts.CI import link_debts as ld, selfcheck, transfer_gate as tg
 from app.scripts.CI.kitcheck import md
 from app.scripts.CI.kitcheck.checks import artifacts, content
 from app.scripts.CI.normalize_tables import check_file
@@ -24,10 +24,17 @@ def _make(p: Path, text: str) -> Path:
 
 # --- правило ----------------------------------------------------------------
 
-def test_rule_equals_critic():
-    # копия правила в kitcheck держится равной общему коду бандла (Р-4)
-    assert md._FENCE_LINE_RE.pattern == critic._FENCE_RE.pattern
-    assert md._FENCE_LINE_RE.flags == critic._FENCE_RE.flags
+def test_md_uses_fence_module():
+    # одно правило в одном модуле (kitcheck/fence.py, решение 2026-10-17):
+    # строка-ограждение и разметка строк в md — из него; поведение правила
+    # держит tests/test_kitcheck_fence.py (тест поведения вместо равенства
+    # регулярок)
+    from app.scripts.CI.kitcheck import fence
+    for ln in ("```", "~~~ x", '```"a"``', "```x```", "> ```", "текст"):
+        assert md.is_fence(ln) == (fence.fence_of(ln) is not None), ln
+    lines = ["````markdown", "```mermaid", "x", "```", "## Раздел", "````", "т"]
+    assert md.code_line_flags(lines) == fence.code_flags(lines)
+    assert md.code_line_flags(lines) == [True] * 6 + [False]
 
 
 def test_is_fence_rule():
