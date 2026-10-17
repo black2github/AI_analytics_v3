@@ -5,7 +5,9 @@
 Матрица состоит из выводимых и ручных разделов. Выводимые — реестр ID,
 покрытие функций, покрытие процессов, источники миграции — собираются из
 тел документов (conventions §5.3 п.2: «матрица производна от тел»). Ручные —
-покрытие API ↔ SRS, долги по ссылкам, бизнес-слой BRD — ведёт аналитик.
+покрытие API ↔ SRS, долги по ссылкам, бизнес-слой BRD (`## BRD-…`) и
+приложения (`## Приложение. …`, после разделов шаблона; решение владельца
+пилота 2026-10-18) — ведёт аналитик.
 
 Режим `--check` (по умолчанию) печатает расхождения выводимых разделов с
 документами и ничего не пишет. Код 0 — расхождений нет, 1 — есть ⚠.
@@ -101,6 +103,10 @@ RANGE_RE = re.compile(r"(?<![\w-])(" + _ID + r")\s*(?:…|\.\.\.|–|—)\s*(" +
 HEAD_ID_RE = re.compile(
     r"^#{2,6}\s+(?:\d+(?:\.\d+)*\.?\s+)?[\[`*]*(" + _ANY_ID + r")" + _TAIL
     + r"[\]`*]*\.?\s*(.*)$")
+# приложение документа с буквенным хвостом после номера: EXTINT-005-A
+SUFFIX_ID_RE = re.compile(r"(?<![\w-])(" + _ID + r"-[A-Z]{1,3})(?![\w-])")
+# ID документа любой формы — только для ячейки, которая целиком и есть ID
+FULL_CELL_ID_RE = re.compile(r"[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+(?:\.\d+)*")
 TABLE_DEF_RE = re.compile(r"^\|\s*\**(" + _ANY_ID + r")" + _TAIL + r"\**\s*\|")
 
 
@@ -164,6 +170,8 @@ def section_key(title: str) -> str:
         return "debts"
     if n.startswith("brd-"):
         return "brd"
+    if re.match(r"приложение\b", n):
+        return "appendix"
     return "unknown"
 
 
@@ -188,7 +196,7 @@ def column_key(header: str) -> str:
 
 def cell_ids(cell: str) -> Set[str]:
     """ID ячейки; диапазон «A … B» одного префикса раскрывается."""
-    out = set(ID_RE.findall(cell))
+    out = set(ID_RE.findall(cell)) | set(SUFFIX_ID_RE.findall(cell))
     for a, b in RANGE_RE.findall(cell):
         ma, mb = re.match(r"(.*-)(\d+)$", a), re.match(r"(.*-)(\d+)$", b)
         if ma and mb and ma.group(1) == mb.group(1) \
@@ -297,6 +305,13 @@ def structure_issues(sections: List[Section]) -> List[str]:
     if order != want:
         issues.append("порядок разделов не по шаблону: "
                       + " → ".join(SECTION_TITLE[k] for k in order))
+    # приложения — ручные разделы после шести разделов шаблона
+    tpl_pos = [n for n, k in enumerate(keys) if k in SECTION_TITLE]
+    for n, s in enumerate(sections):
+        if s.key == "appendix" and tpl_pos and n < tpl_pos[-1]:
+            issues.append(f"приложение «{s.title}» стоит до раздела "
+                          f"«{sections[tpl_pos[-1]].title}» — приложения идут после "
+                          "разделов шаблона")
     for s in sections:
         if s.key in SECTION_TITLE and _norm_name(s.title) != _norm_name(SECTION_TITLE[s.key]):
             issues.append(f"имя раздела «{s.title}» — по шаблону «{SECTION_TITLE[s.key]}»")
@@ -503,8 +518,15 @@ class Kit:
 # ---------------------------------------------------------------- проверка
 
 def _first_id(cell: str) -> str:
-    m = ANY_ID_RE.search(re.sub(r"\]\([^)]*\)", "]", cell))
-    return m.group(1) if m else ""
+    c = re.sub(r"\]\([^)]*\)", "]", cell)
+    m = ANY_ID_RE.search(c)
+    if m:
+        return m.group(1)
+    # ID документа нестандартной формы (`API-ASYNC-SEQ`, `EXTINT-005-A`) — только
+    # когда ячейка целиком и есть ID: пересборка пишет такие строки из шапок, и
+    # сверка должна их узнавать, иначе --check после --write не сходится
+    m = FULL_CELL_ID_RE.fullmatch(c.strip().strip("[]`* "))
+    return m.group(0) if m else ""
 
 
 def _file_cell(cell: str) -> str:
@@ -789,7 +811,10 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
     kept_by_tag: Set[str] = set()
     for i, (rel, name) in derived.items():
         o = old.get(i)
-        nm = _esc(name)
+        # ссылка в выводимом названии — текстом: относительная ссылка и якорь
+        # из чужого файла в матрице битые (ячейка «[ТР-05](#тр-05)» строки
+        # таблицы бизнес-правил); существующее название не трогается
+        nm = _esc(_MD_LINK_TEXT_RE.sub(r"\1", name))
         fl = f"`{rel}`"
         if o and len(o) == len(SECTION_COLS["registry"]):
             # существующее название остаётся, если это title или H1 документа;

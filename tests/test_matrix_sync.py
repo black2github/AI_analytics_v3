@@ -241,3 +241,89 @@ def test_text_in_name_and_basis_columns_not_checked(tmp_path):
     report, code = ms.write(docs)
     assert code == 0, report
     assert "текст без ID" not in "\n".join(report), report
+
+
+# ------------------------------------- приложения: ручные разделы после шаблона
+
+APPENDIX = ("## Приложение. Связи: внешние интеграции ↔ процессы\n\n"
+            "Навигация, ведётся вручную.\n\n"
+            "| EXTINT | PRC | Шаг | Направление |\n|---|---|---|---|\n"
+            "| EXTINT-001 | PROC-001 | 3 | исходящий — (см. OQ-158) |\n")
+
+
+def test_appendix_after_template_sections_is_by_template_and_kept_byte_for_byte(tmp_path):
+    docs = kit(tmp_path, fun_extra="Показывает [SCR-CL-02 Список](../screen-form/scr-cl-02.md).\n")
+    w(docs / "srs/screen-form/scr-cl-02.md", fm("SCR-CL-02", "screen-form", "Список"))
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8") + "\n" + APPENDIX + "\n"
+                  + APPENDIX.replace("## Приложение.", "## Приложение 2."), encoding="utf-8")
+    report, _warn = ms.check(docs)
+    assert "структура матрицы" not in "\n".join(report), report
+    report, code = ms.write(docs)
+    assert code == 0, report
+    text = mx.read_text(encoding="utf-8")
+    assert text.endswith(APPENDIX + "\n" + APPENDIX.replace("## Приложение.", "## Приложение 2."))
+    assert "SCR-CL-01, SCR-CL-02" in text
+
+
+def test_appendix_before_template_section_is_structure_issue(tmp_path):
+    docs = kit(tmp_path)
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8").replace("## Долги по ссылкам",
+                                                         APPENDIX + "\n## Долги по ссылкам"),
+                  encoding="utf-8")
+    before = mx.read_bytes()
+    st = ms.structure_issues(ms.parse_matrix(mx.read_text(encoding="utf-8")))
+    assert any("приложение «Приложение. Связи" in x and "«Долги по ссылкам»" in x for x in st), st
+    report, code = ms.write(docs)
+    assert code == 2 and mx.read_bytes() == before, report
+
+
+def test_section_without_appendix_prefix_still_outside_template(tmp_path):
+    """Несрабатывание исключения: раздел без префикса «Приложение» (опечатка в
+    имени раздела шаблона, «Приложения», произвольное имя) — вне шаблона."""
+    for title in ("Артефакты вне трассировки", "Приложения", "Долги по ссылкaм"):
+        assert ms.section_key(title) == "unknown", title
+    assert ms.section_key("Приложение 3. Артефакты вне трассировки") == "appendix"
+
+
+# ------------------------- ID нестандартной формы: --check сходится после --write
+
+def test_nonstandard_document_ids_recognized_in_first_cell_and_cells():
+    assert ms._first_id("API-ASYNC-SEQ") == "API-ASYNC-SEQ"
+    assert ms._first_id("[EXTINT-005-A](srs/x.md)") == "EXTINT-005-A"
+    assert ms._first_id("`API-ASYNC-SEQ`") == "API-ASYNC-SEQ"
+    assert ms.cell_ids("PRC-011, EXTINT-005, EXTINT-005-A") == {"PRC-011", "EXTINT-005", "EXTINT-005-A"}
+
+
+def test_nonstandard_forms_not_taken_from_free_text():
+    """Несрабатывание: ID без номера (`API-ASYNC-SEQ`) берётся только из ячейки,
+    которая целиком и есть ID; в тексте и в ячейках покрытия он не ID."""
+    assert ms._first_id("последовательность API-ASYNC-SEQ") == ""
+    assert ms._first_id("Операция") == ""
+    assert ms.cell_ids("API-ASYNC-SEQ") == set()
+    assert ms.cell_ids("SCR-CL-01") == {"SCR-CL-01"}
+
+
+def test_new_registry_row_name_link_becomes_text(tmp_path):
+    """Название новой строки из ячейки таблицы чужого файла — без ссылки: её
+    относительный путь и якорь в матрице битые. Существующее название — как есть."""
+    docs = kit(tmp_path, registry=REGISTRY.replace(
+        "| CTL-GRP-1 | Группа сохранения | `srs/control/README.md` |\n", ""))
+    report, code = ms.write(docs)
+    assert code == 0, report
+    text = (docs / "traceability-matrix.md").read_text(encoding="utf-8")
+    assert "| CTL-GRP-1 | Группа сохранения — FUN-CL-01 | `srs/control/README.md` |" in text, text
+    assert "](../function/fun-cl-01.md)" not in text.split("## Покрытие")[0]
+
+
+def test_write_then_check_converges_on_nonstandard_ids(tmp_path):
+    docs = kit(tmp_path, fun_extra="Вызывает [EXTINT-005-A Приложение](../ext/extint-005-a.md).\n")
+    w(docs / "srs/ext/extint-005-a.md", fm("EXTINT-005-A", "contract-call", "Приложение"))
+    w(docs / "srs/ext/api-async-seq.md", fm("API-ASYNC-SEQ", "contract-call", "Последовательность"))
+    report, code = ms.write(docs)
+    assert code == 0, report
+    report, warn = ms.check(docs)
+    assert not warn, report
+    report, code = ms.write(docs)
+    assert code == 0 and "не перезаписан" in report[0], report
