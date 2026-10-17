@@ -604,6 +604,40 @@ def _kc_matrix_registry_and_debts(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return report, all_ok
 
 
+def _matrix_sync_report(docs: Path) -> Tuple[List[str], bool]:
+    """Сверка выводимых разделов матрицы (`matrix_sync --check`) для отчёта
+    selfcheck: (строки, есть ⚠). Матрица не по шаблону канона — одна строка
+    «i … сверка пропущена»: расхождения структуры показывает сама утилита,
+    в отчёт selfcheck они не попадают (решение владельца канона 2026-10-17)."""
+    try:
+        import matrix_sync as ms  # noqa: E402 — утилита сама импортирует selfcheck
+    except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+        from . import matrix_sync as ms  # type: ignore
+    matrix = docs / ms.MATRIX
+    text = _fs.read_text(matrix, encoding="utf-8", errors="replace").replace("\r\n", "\n")
+    if ms.structure_issues(ms.parse_matrix(text)):
+        return ["i матрица трассировки не по шаблону канона — сверка выводимых "
+                "разделов (matrix_sync) пропущена"], False
+    rep, warn = ms.check(docs, matrix)
+    if warn:
+        head = ("⚠ выводимые разделы матрицы (matrix_sync) расходятся с документами "
+                "— пересборка: matrix_sync.py --write:")
+    else:
+        rep = [ln for ln in rep if not ln.startswith("✓")]
+        head = ("✓ выводимые разделы матрицы совпадают с документами (matrix_sync)"
+                + (":" if rep else ""))
+    return [head] + [f"   {ln}" for ln in rep], warn
+
+
+def _kc_matrix_sync(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # справочная сверка: ⚠ и i, вердикт не меняет; без матрицы молчит —
+    # отсутствие матрицы — брак проверки реестра ID выше
+    if not (ctx.docs / "traceability-matrix.md").is_file():
+        return [], True
+    rep, _ = _safe(_matrix_sync_report, ctx.docs)
+    return rep, True
+
+
 def _kc_open_questions(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -930,6 +964,7 @@ def _kc_source_coverage(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 KIT_CHECKS: List[Check] = [
     Check("repo_root", _kc_repo_root, affects_verdict=True),
     Check("matrix_registry_and_debts", _kc_matrix_registry_and_debts, affects_verdict=True),
+    Check("matrix_sync", _kc_matrix_sync, affects_verdict=False),
     Check("open_questions", _kc_open_questions, affects_verdict=True),
     Check("id_slots", _kc_id_slots, affects_verdict=True),
     Check("frontmatter_schema", _kc_frontmatter_schema, affects_verdict=False),
