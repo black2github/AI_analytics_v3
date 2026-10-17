@@ -41,10 +41,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
-    from kitcheck.md import split_cells  # noqa: E402
+    from kitcheck.md import blank_code, split_cells  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
-    from .kitcheck.md import split_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -508,8 +508,9 @@ def _check_register_order(path: Path, num_re, prefix: str,
     text = _fs.read_text(path, encoding="utf-8", errors="replace")
     # заголовок-образец внутри блока кода записью не является (FB-04
     # «Корпоративных карт», 2026-09-15: пересозданный скелет с примером
-    # формата давал «1 записей ✓» при нуле настоящих записей)
-    text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
+    # формата давал «1 записей ✓» при нуле настоящих записей); границы
+    # блоков — общее правило прибора (и ~~~, и ограждение с отступом)
+    text = blank_code(text, repl="", inline=False)
     nums = [int(m.group(1)) for m in num_re.finditer(text)]
     bad = [(a, b) for a, b in zip(nums, nums[1:]) if b < a]
     if bad:
@@ -556,7 +557,7 @@ def check_coordination_log(log_path: Path,
     if not log_path.is_file():
         return [], True
     text = _fs.read_text(log_path, encoding="utf-8", errors="replace")
-    text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
+    text = blank_code(text, repl="", inline=False)
     entries: List[Tuple[str, int]] = []
     cur: Optional[str] = None
     size = 0

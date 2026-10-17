@@ -62,7 +62,7 @@ try:
     from kitcheck.checks._common import (  # noqa: E402,F401 — этап 3
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
     from kitcheck.checks.artifacts import (  # noqa: E402,F401 — этап 3
-        _ART_LINK_RE, _BOM, _FENCE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
+        _ART_LINK_RE, _BOM, _PRE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
     from kitcheck.checks.catalog_api import (  # noqa: E402,F401 — этап 3
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from kitcheck.checks.content import (  # noqa: E402,F401 — этап 3
@@ -83,7 +83,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
     from .kitcheck.checks.artifacts import (  # type: ignore  # noqa: E402,F401
-        _ART_LINK_RE, _BOM, _FENCE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
+        _ART_LINK_RE, _BOM, _PRE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
     from .kitcheck.checks.catalog_api import (  # type: ignore  # noqa: E402,F401
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from .kitcheck.checks.content import (  # type: ignore  # noqa: E402,F401
