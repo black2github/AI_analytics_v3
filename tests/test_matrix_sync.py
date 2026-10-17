@@ -3,6 +3,8 @@
 трассировки сверяются с телами документов (--check)."""
 from pathlib import Path
 
+import pytest
+
 from app.scripts.CI import matrix_sync as ms
 
 
@@ -176,3 +178,66 @@ def test_part_name_title_with_tab_tail_own_title_and_forward():
     assert ms.part_name(own, base_h + " — «Карты»", base_t, base_h) == own
     assert ms.part_name("", base_h + " — вкладка «Реквизиты»", "", base_h) \
         == base_h + " — вкладка «Реквизиты»"
+
+
+# ------------------------------------- задача 13: текст без ID в выводимой ячейке
+
+def test_write_refuses_text_in_coverage_cell(tmp_path):
+    """Пометка в ячейке покрытия — пересборка заменила бы её на «—» молча."""
+    docs = kit(tmp_path, fun_row="| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | "
+                                 "— (долг L835) |")
+    report, warn = ms.check(docs)
+    text = "\n".join(report)
+    assert warn and "текст без ID в выводимой ячейке" in text, text
+    assert "FUN-CL-01 / Печатные формы: «— (долг L835)»" in text, text
+    mx = docs / "traceability-matrix.md"
+    before = mx.read_bytes()
+    report, code = ms.write(docs)
+    text = "\n".join(report)
+    assert code == 2 and mx.read_bytes() == before, report
+    assert "«Покрытие: функции → артефакты»: текст без ID в выводимой ячейке ×1" in text, text
+    assert "перенесите в ручной раздел («Долги по ссылкам», приложение) или снимите" in text
+
+
+def test_write_refuses_text_in_sources_target_cell(tmp_path):
+    docs = kit(tmp_path)
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8").replace(
+        "| 2166860001 | SCR-CL-01 | — |", "| 2166860001 | SCR-CL-01, см. OQ-158 | — |"),
+        encoding="utf-8")
+    before = mx.read_bytes()
+    report, code = ms.write(docs)
+    text = "\n".join(report)
+    assert code == 2 and mx.read_bytes() == before, report
+    assert "2166860001 / Целевые артефакты: «SCR-CL-01, см. OQ-158»" in text, text
+
+
+@pytest.mark.parametrize("cell", [
+    "SCR-CL-01", "SCR-CL-01, SCR-CL-02", "SCR-CL-01; SCR-CL-03.1", "CTL-001 … CTL-005",
+    "CTL-001...CTL-005", "CTL-001–CTL-005", "—", "-", "", "EXTINT-005-A",
+    "[SCR-CL-01](srs/screen-form/scr-cl-01.md)", "**SCR-CL-01**", "`ENT-001`",
+])
+def test_id_only_cells_have_no_text(cell):
+    """Несрабатывание: ID, диапазоны, «—», пустая ячейка, ссылка и выделение."""
+    assert ms.cell_text_residue(cell) == "", cell
+
+
+@pytest.mark.parametrize("cell", ["— (долг L835)", "см. OQ-158", "заглушка", "SCR-CL-01 (вкладка)"])
+def test_free_text_cells_detected(cell):
+    assert ms.cell_text_residue(cell), cell
+
+
+def test_text_in_name_and_basis_columns_not_checked(tmp_path):
+    """Несрабатывание: «Название» покрытия и «Основание» источников — не выводимые
+    колонки; текст в них --write не останавливает."""
+    docs = kit(tmp_path, fun_row="| FUN-CL-01 | Сохранение (см. OQ-158) | SCR-CL-01 | ENT-001 | "
+                                 "CTL-GRP-1 | — |")
+    mx = docs / "traceability-matrix.md"
+    mx.write_text(mx.read_text(encoding="utf-8").replace(
+        "| 2166860001 | SCR-CL-01 | — |", "| 2166860001 | SCR-CL-01 | страница-родитель, OQ-158 |"),
+        encoding="utf-8")
+    report, _warn = ms.check(docs)
+    assert "текст без ID" not in "\n".join(report), report
+    report, code = ms.write(docs)
+    assert code == 0, report
+    assert "текст без ID" not in "\n".join(report), report

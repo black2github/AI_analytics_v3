@@ -18,7 +18,9 @@
 Отказ (код 2, файл не тронут) — всякий раз, когда пересборка потеряла бы
 факт: структура не по шаблону; ID в ячейке, на который нет ссылки в
 документах, которого нет в комплекте или у префикса которого нет колонки;
-строка реестра без документа (документ удалён или сменил ID — снятие
+свободный текст без ID в ячейке выводимой колонки покрытия или «Целевые
+артефакты» источников (пометка «— (долг …)», «см. OQ-…», «заглушка»; колонки
+«Название» и «Основание» не проверяются); строка реестра без документа (документ удалён или сменил ID — снятие
 оформляется вручную, conventions §5); снятый ID снова в документах.
 
 Правила вывода:
@@ -195,6 +197,28 @@ def cell_ids(cell: str) -> Set[str]:
             out |= {f"{ma.group(1)}{n:0{w}d}"
                     for n in range(int(ma.group(2)), int(mb.group(2)) + 1)}
     return out
+
+
+# Остаток выводимой ячейки после снятия ID: ссылки markdown сводятся к тексту,
+# ID-подобные токены (в том числе с буквенным хвостом — EXTINT-005-A — и
+# суб-ID SCR-CL-03.1), разделители «, ;», «—», многоточие и тире диапазона
+# снимаются; непустой остаток — свободный текст, который пересборка заменила бы
+# на «—» молча (задача 13, решение владельца пилота 2026-10-18)
+_MD_LINK_TEXT_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+_ID_TOKEN_RE = re.compile(r"(?<![\w-])[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+(?:\.\d+)*(?![\w-])")
+_CELL_NOISE_RE = re.compile(r"[\s,;—–…*`]+|\.\.\.|-")
+
+
+def cell_text_residue(cell: str) -> str:
+    """Свободный текст выводимой ячейки (пусто — ячейка из ID, диапазонов и «—»)."""
+    s = _MD_LINK_TEXT_RE.sub(r"\1", cell)
+    s = _ID_TOKEN_RE.sub(" ", s)
+    return _CELL_NOISE_RE.sub(" ", s).strip()
+
+
+def _cell_quote(cell: str, limit: int = 60) -> str:
+    c = cell.strip()
+    return c if len(c) <= limit else c[:limit - 1] + "…"
 
 
 def _is_registry_file(p: Path) -> bool:
@@ -585,7 +609,43 @@ def check_coverage(sec: Section, kit: Kit, row_types: Set[str], cols: List[str],
           unknown, 8)
     _emit(lines, "у префикса ID нет колонки в шаблоне (--write не работает, пока перечень "
                  "не пуст)", nocol, 8)
+    _emit(lines, TEXT_CELLS_HINT + " (--write не работает, пока перечень не пуст)",
+          coverage_text_cells(sec, cols), 8)
     return lines, only_matrix + unknown + nocol
+
+
+TEXT_CELLS_HINT = ("текст без ID в выводимой ячейке — перенесите в ручной раздел "
+                   "(«Долги по ссылкам», приложение) или снимите")
+
+
+def coverage_text_cells(sec: Section, cols: List[str]) -> List[str]:
+    """Ячейки выводимых колонок покрытия со свободным текстом: «<строка> /
+    <колонка>: «<текст>»». «Название» и прочие колонки не проверяются."""
+    colmap = [column_key(h) for h in sec.header]
+    out = []
+    for r in sec.rows:
+        rid = _first_id(r[0]) if r else ""
+        if not rid:
+            continue
+        for n, cell in enumerate(r[1:], 1):
+            ck = colmap[n] if n < len(colmap) else "other"
+            if ck in cols and cell_text_residue(cell):
+                out.append(f"{rid} / {sec.header[n]}: «{_cell_quote(cell)}»")
+    return out
+
+
+def sources_text_cells(sec: Section) -> List[str]:
+    """Ячейки «Целевые артефакты» источников со свободным текстом; «Основание» —
+    ручная колонка, не проверяется."""
+    if not any(re.search(r"целев|артефакт", h, re.I) for h in sec.header):
+        return []
+    tcol = sec.col(r"целев|артефакт", 1)
+    out = []
+    for r in sec.rows:
+        m = re.search(r"\b(\d{6,})\b", r[0]) if r else None
+        if m and tcol < len(r) and cell_text_residue(r[tcol]):
+            out.append(f"{m.group(1)} / {sec.header[tcol]}: «{_cell_quote(r[tcol])}»")
+    return out
 
 
 def sources_only_matrix(sec: Section, kit: Kit) -> List[str]:
@@ -624,6 +684,8 @@ def check_sources(sec: Section, kit: Kit) -> List[str]:
     _emit(lines, "ID в ячейке не выводится из confluence_page_ids — связь только в матрице "
                  "или ID нет в комплекте (--write не работает, пока перечень не пуст)",
           sources_only_matrix(sec, kit), 8)
+    _emit(lines, TEXT_CELLS_HINT + " (--write не работает, пока перечень не пуст)",
+          sources_text_cells(sec), 8)
     return lines
 
 
@@ -823,6 +885,14 @@ def write(docs: Path, matrix: Optional[Path] = None) -> Tuple[List[str], int]:
                 refuse.append(f"«{by_key[key].title}»: ID ячеек, которые пересборка потеряет, "
                               f"×{len(only)}: "
                               + "; ".join(only[:6]) + (" …" if len(only) > 6 else ""))
+        for key, cols in (("fun", FUN_COLS), ("proc", PROC_COLS), ("sources", None)):
+            sec = by_key[key]
+            texts = coverage_text_cells(sec, cols) if cols else sources_text_cells(sec)
+            if texts:
+                refuse.append(f"«{sec.title}»: текст без ID в выводимой ячейке ×{len(texts)}: "
+                              + "; ".join(texts[:6]) + (" …" if len(texts) > 6 else "")
+                              + " — перенесите в ручной раздел («Долги по ссылкам», "
+                                "приложение) или снимите")
         only_src = sources_only_matrix(by_key["sources"], kit)
         if only_src:
             refuse.append(f"«{by_key['sources'].title}»: ID ячеек, которые пересборка потеряет, "
