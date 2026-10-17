@@ -18,28 +18,32 @@
 прогонами (гейт переноса копирует комплект во временный каталог), открывают
 новую сессию на каждый прогон — устаревшего содержимого кэш не отдаёт.
 """
+import functools
 import os
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Dict, Iterator, Optional, Union
+from typing import Any, Callable, Dict, Iterator, Optional, Union
 
 PathLike = Union[str, "os.PathLike[str]"]
 
 _cache: Optional[Dict[str, bytes]] = None
+_memo: Optional[Dict[Any, Dict[Any, Any]]] = None
 
 
 @contextmanager
 def session() -> Iterator[None]:
     """Кэш на время прогона. Вложенная сессия пользуется внешней."""
-    global _cache
+    global _cache, _memo
     outer = _cache is not None
     if not outer:
         _cache = {}
+        _memo = {}
     try:
         yield
     finally:
         if not outer:
             _cache = None
+            _memo = None
 
 
 def active() -> bool:
@@ -74,3 +78,33 @@ def read_text(path: PathLike, encoding: Optional[str] = None,
 def _default_encoding() -> str:
     import locale
     return locale.getpreferredencoding(False)
+
+
+def memoize(copy: Optional[Callable[[Any], Any]] = None):
+    """Кэш результатов чистой функции на время прогона (сессии).
+
+    Ключ — аргументы вызова; вне сессии и при нехэшируемых аргументах функция
+    вызывается напрямую. Исключение не кэшируется — повторяется при каждом
+    вызове. `copy` — как отдавать результат: для изменяемого результата
+    (списка) — копия при каждом вызове, чтобы вызывающий не испортил кэш.
+    Применять только к функциям без побочных эффектов, чей результат зависит
+    лишь от аргументов."""
+    def deco(fn):
+        @functools.wraps(fn)
+        def wrapper(*args, **kw):
+            if _memo is None:
+                return fn(*args, **kw)
+            key = (args, tuple(sorted(kw.items())))
+            try:
+                hash(key)
+            except TypeError:
+                return fn(*args, **kw)
+            d = _memo.setdefault(fn, {})
+            if key in d:
+                v = d[key]
+            else:
+                v = fn(*args, **kw)
+                d[key] = v
+            return copy(v) if copy is not None else v
+        return wrapper
+    return deco

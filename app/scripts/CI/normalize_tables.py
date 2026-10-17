@@ -228,6 +228,7 @@ def protect_token_tags(md_text: str) -> str:
     return _TAGLIKE_RE.sub(esc, md_text)
 
 
+@_fs.memoize(copy=list)
 def find_top_tables(md_text: str) -> List[Tag]:
     """Верхнеуровневые сырые HTML-таблицы файла (вложенные обрабатываются
     в составе родительской ячейки текстом; их структура — отдельной таблицей
@@ -1116,6 +1117,7 @@ def _strip_markdown_links(v: str) -> str:
     return "".join(out)
 
 
+@_fs.memoize()
 def _norm_cell(v: str) -> str:
     """Нормальная форма значения для сверки наличия: без markdown-разметки,
     бэктиков, <br> и лишних пробелов, в нижнем регистре.
@@ -1385,6 +1387,7 @@ def _rank_levels(steps: List[Tuple[str, float]]) -> List[Tuple[str, int]]:
     return [(c, ranks[lv]) for c, lv in steps]
 
 
+@_fs.memoize(copy=list)
 def behavior_steps_from_source(source_text: str,
                                cell_re=None) -> List[Tuple[str, int]]:
     """(маркер, уровень) из ячейки «Что делает функция» HTML-источника
