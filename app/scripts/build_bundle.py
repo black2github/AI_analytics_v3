@@ -175,6 +175,33 @@ def eol_norm(text: str) -> str:
     return text.replace("\r\n", "\n")
 
 
+def eol_of(text: str) -> Optional[str]:
+    """Переводы строк файла: "\\r\\n" — все строки CRLF, "\\n" — все LF; None —
+    смешанные или переводов строк нет."""
+    crlf = text.count("\r\n")
+    lf = text.count("\n") - crlf
+    if crlf and not lf:
+        return "\r\n"
+    if lf and not crlf:
+        return "\n"
+    return None
+
+
+def keep_eol(want: str, have: str) -> str:
+    """Текст `want` в переводах строк уже лежащего в поставке файла `have`.
+
+    Поставка хранит файлы байт-в-байт (`* -text`), а сборщик читает канон из
+    рабочей копии с её переводами строк: CRLF-копия канона переписывала
+    LF-файл поставки целиком, и в коммите поставки правка в две строки
+    выглядела заменой всего файла (1.9.6, 2026-10-17). Стиль берётся только
+    у однородного файла; у смешанного — байты канона, как прежде."""
+    eol = eol_of(have)
+    if eol is None:
+        return want
+    norm = eol_norm(want)
+    return norm if eol == "\n" else norm.replace("\n", "\r\n")
+
+
 def _read(path: Path) -> str:
     with open(path, "r", encoding="utf-8", newline="") as f:
         return f.read()
@@ -239,8 +266,12 @@ def sync(canon: Path, bundle: Path, commit: str, sync_data: bool) -> List[str]:
         want = render(rel, _read(src), commit)
         # Идемпотентность: неизменённый файл не перезаписываем (см. правила репозитория).
         # Различие только в переводах строк изменением не считается — см. eol_norm.
-        if dst.is_file() and eol_norm(_read(dst)) == eol_norm(want):
-            continue
+        if dst.is_file():
+            have = _read(dst)
+            if eol_norm(have) == eol_norm(want):
+                continue
+            # изменённый файл — в его прежних переводах строк (см. keep_eol)
+            want = keep_eol(want, have)
         _write(dst, want)
         changed.append(rel)
     return changed

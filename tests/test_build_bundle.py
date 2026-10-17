@@ -145,6 +145,52 @@ class TestSync:
             assert "\r\n" in f.read()                                # байты сохранены
         assert compare(canon, bundle, "aaa111")["расходится"] == []
 
+    @staticmethod
+    def _raw(p):
+        with open(p, "r", encoding="utf-8", newline="") as f:
+            return f.read()
+
+    @staticmethod
+    def _put(p, text):
+        p.parent.mkdir(parents=True, exist_ok=True)
+        with open(p, "w", encoding="utf-8", newline="") as f:
+            f.write(text)
+
+    def test_changed_file_keeps_bundle_lf(self, two_trees):
+        """Канон в CRLF (рабочая копия Windows), поставка хранит LF — правка
+        пишется в LF, а не переписывает файл целиком (1.9.6, 2026-10-17)."""
+        canon, bundle = two_trees
+        sync(canon, bundle, "aaa111", sync_data=False)                # LF, как канон
+        loader = "app/confluence_loader.py"
+        self._put(canon / loader, (LOADER_PY + "x = 1\n").replace("\n", "\r\n"))
+        assert sync(canon, bundle, "aaa111", sync_data=False) == [loader]
+        got = self._raw(bundle / loader)
+        assert "\r\n" not in got and got.endswith("x = 1\n")
+
+    def test_changed_file_keeps_bundle_crlf(self, two_trees):
+        canon, bundle = two_trees
+        sync(canon, bundle, "aaa111", sync_data=False)
+        loader = "app/confluence_loader.py"
+        p = bundle / loader
+        self._put(p, self._raw(p).replace("\n", "\r\n"))             # поставка в CRLF
+        self._put(canon / loader, LOADER_PY + "x = 1\n")             # канон в LF
+        assert sync(canon, bundle, "aaa111", sync_data=False) == [loader]
+        got = self._raw(p)
+        assert got.count("\r\n") == got.count("\n") and got.endswith("x = 1\r\n")
+
+    def test_new_and_mixed_files_get_canon_bytes(self, two_trees):
+        # НЕсрабатывание: нового файла и файла со смешанными окончаниями стиль не угадывается
+        canon, bundle = two_trees
+        loader = "app/confluence_loader.py"
+        self._put(canon / loader, LOADER_PY.replace("\n", "\r\n"))
+        sync(canon, bundle, "aaa111", sync_data=False)
+        assert self._raw(bundle / loader) == LOADER_PY.replace("\n", "\r\n").replace(
+            "verify_ssl=True", "verify_ssl=False")
+        self._put(bundle / loader, "a\r\nb\n")                        # смешанный
+        self._put(canon / loader, (LOADER_PY + "y = 2\n").replace("\n", "\r\n"))
+        sync(canon, bundle, "aaa111", sync_data=False)
+        assert self._raw(bundle / loader).endswith("y = 2\r\n")
+
     def test_missing_source_is_an_error(self, two_trees):
         canon, bundle = two_trees
         (canon / "app/version.py").unlink()
