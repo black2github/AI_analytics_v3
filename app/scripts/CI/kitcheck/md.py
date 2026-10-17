@@ -158,6 +158,34 @@ def table_cells(line: str) -> List[str]:
 
 _PID_RE = re.compile(r"\d{4,}")
 
+
+def frontmatter_end(lines: List[str]) -> int:
+    """Индекс первой строки тела после шапки; 0 — шапки нет или она не
+    закрыта. Граница — правило `read_frontmatter`, одно для всех мест
+    прибора (решение владельца 2026-10-17): BOM в начале снимается, шапка
+    открывается строкой на «---» и закрывается ближайшей строкой «---»
+    (без учёта пробелов) в пределах 200 строк; «---» внутри значения —
+    не граница."""
+    if not lines or not lines[0].lstrip("﻿").startswith("---"):
+        return 0
+    for k in range(1, min(len(lines), 200)):
+        if lines[k].strip() == "---":
+            return k + 1
+    return 0
+
+
+def frontmatter_split(text: str) -> Tuple[Optional[str], str]:
+    """(текст шапки без строк «---», тело) по границе `frontmatter_end`.
+    Шапки нет или она не закрыта — (None, весь текст без BOM): тело
+    проверяется целиком, ничего не отрезается молча."""
+    body = text.lstrip("﻿")
+    lines = body.splitlines(keepends=True)
+    end = frontmatter_end(lines)
+    if not end:
+        return None, body
+    return "".join(lines[1:end - 1]), "".join(lines[end:])
+
+
 def read_frontmatter(path: Path) -> Optional[Dict[str, str]]:
     """Плоский frontmatter файла; None — блок не закрыт (битый),
     {} — блока нет вовсе."""

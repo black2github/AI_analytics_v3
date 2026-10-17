@@ -223,11 +223,19 @@ def added_removed_lines(top: Path, base: Optional[str], rec: dict) -> Tuple[List
         return [], []
     added: List[str] = []
     removed: List[str] = []
+    # заголовок диффа (diff --git, index, ---/+++) — до первого «@@» файла;
+    # внутри ханка строка на «---»/«+++» — снятая «-- …» или добавленная
+    # «++ …» строка текста (прежде по префиксу она молча выпадала)
+    in_hunk = False
     for ln in r.stdout.splitlines():
-        if ln.startswith("+++") or ln.startswith("---"):
+        if ln.startswith("diff --git "):
+            in_hunk = False
             continue
         if ln.startswith("@@"):
+            in_hunk = True
             added.append("@@")
+        elif not in_hunk:
+            continue
         elif ln.startswith("+"):
             added.append(ln[1:])
         elif ln.startswith("-"):
@@ -282,10 +290,9 @@ _ID_LINE_RE = re.compile(r"^(?:id|partOf):\s*(.+?)\s*$", re.M)
 
 def _id_from_text(text: str) -> str:
     """ID из frontmatter текста (для файлов, которых на диске уже нет)."""
-    body = text.lstrip("﻿")
-    if not body.startswith("---"):
+    head = sc.frontmatter_split(text)[0]
+    if head is None:
         return ""
-    head = body.split("\n---", 1)[0]
     m = _ID_LINE_RE.search(head)
     return m.group(1).strip() if m else ""
 
@@ -477,11 +484,14 @@ def collect_facts(top: Path, base: Optional[str], files: List[dict],
             continue
         added, _ = added_removed_lines(top, base, {"path": f["git_path"], "status": f["status"],
                                                   "old": f["old"]})
-        # frontmatter созданной карточки — не факты
-        if added and added[0].lstrip("﻿").strip() == "---":
-            end = next((i for i, ln in enumerate(added[1:], start=1) if ln.strip() == "---"), None)
-            if end is not None:
-                added = added[end + 1:]
+        # шапка созданной карточки — не факты (общая граница шапки); у
+        # изменённой карточки первая добавленная «---» — черта текста, не
+        # шапка: прежде она срезала факты до следующей «---»
+        if f["action"] == "создан":
+            lead = 1 if added[:1] == ["@@"] else 0
+            end = sc.frontmatter_end(added[lead:])
+            if end:
+                added = added[:lead] + added[lead + end:]
         current_inner: Optional[str] = None
         for i, ln in enumerate(added):
             if ln == "@@":

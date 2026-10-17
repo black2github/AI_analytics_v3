@@ -44,10 +44,25 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 try:
     from kitcheck.md import (  # noqa: E402
-        blank_code, count_cells, is_fence, split_cells, strip_row, table_cells)
+        blank_code, code_line_flags, count_cells, frontmatter_split, is_fence,
+        split_cells, strip_row, table_cells)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402
-        blank_code, count_cells, is_fence, split_cells, strip_row, table_cells)
+        blank_code, code_line_flags, count_cells, frontmatter_split, is_fence,
+        split_cells, strip_row, table_cells)
+
+
+def _fm_body(text: str) -> str:
+    """Текст без шапки — общая граница прибора (`frontmatter_split`): BOM
+    снимается, «---» внутри значения и сепаратор таблицы — не граница;
+    шапки нет — текст целиком (прежнее `split("---", 2)` на странице без
+    шапки резало по сепаратору таблицы и молча выбрасывало начало)."""
+    return frontmatter_split(text)[1]
+
+
+def _fm_head(text: str) -> str:
+    """Текст шапки ('' — шапки нет или она не закрыта)."""
+    return frontmatter_split(text)[0] or ""
 try:
     from kitcheck.core import Check, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -1188,7 +1203,7 @@ def check_notation_hints(text: str) -> List[str]:
     в условии — ожидается «==» (§2); обратная стрелка «←» — не используется
     ни в одном значении (§3). Дословные литералы в кавычках, inline-код,
     блоки кода и адреса ссылок не проверяются."""
-    body = text.split("---", 2)[-1] if text.startswith("---") else text
+    body = _fm_body(text)
     eq_hits: List[str] = []
     back_hits: List[str] = []
     fwd_hits: List[str] = []
@@ -1740,7 +1755,7 @@ def check_example_values_absent(card_text: str,
     необезличенный «Выпискин О. О.» в ent-006 — найдено глазами
     пользователя, прогон inkasso-run1): проверяются скользящие фрагменты
     сегмента по 20 знаков."""
-    segs = _example_value_segments(source_text.split("---", 2)[-1])
+    segs = _example_value_segments(_fm_body(source_text))
     if not segs:
         return [], True
     card_norm = _norm_cell(card_text)
@@ -1761,7 +1776,7 @@ def check_example_values_absent(card_text: str,
 
 
 def quoted_literals(source_text: str) -> List[str]:
-    body = source_text.split("---", 2)[-1]
+    body = _fm_body(source_text)
     headings = _source_headings(body)
     flk_cells = _flk_example_cells(body)
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
@@ -2428,8 +2443,7 @@ def check_step_body_structure(card_text: str,
     совпадать с телом того же шага источника (md-источники; HTML-тела
     без md-разметки дают пустые профили — честный skip). Замены текстов
     ссылок профиль не меняют."""
-    src_bodies = _step_bodies(
-        source_text.split("---", 2)[-1].splitlines())
+    src_bodies = _step_bodies(_fm_body(source_text).splitlines())
     if len(src_bodies) < 2:
         return [], True
     card_bodies = _step_bodies(card_text.splitlines())
@@ -2482,7 +2496,7 @@ def _list_indent_widths(lines: List[str]) -> set:
 
 def check_nesting_depth(card_text: str,
                         source_text: str) -> Tuple[List[str], bool]:
-    src_w = _list_indent_widths(source_text.split("---", 2)[-1].splitlines())
+    src_w = _list_indent_widths(_fm_body(source_text).splitlines())
     card_w = _list_indent_widths(card_text.splitlines())
     if len(src_w) >= 4 and len(card_w) <= 2:
         return [f"вложенность шагов уплощена: источник ведёт "
@@ -3232,10 +3246,10 @@ def _docs_card_titles(docs_root: Path) -> List[Tuple[str, str]]:
     out: List[Tuple[str, str]] = []
     for p in sorted(docs_root.rglob("*.md")):
         try:
-            head = _fs.read_text(p, encoding="utf-8", errors="replace")[:2000]
+            head = _fm_head(_fs.read_text(p, encoding="utf-8", errors="replace"))
         except OSError:
             continue
-        if not head.lstrip("﻿").startswith("---"):
+        if not head:
             continue
         m = re.search(r"^title:\s*(.+)$", head, re.M)
         if not m:
@@ -3253,11 +3267,7 @@ def check_target_mentions(card_text: str, md_path: Path,
     """Софт-сторож: теговые упоминания целей вне markdown-ссылок.
     Существующая карточка → «оформить ссылкой»; неизвестная цель без
     следа в матрице → «ссылка или долг». Вердикт не меняет (⚠)."""
-    body = card_text
-    if body.lstrip("﻿").startswith("---"):
-        m = re.search(r"\n---\s*\n", body)
-        if m:
-            body = body[m.end():]
+    body = _fm_body(card_text)
     body = re.sub(r"<!--.*?-->", " ", body, flags=re.S)
     body = _blank_md_links(body)
     warns: List[str] = []
@@ -3578,7 +3588,7 @@ _ENTITY_ID_RE = re.compile(r"^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-\d+$")
 def _frontmatter_entity(text: str) -> str:
     """Значение entity из frontmatter карточного файла контролей без
     обрамляющих кавычек; '' — ключа нет или значение пустое."""
-    m = re.search(r"^entity:[ \t]*(.*?)[ \t]*$", text[:800], re.M)
+    m = re.search(r"^entity:[ \t]*(.*?)[ \t]*$", _fm_head(text), re.M)
     if not m:
         return ""
     val = m.group(1).strip()
@@ -3922,8 +3932,7 @@ def _fc_homoglyphs(fx: "_FileCtx") -> Tuple[List[str], bool]:
         # перенос бракуется за дословность. Сторож дефейса тега (К-32)
         # не ослабляется: он сверяет тег с источником отдельно.
         src_words = {w.group(0)
-                     for w in re.finditer(r"[^\W\d_]+",
-                                          source_text.split("---", 2)[-1])}
+                     for w in re.finditer(r"[^\W\d_]+", _fm_body(source_text))}
         pardoned = [w for w in mixed if w in src_words]
         mixed = [w for w in mixed if w not in src_words]
         if pardoned:
@@ -4108,7 +4117,7 @@ def _fc_readme_main_roles(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # screen-form, несущий предметные секции, — старая структура: ⚠ до
     # структурного захода, сторож тиража после него.
     if (md_path.name.lower() == "readme.md"
-            and re.search(r"^type:\s*screen-form\s*$", text[:500], re.M)
+            and re.search(r"^type:\s*screen-form\s*$", _fm_head(text), re.M)
             and re.search(r"^###\s+(?:FLD|EV|B|MSG)-", text, re.M)):
         report.append(
             "предупреждение: README группы ЭФ несёт предметные секции "
@@ -4128,7 +4137,7 @@ def _fc_pseudo_screen_form(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # предписывает серверную логику выносить в function; фиктивное поле
     # с «Видимость: не отображается (серверная процедура)» — натяжка
     # типа). ⚠-кандидат на смену типа; решение — владельца.
-    if re.search(r"^type:\s*screen-form\s*$", text[:500], re.M):
+    if re.search(r"^type:\s*screen-form\s*$", _fm_head(text), re.M):
         _vis = re.findall(r"^\s*-\s+\*\*Видимость:\*\*\s*(.+)$", text,
                           re.M)
         if _vis and all(re.search(r"не отображается|серверн", v, re.I)
@@ -4149,7 +4158,7 @@ def _fc_figma_mockups(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # 2026-08-14): URL макета — единственная связь аналитики с макетом
     # и обязан переноситься; раздел «Макеты» без единой figma-ссылки —
     # сигнал приёмке (не ✗: у части форм макетов в источнике нет).
-    if (re.search(r"^type:\s*screen-form\s*$", text[:500], re.M)
+    if (re.search(r"^type:\s*screen-form\s*$", _fm_head(text), re.M)
             and re.search(r"^#+\s.*Макеты", text, re.M)
             and "figma.com" not in text.lower()):
         report.append(
@@ -4172,7 +4181,7 @@ def _fc_fabricated_attributes(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # владельца: подтвердить аналогию явной пометкой-предположением и
     # OQ либо сократить карточку до фактов источника.
     if (source_text is not None
-            and re.search(r"^type:\s*data-model\s*$", text[:500], re.M)
+            and re.search(r"^type:\s*data-model\s*$", _fm_head(text), re.M)
             and re.search(r"^\|[^\n]*Атрибут[^\n]*\|[^\n]*Тип",
                           text, re.M)
             and not re.search(r"<table|^\|.*\|.*\|", source_text, re.M)):
@@ -4202,7 +4211,7 @@ def _fc_control_cards_by_entity(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # поле. Сверка «чужих» карточек — только для значения-ID: имени
     # формы в «Проверяемом атрибуте» сравнивать не с чем.
     if (md_path.name.lower().startswith("cards-")
-            and re.search(r"^type:\s*control\s*$", text[:500], re.M)):
+            and re.search(r"^type:\s*control\s*$", _fm_head(text), re.M)):
         _eid = _frontmatter_entity(text)
         if not _eid:
             report.append(
@@ -4239,7 +4248,9 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # вложенность; вложенность переносится СПИСКАМИ (канонная форма,
     # решение 2026-08-29/31). Эталон конвертера — эталон СОДЕРЖИМОГО,
     # не формы (сторож тяжёлых пар li-раскладку принимает).
-    _bq = sum(1 for ln in lines if ln.lstrip().startswith(">"))
+    # строки внутри блока кода — текст примера, не цитата
+    _bq = sum(1 for ln, code in zip(lines, code_line_flags(lines))
+              if not code and ln.lstrip().startswith(">"))
     if _bq:
         ok = False
         report.append(
@@ -4482,8 +4493,7 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # К-7 экзамена inkasso: «Статика и источники — по таблице полей
     # источника page 2169849859» ×40 — отсылка ВМЕСТО переноса
     # содержимого, словарь маркеров сокращения её не покрывал.
-    body_wo_fm = text.split("---", 2)[-1] if text.lstrip("﻿")\
-        .startswith("---") else text
+    body_wo_fm = _fm_body(text)
     # Исключение (решение владельца 2026-10-03, замечание 5 к MR 104):
     # заготовка регистрации потребителя в таблице «Потребители» карточки
     # контракта — `page_id:<ID страницы потребителя>` в колонке
@@ -4774,7 +4784,7 @@ def _rc_form_entity_names(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     # контролей): срабатывает, когда есть оба условия сразу.
     if (docs_root is not None
             and main_file.name.lower().startswith("cards-")
-            and re.search(r"^type:\s*control\s*$", card_text[:500], re.M)):
+            and re.search(r"^type:\s*control\s*$", _fm_head(card_text), re.M)):
         _ename = _frontmatter_entity(card_text)
         if _ename and not _ENTITY_ID_RE.match(_ename):
             _want = _norm_ws(_ename)
@@ -4810,7 +4820,7 @@ def _rc_source_cell_completeness(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     # карточек + весь каталог модели данных (фрагмент вправе уехать
     # в dictionaries/README по шаблону)
     if src_text is not None and re.search(
-            r"^type:\s*data-model\s*$", card_text[:500], re.M):
+            r"^type:\s*data-model\s*$", _fm_head(card_text), re.M):
         sib = "\n\n".join(
             _fs.read_text(f, encoding="utf-8")
             for f in sorted(main_file.parent.glob("*.md"))
@@ -4866,7 +4876,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # строк, не шаги (экзамен inkasso 2026-08-16: сущности МД с
         # секциями 1.1… дали ложные «отсутствуют 72 из 72»). Тип не
         # распознан — консервативно применяем.
-        m_type = re.search(r"^type:\s*([\w-]+)", card_text[:2000], re.M)
+        m_type = re.search(r"^type:\s*([\w-]+)", _fm_head(card_text), re.M)
         steps_apply = (m_type is None or m_type.group(1) in
                        {"process", "agent", "function", "notification"})
         src_report, src_ok = check_source_tables(combined, src_text)
