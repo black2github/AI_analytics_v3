@@ -43,9 +43,11 @@ try:
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 try:
-    from kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # noqa: E402
+    from kitcheck.md import (  # noqa: E402
+        FENCE_BACKTICK, count_cells, is_fence, split_cells, strip_row, table_cells)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import (  # type: ignore  # noqa: E402
+        FENCE_BACKTICK, count_cells, is_fence, split_cells, strip_row, table_cells)
 try:
     from kitcheck.core import Check, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -1046,7 +1048,7 @@ def parse_md_tables(md_text: str) -> List[Tuple[List[str], List[List[str]]]]:
             if set(s.replace("|", "").replace(" ", "")) <= {"-", ":"}:
                 continue                        # строка-разделитель шапки
             block.append([c.strip().strip("`").strip()
-                          for c in s.strip("|").split("|")])
+                          for c in split_cells(strip_row(s))])
         else:
             flush()
     flush()
@@ -3973,8 +3975,8 @@ def _fc_separator_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
         _h, _s = lines[_i].strip(), lines[_i + 1].strip()
         if (_h.startswith("|") and _h.endswith("|")
                 and re.fullmatch(r"\|[\s:|-]*-[\s:|-]*\|", _s)):
-            _nh = _h.strip("|").count("|") + 1
-            _ns = _s.strip("|").count("|") + 1
+            _nh = count_cells(_h)
+            _ns = count_cells(_s)
             if _nh != _ns:
                 ok = False
                 report.append(

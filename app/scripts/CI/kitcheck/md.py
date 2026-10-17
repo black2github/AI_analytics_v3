@@ -6,9 +6,9 @@
 Функции перенесены из `selfcheck.py` дословно (этап 1б рефакторинга);
 `selfcheck` реэкспортирует прежние имена. Новые примитивы — `table_cells`,
 `is_fence` — повторяют поведение мест, которые их зовут, до символа:
-- `table_cells` режет строку по «|» как раньше, в том числе экранированную
-  «\\|» внутри ячейки (подозрение на дефект Д-1, REFACTOR_STATUS.md) —
-  поведение сохранено;
+- `table_cells` (и `split_cells`, `strip_row`, `count_cells`) режет строку по
+  неэкранированным «|»: «\\|» внутри ячейки — часть текста (дефект Д-1
+  исправлен 2026-10-17); на строках без «\\|» результат прежний;
 - `is_fence` принимает набор маркеров явно: часть мест прибора распознаёт
   только ```` ``` ````, часть — и `~~~`; расхождение сохранено и видно в
   вызове (`FENCE_BACKTICK` против `FENCE_BOTH`).
@@ -32,10 +32,53 @@ def is_fence(stripped_line: str, markers: Tuple[str, ...] = FENCE_BOTH) -> bool:
     return stripped_line.startswith(markers)
 
 
+def _escaped_at(s: str, i: int) -> bool:
+    """Символ s[i] экранирован: перед ним нечётное число «\\»."""
+    n = 0
+    while i - n - 1 >= 0 and s[i - n - 1] == "\\":
+        n += 1
+    return n % 2 == 1
+
+
+def split_cells(inner: str) -> List[str]:
+    """Режет текст строки таблицы по неэкранированным «|» (GFM: «\\|» внутри
+    ячейки — часть её текста, не граница; Д-1, исправлено 2026-10-17).
+    Ячейки — как в тексте, с «\\|» и пробелами: перезапись строки (matrix_sync)
+    сохраняет байты. Без «\\|» — ровно `inner.split("|")`."""
+    if "\\|" not in inner:
+        return inner.split("|")
+    out: List[str] = []
+    start = 0
+    for i, ch in enumerate(inner):
+        if ch == "|" and not _escaped_at(inner, i):
+            out.append(inner[start:i])
+            start = i + 1
+    out.append(inner[start:])
+    return out
+
+
+def strip_row(line: str) -> str:
+    """Текст строки таблицы без пробелов и крайних «|»; экранированная «\\|» в
+    конце последней ячейки не срезается. Без «\\|» — `line.strip().strip("|")`."""
+    s = line.strip()
+    if "\\|" not in s:
+        return s.strip("|")
+    s = s.lstrip("|")
+    while s.endswith("|") and not _escaped_at(s, len(s) - 1):
+        s = s[:-1]
+    return s
+
+
+def count_cells(line: str) -> int:
+    """Число ячеек строки таблицы (для сверки шапки с сепаратором)."""
+    return len(split_cells(strip_row(line)))
+
+
 def table_cells(line: str) -> List[str]:
-    """Ячейки строки pipe-таблицы без пробелов по краям:
+    """Ячейки строки pipe-таблицы без пробелов по краям; «\\|» внутри ячейки —
+    часть её текста (`split_cells`). Без «\\|» — прежнее
     `[c.strip() for c in line.strip().strip("|").split("|")]`."""
-    return [c.strip() for c in line.strip().strip("|").split("|")]
+    return [c.strip() for c in split_cells(strip_row(line))]
 
 _PID_RE = re.compile(r"\d{4,}")
 

@@ -41,8 +41,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
+    from kitcheck.md import split_cells  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
+    from .kitcheck.md import split_cells  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -225,7 +227,7 @@ def parse_matrix_full(matrix_text: str):
         row = _ROW_RE.match(ln)
         if not row:
             continue
-        cells = [c.strip() for c in row.group(1).split("|")]
+        cells = [c.strip() for c in split_cells(row.group(1))]
         joined = " ".join(cells)
         if in_debts:
             if all(_SEP_CELL_RE.match(c) for c in cells if c):
@@ -577,7 +579,7 @@ def check_coordination_log(log_path: Path,
     out = [f"coordination-log: записей {len(entries)}, сверх лимита "
            f"{limit} знаков — {len(long)}" + (" ✓" if not long else "")]
     for head, n in long[-5:]:
-        parts = [x.strip() for x in head.split("|")]
+        parts = [x.strip() for x in split_cells(head)]
         who = " | ".join(parts[:2]).lstrip("- ")[:60]
         out.append(f"предупреждение: запись журнала «{who}» — {n} знаков "
                    f"(лимит {limit}): факты и решение — в запись, "

@@ -522,7 +522,7 @@ def task_questions(task_text: str) -> List[dict]:
         sect = sect[:nxt.start()]
     out: List[dict] = []
     for row in _split_matrix_rows(sect.splitlines()):
-        cells = [c.strip() for c in row.strip().strip("|").split("|")]
+        cells = sc.table_cells(row)
         if len(cells) < 3:
             continue
         answer = cells[2]

@@ -17,11 +17,15 @@ try:
     from kitcheck.md import _kit_md
     from kitcheck.md import page_ids
     from kitcheck.md import read_frontmatter
+    from kitcheck.md import split_cells
+    from kitcheck.md import strip_row
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
     from ..md import page_ids  # type: ignore
     from ..md import read_frontmatter  # type: ignore
+    from ..md import split_cells  # type: ignore
+    from ..md import strip_row  # type: ignore
 
 
 _STRUCT_EXT = {".json", ".yaml", ".yml", ".xml"}
@@ -67,7 +71,7 @@ def _source_candidates(text: str) -> List[str]:
     out = list(_FENCE_RE.findall(text))
     for ln in text.splitlines():
         if ln.lstrip().startswith("|"):
-            for cell in ln.strip().strip("|").split("|"):
+            for cell in split_cells(strip_row(ln)):
                 c = re.sub(r"<br\s*/?>", "\n", cell)
                 c = c.replace("`", "").replace("\\|", "|").strip()
                 if len(c) > 10:

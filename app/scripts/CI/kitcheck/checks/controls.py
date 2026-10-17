@@ -15,12 +15,12 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
 
 
-_GRP_ROW_RE = re.compile(r"^\|\s*\[?(CTL-GRP-\d+)\]?[^|]*\|\s*([^|]+)")
+_GRP_ROW_RE = re.compile(r"^\|\s*\[?(CTL-GRP-\d+)\]?(?:\\.|[^\\|])*\|\s*((?:\\.|[^\\|])+)")
 
 
 # формат с колонкой «Контур» (полигон 2026-08-29): | ID | FE/BE | Привязка |
 _GRP_ROW_C_RE = re.compile(
-    r"^\|\s*\[?(CTL-GRP-\d+)\]?[^|]*\|\s*(FE|BE)\s*\|\s*([^|]+)")
+    r"^\|\s*\[?(CTL-GRP-\d+)\]?(?:\\.|[^\\|])*\|\s*(FE|BE)\s*\|\s*((?:\\.|[^\\|])+)")
 
 
 _QUOTE_TOKEN_RE = re.compile(r"«([^»]{3,60})»|`([A-Za-z_]{3,30})`")
