@@ -15,6 +15,7 @@ import re
 try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
+    from kitcheck.md import code_blocks
     from kitcheck.md import page_ids
     from kitcheck.md import read_frontmatter
     from kitcheck.md import split_cells
@@ -22,6 +23,7 @@ try:
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
+    from ..md import code_blocks  # type: ignore
     from ..md import page_ids  # type: ignore
     from ..md import read_frontmatter  # type: ignore
     from ..md import split_cells  # type: ignore
@@ -34,7 +36,9 @@ _STRUCT_EXT = {".json", ".yaml", ".yml", ".xml"}
 _BOM = b"\xef\xbb\xbf"
 
 
-_FENCE_RE = re.compile(r"```[^\n]*\n(.*?)```", re.S)
+# Блок кода в ячейке таблицы выгрузка отдаёт как <pre>…</pre> (экспортёр с
+# 2026-09-06, repair_export --unfence-html): пример из ячейки — тоже кандидат.
+_PRE_RE = re.compile(r"<pre[^>]*>(.*?)</pre>", re.S | re.I)
 
 
 _TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_\-.]{7,}")
@@ -66,9 +70,11 @@ def _parse_structured(raw: bytes, ext: str) -> Optional[str]:
 
 def _source_candidates(text: str) -> List[str]:
     """Фрагменты страницы источника, которые могли быть примером:
-    блоки кода и ячейки таблиц (инлайн-код в ячейке склеивается, `<br>`
-    — перевод строки)."""
-    out = list(_FENCE_RE.findall(text))
+    блоки кода (границы — `is_fence`, как у всего прибора), `<pre>…</pre>`
+    и ячейки таблиц (инлайн-код в ячейке склеивается, `<br>` — перевод
+    строки)."""
+    out = code_blocks(text)
+    out.extend(re.sub(r"<br\s*/?>", "\n", m) for m in _PRE_RE.findall(text))
     for ln in text.splitlines():
         if ln.lstrip().startswith("|"):
             for cell in split_cells(strip_row(ln)):

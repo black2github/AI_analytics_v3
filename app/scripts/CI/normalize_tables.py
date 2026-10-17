@@ -44,10 +44,10 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
 try:
     from kitcheck.md import (  # noqa: E402
-        FENCE_BACKTICK, count_cells, is_fence, split_cells, strip_row, table_cells)
+        blank_code, count_cells, is_fence, split_cells, strip_row, table_cells)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402
-        FENCE_BACKTICK, count_cells, is_fence, split_cells, strip_row, table_cells)
+        blank_code, count_cells, is_fence, split_cells, strip_row, table_cells)
 try:
     from kitcheck.core import Check, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -3728,7 +3728,7 @@ def _fc_torn_table_cells(fx: "_FileCtx") -> Tuple[List[str], bool]:
     _in_fence = False
     _fenced = set()
     for k, ln in enumerate(lines):
-        if is_fence(ln.lstrip(), FENCE_BACKTICK):
+        if is_fence(ln.lstrip()):
             _in_fence = not _in_fence
             _fenced.add(k)
         elif _in_fence:
@@ -4070,7 +4070,7 @@ def _fc_long_lines(fx: "_FileCtx") -> Tuple[List[str], bool]:
         if (source_text or amnesty_text) else None
     for ln in lines:
         s = ln.strip()
-        if is_fence(s, FENCE_BACKTICK):
+        if is_fence(s):
             in_code = not in_code
             continue
         if (in_code or not s or s.startswith("|") or s.startswith("#")
@@ -4251,7 +4251,7 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
     _fenced = False
     for _i in range(1, len(lines)):
         ln = lines[_i]
-        if is_fence(ln.lstrip(), FENCE_BACKTICK):
+        if is_fence(ln.lstrip()):
             _fenced = not _fenced
             continue
         if _fenced:
@@ -4283,7 +4283,7 @@ def _fc_invisible_html_tags(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # <M>) исчезают молча — «структура в байтах ≠ структура в рендере».
     # Кириллические <Атрибуты> тегами не парсятся и легальны; <br> —
     # намеренный перенос в ячейках. Форма переноса — бэктики: `<S>`.
-    nohtml = re.sub(r"```.*?```", " ", text, flags=re.S)
+    nohtml = blank_code(text)
     nohtml = re.sub(r"`[^`\n]*`", " ", nohtml)
     tagish = sorted({m.group(0) for m in re.finditer(
         r"</?[A-Za-z][A-Za-z0-9-]*\s*/?>", nohtml)

@@ -154,6 +154,7 @@ from typing import Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
+from kitcheck.md import blank_code  # noqa: E402
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_VALIDATOR = _HERE / "platform" / "scripts" / "validate_analytics_docs.py"
@@ -353,7 +354,7 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
     for cand in question_candidates(src_root, docs, sources, explicit):
         if cand.is_file():
             text = cand.read_text(encoding="utf-8", errors="replace")
-            text = re.sub(r"^```.*?^```[^\n]*$", "", text, flags=re.S | re.M)
+            text = blank_code(text, repl="", inline=False)
             opened: List[str] = []
             entries = list(_OQ_ENTRY_RE.finditer(text))
             for i, m in enumerate(entries):

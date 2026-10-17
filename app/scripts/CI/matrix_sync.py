@@ -56,9 +56,9 @@ from urllib.parse import unquote
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as scx  # noqa: E402
 try:
-    from kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # noqa: E402
+    from kitcheck.md import is_fence, table_cells  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.md import FENCE_BACKTICK, is_fence, table_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import is_fence, table_cells  # type: ignore  # noqa: E402
 
 MATRIX = "traceability-matrix.md"
 

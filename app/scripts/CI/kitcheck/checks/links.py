@@ -15,6 +15,7 @@ try:
     from kitcheck.md import _anchors_of
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
+    from kitcheck.md import blank_code
     from kitcheck.md import is_fence
     from kitcheck.md import read_frontmatter
     from kitcheck.md import table_cells
@@ -23,6 +24,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from ..md import _anchors_of  # type: ignore
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
+    from ..md import blank_code  # type: ignore
     from ..md import is_fence  # type: ignore
     from ..md import read_frontmatter  # type: ignore
     from ..md import table_cells  # type: ignore
@@ -198,7 +200,7 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
             text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
-        text = re.sub(r"```.*?```", " ", text, flags=re.S)
+        text = blank_code(text)
         src_nav = md.name.lower() in ("readme.md", "traceability-matrix.md")
         for m in _MD_LINK_RE.finditer(text):
             label, raw_t = m.group(1), m.group(2).strip()
@@ -252,7 +254,7 @@ def check_relative_links(docs: Path) -> Tuple[List[str], bool]:
             text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:
             continue
-        text = re.sub(r"```.*?```", " ", text, flags=re.S)
+        text = blank_code(text)
         for m in _MD_LINK_RE.finditer(text):
             raw_t = m.group(2).strip()
             if not raw_t or raw_t.startswith("#") or "://" in raw_t \
@@ -352,7 +354,7 @@ def check_named_entity_links(docs: Path) -> List[str]:
         if p.name.lower() in _NAMED_LINK_SKIP:
             continue
         body = _fs.read_text(p, encoding="utf-8", errors="replace")
-        body = re.sub(r"```.*?```", " ", body, flags=re.S)   # примеры кода
+        body = blank_code(body)   # примеры кода
         first_full: Dict[str, int] = {}
         named: Dict[str, List[int]] = {}
         for m in _MD_LINK_RE.finditer(body):
