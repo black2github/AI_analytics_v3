@@ -4716,12 +4716,56 @@ def run_check(files: List[Path], source_path: Optional[Path],
                 combined += "\n\n" + _fs.read_text(side, encoding="utf-8", errors="replace")
         except OSError:
             continue
+    # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
+    # порядок строк отчёта, вердикт — в run_checks
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text)
+    f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
+    report.extend(f_lines)
+    ok = ok and f_ok
+    return report, ok
+
+
+# --- проверки run_check (рефакторинг: перенос в реестр SOURCE_CHECKS) ---
+#
+# Перенесены из run_check дословно: каждый блок — функция-проверка с
+# локальными report/ok; реестр SOURCE_CHECKS задаёт порядок строк отчёта.
+# Новая проверка — функция и строка в реестре.
+
+@dataclass
+class _SourceCtx:
+    """Контекст проверок run_check: её параметры и значения пролога."""
+    files: object
+    source_path: object
+    min_valid_pct: object
+    docs_root: object
+    soft_markers: object
+    pardon_source: object
+    amnesty_sources: object
+    card_text: object
+    combined: object
+    main_file: object
+    src_text: object
+
+
+
+
+def _rc_clean_document(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    docs_root, main_file = fx.docs_root, fx.main_file
+    report: List[str] = []
+    ok = True
     # сторож чистовика (волна D): по КАЖДОЙ карточке вызова, не только
     # главной (неглавные в selfcheck прогоняются отдельными вызовами,
     # здесь files>1 встречается в CLI)
     cl_report, cl_ok = check_clean_document(main_file, docs_root)
     report.extend(cl_report)
     ok = ok and cl_ok
+    return report, ok
+
+
+def _rc_form_entity_names(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    docs_root, card_text, main_file = fx.docs_root, fx.card_text, fx.main_file
+    report: List[str] = []
+    ok = True
     # FB-11: entity-имя формы законно, пока карточки формы в комплекте
     # нет; появилась карточка с таким title — имя заменяется на её ID.
     # Сигнал не зависит от порядка этапов плана (формы раньше или позже
@@ -4740,10 +4784,24 @@ def run_check(files: List[Path], source_path: Optional[Path],
                     f"формы в комплекте уже есть ({_hit}) — заменить имя "
                     "на её ID (шаблон controls.md: имя допустимо только "
                     "до появления карточки)")
+    return report, ok
+
+
+def _rc_tuz_formula(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    card_text, = fx.card_text,
+    report: List[str] = []
+    ok = True
     # формула ТУЗ обычным шрифтом (решение 2026-08-19, шаблон §2)
     tz_report, tz_ok = check_tuz_formula(card_text)
     report.extend(tz_report)
     ok = ok and tz_ok
+    return report, ok
+
+
+def _rc_source_cell_completeness(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    files, card_text, combined, main_file, src_text = fx.files, fx.card_text, fx.combined, fx.main_file, fx.src_text
+    report: List[str] = []
+    ok = True
     # полнота ячеек источника — reverse-карточки модели данных
     # (COM-01 Корпкарт 2026-08-27: хвосты ячеек Тип/Описание терялись
     # при выносе перечислений в справочник); корпус поиска — группа
@@ -4760,17 +4818,45 @@ def run_check(files: List[Path], source_path: Optional[Path],
         cov_rep, cov_ok = check_cell_coverage(src_text, corpus_txt)
         report.extend(cov_rep)
         ok = ok and cov_ok
+    return report, ok
+
+
+def _rc_tagged_mentions(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    docs_root, card_text, main_file = fx.docs_root, fx.card_text, fx.main_file
+    report: List[str] = []
+    ok = True
     # теговые упоминания целей: ссылка или долг (софт, вердикт не трогает)
     if docs_root is not None:
         tm_report, _ = check_target_mentions(card_text, main_file,
                                              docs_root)
         report.extend(tm_report)
+    return report, ok
+
+
+def _rc_behavior_numbering(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    card_text, = fx.card_text,
+    report: List[str] = []
+    ok = True
     num_report, num_ok = check_behavior_numbering(card_text)
     report.extend(num_report)
     ok = ok and num_ok
+    return report, ok
+
+
+def _rc_notification_structure(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    card_text, = fx.card_text,
+    report: List[str] = []
+    ok = True
     ntf_report, ntf_ok = check_notification_structure(card_text)
     report.extend(ntf_report)
     ok = ok and ntf_ok
+    return report, ok
+
+
+def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    files, docs_root, card_text, combined, main_file, src_text = fx.files, fx.docs_root, fx.card_text, fx.combined, fx.main_file, fx.src_text
+    report: List[str] = []
+    ok = True
     if src_text is not None:
         # сторож маркеров шагов — только для типов с таблицей шагов /
         # поведением (process, agent, function, notification): на
@@ -4885,6 +4971,18 @@ def run_check(files: List[Path], source_path: Optional[Path],
         report.extend(ql_report)
         ok = ok and src_ok and ttl_ok and bh_ok and st_ok and ql_ok
     return report, ok
+
+
+SOURCE_CHECKS: List[Check] = [
+    Check("clean_document", _rc_clean_document, scope="file"),
+    Check("form_entity_names", _rc_form_entity_names, scope="file"),
+    Check("tuz_formula", _rc_tuz_formula, scope="file"),
+    Check("source_cell_completeness", _rc_source_cell_completeness, scope="file"),
+    Check("tagged_mentions", _rc_tagged_mentions, scope="file"),
+    Check("behavior_numbering", _rc_behavior_numbering, scope="file"),
+    Check("notification_structure", _rc_notification_structure, scope="file"),
+    Check("source_comparison", _rc_source_comparison, scope="file"),
+]
 
 
 def main() -> int:
