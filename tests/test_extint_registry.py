@@ -110,6 +110,20 @@ def test_channel_subdirectory_with_own_readme_silent(tmp_path):
     assert not bad, lines
 
 
+def test_consumer_without_call_card_silent(tmp_path):
+    """Отступление ЦР (KHD-001): карточки вызова нет — локальный ID «—», ссылка на документ-
+    инициатор на HEAD, в тексте ссылки экранированные скобки."""
+    repo = clean_repo(tmp_path)
+    fun = "https://gitlab.gboteam.ru/EAN/docs-svc/-/blob/HEAD/svc/srs/shared/function/system/fun-svc-01-x.md"
+    c = card("EXTINT-ABC-001", "Операция один").replace(
+        f"| svc | CALL-EXT-001 | [CALL-EXT-001. Вызов]({HEAD}) |",
+        f"| svc | — (карточки вызова нет; вызов из FUN-SVC-01) | [FUN-SVC-01. \\[СВК\\] Система. Функция]({fun}) |")
+    assert "FUN-SVC-01" in c
+    w(repo / "abc/extint-abc-001-op.md", c)
+    lines, bad = er.check(repo, limit=0)
+    assert not bad, lines
+
+
 # ---------------------------------------------------------------- срабатывание
 
 def test_duplicate_id(tmp_path):
