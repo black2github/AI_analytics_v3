@@ -24,15 +24,16 @@ def card(i: str, title: str = "Операция", kind: str = "operation", chann
             f"| svc | CALL-EXT-001 | [CALL-EXT-001. Вызов]({consumer}) |\n")
 
 
-def readme(as_code: str, ops: list, formats: list = ()) -> str:
+def readme(as_code: str, ops: list, messages: list = (), commons: list = ()) -> str:
     out = (f"---\nid: EXTINT-{as_code}-000\ntitle: 'АС — базовые контракты внешней АС'\n"
            "type: external-integration-registry\n---\n\n# Заголовок\n\nНазначение.\n\n"
            "## О системе\n\n| Поле | Значение |\n|---|---|\n| Система | АС |\n\n"
            "## Операции\n\n| ID | Название | Канал | Синхронность | Карточка |\n|---|---|---|---|---|\n")
     out += "".join(f"| {i} | {t} | {ch} | {s} | [{f}]({f}) |\n" for i, t, ch, s, f in ops)
-    if formats:
-        out += "\n## Форматы сообщений\n\n| ID | Название | Канал | Карточка |\n|---|---|---|---|\n"
-        out += "".join(f"| {i} | {t} | {ch} | [{f}]({f}) |\n" for i, t, ch, f in formats)
+    for title, rows in (("Сообщения и файлы", messages), ("Общие форматы и коды", commons)):
+        if rows:
+            out += f"\n## {title}\n\n| ID | Название | Канал | Карточка |\n|---|---|---|---|\n"
+            out += "".join(f"| {i} | {t} | {ch} | [{f}]({f}) |\n" for i, t, ch, f in rows)
     return out
 
 
@@ -43,11 +44,11 @@ def root(rows: list) -> str:
 
 
 def clean_repo(tmp_path: Path) -> Path:
-    """Чистая папка АС: две операции и формат, README и корневой реестр по шаблону."""
+    """Чистая папка АС: две операции и сообщение, README и корневой реестр по шаблону."""
     repo = tmp_path / "repo"
     w(repo / "abc/extint-abc-001-op.md", card("EXTINT-ABC-001", "Операция один"))
     w(repo / "abc/extint-abc-002-op.md", card("EXTINT-ABC-002", "Операция два", channel="suv", sync="async"))
-    w(repo / "abc/extint-abc-003-fmt.md", card("EXTINT-ABC-003", "Формат", kind="format", channel="kafka", sync=""))
+    w(repo / "abc/extint-abc-003-fmt.md", card("EXTINT-ABC-003", "Формат", kind="message", channel="kafka", sync=""))
     w(repo / "abc/README.md", readme("ABC", [
         ("EXTINT-ABC-002", "Операция два", "СУВ", "async", "extint-abc-002-op.md"),
         ("EXTINT-ABC-001", "Операция один", "REST", "sync", "extint-abc-001-op.md")],
@@ -69,9 +70,31 @@ def test_clean_folder_silent(tmp_path):
     assert lines[-2] == "✓ реестры и шапки карточек сходятся", lines
 
 
-def test_format_without_sync_silent(tmp_path):
-    t = text(clean_repo(tmp_path))
-    assert "sync" not in t, t
+def test_message_and_common_without_sync_silent(tmp_path):
+    """Несрабатывание: у message и common sync не указывается — это не ⚠."""
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-004-codes.md", card("EXTINT-ABC-004", "Коды ошибок", kind="common", channel="rest", sync=""))
+    w(repo / "abc/README.md", (repo / "abc/README.md").read_text(encoding="utf-8")
+      + "\n## Общие форматы и коды\n\n| ID | Название | Канал | Карточка |\n|---|---|---|---|\n"
+        "| EXTINT-ABC-004 | Коды ошибок | REST | [extint-abc-004-codes.md](extint-abc-004-codes.md) |\n")
+    w(repo / "README.md", root([("АС АБЦ", "abc", 4)]))
+    lines, bad = er.check(repo, limit=0)
+    assert not bad, lines
+
+
+def test_sync_on_message_or_common_warned(tmp_path):
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-003-fmt.md", card("EXTINT-ABC-003", "Формат", kind="message", channel="kafka", sync="async"))
+    t = text(repo)
+    assert "у message или common указан sync" in t and "abc/extint-abc-003-fmt.md: message" in t, t
+
+
+def test_card_in_wrong_table_by_kind(tmp_path):
+    """common-карточка в таблице «Сообщения и файлы» — строка не в той таблице."""
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-003-fmt.md", card("EXTINT-ABC-003", "Формат", kind="common", channel="kafka", sync=""))
+    t = text(repo)
+    assert "строка не в той таблице по kind" in t and "kind common, строка в «Сообщения и файлы»" in t, t
 
 
 def test_channel_subdirectory_with_own_readme_silent(tmp_path):
@@ -200,7 +223,7 @@ def test_write_orders_by_channel_then_number_and_is_idempotent(tmp_path):
     w(repo / "README.md", root([("АС АБЦ", "abc", 4)]))
     report, code = er.write(repo)
     assert code == 0, report
-    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1].split("## Форматы")[0]
+    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1].split("## Сообщения и файлы")[0]
     ids = [ln.split("|")[1].strip() for ln in ops.splitlines() if ln.startswith("| EXTINT")]
     assert ids == ["EXTINT-ABC-002", "EXTINT-ABC-001", "EXTINT-ABC-001"], ids   # СУВ раньше REST; дубль — обе
     rd = repo / "abc/README.md"
@@ -220,7 +243,7 @@ def test_soap_and_otsgds_channels_in_dictionary_order(tmp_path):
     w(repo / "README.md", root([("АС АБЦ", "abc", 6)]))
     report, code = er.write(repo)
     assert code == 0, report
-    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1].split("## Форматы")[0]
+    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1].split("## Сообщения и файлы")[0]
     rows = [[c.strip() for c in ln.split("|")[1:4]] for ln in ops.splitlines() if ln.startswith("| EXTINT")]
     assert [r[0] for r in rows] == ["EXTINT-ABC-002", "EXTINT-ABC-001", "EXTINT-ABC-004",
                                     "EXTINT-ABC-006", "EXTINT-ABC-005"], rows   # СУВ, REST, SOAP, MQ, ОТСГДС
@@ -238,7 +261,7 @@ def test_write_creates_readme_by_template(tmp_path):
     new = (repo / "abc/README.md").read_text(encoding="utf-8")
     assert new.startswith("---\nid: EXTINT-ABC-000\ntitle: 'АС АБЦ — базовые контракты внешней АС'\n"), new
     assert "Назначение АС: в источниках не задано." in new and "[examples/](examples/)" in new, new
-    assert "## Форматы сообщений" in new and "Вложения" not in new, new
+    assert "## Сообщения и файлы" in new and "## Общие форматы и коды" not in new and "Вложения" not in new, new
     lines, bad = er.check(repo, limit=0)
     assert not bad, lines
 
@@ -262,7 +285,7 @@ def test_write_refuses_directory_with_card_without_kind(tmp_path):
     w(repo / "abc/extint-abc-004-nokind.md", card("EXTINT-ABC-004", "Без вида", kind=""))
     before = (repo / "abc/README.md").read_bytes()
     report, code = er.write(repo)
-    assert code == 2 and "нет kind или вне operation | format ×1: extint-abc-004-nokind.md" in "\n".join(report), report
+    assert code == 2 and "нет kind или вне operation | message | common ×1: extint-abc-004-nokind.md" in "\n".join(report), report
     assert (repo / "abc/README.md").read_bytes() == before
 
 
@@ -300,3 +323,46 @@ def test_write_keeps_crlf_and_bom(tmp_path):
     assert code == 0, report
     b = rd.read_bytes()
     assert b.startswith(b"\xef\xbb\xbf") and b.count(b"\n") == b.count(b"\r\n"), b[:80]
+
+
+def test_name_without_title_is_h1_without_id_and_warned(tmp_path):
+    """Пересмотр развилки 7 (18.10): без title «Название» = H1 карточки без ID, ⚠ «нет title» остаётся."""
+    repo = clean_repo(tmp_path)
+    c = card("EXTINT-ABC-004", "ВРЕМЕННО").replace("title: 'ВРЕМЕННО'\n", "").replace(
+        "# EXTINT-ABC-004. ВРЕМЕННО", "# EXTINT-ABC-004. Получение списка по H1")
+    w(repo / "abc/extint-abc-004-noname.md", c)
+    w(repo / "README.md", root([("АС АБЦ", "abc", 4)]))
+    report, code = er.write(repo)
+    assert code == 0, report
+    rd = (repo / "abc/README.md").read_text(encoding="utf-8")
+    row = next(ln for ln in rd.splitlines() if ln.startswith("| EXTINT-ABC-004"))
+    assert "| Получение списка по H1 " in row and "ВРЕМЕННО" not in row, row
+    lines, bad = er.check(repo, limit=0)
+    t = "\n".join(lines)
+    assert bad and "нет title (в реестре — H1 карточки без ID) ×1" in t, t
+    assert "строка README расходится" not in t, t
+
+
+def test_write_inserts_message_and_common_sections_in_template_order(tmp_path):
+    """README только с «Операциями»: --write вставляет «Сообщения и файлы», затем «Общие форматы и коды»
+    после «Операций» и перед ручным «Примеры обмена»; при создании README порядок тот же."""
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/README.md", readme("ABC", [
+        ("EXTINT-ABC-002", "Операция два", "СУВ", "async", "extint-abc-002-op.md"),
+        ("EXTINT-ABC-001", "Операция один", "REST", "sync", "extint-abc-001-op.md")])
+      + "\n## Примеры обмена\n\nРучной текст.\n")
+    w(repo / "abc/extint-abc-004-codes.md", card("EXTINT-ABC-004", "Коды ошибок", kind="common", channel="rest", sync=""))
+    w(repo / "README.md", root([("АС АБЦ", "abc", 4)]))
+    report, code = er.write(repo)
+    assert code == 0, report
+    t = (repo / "abc/README.md").read_text(encoding="utf-8")
+    pos = [t.index(h) for h in ("## Операции", "## Сообщения и файлы", "## Общие форматы и коды", "## Примеры обмена")]
+    assert pos == sorted(pos), pos
+    assert "Ручной текст." in t and "Односторонний обмен:" in t and "Общее для операций АС" in t, t
+    lines, bad = er.check(repo, limit=0)
+    assert not bad, lines
+    (repo / "abc/README.md").unlink()
+    report, code = er.write(repo)
+    t = (repo / "abc/README.md").read_text(encoding="utf-8")
+    pos = [t.index(h) for h in ("## Операции", "## Сообщения и файлы", "## Общие форматы и коды", "## Примеры обмена")]
+    assert code == 0 and pos == sorted(pos), (report, pos)

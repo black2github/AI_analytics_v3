@@ -15,13 +15,15 @@ README папки АС (EXTINT-<AS>-000), корневой реестр сист
 
 Проверки:
 - шапка: сломанная (нет закрывающей «---») — ✗; `id`, `title`, `kind`
-  (`operation` | `format`), `channel` из словаря, `sync` (`sync` | `async`) у
-  операций, у формата `sync` не указывается — ⚠;
+  (`operation` — вызов | `message` — односторонний обмен | `common` — общее без
+  обмена), `channel` из словаря, `sync` (`sync` | `async`) у операций, у
+  `message` и `common` `sync` не указывается — ⚠;
 - `id` уникален по всем файлам; `id` = `EXTINT-<ПАПКА>-NNN` и совпадает с
   именем файла `extint-<папка>-NNN-<slug>.md` — ⚠;
 - README каталога карточек есть; README по шаблону (раздел «## Операции») —
-  его таблицы «Операции» и «Форматы сообщений» ↔ карточки: нет строки, строка
-  без файла, название (= `title`, без него «—»), канал, синхронность, таблица
+  его таблицы «Операции», «Сообщения и файлы», «Общие форматы и коды» ↔
+  карточки: нет строки, строка
+  без файла, название (= `title`, без него — H1 карточки без ID), канал, синхронность, таблица
   не по `kind`; README не по шаблону — одна строка, сверка таблиц пропущена
   (перевод — отдельный заход со сверкой фактов);
 - корневой README: раздел «## Реестр систем» (`Система | Папка | README |
@@ -30,8 +32,9 @@ README папки АС (EXTINT-<AS>-000), корневой реестр сист
   `/-/blob/HEAD/` (не `master`, `trunk`, рабочая ветка);
 - маркеры конфликта (`<<<<<<<`, `>>>>>>>` вне блоков кода) в любом `.md` — ✗.
 
-Режим `--write` пересобирает выводимые таблицы «Операции» и «Форматы сообщений»
-README по шаблону и раздел «## Реестр систем» корневого README; текст вне этих
+Режим `--write` пересобирает выводимые таблицы «Операции», «Сообщения и файлы»,
+«Общие форматы и коды» README по шаблону (два последних раздела — только при
+карточках `message` / `common`) и раздел «## Реестр систем» корневого README; текст вне этих
 таблиц (назначение, «О системе», «Примеры обмена», прочие разделы) — байт в байт;
 строки сгруппированы по каналу в порядке словаря, внутри — по номеру, таблицы
 выровнены пробелами; дубль ID — обе строки. README каталога без README создаётся
@@ -68,14 +71,25 @@ CHANNELS: List[Tuple[str, str]] = [
     ("mq", "MQ"), ("otsgds", "ОТСГДС"), ("file", "файл"), ("kafka", "Kafka/СИП"),
     ("postmessage", "PostMessage")]
 CHANNEL_TITLE = dict(CHANNELS)
-KINDS = ("operation", "format")
 SYNCS = ("sync", "async")
 NO_VALUE = "—"
 
 OPS_TITLE = "Операции"
-FORMATS_TITLE = "Форматы сообщений"
 OPS_COLS = ["ID", "Название", "Канал", "Синхронность", "Карточка"]
-FORMATS_COLS = ["ID", "Название", "Канал", "Карточка"]
+SIDE_COLS = ["ID", "Название", "Канал", "Карточка"]
+# таблицы README АС по kind карточки (шаблон канона, раздел A; решение владельца пилота
+# 2026-10-18 вечер: operation — вызов, message — односторонний обмен, common — общее без обмена);
+# порядок — порядок разделов README; «Сообщения и файлы» и «Общие форматы и коды» — только при карточках
+TABLES: List[Tuple[str, str, List[str], str]] = [
+    ("operation", OPS_TITLE, OPS_COLS, ""),
+    ("message", "Сообщения и файлы", SIDE_COLS,
+     "Односторонний обмен: сообщения по подписке, одна сторона MQ-пары, файлы обмена — ответа в этой\n"
+     "карточке нет."),
+    ("common", "Общие форматы и коды", SIDE_COLS,
+     "Общее для операций АС, обмена нет: типы данных, перечни кодов ошибок."),
+]
+KINDS = tuple(k for k, _t, _c, _i in TABLES)
+TABLE_OF_KIND = {k: t for k, t, _c, _i in TABLES}
 ROOT_TITLE = "Реестр систем"
 ROOT_COLS = ["Система", "Папка", "README", "Карточек"]
 SKIP_DIRS = {"examples", "files", ".git"}
@@ -218,8 +232,8 @@ def check_cards(cards: List[Card], rep: Report) -> None:
     rep.emit("✗", "шапка карточки не закрыта или отсутствует — поля не читаются", broken)
     ok = [c for c in cards if not c.broken]
     rep.emit("⚠", "нет id", [c.rel for c in ok if not c.id])
-    rep.emit("⚠", "нет title (в реестре — «—»)", [c.rel for c in ok if not c.get("title")])
-    rep.emit("⚠", "нет kind или значение вне operation | format",
+    rep.emit("⚠", "нет title (в реестре — H1 карточки без ID)", [c.rel for c in ok if not c.get("title")])
+    rep.emit("⚠", "нет kind или значение вне " + " | ".join(KINDS),
              [f"{c.rel}: {c.get('kind') or NO_VALUE}" for c in ok if c.get("kind") not in KINDS])
     rep.emit("⚠", "нет channel или значение вне словаря шаблона (в реестре — «—»)",
              [f"{c.rel}: {c.get('channel') or NO_VALUE}" for c in ok
@@ -227,8 +241,8 @@ def check_cards(cards: List[Card], rep: Report) -> None:
     rep.emit("⚠", "у операции нет sync или значение вне sync | async",
              [f"{c.rel}: {c.get('sync') or NO_VALUE}" for c in ok
               if c.get("kind") == "operation" and c.get("sync") not in SYNCS])
-    rep.emit("⚠", "у формата указан sync (у kind: format не указывается)",
-             [c.rel for c in ok if c.get("kind") == "format" and "sync" in c.fm])
+    rep.emit("⚠", "у message или common указан sync (не указывается — синхронность только у вызова)",
+             [f"{c.rel}: {c.get('kind')}" for c in ok if c.get("kind") in ("message", "common") and "sync" in c.fm])
     by_id: Dict[str, List[str]] = defaultdict(list)
     for c in ok:
         if c.id:
@@ -281,8 +295,18 @@ def check_consumers(cards: List[Card], rep: Report) -> None:
     rep.emit("⚠", "адрес карточки вызова не на /-/blob/HEAD/ (не master, не trunk, не рабочая ветка)", refs)
 
 
+def h1_name(card: Card) -> str:
+    """H1 карточки без ID: «# EXTINT-AS-NNN. Название» → «Название»."""
+    m = re.search(r"^# (.+)$", card.body, re.M)
+    if not m:
+        return ""
+    return re.sub(r"^EXTINT-[A-Z0-9-]+?-\d+[A-Z]?\.?\s*", "", m.group(1).strip()).strip()
+
+
 def expected_row(card: Card) -> Dict[str, str]:
-    return {"title": card.get("title") or NO_VALUE,
+    # «Название» = title; без title — H1 карточки без ID, ⚠ «нет title» остаётся (как в матрице;
+    # решение владельца пилота 2026-10-18, пересмотр развилки 7)
+    return {"title": card.get("title") or h1_name(card) or NO_VALUE,
             "channel": CHANNEL_TITLE.get(card.get("channel"), NO_VALUE),
             "sync": card.get("sync") if card.get("sync") in SYNCS else NO_VALUE}
 
@@ -304,7 +328,7 @@ def check_readmes(repo: Path, cards: List[Card], rep: Report) -> None:
             continue
         names = {c.path.name: c for c in by_dir[d]}
         seen = set()
-        for title in (OPS_TITLE, FORMATS_TITLE):
+        for _k, title, _cols, _intro in TABLES:
             sec = secs.get(title)
             if sec is None:
                 continue
@@ -319,13 +343,13 @@ def check_readmes(repo: Path, cards: List[Card], rep: Report) -> None:
                 seen.add(fname)
                 want = expected_row(c)
                 kind = c.get("kind")
-                if (kind == "operation" and title != OPS_TITLE) or (kind == "format" and title != FORMATS_TITLE):
+                if kind in TABLE_OF_KIND and TABLE_OF_KIND[kind] != title:
                     wrong_table.append(f"{c.rel}: kind {kind}, строка в «{title}»")
                 got = {"title": r[col["Название"]] if "Название" in col and col["Название"] < len(r) else "",
                        "channel": r[col["Канал"]] if "Канал" in col and col["Канал"] < len(r) else "",
                        "sync": r[col["Синхронность"]] if "Синхронность" in col and col["Синхронность"] < len(r) else want["sync"]}
                 for key, label in (("title", "название"), ("channel", "канал"), ("sync", "синхронность")):
-                    if title == FORMATS_TITLE and key == "sync":
+                    if title != OPS_TITLE and key == "sync":
                         continue
                     if got[key].replace("\\|", "|") != want[key]:
                         mism.append(f"{c.rel}: {label} в README «{got[key]}», в карточке «{want[key]}»")
@@ -420,7 +444,6 @@ def check(repo: Path, limit: int = 12) -> Tuple[List[str], bool]:
 # ---------------------------------------------------------------- запись
 
 NOT_SET = "в источниках не задано"
-FORMATS_INTRO = "Описания форматов и сообщений по подписке: у них нет запроса и ответа, только структура."
 EXAMPLES_TEXT = ("Каталог [`examples/`](examples/): файлы обмена по карточкам; какой файл к какой карточке —\n"
                  "§5 карточки.")
 POINTER = ("Здесь — базовые контракты {name}: операции и форматы сообщений с параметрами, кодами\n"
@@ -505,8 +528,12 @@ def system_names(repo: Path) -> Dict[str, str]:
     return out
 
 
+def _table_block(kind: str, title: str, cols: List[str], intro: str, cards: List[Card]) -> List[str]:
+    """Раздел таблицы README: заголовок, вводная фраза шаблона (кроме «Операций»), таблица."""
+    return [f"## {title}", ""] + ([intro, ""] if intro else []) + aligned(cols, card_rows(cards, kind)) + [""]
+
+
 def new_readme(as_code: str, name: str, d: Path, cards: List[Card], eol: str) -> str:
-    rows_ops, rows_fmt = card_rows(cards, "operation"), card_rows(cards, "format")
     about = [["Система", _esc(name)], ["Каналы", NOT_SET], ["Среда и адреса", "в источниках не заданы"],
              ["Документация АС", "в источниках не задана"],
              ["Примеры", "[examples/](examples/)" if (d / "examples").is_dir() else NO_VALUE]]
@@ -516,9 +543,11 @@ def new_readme(as_code: str, name: str, d: Path, cards: List[Card], eol: str) ->
     out = ["---", f"id: EXTINT-{as_code}-000", "title: '" + title.replace("'", "''") + "'",
            "type: external-integration-registry", "---", "", f"# EXTINT-{as_code}-000. {title}", "",
            f"Назначение АС: {NOT_SET}.", "", POINTER.format(name=name), "", "## О системе", ""]
-    out += aligned(["Поле", "Значение"], about) + ["", f"## {OPS_TITLE}", ""] + aligned(OPS_COLS, rows_ops) + [""]
-    if rows_fmt:
-        out += [f"## {FORMATS_TITLE}", "", FORMATS_INTRO, ""] + aligned(FORMATS_COLS, rows_fmt) + [""]
+    out += aligned(["Поле", "Значение"], about) + [""]
+    for kind, title, cols, intro in TABLES:
+        # «Операции» — всегда; прочие разделы — только при карточках этого вида
+        if kind == "operation" or any(c.get("kind") == kind for c in cards):
+            out += _table_block(kind, title, cols, intro, cards)
     out += ["## Примеры обмена", "", EXAMPLES_TEXT, ""]
     return eol.join("\n".join(out).split("\n"))
 
@@ -546,15 +575,20 @@ def _write_atomic(p: Path, text: str, bom: bool) -> None:
 def rebuild_readme(text: str, cards: List[Card]) -> str:
     eol = "\r\n" if "\r\n" in text else "\n"
     lines = text.replace("\r\n", "\n").split("\n")
-    lines = _replace_table(lines, _section_span(lines, OPS_TITLE), aligned(OPS_COLS, card_rows(cards, "operation")))
-    fmt_rows = card_rows(cards, "format")
-    span = _section_span(lines, FORMATS_TITLE)
-    if span:
-        lines = _replace_table(lines, span, aligned(FORMATS_COLS, fmt_rows))
-    elif fmt_rows:
-        ops = _section_span(lines, OPS_TITLE)
-        ins = ops[1]
-        lines = lines[:ins] + [f"## {FORMATS_TITLE}", "", FORMATS_INTRO, ""] + aligned(FORMATS_COLS, fmt_rows) + [""] + lines[ins:]
+    prev = OPS_TITLE
+    for kind, title, cols, intro in TABLES:
+        rows = card_rows(cards, kind)
+        span = _section_span(lines, title)
+        if span:
+            # раздел есть — заменяется только таблица; без карточек этого вида раздел остаётся с
+            # пустой таблицей (ручной текст раздела не снимается)
+            lines = _replace_table(lines, span, aligned(cols, rows))
+        elif rows:
+            # раздела нет, карточки есть — раздел вставляется после предыдущего раздела таблиц
+            ins = _section_span(lines, prev)[1]
+            lines = lines[:ins] + _table_block(kind, title, cols, intro, cards) + lines[ins:]
+        if _section_span(lines, title):
+            prev = title
     return eol.join(lines)
 
 
@@ -577,7 +611,7 @@ def write(repo: Path) -> Tuple[List[str], int]:
         if broken:
             why.append(f"шапка не читается ×{len(broken)}: " + ", ".join(broken))
         if nokind:
-            why.append(f"нет kind или вне operation | format ×{len(nokind)}: " + ", ".join(nokind))
+            why.append(f"нет kind или вне {' | '.join(KINDS)} ×{len(nokind)}: " + ", ".join(nokind))
         readme = d / "README.md"
         if readme.is_file():
             text, bom, _eol = _read(readme)
@@ -586,7 +620,7 @@ def write(repo: Path) -> Tuple[List[str], int]:
                 why.append("README не по шаблону (нет «## Операции») — перевод отдельным заходом со сверкой фактов")
             else:
                 files = {c.path.name for c in dc}
-                for title in (OPS_TITLE, FORMATS_TITLE):
+                for _k, title, _cols, _intro in TABLES:
                     sec = secs.get(title)
                     for r in (sec.rows if sec else []):
                         fname = _link_target(r[-1]).split("/")[-1]
