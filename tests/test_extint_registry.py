@@ -262,8 +262,20 @@ def test_write_creates_readme_by_template(tmp_path):
     assert new.startswith("---\nid: EXTINT-ABC-000\ntitle: 'АС АБЦ — базовые контракты внешней АС'\n"), new
     assert "Назначение АС: в источниках не задано." in new and "[examples/](examples/)" in new, new
     assert "## Сообщения и файлы" in new and "## Общие форматы и коды" not in new and "Вложения" not in new, new
+    # шапка-указатель — дословно по шаблону канона
+    assert "Здесь — базовые контракты АС АБЦ: операции, сообщения и общие форматы с параметрами, кодами\n" in new, new
     lines, bad = er.check(repo, limit=0)
     assert not bad, lines
+
+
+def test_write_creates_readme_without_examples_directory(tmp_path):
+    repo = clean_repo(tmp_path)
+    (repo / "abc/README.md").unlink()
+    er.write(repo)
+    new = (repo / "abc/README.md").read_text(encoding="utf-8")
+    assert "| Примеры         | —" in new, new
+    assert new.endswith("## Примеры обмена\n\nПримеров обмена нет: каталога `examples/` в папке нет.\n"), new
+    assert "[`examples/`](examples/)" not in new, new
 
 
 def test_write_refuses_readme_not_by_template_and_row_without_file(tmp_path):

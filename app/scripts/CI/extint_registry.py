@@ -446,7 +446,8 @@ def check(repo: Path, limit: int = 12) -> Tuple[List[str], bool]:
 NOT_SET = "в источниках не задано"
 EXAMPLES_TEXT = ("Каталог [`examples/`](examples/): файлы обмена по карточкам; какой файл к какой карточке —\n"
                  "§5 карточки.")
-POINTER = ("Здесь — базовые контракты {name}: операции и форматы сообщений с параметрами, кодами\n"
+NO_EXAMPLES_TEXT = "Примеров обмена нет: каталога `examples/` в папке нет."
+POINTER = ("Здесь — базовые контракты {name}: операции, сообщения и общие форматы с параметрами, кодами\n"
            "результата и примерами, одно описание на всю Экосистему. Чего здесь нет: как сервис\n"
            "вызывает контракт — карточка `CALL-EXT-NNN` в комплекте сервиса-потребителя\n"
            "(`srs/contract-call/external/`); маппинг на сущности сервисов; открытые вопросы сервисов.\n"
@@ -548,7 +549,7 @@ def new_readme(as_code: str, name: str, d: Path, cards: List[Card], eol: str) ->
         # «Операции» — всегда; прочие разделы — только при карточках этого вида
         if kind == "operation" or any(c.get("kind") == kind for c in cards):
             out += _table_block(kind, title, cols, intro, cards)
-    out += ["## Примеры обмена", "", EXAMPLES_TEXT, ""]
+    out += ["## Примеры обмена", "", EXAMPLES_TEXT if (d / "examples").is_dir() else NO_EXAMPLES_TEXT, ""]
     return eol.join("\n".join(out).split("\n"))
 
 
