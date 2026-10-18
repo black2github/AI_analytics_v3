@@ -105,9 +105,9 @@ def test_id_differs_from_file_name(tmp_path):
 
 def test_channel_outside_dictionary(tmp_path):
     repo = clean_repo(tmp_path)
-    w(repo / "abc/extint-abc-001-op.md", card("EXTINT-ABC-001", "Операция один", channel="soap"))
+    w(repo / "abc/extint-abc-001-op.md", card("EXTINT-ABC-001", "Операция один", channel="grpc"))
     t = text(repo)
-    assert "значение вне словаря шаблона" in t and "abc/extint-abc-001-op.md: soap" in t, t
+    assert "значение вне словаря шаблона" in t and "abc/extint-abc-001-op.md: grpc" in t, t
     assert "канал в README «REST», в карточке «—»" in t, t
 
 
@@ -208,6 +208,25 @@ def test_write_orders_by_channel_then_number_and_is_idempotent(tmp_path):
     report, code = er.write(repo)
     assert code == 0 and "не перезаписаны" in report[-1], report
     assert rd.read_bytes() == before and rd.stat().st_mtime_ns == mtime
+
+
+def test_soap_and_otsgds_channels_in_dictionary_order(tmp_path):
+    """Словарь после решений 18.10: soap после REST, otsgds после MQ; оба — без ⚠."""
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-004-soap.md", card("EXTINT-ABC-004", "SOAP-метод", channel="soap"))
+    w(repo / "abc/extint-abc-005-otsgds.md", card("EXTINT-ABC-005", "Сообщение ОТСГДС", channel="otsgds",
+                                                  sync="async"))
+    w(repo / "abc/extint-abc-006-mq.md", card("EXTINT-ABC-006", "Сообщение MQ", channel="mq", sync="async"))
+    w(repo / "README.md", root([("АС АБЦ", "abc", 6)]))
+    report, code = er.write(repo)
+    assert code == 0, report
+    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1].split("## Форматы")[0]
+    rows = [[c.strip() for c in ln.split("|")[1:4]] for ln in ops.splitlines() if ln.startswith("| EXTINT")]
+    assert [r[0] for r in rows] == ["EXTINT-ABC-002", "EXTINT-ABC-001", "EXTINT-ABC-004",
+                                    "EXTINT-ABC-006", "EXTINT-ABC-005"], rows   # СУВ, REST, SOAP, MQ, ОТСГДС
+    assert rows[2][2] == "SOAP" and rows[4][2] == "ОТСГДС", rows
+    lines, bad = er.check(repo, limit=0)
+    assert not bad, lines
 
 
 def test_write_creates_readme_by_template(tmp_path):

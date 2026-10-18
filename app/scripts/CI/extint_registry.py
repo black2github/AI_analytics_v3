@@ -64,8 +64,9 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 
 # словарь каналов: значение поля channel → отображение в реестре; порядок — порядок групп
 CHANNELS: List[Tuple[str, str]] = [
-    ("suv", "СУВ"), ("online-adapter", "онлайн-адаптер"), ("rest", "REST"), ("mq", "MQ"),
-    ("file", "файл"), ("kafka", "Kafka/СИП"), ("postmessage", "PostMessage")]
+    ("suv", "СУВ"), ("online-adapter", "онлайн-адаптер"), ("rest", "REST"), ("soap", "SOAP"),
+    ("mq", "MQ"), ("otsgds", "ОТСГДС"), ("file", "файл"), ("kafka", "Kafka/СИП"),
+    ("postmessage", "PostMessage")]
 CHANNEL_TITLE = dict(CHANNELS)
 KINDS = ("operation", "format")
 SYNCS = ("sync", "async")
