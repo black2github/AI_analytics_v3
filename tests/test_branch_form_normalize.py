@@ -1,7 +1,8 @@
 # tests/test_branch_form_normalize.py
-"""Нормализация формы ветвления в ячейках таблиц (решение владельца 2026-10-19; стандарт
-notation.md §1): «**Если** X, **то** Y, **иначе** Z» одной строкой ячейки → через `<br>`;
-вне таблиц, литералы в кавычках, код, вложенное условие и маркер списка — не трогаются."""
+"""Нормализация формы ветвления (решения владельца 2026-10-19; стандарт notation.md §1;
+FB-24 КК, решение А): «**Если** X, **то** Y, **иначе** Z» одной строкой → через `<br>` — в
+ячейках, элементах списков и абзацах; заголовки, шапка, код, комментарии, литералы в кавычках
+и вложенное условие — не трогаются."""
 from pathlib import Path
 
 from app.scripts.CI.normalize_tables import (branch_form_offenders, normalize_branch_form,
@@ -52,8 +53,10 @@ def test_run_write_keeps_bom_and_dry_run_does_not_write(tmp_path: Path, capsys):
 
 # ---------------------------------------------------------------- несрабатывание
 
-def test_outside_tables_untouched():
-    src = "- **Если** X, **то** Y\n\n**Если** A, **то** B."
+def test_headings_code_frontmatter_comment_untouched():
+    src = ("---\ntitle: '**Если** X, **то** Y'\n---\n\n# **Если** X, **то** Y\n\n"
+           "```text\n- **Если** X, **то** Y\n```\n\n<!-- **Если** X, **то** Y -->\n"
+           "<!--\n**Если** A, **то** B\n-->\n")
     assert norm(src) == (src, 0, {})
 
 
@@ -78,12 +81,104 @@ def test_nested_condition_left_to_human():
     assert out == src and n == 0 and skipped == {"вложенное условие": 1}
 
 
-def test_list_marker_in_cell_left_to_human():
-    src = "| x | Формирование:<br>• **Если** A, **то** B |"
-    out, n, skipped = norm(src)
-    assert out == src and n == 0 and skipped == {"маркер списка в ячейке": 1}
+def test_list_marker_in_cell_split():
+    # FB-24: маркер списка больше не причина пропуска — маркер остаётся в начале отрезка
+    out, n, skipped = norm("| x | Формирование:<br>• **Если** A, **то** B |")
+    assert out == "| x | Формирование:<br>• **Если** A,<br>**то** B |" and n == 1 and skipped == {}
 
 
 def test_lawful_form_untouched():
     src = "| x | **Если** X,<br>**то** Y,<br>**иначе** Z |"
     assert norm(src) == (src, 0, {})
+
+
+# ---------------------------------------------------------------- FB-24: списки и абзацы
+
+def test_list_item_with_label():
+    src = "- **Логика проверки:** **Если** поле заполнено, **то** проверка пройдена, **иначе** ошибка."
+    out, n, _s = norm(src)
+    assert out == ("- **Логика проверки:** **Если** поле заполнено,<br>**то** проверка пройдена,"
+                   "<br>**иначе** ошибка.") and n == 2
+
+
+def test_list_item_then_at_end_children_not_moved():
+    src = "  - **Если** заявка подписана, **то**:\n    - отправить уведомление;\n    - сменить статус."
+    out, n, _s = norm(src)
+    assert out == ("  - **Если** заявка подписана,<br>**то**:\n    - отправить уведомление;\n"
+                   "    - сменить статус.") and n == 1
+
+
+def test_paragraph_and_numbered_item():
+    kinds = {}
+    out, n, _s = normalize_branch_form("Договор: **Если** счёт открыт, **то** печать.\n\n"
+                                       "1. **Если** A, **то** B.", kinds)
+    assert out == "Договор: **Если** счёт открыт,<br>**то** печать.\n\n1. **Если** A,<br>**то** B."
+    assert n == 2 and kinds == {"абзацы": 1, "списки": 1}
+
+
+def test_nested_outside_table_skipped():
+    src = "- **Если** A, **то** **Если** B, **то** C"
+    out, n, skipped = norm(src)
+    assert out == src and n == 0 and skipped == {"вложенное условие": 1}
+
+
+def test_lawful_form_outside_table_untouched():
+    src = "- **Если** X,<br>**то** Y,<br>**иначе** Z\n\n**Если** A,<br>**то** B."
+    assert norm(src) == (src, 0, {})
+
+
+def test_else_if_chain_split():
+    out, n, _s = norm("- **Если** A, **то** B, **иначе если** C, **то** D")
+    assert out == "- **Если** A,<br>**то** B,<br>**иначе если** C,<br>**то** D" and n == 3
+
+
+def test_guard_silent_after_write():
+    src = ("| x | **Если** X, **то** Y |\n\n- **Логика проверки:** **Если** A, **то** B, **иначе** C.\n\n"
+           "**Если** P, **то** Q.\n\n  - **Если** R, **то**:\n    - S\n")
+    assert len(branch_form_offenders(src.split("\n"))) == 4
+    out, n, _s = norm(src)
+    assert n == 5 and branch_form_offenders(out.split("\n")) == []
+
+
+def test_else_comma_if_chain_split_not_nested():
+    # «**иначе**, **если** …» и «**Иначе** (**если** …)» — цепочка, не вложенность
+    out, n, sk = norm("4. **иначе**, **если** `<Категория>` = `4`, **то**:")
+    assert out == "4. **иначе**, **если** `<Категория>` = `4`,<br>**то**:" and n == 1 and sk == {}
+    out, n, sk = norm("- **Логика проверки:** **Если** A, **то** B, **иначе**, **если** C, **то** D")
+    assert out == "- **Логика проверки:** **Если** A,<br>**то** B,<br>**иначе**, **если** C,<br>**то** D", out
+    assert n == 3 and sk == {}
+
+
+def test_mention_of_construction_in_prose_untouched():
+    # описание конструкции в шаблонах и правилах — не ветвление: ни переноса, ни ⚠ (FB-24)
+    for src in ("8. Логика: ветвления в форме **Если**/**то**/**иначе** (жирным), шаги.",
+                "- слова **Если**, **то**, **иначе**, **иначе если** выделяются жирным",
+                "    флаг согласия) — ветвлением «**Если** …, **то** …,"):
+        assert norm(src) == (src, 0, {}), src
+        assert branch_form_offenders([src]) == [], src
+
+
+def test_mention_limiter_does_not_hide_real_branch():
+    # условие из одного инлайн-кода или ссылки — содержание, перенос и ⚠ на месте
+    src = "- **Если** `<Категория>`, **то** ошибка"
+    assert branch_form_offenders([src]) != []
+    assert norm(src)[0] == "- **Если** `<Категория>`,<br>**то** ошибка"
+    out, n, _s = norm("**Если** [ENT-1](e.md), **то** печать.")
+    assert n == 1 and out == "**Если** [ENT-1](e.md),<br>**то** печать."
+
+
+def test_guard_skips_outcome_inside_guillemets():
+    # симметрия защит: цитата «…» в примечании — ни ⚠ сторожа, ни переноса нормализатора
+    src = ("**Примечание:** источник контролей формулирует проверку как «**Если** поле пусто, "
+           "**то** ошибка», в карточке — как в источнике.")
+    assert branch_form_offenders([src]) == []
+    assert norm(src) == (src, 0, {})
+
+
+def test_guard_still_flags_branch_outside_guillemets():
+    # настоящее ветвление вне кавычек — ⚠ по-прежнему, даже рядом с цитатой
+    src = "- **Если** статус «Отказ», **то** текст «**Если** вы не согласны, **то** звоните»"
+    assert len(branch_form_offenders([src])) == 1
+    out, n, _s = norm(src)
+    assert n == 1 and out.startswith("- **Если** статус «Отказ»,<br>**то** текст «**Если**")
+    assert branch_form_offenders([out]) == []
