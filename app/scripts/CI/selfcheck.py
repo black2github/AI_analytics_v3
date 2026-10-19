@@ -183,7 +183,8 @@ def _run(files: List[Path], src: Optional[Path],
     return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
-                                      amnesty_sources=amnesty))
+                                      amnesty_sources=amnesty,
+                                      kit_summary=True))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -756,6 +757,35 @@ def _kc_spellings(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep, True
 
 
+# Строки, которые пишутся только в файл отчёта --out (в консоль не печатаются):
+# полные перечни под сводной строкой комплекта.
+OUT_ONLY = "   · "
+
+
+def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторож формы ветвления (notation §1) — одна строка на комплект вместо строки
+    на файл (решение владельца пилота 2026-10-20): у комплекта, мигрированного до
+    нормализации, сотни файлов с одним и тем же ⚠ заслоняют прочие предупреждения.
+    Сколько закроет нормализатор — сухим прогоном по тексту файла; остаток —
+    вложенные условия, человеку. Перечень по файлам — только в --out."""
+    per: List[Tuple[str, int, int]] = []
+    for p in _kit_md(ctx.docs):
+        n, rest = nt.branch_form_counts(_fs.read_text(p, encoding="utf-8", errors="replace"))
+        if n:
+            per.append((p.relative_to(ctx.docs).as_posix(), n, rest))
+    if not per:
+        return [], True
+    per.sort(key=lambda x: (-x[1], x[0]))
+    total, manual = sum(n for _f, n, _r in per), sum(r for _f, _n, r in per)
+    top = ", ".join(f"{f} ×{n}" for f, n, _r in per[:3])
+    more = f", и ещё {len(per) - 3} файлов" if len(per) > 3 else ""
+    rep = [f"⚠ форма ветвления (notation §1): {total} мест в {len(per)} файлах; "
+           f"normalize_tables.py --branch-form --write закроет {total - manual}, "
+           f"вложенных условий вручную {manual} ({top}{more})"]
+    rep += [f"{OUT_ONLY}{f} ×{n}" + (f" (вручную {r})" if r else "") for f, n, r in per]
+    return rep, True
+
+
 def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1054,6 +1084,7 @@ KIT_CHECKS: List[Check] = [
     Check("nfr_catalog", _kc_nfr_catalog, affects_verdict=True),
     Check("source_coverage", _kc_source_coverage, affects_verdict=False),
     Check("spellings", _kc_spellings, affects_verdict=False),
+    Check("branch_form", _kc_branch_form, affects_verdict=False),
 ]
 
 
@@ -1476,7 +1507,8 @@ def main() -> int:
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
     for ln in lines:
-        print(ln)
+        if not ln.startswith("# " + OUT_ONLY):  # перечни — только в --out
+            print(ln)
     return 0 if ok else 2
 
 

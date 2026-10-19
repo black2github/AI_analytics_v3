@@ -3858,7 +3858,8 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                source_text: Optional[str] = None,
                column_roles: bool = True,
                soft_markers: bool = False,
-               amnesty_text: Optional[str] = None) -> Tuple[List[str], bool]:
+               amnesty_text: Optional[str] = None,
+               kit_summary: bool = False) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -3872,7 +3873,10 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     до одной колонки с пометкой «(фрагмент из источника)», игнорируя
     правило, сверку и образец (итерации 6-секст/6-септ/6-окт, 2026-08-09) —
     текстовая доставка не доехала, ловим инструментом. В честных переносах
-    этих слов нет (проверено по источнику и чистым прогонам)."""
+    этих слов нет (проверено по источнику и чистым прогонам).
+
+    kit_summary — прогон в составе самопроверки комплекта: проверки, которые
+    комплект сводит в одну строку (форма ветвления), строки на файл не дают."""
     text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
@@ -3881,7 +3885,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     lines = text.splitlines()
     # проверки карточки — реестр FILE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals)
+    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary)
     f_lines, f_ok = run_checks(FILE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -3906,6 +3910,7 @@ class _FileCtx:
     text: str
     lines: List[str]
     src_literals: Optional[object]
+    kit_summary: bool = False  # в составе selfcheck комплекта: сводные проверки — строкой комплекта
 
 
 # Сплющивание атрибутов ЭФ (z04 ISS-03, FLD-29 «Места жительства»;
@@ -4311,7 +4316,22 @@ def branch_form_offenders(lines: List[str]) -> List[str]:
     return out
 
 
+def branch_form_counts(text: str) -> Tuple[int, int]:
+    """(мест сторожа формы ветвления, мест после сухого прогона --branch-form) —
+    для сводной строки комплекта: закроет нормализатор = разность, вручную —
+    остаток (вложенные условия)."""
+    n = len(branch_form_offenders(text.splitlines()))
+    if not n:
+        return 0, 0
+    new, _cnt, _skipped = normalize_branch_form(text)
+    return n, len(branch_form_offenders(new.splitlines()))
+
+
 def _fc_branch_form(fx: "_FileCtx") -> Tuple[List[str], bool]:
+    # самопроверка комплекта сводит сторож в одну строку (selfcheck._kc_branch_form,
+    # решение владельца пилота 2026-10-20); строка на файл — одиночной проверке
+    if fx.kit_summary:
+        return [], True
     bad = branch_form_offenders(fx.lines)
     report: List[str] = []
     if bad:
@@ -5133,7 +5153,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               docs_root: Optional[Path] = None,
               soft_markers: bool = False,
               pardon_source: Optional[Path] = None,
-              amnesty_sources: Optional[List[Path]] = None) -> Tuple[List[str], bool]:
+              amnesty_sources: Optional[List[Path]] = None,
+              kit_summary: bool = False) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -5164,7 +5185,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                                          else pardon_text),
                             column_roles=main_file.name.lower() != "readme.md",
                             soft_markers=soft_markers,
-                            amnesty_text=amnesty_text)
+                            amnesty_text=amnesty_text,
+                            kit_summary=kit_summary)
     card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
