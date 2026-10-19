@@ -657,7 +657,7 @@ def test_forward_card_without_key_still_legal(tmp_path):
 
 class TestCanonCut:
     """Сторож среза канона (П-5b): строка «срез канона: <hash>» профиля
-    против фактического HEAD selfcheck; без строки молчит."""
+    против фактического HEAD selfcheck; без строки — ⚠ (волна 9), без профиля молчит."""
 
     def _profile(self, tmp_path, line):
         srcs = tmp_path / "conf"
@@ -680,9 +680,17 @@ class TestCanonCut:
         assert any("✗ срез канона" in ln and "deadbee" in ln
                    for ln in rep)
 
-    def test_no_line_silent(self, tmp_path):
-        # НЕсрабатывание: профиль без строки среза — сторож молчит
+    def test_no_line_warns(self, tmp_path):
+        # волна 9 ОНБ-В (ЗК-14): профиль без строки среза — ⚠, вердикт не меняется
         srcs = self._profile(tmp_path, "| **service-id** | `CC` |")
+        rep, ok = selfcheck.check_canon_cut(srcs, "deadbee")
+        assert ok and len(rep) == 1
+        assert rep[0].startswith("⚠ в профиле источников нет строки «Срез канона»"), rep
+
+    def test_no_profile_silent(self, tmp_path):
+        # НЕсрабатывание: профиля нет вовсе — молчание (его отсутствие ловит другой сторож)
+        srcs = tmp_path / "conf"
+        srcs.mkdir()
         rep, ok = selfcheck.check_canon_cut(srcs, "deadbee")
         assert ok and rep == []
 

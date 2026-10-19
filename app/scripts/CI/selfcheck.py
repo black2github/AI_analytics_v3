@@ -74,7 +74,7 @@ try:
     from kitcheck.checks.links import (  # noqa: E402,F401 — этап 3
         _CALL_USAGE_RE, _CARD_ID_HEAD_RE, _ENT_FILE_RE, _NAMED_LINK_SKIP, _SERVICE_FILES, _STEP_CELL_RE, _STEP_HEAD_RE, _STEP_NUM_RE, _STEP_RANGE_RE, _TAGGED_NAME_RE, _link_targets, _step_literals, check_bare_entity_mentions, check_link_anchors_and_ids, check_named_entity_links, check_process_call_consistency, check_relative_links)
     from kitcheck.checks.matrix import (  # noqa: E402,F401 — этап 3
-        _REGISTRY_HDR_RE, check_registry_duplicates)
+        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates)
     from kitcheck.checks.nfr import (  # noqa: E402,F401 — этап 3
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
@@ -95,7 +95,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.links import (  # type: ignore  # noqa: E402,F401
         _CALL_USAGE_RE, _CARD_ID_HEAD_RE, _ENT_FILE_RE, _NAMED_LINK_SKIP, _SERVICE_FILES, _STEP_CELL_RE, _STEP_HEAD_RE, _STEP_NUM_RE, _STEP_RANGE_RE, _TAGGED_NAME_RE, _link_targets, _step_literals, check_bare_entity_mentions, check_link_anchors_and_ids, check_named_entity_links, check_process_call_consistency, check_relative_links)
     from .kitcheck.checks.matrix import (  # type: ignore  # noqa: E402,F401
-        _REGISTRY_HDR_RE, check_registry_duplicates)
+        _REGISTRY_HDR_RE, check_registry_duplicates, check_registry_name_duplicates)
     from .kitcheck.checks.nfr import (  # type: ignore  # noqa: E402,F401
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
@@ -591,7 +591,7 @@ def _kc_matrix_registry_and_debts(ctx: "_KitCtx") -> Tuple[List[str], bool]:
             report.extend(
                 f"   {p.relative_to(docs)}: id {cid} ✗"
                 for p, cid in ghosts[:10])
-        rep, ok = _safe(ld.check, matrix, docs, catalog_codes())
+        rep, ok = _safe(ld.check, matrix, docs, catalog_codes(), catalog_entries())
         mark = "✓" if ok else "✗"
         all_ok = all_ok and ok
         report.append(f"{mark} долги ссылок (link_debts):")
@@ -690,7 +690,70 @@ def _kc_title_uniqueness(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     if tu_rep:
         report.append("⚠ одинаковые названия разных артефактов одного типа:")
         report.extend(f"   {ln}" for ln in tu_rep)
+    # волна 9 ОНБ-В (ЗК-25): те же дубли по «Реестру ID» матрицы — суб-ID внутри
+    # файлов групп; группы, уже названные по шапкам, не повторяются
+    seen = [set(re.findall(r"[A-ZА-Я]{2,}[-\w.]*\d", ln.split(" — ")[0])) for ln in tu_rep]
+    rn_rep = check_registry_name_duplicates(docs / "traceability-matrix.md", seen)
+    if rn_rep:
+        report.append(f"⚠ одинаковые названия разных ID одного типа (реестр матрицы): "
+                      f"групп {len(rn_rep)}")
+        report.extend(f"   {ln}" for ln in rn_rep[:30])
+        if len(rn_rep) > 30:
+            report.append(f"   … и ещё {len(rn_rep) - 30}")
     return report, all_ok
+
+
+# Волна 9 ОНБ-В (ЗК-05, ПР-09): два написания одного значения переносились без вопроса
+# («Подтвердить» / «подтвердить», «e-mail» / «e‑mail»). Сводка близких пар по комплекту:
+# литералы в кавычках и названия полей и кнопок, равные после приведения регистра, ё/е,
+# пробелов и дефисов/тире, но различные дословно. Морфология не нормализуется
+# («Счёт» / «Счета» — не пара). Только i.
+_SPELL_NAME_RE = re.compile(r"(?:^#{2,4}\s+(?:FLD|B)-\d+\.?\s*|(?<![\w-])B-\d+\s*)«([^»\n]{2,80})»", re.M)
+
+
+def spelling_key(v: str) -> str:
+    v = v.lower().replace("ё", "е")
+    v = re.sub(r"[\u2010-\u2015\u2212-]", "-", v)
+    return re.sub(r"\s+", "", v)
+
+
+def spelling_pairs(files: List[Path], docs: Path) -> List[Tuple[str, str, List[str], List[str]]]:
+    """Близкие пары: (вариант A, вариант B, файлы A, файлы B) — первые два варианта
+    группы, файлы — до двух на вариант."""
+    seen: Dict[str, Dict[str, set]] = {}
+    for p_ in files:
+        try:
+            text = _fs.read_text(p_, encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        rel = p_.relative_to(docs).as_posix()
+        vals = set(nt.quoted_literals(text)) | {m.group(1).strip() for m in _SPELL_NAME_RE.finditer(text)}
+        for v in vals:
+            v = v.strip()
+            if len(v) < 2 or not re.search(r"[A-Za-zА-Яа-яЁё]", v):
+                continue
+            seen.setdefault(spelling_key(v), {}).setdefault(v, set()).add(rel)
+    out = []
+    for _k, variants in sorted(seen.items()):
+        if len(variants) < 2:
+            continue
+        (a, fa), (b, fb) = sorted(variants.items(), key=lambda x: (-len(x[1]), x[0]))[:2]
+        out.append((a, b, sorted(fa)[:2], sorted(fb)[:2]))
+    return out
+
+
+def _kc_spellings(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    pairs = spelling_pairs(_kit_md(ctx.docs), ctx.docs)
+    if not pairs:
+        return [], True
+    head = "; ".join(f"«{a}» / «{b}» ({', '.join(fa[:1] + fb[:1])})" for a, b, fa, fb in pairs[:5])
+    rest = f"; ещё {len(pairs) - 5}" if len(pairs) > 5 else ""
+    rep = [f"i написания: {len(pairs)} близких пар — {head}{rest} (регистр, ё/е, пробелы, "
+           "дефис/тире; одно значение — один дословный вид или вопрос)"]
+    rep += [f"   «{a}» ({', '.join(fa)}) / «{b}» ({', '.join(fb)})" for a, b, fa, fb in pairs[:50]]
+    if len(pairs) > 50:
+        rep.append(f"   … и ещё {len(pairs) - 50}")
+    return rep, True
 
 
 def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -990,6 +1053,7 @@ KIT_CHECKS: List[Check] = [
     Check("link_anchors_and_ids", _kc_link_anchors_and_ids, affects_verdict=False),
     Check("nfr_catalog", _kc_nfr_catalog, affects_verdict=True),
     Check("source_coverage", _kc_source_coverage, affects_verdict=False),
+    Check("spellings", _kc_spellings, affects_verdict=False),
 ]
 
 
@@ -1136,6 +1200,19 @@ def catalog_codes() -> Optional[set]:
     except (OSError, ValueError):
         return None
     return {s.get("code") for s in data if isinstance(s, dict) and s.get("code")}
+
+
+def catalog_entries() -> Optional[list]:
+    """Записи каталога канона (code, key, name) — признаки чужой цели долга
+    (link_debts, волна 9 ОНБ-В); None — каталог недоступен."""
+    cat = canon_catalog_path()
+    if cat is None:
+        return None
+    try:
+        data = json.loads(_fs.read_text(cat, encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return [s for s in data if isinstance(s, dict)]
 
 
 def canon_catalog_path() -> Optional[Path]:

@@ -2989,6 +2989,117 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     return report, ok
 
 
+# Волна 9 ОНБ-В (ЗК-04): таблица источника без единого дословного значения (ячейки —
+# ссылки, изображения, пусто, макеты ЭФ) сверке не подлежала вовсе: «Макеты ЭФ» с
+# размерностями и ссылками не перенесли, прибор молчал. Теперь ищутся её заголовки и
+# ключевые ячейки первой колонки — в карточке и в README группы. Только ⚠ / i.
+def _table_keys(hdr: List[str], rows: List[List[str]]) -> List[str]:
+    """Заголовки и первые ячейки строк без ссылок и картинок (≥ 2 символов)."""
+    out = []
+    for cell in list(hdr) + [r[0] for r in rows if r]:
+        t = re.sub(r"<img\b[^>]*>|!\[[^\]]*\]\([^)]*\)", " ", cell, flags=re.I)
+        t = re.sub(r"\[([^\]]*)\]\([^)]*\)|https?://\S+", r" \1 ", t)
+        t = _norm_cell(t)
+        if len(t) >= 2:
+            out.append(t)
+    return out
+
+
+def check_unchecked_tables(card_text: str, source_text: str,
+                           readme_text: str = "") -> List[str]:
+    """T1: таблицы источника, ни одно значение которых не попало в дословную сверку
+    (все ячейки — ссылки, изображения, пусто; таблицы макетов ЭФ), — по заголовкам и
+    ключевым ячейкам первой колонки в карточке и README группы."""
+    hay = _fold_homoglyphs(_norm_cell(card_text + "\n" + readme_text))
+    out: List[str] = []
+    for hdr, rows in parse_md_tables(source_text):
+        if len(rows) < 1:
+            continue
+        hdr_norm = " ".join(_norm_cell(h) for h in hdr)
+        if ("документ" in hdr_norm and "дата" in hdr_norm) or (
+                "дата" in hdr_norm and "описани" in hdr_norm and "автор" in hdr_norm):
+            continue  # реестр документов страницы и история изменений не переносятся
+        plain = 0
+        # как в check_source_tables: таблица и строки макетов ЭФ, строки вложений и
+        # строки-указатели в дословную сверку не входят
+        layout = "figma" in hdr_norm or "размерност" in hdr_norm
+        for row in ([] if layout else rows):
+            if any(_ATTACHMENT_RE.search(c) or _LAYOUT_ROW_RE.search(c)
+                   or re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
+                continue
+            for cell in row:
+                c = cell.strip()
+                if not _norm_cell(c) or re.fullmatch(r"[{}+~\-\s|]*", c):
+                    continue
+                if re.search(r"<img\b|!\[", c, re.I) or _CONFLUENCE_URL_RE.search(c) \
+                        or _LAYOUT_ROW_RE.search(c) or re.search(r"figma\.com", c, re.I):
+                    continue
+                if re.fullmatch(r"\[[^\]]*\]\([^)]*\)|https?://\S+", c):
+                    continue
+                plain += 1
+        if plain:
+            continue
+        keys = _table_keys(hdr, rows)
+        found = [k for k in keys if _fold_homoglyphs(k) in hay]
+        title = " | ".join(h.strip() for h in hdr[:3]) or "без заголовка"
+        if keys and not found:
+            out.append(
+                f"предупреждение: таблица источника «{title}» ({len(rows)} строк): дословных "
+                "значений нет (ссылки/изображения), заголовки в карточке и README не найдены — "
+                "таблица не перенесена? (макеты ЭФ — README группы; правило на изображении — "
+                "долг)")
+        elif keys:
+            out.append(f"i таблица без дословных значений «{title}» ({len(rows)} строк): найдено "
+                       f"{len(found)} из {len(keys)} заголовков и ключевых ячеек — перенос "
+                       "проверить приёмкой")
+    return out
+
+
+_SRC_IMG_RE = re.compile(r"<img\b(?![^>]*emoticon)[^>]*>|!\[[^\]]*\]\([^)]*\)", re.I)
+
+
+def check_image_trace(card_text: str, source_text: str, debts_text: str = "",
+                      card_ids: Optional[List[str]] = None) -> List[str]:
+    """T2: изображения страницы-источника без следа в карточке — нет ни блока
+    приложений, ни ссылок на files/, ни долга «правило на изображении» (в карточке или
+    в строке матрицы с ID карточки). Смайлики Confluence не считаются."""
+    n = len(_SRC_IMG_RE.findall(source_text))
+    if not n:
+        return []
+    if re.search(r"^#{2,4}\s+Приложен", card_text, re.M | re.I) or re.search(r"\]\(\.{0,2}/?(?:[^)]*/)?files/", card_text):
+        return []
+    if "правило на изображении" in card_text.lower():
+        return []
+    for ln in debts_text.splitlines():
+        if "правило на изображении" in ln.lower() and any(
+                re.search(r"(?<![\w-])" + re.escape(i) + r"(?![\w-])", ln) for i in (card_ids or [])):
+            return []
+    return [f"предупреждение: изображения источника ×{n}: в карточке нет ни блока приложений, "
+            "ни files/, ни долга «правило на изображении» — проверить приёмкой (изображения "
+            "не переносятся, правила на них — долг)"]
+
+
+def source_tables_summary(source_text: str) -> List[str]:
+    """T3: перечень таблиц источника (заголовок, строк) — подсказка акцептующему для
+    потерь, которые механически не ловятся. Markdown-таблицы и HTML-сетки."""
+    items: List[Tuple[str, int]] = []
+    for hdr, rows in parse_md_tables(source_text):
+        items.append((" | ".join(h.strip() for h in hdr[:3]) or "без заголовка", len(rows)))
+    for t in find_top_tables(source_text):
+        try:
+            grid = expand_grid(t)
+        except Exception:  # noqa: BLE001 — перечень не должен ронять сверку
+            continue
+        if grid:
+            head = " | ".join(_norm_cell(c)[:30] for c in grid[0][:3])
+            items.append((head or "без заголовка", max(len(grid) - 1, 0)))
+    if not items:
+        return []
+    shown = "; ".join(f"«{h}» ({r})" for h, r in items[:3])
+    rest = f"; ещё {len(items) - 3}" if len(items) > 3 else ""
+    return [f"i таблицы источника: {len(items)} — {shown}{rest}"]
+
+
 def source_role_literals(source_text: str) -> Dict[str, set]:
     """Дословные значения якорных колонок ИСТОЧНИКА, сгруппированные по роли
     («обязат», «кратн»): из готовых markdown-таблиц и из сырых HTML-таблиц
@@ -5159,6 +5270,19 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         steps_apply = (m_type is None or m_type.group(1) in
                        {"process", "agent", "function", "notification"})
         src_report, src_ok = check_source_tables(combined, src_text)
+        # волна 9 ОНБ-В (ЗК-04): таблицы без дословных значений, изображения без
+        # следа, перечень таблиц источника — только ⚠ / i
+        readme = main_file.parent / "README.md" if main_file is not None else None
+        readme_text = (_fs.read_text(readme, encoding="utf-8", errors="replace")
+                       if readme is not None and readme.is_file() and readme != main_file else "")
+        src_report = src_report + check_unchecked_tables(combined, src_text, readme_text)
+        debts_text = ""
+        if docs_root is not None and (Path(docs_root) / "traceability-matrix.md").is_file():
+            debts_text = _fs.read_text(Path(docs_root) / "traceability-matrix.md",
+                                       encoding="utf-8", errors="replace")
+        ids = re.findall(r"^(?:id|partOf):\s*['\"]?([\w.-]+)", combined, re.M)
+        src_report = src_report + check_image_trace(combined, src_text, debts_text, ids)
+        src_report = src_report + source_tables_summary(src_text)
         # title сверяется и у README-реестров: он дословный из главной
         # страницы-оглавления, раз она есть (решение 2026-08-16 v2:
         # title — трассировка к источнику, «собственный» — только у

@@ -118,6 +118,103 @@ def _closed_debt(cells: List[str]) -> bool:
 _BASE_DEBT_RE = re.compile(r"нет\s+базового\s+контракта\s+«([^»]+)»", re.IGNORECASE)
 
 
+# Волна 9 ОНБ-В (ЗК-10, ЗК-11): долг «требуется заход create-data-model /
+# create-internal-contracts» на цель, которая похоже принадлежит другому сервису или
+# внешней системе (команда ОНБ-В завела 9 таких долгов на чужие данные и 8 — на чужие
+# методы; формула «у владельца» не применялась). Только ⚠: квалификацию цели делает
+# аналитик (create-artifact, правило долга).
+_FOREIGN_SKILL_RE = re.compile(r"требуется\s+заход\s+(create-data-model|create-internal-contracts)",
+                               re.IGNORECASE)
+_FOREIGN_DM_WORDS = ("справочник", "подразделени", "классификатор", "внешн")
+_FOREIGN_STOP = {"сервис", "сервиса", "система", "системы", "банк", "банка", "банке",
+                 "функция", "функции", "концепция"}
+# общие основы, которые в каталоге редки, но в именах целей обычны («Заявка на управление …»)
+_FOREIGN_STOP_STEMS = {"управ"}
+_LETTER = r"A-Za-zА-Яа-яЁё"
+
+
+def _word_re(tok: str):
+    return re.compile(r"(?<![" + _LETTER + r"])" + re.escape(tok) + r"(?![" + _LETTER + r"])",
+                      re.IGNORECASE)
+
+
+def _stem(word: str) -> str:
+    """Основа слова для сравнения форм («заявка», «заявки», «заявок» → «заявк»)."""
+    return word.lower().replace("ё", "е")[:5]
+
+
+def foreign_target_signs(catalog: Optional[List[dict]], own: Optional[str]):
+    """Признаки чужих сервисов из каталога: ([(регулярка, признак, service-id)], теги
+    своего сервиса). Слово названия значимо, если длиной от 5 букв, не общее и его
+    основа встречается в названии только одного сервиса каталога; тег в квадратных
+    скобках — от 3 букв. Свой сервис (`service:` комплекта — код или ключ каталога)
+    признаков не даёт."""
+    if not catalog:
+        return [], set()
+    names = [(s.get("code") or "", s.get("key") or "", s.get("name") or "")
+             for s in catalog if isinstance(s, dict)]
+    freq: Dict[str, int] = {}
+    for _c, _k, nm in names:
+        for st in {_stem(w) for w in re.findall(r"[" + _LETTER + r"]{5,}", nm)}:
+            freq[st] = freq.get(st, 0) + 1
+    out = []
+    own_tags = set()
+    for code, key, nm in names:
+        if not code:
+            continue
+        if own and own in (code, key):
+            own_tags |= {t.strip() for t in re.findall(r"\[([^\]]+)\]", nm)}
+            continue
+        out.append((_word_re(code), f"код сервиса {code}", code))
+        if len(key) >= 2:
+            out.append((_word_re(key), f"ключ сервиса {key} ({code})", code))
+        for tag in re.findall(r"\[([^\]]{3,})\]", nm):
+            out.append((_word_re(tag.strip()), f"тег сервиса [{tag.strip()}] ({code})", code))
+        for w in {w for w in re.findall(r"[" + _LETTER + r"]{5,}", nm)}:
+            if (w.lower() not in _FOREIGN_STOP and _stem(w) not in _FOREIGN_STOP_STEMS
+                    and freq.get(_stem(w), 0) <= 1):
+                rx = re.compile(r"(?<![" + _LETTER + r"])" + re.escape(_stem(w)) + r"[" + _LETTER + r"]*",
+                                re.IGNORECASE)
+                out.append((rx, f"слово «{w}» названия сервиса {code}", code))
+    return out, own_tags
+
+
+def _own_service(docs_root: Path) -> Optional[str]:
+    """Код документируемого сервиса — самый частый `service:` в шапках комплекта."""
+    seen: Dict[str, int] = {}
+    for p in list(docs_root.rglob("*.md"))[:400]:
+        try:
+            head = _fs.read_text(p, encoding="utf-8", errors="replace")[:600]
+        except OSError:
+            continue
+        m = re.search(r"^service:\s*['\"]?([\w.-]+)", head, re.M)
+        if m:
+            seen[m.group(1)] = seen.get(m.group(1), 0) + 1
+    return max(seen, key=seen.get) if seen else None
+
+
+def foreign_target_sign(name: str, skill: str, signs, own_tags=frozenset()) -> Optional[str]:
+    """Первый признак чужой цели в имени долга либо None. Имя с тегом своего сервиса
+    или его подсервиса («[КК]», «[КК_ЛК] …») — своя цель."""
+    tag = re.match(r"\s*\[([^\]]+)\]", name)
+    if tag and any(tag.group(1).strip() == t or tag.group(1).strip().startswith(t + "_")
+                   for t in own_tags):
+        return None
+    # для данных сначала признаки внешней системы и справочника — они точнее слова
+    # из названия чужого сервиса
+    if skill.lower() == "create-data-model":
+        if re.search(r"(?<![" + _LETTER + r"])АС\s", name):
+            return "«АС » — внешняя система"
+        low = name.lower()
+        for w in _FOREIGN_DM_WORDS:
+            if w in low:
+                return f"слово «{w}…»"
+    for rx, label, _code in signs:
+        if rx.search(name):
+            return label
+    return None
+
+
 def debts_heading(matrix_text: str) -> Optional[str]:
     """Фактический заголовок раздела долгов (текст без «#» и номера) или None."""
     for ln in matrix_text.splitlines():
@@ -327,9 +424,14 @@ def parse_matrix_full(matrix_text: str):
 
 
 def check(matrix_path: Path, docs_root: Path,
-          catalog_codes: Optional[set] = None):
+          catalog_codes: Optional[set] = None,
+          catalog: Optional[List[dict]] = None):
     """catalog_codes — коды сервисов каталога (`code` в services.json);
-    None — каталог недоступен, владелец долга не сверяется."""
+    None — каталог недоступен, владелец долга не сверяется. catalog — записи
+    каталога (code, key, name) для признаков чужой цели долга (волна 9 ОНБ-В);
+    без каталога признаки — только слова data-model."""
+    foreign_signs, own_tags = foreign_target_signs(catalog, _own_service(docs_root))
+    foreign: List[str] = []
     registry, debts, unrecognized = parse_matrix_full(
         _fs.read_text(matrix_path, encoding="utf-8", errors="replace"))
     dict_text = ""
@@ -396,6 +498,13 @@ def check(matrix_path: Path, docs_root: Path,
                     and typ != "base-contract"):
                 unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
+            fm = _FOREIGN_SKILL_RE.search(raw)
+            sign = foreign_target_sign(name, fm.group(1), foreign_signs, own_tags) if (fm and name) else None
+            if sign:
+                foreign.append(f"⚠ долг {', '.join(from_ids)} «{name}» — похоже на чужую цель "
+                               f"({sign}): данные/метод другого сервиса — формула «у владельца "
+                               "<service-id>», справочник платформы — EXT в dictionaries.md, "
+                               "внешняя АС — карточка вызова (create-artifact, правило долга)")
             target = None
             if name:
                 # FB-02 common-dictionary (2026-10-14): «цель существует» —
@@ -457,6 +566,7 @@ def check(matrix_path: Path, docs_root: Path,
     if n_param:
         report.append(f"долгов параметров {n_param} («параметр … не зафиксирован») "
                       "— просрочка по dictionaries.md")
+    report.extend(foreign)
     for owner_code, n in sorted(unknown_owners.items()):
         # переименование кода в каталоге без уведомления (ЗК-11 ОНБ-В:
         # shortLinkDirectory → short-link) оставляет долги на несуществующий код
