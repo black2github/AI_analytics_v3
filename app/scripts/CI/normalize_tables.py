@@ -2436,6 +2436,89 @@ def _shift_profile(prof: List[str]) -> List[str]:
     return out
 
 
+# FB-16 КК (решение владельца канона 2026-10-19): расхождение рангов тела шага —
+# предупреждение, когда содержание шага на месте и вложенность условий не уменьшилась;
+# брак — при уменьшении глубины вложенности условия (сплющивание, ЗК-18).
+_COND_WORD_RE = re.compile(r"(?i)(?<![\w-])(?:если|иначе)(?![\w-])")
+_STEP_LITERAL_RE = re.compile(r"«([^«»\n]+)»|\"([^\"\n]+)\"|<([^<>\n/][^<>\n]*)>")
+
+
+def _cond_depths(lines: List[str]) -> List[int]:
+    """Глубина каждого «если»/«иначе» тела шага по порядку: абзац — 0, пункт
+    списка — ранг отступа внутри своего непрерывного блока списка + 1 (база блока
+    — его наименьший отступ: ранги экспорта не влияют). Литералы в кавычках и
+    строки таблиц не считаются."""
+    items: List[Tuple[int, str]] = []  # (ширина отступа или -1, текст)
+    for ln in lines:
+        st = ln.strip()
+        if not st or st.startswith("|"):
+            continue
+        m = re.match(r"^( *)[-+*]\s", ln)
+        items.append((len(m.group(1)) if m else -1, st))
+    out: List[int] = []
+    k = 0
+    while k < len(items):
+        if items[k][0] < 0:
+            t = re.sub(r'"[^"\n]*"|«[^»\n]*»', " ", items[k][1])
+            out += [0] * len(_COND_WORD_RE.findall(t))
+            k += 1
+            continue
+        j = k
+        while j < len(items) and items[j][0] >= 0:
+            j += 1
+        rank = {w: i + 1 for i, w in enumerate(sorted({w for w, _ in items[k:j]}))}
+        for w, t in items[k:j]:
+            t = re.sub(r'"[^"\n]*"|«[^»\n]*»', " ", t)
+            out += [rank[w]] * len(_COND_WORD_RE.findall(t))
+        k = j
+    return out
+
+
+def _step_literals_kept(src_body: List[str], card_body: List[str]) -> bool:
+    """Литералы шага источника («…», "…", <…>) — внутренним текстом в теле шага
+    карточки (карточка вправе писать <Атрибут> источника как «Атрибут»)."""
+    card = re.sub(r"\s+", " ", " ".join(card_body))
+    for m in _STEP_LITERAL_RE.finditer(" ".join(src_body)):
+        lit = next(g for g in m.groups() if g)
+        # ссылка внутри литерала — её текстом: карточка снимает адреса Confluence
+        lit = re.sub(r"\[((?:[^\[\]]|\\\[|\\\])*)\]\([^)]*\)", r"\1", lit).replace("\\[", "[").replace("\\]", "]")
+        lit = re.sub(r"\s+", " ", lit).strip()
+        if re.search(r"[a-zA-Z][a-zA-Z0-9]*[ >/=]", lit) and m.group(3):
+            continue  # HTML-тег, не атрибут
+        if lit and lit not in card:
+            return False
+    return True
+
+
+def _max_list_depth(lines: List[str]) -> int:
+    """Наибольшая глубина пункта списка тела шага (ранг внутри своего блока + 1;
+    абзацы — 0): потеря вложенности пунктов без условий (fun-bnk-07, «все
+    предложения — один список») остаётся браком."""
+    depth, block = 0, []
+    for ln in lines + [""]:
+        st = ln.strip()
+        if st.startswith("|"):
+            continue
+        m = re.match(r"^( *)[-+*]\s", ln) if st else None
+        if m:
+            block.append(len(m.group(1)))
+            continue
+        if block:
+            depth = max(depth, len(set(block)))
+            block = []
+    return depth
+
+
+def _step_form_only(src_body: List[str], card_body: List[str]) -> bool:
+    """Расхождение — только форма экспорта: литералы на месте, число условий то же,
+    глубина каждого условия и наибольшая глубина списка в карточке не меньше, чем в
+    источнике."""
+    ds, dc = _cond_depths(src_body), _cond_depths(card_body)
+    return (_step_literals_kept(src_body, card_body) and len(ds) == len(dc)
+            and all(c >= s for s, c in zip(ds, dc))
+            and _max_list_depth(card_body) >= _max_list_depth(src_body))
+
+
 def check_step_body_structure(card_text: str,
                               source_text: str) -> Tuple[List[str], bool]:
     """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
@@ -2448,6 +2531,7 @@ def check_step_body_structure(card_text: str,
     card_bodies = _step_bodies(card_text.splitlines())
     bad: List[str] = []
     levels_only: List[str] = []
+    form_only: List[str] = []
     for num, body in src_bodies.items():
         prof_src = _ranked_profile(body)
         if num not in card_bodies or not prof_src:
@@ -2462,9 +2546,18 @@ def check_step_body_structure(card_text: str,
             # ловится по-прежнему (К-24).
             if _shift_profile(prof_src) == _shift_profile(prof_card):
                 levels_only.append(num)
+            elif _step_form_only(body, card_bodies[num]):
+                form_only.append(num)
             else:
                 bad.append(num)
     report: List[str] = []
+    if form_only:
+        report.append(
+            f"предупреждение: структура тел шагов расходится с источником при том же "
+            f"содержании и не меньшей вложенности условий — шаги №{', №'.join(form_only[:5])}"
+            + ("…" if len(form_only) > 5 else "")
+            + " (ранги отступов экспорта, не потеря; брак — только при сплющивании "
+            "условия или пропуске шага)")
     if levels_only:
         report.append(
             f"i структура тел шагов: базовый уровень отступа списка расходится "
@@ -4101,6 +4194,127 @@ def _fc_branch_form(fx: "_FileCtx") -> Tuple[List[str], bool]:
     return report, True
 
 
+# Нормализация формы ветвления в ячейках таблиц (решение владельца 2026-10-19; правило —
+# стандарт notation.md §1 «Форма ветвления — одна»): «**Если** X, **то** Y, **иначе** Z»
+# одной строкой ячейки → «**Если** X,<br>**то** Y,<br>**иначе** Z». Только ячейки таблиц и
+# только отрезки, где сторож branch_form даёт ⚠; вне таблиц не трогается (там нужен
+# вложенный список — не механика). Не трогаются: текст в «ёлочках» и "кавычках" (литералы
+# сообщений), инлайн-код, отрезок с вложенным **Если** (вложенность — человеку), отрезок с
+# маркером списка внутри ячейки («• », «- », «1.» — куда ставить исход, решает человек).
+# Отступ отрезка (пробелы, &nbsp;) переносится на новые строки. Идемпотентно.
+_BRANCH_INDENT_RE = re.compile(r"^(?:\s|&nbsp;|&emsp;|&ensp;)*")
+_BRANCH_MARKER_RE = re.compile(r"^(?:>|[-*+•](?=\s)|\d+[.)](?=\s))")
+
+
+def _branch_protected(body: str) -> List[Tuple[int, int]]:
+    """Отрезки, которые не разрезаются: «…» с вложенностью, "…", `…`."""
+    spans: List[Tuple[int, int]] = []
+    depth, start = 0, 0
+    for i, ch in enumerate(body):
+        if ch == "«":
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == "»" and depth:
+            depth -= 1
+            if depth == 0:
+                spans.append((start, i + 1))
+    for m in re.finditer(r'"[^"\n]*"|`[^`\n]*`', body):
+        spans.append(m.span())
+    return spans
+
+
+def _branch_fix_segment(seg: str, seen_if: bool) -> Tuple[str, int, str]:
+    """(отрезок, вставлено переносов, причина пропуска или «»)."""
+    indent = _BRANCH_INDENT_RE.match(seg).group(0)
+    body = seg[len(indent):]
+    if _BRANCH_MARKER_RE.match(body):
+        return seg, 0, "маркер списка в ячейке"
+    prot = _branch_protected(body)
+    free = lambda pos: not any(a <= pos < b for a, b in prot)  # noqa: E731
+    ifs = [m.start() for m in _BRANCH_IF_RE.finditer(body) if free(m.start())]
+    opened = bool(_BRANCH_OUT_RE.match(body))
+    cut = [m.start() for m in _BRANCH_OUT_RE.finditer(body)
+           if m.start() > 0 and free(m.start())
+           and (seen_if or opened or any(i < m.start() for i in ifs))]
+    if not cut:
+        return seg, 0, ""
+    if len(ifs) > 1 or (ifs and ifs[0] > 0):
+        return seg, 0, "вложенное условие"
+    for pos in reversed(cut):
+        body = body[:pos].rstrip() + "<br>" + indent + body[pos:]
+    return indent + body, len(cut), ""
+
+
+def normalize_branch_form(text: str) -> Tuple[str, int, Dict[str, int]]:
+    """(текст, вставлено переносов, пропуски по причинам). EOL сохраняется."""
+    eol = "\r\n" if "\r\n" in text else "\n"
+    lines = text.split(eol)
+    total = 0
+    skipped: Dict[str, int] = {}
+    for n, (ln, in_code) in enumerate(zip(lines, code_line_flags(lines))):
+        if in_code or "**" not in ln or not ln.lstrip().startswith("|"):
+            continue
+        cells = re.split(r"(?<!\\)\|", ln)
+        changed = False
+        for k in range(1, len(cells) - 1):
+            segs = re.split(r"(<br\s*/?>)", cells[k], flags=re.I)
+            seen_if = False
+            for j in range(0, len(segs), 2):
+                lead = 1 if j == 0 else 0  # пробел после «|» — часть ячейки, не отступ отрезка
+                head = segs[j][:len(segs[j]) - len(segs[j].lstrip(" "))] if lead else ""
+                seg = segs[j][len(head):]
+                new, cnt, why = _branch_fix_segment(seg, seen_if)
+                if why:
+                    skipped[why] = skipped.get(why, 0) + 1
+                if cnt:
+                    segs[j] = head + new
+                    total += cnt
+                    changed = True
+                if _BRANCH_IF_RE.search(seg):
+                    seen_if = True
+            cells[k] = "".join(segs)
+        if changed:
+            lines[n] = "|".join(cells)
+    return eol.join(lines), total, skipped
+
+
+def run_branch_form(paths: List[Path], write: bool) -> int:
+    """Режим --branch-form: по умолчанию сухой прогон (перечень файлов и число переносов),
+    --write — запись (BOM и EOL сохраняются, неизменённый файл не перезаписывается)."""
+    files: List[Path] = []
+    for p in paths:
+        if p.is_dir():
+            try:
+                from kitcheck.md import _kit_md
+            except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+                from .kitcheck.md import _kit_md  # type: ignore
+            files += _kit_md(p)
+        else:
+            files.append(p)
+    n_files = n_total = 0
+    skipped_all: Dict[str, int] = {}
+    for f in files:
+        raw = f.read_bytes()
+        bom = raw.startswith(b"\xef\xbb\xbf")
+        text = (raw[3:] if bom else raw).decode("utf-8")
+        new, cnt, skipped = normalize_branch_form(text)
+        for k, v in skipped.items():
+            skipped_all[k] = skipped_all.get(k, 0) + v
+        if not cnt:
+            continue
+        n_files += 1
+        n_total += cnt
+        print(f"{f}: переносов {cnt}")
+        if write:
+            f.write_bytes((b"\xef\xbb\xbf" if bom else b"") + new.encode("utf-8"))
+    mode = "записано" if write else "сухой прогон (--write — записать)"
+    skip = ", ".join(f"{k} ×{v}" for k, v in sorted(skipped_all.items())) or "нет"
+    print(f"# форма ветвления в ячейках: файлов {n_files} из {len(files)}, переносов {n_total}; "
+          f"пропущено (вручную): {skip} — {mode}")
+    return 0
+
+
 def _fc_long_lines(fx: "_FileCtx") -> Tuple[List[str], bool]:
     source_text, amnesty_text, lines = fx.source_text, fx.amnesty_text, fx.lines
     report: List[str] = []
@@ -5097,7 +5311,16 @@ def main() -> int:
                     help="порог валидности колонки в %% (ниже — результат не отдаётся)")
     ap.add_argument("--force", action="store_true",
                     help="отдать результат даже ниже порога (для разбора брака)")
+    ap.add_argument("--branch-form", action="store_true",
+                    help="форма ветвления в ячейках таблиц (notation §1): «**Если** X, **то** Y» "
+                         "одной строкой → через <br>; аргументы — файлы или корень комплекта; "
+                         "по умолчанию сухой прогон")
+    ap.add_argument("--write", action="store_true",
+                    help="для --branch-form: записать изменения")
     args = ap.parse_args()
+
+    if args.branch_form:
+        return run_branch_form(list(args.file), args.write)
 
     profile = Profile.load(args.profile) if args.profile else None
     main_file: Path = args.file[0]

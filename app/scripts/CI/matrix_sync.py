@@ -17,6 +17,14 @@
 переносы строк и BOM сохраняются; запись атомарная (временный файл и
 замена); неизменённый файл не перезаписывается; ячейка, где факт тот же
 (название без учёта тега, тот же файл, тот же набор ID), не переписывается.
+Новая колонка шаблона добавляется утилитой при первой пересборке: если шапка
+таблицы выводимого раздела — колонки шаблона в его порядке без части колонок,
+`--check` печатает ⚠ «нет колонки … — --write добавит», а `--write` вставляет
+колонку на её место и заполняет из тел (или «—»), прочие ячейки переносит по
+имени колонки. Это единственное автоматическое изменение структуры: расширение
+шаблона колонкой не останавливает пересборку у команд (решение владельца
+2026-10-19); прочие отклонения структуры — отказ.
+
 Отказ (код 2, файл не тронут) — всякий раз, когда пересборка потеряла бы
 факт: структура не по шаблону; ID в ячейке, на который нет ссылки в
 документах, которого нет в комплекте или у префикса которого нет колонки;
@@ -70,9 +78,9 @@ MATRIX = "traceability-matrix.md"
 TEMPLATE: List[Tuple[str, str, Optional[List[str]]]] = [
     ("registry", "Реестр ID", ["ID", "Название", "Файл"]),
     ("fun", "Покрытие: функции → артефакты",
-     ["Функция", "Название", "Экраны", "Данные", "Контроли", "Печатные формы"]),
+     ["Функция", "Название", "Экраны", "Данные", "Контроли", "Уведомления", "Печатные формы"]),
     ("proc", "Покрытие: процессы → артефакты",
-     ["Процесс", "Название", "Вызывает", "Функции", "Вызовы", "Экраны",
+     ["Процесс", "Название", "Вызывает", "Функции", "Вызовы", "Уведомления", "Экраны",
       "Контроли", "Данные", "Печатные формы"]),
     ("api", "Покрытие: API ↔ SRS", None),
     ("sources", "Источники миграции", ["Page ID", "Целевые артефакты", "Основание"]),
@@ -84,14 +92,15 @@ SECTION_COLS = {k: c for k, _, c in TEMPLATE}
 # Колонки покрытия: ключ колонки → префиксы ID
 COL_PREFIXES = {
     "scr": {"SCR"}, "data": {"ENT", "EXT", "DM"}, "ctl": {"CTL"},
-    "prn": {"PRN"}, "fun": {"FUN"}, "ext": {"CALL", "PLT", "EXTINT"},
+    "prn": {"PRN"}, "fun": {"FUN"}, "ext": {"CALL", "PLT", "EXTINT", "INTC"},
+    "ntf": {"NTF"},
     "callproc": {"PROC", "PRC", "SM"},
 }
 COL_TITLE = {"scr": "Экраны", "data": "Данные", "ctl": "Контроли",
              "prn": "Печатные формы", "fun": "Функции", "ext": "Вызовы",
-             "callproc": "Вызывает"}
-FUN_COLS = ["scr", "data", "ctl", "prn"]
-PROC_COLS = ["callproc", "fun", "ext", "scr", "ctl", "data", "prn"]
+             "callproc": "Вызывает", "ntf": "Уведомления"}
+FUN_COLS = ["scr", "data", "ctl", "ntf", "prn"]
+PROC_COLS = ["callproc", "fun", "ext", "ntf", "scr", "ctl", "data", "prn"]
 
 LOCAL_PREFIXES = {"FLD", "B", "EV", "FF", "M", "MSG", "US", "E"}
 _TAIL = r"(?!\.?[A-Za-z0-9])(?![\w-])"
@@ -179,6 +188,8 @@ def column_key(header: str) -> str:
     h = header.lower().replace("ё", "е")
     if re.search(r"вызыва|\bprc\b|^proc$", h):
         return "callproc"
+    if re.search(r"уведомл|нотифик|ntf", h):
+        return "ntf"
     if re.search(r"вызов|интеграц|call|extint", h):
         return "ext"
     if re.search(r"экран|scr", h):
@@ -288,6 +299,19 @@ def parse_matrix(text: str) -> List[Section]:
     return out
 
 
+def missing_template_columns(sec: Section) -> List[str]:
+    """Колонки шаблона, которых нет в шапке выводимой таблицы, когда остальные стоят
+    в порядке шаблона (первые две — ID и название — на месте): их добавит --write.
+    Иначе — пусто (отклонение колонок — обычное «не по шаблону»)."""
+    cols = SECTION_COLS.get(sec.key)
+    if not cols or not sec.header or sec.header == cols or sec.header[:2] != cols[:2]:
+        return []
+    it = iter(cols)
+    if not all(h in it for h in sec.header):
+        return []
+    return [c for c in cols if c not in sec.header]
+
+
 def structure_issues(sections: List[Section]) -> List[str]:
     """Отклонения от шаблона: состав, порядок, имена, колонки."""
     issues: List[str] = []
@@ -316,7 +340,7 @@ def structure_issues(sections: List[Section]) -> List[str]:
         if s.key in SECTION_TITLE and _norm_name(s.title) != _norm_name(SECTION_TITLE[s.key]):
             issues.append(f"имя раздела «{s.title}» — по шаблону «{SECTION_TITLE[s.key]}»")
         cols = SECTION_COLS.get(s.key)
-        if cols and s.header and s.header != cols:
+        if cols and s.header and s.header != cols and not missing_template_columns(s):
             issues.append(f"колонки «{s.title}»: {' | '.join(s.header)} — по шаблону "
                           f"{' | '.join(cols)}")
         if cols and len(s.tables) != 1:
@@ -727,6 +751,11 @@ def check(docs: Path, matrix: Optional[Path] = None) -> Tuple[List[str], bool]:
     by_key: Dict[str, Section] = {}
     for s in sections:
         by_key.setdefault(s.key, s)
+    for s in sections:
+        miss = missing_template_columns(s)
+        if miss:
+            report.append(f"⚠ «{s.title}»: нет колонки " + ", ".join(f"«{c}»" for c in miss)
+                          + " — --write добавит (новая колонка шаблона)")
     checks = [
         ("registry", lambda s: check_registry(s, kit)),
         ("fun", lambda s: check_coverage(s, kit, {"function"}, FUN_COLS)[0]),
@@ -844,17 +873,21 @@ def build_registry(sec: Section, lines: List[str], kit: Kit) -> List[str]:
 def build_coverage(sec: Section, lines: List[str], kit: Kit, key: str) -> List[str]:
     types, cols = ({"function"}, FUN_COLS) if key == "fun" else ({"process"}, PROC_COLS)
     old = _old_rows(sec, lines)
+    names = SECTION_COLS[key]
     out = []
     for rid in sorted(kit.rows_of_type(types), key=id_sort_key):
         rel_all = kit.related(rid)
-        o = old.get(rid) if rid in old and len(old[rid]) == len(cols) + 2 else None
+        # старая строка — по имени колонки: недостающая колонка шаблона вставляется
+        o = (dict(zip(sec.header, old[rid]))
+             if rid in old and len(old[rid]) == len(sec.header) else None)
         title = kit.fm[rid][1]
-        cells = [rid, o[1] if o and _same_name(o[1], title) else _esc(title)]
+        cells = [rid, o[names[1]] if o and _same_name(o[names[1]], title) else _esc(title)]
         for n, ck in enumerate(cols, 2):
             src = kit.related(rid, with_incoming=False) if ck == "callproc" else rel_all
             ids = {i for i in src if id_prefix(i) in COL_PREFIXES[ck]}
-            if o and {scr_base(i) for i in cell_ids(o[n])} == ids:
-                cells.append(o[n])
+            oc = o.get(names[n]) if o else None
+            if oc is not None and {scr_base(i) for i in cell_ids(oc)} == ids:
+                cells.append(oc)
             else:
                 cells.append(", ".join(sorted(ids, key=id_sort_key)) or "—")
         out.append(_row(cells))

@@ -31,8 +31,26 @@ REGISTRY = """| ID | Название | Файл |
 
 
 def kit(tmp_path: Path, fun_extra: str = "", registry: str = REGISTRY,
-        fun_row: str = "| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — |") -> Path:
+        fun_row: str = "| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — |",
+        legacy: bool = False) -> Path:
+    """legacy — матрица по шаблону до колонки «Уведомления» (2026-10-19); иначе строка
+    функции в прежнем виде (6 ячеек) получает «—» в «Уведомлениях»."""
     docs = tmp_path / "docs"
+    if legacy:
+        fun_hdr = "| Функция | Название | Экраны | Данные | Контроли | Печатные формы |\n| --- | --- | --- | --- | --- | --- |\n"
+        proc_hdr = ("| Процесс | Название | Вызывает | Функции | Вызовы | Экраны | Контроли | Данные | Печатные формы |\n"
+                    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
+        proc_row = "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — |\n"
+    else:
+        cells = [c.strip() for c in fun_row.strip().strip("|").split("|")]
+        if len(cells) == 6:
+            cells.insert(5, "—")
+            fun_row = "| " + " | ".join(cells) + " |"
+        fun_hdr = ("| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |\n"
+                   "| --- | --- | --- | --- | --- | --- | --- |\n")
+        proc_hdr = ("| Процесс | Название | Вызывает | Функции | Вызовы | Уведомления | Экраны | Контроли | Данные | Печатные формы |\n"
+                    "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
+        proc_row = "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — | — |\n"
     w(docs / "srs/control/README.md", fm("CTL-000", "control", "Контроли")
       + "## Группы контролей\n\n| ID | Суть |\n|---|---|\n"
         "| CTL-GRP-1 | Группа сохранения — [FUN-CL-01](../function/fun-cl-01.md) |\n")
@@ -48,12 +66,9 @@ def kit(tmp_path: Path, fun_extra: str = "", registry: str = REGISTRY,
     w(docs / "traceability-matrix.md", "# Матрица трассировки\n\n"
       "## Реестр ID\n\n" + registry + "\n"
       "## Покрытие: функции → артефакты\n\n"
-      "| Функция | Название | Экраны | Данные | Контроли | Печатные формы |\n"
-      "| --- | --- | --- | --- | --- | --- |\n" + fun_row + "\n\n"
+      + fun_hdr + fun_row + "\n\n"
       "## Покрытие: процессы → артефакты\n\n"
-      "| Процесс | Название | Вызывает | Функции | Вызовы | Экраны | Контроли | Данные | Печатные формы |\n"
-      "| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n"
-      "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — |\n\n"
+      + proc_hdr + proc_row + "\n"
       "## Покрытие: API ↔ SRS\n\n| Операция | Артефакты SRS |\n| --- | --- |\n\n"
       "## Источники миграции\n\n| Page ID | Целевые артефакты | Основание |\n| --- | --- | --- |\n"
       "| 2166860001 | SCR-CL-01 | — |\n\n"
@@ -327,3 +342,67 @@ def test_write_then_check_converges_on_nonstandard_ids(tmp_path):
     assert not warn, report
     report, code = ms.write(docs)
     assert code == 0 and "не перезаписан" in report[0], report
+
+
+# ---------------------------------------------------------------- колонка «Уведомления», INTC в «Вызовах» (2026-10-19)
+
+def _ntf(docs: Path) -> None:
+    w(docs / "srs/ntf-notification.md", fm("NTF-000", "notification", "Нотификации"))
+    w(docs / "srs/internal-contracts/intc-001.md", fm("INTC-001", "internal-contract", "Метод"))
+    p = docs / "srs/process/proc-001.md"
+    p.write_text(p.read_text(encoding="utf-8")
+                 + "| 2 | Уведомление [NTF-000](../ntf-notification.md), вызов [INTC-001](../internal-contracts/intc-001.md) |\n",
+                 encoding="utf-8")
+
+
+def test_legacy_matrix_without_ntf_column_warns_not_structure(tmp_path):
+    report, warn = ms.check(kit(tmp_path, legacy=True))
+    text = "\n".join(report)
+    assert warn and "нет колонки «Уведомления» — --write добавит" in text, text
+    assert "структура матрицы не по шаблону" not in text, text
+
+
+def test_write_adds_ntf_column_and_keeps_other_cells(tmp_path):
+    docs = kit(tmp_path, legacy=True)
+    m = docs / "traceability-matrix.md"
+    before = m.read_text(encoding="utf-8")
+    rep_, code = ms.write(docs)
+    assert code == 0, rep_
+    after = m.read_text(encoding="utf-8")
+    assert ("| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |" in after)
+    assert "| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — | — |" in after, after
+    assert "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — | — |" in after, after
+    # вне таблиц покрытия — байт в байт
+    assert before.split("## Покрытие: функции")[0] == after.split("## Покрытие: функции")[0]
+    assert before.split("## Покрытие: API")[1] == after.split("## Покрытие: API")[1]
+    report, warn = ms.check(docs)
+    assert not warn, report
+
+
+def test_ntf_and_intc_go_to_their_columns(tmp_path):
+    docs = kit(tmp_path)
+    _ntf(docs)
+    reg = docs / "traceability-matrix.md"
+    t = reg.read_text(encoding="utf-8").replace(
+        "| PROC-001 | Обработка | `srs/process/proc-001.md` |",
+        "| INTC-001 | Метод | `srs/internal-contracts/intc-001.md` |\n| NTF-000 | Нотификации | `srs/ntf-notification.md` |\n"
+        "| PROC-001 | Обработка | `srs/process/proc-001.md` |")
+    reg.write_text(t, encoding="utf-8")
+    rep_, code = ms.write(docs)
+    assert code == 0, rep_
+    after = reg.read_text(encoding="utf-8")
+    assert "| PROC-001 | Обработка | — | FUN-CL-01 | INTC-001 | NTF-000 | — | — | — | — |" in after, after
+    report, warn = ms.check(docs)
+    assert not warn, report
+
+
+def test_column_order_deviation_is_still_structure(tmp_path):
+    docs = kit(tmp_path)
+    m = docs / "traceability-matrix.md"
+    m.write_text(m.read_text(encoding="utf-8").replace(
+        "| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |",
+        "| Функция | Название | Данные | Экраны | Контроли | Уведомления | Печатные формы |"), encoding="utf-8")
+    report, warn = ms.check(docs)
+    assert "структура матрицы не по шаблону" in "\n".join(report), report
+    _r, code = ms.write(docs)
+    assert code == 2
