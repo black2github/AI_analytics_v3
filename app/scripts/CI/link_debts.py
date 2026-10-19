@@ -145,6 +145,7 @@ def issue_fields(row: str) -> Optional[dict]:
 
 _RANGE_RE = re.compile(r"^(.*?)(\d+)\s*(?:…|\.\.\.)\s*(\d+)$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
+_TYPE_RE = re.compile(r"^type:\s*['\"]?([a-z][a-z-]*)['\"]?\s*$")
 
 
 def _norm(s: str) -> str:
@@ -200,6 +201,25 @@ def _doc_title(path: Path) -> Optional[str]:
                 v = v.replace("''", "'")
         return v
     return None
+
+
+def _doc_type(path: Path) -> str:
+    """type из frontmatter карточки (матрица по шаблону канона колонки «Тип»
+    в реестре не имеет — тип карточки берётся из её шапки)."""
+    try:
+        text = _fs.read_text(path, encoding="utf-8", errors="replace")
+    except OSError:
+        return ""
+    body = text.lstrip("﻿")
+    if not body.startswith("---"):
+        return ""
+    for ln in body.splitlines()[1:60]:
+        if ln.strip() == "---":
+            return ""
+        m = _TYPE_RE.match(ln)
+        if m:
+            return m.group(1).lower()
+    return ""
 
 
 def parse_matrix(matrix_text: str):
@@ -329,8 +349,12 @@ def check(matrix_path: Path, docs_root: Path,
 
     def _card_type(path: Path) -> str:
         rel = path.relative_to(docs_root).as_posix()
-        return next((t for f, t in type_of.items()
-                     if rel == f or rel.endswith("/" + f)), "")
+        typ = next((t for f, t in type_of.items()
+                    if rel == f or rel.endswith("/" + f)), "")
+        # реестр по шаблону канона колонки «Тип» не несёт — тип из шапки
+        # карточки (FB-23 КК: долг dictionary совпадал с моделью статусов
+        # того же названия и ложно считался просроченным)
+        return typ or _doc_type(path)
     types_present = {t for t, _f in registry.values()}
     report: List[str] = []
     ok = True

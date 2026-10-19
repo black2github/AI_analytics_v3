@@ -464,6 +464,41 @@ def test_overdue_requires_same_type_when_known(tmp_path):
 
 
 
+def test_overdue_type_from_frontmatter_when_registry_has_no_type_column(tmp_path):
+    # матрица по шаблону канона: реестр «ID | Название | Файл» без «Тип»;
+    # карточка того же названия другого типа (type в шапке) — не цель,
+    # того же типа — просрочка (FB-23 КК: dictionary vs process «Статусы»)
+    docs = setup_docs(tmp_path, "сущность Пользователь")
+    mx = docs / "traceability-matrix.md"
+    text = mx.read_text(encoding="utf-8").replace(
+        "PRC «Процесс обработки сообщения о блокировке»",
+        "data-model «Пользователь»")
+    out = []
+    for ln in text.split("\n"):
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")] if ln.startswith("|") else None
+        if cells and len(cells) == 4 and cells[1] in ("Тип", "---") or (
+                cells and len(cells) == 4 and re.fullmatch(r"[a-z][a-z-]*", cells[1] or "")):
+            if cells[1] == "---":
+                ln = "|---|---|---|"
+            else:
+                ln = "| " + " | ".join([cells[0], cells[2], cells[3]]) + " |"
+        out.append(ln)
+    text = "\n".join(out)
+    make(docs / "srs/screen-form/scr-bnk-01-user.md",
+         "---\nid: SCR-BNK-01\ntitle: '[УЛ] Пользователь'\ntype: screen-form\n---\n# Э\n")
+    mx.write_text(text + "| SCR-BNK-01 | Пользователь | srs/screen-form/scr-bnk-01-user.md |\n",
+                  encoding="utf-8")
+    report, ok = check(mx, docs)
+    assert not any("ПРОСРОЧЕН" in r for r in report), report
+    make(docs / "srs/data-model/ent-009-user.md",
+         "---\nid: ENT-009\ntitle: '[УЛ] Пользователь'\ntype: data-model\n---\n# С\n")
+    mx.write_text(mx.read_text(encoding="utf-8")
+                  + "| ENT-009 | Пользователь | srs/data-model/ent-009-user.md |\n",
+                  encoding="utf-8")
+    report, ok = check(mx, docs)
+    assert any("ПРОСРОЧЕН" in r and "ent-009-user.md" in r for r in report), report
+
+
 NFR_PAGE = """---
 id: nfr-prf
 type: nfr

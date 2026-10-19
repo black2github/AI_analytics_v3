@@ -247,6 +247,23 @@ def test_write_orders_by_channel_then_number_and_is_idempotent(tmp_path):
     assert rd.read_bytes() == before and rd.stat().st_mtime_ns == mtime
 
 
+def test_db_channel_in_dictionary_after_otsgds(tmp_path):
+    """Канал db («БД»: представление БД, DBLink) — решение владельца 19.10 (С4, карточки !37); без ⚠, после ОТСГДС."""
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-007-view.md", card("EXTINT-ABC-007", "Представление БД", channel="db"))
+    w(repo / "abc/extint-abc-008-otsgds.md", card("EXTINT-ABC-008", "Сообщение ОТСГДС", channel="otsgds", sync="async"))
+    w(repo / "README.md", root([("АС АБЦ", "abc", 4)]))
+    report, code = er.write(repo)
+    assert code == 0, report
+    ops = (repo / "abc/README.md").read_text(encoding="utf-8").split("## Операции")[1]
+    rows = [[c.strip() for c in ln.split("|")[1:4]] for ln in ops.splitlines() if ln.startswith("| EXTINT")]
+    ids = [r[0] for r in rows]
+    assert ids.index("EXTINT-ABC-008") < ids.index("EXTINT-ABC-007"), rows
+    assert [r[2] for r in rows if r[0] == "EXTINT-ABC-007"] == ["БД"], rows
+    lines, bad = er.check(repo, limit=0)
+    assert not bad, lines
+
+
 def test_soap_and_otsgds_channels_in_dictionary_order(tmp_path):
     """Словарь после решений 18.10: soap после REST, otsgds после MQ; оба — без ⚠."""
     repo = clean_repo(tmp_path)
