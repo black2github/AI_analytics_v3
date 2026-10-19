@@ -200,3 +200,7 @@ meta/extint-title-fallback (три коммита: фолбэк H1, призна
   потребителей); вопросы авторам по каналам BSK-002…004 (Самойленко), F1-007 (КиА), F1-004,
   TESSA-001; техбук-MR `analytics/extint-as-readme` (worktree C:	mp	echbook-extint) ждёт
   push; MR !44 ждёт автора; !15 ждёт Прохорова до 01.11.
+
+## 19.10 вечер: С4 ВЛИТ
+
+docs-external-contracts trunk 4e49c7e = Merge extint/as-readme-registry (4 коммита, в т.ч. поля у 10 карточек !37: F1-024…029 db, F1-030 rest, F1-031/032 online-adapter, SVFE-001 kafka/async). `--check` на trunk: ✗ 0, ⚠ — title 20, channel 6, sync 79, дубли 2, «Потребители» 2+1, адреса не на HEAD. Канон 94455d0 (утилита v3, db, link_debts по frontmatter, INTC «Потребители»). Матрица КК на шаблоне влита (e77270a). Остаток С5: передать сообщения Судницину и координаторам, закрыть !53.

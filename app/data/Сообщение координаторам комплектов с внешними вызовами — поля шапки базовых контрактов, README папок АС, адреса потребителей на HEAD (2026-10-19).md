@@ -6,8 +6,8 @@ account-opening-request, onboarding-fo, docs-sign, digital-ruble и другие
 
 ## Что изменилось в репозитории базовых контрактов `EAN/docs-external-contracts`
 
-Срез канона `<хеш после вливания meta/extint-title-fallback>`; репозиторий контрактов —
-MR `extint/as-readme-registry` (после вливания — trunk).
+Срез канона `94455d0` (шаблон, скилл, утилита extint_registry.py); репозиторий контрактов —
+`trunk` после вливания MR !58 (`extint/as-readme-registry`).
 
 1. **У каждой папки АС есть `README.md`** с `id: EXTINT-<AS>-000`: назначение АС, «О системе»
    (каналы, среда, документация, примеры), таблицы «Операции», «Сообщения и файлы», «Общие
