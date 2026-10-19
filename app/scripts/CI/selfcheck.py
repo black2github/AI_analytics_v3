@@ -66,7 +66,7 @@ try:
     from kitcheck.checks.catalog_api import (  # noqa: E402,F401 — этап 3
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from kitcheck.checks.content import (  # noqa: E402,F401 — этап 3
-        _FM_BY_TYPE, _FM_COMMON, _FM_TEMPLATE_EXTRA, _FM_VERSION_EXEMPT, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
+        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
     from kitcheck.checks.controls import (  # noqa: E402,F401 — этап 3
         _GRP_ROW_C_RE, _GRP_ROW_RE, _OP_MARK_RE, _QUOTE_TOKEN_RE, _ST_MARK_RE, _UI_MARK_RE, check_group_contours, check_similar_group_points)
     from kitcheck.checks.ids_domain import (  # noqa: E402,F401 — этап 3
@@ -87,7 +87,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.catalog_api import (  # type: ignore  # noqa: E402,F401
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from .kitcheck.checks.content import (  # type: ignore  # noqa: E402,F401
-        _FM_BY_TYPE, _FM_COMMON, _FM_TEMPLATE_EXTRA, _FM_VERSION_EXEMPT, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
+        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
     from .kitcheck.checks.controls import (  # type: ignore  # noqa: E402,F401
         _GRP_ROW_C_RE, _GRP_ROW_RE, _OP_MARK_RE, _QUOTE_TOKEN_RE, _ST_MARK_RE, _UI_MARK_RE, check_group_contours, check_similar_group_points)
     from .kitcheck.checks.ids_domain import (  # type: ignore  # noqa: E402,F401

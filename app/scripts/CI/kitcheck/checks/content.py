@@ -35,24 +35,13 @@ _FM_BY_TYPE = {
     "entity": {"control"},
     "partOf": None,  # файл-часть многофайлового документа любого типа
     "origin": {"feature", "use-case", "business-rules", "vision"},
-}
-
-
-# ВРЕМЕННЫЕ исключения — до схемы техбука §5 волны 5: поля, которые задают
-# шаблоны канона, но которых пока нет в yaml-схеме стандарта (domain —
-# domain-vision и доменный glossary; ingress, nfr_type — nfr; task, created —
-# task); после вливания волны 5 техбука убрать одной правкой вместе с
-# _FM_VERSION_EXEMPT (version уходит из шаблона nfr.md)
-_FM_TEMPLATE_EXTRA = {
+    # волна 5 ОНБ-В (техбук `85db9fd`): документы уровня домена — концепция домена
+    # (в шаблоне канона `type: domain-vision`) и доменный glossary; nfr; постановка
     "domain": {"domain-vision", "glossary", "vision"},
-    "ingress": {"nfr"},
     "nfr_type": {"nfr"},
-    "task": {"task"},
+    "ingress": {"nfr"},
     "created": {"task"},
 }
-
-
-_FM_VERSION_EXEMPT = {"nfr"}  # ВРЕМЕННО: до схемы техбука §5 волны 5
 
 
 def frontmatter_schema_issues(fm: Dict[str, str]) -> Tuple[List[str], bool]:
@@ -65,9 +54,9 @@ def frontmatter_schema_issues(fm: Dict[str, str]) -> Tuple[List[str], bool]:
         if k.startswith("__") or k in _FM_COMMON:
             continue
         if k == "version":
-            has_version = typ not in _FM_VERSION_EXEMPT
+            has_version = True  # ни у одного типа (conventions §5, волна 5)
             continue
-        allowed = _FM_BY_TYPE.get(k, _FM_TEMPLATE_EXTRA.get(k, set()))
+        allowed = _FM_BY_TYPE.get(k, set())
         if allowed is None or typ in allowed:
             continue
         bad.append(k)

@@ -20,14 +20,27 @@ def test_kind_on_screen_form_and_status_warned():
     assert bad == ["kind", "status"] and not ver
 
 
-def test_template_fields_and_version_exemptions():
-    # поля шаблонов канона вне схемы стандарта — временно законны
+def test_wave5_schema_fields_lawful_by_type():
+    # волна 5 ОНБ-В: domain, nfr_type, ingress, created — в схеме стандарта по типам
     assert sc.frontmatter_schema_issues({"id": "nfr-prf", "type": "nfr", "service": "x",
-                                         "nfr_type": "Производительность", "ingress": "reverse",
-                                         "version": "1"}) == ([], False)
+                                         "nfr_type": "Производительность", "ingress": "reverse"}) == ([], False)
     assert sc.frontmatter_schema_issues({"id": "VIS-000", "type": "domain-vision",
                                          "domain": "cards"}) == ([], False)
-    # version у обычного типа — устарело
+    assert sc.frontmatter_schema_issues({"id": "GLO-001", "type": "glossary", "domain": "cards"}) == ([], False)
+    assert sc.frontmatter_schema_issues({"type": "task", "created": "2026-10-19"}) == ([], False)
+
+
+def test_wave5_fields_outside_their_type_warned():
+    bad, _v = sc.frontmatter_schema_issues({"id": "FUN-CL-01", "type": "function", "service": "x",
+                                            "domain": "cards", "nfr_type": "Доступность",
+                                            "created": "2026-10-19"})
+    assert bad == ["created", "domain", "nfr_type"]
+
+
+def test_version_warned_for_every_type_including_nfr():
+    # временное освобождение nfr снято: version не используется ни у одного типа
+    assert sc.frontmatter_schema_issues({"id": "nfr-prf", "type": "nfr", "service": "x",
+                                         "nfr_type": "Производительность", "version": "1"}) == ([], True)
     assert sc.frontmatter_schema_issues({"id": "FUN-CL-01", "type": "function", "service": "x",
                                          "version": "prod-2026-08"}) == ([], True)
 
