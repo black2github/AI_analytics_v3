@@ -3334,11 +3334,18 @@ def check_clean_document(md_path: Path,
             try:
                 resolved.relative_to(root)
             except ValueError:
+                # мини-комплект зоны «вне Экосистемы» рядом с docs/ — законная
+                # цель карточки вызова (Д-46: контракт интерфейса модуля)
+                try:
+                    resolved.relative_to((root.parent / "modules").resolve())
+                    continue
+                except ValueError:
+                    pass
                 ok = False
                 report.append(
                     f"ссылка ведёт ВНЕ docs/: {target[:80]} — карточки "
-                    "ссылаются только внутрь комплекта (выгрузка/sources — "
-                    "источник, не цель) ✗ НИЖЕ ПОРОГА")
+                    "ссылаются только внутрь комплекта и в мини-комплекты "
+                    "modules/ (выгрузка/sources — источник, не цель) ✗ НИЖЕ ПОРОГА")
     return report + warns, ok
 
 

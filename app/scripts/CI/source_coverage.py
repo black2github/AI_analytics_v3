@@ -31,6 +31,7 @@
 # Страницы НФТ лежат в output/<service>/nfr/, рядом с docs/, не внутри
 # него. Обход корня комплекта (output/<service>) их уже видит. Если
 # передан корень docs/, дополнительно читается соседний каталог nfr/.
+# То же для мини-комплектов зоны «вне Экосистемы» modules/<имя>/ (Д-46).
 
 import argparse
 import re
@@ -137,9 +138,10 @@ def collect(sources: Path, output: Path):
     covered: Dict[str, List[Path]] = {}
     roots = [output]
     if output.name == "docs":
-        sibling = output.parent / "nfr"
-        if sibling.is_dir():
-            roots.append(sibling)
+        for sib in ("nfr", "modules"):
+            sibling = output.parent / sib
+            if sibling.is_dir():
+                roots.append(sibling)
     for root in roots:
         for p in sorted(root.rglob("*.md")):
             for pid in artifact_page_ids(p):
@@ -176,8 +178,32 @@ _TARGET_SLUG_RE = re.compile(r"^srs/([a-z0-9][a-z0-9-]*)(?:/|$)")
 _ATTACH_RE = re.compile(r"(?i)!\[[^\]]*\]\([^)]*\)|<img\b[^>]*>|"
                         r"\[[^\]]*\]\([^)]*\.(?:png|jpe?g|gif|svg|bmp|pdf|docx?|xlsx?|"
                         r"pptx?|zip|vsdx?|bpmn|drawio)\)")
-_INV_COLS = {"page_id": "page_id", "родитель": "parent", "req_type": "req_type",
-             "целевой тип": "target", "основание": "basis"}
+_INV_COLS = {"page_id": "page_id", "title": "title", "родитель": "parent",
+             "req_type": "req_type", "целевой тип": "target", "основание": "basis"}
+# Зона «вне Экосистемы» (Д-46): модуль сервиса в чужом контуре исполнения, дом —
+# мини-комплект modules/<имя>/ рядом с docs/. Страница зоны покрыта, только если её
+# page_id несёт файл под modules/; иначе — ПРОБЕЛ миграции, не структурный класс:
+# «вне Экосистемы» значит «мигрировать в мини-комплект», а не «не мигрировать».
+# Признак — «вне Экосистемы» или «modules/» в целевом типе или основании описи
+# (форма колонки — «вне Экосистемы (modules/<имя>/)»).
+_ZONE_RE = re.compile(r"(?i)вне\s+Экосистемы|modules/")
+
+
+def is_zone_row(row: Dict[str, str]) -> bool:
+    """Строка описи относится к зоне «вне Экосистемы» (Д-46)."""
+    return bool(_ZONE_RE.search(row.get("target", "")) or _ZONE_RE.search(row.get("basis", "")))
+
+
+def _under_modules(path: Path, output: Path) -> bool:
+    """Файл лежит в мини-комплекте: modules/ рядом с docs/ или в корне комплекта."""
+    rp = path.resolve()
+    for base in (output.parent / "modules", output / "modules"):
+        try:
+            rp.relative_to(base.resolve())
+            return True
+        except ValueError:
+            continue
+    return False
 
 
 def find_kit_file(output: Path, name: str) -> Optional[Path]:
@@ -276,24 +302,33 @@ def coverage_report(sources: Path, output: Path,
     и selfcheck-диспетчера. Бракующие: с описью — пробелы миграции и
     страницы вне описи; без описи — все непокрытые (прежнее поведение)."""
     pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
-    uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
     inv_path = inventory if inventory is not None else find_kit_file(output, "inventory.md")
+    inv = (read_inventory(inv_path)
+           if inv_path is not None and inv_path.is_file() else None)
+    # Д-46: страница зоны покрыта только мини-комплектом modules/<имя>/
+    zone = ({pid for pid, row in inv.items() if pid in pages and is_zone_row(row)}
+            if inv is not None else set())
+    zone_in_modules = {pid for pid in zone
+                       if any(_under_modules(a, output) for a in covered.get(pid, []))}
+    uncovered = {pid: p for pid, p in pages.items()
+                 if pid not in covered or (pid in zone and pid not in zone_in_modules)}
     head = (f"страниц выгрузки: {len(pages)}; "
             f"покрыто артефактами: {len(pages) - len(uncovered)}; "
             f"НЕ покрыто: {len(uncovered)}")
     lines: List[str] = []
     classes: Dict[str, str] = {}
-    if inv_path is not None and inv_path.is_file():
-        inv = read_inventory(inv_path)
+    if inv is not None:
         plan = find_kit_file(output, "migration-plan.md") or inv_path.parent / "migration-plan.md"
         slugs, plan_text = plan_slugs(plan)
-        classes = {pid: classify(pid, p, inv, slugs, plan_text)
+        classes = {pid: (GAP if pid in zone else classify(pid, p, inv, slugs, plan_text))
                    for pid, p in uncovered.items()}
         n = {c: sum(1 for v in classes.values() if v == c) for c in CLASS_ORDER}
         lines.append(f"{head} = пробелы миграции {n[GAP]}; структурно: заморожено "
                      f"{n[FROZEN]}, контейнеры {n[CONTAINER]}, справочные {n[REFERENCE]}, "
                      f"вне плана {n[OUT_OF_PLAN]}, бинарные {n[BINARY]}; не в описи "
-                     f"{n[NOT_IN_INV]}")
+                     f"{n[NOT_IN_INV]}"
+                     + (f"; вне Экосистемы {len(zone)} (покрыто мини-комплектом "
+                        f"{len(zone_in_modules)})" if zone else ""))
         if not slugs:
             lines.append("i вне плана: подсервисы в migration-plan.md не найдены — "
                          "класс не выдаётся")
@@ -313,7 +348,10 @@ def coverage_report(sources: Path, output: Path,
     def item(pid: str, p: Path) -> str:
         par = parents.get(pid)
         mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
-                if par and par in covered else "")
+                if par and par in covered and pid not in zone else "")
+        if pid in zone:
+            mark += (" ⚠ зона «вне Экосистемы»: дом — мини-комплект modules/<имя>/"
+                     + (" (покрыта в docs/ — не дом зоны)" if pid in covered else ""))
         ttl = source_title(p)
         name = ttl if ttl else p.stem
         return f"  - {name} — {p.relative_to(sources)}{mark}"

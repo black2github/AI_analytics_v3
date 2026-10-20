@@ -524,8 +524,9 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     # каталог НФТ читается как посторонний.
     # tasks/ — постановки задач forward-режима «изменение по постановке»
     # (решение 2026-10-15): штатный каталог целевого docs-репозитория
+    # modules/ — мини-комплекты зоны «вне Экосистемы» modules/<имя>/ (Д-46)
     _ok_dirs = {"docs", "sources", "sandbox", "prompts", ".git", "brd", "srs",
-                "nfr", "tasks", _docs_r.name}
+                "nfr", "tasks", "modules", _docs_r.name}
     # корень домена: каталоги сервисов из таблицы корневого README законны
     # (решение владельца 2026-10-11); domain-vision.md и glossary.md —
     # markdown, он разрешён и так
@@ -565,7 +566,7 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         report.append(
             f"✗ корень репозитория: посторонние файлы ×{len(junk)} "
             f"({', '.join(junk[:8])}) — в корне только штатные каталоги "
-            "(docs/sources/sandbox/prompts/nfr/tasks) и markdown; рабочие скрипты и кэши "
+            "(docs/sources/sandbox/prompts/nfr/tasks/modules) и markdown; рабочие скрипты и кэши "
             "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
             "вовсе; read-only анализ — в sandbox)")
     return report, all_ok

@@ -53,12 +53,12 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
-    from source_coverage import find_kit_file, plan_slugs  # noqa: E402
+    from source_coverage import find_kit_file, is_zone_row, plan_slugs, read_inventory  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
-    from .source_coverage import find_kit_file, plan_slugs  # type: ignore  # noqa: E402
+    from .source_coverage import find_kit_file, is_zone_row, plan_slugs, read_inventory  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -236,6 +236,20 @@ def debts_heading(matrix_text: str) -> Optional[str]:
     for ln in matrix_text.splitlines():
         if ln.startswith("#") and _DEBTS_HEADING_RE.search(ln):
             return re.sub(r"^#+\s*(?:\d+\.\s*)?", "", ln).strip()
+    return None
+
+
+def _zone_target(name: str, zone_titles: List[str]) -> Optional[str]:
+    """Титул страницы зоны «вне Экосистемы» (дословно по описи), с которым совпадает
+    имя цели долга: дословно, без тега «[…]» или как хвост «…: <имя>» (ЭФ виджета
+    «ЭФ Клиента: X» у долга названа «[тег] X»). Только для ⚠ — широта совпадения
+    допустима."""
+    untag = lambda s: re.sub(r"^\[[^\]]+\]\s*", "", s)  # noqa: E731
+    nn = _norm(name)
+    for title in zone_titles:
+        t = _norm(title)
+        if nn == t or untag(nn) == untag(t) or untag(t).endswith(": " + untag(nn)):
+            return title
     return None
 
 
@@ -489,6 +503,11 @@ def check(matrix_path: Path, docs_root: Path,
     out_of_plan_warn: List[str] = []
     plan = find_kit_file(docs_root, "migration-plan.md")
     slugs = plan_slugs(plan)[0] if plan is not None else set()
+    # Д-46: титулы страниц зоны «вне Экосистемы» по описи — цель долга формы 1 в зоне
+    inv_file = find_kit_file(docs_root, "inventory.md")
+    zone_titles = ([r["title"] for r in read_inventory(inv_file).values()
+                    if r.get("title") and is_zone_row(r)] if inv_file is not None else [])
+    zone_warn: List[str] = []
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
@@ -542,6 +561,12 @@ def check(matrix_path: Path, docs_root: Path,
                     and typ != "base-contract"):
                 unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
+            zt = _zone_target(name, zone_titles) if name else None
+            if zt:
+                zone_warn.append(
+                    f"⚠ долг {', '.join(from_ids)} «{name}» — цель в зоне «вне Экосистемы» "
+                    f"(опись: «{zt}»): долг формы 1 не заводится, цель — мини-комплект "
+                    "modules/<имя>/ (Д-46)")
             fm = _FOREIGN_SKILL_RE.search(raw)
             sign = foreign_target_sign(name, fm.group(1), foreign_signs, own_tags) if (fm and name) else None
             if sign:
@@ -606,6 +631,7 @@ def check(matrix_path: Path, docs_root: Path,
                       "недоступные источники, вне плана) — сторожится полнота полей"
                       + (f"; из них «вне плана» {n_out_of_plan}" if n_out_of_plan else ""))
     report.extend(out_of_plan_warn)
+    report.extend(zone_warn)
     if n_gap:
         report.append(f"пробелов НФТ {n_gap} («Не задано» на страницах типов) "
                       "— просрочка не применяется, цитата сторожится")
