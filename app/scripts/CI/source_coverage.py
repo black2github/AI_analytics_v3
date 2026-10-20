@@ -21,6 +21,13 @@
 #
 # Мягкий гейт: код 0 и отчёт; --strict — код 2 при непокрытых страницах.
 #
+# Классы непокрытия (FB-28 КК, 2026-10-20): непокрытая страница получает
+# класс по своей строке описи inventory.md комплекта (дом классификации —
+# шаг 2 плана миграции): заморожено, контейнер, справочный вход, бинарное,
+# вне плана, не в описи — структурное непокрытие по решению плана; иначе —
+# пробел миграции. С описью --strict бракует только пробелы и страницы вне
+# описи (опись отстала от выгрузки); без описи — прежнее поведение.
+#
 # Страницы НФТ лежат в output/<service>/nfr/, рядом с docs/, не внутри
 # него. Обход корня комплекта (output/<service>) их уже видит. Если
 # передан корень docs/, дополнительно читается соседний каталог nfr/.
@@ -29,7 +36,7 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Set, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -140,28 +147,186 @@ def collect(sources: Path, output: Path):
     return pages, parents, covered, no_id, orphan_dirs
 
 
-def coverage_report(sources: Path, output: Path):
-    """(строки отчёта, число непокрытых) — единая точка формата для CLI
-    и selfcheck-диспетчера."""
+# --- классы непокрытия по описи (FB-28 КК) ---
+#
+# Закрытый перечень классов и словарь признаков — здесь и только здесь.
+# Признаки читаются из колонок описи «целевой тип (гипотеза)», «основание»,
+# «req_type», «родитель»; бинарное — по файлу выгрузки; вне плана — по
+# migration-plan.md. Первое совпадение сверху; не совпало ничего — пробел.
+# Асимметрия ошибок: структурный класс снимает страницу из брака --strict,
+# поэтому признаки узкие, а сомнительное остаётся пробелом.
+GAP, NOT_IN_INV = "пробелы миграции", "не в описи"
+FROZEN, CONTAINER, REFERENCE = "заморожено", "контейнеры", "справочные"
+OUT_OF_PLAN, BINARY = "вне плана", "бинарные"
+# порядок перечней отчёта: пробелы первыми, затем отставание описи, затем
+# структурные классы
+CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, OUT_OF_PLAN, BINARY)
+# отрицание признака («НЕ frozen, GBO-… снят», «не TOC») признаком не считается —
+# иначе карточка, которую опись прямо называет живой, ушла бы из брака
+_NOT = r"(?<!не )(?<!не-)"
+_FROZEN_RE = re.compile(rf"(?i){_NOT}(?:frozen|заморож)")
+_FROZEN_PARENT_RE = re.compile(r"(?i)^заморожено")
+_CONTAINER_TARGET_RE = re.compile(r"(?i)^README-реестр$")
+_CONTAINER_RE = re.compile(rf"(?i){_NOT}(?:\bTOC\b|контейнер|навигац|\bnavigation\b)")
+_REFERENCE_TARGET_RE = re.compile(r"(?i)^doc-rules$")
+_REFERENCE_RE = re.compile(rf"(?i){_NOT}\b(?:reference-only|baseline|instruction)\b")
+_PLAN_SLUG_RE = re.compile(r"(?i)\b(?:подсервис|core)\s+`?([a-z0-9][a-z0-9-]*)")
+_TARGET_SLUG_RE = re.compile(r"^srs/([a-z0-9][a-z0-9-]*)(?:/|$)")
+# страница-вложение: тело — только изображения / ссылки на файлы, без текста
+_ATTACH_RE = re.compile(r"(?i)!\[[^\]]*\]\([^)]*\)|<img\b[^>]*>|"
+                        r"\[[^\]]*\]\([^)]*\.(?:png|jpe?g|gif|svg|bmp|pdf|docx?|xlsx?|"
+                        r"pptx?|zip|vsdx?|bpmn|drawio)\)")
+_INV_COLS = {"page_id": "page_id", "родитель": "parent", "req_type": "req_type",
+             "целевой тип": "target", "основание": "basis"}
+
+
+def find_kit_file(output: Path, name: str) -> Optional[Path]:
+    """Файл комплекта (inventory.md, migration-plan.md): в корне --output или
+    в его родителе (для docs/ — рядом с docs/)."""
+    for d in (output, output.parent):
+        p = d / name
+        if p.is_file():
+            return p
+    return None
+
+
+def read_inventory(path: Path) -> Dict[str, Dict[str, str]]:
+    """page_id → {parent, req_type, target, basis} по таблице описи; колонки —
+    по заголовку таблицы (порядок колонок не закреплён)."""
+    text = _fs.read_text(path, encoding="utf-8", errors="replace").lstrip("\ufeff")
+    cols: Dict[str, int] = {}
+    rows: Dict[str, Dict[str, str]] = {}
+    for ln in text.splitlines():
+        st = ln.strip()
+        if not st.startswith("|"):
+            cols = {} if not rows else cols
+            continue
+        cells = [c.strip() for c in re.split(r"(?<!\\)\|", st.strip("|"))]
+        if not cols:
+            head = {}
+            for i, c in enumerate(cells):
+                for name, key in _INV_COLS.items():
+                    if c.lower().startswith(name):
+                        head[key] = i
+            if "page_id" in head:
+                cols = head
+            continue
+        pid = cells[cols["page_id"]] if cols["page_id"] < len(cells) else ""
+        if not re.fullmatch(r"\d+", pid):
+            continue  # разделитель заголовка
+        rows[pid] = {k: (cells[i] if i < len(cells) else "") for k, i in cols.items()}
+    return rows
+
+
+def plan_slugs(plan: Path) -> Tuple[Set[str], str]:
+    """(слаги подсервисов и core из migration-plan.md, текст плана); ({}, "")
+    — план не читается."""
+    try:
+        text = _fs.read_text(plan, encoding="utf-8", errors="replace")
+    except OSError:
+        return set(), ""
+    return {m.group(1).lower() for m in _PLAN_SLUG_RE.finditer(text)}, text
+
+
+def _attachment_only(path: Path) -> bool:
+    try:
+        text = _fs.read_text(path, encoding="utf-8", errors="replace").lstrip("\ufeff")
+    except OSError:
+        return False
+    lines = text.splitlines()
+    if lines and _FM_BOUND.match(lines[0]):
+        end = next((i for i in range(1, len(lines)) if _FM_BOUND.match(lines[i])), 0)
+        lines = lines[end + 1:]
+    body = "\n".join(lines)
+    if not _ATTACH_RE.search(body):
+        return False
+    rest = re.sub(r"<[^>]+>", " ", _ATTACH_RE.sub(" ", body))
+    return not re.search(r"\w", rest)
+
+
+def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
+             slugs: Set[str], plan_text: str) -> str:
+    """Класс непокрытой страницы (закрытый перечень CLASS_ORDER)."""
+    row = inv.get(pid)
+    if row is not None:
+        target, basis = row.get("target", ""), row.get("basis", "")
+        if (_FROZEN_RE.search(target) or _FROZEN_RE.search(basis)
+                or _FROZEN_RE.search(row.get("req_type", ""))
+                or _FROZEN_PARENT_RE.search(row.get("parent", ""))):
+            return FROZEN
+        if (_CONTAINER_TARGET_RE.search(target) or _CONTAINER_RE.search(basis)
+                or _CONTAINER_RE.search(target)):
+            return CONTAINER
+        if _REFERENCE_TARGET_RE.search(target) or _REFERENCE_RE.search(f"{target} {basis}"):
+            return REFERENCE
+    if _attachment_only(path):
+        return BINARY
+    if row is None:
+        return NOT_IN_INV
+    m = _TARGET_SLUG_RE.match(row.get("target", ""))
+    if (m and slugs and m.group(1).lower() not in slugs
+            and f"srs/{m.group(1)}/" not in plan_text):
+        return OUT_OF_PLAN
+    return GAP
+
+
+def coverage_report(sources: Path, output: Path,
+                    inventory: Optional[Path] = None):
+    """(строки отчёта, число бракующих) — единая точка формата для CLI
+    и selfcheck-диспетчера. Бракующие: с описью — пробелы миграции и
+    страницы вне описи; без описи — все непокрытые (прежнее поведение)."""
     pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
     uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
+    inv_path = inventory if inventory is not None else find_kit_file(output, "inventory.md")
+    head = (f"страниц выгрузки: {len(pages)}; "
+            f"покрыто артефактами: {len(pages) - len(uncovered)}; "
+            f"НЕ покрыто: {len(uncovered)}")
     lines: List[str] = []
-    lines.append(f"страниц выгрузки: {len(pages)}; "
-                 f"покрыто артефактами: {len(pages) - len(uncovered)}; "
-                 f"НЕ покрыто: {len(uncovered)}")
+    classes: Dict[str, str] = {}
+    if inv_path is not None and inv_path.is_file():
+        inv = read_inventory(inv_path)
+        plan = find_kit_file(output, "migration-plan.md") or inv_path.parent / "migration-plan.md"
+        slugs, plan_text = plan_slugs(plan)
+        classes = {pid: classify(pid, p, inv, slugs, plan_text)
+                   for pid, p in uncovered.items()}
+        n = {c: sum(1 for v in classes.values() if v == c) for c in CLASS_ORDER}
+        lines.append(f"{head} = пробелы миграции {n[GAP]}; структурно: заморожено "
+                     f"{n[FROZEN]}, контейнеры {n[CONTAINER]}, справочные {n[REFERENCE]}, "
+                     f"вне плана {n[OUT_OF_PLAN]}, бинарные {n[BINARY]}; не в описи "
+                     f"{n[NOT_IN_INV]}")
+        if not slugs:
+            lines.append("i вне плана: подсервисы в migration-plan.md не найдены — "
+                         "класс не выдаётся")
+        blocking = n[GAP] + n[NOT_IN_INV]
+    else:
+        lines.append(head)
+        if uncovered:
+            lines.append("опись не найдена — классы непокрытия не определены")
+        blocking = len(uncovered)
+
     # К-17 (2026-08-17): блок непокрытых печатается БЕЗ page_id — в
     # формате, пригодном для прямого копирования в open-questions
     # («title — файл выгрузки»). Язык прибора диктует язык документа:
     # прежний формат «page_id — title» исполнители копировали в OQ как
     # есть, а page_id в текстах документов запрещён (носители — только
     # frontmatter и матрица). page_id страницы остаётся в её frontmatter.
-    for pid, p in sorted(uncovered.items(), key=lambda kv: str(kv[1])):
+    def item(pid: str, p: Path) -> str:
         par = parents.get(pid)
         mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
                 if par and par in covered else "")
         ttl = source_title(p)
         name = ttl if ttl else p.stem
-        lines.append(f"  - {name} — {p.relative_to(sources)}{mark}")
+        return f"  - {name} — {p.relative_to(sources)}{mark}"
+
+    ordered = sorted(uncovered.items(), key=lambda kv: str(kv[1]))
+    if classes:
+        for c in CLASS_ORDER:
+            group = [(pid, p) for pid, p in ordered if classes[pid] == c]
+            if group:
+                lines.append(f"{c}: {len(group)}")
+                lines.extend(item(pid, p) for pid, p in group)
+    else:
+        lines.extend(item(pid, p) for pid, p in ordered)
     if no_id:
         lines.append(f"страниц БЕЗ confluence_page_id (дефект выгрузки): "
                      f"{len(no_id)}")
@@ -176,7 +341,7 @@ def coverage_report(sources: Path, output: Path):
     if not uncovered and not no_id and not orphan_dirs:
         lines.append("OK: выгрузка покрыта полностью, целостность "
                      "иерархии не нарушена.")
-    return lines, len(uncovered)
+    return lines, blocking
 
 
 def main() -> int:
@@ -188,10 +353,15 @@ def main() -> int:
     ap.add_argument("--output", type=Path, required=True,
                     help="корень комплекта (output/<service>)")
     ap.add_argument("--strict", action="store_true",
-                    help="код 2, если есть непокрытые страницы")
+                    help="код 2, если есть непокрытые страницы (с описью — "
+                         "только пробелы миграции и страницы вне описи)")
+    ap.add_argument("--inventory", type=Path, default=None,
+                    help="опись выгрузки inventory.md; по умолчанию — в корне "
+                         "--output или в его родителе")
     args = ap.parse_args()
 
-    lines, n_uncovered = coverage_report(args.sources, args.output)
+    lines, n_uncovered = coverage_report(args.sources, args.output,
+                                         inventory=args.inventory)
     for i, ln in enumerate(lines):
         print(ln if ln.startswith("  ") else f"# {ln}")
     return 2 if (args.strict and n_uncovered) else 0
