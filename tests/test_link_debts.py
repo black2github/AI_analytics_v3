@@ -653,3 +653,73 @@ def test_closed_debt_with_markdown_link_and_base_contract(tmp_path):
     report, ok = check(mx, docs, catalog_codes={"ONB"})
     assert ok and not any("⚠ владелец" in r for r in report), report
 
+
+
+# ---------------------------------------------------------------- FB-29 КК: вид «вне плана»
+
+_OUT_ROW = ("| FUN-001 | — | долг вне плана: «[КК_Виджет_ПИН] ЭФ Клиента» — причина: подсервис "
+            "bc-widget вне плана миграции (OQ-157); ответственный: владелец комплекта; ограничение: "
+            "переход на ЭФ виджета не детализируется; закрытие: включение подсервиса в план |\n")
+_PLAN = "# План\n\n| [КК_БК] | подсервис bc-status | `srs/bc-status/` |\n| общая часть | core bc-component | |\n"
+
+
+def test_out_of_plan_debt_complete_clean(tmp_path):
+    # полная строка: не ✗, не просрочка, не НЕИСПОЛНИМ (имени в ожидателе нет — не применяется);
+    # bc-widget в плане нет — ⚠ ограничителя нет
+    docs = _issue_docs(tmp_path, _OUT_ROW)
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, "\n".join(report)
+    assert not any("НЕИСПОЛНИМ" in r or "ПРОСРОЧЕН" in r or "✗" in r or r.startswith("⚠") for r in report), report
+    assert any("долгов без отсутствующей цели 1" in r and "из них «вне плана» 1" in r for r in report)
+
+
+def test_out_of_plan_debt_without_oq_incomplete(tmp_path):
+    docs = _issue_docs(tmp_path, _OUT_ROW.replace(" (OQ-157)", ""))
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert not ok
+    bad = [r for r in report if "НЕПОЛОН" in r]
+    assert bad and "источник OQ-NNN" in bad[0], report
+
+
+def test_out_of_plan_debt_source_field_accepted(tmp_path):
+    row = _OUT_ROW.replace(" (OQ-157)", "").replace("в план |", "в план; источник: OQ-157 |")
+    docs = _issue_docs(tmp_path, row)
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok, "\n".join(report)
+
+
+def test_out_of_plan_subservice_in_plan_warns(tmp_path):
+    # ограничитель: видом нельзя спрятать исполнимый долг — подсервис есть в плане
+    docs = _issue_docs(tmp_path, _OUT_ROW.replace("bc-widget", "bc-status"))
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok  # только ⚠, вердикт не меняет
+    assert ("⚠ долг «вне плана» от FUN-001: подсервис «bc-status» есть в плане миграции — вид не "
+            "подходит, долг по ссылке формой 1") in report, report
+
+
+def test_out_of_plan_without_plan_warns(tmp_path):
+    docs = _issue_docs(tmp_path, _OUT_ROW)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok
+    assert any(r.startswith("⚠ долг «вне плана» от FUN-001: план миграции") and "проверить приёмкой" in r
+               for r in report), report
+
+
+def test_out_of_plan_cause_without_slug_warns(tmp_path):
+    docs = _issue_docs(tmp_path, _OUT_ROW.replace("подсервис bc-widget вне плана миграции", "вне плана миграции"))
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok
+    assert "⚠ долг «вне плана» от FUN-001: причина не называет подсервис — проверить приёмкой" in report
+
+
+def test_other_issue_kinds_unchanged_by_plan_guard(tmp_path):
+    # прежние виды: ни ⚠ ограничителя, ни приписки «из них «вне плана»»
+    docs = _issue_docs(tmp_path, _ISSUE_ROW_OK)
+    make(tmp_path / "migration-plan.md", _PLAN)
+    report, ok = check(docs / "traceability-matrix.md", docs)
+    assert ok and not any("вне плана»" in r for r in report), report

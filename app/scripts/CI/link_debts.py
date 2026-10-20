@@ -29,6 +29,16 @@
 # применяются (цели нет); сторожится полнота полей и наличие FROM-ID в
 # реестре. Раньше такие строки раздел тихо игнорировал.
 #
+# Вид «вне плана» (FB-29 КК, решение владельца канона 2026-10-20): цель
+# ссылки не появится по решению — подсервис вне плана миграции; долг
+# остаётся видимым, снятия открытого долга нет:
+#   | <FROM-ID> | — | долг вне плана: «<дословное имя>» — причина: подсервис <слаг>
+#     вне плана миграции (OQ-NNN); ответственный: владелец комплекта;
+#     ограничение: <…>; закрытие: включение подсервиса в план |
+# OQ-NNN обязателен (решение владельца комплекта записано). Ограничитель:
+# видом нельзя спрятать исполнимый долг — слаг из причины сверяется с
+# подсервисами migration-plan.md комплекта (только ⚠).
+#
 # Стадии запуска (одна утилита, три рубежа): самопроверка агента в заходе →
 # приёмка эксперта → CI docs-репо (после переезда комплекта).
 #
@@ -43,10 +53,12 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
+    from source_coverage import find_kit_file, plan_slugs  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
+    from .source_coverage import find_kit_file, plan_slugs  # type: ignore  # noqa: E402
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -57,8 +69,12 @@ _DEBT_RE = re.compile(
 # чужом репозитории), исполнимость имени — как обычно.
 _OWNER_RE = re.compile(r"»\s+у\s+владельца\s+([\w.-]+)", re.IGNORECASE)
 _ROW_RE = re.compile(r"^\|(.+)\|\s*$")
+OUT_OF_PLAN_KIND = "вне плана"
 ISSUE_KINDS = ("открытый вопрос", "противоречие", "правило на изображении",
-               "источник недоступен")
+               "источник недоступен", OUT_OF_PLAN_KIND)
+# слаг подсервиса в причине долга «вне плана»: «подсервис bc-widget» / «зона bc-widget»
+_CAUSE_SLUG_RE = re.compile(r"(?:подсервис|зона)\s+`?([a-z0-9][a-z0-9-]*)", re.IGNORECASE)
+_OQ_ANY_RE = re.compile(r"\bOQ-\d+\b")
 _ISSUE_RE = re.compile(
     r"долг\s+(" + "|".join(ISSUE_KINDS) + r")\s*:\s*«([^»]+)»", re.IGNORECASE)
 _ISSUE_FIELD_RES = {
@@ -237,6 +253,10 @@ def issue_fields(row: str) -> Optional[dict]:
     missing = [name for key, name in ISSUE_REQUIRED.items() if not out[key]]
     if out["kind"] == "открытый вопрос" and not out["source"]:
         missing.append("источник OQ-NNN или T-<JIRA-ID>")
+    # «вне плана»: решение владельца комплекта записано в журнале — OQ-NNN в
+    # строке обязателен (в причине «(OQ-NNN)» или полем «источник:»)
+    if out["kind"] == OUT_OF_PLAN_KIND and not _OQ_ANY_RE.search(row):
+        missing.append("источник OQ-NNN")
     out["missing"] = missing
     return out
 
@@ -465,6 +485,10 @@ def check(matrix_path: Path, docs_root: Path,
     n_gap = 0
     n_param = 0
     unknown_owners: Dict[str, int] = {}
+    n_out_of_plan = 0
+    out_of_plan_warn: List[str] = []
+    plan = find_kit_file(docs_root, "migration-plan.md")
+    slugs = plan_slugs(plan)[0] if plan is not None else set()
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
@@ -480,6 +504,26 @@ def check(matrix_path: Path, docs_root: Path,
                     report.append(f"долг от {fid}: ID отсутствует в реестре "
                                   f"матрицы ✗ — {raw[:80]}")
                     ok = False
+            if fields.get("kind") == OUT_OF_PLAN_KIND:
+                n_out_of_plan += 1
+                who = ", ".join(from_ids)
+                sm = _CAUSE_SLUG_RE.search(fields.get("cause") or "")
+                if sm and slugs and sm.group(1).lower() in slugs:
+                    out_of_plan_warn.append(
+                        f"⚠ долг «вне плана» от {who}: подсервис «{sm.group(1)}» есть в плане "
+                        "миграции — вид не подходит, долг по ссылке формой 1")
+                elif not sm:
+                    out_of_plan_warn.append(
+                        f"⚠ долг «вне плана» от {who}: причина не называет подсервис — "
+                        "проверить приёмкой")
+                elif plan is None:
+                    out_of_plan_warn.append(
+                        f"⚠ долг «вне плана» от {who}: план миграции (migration-plan.md) не "
+                        "найден — проверить приёмкой")
+                elif not slugs:
+                    out_of_plan_warn.append(
+                        f"⚠ долг «вне плана» от {who}: план миграции не называет подсервисов — "
+                        "проверить приёмкой")
             continue
         # 1) просрочка: цель существует? (межсервисный долг — цель в
         # чужом репозитории, локальная просрочка не проверяется; пробел
@@ -559,7 +603,9 @@ def check(matrix_path: Path, docs_root: Path,
     if n_issue:
         report.append(f"долгов без отсутствующей цели {n_issue} (открытые "
                       "вопросы, противоречия, правила на изображении, "
-                      "недоступные источники) — сторожится полнота полей")
+                      "недоступные источники, вне плана) — сторожится полнота полей"
+                      + (f"; из них «вне плана» {n_out_of_plan}" if n_out_of_plan else ""))
+    report.extend(out_of_plan_warn)
     if n_gap:
         report.append(f"пробелов НФТ {n_gap} («Не задано» на страницах типов) "
                       "— просрочка не применяется, цитата сторожится")
