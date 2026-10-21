@@ -26,13 +26,20 @@
 #     правками до запуска — отказ (чистая веха, чужое не захватывается);
 #   - HEAD канона не определился — отказ, не угадывание;
 #   - хэш уже актуален — «уже актуально», без пустого коммита.
+#
+# Приём среза = докатка норм (2026-10-22): после строки «✓ срез канона»
+# печатается дельта норм между принятым и новым срезом — файлы шаблонов,
+# скиллов, протокола, комплекта миграции и AGENTS.md с заголовками
+# затронутых разделов; прибор (_meta/tools/*.py) — одной строкой числом
+# файлов. В комплект ничего не пишется: это перечень для записи
+# координатора «докатка / не применимо» в журнале (протокол §1).
 
 import argparse
 import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from selfcheck import _CANON_CUT_RE  # noqa: E402  (единый формат строки)
@@ -55,6 +62,67 @@ def _git(root: Path, *args: str) -> Optional[str]:
 
 def canon_head(canon_root: Path) -> Optional[str]:
     return _git(canon_root, "rev-parse", "--short", "HEAD")
+
+
+# что считается нормами для дельты при приёме среза
+NORM_PATHS = ("_meta/templates", "_meta/skills", "_meta/tools/step-protocol.md",
+              "_meta/migration", "AGENTS.md")
+_HUNK_RE = re.compile(r"^@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@", re.M)
+_HEAD_RE = re.compile(r"^(#{2,4}) +(.+?)\s*$")
+
+
+def _touched_sections(canon_root: Path, old: str, new: str, path: str) -> List[str]:
+    """Заголовки ##–#### нового файла, под которыми есть изменённые строки
+    диффа old..new (удаление без добавления — по месту удаления)."""
+    diff = _git(canon_root, "diff", "-U0", f"{old}..{new}", "--", path) or ""
+    lines_new: List[int] = []
+    for m in _HUNK_RE.finditer(diff):
+        start, cnt = int(m.group(1)), int(m.group(2) or "1")
+        lines_new.extend(range(start, start + cnt) if cnt else [max(start, 1)])
+    body = _git(canon_root, "show", f"{new}:{path}") or ""
+    heads: List[Tuple[int, str]] = []
+    in_code = False
+    for i, ln in enumerate(body.splitlines(), 1):
+        if ln.lstrip().startswith(("```", "~~~")):
+            in_code = not in_code
+            continue
+        hm = None if in_code else _HEAD_RE.match(ln)
+        if hm:
+            heads.append((i, hm.group(2)))
+    out: List[str] = []
+    for n in lines_new:
+        h = next((t for i, t in reversed(heads) if i <= n), "(до первого раздела)")
+        if h not in out:
+            out.append(h)
+    return out
+
+
+def norm_delta(canon_root: Path, old: str, new: str) -> List[str]:
+    """Строки блока «Дельта норм old→new» для отчёта приёма среза."""
+    names = _git(canon_root, "diff", "--name-status", f"{old}..{new}", "--",
+                 *NORM_PATHS)
+    tools = _git(canon_root, "diff", "--name-only", f"{old}..{new}", "--",
+                 "_meta/tools/*.py")
+    if names is None:
+        return [f"дельта норм {old}→{new}: не вычислена (срез {old} не найден в клоне канона)"]
+    rows = [ln.split("\t") for ln in names.splitlines() if ln.strip()]
+    n_tools = len([t for t in (tools or "").splitlines() if t.strip()])
+    if not rows and not n_tools:
+        return [f"дельта норм {old}→{new} пуста"]
+    out = [f"Дельта норм {old}→{new} (по каждой — «докатка» или «не применимо» в журнал):"]
+    for row in rows:
+        status, path = row[0][:1], row[-1]
+        if status == "D":
+            out.append(f"  {path} — удалён")
+            continue
+        secs = _touched_sections(canon_root, old, new, path) if path.endswith(".md") else []
+        tail = ("новый файл" if status == "A"
+                else "разделы: " + ", ".join(f"«{t}»" for t in secs) if secs
+                else "изменён")
+        out.append(f"  {path} — {tail}")
+    if n_tools:
+        out.append(f"  прибор: {n_tools} файлов")
+    return out
 
 
 def _auto_reason(canon_root: Path, old: Optional[str],
@@ -120,8 +188,11 @@ def accept(profile: Path, canon_root: Path,
     if _git(src_root, "commit", "-m", msg) is None:
         return "отказ: git commit профиля не удался", False
     old = m.group(1) if m else "(строки не было)"
-    return (f"✓ срез канона: {old} → {head}; профиль закоммичен "
-            f"({msg!r})"), True
+    report = (f"✓ срез канона: {old} → {head}; профиль закоммичен "
+              f"({msg!r})")
+    if m:
+        report += "\n" + "\n".join(norm_delta(canon_root, m.group(1), head))
+    return report, True
 
 
 def main() -> int:

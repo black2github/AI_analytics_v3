@@ -119,3 +119,71 @@ def test_auto_reason_fallback_when_no_range(tmp_path):
     assert ok, msg
     last = _git(src, "log", "-1", "--format=%s")
     assert "обновление канона до" in last
+
+
+# ---------------------------------------------------------------- дельта норм при приёме среза
+
+def _canon_with_norms(tmp_path: Path) -> Path:
+    canon = tmp_path / "canon"
+    make_repo(canon)
+    (canon / "_meta/templates").mkdir(parents=True)
+    (canon / "_meta/skills").mkdir(parents=True)
+    (canon / "_meta/tools").mkdir(parents=True)
+    (canon / "_meta/templates/controls.md").write_text(
+        "# Шаблон\n\n## Поле «Сообщение об ошибке»\n\nтекст\n\n## Чек-лист\n\n7. со способом отображения\n",
+        encoding="utf-8")
+    (canon / "_meta/skills/create-artifact.md").write_text("# Скилл\n\n## Дерево метода\n\n1. пункт\n",
+                                                           encoding="utf-8")
+    (canon / "_meta/tools/selfcheck.py").write_text("x = 1\n", encoding="utf-8")
+    (canon / "other.md").write_text("не норма\n", encoding="utf-8")
+    _git(canon, "add", "-A")
+    _git(canon, "commit", "-q", "-m", "init")
+    return canon
+
+
+def test_norm_delta_lists_files_sections_and_tools(tmp_path):
+    from app.scripts.CI.accept_canon import norm_delta
+    canon = _canon_with_norms(tmp_path)
+    old = _git(canon, "rev-parse", "--short", "HEAD")
+    p = canon / "_meta/templates/controls.md"
+    p.write_text(p.read_text(encoding="utf-8").replace("7. со способом отображения", "7. без способа показа"),
+                 encoding="utf-8")
+    s = canon / "_meta/skills/create-artifact.md"
+    s.write_text(s.read_text(encoding="utf-8") + "2. новый пункт\n", encoding="utf-8")
+    (canon / "_meta/tools/selfcheck.py").write_text("x = 2\n", encoding="utf-8")
+    (canon / "other.md").write_text("изменён, но не норма\n", encoding="utf-8")
+    _git(canon, "add", "-A")
+    _git(canon, "commit", "-q", "-m", "нормы")
+    new = _git(canon, "rev-parse", "--short", "HEAD")
+    out = norm_delta(canon, old, new)
+    assert out[0].startswith(f"Дельта норм {old}→{new}")
+    assert "  _meta/templates/controls.md — разделы: «Чек-лист»" in out
+    assert "  _meta/skills/create-artifact.md — разделы: «Дерево метода»" in out
+    assert "  прибор: 1 файлов" in out
+    assert not any("other.md" in ln for ln in out)
+
+
+def test_norm_delta_empty(tmp_path):
+    from app.scripts.CI.accept_canon import norm_delta
+    canon = _canon_with_norms(tmp_path)
+    old = _git(canon, "rev-parse", "--short", "HEAD")
+    (canon / "other.md").write_text("только не норма\n", encoding="utf-8")
+    _git(canon, "add", "-A")
+    _git(canon, "commit", "-q", "-m", "прочее")
+    new = _git(canon, "rev-parse", "--short", "HEAD")
+    assert norm_delta(canon, old, new) == [f"дельта норм {old}→{new} пуста"]
+
+
+def test_accept_prints_norm_delta(tmp_path):
+    canon = _canon_with_norms(tmp_path)
+    old = _git(canon, "rev-parse", "--short", "HEAD")
+    s = canon / "_meta/skills/create-artifact.md"
+    s.write_text(s.read_text(encoding="utf-8") + "2. новый пункт\n", encoding="utf-8")
+    _git(canon, "add", "-A")
+    _git(canon, "commit", "-q", "-m", "скилл")
+    src = make_src(tmp_path, f"| **Срез канона** | `{old}` |\n")
+    msg, ok = accept(src / "README.md", canon)
+    assert ok, msg
+    lines = msg.splitlines()
+    assert lines[0].startswith("✓ срез канона:") and lines[1].startswith("Дельта норм")
+    assert "  _meta/skills/create-artifact.md — разделы: «Дерево метода»" in lines

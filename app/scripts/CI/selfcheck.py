@@ -79,6 +79,10 @@ try:
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping)
+    from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
+        check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
+        check_copy_titles, check_function_kind_suspect, check_passport_after_table,
+        check_thick_calls, check_unnormalized_sources, oq_class_counter)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -100,6 +104,10 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping)
+    from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
+        check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
+        check_copy_titles, check_function_kind_suspect, check_passport_after_table,
+        check_thick_calls, check_unnormalized_sources, oq_class_counter)
 
 
 def index_sources(root: Path):
@@ -787,6 +795,32 @@ def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep, True
 
 
+def _kc_review_guards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторожа по разбору замечаний к миграции КК (план П1, 2026-10-22): кнопки ЭФ не по
+    шаблону, страница-копия как своя, нетонкая карточка вызова, способ показа в контроле,
+    вызыватель без ссылки, склейка абзацев ячейки и перенос без нормализованной копии,
+    строка паспорта вне таблицы, подозрение на неверный тип function. Только ⚠, вердикт
+    не меняют."""
+    report: List[str] = []
+    for fn in (check_button_fields, check_copy_titles, check_thick_calls,
+               check_control_display_mode, check_caller_links, check_cell_glue,
+               check_passport_after_table, check_function_kind_suspect):
+        rep, _ = _safe(lambda f=fn: (f(ctx.docs), True))
+        report.extend(rep)
+    rep, _ = _safe(lambda: (check_unnormalized_sources(ctx.docs, ctx.idx), True))
+    report.extend(rep)
+    return report, True
+
+
+def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Счётчик журнала открытых вопросов по классам статуса (i)."""
+    oq = ctx.docs / "open-questions.md"
+    if not oq.is_file():
+        oq = ctx.docs.parent / "open-questions.md"
+    rep, _ = _safe(lambda: (oq_class_counter(oq), True))
+    return rep, True
+
+
 def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1086,6 +1120,8 @@ KIT_CHECKS: List[Check] = [
     Check("source_coverage", _kc_source_coverage, affects_verdict=False),
     Check("spellings", _kc_spellings, affects_verdict=False),
     Check("branch_form", _kc_branch_form, affects_verdict=False),
+    Check("review_guards", _kc_review_guards, affects_verdict=False),
+    Check("oq_classes", _kc_oq_classes, affects_verdict=False),
 ]
 
 
