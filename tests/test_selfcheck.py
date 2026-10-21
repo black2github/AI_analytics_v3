@@ -1235,6 +1235,28 @@ def test_id_slots_table_without_folder_column_flagged(tmp_path):
     assert any("нет колонки «Каталог»" in ln for ln in report)
 
 
+def test_id_slots_call_mod_not_a_slot(tmp_path):
+    # FB-30 КК: без таблицы частей CALL-MOD-NNN в каталоге подсервиса —
+    # MOD служебный сегмент, не слот части (как EXT/INT): сторож молчит
+    docs = tmp_path / "docs"
+    make(docs / "srs/document-signing/contract-call/module/call-mod-001-x.md",
+         _slot_card("CALL-MOD-001", "contract-call"))
+    make_matrix(docs, "| CALL-MOD-001 | contract-call | Вызов | call-mod-001-x.md |\n")
+    report, _ = selfcheck.run(docs, None)
+    assert not any("слот части" in ln for ln in report)
+
+
+def test_id_slots_call_mod_with_part_slot(tmp_path):
+    # с таблицей частей слот стоит после префикса: CALL-DS-MOD-NNN (как CALL-DS-EXT)
+    docs = tmp_path / "docs"
+    make(docs / "README.md", _PART_TABLE)
+    make(docs / "srs/document-signing/contract-call/module/call-mod-001-x.md",
+         _slot_card("CALL-DS-MOD-001", "contract-call"))
+    make_matrix(docs, "| CALL-DS-MOD-001 | contract-call | Вызов | call-mod-001-x.md |\n")
+    report, _ = selfcheck.run(docs, None)
+    assert not any("слот части" in ln and "✗" in ln for ln in report)
+
+
 def test_id_slots_happy_layout(tmp_path):
     # раскладка docs-sign: слоты по таблице, общая часть в shared/, корень без слота
     docs = tmp_path / "docs"
