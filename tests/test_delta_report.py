@@ -475,6 +475,27 @@ def test_cli_out_and_json(tmp_path):
     assert "delta.md" not in st
 
 
+def test_affected_before_edits(tmp_path):
+    # до правок: кто ссылается на SCR-CL-02 (PRN-001; матрица и README не считаются) и на кого ссылается она (ENT-001)
+    repo = make_repo(tmp_path)
+    # постановка с id T-… ссылается на форму — соседом не считается
+    _w(repo / 'tasks/ECO-9.md', '---' + chr(10) + 'id: T-ECO-9' + chr(10) + 'type: task' + chr(10) + 'task: ECO-9' + chr(10) + '---' + chr(10) + chr(10) + 'см. [форму](../srs/screen-form/scr-cl-02.md)' + chr(10))
+    rows, notes = dr.affected_before(repo, ["SCR-CL-02", "NO-SUCH-1"])
+    assert notes == ["карточка `NO-SUCH-1` не найдена (frontmatter `id` ни у одного файла комплекта)"]
+    assert len(rows) == 1 and rows[0]["id"] == "SCR-CL-02"
+    assert rows[0]["incoming"] == ["PRN-001"] and rows[0]["outgoing"] == ["ENT-001"]
+    text = dr.render_affected(rows, notes)
+    assert "## SCR-CL-02 (`srs/screen-form/scr-cl-02.md`)" in text and "`PRN-001`" in text
+
+
+def test_affected_cli(tmp_path):
+    repo = make_repo(tmp_path)
+    r = _cli("--repo", str(repo), "--affected", "SCR-CL-02")
+    assert r.returncode == 0 and r.stdout.startswith("# Затронуто до правок")
+    r = _cli("--repo", str(repo), "--affected", "NO-SUCH-1")
+    assert r.returncode == 2 and "не найдена" in r.stdout
+
+
 def test_cli_exit_codes(tmp_path):
     r = _cli("--repo", str(tmp_path))
     assert r.returncode == 2 and "не git-репозиторий" in r.stdout

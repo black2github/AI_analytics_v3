@@ -54,6 +54,10 @@
 #   --task <JIRA-ID> задача; без ключа — из единственной постановки в дельте
 #   --out <файл.md>  записать отчёт в файл (UTF-8, переводы строк \n)
 #   --json           дополнительно напечатать данные отчёта в JSON
+#   --affected <ID[,ID…]>  ДО правок: соседи карточек по относительным ссылкам
+#                    (кто ссылается на карточку и на кого ссылается она) —
+#                    детерминированный перечень для шага 2 режима C; дельта не
+#                    строится, git не нужен; код 2, если ни один ID не найден
 #
 # Код выхода: 0 — отчёт собран; 2 — собрать нельзя (не git-репозиторий,
 # матрицы нет, постановка в дельте неоднозначна).
@@ -764,6 +768,70 @@ def render(data: dict) -> str:
     return "\n".join(L) + "\n"
 
 
+def card_index(kit: Path) -> Dict[str, Path]:
+    """ID карточки → файл (frontmatter `id`; README-реестры не считаются,
+    как в transfer_gate.card_referrers)."""
+    out: Dict[str, Path] = {}
+    for f in kit.rglob("*.md"):
+        if f.name.lower() == "readme.md" or sc.is_task_file(f, kit) or sc.in_dot_dir(f, kit):
+            continue
+        fid = (sc.read_frontmatter(f) or {}).get("id")
+        if fid:
+            out[str(fid)] = f
+    return out
+
+
+def affected_before(kit: Path, ids: List[str]) -> Tuple[List[dict], List[str]]:
+    """Режим --affected (решение владельца 2026-10-21): до правок, по ID
+    карточек, которые собираются менять, — кто на них ссылается относительной
+    ссылкой (входящие, transfer_gate.card_referrers) и на кого ссылаются они
+    (исходящие). Детерминированный перечень соседей для шага 2 режима C
+    «Разбор постановки и затронутые карточки» — агент любой силы получает его
+    из прибора, а не из памяти. Матрица и README-реестры не считаются.
+    Возвращает (записи по ID, замечания)."""
+    index = card_index(kit)
+    by_path = {p.resolve(): i for i, p in index.items()}
+    referrers = tg.card_referrers(kit)
+    rows: List[dict] = []
+    notes: List[str] = []
+    for cid in ids:
+        f = index.get(cid)
+        if f is None:
+            notes.append(f"карточка `{cid}` не найдена (frontmatter `id` ни у одного файла комплекта)")
+            continue
+        outgoing: List[str] = []
+        text = f.read_text(encoding="utf-8", errors="replace")
+        for rel in tg._MD_LINK_RE.findall(text):
+            try:
+                tid = by_path.get((f.parent / rel).resolve())
+            except OSError:
+                tid = None
+            if tid and tid != cid and tid not in outgoing:
+                outgoing.append(tid)
+        # входящие — только карточки комплекта: постановки tasks/ (id T-…) и файлы
+        # вне индекса соседями не считаются
+        incoming = [i for i in referrers.get(cid, []) if i in index]
+        rows.append({"id": cid, "file": f.relative_to(kit).as_posix(),
+                     "incoming": incoming, "outgoing": sorted(outgoing)})
+    return rows, notes
+
+
+def render_affected(rows: List[dict], notes: List[str]) -> str:
+    L = ["# Затронуто до правок", "",
+         "Соседи карточек по относительным ссылкам (матрица и README-реестры не считаются). "
+         "Каждая входящая карточка — кандидат в «Затронуто» постановки: меняется или остаётся "
+         "со ссылкой — решает разбор по домам.", ""]
+    for r in rows:
+        L.append(f"## {r['id']} (`{r['file']}`)")
+        L.append("")
+        L.append("- ссылаются на неё: " + (", ".join(f"`{i}`" for i in r["incoming"]) if r["incoming"] else "нет"))
+        L.append("- она ссылается на: " + (", ".join(f"`{i}`" for i in r["outgoing"]) if r["outgoing"] else "нет"))
+        L.append("")
+    if notes:
+        L += ["## Замечания прибора", ""] + [f"- {n}" for n in notes] + [""]
+    return "\n".join(L)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Отчёт дельты комплекта документации по изменениям рабочего дерева "
@@ -776,8 +844,29 @@ def main() -> int:
                     help="JIRA-ID задачи; без ключа — из единственной постановки tasks/ в дельте")
     ap.add_argument("--out", type=Path, default=None, help="записать отчёт в файл (UTF-8, \\n)")
     ap.add_argument("--json", action="store_true", help="дополнительно вывести данные в JSON")
+    ap.add_argument("--affected", default=None,
+                    help="ДО правок: ID карточек через запятую — кто на них ссылается и на кого "
+                         "ссылаются они (соседи для шага 2 режима C); отчёт дельты не строится")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if a.affected:
+        kit, err = kit_root(a.repo.resolve())
+        if err:
+            print(f"✗ соседи не найдены: {err}")
+            return 2
+        ids = [i.strip() for i in a.affected.split(",") if i.strip()]
+        rows, notes = affected_before(kit, ids)
+        text = render_affected(rows, notes)
+        if a.out is not None:
+            a.out.parent.mkdir(parents=True, exist_ok=True)
+            with open(a.out, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(text)
+            print(f"i соседи записаны: {a.out}")
+        else:
+            print(text, end="")
+        if a.json:
+            print(json.dumps({"affected": rows, "notes": notes}, ensure_ascii=False, indent=1))
+        return 0 if rows else 2
     try:
         data, err = build(a.repo, a.base, a.task)
     except Exception as e:  # noqa: BLE001
