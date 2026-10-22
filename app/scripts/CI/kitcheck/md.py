@@ -213,10 +213,23 @@ def in_dot_dir(p: Path, docs: Path) -> bool:
         return False
     return any(part.startswith(".") for part in rel.parts[:-1])
 
-def _kit_md(docs: Path):
-    """Документы комплекта для обходов сторожей — без постановок `tasks/`."""
+def in_module_zone(p: Path, docs: Path) -> bool:
+    """Файл мини-комплекта зоны «вне Экосистемы» `docs/modules/<имя>/` (Д-49 п. 4): не
+    карточка комплекта — схема типов, реестр ID, слоты частей, матрица и README-реестры к
+    нему не применяются; относительные ссылки, нотация и page_id (покрытие) — применяются."""
+    try:
+        rel = p.relative_to(docs)
+    except ValueError:
+        return False
+    return len(rel.parts) >= 3 and rel.parts[0] == "modules"
+
+
+def _kit_md(docs: Path, zone: bool = False):
+    """Документы комплекта для обходов сторожей — без постановок `tasks/`; мини-комплекты
+    зоны `docs/modules/<имя>/` — только при zone=True (ссылки и нотация, Д-49)."""
     return [p for p in sorted(docs.rglob("*.md"))
-            if not is_task_file(p, docs) and not in_dot_dir(p, docs)]
+            if not is_task_file(p, docs) and not in_dot_dir(p, docs)
+            and (zone or not in_module_zone(p, docs))]
 
 def gitlab_slug(heading: str) -> str:
     """Якорь заголовка, как его строит GitLab: нижний регистр, без

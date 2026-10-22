@@ -195,7 +195,8 @@ def is_zone_row(row: Dict[str, str]) -> bool:
 
 
 def _under_modules(path: Path, output: Path) -> bool:
-    """Файл лежит в мини-комплекте: modules/ рядом с docs/ или в корне комплекта."""
+    """Файл лежит в мини-комплекте: docs/modules/<имя>/ (Д-49, норма) или modules/ рядом с
+    docs/ (старое место, переходный период)."""
     rp = path.resolve()
     for base in (output.parent / "modules", output / "modules"):
         try:
@@ -350,8 +351,8 @@ def coverage_report(sources: Path, output: Path,
         mark = (" ⚠ дочерняя единица ПОКРЫТОГО родителя"
                 if par and par in covered and pid not in zone else "")
         if pid in zone:
-            mark += (" ⚠ зона «вне Экосистемы»: дом — мини-комплект modules/<имя>/"
-                     + (" (покрыта в docs/ — не дом зоны)" if pid in covered else ""))
+            mark += (" ⚠ зона «вне Экосистемы»: дом — мини-комплект docs/modules/<имя>/"
+                     + (" (покрыта карточкой комплекта — не дом зоны)" if pid in covered else ""))
         ttl = source_title(p)
         name = ttl if ttl else p.stem
         return f"  - {name} — {p.relative_to(sources)}{mark}"

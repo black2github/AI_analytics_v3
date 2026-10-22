@@ -88,7 +88,7 @@ def test_zone_page_without_mini_kit_is_gap(tmp_path):
                              "мини-комплектом 0)"), lines[0]
     assert blocking == 1
     gap = lines.index("пробелы миграции: 1")
-    assert "зона «вне Экосистемы»: дом — мини-комплект modules/<имя>/" in lines[gap + 1]
+    assert "зона «вне Экосистемы»: дом — мини-комплект docs/modules/<имя>/" in lines[gap + 1]
 
 
 def test_zone_page_covered_by_mini_kit(tmp_path):
@@ -105,7 +105,7 @@ def test_zone_page_covered_only_in_docs_is_gap(tmp_path):
     make(docs / "srs/bc-a/screen-form/scr-1.md", card("SCR-1", "ЭФ", "'1'"))
     lines, _b = cov.coverage_report(src, docs)
     assert "пробелы миграции 1" in lines[0]
-    assert any("(покрыта в docs/ — не дом зоны)" in ln for ln in lines), lines
+    assert any("(покрыта карточкой комплекта — не дом зоны)" in ln for ln in lines), lines
 
 
 def test_zone_by_basis_word_modules(tmp_path):

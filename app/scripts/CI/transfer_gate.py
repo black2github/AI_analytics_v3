@@ -131,10 +131,28 @@
 #                       протоколу чек-листа
 #   --json              дополнительно вывести результат в JSON (вердикт, строки:
 #                       знак, критерий, проверка, результат) — для CI
+#   --after-step        лёгкий гейт после каждого захода (Д-49, 2026-10-23): та же
+#                       сборка в целевой раскладке и валидатор платформы; прибор
+#                       selfcheck НЕ гоняется (команда гоняет его сама, вердикт — в
+#                       сдаче); критерии конца миграции понижены по закрытому
+#                       списку: CORE-20 «открытые вопросы» ✗ → i, SDLC-05 ⚠ → i,
+#                       SDLC-04 «раздела API ↔ SRS нет» ✗ → ⚠; остальные ✗
+#                       (TRF-01…04, SDLC-08, FMT-01, CORE-06, CORE-09, ВАЛИДАТОР)
+#                       остаются ✗; корень сборки проверяется самим гейтом
+#                       (посторонний каталог или не-markdown файл — ✗ TRF-01:
+#                       в полном режиме это делает selfcheck на сборке);
+#                       --out отклоняется. Вердикт — «ФОРМА
+#                       ПЕРЕНОСИМА / ФОРМА НЕ ПЕРЕНОСИМА: блокеров N (новых M)»,
+#                       слово READY не печатается
+#   --baseline <отчёт.md>  прошлый отчёт гейта (--report): строки ✗ сопоставляются
+#                       по критерию, проверке и результату без отдельно стоящих
+#                       чисел; под итогом — «новых блокеров M: …» и «ушло K».
+#                       Работает в обоих режимах; без ключа — «(новых —)»
 #
 # ПРИМЕР.
 #   python _meta/tools/transfer_gate.py --src C:\doc-as-code\EAS\src-business-cards
 #   python _meta/tools/transfer_gate.py --src <src> --out C:\doc-as-code\EAN\docs-business-cards
+#   python _meta/tools/transfer_gate.py --src <src> --after-step --report gate-z04.md --baseline gate-z03.md
 #
 # ОГРАНИЧИТЕЛИ. Асимметрия ошибок канона: сомнение трактуется в сторону
 # NOT READY; гейт никогда не копирует при ненулевом числе ✗ или ошибок
@@ -155,6 +173,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
 from kitcheck.md import blank_code  # noqa: E402
+from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_status_class  # noqa: E402
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_VALIDATOR = _HERE / "platform" / "scripts" / "validate_analytics_docs.py"
@@ -172,7 +191,9 @@ _REPO_ROOT_FILES = {"CODEOWNERS", "gpb-manifest.json", ".gitignore", ".gitlab-ci
                     ".gitattributes"}
 
 _OQ_ENTRY_RE = re.compile(r"^##\s+(OQ-\d+)\b.*$", re.M)
-_OQ_STATUS_RE = re.compile(r"^\s*-\s*\*\*Статус:?\*\*:?\s*([^\n]+)$", re.M)
+# строка статуса — обе формы, «- **Статус:**» и «- Статус:» (Д-49 п. 3); дом выражения —
+# kitcheck/checks/review_guards.py (сторож B9 читает журнал тем же выражением)
+_OQ_STATUS_RE = OQ_STATUS_RE
 _OPEN_WORDS = ("открыт", "в работе", "ждёт", "ожидает", "уточня")
 
 # соответствие строк отчёта критериям чек-листа DoR v1.2 (раздел 1)
@@ -293,6 +314,122 @@ class Gate:
     def as_dicts(self) -> List[dict]:
         return [{"mark": m, "criterion": c, "check": k, "text": t} for m, c, k, t in self.lines]
 
+    def downgrade(self, rules: Tuple[Tuple[str, str, str, str], ...], note: str = "") -> None:
+        """Понизить строки по закрытому списку (знак, критерий, проверка → новый знак):
+        лёгкий режим --after-step (Д-49 п. 1). Строка вне списка не меняется."""
+        out = []
+        for m, c, k, t in self.lines:
+            for frm, crit, check, to in rules:
+                if m == frm and c == crit and k == check:
+                    if m == "✗":
+                        self.blockers -= 1
+                    if to == "✗":
+                        self.blockers += 1
+                    m, t = to, t + note
+                    break
+            out.append((m, c, k, t))
+        self.lines = out
+
+
+# лёгкий режим --after-step (Д-49 п. 1): понижаются только критерии конца миграции —
+# закрытый список (знак, критерий, проверка, новый знак); всё остальное — как в полном
+# режиме, ✗ формы (TRF-01…04, SDLC-08, FMT-01, CORE-06, CORE-09, ВАЛИДАТОР) остаются ✗
+_AFTER_STEP_NOTE = " (проверяется полным гейтом перед переносом)"
+_AFTER_STEP_DOWNGRADE = (
+    ("✗", "CORE-20", "открытые вопросы", "i"),
+    ("⚠", "SDLC-05", "service-vision.md", "i"),
+    ("⚠", "SDLC-05", "glossary.md", "i"),
+    ("✗", "SDLC-04", "матрица: раздел «Покрытие: API ↔ SRS»", "⚠"),
+)
+# корень целевой раскладки (лёгкий режим, Д-49): штатные каталоги комплекта в корне
+# репозитория документации. api/ — отдельный блокер TRF-03, здесь не дублируется; служебные
+# каталоги вложений (files/, img/ …) — как у карточек корня
+_TARGET_ROOT_DIRS = {"brd", "srs", "nfr", "tasks", "modules", "api"} | _SERVICE_DIRS
+
+
+def check_staged_root(gate: "Gate", staged: Path) -> None:
+    """Лёгкий режим: посторонние каталоги и не-markdown файлы в корне сборки — ✗ TRF-01.
+    В полном режиме тот же дефект ловит сторож корня selfcheck на сборке (✗ ПРИБОР); лёгкий
+    режим selfcheck не гоняет, поэтому проверяет корень сам — иначе `docs/archive/` уехал бы
+    в корень репозитория документации незамеченным (КК, 2026-10-23)."""
+    junk = sorted(
+        p.name + ("/" if p.is_dir() else "") for p in staged.iterdir()
+        if not p.name.startswith(".")
+        and ((p.is_dir() and p.name not in _TARGET_ROOT_DIRS)
+             or (p.is_file() and p.suffix.lower() not in (".md", ".markdown"))))
+    if junk:
+        gate.add("✗", "TRF-01", f"в корне целевой раскладки посторонние каталоги и файлы: "
+                 f"{', '.join(junk[:8])}{'…' if len(junk) > 8 else ''} — в корне репозитория "
+                 "документации только разделы комплекта (brd/, srs/, nfr/, tasks/, modules/) и "
+                 "markdown; перенести внутрь раздела или удалить", check="корень целевой раскладки")
+    else:
+        gate.add("✓", "TRF-01", "в корне целевой раскладки только разделы комплекта и markdown",
+                 check="корень целевой раскладки")
+
+
+_NUM_RE = re.compile(r"(?<![\w.\-/])\d+(?:[.,]\d+)?(?![\w\-/])")
+
+
+def _blocker_key(crit: str, check: str, text: str) -> Tuple[str, str, str]:
+    """Ключ сопоставления строки ✗ с прошлым отчётом (--baseline): критерий, проверка и
+    результат без отдельно стоящих чисел — «битые ссылки: 30 из 7263» и «…: 31 из 7270»
+    один блокер. Числа в составе идентификаторов и имён (proc-001, OQ-55, v2) остаются —
+    иначе новый блокер в соседнем файле спрятался бы за старым; номер строки «файл.md:12»
+    — отдельное число, заменяется."""
+    return (crit.strip(), check.strip(), _NUM_RE.sub("#", " ".join(text.split())))
+
+
+def read_baseline(path: Path) -> Optional[List[Tuple[str, str, str]]]:
+    """Строки ✗ прошлого отчёта гейта (его же таблица «Статус | Критерий | Проверка |
+    Результат»); None — таблицы гейта в файле нет."""
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return None
+    rows: List[Tuple[str, str, str]] = []
+    seen_head = False
+    for ln in text.splitlines():
+        s = ln.strip()
+        if s.startswith("| Статус | Критерий | Проверка | Результат |"):
+            seen_head = True
+            continue
+        if not seen_head or not s.startswith("|"):
+            continue
+        cells = [c.replace("\\|", "|").strip()
+                 for c in re.split(r"(?<!\\)\|", s.strip().strip("|"))]
+        if len(cells) == 4 and cells[0].startswith("✗"):
+            rows.append(_blocker_key(cells[1], cells[2], cells[3]))
+    return rows if seen_head else None
+
+
+def baseline_delta(gate: "Gate", base: List[Tuple[str, str, str]]
+                   ) -> Tuple[List[Tuple[str, str, str]], int]:
+    """(новые блокеры, ушло K) — сопоставление строк ✗ как мультимножеств ключей."""
+    left: Dict[Tuple[str, str, str], int] = {}
+    for k in base:
+        left[k] = left.get(k, 0) + 1
+    new: List[Tuple[str, str, str]] = []
+    for m, c, k, t in gate.lines:
+        if m != "✗":
+            continue
+        key = _blocker_key(c, k, t)
+        if left.get(key):
+            left[key] -= 1
+        else:
+            new.append((c, k, " ".join(t.split())))
+    return new, sum(left.values())
+
+
+# шапки собранного комплекта: условия переноса и «Затронуто» реестра долгов читают их четыре
+# раза — кэш на прогон (очищается в run_gate); на КК ~1500 чтений → ~390
+_FM_CACHE: Dict[Path, dict] = {}
+
+
+def _fm(f: Path) -> dict:
+    if f not in _FM_CACHE:
+        _FM_CACHE[f] = sc.read_frontmatter(f) or {}
+    return _FM_CACHE[f]
+
 
 # --- шаг 1: сборка комплекта в целевой раскладке ---------------------------
 
@@ -362,7 +499,12 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
                 body = text[m.end():end]
                 st = _OQ_STATUS_RE.search(body)
                 status = st.group(1).strip().lower() if st else ""
-                if not st or any(w in status for w in _OPEN_WORDS):
+                # класс — по первому слову статуса, как у сторожа B9: «закрыт (…; переоткрыть
+                # при …)» — закрыт, подстрока «открыт» внутри пояснения не открывает вопрос (КК,
+                # 7 записей); «частично» — открыт (асимметрия ошибок)
+                cls = oq_status_class(status) if st else ""
+                if not st or cls in ("открыт", "частично") or (
+                        cls == "прочие" and any(w in status for w in _OPEN_WORDS)):
                     opened.append(m.group(1) + ("" if st else " (без строки «Статус»)"))
             return cand, opened
     return None, []
@@ -467,7 +609,7 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                     if ln.strip().startswith("|") and not re.match(r"^\|[\s:|-]+\|?$", ln.strip())]
             ops = max(0, len(rows) - 1)  # минус шапка
             intc = sum(1 for f in staged.rglob("*.md")
-                       if (sc.read_frontmatter(f) or {}).get("type") == "internal-contract")
+                       if _fm(f).get("type") == "internal-contract")
             if ops == 0 and intc:
                 gate.add("⚠", "SDLC-04", f"раздел есть, но пуст, а в комплекте {intc} описаний "
                          "собственных методов (internal-contract) — проверьте, есть ли у сервиса "
@@ -538,7 +680,7 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     # согласованию, если стандарт требует согласования)
     types: Dict[str, int] = {}
     for f in staged.rglob("*.md"):
-        t = (sc.read_frontmatter(f) or {}).get("type")
+        t = _fm(f).get("type")
         if t:
             types[t] = types.get(t, 0) + 1
     outside = {t: n for t, n in types.items() if t not in _PLATFORM_TYPES}
@@ -559,8 +701,12 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                  check="типы документов")
     # SDLC-08: каталоги карточек без README-реестра
     no_readme: List[str] = []
-    for d in sorted({f.parent for f in staged.rglob("*.md") if (sc.read_frontmatter(f) or {}).get("id")}):
+    for d in sorted({f.parent for f in staged.rglob("*.md") if _fm(f).get("id")}):
         if d == staged or d.name in _SERVICE_DIRS:
+            continue
+        # мини-комплект зоны modules/<имя>/ (Д-49 п. 4): не каталог карточек комплекта —
+        # состав ведёт его README (паспорт границы), у spec/ и interface/ реестра нет по шаблону
+        if d.relative_to(staged).parts[0] == "modules":
             continue
         if not (d / "README.md").is_file():
             no_readme.append(d.relative_to(staged).as_posix())
@@ -815,7 +961,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
              layout: Optional[Path] = None, no_validator: bool = False,
              sources: Optional[Path] = None, strict: bool = False,
              fmt: str = "log",
-             questions: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
+             questions: Optional[Path] = None, after_step: bool = False,
+             baseline: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
     тестов); "table" — markdown-таблица с группировкой и легендой меток.
 
@@ -824,7 +971,14 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
     сборки «из docs/», без ожидания журнала вопросов, с проверкой CODEOWNERS и
     манифеста в самом репозитории; --out в этом режиме не имеет смысла и
     отклоняется. Отчёт читается как расстояние комплекта до действующего
-    стандарта, а не как проверка переноса."""
+    стандарта, а не как проверка переноса.
+
+    Лёгкий режим after_step (Д-49 п. 1): та же сборка и валидатор платформы, прибор
+    selfcheck не гоняется (вердикт прибора — в сдаче захода), критерии конца миграции
+    понижены по закрытому списку _AFTER_STEP_DOWNGRADE, --out отклоняется; вердикт —
+    «ФОРМА ПЕРЕНОСИМА / ФОРМА НЕ ПЕРЕНОСИМА», слово READY не печатается. baseline —
+    прошлый отчёт гейта (--report): под итогом новые и ушедшие блокеры (оба режима)."""
+    _FM_CACHE.clear()
     gate = Gate()
     docs, docs_repo = detect_layout(src_root, docs_name)
     if docs is None:
@@ -832,13 +986,18 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                  "(рабочий репозиторий несёт комплект в docs/; у репозитория документации "
                  "матрица трассировки лежит в корне — тогда гейт сам включает режим "
                  "репозитория документации)")
-        lines = gate.render() + ["ИТОГ: NOT READY"]
-        return lines, False, {"verdict": "NOT READY", "lines": gate.lines}
+        lines = gate.render() + [f"ИТОГ: {_verdict(False, after_step)}"]
+        return lines, False, {"verdict": _verdict(False, after_step), "lines": gate.lines}
     if docs_repo and out is not None:
         gate.add("✗", "TRF-01", "--out не применим в режиме репозитория документации: "
                  "--src уже является репозиторием назначения")
-        lines = gate.render() + ["ИТОГ: NOT READY"]
-        return lines, False, {"verdict": "NOT READY", "lines": gate.lines}
+        lines = gate.render() + [f"ИТОГ: {_verdict(False, after_step)}"]
+        return lines, False, {"verdict": _verdict(False, after_step), "lines": gate.lines}
+    if after_step and out is not None:
+        gate.add("✗", "TRF-01", "--out не применим в режиме --after-step: лёгкий гейт "
+                 "проверяет форму после захода, перенос — только полным гейтом")
+        lines = gate.render() + [f"ИТОГ: {_verdict(False, after_step)}"]
+        return lines, False, {"verdict": _verdict(False, after_step), "lines": gate.lines}
     tmp = None
     if keep is not None:
         staged = keep
@@ -873,7 +1032,11 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      check="служебные файлы миграции")
         if sources is None:
             sources = find_sources(src_root)
-        if sources is None and docs_repo:
+        if after_step:
+            gate.add("i", "ПРИБОР", "selfcheck не гонялся (режим --after-step), вердикт "
+                     "прибора — в сдаче", check="прибор selfcheck")
+            check_staged_root(gate, staged)
+        elif sources is None and docs_repo:
             gate.add("i", "ПРИБОР", "режим репозитория документации: выгрузки источников здесь "
                      "нет по построению — прибор идёт по внутренним сторожам; сверка с "
                      "источником — в рабочем репозитории (--sources, если нужна)")
@@ -881,9 +1044,12 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
             gate.add("⚠", "ПРИБОР", "каталог выгрузки источников не найден "
                      "(sources/confluence, confluence) — прибор идёт без сверки "
                      "с источником; задайте --sources")
-        run_selfcheck(gate, staged, sources, strict)
+        if not after_step:
+            run_selfcheck(gate, staged, sources, strict)
         check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
                                   sources, questions)
+        if after_step:
+            gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
         check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
@@ -895,8 +1061,32 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         lines = gate.render_table() if fmt == "table" else gate.render()
         if fmt == "table":
             lines.append("")
-        lines.append(f"ИТОГ: {'READY' if ready else 'NOT READY'} — блокеров {gate.blockers}, "
-                     f"предупреждений {n_warn}")
+        delta: Optional[Tuple[List[Tuple[str, str, str]], int]] = None
+        base_err = ""
+        if baseline is not None:
+            base = read_baseline(baseline)
+            if base is None:
+                base_err = (f"✗ --baseline: в {baseline} нет таблицы гейта «Статус | Критерий | "
+                            "Проверка | Результат» — дельта не посчитана")
+            else:
+                delta = baseline_delta(gate, base)
+        new_txt = "—" if delta is None else str(len(delta[0]))
+        if after_step:
+            lines.append(f"ИТОГ: {_verdict(ready, True)}" + ("" if ready else
+                         f": блокеров {gate.blockers}") + f" (новых {new_txt}), "
+                         f"предупреждений {n_warn}")
+        else:
+            lines.append(f"ИТОГ: {'READY' if ready else 'NOT READY'} — блокеров {gate.blockers}"
+                         + (f" (новых {new_txt})" if baseline is not None else "")
+                         + f", предупреждений {n_warn}")
+        if base_err:
+            lines.append(base_err)
+        if delta is not None:
+            new, gone = delta
+            lines.append(f"новых блокеров {len(new)}" + (": " if new else "")
+                         + "; ".join(f"[{c}] {t[:160]}" for c, _, t in new[:20])
+                         + ("…" if len(new) > 20 else ""))
+            lines.append(f"ушло {gone} (относительно {baseline.name})")
         if fmt == "table":
             lines.append("")
             lines.append(_LEGEND)
@@ -928,7 +1118,9 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                     "cross": bool(owner), "oq": oq or "—", "kind": kind,
                     "affected": affected,
                     "closure": (issue.get("closure") if issue else None) or _CLOSURE_BY_KIND[kind]})
-        return lines, ready, {"verdict": "READY" if ready else "NOT READY",
+        return lines, ready, {"verdict": _verdict(ready, after_step),
+                              "after_step": after_step,
+                              "new_blockers": None if delta is None else len(delta[0]),
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
@@ -953,13 +1145,19 @@ _CLOSURE_BY_KIND = {
 _MD_LINK_RE = re.compile(r"\]\(([^)\s#]+\.md)(?:#[^)]*)?\)")
 
 
+def _verdict(ready: bool, after_step: bool) -> str:
+    if after_step:
+        return "ФОРМА ПЕРЕНОСИМА" if ready else "ФОРМА НЕ ПЕРЕНОСИМА"
+    return "READY" if ready else "NOT READY"
+
+
 def card_referrers(staged: Path) -> Dict[str, List[str]]:
     """ID карточки → ID карточек, ссылающихся на неё относительной ссылкой («Затронуто»
     долгом шире FROM-ID — комментарий платформы 13.10; считает прибор, не человек).
     Матрица и README-реестры не считаются: они ссылаются на всё."""
     id_of: Dict[Path, str] = {}
     for f in staged.rglob("*.md"):
-        fid = (sc.read_frontmatter(f) or {}).get("id")
+        fid = _fm(f).get("id")
         if fid and f.name.lower() != "readme.md":
             id_of[f.resolve()] = str(fid)
     out: Dict[str, set] = {}
@@ -1036,8 +1234,17 @@ def run_gate_table_lines(data: dict) -> List[str]:
     for r in data.get("lines", []):
         g.add(r["mark"], r["criterion"], r["text"], r.get("check"))
     lines = g.render_table()
-    lines += ["", f"ИТОГ: {data.get('verdict')} — блокеров {data.get('blockers', 0)}, "
-                  f"предупреждений {data.get('warnings', 0)}", "", _LEGEND]
+    nb = data.get("new_blockers")
+    new_txt = "—" if nb is None else str(nb)
+    if data.get("after_step"):
+        itog = (f"ИТОГ: {data.get('verdict')}" + ("" if not data.get("blockers") else
+                f": блокеров {data.get('blockers', 0)}") + f" (новых {new_txt}), "
+                f"предупреждений {data.get('warnings', 0)}")
+    else:
+        itog = (f"ИТОГ: {data.get('verdict')} — блокеров {data.get('blockers', 0)}"
+                + (f" (новых {new_txt})" if nb is not None else "")
+                + f", предупреждений {data.get('warnings', 0)}")
+    lines += ["", itog, "", _LEGEND]
     return lines
 
 
@@ -1046,7 +1253,12 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
     git = data.get("src_git") or {}
     repo_kind = ("Репозиторий документации (режим проверки на месте: комплект в корне, перенос не "
                  "выполняется)" if data.get("docs_repo") else "Рабочий репозиторий")
-    head = [f"# Гейт переноса: {src_root.name}", "",
+    head = [f"# Гейт переноса: {src_root.name}", ""]
+    if data.get("after_step"):
+        head += ["Режим: после захода (--after-step) — форма комплекта в целевой раскладке; "
+                 "прибор selfcheck не гонялся, критерии конца миграции понижены; перенос — "
+                 "только полным гейтом.", ""]
+    head += [
             f"Дата: {_dt.date.today().isoformat()}. Вид допуска: **техническое подключение сервиса** "
             "(допуск задач к разработке — платформа). "
             f"{repo_kind}: `{src_root}`, коммит `{git.get('commit', '?')}`, ветка "
@@ -1101,7 +1313,8 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description="Гейт переноса комплекта src-<service> → docs-<service>: READY / NOT READY")
+        description="Гейт переноса комплекта src-<service> → docs-<service>: READY / NOT READY; "
+                    "--after-step — форма после захода: ФОРМА ПЕРЕНОСИМА / НЕ ПЕРЕНОСИМА")
     ap.add_argument("--src", required=True, type=Path, help="корень клона src-репозитория")
     ap.add_argument("--docs", default="docs",
                     help="каталог комплекта внутри src (docs); «.» — комплект в корне (режим "
@@ -1129,6 +1342,11 @@ def main() -> int:
     ap.add_argument("--report", type=Path, default=None,
                     help="записать таблицу с шапкой в markdown-файл (приложение к протоколу)")
     ap.add_argument("--json", action="store_true", help="дополнительно вывести JSON")
+    ap.add_argument("--after-step", action="store_true",
+                    help="лёгкий гейт после захода (Д-49): без повторного selfcheck, критерии конца "
+                         "миграции понижены, вердикт «ФОРМА ПЕРЕНОСИМА / НЕ ПЕРЕНОСИМА», --out отклоняется")
+    ap.add_argument("--baseline", type=Path, default=None,
+                    help="прошлый отчёт гейта (--report): под итогом новые и ушедшие блокеры")
     a = ap.parse_args()
     fmt = "log" if a.log else "table"
     try:
@@ -1136,7 +1354,8 @@ def main() -> int:
                                       a.validator, a.layout, a.no_validator,
                                       a.sources.resolve() if a.sources else None,
                                       a.strict, fmt,
-                                      a.questions.resolve() if a.questions else None)
+                                      a.questions.resolve() if a.questions else None,
+                                      a.after_step, a.baseline)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2

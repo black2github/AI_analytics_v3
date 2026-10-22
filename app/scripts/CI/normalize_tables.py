@@ -3335,7 +3335,9 @@ def check_clean_document(md_path: Path,
                 resolved.relative_to(root)
             except ValueError:
                 # мини-комплект зоны «вне Экосистемы» рядом с docs/ — законная
-                # цель карточки вызова (Д-46: контракт интерфейса модуля)
+                # цель карточки вызова (Д-46: контракт интерфейса модуля); это старое
+                # место, переходный период — по Д-49 зона в docs/modules/<имя>/, и
+                # ссылка туда — цель внутри комплекта, сюда не доходит
                 try:
                     resolved.relative_to((root.parent / "modules").resolve())
                     continue

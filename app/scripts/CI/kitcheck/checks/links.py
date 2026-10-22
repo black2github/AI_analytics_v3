@@ -246,7 +246,8 @@ def check_relative_links(docs: Path) -> Tuple[List[str], bool]:
     вырезаются (в них ссылки — иллюстрации)."""
     broken: List[Tuple[str, str]] = []
     total = 0
-    for md in _kit_md(docs):
+    # мини-комплекты зоны docs/modules/ — тоже: ссылки зоны на docs/ и обратно (Д-49)
+    for md in _kit_md(docs, zone=True):
         try:
             text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:

@@ -189,7 +189,10 @@ def check_passport_after_table(docs: Path) -> List[str]:
 
 # --- B9 (Т13): счётчик открытых вопросов по классам ---
 _OQ_HEAD_RE = re.compile(r"^##\s+OQ-\d+\s*—\s*(\d{4}-\d{2}-\d{2})", re.M)
-_OQ_STATUS_RE = re.compile(r"^-\s*Статус:\s*(.+)$", re.M)
+# строка статуса записи журнала в обеих формах: «- **Статус:** …» (шаблон канона) и
+# «- Статус: …» (КК, 331 запись); один дом — здесь, гейт переноса импортирует (Д-49 п. 3)
+OQ_STATUS_RE = re.compile(r"^\s*-\s*(?:\*\*Статус:?\*\*:?|Статус:)\s*([^\n]+)$", re.M)
+_OQ_STATUS_RE = OQ_STATUS_RE
 _CLOSED = ("закрыт", "решен", "решён", "реализован", "реализовано", "снят")
 
 
@@ -204,6 +207,11 @@ def _oq_class(status: str) -> str:
     if any(w.startswith(c.replace("ё", "е")) for c in _CLOSED):
         return "закрыт"
     return "прочие"
+
+
+# класс статуса записи журнала (открыт / частично / зафиксировано / закрыт / прочие) —
+# общий для сторожа B9 и гейта переноса (Д-49 п. 3)
+oq_status_class = _oq_class
 
 
 def oq_class_counter(oq: Path, today: Optional[date] = None) -> List[str]:

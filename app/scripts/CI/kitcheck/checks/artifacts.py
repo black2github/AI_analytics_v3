@@ -199,7 +199,7 @@ def check_file_artifacts(docs: Path) -> Tuple[List[str], bool]:
             and "img" not in p.relative_to(docs).parts}
     linked: set = set()
     broken: List[Tuple[str, str]] = []
-    for md in _kit_md(docs):
+    for md in _kit_md(docs, zone=True):  # ссылки зоны docs/modules/ на files/ — тоже
         try:
             text = _fs.read_text(md, encoding="utf-8", errors="replace")
         except OSError:

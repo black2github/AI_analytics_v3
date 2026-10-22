@@ -25,7 +25,7 @@
 # страницы) в срезе 1 не сверяются — честная пометка в отчёте.
 
 import argparse
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 import re
 import subprocess
@@ -45,13 +45,13 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 try:
     from kitcheck.md import (  # noqa: E402,F401 — примитивы markdown (этап 1б); имена
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,  # сохраняются в selfcheck для
-        gitlab_slug, in_dot_dir, is_task_file,  # утилит и тестов, которые зовут их
+        gitlab_slug, in_dot_dir, in_module_zone, is_task_file,  # утилит и тестов, которые зовут их
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,  # как selfcheck.*
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402,F401
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,
-        gitlab_slug, in_dot_dir, is_task_file,
+        gitlab_slug, in_dot_dir, in_module_zone, is_task_file,
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 try:
@@ -84,6 +84,7 @@ try:
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
+    from kitcheck.checks.zone import check_module_zone  # noqa: E402 — зона docs/modules/
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -110,6 +111,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
+    from .kitcheck.checks.zone import check_module_zone  # type: ignore  # noqa: E402
 
 
 def index_sources(root: Path):
@@ -237,9 +239,17 @@ def _run_impl(docs: Path, sources: Optional[Path],
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
+    zone_cards: Dict[str, Path] = {}   # page_id -> файл мини-комплекта зоны docs/modules/
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
+            continue
+        if in_module_zone(p, docs):
+            # мини-комплект зоны «вне Экосистемы» (Д-49 п. 4): не карточка комплекта —
+            # перепись, схема типов, реестр ID, сверка с выгрузкой его не касаются; page_id
+            # нужен сторожу разметки подсервисов, сводная строка — _kc_module_zone
+            for _pid in page_ids(read_frontmatter(p) or {}):
+                zone_cards.setdefault(_pid, p)
             continue
         if is_task_file(p, docs):
             # строка-сигнал без счётчика: постановка — источник правок,
@@ -464,7 +474,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
     # порядок реестра — порядок строк отчёта; вердикт — в run_checks
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
-                    fm_schema_issues=fm_schema_issues, groups=groups, idx=idx)
+                    fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
+                    zone_cards=zone_cards)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     all_ok = all_ok and _k_ok
@@ -494,6 +505,7 @@ class _KitCtx:
     fm_schema_issues: List[Tuple[str, List[str], bool]]
     groups: Dict[str, List[Path]]
     idx: Dict[str, Path]
+    zone_cards: Dict[str, Path] = field(default_factory=dict)
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -780,7 +792,7 @@ def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     Сколько закроет нормализатор — сухим прогоном по тексту файла; остаток —
     вложенные условия, человеку. Перечень по файлам — только в --out."""
     per: List[Tuple[str, int, int]] = []
-    for p in _kit_md(ctx.docs):
+    for p in _kit_md(ctx.docs, zone=True):  # нотация применяется и к зоне docs/modules/ (Д-49)
         n, rest = nt.branch_form_counts(_fs.read_text(p, encoding="utf-8", errors="replace"))
         if n:
             per.append((p.relative_to(ctx.docs).as_posix(), n, rest))
@@ -827,6 +839,13 @@ def _kc_task_tags(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Задача объявлена введённой в журнале/состоянии координации, а тега src/<ID> нет;
     страница числится замороженной по задаче, введённой тегом (2026-10-24). Только ⚠ и i."""
     rep, _ = _safe(lambda: (check_task_tags(ctx.docs), True))
+    return rep, True
+
+
+def _kc_module_zone(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Зона «вне Экосистемы» docs/modules/<имя>/ (Д-49 п. 4): сводная i-строка, мини-комплект
+    без README, переходный сторож старого места modules/ рядом с docs/. Только ⚠ и i."""
+    rep, _ = _safe(lambda: (check_module_zone(ctx.docs), True))
     return rep, True
 
 
@@ -923,7 +942,7 @@ def _kc_sources_protocol(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         # сторож разметки подсервисов (П-4): без таблицы в профиле
         # возвращает пусто и молчит
         sm_rep, sm_ok = _safe(check_subservice_mapping, docs, sources,
-                              {pid: fs[0] for pid, fs in groups.items()})
+                              {**ctx.zone_cards, **{pid: fs[0] for pid, fs in groups.items()}})
         all_ok = all_ok and sm_ok
         report.extend(sm_rep)
         # сторож среза канона (П-5b): без строки в профиле молчит
@@ -1132,6 +1151,7 @@ KIT_CHECKS: List[Check] = [
     Check("review_guards", _kc_review_guards, affects_verdict=False),
     Check("oq_classes", _kc_oq_classes, affects_verdict=False),
     Check("task_tags", _kc_task_tags, affects_verdict=False),
+    Check("module_zone", _kc_module_zone, affects_verdict=False),
 ]
 
 

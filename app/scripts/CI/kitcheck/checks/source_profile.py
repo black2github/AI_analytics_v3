@@ -157,12 +157,22 @@ def check_subservice_mapping(docs: Path, sources: Path,
         parts = rel.split("/")
         seg = (parts[1] if len(parts) > 2 and parts[0] == "srs"
                and parts[1] not in _KNOWN_TYPES else None)
+        # мини-комплект зоны «вне Экосистемы» живёт в docs/modules/<имя>/ (Д-49 п. 4)
+        in_zone = rel.startswith("modules/")
         if kind == "external":
+            if in_zone:
+                continue
             ok = False
             report.append(
                 f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
-                "«вне Экосистемы», карточке в docs/ не место "
-                "(мини-комплект вне комплекта, conventions §3.1)")
+                "«вне Экосистемы», карточке комплекта не место — дом "
+                "мини-комплект docs/modules/<имя>/ (conventions §3.1)")
+        elif in_zone:
+            ok = False
+            report.append(
+                f"✗ разметка: {rel} — источник «{title[:50]}» не размечен "
+                "«вне Экосистемы», а файл лежит в мини-комплекте зоны "
+                "docs/modules/ — зона только для страниц вне Экосистемы")
         elif kind == "slug" and seg != slug:
             ok = False
             report.append(

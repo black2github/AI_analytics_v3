@@ -53,12 +53,14 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
-    from source_coverage import find_kit_file, is_zone_row, plan_slugs, read_inventory  # noqa: E402
+    from source_coverage import (  # noqa: E402
+        artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
-    from .source_coverage import find_kit_file, is_zone_row, plan_slugs, read_inventory  # type: ignore  # noqa: E402
+    from .source_coverage import (  # type: ignore  # noqa: E402
+        artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -505,8 +507,19 @@ def check(matrix_path: Path, docs_root: Path,
     slugs = plan_slugs(plan)[0] if plan is not None else set()
     # Д-46: титулы страниц зоны «вне Экосистемы» по описи — цель долга формы 1 в зоне
     inv_file = find_kit_file(docs_root, "inventory.md")
-    zone_titles = ([r["title"] for r in read_inventory(inv_file).values()
-                    if r.get("title") and is_zone_row(r)] if inv_file is not None else [])
+    zone_rows = ({pid: r for pid, r in read_inventory(inv_file).items()
+                  if r.get("title") and is_zone_row(r)} if inv_file is not None else {})
+    zone_titles = [r["title"] for r in zone_rows.values()]
+    # Д-49: мини-комплект зоны — docs/modules/<имя>/ (старое место modules/ рядом с docs/ —
+    # переходный период); страница зоны покрыта файлом мини-комплекта с её page_id
+    zone_files: Dict[str, Path] = {}
+    if zone_rows:
+        for base in (docs_root / "modules", docs_root.parent / "modules"):
+            if base.is_dir():
+                for zp in sorted(base.rglob("*.md")):
+                    for zpid in artifact_page_ids(zp):
+                        zone_files.setdefault(zpid, zp)
+    zone_pid_by_title = {r["title"]: pid for pid, r in zone_rows.items()}
     zone_warn: List[str] = []
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
@@ -562,11 +575,21 @@ def check(matrix_path: Path, docs_root: Path,
                 unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
             zt = _zone_target(name, zone_titles) if name else None
-            if zt:
+            zf = zone_files.get(zone_pid_by_title.get(zt, "")) if zt else None
+            if zt and zf is not None:
+                try:
+                    zrel = zf.relative_to(docs_root.parent).as_posix()
+                except ValueError:
+                    zrel = zf.as_posix()
+                zone_warn.append(
+                    f"⚠ долг {', '.join(from_ids)} «{name}» — цель в зоне «вне Экосистемы» "
+                    f"покрыта мини-комплектом ({zrel}): долг формы 1 не заводится — снять "
+                    "строку, в карточке — ссылка на файл мини-комплекта (Д-49)")
+            elif zt:
                 zone_warn.append(
                     f"⚠ долг {', '.join(from_ids)} «{name}» — цель в зоне «вне Экосистемы» "
                     f"(опись: «{zt}»): долг формы 1 не заводится, цель — мини-комплект "
-                    "modules/<имя>/ (Д-46)")
+                    "docs/modules/<имя>/ (Д-49)")
             fm = _FOREIGN_SKILL_RE.search(raw)
             sign = foreign_target_sign(name, fm.group(1), foreign_signs, own_tags) if (fm and name) else None
             if sign:
