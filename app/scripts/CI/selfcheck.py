@@ -83,6 +83,7 @@ try:
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
+    from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -108,6 +109,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
+    from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
 
 
 def index_sources(root: Path):
@@ -821,6 +823,13 @@ def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep, True
 
 
+def _kc_task_tags(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Задача объявлена введённой в журнале/состоянии координации, а тега src/<ID> нет;
+    страница числится замороженной по задаче, введённой тегом (2026-10-24). Только ⚠ и i."""
+    rep, _ = _safe(lambda: (check_task_tags(ctx.docs), True))
+    return rep, True
+
+
 def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1122,6 +1131,7 @@ KIT_CHECKS: List[Check] = [
     Check("branch_form", _kc_branch_form, affects_verdict=False),
     Check("review_guards", _kc_review_guards, affects_verdict=False),
     Check("oq_classes", _kc_oq_classes, affects_verdict=False),
+    Check("task_tags", _kc_task_tags, affects_verdict=False),
 ]
 
 
