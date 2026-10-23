@@ -142,6 +142,16 @@ README-реестра» (среди них `archive/…`), FMT-01 «пример
 
 ## Канон
 
-Ждёт «С1 влит» (`meta/d49-gate-after-step`): затем ветка `meta/d49-tool` от `master` в отдельном
-рабочем дереве, копии прибора, раздел `transfer_gate.py` в `_meta/tools/README.md`, сверка
-`tr -d '\r'`, SF ✓, команды владельцу.
+Ветка `meta/d49-tool` от `origin/master` `53ea2b2` (после вливания С1 `meta/d49-gate-after-step`),
+рабочее дерево `C:\tmp\canon-d49`. До копирования: десять файлов прибора в каноне совпадали с
+analyzer `3f5be18c` (база до Д-49) — чужих правок прибора нет.
+
+- Копии из analyzer `69426dca`: `transfer_gate.py`, `selfcheck.py`, `source_coverage.py`,
+  `link_debts.py`, `normalize_tables.py`, `kitcheck/md.py`, `kitcheck/checks/{artifacts,links,
+  review_guards,source_profile}.py`, новый `kitcheck/checks/zone.py` — сверка `tr -d '\r'`: совпадают.
+- `_meta/tools/README.md`, раздел `transfer_gate.py`: лёгкий режим (с проверкой корня сборки),
+  дельта `--baseline`, строка статуса журнала, зона «вне Экосистемы» — +32 строки, без Д-NN.
+- `_meta/structural-facts.md`, SF-07: в потребители добавлены `normalize_tables.py`,
+  `transfer_gate.py`, `kitcheck/md.py`, `kitcheck/checks/zone.py`, `kitcheck/checks/source_profile.py`,
+  `_meta/tools/README.md` (носители сигнатуры `modules/<имя>/`). Сторож ✓ по всем 7 фактам.
+- **Влито:** канон `ca41ef5`, merge `45e6d38` в `master` (2026-10-23).
