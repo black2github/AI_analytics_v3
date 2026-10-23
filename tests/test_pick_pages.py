@@ -296,3 +296,54 @@ class TestExtract:
         f = tmp_path / "файл.txt"
         f.write_text("x", encoding="utf-8")
         assert main([str(new), str(f), "--pages", str(_ids(tmp_path, "2"))]) == 2
+
+
+class TestClassify:
+    """Причина замены (2026-10-23): отличить починку экспортёра (только маркеры)
+    от правки страницы в Confluence (текст) и от смены страничного флага."""
+
+    def test_marker_kind_flip_is_markup_only(self):
+        from app.scripts.pick_pages import MARKUP_ONLY, classify_change
+        old = "---\nstatus: draft\n---\n\n{++GBO-1: ЭФ состоит из трех страниц:++}\n"
+        new = "---\nstatus: draft\n---\n\n{--GBO-1: ЭФ состоит из трех страниц:--}\n"
+        assert classify_change(old, new) == MARKUP_ONLY
+
+    def test_island_span_added_is_markup_only(self):
+        from app.scripts.pick_pages import MARKUP_ONLY, classify_change
+        old = '<table><tr><td><ol><li>Если все исполнены</li></ol></td></tr></table>\n'
+        new = ('<table><tr><td><ol><li><span class="critic-ins" data-task="GBO-1">'
+               'Если все исполнены</span></li></ol></td></tr></table>\n')
+        assert classify_change(old, new) == MARKUP_ONLY
+
+    def test_status_cell_sign_flip_is_markup_only(self):
+        from app.scripts.pick_pages import MARKUP_ONLY, classify_change
+        old = "| a | status |\n| --- | --- |\n| текст | +GBO-1 |\n"
+        new = "| a | status |\n| --- | --- |\n| текст | -GBO-1 |\n"
+        assert classify_change(old, new) == MARKUP_ONLY
+
+    def test_text_change_is_text_changed(self):
+        from app.scripts.pick_pages import TEXT_CHANGED, classify_change
+        old = "---\n---\n\n{++GBO-1: старый текст++}\n"
+        new = "---\n---\n\n{--GBO-1: новый текст--}\n"
+        assert classify_change(old, new) == TEXT_CHANGED
+
+    def test_flag_only(self):
+        from app.scripts.pick_pages import FLAG_ONLY, classify_change
+        old = "---\nstatus: draft\nunapproved_jira: GBO-1\n---\n\nтекст\n"
+        new = "---\nstatus: draft\n---\n\nтекст\n"
+        assert classify_change(old, new) == FLAG_ONLY
+
+    def test_plan_and_report_carry_the_kind(self, tmp_path):
+        from app.scripts.pick_pages import MARKUP_ONLY, TEXT_CHANGED
+        arc, new = _stand(tmp_path)
+        _page(arc, "Сервис/А.md", "2", "старый А, см. {++GBO-1: Б++}\n")
+        _page(new, "Сервис/А.md", "2", "старый А, см. {--GBO-1: Б--}\n")
+        plan = build_plan(new, arc, ["2", "4"])
+        kinds = {p["id"]: p["kind"] for p in plan["pages"]}
+        assert kinds["2"] == MARKUP_ONLY and kinds["4"] == TEXT_CHANGED
+        out = tmp_path / "r.md"
+        assert main([str(new), str(arc), "--pages", str(_ids(tmp_path, "2 4")), "--dry-run",
+                     "--out", str(out)]) == 0
+        text = out.read_text(encoding="utf-8")
+        assert f"| заменена: {MARKUP_ONLY} | 1 |" in text
+        assert f"## Заменена — {TEXT_CHANGED} (1)" in text
