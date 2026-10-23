@@ -187,3 +187,65 @@ class TestExporterHook:
         acc = new_accumulator()
         _resolve_page_content(self._page(CLEAN_PROSE), False, True, acc, "страница")
         assert called == [] and acc["prom_invariant"] == []
+
+
+class TestNormalization1911:
+    """Нормализация 1.9.11: на выгрузке КК 1.9.10 из 76 сигналов 50 были ложными —
+    нумерация списков (28) и «тегообразный» текст (<vpan>, <XS>, XML в коде — 22)."""
+
+    def test_ordered_list_numbers_not_leaked(self):
+        assert _check("<ol><li>первый</li><li>второй<ol><li>вложенный</li></ol></li></ol>").ok
+
+    def test_latin_placeholders_in_prose(self):
+        assert _check("<p>Поле &lt;vpan&gt; и &lt;XS&gt; обязательны</p>").ok
+
+    def test_latin_placeholders_in_island(self):
+        assert _check(_island("<p>Поле &lt;vpan&gt;, &lt;br&gt; и &lt;<span>id&gt;</span></p>")).ok
+
+    def test_code_block_with_xml_and_html(self):
+        html = ('<ac:structured-macro ac:name="code"><ac:plain-text-body><![CDATA['
+                '<client><messageId>1</messageId></client><div class="x">т</div>'
+                ']]></ac:plain-text-body></ac:structured-macro>')
+        assert _check(html).ok
+
+    def test_literal_br_text(self):
+        assert _check("<p>перенос через &lt;br&gt; в ячейке</p>").ok
+
+    # --- НЕсрабатывание: настоящая потеря по-прежнему видна ---
+
+    def test_lost_latin_placeholder_detected(self):
+        html = "<p>Поле &lt;vpan&gt; обязательно</p>"
+        chk = _check(html, "Поле обязательно")
+        assert chk.lost_reject == Counter({"vpan": 1})
+
+    def test_lost_list_item_detected(self):
+        html = "<ol><li>первый</li><li>второй</li></ol>"
+        chk = _check(html, "1. первый")
+        assert chk.lost_reject == Counter({"второй": 1})
+
+    def test_number_text_in_paragraph_kept(self):
+        # «N. » в начале строки снимается только как нумерация; число внутри текста — слово
+        assert _check("<p>Шаг 1. Проверка</p>").ok
+        assert words(md_plain("Шаг 1. Проверка")) == Counter({"шаг": 1, "1": 1, "проверка": 1})
+
+    def test_paragraph_starting_with_number(self):
+        # чёрный и цветной абзац, начинающиеся с «1. », и такая же ячейка таблицы
+        html = (f'<p>1. Чёрный пункт</p><p><span style="color: {GREEN};">2. Новый пункт</span></p>'
+                f'<table><tbody><tr><th>А</th></tr><tr><td>3. Ячейка</td></tr></tbody></table>'
+                + _island('<p>4. В острове</p>'))
+        chk = _check(html)
+        assert chk.ok, chk.summary()
+
+    def test_link_target_with_parentheses(self):
+        # адрес со скобками: (Copy) у figma, якорь с (2FAOperationStrategy)
+        html = ('<p>Макет: <a href="https://f.com/d/X-(Copy)?node-id=19-278585&amp;t=Yh-4">ссылка</a>, '
+                'смотри <a href="#id-Стратегия2(2FAOperationStrategy)-startOper">ниже</a></p>')
+        assert _check(html).ok
+
+    def test_negative_number_cell_is_text(self):
+        html = '<table><tbody><tr><th>Сдвиг</th></tr><tr><td>-3</td></tr><tr><td>+6</td></tr></tbody></table>'
+        assert _check(html).ok
+
+    def test_status_cell_still_stripped(self):
+        md = f"| a | status |\n| --- | --- |\n| б | +{TASK} |\n| в | -UNKNOWN-ff00ff |"
+        assert words(md_plain(md)) == Counter({"a": 1, "б": 1, "в": 1})
