@@ -347,3 +347,86 @@ class TestClassify:
         text = out.read_text(encoding="utf-8")
         assert f"| заменена: {MARKUP_ONLY} | 1 |" in text
         assert f"## Заменена — {TEXT_CHANGED} (1)" in text
+
+
+class TestTextAdded:
+    """Причина «дополнен текст» (1.9.12): старый текст без маркеров целиком сохранился,
+    добавились строки — восстановление экспортёром 1.9.11 строк таблиц за первым
+    <tbody> и списков в списке. Пары: срабатывание на трёх нотациях и НЕсрабатывание
+    на удалении, замене слова, перестановке и случайном совпадении слова ниже."""
+
+    def _kind(self, old, new):
+        from app.scripts.pick_pages import classify_change
+        return classify_change(old, new)
+
+    def test_pipe_rows_restored(self):
+        from app.scripts.pick_pages import TEXT_ADDED
+        old = "# Логика\n\n| Шаг | Описание |\n| --- | --- |\n\nдалее\n"
+        new = "# Логика\n\n| Шаг | Описание |\n| --- | --- |\n| 1 | запрос |\n| 2 | ответ |\n\nдалее\n"
+        assert self._kind(old, new) == TEXT_ADDED
+
+    def test_html_rows_restored_multiline(self):
+        from app.scripts.pick_pages import TEXT_ADDED
+        old = '<table>\n<tbody>\n<tr>\n<td colspan="2">Шаг</td>\n</tr>\n</tbody>\n</table>\n'
+        new = ('<table>\n<tbody>\n<tr>\n<td colspan="2">Шаг</td>\n</tr>\n<tr>\n<td>1</td>\n'
+               '<td>результат</td>\n</tr>\n</tbody>\n</table>\n')
+        assert self._kind(old, new) == TEXT_ADDED
+
+    def test_island_row_restored_inside_one_line(self):
+        from app.scripts.pick_pages import TEXT_ADDED
+        old = "| a | <table><tr><td>шапка</td></tr></table> |\n"
+        new = "| a | <table><tr><td>шапка</td></tr><tr><td>шаг 1</td></tr></table> |\n"
+        assert self._kind(old, new) == TEXT_ADDED
+
+    def test_restored_with_marker_changes(self):
+        from app.scripts.pick_pages import TEXT_ADDED
+        old = "{++GBO-1: Каждая анкета++} может\n"
+        new = "{++GBO-1: Каждая ++}анкета может\n- [Метод](x.md)\n"
+        assert self._kind(old, new) == TEXT_ADDED
+
+    def test_list_in_list_restored(self):
+        from app.scripts.pick_pages import TEXT_ADDED
+        old = "<td><ul></ul></td>\n"
+        new = '<td><ul><ul><li><a href="x.md">Метод</a></li></ul></ul></td>\n'
+        assert self._kind(old, new) == TEXT_ADDED
+
+    # --- НЕсрабатывание ---
+
+    def test_deleted_line_is_text_changed(self):
+        from app.scripts.pick_pages import TEXT_CHANGED
+        assert self._kind("а\nб\nв\n", "а\nв\nг\n") == TEXT_CHANGED
+
+    def test_replaced_word_is_text_changed(self):
+        from app.scripts.pick_pages import TEXT_CHANGED
+        assert self._kind("| Да | один |\n", "| Нет | один |\n") == TEXT_CHANGED
+
+    def test_reordered_is_text_changed(self):
+        from app.scripts.pick_pages import TEXT_CHANGED
+        assert self._kind("<tr><td>тело</td></tr><tr><td>шапка</td></tr>\n",
+                          "<tr><td>шапка</td></tr><tr><td>тело</td></tr>\n") == TEXT_CHANGED
+
+    def test_word_found_further_down_is_not_enough(self):
+        # слово «Да» заменено на «Нет», а «Да» встречается ниже на странице — проверка
+        # локальна по блоку, правка не маскируется под дописывание
+        from app.scripts.pick_pages import TEXT_CHANGED
+        old = "| Да | один |\n\nтекст\n\n| Да | два |\n"
+        new = "| Нет | один |\n\nтекст\n\n| Да | два |\n"
+        assert self._kind(old, new) == TEXT_CHANGED
+
+    def test_markup_only_and_flag_unchanged(self):
+        from app.scripts.pick_pages import FLAG_ONLY, MARKUP_ONLY
+        assert self._kind("{++GBO-1: т++}\n", "{--GBO-1: т--}\n") == MARKUP_ONLY
+        assert self._kind("---\nunapproved_jira: GBO-1\n---\nт\n", "---\n---\nт\n") == FLAG_ONLY
+
+    def test_report_section_and_console(self, tmp_path, capsys):
+        from app.scripts.pick_pages import TEXT_ADDED
+        arc, new = _stand(tmp_path)
+        _page(arc, "Сервис/А.md", "2", "| Шаг |\n| --- |\n")
+        _page(new, "Сервис/А.md", "2", "| Шаг |\n| --- |\n| 1 |\n")
+        out = tmp_path / "r.md"
+        assert main([str(new), str(arc), "--pages", str(_ids(tmp_path, "2")), "--dry-run",
+                     "--out", str(out)]) == 0
+        text = out.read_text(encoding="utf-8")
+        assert f"| заменена: {TEXT_ADDED} | 1 |" in text
+        assert f"## Заменена — {TEXT_ADDED} (1)" in text and "не правка аналитика" in text
+        assert f"{TEXT_ADDED}: 1" in capsys.readouterr().out
