@@ -64,6 +64,7 @@ BUNDLE_FILES: Tuple[str, ...] = (
     "app/image_migrator.py",
     "app/page_cache.py",
     "app/page_exclusion_filter.py",
+    "app/prom_invariant.py",
     "app/scripts/CI/__init__.py",
     "app/scripts/CI/critic.py",
     "app/scripts/CI/critic_manual.md",
