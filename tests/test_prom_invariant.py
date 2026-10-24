@@ -125,7 +125,10 @@ class TestModelExceptions:
     def test_md_plain_strips_markup_only(self):
         md = (f"| a | status |\n| б | +{TASK} |\n{{++{TASK}: в++}} ![x](i.png) [г](http://u) "
               f'<span class="critic-ins" data-task="{TASK}">д</span> &lt;Номер&gt;')
-        assert words(md_plain(md)) == Counter({"a": 1, "б": 1, "в": 1, "г": 1, "д": 1, "номер": 1})
+        # заголовок служебного столбца «status» md_plain не вырезает (1.9.13): в срезах
+        # reject/apply его уже удалил критик, а столбец источника с таким именем — текст
+        assert words(md_plain(md)) == Counter({"a": 1, "status": 1, "б": 1, "в": 1, "г": 1,
+                                               "д": 1, "номер": 1})
 
 
 class TestReportSection:
@@ -248,4 +251,5 @@ class TestNormalization1911:
 
     def test_status_cell_still_stripped(self):
         md = f"| a | status |\n| --- | --- |\n| б | +{TASK} |\n| в | -UNKNOWN-ff00ff |"
-        assert words(md_plain(md)) == Counter({"a": 1, "б": 1, "в": 1})
+        # ячейки ±ID вырезаются; слово заголовка «status» — нет (1.9.13)
+        assert words(md_plain(md)) == Counter({"a": 1, "status": 1, "б": 1, "в": 1})
