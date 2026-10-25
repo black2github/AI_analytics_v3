@@ -18,7 +18,7 @@
 import hashlib
 from pathlib import Path
 
-VERSION = "1.9.13"
+VERSION = "1.9.14"
 
 # Коммит канона, из которого собрана поставка: подставляется сборщиком
 # (app/scripts/build_bundle.py) при раскладке бандла. В самом каноне пусто — это

@@ -85,6 +85,7 @@ try:
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
     from kitcheck.checks.zone import check_module_zone  # noqa: E402 — зона docs/modules/
+    from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -112,6 +113,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_thick_calls, check_unnormalized_sources, oq_class_counter)
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
     from .kitcheck.checks.zone import check_module_zone  # type: ignore  # noqa: E402
+    from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
 
 
 def index_sources(root: Path):
@@ -204,19 +206,85 @@ def _run(files: List[Path], src: Optional[Path],
 def run(docs: Path, sources: Optional[Path],
         strict: bool = False,
         catalog: Optional[Path] = None,
+        raw: Optional[Path] = None,
+        introduced: Optional[Path] = None,
+        include_nested: bool = False,
+        bundle: Optional[Path] = None,
         allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     """Прогон самопроверки комплекта: (строки отчёта, вердикт OK).
 
     Файлы комплекта и выгрузки читаются с диска один раз за прогон — через
-    кэш `kitcheck.fs` (сессия на время прогона)."""
+    кэш `kitcheck.fs` (сессия на время прогона). raw — архив sources/raw
+    для raw-оракула снятий (FB-32, по умолчанию выключен)."""
     with _fs.session():
-        return _run_impl(docs, sources, strict, catalog,
+        return _run_impl(docs, sources, strict, catalog, raw, introduced, include_nested, bundle,
                          allow_sibling_docs=allow_sibling_docs)
+
+
+def _load_raw_oracle(bundle: Optional[Path]):
+    """Модуль raw-оракула: из бандла экспортёра по ключу --bundle (дом разбора маркеров —
+    critic.py бандла) либо рядом с прибором (dev-копия analyzer). Путь не угадывается: без
+    --bundle и без модуля рядом — None (строка ⚠ у вызывающего)."""
+    import importlib
+    if bundle is not None:
+        cands = [bundle, bundle / "app" / "scripts" / "CI"]
+        home = next((c for c in cands if (c / "raw_oracle.py").is_file()), None)
+        if home is None:
+            return None
+        if str(home) not in sys.path:
+            sys.path.insert(0, str(home))
+        return importlib.import_module("raw_oracle")
+    try:
+        if __package__:
+            return importlib.import_module(f"{__package__}.raw_oracle")
+        return importlib.import_module("raw_oracle")
+    except ImportError:
+        return None
+
+
+def raw_oracle_lines(docs: Path, sources: Optional[Path], raw: Path,
+                     introduced: Optional[Path] = None,
+                     include_nested: bool = False,
+                     bundle: Optional[Path] = None) -> List[str]:
+    """Raw-оракул снятий (FB-32 КК): del-фрагмент введённой задачи из архива raw не должен
+    дословно присутствовать в применённой копии той же страницы — ⚠ на каждую находку,
+    счётчики пропусков — i. Введённые задачи — теги src/<ID> с HEAD (одно правило с
+    kitcheck/checks/task_tags), для прогона без git — файл --introduced (ID по строке)."""
+    if introduced is not None:
+        ids = {ln.strip() for ln in _fs.read_text(introduced, encoding="utf-8").splitlines()
+               if ln.strip() and not ln.strip().startswith("#")}
+    else:
+        root = next((d for d in [raw.resolve(), *raw.resolve().parents] if (d / ".git").exists()),
+                    None)
+        tags = task_tags(root) if root is not None else None
+        ids = {t for t in (tags or set()) if t != "PROM"}
+    if not ids:
+        return ["i сверка по архиву raw: введённых задач не найдено (теги src/*), проверка пропущена"]
+    ro = _load_raw_oracle(bundle)
+    if ro is None:
+        where = f" в {bundle}" if bundle is not None else ""
+        return [f"⚠ сверка по архиву raw не выполнена: бандл не найден{where} (--bundle <каталог бандла "
+                "экспортёра: raw_oracle.py рядом с critic.py>)"]
+    applied = sources if sources is not None else raw.parent / "confluence"
+    lines, st = ro.check_tree(raw, applied, ids, include_nested)
+    lines.append(f"i сверка по архиву raw: введённые задачи {', '.join(sorted(ids))}; страниц с маркерами удаления "
+                 f"{st['pages']}, удалённых фрагментов проверено {st['checked']}, находок {st['findings']}; "
+                 f"законно встречаются на странице вне удалений {st['kept']}")
+    lines.append(f"i сверка по архиву raw: пропущено удалённых фрагментов в ячейках вложенных таблиц: {st['nested']}"
+                 + ("" if include_nested else " (--include-nested-cells — проверить)")
+                 + f"; короткие (меньше {ro.MIN_WORDS} слов или {ro.MIN_CHARS} символов): "
+                 f"{st['short']}; вставлены введённой задачей: {st['reinserted']}; страниц без "
+                 f"применённой копии: {st['no_copy']}")
+    return lines
 
 
 def _run_impl(docs: Path, sources: Optional[Path],
               strict: bool = False,
               catalog: Optional[Path] = None,
+              raw: Optional[Path] = None,
+              introduced: Optional[Path] = None,
+              include_nested: bool = False,
+              bundle: Optional[Path] = None,
               allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
@@ -235,6 +303,11 @@ def _run_impl(docs: Path, sources: Optional[Path],
             report.append(f"i выгрузка: page_id {pid} у нескольких файлов "
                           f"({', '.join(p.name for p in paths[:3])}) — "
                           "используется первый по сортировке")
+    if raw is not None:
+        # raw-оракул снятий (FB-32): только по ключу --raw, legacy-прогоны не меняются
+        ro_rep, _ = _safe(lambda: (raw_oracle_lines(docs, sources, raw, introduced,
+                                                    include_nested, bundle), True))
+        report.extend(ro_rep)
 
     # перепись файлов комплекта (правило 2: каждый — ровно одна категория)
     groups: Dict[str, List[Path]] = {}
@@ -1534,9 +1607,23 @@ def main() -> int:
                          "журнала (хронометраж этапов дозахода: время "
                          "штампует прибор, не исполнитель — у LLM нет "
                          "часов, самодельные таймстемпы фабрикуются)")
+    ap.add_argument("--raw", type=Path, default=None,
+                    help="архив выгрузки sources/raw: сверка по архиву raw (FB-32) — удалённое "
+                         "введённой задачи (тег src/<ID>) не должен оставаться в применённой копии "
+                         "той же страницы; по умолчанию выключен")
+    ap.add_argument("--introduced", type=Path, default=None,
+                    help="файл с ID введённых задач (по одному в строке) вместо тегов src/* — для "
+                         "прогона без git")
+    ap.add_argument("--include-nested-cells", action="store_true",
+                    help="сверка по архиву raw: проверять и ячейки вложенных таблиц HTML-островов (по "
+                         "умолчанию пропускаются)")
+    ap.add_argument("--bundle", type=Path, default=None,
+                    help="каталог бандла экспортёра (confluence-tree-exporter): модуль сверки по архиву raw берётся "
+                         "оттуда, рядом с critic.py; путь не угадывается")
     args = ap.parse_args()
     report, ok = run(args.docs, args.sources, strict=args.strict,
-                     catalog=args.catalog,
+                     catalog=args.catalog, raw=args.raw, introduced=args.introduced,
+                     include_nested=args.include_nested_cells, bundle=args.bundle,
                      allow_sibling_docs=args.allow_sibling_docs)
     if args.journal is not None and args.sources is not None:
         jwarn = check_journal_name(args.journal, args.sources)

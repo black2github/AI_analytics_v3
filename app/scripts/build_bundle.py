@@ -68,6 +68,9 @@ BUNDLE_FILES: Tuple[str, ...] = (
     "app/scripts/CI/__init__.py",
     "app/scripts/CI/critic.py",
     "app/scripts/CI/critic_manual.md",
+    # raw-оракул снятий (FB-32, 1.9.14): разбор маркеров — функциями critic.py, поэтому дом —
+    # рядом с ним; selfcheck канона анализа берёт его отсюда по ключу --bundle
+    "app/scripts/CI/raw_oracle.py",
     # правило границ блоков кода — общее с прибором самопроверки (1.9.6, 2026-10-17);
     # пакет kitcheck в поставке — только эти два файла без зависимостей
     "app/scripts/CI/kitcheck/__init__.py",
