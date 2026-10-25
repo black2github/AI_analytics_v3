@@ -3269,11 +3269,59 @@ def _md_link_targets(text: str) -> List[Tuple[int, str]]:
     return out
 
 
+
+def _allowed_kit_roots(docs_root: Path,
+                       allow_sibling_docs: bool = False) -> List[Path]:
+    """Корни, внутри которых разрешены относительные ссылки чистовика.
+
+    По умолчанию — только переданный корень комплекта. С `allow_sibling_docs` —
+    также соседние пакеты того же монорепо, у которых есть `srs/` или `brd/`
+    (топология ЦР: `<repo>/<service-id>/`).
+    """
+    root = docs_root.resolve()
+    roots: List[Path] = [root]
+    if not allow_sibling_docs:
+        return roots
+    if (root / 'srs').is_dir() or (root / 'brd').is_dir():
+        monorepo = root.parent
+    elif root.name == 'docs':
+        monorepo = root.parent.parent
+    else:
+        monorepo = root.parent
+    if not monorepo.is_dir():
+        return roots
+    for sibling in sorted(monorepo.iterdir()):
+        if not sibling.is_dir():
+            continue
+        try:
+            if sibling.resolve() == root:
+                continue
+        except OSError:
+            continue
+        if (sibling / 'srs').is_dir() or (sibling / 'brd').is_dir():
+            r = sibling.resolve()
+            if r not in roots:
+                roots.append(r)
+    return roots
+
+
+def _under_any_kit_root(resolved: Path, roots: List[Path]) -> bool:
+    for r in roots:
+        try:
+            resolved.relative_to(r)
+            return True
+        except ValueError:
+            continue
+    return False
+
+
 def check_clean_document(md_path: Path,
-                         docs_root: Optional[Path] = None
+                         docs_root: Optional[Path] = None,
+                         allow_sibling_docs: bool = False
                          ) -> Tuple[List[str], bool]:
     """Сторож чистовика: (а) битые относительные ссылки, (б) цели вне
-    docs/, (в) изображения, (г) critic-маркеры — брак; внешние http(s)
+    комплекта (при allow_sibling_docs — вне sibling-пакетов с srs|brd),
+    (в) изображения, (г) critic-маркеры — брак; внешние http(s)
     вне белого списка — предупреждение (видимо и при ✓)."""
     from urllib.parse import unquote
     text = _fs.read_text(md_path, encoding="utf-8")
@@ -3298,7 +3346,11 @@ def check_clean_document(md_path: Path,
             "✗ НИЖЕ ПОРОГА")
     # (а)/(б) ссылки
     warns: List[str] = []
-    root = docs_root.resolve() if docs_root is not None else None
+    roots = (_allowed_kit_roots(docs_root, allow_sibling_docs)
+             if docs_root is not None else [])
+    scope_label = ("комплекта и sibling-пакетов (srs|brd)" if allow_sibling_docs
+                   else "docs/")
+    root = roots[0] if roots else None
     for pos, target in _md_link_targets(text):
         if not target or target == "#":
             ok = False
@@ -3330,22 +3382,26 @@ def check_clean_document(md_path: Path,
                 f"битая относительная ссылка: {target[:80]} — цель не "
                 "существует ✗ НИЖЕ ПОРОГА")
             continue
-        if root is not None:
-            try:
-                resolved.relative_to(root)
-            except ValueError:
+        if roots:
+            if _under_any_kit_root(resolved, roots):
+                pass
+            else:
                 # мини-комплект зоны «вне Экосистемы» рядом с docs/ — законная
                 # цель карточки вызова (Д-46: контракт интерфейса модуля); это старое
                 # место, переходный период — по Д-49 зона в docs/modules/<имя>/, и
                 # ссылка туда — цель внутри комплекта, сюда не доходит
-                try:
-                    resolved.relative_to((root.parent / "modules").resolve())
+                allowed_modules = False
+                if root is not None:
+                    try:
+                        resolved.relative_to((root.parent / "modules").resolve())
+                        allowed_modules = True
+                    except ValueError:
+                        pass
+                if allowed_modules:
                     continue
-                except ValueError:
-                    pass
                 ok = False
                 report.append(
-                    f"ссылка ведёт ВНЕ docs/: {target[:80]} — карточки "
+                    f"ссылка ведёт ВНЕ {scope_label}: {target[:80]} — карточки "
                     "ссылаются только внутрь комплекта и в мини-комплекты "
                     "modules/ (выгрузка/sources — источник, не цель) ✗ НИЖЕ ПОРОГА")
     return report + warns, ok
@@ -5163,7 +5219,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               soft_markers: bool = False,
               pardon_source: Optional[Path] = None,
               amnesty_sources: Optional[List[Path]] = None,
-              kit_summary: bool = False) -> Tuple[List[str], bool]:
+              kit_summary: bool = False,
+              allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -5224,7 +5281,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
             continue
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -5251,18 +5308,21 @@ class _SourceCtx:
     combined: object
     main_file: object
     src_text: object
+    allow_sibling_docs: object
 
 
 
 
 def _rc_clean_document(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     docs_root, main_file = fx.docs_root, fx.main_file
+    allow_sibling_docs = bool(fx.allow_sibling_docs)
     report: List[str] = []
     ok = True
     # сторож чистовика (волна D): по КАЖДОЙ карточке вызова, не только
     # главной (неглавные в selfcheck прогоняются отдельными вызовами,
     # здесь files>1 встречается в CLI)
-    cl_report, cl_ok = check_clean_document(main_file, docs_root)
+    cl_report, cl_ok = check_clean_document(
+        main_file, docs_root, allow_sibling_docs=allow_sibling_docs)
     report.extend(cl_report)
     ok = ok and cl_ok
     return report, ok
@@ -5533,6 +5593,9 @@ def main() -> int:
                     help="для --check: корень docs/ комплекта — включает "
                          "проверку «ссылка ведёт вне docs/» сторожа "
                          "чистовика (selfcheck передаёт сам)")
+    ap.add_argument("--allow-sibling-docs", action="store_true",
+                    help="разрешить относительные ссылки в sibling-пакеты "
+                         "монорепо с srs/ или brd/ (топология ЦР)")
     ap.add_argument("--sidecar", action="store_true",
                     help="записать результат в <файл>.tables.md рядом (иначе stdout)")
     ap.add_argument("--min-valid", type=float, default=95.0,
@@ -5569,7 +5632,8 @@ def main() -> int:
     if args.check:
         report, ok = run_check(list(args.file), args.source,
                                min_valid_pct=args.min_valid,
-                               docs_root=args.docs_root)
+                               docs_root=args.docs_root,
+                               allow_sibling_docs=args.allow_sibling_docs)
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:

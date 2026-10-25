@@ -191,28 +191,33 @@ def _run(files: List[Path], src: Optional[Path],
          docs_root: Optional[Path] = None,
          soft_markers: bool = True,
          pardon_src: Optional[Path] = None,
-         amnesty: Optional[List[Path]] = None) -> Tuple[List[str], bool]:
+         amnesty: Optional[List[Path]] = None,
+         allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
                                       amnesty_sources=amnesty,
-                                      kit_summary=True))
+                                      kit_summary=True,
+                                      allow_sibling_docs=allow_sibling_docs))
 
 
 def run(docs: Path, sources: Optional[Path],
         strict: bool = False,
-        catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
+        catalog: Optional[Path] = None,
+        allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     """Прогон самопроверки комплекта: (строки отчёта, вердикт OK).
 
     Файлы комплекта и выгрузки читаются с диска один раз за прогон — через
     кэш `kitcheck.fs` (сессия на время прогона)."""
     with _fs.session():
-        return _run_impl(docs, sources, strict, catalog)
+        return _run_impl(docs, sources, strict, catalog,
+                         allow_sibling_docs=allow_sibling_docs)
 
 
 def _run_impl(docs: Path, sources: Optional[Path],
               strict: bool = False,
-              catalog: Optional[Path] = None) -> Tuple[List[str], bool]:
+              catalog: Optional[Path] = None,
+              allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -370,7 +375,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         return [ln for ln in rep if is_soft_signal(ln)]
 
     for p, note in solo:
-        rep, ok = _run([p], None, docs, soft_markers=not strict)
+        rep, ok = _run([p], None, docs, soft_markers=not strict,
+                       allow_sibling_docs=allow_sibling_docs)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         all_ok = all_ok and ok
@@ -417,7 +423,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         amnesty = [idx[x] for x in extra_page_ids.get(files[0], [])
                    if x in idx and idx[x] != src]
         rep, ok = _run(files, src, docs, soft_markers=not strict,
-                       amnesty=amnesty or None)
+                       amnesty=amnesty or None,
+                       allow_sibling_docs=allow_sibling_docs)
         # макеты Figma группы (решение 2026-08-31, модель README/main):
         # ссылки макетов живут в НЕсверяемом README-оглавлении — их
         # наличие сторожится здесь (сверка ячейки макетов отключена)
@@ -440,7 +447,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         # та же страница милует (z03 ISS-03, scr-cl-01.4)
         for extra in files[1:]:
             rep2, ok2 = _run([extra], None, docs, soft_markers=not strict,
-                             pardon_src=src)
+                             pardon_src=src,
+                             allow_sibling_docs=allow_sibling_docs)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
         mark = "✓" if ok else "✗"
@@ -1514,6 +1522,9 @@ def main() -> int:
                     help="полный профиль (держатели канона): маркеры "
                          "сокращения — брак; без флага — командный "
                          "профиль, маркеры — предупреждение (Р-8)")
+    ap.add_argument("--allow-sibling-docs", action="store_true",
+                    help="разрешить относительные ссылки в sibling-пакеты "
+                         "монорепо с srs/ или brd/ (топология ЦР)")
     ap.add_argument("--catalog", type=Path, default=None,
                     help="каталог сервисов services.json для сторожа "
                          "каталога; по умолчанию — _meta/services.json "
@@ -1525,7 +1536,8 @@ def main() -> int:
                          "часов, самодельные таймстемпы фабрикуются)")
     args = ap.parse_args()
     report, ok = run(args.docs, args.sources, strict=args.strict,
-                     catalog=args.catalog)
+                     catalog=args.catalog,
+                     allow_sibling_docs=args.allow_sibling_docs)
     if args.journal is not None and args.sources is not None:
         jwarn = check_journal_name(args.journal, args.sources)
         if jwarn:

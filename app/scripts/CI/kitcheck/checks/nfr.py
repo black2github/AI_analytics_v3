@@ -45,10 +45,15 @@ _NFR_TYPE_BY_CODE = {
 _NFR_CODES = frozenset(_NFR_TYPE_BY_CODE)
 
 
+# строки таблицы и пункты политик / скелета со **nfr-<код>-NNN.
 _NFR_ROW_RE = re.compile(r"(?m)^\|\s*(nfr-([a-z]{3})-(\d{3}))\s*\|")
-
+_NFR_POLICY_RE = re.compile(
+    r"(?m)^\s*[-*]\s+\*\*(nfr-([a-z]{3})-(\d{3}))\.")
 
 _NFR_INGRESS = frozenset({"reverse", "forward", "mixed"})
+
+_NFR_FORBIDDEN_COLUMNS = re.compile(
+    r"(?m)^\|[^\n]*\b(?:Не задано|Основание)\b[^\n]*\|")
 
 
 def _nfr_repo_root(docs: Path) -> Path:
@@ -61,8 +66,10 @@ def _nfr_repo_root(docs: Path) -> Path:
 def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
     """Сторож output/<service>/nfr рядом с docs/.
 
-    Каталога нет — молчит: утилита не знает, был ли вход. Значение nfr
-    в _KNOWN_TYPES пути srs/<тип>/ не добавляется.
+    Каталога нет — молчит: утилита не знает, был ли вход. Если каталог
+    есть — обязательны README и все 18 nfr-<код>.md, без колонок
+    «Не задано»/«Основание». Значение nfr в _KNOWN_TYPES пути srs/<тип>/
+    не добавляется.
     """
     report: List[str] = []
     ok = True
@@ -88,6 +95,11 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
     seen_codes: Dict[str, Path] = {}
     page_rows: set = set()
     repo = _nfr_repo_root(docs)
+    has_readme = (nfr_dir / "README.md").is_file()
+    if not has_readme:
+        ok = False
+        report.append(
+            f"✗ {nfr_dir.relative_to(docs.parent)}: нет README.md реестра")
     for p in sorted(nfr_dir.glob("*.md")):
         rel = p.relative_to(docs.parent)
         fm = read_frontmatter(p)
@@ -176,7 +188,9 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
         except OSError:
             text = ""
         seen_rows = set()
-        for token, row_code, _num in _NFR_ROW_RE.findall(text):
+        id_hits = list(_NFR_ROW_RE.findall(text)) + list(
+            _NFR_POLICY_RE.findall(text))
+        for token, row_code, _num in id_hits:
             if row_code != code:
                 ok = False
                 report.append(f"✗ {rel}: строка {token} не типа {code}")
@@ -195,6 +209,22 @@ def check_nfr_catalog(docs: Path) -> Tuple[List[str], bool]:
             ok = False
             report.append(
                 f"✗ {rel}: запрещённые слова вне frontmatter")
+        if _NFR_FORBIDDEN_COLUMNS.search(body):
+            ok = False
+            report.append(
+                f"✗ {rel}: запрещены колонки «Не задано» и «Основание»")
+        if re.search(
+                r"(?m)^##\s*Текущее состояние и свидетельства\s*$", body):
+            ok = False
+            report.append(
+                f"✗ {rel}: раздел «Текущее состояние и свидетельства» "
+                "запрещён")
+    for missing_code in sorted(_NFR_CODES - set(seen_codes)):
+        ok = False
+        report.append(
+            f"✗ nfr/nfr-{missing_code}.md: нет страницы типа "
+            f"«{_NFR_TYPE_BY_CODE[missing_code]}» "
+            "(каталог НФТ должен содержать все 18 типов)")
     matrix = docs / "traceability-matrix.md"
     if seen_codes:
         if not matrix.is_file():

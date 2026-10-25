@@ -118,16 +118,24 @@ def test_empty_source_with_dash_in_title_detected(tmp_path):
 
 def test_nfr_page_with_bom_ok(tmp_path):
     # Ф11: шапка с BOM прежде оставалась в теле — confluence_page_ids → ✗
+    # каталог НФТ по норме канона 49a2c85 (22.10): README-реестр и все 18 страниц типов
+    from app.scripts.CI.kitcheck.checks.nfr import _NFR_TYPE_BY_CODE
     page = (BOM + "---\nid: nfr-prf\ntype: nfr\nnfr_type: Производительность\n"
             "ingress: reverse\nconfluence_page_ids: 123\n---\n# Производительность\n\n"
-            "| ID | Показатель | Норма | Не задано |\n|---|---|---|---|\n"
-            "| nfr-prf-001 | Время отклика | ≤ 2 с | окно измерения |\n")
+            "| ID | Показатель | Норма |\n|---|---|---|\n"
+            "| nfr-prf-001 | Время отклика | ≤ 2 с |\n")
     docs = tmp_path / "output/svc/docs"
     _make(docs / "README.md", "# К\n")
     _make(docs / "traceability-matrix.md",
           "# Матрица\n\n## BRD-6.2. НФТ\n\n| ID | Показатель |\n|---|---|\n"
           "| nfr-prf-001 | Время отклика |\n")
-    _make(tmp_path / "output/svc/nfr/nfr-prf.md", page)
+    nfr = tmp_path / "output/svc/nfr"
+    _make(nfr / "README.md", "---\nid: nfr\ntype: nfr\n---\n# Реестр НФТ\n")
+    for code, name in _NFR_TYPE_BY_CODE.items():
+        if code != "prf":
+            _make(nfr / f"nfr-{code}.md", f"---\nid: nfr-{code}\ntype: nfr\nnfr_type: {name}\n"
+                  f"ingress: reverse\nconfluence_page_ids: 123\n---\n# {name}\n")
+    _make(nfr / "nfr-prf.md", page)
     report, ok = check_nfr_catalog(docs)
     assert ok, report
 

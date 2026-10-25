@@ -26,17 +26,39 @@ def test_no_catalog_is_silent(tmp_path):
     assert ok and report == []
 
 
+def _type_page(code: str, name: str, rows: str = "") -> str:
+    return (f"---\nid: nfr-{code}\ntype: nfr\nnfr_type: {name}\ningress: reverse\n"
+            f"confluence_page_ids: 123\n---\n# {name}\n\n{rows}")
+
+
 def test_valid_page_ok(tmp_path):
+    # норма канона 49a2c85 (22.10): каталог НФТ — README-реестр и все 18 страниц типов,
+    # без колонок «Не задано» / «Основание»
+    from app.scripts.CI.kitcheck.checks.nfr import _NFR_TYPE_BY_CODE
     docs = tmp_path / "output/svc/docs"
     make(docs / "README.md", "# К\n")
     # строки страниц типов обязаны стоять в разделе BRD-6.2 матрицы
     make(docs / "traceability-matrix.md",
          "# Матрица\n\n## BRD-6.2. НФТ\n\n| ID | Показатель |\n|---|---|\n"
          "| nfr-prf-001 | Время отклика |\n")
-    make(tmp_path / "output/svc/nfr/nfr-prf.md", PAGE)
+    nfr = tmp_path / "output/svc/nfr"
+    make(nfr / "README.md", "---\nid: nfr\ntype: nfr\n---\n# Реестр НФТ\n")
+    for code, name in _NFR_TYPE_BY_CODE.items():
+        rows = ("| ID | Показатель | Норма |\n|---|---|---|\n| nfr-prf-001 | Время отклика | ≤ 2 с |\n"
+                if code == "prf" else "")
+        make(nfr / f"nfr-{code}.md", _type_page(code, name, rows))
     report, ok = check_nfr_catalog(docs)
     assert ok, report
     assert any("каталог НФТ" in r for r in report), report
+
+
+def test_forbidden_columns_flagged(tmp_path):
+    # прежняя форма страницы с колонкой «Не задано» — теперь ✗ (норма канона 49a2c85)
+    docs = tmp_path / "output/svc/docs"
+    make(docs / "README.md", "# К\n")
+    make(tmp_path / "output/svc/nfr/nfr-prf.md", PAGE)
+    report, ok = check_nfr_catalog(docs)
+    assert not ok and any("запрещены колонки «Не задано» и «Основание»" in r for r in report), report
 
 
 def test_nfr_section_in_feature_and_bad_names_flagged(tmp_path):
