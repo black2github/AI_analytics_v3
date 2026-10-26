@@ -325,6 +325,31 @@ class TestZip:
         assert "app/version.py" in names and ".gitignore" not in names
         assert "app/" in names                  # каталоги как в прежних сборках
 
+    def test_untracked_bundle_file_blocks_archive(self, tmp_path, monkeypatch):
+        """25.10: raw_oracle.py лежал в каталоге, но был закоммичен после сборки архива —
+        архив ушёл без него. Файл поставки вне git ls-files — ошибка с именем файла."""
+        import pytest
+        bundle = tmp_path / "bundle"
+        (bundle / "app/scripts/CI").mkdir(parents=True)
+        (bundle / "app/version.py").write_text(VERSION_PY, encoding="utf-8")
+        (bundle / "app/scripts/CI/raw_oracle.py").write_text("# raw\n", encoding="utf-8")
+        monkeypatch.setattr("app.scripts.build_bundle._tracked_files",
+                            lambda _b: ["app/version.py"])
+        with pytest.raises(RuntimeError, match="raw_oracle.py"):
+            build_zip(bundle)
+        assert not (bundle / "confluence-tree-exporter.zip").exists()
+
+    def test_bundle_file_absent_from_disk_is_not_an_error(self, tmp_path, monkeypatch):
+        """Ограничитель: файл из BUNDLE_FILES, которого в каталоге нет вовсе (неполная копия в
+        тесте), архив не блокирует — сторож про забытый git add, а не про состав поставки."""
+        bundle = tmp_path / "bundle"
+        (bundle / "app").mkdir(parents=True)
+        (bundle / "app/version.py").write_text(VERSION_PY, encoding="utf-8")
+        monkeypatch.setattr("app.scripts.build_bundle._tracked_files",
+                            lambda _b: ["app/version.py"])
+        _target, n = build_zip(bundle)
+        assert n == 1
+
 
 class TestCli:
     def test_check_reports_divergence_with_code_1(self, two_trees, capsys, monkeypatch):

@@ -297,9 +297,25 @@ def _tracked_files(bundle: Path) -> List[str]:
     return out.stdout.split()
 
 
+def untracked_bundle_files(bundle: Path, tracked: List[str]) -> List[str]:
+    """Файлы поставки из BUNDLE_FILES, которые лежат в каталоге, но не под контролем версий.
+    Архив собирается из `git ls-files`, поэтому такой файл в архив не попадёт молча: 25.10
+    поставка 1.9.14 ушла командам без raw_oracle.py — архив собрали до коммита файла."""
+    known = set(tracked)
+    return sorted(f for f in BUNDLE_FILES
+                  if f not in known and (bundle / f).is_file())
+
+
 def build_zip(bundle: Path) -> Tuple[Path, int]:
-    """Пересобрать архив поставки. Возвращает (путь, число файлов)."""
-    entries = zip_entries(_tracked_files(bundle))
+    """Пересобрать архив поставки. Возвращает (путь, число файлов).
+    Файл поставки вне контроля версий — ошибка, а не тихий пропуск."""
+    tracked = _tracked_files(bundle)
+    missing = untracked_bundle_files(bundle, tracked)
+    if missing:
+        raise RuntimeError(
+            "архив не собран: файлы поставки не под контролем версий (сначала git add + commit): "
+            + ", ".join(missing))
+    entries = zip_entries(tracked)
     dirs = sorted({str(Path(e).parent.as_posix()) + "/" for e in entries
                    if Path(e).parent != Path(".")})
     target = bundle / ZIP_NAME
