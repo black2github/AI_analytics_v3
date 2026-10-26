@@ -409,6 +409,21 @@ def test_check_questions_d_no_recommendation():
     assert dr.check_questions(_qtask(row)) == ["вопрос 1: нет рекомендации агента («Рекомендую …»)"]
 
 
+def test_check_questions_boundary_row_with_default_rule_not_noted():
+    # граница захода (правила опроса п. 6): «… — по умолчанию DFR-NNN» — без «Рекомендую»,
+    # DFR-001 не голый ID; рядом обычная строка-решение — замечаний нет
+    rows = ("| 3 | **Форма «ЭФ Клиента в режиме чтения» (`SCR-CL-02`): поле «Телефон» добавляю в блок "
+            "«Иные сведения»** — по умолчанию DFR-001. | — |\n"
+            "| 4 | **Карточка «Нотификация» (`NTF-001`): адресата не меняю** — по умолчанию DFR-004. | — |\n")
+    assert dr.check_questions(_qtask(rows)) == []
+
+
+def test_check_questions_default_rule_without_boundary_wording_noted():
+    # «DFR-001» без «по умолчанию» — это не граница: нет рекомендации — замечание; сам DFR не голый ID
+    row = "| 3 | Форма «ЭФ Клиента в режиме чтения» (`SCR-CL-02`): показывать поле? См. DFR-001. | — |\n"
+    assert dr.check_questions(_qtask(row)) == ["вопрос 3: нет рекомендации агента («Рекомендую …»)"]
+
+
 def test_check_questions_e_several_questions():
     row = "| 1 | Поле «Телефон» обязательное? Какая маска? Рекомендую обязательное, маска +7. | — |\n"
     assert dr.check_questions(_qtask(row)) == [
