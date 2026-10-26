@@ -40,8 +40,10 @@ _TASK = ("---\ntype: task\ntask: ECO-123\nservice: x\ncreated: 2026-10-15\n---\n
          "- **T-ECO-123-01** (2026-10-15, аналитик): добавить поле «Дата рождения»\n"
          "- **T-ECO-123-02** (2026-10-15, аналитик): текст ошибки — «Укажите дату рождения»\n\n"
          "## Вопросы и ответы\n\n| № | Вопрос агента | Ответ |\n|---|---|---|\n"
-         "| 1 | Тип атрибута birthDate? | T-ECO-123-02 |\n"
-         "| 2 | Нужен ли контроль возраста? | — (долг «открытый вопрос», ответственный аналитик) |\n")
+         # вопросы по правилам опроса (рекомендация агента) — сторож формы молчит
+         "| 1 | Тип атрибута birthDate? Рекомендую дату. | T-ECO-123-02 |\n"
+         "| 2 | Нужен ли контроль возраста? Рекомендую не вводить до ответа. "
+         "| — (долг «открытый вопрос», ответственный аналитик) |\n")
 _SCR_ADD = "\n| Дата рождения | дата | да |\n\n### FLD-3. Дата рождения\n\n- **Формат:** ДД.ММ.ГГГГ\n"
 
 
@@ -317,7 +319,7 @@ def test_open_questions_from_task_and_debts(tmp_path):
     data = _build(make_delta(make_repo(tmp_path)))
     qs = data["questions"]["questions"]
     assert [q["n"] for q in qs] == ["2"]
-    assert qs[0]["question"] == "Нужен ли контроль возраста?"
+    assert qs[0]["question"] == "Нужен ли контроль возраста? Рекомендую не вводить до ответа."
     assert [d["name"] for d in data["questions"]["debts"]] == ["Нужен ли контроль возраста"]
     text = dr.render(data).split("## Открытые вопросы")[1].split("## Проверки")[0]
     assert "вопрос 2: Нужен ли контроль возраста?" in text
@@ -330,6 +332,128 @@ def test_no_open_questions(tmp_path):
     data = _build(make_delta(make_repo(tmp_path), debt_row="", task=task))
     assert data["questions"] == {"questions": [], "debts": []}
     assert "## Открытые вопросы\n\nнет\n" in dr.render(data)
+
+
+# 6а. форма вопросов постановки (check_questions, правила опроса канона) -------------------
+
+_Q_OK_1 = ("| 1 | **Поле «Контактный телефон для уведомлений» на вкладке «Открываемый счёт» "
+           "(`SCR-CL-03.1`) — блок размещения.** Варианты: «Дополнительно», «Информация о счёте», "
+           "новый блок. Рекомендую «Дополнительно» — там остальные необязательные реквизиты для "
+           "уведомлений. | T-ECO-123-02 |\n")
+_Q_OK_2 = ("| 2 | Где на [Форма «Заявка» (`SCR-CL-02`)](../srs/screen-form/scr-cl-02.md) показать "
+           "дату? Рекомендую под ФИО. | — |\n")
+_Q_OK_3 = "| 3 | Текст ошибки из T-ECO-123-02 оставить дословно? Рекомендую дословно. | нет |\n"
+_Q_OK_4 = ("| 4 | Справочник «Пользователь» (`EXT-007`) для поля «Телефон» на «Открываемый счёт» "
+           "(`SCR-CL-03.1`, строка 20) — брать текущий? Рекомендую текущий. | — |\n")
+_Q_OK_5 = ("| 5 | Блок «Открываемый счёт» (вкладка `SCR-CL-03.1`) и "
+           "[CTL-GRP-1 Проверки при продолжении](../srs/control/ctl.md) — объединить? "
+           "Рекомендую не объединять. | — |\n")
+
+
+def _qtask(*rows: str) -> str:
+    """Постановка с таблицей вопросов из заданных строк и следующим разделом."""
+    return ("---\ntype: task\ntask: ECO-123\n---\n\n# ECO-123. Поле\n\n## Вопросы и ответы\n\n"
+            "| № | Вопрос агента | Ответ |\n|---|---|---|\n" + "".join(rows)
+            + "\n## Журнал\n\n| 9 | Голый EXT-999? | — |\n")
+
+
+def test_check_questions_clean_table_no_notes():
+    # НЕсрабатывание: «Наименование» (`ID`), «Наименование» (`ID`, строка 20),
+    # «Наименование» (вкладка `ID`), ID в ярлыке ссылки с кириллицей (обе формы
+    # реестра), строка постановки T-…-NN
+    assert dr.check_questions(_qtask(_Q_OK_1, _Q_OK_2, _Q_OK_3, _Q_OK_4, _Q_OK_5)) == []
+
+
+def test_check_questions_no_section_or_table():
+    assert dr.check_questions("# ECO-123. Поле\n\n## Постановка\n\n- текст\n") == []
+    assert dr.check_questions("# ECO-123. Поле\n\n## Вопросы и ответы\n\nнет вопросов\n") == []
+    assert dr.check_questions("") == []
+
+
+@pytest.mark.parametrize("cell, ident", [
+    ("Какой справочник взять для поля EXT-007? Рекомендую текущий.", "EXT-007"),
+    ("Куда отнести `CTL-GRP-1`? Рекомендую в первую группу.", "CTL-GRP-1"),
+    # чужое наименование раньше в ячейке ID не называет (живой прогон 26.10)
+    ("Проверку только на «Продолжить» или во всей CTL-GRP-1 (включая сохранение)? "
+     "Рекомендую во всей.", "CTL-GRP-1"),
+    # точечная нотация — не наименование артефакта
+    ("Маска для `ENT-001`.«Контактный телефон» — +7? Рекомендую +7.", "ENT-001"),
+    # ярлык ссылки из одного ID — не наименование
+    ("Где на форме [SCR-CL-02](../x.md) показать дату? Рекомендую под ФИО.", "SCR-CL-02"),
+    # между «(» и ID больше 30 символов — не наименование
+    ("Справочник «Пользователь» (см. также раздел про внешние справочники `EXT-007`)? "
+     "Рекомендую текущий.", "EXT-007"),
+])
+def test_check_questions_a_bare_id(cell, ident):
+    assert dr.check_questions(_qtask(f"| 1 | {cell} | — |\n")) == [
+        f"вопрос 1: голый идентификатор «{ident}» — рядом нет наименования"]
+
+
+def test_check_questions_b_type_prefix():
+    row = "| 1 | Нужны ли новые NTF для смены статуса? Рекомендую одно уведомление «Статус изменён». | — |\n"
+    assert dr.check_questions(_qtask(row)) == [
+        "вопрос 1: префикс типа «NTF» вместо наименования типа требований "
+        "(словами: уведомления, печатные формы…)"]
+
+
+def test_check_questions_c_implementation_question():
+    row = ("| 1 | Какие физ. имя и длина VARCHAR у атрибута «Телефон» (`ENT-001`)? "
+           "Рекомендую взять из модели. | — |\n")
+    assert dr.check_questions(_qtask(row)) == [
+        "вопрос 1: вопрос реализации («физ. имя», «VARCHAR») — физическое имя, тип и "
+        "ограничения БД в forward не задаются"]
+
+
+def test_check_questions_d_no_recommendation():
+    row = "| 1 | Нужна ли маска для поля «Телефон» (`FLD-3`)? | — |\n"
+    assert dr.check_questions(_qtask(row)) == ["вопрос 1: нет рекомендации агента («Рекомендую …»)"]
+
+
+def test_check_questions_e_several_questions():
+    row = "| 1 | Поле «Телефон» обязательное? Какая маска? Рекомендую обязательное, маска +7. | — |\n"
+    assert dr.check_questions(_qtask(row)) == [
+        "вопрос 1: в одной строке несколько вопросов (2 знаков «?») — один вопрос — один факт"]
+
+
+def test_check_questions_order_by_row_then_rule():
+    rows = ("| 2 | Нужна ли маска для поля «Телефон» (`FLD-3`)? | — |\n"
+            "| 4 | Какой справочник EXT-007? | — |\n")
+    assert dr.check_questions(_qtask(_Q_OK_1, rows)) == [
+        "вопрос 2: нет рекомендации агента («Рекомендую …»)",
+        "вопрос 4: голый идентификатор «EXT-007» — рядом нет наименования",
+        "вопрос 4: нет рекомендации агента («Рекомендую …»)"]
+
+
+def test_check_questions_in_delta_report_notes(tmp_path):
+    task = _TASK + "| 3 | Какой справочник EXT-007? Рекомендую текущий. | — |\n"
+    data = _build(make_delta(make_repo(tmp_path), task=task))
+    assert "вопрос 3: голый идентификатор «EXT-007» — рядом нет наименования" in data["notes"]
+    notes = dr.render(data).split("## Замечания прибора")[1]
+    assert "- вопрос 3: голый идентификатор «EXT-007» — рядом нет наименования" in notes
+
+
+def test_questions_cli(tmp_path):
+    repo = make_repo(tmp_path)
+    _w(repo / "tasks/ECO-123.md", _qtask(_Q_OK_1, _Q_OK_2, _Q_OK_3))
+    r = _cli("--repo", str(repo), "--questions", "ECO-123")
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert r.stdout.startswith("# Вопросы постановки ECO-123 — проверка формы")
+    assert "OK: замечаний по вопросам нет" in r.stdout
+    _w(repo / "tasks/ECO-124.md", _qtask("| 1 | Какой справочник EXT-007? | — |\n"))
+    r = _cli("--repo", str(repo), "--questions", "ECO-124")
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "- вопрос 1: голый идентификатор «EXT-007» — рядом нет наименования" in r.stdout
+    assert ("i замечаний: 2 — переформулируй по правилам опроса (_meta/rules/questions.md) "
+            "до показа аналитику") in r.stdout
+    r = _cli("--repo", str(repo), "--questions", "ECO-404")
+    assert r.returncode == 2 and "✗ постановка не найдена: tasks/ECO-404.md" in r.stdout
+    out = tmp_path / "rep" / "q.md"
+    r = _cli("--repo", str(repo), "--questions", "ECO-124", "--json", "--out", str(out))
+    assert r.returncode == 0, r.stdout + r.stderr
+    raw = out.read_bytes()
+    assert b"\r\n" not in raw and "i замечаний: 2" in raw.decode("utf-8")
+    js = json.loads(r.stdout[r.stdout.index("{"):])
+    assert len(js["notes"]) == 2 and js["questions"][0]["n"] == "1"
 
 
 # 7. выбор постановки ------------------------------------------------------------------------

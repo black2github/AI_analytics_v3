@@ -35,7 +35,13 @@
 #      (строки таблиц, пункты списков `- **…**`, заголовки `### `); колонка
 #      «Происхождение» пустая — её дописывает агент. Не больше 200 строк.
 #   6. Открытые вопросы: строки «Вопросы и ответы» постановки с ответом «—»
-#      и добавленные долги вида «открытый вопрос».
+#      и добавленные долги вида «открытый вопрос». Форма вопросов (все
+#      строки таблицы, решение владельца 2026-10-26) — сторож
+#      `check_questions` по правилам опроса канона `_meta/rules/questions.md`:
+#      голый идентификатор без наименования, префикс типа вместо названия
+#      типа требований словами, вопрос реализации (физическое имя, тип и
+#      ограничения БД), нет рекомендации агента, несколько «?» в строке.
+#      Замечания — в блок «Замечания прибора», заход не блокируют.
 #   7. Проверки: блок-заглушка (selfcheck / link_debts / гейт) — результаты
 #      вписывает агент после прогона; прибор лишь проверяет, что постановка
 #      существует и её frontmatter несёт `type: task` и `task: <JIRA-ID>`.
@@ -58,6 +64,10 @@
 #                    (кто ссылается на карточку и на кого ссылается она) —
 #                    детерминированный перечень для шага 2 режима C; дельта не
 #                    строится, git не нужен; код 2, если ни один ID не найден
+#   --questions <JIRA-ID>  ДО показа вопросов аналитику: проверка формы таблицы
+#                    «Вопросы и ответы» постановки `tasks/<JIRA-ID>.md` (сторож
+#                    `check_questions`); дельта не строится, git не нужен; код 0
+#                    и при замечаниях (замечание, не гейт), код 2 — постановки нет
 #
 # Код выхода: 0 — отчёт собран; 2 — собрать нельзя (не git-репозиторий,
 # матрицы нет, постановка в дельте неоднозначна).
@@ -89,6 +99,25 @@ _LIST_FACT_RE = re.compile(r"^\s*[-*]\s+\*\*")
 _HEADING_FACT_RE = re.compile(r"^###\s+\S")
 _TASK_TITLE_RE = re.compile(r"^#\s+([A-Za-z][\w-]*-\d+)\s*[.:—-]\s*(.+?)\s*$", re.M)
 _QA_HEAD_RE = re.compile(r"^##\s+Вопросы\s+и\s+ответы", re.I | re.M)
+# сторож формы вопросов (check_questions, правила опроса канона
+# `_meta/rules/questions.md`): markdown-ссылка «[label](target)» → label
+_Q_MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+# идентификатор артефакта (`EXT-007`, `SCR-CL-03.1`, `CTL-GRP-1`); слева не буква,
+# не цифра и не дефис — поэтому строки постановки `T-<КЛЮЧ>-NN` не считаются
+_Q_ID_RE = re.compile(r"(?<![\w-])(?:[A-Z]{2,6}-GRP-\d+|[A-Z]{2,6}(?:-[A-Z]{1,6})*-\d+(?:\.\d+)*)(?!\w)")
+# ID назван, если прямо перед ним — закрывающая кавычка наименования, «(» и не
+# больше 30 символов без скобок: «Пользователь» (`EXT-007`), «Счёт» (вкладка `SCR-CL-03.1`).
+# Окно «»» где-то рядом» ловило чужое наименование («…на «Продолжить» или во всей
+# CTL-GRP-1») — живой прогон 26.10
+_Q_NAMED_BEFORE_RE = re.compile(r"»\s*\([^()]{0,30}$")
+_Q_CYR_RE = re.compile(r"[А-Яа-яЁё]")
+# префикс типа отдельным словом (за ним не дефис — иначе это часть ID)
+_Q_PREFIXES = ("NTF", "PRN", "CTL", "SM", "CALL", "ENT", "EXT", "FUN", "PROC", "SCR", "RBAC",
+               "INTC", "LIBC", "EXTINT", "PLT", "FLD", "MSG", "EV")
+_Q_PREFIX_RE = re.compile(r"\b(" + "|".join(sorted(_Q_PREFIXES, key=len, reverse=True)) + r")\b(?!-)")
+# фразы вопроса реализации — в forward не задаются никем
+_Q_IMPL_PHRASES = ("физ. имя", "физическое имя", "varchar", "NOT NULL", "ограничения БД",
+                   "ограничений БД", "имя колонки", "тип БД")
 
 
 # --- git ---------------------------------------------------------------------
@@ -525,8 +554,9 @@ def collect_facts(top: Path, base: Optional[str], files: List[dict],
     return facts, inner, overflow
 
 
-def task_questions(task_text: str) -> List[dict]:
-    """Строки таблицы «Вопросы и ответы» постановки с ответом «—»."""
+def _qa_cells(task_text: str) -> List[List[str]]:
+    """Ячейки всех строк таблицы раздела «Вопросы и ответы» постановки (без
+    шапки и разделителя); раздела нет — пусто."""
     m = _QA_HEAD_RE.search(task_text)
     if not m:
         return []
@@ -534,14 +564,91 @@ def task_questions(task_text: str) -> List[dict]:
     nxt = re.search(r"^#{1,2}\s", sect, re.M)
     if nxt:
         sect = sect[:nxt.start()]
+    return [sc.table_cells(row) for row in _split_matrix_rows(sect.splitlines())]
+
+
+def task_questions(task_text: str) -> List[dict]:
+    """Строки таблицы «Вопросы и ответы» постановки с ответом «—»."""
     out: List[dict] = []
-    for row in _split_matrix_rows(sect.splitlines()):
-        cells = sc.table_cells(row)
+    for cells in _qa_cells(task_text):
         if len(cells) < 3:
             continue
         answer = cells[2]
         if answer == "—" or answer.startswith("— ") or answer.startswith("—("):
             out.append({"n": cells[0], "question": cells[1], "answer": answer})
+    return out
+
+
+def all_task_questions(task_text: str) -> List[dict]:
+    """Все строки таблицы «Вопросы и ответы» (для --questions --json)."""
+    return [{"n": c[0], "question": c[1], "answer": c[2] if len(c) > 2 else ""}
+            for c in _qa_cells(task_text) if len(c) >= 2]
+
+
+def _question_notes(cell: str) -> List[str]:
+    """Замечания к одной ячейке «Вопрос агента» в порядке a → b → c → d → e."""
+    # a. ID назван в двух случаях: (1) он в ярлыке markdown-ссылки, где есть
+    # кириллица (форма реестра «ID Наименование» / «Наименование (ID)»; ярлык из
+    # одного ID — не наименование); (2) прямо перед ним «Наименование» ( и не
+    # больше 30 символов без скобок. Всё прочее — голый ID, в том числе точечная
+    # нотация `ENT-001`.«Поле». Одно замечание на ID, даже если он встречается
+    # и названным по случаю (2); ярлык ссылки (1) называет ID для всей ячейки
+    named: set = set()
+    for lm in _Q_MD_LINK_RE.finditer(cell):
+        if _Q_CYR_RE.search(lm.group(1)):
+            named.update(m.group(0) for m in _Q_ID_RE.finditer(lm.group(1)))
+    text = _Q_MD_LINK_RE.sub(r"\1", cell)
+    out: List[str] = []
+    bare: List[str] = []
+    for m in _Q_ID_RE.finditer(text):
+        ident = m.group(0)
+        if ident in named or _Q_NAMED_BEFORE_RE.search(text[:m.start()]):
+            continue
+        if ident not in bare:
+            bare.append(ident)
+    out += [f"голый идентификатор «{i}» — рядом нет наименования" for i in bare]
+    # b. префикс типа вместо наименования типа требований
+    prefixes: List[str] = []
+    for m in _Q_PREFIX_RE.finditer(text):
+        if m.group(1) not in prefixes:
+            prefixes.append(m.group(1))
+    out += [f"префикс типа «{p}» вместо наименования типа требований "
+            "(словами: уведомления, печатные формы…)" for p in prefixes]
+    # c. вопрос реализации — одно замечание на строку, фразы как в тексте
+    found: List[str] = []
+    for ph in _Q_IMPL_PHRASES:
+        m = re.search(re.escape(ph), text, re.I)
+        if m and m.group(0) not in found:
+            found.append(m.group(0))
+    if found:
+        out.append("вопрос реализации (" + ", ".join(f"«{f}»" for f in found)
+                   + ") — физическое имя, тип и ограничения БД в forward не задаются")
+    # d. нет рекомендации агента
+    if "рекоменду" not in text.lower():
+        out.append("нет рекомендации агента («Рекомендую …»)")
+    # e. несколько вопросов в одной строке
+    n_q = text.count("?")
+    if n_q > 1:
+        out.append(f"в одной строке несколько вопросов ({n_q} знаков «?») — один вопрос — один факт")
+    return out
+
+
+def check_questions(task_text: str) -> List[str]:
+    """Сторож формы таблицы «Вопросы и ответы» постановки (решение владельца
+    2026-10-26): по ВСЕМ строкам, не только с ответом «—», проверяет ячейку
+    «Вопрос агента» по правилам опроса канона `_meta/rules/questions.md` —
+    механическая защита, не зависящая от того, прочитал ли агент правило.
+    Замечания вида `вопрос N: <что не так>` — по порядку строк, внутри строки
+    a → b → c → d → e. Раздела или таблицы нет — пусто (шаблон допускает
+    заход без вопросов). Карточки не проверяются — шума по комплекту нет."""
+    if not task_text:
+        return []
+    out: List[str] = []
+    for k, cells in enumerate(_qa_cells(task_text), 1):
+        if len(cells) < 2:
+            continue
+        n = cells[0] or str(k)
+        out += [f"вопрос {n}: {x}" for x in _question_notes(cells[1])]
     return out
 
 
@@ -643,6 +750,8 @@ def build(repo: Path, base_arg: Optional[str] = None,
     if err:
         return None, err
     task_text, task_name = check_task_file(kit, task_id, notes)
+    if task_text:
+        notes.extend(check_questions(task_text))
     matrix_rec = next((f for f in files if f["kind"] == "matrix"), None)
     matrix = collect_matrix(top, base, {"path": matrix_rec["git_path"], "status": matrix_rec["status"],
                                         "old": matrix_rec["old"]} if matrix_rec else None)
@@ -832,6 +941,18 @@ def render_affected(rows: List[dict], notes: List[str]) -> str:
     return "\n".join(L)
 
 
+def render_questions(task_id: str, notes: List[str]) -> str:
+    """Текст режима --questions: замечания сторожа формы вопросов или «OK»."""
+    L = [f"# Вопросы постановки {task_id} — проверка формы", ""]
+    if notes:
+        L += [f"- {n}" for n in notes] + ["",
+              f"i замечаний: {len(notes)} — переформулируй по правилам опроса "
+              "(_meta/rules/questions.md) до показа аналитику"]
+    else:
+        L.append("OK: замечаний по вопросам нет")
+    return "\n".join(L) + "\n"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Отчёт дельты комплекта документации по изменениям рабочего дерева "
@@ -847,6 +968,10 @@ def main() -> int:
     ap.add_argument("--affected", default=None,
                     help="ДО правок: ID карточек через запятую — кто на них ссылается и на кого "
                          "ссылаются они (соседи для шага 2 режима C); отчёт дельты не строится")
+    ap.add_argument("--questions", default=None, metavar="JIRA-ID",
+                    help="ДО показа аналитику: проверка формы таблицы «Вопросы и ответы» "
+                         "постановки tasks/<JIRA-ID>.md по правилам опроса; код 0 и при "
+                         "замечаниях, код 2 — постановки нет; отчёт дельты не строится")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     if a.affected:
@@ -867,6 +992,27 @@ def main() -> int:
         if a.json:
             print(json.dumps({"affected": rows, "notes": notes}, ensure_ascii=False, indent=1))
         return 0 if rows else 2
+    if a.questions:
+        task_id = a.questions.strip()
+        kit, err = kit_root(a.repo.resolve())
+        path = kit / "tasks" / f"{task_id}.md" if kit is not None else None
+        if path is None or not path.is_file():
+            print(f"✗ постановка не найдена: tasks/{task_id}.md" + (f" ({err})" if err else ""))
+            return 2
+        task_text = path.read_text(encoding="utf-8", errors="replace")
+        notes = check_questions(task_text)
+        text = render_questions(task_id, notes)
+        if a.out is not None:
+            a.out.parent.mkdir(parents=True, exist_ok=True)
+            with open(a.out, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(text)
+            print(f"i проверка вопросов записана: {a.out}")
+        else:
+            print(text, end="")
+        if a.json:
+            print(json.dumps({"questions": all_task_questions(task_text), "notes": notes},
+                             ensure_ascii=False, indent=1))
+        return 0
     try:
         data, err = build(a.repo, a.base, a.task)
     except Exception as e:  # noqa: BLE001
