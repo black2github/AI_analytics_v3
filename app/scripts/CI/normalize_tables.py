@@ -5487,6 +5487,52 @@ def _rc_behavior_numbering(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     return report, ok
 
 
+# Подраздел «Из источника, вне разделов шаблона» (норма канона 2026-10-26: шаблон function §6,
+# чек-лист п. 11): сведения источника без слота в шаблоне — дословно, с лейблом источника, H2 в
+# конце карточки. Прибор только показывает приёмке, что такой перенос в карточке есть (строка i,
+# видна и у ✓), и сигналит о форме: подраздел пуст или не последний H2 — предупреждение, вердикт
+# не меняется. Дословность сверяется по странице целиком, дубли слотов — дело ревью. Карточка без
+# подраздела — ни одной строки.
+_OUTSIDE_TPL_TITLE = "из источника, вне разделов шаблона"
+
+
+def _h2_key(title: str) -> str:
+    """Имя H2 для сравнения: без номера раздела, конечной точки, регистра и «ё»."""
+    t = re.sub(r"^\s*\d+(?:\.\d+)*\.?\s+", "", title.strip())
+    return re.sub(r"\s+", " ", t.rstrip(" .:")).lower().replace("ё", "е")
+
+
+def check_outside_template_section(card_text: str) -> Tuple[List[str], bool]:
+    """Подраздел «Из источника, вне разделов шаблона»: строка i с числом строк; предупреждение,
+    если он пуст или не последний H2 карточки. Без подраздела — пусто."""
+    lines = card_text.splitlines()
+    code = _fence.code_flags(lines)
+    h2 = [(i, ln[3:]) for i, ln in enumerate(lines)
+          if not code[i] and ln.startswith("## ") and not ln.startswith("###")]
+    hits = [k for k, (_i, t) in enumerate(h2) if _h2_key(t) == _OUTSIDE_TPL_TITLE]
+    if not hits:
+        return [], True
+    k = hits[0]
+    start = h2[k][0] + 1
+    end = h2[k + 1][0] if k + 1 < len(h2) else len(lines)
+    body = re.sub(r"<!--.*?-->", " ", "\n".join(lines[start:end]), flags=re.S)
+    n = sum(1 for ln in body.splitlines() if ln.strip())
+    report = [f"i подраздел вне шаблона: {n} строк"]
+    if n == 0:
+        report.append("предупреждение: подраздел «Из источника, вне разделов шаблона» пуст — "
+                      "убрать заголовок или перенести сведения источника без слота "
+                      "(шаблон function §6)")
+    if k != len(h2) - 1:
+        report.append("предупреждение: подраздел «Из источника, вне разделов шаблона» не "
+                      f"последний H2 карточки (после него «{h2[-1][1].strip()[:60]}») — "
+                      "по шаблону он в конце карточки (function §6)")
+    return report, True
+
+
+def _rc_outside_template_section(fx: "_SourceCtx") -> Tuple[List[str], bool]:
+    return check_outside_template_section(fx.card_text)
+
+
 def _rc_notification_structure(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     card_text, = fx.card_text,
     report: List[str] = []
@@ -5639,6 +5685,7 @@ SOURCE_CHECKS: List[Check] = [
     Check("behavior_numbering", _rc_behavior_numbering, scope="file"),
     Check("notification_structure", _rc_notification_structure, scope="file"),
     Check("source_comparison", _rc_source_comparison, scope="file"),
+    Check("outside_template_section", _rc_outside_template_section, scope="file"),
 ]
 
 
