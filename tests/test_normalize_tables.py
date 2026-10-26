@@ -4781,3 +4781,168 @@ class TestHttpWhitelistContourGroups:
         p = self._card(tmp_path, "[реестр](https://passport.example.ru/registration)\n")
         rep, _ = check_clean_document(p, None)
         assert any("вне белого списка" in r for r in rep), rep
+
+
+
+class TestFB01PlainPassport:
+    """FB-01 access-rules (2026-10-26): таблица-паспорт функции с лейблами обычным текстом
+    и без строки шапки (первая строка паспорта — заголовок таблицы). Лейблы не требуются,
+    значение строки-«шапки» проверяется наравне со строками, значения второй колонки —
+    обязательны; режим паспорта виден строкой i."""
+
+    SOURCE = (
+        "| Кому доступна функция: | Функция доступна пользователям в соответствии с ролевой моделью. |\n"
+        "| --- | --- |\n"
+        "| Как вызывается функция: | Данная функция вызывается при нажатии кнопки \"Посмотреть историю\" |\n"
+        "| Что делает функция: | При вызове отображается ЭФ «История исполнения правила» |\n"
+        "| Код привилегии | ACCESS_RULE_HISTORY_VIEW |\n"
+        "| Какие методы закрывает функция | `/admin/access-rule/{id}/history` |\n"
+    )
+    CARD = (
+        "# FUN-BNK-01. Просмотр истории\n\n## Доступность\n\n"
+        "Функция доступна пользователям в соответствии с ролевой моделью.\n\n"
+        "Код привилегии ACCESS_RULE_HISTORY_VIEW, закрывает метод /admin/access-rule/{id}/history.\n\n"
+        "## Вызов\n\nДанная функция вызывается при нажатии кнопки \"Посмотреть историю\"\n\n"
+        "## Поведение\n\nПри вызове отображается ЭФ «История исполнения правила»\n"
+    )
+
+    def test_labels_not_required_and_info_line(self):
+        report, ok = check_source_tables(self.CARD, self.SOURCE)
+        assert ok, report
+        assert any(r.startswith("i таблица-паспорт «Кому доступна функция:") and
+                   "лейблы не требуются (5 строк), значения проверены" in r for r in report)
+
+    def test_header_value_checked_as_data(self):
+        # значение строки-«шапки» раньше терялось молча — теперь его потеря — брак
+        card = self.CARD.replace("Функция доступна пользователям в соответствии с ролевой моделью.", "")
+        report, ok = check_source_tables(card, self.SOURCE)
+        assert not ok and any("Функция доступна пользователям" in r for r in report), report
+
+    def test_second_column_values_required_incl_api_path(self):
+        for lost in ("ACCESS_RULE_HISTORY_VIEW", "/admin/access-rule/{id}/history"):
+            report, ok = check_source_tables(self.CARD.replace(lost, ""), self.SOURCE)
+            assert not ok, lost
+
+    def test_labels_from_list_without_colon(self):
+        source = ("| Код привилегии | ACCESS_RULE_VIEW |\n| --- | --- |\n"
+                  "| Какие методы закрывает функция | /admin/access-rule |\n"
+                  "| Кому доступна функция | Пользователям банка по ролевой модели |\n")
+        card = "Код привилегии ACCESS_RULE_VIEW, метод /admin/access-rule. Пользователям банка по ролевой модели."
+        report, ok = check_source_tables(card, source)
+        assert ok, report
+
+    def test_data_table_with_column_titles_not_passport(self):
+        # «Параметр | Описание» — таблица данных: первая колонка сторожится, шапка не данные
+        source = ("| Параметр | Описание |\n| --- | --- |\n"
+                  "| Статус: | Состояние заявки |\n| Тип: | Тип заявки |\n")
+        report, ok = check_source_tables("Состояние заявки. Тип заявки.", source)
+        # шапка — заголовки колонок, не лейбл: таблица данных, первая колонка («Статус:») требуется
+        assert not ok and not any(r.startswith("i таблица-паспорт") for r in report)
+        source2 = ("| Поле | Значение |\n| --- | --- |\n"
+                   "| Длинное поле, которое описывает что-то. Подробно | Да |\n| Другое | Нет |\n")
+        report, ok = check_source_tables("Да Нет", source2)
+        assert not ok   # первые ячейки — не лейблы: колонка требуется
+
+    def test_long_sentence_first_cells_not_passport(self):
+        source = ("| Пользователь выбирает организацию в списке. Затем нажимает кнопку: | Да |\n| --- | --- |\n"
+                  "| Система проверяет данные и сохраняет заявку в черновик: | Нет |\n"
+                  "| Ещё одна длинная фраза с точкой. Внутри ячейки: | Иногда |\n")
+        report, ok = check_source_tables("Да Нет Иногда", source)
+        assert not ok and not any(r.startswith("i таблица-паспорт") for r in report)
+
+    def test_single_row_table_unchanged(self):
+        # таблица из одной строки данных — служебная, сверке не подлежит, как прежде
+        source = "| Кому доступна функция: | Всем |\n| --- | --- |\n| Код привилегии | X_VIEW |\n"
+        report, ok = check_source_tables("", source)
+        assert ok and report == ["markdown-таблицы источника: все значения на месте ✓"]
+
+    def test_bold_passport_unchanged_except_header_check(self):
+        # К-35: жирный паспорт — без изменений (строки режима нет), кроме проверки значения шапки
+        report, ok = check_source_tables(TestK35PassportLabelColumn.CARD, TestK35PassportLabelColumn.SOURCE)
+        assert ok and report == ["markdown-таблицы источника: все значения на месте ✓"]
+
+    def test_bold_passport_header_value_checked(self):
+        # значение шапки жирного паспорта («Хранение сведений…») отсутствует в карточке → ✗
+        card = TestK35PassportLabelColumn.CARD.replace("Хранение сведений о счетах по заявке.\n\n", "")
+        report, ok = check_source_tables(card, TestK35PassportLabelColumn.SOURCE)
+        assert not ok and any("Хранение сведений о счетах" in r for r in report), report
+        assert not any(r.startswith("i таблица-паспорт") for r in report)
+
+    def test_info_line_visible_for_green_card(self):
+        # строка режима — мягкий сигнал: selfcheck показывает её и при ✓ карточки
+        from app.scripts.CI.kitcheck.core import is_soft_signal
+        report, ok = check_source_tables(self.CARD, self.SOURCE)
+        assert ok and any(is_soft_signal(r) and r.startswith("i таблица-паспорт") for r in report)
+
+
+class TestCompareFoldQuotesAndLinkId:
+    """Сверка значений таблиц источника (решение владельца канона 2026-10-26, замер FB-01):
+    вид кавычек и ID карточки в начале текста ссылки различием не считаются — симметрично;
+    всё остальное (потерянное слово, ID не в начале, снятый тег) — различие, как прежде."""
+
+    SOURCE = ("| **Назначение** | Доступность определяется по привилегии функций \"[\\[УЛ\\] Банк: Функция "
+              "создания УЛ](https://confluence.example/pages/1)\" (см. п. ролевой модели). |\n| --- | --- |\n"
+              "| **Код привилегии** | UL_DELETE |\n| **Таблица БД** | ul_authority |\n")
+
+    def test_quote_kinds_folded(self):
+        card = ("Доступность определяется по привилегии функций «[УЛ] Банк: Функция создания УЛ» "
+                "(см. п. ролевой модели). Код UL_DELETE, таблица ul_authority.")
+        report, ok = check_source_tables(card, self.SOURCE)
+        assert ok, report
+
+    def test_lost_word_with_folded_quotes_still_flagged(self):
+        # НЕсрабатывание ослабления: кавычки сведены, но выпало «п.» — потеря
+        card = ("Доступность определяется по привилегии функций «[УЛ] Банк: Функция создания УЛ» "
+                "(см. ролевой модели). Код UL_DELETE, таблица ul_authority.")
+        report, ok = check_source_tables(card, self.SOURCE)
+        assert not ok and any("пример потери" in r for r in report), report
+
+    def test_card_id_at_link_start_ignored(self):
+        source = ("| **Зачем нужна ЭФ:** | Данная ЭФ предназначена для просмотра пользователем Банка "
+                  "[\\[КК_ЛК\\] Заявка на управление лимитами](../x.md) |\n| --- | --- |\n"
+                  "| **Как вызывается** | С журнала заявок |\n| **Кто видит** | Пользователь банка |\n")
+        card = ("Данная ЭФ предназначена для просмотра пользователем Банка "
+                "[ENT-019 [КК_ЛК] Заявка на управление лимитами](../../data-model/ent-019.md). "
+                "С журнала заявок. Пользователь банка.")
+        report, ok = check_source_tables(card, source)
+        assert ok, report
+        # ID с подтипом (ENT-USR-001) — той же формы
+        card2 = card.replace("[ENT-019 ", "[ENT-USR-001 ")
+        assert check_source_tables(card2, source)[1]
+
+    def test_card_id_not_at_link_start_compared_as_is(self):
+        source = ("| **Зачем нужна ЭФ:** | Просмотр [\\[КК_ЛК\\] Заявка на управление лимитами](../x.md) |\n"
+                  "| --- | --- |\n| **Как вызывается** | С журнала заявок |\n| **Кто видит** | Пользователь банка |\n")
+        card = ("Просмотр [[КК_ЛК] ENT-019 Заявка на управление лимитами](../ent-019.md). "
+                "С журнала заявок. Пользователь банка.")
+        report, ok = check_source_tables(card, source)
+        assert not ok, report
+
+    def test_dropped_tag_still_a_difference(self):
+        # снятый тег [КК_БК] нормализацией не покрывается (scr-cl-18 КК)
+        source = ("| **Зачем нужна ЭФ:** | Просмотр заявок (сущность [\\[КК_БК\\] Заявка на изменение статуса](../x.md)) |\n"
+                  "| --- | --- |\n| **Как вызывается** | С журнала заявок |\n| **Кто видит** | Пользователь банка |\n")
+        card = ("Просмотр заявок (сущность [ENT-015 Заявка на изменение статуса](../ent-015.md)). "
+                "С журнала заявок. Пользователь банка.")
+        report, ok = check_source_tables(card, source)
+        assert not ok, report
+
+    def test_quotes_dropped_link_replaced_by_name(self):
+        # живая ссылка без кавычек в источнике ↔ название в «ёлочках» в карточке (УЛ fun-cl-03)
+        source = ("| **Доступность функции:** | Зависит от роли пользователя [\\[ЦРМ\\] Ролевая модель "
+                  "клиента](https://confluence.example/pages/1) |\n| --- | --- |\n"
+                  "| **Код привилегии** | UL_VIEW |\n| **Таблица БД** | ul_authority |\n")
+        card = ("Зависит от роли пользователя «[ЦРМ] Ролевая модель клиента». "
+                "Код UL_VIEW, таблица ul_authority.")
+        report, ok = check_source_tables(card, source)
+        assert ok, report
+
+    def test_quoted_literal_guard_unchanged(self):
+        # снятие кавычек — только внутри сверки значений: сторож кавычечных литералов на тех же
+        # входах ведёт себя как прежде (литерал без слова в карточке — потеря)
+        from app.scripts.CI.normalize_tables import check_quoted_literals
+        source = "Кнопка «Сохранить черновик» внизу формы.\n"
+        rep, ok = check_quoted_literals("Кнопка внизу формы.", source)
+        assert not ok
+        rep, ok = check_quoted_literals("Кнопка «Сохранить черновик» внизу формы.", source)
+        assert ok

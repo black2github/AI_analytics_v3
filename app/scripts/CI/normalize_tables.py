@@ -2840,6 +2840,60 @@ def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
             f"источник {src!r} — перенос дословный)"], False
 
 
+# FB-01 access-rules (2026-10-26): лейблы паспорта функции без двоеточия, которые
+# встречаются на страницах функций обычным текстом («Код привилегии | …»). Закрытый перечень,
+# расширяется по сигналу; лейбл с двоеточием распознаётся и без перечня (_is_passport_label).
+_PASSPORT_LABELS = frozenset({
+    "код привилегии",
+    "какие методы закрывает функция",
+    "кому доступна функция",
+    "как вызывается функция",
+    "что делает функция",
+})
+# заголовки колонок обычной двухколонной таблицы данных: шапка с ними — не строка паспорта
+_DATA_COLUMN_TITLES = frozenset({
+    "описание", "значение", "расшифровка", "комментарий", "примечание", "наименование",
+    "параметр", "поле", "код", "value", "description",
+})
+
+
+# Сверка значений таблиц источника (решение владельца канона 2026-10-26, замер FB-01): две
+# разницы записи различием не считаются, симметрично для источника и карточки —
+#   - кавычки: «ёлочки», лапки, прямые двойные и одинарные снимаются совсем — знак кавычки
+#     не содержание; замена живой ссылки названием в «ёлочках» — законная (правило «живые
+#     URL не переносятся»). Только в этой сверке: сторож кавычечных литералов не затронут;
+#   - ID карточки в начале текста ссылки — правило ссылок комплекта «[ID Название]»:
+#     «[ENT-019 [КК_ЛК] Заявка…](…)» сверяется как «[[КК_ЛК] Заявка…](…)». ID — по форме
+#     идентификаторов канона: префикс типа заглавными с дефисами и трёхзначный номер. ID не в
+#     начале текста ссылки и снятый тег («[КК_БК]») — различие, как прежде.
+_CMP_QUOTES_RE = re.compile(r"[«»“”„\"']")
+_LINK_TEXT_ID_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{3}\s+(?=\S)")
+
+
+def _cmp_text(v: str) -> str:
+    """Нормальная форма для сверки значений таблиц источника: _norm_cell без ID карточки в
+    начале текста ссылки и без кавычек, кириллица/латиница — без двойников."""
+    v = _LINK_TEXT_ID_RE.sub("[", v)
+    v = _CMP_QUOTES_RE.sub("", _fold_homoglyphs(_norm_cell(v)))
+    return re.sub(r"\s+", " ", v).strip()
+
+
+def _is_passport_label(cell: str) -> bool:
+    """Первая ячейка строки паспорта: целиком жирный лейбл (К-35) либо обычный текст —
+    короткий (не длиннее 6 слов и 60 символов, без точки внутри) с двоеточием в конце или
+    лейбл из закрытого перечня паспорта функции."""
+    c = cell.strip()
+    if re.fullmatch(r"\*\*[^*]+\*\*", c):
+        return True
+    if not c or "**" in c:
+        return False
+    plain = c.rstrip(":").strip()
+    if plain.lower() in _PASSPORT_LABELS:
+        return True
+    return (c.endswith(":") and "." not in plain and len(c) <= 60
+            and len(plain.split()) <= 6)
+
+
 def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -2850,7 +2904,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     слова. Таблицы из 1 колонки или <2 строк не сверяются (служебные)."""
     report: List[str] = []
     ok = True
-    card_norm = _fold_homoglyphs(_norm_cell(card_text))
+    card_norm = _cmp_text(card_text)
     for hdr, rows in parse_md_tables(source_text):
         if len(hdr) < 2 or len(rows) < 2:
             continue
@@ -2886,16 +2940,35 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
         # слотом шаблона («Таблица БД» + «**Название физической таблицы
         # БД**»). Значения второй колонки сторожатся по-прежнему
         # (асимметрия: данные — сторожим, носители структуры — нет).
-        if (len(hdr) == 2
-                and re.fullmatch(r"\*\*[^*]+\*\*", hdr[0].strip())
-                and all(re.fullmatch(r"\*\*[^*]+\*\*", r[0].strip())
-                        for r in rows
-                        if r and any(c.strip() for c in r))):
+        bold_passport = (
+            len(hdr) == 2
+            and re.fullmatch(r"\*\*[^*]+\*\*", hdr[0].strip())
+            and all(re.fullmatch(r"\*\*[^*]+\*\*", r[0].strip())
+                    for r in rows
+                    if r and any(c.strip() for c in r)))
+        # FB-01 access-rules (2026-10-26): паспорт с лейблами обычным текстом («Кому
+        # доступна функция: | …», «Код привилегии | …») и без строки шапки — первая строка
+        # паспорта стала заголовком таблицы. Лейблы не требуются, как у жирного паспорта;
+        # значение строки-«шапки» проверяется наравне со строками (раньше терялось молча).
+        plain_passport = (
+            not bold_passport and len(hdr) == 2
+            and _is_passport_label(hdr[0])
+            and all(_is_passport_label(r[0]) for r in rows
+                    if r and any(c.strip() for c in r))
+            and any(len(r) > 1 and r[1].strip() for r in rows))
+        if bold_passport or plain_passport:
             skip_cols.add(0)
+        check_rows = list(rows)
+        # строка-шапка паспорта — данные и у жирного паспорта К-35 (решение владельца канона
+        # 2026-10-26: тихая потеря значения шапки — нарушение асимметрии), если её вторая
+        # ячейка — не заголовок колонки
+        if ((plain_passport or bold_passport) and hdr[1].strip()
+                and _norm_cell(hdr[1]).strip(" :*").lower() not in _DATA_COLUMN_TITLES):
+            check_rows.insert(0, list(hdr))
         missing: List[str] = []
         img_mixed: List[str] = []
         url_cells: List[str] = []
-        for row in rows:
+        for row in check_rows:
             # Строка с вложением (пример Запрос.xml/Ответ.xml) — целиком в
             # sidecar examples/, в карточке её значений законно нет.
             if any(_ATTACHMENT_RE.search(c) for c in row):
@@ -2946,13 +3019,18 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                                  or rest.lower().startswith(("см", "cм")))):
                         url_cells.append(cell.strip()[:50])
                         continue
-                if cv and _fold_homoglyphs(cv) not in card_norm:
+                if cv and _cmp_text(cell) not in card_norm:
                     missing.append(cell.strip()[:60])
+        if plain_passport:
+            title = " | ".join(h.strip() for h in hdr[:3])[:80]
+            report.append(
+                f"i таблица-паспорт «{title}»: лейблы не требуются ({len(check_rows)} строк), "
+                "значения проверены")
         if missing:
             ok = False
             title = " | ".join(h.strip() for h in hdr[:3])
             report.append(
-                f"таблица источника «{title}» ({len(rows)} строк): в карточке "
+                f"таблица источника «{title}» ({len(check_rows)} строк): в карточке "
                 f"отсутствуют {len(missing)} значений ✗ НИЖЕ ПОРОГА")
             for v in missing[:3]:
                 report.append(f"      пример потери: {v!r}")
@@ -2975,7 +3053,7 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     # file_id/upload_token потеряны при зелёном гейте).
     html_names = html_param_names(source_text)
     lost = sorted(n for n in html_names
-                  if _fold_homoglyphs(_norm_cell(n)) not in card_norm)
+                  if _cmp_text(n) not in card_norm)
     if lost:
         ok = False
         report.append(
