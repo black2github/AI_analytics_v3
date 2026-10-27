@@ -47,6 +47,15 @@
 #   7. Проверки: блок-заглушка (selfcheck / link_debts / гейт) — результаты
 #      вписывает агент после прогона; прибор лишь проверяет, что постановка
 #      существует и её frontmatter несёт `type: task` и `task: <JIRA-ID>`.
+#   8. Сторож отчёта перед сдачей (`--check <файл.md>`, решение владельца
+#      2026-10-27 после прогона TEAMTB-202610272 на слабой модели: отчёт
+#      сдан с пустым «Происхождением», заглушками «почему: …» и шаблонным
+#      разделом «Проверки», собран до правки матрицы): факты без
+#      происхождения, оставшиеся «почему: …» в «Затронуто», незаполненный
+#      раздел «Проверки», неразобранный блок «Замечания прибора», отчёт
+#      старее дельты рабочего дерева (файлы дельты, которых нет в
+#      «Изменённых файлах»). Замечания, код 0; гейт — скилл («пока есть
+#      замечания — не сдавать»).
 #
 # ОГРАНИЧИТЕЛИ. Утилита read-only: в репозитории ничего не меняет, пишет в
 # stdout и/или в файл `--out`. Это вход для человека, не гейт: замечания
@@ -70,6 +79,10 @@
 #                    «Вопросы и ответы» постановки `tasks/<JIRA-ID>.md` (сторож
 #                    `check_questions`); дельта не строится, git не нужен; код 0
 #                    и при замечаниях (замечание, не гейт), код 2 — постановки нет
+#   --check <файл.md>  ПЕРЕД СДАЧЕЙ: проверка заполненного отчёта дельты (сторож
+#                    `check_report`) и его свежести против дельты рабочего дерева
+#                    `--repo` (`--base`, `--task` — как у сборки); код 0 и при
+#                    замечаниях, код 2 — файла нет
 #
 # Код выхода: 0 — отчёт собран; 2 — собрать нельзя (не git-репозиторий,
 # матрицы нет, постановка в дельте неоднозначна).
@@ -556,9 +569,14 @@ def collect_facts(top: Path, base: Optional[str], files: List[dict],
     return facts, inner, overflow
 
 
-def _qa_cells(task_text: str) -> List[List[str]]:
-    """Ячейки всех строк таблицы раздела «Вопросы и ответы» постановки (без
-    шапки и разделителя); раздела нет — пусто."""
+_QA_BOUNDARY_HEAD_RE = re.compile(r"^###\s+Границы\s+захода", re.I)
+
+
+def _qa_rows(task_text: str) -> List[Tuple[bool, List[str]]]:
+    """Строки таблиц раздела «Вопросы и ответы» постановки (без шапки и
+    разделителя) с признаком «строка подраздела «### Границы захода»»
+    (шаблон `task.md`: два списка — «Решения» и «Границы захода»); раздела
+    нет — пусто."""
     m = _QA_HEAD_RE.search(task_text)
     if not m:
         return []
@@ -566,7 +584,27 @@ def _qa_cells(task_text: str) -> List[List[str]]:
     nxt = re.search(r"^#{1,2}\s", sect, re.M)
     if nxt:
         sect = sect[:nxt.start()]
-    return [sc.table_cells(row) for row in _split_matrix_rows(sect.splitlines())]
+    out: List[Tuple[bool, List[str]]] = []
+    boundary = False
+    block: List[str] = []
+
+    def flush() -> None:
+        out.extend((boundary, sc.table_cells(row)) for row in _split_matrix_rows(block))
+        block.clear()
+
+    for line in sect.splitlines():
+        if line.startswith("###"):
+            flush()
+            boundary = bool(_QA_BOUNDARY_HEAD_RE.match(line))
+            continue
+        block.append(line)
+    flush()
+    return out
+
+
+def _qa_cells(task_text: str) -> List[List[str]]:
+    """Ячейки всех строк таблиц раздела «Вопросы и ответы» (оба подраздела)."""
+    return [cells for _, cells in _qa_rows(task_text)]
 
 
 def task_questions(task_text: str) -> List[dict]:
@@ -587,8 +625,9 @@ def all_task_questions(task_text: str) -> List[dict]:
             for c in _qa_cells(task_text) if len(c) >= 2]
 
 
-def _question_notes(cell: str) -> List[str]:
-    """Замечания к одной ячейке «Вопрос агента» в порядке a → b → c → d → e."""
+def _question_notes(cell: str, boundary: bool = False) -> List[str]:
+    """Замечания к одной ячейке «Вопрос агента» в порядке a → b → c → d → e;
+    `boundary` — строка подраздела «Границы захода»."""
     # a. ID назван в двух случаях: (1) он в ярлыке markdown-ссылки, где есть
     # кириллица (форма реестра «ID Наименование» / «Наименование (ID)»; ярлык из
     # одного ID — не наименование); (2) прямо перед ним «Наименование» ( и не
@@ -630,9 +669,14 @@ def _question_notes(cell: str) -> List[str]:
         out.append("вопрос реализации (" + ", ".join(f"«{f}»" for f in found)
                    + ") — физическое имя, тип и ограничения БД в forward не задаются")
     # d. нет рекомендации агента
-    # пункт «Границ захода» («…: не меняю — по умолчанию DFR-NNN») — утверждение
-    # по умолчанию постановки, рекомендации ему не нужно (правила опроса п. 6)
-    boundary = "по умолчанию" in text.lower() and "DFR-" in text
+    # пункт «Границ захода» — утверждение «что делаю / чего не делаю» с
+    # основанием, рекомендации ему не нужно (правила опроса п. 6): любая строка
+    # подраздела «### Границы захода», а вне подраздела — строка в форме
+    # «… — по умолчанию DFR-NNN» (постановка без подразделов). Границу,
+    # переписанную после ответа аналитика без DFR («добавляю — решение
+    # аналитика»), старая форма считала вопросом без рекомендации — живой
+    # прогон 27.10 (TEAMTB-202610272); голые ID в границах проверяются как везде
+    boundary = boundary or ("по умолчанию" in text.lower() and "DFR-" in text)
     if "рекоменду" not in text.lower() and not boundary:
         out.append("нет рекомендации агента («Рекомендую …»)")
     # e. несколько вопросов в одной строке
@@ -653,11 +697,11 @@ def check_questions(task_text: str) -> List[str]:
     if not task_text:
         return []
     out: List[str] = []
-    for k, cells in enumerate(_qa_cells(task_text), 1):
+    for k, (boundary, cells) in enumerate(_qa_rows(task_text), 1):
         if len(cells) < 2:
             continue
         n = cells[0] or str(k)
-        out += [f"вопрос {n}: {x}" for x in _question_notes(cells[1])]
+        out += [f"вопрос {n}: {x}" for x in _question_notes(cells[1], boundary)]
     return out
 
 
@@ -950,6 +994,96 @@ def render_affected(rows: List[dict], notes: List[str]) -> str:
     return "\n".join(L)
 
 
+# --- сторож отчёта дельты перед сдачей (--check) -----------------------------
+
+_REPORT_TITLE_RE = re.compile(r"^#\s+Отчёт дельты:\s*(\S+)", re.M)
+_REPORT_SECTION_RE = re.compile(r"^##\s+(.+?)\s*$", re.M)
+_REPORT_FILE_ROW_RE = re.compile(r"^\|\s*`([^`]+)`\s*\|", re.M)
+_REPORT_TASK_LINE_RE = re.compile(r"^Постановка:\s*`([^`]+)`", re.M)
+# заглушки, которые печатает render(): агент обязан их заменить
+_REPORT_WHY_STUB = "почему: …"
+_REPORT_CHECKS_STUBS = ("`selfcheck`: …", "`READY` / `NOT READY`")
+
+
+def _report_sections(text: str) -> Dict[str, str]:
+    """Разделы отчёта `## Имя` → текст раздела (до следующего `## `)."""
+    parts = _REPORT_SECTION_RE.split(text)
+    return {parts[i].strip(): parts[i + 1] for i in range(1, len(parts) - 1, 2)}
+
+
+def check_report(report_text: str, repo: Optional[Path] = None, base: Optional[str] = None,
+                 task: Optional[str] = None) -> List[str]:
+    """Сторож заполненного отчёта дельты перед сдачей в описание MR. Проверяет
+    то, что агент обязан дописать после сборки прибором (шаблон канона
+    `_meta/templates/delta-report.md`), и свежесть отчёта: `repo` задан —
+    дельта рабочего дерева собирается заново и файлы, которых нет в разделе
+    «Изменённые файлы», — замечание (отчёт собран до части правок, живой прогон
+    27.10: «матрица не изменена» при изменённой матрице). Замечания — строки;
+    код выхода не меняют."""
+    notes: List[str] = []
+    secs = _report_sections(report_text)
+    if not _REPORT_TITLE_RE.search(report_text) or "Факты и происхождение" not in secs:
+        notes.append("это не отчёт дельты по шаблону канона: нет заголовка «# Отчёт дельты: …» "
+                     "или раздела «Факты и происхождение» — собери `--task <JIRA-ID> --out <файл>`")
+        return notes
+    # 1. факты без происхождения (служебные строки прибора «…ещё N» и «—» не считаются)
+    rows = [sc.table_cells(r) for r in _split_matrix_rows(secs["Факты и происхождение"].splitlines())]
+    rows = [r for r in rows if len(r) >= 3 and not r[0].startswith("…ещё") and r[0].strip() != "—"]
+    empty = [r for r in rows if not r[2].strip()]
+    if empty:
+        notes.append(f"фактов без происхождения: {len(empty)} из {len(rows)} — колонку "
+                     "«Происхождение» заполняет агент (строка постановки T-NN, ID карточки "
+                     "комплекта или номер вопроса), строк без происхождения быть не должно")
+    # 2. затронутые карточки с заглушкой «почему: …»
+    n_why = secs.get("Затронуто", "").count(_REPORT_WHY_STUB)
+    if n_why:
+        notes.append(f"затронутые карточки без ответа «почему не изменена»: {n_why} — заглушка "
+                     "«почему: …» заменяется причиной (или карточка правится)")
+    # 3. раздел «Проверки» — шаблонный текст или пусто
+    chk = secs.get("Проверки", "")
+    if not chk.strip() or any(s in chk for s in _REPORT_CHECKS_STUBS):
+        notes.append("раздел «Проверки» не заполнен — результаты selfcheck, link_debts и гейта "
+                     "переноса вписываются после прогона (новых ✗ нет / NOT READY с чем)")
+    # 4. блок «Замечания прибора» оставлен как есть
+    rem = [ln for ln in secs.get("Замечания прибора", "").splitlines() if ln.startswith("- ")]
+    if rem:
+        notes.append(f"блок «Замечания прибора» не разобран: {len(rem)} — каждое либо исправлено "
+                     "в комплекте, либо объяснено в отчёте как предсуществующее")
+    # 5. свежесть: дельта рабочего дерева против раздела «Изменённые файлы»
+    if repo is not None:
+        if task is None:
+            m = _REPORT_TITLE_RE.search(report_text)
+            task = m.group(1) if m else None
+        try:
+            data, err = build(repo, base, task)
+        except Exception as e:  # noqa: BLE001
+            data, err = None, repr(e)
+        if err or data is None:
+            notes.append(f"сверка с дельтой рабочего дерева не выполнена: {err}")
+        else:
+            files_sec = secs.get("Изменённые файлы", "")
+            listed = set(_REPORT_FILE_ROW_RE.findall(files_sec)) | set(_REPORT_TASK_LINE_RE.findall(files_sec))
+            missing = sorted({f["path"] for f in data["files"]} - listed)
+            if missing:
+                notes.append("отчёт собран до части правок — в дельте есть файлы, которых нет в "
+                             "«Изменённых файлах»: " + ", ".join(f"`{p}`" for p in missing)
+                             + " — пересобери отчёт после всех правок (включая матрицу) и "
+                             "заполни заново")
+    return notes
+
+
+def render_check(path: Path, notes: List[str]) -> str:
+    """Текст режима --check: замечания сторожа отчёта или «OK»."""
+    L = [f"# Отчёт дельты `{path.name}` — проверка перед сдачей", ""]
+    if notes:
+        L += [f"- {n}" for n in notes] + ["",
+              f"i замечаний: {len(notes)} — отчёт к сдаче не готов (create-artifact, режим C, "
+              "шаг 8: доведи и проверь снова)"]
+    else:
+        L.append("OK: отчёт дельты готов к сдаче")
+    return "\n".join(L) + "\n"
+
+
 def render_questions(task_id: str, notes: List[str]) -> str:
     """Текст режима --questions: замечания сторожа формы вопросов или «OK»."""
     L = [f"# Вопросы постановки {task_id} — проверка формы", ""]
@@ -981,8 +1115,29 @@ def main() -> int:
                     help="ДО показа аналитику: проверка формы таблицы «Вопросы и ответы» "
                          "постановки tasks/<JIRA-ID>.md по правилам опроса; код 0 и при "
                          "замечаниях, код 2 — постановки нет; отчёт дельты не строится")
+    ap.add_argument("--check", type=Path, default=None, metavar="ФАЙЛ.md",
+                    help="ПЕРЕД СДАЧЕЙ: проверка заполненного отчёта дельты (происхождение "
+                         "фактов, «почему: …», «Проверки», замечания прибора) и его свежести "
+                         "против дельты --repo; код 0 и при замечаниях, код 2 — файла нет")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if a.check is not None:
+        if not a.check.is_file():
+            print(f"✗ отчёт дельты не найден: {a.check}")
+            return 2
+        report_text = a.check.read_text(encoding="utf-8", errors="replace")
+        notes = check_report(report_text, a.repo, a.base, a.task)
+        text = render_check(a.check, notes)
+        if a.out is not None:
+            a.out.parent.mkdir(parents=True, exist_ok=True)
+            with open(a.out, "w", encoding="utf-8", newline="\n") as fh:
+                fh.write(text)
+            print(f"i проверка отчёта записана: {a.out}")
+        else:
+            print(text, end="")
+        if a.json:
+            print(json.dumps({"report": str(a.check), "notes": notes}, ensure_ascii=False, indent=1))
+        return 0
     if a.affected:
         kit, err = kit_root(a.repo.resolve())
         if err:

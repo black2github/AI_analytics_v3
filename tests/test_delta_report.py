@@ -2,6 +2,7 @@
 изменённые файлы, идентификаторы, матрица, затронутые карточки, заготовка фактов,
 открытые вопросы, выбор постановки, база, --out/--json."""
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -418,6 +419,25 @@ def test_check_questions_boundary_row_with_default_rule_not_noted():
     assert dr.check_questions(_qtask(rows)) == []
 
 
+def test_check_questions_boundary_section_row_without_default_rule_not_noted():
+    # подраздел «### Границы захода» (шаблон task.md): граница, переписанная после
+    # ответа аналитика без DFR и без «по умолчанию», — не вопрос без рекомендации
+    # (живой прогон 27.10); голый ID в границе — замечание как везде
+    text = ("---\ntype: task\ntask: ECO-123\n---\n\n# ECO-123. Поле\n\n## Вопросы и ответы\n\n"
+            "### Решения\n\n| № | Вопрос агента | Ответ |\n|---|---|---|\n"
+            "| 1 | Нужна ли маска для поля «Телефон» (`FLD-3`)? | — |\n\n"
+            "### Границы захода\n\n| № | Граница (что делаю / чего не делаю) | Ответ |\n|---|---|---|\n"
+            "| 10 | **Печатные формы заявлений клиента («Заявление о заключении ДБС» (`PRN-001`)): "
+            "добавляю поле «Контактный телефон»** — решение аналитика вместо DFR-003. | T-ECO-123-02 |\n"
+            "| 11 | **Печатные формы (`PRN-002`, `PRN-003`): добавляю поле** — решение аналитика. | T-ECO-123-02 |\n"
+            "\n## Журнал\n")
+    assert dr.check_questions(text) == [
+        "вопрос 1: нет рекомендации агента («Рекомендую …»)",
+        "вопрос 11: голый идентификатор «PRN-002» — рядом нет наименования",
+        "вопрос 11: голый идентификатор «PRN-003» — рядом нет наименования",
+    ]
+
+
 def test_check_questions_default_rule_without_boundary_wording_noted():
     # «DFR-001» без «по умолчанию» — это не граница: нет рекомендации — замечание; сам DFR не голый ID
     row = "| 3 | Форма «ЭФ Клиента в режиме чтения» (`SCR-CL-02`): показывать поле? См. DFR-001. | — |\n"
@@ -469,6 +489,94 @@ def test_questions_cli(tmp_path):
     assert b"\r\n" not in raw and "i замечаний: 2" in raw.decode("utf-8")
     js = json.loads(r.stdout[r.stdout.index("{"):])
     assert len(js["notes"]) == 2 and js["questions"][0]["n"] == "1"
+
+
+# 6a. сторож отчёта дельты перед сдачей (--check) ---------------------------------------------
+
+def _filled_report(repo: Path) -> str:
+    """Отчёт прибора по типовой дельте, доведённый агентом: происхождение у всех
+    фактов, причины у затронутых, раздел «Проверки» заполнен, блок замечаний разобран."""
+    text = dr.render(_build(repo))
+    head, _, facts_tail = text.partition("## Факты и происхождение")
+    facts, _, rest = facts_tail.partition("## Открытые вопросы")
+    facts = "\n".join(re.sub(r"\|\s*\|$", "| T-ECO-123-01 |", ln) if ln.startswith("| ") and
+                     not ln.startswith("| Факт") else ln for ln in facts.splitlines())
+    text = head + "## Факты и происхождение" + facts + "\n\n## Открытые вопросы" + rest
+    text = text.replace("почему: …", "почему: поля печати не меняются")
+    text = text.replace("`selfcheck`: …; `link_debts`: …; гейт переноса (режим репозитория документации): "
+                        "`READY` / `NOT READY` — отчёт приложен.",
+                        "`selfcheck`: новых ✗ нет; `link_debts`: OK; гейт: NOT READY — 3 прежних блокера.")
+    if "## Замечания прибора" in text:
+        text = text[:text.index("## Замечания прибора")].rstrip() + "\n"
+    return text
+
+
+def test_check_report_filled_report_no_notes(tmp_path):
+    # НЕсрабатывание: доведённый отчёт по актуальной дельте — ровно []
+    repo = make_delta(make_repo(tmp_path))
+    assert dr.check_report(_filled_report(repo), repo) == []
+
+
+def test_check_report_raw_prior_output_noted(tmp_path):
+    # отчёт прибора как есть (живой прогон 27.10): факты без происхождения,
+    # «почему: …», шаблонные «Проверки»; порядок — 1 → 2 → 3 → 4
+    repo = make_delta(make_repo(tmp_path))
+    data = _build(repo)
+    notes = dr.check_report(dr.render(data), repo)
+    n_facts = len(data["facts"])
+    assert notes[0].startswith(f"фактов без происхождения: {n_facts} из {n_facts} — колонку «Происхождение»")
+    assert notes[1].startswith("затронутые карточки без ответа «почему не изменена»: 1 — заглушка")
+    assert notes[2].startswith("раздел «Проверки» не заполнен — результаты selfcheck, link_debts и гейта")
+    assert len(notes) == 3 + (1 if data["notes"] else 0)
+
+
+def test_check_report_stale_report_lists_new_files(tmp_path):
+    # отчёт собран до части правок — изменённый после сборки файл в отчёте отсутствует
+    repo = make_delta(make_repo(tmp_path))
+    text = _filled_report(repo)
+    ent = repo / "srs/data-model/ent-001.md"
+    _w(ent, ent.read_text(encoding="utf-8") + "| phone | string |\n")
+    assert dr.check_report(text, repo) == [
+        "отчёт собран до части правок — в дельте есть файлы, которых нет в «Изменённых файлах»: "
+        "`srs/data-model/ent-001.md` — пересобери отчёт после всех правок (включая матрицу) и "
+        "заполни заново"]
+
+
+def test_check_report_not_a_report_and_without_repo(tmp_path):
+    assert dr.check_report("# Что-то другое\n\n## Проверки\n") == [
+        "это не отчёт дельты по шаблону канона: нет заголовка «# Отчёт дельты: …» или раздела "
+        "«Факты и происхождение» — собери `--task <JIRA-ID> --out <файл>`"]
+    # без repo свежесть не проверяется — остальные правила работают
+    repo = make_delta(make_repo(tmp_path))
+    assert dr.check_report(_filled_report(repo)) == []
+
+
+def test_check_report_remaining_tool_notes_block(tmp_path):
+    repo = make_delta(make_repo(tmp_path))
+    text = _filled_report(repo) + "\n## Замечания прибора\n\n- дубль ID в реестре матрицы: `X-1`\n"
+    assert dr.check_report(text, repo) == [
+        "блок «Замечания прибора» не разобран: 1 — каждое либо исправлено в комплекте, либо "
+        "объяснено в отчёте как предсуществующее"]
+
+
+def test_check_cli(tmp_path):
+    repo = make_delta(make_repo(tmp_path))
+    good = tmp_path / "rep" / "delta-ok.md"
+    _w(good, _filled_report(repo))
+    r = _cli("--repo", str(repo), "--check", str(good))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert r.stdout.startswith("# Отчёт дельты `delta-ok.md` — проверка перед сдачей")
+    assert "OK: отчёт дельты готов к сдаче" in r.stdout
+    raw = tmp_path / "rep" / "delta-raw.md"
+    r = _cli("--repo", str(repo), "--out", str(raw))
+    assert r.returncode == 0, r.stdout + r.stderr
+    r = _cli("--repo", str(repo), "--check", str(raw), "--json")
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "- фактов без происхождения:" in r.stdout and "i замечаний: " in r.stdout
+    js = json.loads(r.stdout[r.stdout.index("{"):])
+    assert len(js["notes"]) >= 3
+    r = _cli("--repo", str(repo), "--check", str(tmp_path / "nope.md"))
+    assert r.returncode == 2 and "✗ отчёт дельты не найден" in r.stdout
 
 
 # 7. выбор постановки ------------------------------------------------------------------------
