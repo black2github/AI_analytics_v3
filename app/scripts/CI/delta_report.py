@@ -54,8 +54,12 @@
 #      происхождения, оставшиеся «почему: …» в «Затронуто», незаполненный
 #      раздел «Проверки», неразобранный блок «Замечания прибора», отчёт
 #      старее дельты рабочего дерева (файлы дельты, которых нет в
-#      «Изменённых файлах»). Замечания, код 0; гейт — скилл («пока есть
-#      замечания — не сдавать»).
+#      «Изменённых файлах»); с 2026-10-28 (прогон TEAMTB-202610274: матрица
+#      и формы просмотра обещаны постановкой, не тронуты, `--check` печатал
+#      OK) — план против дельты (строки «Действий по карточкам» с правкой и
+#      пункты «Границ захода» с правкой против файлов и ID дельты) и новые
+#      ID вида, который ведёт реестр матрицы, без строки в матрице.
+#      Замечания, код 0; гейт — скилл («пока есть замечания — не сдавать»).
 #
 # ОГРАНИЧИТЕЛИ. Утилита read-only: в репозитории ничего не меняет, пишет в
 # stdout и/или в файл `--out`. Это вход для человека, не гейт: замечания
@@ -1069,7 +1073,134 @@ def check_report(report_text: str, repo: Optional[Path] = None, base: Optional[s
                              "«Изменённых файлах»: " + ", ".join(f"`{p}`" for p in missing)
                              + " — пересобери отчёт после всех правок (включая матрицу) и "
                              "заполни заново")
+            # 6. план против дельты: карточки, которые постановка обещает править,
+            #    а в дельте их нет (прогон 27.10, TEAMTB-202610274: матрица и формы
+            #    просмотра обещаны, не тронуты — отчёт честно писал «матрица не
+            #    изменена», и сторож молчал)
+            notes.extend(_plan_vs_delta_notes(Path(data["kit"]), data))
+            # 7. новые ID вида, который ведёт реестр матрицы, — без строки в матрице
+            notes.extend(_new_ids_outside_matrix_notes(Path(data["kit"]), data))
     return notes
+
+
+# план против дельты (--check, п. 6): обещания постановки — строки «Действий по
+# карточкам» с действием правки и пункты «Границ захода» с правкой — против
+# файлов и ID дельты
+_PLAN_HEAD_RE = re.compile(r"^##\s+Действия\s+по\s+карточкам", re.I | re.M)
+_PLAN_NO_EDIT_RE = re.compile(r"без\s+правк|не\s+меня|не\s+трога|не\s+описыва|не\s+добавля|"
+                              r"не\s+созда|без\s+изменен|оставля", re.I)
+_PLAN_BOLD_HEAD_RE = re.compile(r"^\*\*(.+?):\*\*")
+_PLAN_FILE_RE = re.compile(r"[\w./-]+\.md\b")
+_PLAN_SKIP_PREFIXES = ("DFR", "T", "OQ", "FB")
+
+
+def _plan_targets(cell: str) -> Tuple[List[str], List[str]]:
+    """(ID карточек, имена файлов) из ячейки «Карточка» или заголовка границы."""
+    text = _Q_MD_LINK_RE.sub(r"\1", cell).replace("`", " ")
+    files = sorted(set(_PLAN_FILE_RE.findall(text)))
+    ids = []
+    for i in _Q_ID_RE.findall(text):
+        if i.split("-")[0] in _PLAN_SKIP_PREFIXES or i in ids:
+            continue
+        ids.append(i)
+    return ids, files
+
+
+def _plan_promises(task_text: str) -> List[Tuple[str, List[str], List[str]]]:
+    """Обещания правки: [(источник, ID, файлы)] — строки «Действий по карточкам»
+    без «без правки / не меняю» и пункты «Границ захода» с правкой (карточки —
+    из жирного заголовка «**…:**» пункта; без заголовка пункт не читается)."""
+    out: List[Tuple[str, List[str], List[str]]] = []
+    m = _PLAN_HEAD_RE.search(task_text)
+    if m:
+        sect = task_text[m.end():]
+        nxt = re.search(r"^#{1,2}\s", sect, re.M)
+        if nxt:
+            sect = sect[:nxt.start()]
+        for row in _split_matrix_rows(sect.splitlines()):
+            cells = sc.table_cells(row)
+            if len(cells) < 2 or _PLAN_NO_EDIT_RE.search(cells[1]):
+                continue
+            ids, files = _plan_targets(cells[0])
+            if ids or files:
+                out.append(("действие", ids, files))
+    for k, (boundary, cells) in enumerate(_qa_rows(task_text), 1):
+        if not boundary or len(cells) < 2:
+            continue
+        head = _PLAN_BOLD_HEAD_RE.match(cells[1].strip())
+        if not head:
+            continue
+        rest = cells[1].strip()[head.end():]
+        if _PLAN_NO_EDIT_RE.search(rest):
+            continue
+        ids, files = _plan_targets(head.group(1))
+        if ids or files:
+            out.append((f"граница {cells[0] or k}", ids, files))
+    return out
+
+
+def _plan_vs_delta_notes(kit: Path, data: dict) -> List[str]:
+    """Замечание сторожа: обещанные постановкой карточки и файлы, которых нет в
+    дельте рабочего дерева."""
+    task_id = data.get("task") or ""
+    path = kit / "tasks" / f"{task_id}.md"
+    if not task_id or not path.is_file():
+        return []
+    task_text = path.read_text(encoding="utf-8", errors="replace")
+    paths = {f["path"].replace("\\", "/") for f in data["files"]}
+    known = {f["id"] for f in data["files"] if f.get("id")}
+    known |= set(data["ids"].get("new", []))
+    for lst in data["ids"].get("inner", {}).values():
+        known |= set(lst)
+    index = card_index(kit)
+    missing: List[str] = []
+    for src, ids, files in _plan_promises(task_text):
+        for i in ids:
+            f = index.get(i)
+            rel = f.resolve().relative_to(kit.resolve()).as_posix() if f else None
+            if i in known or (rel and rel in paths):
+                continue
+            item = f"`{i}` ({src})"
+            if item not in missing:
+                missing.append(item)
+        for name in files:
+            if any(p == name or p.endswith("/" + name) for p in paths):
+                continue
+            item = f"`{name}` ({src})"
+            if item not in missing:
+                missing.append(item)
+    if not missing:
+        return []
+    return ["план против дельты — карточки из «Действий по карточкам» и «Границ захода» без правок "
+            "в дельте: " + ", ".join(missing) + " — каждая либо правится, либо строка «Действий» "
+            "получает «без правки: <причина>»; сужение принятой границы — новым вопросом аналитику, "
+            "не решением агента"]
+
+
+def _id_family(rid: str) -> str:
+    return re.sub(r"-\d+(?:\.\d+)*$", "", rid)
+
+
+def _new_ids_outside_matrix_notes(kit: Path, data: dict) -> List[str]:
+    """Замечание сторожа: новые внутренние ID (заголовки `### ID` в дельте) того
+    вида, который ведёт реестр матрицы (есть строки `<вид>-NNN`), но в матрице
+    такого ID нет (прогон 27.10: `CTL-058` создан, матрица не тронута)."""
+    matrix_path = kit / "traceability-matrix.md"
+    if not matrix_path.is_file():
+        return []
+    matrix = matrix_path.read_text(encoding="utf-8", errors="replace")
+    families = {_id_family(r) for r in _registry_rows(matrix)}
+    missing: List[str] = []
+    for lst in data["ids"].get("inner", {}).values():
+        for i in lst:
+            if _id_family(i) in families and i not in missing \
+                    and not re.search(r"(?<![\w-])" + re.escape(i) + r"(?![\w.])", matrix):
+                missing.append(i)
+    if not missing:
+        return []
+    return ["новые ID вне матрицы трассировки: " + ", ".join(f"`{i}`" for i in missing)
+            + " — реестр матрицы ведёт карточки этого вида, строка реестра и связи "
+            "(и долги, если есть) вписываются до сдачи"]
 
 
 def render_check(path: Path, notes: List[str]) -> str:

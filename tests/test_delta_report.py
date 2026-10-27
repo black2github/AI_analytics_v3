@@ -559,6 +559,81 @@ def test_check_report_remaining_tool_notes_block(tmp_path):
         "объяснено в отчёте как предсуществующее"]
 
 
+_PLAN_TASK = (_TASK.replace("## Вопросы и ответы", "## Действия по карточкам\n\n"
+              "| Карточка | Действие | Основание |\n|---|---|---|\n"
+              "| `SCR-CL-02` | изменить: поле «Дата рождения» (`FLD-3`) | T-ECO-123-01 |\n"
+              "| `CTL-CL-001` (новая) | создать | T-ECO-123-01 |\n"
+              "| `ENT-001` | без правки карточки: атрибут есть | T-ECO-123-01 |\n"
+              "| `PRN-001` | изменить: поле «Дата рождения» | DFR-003 |\n"
+              "| `traceability-matrix.md` | обновить связи | правило канона |\n\n"
+              "## Вопросы и ответы\n\n### Решения")
+              + "\n\n### Границы захода\n\n| № | Граница (что делаю / чего не делаю) | Ответ |\n|---|---|---|\n"
+              "| 3 | **«Печать» (`PRN-001`):** добавляю поле «Дата рождения» — по умолчанию DFR-003. | — |\n"
+              "| 4 | **«Форма» (`SCR-CL-02`):** добавляю поле (`FLD-3`), сообщение (`MSG-1`) — по умолчанию DFR-005. | — |\n"
+              "| 5 | **«Клиент» (`ENT-001`) и нотификации (`NTF-*`):** не меняю — по умолчанию DFR-004. | — |\n"
+              "| 6 | Макет Figma: не описываю — в постановке не названо. | — |\n")
+
+
+def test_check_report_plan_vs_delta_notes_promised_cards_absent(tmp_path):
+    # план против дельты (прогон 27.10, TEAMTB-202610274): «Действия» обещают PRN-001,
+    # граница 3 — тоже; в дельте карточки нет. SCR-CL-02 (в дельте), CTL-CL-001 (создана),
+    # матрица (в дельте), ENT-001 («без правки»), граница 4 (FLD-3 — новый внутренний ID,
+    # MSG-1 — в заголовке нет), границы 5–6 («не меняю / не описываю») — молчат
+    repo = make_delta(make_repo(tmp_path), task=_PLAN_TASK)
+    assert dr.check_report(_filled_report(repo), repo) == [
+        "план против дельты — карточки из «Действий по карточкам» и «Границ захода» без правок "
+        "в дельте: `PRN-001` (действие), `PRN-001` (граница 3) — каждая либо правится, либо "
+        "строка «Действий» получает «без правки: <причина>»; сужение принятой границы — новым "
+        "вопросом аналитику, не решением агента"]
+
+
+def test_check_report_plan_vs_delta_silent_when_promise_kept(tmp_path):
+    # НЕсрабатывание: обещанная карточка поправлена — замечания нет
+    repo = make_delta(make_repo(tmp_path), task=_PLAN_TASK)
+    prn = repo / "srs/print-form/prn-001.md"
+    _w(prn, prn.read_text(encoding="utf-8") + "\n| 5.1 | Дата рождения | = ENT-001.birthDate |\n")
+    assert dr.check_report(_filled_report(repo), repo) == []
+
+
+def test_check_report_plan_vs_delta_file_promise(tmp_path):
+    # обещан файл по имени (матрица) — его нет в дельте
+    task = _TASK.replace("## Вопросы и ответы", "## Действия по карточкам\n\n"
+                         "| Карточка | Действие | Основание |\n|---|---|---|\n"
+                         "| `traceability-matrix.md` | обновить связи; долг на макет | правило канона |\n\n"
+                         "## Вопросы и ответы")
+    repo = make_delta(make_repo(tmp_path), task=task)
+    text = _filled_report(repo)
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-qm", "matrix done")  # матрица уходит в базу → из дельты пропадает
+    m = repo / "srs/screen-form/scr-cl-02.md"
+    _w(m, m.read_text(encoding="utf-8") + "- **Видимость:** всегда\n")
+    notes = dr.check_report(text, repo, base="HEAD")
+    assert any(n.startswith("план против дельты") and "`traceability-matrix.md` (действие)" in n
+               for n in notes)
+
+
+def test_check_report_new_id_outside_matrix(tmp_path):
+    # реестр матрицы ведёт вид CTL-NNN (есть строка CTL-009), новый `### CTL-001`
+    # в дельте, в матрице его нет → замечание; вид не ведётся (только CTL-CL-NNN) —
+    # молчит (test_check_report_filled_report_no_notes)
+    row = _CTL_ROW + "| CTL-009 | control | Другой контроль | srs/control/ctl-cl-001.md |\n"
+    repo = make_delta(make_repo(tmp_path), registry_row=row)
+    assert dr.check_report(_filled_report(repo), repo) == [
+        "новые ID вне матрицы трассировки: `CTL-001` — реестр матрицы ведёт карточки этого вида, "
+        "строка реестра и связи (и долги, если есть) вписываются до сдачи"]
+
+
+def test_check_report_new_id_in_matrix_silent(tmp_path):
+    # НЕсрабатывание: ID упомянут в матрице (строка связей) — замечания нет
+    row = _CTL_ROW + "| CTL-009 | control | Другой контроль | srs/control/ctl-cl-001.md |\n"
+    repo = make_delta(make_repo(tmp_path), registry_row=row)
+    m = repo / "traceability-matrix.md"
+    _w(m, m.read_text(encoding="utf-8").replace("| CTL-CL-001 | SCR-CL-02 | контроль поля |\n",
+                                                "| CTL-CL-001 | SCR-CL-02 | контроль поля |\n"
+                                                "| CTL-001 | SCR-CL-02 | дата обязательна |\n"))
+    assert dr.check_report(_filled_report(repo), repo) == []
+
+
 def test_check_cli(tmp_path):
     repo = make_delta(make_repo(tmp_path))
     good = tmp_path / "rep" / "delta-ok.md"
