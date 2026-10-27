@@ -1087,9 +1087,11 @@ def check_report(report_text: str, repo: Optional[Path] = None, base: Optional[s
 # карточкам» с действием правки и пункты «Границ захода» с правкой — против
 # файлов и ID дельты
 _PLAN_HEAD_RE = re.compile(r"^##\s+Действия\s+по\s+карточкам", re.I | re.M)
-_PLAN_NO_EDIT_RE = re.compile(r"без\s+правк|не\s+меня|не\s+трога|не\s+описыва|не\s+добавля|"
-                              r"не\s+созда|без\s+изменен|оставля", re.I)
-_PLAN_BOLD_HEAD_RE = re.compile(r"^\*\*(.+?):\*\*")
+# «чего не делаю» — только в начале действия/глагола: «изменить: … без изменения
+# логики …» — правка, а не отказ (прогон 28.10, TEAMTB-202610281)
+_PLAN_NO_EDIT_RE = re.compile(r"^\W*(?:без\s+правк|не\s+меня|не\s+трога|не\s+описыва|не\s+добавля|"
+                              r"не\s+созда|без\s+изменен|оставля)", re.I)
+_PLAN_BOLD_RE = re.compile(r"\*\*")
 _PLAN_FILE_RE = re.compile(r"[\w./-]+\.md\b")
 _PLAN_SKIP_PREFIXES = ("DFR", "T", "OQ", "FB")
 
@@ -1108,9 +1110,15 @@ def _plan_targets(cell: str) -> Tuple[List[str], List[str]]:
 
 def _plan_promises(task_text: str) -> List[Tuple[str, List[str], List[str]]]:
     """Обещания правки: [(источник, ID, файлы)] — строки «Действий по карточкам»
-    без «без правки / не меняю» и пункты «Границ захода» с правкой (карточки —
-    из жирного заголовка «**…:**» пункта; без заголовка пункт не читается)."""
+    без «без правки / не меняю» и пункты «Границ захода» с правкой. Пункт
+    границы — «<карточки>: <что делаю / чего не делаю>»: карточки — до первого
+    двоеточия (жирное начертание любое: «**X:** …» и «**X: добавляю** …» —
+    прогон 28.10, TEAMTB-202610281), после него — глагол. Карточка, которую
+    «Действия» явно оставили без правки («без правки: <причина>»), обещанием
+    границы не считается — причина записана, аналитик её видит."""
     out: List[Tuple[str, List[str], List[str]]] = []
+    kept_ids: set = set()
+    kept_files: set = set()
     m = _PLAN_HEAD_RE.search(task_text)
     if m:
         sect = task_text[m.end():]
@@ -1119,21 +1127,25 @@ def _plan_promises(task_text: str) -> List[Tuple[str, List[str], List[str]]]:
             sect = sect[:nxt.start()]
         for row in _split_matrix_rows(sect.splitlines()):
             cells = sc.table_cells(row)
-            if len(cells) < 2 or _PLAN_NO_EDIT_RE.search(cells[1]):
+            if len(cells) < 2:
                 continue
             ids, files = _plan_targets(cells[0])
+            if _PLAN_NO_EDIT_RE.search(cells[1]):
+                kept_ids.update(ids)
+                kept_files.update(files)
+                continue
             if ids or files:
                 out.append(("действие", ids, files))
     for k, (boundary, cells) in enumerate(_qa_rows(task_text), 1):
         if not boundary or len(cells) < 2:
             continue
-        head = _PLAN_BOLD_HEAD_RE.match(cells[1].strip())
-        if not head:
+        text = _PLAN_BOLD_RE.sub("", cells[1]).strip()
+        head, sep, rest = text.partition(":")
+        if not sep or _PLAN_NO_EDIT_RE.search(rest):
             continue
-        rest = cells[1].strip()[head.end():]
-        if _PLAN_NO_EDIT_RE.search(rest):
-            continue
-        ids, files = _plan_targets(head.group(1))
+        ids, files = _plan_targets(head)
+        ids = [i for i in ids if i not in kept_ids]
+        files = [f for f in files if f not in kept_files]
         if ids or files:
             out.append((f"граница {cells[0] or k}", ids, files))
     return out
