@@ -655,6 +655,28 @@ def test_check_report_new_id_in_matrix_silent(tmp_path):
     assert dr.check_report(_filled_report(repo), repo) == []
 
 
+def test_check_report_task_links_broken_and_outside(tmp_path):
+    # ссылки постановки (прогон 28.10): путь от корня комплекта из tasks/ — битая;
+    # ../../outside.md существует, но вне репозитория; ../srs/… и якорь — молчат
+    (tmp_path / "outside.md").write_text("x", encoding="utf-8")
+    task = _TASK.replace("## Вопросы и ответы", "## Как понял агент\n\n"
+                         "см. [форму](srs/screen-form/scr-cl-02.md), [канон](../../outside.md), "
+                         "[форму верно](../srs/screen-form/scr-cl-02.md), [раздел](#как-понял-агент), "
+                         "[сайт](https://example.org/x).\n\n## Вопросы и ответы")
+    repo = make_delta(make_repo(tmp_path), task=task)
+    assert dr.check_report(_filled_report(repo), repo) == [
+        "ссылки в постановке `tasks/ECO-123.md` — битых 1: `srs/screen-form/scr-cl-02.md`; "
+        "вне репозитория 1: `../../outside.md` — карточки в постановке называются наименованием "
+        "и ID без markdown-ссылок (шаблон `task.md`); если ссылка нужна — путь от `tasks/` "
+        "(`../srs/…`), на канон `../docs-o2new` не ссылаться: его нет в репозитории команды"]
+
+
+def test_check_report_task_without_links_silent(tmp_path):
+    # НЕсрабатывание: постановка без markdown-ссылок (типовая) — замечания нет
+    repo = make_delta(make_repo(tmp_path))
+    assert dr.check_report(_filled_report(repo), repo) == []
+
+
 def test_check_cli(tmp_path):
     repo = make_delta(make_repo(tmp_path))
     good = tmp_path / "rep" / "delta-ok.md"

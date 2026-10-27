@@ -58,7 +58,10 @@
 #      и формы просмотра обещаны постановкой, не тронуты, `--check` печатал
 #      OK) — план против дельты (строки «Действий по карточкам» с правкой и
 #      пункты «Границ захода» с правкой против файлов и ID дельты) и новые
-#      ID вида, который ведёт реестр матрицы, без строки в матрице.
+#      ID вида, который ведёт реестр матрицы, без строки в матрице; с
+#      прогона TEAMTB-202610281 (28.10, 9 новых блокеров гейта из одного
+#      файла) — markdown-ссылки постановки `tasks/<JIRA-ID>.md`, битые (путь
+#      от корня, а файл в tasks/) или ведущие вне репозитория (канон).
 #      Замечания, код 0; гейт — скилл («пока есть замечания — не сдавать»).
 #
 # ОГРАНИЧИТЕЛИ. Утилита read-only: в репозитории ничего не меняет, пишет в
@@ -1080,6 +1083,10 @@ def check_report(report_text: str, repo: Optional[Path] = None, base: Optional[s
             notes.extend(_plan_vs_delta_notes(Path(data["kit"]), data))
             # 7. новые ID вида, который ведёт реестр матрицы, — без строки в матрице
             notes.extend(_new_ids_outside_matrix_notes(Path(data["kit"]), data))
+            # 8. markdown-ссылки постановки: битые (пути от корня, а файл в tasks/)
+            #    и ведущие вне репозитория (на канон ../docs-o2new) — прогон 28.10,
+            #    TEAMTB-202610281: 9 новых блокеров CORE-06 гейта из одного файла
+            notes.extend(_task_links_notes(Path(data["kit"]), data))
     return notes
 
 
@@ -1187,6 +1194,57 @@ def _plan_vs_delta_notes(kit: Path, data: dict) -> List[str]:
             "в дельте: " + ", ".join(missing) + " — каждая либо правится, либо строка «Действий» "
             "получает «без правки: <причина>»; сужение принятой границы — новым вопросом аналитику, "
             "не решением агента"]
+
+
+_TASK_LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
+
+
+def _task_links_notes(kit: Path, data: dict) -> List[str]:
+    """Замечание сторожа: markdown-ссылки в `tasks/<JIRA-ID>.md`, которые не
+    ведут на файл (путь от корня комплекта, а файл лежит в `tasks/`) или ведут
+    вне репозитория (канон `../docs-o2new` в репозитории команды не лежит).
+    Норма шаблона `task.md`: карточки в постановке называются наименованием и
+    ID, без markdown-ссылок."""
+    task_id = data.get("task") or ""
+    path = kit / "tasks" / f"{task_id}.md"
+    if not task_id or not path.is_file():
+        return []
+    text = path.read_text(encoding="utf-8", errors="replace")
+    bad: List[str] = []
+    outside: List[str] = []
+    kit_res = kit.resolve()
+    for raw in _TASK_LINK_RE.findall(text):
+        if raw.startswith("#") or re.match(r"^[a-z][a-z0-9+.-]*:", raw, re.I):
+            continue  # якорь внутри файла, http/mailto
+        rel = raw.split("#", 1)[0]
+        if not rel:
+            continue
+        try:
+            target = (path.parent / rel).resolve()
+        except OSError:
+            target = None
+        if target is None or not target.exists():
+            if rel not in bad:
+                bad.append(rel)
+            continue
+        try:
+            target.relative_to(kit_res)
+        except ValueError:
+            if rel not in outside:
+                outside.append(rel)
+    if not bad and not outside:
+        return []
+    parts = []
+    if bad:
+        parts.append(f"битых {len(bad)}: " + ", ".join(f"`{r}`" for r in bad[:6])
+                     + (" …" if len(bad) > 6 else ""))
+    if outside:
+        parts.append(f"вне репозитория {len(outside)}: " + ", ".join(f"`{r}`" for r in outside[:6])
+                     + (" …" if len(outside) > 6 else ""))
+    return [f"ссылки в постановке `tasks/{task_id}.md` — " + "; ".join(parts)
+            + " — карточки в постановке называются наименованием и ID без markdown-ссылок "
+            "(шаблон `task.md`); если ссылка нужна — путь от `tasks/` (`../srs/…`), на канон "
+            "`../docs-o2new` не ссылаться: его нет в репозитории команды"]
 
 
 def _id_family(rid: str) -> str:
