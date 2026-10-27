@@ -1,6 +1,6 @@
 """Подраздел «Из источника, вне разделов шаблона» (норма канона 2026-10-26, шаблон function §6):
-строка i с числом строк (видна и у ✓ карточки), предупреждение — пуст или не последний H2;
-карточка без подраздела — ни одной строки."""
+строка i с числом строк (видна и у ✓ карточки); форма подраздела (пустота, положение) не
+проверяется — решение владельца канона 2026-10-26; карточка без подраздела — ни одной строки."""
 from app.scripts.CI.kitcheck.core import is_soft_signal
 from app.scripts.CI.normalize_tables import check_outside_template_section
 
@@ -23,19 +23,16 @@ def test_absent_no_lines():
     assert ok and rep == []
 
 
-def test_empty_section_warns():
+def test_empty_section_only_zero_count_no_warning():
+    # пустой подраздел виден по «0 строк»; предупреждения о форме нет
     rep, ok = check_outside_template_section(HEAD + "## Из источника, вне разделов шаблона\n\n<!-- нет -->\n")
-    assert ok
-    assert rep[0] == "i подраздел вне шаблона: 0 строк"
-    assert any(r.startswith("предупреждение:") and "пуст" in r for r in rep)
+    assert ok and rep == ["i подраздел вне шаблона: 0 строк"]
 
 
-def test_not_last_h2_warns():
-    rep, ok = check_outside_template_section(HEAD + SECTION + "\n## 5. Связанные артефакты\n\n- x\n")
-    assert ok
-    assert rep[0] == "i подраздел вне шаблона: 1 строк"
-    assert any(r.startswith("предупреждение:") and "не последний" in r and "Связанные артефакты" in r
-               for r in rep)
+def test_not_last_h2_no_warning_count_until_next_h2():
+    # положение не проверяется; строки считаются до следующего H2
+    rep, ok = check_outside_template_section(HEAD + SECTION + "\n## 5. Связанные артефакты\n\n- x\n- y\n")
+    assert ok and rep == ["i подраздел вне шаблона: 1 строк"]
 
 
 def test_h3_inside_section_is_part_of_it():
