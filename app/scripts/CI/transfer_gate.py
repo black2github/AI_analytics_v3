@@ -41,7 +41,8 @@
 #   Режим репозитория документации (2026-10-14): --src — целевой
 #      docs-<service-id>, комплект в корне (docs/ нет, матрица в корне, либо
 #      --docs .). Комплект проверяется на месте: CODEOWNERS и манифест — в
-#      самом репозитории, журнал вопросов не ожидается, служебные файлы
+#      самом репозитории (в его корне, как их читает GitLab; комплект может
+#      лежать в подкаталоге — 2026-10-28), журнал вопросов не ожидается, служебные файлы
 #      миграции в корне — блокер, --out отклоняется. Отчёт — расстояние до
 #      действующего стандарта, не проверка переноса.
 #   4. Проверяет условия самого переноса, которых нет ни у прибора, ни у
@@ -160,6 +161,7 @@
 # молчание.
 
 import argparse
+import fnmatch
 import json
 import re
 import shutil
@@ -173,6 +175,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
 from kitcheck.md import blank_code  # noqa: E402
+from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_status_class  # noqa: E402
 
 _HERE = Path(__file__).resolve().parent
@@ -893,10 +896,140 @@ def copy_out(staged: Path, out: Path) -> Tuple[int, str]:
     return n, ""
 
 
+# Репозиторий с несколькими комплектами (2026-10-28, docs-common-dictionary: двадцать
+# справочников по подкаталогам, один CODEOWNERS в корне с правилами по каталогам). GitLab
+# читает CODEOWNERS только из корня репозитория, docs/ и .gitlab/ — файл в подкаталоге
+# комплекта владельцев не назначает. Поэтому в режиме репозитория документации владельцы
+# и манифест ищутся не в корне комплекта, а в корне домена (родитель с таблицей сервисов
+# в README — тот же признак, что у selfcheck «i домен: корень …»), иначе в вершине
+# git-репозитория; комплект в корне репозитория — поведение прежнее.
+_CODEOWNERS_PLACES = ("CODEOWNERS", "docs/CODEOWNERS", ".gitlab/CODEOWNERS")
+# шапка секции GitLab: «[Имя]», «^[Имя]», «[Имя][2]», за ней — владельцы секции по умолчанию
+_CO_SECTION_RE = re.compile(r"^\^?\[([^\]]+)\](?:\[\d+\])?(.*)$")
+# правило по умолчанию: покрывает весь репозиторий, владельца каталога комплекта не называет
+_CO_DEFAULT_PATTERNS = {"*", "**", "/*", "/**"}
+
+
+def repo_root_for(kit: Path) -> Path:
+    """Корень, где GitLab читает CODEOWNERS для комплекта: корень домена, иначе
+    вершина git-репозитория (git недоступен — подъём по родителям до каталога с .git);
+    ничего не найдено — сам комплект (прежнее поведение)."""
+    kit = kit.resolve()
+    dom = domain_context(kit)
+    if dom is not None:
+        return dom[0].resolve()
+    try:
+        r = subprocess.run(["git", "-C", str(kit), "rev-parse", "--show-toplevel"],
+                           capture_output=True, text=True, encoding="utf-8", timeout=30)
+        if r.returncode == 0 and r.stdout.strip():
+            top = Path(r.stdout.strip()).resolve()
+            if kit == top or top in kit.parents:
+                return top
+    except (OSError, subprocess.SubprocessError):
+        pass
+    for d in (kit, *kit.parents):
+        if (d / ".git").exists():
+            return d
+    return kit
+
+
+def _co_rules(text: str) -> List[Tuple[str, str, str]]:
+    """(шаблон, владельцы, секция) по строкам CODEOWNERS; правило без владельцев берёт
+    владельцев секции по умолчанию."""
+    rules: List[Tuple[str, str, str]] = []
+    sec, sec_owners = "", ""
+    for raw in text.splitlines():
+        ln = raw.strip()
+        if not ln or ln.startswith("#"):
+            continue
+        m = _CO_SECTION_RE.match(ln)
+        if m:
+            sec, sec_owners = m.group(1).strip(), m.group(2).strip()
+            continue
+        pat, _, owners = ln.partition(" ")
+        rules.append((pat, owners.strip() or sec_owners, sec))
+    return rules
+
+
+def _co_covers(pat: str, rel: str) -> bool:
+    """Шаблон CODEOWNERS покрывает каталог комплекта rel (путь от корня через «/»):
+    правила gitignore в упрощённом виде — ведущий «/» или «/» внутри шаблона — от корня,
+    завершающий «/» или «/**» — каталог и всё под ним; шаблон из одного имени без «/» —
+    каталог с таким именем на любом уровне."""
+    p = pat
+    if p.endswith("/**"):
+        p = p[:-3]
+    p = p.rstrip("/")
+    anchored = p.startswith("/") or "/" in p.lstrip("/")
+    parts = [x for x in p.strip("/").split("/") if x]
+    comps = rel.split("/")
+    if not parts:
+        return False
+    if anchored:
+        return (len(parts) <= len(comps)
+                and all(fnmatch.fnmatchcase(c, x) for c, x in zip(comps, parts)))
+    return any(fnmatch.fnmatchcase(c, parts[0]) for c in comps)
+
+
+def _check_codeowners(gate: Gate, kit: Path, root: Path, where: str) -> None:
+    """CORE-04: CODEOWNERS по правилам GitLab (корень, docs/, .gitlab/ корня)"""
+    found: Optional[Tuple[str, str]] = None
+    for place in _CODEOWNERS_PLACES:
+        f = root / place
+        if f.is_file():
+            text = f.read_text(encoding="utf-8", errors="replace")
+            if any(ln.strip() and not ln.strip().startswith("#") for ln in text.splitlines()):
+                found = (place, text)
+                break
+    rel = kit.relative_to(root).as_posix()
+    dead = kit / "CODEOWNERS"
+    if found is None:
+        tail = (f"; файл {rel}/CODEOWNERS GitLab не читает и не засчитывается"
+                if dead.is_file() else "")
+        gate.add("✗", "CORE-04", f"CODEOWNERS нет ни в одном месте, где его читает GitLab "
+                 f"({', '.join(str(root / x) for x in _CODEOWNERS_PLACES)}) или он пуст — "
+                 f"владелец документации комплекта {rel} не назначен (чек-лист: обязательно до "
+                 f"подключения){tail}", check="владельцы документации")
+        return
+    place, text = found
+    rules = _co_rules(text)
+    specific = [(p, o) for p, o, _s in rules
+                if p not in _CO_DEFAULT_PATTERNS and _co_covers(p, rel)]
+    if specific:
+        pat, owners = specific[-1]
+        gate.add("✓", "CORE-04", f"CODEOWNERS {where} ({place} корня репозитория): комплект "
+                 f"{rel} покрыт правилом «{pat}» — {owners or 'владельцы секции не указаны'}",
+                 check="владельцы документации")
+    else:
+        # секции GitLab действуют все сразу — правило «*» каждой секции показывается
+        dflt = [f"«{p} {o}»".replace(" »", "»") + (f" [{sc}]" if sc else "")
+                for p, o, sc in rules if p in _CO_DEFAULT_PATTERNS]
+        shown = "; ".join(dflt) if dflt else "по умолчанию"
+        gate.add("⚠", "CORE-04", f"владельцы комплекта {rel} назначены только правилом по "
+                 f"умолчанию {shown} — добавить строку для каталога комплекта «/{rel}/» в "
+                 f"{place} корня репозитория", check="владельцы документации")
+    if dead.is_file():
+        gate.add("i", "CORE-04", f"{rel}/CODEOWNERS GitLab не читает (владельцев назначает только "
+                 "файл в корне репозитория, docs/ или .gitlab/) — можно удалить",
+                 check="владельцы документации")
+
+
+def _manifest_fields(mf: Path) -> str:
+    try:
+        data = json.loads(mf.read_text(encoding="utf-8-sig"))
+    except (OSError, ValueError) as e:
+        return f"не разбирается как JSON: {e}"
+    if not isinstance(data, dict):
+        return type(data).__name__
+    named = [f"{k}={data[k]}" for k in ("name", "title") if k in data]
+    return ", ".join(named) if named else "поля: " + ", ".join(sorted(data.keys()))
+
+
 def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -> None:
     """CORE-04 / SDLC-07: владельцы и манифест живут в репозитории назначения —
     проверяются при --out либо на месте (in_place: режим репозитория документации,
-    когда --src и есть репозиторий назначения); поля манифеста определяет владелец
+    когда --src и есть репозиторий назначения; комплект может лежать в подкаталоге —
+    тогда ищутся в корне домена или git-репозитория); поля манифеста определяет владелец
     платформы, поэтому они печатаются для ручной сверки, а не сверяются."""
     if out is None:
         gate.add("i", "SDLC-07", "CODEOWNERS и gpb-manifest.json проверяются в репозитории "
@@ -916,15 +1049,31 @@ def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -
                  "(правило: после закрытия миграции правки делаются в docs-репозитории)",
                  check="репозиторий назначения")
     where = "в репозитории документации" if in_place else "в репозитории назначения"
-    co = out / "CODEOWNERS"
-    if co.is_file() and any(ln.strip() and not ln.strip().startswith("#")
-                            for ln in co.read_text(encoding="utf-8", errors="replace").splitlines()):
-        gate.add("✓", "CORE-04", f"CODEOWNERS {where} есть и непустой",
-                 check="владельцы документации")
+    kit = out
+    if in_place:
+        root = repo_root_for(out)
+        if root != out.resolve():
+            kit = out.resolve()
+            out = root
+    if kit is out:
+        co = out / "CODEOWNERS"
+        if co.is_file() and any(ln.strip() and not ln.strip().startswith("#")
+                                for ln in co.read_text(encoding="utf-8",
+                                                       errors="replace").splitlines()):
+            gate.add("✓", "CORE-04", f"CODEOWNERS {where} есть и непустой",
+                     check="владельцы документации")
+        else:
+            gate.add("✗", "CORE-04", f"CODEOWNERS в {out} отсутствует или пуст — владелец "
+                     "документации не назначен (чек-лист: обязательно до подключения)",
+                     check="владельцы документации")
     else:
-        gate.add("✗", "CORE-04", f"CODEOWNERS в {out} отсутствует или пуст — владелец "
-                 "документации не назначен (чек-лист: обязательно до подключения)",
-                 check="владельцы документации")
+        _check_codeowners(gate, kit, out, where)
+        kit_mf = kit / "gpb-manifest.json"
+        if kit_mf.is_file():
+            # нужен ли платформе манифест на комплект внутри репозитория — вопрос к
+            # платформе, гейт его не решает: печать без требования
+            gate.add("i", "SDLC-07", f"манифест комплекта {kit.relative_to(out).as_posix()}/"
+                     f"gpb-manifest.json: {_manifest_fields(kit_mf)}", check="манифест")
     mf = out / "gpb-manifest.json"
     if not mf.is_file():
         gate.add("⚠", "SDLC-07", f"gpb-manifest.json в {out} нет — обязателен по стандарту "

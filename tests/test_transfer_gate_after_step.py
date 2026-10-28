@@ -197,7 +197,10 @@ def test_oq_without_status_line_still_open(tmp_path):
 
 
 def test_oq_regex_single_home():
-    from app.scripts.CI.kitcheck.checks import review_guards as rg
+    # тот же объект модуля, что импортирует гейт (kitcheck — через sys.path прибора); сравнение с
+    # app.scripts.CI.kitcheck.… — другим объектом модуля — держалось на кеше re.compile и падало
+    # в полном прогоне, когда кеш вытеснялся (2026-10-28)
+    from kitcheck.checks import review_guards as rg
     assert tg._OQ_STATUS_RE is rg.OQ_STATUS_RE is rg._OQ_STATUS_RE
 
 

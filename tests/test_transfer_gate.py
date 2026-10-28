@@ -564,3 +564,122 @@ def test_nonstandard_debts_heading_blocks_transfer(tmp_path):
     assert not ready
     assert any(l.startswith("✗ [CORE-20] раздел долгов назван «Долги ссылок»") for l in lines), "\n".join(lines)
 
+
+
+# --- репозиторий с несколькими комплектами (2026-10-28, docs-common-dictionary): CODEOWNERS и
+# манифест ищутся в корне домена, иначе в корне git — там, где их читает GitLab
+
+def make_multi_repo(tmp_path: Path, root_co, kit_co: bool = False, place: str = "CODEOWNERS",
+                    git: str = "dir", kit_manifest: bool = False) -> Path:
+    """Репозиторий с комплектом в подкаталоге branches/; вернуть путь комплекта."""
+    repo = tmp_path / "docs-dict"
+    kit = make_docs_repo(repo, codeowners=False)          # repo/docs-x
+    kit = kit.rename(repo / "branches")
+    (kit / "gpb-manifest.json").unlink()
+    _w(repo / "gpb-manifest.json", '{"name": "docs-dict", "title": "Справочники"}\n')
+    if kit_manifest:
+        _w(kit / "gpb-manifest.json", '{"name": "branches", "title": "Филиалы"}\n')
+    if root_co is not None:
+        _w(repo / place, root_co)
+    if kit_co:
+        _w(kit / "CODEOWNERS", "* @kit-team\n")
+    if git == "dir":
+        (repo / ".git").mkdir()
+    elif git == "init":
+        import subprocess
+        if subprocess.run(["git", "init", "-q", str(repo)]).returncode != 0:
+            pytest.skip("git недоступен")
+    return kit
+
+
+_ROOT_CO = "[Default][1]\n* @eshefer\n\n[Analytics][1]\n/branches/ @atrushin @eshefer\n"
+
+
+def test_multi_kit_root_rule_for_kit_dir_passes(tmp_path):
+    # (а) корневой CODEOWNERS (настоящий git) с правилом на каталог комплекта — ✓, правило и владельцы
+    kit = make_multi_repo(tmp_path, _ROOT_CO, git="init")
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("✓ [CORE-04] CODEOWNERS в репозитории документации (CODEOWNERS корня "
+                            "репозитория): комплект branches покрыт правилом «/branches/» — "
+                            "@atrushin @eshefer") for l in lines)
+    assert not any("GitLab не читает" in l for l in lines)
+
+
+def test_multi_kit_default_rule_only_warns(tmp_path):
+    # (б) комплект покрыт только правилом по умолчанию — ⚠, не ✗
+    kit = make_multi_repo(tmp_path, "[Default][1]\n* @eshefer\n\n[Analytics][1]\n/countries/ @a\n")
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("⚠ [CORE-04] владельцы комплекта branches назначены только правилом по "
+                            "умолчанию «* @eshefer» [Default] — добавить строку для каталога комплекта "
+                            "«/branches/»") for l in lines)
+
+
+def test_multi_kit_only_dead_kit_codeowners_blocks(tmp_path):
+    # (в) только branches/CODEOWNERS, корневого нет — ✗: мёртвый файл не засчитывается
+    kit = make_multi_repo(tmp_path, None, kit_co=True)
+    lines, ready, _ = _run(kit)
+    assert not ready
+    co = [l for l in lines if l.startswith("✗ [CORE-04]")]
+    assert co and "CODEOWNERS нет ни в одном месте, где его читает GitLab" in co[0]
+    assert ".gitlab" in co[0] and "branches/CODEOWNERS GitLab не читает и не засчитывается" in co[0]
+
+
+def test_multi_kit_gitlab_dir_codeowners_counts(tmp_path):
+    # (г) .gitlab/CODEOWNERS — засчитывается; правило без ведущего «/» и с «/**»
+    kit = make_multi_repo(tmp_path, "branches/** @x\n", place=".gitlab/CODEOWNERS")
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("✓ [CORE-04]") and "(.gitlab/CODEOWNERS корня репозитория)" in l
+               and "«branches/**» — @x" in l for l in lines)
+
+
+def test_multi_kit_root_and_dead_kit_file_info(tmp_path):
+    # (д) корневой и подкаталожный вместе — ✓ плюс i «можно удалить»
+    kit = make_multi_repo(tmp_path, _ROOT_CO, kit_co=True)
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("✓ [CORE-04]") for l in lines)
+    assert any(l.startswith("i [CORE-04] branches/CODEOWNERS GitLab не читает") and "можно удалить" in l
+               for l in lines)
+
+
+def test_multi_kit_manifest_of_kit_is_info_root_printed(tmp_path):
+    # (е) манифест в подкаталоге — i-строка без требования; манифест корня печатается как раньше
+    kit = make_multi_repo(tmp_path, _ROOT_CO, kit_manifest=True)
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l == "i [SDLC-07] манифест комплекта branches/gpb-manifest.json: name=branches, "
+                    "title=Филиалы" for l in lines)
+    assert any(l.startswith("✓ [SDLC-07] gpb-manifest.json разбирается; поля: name, title") for l in lines)
+
+
+def test_multi_kit_without_git_falls_back_to_src(tmp_path):
+    # (ж) без git и без домена подъём по родителям останавливается на --src — поведение прежнее
+    kit = make_multi_repo(tmp_path, _ROOT_CO, git="none")
+    lines, ready, _ = _run(kit)
+    assert not ready
+    assert any(l.startswith(f"✗ [CORE-04] CODEOWNERS в {kit} отсутствует или пуст") for l in lines)
+    assert not any("манифест комплекта" in l for l in lines)
+
+
+def test_multi_kit_domain_root_wins_without_git(tmp_path):
+    # корень домена (README с таблицей сервисов, где есть каталог комплекта) — без git
+    kit = make_multi_repo(tmp_path, _ROOT_CO, git="none")
+    _w(kit.parent / "README.md", "# Домен\n\n| service-id | Слот | Название | Вход |\n|---|---|---|---|\n"
+                                 "| branches | нет | Филиалы | [README](branches/README.md) |\n")
+    lines, ready, _ = _run(kit)
+    assert ready, "\n".join(lines)
+    assert any(l.startswith("✓ [CORE-04]") and "«/branches/»" in l for l in lines)
+
+
+def test_co_covers_patterns():
+    assert tg._co_covers("/branches/", "branches")
+    assert tg._co_covers("/branches", "branches")
+    assert tg._co_covers("branches/", "branches")
+    assert tg._co_covers("/dict/", "dict/branches")
+    assert not tg._co_covers("/branches/", "branches-old")
+    assert not tg._co_covers("/countries/", "branches")
+    assert not tg._co_covers("*.md", "branches")
+    assert not tg._co_covers("/a/branches/", "branches")
