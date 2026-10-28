@@ -3010,8 +3010,16 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
                 # FB-16 КК (2026-10-09): значение-ссылка на Confluence
                 # («Cм. внутр. Сonfluence [https://confluence…») — перенос
                 # живых URL запрещён правилами, требовать его полнотой
-                # нельзя; такая ячейка — не потеря, а отсылка источника
+                # нельзя; такая ячейка — не потеря, а отсылка источника.
+                # FB-41 КК (2026-10-28): ячейка целиком URL (markdown-ссылка
+                # с URL в тексте или голый URL) — та же отсылка; признак —
+                # значение ячейки после сведения ссылок к тексту само URL,
+                # а не пустой остаток: у [Название](url) остаток тоже пуст,
+                # но название — содержание, оно переносится (FB-38)
                 if cv and _CONFLUENCE_URL_RE.search(cell):
+                    if re.fullmatch(r"(?:https?://\S+\s*)+", cv):
+                        url_cells.append(cell.strip()[:50])
+                        continue
                     rest = _norm_cell(re.sub(
                         r"\[([^\]]*)\]\([^)]*\)|https?://\S+", " ", cell))
                     if (len(rest) <= 40

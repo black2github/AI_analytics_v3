@@ -25,6 +25,49 @@ def test_confluence_url_cell_is_not_a_loss():
     assert not ok and any("отсутствуют" in r for r in rep), rep
 
 
+# FB-41 КК (2026-10-28): ячейка целиком URL Confluence — та же отсылка, что у FB-16; перенос URL
+# запрещён сторожем отсылков, полнота его не требует. Страница 2184433380, карточка call-ext-005.
+_URL = "https://confluence.gboteam.ru/x/Ngo5Ag"
+_CARD41 = "| Параметр | Значение |\n|---|---|\n| Протокол | REST |\n| Документация | — |\n"
+
+
+def _src41(value):
+    return ("Текст.\n\n| Параметр | Значение |\n|---|---|\n| Протокол | REST |\n"
+            f"| Документация | {value} |\n")
+
+
+def test_fb41_markdown_link_with_url_text_is_not_a_loss():
+    # (а) [url](url) — значение ячейки само URL
+    rep, ok = check_source_tables(_CARD41, _src41(f"[{_URL}]({_URL})"))
+    assert ok, rep
+    assert any("ячейки-ссылки на Confluence ×1" in r for r in rep), rep
+
+
+def test_fb41_bare_url_is_not_a_loss():
+    # (б) голый URL без markdown
+    rep, ok = check_source_tables(_CARD41, _src41(_URL))
+    assert ok, rep
+    assert any("ячейки-ссылки на Confluence ×1" in r for r in rep), rep
+
+
+def test_fb41_titled_link_still_needs_its_title():
+    # (в) НЕсрабатывание: у [Название](url) название — содержание, переносится (FB-38)
+    src = _src41(f"[Описание представления]({_URL})")
+    rep, ok = check_source_tables(_CARD41, src)
+    assert not ok and any("отсутствуют" in r for r in rep), rep
+    card = _CARD41.replace("| Документация | — |", "| Документация | Описание представления |")
+    rep, ok = check_source_tables(card, src)
+    assert ok, rep
+    assert not any("ячейки-ссылки на Confluence" in r for r in rep), rep
+
+
+def test_fb41_url_only_cell_outside_confluence_still_a_loss():
+    # (г) НЕсрабатывание: ссылка-только-URL не на Confluence — поведение прежнее
+    gl = "https://gitlab.example.ru/group/repo"
+    rep, ok = check_source_tables(_CARD41, _src41(f"[{gl}]({gl})"))
+    assert not ok and any("отсутствуют" in r for r in rep), rep
+
+
 def test_homoglyph_verbatim_in_source_text_pardoned(tmp_path):
     # FB-16.2 / FB-20: слово с гомоглифом стоит в тексте источника (не в литерале)
     src = "---\ntitle: X\n---\n\nМетод getCardFeeСounters возвращает список.\n"  # кириллическая С
