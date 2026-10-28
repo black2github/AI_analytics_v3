@@ -53,12 +53,14 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
+    from kitcheck.checks.review_guards import OQ_ENTRY_RE  # noqa: E402
     from source_coverage import (  # noqa: E402
         artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
+    from .kitcheck.checks.review_guards import OQ_ENTRY_RE  # type: ignore  # noqa: E402
     from .source_coverage import (  # type: ignore  # noqa: E402
         artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 
@@ -691,7 +693,9 @@ def check(matrix_path: Path, docs_root: Path,
     return report, ok
 
 
-_OQ_NUM_RE = re.compile(r"^##\s+OQ-(\d+)\b", re.M)
+# граница записи журнала OQ — одна со сторожем B9 и гейтом переноса; дом выражения —
+# kitcheck/checks/review_guards.py (FB-39 КК, 2026-10-28)
+_OQ_NUM_RE = OQ_ENTRY_RE
 
 # Настраиваемые параметры: упоминание «[Настраиваемые параметры]
 # <сервис>.<ключ>» в документах комплекта требует строки с этим ключом в

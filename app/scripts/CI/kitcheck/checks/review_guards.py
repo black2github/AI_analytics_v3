@@ -12,10 +12,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs
-    from kitcheck.md import _kit_md, code_line_flags, read_frontmatter
+    from kitcheck.md import _kit_md, blank_code, code_line_flags, read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
-    from ..md import _kit_md, code_line_flags, read_frontmatter  # type: ignore
+    from ..md import _kit_md, blank_code, code_line_flags, read_frontmatter  # type: ignore
 
 _LIMIT = 30
 # строки, которые selfcheck пишет только в файл отчёта --out (тот же префикс, что
@@ -188,7 +188,17 @@ def check_passport_after_table(docs: Path) -> List[str]:
 
 
 # --- B9 (Т13): счётчик открытых вопросов по классам ---
-_OQ_HEAD_RE = re.compile(r"^##\s+OQ-\d+\s*—\s*(\d{4}-\d{2}-\d{2})", re.M)
+# запись журнала — любой заголовок «## OQ-NNN…»: граница записи одна для сторожа B9, гейта
+# переноса и порядка реестра link_debts; формат заголовка проверяется отдельно. Прежняя
+# регулярка требовала ISO-дату и молча теряла записи без неё (FB-39 КК, 12 записей, 2026-10-28)
+OQ_ENTRY_RE = re.compile(r"^##\s+OQ-(\d+)\b([^\n]*)$", re.M)
+# две формы заголовка по норме гида: «## OQ-NNN — ГГГГ-ММ-ДД — …» (рекомендуется: дата нужна
+# счёту давности) и «## OQ-NNN. …» (стенд, эталон, команды); прочие — строкой ⚠ (FB-39 КК)
+_OQ_CANON_HEAD_RE = re.compile(r"^\s+—\s+\d{4}-\d{2}-\d{2}\s+—\s+\S")
+_OQ_DOT_HEAD_RE = re.compile(r"^\.\s+\S")
+# дата — первым словом после номера, в двух формах: ГГГГ-ММ-ДД и ДД.ММ.ГГГГ
+_OQ_HEAD_DATE_RE = re.compile(
+    r"^(\s*[—–-]*\s*)(?:(\d{4})-(\d{2})-(\d{2})|(\d{2})\.(\d{2})\.(\d{4}))(?![\d.-])(\s*[—–-]*\s*)")
 # строка статуса записи журнала в обеих формах: «- **Статус:** …» (шаблон канона) и
 # «- Статус: …» (КК, 331 запись); один дом — здесь, гейт переноса импортирует (Д-49 п. 3)
 OQ_STATUS_RE = re.compile(r"^\s*-\s*(?:\*\*Статус:?\*\*:?|Статус:)\s*([^\n]+)$", re.M)
@@ -214,32 +224,98 @@ def _oq_class(status: str) -> str:
 oq_status_class = _oq_class
 
 
+def oq_entries(text: str) -> List[Tuple[str, str, str]]:
+    """Записи журнала открытых вопросов: (номер, остаток заголовка, тело до следующей записи).
+    Заголовок-образец в блоке кода записью не является (общее правило блоков кода прибора)."""
+    text = blank_code(text, repl="", inline=False)
+    heads = list(OQ_ENTRY_RE.finditer(text))
+    return [(h.group(1), h.group(2),
+             text[h.end():heads[i + 1].start() if i + 1 < len(heads) else len(text)])
+            for i, h in enumerate(heads)]
+
+
+def _sep_defect(sep: str) -> Optional[str]:
+    if re.fullmatch(r"\s+—\s+", sep):
+        return None
+    s = sep.strip()
+    if s == "—":
+        return "разделитель «—» без пробелов"
+    return f"разделитель «{s}»" if s else "нет разделителя «—»"
+
+
+def _oq_head_check(rest: str) -> Tuple[Optional[date], Optional[str]]:
+    """Дата заголовка записи (или None) и причина несоответствия обеим формам нормы
+    (None — по форме). Причина — первая из: нет даты, разделитель, нет формулировки,
+    дата не ISO."""
+    m = _OQ_HEAD_DATE_RE.match(rest)
+    d = None
+    if m:
+        y, mo, dd = m.group(2, 3, 4) if m.group(2) else m.group(7, 6, 5)
+        try:
+            d = date(int(y), int(mo), int(dd))
+        except ValueError:
+            pass
+    if _OQ_CANON_HEAD_RE.match(rest) or _OQ_DOT_HEAD_RE.match(rest):
+        return d, None
+    if not m:
+        return None, "нет даты"
+    tail = rest[m.end():].strip()
+    defect = _sep_defect(m.group(1)) or (
+        "нет формулировки" if not tail else _sep_defect(m.group(8)))
+    if defect:
+        return d, defect
+    if m.group(5):
+        return d, f"дата {m.group(5)}.{m.group(6)}.{m.group(7)}"
+    return d, "не по формату"
+
+
+def _oq_runs(bad: List[Tuple[int, str, str]]) -> List[str]:
+    """Номера записей подряд с одной причиной — диапазоном «OQ-a…OQ-b (причина)»."""
+    out: List[str] = []
+    i = 0
+    while i < len(bad):
+        j = i
+        while j + 1 < len(bad) and bad[j + 1][2] == bad[i][2] and bad[j + 1][0] == bad[j][0] + 1:
+            j += 1
+        a, b = f"OQ-{bad[i][1]}", f"OQ-{bad[j][1]}"
+        ids = a if j == i else (f"{a}, {b}" if j == i + 1 else f"{a}…{b}")
+        out.append(f"{ids} ({bad[i][2]})")
+        i = j + 1
+    return out
+
+
 def oq_class_counter(oq: Path, today: Optional[date] = None) -> List[str]:
     if not oq.is_file():
         return []
-    text = _text(oq)
-    heads = list(_OQ_HEAD_RE.finditer(text))
-    if not heads:
+    entries = oq_entries(_text(oq))
+    if not entries:
         return []
     today = today or date.today()
     counts = {"открыт": 0, "частично": 0, "зафиксировано": 0, "закрыт": 0, "прочие": 0}
     stale = 0
-    for i, h in enumerate(heads):
-        body = text[h.end():heads[i + 1].start() if i + 1 < len(heads) else len(text)]
+    bad: List[Tuple[int, str, str]] = []
+    for num, rest, body in entries:
         sm = _OQ_STATUS_RE.search(body)
         cls = _oq_class(sm.group(1)) if sm else "прочие"
         counts[cls] += 1
-        if cls == "открыт":
-            try:
-                if (today - date.fromisoformat(h.group(1))).days > 30:
-                    stale += 1
-            except ValueError:
-                pass
-    line = (f"i OQ: всего {len(heads)}, открыт {counts['открыт']}, частично {counts['частично']}, "
+        d, defect = _oq_head_check(rest)
+        if defect:
+            bad.append((int(num), num, defect))
+        if cls == "открыт" and d and (today - d).days > 30:
+            stale += 1
+    line = (f"i OQ: всего {len(entries)}, открыт {counts['открыт']}, частично {counts['частично']}, "
             f"зафиксировано {counts['зафиксировано']}, закрыт {counts['закрыт']}")
     if counts["прочие"]:
         line += f", прочие {counts['прочие']}"
-    return [line + f"; открытых старше 30 дней — {stale}"]
+    out = [line + f"; открытых старше 30 дней — {stale}"]
+    if bad:
+        # ⚠, не i: запись с таким заголовком прежде терялась молча — сигнал приёмке (FB-39 КК)
+        runs = _oq_runs(bad)
+        shown = runs[:_LIMIT] + ([f"… и ещё {len(runs) - _LIMIT}"] if len(runs) > _LIMIT else [])
+        out.append(f"⚠ заголовки реестра OQ не по формату «## OQ-NNN — ГГГГ-ММ-ДД — …» или «## OQ-NNN. …»: "
+                   f"{len(bad)} — "
+                   + ", ".join(shown))
+    return out
 
 
 # ================================================================ срез 2

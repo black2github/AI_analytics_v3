@@ -140,6 +140,92 @@ def test_b9_no_journal_silent(tmp_path):
     assert rg.oq_class_counter(tmp_path / "open-questions.md") == []
 
 
+# заголовки не по формату (FB-39 КК, 2026-10-28): запись считается, формат — отдельной строкой ⚠
+OQ_ODD = ("# OQ\n\n## OQ-01 — 2026-08-01 — по формату\n\n- Статус: открыт\n\n"
+          "## OQ-02 — TEAMTB-4518: без даты\n\n- Статус: открыт\n\n"
+          "## OQ-03 — 01.08.2026 — дата не ISO\n\n- Статус: открыт\n\n"
+          "## OQ-04 — 27.10.2026 — дата не ISO\n\n- Статус: частично закрыт (2026-10-28)\n\n"
+          "## OQ-05 — 27.10.2026 — дата не ISO\n\n- Статус: закрыт\n\n"
+          "## OQ-06 - 27.10.2026 - разделитель\n\n- Вопрос: без статуса\n")
+
+
+def test_b9_odd_heads_counted_in_classes(tmp_path):
+    # (а) все формы заголовка в «всего» и в классах; (д) запись без строки статуса — «прочие»
+    p = tmp_path / "open-questions.md"
+    make(p, OQ_ODD)
+    out = rg.oq_class_counter(p, today=date(2026, 10, 28))
+    assert out[0] == ("i OQ: всего 6, открыт 3, частично 1, зафиксировано 0, закрыт 1, прочие 1; "
+                      "открытых старше 30 дней — 2")
+
+
+def test_b9_odd_heads_warning_with_ranges(tmp_path):
+    # (б) строка ⚠: номера подряд с одной причиной — диапазоном; причина разделителя — раньше даты
+    p = tmp_path / "open-questions.md"
+    make(p, OQ_ODD)
+    out = rg.oq_class_counter(p, today=date(2026, 10, 28))
+    assert out[1:] == ["⚠ заголовки реестра OQ не по формату «## OQ-NNN — ГГГГ-ММ-ДД — …» или "
+                       "«## OQ-NNN. …»: 5 — "
+                       "OQ-02 (нет даты), OQ-03 (дата 01.08.2026), OQ-04, OQ-05 (дата 27.10.2026), "
+                       "OQ-06 (разделитель «-»)"]
+
+
+def test_b9_dmy_date_counts_as_stale(tmp_path):
+    # (в) дата ДД.ММ.ГГГГ входит в «старше 30 дней»; без даты — не входит
+    p = tmp_path / "open-questions.md"
+    make(p, "## OQ-1 — 01.08.2026 — старый\n\n- Статус: открыт\n\n"
+            "## OQ-2 — без даты\n\n- Статус: открыт\n")
+    assert rg.oq_class_counter(p, today=date(2026, 10, 28))[0].endswith("открытых старше 30 дней — 1")
+
+
+def test_b9_canonical_heads_no_warning(tmp_path):
+    # (г) без нестандартных заголовков строки ⚠ нет, вывод прежний (сверка — test_b9_counter)
+    p = tmp_path / "open-questions.md"
+    make(p, OQ)
+    assert len(rg.oq_class_counter(p, today=date(2026, 10, 22))) == 1
+
+
+def test_b9_head_defect_reasons():
+    chk = rg._oq_head_check
+    assert chk(" — 2026-08-01 — текст") == (date(2026, 8, 1), None)
+    assert chk(" — 27.10.2026 — текст") == (date(2026, 10, 27), "дата 27.10.2026")
+    assert chk(" - 27.10.2026 - текст")[1] == "разделитель «-»"
+    assert chk(" — 2026-08-01—текст")[1] == "разделитель «—» без пробелов"
+    assert chk(" 2026-08-01 — текст")[1] == "нет разделителя «—»"
+    assert chk(" — 2026-08-01")[1] == "нет формулировки"
+    assert chk(" — ENT-007: 2026-08-01") == (None, "нет даты")
+    assert chk("") == (None, "нет даты")
+    # вторая форма нормы — «## OQ-NNN. <формулировка>» без даты: по форме, в давность не входит
+    assert chk(". Расхождение копии") == (None, None)
+    assert chk(".Без пробела")[1] == "нет даты"
+
+
+def test_b9_dot_form_no_warning(tmp_path):
+    # журнал формы «## OQ-NNN. …» (стенд, эталон, команды): счётчик есть, строки ⚠ нет;
+    # прежняя регулярка такой журнал не видела вовсе — строки «i OQ» не было
+    p = tmp_path / "open-questions.md"
+    make(p, "## OQ-001. Первый\n\n- **Статус:** открыт\n\n## OQ-002. Второй\n\n- **Статус:** закрыт\n")
+    assert rg.oq_class_counter(p, today=date(2026, 10, 28)) == [
+        "i OQ: всего 2, открыт 1, частично 0, зафиксировано 0, закрыт 1; открытых старше 30 дней — 0"]
+
+
+def test_b9_code_block_example_not_an_entry(tmp_path):
+    # образец формата в блоке кода записью не является — как у порядка реестра link_debts
+    p = tmp_path / "open-questions.md"
+    make(p, "```\n## OQ-001 — 2026-01-01 — образец\n- Статус: открыт\n```\n\n"
+            "## OQ-01 — 2026-10-20 — запись\n\n- Статус: открыт\n")
+    assert rg.oq_class_counter(p, today=date(2026, 10, 28))[0].startswith("i OQ: всего 1, открыт 1,")
+
+
+def test_oq_entry_boundary_one_for_guard_gate_and_order(tmp_path):
+    # одна граница записи у B9, гейта переноса и порядка реестра: нестандартные заголовки не теряются
+    from app.scripts.CI import link_debts as ld, transfer_gate as tg
+    p = tmp_path / "open-questions.md"
+    make(p, OQ_ODD)
+    assert ld.check_oq_order(p)[0][0] == "open-questions: порядок реестра append-only соблюдён (6 записей) ✓"
+    _, opened = tg.open_questions(tmp_path, tmp_path, explicit=p)
+    assert opened == ["OQ-01", "OQ-02", "OQ-03", "OQ-04", "OQ-06 (без строки «Статус»)"]
+
+
 # ---------------------------------------------------------------- подключение к selfcheck
 
 def test_selfcheck_runs_guards_without_verdict_change(tmp_path):

@@ -174,9 +174,8 @@ from typing import Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
-from kitcheck.md import blank_code  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
-from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_status_class  # noqa: E402
+from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_entries, oq_status_class  # noqa: E402
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_VALIDATOR = _HERE / "platform" / "scripts" / "validate_analytics_docs.py"
@@ -193,7 +192,8 @@ _SKIP_DIRS = {"prompts", "sandbox", "sources", "confluence", "__pycache__",
 _REPO_ROOT_FILES = {"CODEOWNERS", "gpb-manifest.json", ".gitignore", ".gitlab-ci.yml",
                     ".gitattributes"}
 
-_OQ_ENTRY_RE = re.compile(r"^##\s+(OQ-\d+)\b.*$", re.M)
+# записи журнала перечисляет review_guards.oq_entries — одна граница записи со сторожем B9 и
+# порядком реестра link_debts (FB-39 КК, 2026-10-28)
 # строка статуса — обе формы, «- **Статус:**» и «- Статус:» (Д-49 п. 3); дом выражения —
 # kitcheck/checks/review_guards.py (сторож B9 читает журнал тем же выражением)
 _OQ_STATUS_RE = OQ_STATUS_RE
@@ -494,12 +494,8 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
     for cand in question_candidates(src_root, docs, sources, explicit):
         if cand.is_file():
             text = cand.read_text(encoding="utf-8", errors="replace")
-            text = blank_code(text, repl="", inline=False)
             opened: List[str] = []
-            entries = list(_OQ_ENTRY_RE.finditer(text))
-            for i, m in enumerate(entries):
-                end = entries[i + 1].start() if i + 1 < len(entries) else len(text)
-                body = text[m.end():end]
+            for num, _head, body in oq_entries(text):
                 st = _OQ_STATUS_RE.search(body)
                 status = st.group(1).strip().lower() if st else ""
                 # класс — по первому слову статуса, как у сторожа B9: «закрыт (…; переоткрыть
@@ -508,7 +504,7 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
                 cls = oq_status_class(status) if st else ""
                 if not st or cls in ("открыт", "частично") or (
                         cls == "прочие" and any(w in status for w in _OPEN_WORDS)):
-                    opened.append(m.group(1) + ("" if st else " (без строки «Статус»)"))
+                    opened.append(f"OQ-{num}" + ("" if st else " (без строки «Статус»)"))
             return cand, opened
     return None, []
 
