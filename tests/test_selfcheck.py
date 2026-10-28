@@ -191,7 +191,7 @@ def test_overdue_debt_propagates(tmp_path):
          "выпуск'\ntype: process\n---\n\n# П\n")
     make_matrix(docs,
                 "| FUN-BNK-01 | function | Ф1 | srs/functions/f1.md |\n"
-                "| FUN-BNK-01 | — | нет целевого артефакта PRC «Процесс "
+                "| FUN-BNK-01 | — | нет целевого артефакта process «Процесс "
                 "обработки заявки на выпуск» — требуется заход "
                 "create-process |\n")
     report, ok = selfcheck.run(docs, None)
