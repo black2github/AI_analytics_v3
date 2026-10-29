@@ -907,6 +907,35 @@ def _kc_review_guards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return report, True
 
 
+def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторож приписки сообщения (FB-12 КК, normalize_tables._fc_message_attribution) не
+    выполнен: у карточного файла контролей страница не указана или на ней нет таблицы с
+    колонкой сообщения — одна i-строка на комплект вместо строки на файл. Перечень — в --out."""
+    per: List[Tuple[str, str]] = []
+    for p in sorted(ctx.docs.rglob("cards-*.md")):
+        text = _fs.read_text(p, encoding="utf-8", errors="replace")
+        if not nt.is_control_cards_file(p, text):
+            continue
+        pids = page_ids(read_frontmatter(p) or {})
+        srcs = [ctx.idx[x] for x in pids if x in ctx.idx] if ctx.sources is not None else []
+        if not srcs:
+            per.append((p.relative_to(ctx.docs).as_posix(), "страница не указана"
+                        if not pids else "страница не сверялась"))
+            continue
+        if not any(nt.message_rows(_fs.read_text(s, encoding="utf-8", errors="replace"))
+                   for s in srcs):
+            per.append((p.relative_to(ctx.docs).as_posix(), "нет таблицы с колонкой сообщения"))
+    if not per:
+        return [], True
+    kinds: Dict[str, int] = {}
+    for _f, k in per:
+        kinds[k] = kinds.get(k, 0) + 1
+    rep = [f"i сверка сообщений карточек контролей с источником не выполнена: {len(per)} файлов ("
+           + ", ".join(f"{k} ×{n}" for k, n in kinds.items()) + ")"]
+    rep += [f"{OUT_ONLY}{f}: {k}" for f, k in per]
+    return rep, True
+
+
 def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Счётчик журнала открытых вопросов по классам статуса (i)."""
     oq = ctx.docs / "open-questions.md"
@@ -1230,6 +1259,8 @@ KIT_CHECKS: List[Check] = [
     Check("spellings", _kc_spellings, affects_verdict=False),
     Check("branch_form", _kc_branch_form, affects_verdict=False),
     Check("review_guards", _kc_review_guards, affects_verdict=False),
+    Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
+          affects_verdict=False),
     Check("oq_classes", _kc_oq_classes, affects_verdict=False),
     Check("task_tags", _kc_task_tags, affects_verdict=False),
     Check("module_zone", _kc_module_zone, affects_verdict=False),
