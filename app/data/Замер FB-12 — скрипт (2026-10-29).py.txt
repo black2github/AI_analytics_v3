@@ -1,0 +1,456 @@
+# -*- coding: utf-8 -*-
+"""Замер FB-12 КК: приписка источнику в карточках контролей (одноразовый скрипт, не часть прибора).
+
+Запуск (Git Bash, из корня analyzer; скрипт скопировать как fb12_measure.py; системный Python, venv в PYTHONPATH):
+    R="$(pwd -W)"; export PYTHONPATH="$R;$R/.venv/Lib/site-packages" PYTHONIOENCODING=utf-8
+    # КК: архив origin/master клона (рабочую копию не трогать)
+    git -C C:/doc-as-code/EAS/src-business-cards archive origin/master docs/srs sources/confluence | tar -x -C C:/tmp/fb12/kk
+    /c/Python312/python.exe fb12_measure.py --label kk --sources C:/tmp/fb12/kk/sources/confluence \
+        --cards C:/tmp/fb12/kk/docs/srs --cards-glob "*/control/cards-*.md" --out C:/tmp/fb12/out
+    # Эталон
+    /c/Python312/python.exe fb12_measure.py --label etalon --sources C:/doc-as-code/EAN/docs-o2new/sources/confluence/o2plus \
+        --cards C:/doc-as-code/EAN/docs-o2new/output/open-add-account/docs/srs/controls --cards-glob "cards-*.md" --out C:/tmp/fb12/out
+КК — около 4 минут (подобие считается по всем строкам-кандидатам), эталон — секунды.
+
+Что делает:
+  1) инвентаризация колонок сообщения в таблицах источника (HTML-острова и pipe-таблицы);
+  2) сопоставление карточки CTL с строкой источника по тексту логики (точно / подобие);
+  3) два детектора приписки (текстовый по фразам-признакам; обратный — сообщение карточки
+     содержательно, ячейка источника пуста);
+  4) детальный вывод для ручной классификации — <out>/<label>-hits.md, сводка — <out>/<label>-summary.json.
+"""
+import argparse
+import difflib
+import json
+import re
+import sys
+from pathlib import Path
+
+from bs4 import BeautifulSoup, Tag
+
+from app.scripts.CI.normalize_tables import cell_text, parse_md_tables, protect_token_tags
+
+MSG_HDR_RE = re.compile(r"сообщени|текст\s+ошибки", re.I)
+# Колонка сообщения пользователю/об ошибке — заголовок целиком из этого словаря (после чистки
+# разметки); прочие заголовки со словом «сообщение» (структура XML, пример, тип, параметры
+# сообщения интеграции) считаются отдельно как отброшенные кандидаты
+MSG_HDR_OK_RE = re.compile(
+    r"(сообщение( об ошибке( на фронте)?| для пользователя| пользователю| ошибки контроля)?"
+    r"|текст (ошибки|сообщения))\.?( \(атрибут error\.message\))?", re.I)
+
+
+def hdr_clean(h: str) -> str:
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>|\*", "", h)).strip()
+
+
+def is_msg_hdr(h: str) -> bool:
+    return bool(MSG_HDR_OK_RE.fullmatch(hdr_clean(h)))
+LOGIC_HDR_RE = re.compile(r"логик|правил|услови|описание провер|алгоритм", re.I)
+NAME_HDR_RE = re.compile(r"название|наименование", re.I)
+THRESH = 0.9
+
+# Фразы-признаки не-цитаты о сообщении (текстовый детектор), регистронезависимо
+PHRASES = [
+    "дословно совпада", "как в постановке", "в постановке текст", "совпадает с текстом",
+    "аналогично постановке", "см. логику", "см логику", "в источнике сообщение",
+    "сообщение совпадает", "совпадает с логикой", "текст логики", "перенесено как задано",
+    "как задано источником", "повторяет текст", "повторяет логику", "равен тексту", "совпадает с названием",
+]
+NOT_SET_RE = re.compile(r"в\s+постановке\s+не\s+задан", re.I)
+
+
+def norm(v: str) -> str:
+    v = re.sub(r"!\[[^\]]*\]\([^)]*\)", " ", v)
+    v = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", v)                 # ссылки → текст
+    v = re.sub(r"<br\s*/?>|&nbsp;", " ", v, flags=re.I)
+    v = re.sub(r"\b[A-Z]{2,6}(?:-[A-Z]{2,6})*-\d+(?:\.\d+)*\b", " ", v)   # ID артефактов карточки
+    v = v.replace("\\", "").replace("ё", "е").replace("Ё", "Е").replace(" ", " ")
+    v = re.sub(r"[*_`«»\"“”„'’<>~]", " ", v)
+    v = re.sub(r"\s*([.,:;()=])\s*", r"\1", v)
+    return re.sub(r"\s+", " ", v).strip().lower()
+
+
+def is_empty_msg(raw: str) -> str:
+    """'' — содержательно; 'empty' — пусто; 'dash' — только прочерк."""
+    t = re.sub(r"<br\s*/?>|&nbsp;|\s|\*", "", raw)
+    if not t:
+        return "empty"
+    if re.fullmatch(r"[-—–]+", t):
+        return "dash"
+    return ""
+
+
+# ---------- источник ----------
+
+FM_ID_RE = re.compile(r"^confluence_page_id:\s*'?(\d+)'?", re.M)
+
+
+def html_table(table: Tag):
+    """Сетка с флагами: (value, merged) по позиции; число ведущих строк из одних th."""
+    grid, merged_any_data, carry = [], False, {}
+    trs = [tr for tr in table.find_all("tr") if tr.find_parent("table") is table]
+    head_n = 0
+    for tr in trs:
+        cells = tr.find_all(["td", "th"], recursive=False)
+        if cells and all(c.name == "th" for c in cells) and head_n == len(grid):
+            head_n += 1
+        row, col = [], 0
+
+        def fill():
+            nonlocal col
+            while col in carry:
+                rem, val = carry[col]
+                row.append((val, 2))       # 2 — протяжка rowspan сверху
+                if rem - 1:
+                    carry[col][0] = rem - 1
+                else:
+                    del carry[col]
+                col += 1
+        fill()
+        for c in cells:
+            fill()
+            val = cell_text(c)
+            cs, rs = int(c.get("colspan", 1) or 1), int(c.get("rowspan", 1) or 1)
+            for _ in range(cs):
+                row.append((val, 1 if (cs > 1 or rs > 1) else 0))   # 1 — исходная объединённая
+                if rs > 1:
+                    carry[col] = [rs - 1, val]
+                col += 1
+        fill()
+        grid.append(row)
+    w = max((len(r) for r in grid), default=0)
+    grid = [r + [("", False)] * (w - len(r)) for r in grid]
+    return grid, head_n
+
+
+def page_tables(text: str):
+    """[(kind, header_labels, data_rows[[(val,merged)]], meta)]"""
+    out = []
+    soup = BeautifulSoup(protect_token_tags(text), "html.parser")
+    for t in soup.find_all("table"):
+        if t.find_parent("table"):
+            continue
+        grid, head_n = html_table(t)
+        if not grid:
+            continue
+        meta = {"head_rows": head_n, "header_not_first": False, "no_header": False}
+        if head_n == 0:
+            # заголовок из td: ищем строку с колонкой сообщения среди первых трёх
+            hit = next((i for i, r in enumerate(grid[:3]) if any(is_msg_hdr(v) for v, _ in r)), None)
+            if hit is None:
+                meta["no_header"] = True
+                head_n = 0
+            else:
+                meta["header_not_first"] = hit > 0
+                head_n = hit + 1
+        labels = []
+        # строка-раздел шапки (одно значение на всю ширину, «Контроли <сущность>») — не заголовок колонки
+        head_rows = [r for r in grid[:head_n] if len({v for v, _ in r if v.strip()}) > 1
+                     or sum(1 for v, _ in r if v.strip()) < len(r) - 1]
+        for ci in range(len(grid[0])):
+            parts = []
+            for r in head_rows:
+                v = r[ci][0]
+                if v and v not in parts:
+                    parts.append(v)
+            labels.append(" / ".join(parts))
+        out.append(("html", labels, grid[head_n:], meta))
+    md_only = re.sub(r"<table.*?</table>", "", text, flags=re.S | re.I)
+    for hdr, rows in parse_md_tables(md_only):
+        meta = {"head_rows": 1, "header_not_first": False, "no_header": False}
+        out.append(("md", hdr, [[(v, False) for v in r] for r in rows], meta))
+    return out
+
+
+def scan_sources(root: Path):
+    pages, inv = {}, {"pages_total": 0, "pages_with_msg": 0, "tables": 0, "rows": 0,
+                      "rows_empty": 0, "rows_dash": 0, "headers": {}, "rejected_headers": {},
+                      "tables_with_logic": 0, "rows_logic": 0, "rows_logic_empty": 0, "doubt": {}, "doubt_tables": 0,
+                      "merged_msg_tables": 0, "doubt_list": []}
+    rows_all = []
+    for p in sorted(root.rglob("*.md")):
+        if "raw" in p.relative_to(root).parts[:1]:
+            continue
+        text = p.read_text(encoding="utf-8")
+        m = FM_ID_RE.search(text)
+        pid = m.group(1) if m else None
+        inv["pages_total"] += 1
+        has = False
+        for ti, (kind, labels, data, meta) in enumerate(page_tables(text)):
+            for h in labels:
+                if MSG_HDR_RE.search(h) and not is_msg_hdr(h) and len(hdr_clean(h)) <= 80:
+                    k = hdr_clean(h)
+                    inv["rejected_headers"][k] = inv["rejected_headers"].get(k, 0) + 1
+            cand = [i for i, h in enumerate(labels) if is_msg_hdr(h)]
+            if not cand:
+                continue
+            has = True
+            inv["tables"] += 1
+            logic_cols = [i for i, h in enumerate(labels) if LOGIC_HDR_RE.search(h)]
+            if logic_cols:
+                inv["tables_with_logic"] += 1
+            for i in cand:
+                key = hdr_clean(labels[i])
+                inv["headers"][key] = inv["headers"].get(key, 0) + 1
+            reasons = []
+            if len(cand) > 1:
+                reasons.append("несколько колонок-кандидатов")
+            if meta["header_not_first"]:
+                reasons.append("заголовок не в первой строке")
+            if meta["no_header"]:
+                reasons.append("без заголовка")
+            mi = cand[0]
+            merged_data = any(m for r in data for _, m in r)
+            merged_msg = any(r[mi][1] for r in data if mi < len(r))
+            if merged_msg:
+                reasons.append("объединённые ячейки в колонке сообщения")
+            elif merged_data:
+                reasons.append("объединённые ячейки в других колонках")
+            if merged_msg:
+                inv["merged_msg_tables"] += 1
+            # «сомнительный разбор» — всё, кроме объединений вне колонки сообщения
+            doubtful = [r for r in reasons if r != "объединённые ячейки в других колонках"]
+            for r in reasons:
+                inv["doubt"][r] = inv["doubt"].get(r, 0) + 1
+            if doubtful:
+                inv["doubt_tables"] += 1
+                inv["doubt_list"].append(f"{p.relative_to(root)} #{ti} ({kind}): {', '.join(doubtful)}")
+            name_cols = [i for i, h in enumerate(labels) if NAME_HDR_RE.search(h)]
+            for ri, r in enumerate(data):
+                vals = [v for v, _ in r]
+                if not any(v.strip() for v in vals):
+                    continue
+                # строка-раздел: все ячейки одинаковы (colspan на всю ширину)
+                if len(set(vals)) == 1:
+                    continue
+                # строка-хвост: всё непустое в ней — протяжка rowspan сверху (своих ячеек нет)
+                if all(m == 2 for v, m in r if v.strip()):
+                    inv["rows_tail"] = inv.get("rows_tail", 0) + 1
+                    continue
+                msg = vals[mi] if mi < len(vals) else ""
+                e = is_empty_msg(msg)
+                inv["rows"] += 1
+                if e == "empty":
+                    inv["rows_empty"] += 1
+                elif e == "dash":
+                    inv["rows_dash"] += 1
+                if logic_cols:
+                    inv["rows_logic"] += 1
+                    if e:
+                        inv["rows_logic_empty"] += 1
+                rows_all.append({
+                    "page": str(p.relative_to(root)), "pid": pid, "table": ti, "row": ri, "kind": kind,
+                    "msg": msg, "msg_state": e or "filled", "msg_merged": bool(r[mi][1]) if mi < len(r) else False,
+                    "cells": [v for i, v in enumerate(vals) if i not in cand],
+                    "logic": [vals[i] for i in logic_cols if i < len(vals) and i not in cand],
+                    "names": [vals[i] for i in name_cols if i < len(vals) and i not in cand],
+                    "doubt": doubtful,
+                })
+        if has:
+            inv["pages_with_msg"] += 1
+        pages.setdefault(pid, []).append(str(p.relative_to(root)))
+    return inv, rows_all
+
+
+# ---------- карточки ----------
+
+CARD_RE = re.compile(r"^### (CTL-\d+)\.\s*(.*)$", re.M)
+FIELD_RE = re.compile(r"^- \*\*([^*]+?):\*\*\s?(.*)$")
+FM_IDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]]*)\]", re.M)
+
+
+def parse_cards(path: Path):
+    text = path.read_text(encoding="utf-8")
+    m = FM_IDS_RE.search(text)
+    pids = re.findall(r"\d+", m.group(1)) if m else []
+    heads = list(CARD_RE.finditer(text))
+    cards = []
+    for i, h in enumerate(heads):
+        end = heads[i + 1].start() if i + 1 < len(heads) else len(text)
+        body = text[h.end():end]
+        body = re.split(r"^#{1,3} ", body, maxsplit=1, flags=re.M)[0]
+        fields, cur = {}, None
+        for ln in body.splitlines():
+            fm = FIELD_RE.match(ln)
+            if fm:
+                cur = fm.group(1).strip()
+                fields[cur] = fm.group(2)
+            elif cur and ln.strip():
+                fields[cur] += "\n" + ln
+        cards.append({"file": path.name, "id": h.group(1), "title": h.group(2).strip(), "pids": pids,
+                      "fields": fields, "section": body})
+    return cards
+
+
+NOTE_RE = re.compile(r"\((?:[^()]|\([^()]*\))*(?:комплект|долг|выгрузк|артефакт|источник|постановк)(?:[^()]|\([^()]*\))*\)", re.I)
+
+
+def strip_notes(v: str) -> str:
+    """Пояснения канона в скобках («справочник вне комплекта … долг в матрице») — не текст источника."""
+    return NOTE_RE.sub(" ", v)
+
+
+def best_match(card, rows):
+    logic = strip_notes(card["fields"].get("Логика проверки", ""))
+    cond = strip_notes(card["fields"].get("Условие выполнения", ""))
+    keys = [k for k in {norm(logic), norm(cond + " " + logic)} if k]
+    best_s, tops = 0.0, []
+    for r in rows:
+        cells = r["logic"] or r["cells"]
+        rs = 0.0
+        for c in cells:
+            nc = norm(c)
+            if not nc:
+                continue
+            for k in keys:
+                if k == nc:
+                    rs = 1.0
+                    break
+                sm = difflib.SequenceMatcher(None, k, nc, autojunk=False)
+                if sm.real_quick_ratio() < max(best_s, rs) or sm.quick_ratio() < max(best_s, rs):
+                    continue
+                rs = max(rs, sm.ratio())
+            if rs == 1.0:
+                break
+        if rs > best_s + 1e-9:
+            best_s, tops = rs, [r]
+        elif rs and abs(rs - best_s) <= 1e-9:
+            tops.append(r)
+    if not tops:
+        return (0.0, None, "", [])
+    return (best_s, tops[0], "точно" if best_s == 1.0 else "подобие", tops)
+
+
+def disambiguate(card, tops):
+    """Одинаково похожих строк несколько (типовая логика «Если значение указано…»): выбор по
+    реквизиту и названию проверки; иначе — неоднозначно."""
+    if len({(t["page"], t["table"], t["row"]) for t in tops}) == 1:
+        return tops[0], False
+    nm = name_match(card, tops)
+    if nm is not None:
+        return nm, False
+    # для детекторов важна только заполненность ячейки: если у всех равных кандидатов она
+    # одинакова, выбор строки на вывод не влияет
+    if len({t["msg_state"] == "filled" for t in tops}) == 1:
+        return tops[0], "state"
+    return tops[0], True
+
+
+def name_match(card, rows):
+    """Запасной ключ: «Реквизит: Название проверки» заголовка карточки ↔ колонка названия строки
+    (и реквизит в любой ячейке строки при неоднозначности). Только единственный кандидат."""
+    attr, _, name = card["title"].rpartition(":")
+    n, an = norm(name), norm(attr)
+    if not n:
+        return None
+    cand = [r for r in rows if any(norm(v) == n for v in r["names"])]
+    if len(cand) > 1 and an:
+        exact = [r for r in cand if any(norm(v) == an for v in r["cells"])]
+        cand = exact or [r for r in cand if any(an in norm(v) or (norm(v) and norm(v) in an) for v in r["cells"])]
+    return cand[0] if len(cand) == 1 else None
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--label", required=True)
+    ap.add_argument("--sources", required=True, type=Path)
+    ap.add_argument("--cards", required=True, type=Path)
+    ap.add_argument("--cards-glob", required=True)
+    ap.add_argument("--out", required=True, type=Path)
+    a = ap.parse_args()
+    a.out.mkdir(parents=True, exist_ok=True)
+
+    inv, rows = scan_sources(a.sources)
+    cards = []
+    for p in sorted(a.cards.glob(a.cards_glob)):
+        cards.extend(parse_cards(p))
+
+    by_pid = {}
+    for r in rows:
+        by_pid.setdefault(r["pid"], []).append(r)
+
+    res = {"cards": len(cards), "exact": 0, "similar": 0, "unmatched": 0,
+           "text_hits": 0, "text_hits_section": 0, "rev_hits": 0, "not_set": 0, "not_set_vs_filled": 0}
+    det = []
+    for c in cards:
+        own = [r for pid in c["pids"] for r in by_pid.get(pid, [])]
+        pool = own or rows
+        s, r, how, tops = best_match(c, pool)
+        if (s < THRESH) and own:          # страница карточки без строки — ищем по всем
+            s2, r2, how2, tops2 = best_match(c, rows)
+            if s2 > s:
+                s, r, how, tops = s2, r2, how2 + " (другая страница)", tops2
+        nm = name_match(c, pool)
+        matched = s >= THRESH
+        ambiguous = False
+        if matched:
+            r, ambiguous = disambiguate(c, tops)
+            if len(tops) > 1:
+                res["logic_multi"] = res.get("logic_multi", 0) + 1
+            if ambiguous == "state":
+                res["same_state"] = res.get("same_state", 0) + 1
+                how += f" (равных ×{len(tops)}, заполненность одинакова)"
+                ambiguous = False
+            if ambiguous:
+                # типовая логика без опоры на название — строку надёжно не выбрать
+                matched, how = False, how + f" неоднозначно ×{len(tops)}"
+                res["ambiguous"] = res.get("ambiguous", 0) + 1
+        if matched:
+            res["exact" if how.startswith("точно") else "similar"] += 1
+        elif nm is not None:
+            # логика переформулирована, но реквизит + название проверки однозначно указывают строку
+            matched, r, how = True, nm, f"по названию (логика {s:.2f})"
+            res["by_name"] = res.get("by_name", 0) + 1
+        else:
+            res["unmatched"] += 1
+        msg = c["fields"].get("Сообщение об ошибке", "")
+        low_msg, low_sec = msg.lower(), c["section"].lower()
+        ph_msg = [ph for ph in PHRASES if ph in low_msg]
+        ph_sec = [ph for ph in PHRASES if ph in low_sec and ph not in low_msg]
+        not_set = bool(NOT_SET_RE.search(msg))
+        if not_set:
+            res["not_set"] += 1
+        if ph_msg:
+            res["text_hits"] += 1
+        if ph_sec:
+            res["text_hits_section"] += 1
+        rev = matched and not not_set and msg.strip() and r["msg_state"] != "filled"
+        if rev:
+            res["rev_hits"] += 1
+        if matched and not_set and r["msg_state"] == "filled":
+            res["not_set_vs_filled"] += 1
+        det.append({"card": f'{c["file"]} {c["id"]}', "title": c["title"], "score": round(s, 3), "how": how,
+                    "matched": matched, "name_match": bool(nm), "row": r, "msg": msg, "ph_msg": ph_msg,
+                    "ph_sec": ph_sec, "not_set": not_set, "rev": bool(rev), "own_pages": bool(own),
+                    "ambiguous": ambiguous, "ntops": len(tops)})
+
+    summary = {"label": a.label, **{k: v for k, v in inv.items() if k != "doubt_list"}, **res}
+    (a.out / f"{a.label}-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    lines = [f"# {a.label}: детали\n", "## Сомнительные таблицы\n"] + [f"- {x}" for x in inv["doubt_list"]]
+
+    def row_s(r):
+        if not r:
+            return "—"
+        return f'`{r["page"]}` табл.{r["table"]} стр.{r["row"]} msg[{r["msg_state"]}{",merged" if r["msg_merged"] else ""}]={r["msg"][:160]!r}'
+
+    for title, flt in [("Текстовый детектор (поле сообщения)", lambda d: d["ph_msg"]),
+                       ("Текстовый детектор (вне поля сообщения)", lambda d: d["ph_sec"]),
+                       ("Обратный детектор", lambda d: d["rev"]),
+                       ("«в постановке не задано» при заполненной ячейке", lambda d: d["matched"] and d["not_set"] and d["row"]["msg_state"] == "filled"),
+                       ("Несопоставленные", lambda d: not d["matched"])]:
+        lines.append(f"\n## {title}\n")
+        for d in det:
+            if flt(d):
+                lines.append(f'- **{d["card"]}** «{d["title"]}» score={d["score"]} {d["how"]} name={d["name_match"]} own={d["own_pages"]} ph={d["ph_msg"] or d["ph_sec"]}')
+                lines.append(f'  - карточка: {d["msg"][:300]!r}')
+                lines.append(f'  - источник: {row_s(d["row"])}')
+                if d["row"]:
+                    lines.append(f'  - логика источника: {(d["row"]["logic"] or d["row"]["cells"])[:1]!r:.300}')
+    (a.out / f"{a.label}-hits.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    json.dump(det, (a.out / f"{a.label}-det.json").open("w", encoding="utf-8"), ensure_ascii=False, default=str)
+    print(json.dumps(summary, ensure_ascii=False, indent=1))
+
+
+if __name__ == "__main__":
+    sys.exit(main())
