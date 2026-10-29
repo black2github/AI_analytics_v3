@@ -5137,6 +5137,15 @@ def _fc_control_cards_by_entity(fx: "_FileCtx") -> Tuple[List[str], bool]:
     return report, ok
 
 
+_GLOSSARY_TYPE_RE = re.compile(r"^type:\s*['\"]?glossary['\"]?\s*$", re.M)
+# Документы определений, к которым не применяется сторож полноты кавычечных
+# литералов источника (решение владельца канона 2026-10-30): глоссарий — не
+# дословный перенос страницы, шаблон требует атомарных определений и
+# делегирования реестров, то есть сокращения источника; domain-vision домена —
+# по тому же основанию. Тип → наименование для i-строки.
+_NO_LITERALS_TYPES = {"glossary": "глоссарию", "domain-vision": "видению домена"}
+
+
 def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
     lines, = fx.lines,
     report: List[str] = []
@@ -5150,8 +5159,13 @@ def _fc_blockquote_indented_code(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # не формы (сторож тяжёлых пар li-раскладку принимает).
     # строки внутри блока кода — текст примера, не цитата
     _code = code_line_flags(lines)
-    _bq = sum(1 for ln, code in zip(lines, _code)
-              if not code and ln.lstrip().startswith(">"))
+    # глоссарий: выноску-делегирование «> Полный справочник … — в …»
+    # предписывает шаблон glossary.md (решение владельца канона
+    # 2026-10-30) — сторож выносок к type: glossary не применяется;
+    # отступные код-блоки сторожатся по-прежнему
+    _bq = (0 if _GLOSSARY_TYPE_RE.search(_fm_head(fx.text)) else
+           sum(1 for ln, code in zip(lines, _code)
+               if not code and ln.lstrip().startswith(">")))
     if _bq:
         ok = False
         report.append(
@@ -5958,8 +5972,13 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                         if f not in files),
             flags=re.S)
             if docs_root is not None else None)
-        ql_report, ql_ok = check_quoted_literals(combined, src_text,
-                                                 sibling_text=sib_txt)
+        if m_type is not None and m_type.group(1) in _NO_LITERALS_TYPES:
+            ql_report, ql_ok = [
+                f"i {main_file.name}: сторож литералов не применяется к "
+                f"{_NO_LITERALS_TYPES[m_type.group(1)]}"], True
+        else:
+            ql_report, ql_ok = check_quoted_literals(combined, src_text,
+                                                     sibling_text=sib_txt)
         report.extend(src_report)
         report.extend(ttl_report)
         report.extend(bh_report)

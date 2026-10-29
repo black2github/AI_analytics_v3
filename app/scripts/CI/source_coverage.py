@@ -23,8 +23,9 @@
 #
 # Классы непокрытия (FB-28 КК, 2026-10-20): непокрытая страница получает
 # класс по своей строке описи inventory.md комплекта (дом классификации —
-# шаг 2 плана миграции): заморожено, контейнер, справочный вход, бинарное,
-# вне плана, не в описи — структурное непокрытие по решению плана; иначе —
+# шаг 2 плана миграции): заморожено, контейнер, справочный вход, снято с
+# миграции, бинарное, вне плана, не в описи — структурное непокрытие по
+# решению плана; иначе —
 # пробел миграции. С описью --strict бракует только пробелы и страницы вне
 # описи (опись отстала от выгрузки); без описи — прежнее поведение.
 #
@@ -149,6 +150,20 @@ def collect(sources: Path, output: Path):
     return pages, parents, covered, no_id, orphan_dirs
 
 
+def empty_dirs(sources: Path) -> List[Path]:
+    """Каталоги без парной fileN.md и без дочерних страниц .md — дефект выгрузки.
+    Каталоги вложений экспортёра img/ (и всё под ними) — не страницы, не в счёт."""
+    out: List[Path] = []
+    for d in sorted(sources.rglob("*")):
+        if (not d.is_dir() or d == sources or d.with_suffix(".md").is_file()
+                or "img" in d.relative_to(sources).parts):
+            continue
+        if not any(f.suffix == ".md" and f.name.lower() != "index.md"
+                   for f in d.rglob("*")):
+            out.append(d)
+    return out
+
+
 # --- классы непокрытия по описи (FB-28 КК) ---
 #
 # Закрытый перечень классов и словарь признаков — здесь и только здесь.
@@ -159,10 +174,11 @@ def collect(sources: Path, output: Path):
 # поэтому признаки узкие, а сомнительное остаётся пробелом.
 GAP, NOT_IN_INV = "пробелы миграции", "не в описи"
 FROZEN, CONTAINER, REFERENCE = "заморожено", "контейнеры", "справочные"
+WITHDRAWN = "снято с миграции"
 OUT_OF_PLAN, BINARY = "вне плана", "бинарные"
 # порядок перечней отчёта: пробелы первыми, затем отставание описи, затем
 # структурные классы
-CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, OUT_OF_PLAN, BINARY)
+CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, WITHDRAWN, OUT_OF_PLAN, BINARY)
 # отрицание признака («НЕ frozen, GBO-… снят», «не TOC») признаком не считается —
 # иначе карточка, которую опись прямо называет живой, ушла бы из брака
 _NOT = r"(?<!не )(?<!не-)"
@@ -172,6 +188,16 @@ _CONTAINER_TARGET_RE = re.compile(r"(?i)^README-реестр$")
 _CONTAINER_RE = re.compile(rf"(?i){_NOT}(?:\bTOC\b|контейнер|навигац|\bnavigation\b)")
 _REFERENCE_TARGET_RE = re.compile(r"(?i)^doc-rules$")
 _REFERENCE_RE = re.compile(rf"(?i){_NOT}\b(?:reference-only|baseline|instruction)\b")
+# Снято с миграции (OQ-294 КК, 2026-10-30): страница помечена в выгрузке DELETE /
+# [DRAFT] / «черновик», её преемник или актуальная страница покрыта карточкой. Раньше
+# такие строки описи несли только reference-only и маскировались под справочный вход.
+# Признак: «снято с миграции» в целевом типе или основании; метки выгрузки DELETE
+# (заглавными) и [DRAFT] — в title или основании; «черновик» — только в основании:
+# в title это бывает частью названия живой страницы (КК: «Черновик - ПР для выпуска
+# ЦК» — справочный вход концепции сервиса). Проверяется до справочного входа, после
+# заморозки и контейнеров («(черновик)» в title замороженной — заморожено).
+_WITHDRAWN_RE = re.compile(rf"(?i){_NOT}(?:снят[оаы]?\s+с\s+миграции|(?<![\w-])черновик)")
+_WITHDRAWN_MARK_RE = re.compile(rf"(?i){_NOT}(?:(?-i:\bDELETE\b)|\[DRAFT\])")
 _PLAN_SLUG_RE = re.compile(r"(?i)\b(?:подсервис|core)\s+`?([a-z0-9][a-z0-9-]*)")
 _TARGET_SLUG_RE = re.compile(r"^srs/([a-z0-9][a-z0-9-]*)(?:/|$)")
 # страница-вложение: тело — только изображения / ссылки на файлы, без текста
@@ -284,6 +310,9 @@ def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
         if (_CONTAINER_TARGET_RE.search(target) or _CONTAINER_RE.search(basis)
                 or _CONTAINER_RE.search(target)):
             return CONTAINER
+        if (_WITHDRAWN_RE.search(f"{target} {basis}")
+                or _WITHDRAWN_MARK_RE.search(f"{row.get('title', '')} {basis}")):
+            return WITHDRAWN
         if _REFERENCE_TARGET_RE.search(target) or _REFERENCE_RE.search(f"{target} {basis}"):
             return REFERENCE
     if _attachment_only(path):
@@ -326,7 +355,8 @@ def coverage_report(sources: Path, output: Path,
         n = {c: sum(1 for v in classes.values() if v == c) for c in CLASS_ORDER}
         lines.append(f"{head} = пробелы миграции {n[GAP]}; структурно: заморожено "
                      f"{n[FROZEN]}, контейнеры {n[CONTAINER]}, справочные {n[REFERENCE]}, "
-                     f"вне плана {n[OUT_OF_PLAN]}, бинарные {n[BINARY]}; не в описи "
+                     + (f"снято с миграции {n[WITHDRAWN]}, " if n[WITHDRAWN] else "")
+                     + f"вне плана {n[OUT_OF_PLAN]}, бинарные {n[BINARY]}; не в описи "
                      f"{n[NOT_IN_INV]}"
                      + (f"; вне Экосистемы {len(zone)} (покрыто мини-комплектом "
                         f"{len(zone_in_modules)})" if zone else ""))
@@ -371,13 +401,23 @@ def coverage_report(sources: Path, output: Path,
                      f"{len(no_id)}")
         for p in no_id[:10]:
             lines.append(f"  - {p.relative_to(sources)}")
+    # Каталог без парной fileN.md с дочерними страницами — узел дерева выгрузки
+    # (OQ-294 КК, 2026-10-30: принято владельцем канона, выгрузку не переснимать);
+    # дефект выгрузки — только каталог без страницы и без дочерних .md.
     if orphan_dirs:
-        lines.append(f"каталогов без парной страницы fileN.md "
-                     f"(нарушение инварианта имён выгрузки): "
-                     f"{len(orphan_dirs)}")
+        lines.append(f"каталоги-узлы без собственной страницы: {len(orphan_dirs)} "
+                     f"(у каталога есть дочерние страницы, собственной страницы в "
+                     f"выгрузке нет; текста среза не несёт; возможная причина — "
+                     f"страница не выгружена экспортёром (пустая или без доступа))")
         for d in orphan_dirs:
             lines.append(f"  - {d.relative_to(sources)}/")
-    if not uncovered and not no_id and not orphan_dirs:
+    empty = empty_dirs(sources)
+    if empty:
+        lines.append(f"каталогов без парной страницы fileN.md и без дочерних страниц "
+                     f"(нарушение инварианта имён выгрузки): {len(empty)}")
+        for d in empty:
+            lines.append(f"  - {d.relative_to(sources)}/")
+    if not uncovered and not no_id and not orphan_dirs and not empty:
         lines.append("OK: выгрузка покрыта полностью, целостность "
                      "иерархии не нарушена.")
     return lines, blocking
