@@ -938,6 +938,72 @@ class TestLogicFieldTableNotRequired:
         assert "storage_type" not in names and "file_id" in names
 
 
+class TestFunctionPassportNotParamGrid:
+    """skillCore P2 FUN-CL-02 (2026-10-29): таблица-паспорт функции «лейбл | значение» — не
+    сетка параметров. Значение «Код привилегии: CLIENT_CONTRACT_VIEW» требовалось как имя
+    параметра, хотя шаблон function.md берёт код привилегии из rbac.md комплекта."""
+
+    PASSPORT = (
+        "# Клиент: Функция просмотра заявки\n\n"
+        "<table><tbody>\n"
+        "<tr><td><strong>Доступность функции:</strong></td><td><p>Зависит от роли</p></td></tr>\n"
+        "<tr><td><strong>Как вызывается функция:</strong></td><td><p>По нажатию кнопки</p></td></tr>\n"
+        "<tr><td><strong>Входящие параметры функции:</strong></td>"
+        "<td><ul><li>Идентификатор заявки (обязателен)</li></ul></td></tr>\n"
+        "<tr><td><strong>Что делает функция:</strong></td><td><p>Отображает заявку</p></td></tr>\n"
+        "<tr><td><strong>Код привилегии:</strong></td><td><p>CLIENT_CONTRACT_VIEW</p></td></tr>\n"
+        "</tbody></table>\n"
+    )
+
+    def test_bold_passport_gives_no_param_names(self):
+        assert html_param_names(self.PASSPORT) == set()
+
+    def test_plain_passport_gives_no_param_names(self):
+        # лейблы обычным текстом с двоеточием (FB-01 access-rules) — тот же признак
+        source = (
+            "<table><tr><td>Кому доступна функция:</td><td>Клиенту</td></tr>"
+            "<tr><td>Код привилегии:</td><td>CLIENT_CONTRACT_VIEW</td></tr></table>\n"
+        )
+        assert html_param_names(source) == set()
+
+    def test_card_without_constant_passes(self):
+        # карточка по шаблону (код привилегии из rbac.md, константы нет) — не брак
+        card = "| Роль | Привилегия |\n|---|---|\n| Клиент | Просмотр заявки |\n"
+        report, ok = check_source_tables(card, self.PASSPORT)
+        assert ok, report
+        assert not any("имён параметров" in r for r in report)
+
+    def test_headed_two_column_grid_still_required(self):
+        # НЕсрабатывание: двухколоночная сетка с шапкой — сторожится, жирная шапка тоже
+        for head in ("<th>Параметр</th><th>Описание</th>",
+                     "<th><strong>Имя</strong></th><th><strong>Тип</strong></th>"):
+            source = (f"<table><tr>{head}</tr>"
+                      "<tr><td>file_id</td><td>Идентификатор файла</td></tr>"
+                      "<tr><td>upload_token</td><td>Токен загрузки</td></tr></table>\n")
+            assert {"file_id", "upload_token"} <= html_param_names(source), head
+
+    def test_headless_grid_with_bold_names_still_required(self):
+        # НЕсрабатывание: сетка без шапки с жирными именами похожа на жирный паспорт —
+        # лейбл-имя параметра паспорт не делает
+        source = ("<table><tr><td><strong>file_id</strong></td><td>Идентификатор файла</td></tr>"
+                  "<tr><td><strong>upload_token</strong></td><td>Токен загрузки</td></tr></table>\n")
+        assert "upload_token" in html_param_names(source)
+        card = "| Параметр | Описание |\n|---|---|\n| `file_id` | Идентификатор файла |\n"
+        _report, ok = check_source_tables(card, source)
+        assert not ok
+
+    def test_incident_2026_08_12_with_passport_alongside(self):
+        # НЕсрабатывание: паспорт рядом с сеткой инцидента 2026-08-12 — потеря
+        # file_id/upload_token по-прежнему брак
+        source = self.PASSPORT + TestHtmlSourceCompleteness.SOURCE
+        names = html_param_names(source)
+        assert {"file_id", "upload_token", "Content-Type"} <= names
+        assert "CLIENT_CONTRACT_VIEW" not in names
+        card = "| Код параметра | Наименование параметра |\n|---|---|\n| `file_id` | Идентификатор файла |\n"
+        _report, ok = check_source_tables(card, source)
+        assert not ok
+
+
 class TestHtmlSourceCompleteness:
     """--check --source: полнота HTML-таблиц источника — каждое имя параметра
     из раскрытой сетки обязано присутствовать в карточке (инцидент

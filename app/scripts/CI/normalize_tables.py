@@ -1351,6 +1351,17 @@ def html_param_names(source_text: str) -> set:
         # требуются (OQ-033 file-storage, intc-035, 2026-08-14).
         if grid and [_plain(c).strip().lower() for c in grid[0][:2]] == ["поле", "значение"]:
             continue
+        # Таблица-паспорт функции («**Код привилегии:** | CLIENT_CONTRACT_VIEW», skillCore P2
+        # FUN-CL-02, 2026-10-29) — «лейбл | значение», не сетка параметров: значение
+        # паспорта (имя константы) требовалось как имя параметра, а шаблон function.md берёт
+        # код привилегии из rbac.md — проходила только карточка с вписанной константой.
+        # Признак — тот же, что у сверки значений (passport_kind). Ограничитель: лейбл,
+        # похожий на имя параметра («**file_id**» — сетка без шапки с жирными именами), паспорт
+        # не делает — такая таблица сторожится по-прежнему.
+        if grid and passport_kind(grid[0], grid[1:]) and not any(
+                _NAME_TOKEN_RE.match(_plain(r[0]).strip().strip("*:` ").strip())
+                for r in grid if r and r[0].strip()):
+            continue
         for row in grid[1:]:
             for cell in row[:2]:
                 v = _plain(_BR_RE.sub(" ", cell)).strip().strip("`").strip()
@@ -2894,6 +2905,24 @@ def _is_passport_label(cell: str) -> bool:
             and len(plain.split()) <= 6)
 
 
+def passport_kind(hdr: List[str], rows: List[List[str]]) -> Optional[str]:
+    """Двухколонная таблица-паспорт «лейбл → значение»: "bold" — лейблы целиком жирные (К-35),
+    "plain" — лейблы обычным текстом, первая строка паспорта стала шапкой (FB-01 access-rules);
+    иначе None. Один признак для сверки значений markdown-таблиц и сбора имён параметров
+    HTML-таблиц."""
+    if len(hdr) != 2:
+        return None
+    data = [r for r in rows if r and any(c.strip() for c in r)]
+    if (re.fullmatch(r"\*\*[^*]+\*\*", hdr[0].strip())
+            and all(re.fullmatch(r"\*\*[^*]+\*\*", r[0].strip()) for r in data)):
+        return "bold"
+    if (_is_passport_label(hdr[0])
+            and all(_is_passport_label(r[0]) for r in data)
+            and any(len(r) > 1 and r[1].strip() for r in rows)):
+        return "plain"
+    return None
+
+
 def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -2940,22 +2969,13 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
         # слотом шаблона («Таблица БД» + «**Название физической таблицы
         # БД**»). Значения второй колонки сторожатся по-прежнему
         # (асимметрия: данные — сторожим, носители структуры — нет).
-        bold_passport = (
-            len(hdr) == 2
-            and re.fullmatch(r"\*\*[^*]+\*\*", hdr[0].strip())
-            and all(re.fullmatch(r"\*\*[^*]+\*\*", r[0].strip())
-                    for r in rows
-                    if r and any(c.strip() for c in r)))
         # FB-01 access-rules (2026-10-26): паспорт с лейблами обычным текстом («Кому
         # доступна функция: | …», «Код привилегии | …») и без строки шапки — первая строка
         # паспорта стала заголовком таблицы. Лейблы не требуются, как у жирного паспорта;
         # значение строки-«шапки» проверяется наравне со строками (раньше терялось молча).
-        plain_passport = (
-            not bold_passport and len(hdr) == 2
-            and _is_passport_label(hdr[0])
-            and all(_is_passport_label(r[0]) for r in rows
-                    if r and any(c.strip() for c in r))
-            and any(len(r) > 1 and r[1].strip() for r in rows))
+        kind = passport_kind(hdr, rows)
+        bold_passport = kind == "bold"
+        plain_passport = kind == "plain"
         if bold_passport or plain_passport:
             skip_cols.add(0)
         check_rows = list(rows)
