@@ -5,7 +5,7 @@
 pytest), `9124f82`, `6d5c628` (патч, скрипт метрик, базовый прогон), `fce69c9` (черновик сдачи), `8a9463e`
 (прогоны до-1, до-2, после-1), коммит сдачи с прогоном после-2 и этим разделом — хеш в сообщении сессии.
 
-**Вердикт — раздел 11: НЕ ГОТОВО (провал пары A/B P1 по правилу SC-05 — размах повторов; вопрос Q-02 владельцу).**
+**Вердикт первой сдачи — раздел 11: НЕ ГОТОВО по правилу размаха SC-05 (вопрос Q-02). Ответ владельца — вариант (а), пара принята; итоговый вердикт — раздел 12: ГОТОВО.**
 
 ## 1. Что изменено: файл → разделы
 
@@ -256,3 +256,67 @@ baseline, pytest 230 passed, SC-03 grep без новых ссылок на но
   (а) с записью уточнения в SC-05 (строки диффа — без `tasks/`; литералы — присутствие), поскольку исходное правило
   с двумя повторами ловит дисперсию модели, а не структуры скилла; срез 2 (P2 на `create-function`) покажет то же на
   reverse-входе.
+
+## 12. Решение по Q-02 и итоговый вердикт (2026-10-29, после ответа владельца)
+
+Решение владельца (коммит `24a6ba1`, `questions.md` Q-02, уточнение SC-05 в файле решений): вариант (а). Метрики
+делятся на **решающие** (критерий «не хуже худшего из „до“ в обоих повторах»; новый класс ✗/⚠ — провал) и
+**информационные** (в таблицу, на исход не влияют); правило размаха повторов снято, третий повтор не добавляется;
+пара P1 принята. Новых прогонов не делалось — раздел собран по уже сохранённым каталогам прогонов и `metrics.json`.
+
+### 12.1. Таблица 10.3 по уточнённому правилу
+
+| Метрика | Вид | до-1 / до-2 | после-1 / после-2 | не хуже худшего «до» | Итог |
+| --- | --- | --- | --- | --- | --- |
+| 1. selfcheck: вердикт | решающая | БРАК, БРАК | БРАК, БРАК | да (равно базе) | не хуже |
+| 1. selfcheck: ✗ / ⚠ всего | решающая | 50/20, 50/20 | 50/20, 50/20 | да | равно |
+| 1. selfcheck: ✗ / ⚠ по затронутым файлам | решающая | 3/3, 4/3 | 4/3, 4/3 | да (4 ≤ 4, 3 ≤ 3) | не хуже |
+| 1. selfcheck: классов ✗; новых классов ✗ / ⚠ против базы | решающая | 5; 0/0, 5; 0/0 | 5; 0/0, 5; 0/0 | да | равно, новых нет |
+| 2. ожидаемые ID (FLD-17, MSG-27, CTL-054); поле PRN-001; атрибут ENT-001 | решающая | 3; 1; 1 × 2 | 3; 1; 1 × 2 | да | равно |
+| 2. новые ID реестра матрицы | решающая | CTL-054, CTL-054 | CTL-054, CTL-054 | да | равно |
+| 2. файлов эталона нет в дельте | решающая | 2, 2 | 1, 2 | да (1 ≤ 2, 2 ≤ 2) | не хуже (после-1 ближе: изменил `fun-sys-01`, как эталон) |
+| 2. файлов сверх эталона | решающая | 3, 4 | 4, 4 | да (4 ≤ 4) | не хуже (те же четыре файла умолчаний DFR у всех) |
+| 3. matrix_sync --check: расхождений | решающая | 89, 89 | 89, 89 | да | равно |
+| 4. файлов с иным составом разделов ## | решающая | 0, 0 | 0, 0 | да | равно |
+| 5. литералов постановки присутствует (из 4) | решающая | 4, 4 | 4, 4 | да | равно |
+| 5. размещение литералов по файлам | решающая (новое место — с оценкой, не провал) | см. 12.2 | см. 12.2 | одно новое место у после-1 (оценено в 12.2) | не хуже |
+| 4. дифф к эталону: файлов отличается | информационная | 13, 14 | 14, 14 | — | в таблицу |
+| 4. дифф к эталону: строк + / − всего | информационная | 174/72, 182/79 | 214/104, 182/73 | — | в таблицу |
+| 4. … в карточках, матрице и README | информационная | 93/38, 101/45 | 95/38, 100/38 | — | в таблицу |
+| 4. … в tasks/TEAMTB-4567890.md | информационная | 81/34, 81/34 | 119/66, 82/35 | — | в таблицу |
+| 5. литералы: счётчики вхождений | информационная | 11/4/1/7, 9/4/1/6 | 10/9/1/11, 12/3/1/7 | — | в таблицу |
+| 6. вопросов в tasks / записей OQ | информационная | 20/0, 20/0 | 20/0, 18/0 | — | в таблицу |
+
+### 12.2. Размещение литералов по файлам (решающая метрика по уточнению SC-05)
+
+Файлы (кроме `tasks/`), где литерал появился в результате захода, — по копиям в ветке против `polygon/`; «эталон» —
+`polygon-ref/result/` против `polygon/`. Литерал «Продолжить» в комплекте был до захода во всех затронутых файлах
+(кнопка `B-1` формы, группа `CTL-GRP-1`) — новых мест нет ни у кого.
+
+| Литерал | эталон (новые места против `polygon/`) | до-1 | до-2 | после-1 | после-2 | новое место у «после», которого нет ни у «до», ни у эталона |
+| --- | --- | --- | --- | --- | --- | --- |
+| «Контактный телефон для уведомлений» | `srs/control/cards-account.md`<br>`srs/function/system/fun-sys-01-save-request.md`<br>`srs/print-form/prn-001-dbs-account-opening.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`traceability-matrix.md` | `srs/data-model/ent-001-request.md`<br>`srs/function/system/fun-sys-02-get-digests.md`<br>`srs/print-form/prn-001-dbs-account-opening.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md`<br>`traceability-matrix.md` | `srs/function/system/fun-sys-02-get-digests.md`<br>`srs/print-form/prn-001-dbs-account-opening.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md`<br>`traceability-matrix.md` | `srs/control/cards-account.md`<br>`srs/data-model/ent-001-request.md`<br>`srs/function/system/fun-sys-01-save-request.md`<br>`srs/print-form/prn-001-dbs-account-opening.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md`<br>`traceability-matrix.md` | `srs/data-model/ent-001-request.md`<br>`srs/function/system/fun-sys-02-get-digests.md`<br>`srs/print-form/prn-001-dbs-account-opening.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md`<br>`traceability-matrix.md` | — |
+| «+7 (XXX) XXX-XX-XX» | `srs/control/README.md`<br>`srs/control/cards-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md` | `srs/control/cards-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md` | `srs/control/cards-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.3-confirmation.md` | `srs/control/README.md`<br>`srs/control/cards-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md`<br>`traceability-matrix.md` | `srs/control/cards-account.md`<br>`srs/screen-form/client/scr-cl-03-request-edit/scr-cl-03.1-account.md` | `traceability-matrix.md` |
+| «Укажите телефон в формате +7 (XXX) XXX-XX-XX» | `srs/control/cards-account.md` | `srs/control/cards-account.md` | `srs/control/cards-account.md` | `srs/control/cards-account.md` | `srs/control/cards-account.md` | — |
+| «Продолжить» | — | — | — | — | — | — |
+
+Оценка единственного нового места: у «после-1» формат `+7 (XXX) XXX-XX-XX` упомянут в `traceability-matrix.md` —
+внутри строки долга вида «открытый вопрос» (формулировка вопроса об обязательности атрибута цитирует формат поля);
+это текст долга, а не факт в карточке, дома факта (`FLD-17`, `CTL-054`) те же, что у «до» и эталона. Различие не
+системное: «до-1», «до-2» и «после-2» формат в матрицу не вносили, «после-1» — да; в карточках размещение у всех
+четырёх совпадает (`scr-cl-03.1`, `cards-account.md`), у «до» и «после-2» добавочно сводка `scr-cl-03.3` (DFR-001),
+у «после-1» — `README.md` (строка условных обозначений), как у эталона. Провалом не считается (SC-05, уточнение).
+
+### 12.3. Вывод (SC-05)
+
+**«После» не хуже «до» по всем решающим метрикам в обоих повторах; новых классов ✗ и ⚠ нет. Пара P1 принята.**
+Информационные метрики — в таблице: расхождение строк диффа сидит в файле постановки и в счётчиках вхождений, по
+карточкам, матрице и README «после» внутри значений «до».
+
+### 12.4. Итоговый вердикт
+
+**ГОТОВО.** Переворот диспетчера и четыре внешние ссылки — коммит `e89faac`, патч `skillCore/patches/1/0001-create-artifact-6.patch`
+(проверен `git am --keep-cr`); SF код 0; оба selfcheck байт в байт с Linux-baseline; pytest 230 passed; SC-03 grep без
+новых ссылок на номера шагов; пара A/B P1 принята по уточнённому SC-05. Reverse-плечо PRC-002 не выполнялось по
+решению владельца. Вопросов нет. Ветку вливает в `main` зеркала сессия analyzer после отметки SC-09 «Срез 1 принят»;
+в канон срезы 0 и 1 идут одной веткой `meta/skill-core-1` (два патча, `git am --keep-cr -p2`, `--reset-author`).
