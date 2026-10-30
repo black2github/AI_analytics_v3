@@ -9,7 +9,7 @@
 import pytest
 
 from app.scripts.CI import link_debts as ld
-from app.scripts.CI import normalize_tables as nt
+from app.scripts.CI.kitcheck import html as kc_html
 from app.scripts.CI.kitcheck import md
 from app.scripts.CI.kitcheck.checks import controls
 
@@ -54,14 +54,14 @@ def test_rows_without_escaped_pipe_split_as_before(line):
 
 def test_parse_md_tables_keeps_escaped_pipe_in_cell():
     text = "| Код | Значение |\n|---|---|\n" + ROW_WITH_ESCAPED_PIPE + "\n"
-    (header, rows), = nt.parse_md_tables(text)
+    (header, rows), = kc_html.parse_md_tables(text)
     assert len(rows[0]) == len(header) == 2, rows
     assert rows[0][1] == "досье\\|продукты", rows
 
 
 def test_parse_md_tables_without_escaped_pipe_unchanged():
     text = "| Код | Значение |\n|---|---|\n| 1 | `x` |\n"
-    assert nt.parse_md_tables(text) == [(["Код", "Значение"], [["1", "x"]])]
+    assert kc_html.parse_md_tables(text) == [(["Код", "Значение"], [["1", "x"]])]
 
 
 def test_link_debts_debt_name_keeps_escaped_pipe():

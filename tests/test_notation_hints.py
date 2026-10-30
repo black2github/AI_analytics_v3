@@ -1,7 +1,8 @@
 # tests/test_notation_hints.py
 """ПР-02 (разбор замечаний ОНБ-В): предупреждения нотации — одиночный «=» в
 условии и обратная стрелка «←»; присваивание, «==», литералы и код не трогаются."""
-from app.scripts.CI.normalize_tables import check_file, check_notation_hints
+from app.scripts.CI.kitcheck.checks.card_run import check_file
+from app.scripts.CI.kitcheck.checks.card_form import check_notation_hints
 
 
 def test_single_eq_in_condition_warned():

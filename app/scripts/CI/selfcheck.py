@@ -5,7 +5,7 @@
 # здесь, а не в промпте и не у оператора: диспетчер сам находит
 # карточки в docs/, сам сопоставляет каждой страницу-источник по
 # confluence_page_id (frontmatter выгрузки) и прогоняет связку
-# проверок нормализатора (normalize_tables.run_check — единая точка
+# проверок карточки (kitcheck.checks.card_run.run_check — единая точка
 # монтажа; двойного монтажа проверок нет).
 #
 # Правила устойчивости (решения 2026-08-16):
@@ -36,7 +36,20 @@ from typing import Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import link_debts as ld  # noqa: E402
-import normalize_tables as nt  # noqa: E402
+try:  # проверки карточки — kitcheck/checks/card_*.py (Д-50; прежде normalize_tables)
+    from kitcheck.checks.card_run import run_check  # noqa: E402
+    from kitcheck.checks.card_source import quoted_literals  # noqa: E402
+    from kitcheck.checks.card_clean import check_oq_page_refs, check_service_table_integrity  # noqa: E402
+    from kitcheck.checks.card_branch_form import branch_form_counts  # noqa: E402
+    from kitcheck.checks.card_controls import is_control_cards_file, message_rows  # noqa: E402
+except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+    from .kitcheck.checks.card_run import run_check  # type: ignore  # noqa: E402
+    from .kitcheck.checks.card_source import quoted_literals  # type: ignore  # noqa: E402
+    from .kitcheck.checks.card_clean import (  # type: ignore  # noqa: E402
+        check_oq_page_refs, check_service_table_integrity)
+    from .kitcheck.checks.card_branch_form import branch_form_counts  # type: ignore  # noqa: E402
+    from .kitcheck.checks.card_controls import (  # type: ignore  # noqa: E402
+        is_control_cards_file, message_rows)
 import source_coverage as sc  # noqa: E402
 try:
     from kitcheck import fs as _fs  # noqa: E402
@@ -195,7 +208,7 @@ def _run(files: List[Path], src: Optional[Path],
          pardon_src: Optional[Path] = None,
          amnesty: Optional[List[Path]] = None,
          allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
-    return _safe(lambda: nt.run_check(files, src, docs_root=docs_root,
+    return _safe(lambda: run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
                                       amnesty_sources=amnesty,
@@ -339,7 +352,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
             # содержательно реестр сторожит link_debts (срез 2), но
             # структурную целостность таблиц проверяем и здесь: разрыв
             # матрицы жил с захода 4 незамеченным (К-16, 2026-08-17)
-            rep, ok = _safe(nt.check_service_table_integrity, p)
+            rep, ok = _safe(check_service_table_integrity, p)
             if p.name == "traceability-matrix.md":
                 rd_rep, rd_ok = _safe(check_registry_duplicates, p)
                 if not rd_ok:
@@ -754,7 +767,7 @@ def _kc_open_questions(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     all_ok = all_ok and ok
     # К-17: page_id в текстах OQ — софт-сигнал (носители page_id — только
     # frontmatter и матрица; ужесточение после вычистки легаси-фона)
-    wrep, _ = _safe(nt.check_oq_page_refs, oq)
+    wrep, _ = _safe(check_oq_page_refs, oq)
     if rep or wrep:
         report.append(("✓" if ok else "✗") + " реестр открытых вопросов:")
         report.extend(f"   {ln}" for ln in rep)
@@ -832,7 +845,7 @@ def spelling_pairs(files: List[Path], docs: Path) -> List[Tuple[str, str, List[s
         except OSError:
             continue
         rel = p_.relative_to(docs).as_posix()
-        vals = set(nt.quoted_literals(text)) | {m.group(1).strip() for m in _SPELL_NAME_RE.finditer(text)}
+        vals = set(quoted_literals(text)) | {m.group(1).strip() for m in _SPELL_NAME_RE.finditer(text)}
         for v in vals:
             v = v.strip()
             if len(v) < 2 or not re.search(r"[A-Za-zА-Яа-яЁё]", v):
@@ -874,7 +887,7 @@ def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     вложенные условия, человеку. Перечень по файлам — только в --out."""
     per: List[Tuple[str, int, int]] = []
     for p in _kit_md(ctx.docs, zone=True):  # нотация применяется и к зоне docs/modules/ (Д-49)
-        n, rest = nt.branch_form_counts(_fs.read_text(p, encoding="utf-8", errors="replace"))
+        n, rest = branch_form_counts(_fs.read_text(p, encoding="utf-8", errors="replace"))
         if n:
             per.append((p.relative_to(ctx.docs).as_posix(), n, rest))
     if not per:
@@ -908,13 +921,13 @@ def _kc_review_guards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 
 
 def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
-    """Сторож приписки сообщения (FB-12 КК, normalize_tables._fc_message_attribution) не
+    """Сторож приписки сообщения (FB-12 КК, kitcheck.checks.card_controls._fc_message_attribution) не
     выполнен: у карточного файла контролей страница не указана или на ней нет таблицы с
     колонкой сообщения — одна i-строка на комплект вместо строки на файл. Перечень — в --out."""
     per: List[Tuple[str, str]] = []
     for p in sorted(ctx.docs.rglob("cards-*.md")):
         text = _fs.read_text(p, encoding="utf-8", errors="replace")
-        if not nt.is_control_cards_file(p, text):
+        if not is_control_cards_file(p, text):
             continue
         pids = page_ids(read_frontmatter(p) or {})
         srcs = [ctx.idx[x] for x in pids if x in ctx.idx] if ctx.sources is not None else []
@@ -922,7 +935,7 @@ def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
             per.append((p.relative_to(ctx.docs).as_posix(), "страница не указана"
                         if not pids else "страница не сверялась"))
             continue
-        if not any(nt.message_rows(_fs.read_text(s, encoding="utf-8", errors="replace"))
+        if not any(message_rows(_fs.read_text(s, encoding="utf-8", errors="replace"))
                    for s in srcs):
             per.append((p.relative_to(ctx.docs).as_posix(), "нет таблицы с колонкой сообщения"))
     if not per:

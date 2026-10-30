@@ -5,8 +5,9 @@ FB-24 КК, решение А): «**Если** X, **то** Y, **иначе** Z»
 и вложенное условие — не трогаются."""
 from pathlib import Path
 
-from app.scripts.CI.normalize_tables import (branch_form_offenders, normalize_branch_form,
-                                             run_branch_form)
+from app.scripts.CI.kitcheck.checks.card_branch_form import branch_form_offenders
+from app.scripts.CI.kitcheck.branch_form import normalize_branch_form
+from app.scripts.CI.normalize_tables import run_branch_form
 
 
 def norm(text: str):

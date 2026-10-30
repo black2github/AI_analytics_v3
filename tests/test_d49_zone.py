@@ -11,7 +11,7 @@ from app.scripts.CI import selfcheck as sc
 from app.scripts.CI import source_coverage as cov
 from app.scripts.CI.kitcheck.checks.zone import check_module_zone
 from app.scripts.CI.kitcheck.md import _kit_md, in_module_zone
-from app.scripts.CI.normalize_tables import check_clean_document
+from app.scripts.CI.kitcheck.checks.card_clean import check_clean_document
 
 
 def make(p: Path, text: str) -> None:

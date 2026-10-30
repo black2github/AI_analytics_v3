@@ -8,7 +8,7 @@ from pathlib import Path
 from app.scripts.CI import link_debts as ld
 from app.scripts.CI import selfcheck as sc
 from app.scripts.CI import source_coverage as cov
-from app.scripts.CI.normalize_tables import check_clean_document
+from app.scripts.CI.kitcheck.checks.card_clean import check_clean_document
 
 
 def make(p: Path, text: str) -> None:

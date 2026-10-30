@@ -6,8 +6,9 @@ FB-20 (помилование тега с гомоглифом), FB-21 (raw/ н�
 from pathlib import Path
 
 from app.scripts.CI import selfcheck
-from app.scripts.CI.normalize_tables import (check_file, check_source_tables,
-                                             check_step_body_structure)
+from app.scripts.CI.kitcheck.checks.card_run import check_file
+from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
+from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
 
 
 def test_confluence_url_cell_is_not_a_loss():
@@ -110,7 +111,7 @@ def test_step_structure_checked_against_main_card_before_group(tmp_path):
     # FB-16.3 (fun-sys-16 КК): вторая карточка группы (intc) несёт свои абзацы
     # под тем же номером шага — объединение группы ложно расходится с источником;
     # К-26 сверяет главную карточку, объединение — только если главная не прошла
-    from app.scripts.CI.normalize_tables import run_check
+    from app.scripts.CI.kitcheck.checks.card_run import run_check
     src = tmp_path / "src.md"
     src.write_text("---\ntitle: 'Ф'\nconfluence_page_id: '111222'\n---\n\n"
                    "**Шаг 5.** Вызов метода.\n\nРезультат сохраняется.\n\n**Шаг 6.** Конец.\n",

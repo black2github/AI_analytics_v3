@@ -5,7 +5,8 @@
 меняется."""
 from pathlib import Path
 
-from app.scripts.CI.normalize_tables import branch_form_offenders, check_file
+from app.scripts.CI.kitcheck.checks.card_branch_form import branch_form_offenders
+from app.scripts.CI.kitcheck.checks.card_run import check_file
 
 
 def off(text: str):

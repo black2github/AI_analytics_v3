@@ -12,7 +12,11 @@ from pathlib import Path
 
 from app.scripts.CI.kitcheck import md
 from app.scripts.CI.kitcheck.checks import content
-from app.scripts.CI import normalize_tables as nt
+from app.scripts.CI.kitcheck.checks import card_controls
+from app.scripts.CI.kitcheck.checks import card_form
+from app.scripts.CI.kitcheck.checks import card_run
+from app.scripts.CI.kitcheck.checks import card_source
+from app.scripts.CI.kitcheck import html as kc_html
 from app.scripts.CI.selfcheck import _empty_source_note, check_nfr_catalog
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app" / "scripts" / "CI"))
@@ -47,7 +51,7 @@ def test_split_bom_dash_in_value_and_no_frontmatter():
 def test_dash_in_title_not_body_reference(tmp_path):
     # Ф8: «---» в title не выталкивает confluence_page_ids из шапки в тело
     p = _make(tmp_path / "f.md", FM.format(t="Заявка --- счёт") + "\n# Ф\n\nтекст\n")
-    rep, ok = nt.check_file(p)
+    rep, ok = card_run.check_file(p)
     assert not any("отсылки к страницам источника" in ln for ln in rep), rep
 
 
@@ -55,7 +59,7 @@ def test_body_reference_still_caught(tmp_path):
     # НЕсрабатывание: отсылка в теле по-прежнему брак
     p = _make(tmp_path / "f.md", FM.format(t="Заявка — счёт")
               + "\n# Ф\n\nсм. confluence page 2169849859\n")
-    rep, ok = nt.check_file(p)
+    rep, ok = card_run.check_file(p)
     assert not ok and any("отсылки к страницам источника" in ln for ln in rep), rep
 
 
@@ -77,26 +81,26 @@ def test_source_silent_unclosed_frontmatter_not_hidden(tmp_path):
 
 def test_notation_ignores_bom_frontmatter():
     # Ф2: стрелка в title шапки с BOM — не нотация тела
-    assert nt.check_notation_hints(BOM + "---\ntitle: 'Заявка ← счёт'\n---\n\n# Т\n") == []
-    assert nt.check_notation_hints("---\ntitle: 'А'\n---\n\n# Т\n\nЗаявка ← счёт\n")
+    assert card_form.check_notation_hints(BOM + "---\ntitle: 'Заявка ← счёт'\n---\n\n# Т\n") == []
+    assert card_form.check_notation_hints("---\ntitle: 'А'\n---\n\n# Т\n\nЗаявка ← счёт\n")
 
 
 def test_entity_and_type_only_from_frontmatter():
     # Ф7: entity в тексте — не значение шапки; длинная шапка — не помеха
-    assert nt._frontmatter_entity("---\ntype: controls\n---\n\n# К\n\nentity: ENT-999\n") == ""
+    assert card_controls._frontmatter_entity("---\ntype: controls\n---\n\n# К\n\nentity: ENT-999\n") == ""
     long_fm = "---\ntitle: '" + "Д" * 900 + "'\nentity: ENT-001\ntype: screen-form\n---\n\n# К\n"
-    assert nt._frontmatter_entity(long_fm) == "ENT-001"
-    assert "type: screen-form" in nt._fm_head(long_fm)
+    assert card_controls._frontmatter_entity(long_fm) == "ENT-001"
+    assert "type: screen-form" in kc_html._fm_head(long_fm)
 
 
 def test_quote_in_code_block_not_blockquote(tmp_path):
     # Д4: «>» внутри блока кода — текст примера
     p = _make(tmp_path / "c.md", "# К\n\n```bash\n> ответ сервера\n```\n")
-    rep, ok = nt.check_file(p)
+    rep, ok = card_run.check_file(p)
     assert not any("blockquote" in ln for ln in rep), rep
     # НЕсрабатывание: цитата вне блока — по-прежнему брак
     p2 = _make(tmp_path / "d.md", "# К\n\n> заметка\n")
-    rep2, ok2 = nt.check_file(p2)
+    rep2, ok2 = card_run.check_file(p2)
     assert not ok2 and any("blockquote" in ln for ln in rep2), rep2
 
 
@@ -105,7 +109,7 @@ def test_quote_in_code_block_not_blockquote(tmp_path):
 def test_source_without_frontmatter_not_cut_at_table_separator():
     # Ф16–Ф20: прежнее split("---", 2) резало по сепаратору таблицы
     src = "Текст «Первый литерал»\n\n| a | b |\n| --- | --- |\n| x | «Второй литерал» |\n"
-    lits = nt.quoted_literals(src)
+    lits = card_source.quoted_literals(src)
     assert any("Первый литерал" in x for x in lits), lits
 
 

@@ -119,8 +119,11 @@ def test_t5_own_subservice_tag_silent(tmp_path):
 # ---------------------------------------------------------------- T1–T3: сверка с источником
 
 from app.scripts.CI.kitcheck.core import is_soft_signal  # noqa: E402
-from app.scripts.CI.normalize_tables import (check_image_trace, check_unchecked_tables,  # noqa: E402
-                                             source_tables_summary)
+from app.scripts.CI.kitcheck.checks.card_source import (
+    check_image_trace,
+    check_unchecked_tables,
+    source_tables_summary,
+)  # noqa: E402
 
 SRC_LAYOUT = ("---\ntitle: X\n---\n\n## Макеты ЭФ\n\n| Размерность экрана | Макет |\n| --- | --- |\n"
               "| xl | [Макет xl](https://www.figma.com/file/a) |\n| m | [Макет m](https://www.figma.com/file/b) |\n"

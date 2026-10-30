@@ -6,7 +6,7 @@ type: glossary не применяются сторож полноты кавы�
 frontmatter, не по имени файла; обычная карточка с теми же признаками — прежние ✗."""
 from pathlib import Path
 
-from app.scripts.CI.normalize_tables import run_check
+from app.scripts.CI.kitcheck.checks.card_run import run_check
 
 SRC = ("---\ntitle: '[X] Глоссарий'\nconfluence_page_id: '1'\n---\n\n"
        "Термин «Подсервис» — «Набор операций и функционала сервиса». "

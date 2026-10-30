@@ -6,12 +6,27 @@ import pytest
 from bs4 import BeautifulSoup
 
 from app.scripts.CI.normalize_tables import (
-    Profile, _title_key, assert_invariant, blocks_profile_applies, build_flat,
-    check_file, expand_grid, find_top_tables, header_blocks, normalize_file,
-    check_behavior_nesting, check_behavior_numbering,
-    check_source_tables, check_title, html_param_names, render_sample,
-    source_role_literals, validate_columns,
+    Profile,
+    assert_invariant,
+    blocks_profile_applies,
+    build_flat,
+    header_blocks,
+    normalize_file,
+    render_sample,
 )
+from app.scripts.CI.kitcheck.html import _title_key, expand_grid, find_top_tables
+from app.scripts.CI.kitcheck.checks.card_run import check_file
+from app.scripts.CI.kitcheck.checks.card_steps import (
+    check_behavior_nesting,
+    check_behavior_numbering,
+)
+from app.scripts.CI.kitcheck.checks.card_source import (
+    check_source_tables,
+    check_title,
+    html_param_names,
+    source_role_literals,
+)
+from app.scripts.CI.kitcheck.columns import validate_columns
 
 
 def grid_of(html: str):
@@ -688,21 +703,21 @@ class TestQuotedLiterals:
     «свободный текст не сторожится»."""
 
     def test_lost_message_caught(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: x\n---\nЕсли записей нет, отображается сообщение '
                '"Записей пока нет" (см. макет ЭФ)\n')
         report, ok = check_quoted_literals("# карточка без сообщения\n", src)
         assert not ok and "Записей пока нет" in report[0]
 
     def test_paraphrase_caught(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = '---\nt: x\n---\nКатегория «Ошибка обработки» выбрана всегда\n'
         card = "Категория «Ошибки обработки» выбрана всегда\n"  # пересказ
         _report, ok = check_quoted_literals(card, src)
         assert not ok
 
     def test_all_present_ok(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\nt: x\n---\nКнопка "Сохранить"; статус «Исполнен»\n')
         card = 'Кнопка «Сохранить» переводит в статус "Исполнен".\n'
         report, ok = check_quoted_literals(card, src)
@@ -710,7 +725,7 @@ class TestQuotedLiterals:
 
     def test_url_literals_not_required(self):
         # тест на НЕсрабатывание: литералы с URL/figma не требуются
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = '---\nt: x\n---\nсм. "https://figma.com/x" и «страницу confluence»\n'
         report, ok = check_quoted_literals("# пусто\n", src)
         assert ok and not report
@@ -775,27 +790,27 @@ class TestStepMarkers:
            "</table>\n")
 
     def test_all_markers_present_ok(self):
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         card = "| 1.1 | Принять файл |\n| 1.2 | Проверить |\n| 1.22 | Сохранить |\n"
         report, ok = check_step_markers(card, self.SRC)
         assert ok and "все 3" in report[0]
 
     def test_renumbering_caught(self):
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         card = "| 1 | Принять файл |\n| 2 | Проверить |\n| 3 | Сохранить |\n"
         report, ok = check_step_markers(card, self.SRC)
         assert not ok and "перенумерация" in report[0]
 
     def test_marker_boundary_not_substring(self):
         # «1.2» не должен «находиться» внутри «1.22»
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         card = "| 1.1 | x |\n| 1.22 | y |\n"
         _report, ok = check_step_markers(card, self.SRC)
         assert not ok  # 1.2 действительно отсутствует
 
     def test_source_without_composite_markers_skipped(self):
         # тест на НЕсрабатывание: голый текст без нумерации — сверять нечего
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         src = "# Ф\n\n<table><tr><th>Параметр</th><td>x</td></tr></table>\n"
         report, ok = check_step_markers("текст", src)
         assert ok and not report
@@ -867,25 +882,25 @@ class TestLogicalCardinality:
     кратн; строгий якорь раскроя HTML не затронут."""
 
     def test_logical_forms_accepted_in_links(self):
-        from app.scripts.CI.normalize_tables import _looks_like_cardinality_logical
+        from app.scripts.CI.kitcheck.columns import _looks_like_cardinality_logical
         for v in ["1 : N", "1 : 1", "0..1", "N : M", "1 : 0..N", "[1..N]", "[1]"]:
             assert _looks_like_cardinality_logical(v), v
 
     def test_param_tables_still_strict(self):
         # тест на НЕсрабатывание: в таблицах параметров раскавычивание
         # [1] -> 1 остаётся браком (защита литералов якорных колонок)
-        from app.scripts.CI.normalize_tables import _looks_like_cardinality
+        from app.scripts.CI.kitcheck.columns import _looks_like_cardinality
         assert not _looks_like_cardinality("1 : N")
         assert not _looks_like_cardinality("1")
 
     def test_garbage_still_rejected(self):
-        from app.scripts.CI.normalize_tables import _looks_like_cardinality_logical
+        from app.scripts.CI.kitcheck.columns import _looks_like_cardinality_logical
         for v in ["много", "1 или 2", "N шт.", "см. ниже"]:
             assert not _looks_like_cardinality_logical(v), v
 
     def test_links_table_signature(self):
         # сигнатура «Связь|Сущность|Кратность» включает логическую нотацию
-        from app.scripts.CI.normalize_tables import validate_columns
+        from app.scripts.CI.kitcheck.columns import validate_columns
         rep = validate_columns(["Связь", "Сущность", "Кратность"],
                                [["A → B", "ENT-002", "1 : N"]], path_index=None)
         kr = [r for r in rep if r.get("role") == "кратн"]
@@ -1400,14 +1415,14 @@ class TestCellCoverage:
         # НЕсрабатывание: канонные трансформации — enum в справочник
         # (пары «код - расшифровка» строками таблицы, латинский перечень
         # по строкам), типографские кавычки, ссылка вместо перечня
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         report, ok = check_cell_coverage(self.SOURCE, self.FULL_CORPUS)
         assert ok, "\n".join(report)
         assert any("потерь 0" in ln for ln in report)
 
     def test_lost_tail_caught(self):
         # срабатывание: потеряны алфавит (Тип), составной ключ (Описание)
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         corpus = (self.FULL_CORPUS
                   .replace(", допустимый алфавит: цифры, английские буквы",
                            "")
@@ -1420,7 +1435,7 @@ class TestCellCoverage:
 
     def test_lost_enum_meaning_caught(self):
         # срабатывание: расшифровка значения выброшена из справочника
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         corpus = self.FULL_CORPUS.replace(
             "| `OMNI` | Универсальный сервис «Реквизиты карты» |",
             "| `OMNI` |  |")
@@ -1431,7 +1446,7 @@ class TestCellCoverage:
     def test_example_tail_not_required(self):
         # НЕсрабатывание: «Пример: …» удаляется из карточек ПО ШАБЛОНУ —
         # его отсутствие в комплекте не потеря
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = ("<table><tr><th>Поле</th><th>Тип</th><th>Описание</th></tr>"
                "<tr><td>Код</td><td>Строка</td>"
                "<td>Код колонки.<br>Пример: CC_ORG_NAME</td></tr>"
@@ -1443,7 +1458,7 @@ class TestCellCoverage:
     def test_reference_construction_pardoned(self):
         # НЕсрабатывание: «Ссылка на идентификатор записи справочника
         # "Пользователь"» в карточке легально становится EXT-ссылкой
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
                "<tr><td>Логин</td><td>Ссылка на идентификатор записи "
                "справочника \"Пользователь\"</td></tr></table>")
@@ -1455,7 +1470,7 @@ class TestCellCoverage:
         # НЕсрабатывание: вставка служебных слов переносом («в
         # соответствии СО СТАТУСНОЙ МОДЕЛЬЮ „X“») — слова фрагмента по
         # порядку в одном окне корпуса
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
                "<tr><td>Статус</td><td>Текущий статус в соответствии с "
                "[КК] Статусы операции</td></tr></table>")
@@ -1467,7 +1482,7 @@ class TestCellCoverage:
     def test_scattered_words_still_lost(self):
         # срабатывание: слова фрагмента есть в корпусе РОССЫПЬЮ по разным
         # местам — окно не милует, потеря видна
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
                "<tr><td>Тип</td><td>Тип операции для которой выполняется "
                "подтверждение</td></tr></table>")
@@ -1480,7 +1495,7 @@ class TestCellCoverage:
     def test_markdown_link_with_colon_not_split(self):
         # блокер ISS-01: ссылка с «:» в тексте резалась пополам ДО
         # снятия markdown — правая половина требовала сырой URL
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = ("<table><tr><th>Поле</th><th>Описание</th></tr>"
                "<tr><td>Валюта</td><td>Справочник "
                "[[СпрВал] Модель данных: Валюта]"
@@ -1493,7 +1508,7 @@ class TestCellCoverage:
     def test_section_rows_and_alien_tables_skipped(self):
         # НЕсрабатывание: секционные строки и таблицы без целевых
         # колонок (перечни кодов) не проверяются
-        from app.scripts.CI.normalize_tables import check_cell_coverage
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
         src = (
             "<table>\n"
             "<tr><th>№</th><th>Поле</th><th>Тип</th><th>Описание</th></tr>\n"
@@ -1791,7 +1806,7 @@ class TestCheckSourceTables:
            "| Брокеридж и лицензии | BROKERAGE |\n")
 
     def test_missing_table_caught(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         card = "| Код |\n|---|\n| `CORP_CARDS` |\n"          # ужато до колонки
         rep, ok = check_source_tables(card, self.SRC)
         assert not ok
@@ -1799,7 +1814,7 @@ class TestCheckSourceTables:
 
     def test_full_transfer_passes(self):
         # НЕсрабатывание: перенос целиком (пусть и с бэктиками/жирным) — OK
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         card = ("| Наименование | Код |\n|---|---|\n"
                 "| Корпоративные карты | `CORP_CARDS` |\n"
                 "| Брокеридж и лицензии | `BROKERAGE` |\n")
@@ -1808,7 +1823,7 @@ class TestCheckSourceTables:
 
     def test_single_column_source_tables_ignored(self):
         # НЕсрабатывание: одноколоночные/короткие таблицы источника не сверяются
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = "| Код |\n|---|\n| X1 |\n| X2 |\n"
         _rep, ok = check_source_tables("пустая карточка", src)
         assert ok
@@ -1888,7 +1903,7 @@ class TestTitleDetectorExtended:
     =присвоения, глагольные описания."""
 
     def test_new_markers_caught(self):
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         for bad in ("=Код должности представителя",
                     "Признак заявителя<br>(допускается передача только одной персоны)",
                     "Перечень наборов<br>Проверка ЕИО выполняется всегда",
@@ -1896,7 +1911,7 @@ class TestTitleDetectorExtended:
             assert _title_suspicious(bad), bad
 
     def test_honest_names_not_flagged(self):
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         for good in ("Перечень характеров отношений с Клиентом",
                      "GUID организации в ЕСК",
                      "Признак ответа в «расширенном» формате"):
@@ -1906,12 +1921,12 @@ class TestTitleDetectorExtended:
 class TestTitleDetectorPurposeMarkers:
     def test_purpose_descriptions_caught(self):
         # замечание 5 по 6-ундец: описания назначения — не имена
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         assert _title_suspicious("Секция для связи блока Segment представителя")
         assert _title_suspicious("ссылка на блок Segment с информацией по организации")
 
     def test_names_with_similar_words_not_flagged(self):
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         assert not _title_suspicious("Ссылки документа")     # не «ссылка на»
         assert not _title_suspicious("Секция подписи")       # не «секция для»
 
@@ -1928,7 +1943,7 @@ class TestNotificationStructure:
                 "\n## Сообщения нотификации\n\n" + events + tail)
 
     def test_missing_channel_card_caught(self):
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: E-mail, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
@@ -1938,7 +1953,7 @@ class TestNotificationStructure:
 
     def test_consistent_card_clean(self):
         # тест на НЕсрабатывание: ключи, шаблон и порядок согласованы
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: E-mail, Пользователи Банка\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
@@ -1951,7 +1966,7 @@ class TestNotificationStructure:
         assert ok and "согласованы ✓" in report[0]
 
     def test_missing_template_caught(self):
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: E-mail, Пользователи Банка\n\nправила\n",
             "### NTF-01.E01. Событие А\n\n"
@@ -1961,7 +1976,7 @@ class TestNotificationStructure:
         assert not ok and any("M-02" in r for r in report)
 
     def test_non_monotonic_events_caught(self):
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E03. Событие В\n\n"
@@ -1973,14 +1988,14 @@ class TestNotificationStructure:
 
     def test_other_card_types_untouched(self):
         # тест на НЕсрабатывание: не-нотификация (нет обоих разделов)
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         report, ok = check_notification_structure(
             "---\nid: FUN-BNK-01\n---\n\n## Поведение\n\n#### Подраздел\n")
         assert ok and not report
 
     def test_single_digit_event_number_flagged(self):
         # формат E-номера: минимум две цифры (прогон B выдал E1/E2)
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "### NTF-01.E1. Событие А\n\n"
@@ -1991,7 +2006,7 @@ class TestNotificationStructure:
     def test_br_flat_message_flagged_table_allowed(self):
         # <br>-простыня в абзаце сообщения — брак; <br> в ячейке
         # реестра (строка на «|») — легален
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = self.make(
             "### Канал и получатели: SMS, Пользователи Клиента\n\nправила\n",
             "| ID | Событие | Каналы, получатели |\n|---|---|---|\n"
@@ -2021,20 +2036,20 @@ class TestHistoryTableNotRequired:
            "| A1 | Боевой код |\n| B2 | Второй код |\n")
 
     def test_history_not_required(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         card = "| Код | Значение |\n|---|---|\n| A1 | Боевой код |\n| B2 | Второй код |\n"
         rep, ok = check_source_tables(card, self.SRC)
         assert ok, rep
 
     def test_real_table_still_guarded(self):
         # тест на НЕсрабатывание фильтра: потеря обычной таблицы ловится
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         rep, ok = check_source_tables("# пустая карточка\n", self.SRC)
         assert not ok and any("Код" in r or "A1" in r for r in rep)
 
     def test_unprefixed_key_heading_flagged(self):
         # заголовок-ключ без префикса «Канал и получатели: » — брак
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         text = ("---\nid: NTF-01\ntype: notification\n---\n\n"
                 "## Каналы и адреса доставки\n\n"
                 "### SMS, Пользователи Клиента\n\nправила\n"
@@ -2057,7 +2072,7 @@ class TestCriticAttrsNotLiterals:
            'Параметр {Код} = "O2PLUS" обязателен.\n')
 
     def test_attr_values_skipped_content_kept(self):
-        from app.scripts.CI.normalize_tables import quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import quoted_literals
         lits = quoted_literals(self.SRC)
         assert "critic-del" not in lits and "critic-ins" not in lits
         assert "GBO-104711" not in lits
@@ -2077,14 +2092,14 @@ class TestPlaceholderLinkFlagged:
             "#### Канал и получатели: E-mail, Пользователи Банка\n\n")
 
     def test_stub_link_flagged(self):
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         report, ok = check_notification_structure(
             self.BASE + "Статус: [Сущность](../e.md)[.<Статус>](#)\n")
         assert not ok and any("](#)" in r for r in report)
 
     def test_real_links_clean(self):
         # тест на НЕсрабатывание: обычные относительные ссылки легальны
-        from app.scripts.CI.normalize_tables import check_notification_structure
+        from app.scripts.CI.kitcheck.checks.card_notification import check_notification_structure
         report, ok = check_notification_structure(
             self.BASE + "Статус: [Сущность](../e.md).<Статус>\n")
         assert ok, report
@@ -2112,7 +2127,7 @@ class TestPartOfTitleHolder:
 
     def test_title_taken_from_readme_holder(self, tmp_path):
         # НЕсрабатывание: title дословно в README группы — часть не бракуется
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         part, readme, src = self._group(tmp_path, "[X] Контроли заявки")
         rep, ok = run_check([part, readme], src)
         assert not any("ПОТЕРЯ НАИМЕНОВАНИЯ" in r for r in rep), "\n".join(rep)
@@ -2121,7 +2136,7 @@ class TestPartOfTitleHolder:
 
     def test_holder_title_diverging_still_flagged(self, tmp_path):
         # срабатывание: title держателя расходится с источником — брак
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         part, readme, src = self._group(tmp_path, "[X] Контроли заявок")
         rep, ok = run_check([part, readme], src)
         assert not ok and any("расходится" in r and "держатель — README.md"
@@ -2129,7 +2144,7 @@ class TestPartOfTitleHolder:
 
     def test_part_without_holder_still_loss(self, tmp_path):
         # срабатывание: части без файла с id — потеря наименования как прежде
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         part, _readme, src = self._group(tmp_path, "[X] Контроли заявки")
         rep, ok = run_check([part], src)
         assert not ok and any("ПОТЕРЯ НАИМЕНОВАНИЯ" in r for r in rep)
@@ -2144,7 +2159,7 @@ class TestReadmeRegistryTitle:
     SRC = "---\ntitle: '[X] Методы сервиса'\n---\n\nтекст\n"
 
     def test_readme_title_checked_like_any_card(self, tmp_path):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         readme = tmp_path / "README.md"
         readme.write_text(
             "---\ntitle: '[X] Методы и файловые контракты сервиса'\n---\n\n# Р\n",
@@ -2156,7 +2171,7 @@ class TestReadmeRegistryTitle:
 
     def test_readme_verbatim_title_ok(self, tmp_path):
         # тест на НЕсрабатывание: дословный title реестра проходит
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         readme = tmp_path / "README.md"
         readme.write_text("---\ntitle: '[X] Методы сервиса'\n---\n\n"
                           "# Методы и файловые контракты сервиса\n",
@@ -2167,7 +2182,7 @@ class TestReadmeRegistryTitle:
         assert ok, rep
 
     def test_regular_card_title_still_checked(self, tmp_path):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         cardf = tmp_path / "card.md"
         cardf.write_text("---\ntitle: 'Другое имя'\n---\n\n# К\n",
                          encoding="utf-8")
@@ -2188,7 +2203,7 @@ class TestStepMarkersTypeScoped:
            "<tr><td><strong>1.3</strong></td><td>Поле В</td></tr></table>\n")
 
     def test_data_model_sections_not_steps(self, tmp_path):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         cardf = tmp_path / "ent-001.md"
         cardf.write_text("---\nid: ENT-001\ntitle: 'С'\ntype: data-model\n"
                          "---\n\nПоле А, Поле Б, Поле В\n", encoding="utf-8")
@@ -2199,7 +2214,7 @@ class TestStepMarkersTypeScoped:
 
     def test_process_type_still_guarded(self, tmp_path):
         # тест на НЕсрабатывание фильтра: у процессов маркеры сторожатся
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         cardf = tmp_path / "prc-001.md"
         cardf.write_text("---\nid: PRC-001\ntitle: 'С'\ntype: process\n"
                          "---\n\nшаги потеряны\n", encoding="utf-8")
@@ -2215,18 +2230,18 @@ class TestExamCalibrations:
     имя параметра, не «тип»."""
 
     def test_latin_identifier_name_not_suspicious(self):
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         assert not _title_suspicious("TraceID")
         assert not _title_suspicious("SessionID")
 
     def test_dictionary_types_still_suspicious(self):
         # тест на НЕсрабатывание послабления: словарные типы — брак
-        from app.scripts.CI.normalize_tables import _title_suspicious
+        from app.scripts.CI.kitcheck.columns import _title_suspicious
         assert _title_suspicious("GUID")
         assert _title_suspicious("Строка(20)")
 
     def test_critic_scraps_not_required_values(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| Доступность функции | Условие |\n|---|---|\n"
                "| Роль Банка | СТАТУС |\n| ++} | {++ |\n")
         card = "Роль Банка и СТАТУС перенесены\n"
@@ -2235,7 +2250,7 @@ class TestExamCalibrations:
 
     def test_content_inside_critic_still_required(self):
         # тест на НЕсрабатывание: содержимое правок остаётся значением
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| Доступность функции | Условие |\n|---|---|\n"
                "| Роль Банка | {++Новое условие++} |\n"
                "| Вторая строка | Ещё значение |\n")
@@ -2248,7 +2263,7 @@ class TestExamCalibrations:
 
     def test_k4_readme_column_roles_skipped(self, tmp_path):
         # К-4: README-реестр — колонные роли не применяются
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "README.md"
         p.write_text("---\ntitle: 'Р'\n---\n\n" + self.TBL, encoding="utf-8")
         rep, ok = check_file(p, column_roles=False)
@@ -2260,7 +2275,7 @@ class TestExamCalibrations:
         # прежняя TBL держалась на ложном срабатывании («Краткое название»
         # считалось кратностью), снятом калибровкой master канона
         # 2026-08-28 (слито в analyzer 2026-09-29)
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "card.md"
         tbl = ("| Поле | Обязательность |\n|---|---|\n"
                "| Номер | Да |\n| Сумма | иногда |\n")
@@ -2280,7 +2295,7 @@ class TestApplyCritic:
     сохранён для прохождения гейта»)."""
 
     def test_textual_forms_applied(self):
-        from app.scripts.CI.normalize_tables import apply_critic
+        from app.scripts.CI.kitcheck.checks.card_run import apply_critic
         s = ("до {++GBO-118742: добавлено++} середина {--удалено--} "
              "конец {~~старое~>новое~~}")
         assert apply_critic(s) == "до добавлено середина  конец новое"
@@ -2288,24 +2303,24 @@ class TestApplyCritic:
     def test_unknown_task_prefix_stripped(self):
         # К-15: экспортёрский префикс правки без номера задачи
         # (UNKNOWN-<hex-цвет>:) — тоже разметка, не текст
-        from app.scripts.CI.normalize_tables import apply_critic
+        from app.scripts.CI.kitcheck.checks.card_run import apply_critic
         s = "{++UNKNOWN-ff0000: Статус документа. Ссылка++}"
         assert apply_critic(s) == "Статус документа. Ссылка"
 
     def test_unknown_like_content_not_stripped(self):
         # тест на НЕсрабатывание: UNKNOWN вне разметки — содержимое
-        from app.scripts.CI.normalize_tables import apply_critic
+        from app.scripts.CI.kitcheck.checks.card_run import apply_critic
         s = "плейсхолдер UNKNOWN-ff0000: остаётся текстом"
         assert apply_critic(s) == s
 
     def test_html_forms_applied(self):
-        from app.scripts.CI.normalize_tables import apply_critic
+        from app.scripts.CI.kitcheck.checks.card_run import apply_critic
         s = ('a <span class="critic-del" data-task="GBO-1">старый</span>'
              '<span class="critic-ins" data-task="GBO-1">новый</span> b')
         assert apply_critic(s) == "a новый b"
 
     def test_gate_requires_target_not_markup(self):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         import pathlib, tempfile
         with tempfile.TemporaryDirectory() as d:
             p = pathlib.Path(d)
@@ -2326,7 +2341,7 @@ class TestApplyCritic:
     def test_missing_target_content_still_caught(self):
         # тест на НЕсрабатывание: целевое содержимое добавления обязано
         # присутствовать — К-5 не превращается в дыру
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         import pathlib, tempfile
         with tempfile.TemporaryDirectory() as d:
             p = pathlib.Path(d)
@@ -2350,7 +2365,7 @@ class TestExamCalibrationsK6K7:
     в теле карточки — брак (отсылка вместо переноса, инцидент ×40)."""
 
     def test_k6_img_cells_not_required(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| № | Desktop (S-XL) | Наименование блока |\n|---|---|---|\n"
                '| 1 | <img src="img/a.png" width="473"> | Общие элементы |\n'
                '| 2 | <img src="img/b.png"><img src="img/c.png"> | Фильтры |\n')
@@ -2362,7 +2377,7 @@ class TestExamCalibrationsK6K7:
 
     def test_k6_text_cells_still_required(self):
         # тест на НЕсрабатывание: текстовые ячейки обязаны переноситься
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| № | Desktop (S-XL) | Наименование блока |\n|---|---|---|\n"
                '| 1 | <img src="img/a.png"> | Уникальный блок настроек |\n'
                "| 2 | текстовая ячейка | Второй блок |\n")
@@ -2370,7 +2385,7 @@ class TestExamCalibrationsK6K7:
         assert not ok and any("Уникальный блок" in r for r in rep)
 
     def test_k7_page_refs_in_body_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "card.md"
         p.write_text("---\ntitle: 'К'\nconfluence_page_ids: [2169849859]\n"
                      "---\n\nСтатика и источники — по таблице полей "
@@ -2381,7 +2396,7 @@ class TestExamCalibrationsK6K7:
 
     def test_k7_frontmatter_only_is_clean(self, tmp_path):
         # тест на НЕсрабатывание: page_ids во frontmatter легальны
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "card.md"
         p.write_text("---\ntitle: 'К'\nconfluence_page_ids: [2169849859]\n"
                      "---\n\nОбычное содержимое карточки без отсылок.\n",
@@ -2395,7 +2410,7 @@ class TestStripHistory:
     её кавычечные литералы не требуются в карточках."""
 
     def test_history_literals_not_required(self, tmp_path):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text(
             '---\ntitle: "С"\n---\n\n'
@@ -2413,7 +2428,7 @@ class TestStripHistory:
 
     def test_content_literals_still_required(self, tmp_path):
         # тест на НЕсрабатывание: литералы вне истории требуются
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text('---\ntitle: "С"\n---\n\n'
                        'Контроль: значение "Сумма документа" обязательно.\n',
@@ -2431,7 +2446,7 @@ class TestK11LinkUrlParens:
     (OQ-033 экзамена: EXTINT-001, «Применение»/«Форматы»)."""
 
     def test_parens_in_url_no_tails(self):
-        from app.scripts.CI.normalize_tables import _strip_markdown_links
+        from app.scripts.CI.kitcheck.html import _strip_markdown_links
         v = ('см. [Функция выгрузки](../[РРКО_ИПИ]-Инкассовое-поручение-'
              '(исходящее)/функция.md) и файл '
              '[схема](xsd/pain.013.001.08(2).xsd) конец')
@@ -2440,7 +2455,7 @@ class TestK11LinkUrlParens:
 
     def test_plain_links_and_cardinality_unchanged(self):
         # тест на НЕсрабатывание: обычные ссылки и кратность [1] как раньше
-        from app.scripts.CI.normalize_tables import _strip_markdown_links
+        from app.scripts.CI.kitcheck.html import _strip_markdown_links
         assert _strip_markdown_links("[текст](a.md) и [1] рядом") == \
             "текст и [1] рядом"
 
@@ -2455,7 +2470,7 @@ class TestPrivilegeWarning:
                 f"## Доступность\n\n{dostup}\n\n## Поведение\n\nтекст\n")
 
     def test_cl_without_privileges_warned_not_failed(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card("FUN-CL-01", "Доступна всегда."),
                      encoding="utf-8")
@@ -2464,7 +2479,7 @@ class TestPrivilegeWarning:
         assert any(r.startswith("предупреждение") for r in rep)
 
     def test_bnk_with_privilege_clean(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card(
             "FUN-BNK-02",
@@ -2475,7 +2490,7 @@ class TestPrivilegeWarning:
 
     def test_sys_not_warned(self, tmp_path):
         # тест на НЕсрабатывание: FUN-SYS сторож не трогает
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card(
             "FUN-SYS-01",
@@ -2504,7 +2519,7 @@ class TestTuzFormulaAndTargetMentions:
         return docs
 
     def test_tuz_bold_flagged(self):
-        from app.scripts.CI.normalize_tables import check_tuz_formula
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
         rep, ok = check_tuz_formula(
             "- **Системная функция; вызов с ТУЗ; роли и привилегии "
             "не применяются.**\n")
@@ -2512,14 +2527,14 @@ class TestTuzFormulaAndTargetMentions:
 
     def test_tuz_plain_ok(self):
         # НЕсрабатывание: обычный шрифт легитимен
-        from app.scripts.CI.normalize_tables import check_tuz_formula
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
         rep, ok = check_tuz_formula(
             "- Системная функция; вызов с ТУЗ; роли и привилегии "
             "не применяются.\n")
         assert ok and rep == []
 
     def test_existing_title_without_link_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
         card = docs / "srs" / "fun-sys-03.md"
         card.write_text(
@@ -2534,7 +2549,7 @@ class TestTuzFormulaAndTargetMentions:
 
     def test_linked_title_not_warned(self, tmp_path):
         # НЕсрабатывание: оформленная ссылка сторожу не видна
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
         card = docs / "srs" / "fun-sys-03.md"
         card.write_text(
@@ -2546,7 +2561,7 @@ class TestTuzFormulaAndTargetMentions:
         assert warns == []
 
     def test_unknown_target_without_debt_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
         card = docs / "srs" / "fun-sys-03.md"
         card.write_text(
@@ -2560,7 +2575,7 @@ class TestTuzFormulaAndTargetMentions:
 
     def test_debt_in_matrix_not_warned(self, tmp_path):
         # НЕсрабатывание: игла (без тега, ≤3 слова) находит долг
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
         card = docs / "srs" / "fun-sys-03.md"
         card.write_text(
@@ -2573,7 +2588,7 @@ class TestTuzFormulaAndTargetMentions:
 
     def test_cardinality_brackets_not_mentions(self, tmp_path):
         # НЕсрабатывание: [1], [0..1], [x] — не теговые упоминания
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
         card = docs / "srs" / "fun-sys-03.md"
         card.write_text(
@@ -2589,7 +2604,7 @@ class TestK31Homoglyphs:
     (пилот-2: «Kратность» с латинской K выключила роль колонки)."""
 
     def test_latin_k_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -2601,7 +2616,7 @@ class TestK31Homoglyphs:
 
     def test_plantuml_escape_not_flagged(self, tmp_path):
         # НЕсрабатывание: «\nИПИ» в метке PlantUML — эскейп, не гомоглиф
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: PRC-01\ntitle: 'П'\ntype: process\n---\n\n"
@@ -2612,7 +2627,7 @@ class TestK31Homoglyphs:
 
     def test_clean_scripts_not_flagged(self, tmp_path):
         # НЕсрабатывание: чистые слова, коды, дефисные пары, Ф1
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -2637,7 +2652,7 @@ class TestK32SourceTagMentions:
                 "type: function\n---\n\n## Поведение\n\n" + poведение)
 
     def test_defaced_tag_flagged(self):
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         rep, ok = check_source_tag_mentions(
             self._card("Проверки см в Методы для конкретной функции\n"),
             self._SRC)
@@ -2645,7 +2660,7 @@ class TestK32SourceTagMentions:
 
     def test_tag_intact_ok(self):
         # НЕсрабатывание: тег на месте
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         rep, ok = check_source_tag_mentions(
             self._card("Проверки см в [РРКО_ИПИ] Методы для конкретной "
                        "функции\n"), self._SRC)
@@ -2653,7 +2668,7 @@ class TestK32SourceTagMentions:
 
     def test_linked_mention_ok(self):
         # НЕсрабатывание: оформлено ссылкой, тег в ссылке заменён на ID
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         rep, ok = check_source_tag_mentions(
             self._card("Проверки см в [FUN-SYS-99 Методы для конкретной "
                        "функции](../fun-sys-99.md)\n"), self._SRC)
@@ -2663,7 +2678,7 @@ class TestK32SourceTagMentions:
         # НЕсрабатывание: имя существующей карточки без тега + ссылка
         # на её файл (реестровая конвенция README/матрицы; дисплей
         # ссылки с ID-переименованием иглу не несёт)
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         docs = tmp_path / "docs"
         (docs / "client").mkdir(parents=True)
         (docs / "client" / "fun-cl-99-methods.md").write_text(
@@ -2678,7 +2693,7 @@ class TestK32SourceTagMentions:
 
     def test_absent_mention_warns_not_flags(self):
         # отсутствие целиком — предупреждение, не брак
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         rep, ok = check_source_tag_mentions(
             self._card("Совсем другой текст.\n"), self._SRC)
         assert ok and any(r.startswith("предупреждение") and "Методы" in r
@@ -2692,7 +2707,7 @@ class TestK32SourceTagMentions:
 
     def test_source_frontmatter_is_not_a_mention(self):
         # doc_id давал «[КК_ЛК] Лимит по карте}}'» — неустранимое ⚠
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         card = ("---\nid: ENT-023\ntitle: '[КК_ЛК] Лимит по карте'\n"
                 "type: data-model\n---\n\n# ENT-023. Лимит по карте\n")
         rep, ok = check_source_tag_mentions(
@@ -2702,7 +2717,7 @@ class TestK32SourceTagMentions:
     def test_body_mentions_after_frontmatter_still_checked(self):
         # НЕсрабатывание исключения: упоминание в ТЕЛЕ страницы с
         # frontmatter по-прежнему сторожится — и дефейс, и отсутствие
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         src = self._FM + self._SRC
         rep, ok = check_source_tag_mentions(
             self._card("Проверки см в Методы для конкретной функции\n"), src)
@@ -2716,7 +2731,7 @@ class TestK32SourceTagMentions:
         # отчёт КК 2026-10-05: «[КК] ТЕССА_Входящие параметры &lt;атрибут&gt;»
         # давал иглу с хвостом «&lt» и ложное «не найдено»; НЕсрабатывание —
         # то же имя без хвоста в карточке с тегом принимается
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         src = ("<p>см. [КК] ТЕССА_Входящие параметры &lt;атрибут&gt; "
                "заполняются</p>")
         rep, ok = check_source_tag_mentions(
@@ -2729,7 +2744,7 @@ class TestK32SourceTagMentions:
     def test_unclosed_or_inner_rule_not_stripped(self):
         # НЕсрабатывание исключения: без закрывающей «---» ничего не
         # снимается; разделитель «---» в теле страницы текст не съедает
-        from app.scripts.CI.normalize_tables import check_source_tag_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_source_tag_mentions
         card = self._card("Совсем другой текст.\n")
         rep, _ = check_source_tag_mentions(
             card, "---\ntitle: x\nсм. [РРКО_ИПИ] Методы для конкретной\n")
@@ -2755,14 +2770,14 @@ class TestK34LabelSections:
             "</tbody></table>\n")
 
     def test_bold_label_line_flagged(self):
-        from app.scripts.CI.normalize_tables import check_label_sections
+        from app.scripts.CI.kitcheck.checks.card_passport import check_label_sections
         rep, ok = check_label_sections(
             "## Назначение\n\n**Что делает функция:**\n\nПроверки при "
             "вызове метода выполняются штатно.\n", self._SRC)
         assert not ok and "К-34" in rep[0] and "Что делает функция" in rep[0]
 
     def test_passport_pair_table_flagged(self):
-        from app.scripts.CI.normalize_tables import check_label_sections
+        from app.scripts.CI.kitcheck.checks.card_passport import check_label_sections
         rep, ok = check_label_sections(
             "| **Доступность функции** | Доступ к функции не ограничен "
             "(ТУЗ) |\n| --- | --- |\n", self._SRC)
@@ -2771,7 +2786,7 @@ class TestK34LabelSections:
     def test_bold_content_not_flagged(self):
         # НЕсрабатывание: «ПРИМЕЧАНИЯ!» — жирный текст ВНУТРИ значения
         # ячейки, не лейбл пары — переносится как есть
-        from app.scripts.CI.normalize_tables import check_label_sections
+        from app.scripts.CI.kitcheck.checks.card_passport import check_label_sections
         rep, ok = check_label_sections(
             "## Поведение\n\nПроверки при вызове метода выполняются "
             "штатно.\n\n**ПРИМЕЧАНИЯ!**\n\nисходим из одного "
@@ -2781,7 +2796,7 @@ class TestK34LabelSections:
     def test_data_model_passport_not_flagged(self, tmp_path):
         # НЕсрабатывание: у data-model паспорт-таблица — слот шаблона;
         # гейт по type в run_check
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "s.md"
         src.write_text("---\nconfluence_page_id: 1\ntitle: '[Т] С'\n"
                        "---\n\n<h1>[Т] С</h1>" + self._SRC.split(
@@ -2805,7 +2820,7 @@ class TestK33NestedLinks:
                 f"type: function\n---\n\n{body}\n")
 
     def test_double_wrap_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card(
             "- При выполнении [[[[РРКО_ИПИ] Клиент: Функция снятия "
@@ -2815,7 +2830,7 @@ class TestK33NestedLinks:
         assert not ok and any("К-33" in r for r in rep)
 
     def test_link_inside_title_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card(
             "текст",
@@ -2826,7 +2841,7 @@ class TestK33NestedLinks:
 
     def test_tagged_display_legit(self, tmp_path):
         # НЕсрабатывание: скобочный тег в дисплее — скобка самой ссылки
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(self._card(
             'ID "[[РРКО_ИПИ] Инкассовое поручение исходящее]'
@@ -2841,7 +2856,7 @@ class TestK30InvisibleChars:
     дозаходом 5.3)."""
 
     def test_zwsp_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-08\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -2851,8 +2866,8 @@ class TestK30InvisibleChars:
 
     def test_bold_content_line_not_section_boundary(self):
         # фикс границы: «**ИНАЧЕ**» внутри секции не рвёт профиль
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         cell = ("<p>Функция проверяет возможность отклонения документа "
                 "администратором банка по статусной модели заявки.</p>"
                 "<p><strong>ИНАЧЕ</strong></p>"
@@ -2882,8 +2897,8 @@ class TestProbeAcrossBlockBoundary:
             "<td>" + _CELL + "</td></tr></tbody></table>\n")
 
     def test_correct_layout_not_flagged(self):
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         card = ("## Вызов функции\n\n"
                 + html_fragment_to_markdown(self._CELL) + "\n")
         rep, ok = check_heavy_pair_structure(card, self._SRC)
@@ -2891,8 +2906,7 @@ class TestProbeAcrossBlockBoundary:
 
     def test_loss_still_flagged(self):
         # НЕсрабатывание наоборот: содержимого нет — потеря видна
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
         card = "## Вызов функции\n\nСовсем другой текст.\n"
         rep, ok = check_heavy_pair_structure(card, self._SRC)
         assert not ok
@@ -2913,16 +2927,16 @@ class TestK25dPairSectionProfiles:
             "<td>" + _CELL + "</td></tr></tbody></table>\n")
 
     def test_glued_paragraphs_flagged(self):
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         glued = html_fragment_to_markdown(self._CELL).replace("\n\n", " ")
         card = "**Что делает функция:**\n\n" + glued + "\n"
         rep, ok = check_heavy_pair_structure(card, self._SRC)
         assert not ok and any("расходится с эталоном" in r for r in rep)
 
     def test_etalon_section_clean(self):
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         card = ("**Что делает функция:**\n\n"
                 + html_fragment_to_markdown(self._CELL) + "\n")
         rep, ok = check_heavy_pair_structure(card, self._SRC)
@@ -2932,8 +2946,8 @@ class TestK25dPairSectionProfiles:
         # решение 2026-08-29 (README SCR-CL-01): раскладка тяжёлой пары
         # markdown-СПИСКОМ легальна — профиль эталона (quote-абзацы
         # конвертера) не требуется, i-сигнал вместо ✗
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         md = html_fragment_to_markdown(self._CELL)
         as_list = "\n".join("- " + p for p in md.split("\n\n") if p.strip())
         card = "**Что делает функция:**\n\n" + as_list + "\n"
@@ -2944,8 +2958,8 @@ class TestK25dPairSectionProfiles:
     def test_naznachenie_duplicate_head_not_flagged(self):
         # дубль начала ячейки в «Назначении» (первые предложения
         # дословно) легитимен: сверка идёт с ЛУЧШИМ вхождением
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_pair_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         md = html_fragment_to_markdown(self._CELL)
         first_para = md.split("\n\n")[0]
         card = ("## Назначение\n\n" + first_para + "\n\n"
@@ -2969,8 +2983,8 @@ class TestK29HeavyCellInvariant:
             "<td>" + _CELL + "</td></tr></tbody></table>\n")
 
     def test_collapsed_heavy_cell_flagged(self):
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_cells, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_cells
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         flat = html_fragment_to_markdown(self._CELL).replace("\n", " ")
         card = f"| **Описание работы:** | {flat} |\n"
         rep, ok = check_heavy_cells(card, self._SRC)
@@ -2978,8 +2992,8 @@ class TestK29HeavyCellInvariant:
 
     def test_label_section_clean(self):
         # тест на НЕсрабатывание: содержимое вынесено секцией
-        from app.scripts.CI.normalize_tables import (
-            check_heavy_cells, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_cells
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         card = ("| Поле | Значение |\n|---|---|\n| **Alias** | /x |\n\n"
                 "**Описание работы:**\n\n"
                 + html_fragment_to_markdown(self._CELL) + "\n")
@@ -2988,7 +3002,7 @@ class TestK29HeavyCellInvariant:
 
     def test_short_rule_cell_in_table_legal(self):
         # тест на НЕсрабатывание: короткая правило-ячейка в таблице
-        from app.scripts.CI.normalize_tables import check_heavy_cells
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_cells
         src = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
                "<td>Источник вызова</td>"
                "<td><p>Если пусто, то = 0 (Создание), иначе = 1 "
@@ -3005,8 +3019,7 @@ class TestK26TableBodiesExcluded:
     источника несопоставима по числу строк по построению."""
 
     def test_md_table_in_step_body_ok(self):
-        from app.scripts.CI.normalize_tables import (
-            check_step_body_structure)
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
         src = ("---\ntitle: X\n---\n\n"
                "**Шаг 1.** Маппинг полей:\n\n"
                "<table><tr><td>Поле</td><td>Атрибут</td></tr>"
@@ -3021,8 +3034,7 @@ class TestK26TableBodiesExcluded:
 
     def test_flattened_lists_still_caught(self):
         # НЕсрабатывание послабления: уплощение СПИСКОВ тела ловится
-        from app.scripts.CI.normalize_tables import (
-            check_step_body_structure)
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
         src = ("---\ntitle: X\n---\n\n"
                "**Шаг 1.** Проверки:\n\n- правило один\n  - подусловие\n\n"
                "**Шаг 2.** Конец.\n")
@@ -3047,7 +3059,7 @@ class TestK26StepBodyStructure:
             "    * Процесс завершён\n")
 
     def test_flattened_body_flagged(self):
-        from app.scripts.CI.normalize_tables import check_step_body_structure
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
         card = ("- **Шаг №10.** Печать\n"
                 "- Выполняется печать по правилам:\n"
                 "- правило раз\n"
@@ -3059,7 +3071,7 @@ class TestK26StepBodyStructure:
 
     def test_ranked_levels_clean(self):
         # тест на НЕсрабатывание: ранги совпадают при другом шаге отступа
-        from app.scripts.CI.normalize_tables import check_step_body_structure
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
         card = ("- **Шаг №10.** Печать\n"
                 "  - Выполняется печать по правилам:\n"
                 "    - правило раз\n"
@@ -3071,7 +3083,7 @@ class TestK26StepBodyStructure:
 
     def test_html_source_skipped(self):
         # тест на НЕсрабатывание: HTML-тела без md-маркеров — skip
-        from app.scripts.CI.normalize_tables import check_step_body_structure
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
         src = ("---\ntitle: X\n---\n\n<td><strong>Шаг №1.</strong> "
                "текст</td><td><strong>Шаг №2.</strong> текст</td>\n")
         rep, ok = check_step_body_structure("текст", src)
@@ -3082,7 +3094,7 @@ class TestK28UiArtifacts:
     """К-28: элементы UI Confluence из выгрузки в чистовике = брак."""
 
     def test_expand_source_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-BNK-07\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3092,7 +3104,7 @@ class TestK28UiArtifacts:
         assert not ok and any("артефакт интерфейса" in r for r in rep)
 
     def test_clean_card_ok(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-BNK-07\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3106,7 +3118,7 @@ class TestK27StubGuard:
     прозе и заглушки ЭФ — легальны."""
 
     def test_stub_card_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "rbac.md"
         p.write_text(
             "---\nid: RBAC-001\ntitle: 'Р'\ntype: rbac\n---\n\n"
@@ -3116,7 +3128,7 @@ class TestK27StubGuard:
         assert not ok and any("заглушка вне правил" in r for r in rep)
 
     def test_word_in_prose_clean(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3126,7 +3138,7 @@ class TestK27StubGuard:
         assert ok, rep
 
     def test_screen_form_stub_legal(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "scr.md"
         p.write_text(
             "---\nid: SCR-CL-09\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3138,7 +3150,7 @@ class TestK27StubGuard:
     def test_contract_call_stub_legal(self, tmp_path):
         # модель CALL (2026-08-20): заглушка карточки вызова чужого
         # контракта — легальна, как прежний тип external-integration
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "call.md"
         p.write_text(
             "---\nid: CALL-003\ntitle: 'В'\ntype: contract-call\n---\n\n"
@@ -3165,8 +3177,8 @@ class TestK25CellConverterAndStructure:
     def test_margin_left_paragraph_level(self):
         # вложенность абзацев инлайн-стилем Confluence (margin-left)
         # переносится blockquote-уровнем; профиль различает уровни
-        from app.scripts.CI.normalize_tables import (
-            html_fragment_to_markdown, _md_profile)
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
+        from app.scripts.CI.kitcheck.checks.card_passport import _md_profile
         cell = ('<p><strong>ТОГДА</strong></p>'
                 '<p style="margin-left: 40.0px"><strong>Выполнение '
                 'функции возможно</strong> новый статус "DELETED"</p>'
@@ -3177,7 +3189,7 @@ class TestK25CellConverterAndStructure:
         assert _md_profile(lines) == ["p", "q1", "p"]
 
     def test_converter_keeps_alternation(self):
-        from app.scripts.CI.normalize_tables import html_fragment_to_markdown
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         md = html_fragment_to_markdown(self._CELL)
         lines = [ln for ln in md.splitlines() if ln.strip()]
         assert lines[0] == "Инициируется процесс."
@@ -3188,14 +3200,14 @@ class TestK25CellConverterAndStructure:
 
     def test_inline_strong_inside_word_glued(self):
         # имена файлов с жирным куском внутри слова остаются слитными
-        from app.scripts.CI.normalize_tables import html_fragment_to_markdown
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         md = html_fragment_to_markdown(
             "<ul><li>767_610412_<strong>13_9</strong>_1.xml</li></ul>")
         assert "767_610412_**13_9**_1.xml" in md
 
     def test_section_matching_profile_clean(self, tmp_path):
-        from app.scripts.CI.normalize_tables import (
-            check_passport_cell_structure, html_fragment_to_markdown)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_passport_cell_structure
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
         card = ("**Что делает функция**\n\n"
                 + html_fragment_to_markdown(self._CELL) + "\n")
         rep, ok = check_passport_cell_structure(card, self._SRC)
@@ -3203,8 +3215,7 @@ class TestK25CellConverterAndStructure:
 
     def test_section_broken_profile_flagged(self):
         # всё уехало под список — принадлежность уровней сломана
-        from app.scripts.CI.normalize_tables import (
-            check_passport_cell_structure)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_passport_cell_structure
         card = ("**Что делает функция**\n\n"
                 "Инициируется процесс.\n\n"
                 "- Создается Задача с атрибутами:\n"
@@ -3218,8 +3229,7 @@ class TestK25CellConverterAndStructure:
     def test_link_replacement_does_not_flag(self, tmp_path):
         # тест на НЕсрабатывание: замена текста ссылки (правило трёх
         # случаев) не меняет структурный профиль
-        from app.scripts.CI.normalize_tables import (
-            check_passport_cell_structure)
+        from app.scripts.CI.kitcheck.checks.card_passport import check_passport_cell_structure
         card = ("**Что делает функция**\n\n"
                 "Инициируется процесс.\n\n"
                 "Создается Задача с атрибутами "
@@ -3246,7 +3256,7 @@ class TestK24bPassportCellFormat:
             "</tr></tbody></table>\n")
 
     def _run(self, tmp_path, card_body):
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text(self._SRC, encoding="utf-8")
         card = tmp_path / "card.md"
@@ -3267,7 +3277,7 @@ class TestK24bPassportCellFormat:
     def test_td_strong_colon_variant_detected(self, tmp_path):
         # К-25c: лейбл в <td><strong>…:</strong> (макет системных
         # функций) детектится так же, как <th> — теперь инвариантом К-29
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text(
             "---\ntitle: X\n---\n\n<table><tbody><tr>"
@@ -3307,7 +3317,7 @@ class TestK24NestingDepth:
             "            - уточнение поля\n")
 
     def test_flattened_card_flagged(self):
-        from app.scripts.CI.normalize_tables import check_nesting_depth
+        from app.scripts.CI.kitcheck.checks.card_steps import check_nesting_depth
         card = ("- Выполняется процесс:\n- Содержимое файла формируется "
                 "по правилу\n- NNN - номер АС\n- уточнение поля\n")
         rep, ok = check_nesting_depth(card, self._SRC)
@@ -3315,7 +3325,7 @@ class TestK24NestingDepth:
 
     def test_structured_card_clean(self):
         # тест на НЕсрабатывание: уровни перенесены отступами
-        from app.scripts.CI.normalize_tables import check_nesting_depth
+        from app.scripts.CI.kitcheck.checks.card_steps import check_nesting_depth
         card = ("- Выполняется процесс:\n"
                 "  + Содержимое файла формируется по правилу\n"
                 "    - NNN - номер АС\n"
@@ -3325,7 +3335,7 @@ class TestK24NestingDepth:
 
     def test_shallow_source_skipped(self):
         # тест на НЕсрабатывание: источник без глубокой вложенности
-        from app.scripts.CI.normalize_tables import check_nesting_depth
+        from app.scripts.CI.kitcheck.checks.card_steps import check_nesting_depth
         src = "---\ntitle: X\n---\n\n- один\n- два\n"
         rep, ok = check_nesting_depth("- один\n- два\n", src)
         assert ok, rep
@@ -3342,14 +3352,14 @@ class TestK23StepHeadings:
             "##### Шаг №2.1. Подшаг\n\nтекст\n")
 
     def test_lost_steps_flagged(self):
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         card = "- Выгрузить в xml\n- NEW\n- FAILED\n- SEQ\n"
         rep, ok = check_step_markers(card, self._SRC)
         assert not ok and any("маркеры шагов" in r for r in rep)
 
     def test_steps_present_clean(self):
         # тест на НЕсрабатывание: шаги перенесены
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         card = ("- **Шаг №1.** Валидация запроса …\n"
                 "- **Шаг №2.** Создание задачи …\n"
                 "- **Шаг №2.1.** Подшаг …\n")
@@ -3358,7 +3368,7 @@ class TestK23StepHeadings:
 
     def test_strong_declared_steps_collected(self):
         # объявления «**Шаг №N.**» (markdown-strong) тоже собираются
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         src = ("---\ntitle: X\n---\n\n**Шаг №1.** Проверка\n\n"
                "**Шаг №2.** Изменение статуса\n")
         rep, ok = check_step_markers("текст без шагов вовсе", src)
@@ -3366,7 +3376,7 @@ class TestK23StepHeadings:
 
     def test_single_step_source_skipped(self):
         # тест на НЕсрабатывание: <2 шагов — сверять нечего
-        from app.scripts.CI.normalize_tables import check_step_markers
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_markers
         src = "---\ntitle: X\n---\n\n#### Шаг №1. Единственный\n"
         rep, ok = check_step_markers("текст без шагов", src)
         assert ok, rep
@@ -3377,7 +3387,7 @@ class TestK21OqRefsInCard:
     «open-questions» без номера — легально."""
 
     def test_oq_ref_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: RBAC-001\ntitle: 'Р'\ntype: rbac\n---\n\n"
@@ -3386,7 +3396,7 @@ class TestK21OqRefsInCard:
         assert not ok and any("открытым вопросам" in r for r in rep)
 
     def test_no_numbered_ref_clean(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3408,8 +3418,7 @@ class TestK19ExampleValuesAbsent:
             '<p>Реквизит №24 в 762-П.</p></td>\n')
 
     def test_example_tail_in_card_flagged(self):
-        from app.scripts.CI.normalize_tables import (
-            check_example_values_absent)
+        from app.scripts.CI.kitcheck.checks.card_source import check_example_values_absent
         card = ("Назначение платежа с указанием ФЗ лизингового платежа "
                 "по договору лизинга № 1122р/2л Реквизит №24 в 762-П.")
         rep, ok = check_example_values_absent(card, self._SRC)
@@ -3417,15 +3426,14 @@ class TestK19ExampleValuesAbsent:
 
     def test_clean_card_ok(self):
         # тест на НЕсрабатывание: пример вырезан целиком
-        from app.scripts.CI.normalize_tables import (
-            check_example_values_absent)
+        from app.scripts.CI.kitcheck.checks.card_source import check_example_values_absent
         card = "Назначение платежа с указанием ФЗ Реквизит №24 в 762-П."
         rep, ok = check_example_values_absent(card, self._SRC)
         assert ok, rep
 
     def test_function_type_not_guarded(self, tmp_path):
         # тест на НЕсрабатывание: у function примеры переносятся легитимно
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text(self._SRC, encoding="utf-8")
         card = tmp_path / "card.md"
@@ -3445,7 +3453,7 @@ class TestK18FlkAndExamples:
     обезличивание ПД); прочие колонки и литералы — требуются."""
 
     def test_flk_column_not_required_md(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("---\ntitle: X\n---\n\n"
                "| Атрибут | Тип | ФЛК |\n|---|---|---|\n"
                "| Номер | Число | не более 6 знаков |\n"
@@ -3456,7 +3464,7 @@ class TestK18FlkAndExamples:
 
     def test_other_columns_still_required(self):
         # тест на НЕсрабатывание фильтра: потеря типа — брак по-прежнему
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("---\ntitle: X\n---\n\n"
                "| Атрибут | Тип | ФЛК |\n|---|---|---|\n"
                "| Номер | Число | не более 6 знаков |\n"
@@ -3466,7 +3474,7 @@ class TestK18FlkAndExamples:
         assert not ok and any("отсутствуют" in r for r in rep)
 
     def test_literal_inside_example_not_required(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: X\n---\n\n'
                '<td><p>Запрос</p><p><strong>Пример:</strong> '
                '{"userFio":"Выпискин О. О."}</p></td>\n'
@@ -3478,7 +3486,7 @@ class TestK18FlkAndExamples:
     def test_literal_in_next_cell_after_example_required(self):
         # тест на НЕсрабатывание: граница ячейки после «Пример:» —
         # следующий литерал снова требуется
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: X\n---\n\n'
                '<td><strong>Пример:</strong> просто текст примера</td>\n'
                '<td>статус "Отклонено банком" обязателен</td>\n')
@@ -3487,7 +3495,7 @@ class TestK18FlkAndExamples:
         assert not ok and any("отсутствуют" in r for r in rep)
 
     def test_flk_cell_quotes_not_required_html(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: X\n---\n\n'
                '<table><tbody>'
                '<tr><th>Атрибут</th><th>ФЛК</th></tr>'
@@ -3504,7 +3512,7 @@ class TestK17OqPageRefs:
     предупреждение (носители page_id — frontmatter и матрица)."""
 
     def test_page_id_and_bare_number_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_oq_page_refs
+        from app.scripts.CI.kitcheck.checks.card_clean import check_oq_page_refs
         p = tmp_path / "open-questions.md"
         p.write_text(
             "## OQ-001\n\n**Вопрос:** страница confluence_page_id "
@@ -3517,7 +3525,7 @@ class TestK17OqPageRefs:
 
     def test_task_ids_dates_titles_clean(self, tmp_path):
         # тест на НЕсрабатывание: GBO-номера, даты, title + файл выгрузки
-        from app.scripts.CI.normalize_tables import check_oq_page_refs
+        from app.scripts.CI.kitcheck.checks.card_clean import check_oq_page_refs
         p = tmp_path / "open-questions.md"
         p.write_text(
             "## OQ-002\n\n**Вопрос:** задача GBO-79044 от 2026-08-17; "
@@ -3533,7 +3541,7 @@ class TestK16BlankLineBreaksTable:
     плоско); пустая строка между СОСЕДНИМИ таблицами легальна."""
 
     def test_blank_after_separator_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
@@ -3543,7 +3551,7 @@ class TestK16BlankLineBreaksTable:
         assert not ok and any("разрывает таблицу" in r for r in rep)
 
     def test_blank_between_data_rows_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
@@ -3554,7 +3562,7 @@ class TestK16BlankLineBreaksTable:
 
     def test_adjacent_tables_legal(self, tmp_path):
         # тест на НЕсрабатывание: две таблицы подряд через пустую строку
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: ENT-002\ntitle: 'С'\ntype: entity\n---\n\n"
@@ -3576,7 +3584,7 @@ class TestCleanDocumentGuard:
         return docs
 
     def _check(self, docs, body):
-        from app.scripts.CI.normalize_tables import check_clean_document
+        from app.scripts.CI.kitcheck.checks.card_clean import check_clean_document
         p = docs / "srs" / "card.md"
         p.write_text("---\nid: X-01\ntitle: 'К'\ntype: function\n---\n\n"
                      + body, encoding="utf-8")
@@ -3640,7 +3648,7 @@ class TestK14AnchorQuotesNotLiterals:
     навигация, не литерал; тот же текст вне ссылки — литерал."""
 
     def test_quote_inside_anchor_not_required(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: X\n---\n\n'
                'см. [Дополнительные действия]'
                '(#id-[РРКО_ИПИ]ЭФКлиента"Журналдокументов"-Действия);\n'
@@ -3651,7 +3659,7 @@ class TestK14AnchorQuotesNotLiterals:
 
     def test_same_quote_outside_link_required(self):
         # тест на НЕсрабатывание фильтра: литерал вне ссылки обязателен
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = ('---\ntitle: X\n---\n\n'
                'кнопка "Журнал документов" отображается всегда.\n')
         card = "карточка без текста кнопки\n"
@@ -3665,7 +3673,7 @@ class TestK13HtmlCommentGuard:
     дозаход: обход гейта через <!-- selfcheck-coverage: … -->)."""
 
     def test_comment_in_card_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3676,7 +3684,7 @@ class TestK13HtmlCommentGuard:
 
     def test_no_comment_clean(self, tmp_path):
         # тест на НЕсрабатывание
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3687,7 +3695,7 @@ class TestK13HtmlCommentGuard:
     def test_value_only_in_comment_is_loss(self, tmp_path):
         # интеграция: значение источника, спрятанное в коммент, потерей
         # и остаётся — сверка значений комменты не видит
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text(
             "---\ntitle: 'Э'\nconfluence_page_id: '111'\n---\n\n"
@@ -3709,7 +3717,7 @@ class TestK12SurrogateParamCode:
     волны B: без технических имён источника код ПУСТОЙ)."""
 
     def test_numeric_codes_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-03\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3722,7 +3730,7 @@ class TestK12SurrogateParamCode:
 
     def test_paths_and_empty_clean(self, tmp_path):
         # тест на НЕсрабатывание: пути и пустые коды легальны
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-03\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3737,7 +3745,7 @@ class TestK12SurrogateParamCode:
 
     def test_registry_number_column_untouched(self, tmp_path):
         # тест на НЕсрабатывание: «№» реестра полей — не «Код параметра»
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: SCR-CL-02.1\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3754,7 +3762,7 @@ class TestStruckMarkerGuard:
     чистовике ему не место (инцидент scr-cl-02: инверсия смысла шага)."""
 
     def test_marker_in_card_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3764,7 +3772,7 @@ class TestStruckMarkerGuard:
 
     def test_tilde_strike_legal(self, tmp_path):
         # тест на НЕсрабатывание: перенесённая семантика (~~…~~) — не брак
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: SCR-CL-02\ntitle: 'Э'\ntype: screen-form\n---\n\n"
@@ -3779,7 +3787,7 @@ class TestK10DuplicateHeaders:
     нормализатора как формат, брак; протяжки в данных легальны."""
 
     def test_duplicate_headers_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-20\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3791,7 +3799,7 @@ class TestK10DuplicateHeaders:
 
     def test_data_row_spans_legal(self, tmp_path):
         # тест на НЕсрабатывание: протяжка в данных — не брак
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text(
             "---\nid: FUN-CL-20\ntitle: 'Ф'\ntype: function\n---\n\n"
@@ -3803,7 +3811,7 @@ class TestK10DuplicateHeaders:
 
     def test_readme_registry_not_checked(self, tmp_path):
         # README-реестры — вне колонных проверок (К-4), дубли не флагуются
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "README.md"
         p.write_text("---\ntitle: 'Р'\n---\n\n"
                      "| Ա | X | X |\n|---|---|---|\n| 1 | а | б |\n",
@@ -3819,7 +3827,7 @@ class TestFencedBlocksOutOfTornCellGuard:
     разбор ✗ 2026-08-21)."""
 
     def _check(self, text, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "card.md"
         p.write_text(text, encoding="utf-8")
         return check_file(p)
@@ -3861,7 +3869,7 @@ class TestEscapedBracketsInLinks:
     «[КК_ВК\] Банк: …](url)» должна терять URL при нормализации."""
 
     def test_escaped_bracket_link_stripped(self):
-        from app.scripts.CI.normalize_tables import _norm_cell
+        from app.scripts.CI.kitcheck.html import _norm_cell
         v = ("[КК_ВК\] Банк: Функция изменения статуса]"
              "(../../[КК_ВК]-Функции/файл.md)")
         n = _norm_cell(v)
@@ -3870,7 +3878,7 @@ class TestEscapedBracketsInLinks:
 
     def test_wellformed_escaped_label_still_stripped(self):
         # НЕсрабатывание: корректная ссылка с \[тегом\] в ярлыке
-        from app.scripts.CI.normalize_tables import _norm_cell
+        from app.scripts.CI.kitcheck.html import _norm_cell
         v = ("[\[КК_ВК\] Банк: Функция]"
              "(../../[КК_ВК]-Функции/файл.md)")
         n = _norm_cell(v)
@@ -3904,7 +3912,7 @@ class TestStructRowsAndHomoglyphPardon:
         assert report["обязат"]["valid_pct"] < 100
 
     def test_homoglyph_from_source_literal_pardoned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         src = 'Кнопка "ОK" закрывает сообщение.'  # кириллическая О
         card = tmp_path / "c.md"
         card.write_text('# К\n\nКнопка "ОK" — закрыть.\n',
@@ -3914,7 +3922,7 @@ class TestStructRowsAndHomoglyphPardon:
         assert any("помилованы" in ln for ln in rep)
 
     def test_homoglyph_not_in_source_still_defect(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text('# К\n\nСтатус "Aктивен" установлен.\n',
                         encoding="utf-8")  # латинская A
@@ -3926,7 +3934,7 @@ class TestStructRowsAndHomoglyphPardon:
         # z03 ISS-03 (scr-cl-01.4): источник группы доезжает до
         # НЕглавной карточки каналом помилований — гомоглиф «ОK»
         # милуется, а сверочные блоки (литералы, title) НЕ включаются
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text('# Другой title\n\nКнопка "ОK" закрывает. '
                        'Литерал "Иной".\n', encoding="utf-8")
@@ -3942,7 +3950,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_flattened_attr_logic_defect(self, tmp_path):
         # z04 ISS-03 (FLD-29): ≥2 «если» в однострочном значении
         # атрибута — вложенное ветвление источника выпрямлено
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### FLD-1. «Поле»\n\n"
@@ -3958,7 +3966,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_flattened_attr_not_fired_on_list_or_single(self, tmp_path):
         # НЕсрабатывание: одно «если» одной строкой; значение,
         # разложенное подсписком; «если» в кавычках и скобках
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### FLD-1. «Поле»\n\n"
@@ -3979,7 +3987,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_separator_column_mismatch_defect(self, tmp_path):
         # находка владельца 2026-08-29 (реестр контролей после d10):
         # сепаратор с числом колонок ≠ заголовку — GFM таблицу не рендерит
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text("# К\n\n| A | B |\n|---|---|---|\n| 1 | 2 |\n",
                         encoding="utf-8")
@@ -3989,7 +3997,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_separator_match_clean(self, tmp_path):
         # НЕсрабатывание: колонки совпадают
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text("# К\n\n| A | B |\n|---|---|\n| 1 | 2 |\n",
                         encoding="utf-8")
@@ -4000,7 +4008,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_glued_steps_in_button_action_defect(self, tmp_path):
         # замечание владельца (дозаход z01-z04): «При нажатии» со
         # склеенными шагами одной строкой
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### B-1. «Удалить все анкеты»\n\n"
@@ -4013,7 +4021,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_steps_on_own_lines_not_fired(self, tmp_path):
         # НЕсрабатывание: шаги разложены по строкам списка
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### B-1. «Кнопка»\n\n"
@@ -4026,7 +4034,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_long_flat_value_defect(self, tmp_path):
         # замечание владельца: «Формат» FLD-13 — простыня одной строкой
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### FLD-13. «Офис получения»\n\n"
@@ -4039,7 +4047,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_links_dont_inflate_length(self, tmp_path):
         # НЕсрабатывание: длина считается по видимому тексту — URL
         # markdown-ссылок строку не раздувают
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         link = "[EXT-004](../../../../data-model/dictionaries.md#реестр)"
         card.write_text(
@@ -4053,7 +4061,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_flattened_list_item_defect(self, tmp_path):
         # замечание владельца: разложен только первый блок — элемент
         # списка с ветвлением (в т.ч. в ДЛИННОЙ скобке) остался строкой
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### FLD-29. «Поле»\n\n"
@@ -4069,7 +4077,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_lazy_continuation_paragraph_defect(self, tmp_path):
         # закон обходов (z05, B-1 scr-bnk-02): пустой ярлык + абзац-
         # продолжение с ≥2 «если» — та же простыня вне маркера списка
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### B-1. Кнопка \"Применить\"\n\n"
@@ -4085,7 +4093,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_norm_cell_ignores_list_markers(self):
         # разложение ячейки списком не рвёт нормализованную сверку —
         # маркеры «- » вычищаются (снят конфликт сторож↔дословность)
-        from app.scripts.CI.normalize_tables import _norm_cell
+        from app.scripts.CI.kitcheck.html import _norm_cell
         src_cell = "После нажатия ЭФ закрывается. **Если** статус, **то** форма"
         card = ("- **При нажатии:**\n"
                 "  - После нажатия ЭФ закрывается.\n"
@@ -4095,7 +4103,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_short_paren_insert_in_item_not_fired(self, tmp_path):
         # НЕсрабатывание: короткая скобочная оговорка «(если было
         # заполнено)» — не второе условие
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### EV-3. «Переключение»\n\n"
@@ -4108,7 +4116,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_long_body_line_defect(self, tmp_path):
         # решение 2026-08-29 (README SCR-CL-01 «Части»): перечень одной
         # строкой вне таблицы длиннее 500 видимых символов
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text("# К\n\nОбщие для экрана: "
                         + "; ".join(f"элемент номер {i}" for i in range(40))
@@ -4120,7 +4128,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_long_table_row_and_quote_not_flagged(self, tmp_path):
         # НЕсрабатывание: строка таблицы и длинная дословная цитата
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         long_quote = '"' + "текст сообщения пользователю " * 25 + '"'
         card = tmp_path / "c.md"
         card.write_text(
@@ -4135,7 +4143,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_content_readme_of_ef_group_warns(self, tmp_path):
         # решение 2026-08-30: README группы ЭФ с предметными секциями —
         # старая структура, содержимое уровня страницы уходит в frame
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "README.md"
         card.write_text(
             "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Выход»\n\n"
@@ -4147,7 +4155,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_nav_readme_and_frame_card_not_warned(self, tmp_path):
         # НЕсрабатывание: README без frontmatter (навигация) и frame-
         # карточка с секциями — целевая структура
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         nav = tmp_path / "README.md"
         nav.write_text("# Форма\n\nЧасти: [SCR-X-01.0](x.md)\n",
                        encoding="utf-8")
@@ -4162,7 +4170,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_pseudo_screen_form_warns(self, tmp_path):
         # z06 (SCR-CL-05): все поля «не отображается» — операционная
         # функция в шаблоне формы, кандидат на смену типа
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Алгоритм»\n\n"
@@ -4175,7 +4183,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_real_screen_form_not_warned(self, tmp_path):
         # НЕсрабатывание: есть отображаемые поля
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: screen-form\n---\n\n# Ф\n\n### FLD-1. «Поле»\n\n"
@@ -4187,7 +4195,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_screen_form_without_figma_warns(self, tmp_path):
         # решение 2026-08-29: URL макетов Figma обязаны переноситься
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: screen-form\n---\n\n# Ф\n\n### Макеты ЭФ\n\n"
@@ -4199,7 +4207,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_screen_form_with_figma_silent(self, tmp_path):
         # НЕсрабатывание: ссылка на макет есть
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: screen-form\n---\n\n# Ф\n\n### Макеты ЭФ\n\n"
@@ -4212,7 +4220,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_bare_html_tagish_placeholder_defect(self, tmp_path):
         # z04 ISS-03 (B-5): <S>/<XS> — HTML-теги в рендере
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n- **Видимость:** **Если** Метод определения "
@@ -4226,7 +4234,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_tagish_pardons_br_backticks_cyrillic(self, tmp_path):
         # НЕсрабатывание: <br> легален, `<S>` в бэктиках, кириллический
         # <Атрибут> тегом не парсится
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n- **Логика:**<br>значение `<S>` = true, атрибут "
@@ -4238,7 +4246,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_condition_notation_warning(self, tmp_path):
         # голое «если» в секции FLD — предупреждение, вердикт не валит
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n### FLD-1. «Поле»\n\n"
@@ -4252,7 +4260,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_condition_notation_not_fired(self, tmp_path):
         # НЕсрабатывание: жирная нотация; «если» в кавычках/скобках/
         # обязательности; «если» вне зон FLD/EV/B/MSG
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\nТекст: если применимо — вне зоны.\n\n"
@@ -4269,7 +4277,7 @@ class TestStructRowsAndHomoglyphPardon:
         # z04 ISS-03: кавычки href=«…» сбивали рамки _QUOTED_RE — маска
         # "+7 (ХXX) XXX-XX-XX" после атрибутного тега не распознавалась
         # литералом вовсе (терялись и сверка, и К-30-помилование)
-        from app.scripts.CI.normalize_tables import quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import quoted_literals
         src = ('<p>Алфавит: <a href="../Стандартные-наборы.md">Цифры</a>'
                '</p><p>Отображение по маске: "+7 (ХXX) XXX-XX-XX", '
                'где X - цифра</p>')
@@ -4281,7 +4289,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_quote_parity_keeps_example_boundaries(self):
         # НЕсрабатывание К-18: </p> (тег без кавычек) сохраняется как
         # граница — литерал ПОСЛЕ закрытого примера по-прежнему требуется
-        from app.scripts.CI.normalize_tables import quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import quoted_literals
         src = ('<p>Пример: значение примера</p>'
                '<p>Кнопка "Продолжить" доступна.</p>')
         assert "Продолжить" in quoted_literals(src)
@@ -4289,7 +4297,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_mixed_img_cell_skipped_with_warning(self, tmp_path):
         # z04 ISS-03 («Выход с ЭФ» view): ячейка с <img> внутри текста —
         # дословная сверка пропущена, сигнал приёмке вместо ✗
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| № | Поле | Логика |\n|---|---|---|\n"
                '| 1 | Выход | **Если** экран узкий, **то** иконка '
                '<img src="img/a.png" width="20" alt="x.png"> **Иначе** '
@@ -4305,7 +4313,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_textonly_cell_still_guarded(self, tmp_path):
         # НЕсрабатывание послабления: ячейка БЕЗ img сверяется как раньше
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         src = ("| № | Поле | Логика |\n|---|---|---|\n"
                "| 1 | Выход | Дословный текст ячейки без картинок |\n"
                "| 2 | Заголовок | Наименование экранной формы заявки |\n")
@@ -4316,7 +4324,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_literal_relocated_to_sibling_is_signal_not_defect(self):
         # z04 ISS-03: точка применения «Подписать и отправить» живёт в
         # README реестра, не в cards-файле группы — i-сигнал, не ✗
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         src = 'При нажатии кнопки "Подписать и отправить" на ЭФ.'
         rep, ok = check_quoted_literals(
             "# Карточка\n\nбез кнопки\n", src,
@@ -4327,7 +4335,7 @@ class TestStructRowsAndHomoglyphPardon:
 
     def test_literal_missing_everywhere_still_defect(self):
         # НЕсрабатывание фолбэка: литерала нет и у соседей — ✗ как раньше
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         rep, ok = check_quoted_literals(
             "# К\n\nтекст\n", 'Кнопка "Продолжить" доступна.',
             sibling_text="соседи без кнопки")
@@ -4337,7 +4345,7 @@ class TestStructRowsAndHomoglyphPardon:
     def test_run_check_pardon_does_not_mute_alien_homoglyph(self, tmp_path):
         # НЕсрабатывание: гомоглиф НЕ из литералов источника группы —
         # брак части остаётся
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         src = tmp_path / "src.md"
         src.write_text('# С\n\nКнопка "ОК" закрывает.\n',
                        encoding="utf-8")  # чистая кириллица
@@ -4354,7 +4362,7 @@ class TestLayoutCellExcludedFromHeavyPairs:
     сверку тяжёлых пар — её ссылки живут в несверяемом README."""
 
     def test_layout_cell_skipped(self):
-        from app.scripts.CI.normalize_tables import heavy_source_cells
+        from app.scripts.CI.kitcheck.checks.card_passport import heavy_source_cells
         src = ('<table><tr><td>Макеты ЭФ</td><td>'
                '<p>Моментальная карта - <a href="https://www.figma.com/'
                'design/a">макеты</a></p><p>Размер XL - <a href='
@@ -4365,7 +4373,7 @@ class TestLayoutCellExcludedFromHeavyPairs:
 
     def test_ordinary_heavy_cell_still_collected(self):
         # НЕсрабатывание послабления: обычная тяжёлая пара собирается
-        from app.scripts.CI.normalize_tables import heavy_source_cells
+        from app.scripts.CI.kitcheck.checks.card_passport import heavy_source_cells
         src = ('<table><tr><td>Что делает функция</td><td>'
                '<p>Первый абзац текста подлиннее про поведение.</p>'
                '<ul><li>шаг один</li><li>шаг два</li></ul>'
@@ -4379,7 +4387,7 @@ class TestBlockquoteAndIndentedCode:
     код-блоки конвертера в чистовике — «заметки» и код в рендере."""
 
     def test_blockquote_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n**Шаг 1.**\n\n> **Если** статус равен:\n\n"
@@ -4389,7 +4397,7 @@ class TestBlockquoteAndIndentedCode:
         assert any("blockquote" in ln for ln in rep)
 
     def test_indented_code_with_text_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\nАбзац перед блоком.\n\n"
@@ -4402,7 +4410,7 @@ class TestBlockquoteAndIndentedCode:
     def test_nested_list_after_parent_li_not_flagged(self, tmp_path):
         # НЕсрабатывание: вложенный список после родительского li —
         # легальная вложенность, не код-блок
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\n- **Если** статус равен:\n\n"
@@ -4416,7 +4424,7 @@ class TestBlockquoteAndIndentedCode:
     def test_mermaid_fenced_block_not_flagged(self, tmp_path):
         # НЕсрабатывание: отступные строки ВНУТРИ fenced-блока (mermaid
         # статусной модели: «[*] --> NONE : создание через ЭФ») — код
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "# К\n\nДиаграмма.\n\n```mermaid\nstateDiagram-v2\n"
@@ -4440,7 +4448,7 @@ class TestControlsEntitySlicing:
         return p
 
     def test_no_entity_warned_once(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(tmp_path, "cards-request-main-1.md", "",
                        "### CTL-001. Проверка\n\n"
                        "- **Проверяемый атрибут:** [ENT-016](x.md).«А».\n")
@@ -4449,7 +4457,7 @@ class TestControlsEntitySlicing:
         assert sum(1 for ln in rep if "без entity" in ln) == 1
 
     def test_alien_card_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(
             tmp_path, "cards-ent-016-request.md", "entity: ENT-016\n",
             "### CTL-001. Своя\n\n"
@@ -4463,7 +4471,7 @@ class TestControlsEntitySlicing:
 
     def test_homogeneous_file_silent(self, tmp_path):
         # НЕсрабатывание: все карточки своей сущности
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(
             tmp_path, "cards-ent-016-request.md", "entity: ENT-016\n",
             "### CTL-001. Своя\n\n"
@@ -4478,7 +4486,7 @@ class TestControlsEntitySlicing:
              "лимитами карты\" в режиме создания/редактирования'\n")
 
     def test_named_form_entity_recognized(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(
             tmp_path, "cards-ef-request.md", self._FORM,
             "### CTL-058. Поле\n\n"
@@ -4491,7 +4499,7 @@ class TestControlsEntitySlicing:
     def test_named_entity_skips_alien_check(self, tmp_path):
         # НЕсрабатывание: для имени формы сравнивать не с чем —
         # «Проверяемый атрибут» с ID не считается чужим
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(
             tmp_path, "cards-ef-request.md", self._FORM,
             "### CTL-001. Поле\n\n"
@@ -4501,7 +4509,7 @@ class TestControlsEntitySlicing:
 
     def test_empty_entity_value_warned(self, tmp_path):
         # НЕсрабатывание расширения: ключ есть, значение пустое — «без entity»
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(tmp_path, "cards-ef-request.md", "entity: ''\n",
                        "### CTL-001. Поле\n\n- **Проверяемое поле:** п.\n")
         rep, _ = check_file(p)
@@ -4510,7 +4518,7 @@ class TestControlsEntitySlicing:
     def test_named_entity_with_existing_form_card_warns(self, tmp_path):
         # карточка формы с таким title появилась — напомнить заменить на ID;
         # НЕсрабатывание — пока карточки нет, замечания нет
-        from app.scripts.CI.normalize_tables import run_check
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
         docs = tmp_path / "docs"
         (docs / "control").mkdir(parents=True)
         p = self._card(
@@ -4524,7 +4532,8 @@ class TestControlsEntitySlicing:
             "управление лимитами карты\" в режиме создания/редактирования'\n"
             "type: screen-form\n---\n", encoding="utf-8")
         from app.scripts.CI import normalize_tables as nt
-        nt._TARGET_INDEX_CACHE.clear()
+        from app.scripts.CI.kitcheck.checks import card_clean
+        card_clean._TARGET_INDEX_CACHE.clear()
         rep, ok = run_check([p], None, docs_root=docs)
         assert ok
         assert any("заменить имя на её ID" in ln and "scr-cl-07" in ln
@@ -4536,7 +4545,7 @@ class TestFabricatedAttributes:
     источнике без таблиц — кандидат на фабрикацию «по аналогии»."""
 
     def test_attrs_without_source_table_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: data-model\n---\n\n# С\n\n"
@@ -4550,7 +4559,7 @@ class TestFabricatedAttributes:
 
     def test_attrs_backed_by_source_table_silent(self, tmp_path):
         # НЕсрабатывание: у источника есть таблица
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         card = tmp_path / "c.md"
         card.write_text(
             "---\ntype: data-model\n---\n\n# С\n\n"
@@ -4572,15 +4581,14 @@ class TestSTS03Calibrations:
     # --- ярлык структурного ряда без кавычек («Блок подтверждение») ---
 
     def test_bare_block_label_pardoned(self):
-        from app.scripts.CI.normalize_tables import (
-            _STRUCT_LABEL_BARE_RE, _STRUCT_LABEL_RE)
+        from app.scripts.CI.kitcheck.columns import _STRUCT_LABEL_BARE_RE, _STRUCT_LABEL_RE
         assert _STRUCT_LABEL_BARE_RE.match("Блок подтверждение")
         assert _STRUCT_LABEL_BARE_RE.match("Вкладка Карты")
         assert _STRUCT_LABEL_RE.match('Блок "Информация"')  # старый путь жив
 
     def test_bare_label_limiter_not_fired(self):
         # НЕсрабатывание: фраза-продолжение и обычные значения — не ярлык
-        from app.scripts.CI.normalize_tables import _STRUCT_LABEL_BARE_RE
+        from app.scripts.CI.kitcheck.columns import _STRUCT_LABEL_BARE_RE
         assert not _STRUCT_LABEL_BARE_RE.match(
             "Блок отображается, если заявка подписана")
         assert not _STRUCT_LABEL_BARE_RE.match("Да")
@@ -4589,18 +4597,18 @@ class TestSTS03Calibrations:
     # --- размерный маркер <S> (глотался как зачёркивание) ---
 
     def test_size_marker_S_escaped(self):
-        from app.scripts.CI.normalize_tables import protect_token_tags
+        from app.scripts.CI.kitcheck.html import protect_token_tags
         assert protect_token_tags("до <S> после") == "до &lt;S&gt; после"
         assert "&lt;XS&gt;" in protect_token_tags("<XS>")  # как было
 
     def test_lowercase_strike_kept(self):
         # НЕсрабатывание: строчный <s> — настоящее HTML-зачёркивание
-        from app.scripts.CI.normalize_tables import protect_token_tags
+        from app.scripts.CI.kitcheck.html import protect_token_tags
         assert protect_token_tags("<s>снято</s>") == "<s>снято</s>"
 
     def test_size_marker_tail_not_swallowed(self):
         # ячейка с <S>: хвост после маркера доезжает до сетки
-        from app.scripts.CI.normalize_tables import find_top_tables
+        from app.scripts.CI.kitcheck.html import find_top_tables
         html = ("<table><tbody><tr><td>Заголовок</td></tr>"
                 "<tr><td>текст <S> хвост</td></tr></tbody></table>")
         cell = find_top_tables(html)[0].find_all("td")[1] \
@@ -4610,20 +4618,20 @@ class TestSTS03Calibrations:
     # --- скобочный хвост упоминаний ---
 
     def test_mention_paren_tail_cut(self):
-        from app.scripts.CI.normalize_tables import _mention_core
+        from app.scripts.CI.kitcheck.checks.card_clean import _mention_core
         assert (_mention_core("Ролевая модель клиента) и статусом заявки")
                 == "Ролевая модель клиента")
 
     def test_mention_paired_paren_kept(self):
         # НЕсрабатывание: скобка ВНУТРИ имени парна и не режет
-        from app.scripts.CI.normalize_tables import _mention_core
+        from app.scripts.CI.kitcheck.checks.card_clean import _mention_core
         assert (_mention_core(
             "Изменение статуса карты (Блокировка/Закрытие) хвост")
             == "Изменение статуса карты (Блокировка/Закрытие) хвост")
 
     def test_mention_paren_debt_found(self, tmp_path):
         # долг в матрице находится иглой без скобочного хвоста
-        from app.scripts.CI.normalize_tables import check_target_mentions
+        from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = tmp_path / "docs"
         (docs / "srs").mkdir(parents=True)
         (docs / "traceability-matrix.md").write_text(
@@ -4674,7 +4682,7 @@ class TestConsumerPlaceholderPageId:
         return p
 
     def test_placeholder_token_not_flagged(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(tmp_path, "## 7. Потребители\n\n| Сервис | Локальный ID | Карточка вызова |\n|---|---|---|\n"
                        "| business-cards | page_id:2184429392 | Клиент: Функция подписи — до регистрации |\n")
         rep, _ = check_file(p)
@@ -4683,7 +4691,7 @@ class TestConsumerPlaceholderPageId:
     def test_other_page_references_still_flagged(self, tmp_path):
         # тест на НЕсрабатывание исключения: обычная отсылка «page 2169849859»
         # и слово page_id без ключа-двоеточия по-прежнему брак
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(tmp_path, "## 1. Описание\n\nСтатика — по таблице источника page 2169849859 (см. page_id во frontmatter).\n")
         rep, _ = check_file(p)
         assert any("отсылки к страницам источника в теле карточки ×2" in r for r in rep), rep
@@ -4701,7 +4709,7 @@ class TestVisibleLengthWording:
         return p
 
     def test_attribute_message_names_visible_length(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = self._card(tmp_path, "### B-1. Кнопка\n\n- **При нажатии:** "
                        + "слово " * 60 + "\n")
         rep, _ = check_file(p)
@@ -4711,7 +4719,7 @@ class TestVisibleLengthWording:
     def test_long_link_urls_do_not_trigger(self, tmp_path):
         # тест на НЕсрабатывание: три ссылки с длинными адресами, видимого
         # текста мало — замечаний о длине нет
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         url = "../../../data-model/ent-019-limit-management-request-with-very-long-name.md"
         p = self._card(tmp_path, "### FLD-1. Поле\n\n- **Логика установки значения:** = "
                        + " + ".join(f"[ENT-019]({url}).«Атрибут {i}»" for i in range(3)) + "\n")
@@ -4768,7 +4776,7 @@ class TestBareTypeNamePardonedBySource:
 
     def test_source_name_literals_skip_db_columns(self):
         # колонка физимён БД в литералы названий не попадает
-        from app.scripts.CI.normalize_tables import source_role_literals
+        from app.scripts.CI.kitcheck.checks.card_source import source_role_literals
         lits = source_role_literals(
             "<table><tr><th>Название поля</th><th>[DEV] Название поля в таблице БД</th></tr>"
             "<tr><td>Дата</td><td>op_date</td></tr></table>")
@@ -4787,7 +4795,7 @@ class TestHomoglyphFoldInSourceComparison:
            "| 5 | Если статус == СLOSE то закрыть |\n| 6 | Иначе продолжить |\n")
 
     def test_corrected_homoglyph_counts_as_transferred(self):
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         card = ("| N блока | Значение блоков строки |\n|---|---|\n"
                 "| 5 | Если статус == CLOSE то закрыть |\n| 6 | Иначе продолжить |\n")
         rep, ok = check_source_tables(card, self.SRC)
@@ -4797,7 +4805,7 @@ class TestHomoglyphFoldInSourceComparison:
 
     def test_real_loss_still_reported(self):
         # НЕсрабатывание свёртки: строки 6 в карточке нет — потеря остаётся
-        from app.scripts.CI.normalize_tables import check_source_tables
+        from app.scripts.CI.kitcheck.checks.card_source import check_source_tables
         card = ("| N блока | Значение блоков строки |\n|---|---|\n"
                 "| 5 | Если статус == CLOSE то закрыть |\n")
         rep, ok = check_source_tables(card, self.SRC)
@@ -4805,7 +4813,7 @@ class TestHomoglyphFoldInSourceComparison:
         assert any("Иначе продолжить" in r for r in rep)
 
     def test_quoted_literal_with_homoglyph_matches(self):
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         rep, ok = check_quoted_literals(
             "Статус «CLOSE» закрывает заявку.\n",
             "<p>Статус «СLOSE» закрывает заявку.</p>")
@@ -4814,7 +4822,7 @@ class TestHomoglyphFoldInSourceComparison:
     def test_mixed_script_in_card_still_defect(self, tmp_path):
         # К-31 не ослаблен: латиница внутри кириллического слова карточки —
         # брак, когда литерала с ним в источнике нет
-        from app.scripts.CI.normalize_tables import check_file
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
         p = tmp_path / "f.md"
         p.write_text("---\nid: FUN-SYS-03\ntitle: 'Ф'\ntype: function\n---\n\n"
                      "Проверка cтатуса заявки.\n", encoding="utf-8")  # c латинская
@@ -4834,7 +4842,7 @@ class TestHttpWhitelistContourGroups:
         return p
 
     def test_contour_links_not_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_clean_document
+        from app.scripts.CI.kitcheck.checks.card_clean import check_clean_document
         p = self._card(tmp_path,
                        "[EXTINT-T-001](https://gitlab.gboteam.ru/EAN/docs-external-contracts/-/blob/HEAD/tessa/extint-t-001.md)\n"
                        "[INTC-004](https://gitlab.gboteam.ru/EAS/src-x/-/blob/HEAD/docs/srs/internal-contract/intc-004.md)\n"
@@ -4843,7 +4851,7 @@ class TestHttpWhitelistContourGroups:
         assert not any("вне белого списка" in r for r in rep), rep
 
     def test_foreign_host_still_warned(self, tmp_path):
-        from app.scripts.CI.normalize_tables import check_clean_document
+        from app.scripts.CI.kitcheck.checks.card_clean import check_clean_document
         p = self._card(tmp_path, "[реестр](https://passport.example.ru/registration)\n")
         rep, _ = check_clean_document(p, None)
         assert any("вне белого списка" in r for r in rep), rep
@@ -5006,7 +5014,7 @@ class TestCompareFoldQuotesAndLinkId:
     def test_quoted_literal_guard_unchanged(self):
         # снятие кавычек — только внутри сверки значений: сторож кавычечных литералов на тех же
         # входах ведёт себя как прежде (литерал без слова в карточке — потеря)
-        from app.scripts.CI.normalize_tables import check_quoted_literals
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
         source = "Кнопка «Сохранить черновик» внизу формы.\n"
         rep, ok = check_quoted_literals("Кнопка внизу формы.", source)
         assert not ok

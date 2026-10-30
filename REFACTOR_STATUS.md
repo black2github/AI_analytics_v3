@@ -53,6 +53,42 @@ PYTHONPATH="$PWD;<analyzer>/.venv/Lib/site-packages" PYTHONIOENCODING=utf-8 /c/P
 | 4 | Проверки файла (check_file) → модули | готов 17.10: реестр FILE_CHECKS (29), check_file — пролог и прогон реестра; эталон отличий 0, исходы тестов прежние; 4б: run_check → реестр SOURCE_CHECKS (8), тесты ядра ×8 |
 | 5 | Кэш разобранных данных | готов 17.10: memoize для find_top_tables, behavior_steps_from_source, _norm_cell; selfcheck КК 55,7 → 40,1 с, стенд 28,0 → 17,6 с; эталон отличий 0, исходы тестов прежние |
 | 6 | Копия в канон | готов 17.10: ветка канона `meta/tool-refactor` от `master` `8c4e073`, коммит `125d6ad`; эталон из копий канона отличий 0 (раздел ниже); push, MR и приёмка стенда — владельцем |
+| 7 | Проверки карточки из `normalize_tables.py` → `kitcheck/checks/card_*.py` (Д-50, 30.10) | готов 30.10: канон `3f5208f` → merge `c37eb63`; раздел «Разделение normalize_tables.py» ниже |
+
+## Разделение normalize_tables.py (Д-50, 2026-10-30)
+
+Решение и сценарии жизненного цикла — реестр решений, Д-50; план с развилками — app/data «План —
+разделение normalize_tables.py, оценка, срезы и развилки (2026-10-30)».
+
+- **Раскладка.** Граф зависимостей верхнего уровня по AST (283 имени). Нормализатор остаётся в
+  `normalize_tables.py`: профиль, сборка, рендер, `normalize_file`, `run_branch_form`, CLI — 726
+  строк вместо 6114. Механизмы, общие с проверками, ушли в ядро: `kitcheck/html.py` (16 имён),
+  `columns.py` (22), `branch_form.py` (11). Проверки карточки — `kitcheck/checks/card_*.py`, 10
+  модулей, 218 имён: `card_run` (реестры, `run_check`, `check_file`, `_rc_*`), `card_source`,
+  `card_steps`, `card_passport`, `card_notification`, `card_branch_form`, `card_controls`,
+  `card_clean`, `card_form`, `card_common`. Слои без циклов: html → columns/branch_form →
+  card_common → card_<тема> → card_run.
+- **Перенос скриптом, дословно.** Каждый узел верхнего уровня переносится с комментариями над ним.
+  Проверка сохранности: все 283 узла найдены дословно ровно в одном файле. Единственная правка
+  текста — `main`: `--check` импортирует `run_check` из `card_run`. Неопределённых имён нет
+  (symtable).
+- **Импорты внутри пакета — только относительные.** Шаблон соседних модулей «`from kitcheck…`, иначе
+  относительный» вместе с `sys.path.insert` загружал модуль второй копией
+  (`kitcheck.checks.card_clean` и `app.scripts.CI.kitcheck.checks.card_clean`). Тест FB-11 чистил
+  кэш `_TARGET_INDEX_CACHE` у одной копии, а `run_check` читал другую. Относительный импорт держит
+  одну копию при любом способе загрузки пакета.
+- **Переходный реэкспорт.** Модульный `__getattr__` в `normalize_tables.py` отдаёт старые имена
+  проверок лениво: из того же пакета, если модуль загружен пакетом. `selfcheck.py` и 18 файлов
+  тестов переведены на новые адреса (в `test_selfcheck` подмена — `selfcheck.run_check`).
+- **Эквивалентность.**
+  - golden `split-base` (`HEAD` `4b0c0d71`) против `split-new`: 43 отчёта, отличий 0;
+  - selfcheck КК (`4d09481`) и эталона канона: строки отчёта те же. У КК единственное отличие —
+    путь в предупреждении bs4 `XMLParsedAsHTMLWarning`: код разбора теперь в `kitcheck/html.py`;
+  - `transfer_gate` на КК: отчёт `.md` тот же, кроме строк с датой;
+  - копии в каноне: selfcheck эталона из `_meta/tools` ветки против `origin/master` (с каталогом
+    сервисов) — 0 отличий; `normalize_tables.py --check` на карточке КК — 0 отличий;
+  - полный pytest: 58 failed, 2206 passed, 4 errors; падения поимённо те же, что до переноса
+    (`c80d6cff`: 58 / 2205 / 4, плюс один тест, добавленный после того прогона).
 
 ## Финальный шаг: ветка канона
 

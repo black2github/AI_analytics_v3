@@ -120,14 +120,14 @@ def test_crash_isolated_per_card(tmp_path, monkeypatch):
     docs = tmp_path / "docs"
     make(docs / "srs/functions/f1.md", card("[X] Ф1"))
     make(docs / "srs/functions/f2.md", card("[X] Ф2"))
-    real = selfcheck.nt.run_check
+    real = selfcheck.run_check
 
     def boom(files, src, **kw):
         if files[0].name == "f1.md":
             raise RuntimeError("патологический вход")
         return real(files, src, **kw)
 
-    monkeypatch.setattr(selfcheck.nt, "run_check", boom)
+    monkeypatch.setattr(selfcheck, "run_check", boom)
     report, ok = selfcheck.run(docs, None)
     assert not ok
     assert any("КРАШ" in ln for ln in report)

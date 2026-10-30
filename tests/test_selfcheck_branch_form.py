@@ -6,7 +6,7 @@
 import sys
 from pathlib import Path
 
-from app.scripts.CI import normalize_tables as nt
+from app.scripts.CI.kitcheck.checks import card_run
 from app.scripts.CI import selfcheck
 
 
@@ -53,7 +53,7 @@ def test_no_per_file_line_in_kit_report(tmp_path):
 
 def test_single_file_check_keeps_per_file_line(tmp_path):
     docs = kit(tmp_path)
-    rep, _ok = nt.run_check([docs / "srs/functions/f1-cells.md"], None, docs_root=docs)
+    rep, _ok = card_run.run_check([docs / "srs/functions/f1-cells.md"], None, docs_root=docs)
     assert any(ln.startswith("предупреждение: форма ветвления") and "×2" in ln for ln in rep), rep
     assert sum("пример:" in ln for ln in rep) == 2
 

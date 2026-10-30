@@ -8,7 +8,7 @@ from pathlib import Path
 from app.scripts.CI import link_debts as ld
 from app.scripts.CI.kitcheck import md
 from app.scripts.CI.kitcheck.checks import content
-from app.scripts.CI.normalize_tables import check_file
+from app.scripts.CI.kitcheck.checks.card_run import check_file
 
 SAMPLE = ("````markdown\n## Назначение\n\n```mermaid\nflowchart\n```\n\n"
           "## Поведение\n\n- шаг\n````\n")

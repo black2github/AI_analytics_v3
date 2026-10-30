@@ -11,7 +11,7 @@ from pathlib import Path
 from app.scripts.CI import link_debts as ld, selfcheck, transfer_gate as tg
 from app.scripts.CI.kitcheck import md
 from app.scripts.CI.kitcheck.checks import artifacts, content
-from app.scripts.CI.normalize_tables import check_file
+from app.scripts.CI.kitcheck.checks.card_run import check_file
 
 GLUED = '```"params"``: {`'   # склейка инлайн-кода выгрузки (инцидент 2026-09-06)
 

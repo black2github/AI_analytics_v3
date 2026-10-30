@@ -4,8 +4,8 @@
 сопоставленной строки источника пуста и не объединена. Только ⚠ / i, вердикт не меняется."""
 from pathlib import Path
 
-from app.scripts.CI.normalize_tables import (check_file, message_attribution,
-                                             message_rows)
+from app.scripts.CI.kitcheck.checks.card_run import check_file
+from app.scripts.CI.kitcheck.checks.card_controls import message_attribution, message_rows
 
 HEAD = ("<table><tbody>"
         "<tr><th>№</th><th>Проверяемый реквизит</th><th>Название проверки</th>"

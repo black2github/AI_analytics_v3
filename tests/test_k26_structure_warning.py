@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from app.scripts.CI.normalize_tables import check_step_body_structure, check_step_markers
+from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure, check_step_markers
 
 SRC = ("---\ntitle: X\n---\n\n"
        "#### Шаг №1. Формирование\n\n"

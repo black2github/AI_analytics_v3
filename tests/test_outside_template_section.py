@@ -2,7 +2,7 @@
 строка i с числом строк (видна и у ✓ карточки); форма подраздела (пустота, положение) не
 проверяется — решение владельца канона 2026-10-26; карточка без подраздела — ни одной строки."""
 from app.scripts.CI.kitcheck.core import is_soft_signal
-from app.scripts.CI.normalize_tables import check_outside_template_section
+from app.scripts.CI.kitcheck.checks.card_source import check_outside_template_section
 
 HEAD = "---\nid: FUN-BNK-01\ntype: function\n---\n\n# Функция\n\n## 1. Назначение\n\nТекст.\n\n"
 SECTION = ("## Из источника, вне разделов шаблона\n\n"
