@@ -342,3 +342,157 @@ def test_cards_short_fragment_marked_check(tmp_path):
     rows, _st = ro.check_cards(raw, docs, INTRO)
     marks = {r.fragment: r.check for r in rows}
     assert marks == {short: True, LONG: False}
+
+
+# ================================================================ режим карточек, раздел 2: вставки невведённых задач
+
+def _ins_kit(tmp_path, raw_body: str, card_body: str, applied_body=None, matrix=None,
+             unapproved=None, card_id: str = "FUN-01"):
+    raw = tmp_path / "sources/raw"
+    applied = tmp_path / "sources/confluence"
+    docs = tmp_path / "docs"
+    raw.mkdir(parents=True)
+    applied.mkdir(parents=True)
+    (raw / "p.md").write_text(page("1001", raw_body), encoding="utf-8")
+    if applied_body is not None:
+        (applied / "p.md").write_text(page("1001", applied_body), encoding="utf-8")
+    (docs / "srs/function").mkdir(parents=True)
+    (docs / "srs/function/fun-01.md").write_text(
+        f"---\nid: {card_id}\ntitle: 'Ф'\ntype: function\nconfluence_page_ids: ['1001']\n---\n\n# Ф\n\n"
+        f"## Поведение\n\n{card_body}\n", encoding="utf-8")
+    if matrix is not None:
+        (docs / "traceability-matrix.md").write_text(matrix, encoding="utf-8")
+    if unapproved is not None:
+        (tmp_path / "sandbox").mkdir()
+        (tmp_path / "sandbox/confluence-unapproved-jira-pages.md").write_text(unapproved, encoding="utf-8")
+    return raw, docs, applied
+
+
+def _ins(tmp_path, raw_body, card_body, introduced=INTRO, **kw):
+    raw, docs, applied = _ins_kit(tmp_path, raw_body, card_body, **kw)
+    return ro.check_cards_ins(raw, docs, introduced, applied)
+
+
+def test_ins_wiki_foreign_task_in_card_flags(tmp_path):
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}\n\nОстальной текст страницы", LONG)
+    assert len(rows) == 1 and rows[0].task == OTHER and rows[0].card == "srs/function/fun-01.md"
+    assert rows[0].page == "1001" and rows[0].card_id == "FUN-01" and rows[0].line == 12
+    assert st["findings"] == st["main"] == 1 and st["cards"] == 1
+
+
+def test_ins_html_span_foreign_task_flags(tmp_path):
+    raw_body = f'<table><tr><td><span class="critic-ins" data-task="{OTHER}">{LONG}</span></td></tr></table>'
+    rows, _st = _ins(tmp_path, raw_body, LONG)
+    assert len(rows) == 1 and rows[0].task == OTHER
+
+
+def test_ins_html_row_foreign_task_flags(tmp_path):
+    raw_body = (f'<table><tr><td>Поле</td></tr><tr class="critic-row-ins" data-task="{OTHER}">'
+                f'<td>{LONG}</td></tr></table>')
+    rows, _st = _ins(tmp_path, raw_body, f"| Поле |\n|---|\n| {LONG} |")
+    assert len(rows) == 1 and rows[0].task == OTHER
+
+
+def test_ins_md_status_row_foreign_task_flags(tmp_path):
+    raw_body = f"| Поле | Описание | status |\n|---|---|---|\n| Организация | {LONG} | +{OTHER} |"
+    rows, _st = _ins(tmp_path, raw_body, f"| Поле | Описание |\n|---|---|\n| Организация | {LONG} |")
+    assert len(rows) == 1 and rows[0].task == OTHER
+
+
+def test_ins_repeats_one_finding_with_count(tmp_path):
+    rows, _st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", f"{LONG}\n\nи ещё раз: {LONG}")
+    assert len(rows) == 1 and rows[0].count == 2
+
+
+def test_ins_introduced_task_silent(tmp_path):
+    # НЕсрабатывание: вставка ВВЕДЁННОЙ задачи в карточке законна
+    rows, st = _ins(tmp_path, f"{{++{T}: {LONG}++}}", LONG)
+    assert rows == [] and st["pages"] == 0
+
+
+def test_ins_text_in_applied_copy_silent(tmp_path):
+    # НЕсрабатывание: текст есть в применённой копии страницы — «законно в срезе»
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", LONG, applied_body=LONG)
+    assert rows == [] and st["kept"] == 1
+
+
+def test_ins_text_outside_markers_in_raw_silent(tmp_path):
+    # НЕсрабатывание: тот же текст стоит в raw и вне маркеров вставки
+    rows, st = _ins(tmp_path, f"{LONG}\n\n{{++{OTHER}: {LONG}++}}", LONG)
+    assert rows == [] and st["kept"] == 1
+
+
+def test_ins_without_applied_copy_uses_raw_only(tmp_path):
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", LONG)
+    assert len(rows) == 1 and st["no_copy"] == 1
+
+
+def test_ins_short_fragment_skipped_and_counted(tmp_path):
+    # НЕсрабатывание: короче порога — пропуск со счётчиком
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: признак активна++}}", "признак активна")
+    assert rows == [] and st["short"] == 1
+
+
+def test_ins_excluded_section_and_debt_line_silent(tmp_path):
+    # НЕсрабатывание: совпадение только в разделе «Происхождение» или в строке долга — маска
+    for body in (f"текст\n\n## Происхождение\n\n{LONG}", f"- {LONG} — см. OQ-12"):
+        rows, st = _ins(tmp_path / str(abs(hash(body))), f"{{++{OTHER}: {LONG}++}}", body)
+        assert rows == [] and st["excluded"] == 1, body
+
+
+def test_ins_prom_and_empty_task_silent(tmp_path):
+    # НЕсрабатывание: data-task="PROM" — не задача (тег src/PROM), без data-task — не задача
+    for task in ("PROM", ""):
+        raw_body = f'<table><tr><td><span class="critic-ins" data-task="{task}">{LONG}</span></td></tr></table>'
+        rows, st = _ins(tmp_path / (task or "empty"), raw_body, LONG)
+        assert rows == [] and st["pages"] == 0, task
+
+
+def test_ins_registration_covered_by_matrix_debt_with_card_id(tmp_path):
+    matrix = (f"# Матрица\n\n| Долг | Задача |\n|---|---|\n| FUN-99 | {OTHER} |\n"
+              f"| долг FUN-01: приписка | {OTHER} |\n")
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", LONG, matrix=matrix,
+                    unapproved=f"| 1001 | Стр | draft | {OTHER} |\n")
+    assert rows[0].covered and rows[0].matrix_line == 6 and rows[0].unapproved is True
+    assert st["covered"] == 1 and st["main"] == 0
+
+
+def test_ins_registration_debt_without_card_id_does_not_cover(tmp_path):
+    # прецедент 5.1: долг без ID карточки не покрывает; строка матрицы — первая с задачей
+    matrix = f"# Матрица\n\n| FUN-011 | {OTHER} |\n"
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", LONG, matrix=matrix,
+                    unapproved="| 1001 | Стр | draft | GBO-1 |\n")
+    assert not rows[0].covered and rows[0].matrix_line == 3 and rows[0].unapproved is False
+    assert st["main"] == 1
+
+
+def test_ins_registration_files_missing(tmp_path):
+    rows, _st = _ins(tmp_path, f"{{++{OTHER}: {LONG}++}}", LONG)
+    assert rows[0].matrix_line == 0 and rows[0].unapproved is None and not rows[0].covered
+
+
+def test_ins_short_check_goes_to_check_table(tmp_path):
+    short = "по умолчанию не отображается"            # 4 слова — «проверить»
+    rows, st = _ins(tmp_path, f"{{++{OTHER}: {short}++}}\n\n{{++{OTHER}: {LONG}++}}", f"{short}\n\n{LONG}")
+    assert {r.fragment: r.check for r in rows} == {short: True, LONG: False}
+    assert st["check"] == 1 and st["main"] == 1
+
+
+def test_ins_cli_report_two_sections_three_tables(tmp_path, capsys):
+    raw, docs, _applied = _ins_kit(tmp_path, f"{{--{T}: {LONG}--}}\n\n{{++{OTHER}: поле банк заполнено "
+                                             f"из справочника по умолчанию++}}",
+                                   f"{LONG}\n\nполе банк заполнено из справочника по умолчанию",
+                                   matrix="# М\n", unapproved="")
+    intro = tmp_path / "intro.txt"
+    intro.write_text(f"{T}\n", encoding="utf-8")
+    out = tmp_path / "report.md"
+    assert ro.main(["--cards", str(docs), "--raw", str(raw), "--introduced", str(intro),
+                    "--out", str(out)]) == 0
+    text = out.read_text(encoding="utf-8")
+    assert "## 1. Удалённое введёнными задачами осталось в карточках" in text
+    assert "## 2. Вставки невведённых задач присутствуют в карточках" in text
+    for title in ("### Основной список — 1", "### Проверить — 0", "### Покрыто долгом матрицы — 0"):
+        assert title in text, title
+    assert f"| srs/function/fun-01.md | Поведение | 1001 | {OTHER} |" in text
+    assert "unapproved: нет; матрица: —" in text
+    assert "вставки невведённых: основной список 1" in capsys.readouterr().out
