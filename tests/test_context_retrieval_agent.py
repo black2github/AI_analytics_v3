@@ -16,12 +16,66 @@ import os
 # Добавляем корень проекта в путь
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+import socket
+
+import pytest
+from langchain_core.messages import AIMessage
+from langchain_core.runnables import RunnableLambda
+
+import app.agents.context_retrieval_agent as cra
 from app.agents.context_retrieval_agent import (
     ContextRetrievalAgent,
     ContextMap,
     PageContext,
     create_context_agent
 )
+
+
+# ============================================================================
+# ЗАГЛУШКИ СЕТИ (только для pytest)
+# ============================================================================
+#
+# Юнит-тесты проверяют форму карты контекста, не ответы живых сервисов.
+# Без заглушек retrieve_context ходил в LLM (декомпозиция запроса) и в
+# Confluence (незавершённые изменения) без тайм-аута: при недоступном хосте
+# полный прогон tests/ висел 37+ минут (2026-10-30). Живая проверка связки —
+# примеры этого файла (python tests/test_context_retrieval_agent.py --example N),
+# они заглушками не затронуты. ChromaDB и модель эмбеддингов — локальные.
+
+# ответ LLM в формате промпта декомпозиции: тип + запрос + причина
+_FAKE_LLM_ANSWER = (
+    '[{"type": "function", "query": "карта", "reason": "заглушка"},'
+    ' {"type": "integration", "query": "интеграция", "reason": "заглушка"}]'
+)
+
+
+def _no_network(*_args, **_kwargs):
+    raise RuntimeError("сетевой вызов в юнит-тесте context_retrieval_agent")
+
+
+@pytest.fixture(autouse=True)
+def offline_agent(monkeypatch):
+    """LLM и Confluence — заглушки; любой иной выход в сеть — ошибка, а не
+    зависание. Возвращает журнал вызовов заглушек."""
+    calls = {"llm": 0, "confluence": []}
+
+    def fake_llm(_prompt):
+        calls["llm"] += 1
+        return AIMessage(content=_FAKE_LLM_ANSWER)
+
+    def fake_page(page_id):
+        # у каждой страницы есть незавершённое изменение — путь pending
+        # и дедупликация по page_id проходят по-настоящему
+        calls["confluence"].append(page_id)
+        approved = f"Подтверждённый текст страницы {page_id}."
+        return {"approved_content": approved,
+                "full_content": approved + f"\n\nНовый абзац {page_id}."}
+
+    monkeypatch.setattr(cra, "get_llm", lambda *a, **k: RunnableLambda(fake_llm))
+    monkeypatch.setattr(cra, "get_page_data_cached", fake_page)
+    monkeypatch.setattr(socket, "create_connection", _no_network)
+    monkeypatch.setattr(socket.socket, "connect", _no_network)
+    return calls
 
 
 # ============================================================================
@@ -280,7 +334,7 @@ def test_agent_initialization():
     print("✓ Agent initialization test passed")
 
 
-def test_context_map_creation():
+def test_context_map_creation(offline_agent):
     """Тест создания карты контекста"""
     agent = ContextRetrievalAgent("CC")
     context_map = agent.retrieve_context("тестовый запрос", top_k=5)
@@ -289,6 +343,9 @@ def test_context_map_creation():
     assert context_map.service_code == "CC"
     assert isinstance(context_map.confirmed_pages, list)
     assert isinstance(context_map.related_systems, list)
+    # декомпозиция шла через заглушку LLM, не через сеть (в живом --test журнала нет)
+    if offline_agent is not None:
+        assert offline_agent["llm"] >= 1
     print("✓ Context map creation test passed")
 
 
@@ -369,7 +426,7 @@ if __name__ == "__main__":
         print("RUNNING UNIT TESTS")
         print("=" * 80)
         test_agent_initialization()
-        test_context_map_creation()
+        test_context_map_creation(None)
         test_filter_by_type()
         test_factory_function()
         test_page_context_structure()
