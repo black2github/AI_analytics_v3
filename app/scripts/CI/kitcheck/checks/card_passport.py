@@ -162,7 +162,16 @@ def check_heavy_pair_structure(card_text: str,
         expected = _md_profile(md.splitlines())
         if len(expected) < 3:
             continue
-        plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "", md, flags=re.M))
+        # маркеры цитат «> » (перевод margin-left выгрузки) срезаются
+        # при нарезке проб, как маркеры списков: в карточке цитаты
+        # запрещены (вложенность — списками), и проба с «> » не
+        # находилась никогда — quote-first ячейка сверялась по одной
+        # средней пробе и падала при любой законной раскладке (FB-44
+        # КК, fun-cl-33). Профиль expected берётся из md как есть.
+        plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "",
+                                  re.sub(r"^[ \t]*(?:>[ \t]*)+", "", md,
+                                         flags=re.M),
+                                  flags=re.M))
         probes = [p for p in (plain[:40], plain[40:80],
                               plain[len(plain) // 2:len(plain) // 2 + 40])
                   if len(p) >= 30]

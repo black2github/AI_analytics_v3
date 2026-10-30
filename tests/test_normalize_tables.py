@@ -2,6 +2,8 @@
 """Нормализатор сырых HTML-таблиц (Д-21, проход 1): сетка, протяжка,
 иерархия по профилю, счётный инвариант нулевых потерь."""
 
+import re
+
 import pytest
 from bs4 import BeautifulSoup
 
@@ -618,6 +620,87 @@ class TestBehaviorNesting:
         flat = ("## Поведение\n\n1. Цикл:\nA) Взять\nB) Положить\n")
         assert check_behavior_nesting(good, src)[1]
         assert not check_behavior_nesting(flat, src)[1]
+
+
+class TestNestingByNumberFlatSource:
+    """FB-45 КК (fun-cl-54, решение владельца 2026-10-30): составные
+    шаги «4.1» в источнике без отступа — артефакт разметки; карточка,
+    вложившая шаг ровно по глубине номера, получает i-строку, не ✗.
+    Иное расхождение уровней — ✗ как прежде."""
+
+    SRC = (
+        "# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+        "<p><strong>4)</strong> Импорт реестра:</p>"
+        "<p><strong>4.1)</strong> Прочитать файл</p>"
+        "<p><strong>4.2)</strong> Проверить строки</p>"
+        "<p><strong>5)</strong> Завершение</p>"
+        "</td></tr></table>\n"
+    )
+
+    def test_nested_by_number_accepted_with_signal(self):
+        from app.scripts.CI.kitcheck.checks.card_steps import (
+            check_behavior_numbering)
+        from app.scripts.CI.kitcheck.core import is_soft_signal
+        card = ("## Поведение\n\n"
+                "- **4)** Импорт реестра:\n"
+                "   - **4.1)** Прочитать файл\n"
+                "   - **4.2)** Проверить строки\n"
+                "- **5)** Завершение\n")
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert ok, report
+        notes = [r for r in report if "вложен по номеру" in r]
+        assert len(notes) == 2 and all(r.startswith("i ") for r in notes)
+        assert all(is_soft_signal(r) for r in notes)
+        assert any("вложены по номеру 2" in r for r in report)
+        # карточка самосогласована: соседний сторож нумерации чист
+        assert check_behavior_numbering(card)[1]
+
+    def test_deeper_than_number_caught(self):
+        # НЕсрабатывание: «4.2» на уровне 2 — глубже номера
+        card = ("## Поведение\n\n"
+                "- **4)** Импорт реестра:\n"
+                "   - **4.1)** Прочитать файл\n"
+                "      - **4.2)** Проверить строки\n"
+                "- **5)** Завершение\n")
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert not ok
+        assert any("«4.2»" in r and "✗" in r for r in report)
+
+    def test_single_number_nested_caught(self):
+        # НЕсрабатывание: одиночный номер «5» на уровне 1 при источнике 0
+        card = ("## Поведение\n\n"
+                "- **4)** Импорт реестра:\n"
+                "   - **4.1)** Прочитать файл\n"
+                "   - **4.2)** Проверить строки\n"
+                "   - **5)** Завершение\n")
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert not ok
+        assert any("«5»" in r and "✗" in r for r in report)
+
+    def test_lost_step_still_caught(self):
+        card = ("## Поведение\n\n"
+                "- **4)** Импорт реестра:\n"
+                "   - **4.1)** Прочитать файл\n"
+                "- **5)** Завершение\n")
+        report, ok = check_behavior_nesting(card, self.SRC)
+        assert not ok and any("«4.2»" in r and "ПОТЕРЯ" in r
+                              for r in report)
+
+    def test_source_deeper_than_card_caught(self):
+        # НЕсрабатывание: источник глубже карточки — выпрямление, даже
+        # если уровень карточки равен глубине номера
+        src = ("# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+               "<p><strong>1)</strong> Если критично:</p>"
+               '<p style="margin-left: 40.0px"><strong>A)</strong> то:</p>'
+               '<p style="margin-left: 80.0px"><strong>1.1)</strong> Отказ</p>'
+               "</td></tr></table>\n")
+        card = ("## Поведение\n\n"
+                "1. Если критично:\n"
+                "   A) то:\n"
+                "   1.1. Отказ\n")
+        report, ok = check_behavior_nesting(card, src)
+        assert not ok
+        assert not any("вложен по номеру" in r for r in report)
 
 
 class TestBehaviorNumbering:
@@ -2966,6 +3049,68 @@ class TestK25dPairSectionProfiles:
                 "## Поведение\n\n" + md + "\n")
         rep, ok = check_heavy_pair_structure(card, self._SRC)
         assert ok, rep
+
+
+class TestQuoteFirstHeavyPair:
+    """FB-44 КК (fun-cl-33): ячейка начинается абзацем с отступом —
+    эталон конвертера несёт «> …», в карточке цитаты запрещены. Пробы
+    режутся без маркеров цитат: законная раскладка списком проходит,
+    потеря и склейка — ✗ как прежде."""
+
+    # как в fun-cl-33: первые абзацы короткие и с отступом — обе
+    # ведущие пробы (0:40, 40:80) пересекают маркер «> »; длинный
+    # хвост — средняя проба попадает в последний абзац, и секция от
+    # неё короче половины эталона (listy-escape не спасал)
+    _CELL = ('<p style="margin-left: 40.0px">Функция проверки в ЕСК '
+             "наличия полномочий на подпись.</p>"
+             '<p style="margin-left: 40.0px">Если действие == CLOSE, то '
+             "переход на шаг 3.</p>"
+             '<p style="margin-left: 40.0px">Если действие == BLOCK, то '
+             "переход на шаг 4.</p>"
+             '<p style="margin-left: 40.0px">Если действие == UNLOCK, то '
+             "переход на шаг 5.</p>"
+             "<p>Выполняется проверка статуса закрываемой карты, для этого "
+             "вызывается метод получения данных одной корпоративной карты "
+             "с параметром внешнего идентификатора карты; если статус "
+             "карты, полученной в ответе, имеет одно из значений "
+             "закрытых статусов, то клиенту выводится сообщение об "
+             "ошибке и подписание заявки прекращается без отправки в "
+             "банк, иначе выполняется переход к подписанию заявки.</p>")
+    _SRC = ("---\ntitle: X\n---\n\n<table><tbody><tr>"
+            "<td><strong>Что делает функция:</strong></td>"
+            "<td>" + _CELL + "</td></tr></tbody></table>\n")
+
+    def _md(self):
+        from app.scripts.CI.kitcheck.html import html_fragment_to_markdown
+        md = html_fragment_to_markdown(self._CELL)
+        assert md.lstrip().startswith(">")  # предпосылка: quote-first
+        return md
+
+    def test_list_layout_passes_with_signal(self):
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        paras = [re.sub(r"^>\s*", "", p.strip())
+                 for p in self._md().split("\n\n") if p.strip()]
+        card = ("**Что делает функция:**\n\n"
+                + "\n".join("- " + p for p in paras) + "\n")
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert ok, rep
+        assert any(r.startswith("i тяжёлая пара разложена") for r in rep)
+
+    def test_lost_cell_still_flagged(self):
+        # НЕсрабатывание: содержимое ячейки не перенесено
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        card = "**Что делает функция:**\n\n- Совсем другой текст.\n"
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert not ok and any("расходится с эталоном" in r for r in rep)
+
+    def test_glued_cell_still_flagged(self):
+        # НЕсрабатывание: абзацы склеены в простыню без цитаты
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        glued = " ".join(re.sub(r"^>\s*", "", p.strip())
+                         for p in self._md().split("\n\n") if p.strip())
+        card = "**Что делает функция:**\n\n" + glued + "\n"
+        rep, ok = check_heavy_pair_structure(card, self._SRC)
+        assert not ok and any("расходится с эталоном" in r for r in rep)
 
 
 class TestK29HeavyCellInvariant:

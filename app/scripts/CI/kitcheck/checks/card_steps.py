@@ -117,6 +117,7 @@ def check_behavior_nesting(card_text: str,
     card = behavior_steps_from_card(card_text)
     report: List[str] = []
     ok = True
+    by_number = 0
     j = 0
     for core, lvl in src:
         k = next((i for i in range(j, len(card)) if card[i][0] == core), None)
@@ -125,14 +126,33 @@ def check_behavior_nesting(card_text: str,
                           "карточке ✗ ПОТЕРЯ ШАГА")
             ok = False
             continue
-        if card[k][1] != lvl:
+        # составной номер при плоском источнике (решение владельца
+        # 2026-10-30, FB-45 КК, fun-cl-54): «4.1» в источнике с
+        # отступом 0 — артефакт разметки; карточка, вложившая шаг
+        # РОВНО по глубине номера (самосогласованность
+        # check_behavior_numbering), иначе зажата между двумя ✗.
+        # Только «источник мельче, уровень карточки = глубина номера»;
+        # глубже номера, одиночный номер, источник глубже карточки
+        # (выпрямление), потеря шага — ✗ как прежде
+        if (lvl < card[k][1] and "." in core
+                and card[k][1] == core.count(".")):
+            report.append(
+                f"i поведение: шаг «{core}» вложен по номеру (уровень "
+                f"{card[k][1]}), в источнике отступ {lvl} — артефакт "
+                "разметки источника, профиль принят")
+            by_number += 1
+        elif card[k][1] != lvl:
             report.append(
                 f"поведение: шаг «{core}» — уровень вложенности {card[k][1]} "
                 f"в карточке против {lvl} в источнике ✗ (выпрямление меняет "
                 "смысл ветвления)")
             ok = False
         j = k + 1
-    if ok:
+    if ok and by_number:
+        report.append(f"поведение: профиль вложенности принят "
+                      f"({len(src)} шагов, из них вложены по номеру "
+                      f"{by_number}) ✓")
+    elif ok:
         report.append(f"поведение: профиль вложенности совпадает "
                       f"({len(src)} шагов) ✓")
     return report, ok
