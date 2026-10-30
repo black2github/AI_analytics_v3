@@ -8,7 +8,7 @@ import re
 from typing import Dict, List, Optional, Tuple
 from .. import fence as _fence
 from ..html import (
-    _BR_RE, _fm_body, _norm_cell, _plain, _title_key, expand_grid, find_top_tables,
+    _BR_RE, _fm_body, _fm_head, _norm_cell, _plain, _title_key, expand_grid, find_top_tables,
     parse_md_tables
 )
 from ..columns import _COLUMN_RULES, _is_section_row, validate_columns
@@ -454,7 +454,8 @@ def quoted_literals(source_text: str) -> List[str]:
 
 def check_quoted_literals(card_text: str,
                           source_text: str,
-                          sibling_text: Optional[str] = None
+                          sibling_text: Optional[str] = None,
+                          page_artifacts: Optional[List[Tuple[str, str]]] = None
                           ) -> Tuple[List[str], bool]:
     """Каждый кавычечный литерал источника обязан присутствовать в карточке
     (сравнение нормализованное, кавычки не требуются).
@@ -465,7 +466,14 @@ def check_quoted_literals(card_text: str,
     одного реестра — точки применения живут в README реестра, не в
     cards-файлах группы. Литерал, найденный у соседей, — не потеря:
     i-сигнал приёмке вместо ✗ (тот же принцип корпуса, что у полноты
-    ячеек data-model)."""
+    ячеек data-model).
+
+    page_artifacts — [(путь, текст)] карточек комплекта, у которых главная
+    страница группы стоит в confluence_page_ids в любой позиции (решение
+    владельца канона 2026-10-30; PROC-047 ↔ glossary.md по одной странице):
+    разложение по решению, а не по соседству — отдельная i-строка с файлами.
+    Литерал, которого нет ни в группе, ни в каталоге, ни в артефактах той же
+    страницы, — ✗ как прежде."""
     lits = quoted_literals(source_text)
     if not lits:
         return [], True
@@ -484,6 +492,21 @@ def check_quoted_literals(card_text: str,
                 "соседних карточках каталога, не в группе сверки "
                 f"({'; '.join(repr(v[:40]) for v in relocated[:3])}) — "
                 "разложение по реестру, принадлежность проверить приёмкой")
+    if lost and page_artifacts:
+        found, where = [], []
+        for rel, text in page_artifacts:
+            a_norm = _fold_homoglyphs(_norm_cell(text))
+            hit = [v for v in lost if v not in found
+                   and _fold_homoglyphs(_norm_cell(v)) in a_norm]
+            if hit:
+                found += hit
+                where.append(rel)
+        if found:
+            lost = [v for v in lost if v not in found]
+            report.append(
+                f"i кавычечные литералы ×{len(found)} найдены в артефактах той же "
+                f"страницы ({', '.join(where)}), не в группе сверки "
+                f"({'; '.join(repr(v[:40]) for v in found[:3])})")
     if lost:
         report.append(
             f"кавычечные литералы источника: в карточке отсутствуют "
@@ -549,7 +572,17 @@ _CONTOUR_PREFIX_RE = re.compile(
     re.IGNORECASE)
 
 
-def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
+_AGG_PIDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]\n]*)\]", re.M)
+# заголовок раздела карточки-агрегатора — любой уровень (#…######: уровень — вёрстка,
+# решение владельца канона 2026-10-30); ведущий номер раздела («2.», «2.1.»)
+# — нумерация шаблона, не часть наименования
+_AGG_HEADING_RE = re.compile(r"^#{1,6}[ \t]+(?:\d+(?:\.\d+)*\.?[ \t]+)?(.+?)[ \t]*#*[ \t]*$", re.M)
+
+
+def check_title(card_text: str, source_text: str,
+                extra_titles: Optional[List[str]] = None,
+                corpus: Optional[str] = None,
+                file_name: Optional[str] = None) -> Tuple[List[str], bool]:
     """Дословный перенос title источника во frontmatter карточки.
 
     title — постоянный атрибут (наименование в языке предметной области;
@@ -558,7 +591,19 @@ def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
     шумного отказа. Источник без title сверке не подлежит.
 
     Исключение — базовый контракт внешней АС (type: external-integration):
-    ведущий маркер контура-потребителя из закрытого списка не переносится."""
+    ведущий маркер контура-потребителя из закрытого списка не переносится.
+
+    Карточка-агрегатор (решение владельца канона 2026-10-30): больше одной
+    страницы в confluence_page_ids или файл `dictionaries.md` (шаблон
+    data-model — один файл справочников). Для `dictionaries.md` title —
+    собственное наименование файла («Справочники …»), у агрегатора нескольких
+    страниц — наименование по решению; наименования страниц-источников
+    переносятся дословно, с ведущим тегом страницы, заголовками разделов
+    (любого уровня; текст абзаца или таблицы — не заголовок). Равенство title
+    главной странице проходит первым, как у любой карточки. extra_titles —
+    title дополнительных страниц (selfcheck передаёт их по индексу выгрузки;
+    CLI с одним источником — только главная), corpus — текст группы, где
+    ищутся заголовки (по умолчанию — сама карточка), file_name — имя файла."""
     src = _frontmatter_title(source_text)
     if src is None:
         return [], True
@@ -572,6 +617,19 @@ def check_title(card_text: str, source_text: str) -> Tuple[List[str], bool]:
         marker = src[:len(src) - len(stripped)].strip()
         return [f"title: перенесён без маркера контура {marker!r} — "
                 f"базовый контракт общий для потребителей ✓"], True
+    m_pids = _AGG_PIDS_RE.search(_fm_head(card_text))
+    n_pages = len(re.findall(r"\d+", m_pids.group(1))) if m_pids else 0
+    if card is not None and (n_pages > 1 or (file_name or "").lower() == "dictionaries.md"):
+        heads = {h.strip() for h in _AGG_HEADING_RE.findall(corpus if corpus is not None
+                                                            else card_text)}
+        titles = [src] + [t for t in (extra_titles or []) if t and t != src]
+        lost = [t for t in titles if t.strip() not in heads]
+        n = max(n_pages, len(titles))
+        if not lost:
+            return [f"title: карточка-агрегатор {n} страниц — наименования источников "
+                    "заголовками разделов ✓"], True
+        return [f"title: карточка-агрегатор {n} страниц — нет заголовков по страницам: "
+                + "; ".join(repr(t) for t in lost) + " ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
     if card is None:
         return [f"title: ОТСУТСТВУЕТ в карточке — у источника {src!r} "
                 "✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False

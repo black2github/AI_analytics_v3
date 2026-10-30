@@ -7,10 +7,11 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 import re
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..core import Check, run_checks
 from ..html import _fm_head
+from ..md import _kit_md, page_ids, read_frontmatter
 from .card_common import _norm_ws
 from .card_form import (
     _fc_blank_line_table_breaks, _fc_blockquote_indented_code, _fc_confluence_ui_artifacts,
@@ -391,6 +392,18 @@ def _rc_notification_structure(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     return report, ok
 
 
+@_fs.memoize(copy=dict)
+def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
+    """page_id → карточки комплекта, у которых он стоит в confluence_page_ids в любой
+    позиции (группы selfcheck строятся по первой). Строится один раз за прогон: кэш
+    сессии selfcheck, а не чтение всего комплекта на каждую карточку."""
+    out: Dict[str, List[Path]] = {}
+    for p in _kit_md(docs_root, zone=True):
+        for pid in page_ids(read_frontmatter(p) or {}):
+            out.setdefault(pid, []).append(p)
+    return out
+
+
 def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     files, docs_root, card_text, combined, main_file, src_text = fx.files, fx.docs_root, fx.card_text, fx.combined, fx.main_file, fx.src_text
     report: List[str] = []
@@ -439,7 +452,14 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                         and _frontmatter_title(t) is not None):
                     ttl_text, ttl_holder = t, f
                     break
-        ttl_report, ttl_ok = check_title(ttl_text, src_text)
+        # карточка-агрегатор (решение владельца канона 2026-10-30): title доп. страниц —
+        # из файлов выгрузки, которые selfcheck передаёт по индексу (amnesty_sources —
+        # страницы карточки после главной); заголовки ищутся во всей группе
+        extra_titles = [_frontmatter_title(_fs.read_text(p, encoding="utf-8", errors="replace"))
+                        for p in (fx.amnesty_sources or []) if p.is_file()]
+        ttl_report, ttl_ok = check_title(
+            ttl_text, src_text, extra_titles=[t for t in extra_titles if t],
+            corpus=combined, file_name=(ttl_holder or main_file).name)
         if ttl_holder is not None:
             ttl_report = [
                 ln.replace("title:", f"title (часть partOf без title, "
@@ -518,8 +538,21 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 f"i {main_file.name}: сторож литералов не применяется к "
                 f"{_NO_LITERALS_TYPES[m_type.group(1)]}"], True
         else:
+            # артефакты той же страницы (решение владельца канона 2026-10-30): карточки
+            # комплекта с главной страницей группы в confluence_page_ids в любой позиции,
+            # кроме группы и соседей каталога (они уже в sib_txt)
+            page_art = None
+            if docs_root is not None:
+                _pids = page_ids(read_frontmatter(main_file) or {})
+                page_art = [
+                    (f.relative_to(docs_root).as_posix(),
+                     re.sub(r"<!--.*?-->", " ", _fs.read_text(f, encoding="utf-8", errors="replace"),
+                            flags=re.S))
+                    for f in (_page_artifact_index(docs_root).get(_pids[0], []) if _pids else [])
+                    if f not in files and f.parent != main_file.parent] or None
             ql_report, ql_ok = check_quoted_literals(combined, src_text,
-                                                     sibling_text=sib_txt)
+                                                     sibling_text=sib_txt,
+                                                     page_artifacts=page_art)
         report.extend(src_report)
         report.extend(ttl_report)
         report.extend(bh_report)
