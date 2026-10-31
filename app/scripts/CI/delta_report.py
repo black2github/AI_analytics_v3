@@ -127,6 +127,10 @@ _Q_MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
 # идентификатор артефакта (`EXT-007`, `SCR-CL-03.1`, `CTL-GRP-1`); слева не буква,
 # не цифра и не дефис — поэтому строки постановки `T-<КЛЮЧ>-NN` не считаются
 _Q_ID_RE = re.compile(r"(?<![\w-])(?:[A-Z]{2,6}-GRP-\d+|[A-Z]{2,6}(?:-[A-Z]{1,6})*-\d+(?:\.\d+)*)(?!\w)")
+# строка НФТ `nfr-<код>-NNN` (нижний регистр, код — по каталогу `_meta/templates/nfr/`);
+# страница типа `nfr-<код>` без номера — имя файла, не ID. Внутри пути и якоря
+# (`nfr/nfr-prf.md`, `#nfr-prf-003`, `nfr-prf-003.md`) не ловится
+_Q_NFR_ID_RE = re.compile(r"(?<![\w/#.-])nfr(?:-[a-z][a-z0-9]*)+-\d{3}(?![\w-]|[./]\w)")
 # ID назван, если прямо перед ним — закрывающая кавычка наименования, «(» и не
 # больше 30 символов без скобок: «Пользователь» (`EXT-007`), «Счёт» (вкладка `SCR-CL-03.1`).
 # Окно «»» где-то рядом» ловило чужое наименование («…на «Продолжить» или во всей
@@ -135,7 +139,7 @@ _Q_NAMED_BEFORE_RE = re.compile(r"»\s*\([^()]{0,30}$")
 _Q_CYR_RE = re.compile(r"[А-Яа-яЁё]")
 # префикс типа отдельным словом (за ним не дефис — иначе это часть ID)
 _Q_PREFIXES = ("NTF", "PRN", "CTL", "SM", "CALL", "ENT", "EXT", "FUN", "PROC", "SCR", "RBAC",
-               "INTC", "LIBC", "EXTINT", "PLT", "FLD", "MSG", "EV")
+               "INTC", "LIBC", "EXTINT", "PLT", "FLD", "MSG", "EV", "CHD", "NFR")
 _Q_PREFIX_RE = re.compile(r"\b(" + "|".join(sorted(_Q_PREFIXES, key=len, reverse=True)) + r")\b(?!-)")
 # фразы вопроса реализации — в forward не задаются никем
 _Q_IMPL_PHRASES = ("физ. имя", "физическое имя", "varchar", "NOT NULL", "ограничения БД",
@@ -632,6 +636,13 @@ def all_task_questions(task_text: str) -> List[dict]:
             for c in _qa_cells(task_text) if len(c) >= 2]
 
 
+def _q_ids(text: str) -> List["re.Match"]:
+    """ID артефактов в тексте по порядку: верхний регистр (`_Q_ID_RE`) и строки
+    НФТ (`_Q_NFR_ID_RE`)."""
+    found = list(_Q_ID_RE.finditer(text)) + list(_Q_NFR_ID_RE.finditer(text))
+    return sorted(found, key=lambda m: m.start())
+
+
 def _question_notes(cell: str, boundary: bool = False) -> List[str]:
     """Замечания к одной ячейке «Вопрос агента» в порядке a → b → c → d → e;
     `boundary` — строка подраздела «Границы захода»."""
@@ -644,11 +655,11 @@ def _question_notes(cell: str, boundary: bool = False) -> List[str]:
     named: set = set()
     for lm in _Q_MD_LINK_RE.finditer(cell):
         if _Q_CYR_RE.search(lm.group(1)):
-            named.update(m.group(0) for m in _Q_ID_RE.finditer(lm.group(1)))
+            named.update(m.group(0) for m in _q_ids(lm.group(1)))
     text = _Q_MD_LINK_RE.sub(r"\1", cell)
     out: List[str] = []
     bare: List[str] = []
-    for m in _Q_ID_RE.finditer(text):
+    for m in _q_ids(text):
         ident = m.group(0)
         # умолчание постановки `DFR-NNN` (_meta/rules/defaults.md) — основание
         # границы захода, не артефакт комплекта: наименования у него нет
