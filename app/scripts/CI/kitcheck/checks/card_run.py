@@ -50,7 +50,8 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                column_roles: bool = True,
                soft_markers: bool = False,
                amnesty_text: Optional[str] = None,
-               kit_summary: bool = False) -> Tuple[List[str], bool]:
+               kit_summary: bool = False,
+               without_sources: bool = False) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -67,7 +68,10 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     этих слов нет (проверено по источнику и чистым прогонам).
 
     kit_summary — прогон в составе самопроверки комплекта: проверки, которые
-    комплект сводит в одну строку (форма ветвления), строки на файл не дают."""
+    комплект сводит в одну строку (форма ветвления), строки на файл не дают.
+
+    without_sources — самопроверка комплекта без выгрузки (selfcheck без --sources):
+    формулировки, отсылающие к источнику, заменяются нейтральными (маркер сокращения)."""
     text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
@@ -76,7 +80,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     lines = text.splitlines()
     # проверки карточки — реестр FILE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary)
+    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary, without_sources=without_sources)
     f_lines, f_ok = run_checks(FILE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -102,6 +106,7 @@ class _FileCtx:
     lines: List[str]
     src_literals: Optional[object]
     kit_summary: bool = False  # в составе selfcheck комплекта: сводные проверки — строкой комплекта
+    without_sources: bool = False  # selfcheck без --sources: без отсылок к источнику в формулировках
 # Документы определений, к которым не применяется сторож полноты кавычечных
 # литералов источника (решение владельца канона 2026-10-30): глоссарий — не
 # дословный перенос страницы, шаблон требует атомарных определений и
@@ -189,7 +194,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               pardon_source: Optional[Path] = None,
               amnesty_sources: Optional[List[Path]] = None,
               kit_summary: bool = False,
-              allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
+              allow_sibling_docs: bool = False,
+              without_sources: bool = False) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -221,7 +227,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             column_roles=main_file.name.lower() != "readme.md",
                             soft_markers=soft_markers,
                             amnesty_text=amnesty_text,
-                            kit_summary=kit_summary)
+                            kit_summary=kit_summary,
+                            without_sources=without_sources)
     card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в

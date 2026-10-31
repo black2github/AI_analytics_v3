@@ -92,7 +92,10 @@ def test_forward_card_internal_checks_only(tmp_path):
     make_matrix(docs)
     report, ok = selfcheck.run(docs, None)
     assert ok, report
-    assert any("page_ids нет" in ln for ln in report)
+    # карточка в переписи со своей отметкой; без --sources пометки режима
+    # «page_ids нет» нет (трек rules, срез 3) — с ней: test_selfcheck_no_sources
+    assert f"✓ {Path('srs/functions/f1.md')}" in report
+    assert not any("page_ids нет" in ln for ln in report)
 
 
 def test_broken_frontmatter_flagged(tmp_path):
@@ -608,7 +611,9 @@ def test_solo_fail_names_real_culprit(tmp_path):
     bad = next(ln for ln in report if "bad.md" in ln)
     good = next(ln for ln in report if "good.md" in ln)
     assert bad.startswith("✗") and "брак внутренних сторожей" in bad
-    assert "причины ниже" in bad and "без источника" in bad
+    # без --sources пометки режима нет (трек rules, срез 3); с ней —
+    # tests/test_selfcheck_no_sources.py
+    assert "причины ниже" in bad and "без источника" not in bad
     assert good.startswith("✓") and "брак" not in good
 
 

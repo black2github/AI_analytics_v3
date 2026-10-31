@@ -207,13 +207,15 @@ def _run(files: List[Path], src: Optional[Path],
          soft_markers: bool = True,
          pardon_src: Optional[Path] = None,
          amnesty: Optional[List[Path]] = None,
-         allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
+         allow_sibling_docs: bool = False,
+         without_sources: bool = False) -> Tuple[List[str], bool]:
     return _safe(lambda: run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
                                       amnesty_sources=amnesty,
                                       kit_summary=True,
-                                      allow_sibling_docs=allow_sibling_docs))
+                                      allow_sibling_docs=allow_sibling_docs,
+                                      without_sources=without_sources))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -324,7 +326,10 @@ def _run_impl(docs: Path, sources: Optional[Path],
 
     # перепись файлов комплекта (правило 2: каждый — ровно одна категория)
     groups: Dict[str, List[Path]] = {}
-    solo: List[Tuple[Path, str]] = []  # (файл, пометка)
+    # (файл, пометка); без --sources пометки нет — слой миграции выключен,
+    # об отсутствующей выгрузке строка карточки не говорит (трек rules, срез 3)
+    solo: List[Tuple[Path, Optional[str]]] = []
+    unsourced: List[Tuple[Path, str]] = []  # без --sources: карточка -> page_id
     extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
     extra_page_ids: Dict[Path, List[str]] = {}  # карточка -> доп. page_ids
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
@@ -416,15 +421,21 @@ def _run_impl(docs: Path, sources: Optional[Path],
                 # карточек первой сдачи COM-01, фиктивная зелень)
                 counts["✗"] += 1
                 all_ok = False
+                # формулировка нейтральная к слою (срез 3 трека rules):
+                # page id — ключ сопоставления и без выгрузки (дельты)
                 report.append(f"✗ {rel}: confluence_page_ids задан, но "
-                              "id не распознаны — reverse-карточка "
-                              "выпала бы из сверки с источником; формат "
-                              "по шаблону: inline-список")
+                              "id не распознаны — ключ сопоставления по "
+                              "странице не читается (сверка с источником "
+                              "и дельты по page id карточку не найдут); "
+                              "формат по шаблону: inline-список")
                 continue
-            solo.append((p, "без источника (page_ids нет — forward/реестр)"))
+            solo.append((p, None if sources is None else
+                         "без источника (page_ids нет — forward/реестр)"))
         elif sources is None:
-            solo.append((p, f"источник page_id {pids[0]} не сверялся — "
-                            "--sources не задан"))
+            # Р-2 (б): строки на карточке нет — сводная строка комплекта
+            # (_kc_unsourced_cards), перечень в --out
+            solo.append((p, None))
+            unsourced.append((p, pids[0]))
         elif pids[0] not in idx:
             counts["✗"] += 1
             all_ok = False
@@ -462,19 +473,22 @@ def _run_impl(docs: Path, sources: Optional[Path],
 
     for p, note in solo:
         rep, ok = _run([p], None, docs, soft_markers=not strict,
-                       allow_sibling_docs=allow_sibling_docs)
+                       allow_sibling_docs=allow_sibling_docs,
+                       without_sources=sources is None)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         all_ok = all_ok and ok
         if ok:
-            report.append(f"✓ {p.relative_to(docs)}: {note}")
+            report.append(f"✓ {p.relative_to(docs)}"
+                          + (f": {note}" if note else ""))
             report.extend(f"   {ln}" for ln in _warns(rep))
         else:
             # Формулировка причины ✗ (2026-08-22): пометка режима сверки
             # («без источника…») читалась причиной брака — брак всегда
             # у внутренних сторожей, их строки ниже.
             report.append(f"✗ {p.relative_to(docs)}: брак внутренних "
-                          f"сторожей (причины ниже); {note}")
+                          "сторожей (причины ниже)"
+                          + (f"; {note}" if note else ""))
             report.extend(f"   {ln}" for ln in rep)
 
     for pid, files in sorted(groups.items()):
@@ -569,7 +583,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
-                    zone_cards=zone_cards)
+                    zone_cards=zone_cards, unsourced=unsourced)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     all_ok = all_ok and _k_ok
@@ -600,6 +614,7 @@ class _KitCtx:
     groups: Dict[str, List[Path]]
     idx: Dict[str, Path]
     zone_cards: Dict[str, Path] = field(default_factory=dict)
+    unsourced: List[Tuple[Path, str]] = field(default_factory=list)  # без --sources: карточка, page_id
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -923,14 +938,17 @@ def _kc_review_guards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Сторож приписки сообщения (FB-12 КК, kitcheck.checks.card_controls._fc_message_attribution) не
     выполнен: у карточного файла контролей страница не указана или на ней нет таблицы с
-    колонкой сообщения — одна i-строка на комплект вместо строки на файл. Перечень — в --out."""
+    колонкой сообщения — одна i-строка на комплект вместо строки на файл. Перечень — в --out.
+    Без --sources молчит: сверка с источником — миграционный слой (трек rules, срез 3)."""
+    if ctx.sources is None:
+        return [], True
     per: List[Tuple[str, str]] = []
     for p in sorted(ctx.docs.rglob("cards-*.md")):
         text = _fs.read_text(p, encoding="utf-8", errors="replace")
         if not is_control_cards_file(p, text):
             continue
         pids = page_ids(read_frontmatter(p) or {})
-        srcs = [ctx.idx[x] for x in pids if x in ctx.idx] if ctx.sources is not None else []
+        srcs = [ctx.idx[x] for x in pids if x in ctx.idx]
         if not srcs:
             per.append((p.relative_to(ctx.docs).as_posix(), "страница не указана"
                         if not pids else "страница не сверялась"))
@@ -946,6 +964,20 @@ def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     rep = [f"i сверка сообщений карточек контролей с источником не выполнена: {len(per)} файлов ("
            + ", ".join(f"{k} ×{n}" for k, n in kinds.items()) + ")"]
     rep += [f"{OUT_ONLY}{f}: {k}" for f, k in per]
+    return rep, True
+
+
+def _kc_unsourced_cards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Карточки с confluence_page_ids в прогоне без --sources (Р-2 (б), трек rules, срез 3):
+    вместо строки «не сверялся» на каждой — одна i-строка на комплект с числом и командой
+    включения сверки; перечень (путь, page id) — в --out. С --sources и при N = 0 молчит."""
+    if ctx.sources is not None or not ctx.unsourced:
+        return [], True
+    rep = [f"i карточек с происхождением из Confluence (confluence_page_ids): {len(ctx.unsourced)}; "
+           "выгрузки в репозитории нет — сверка с источником: selfcheck.py --sources "
+           "<архив src-<service-id>>"]
+    rep += [f"{OUT_ONLY}{p.relative_to(ctx.docs).as_posix()}: page_id {pid}"
+            for p, pid in sorted(ctx.unsourced)]
     return rep, True
 
 
@@ -1274,6 +1306,7 @@ KIT_CHECKS: List[Check] = [
     Check("review_guards", _kc_review_guards, affects_verdict=False),
     Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
           affects_verdict=False),
+    Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),
     Check("oq_classes", _kc_oq_classes, affects_verdict=False),
     Check("task_tags", _kc_task_tags, affects_verdict=False),
     Check("module_zone", _kc_module_zone, affects_verdict=False),

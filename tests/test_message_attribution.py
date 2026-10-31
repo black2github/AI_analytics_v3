@@ -204,8 +204,9 @@ def test_kit_summary_line(tmp_path):
     for name in ("cards-a.md", "cards-b.md"):
         (docs / "srs" / "control" / name).write_text(
             "---\ntype: control\nentity: ENT-001\n---\n\n# К\n\n" + body, encoding="utf-8")
-    ctx = selfcheck._KitCtx(docs=docs, sources=None, strict=False, catalog=None, card_ids={},
-                            card_titles={}, fm_schema_issues=[], groups={}, idx={})
+    # с --sources: без выгрузки сводная строка молчит (трек rules, срез 3)
+    ctx = selfcheck._KitCtx(docs=docs, sources=tmp_path / "conf", strict=False, catalog=None,
+                            card_ids={}, card_titles={}, fm_schema_issues=[], groups={}, idx={})
     rep, ok = selfcheck._kc_message_attribution_unchecked(ctx)
     assert ok and rep[0] == ("i сверка сообщений карточек контролей с источником не выполнена: "
                              "2 файлов (страница не указана ×2)")

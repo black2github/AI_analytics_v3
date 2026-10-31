@@ -285,7 +285,13 @@ def _fc_shortening_markers(fx: "_FileCtx") -> Tuple[List[str], bool]:
                     "(контекст совпадает) — сокращением не считается")
                 cnt -= pardoned
         if cnt:
-            if soft_markers:
+            # прогон без выгрузки (selfcheck без --sources) — об источнике
+            # не говорим, его нет (трек rules, срез 3)
+            if soft_markers and fx.without_sources:
+                report.append(
+                    f"предупреждение: маркер сокращения «{marker}» ×{cnt} — "
+                    f"проверьте, что перечень приведён целиком")
+            elif soft_markers:
                 report.append(
                     f"предупреждение: маркер сокращения «{marker}» ×{cnt} — "
                     f"проверьте, что справочники и перечни источника "
