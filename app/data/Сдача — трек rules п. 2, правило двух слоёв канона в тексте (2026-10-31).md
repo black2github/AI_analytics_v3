@@ -39,7 +39,9 @@ git -C C:/tmp/canon-layers push -u origin meta/layers-rule
 
 `app/data/Постановка для сессии прибора — пометка Слой миграция, тест полноты, kitcheck README (2026-10-31).md`:
 строка `Слой: миграция` в докстринге миграционных утилит и модулей (в analyzer: `source_inventory`, `source_coverage`,
-`normalize_tables` с оговоркой про `--check`, `raw_oracle`, `kitcheck/checks/source_profile.py`, `card_source.py`; три
+`normalize_tables` с оговоркой про `--check`, `raw_oracle`, `kitcheck/checks/source_profile.py`; `card_source.py` — смешанный,
+без пометки (уточнение сессии прибора 31.10: `SOURCE_CHECKS` запускается всегда, с источником сверяют 2 из 9 проверок; строки
+таблицы README канона переписаны по факту, добавлен `raw_oracle.py`); три
 `scan_*` — прямо в каноне при копии), тест полноты с проверкой на НЕсрабатывание для ядра, пункт «источник и поведение
 без него» в `kitcheck/README.md`, копия в канон их срезом. Оценка 1–1,5 ч.
 
