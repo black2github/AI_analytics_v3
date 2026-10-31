@@ -562,6 +562,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     return report, ok
 
 
+# реестр запускается всегда; сверка с источником (source_cell_completeness,
+# source_comparison) — только при --sources (src_text не None), миграционный слой
 SOURCE_CHECKS: List[Check] = [
     Check("clean_document", _rc_clean_document, scope="file"),
     Check("form_entity_names", _rc_form_entity_names, scope="file"),

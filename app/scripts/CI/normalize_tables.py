@@ -1,4 +1,5 @@
 # app/scripts/CI/normalize_tables.py
+# Слой: миграция (нормализатор сырых HTML-таблиц); `--check` — проверки карточки ядра (`kitcheck/checks/card_*`), работает без выгрузки
 #
 # Нормализатор сырых HTML-таблиц в markdown-файлах (проход 1
 # двухпроходного разбора source-parsing).

@@ -1,4 +1,5 @@
 # app/scripts/CI/kitcheck/checks/source_profile.py
+# Слой: миграция
 """Проверки selfcheck: source_profile — перенесены из selfcheck.py дословно (этап 3 рефакторинга);
 selfcheck реэкспортирует имена."""
 import sys
