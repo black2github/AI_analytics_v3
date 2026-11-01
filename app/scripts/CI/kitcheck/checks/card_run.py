@@ -26,7 +26,7 @@ from .card_source import (
     _fc_source_page_refs_and_columns, _frontmatter_title, check_cell_coverage,
     check_example_values_absent, check_image_trace, check_outside_template_section,
     check_quoted_literals, check_source_tables, check_title, check_unchecked_tables,
-    source_role_literals, source_tables_summary
+    source_role_literals, source_tables_summary, thin_call_home
 )
 from .card_steps import (
     check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
@@ -424,17 +424,24 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         m_type = re.search(r"^type:\s*([\w-]+)", _fm_head(card_text), re.M)
         steps_apply = (m_type is None or m_type.group(1) in
                        {"process", "agent", "function", "notification"})
-        src_report, src_ok = check_source_tables(combined, src_text)
+        debts_text = ""
+        if docs_root is not None and (Path(docs_root) / "traceability-matrix.md").is_file():
+            debts_text = _fs.read_text(Path(docs_root) / "traceability-matrix.md",
+                                       encoding="utf-8", errors="replace")
+        # тонкая карточка вызова (шаблон contract-call, решение владельца канона
+        # 2026-11-01, КК CALL-EXT-007…034): состав параметров и примеры — в базовом
+        # контракте / на странице среза, имена параметров HTML-сеток и литералы из
+        # таблиц источника не требуются; литералы прозы — как прежде
+        thin_call = (thin_call_home(card_text, debts_text)
+                     if m_type is not None and m_type.group(1) == "contract-call"
+                     else None)
+        src_report, src_ok = check_source_tables(combined, src_text, thin_call=thin_call)
         # волна 9 ОНБ-В (ЗК-04): таблицы без дословных значений, изображения без
         # следа, перечень таблиц источника — только ⚠ / i
         readme = main_file.parent / "README.md" if main_file is not None else None
         readme_text = (_fs.read_text(readme, encoding="utf-8", errors="replace")
                        if readme is not None and readme.is_file() and readme != main_file else "")
         src_report = src_report + check_unchecked_tables(combined, src_text, readme_text)
-        debts_text = ""
-        if docs_root is not None and (Path(docs_root) / "traceability-matrix.md").is_file():
-            debts_text = _fs.read_text(Path(docs_root) / "traceability-matrix.md",
-                                       encoding="utf-8", errors="replace")
         ids = re.findall(r"^(?:id|partOf):\s*['\"]?([\w.-]+)", combined, re.M)
         src_report = src_report + check_image_trace(combined, src_text, debts_text, ids)
         src_report = src_report + source_tables_summary(src_text)
@@ -555,7 +562,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                     if f not in files and f.parent != main_file.parent] or None
             ql_report, ql_ok = check_quoted_literals(combined, src_text,
                                                      sibling_text=sib_txt,
-                                                     page_artifacts=page_art)
+                                                     page_artifacts=page_art,
+                                                     thin_call=thin_call)
         report.extend(src_report)
         report.extend(ttl_report)
         report.extend(bh_report)

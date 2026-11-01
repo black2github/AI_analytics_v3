@@ -414,17 +414,51 @@ def _blank_page_link_labels(body: str) -> str:
                    if _PAGE_TARGET_RE.search(m.group(2)) else m.group(0)), body)
 
 
+_TABLE_TAG_RE = re.compile(r"<(/?)table\b[^>]*>", re.IGNORECASE)
+
+
+def _source_prose(body: str) -> str:
+    """Проза источника: верхнеуровневые HTML-таблицы (вложенные — в их составе),
+    строки pipe-таблиц и закрытые блоки кода (границы — kitcheck/fence.py; JSON-примеры
+    запроса и ответа) заменены пустыми строками. Незакрытая таблица и незакрытый блок
+    кода остаются прозой — их литералы требуются (асимметрия ошибок)."""
+    out, pos, depth, start = [], 0, 0, 0
+    for m in _TABLE_TAG_RE.finditer(body):
+        if not m.group(1):
+            if depth == 0:
+                start = m.start()
+            depth += 1
+        elif depth:
+            depth -= 1
+            if depth == 0:
+                out.append(body[pos:start] + "\n")
+                pos = m.end()
+    out.append(body[pos:])
+    lines = "".join(out).split("\n")
+    code = [False] * len(lines)
+    for b in _fence.blocks(lines):
+        if b.closed:
+            code[b.start:b.end + 1] = [True] * (b.end + 1 - b.start)
+    return "\n".join("" if code[i] or ln.strip().startswith("|") else ln
+                     for i, ln in enumerate(lines))
+
+
 def quoted_literals(source_text: str,
-                    skip_page_link_labels: bool = False) -> List[str]:
+                    skip_page_link_labels: bool = False,
+                    prose_only: bool = False) -> List[str]:
     """Кавычечные литералы источника. skip_page_link_labels — не брать
     литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
     источник → карточка); сторож вариантов написания по чистовику (selfcheck)
-    зовёт без него."""
+    зовёт без него. prose_only — только литералы прозы (_source_prose): тонкой
+    карточке вызова значения формата и примеров из таблиц параметров и блоков
+    кода не требуются."""
     body = _fm_body(source_text)
     headings = _source_headings(body)
     flk_cells = _flk_example_cells(body)
     if skip_page_link_labels:
         body = _blank_page_link_labels(body)
+    if prose_only:
+        body = _source_prose(body)
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
     # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
     # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
@@ -499,7 +533,8 @@ def quoted_literals(source_text: str,
 def check_quoted_literals(card_text: str,
                           source_text: str,
                           sibling_text: Optional[str] = None,
-                          page_artifacts: Optional[List[Tuple[str, str]]] = None
+                          page_artifacts: Optional[List[Tuple[str, str]]] = None,
+                          thin_call: Optional[str] = None
                           ) -> Tuple[List[str], bool]:
     """Каждый кавычечный литерал источника обязан присутствовать в карточке
     (сравнение нормализованное, кавычки не требуются).
@@ -518,14 +553,29 @@ def check_quoted_literals(card_text: str,
     разложение по решению, а не по соседству — отдельная i-строка с файлами.
     Литерал, которого нет ни в группе, ни в каталоге, ни в артефактах той же
     страницы, — ✗ как прежде. Литерал из ярлыка ссылки на страницу
-    выгрузки/Confluence не требуется: титул чужой страницы — адрес."""
+    выгрузки/Confluence не требуется: титул чужой страницы — адрес.
+
+    thin_call — дом состава параметров тонкой карточки вызова (thin_call_home):
+    литералы, стоящие в источнике только в таблицах и блоках кода (значения
+    формата и примеров), не требуются — i-строка с числом; литерал прозы — как
+    прежде."""
     lits = quoted_literals(source_text, skip_page_link_labels=True)
+    report: List[str] = []
+    if thin_call and lits:
+        prose = {_norm_cell(v) for v in quoted_literals(
+            source_text, skip_page_link_labels=True, prose_only=True)}
+        not_prose = [v for v in lits if _norm_cell(v) not in prose]
+        if not_prose:
+            lits = [v for v in lits if v not in not_prose]
+            report.append(
+                f"i тонкая карточка вызова: состав параметров и примеры — {thin_call}; "
+                f"литералов из таблиц и блоков кода источника не сверялось: "
+                f"{len(not_prose)}")
     if not lits:
-        return [], True
+        return report, True
     norm_card = _fold_homoglyphs(_norm_cell(card_text))
     lost = [v for v in lits
             if _fold_homoglyphs(_norm_cell(v)) not in norm_card]
-    report: List[str] = []
     if lost and sibling_text:
         sib_norm = _fold_homoglyphs(_norm_cell(sibling_text))
         relocated = [v for v in lost
@@ -761,14 +811,47 @@ def passport_kind(hdr: List[str], rows: List[List[str]]) -> Optional[str]:
     return None
 
 
-def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bool]:
+# Тонкая карточка вызова (шаблон contract-call: «thin: ссылка на базовый контракт +
+# использование»; имя метода, транспорт и состав параметров живут в базовом контракте
+# поставщика). Признак — ссылка на базовый в строке «**Базовый контракт:**» либо долг
+# «класс карточки» этой карточки в матрице (собственный метод сервиса под именем внешней
+# АС: состав — на странице среза до переклассификации). «Базовый контракт: отсутствует»
+# / «нет …» без долга класса — не тонкая: сверка как прежде.
+_BASE_CONTRACT_LINK_RE = re.compile(
+    r"^\*\*Базовый контракт:\*\*[ \t]*\[((?:EXTINT|INTC|LIBC|MOD)(?:-[A-Z0-9]+)+)\b", re.M)
+_CARD_ID_RE = re.compile(r"^id:\s*['\"]?([\w.-]+)", re.M)
+
+
+def thin_call_home(card_text: str, debts_text: str = "") -> Optional[str]:
+    """Дом состава параметров тонкой карточки вызова («в базовом контракте <ID>» /
+    «на странице среза (долг класса)») или None — карточка не тонкая. Тип карточки
+    (contract-call) проверяет вызывающий."""
+    lines = card_text.split("\n")
+    code = _fence.code_flags(lines)
+    m = _BASE_CONTRACT_LINK_RE.search(
+        "\n".join(ln for i, ln in enumerate(lines) if not code[i]))
+    if m:
+        return f"в базовом контракте {m.group(1)}"
+    cid = _CARD_ID_RE.search(_fm_head(card_text))
+    if cid and debts_text and re.search(
+            rf"^\|\s*{re.escape(cid.group(1))}\s*\|[^\n]*класс карточки",
+            debts_text, re.M | re.I):
+        return "на странице среза (долг класса)"
+    return None
+
+
+def check_source_tables(card_text: str, source_text: str,
+                        thin_call: Optional[str] = None) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
     в карточке значениями ВСЕХ колонок.
 
     Агент четырежды ужимал справочник (итерации 6-секст…6-нон, 2026-08-09),
     в том числе обойдя словесный гейт «фрагмент» — сторожим содержимое, а не
-    слова. Таблицы из 1 колонки или <2 строк не сверяются (служебные)."""
+    слова. Таблицы из 1 колонки или <2 строк не сверяются (служебные).
+
+    thin_call — дом состава параметров тонкой карточки вызова (thin_call_home):
+    имена параметров HTML-сеток не требуются — i-строка с числом."""
     report: List[str] = []
     ok = True
     card_norm = _cmp_text(card_text)
@@ -920,7 +1003,11 @@ def check_source_tables(card_text: str, source_text: str) -> Tuple[List[str], bo
     html_names = html_param_names(source_text)
     lost = sorted(n for n in html_names
                   if _cmp_text(n) not in card_norm)
-    if lost:
+    if thin_call and html_names:
+        report.append(
+            f"i тонкая карточка вызова: состав параметров — {thin_call}; "
+            f"имён параметров HTML-таблиц не сверялось: {len(html_names)}")
+    elif lost:
         ok = False
         report.append(
             f"HTML-таблицы источника: в карточке отсутствуют "

@@ -5397,3 +5397,163 @@ class TestCompareFoldQuotesAndLinkId:
         assert not ok
         rep, ok = check_quoted_literals("Кнопка «Сохранить черновик» внизу формы.", source)
         assert ok
+
+
+class TestThinCallCardTableLiterals:
+    """Тонкая карточка вызова (шаблон contract-call: состав параметров и примеры — в базовом
+    контракте / на странице среза; КК CALL-EXT-007…034, 2026-11-01): имена параметров
+    HTML-сеток и литералы из таблиц источника не требуются, литералы прозы — как прежде."""
+
+    SRC = ('---\ntitle: АС Ф1_Получение счетов\n---\n\n'
+           '<p>Метод возвращает счета клиента. При ошибке выводится "Сервис недоступен".</p>\n'
+           '<table><tbody>\n'
+           '<tr><th>Параметр</th><th>Описание</th></tr>\n'
+           '<tr><td>accountNumber</td><td>Номер счета, пример "40702810000260002215"</td></tr>\n'
+           '<tr><td>clientCode</td><td>Тип счета "typeContrAccount"</td></tr>\n'
+           '</tbody></table>\n')
+    BASE = "**Базовый контракт:** [EXTINT-F1-901. Получение счетов](https://x/f1/extint-f1-901.md)\n"
+    DEBT = ("| CALL-EXT-901 | — | долг противоречие: «класс карточки — собственный REST-метод "
+            "сервиса, не вызов АС Ф1» — закрытие: переклассификация в INTC |\n")
+    HOME = "в базовом контракте EXTINT-F1-901"
+
+    def _card(self, base: str, prose: str = "При ошибке выводится «Сервис недоступен».",
+              ctype: str = "contract-call") -> str:
+        return ("---\nid: CALL-EXT-901\ntitle: 'АС Ф1_Получение счетов'\n"
+                f"type: {ctype}\n---\n\n# CALL-EXT-901. АС Ф1_Получение счетов\n\n"
+                f"{base}\nМетод возвращает счета клиента. {prose}\n")
+
+    def _run(self, tmp_path, card_text: str, debts: str = ""):
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        docs = tmp_path / "docs"
+        (docs / "srs").mkdir(parents=True)
+        (docs / "traceability-matrix.md").write_text(debts, encoding="utf-8")
+        card = docs / "srs" / "call-ext-901.md"
+        card.write_text(card_text, encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        return run_check([card], src, docs_root=docs)
+
+    # --- признак тонкости ---
+
+    def test_thin_home_by_base_link(self):
+        from app.scripts.CI.kitcheck.checks.card_source import thin_call_home
+        assert thin_call_home(self._card(self.BASE)) == self.HOME
+
+    def test_thin_home_by_class_debt(self):
+        from app.scripts.CI.kitcheck.checks.card_source import thin_call_home
+        card = self._card("**Базовый контракт:** отсутствует\n")
+        assert thin_call_home(card, self.DEBT) == "на странице среза (долг класса)"
+
+    def test_not_thin_without_base_and_class_debt(self):
+        # НЕсрабатывание: «отсутствует» / «нет базового контракта EXTINT-…» и долг другого вида
+        from app.scripts.CI.kitcheck.checks.card_source import thin_call_home
+        other = "| CALL-EXT-901 | — | нет базового контракта у владельца f1 |\n"
+        for base in ("**Базовый контракт:** отсутствует\n",
+                     "**Базовый контракт:** нет — нет базового контракта EXTINT-SVFE-NNN\n"):
+            assert thin_call_home(self._card(base), other) is None
+
+    def test_base_link_in_code_block_not_thin(self):
+        from app.scripts.CI.kitcheck.checks.card_source import thin_call_home
+        assert thin_call_home(self._card("```\n" + self.BASE + "```\n")) is None
+
+    # --- сторожа по отдельности ---
+
+    def test_table_literals_skipped_prose_kept(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC + ('\n| Поле | Формат |\n|---|---|\n| dateFrom | "2002-12-01" |\n'
+                          '| dateTo | "2031-12-13" |\n')
+        card = "При ошибке выводится «Сервис недоступен».\n"
+        rep, ok = check_quoted_literals(card, src, thin_call=self.HOME)
+        assert ok, rep
+        assert any("литералов из таблиц и блоков кода источника не сверялось: 4" in r for r in rep), rep
+
+    def test_prose_literal_lost_in_thin_card(self):
+        # ограничитель: литерал прозы обязателен и у тонкой карточки
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals("Метод без текста ошибки.\n", self.SRC,
+                                        thin_call=self.HOME)
+        assert not ok and any("Сервис недоступен" in r for r in rep), rep
+
+    def test_literal_in_table_and_prose_required(self):
+        # литерал, стоящий и в таблице, и в прозе, — литерал прозы: обязателен
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC + '\n<p>Тип "typeContrAccount" передаётся всегда.</p>\n'
+        rep, ok = check_quoted_literals("При ошибке выводится «Сервис недоступен».\n", src,
+                                        thin_call=self.HOME)
+        assert not ok and any("typeContrAccount" in r for r in rep), rep
+
+    def test_code_block_example_literals_skipped(self):
+        # JSON-пример запроса в блоке кода (КК CALL-EXT-008: "reportDateFrom": "2002-12-01") —
+        # пример живёт в базовом контракте, у тонкой карточки не требуется
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC + '\n```json\n{\n  "reportDateFrom": "2002-12-01"\n}\n```\n'
+        card = "При ошибке выводится «Сервис недоступен».\n"
+        rep, ok = check_quoted_literals(card, src, thin_call=self.HOME)
+        assert ok, rep
+        assert any("не сверялось: 4" in r for r in rep), rep
+        rep, ok = check_quoted_literals(card, src)
+        assert not ok and any("отсутствуют 4 из 5" in r for r in rep), rep
+
+    def test_unclosed_code_block_stays_prose(self):
+        # асимметрия ошибок: незакрытый блок кода — проза, литерал требуется
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC + '\n```\nПосле ошибки показать "Повторите позже".\n'
+        rep, ok = check_quoted_literals("При ошибке выводится «Сервис недоступен».\n", src,
+                                        thin_call=self.HOME)
+        assert not ok and any("Повторите позже" in r for r in rep), rep
+
+    def test_legacy_literals_unchanged(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals("При ошибке выводится «Сервис недоступен».\n", self.SRC)
+        assert not ok and any("отсутствуют 2 из 3" in r for r in rep), rep
+
+    def test_html_param_names_skipped(self):
+        rep, ok = check_source_tables("пусто\n", self.SRC, thin_call=self.HOME)
+        assert ok, rep
+        assert any("имён параметров HTML-таблиц не сверялось: 2" in r for r in rep), rep
+        rep, ok = check_source_tables("пусто\n", self.SRC)
+        assert not ok and any("отсутствуют 2 имён параметров" in r for r in rep), rep
+
+    def test_unclosed_table_stays_prose(self):
+        # асимметрия ошибок: незакрытая таблица — проза, литерал требуется
+        from app.scripts.CI.kitcheck.checks.card_source import _source_prose
+        body = '<p>до</p>\n<table><tr><td>"Внутри"</td></tr>\n'
+        assert _source_prose(body) == body
+
+    # --- связка run_check ---
+
+    def test_run_thin_by_base(self, tmp_path):
+        rep, _ = self._run(tmp_path, self._card(self.BASE))
+        txt = "\n".join(rep)
+        assert "имён параметров HTML-таблиц не сверялось: 2" in txt, txt
+        assert "литералов из таблиц и блоков кода источника не сверялось: 2" in txt, txt
+        assert "кавычечные литералы источника: все 1 на месте ✓" in txt, txt
+        assert "НИЖЕ ПОРОГА" not in txt, txt
+
+    def test_run_thin_by_class_debt(self, tmp_path):
+        rep, _ = self._run(tmp_path, self._card("**Базовый контракт:** отсутствует\n"),
+                           debts=self.DEBT)
+        txt = "\n".join(rep)
+        assert "на странице среза (долг класса)" in txt, txt
+        assert "НИЖЕ ПОРОГА" not in txt, txt
+
+    def test_run_prose_literal_lost(self, tmp_path):
+        rep, ok = self._run(tmp_path, self._card(self.BASE, prose="Ошибка — по коду."))
+        assert not ok
+        assert any("кавычечные литералы" in r and "Сервис недоступен" in r for r in rep), rep
+
+    def test_run_contract_call_without_base_unchanged(self, tmp_path):
+        # CALL-EXT-035 КК: «Базовый контракт: отсутствует», долг «нет базового контракта»
+        rep, ok = self._run(tmp_path, self._card("**Базовый контракт:** отсутствует\n"),
+                            debts="| CALL-EXT-901 | — | нет базового контракта у владельца f1 |\n")
+        txt = "\n".join(rep)
+        assert not ok
+        assert "отсутствуют 2 имён параметров" in txt and "отсутствуют 2 из 3" in txt, txt
+        assert "тонкая карточка" not in txt, txt
+
+    def test_run_process_type_unchanged(self, tmp_path):
+        rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="process"))
+        txt = "\n".join(rep)
+        assert not ok
+        assert "отсутствуют 2 имён параметров" in txt and "отсутствуют 2 из 3" in txt, txt
+        assert "тонкая карточка" not in txt, txt
