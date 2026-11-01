@@ -68,9 +68,9 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 try:
-    from kitcheck.core import Check, is_soft_signal, run_checks  # noqa: E402
+    from kitcheck.core import Check, is_examples_signal, is_soft_signal, run_checks  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
-    from .kitcheck.core import Check, is_soft_signal, run_checks  # type: ignore  # noqa: E402
+    from .kitcheck.core import Check, is_examples_signal, is_soft_signal, run_checks  # type: ignore  # noqa: E402
 try:
     from kitcheck.checks._common import (  # noqa: E402,F401 — этап 3
         _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
@@ -306,6 +306,9 @@ def _run_impl(docs: Path, sources: Optional[Path],
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
     report: List[str] = []
     counts = {"✓": 0, "✗": 0, "⚠": 0}
+    # класс «примеры» (решение 2026-11-01): файлы с предупреждением о содержимом примера —
+    # отдельный счётчик ИТОГО, вердикт не меняет
+    ex_files: set = set()
     all_ok = True
 
     idx: Dict[str, Path] = {}
@@ -477,6 +480,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                        without_sources=sources is None)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
+        if any(is_examples_signal(ln) for ln in rep):
+            ex_files.add(p)
         all_ok = all_ok and ok
         if ok:
             report.append(f"✓ {p.relative_to(docs)}"
@@ -525,6 +530,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         rep, ok = _run(files, src, docs, soft_markers=not strict,
                        amnesty=amnesty or None,
                        allow_sibling_docs=allow_sibling_docs)
+        if any(is_examples_signal(ln) for ln in rep):
+            ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
         # ссылки макетов живут в НЕсверяемом README-оглавлении — их
         # наличие сторожится здесь (сверка ячейки макетов отключена)
@@ -551,6 +558,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                              allow_sibling_docs=allow_sibling_docs)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
+            if any(is_examples_signal(ln) for ln in rep2):
+                ex_files.add(extra)
         mark = "✓" if ok else "✗"
         # пустой источник (2026-10-05): ✓ без сверки — фиктивная зелень.
         # Замороженная страница (флаг unapproved_jira) — ✗: карточка по
@@ -586,11 +595,13 @@ def _run_impl(docs: Path, sources: Optional[Path],
                     zone_cards=zone_cards, unsourced=unsourced)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
+    n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
     all_ok = all_ok and _k_ok
 
     total = sum(counts.values())
     report.append(f"ИТОГО: файлов {total} — ✓ {counts['✓']}, "
-                  f"✗ {counts['✗']}, ⚠ {counts['⚠']}; вердикт: "
+                  f"✗ {counts['✗']}, ⚠ {counts['⚠']}, "
+                  f"⚠ примеры: {len(ex_files) + n_ex_kit}; вердикт: "
                   + ("OK" if all_ok else "БРАК"))
     return report, all_ok
 

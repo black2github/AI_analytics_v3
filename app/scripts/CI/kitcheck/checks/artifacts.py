@@ -98,11 +98,29 @@ def _struct_tokens(raw: bytes) -> List[str]:
 
 def check_structured_examples(docs: Path, idx: Dict[str, Path]
                               ) -> Tuple[List[str], bool]:
-    """(отчёт, ok). idx: page_id -> файл выгрузки (пусто без источников)."""
+    """(отчёт, ok). idx: page_id -> файл выгрузки (пусто без источников).
+
+    Класс «примеры» (решение владельца канона 2026-11-01: пример не норма): брак переноса —
+    только факт — sidecar пуст или не читается (отсутствие файла по ссылке — сторож
+    относительных ссылок). Невалидный формат — предупреждение «⚠ примеры:»."""
+    rep: List[str] = []
+    ok = True
+    for f in sorted(p for p in docs.rglob("*")
+                    if p.is_file() and "examples" in p.relative_to(docs).parts[:-1]):
+        rel = f.relative_to(docs).as_posix()
+        try:
+            raw = _fs.read_bytes(f)
+        except OSError as e:
+            ok = False
+            rep.append(f"✗ sidecar {rel} не читается ({e.__class__.__name__}) — брак переноса")
+            continue
+        if not raw.strip():
+            ok = False
+            rep.append(f"✗ sidecar {rel} пуст — брак переноса: пример источника не перенесён")
     files = sorted(p for p in docs.rglob("*")
                    if p.is_file() and p.suffix.lower() in _STRUCT_EXT)
     if not files:
-        return [], True
+        return rep, ok
     owners: Dict[Path, List[Path]] = {}
     for md in _kit_md(docs):
         try:
@@ -119,12 +137,22 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
                 continue
             if rp.suffix.lower() in _STRUCT_EXT:
                 owners.setdefault(rp, []).append(md)
-    rep: List[str] = []
-    ok = True
     n_ok = 0
     for f in files:
         rel = f.relative_to(docs).as_posix()
-        raw = _fs.read_bytes(f)
+        in_examples = "examples" in f.relative_to(docs).parts[:-1]
+        try:
+            raw = _fs.read_bytes(f)
+        except OSError as e:
+            if not in_examples:         # sidecar examples/ — ✗ выше
+                ok = False
+                rep.append(f"✗ структурный файл {rel} не читается ({e.__class__.__name__})")
+            continue
+        if not raw.strip():
+            if not in_examples:
+                ok = False
+                rep.append(f"✗ структурный файл {rel} пуст")
+            continue
         ext = f.suffix.lower()
         if raw.startswith(_BOM):
             ok = False
@@ -160,19 +188,22 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
                         src_parses = True
                         break
                 break
+        extint = any(str((read_frontmatter(c) or {}).get("id", "")).upper()
+                     .startswith("EXTINT-") for c in cards)
+        note = (" — проверьте контракт: пример получен извне и служит свидетельством "
+                "фактического формата") if extint else ""
         if located is not None and not src_parses:
-            rep.append(f"⚠ структурный файл {rel} не разбирается ({err}); "
+            rep.append(f"⚠ примеры: структурный файл {rel} не разбирается ({err}); "
                        "в источнике пример тоже не разбирается — дефект "
                        "аналитики: сохранить как .txt с пометкой в карточке "
                        "и записью в вопросы, не чинить "
-                       f"(источник: {located.name})")
+                       f"(источник: {located.name}){note}")
             continue
-        ok = False
         why = ("в источнике тот же пример разбирается" if src_parses
                else "в источнике пример не найден" if pages
                else "источника нет")
-        rep.append(f"✗ структурный файл {rel} не разбирается ({err}); "
-                   f"{why} — брак переноса, чинится по источнику")
+        rep.append(f"⚠ примеры: структурный файл {rel} не разбирается ({err}); "
+                   f"{why} — пример не норма, сверить с источником приёмкой{note}")
     for f in files:
         if f.resolve() not in owners:
             rep.append(f"⚠ структурный файл {f.relative_to(docs).as_posix()} "

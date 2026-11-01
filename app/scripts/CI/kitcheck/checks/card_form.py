@@ -290,7 +290,7 @@ def _fc_shortening_markers(fx: "_FileCtx") -> Tuple[List[str], bool]:
             lines[i] = ln.replace(_SIDECAR_NOTE, " ")
     if n_sidecar:
         text = "\n".join(lines)
-        report.append(f"i пометка шаблона о невалидном sidecar ×{n_sidecar} — "
+        report.append(f"⚠ примеры: пометка шаблона о невалидном sidecar ×{n_sidecar} — "
                       "маркером сокращения не считается")
     for marker in ("фрагмент", "см. источник", "и т.д.", "и т. д."):
         cnt = text.lower().count(marker)

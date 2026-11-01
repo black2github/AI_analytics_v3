@@ -417,13 +417,14 @@ def _blank_page_link_labels(body: str) -> str:
 _TABLE_TAG_RE = re.compile(r"<(/?)table\b[^>]*>", re.IGNORECASE)
 
 
-def _source_prose(body: str) -> str:
+def _source_prose(body: str, tables: bool = True) -> str:
     """Проза источника: верхнеуровневые HTML-таблицы (вложенные — в их составе),
     строки pipe-таблиц и закрытые блоки кода (границы — kitcheck/fence.py; JSON-примеры
     запроса и ответа) заменены пустыми строками. Незакрытая таблица и незакрытый блок
-    кода остаются прозой — их литералы требуются (асимметрия ошибок)."""
+    кода остаются прозой — их литералы требуются (асимметрия ошибок). tables=False —
+    вырезаются только закрытые блоки кода, таблицы остаются."""
     out, pos, depth, start = [], 0, 0, 0
-    for m in _TABLE_TAG_RE.finditer(body):
+    for m in (_TABLE_TAG_RE.finditer(body) if tables else ()):
         if not m.group(1):
             if depth == 0:
                 start = m.start()
@@ -439,19 +440,21 @@ def _source_prose(body: str) -> str:
     for b in _fence.blocks(lines):
         if b.closed:
             code[b.start:b.end + 1] = [True] * (b.end + 1 - b.start)
-    return "\n".join("" if code[i] or ln.strip().startswith("|") else ln
+    return "\n".join("" if code[i] or (tables and ln.strip().startswith("|")) else ln
                      for i, ln in enumerate(lines))
 
 
 def quoted_literals(source_text: str,
                     skip_page_link_labels: bool = False,
-                    prose_only: bool = False) -> List[str]:
+                    prose_only: bool = False,
+                    no_code: bool = False) -> List[str]:
     """Кавычечные литералы источника. skip_page_link_labels — не брать
     литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
     источник → карточка); сторож вариантов написания по чистовику (selfcheck)
     зовёт без него. prose_only — только литералы прозы (_source_prose): тонкой
     карточке вызова значения формата и примеров из таблиц параметров и блоков
-    кода не требуются."""
+    кода не требуются. no_code — без закрытых блоков кода (таблицы остаются):
+    литерал только из примера в блоке кода — класс «примеры»."""
     body = _fm_body(source_text)
     headings = _source_headings(body)
     flk_cells = _flk_example_cells(body)
@@ -459,6 +462,8 @@ def quoted_literals(source_text: str,
         body = _blank_page_link_labels(body)
     if prose_only:
         body = _source_prose(body)
+    elif no_code:
+        body = _source_prose(body, tables=False)
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
     # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
     # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
@@ -602,6 +607,21 @@ def check_quoted_literals(card_text: str,
                 f"i кавычечные литералы ×{len(found)} найдены в артефактах той же "
                 f"страницы ({', '.join(where)}), не в группе сверки "
                 f"({'; '.join(repr(v[:40]) for v in found[:3])})")
+    # класс «примеры» (решение владельца канона 2026-11-01: пример не норма): литерал,
+    # который в источнике стоит только в закрытом блоке кода, — значение примера; его
+    # отсутствие в карточке и sidecar — предупреждение приёмке, не брак
+    if lost:
+        no_code = {_norm_cell(v) for v in quoted_literals(
+            source_text, skip_page_link_labels=True, no_code=True)}
+        code_only = [v for v in lits if _norm_cell(v) not in no_code]
+        ex_lost = [v for v in lost if v in code_only]
+        if ex_lost:
+            lost = [v for v in lost if v not in ex_lost]
+            report.append(
+                f"⚠ примеры: значения примера источника (блок кода) отсутствуют "
+                f"{len(ex_lost)} из {len(code_only)} — пример не норма, проверить "
+                "приёмкой" + (_EXTINT_EXAMPLE_NOTE if _is_extint(card_text) else "")
+                + "; примеры: " + "; ".join(repr(v[:50]) for v in ex_lost[:4]))
     if lost:
         report.append(
             f"кавычечные литералы источника: в карточке отсутствуют "
@@ -609,9 +629,22 @@ def check_quoted_literals(card_text: str,
             "кнопок и значений переносятся дословно); примеры: "
             + "; ".join(repr(v[:50]) for v in lost[:4]))
         return report, False
+    n_ex = sum(1 for ln in report if ln.startswith("⚠ примеры:"))
     report.append(f"кавычечные литералы источника: все {len(lits)} "
-                  "на месте ✓")
+                  "на месте ✓" if not n_ex else
+                  "кавычечные литералы источника: тексты и значения вне примеров на месте ✓")
     return report, True
+
+
+# Базовый контракт внешней АС: пример получен от поставщика и свидетельствует о фактическом
+# формате — расхождение примера с контрактом проверяется по контракту
+_EXTINT_EXAMPLE_NOTE = (" — проверьте контракт: пример получен извне и служит "
+                        "свидетельством фактического формата")
+
+
+def _is_extint(card_text: str) -> bool:
+    m = _CARD_ID_RE.search(_fm_head(card_text))
+    return bool(m and m.group(1).upper().startswith("EXTINT-"))
 
 
 _FM_TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$", re.M)

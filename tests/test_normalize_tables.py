@@ -1914,7 +1914,9 @@ class TestCheckTruncationMarkers:
             self.BASE + self._EXH + f"| Пример запроса | [r.txt]({link}) — {self._NOTE} |\n", tmp_path)
         assert ok, "\n".join(rep)
         assert not any("маркер сокращения" in l for l in rep)
-        assert any("пометка шаблона о невалидном sidecar ×1" in l for l in rep)
+        # класс «примеры» (решение 2026-11-01): строка с префиксом, вердикт не меняется
+        assert any(l.startswith("⚠ примеры: пометка шаблона о невалидном sidecar ×1")
+                   for l in rep), rep
 
     def test_sidecar_note_at_json_link_flagged(self, tmp_path):
         # НЕсрабатывание: та же формула у ссылки на .json — маркер
@@ -5534,8 +5536,12 @@ class TestThinCallCardTableLiterals:
         rep, ok = check_quoted_literals(card, src, thin_call=self.HOME)
         assert ok, rep
         assert any("не сверялось: 4" in r for r in rep), rep
+        # не тонкая: литералы таблицы — ✗; литералы только из блока кода — класс «примеры»
+        # (решение владельца 2026-11-01: пример не норма)
         rep, ok = check_quoted_literals(card, src)
-        assert not ok and any("отсутствуют 4 из 5" in r for r in rep), rep
+        assert not ok and any("отсутствуют 2 из 5" in r for r in rep), rep
+        assert any(r.startswith("⚠ примеры: значения примера источника (блок кода) "
+                                "отсутствуют 2 из 2") for r in rep), rep
 
     def test_unclosed_code_block_stays_prose(self):
         # асимметрия ошибок: незакрытый блок кода — проза, литерал требуется
@@ -5729,3 +5735,86 @@ class TestSidecarRelativeLink:
     def test_missing_file(self, tmp_path):
         txt = self._run(tmp_path, "../examples/nope.txt")
         assert "отсутствуют 2 из 2" in txt, txt
+
+
+class TestExamplesClass:
+    """Класс «примеры» (решение владельца канона 2026-11-01: пример не норма): литерал,
+    который в источнике стоит только в закрытом блоке кода, при отсутствии в карточке и
+    sidecar — «⚠ примеры:», не ✗, для карточек любого типа. Литералы прозы и таблиц — ✗."""
+
+    SRC = ('---\ntitle: ЭКО_Метод\n---\n\n'
+           'При ошибке выводится "Сервис недоступен".\n\n'
+           '| Поле | Описание |\n|---|---|\n| status | значение "ACTIVE" |\n| code | "E01" |\n\n'
+           'Пример запроса:\n\n```json\n{"clientId": "c060253d-aaaa", "dateFrom": "2026-01-01"}\n```\n')
+    CARD = ("---\nid: {cid}\ntitle: 'ЭКО_Метод'\ntype: {ctype}\n---\n\n# {cid}. ЭКО_Метод\n\n"
+            "При ошибке выводится «Сервис недоступен». status = ACTIVE, code = E01.\n")
+
+    def _card(self, cid="INTC-901", ctype="internal-contract", drop=""):
+        return self.CARD.format(cid=cid, ctype=ctype).replace(drop, "") if drop else \
+            self.CARD.format(cid=cid, ctype=ctype)
+
+    def test_code_only_literals_are_examples_warning(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(), self.SRC)
+        assert ok, rep
+        ex = [r for r in rep if r.startswith("⚠ примеры:")]
+        assert len(ex) == 1 and "отсутствуют 4 из 4" in ex[0], rep
+        assert "проверьте контракт" not in ex[0]
+        assert any("тексты и значения вне примеров на месте ✓" in r for r in rep), rep
+
+    @pytest.mark.parametrize("ctype", ["process", "function", "data-model"])
+    def test_any_card_type(self, ctype):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(ctype=ctype), self.SRC)
+        assert ok and any(r.startswith("⚠ примеры:") for r in rep), rep
+
+    def test_extint_says_check_contract(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(cid="EXTINT-F1-901", ctype="external-contract"),
+                                        self.SRC)
+        assert ok and any(r.startswith("⚠ примеры:") and "проверьте контракт: пример получен "
+                          "извне" in r for r in rep), rep
+
+    def test_prose_literal_lost_is_defect(self):
+        # НЕсрабатывание: литерал прозы — ✗
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(drop="«Сервис недоступен»"), self.SRC)
+        assert not ok and any("✗" in r and "Сервис недоступен" in r for r in rep), rep
+
+    def test_table_literal_lost_is_defect(self):
+        # НЕсрабатывание: литерал таблицы у НЕ тонкой карточки — ✗
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(drop=" status = ACTIVE,"), self.SRC)
+        assert not ok and any("✗" in r and "ACTIVE" in r for r in rep), rep
+
+    def test_literal_in_code_and_prose_is_defect(self):
+        # НЕсрабатывание: литерал и в блоке кода, и в прозе — литерал прозы
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC + '\nДата начала — "2026-01-01".\n'
+        rep, ok = check_quoted_literals(self._card(), src)
+        assert not ok and any("✗" in r and "2026-01-01" in r for r in rep), rep
+
+    def test_source_without_examples_unchanged(self):
+        # тип/страница без примеров — отчёт как прежде
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.SRC.split("Пример запроса:")[0]
+        rep, ok = check_quoted_literals(self._card(), src)
+        assert ok and rep == ["кавычечные литералы источника: все 3 на месте ✓"], rep
+
+    def test_signal_visible_and_counted(self):
+        from app.scripts.CI.kitcheck.core import is_examples_signal, is_soft_signal
+        for ln in ("⚠ примеры: значения примера", "[intc-005.md] ⚠ примеры: пометка шаблона"):
+            assert is_soft_signal(ln) and is_examples_signal(ln)
+        assert not is_examples_signal("⚠ структурный файл x.json без ссылающейся карточки")
+
+    def test_run_check_examples_not_verdict(self, tmp_path):
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        docs = tmp_path / "docs"
+        card = docs / "srs" / "intc-901.md"
+        card.parent.mkdir(parents=True)
+        card.write_text(self._card(), encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, _ok = run_check([card], src, docs_root=docs)
+        assert any(r.startswith("⚠ примеры:") for r in rep), rep
+        assert not any("кавычечные литералы источника: в карточке отсутствуют" in r for r in rep), rep

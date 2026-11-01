@@ -1796,11 +1796,14 @@ class TestStructuredExamples:
         rep, ok = selfcheck.check_structured_examples(docs, {})
         assert not ok and any("BOM в начале — брак переноса" in l for l in rep)
 
-    def test_invalid_without_sources_is_defect(self, tmp_path):
+    # класс «примеры» (решение владельца 2026-11-01: пример не норма): невалидный формат
+    # sidecar — предупреждение «⚠ примеры:», вердикт не меняется; брак — пустой/нечитаемый
+
+    def test_invalid_without_sources_is_examples_warning(self, tmp_path):
         docs = self._docs(tmp_path, _BAD)
         rep, ok = selfcheck.check_structured_examples(docs, {})
-        assert not ok
-        assert any(l.startswith("✗ структурный файл srs/internal-contract/examples/r.json")
+        assert ok, rep
+        assert any(l.startswith("⚠ примеры: структурный файл srs/internal-contract/examples/r.json")
                    and "источника нет" in l for l in rep)
 
     def test_source_parses_is_transfer_defect(self, tmp_path):
@@ -1808,7 +1811,9 @@ class TestStructuredExamples:
         src = tmp_path / "confluence/p.md"
         make(src, source("Метод", "5551", "Пример ответа\n\n```\n" + _GOOD + "\n```\n"))
         rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
-        assert not ok and any("в источнике тот же пример разбирается — брак переноса" in l for l in rep)
+        assert ok and any(l.startswith("⚠ примеры:")
+                          and "в источнике тот же пример разбирается — пример не норма" in l
+                          for l in rep), rep
 
     def test_source_invalid_is_analytics_debt_warning(self, tmp_path):
         docs = self._docs(tmp_path, _BAD)
@@ -1818,7 +1823,7 @@ class TestStructuredExamples:
         make(src, source("Метод", "5551", "| Поле | Значение |\n|---|---|\n| Пример ответа | `" + cell + "` |\n"))
         rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
         assert ok, rep
-        assert any(l.startswith("⚠ структурный файл") and "дефект аналитики" in l
+        assert any(l.startswith("⚠ примеры: структурный файл") and "дефект аналитики" in l
                    and "сохранить как .txt" in l for l in rep)
 
     def test_source_table_cell_parses_is_transfer_defect(self, tmp_path):
@@ -1826,7 +1831,8 @@ class TestStructuredExamples:
         src = tmp_path / "confluence/p.md"
         make(src, source("Метод", "5551", "| Поле | Значение |\n|---|---|\n| Пример ответа | `" + _GOOD + "` |\n"))
         rep, ok = selfcheck.check_structured_examples(docs, {"5551": src})
-        assert not ok and any("тот же пример разбирается" in l for l in rep)
+        assert ok and any(l.startswith("⚠ примеры:") and "тот же пример разбирается" in l
+                          for l in rep), rep
 
     def test_orphan_example_warned(self, tmp_path):
         docs = self._docs(tmp_path, _GOOD)
@@ -1841,15 +1847,53 @@ class TestStructuredExamples:
         (docs / "srs/internal-contract/examples/s.xml").write_text("<a><b/></a", encoding="utf-8")
         (docs / "srs/internal-contract/examples/c.yaml").write_text("a: 1\nb: [1, 2\n", encoding="utf-8")
         rep, ok = selfcheck.check_structured_examples(docs, {})
-        assert not ok
-        assert sum(1 for l in rep if l.startswith("✗ структурный файл")) == 2
+        assert ok, rep
+        assert sum(1 for l in rep if l.startswith("⚠ примеры: структурный файл")) == 2
 
     def test_wired_into_run_with_sources(self, tmp_path):
         docs = self._docs(tmp_path, _BAD)
         src_root = tmp_path / "confluence"
         make(src_root / "p.md", source("Метод", "5551", "```\n" + _GOOD + "\n```\n"))
         report, ok = selfcheck.run(docs, src_root)
-        assert not ok and any("брак переноса, чинится по источнику" in l for l in report)
+        assert any(l.startswith("⚠ примеры: структурный файл") for l in report), report
+        itogo = next(l for l in report if l.startswith("ИТОГО"))
+        assert "⚠ примеры: 1;" in itogo, itogo
+
+    def test_empty_sidecar_is_transfer_defect(self, tmp_path):
+        # НЕсрабатывание класса: пустой sidecar (0 байт / пробелы) — брак переноса, ✗
+        docs = self._docs(tmp_path, "  \n")
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok and any(l.startswith("✗ sidecar srs/internal-contract/examples/r.json пуст")
+                              for l in rep), rep
+        assert not any("⚠ примеры" in l for l in rep), rep
+
+    def test_empty_txt_sidecar_is_transfer_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        (docs / "srs/internal-contract/examples/req.txt").write_bytes(b"")
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok and any(l.startswith("✗ sidecar srs/internal-contract/examples/req.txt пуст")
+                              for l in rep), rep
+
+    def test_empty_struct_file_outside_examples_still_defect(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        make(docs / "srs/internal-contract/files/schema.json", " ")
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert not ok and any(l.startswith("✗ структурный файл srs/internal-contract/files/schema.json пуст")
+                              for l in rep), rep
+
+    def test_extint_invalid_example_says_check_contract(self, tmp_path):
+        docs = self._docs(tmp_path, _BAD)
+        make(docs / "srs/internal-contract/intc-001.md",
+             _INTC_CARD.replace("id: INTC-001", "id: EXTINT-F1-001"))
+        rep, ok = selfcheck.check_structured_examples(docs, {})
+        assert ok and any(l.startswith("⚠ примеры:") and "проверьте контракт" in l
+                          for l in rep), rep
+
+    def test_examples_counter_zero_in_itogo(self, tmp_path):
+        docs = self._docs(tmp_path, _GOOD)
+        report, _ok = selfcheck.run(docs, None)
+        itogo = next(l for l in report if l.startswith("ИТОГО"))
+        assert "⚠ примеры: 0;" in itogo, itogo
 
 
 class TestRelativeLinks:
