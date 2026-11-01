@@ -5737,6 +5737,69 @@ class TestSidecarRelativeLink:
         assert "отсутствуют 2 из 2" in txt, txt
 
 
+class TestSidecarLinkInGroupMember:
+    """Ссылка на sidecar в неглавной карточке группы сверки разрешается от каталога этой
+    карточки (КК fun-sys-16 + intc-004, 2026-11-01): вердикт не зависит от порядка файлов."""
+
+    SRC = TestSidecarRelativeLink.SRC
+    SIDE = TestSidecarRelativeLink.SIDE
+
+    def _run(self, tmp_path, link: str, order=("fun", "intc"), side_rel="srs/ic/examples/r.json",
+             fun_link: str = ""):
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        docs = tmp_path / "docs"
+        fun = docs / "srs" / "function" / "system" / "fun-sys-16.md"
+        intc = docs / "srs" / "ic" / "client" / "intc-004.md"
+        for p in (fun, intc):
+            p.parent.mkdir(parents=True, exist_ok=True)
+        side = docs / side_rel
+        side.parent.mkdir(parents=True, exist_ok=True)
+        side.write_text(self.SIDE, encoding="utf-8")
+        fun.write_text("---\nid: FUN-SYS-16\ntitle: 'ЭКО_Выгрузка отчета'\ntype: function\n---\n\n"
+                       f"# FUN-SYS-16. ЭКО_Выгрузка отчета\n\nФункция вызывает метод.{fun_link}\n",
+                       encoding="utf-8")
+        intc.write_text("---\nid: INTC-004\npartOf: FUN-SYS-16\ntype: internal-contract\n---\n\n"
+                        f"# INTC-004. Метод\n\nОбразец запроса — [r]({link}).\n", encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        files = [fun, intc] if order == ("fun", "intc") else [intc, fun]
+        rep, _ = run_check(files, src, docs_root=docs)
+        return "\n".join(rep)
+
+    def test_link_in_member_card_resolved_from_its_dir(self, tmp_path):
+        txt = self._run(tmp_path, "../examples/r.json")
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+
+    def test_order_independent(self, tmp_path):
+        txt = self._run(tmp_path, "../examples/r.json", order=("intc", "fun"))
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+
+    def test_main_card_direct_examples_unchanged(self, tmp_path):
+        txt = self._run(tmp_path, "../nowhere.md", side_rel="srs/function/system/examples/r.json",
+                        fun_link=" Образец — [r](examples/r.json).")
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+
+    def test_member_foreign_path_not_read(self, tmp_path):
+        # НЕсрабатывание: ограничитель (30) действует и в неглавной карточке
+        txt = self._run(tmp_path, "../../elsewhere/r.json", side_rel="srs/elsewhere/r.json")
+        assert "отсутствуют 2 из 2" in txt, txt
+
+    def test_shared_sidecar_read_once(self, tmp_path, monkeypatch):
+        from app.scripts.CI.kitcheck import fs as _fs
+        reads = []
+        orig = _fs.read_text
+
+        def spy(p, *a, **k):
+            if str(p).endswith("r.json"):
+                reads.append(p)
+            return orig(p, *a, **k)
+        monkeypatch.setattr(_fs, "read_text", spy)
+        txt = self._run(tmp_path, "../examples/r.json", side_rel="srs/ic/examples/r.json",
+                        fun_link=" Образец — [r](../../ic/examples/r.json).")
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+        assert len(reads) == 1, reads
+
+
 class TestExamplesClass:
     """Класс «примеры» (решение владельца канона 2026-11-01: пример не норма): литерал,
     который в источнике стоит только в закрытом блоке кода, при отсутствии в карточке и
@@ -5846,3 +5909,95 @@ class TestExamplesClass:
         rep, _ok = run_check([card], src, docs_root=docs)
         assert any(r.startswith("⚠ примеры:") for r in rep), rep
         assert not any("кавычечные литералы источника: в карточке отсутствуют" in r for r in rep), rep
+
+
+class TestAttrNotationEquivalence:
+    """Нотация атрибута после ссылки на сущность (КК PROM-5.3-NOT, 2026-11-01): срез
+    `[ENT](…).<X>` (выгрузка `.\\<X\\>`) и чистовик `.«X»` — одна запись для всех сверок с
+    источником. HTML-тег после точки и `<X>` без точки не трогаются; разные X — расхождение."""
+
+    def test_norm_attr_notation_unit(self):
+        from app.scripts.CI.kitcheck.md import norm_attr_notation as n
+        assert n("Заявка.<Статус>") == "Заявка.«Статус»"
+        assert n("Заявка.\\<Статус\\>") == "Заявка.«Статус»"
+        assert n("X.<А>.<Б>.<В>") == "X.«А».«Б».«В»"
+        assert n("X.«А».<Б>") == "X.«А».«Б»"
+        # срез с пробелом после точки (КК ent-015: «Клиент Банка. &lt;Полное наименование&gt;»)
+        assert n("Клиент Банка. <Полное наименование>") == "Клиент Банка.«Полное наименование»"
+        assert n("текст. <br>") == "текст. <br>"
+        assert n("Клиент Банка.  <Два пробела>") == "Клиент Банка.  <Два пробела>"
+        # НЕсрабатывание: HTML-теги после точки, подстановка без точки
+        for v in ("конец предложения.<br>", "текст.<p class=\"x\">", "ячейка.</td>",
+                  "x.<br/>", "Нажмите <Кнопка>", "«Статус»", "x.<!-- к -->"):
+            assert n(v) == v, v
+
+    def test_norm_cell_equivalence(self):
+        from app.scripts.CI.kitcheck.html import _norm_cell
+        src = "= [\\[КК_ЛК\\] Заявка на управление лимитами по карте](../x.md).\\<Статус\\>.\\<Код\\>"
+        card = "= [[КК_ЛК] Заявка на управление лимитами по карте](../ent-019.md).«Статус».«Код»"
+        assert _norm_cell(src) == _norm_cell(card)
+        # НЕсрабатывание: разные атрибуты — расхождение
+        assert _norm_cell(src) != _norm_cell(card.replace("«Код»", "«Тип»"))
+
+    def test_source_table_value(self):
+        source = ("| **Название:** | Лимиты |\n| --- | --- |\n"
+                  "| **Значение:** | = [\\[КК_ЛК\\] Заявка на управление лимитами по карте](../x.md)"
+                  ".\\<Статус заявки\\> |\n| **Формат:** | Строка |\n")
+        card = ("Лимиты.\n\nЗначение: = [ENT-019 [КК_ЛК] Заявка на управление лимитами по карте]"
+                "(../ent-019.md).«Статус заявки»\n\nФормат: Строка.")
+        report, ok = check_source_tables(card, source)
+        assert ok, report
+        report, ok = check_source_tables(card.replace("«Статус заявки»", "«Тип заявки»"), source)
+        assert not ok, report
+
+    def test_cell_coverage(self):
+        # ent-011 КК: «согласно классификаторы.<типы документов>.<код документа>»
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
+        source = ("<table><tr><th>Наименование поля</th><th>Тип</th><th>Описание</th></tr>"
+                  "<tr><td>Тип документа</td><td>Строка(10)</td>"
+                  "<td>Код согласно Классификаторы.&lt;Типы документов&gt;.&lt;Код документа&gt;"
+                  "</td></tr></table>\n")
+        corpus = ("| Тип документа | Строка(10) | Код согласно [EXT-001 Классификаторы](../x.md)"
+                  ".«Типы документов».«Код документа» |\n")
+        report, ok = check_cell_coverage(source, corpus)
+        assert ok, report
+
+    def test_cell_coverage_space_after_dot(self):
+        # КК ent-015 (регресс первой версии правки): источник «Клиент Банка. <X>» с пробелом,
+        # карточка `.<X>` в обратных кавычках — покрыто, как до правки
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
+        source = ("<table><tr><th>Наименование поля</th><th>Тип</th><th>Описание поля</th></tr>"
+                  "<tr><td>Полное наименование клиента</td><td>Строка (800)</td>"
+                  "<td>= Клиент Банка. &lt;Полное наименование&gt;</td></tr></table>\n")
+        for card_val in ("= [EXT-002 Клиент Банка](d.md#р).`<Полное наименование>`",
+                         "= [EXT-002 Клиент Банка](d.md#р).«Полное наименование»"):
+            corpus = f"| Полное наименование клиента | Строка (800) | {card_val} |\n"
+            report, ok = check_cell_coverage(source, corpus)
+            assert ok, (card_val, report)
+
+    def test_name_column_with_guillemet_attr(self, tmp_path):
+        # fun-cl-55 КК: «Название» `….«Сс…»` против источника `….<Сс…>` — не пояснение
+        card = TestBareTypeNamePardonedBySource.CARD.replace(
+            "| Дата | Дата |", "| [ENT-010 Выпускаемая карта](../ent-010.md).«Ссылка на счёт» = карта "
+            "| Дата |")
+        src = TestBareTypeNamePardonedBySource.SRC_WITH.replace(
+            "<td>Дата</td><td>Дата</td>",
+            "<td>Выпускаемая карта.&lt;Ссылка на счёт&gt; = карта</td><td>Дата</td>")
+        p = tmp_path / "scr.md"
+        p.write_text(card, encoding="utf-8")
+        rep, ok = check_file(p, source_text=src)
+        assert ok, "\n".join(rep)
+
+    def test_heavy_pair_with_notation(self):
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        cell = ("<p>Функция вызывается при открытии экрана карты клиента.</p>"
+                "<ul><li>Значение = [\\[КК_ЛК\\] Заявка](../x.md).&lt;Статус заявки на лимит&gt;</li>"
+                "<li>Код = [\\[КК_ЛК\\] Заявка](../x.md).&lt;Код заявки на лимит карты&gt;</li></ul>"
+                "<p>Иначе функция завершается без изменения данных заявки.</p>")
+        src = ("<table><tr><td><strong>Логика</strong></td><td>" + cell + "</td></tr></table>\n")
+        card = ("Функция вызывается при открытии экрана карты клиента.\n\n"
+                "- Значение = [ENT-019 [КК_ЛК] Заявка](../ent-019.md).«Статус заявки на лимит»\n"
+                "- Код = [ENT-019 [КК_ЛК] Заявка](../ent-019.md).«Код заявки на лимит карты»\n\n"
+                "Иначе функция завершается без изменения данных заявки.\n")
+        rep, ok = check_heavy_pair_structure(card, src)
+        assert ok, rep

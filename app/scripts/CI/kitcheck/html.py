@@ -10,7 +10,7 @@ import re
 import sys
 from typing import Dict, List, Optional, Tuple
 from . import fs as _fs
-from .md import frontmatter_split, split_cells, strip_row
+from .md import frontmatter_split, norm_attr_notation, split_cells, strip_row
 
 try:
     from bs4 import BeautifulSoup, NavigableString, Tag
@@ -345,6 +345,8 @@ def _norm_cell(v: str) -> str:
     # markdown-экранирование HTML→MD-конвертера выгрузки (\[ДСФ_ЭКО\] и т.п.):
     # карточка пишет чистый текст — сравниваем без обратных косых
     v = re.sub(r"\\([^\w\s])", r"\1", v)
+    # нотация атрибута `.<X>` (срез) ≡ `.«X»` (чистовик) — общее правило md.norm_attr_notation
+    v = norm_attr_notation(v)
     return re.sub(r"\s+", " ", v).strip().lower()
 
 

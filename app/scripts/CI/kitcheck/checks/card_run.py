@@ -248,21 +248,31 @@ def run_check(files: List[Path], source_path: Optional[Path],
     # Карточка в подкаталоге ссылается на sidecar через «../examples/…» (КК intc-005,
     # internal-contracts/client/, 2026-11-01): такая ссылка — sidecar, только если файл лежит
     # в каталоге examples внутри комплекта (docs_root, если задан); чужие пути не читаются.
+    # Ссылка разрешается от каталога ТОЙ карточки группы, где стоит (КК fun-sys-16 + intc-004,
+    # 2026-11-01: главная — функция в function/system/, ссылка — в контракте
+    # internal-contracts/client/; от каталога главной sidecar не находился, вердикт зависел от
+    # порядка файлов). Sidecar, на который ссылаются две карточки, читается один раз.
     root = Path(docs_root).resolve() if docs_root is not None else None
-    for m in re.finditer(r"\]\(((?:\.\./)*examples/[^)\s]+)\)", combined):
-        side = (main_file.parent / m.group(1)).resolve()
-        try:
-            if m.group(1).startswith("../") and (
-                    side.parent.name != "examples"
-                    or (root is not None and root not in side.parents)):
+    seen_sides: set = set()
+    for f in files:
+        f_text = strip_html_comments(_fs.read_text(f, encoding="utf-8"))
+        for m in re.finditer(r"\]\(((?:\.\./)*examples/[^)\s]+)\)", f_text):
+            side = (f.parent / m.group(1)).resolve()
+            if side in seen_sides:
                 continue
-            if (side.is_file() and side.stat().st_size <= 2_000_000
-                    and side.suffix.lower() in {
-                        ".json", ".xml", ".xsd", ".wsdl", ".sh", ".txt",
-                        ".html", ".yaml", ".yml"}):
-                combined += "\n\n" + _fs.read_text(side, encoding="utf-8", errors="replace")
-        except OSError:
-            continue
+            try:
+                if m.group(1).startswith("../") and (
+                        side.parent.name != "examples"
+                        or (root is not None and root not in side.parents)):
+                    continue
+                if (side.is_file() and side.stat().st_size <= 2_000_000
+                        and side.suffix.lower() in {
+                            ".json", ".xml", ".xsd", ".wsdl", ".sh", ".txt",
+                            ".html", ".yaml", ".yml"}):
+                    seen_sides.add(side)
+                    combined += "\n\n" + _fs.read_text(side, encoding="utf-8", errors="replace")
+            except OSError:
+                continue
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
     fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs)
