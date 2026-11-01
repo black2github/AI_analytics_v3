@@ -112,7 +112,10 @@ class _FileCtx:
 # дословный перенос страницы, шаблон требует атомарных определений и
 # делегирования реестров, то есть сокращения источника; domain-vision домена —
 # по тому же основанию. Тип → наименование для i-строки.
-_NO_LITERALS_TYPES = {"glossary": "глоссарию", "domain-vision": "видению домена"}
+_NO_LITERALS_TYPES = {"glossary": "глоссарию", "domain-vision": "видению домена",
+                      # сводка видения сервиса по нескольким страницам, в том числе черновикам
+                      # (решение владельца канона 2026-11-01, КК service-vision.md)
+                      "vision": "видению сервиса"}
 
 
 FILE_CHECKS: List[Check] = [
@@ -428,6 +431,22 @@ def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
     return out
 
 
+def _extra_page_line(line: str, tag: str) -> str:
+    """Строка сторожа литералов для доп. страницы: «… источника» → «… <tag>»; строки класса
+    «⚠ примеры:» и i-строки сохраняют начало (класс и видимость при ✓) и получают метку."""
+    if "кавычечные литералы источника" in line:
+        return line.replace("кавычечные литералы источника", f"кавычечные литералы {tag}", 1)
+    if line.startswith("⚠ примеры:"):
+        return line.replace("⚠ примеры:", f"⚠ примеры: {tag}:", 1)
+    return f"{line} ({tag})"
+
+
+def _page_id_of(source_text: str) -> str:
+    """page_id страницы выгрузки (confluence_page_id шапки) или пусто."""
+    m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)", _fm_head(source_text), re.M)
+    return m.group(1) if m else ""
+
+
 def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     files, docs_root, card_text, combined, main_file, src_text = fx.files, fx.docs_root, fx.card_text, fx.combined, fx.main_file, fx.src_text
     report: List[str] = []
@@ -486,11 +505,17 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # карточка-агрегатор (решение владельца канона 2026-10-30): title доп. страниц —
         # из файлов выгрузки, которые selfcheck передаёт по индексу (amnesty_sources —
         # страницы карточки после главной); заголовки ищутся во всей группе
-        extra_titles = [_frontmatter_title(_fs.read_text(p, encoding="utf-8", errors="replace"))
-                        for p in (fx.amnesty_sources or []) if p.is_file()]
+        extra_pages = []
+        for p in (fx.amnesty_sources or []):
+            if p.is_file():
+                p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
+                p_title = _frontmatter_title(p_text)
+                if p_title:
+                    extra_pages.append((_page_id_of(p_text), p_title))
         ttl_report, ttl_ok = check_title(
-            ttl_text, src_text, extra_titles=[t for t in extra_titles if t],
-            corpus=combined, file_name=(ttl_holder or main_file).name)
+            ttl_text, src_text, extra_titles=[t for _i, t in extra_pages],
+            corpus=combined, file_name=(ttl_holder or main_file).name,
+            extra_ids=[i for i, _t in extra_pages])
         if ttl_holder is not None:
             ttl_report = [
                 ln.replace("title:", f"title (часть partOf без title, "
@@ -582,6 +607,20 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                                                      sibling_text=sib_txt,
                                                      page_artifacts=page_art,
                                                      thin_call=thin_call)
+            # доп. страницы карточки (решение владельца канона 2026-11-01, замер КК: 59 потерь в
+            # 3 парах из 60): литералы сверяются как у главной — та же группа, sidecar, соседи,
+            # артефакты страницы и освобождения; строки — с page_id и title страницы. Страница
+            # вне выгрузки сюда не попадает (selfcheck передаёт только найденные файлы)
+            for p in (fx.amnesty_sources or []):
+                if not p.is_file():
+                    continue
+                p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
+                p_rep, p_ok = check_quoted_literals(combined, p_text, sibling_text=sib_txt,
+                                                    page_artifacts=page_art, thin_call=thin_call)
+                tag = (f"доп. страницы {_page_id_of(p_text)} "
+                       f"«{_frontmatter_title(p_text) or p.stem}»")
+                ql_report += [_extra_page_line(ln, tag) for ln in p_rep]
+                ql_ok = ql_ok and p_ok
         report.extend(src_report)
         report.extend(ttl_report)
         report.extend(bh_report)

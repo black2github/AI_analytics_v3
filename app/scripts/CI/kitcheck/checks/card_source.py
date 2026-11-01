@@ -715,6 +715,9 @@ _COPY_PREFIX_RE = re.compile(r"^Копия\s+")
 
 
 _AGG_PIDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]\n]*)\]", re.M)
+# типы-сводки: титулы их доп. страниц заголовками разделов быть не обязаны (тип → для i-строки)
+_TITLE_SUMMARY_TYPES = {"glossary": "глоссария", "vision": "видения сервиса",
+                        "domain-vision": "видения домена"}
 # заголовок раздела карточки-агрегатора — любой уровень (#…######: уровень — вёрстка,
 # решение владельца канона 2026-10-30); ведущий номер раздела («2.», «2.1.»)
 # — нумерация шаблона, не часть наименования
@@ -724,7 +727,8 @@ _AGG_HEADING_RE = re.compile(r"^#{1,6}[ \t]+(?:\d+(?:\.\d+)*\.?[ \t]+)?(.+?)[ \t
 def check_title(card_text: str, source_text: str,
                 extra_titles: Optional[List[str]] = None,
                 corpus: Optional[str] = None,
-                file_name: Optional[str] = None) -> Tuple[List[str], bool]:
+                file_name: Optional[str] = None,
+                extra_ids: Optional[List[str]] = None) -> Tuple[List[str], bool]:
     """Дословный перенос title источника во frontmatter карточки.
 
     title — постоянный атрибут (наименование в языке предметной области;
@@ -743,28 +747,59 @@ def check_title(card_text: str, source_text: str,
     страниц — наименование по решению; наименования страниц-источников
     переносятся дословно, с ведущим тегом страницы, заголовками разделов
     (любого уровня; текст абзаца или таблицы — не заголовок). Равенство title
-    главной странице проходит первым, как у любой карточки. extra_titles —
-    title дополнительных страниц (selfcheck передаёт их по индексу выгрузки;
-    CLI с одним источником — только главная), corpus — текст группы, где
-    ищутся заголовки (по умолчанию — сама карточка), file_name — имя файла."""
+    главной странице (у базового контракта — и со снятым маркером) засчитывает
+    ГЛАВНУЮ страницу; title дополнительных страниц обязаны быть заголовками
+    разделов всегда (решение владельца канона 2026-11-01, вариант «одна логика для
+    агрегаторов и базовых контрактов»: knosis-001 — вторая страница не сверялась).
+    extra_titles — title дополнительных страниц (selfcheck передаёт их по индексу
+    выгрузки; страница вне выгрузки сюда не попадает; CLI с одним источником —
+    только главная), extra_ids — их page_id в том же порядке (для отчёта), corpus —
+    текст группы, где ищутся заголовки (по умолчанию — сама карточка), file_name —
+    имя файла."""
     src = _frontmatter_title(source_text)
     if src is None:
         return [], True
     card = _frontmatter_title(card_text)
-    if card == src:
-        return [f"title: дословно перенесён ({src!r}) ✓"], True
     is_base = re.search(r"^type:\s*external-integration\s*$",
                         card_text[:600], re.M) is not None
     stripped = _CONTOUR_PREFIX_RE.sub("", _COPY_PREFIX_RE.sub("", src))
-    if is_base and card is not None and card == stripped and stripped != src:
+    main_line = None
+    if card == src:
+        main_line = f"title: дословно перенесён ({src!r}) ✓"
+    elif is_base and card is not None and card == stripped and stripped != src:
         marker = src[:len(src) - len(stripped)].strip()
-        return [f"title: перенесён без маркера контура {marker!r} — "
-                f"базовый контракт общий для потребителей ✓"], True
+        main_line = (f"title: перенесён без маркера контура {marker!r} — "
+                     f"базовый контракт общий для потребителей ✓")
+    heads_of = lambda: {h.strip() for h in _AGG_HEADING_RE.findall(  # noqa: E731
+        corpus if corpus is not None else card_text)}
+    if main_line is not None:
+        ids = list(extra_ids or [])
+        extra = [(ids[k] if k < len(ids) else "", t)
+                 for k, t in enumerate(extra_titles or []) if t and t != src]
+        if not extra:
+            return [main_line], True
+        # оглавление (README.md каталога) и сводки (glossary, vision, domain-vision): доп.
+        # страницы у них — дочерние, разложенные по своим карточкам, или пересказанные; титулы
+        # заголовками разделов быть не обязаны (решение владельца канона 2026-11-01, КК: 8
+        # таких файлов из 14 новых ✗ замера)
+        m_type = re.search(r"^type:\s*([\w-]+)", _fm_head(card_text), re.M)
+        kind = ("оглавления" if (file_name or "").lower() == "readme.md"
+                else _TITLE_SUMMARY_TYPES.get(m_type.group(1)) if m_type else None)
+        if kind:
+            return [main_line, f"i title доп. страниц ({len(extra)}) не сверяется у {kind} — "
+                               "титулы страниц заголовками разделов быть не обязаны"], True
+        heads = heads_of()
+        lost = [(i, t) for i, t in extra if t.strip() not in heads]
+        if not lost:
+            return [main_line, f"title доп. страниц ({len(extra)}): наименования заголовками "
+                               "разделов ✓"], True
+        return [main_line, "title доп. страниц: нет заголовков разделов по страницам: "
+                + "; ".join(f"{i} {t!r}".strip() for i, t in lost)
+                + " ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
     m_pids = _AGG_PIDS_RE.search(_fm_head(card_text))
     n_pages = len(re.findall(r"\d+", m_pids.group(1))) if m_pids else 0
     if card is not None and (n_pages > 1 or (file_name or "").lower() == "dictionaries.md"):
-        heads = {h.strip() for h in _AGG_HEADING_RE.findall(corpus if corpus is not None
-                                                            else card_text)}
+        heads = heads_of()
         titles = [src] + [t for t in (extra_titles or []) if t and t != src]
         lost = [t for t in titles if t.strip() not in heads]
         n = max(n_pages, len(titles))

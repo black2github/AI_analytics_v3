@@ -5,6 +5,8 @@
 в confluence_page_ids (PROC-047 ↔ glossary.md)."""
 from pathlib import Path
 
+import pytest
+
 from app.scripts.CI import selfcheck
 from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals, check_title
 
@@ -56,11 +58,60 @@ def test_heading_searched_in_group_corpus():
     assert ok, rep
 
 
-def test_equal_title_passes_first():
-    # glossary.md с тремя страницами: title главной — прежняя строка, правило агрегатора не вмешивается
-    c = card("[КК] Глоссарий", "'1', '2', '3'", "## Термины\n", type_="glossary")
-    rep, ok = check_title(c, src("[КК] Глоссарий"), extra_titles=["Другая", "Третья"])
+def test_equal_title_counts_main_page_only():
+    # решение владельца 2026-11-01 (вариант а): равенство title засчитывает только главную
+    # страницу; title доп. страниц обязаны быть заголовками разделов
+    c = card("[КК] Процесс", "'1', '2', '3'", "## Шаги\n", type_="process")
+    rep, ok = check_title(c, src("[КК] Процесс"), extra_titles=["Другая", "Третья"],
+                          extra_ids=["2", "3"])
+    assert not ok
+    assert rep == ["title: дословно перенесён ('[КК] Процесс') ✓",
+                   "title доп. страниц: нет заголовков разделов по страницам: 2 'Другая'; "
+                   "3 'Третья' ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], rep
+
+
+@pytest.mark.parametrize("type_, fname, kind", [
+    ("glossary", "glossary.md", "глоссария"), ("vision", "service-vision.md", "видения сервиса"),
+    ("domain-vision", "domain-vision.md", "видения домена"), ("data-model", "README.md", "оглавления")])
+def test_summary_and_readme_extra_titles_not_checked(type_, fname, kind):
+    # решение владельца 2026-11-01 (вариант 2): оглавления и сводки — i-строка, не ✗
+    c = card("[КК] Сводка", "'1', '2'", "## Термины\n", type_=type_)
+    rep, ok = check_title(c, src("[КК] Сводка"), extra_titles=["Другая"], extra_ids=["2"],
+                          file_name=fname)
+    assert ok, rep
+    assert rep == ["title: дословно перенесён ('[КК] Сводка') ✓",
+                   f"i title доп. страниц (1) не сверяется у {kind} — титулы страниц заголовками "
+                   "разделов быть не обязаны"], rep
+
+
+def test_equal_title_extra_pages_as_headings_pass():
+    c = card("[КК] Процесс", "'1', '2', '3'", "## Другая\n\n## Третья\n", type_="process")
+    rep, ok = check_title(c, src("[КК] Процесс"), extra_titles=["Другая", "Третья"],
+                          extra_ids=["2", "3"])
+    assert ok and rep == ["title: дословно перенесён ('[КК] Процесс') ✓",
+                          "title доп. страниц (2): наименования заголовками разделов ✓"], rep
+
+
+def test_equal_title_single_page_unchanged():
+    # НЕсрабатывание: одна страница — одна строка, как прежде
+    c = card("[КК] Глоссарий", "'1'", "## Термины\n", type_="glossary")
+    rep, ok = check_title(c, src("[КК] Глоссарий"))
     assert ok and rep == ["title: дословно перенесён ('[КК] Глоссарий') ✓"]
+
+
+def test_base_contract_stripped_marker_extra_page_checked():
+    # knosis-001: title базового без маркера страницы-копии засчитывает главную, вторая
+    # страница обязана быть заголовком раздела
+    c = ("---\nid: EXTINT-KNOSIS-001\ntitle: 'КНОСИС_API_Запрос выписки ЕГРИП для ИП'\n"
+         "type: external-integration\nconfluence_page_ids: [11, 12]\n---\n\n"
+         "# EXTINT-KNOSIS-001. Запрос выписки ЕГРИП\n\n## 1. Краткое описание\n")
+    main = src("Копия [КК] КНОСИС_API_Запрос выписки ЕГРИП для ИП", pid="11")
+    rep, ok = check_title(c, main, extra_titles=["Описание допустимых кодов"], extra_ids=["12"])
+    assert not ok and rep[0].startswith("title: перенесён без маркера контура"), rep
+    assert "12 'Описание допустимых кодов' ✗ ПОТЕРЯ НАИМЕНОВАНИЯ" in rep[1], rep
+    rep, ok = check_title(c + "\n### Описание допустимых кодов\n", main,
+                          extra_titles=["Описание допустимых кодов"], extra_ids=["12"])
+    assert ok, rep
 
 
 # ---------------------------------------------------------------- несрабатывание
@@ -165,3 +216,62 @@ def test_selfcheck_aggregator_title_by_extra_page(tmp_path):
     text = "\n".join(report)
     # вторая страница взята из индекса выгрузки — её заголовка нет
     assert "нет заголовков по страницам: '[КК_ЛК] Справочник лимитов' ✗ ПОТЕРЯ НАИМЕНОВАНИЯ" in text, text
+
+
+# ------------------------------------------- литералы доп. страниц (решение владельца 2026-11-01)
+
+def _kit(tmp_path, extra_body: str, card_body: str, type_: str = "process", pids=("111222", "222333"),
+         sidecar: str = ""):
+    docs, srcs = tmp_path / "docs", tmp_path / "conf"
+    make(srcs / "main.md", src("[КК] Процесс", "111222", "Кнопка «Сохранить».\n"))
+    make(srcs / "extra.md", src("[КК] Процесс, часть 2", "222333", extra_body))
+    ids = ", ".join(f"'{p}'" for p in pids)
+    make(docs / "srs/bc/process/proc-001.md",
+         f"---\nid: PROC-001\ntitle: '[КК] Процесс'\ntype: {type_}\nconfluence_page_ids: [{ids}]\n"
+         f"---\n\n# PROC-001. Процесс\n\nКнопка «Сохранить».\n\n## [КК] Процесс, часть 2\n\n{card_body}\n")
+    if sidecar:
+        make(docs / "srs/bc/process/examples/r.json", sidecar)
+    report, _ok = selfcheck.run(docs, srcs)
+    return report, "\n".join(report)
+
+
+def test_extra_page_prose_literal_lost_is_defect(tmp_path):
+    report, text = _kit(tmp_path, "Сообщение «Заявка отклонена».\n", "текст без сообщения")
+    assert any(ln.startswith("✗ srs") and "proc-001.md" in ln for ln in report), text
+    assert ("кавычечные литералы доп. страницы 222333 «[КК] Процесс, часть 2»: в карточке "
+            "отсутствуют 1 из 1 ✗") in text, text
+    assert "кавычечные литералы доп. страниц" in text and "сверяются по каждой" in text, text
+
+
+def test_extra_page_literal_found_in_card_or_sidecar(tmp_path):
+    report, text = _kit(tmp_path, "Сообщение «Заявка отклонена».\n", "Сообщение «Заявка отклонена».")
+    assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text
+    report, text = _kit(tmp_path / "s", "Поле «ACCEPTED».\n", "Образец — [r](examples/r.json).",
+                        sidecar='{"status": "ACCEPTED"}\n')
+    assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text
+
+
+def test_extra_page_code_block_literal_is_examples_class(tmp_path):
+    report, text = _kit(tmp_path, "Ответ:\n\n```json\n{\"status\": \"ACCEPTED\"}\n```\n", "текст")
+    assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text
+    assert "⚠ примеры: доп. страницы 222333 «[КК] Процесс, часть 2»: значения примера" in text, text
+
+
+def test_vision_type_not_checked(tmp_path):
+    # НЕсрабатывание: сводка видения сервиса — сторож литералов не применяется
+    report, text = _kit(tmp_path, "Цель «Цифровая экосистема».\n", "текст", type_="vision")
+    assert "сторож литералов не применяется к видению сервиса" in text, text
+    assert "кавычечные литералы доп. страницы" not in text, text
+
+
+def test_extra_page_outside_export_does_not_break(tmp_path):
+    report, text = _kit(tmp_path, "Сообщение «Заявка отклонена».\n", "текст",
+                        pids=("111222", "999888"))
+    assert "вне выгрузки, без сверки: 999888" in text, text
+    assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text
+
+
+def test_single_page_card_unchanged(tmp_path):
+    report, text = _kit(tmp_path, "Сообщение «Заявка отклонена».\n", "текст", pids=("111222",))
+    assert "доп. страниц" not in text, text
+    assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text

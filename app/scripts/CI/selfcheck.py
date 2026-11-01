@@ -455,9 +455,14 @@ def _run_impl(docs: Path, sources: Optional[Path],
             extra_pids[p] = len(pids) - 1
             extra_page_ids[p] = list(pids[1:])
             if len(pids) > 1:
-                report.append(f"i {rel}: доп. страницы-источники "
-                              f"({len(pids) - 1}) механически не сверяются "
-                              "(сверка — по главной, первой в списке)")
+                # решение владельца канона 2026-11-01: кавычечные литералы доп. страниц
+                # сверяются как у главной; прочие сторожа — по главной
+                outside = [x for x in pids[1:] if x not in idx]
+                report.append(f"i {rel}: доп. страницы-источники ({len(pids) - 1}): "
+                              "кавычечные литералы сверяются по каждой, прочие сторожа — "
+                              "по главной (первой в списке)"
+                              + (f"; вне выгрузки, без сверки: {', '.join(outside)}"
+                                 if outside else ""))
 
     def _warns(rep: List[str]) -> List[str]:
         # предупреждения видимы и при ✓ (софт-сигналы, не влияют на
