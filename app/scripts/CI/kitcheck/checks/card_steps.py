@@ -46,6 +46,21 @@ def _marker_core(text: str) -> Optional[str]:
     return None
 
 
+def _marker_only(text: str) -> bool:
+    """Элемент — один маркер без тела: «9.», «Шаг №76.», «- 9. 9», «**Шаг №8.**».
+    Пустой пункт списка — артефакт разметки источника (Confluence дорисовывает
+    номер пустому `<li>`), шагом не является и в профиль вложенности не входит
+    ни у источника, ни у карточки (fun-cl-19 КК, 2026-11-01: три пустых «9.»
+    вложенного списка источника против одного в карточке давали 6 ✗ каскадом).
+    Ограничитель: любое тело после маркера, кроме повтора его же номера, —
+    шаг («9. Да» — шаг)."""
+    m = _STEP_MARKER_RE.match(text)
+    if not m:
+        return False
+    rest = text[m.end():].strip(" .)*:;—–- ")
+    return rest == "" or rest.lower() == m.group(1).lower()
+
+
 def _rank_levels(steps: List[Tuple[str, float]]) -> List[Tuple[str, int]]:
     """Нормализация отступов: уровень = ранг уникального отступа."""
     ranks = {v: i for i, v in enumerate(sorted({lv for _c, lv in steps}))}
@@ -71,7 +86,7 @@ def behavior_steps_from_source(source_text: str,
     for el in cell.find_all(["p", "li"]):
         text = el.get_text(" ", strip=True)
         core = _marker_core(text)
-        if core is None:
+        if core is None or _marker_only(text):
             continue
         if el.name == "li":
             depth = len([a for a in el.parents
@@ -95,7 +110,7 @@ def behavior_steps_from_card(card_text: str) -> List[Tuple[str, int]]:
         if not ln.strip():
             continue
         core = _marker_core(ln.strip())
-        if core is None:
+        if core is None or _marker_only(ln.strip()):
             continue
         steps.append((core, float(len(ln) - len(ln.lstrip()))))
     return _rank_levels(steps)

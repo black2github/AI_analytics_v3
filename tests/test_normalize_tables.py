@@ -609,6 +609,49 @@ class TestBehaviorNesting:
         report, ok = check_behavior_nesting("## Поведение\n\n1. Шаг\n", src)
         assert ok and not report
 
+    # fun-cl-19 КК (2026-11-01): пустые пункты вложенного списка источника
+    # («9. 9», «9.», «Шаг №76.» без тела) — артефакт разметки, не шаги;
+    # карточка перенесла один из трёх — прежде 6 ✗ каскадом
+    SRC_EMPTY = (
+        "# Ф\n\n<table><tr><th>Что делает функция</th><td>"
+        "<p><strong>Шаг №1.</strong> Подписать</p>"
+        '<p style="margin-left: 40.0px"><strong>Шаг №65.</strong> Сохранить:</p>'
+        "<ul><li>9. 9</li><li>9. 9</li><li>9.</li></ul>"
+        '<p style="margin-left: 40.0px"><strong>Шаг №76.</strong></p>'
+        "<p><strong>Шаг №8.</strong> Сообщение. Переход на шаг №9.</p>"
+        "<p><strong>Шаг №9.</strong> Завершение процесса.</p>"
+        "</td></tr></table>\n"
+    )
+
+    def test_marker_only_items_not_steps(self):
+        card = ("## Поведение\n\n"
+                "- **Шаг №1.** Подписать\n"
+                "  - **Шаг №65.** Сохранить:\n"
+                "        - 9.\n"
+                "  - **Шаг №76.**\n"
+                "- **Шаг №8.** Сообщение. Переход на шаг №9.\n"
+                "- **Шаг №9.** Завершение процесса.\n")
+        report, ok = check_behavior_nesting(card, self.SRC_EMPTY)
+        assert ok, "\n".join(report)
+        assert "совпадает (4 шагов)" in report[0]
+
+    def test_marker_with_body_still_a_step(self):
+        # НЕсрабатывание: «9. Да» — шаг; его потеря ловится как прежде
+        src = self.SRC_EMPTY.replace("<li>9.</li>", "<li>9. Да</li>")
+        card = ("## Поведение\n\n"
+                "- **Шаг №1.** Подписать\n"
+                "  - **Шаг №65.** Сохранить:\n"
+                "  - **Шаг №76.**\n"
+                "- **Шаг №8.** Сообщение. Переход на шаг №9.\n"
+                "- **Шаг №9.** Завершение процесса.\n")
+        report, ok = check_behavior_nesting(card, src)
+        assert not ok and any("ПОТЕРЯ ШАГА" in r and "«9»" in r for r in report)
+
+    def test_marker_only_helper(self):
+        from app.scripts.CI.kitcheck.checks.card_steps import _marker_only
+        assert _marker_only("9.") and _marker_only("- 9. 9") and _marker_only("**Шаг №76.**")
+        assert not _marker_only("9. Да") and not _marker_only("Шаг №8. Сообщение")
+
     def test_letter_markers_with_margin(self):
         # маркеры не обязаны быть числовыми: A) / B) с отступом
         src = ("# Ф\n\n<table><tr><th>Что делает функция</th><td>"
@@ -1502,6 +1545,35 @@ class TestCellCoverage:
         report, ok = check_cell_coverage(self.SOURCE, self.FULL_CORPUS)
         assert ok, "\n".join(report)
         assert any("потерь 0" in ln for ln in report)
+
+    def test_window_anchor_not_first_word(self):
+        # ent-007 КК :61–63 (2026-11-01): первое слово фрагмента («клиент»)
+        # встречается в карточке десятки раз раньше нужной ячейки, а между
+        # «=» и названием в чистовике стоит ID ярлыка ссылки — подстрока не
+        # находится, окно искалось от первых 20 вхождений первого слова и
+        # до строки в конце таблицы не доходило. Якорь — редкий токен.
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
+        source = ("<table><tr><th>Наименование поля</th><th>Тип</th>"
+                  "<th>Описание</th></tr>"
+                  "<tr><td>ИНН клиента</td><td>Строка(12)</td>"
+                  "<td>= Клиент Банка.&lt;ИНН/КИО&gt;</td></tr></table>\n")
+        noise = "".join(f"| Поле клиента {i} | клиент банка номер {i} |\n"
+                        for i in range(30))
+        corpus = noise + ("| ИНН клиента | Строка(12) | = [EXT-002 Клиент Банка]"
+                          "(dictionaries.md#реестр).`<ИНН/КИО>`. Поле используется |\n")
+        report, ok = check_cell_coverage(source, corpus)
+        assert ok, "\n".join(report)
+
+    def test_window_scattered_words_still_lost(self):
+        # НЕсрабатывание: слова фрагмента в разных ячейках — потеря
+        from app.scripts.CI.kitcheck.checks.card_source import check_cell_coverage
+        source = ("<table><tr><th>Наименование поля</th><th>Тип</th>"
+                  "<th>Описание</th></tr>"
+                  "<tr><td>ИНН клиента</td><td>Строка(12)</td>"
+                  "<td>= Клиент Банка.&lt;ИНН/КИО&gt;</td></tr></table>\n")
+        corpus = "| ИНН клиента | Строка(12) | Клиент Банка | `<ИНН/КИО>` |\n"
+        report, ok = check_cell_coverage(source, corpus)
+        assert not ok and any("не покрыт фрагмент" in ln for ln in report)
 
     def test_lost_tail_caught(self):
         # срабатывание: потеряны алфавит (Тип), составной ключ (Описание)
@@ -4895,9 +4967,9 @@ class TestBareTypeNamePardonedBySource:
     def test_bare_type_name_verbatim_in_source_passes(self, tmp_path):
         rep, ok = self._check(tmp_path, self.CARD, self.SRC_WITH)
         assert ok, "\n".join(rep)
-        assert any("словарный тип как имя, дословно из источника — принято (1)" in l
+        assert any("дословно из источника — принято, разнести без потери дословности нельзя (1)" in l
                    and "'Дата'" in l for l in rep)
-        assert not any("несёт пояснения/значения/тип" in l for l in rep)
+        assert not any("✗" in l and "несёт пояснения/значения/тип" in l for l in rep)
 
     def test_bare_type_name_absent_in_source_still_fails(self, tmp_path):
         # НЕсрабатывание помилования: в источнике поле зовётся иначе
@@ -4910,14 +4982,39 @@ class TestBareTypeNamePardonedBySource:
         _rep, ok = check_file(p)
         assert not ok
 
-    def test_explanation_in_name_not_pardoned_even_if_verbatim(self, tmp_path):
-        # пояснение в ячейке названия разносится, дословность не оправдание
+    def test_explanation_in_name_verbatim_in_source_pardoned(self, tmp_path):
+        # решение владельца канона 2026-11-01 (ложные ✗ гейта КК: call-ext-033,
+        # fun-cl-55): пояснение/правило в ячейке названия, ДОСЛОВНО стоящее в
+        # колонке названий источника, — содержимое источника; разнести его
+        # карточка не может без потери дословности — предупреждение, не брак
         card = self.CARD.replace("| Дата | Дата |", "| Дата — обязателен | Дата |")
         src = self.SRC_WITH.replace("<td>Дата</td><td>Дата</td>",
                                     "<td>Дата — обязателен</td><td>Дата</td>")
         rep, ok = self._check(tmp_path, card, src)
+        assert ok, "\n".join(rep)
+        assert any("предупреждение: «Название» несёт пояснения/значения/тип "
+                   "дословно из источника — принято" in l for l in rep)
+
+    def test_explanation_in_name_not_in_source_still_fails(self, tmp_path):
+        # НЕсрабатывание помилования: пояснение приписано исполнителем —
+        # в колонке названий источника его дословно нет
+        card = self.CARD.replace("| Дата | Дата |", "| Дата — обязателен | Дата |")
+        rep, ok = self._check(tmp_path, card, self.SRC_WITH)
         assert not ok
-        assert any("несёт пояснения/значения/тип" in l for l in rep)
+        assert any("✗" in l and "несёт пояснения/значения/тип" in l for l in rep)
+
+    def test_name_with_id_link_matches_source_without_id(self, tmp_path):
+        # ярлык ссылки «ID + название» (чистовик) против названия без ID в
+        # источнике: ID — адрес карточки, не часть названия (fun-cl-55 КК,
+        # 2026-11-01: «[ENT-010 [КК_ВК] Выпускаемая карта](…).» дословно
+        # из источника «[КК_ВК] Выпускаемая карта.»)
+        card = self.CARD.replace(
+            "| Дата | Дата |",
+            "| [ENT-010 Выпускаемая карта](../ent-010.md) = карта | Дата |")
+        src = self.SRC_WITH.replace("<td>Дата</td><td>Дата</td>",
+                                    "<td>Выпускаемая карта = карта</td><td>Дата</td>")
+        rep, ok = self._check(tmp_path, card, src)
+        assert ok, "\n".join(rep)
 
     def test_source_name_literals_skip_db_columns(self):
         # колонка физимён БД в литералы названий не попадает

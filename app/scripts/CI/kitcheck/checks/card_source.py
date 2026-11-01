@@ -169,16 +169,27 @@ def _window_covered(frag: str, corpus: str) -> bool:
     tokens = [t for t in frag.split() if len(t) >= 3]
     if len(tokens) < 2:
         return False
-    first = tokens[0]
+    # Якорь — САМЫЙ РЕДКИЙ в корпусе токен фрагмента, а не первый: первое
+    # слово («клиент», «заявка») встречается в карточке сотни раз, и
+    # перебор первых 20 вхождений не доходил до нужной ячейки — ложная
+    # «потеря фрагмента» на строках в конце длинной таблицы (ent-007 КК
+    # :61–63, 2026-11-01). Окно — по обе стороны якоря, в границах ячейки.
+    anchor = min(tokens, key=lambda t: (corpus.count(t), -len(t)))
+    span = len(frag) + 80
     start, hits = 0, 0
-    while hits < 20:
-        pos = corpus.find(first, start)
+    while hits < 400:
+        pos = corpus.find(anchor, start)
         if pos < 0:
             return False
         hits += 1
         start = pos + 1
-        window = corpus[pos:pos + len(frag) + 80]
-        cell_end = window.find(" | ")
+        lo = max(0, pos - span)
+        window = corpus[lo:pos + span]
+        apos = pos - lo                      # якорь внутри окна
+        cut = window.rfind(" | ", 0, apos)   # левая граница ячейки
+        if cut != -1:
+            window, apos = window[cut + 3:], apos - (cut + 3)
+        cell_end = window.find(" | ", apos)  # правая граница ячейки
         if cell_end != -1:
             window = window[:cell_end]
         wpos = 0
@@ -1133,9 +1144,13 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
                     f"принято ({col['pardoned_count']}): "
                     + ", ".join(repr(s[:30]) for s in col["pardoned"]))
             if col.get("suspicious_pardoned_count"):
+                # дословно из источника — не брак переноса (OQ-128; с
+                # 2026-11-01 — любое пояснение/значение/правило в названии,
+                # не только словарный тип); приёмке видно предупреждением
                 report.append(
-                    f"      «Название» — словарный тип как имя, дословно из "
-                    f"источника — принято ({col['suspicious_pardoned_count']}): "
+                    f"      предупреждение: «Название» несёт пояснения/значения/тип "
+                    f"дословно из источника — принято, разнести без потери "
+                    f"дословности нельзя ({col['suspicious_pardoned_count']}): "
                     + ", ".join(repr(s[:30]) for s in col["suspicious_pardoned"]))
             if col.get("suspicious_count"):
                 # В ГОТОВОЙ карточке подозрительное название — брак: проход 2

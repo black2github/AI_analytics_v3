@@ -14,6 +14,9 @@ from .html import _BR_RE, _norm_cell, _plain, _title_key
 _CARDINALITY_RE = re.compile(r"^\[\s*\d+\s*(([.]{2}|-)\s*(\d+|[*]|[nNмМ]))?\s*\]$")
 _PATH_RE = re.compile("^[\\w@\\[\\]{}().*/:#=+«»'\"-]+$", re.UNICODE)
 _SENTENCE_RE = re.compile(r"[а-яё]+\s+[а-яё]+\s+[а-яё]+", re.IGNORECASE)
+# ярлык markdown-ссылки чистовика «[ENT-010 Название](…)»: ID перед названием
+# (как _LINK_TEXT_ID_RE в checks/card_source.py)
+_LINK_ID_PREFIX_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{3}\s+(?=\S)")
 
 
 _TYPE_TOKENS = {
@@ -292,16 +295,31 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             continue
         bad = [r[i] for r in data_rows if i < len(r) and not check(r[i])]
         wl = (source_literals or {}).get(role) or set()
-        pardoned = [v for v in bad if _norm_cell(v) and _norm_cell(v) in wl]
-        bad = [v for v in bad if not (_norm_cell(v) and _norm_cell(v) in wl)]
+
+        def _in_wl(v: str, _wl=wl) -> bool:
+            # ярлык ссылки чистовика «[ENT-010 Название](…)» несёт ID, которого
+            # в названии источника нет: сравниваем и без ID (ID — адрес
+            # карточки, не часть названия; fun-cl-55 КК, 2026-11-01)
+            k = _norm_cell(v)
+            return bool(k) and (k in _wl or _norm_cell(_LINK_ID_PREFIX_RE.sub("[", v)) in _wl)
+
+        pardoned = [v for v in bad if _in_wl(v)]
+        bad = [v for v in bad if not _in_wl(v)]
         total = len(data_rows) or 1
         suspicious = ([r[i] for r in data_rows if i < len(r) and r[i].strip()
                        and _title_suspicious(r[i])]
                       if role == "название" else [])
-        # OQ-128: голый словарный тип как имя, дословно стоящий в колонке
-        # названий ИСТОЧНИКА, — его содержимое, не дефект переноса
-        susp_pardoned = [v for v in suspicious
-                         if _bare_type_name(v) and _norm_cell(v) in wl]
+        # Подозрительное название, ДОСЛОВНО стоящее в колонке названий
+        # ИСТОЧНИКА, — его содержимое, не дефект переноса: голый словарный
+        # тип (OQ-128 КК, 2026-10-07) и — с 2026-11-01 (решение владельца
+        # канона по ложным ✗ гейта КК: call-ext-033 «Указывается либо ФИО
+        # держателя…», fun-cl-55 «не заполняется», правило «Если … то» в
+        # колонке «Наименование поля ЭФ») — любое пояснение/значение/правило:
+        # разнести его карточка не может без потери дословности, а
+        # дословность по странице сильнее шаблонной формы. Пересказанное
+        # или склеенное исполнителем название (в источнике дословно нет) —
+        # ✗ как прежде.
+        susp_pardoned = [v for v in suspicious if _in_wl(v)]
         suspicious = [v for v in suspicious if v not in susp_pardoned]
         report.append({
             "column": title, "role": role, "index": i,
