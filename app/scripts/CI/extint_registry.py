@@ -20,6 +20,8 @@ README папки АС (EXTINT-<AS>-000), корневой реестр сист
   `message` и `common` `sync` не указывается — ⚠;
 - `id` уникален по всем файлам; `id` = `EXTINT-<ПАПКА>-NNN` и совпадает с
   именем файла `extint-<папка>-NNN-<slug>.md` — ⚠;
+- название метода (`title`, без него — H1 без ID) уникально в папке АС: общий
+  базовый контракт один на метод — ⚠ с перечнем ID;
 - README каталога карточек есть; README по шаблону (раздел «## Операции») —
   его таблицы «Операции», «Сообщения и файлы», «Общие форматы и коды» ↔
   карточки: нет строки, строка
@@ -249,6 +251,22 @@ def check_cards(cards: List[Card], rep: Report) -> None:
             by_id[c.id].append(c.rel)
     rep.emit("⚠", "дубль id — перенумерация отдельным решением владельца с уведомлением потребителей",
              [f"{i}: {', '.join(v)}" for i, v in sorted(by_id.items()) if len(v) > 1])
+    # Общий базовый контракт — один на метод (решение владельца пилота 2026-11-01): дубль ID ловится
+    # выше, а одинаковое название метода в одной АС под разными ID — нет (EXTINT-F1-026 и
+    # EXTINT-F1-029 — одна и та же DBLINK-витрина). Название — title, без него H1 без ID; сравнение
+    # без регистра, вида кавычек и лишних пробелов. Разные АС — не дубль.
+    by_name: Dict[Tuple[str, str], List[str]] = defaultdict(list)
+    shown: Dict[Tuple[str, str], str] = {}
+    for c in ok:
+        title = c.get("title") or h1_name(c)
+        key = (c.as_dir.name, _name_key(title))
+        if key[1]:
+            by_name[key].append(c.id or c.rel)
+            shown.setdefault(key, title)
+    rep.emit("⚠", "одинаковое название метода в одной АС под разными id — общий базовый контракт один "
+                  "на метод: дубль объединяет владелец с уведомлением потребителей",
+             [f"{key[0]}: {', '.join(v)} — «{shown[key]}»" for key, v in sorted(by_name.items())
+              if len(v) > 1])
     bad = []
     for c in ok:
         folder = c.as_dir.name
@@ -258,6 +276,14 @@ def check_cards(cards: List[Card], rep: Report) -> None:
         elif c.id and c.id != f"EXTINT-{folder.upper()}-{m.group(1)}":
             bad.append(f"{c.rel}: id {c.id}, по имени файла и папке — EXTINT-{folder.upper()}-{m.group(1)}")
     rep.emit("⚠", "id ↔ имя файла ↔ папка расходятся", bad)
+
+
+_NAME_QUOTES_RE = re.compile(r"[«»“”„\"']")
+
+
+def _name_key(name: str) -> str:
+    """Название для сверки дублей: без регистра, вида кавычек, лишних пробелов и точки в конце."""
+    return re.sub(r"\s+", " ", _NAME_QUOTES_RE.sub('"', name)).strip().rstrip(".").casefold()
 
 
 def check_consumers(cards: List[Card], rep: Report) -> None:

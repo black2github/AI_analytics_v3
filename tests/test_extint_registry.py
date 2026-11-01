@@ -133,6 +133,35 @@ def test_duplicate_id(tmp_path):
     assert "дубль id" in t and "extint-abc-001-op.md, abc/extint-abc-001-other.md" in t, t
 
 
+def test_same_method_name_in_one_as(tmp_path):
+    # живой дубль EXTINT-F1-026 = F1-029 (решение владельца 01.11: общий базовый — один на метод);
+    # сравнение без регистра, вида кавычек и лишних пробелов
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-004-op.md", card("EXTINT-ABC-004", "операция  один."))
+    t = text(repo)
+    assert "одинаковое название метода в одной АС" in t, t
+    assert "abc: EXTINT-ABC-001, EXTINT-ABC-004 — «Операция один»" in t, t
+
+
+def test_same_method_name_quote_kinds(tmp_path):
+    repo = clean_repo(tmp_path)
+    w(repo / "abc/extint-abc-001-op.md", card("EXTINT-ABC-001", 'Представление «Карты»'))
+    w(repo / "abc/extint-abc-004-op.md", card("EXTINT-ABC-004", 'Представление "Карты"'))
+    assert "EXTINT-ABC-001, EXTINT-ABC-004" in text(repo)
+
+
+def test_same_method_name_in_different_as_silent(tmp_path):
+    # НЕсрабатывание: одинаковое название в разных АС — не дубль
+    repo = clean_repo(tmp_path)
+    w(repo / "xyz/extint-xyz-001-op.md", card("EXTINT-XYZ-001", "Операция один"))
+    assert "одинаковое название метода" not in text(repo)
+
+
+def test_different_method_names_silent(tmp_path):
+    # НЕсрабатывание: чистая папка АС (разные названия) — без строки
+    assert "одинаковое название метода" not in text(clean_repo(tmp_path))
+
+
 def test_id_differs_from_file_name(tmp_path):
     repo = clean_repo(tmp_path)
     w(repo / "abc/extint-abc-001-op.md", card("EXTINT-ABC-009", "Операция один"))
