@@ -2,6 +2,7 @@
 изменённые файлы, идентификаторы, матрица, затронутые карточки, заготовка фактов,
 открытые вопросы, выбор постановки, база, --out/--json."""
 import json
+import os
 import re
 import subprocess
 import sys
@@ -916,3 +917,18 @@ def test_broken_frontmatter_is_note_not_crash(tmp_path):
     _w(repo / "srs/control/ctl-cl-002.md", "---\nid: CTL-CL-002\ntype: control\n\n# без закрытия\n")
     data = _build(repo)
     assert any("frontmatter не разбирается" in n and "ctl-cl-002.md" in n for n in data["notes"])
+
+
+# Ссылки на шаги процедуры — именами, без номеров шагов режима (трек change-input):
+# справка --affected ведёт к шагу «Разбор постановки», замечания --check — к шагу сдачи.
+def test_affected_help_names_step_of_change_input():
+    out = subprocess.run([sys.executable, str(Path(dr.__file__)), "--help"], capture_output=True,
+                         env={**os.environ, "PYTHONIOENCODING": "utf-8"})
+    help_text = re.sub(r"\s+", " ", out.stdout.decode("utf-8"))
+    assert "соседи для шага «Разбор постановки» входа change" in help_text
+
+
+def test_render_check_notes_name_delivery_step(tmp_path):
+    text = dr.render_check(tmp_path / "delta.md", ["замечание"])
+    assert "«Порядок» create-artifact, шаг сдачи" in text
+    assert "режим C" not in text
