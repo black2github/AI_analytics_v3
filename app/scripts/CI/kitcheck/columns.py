@@ -16,7 +16,7 @@ _PATH_RE = re.compile("^[\\w@\\[\\]{}().*/:#=+«»'\"-]+$", re.UNICODE)
 _SENTENCE_RE = re.compile(r"[а-яё]+\s+[а-яё]+\s+[а-яё]+", re.IGNORECASE)
 # ярлык markdown-ссылки чистовика «[ENT-010 Название](…)»: ID перед названием
 # (как _LINK_TEXT_ID_RE в checks/card_source.py)
-_LINK_ID_PREFIX_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{3}\s+(?=\S)")
+_LINK_ID_PREFIX_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{2,3}(?:\.\d+)*\s+(?=\S)")
 
 
 _TYPE_TOKENS = {

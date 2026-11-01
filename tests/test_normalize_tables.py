@@ -5422,7 +5422,11 @@ class TestThinCallCardTableLiterals:
                 f"type: {ctype}\n---\n\n# CALL-EXT-901. АС Ф1_Получение счетов\n\n"
                 f"{base}\nМетод возвращает счета клиента. {prose}\n")
 
-    def _run(self, tmp_path, card_text: str, debts: str = ""):
+    # готовая md-таблица кодов ошибок страницы (КК CALL-EXT-012/027) — состав базового контракта
+    CODES = ("\n| № п/п | Код | Описание |\n|---|---|---|\n| 1 | 0 | Операция выполнена без ошибок |\n"
+             "| 2 | 101 | Клиент не найден |\n")
+
+    def _run(self, tmp_path, card_text: str, debts: str = "", src_text: str = ""):
         from app.scripts.CI.kitcheck.checks.card_run import run_check
         docs = tmp_path / "docs"
         (docs / "srs").mkdir(parents=True)
@@ -5430,7 +5434,7 @@ class TestThinCallCardTableLiterals:
         card = docs / "srs" / "call-ext-901.md"
         card.write_text(card_text, encoding="utf-8")
         src = tmp_path / "src.md"
-        src.write_text(self.SRC, encoding="utf-8")
+        src.write_text(src_text or self.SRC, encoding="utf-8")
         return run_check([card], src, docs_root=docs)
 
     # --- признак тонкости ---
@@ -5557,3 +5561,79 @@ class TestThinCallCardTableLiterals:
         assert not ok
         assert "отсутствуют 2 имён параметров" in txt and "отсутствуют 2 из 3" in txt, txt
         assert "тонкая карточка" not in txt, txt
+
+    # --- готовые md-таблицы источника (коды ошибок, справочники) ---
+
+    def test_md_tables_skipped(self):
+        rep, ok = check_source_tables("пусто\n", self.SRC + self.CODES, thin_call=self.HOME)
+        assert ok, rep
+        assert any("таблиц источника не сверялось: 1 (строк 2)" in r for r in rep), rep
+        assert not any("markdown-таблицы источника: все значения" in r for r in rep), rep
+        rep, ok = check_source_tables("пусто\n", self.CODES)
+        assert not ok and any("отсутствуют 6 значений" in r for r in rep), rep
+
+    def test_run_md_tables_thin(self, tmp_path):
+        rep, _ = self._run(tmp_path, self._card(self.BASE), src_text=self.SRC + self.CODES)
+        txt = "\n".join(rep)
+        assert "таблиц источника не сверялось: 1 (строк 2)" in txt, txt
+        assert "НИЖЕ ПОРОГА" not in txt, txt
+
+    def test_run_md_tables_not_thin_contract_call(self, tmp_path):
+        # НЕсрабатывание: contract-call без базового и без долга класса (CALL-EXT-035)
+        rep, ok = self._run(tmp_path, self._card("**Базовый контракт:** отсутствует\n"),
+                            debts="| CALL-EXT-901 | — | нет базового контракта у владельца f1 |\n",
+                            src_text=self.SRC + self.CODES)
+        txt = "\n".join(rep)
+        assert not ok and "таблица источника «№ п/п | Код | Описание» (2 строк): в карточке отсутствуют" in txt, txt
+        assert "тонкая карточка" not in txt, txt
+
+    def test_run_md_tables_other_type(self, tmp_path):
+        # НЕсрабатывание: тип process со строкой базового контракта
+        rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="process"),
+                            src_text=self.SRC + self.CODES)
+        txt = "\n".join(rep)
+        assert not ok and "таблица источника «№ п/п | Код | Описание» (2 строк): в карточке отсутствуют" in txt, txt
+        assert "тонкая карточка" not in txt, txt
+
+
+class TestLinkIdPrefixShortNumbers:
+    """ID карточки в начале ярлыка ссылки «[ID Название](…)» снимается и при номере из двух
+    цифр и с подномером (КК, 2026-11-01: FUN-CL-07, PRN-04, SCR-CL-01.1 — PRN-04 давал ложное
+    «отсутствуют 1 значений» по ссылке «[FUN-CL-07 [КК_СК] Клиент: …](…)»). Не ID — «UTF-8»,
+    «ISO-8601»; ярлык без ID не трогается."""
+
+    @pytest.mark.parametrize("cid", ["FUN-CL-07", "PRN-04", "SCR-CL-01.1", "ENT-019", "ENT-USR-001"])
+    def test_id_stripped_both_regexes(self, cid):
+        from app.scripts.CI.kitcheck.checks.card_source import _LINK_TEXT_ID_RE
+        from app.scripts.CI.kitcheck.columns import _LINK_ID_PREFIX_RE
+        v = f"[{cid} [КК_СК] Клиент: Функция экспорта списка карт и лимитов](../x.md)"
+        want = "[[КК_СК] Клиент: Функция экспорта списка карт и лимитов](../x.md)"
+        assert _LINK_TEXT_ID_RE.sub("[", v) == want
+        assert _LINK_ID_PREFIX_RE.sub("[", v) == want
+
+    @pytest.mark.parametrize("v", ["[UTF-8 строка](../x.md)", "[ISO-8601 дата](../x.md)",
+                                   "[[КК_СК] Клиент: Функция](../x.md)", "[Пункт 07 меню](../x.md)",
+                                   "[FUN-CL-07](../x.md)"])
+    def test_not_an_id_untouched(self, v):
+        # НЕсрабатывание: не ID канона, ярлык без ID, ID без названия после него
+        from app.scripts.CI.kitcheck.checks.card_source import _LINK_TEXT_ID_RE
+        from app.scripts.CI.kitcheck.columns import _LINK_ID_PREFIX_RE
+        assert _LINK_TEXT_ID_RE.sub("[", v) == v
+        assert _LINK_ID_PREFIX_RE.sub("[", v) == v
+
+    def test_source_table_value_with_two_digit_id(self):
+        # PRN-04 КК: значение паспорта со ссылкой на функцию — в карточке ярлык «ID + название»
+        source = ("| **Название ПФ:** | Список карт и лимитов |\n| --- | --- |\n"
+                  "| **Где используется:** | ПФ формируется при вызове функции [\\[КК_СК\\] Клиент: "
+                  "Функция экспорта списка карт и лимитов](../f.md) |\n"
+                  "| **Защита от изменений:** | Нет |\n")
+        card = ("Список карт и лимитов.\n\nПФ формируется при вызове функции "
+                "[FUN-CL-07 [КК_СК] Клиент: Функция экспорта списка карт и лимитов](../fun-cl-07.md)\n\n"
+                "Защита от изменений: Нет.")
+        report, ok = check_source_tables(card, source)
+        assert ok, report
+        # ID с подномером — той же формы; потерянное слово — по-прежнему потеря
+        assert check_source_tables(card.replace("[FUN-CL-07 ", "[SCR-CL-01.1 "), source)[1]
+        lost = card.replace("экспорта списка", "экспорта")
+        report, ok = check_source_tables(lost, source)
+        assert not ok, report

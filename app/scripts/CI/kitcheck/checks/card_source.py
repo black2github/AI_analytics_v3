@@ -763,10 +763,12 @@ _DATA_COLUMN_TITLES = frozenset({
 #     URL не переносятся»). Только в этой сверке: сторож кавычечных литералов не затронут;
 #   - ID карточки в начале текста ссылки — правило ссылок комплекта «[ID Название]»:
 #     «[ENT-019 [КК_ЛК] Заявка…](…)» сверяется как «[[КК_ЛК] Заявка…](…)». ID — по форме
-#     идентификаторов канона: префикс типа заглавными с дефисами и трёхзначный номер. ID не в
-#     начале текста ссылки и снятый тег («[КК_БК]») — различие, как прежде.
+#     идентификаторов канона: префикс типа заглавными с дефисами и номер из двух-трёх цифр,
+#     с подномером через точку (FUN-CL-07, PRN-04, SCR-CL-01.1 — КК, 2026-11-01). «[UTF-8 …]»,
+#     «[ISO-8601 …]» — не ID. ID не в начале текста ссылки и снятый тег («[КК_БК]») — различие,
+#     как прежде.
 _CMP_QUOTES_RE = re.compile(r"[«»“”„\"']")
-_LINK_TEXT_ID_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{3}\s+(?=\S)")
+_LINK_TEXT_ID_RE = re.compile(r"\[(?:[A-Z][A-Z0-9]*-)+\d{2,3}(?:\.\d+)*\s+(?=\S)")
 
 
 def _cmp_text(v: str) -> str:
@@ -851,10 +853,12 @@ def check_source_tables(card_text: str, source_text: str,
     слова. Таблицы из 1 колонки или <2 строк не сверяются (служебные).
 
     thin_call — дом состава параметров тонкой карточки вызова (thin_call_home):
-    имена параметров HTML-сеток не требуются — i-строка с числом."""
+    готовые markdown-таблицы (коды ошибок, справочники) и имена параметров
+    HTML-сеток не требуются — i-строки с числами."""
     report: List[str] = []
     ok = True
     card_norm = _cmp_text(card_text)
+    thin_tables = thin_rows = 0
     for hdr, rows in parse_md_tables(source_text):
         if len(hdr) < 2 or len(rows) < 2:
             continue
@@ -906,6 +910,12 @@ def check_source_tables(card_text: str, source_text: str,
         if ((plain_passport or bold_passport) and hdr[1].strip()
                 and _norm_cell(hdr[1]).strip(" :*").lower() not in _DATA_COLUMN_TITLES):
             check_rows.insert(0, list(hdr))
+        # тонкая карточка вызова (решение владельца канона 2026-11-01): таблицы кодов
+        # ошибок и справочники страницы — состав базового контракта, не карточки вызова
+        if thin_call:
+            thin_tables += 1
+            thin_rows += len(check_rows)
+            continue
         missing: List[str] = []
         img_mixed: List[str] = []
         url_cells: List[str] = []
@@ -997,6 +1007,10 @@ def check_source_tables(card_text: str, source_text: str,
                 f"×{len(url_cells)} полнотой не считаются (живые URL не "
                 "переносятся); содержимое по ссылке — отдельная страница "
                 "или долг")
+    if thin_tables:
+        report.append(
+            f"i тонкая карточка вызова: состав параметров и примеры — {thin_call}; "
+            f"таблиц источника не сверялось: {thin_tables} (строк {thin_rows})")
     # Полнота HTML-таблиц источника: каждое имя параметра из раскрытых
     # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
     # file_id/upload_token потеряны при зелёном гейте).
@@ -1018,7 +1032,7 @@ def check_source_tables(card_text: str, source_text: str,
         report.append(
             f"HTML-таблицы источника: все {len(html_names)} имён параметров "
             f"на месте ✓")
-    if ok:
+    if ok and not thin_tables:
         report.append("markdown-таблицы источника: все значения на месте ✓")
     return report, ok
 
