@@ -415,14 +415,19 @@ def _blank_page_link_labels(body: str) -> str:
 
 
 _TABLE_TAG_RE = re.compile(r"<(/?)table\b[^>]*>", re.IGNORECASE)
+# блок кода HTML-выгрузки: <pre>…</pre> (так экспортёр отдаёт блок кода в ячейке и макрос
+# кода; то же правило, что _PRE_RE в checks/artifacts.py). Незакрытый <pre> не совпадает —
+# остаётся прозой. Инлайн-код в обратных кавычках — не блок.
+_PRE_BLOCK_RE = re.compile(r"<pre[^>]*>.*?</pre>", re.S | re.I)
 
 
 def _source_prose(body: str, tables: bool = True) -> str:
     """Проза источника: верхнеуровневые HTML-таблицы (вложенные — в их составе),
-    строки pipe-таблиц и закрытые блоки кода (границы — kitcheck/fence.py; JSON-примеры
-    запроса и ответа) заменены пустыми строками. Незакрытая таблица и незакрытый блок
-    кода остаются прозой — их литералы требуются (асимметрия ошибок). tables=False —
-    вырезаются только закрытые блоки кода, таблицы остаются."""
+    строки pipe-таблиц, закрытые блоки кода (границы — kitcheck/fence.py; JSON-примеры
+    запроса и ответа) и закрытые HTML-блоки <pre>…</pre> заменены пустыми строками.
+    Незакрытая таблица, незакрытый блок кода и незакрытый <pre> остаются прозой — их
+    литералы требуются (асимметрия ошибок); инлайн-код — тоже проза. tables=False —
+    вырезаются только блоки кода, таблицы остаются."""
     out, pos, depth, start = [], 0, 0, 0
     for m in (_TABLE_TAG_RE.finditer(body) if tables else ()):
         if not m.group(1):
@@ -440,8 +445,9 @@ def _source_prose(body: str, tables: bool = True) -> str:
     for b in _fence.blocks(lines):
         if b.closed:
             code[b.start:b.end + 1] = [True] * (b.end + 1 - b.start)
-    return "\n".join("" if code[i] or (tables and ln.strip().startswith("|")) else ln
+    text = "\n".join("" if code[i] or (tables and ln.strip().startswith("|")) else ln
                      for i, ln in enumerate(lines))
+    return _PRE_BLOCK_RE.sub(lambda m: "\n" * max(1, m.group(0).count("\n")), text)
 
 
 def quoted_literals(source_text: str,

@@ -5807,6 +5807,34 @@ class TestExamplesClass:
             assert is_soft_signal(ln) and is_examples_signal(ln)
         assert not is_examples_signal("⚠ структурный файл x.json без ссылающейся карточки")
 
+    # HTML-выгрузка: блок кода примера — <pre>…</pre>; инлайн-код в <p> — проза
+
+    HTML = ('---\ntitle: ЭКО_Метод\n---\n\n'
+            '<p>При ошибке выводится "Сервис недоступен".</p>\n'
+            '<p>Пример запроса:</p><pre>{ "clientIds": { "eqin": "2ba504e0-aaaa" } }</pre>\n')
+
+    def test_pre_block_literals_are_examples(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals(self._card(), self.HTML)
+        assert ok, rep
+        assert any(r.startswith("⚠ примеры:") and "отсутствуют 3 из 3" in r for r in rep), rep
+
+    def test_inline_code_in_paragraph_is_prose(self):
+        # НЕсрабатывание: инлайн-код в обратных кавычках внутри <p> — не блок, литерал ✗
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.HTML.replace('<pre>{ "clientIds"', '<p>`{ "clientIds"').replace(
+            '} }</pre>', '} }`</p>')
+        rep, ok = check_quoted_literals(self._card(), src)
+        assert not ok and any("✗" in r and "2ba504e0-aaaa" in r for r in rep), rep
+        assert not any(r.startswith("⚠ примеры:") for r in rep), rep
+
+    def test_unclosed_pre_is_prose(self):
+        # асимметрия ошибок: незакрытый <pre> — проза, литерал требуется
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.HTML.replace("</pre>", "")
+        rep, ok = check_quoted_literals(self._card(), src)
+        assert not ok and any("✗" in r and "2ba504e0-aaaa" in r for r in rep), rep
+
     def test_run_check_examples_not_verdict(self, tmp_path):
         from app.scripts.CI.kitcheck.checks.card_run import run_check
         docs = tmp_path / "docs"
