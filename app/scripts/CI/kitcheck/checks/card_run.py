@@ -245,9 +245,17 @@ def run_check(files: List[Path], source_path: Optional[Path],
     # иначе «перенос по шаблону» читается прибором как потеря
     # (образцы вызова EXTINT-F1-003: GUID и номер счёта живут в
     # extint-f1-003-request.json, в карточке их быть не должно).
-    for m in re.finditer(r"\]\((examples/[^)\s]+)\)", combined):
+    # Карточка в подкаталоге ссылается на sidecar через «../examples/…» (КК intc-005,
+    # internal-contracts/client/, 2026-11-01): такая ссылка — sidecar, только если файл лежит
+    # в каталоге examples внутри комплекта (docs_root, если задан); чужие пути не читаются.
+    root = Path(docs_root).resolve() if docs_root is not None else None
+    for m in re.finditer(r"\]\(((?:\.\./)*examples/[^)\s]+)\)", combined):
         side = (main_file.parent / m.group(1)).resolve()
         try:
+            if m.group(1).startswith("../") and (
+                    side.parent.name != "examples"
+                    or (root is not None and root not in side.parents)):
+                continue
             if (side.is_file() and side.stat().st_size <= 2_000_000
                     and side.suffix.lower() in {
                         ".json", ".xml", ".xsd", ".wsdl", ".sh", ".txt",

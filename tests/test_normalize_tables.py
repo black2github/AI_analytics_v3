@@ -5637,3 +5637,56 @@ class TestLinkIdPrefixShortNumbers:
         lost = card.replace("экспорта списка", "экспорта")
         report, ok = check_source_tables(lost, source)
         assert not ok, report
+
+
+class TestSidecarRelativeLink:
+    """Sidecar-образец по ссылке «../examples/…» из карточки в подкаталоге (КК intc-005,
+    internal-contracts/client/, 2026-11-01): значения примера, перенесённые в sidecar,
+    не теряются. Чужие пути и файл вне examples/ комплекта не читаются."""
+
+    SRC = ('---\ntitle: ЭКО_Выгрузка отчета\n---\n\n'
+           'Пример запроса: идентификатор "c060253d-aaaa-bbbb" за период с "2026-01-01".\n')
+    SIDE = '{"accountId": "c060253d-aaaa-bbbb", "dateFrom": "2026-01-01"}\n'
+
+    def _run(self, tmp_path, link: str, side_rel: str = "srs/ic/examples/r.txt"):
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        docs = tmp_path / "docs"
+        card = docs / "srs" / "ic" / "client" / "intc-005.md"
+        card.parent.mkdir(parents=True)
+        side = docs / side_rel if not side_rel.startswith("..") else tmp_path / side_rel[3:]
+        side.parent.mkdir(parents=True, exist_ok=True)
+        side.write_text(self.SIDE, encoding="utf-8")
+        card.write_text("---\nid: INTC-005\ntitle: 'ЭКО_Выгрузка отчета'\ntype: internal-contract\n"
+                        f"---\n\n# INTC-005. ЭКО_Выгрузка отчета\n\nОбразец запроса — [r.txt]({link}).\n",
+                        encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC, encoding="utf-8")
+        rep, _ = run_check([card], src, docs_root=docs)
+        return "\n".join(rep)
+
+    def test_parent_examples_link_read(self, tmp_path):
+        txt = self._run(tmp_path, "../examples/r.txt")
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+
+    def test_direct_examples_link_unchanged(self, tmp_path):
+        txt = self._run(tmp_path, "examples/r.txt", side_rel="srs/ic/client/examples/r.txt")
+        assert "кавычечные литералы источника: все 2 на месте ✓" in txt, txt
+
+    def test_foreign_path_not_read(self, tmp_path):
+        # НЕсрабатывание: ссылка не на examples/ — не sidecar
+        txt = self._run(tmp_path, "../../elsewhere/r.txt", side_rel="srs/elsewhere/r.txt")
+        assert "отсутствуют 2 из 2" in txt, txt
+
+    def test_escape_from_examples_not_read(self, tmp_path):
+        # НЕсрабатывание: «../examples/../…» уводит из каталога examples
+        txt = self._run(tmp_path, "../examples/../r.txt", side_rel="srs/ic/r.txt")
+        assert "отсутствуют 2 из 2" in txt, txt
+
+    def test_examples_outside_docs_root_not_read(self, tmp_path):
+        # НЕсрабатывание: каталог examples вне комплекта (выше docs/)
+        txt = self._run(tmp_path, "../../../../examples/r.txt", side_rel="../examples/r.txt")
+        assert "отсутствуют 2 из 2" in txt, txt
+
+    def test_missing_file(self, tmp_path):
+        txt = self._run(tmp_path, "../examples/nope.txt")
+        assert "отсутствуют 2 из 2" in txt, txt
