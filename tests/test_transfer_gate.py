@@ -407,6 +407,63 @@ def test_txt_example_that_parses_is_warned(tmp_path):
     assert len(hits) == 1 and "examples/r.txt" in hits[0] and "frag.txt" not in hits[0]
 
 
+# FMT-01 и selfcheck разбирают примеры одинаково строго (КК гейт 5.4, intc-001/005, 2026-11-01)
+
+def _fmt(lines):
+    return [l for l in lines if "[FMT-01]" in l]
+
+
+def test_txt_json_with_trailing_comma_not_warned(tmp_path):
+    # пометка шаблона «фрагмент, в источнике не разбирается»: JSON с висячей запятой строгим
+    # разбором невалиден — .txt по норме, предупреждения нет (раньше YAML принимал его)
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/f1.md",
+       _CARD.replace("см.", "пример [r](examples/r.txt) — фрагмент, в источнике не разбирается; см."))
+    _w(src / "docs/srs/function/examples/r.txt", '{"a": 1, "b": [1, 2,],}')
+    lines, ready, _ = _run(src)
+    assert ready, "\n".join(lines)
+    assert not _fmt(lines), "\n".join(lines)
+
+
+def test_txt_valid_xml_warned_prose_not(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/examples/r.txt", "<a><b/></a>")
+    _w(src / "docs/srs/function/examples/note.txt", "Обычный текст: значение, ещё значение")
+    lines, _, _ = _run(src)
+    hits = [l for l in lines if l.startswith("⚠ [FMT-01] пример помечен фрагментом")]
+    assert len(hits) == 1 and "examples/r.txt" in hits[0] and "note.txt" not in hits[0], hits
+
+
+def test_json_with_trailing_comma_is_examples_warning(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
+    _w(src / "docs/srs/function/examples/r.json", '{"a": 1,}')
+    lines, ready, _ = _run(src)
+    assert ready, "\n".join(lines)
+    fmt = _fmt(lines)
+    # один вердикт на файл: строка selfcheck класса «примеры», сторож .txt молчит
+    assert len(fmt) == 1 and fmt[0].startswith("⚠ [FMT-01] примеры: структурный файл "
+                                               "srs/function/examples/r.json не разбирается"), fmt
+
+
+def test_valid_json_clean(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
+    _w(src / "docs/srs/function/examples/r.json", '{"a": 1}')
+    lines, ready, _ = _run(src)
+    assert ready and not [l for l in _fmt(lines) if l.startswith(("⚠", "✗"))], "\n".join(lines)
+
+
+def test_empty_sidecar_is_fmt01_defect(tmp_path):
+    src = make_src(tmp_path)
+    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.txt); см."))
+    _w(src / "docs/srs/function/examples/r.txt", "  \n")
+    lines, ready, _ = _run(src)
+    assert not ready
+    assert any(l.startswith("✗ [FMT-01] sidecar srs/function/examples/r.txt пуст") for l in lines), \
+        "\n".join(lines)
+
+
 def test_catalog_without_readme_warned(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/srs/data-model/e1.md", "---\nid: ENT-001\ntype: data-model\nservice: X\n---\n# С\n")

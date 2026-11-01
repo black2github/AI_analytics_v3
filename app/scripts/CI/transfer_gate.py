@@ -207,6 +207,7 @@ _SELFCHECK_CRITERIA = (
     ("слот части", "SDLC-09"),
     ("структурный файл", "FMT-01"),
     ("структурные файлы", "FMT-01"),
+    ("sidecar", "FMT-01"),
     ("относительные ссылки", "CORE-06"),
     ("условные обозначения README", "SDLC-08"),
     ("матрица «API ↔ SRS»", "TRF-05"),
@@ -716,17 +717,19 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                  "тогда укажите это в README комплекта",
                  check="README каталогов")
     # FMT-01: защита от обхода — файл .txt в examples/, который разбирается как
-    # JSON/YAML/XML, был рабочим примером, переименованным ради PASS
+    # JSON/XML, был рабочим примером, переименованным ради PASS. Разбор — тот же строгий, что у
+    # selfcheck (artifacts._parse_structured): JSON — только по виду «{…}»/«[…]», XML — «<…».
+    # YAML здесь не пробуется: он принимает JSON с висячей запятой (КК intc-001/005, гейт 5.4 —
+    # гейт считал «рабочим» пример, который selfcheck видит невалидным), а прозу — как скаляр
     parse_txt: List[str] = []
     for f in staged.rglob("*.txt"):
         if "examples" not in f.relative_to(staged).parts:
             continue
-        raw = f.read_bytes()
-        for ext in (".json", ".xml", ".yaml"):
-            if raw.strip() and sc._parse_structured(raw.lstrip(b"\xef\xbb\xbf"), ext) is None \
-                    and (ext != ".yaml" or raw.lstrip().startswith((b"{", b"[", b"<"))):
-                parse_txt.append(f.relative_to(staged).as_posix())
-                break
+        raw = f.read_bytes().lstrip(b"\xef\xbb\xbf")
+        head = raw.lstrip()[:1]
+        ext = ".json" if head in (b"{", b"[") else ".xml" if head == b"<" else None
+        if ext and sc._parse_structured(raw, ext) is None:
+            parse_txt.append(f.relative_to(staged).as_posix())
     if parse_txt:
         gate.add("⚠", "FMT-01", f"пример помечен фрагментом (.txt), но разбирается: "
                  f"{', '.join(parse_txt[:5])}{'…' if len(parse_txt) > 5 else ''} — проверьте "
@@ -801,6 +804,11 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
                     block = ("i", crit, st[1:].strip().rstrip(":"))  # причины — информационно
             elif mark == "⚠" and "условные обозначения README" in st:
                 block = ("⚠", "SDLC-08", "самоописание README")  # подстроки — сами сигналы
+            elif not s.startswith(" ") and st.startswith("⚠ примеры:"):
+                # класс «примеры» (содержимое примера — не брак): строка уровня комплекта
+                # (структурный файл не разбирается) — ⚠ того же критерия, текст как в selfcheck;
+                # строки карточек (с отступом) — в счётчике «⚠ примеры» строки ИТОГО
+                gate.add("⚠", crit, st[1:].strip(), check="примеры")
     total = next((ln for ln in report if ln.startswith("ИТОГО")), "")
     mode = ("полный профиль" if strict else "командный профиль") + (
         f", источники {sources.as_posix()}" if sources else ", БЕЗ источников")
