@@ -255,6 +255,10 @@ def _fc_blank_line_table_breaks(fx: "_FileCtx") -> Tuple[List[str], bool]:
     return report, ok
 
 
+_SIDECAR_NOTE = "фрагмент, в источнике не разбирается"
+_SIDECAR_TXT_LINK_RE = re.compile(r"\]\((?:\.\./)*examples/[^)\s]+\.txt\)", re.IGNORECASE)
+
+
 def _fc_shortening_markers(fx: "_FileCtx") -> Tuple[List[str], bool]:
     source_text, soft_markers, text = fx.source_text, fx.soft_markers, fx.text
     report: List[str] = []
@@ -274,6 +278,20 @@ def _fc_shortening_markers(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # Помилование — по КОНТЕКСТУ (слова перед маркером в той же
     # строке), а не по счёту: «и т.д.» источника в одном месте не
     # покрывает сокращение перечня в другом.
+    # Пометка шаблона internal-contracts о невалидном sidecar (пример в источнике не
+    # разбирается — файл .txt, рядом со ссылкой «фрагмент, в источнике не разбирается»;
+    # КК intc-005, 2026-11-01) — не сокращение: снимается только эта формула и только на
+    # строке со ссылкой на examples/….txt. «Фрагмент» в другом месте — маркер, как прежде.
+    lines = text.split("\n")
+    n_sidecar = 0
+    for i, ln in enumerate(lines):
+        if _SIDECAR_TXT_LINK_RE.search(ln) and _SIDECAR_NOTE in ln:
+            n_sidecar += ln.count(_SIDECAR_NOTE)
+            lines[i] = ln.replace(_SIDECAR_NOTE, " ")
+    if n_sidecar:
+        text = "\n".join(lines)
+        report.append(f"i пометка шаблона о невалидном sidecar ×{n_sidecar} — "
+                      "маркером сокращения не считается")
     for marker in ("фрагмент", "см. источник", "и т.д.", "и т. д."):
         cnt = text.lower().count(marker)
         if cnt and source_text:

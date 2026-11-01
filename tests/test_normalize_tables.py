@@ -1904,6 +1904,45 @@ class TestCheckTruncationMarkers:
         assert any("маркер сокращения «и т.д.»" in l for l in rep)
         assert not any("дословно из источника" in l for l in rep)
 
+    # Пометка шаблона internal-contracts о невалидном sidecar .txt (КК intc-005, 2026-11-01)
+    _NOTE = "фрагмент, в источнике не разбирается"
+    _EXH = "\n### 5. Примеры\n\n| Пример | Файл |\n|---|---|\n"
+
+    @pytest.mark.parametrize("link", ["../examples/r.txt", "examples/r.txt", "../../examples/r.TXT"])
+    def test_sidecar_txt_note_not_a_marker(self, tmp_path, link):
+        rep, ok = self._check(
+            self.BASE + self._EXH + f"| Пример запроса | [r.txt]({link}) — {self._NOTE} |\n", tmp_path)
+        assert ok, "\n".join(rep)
+        assert not any("маркер сокращения" in l for l in rep)
+        assert any("пометка шаблона о невалидном sidecar ×1" in l for l in rep)
+
+    def test_sidecar_note_at_json_link_flagged(self, tmp_path):
+        # НЕсрабатывание: та же формула у ссылки на .json — маркер
+        rep, ok = self._check(
+            self.BASE + self._EXH + f"| Пример запроса | [r.json](../examples/r.json) — {self._NOTE} |\n",
+            tmp_path)
+        assert not ok and any("маркер сокращения «фрагмент» ×1" in l for l in rep)
+
+    def test_sidecar_note_without_link_flagged(self, tmp_path):
+        # НЕсрабатывание: формула в прозе без ссылки на sidecar
+        rep, ok = self._check(self.BASE + f"\nПример запроса — {self._NOTE}.\n", tmp_path)
+        assert not ok and any("маркер сокращения «фрагмент» ×1" in l for l in rep)
+
+    def test_fragment_in_prose_still_flagged(self, tmp_path):
+        # НЕсрабатывание: «фрагмент» в другом месте той же карточки считается
+        rep, ok = self._check(
+            self.BASE + self._EXH + f"| Пример запроса | [r.txt](../examples/r.txt) — {self._NOTE} |\n"
+            "\n### 2.2. Коды (фрагмент справочника)\n", tmp_path)
+        assert not ok and any("маркер сокращения «фрагмент» ×1" in l for l in rep)
+
+    def test_other_markers_on_sidecar_line_flagged(self, tmp_path):
+        # НЕсрабатывание: «и т.д.» на той же строке — маркер, как прежде
+        rep, ok = self._check(
+            self.BASE + self._EXH + f"| Пример | [r.txt](../examples/r.txt) — {self._NOTE}, поля и т.д. |\n",
+            tmp_path)
+        assert not ok and any("маркер сокращения «и т.д.» ×1" in l for l in rep)
+        assert not any("маркер сокращения «фрагмент»" in l for l in rep)
+
     def test_marker_mixed_counts_only_unpardoned(self, tmp_path):
         # одно вхождение дословное, второе — сокращение: в замечании ×1
         rep, ok = self._check_src(
