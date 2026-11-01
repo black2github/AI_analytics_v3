@@ -8,7 +8,7 @@ import html
 import re
 from typing import List, Optional, Tuple
 from .. import fence as _fence
-from ..md import blank_code, code_line_flags, count_cells, table_cells
+from ..md import blank_code, code_line_flags, count_cells, html_comments, table_cells
 from ..html import _fm_body, _fm_head, _norm_cell, parse_md_tables
 from .card_common import _norm_ws, blank_table_breaks
 
@@ -316,7 +316,10 @@ def _fc_html_comments(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # Правило канона «гейт закрывается ПЕРЕНОСОМ, а не упоминанием» —
     # теперь с сторожем: чистовику служебные комменты не положены вовсе
     # (черновые пометки запрещены шаблонами; фон 4 стендов: 0 легальных).
-    cmts = re.findall(r"<!--.*?-->", text, re.S)
+    # Внутри блока кода коммент — содержимое примера (XML-образец payload
+    # источника), не пометка: смотрим только текст вне блоков (границы —
+    # правило kitcheck/fence.py; proc-033 КК, 2026-11-02).
+    cmts = html_comments(text)
     if cmts:
         ok = False
         report.append(

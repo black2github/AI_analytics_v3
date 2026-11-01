@@ -79,6 +79,39 @@ def code_blocks(text: str) -> List[str]:
             for b in _fence.blocks(lines)]
 
 
+_HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.S)
+
+
+def _code_chunks(text: str) -> List[Tuple[bool, str]]:
+    """Текст кусками (в блоке кода?, кусок) по правилу `kitcheck/fence.py`;
+    "\\n".join кусков даёт исходный текст байт в байт."""
+    lines = text.split("\n")
+    flags = _fence.code_flags(lines)
+    out: List[Tuple[bool, str]] = []
+    start = 0
+    for k in range(1, len(lines) + 1):
+        if k == len(lines) or flags[k] != flags[start]:
+            out.append((flags[start], "\n".join(lines[start:k])))
+            start = k
+    return out
+
+
+def html_comments(text: str) -> List[str]:
+    """HTML-комментарии вне блоков кода. Комментарий внутри ``` … ``` —
+    содержимое примера (XML-образец payload источника), а не служебная
+    пометка чистовика (proc-033 КК, 2026-11-02)."""
+    return [c for is_code, chunk in _code_chunks(text) if not is_code
+            for c in _HTML_COMMENT_RE.findall(chunk)]
+
+
+def strip_html_comments(text: str, repl: str = " ") -> str:
+    """Текст без HTML-комментариев вне блоков кода (К-13: значение,
+    спрятанное в комментарии, сверкой не «находится»); внутри блоков кода
+    комментарии — дословное содержимое примера и остаются для сверки."""
+    return "\n".join(chunk if is_code else _HTML_COMMENT_RE.sub(repl, chunk)
+                     for is_code, chunk in _code_chunks(text))
+
+
 def _escaped_at(s: str, i: int) -> bool:
     """Символ s[i] экранирован: перед ним нечётное число «\\»."""
     n = 0

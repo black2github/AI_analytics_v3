@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..core import Check, run_checks
 from ..html import _fm_head
-from ..md import _kit_md, page_ids, read_frontmatter
+from ..md import _kit_md, page_ids, read_frontmatter, strip_html_comments
 from .card_common import _norm_ws
 from .card_form import (
     _fc_blank_line_table_breaks, _fc_blockquote_indented_code, _fc_confluence_ui_artifacts,
@@ -235,10 +235,10 @@ def run_check(files: List[Path], source_path: Optional[Path],
     # status-model); title/поведение/колонки — по первой (основной).
     # HTML-комменты вырезаются ДО поиска значений (К-13): содержимое
     # коммента невидимо читателю — «найденное» там значение не перенесено.
-    combined = re.sub(
-        r"<!--.*?-->", " ",
-        "\n\n".join(_fs.read_text(f, encoding="utf-8") for f in files),
-        flags=re.S)
+    # Комменты внутри блоков кода — дословное содержимое примера, остаются
+    # (границы — kitcheck/fence.py; proc-033 КК, 2026-11-02).
+    combined = strip_html_comments(
+        "\n\n".join(_fs.read_text(f, encoding="utf-8") for f in files))
     # Sidecar-образцы §5 — часть карточки: шаблон предписывает держать
     # payload (JSON/XML/XSD/WSDL/curl) в <as>/examples/, а не в теле.
     # Значения источника, перенесённые в sidecar, ищутся ЗДЕСЬ же —
@@ -355,8 +355,7 @@ def _rc_source_cell_completeness(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             _fs.read_text(f, encoding="utf-8")
             for f in sorted(main_file.parent.glob("*.md"))
             if f not in files)
-        corpus_txt = combined + "\n\n" + re.sub(r"<!--.*?-->", " ", sib,
-                                                flags=re.S)
+        corpus_txt = combined + "\n\n" + strip_html_comments(sib)
         cov_rep, cov_ok = check_cell_coverage(src_text, corpus_txt)
         report.extend(cov_rep)
         ok = ok and cov_ok
@@ -503,7 +502,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             # объединение — только если главная не прошла (шаги могли
             # быть разложены по карточкам группы)
             sb_report, sb_ok = check_step_body_structure(
-                re.sub(r"<!--.*?-->", " ", card_text, flags=re.S), src_text)
+                strip_html_comments(card_text), src_text)
             if not sb_ok:
                 sb_report, sb_ok = check_step_body_structure(combined, src_text)
             report.extend(sb_report)
@@ -533,12 +532,10 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # sibling-корпус — только внутри комплекта (docs_root задан:
         # selfcheck-режим): в CLI-прогоне рядом с карточкой может лежать
         # что угодно, включая сам источник, — фолбэк глушил бы сверку
-        sib_txt = (re.sub(
-            r"<!--.*?-->", " ",
+        sib_txt = (strip_html_comments(
             "\n\n".join(_fs.read_text(f, encoding="utf-8")
                         for f in sorted(main_file.parent.glob("*.md"))
-                        if f not in files),
-            flags=re.S)
+                        if f not in files))
             if docs_root is not None else None)
         if m_type is not None and m_type.group(1) in _NO_LITERALS_TYPES:
             ql_report, ql_ok = [
@@ -553,8 +550,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 _pids = page_ids(read_frontmatter(main_file) or {})
                 page_art = [
                     (f.relative_to(docs_root).as_posix(),
-                     re.sub(r"<!--.*?-->", " ", _fs.read_text(f, encoding="utf-8", errors="replace"),
-                            flags=re.S))
+                     strip_html_comments(_fs.read_text(f, encoding="utf-8", errors="replace")))
                     for f in (_page_artifact_index(docs_root).get(_pids[0], []) if _pids else [])
                     if f not in files and f.parent != main_file.parent] or None
             ql_report, ql_ok = check_quoted_literals(combined, src_text,

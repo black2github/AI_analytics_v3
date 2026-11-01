@@ -12,6 +12,7 @@ from ..html import (
     parse_md_tables
 )
 from ..columns import _COLUMN_RULES, _is_section_row, validate_columns
+from ..md import strip_html_comments
 from .card_common import _LAYOUT_ROW_RE
 
 
@@ -388,10 +389,42 @@ def check_example_values_absent(card_text: str,
     return [], True
 
 
-def quoted_literals(source_text: str) -> List[str]:
+# Ссылка источника на страницу выгрузки/Confluence: <a href="…">ярлык</a> и
+# [ярлык](…). Цель — страница выгрузки (`….md`, с якорем или без) либо адрес
+# Confluence (confluence, pageId=, viewpage, /pages/); прочие адреса (внешние
+# ресурсы, якоря своей страницы) сюда не относятся.
+_PAGE_TARGET_RE = re.compile(
+    r"\.md(?:#[^\s\"]*)?$|confluence|pageId=|viewpage|/pages/", re.IGNORECASE)
+_HTML_LINK_RE = re.compile(
+    r"(<a\b[^>]*?\bhref=\"([^\"]*)\"[^>]*>)(.*?)(</a>)", re.IGNORECASE | re.S)
+_MD_LINK_RE = re.compile(r"\[([^\[\]\n]*)\]\(([^)\s]+)\)")
+
+
+def _blank_page_link_labels(body: str) -> str:
+    """Ярлыки ссылок на страницы выгрузки/Confluence заменены пробелом: титул
+    чужой страницы в ярлыке — адрес, а не литерал текста (intc-007 КК,
+    2026-11-02: «… в сервисе "Корпоративные карты"» — титул страницы
+    маппинга; карточка ссылается на свой дом факта, титул ей не нужен).
+    Тот же литерал в тексте вне ярлыка остаётся обязательным."""
+    body = _HTML_LINK_RE.sub(
+        lambda m: (m.group(1) + " " + m.group(4)
+                   if _PAGE_TARGET_RE.search(m.group(2)) else m.group(0)), body)
+    return _MD_LINK_RE.sub(
+        lambda m: ("[ ](" + m.group(2) + ")"
+                   if _PAGE_TARGET_RE.search(m.group(2)) else m.group(0)), body)
+
+
+def quoted_literals(source_text: str,
+                    skip_page_link_labels: bool = False) -> List[str]:
+    """Кавычечные литералы источника. skip_page_link_labels — не брать
+    литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
+    источник → карточка); сторож вариантов написания по чистовику (selfcheck)
+    зовёт без него."""
     body = _fm_body(source_text)
     headings = _source_headings(body)
     flk_cells = _flk_example_cells(body)
+    if skip_page_link_labels:
+        body = _blank_page_link_labels(body)
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
     # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
     # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
@@ -484,8 +517,9 @@ def check_quoted_literals(card_text: str,
     владельца канона 2026-10-30; PROC-047 ↔ glossary.md по одной странице):
     разложение по решению, а не по соседству — отдельная i-строка с файлами.
     Литерал, которого нет ни в группе, ни в каталоге, ни в артефактах той же
-    страницы, — ✗ как прежде."""
-    lits = quoted_literals(source_text)
+    страницы, — ✗ как прежде. Литерал из ярлыка ссылки на страницу
+    выгрузки/Confluence не требуется: титул чужой страницы — адрес."""
+    lits = quoted_literals(source_text, skip_page_link_labels=True)
     if not lits:
         return [], True
     norm_card = _fold_homoglyphs(_norm_cell(card_text))
@@ -577,10 +611,16 @@ def _frontmatter_title(text: str) -> Optional[str]:
 # потребителей и префикс одного из них не наследует (решение аналитика
 # 2026-08-25, EXTINT-F1-004). Список закрытый: имена систем в скобках
 # («[Файловый сервис] Банк: Функция выгрузки файла») — часть
-# наименования и снятию НЕ подлежат.
+# наименования и снятию НЕ подлежат. «[КК]» — маркер страниц-копий КК
+# («Копия [КК] ЕСК_ОА_…», EXTINT этап 2, 2026-11-02).
 _CONTOUR_PREFIX_RE = re.compile(
-    r"^\[(?:O2\+NEW|О2\+NEW|ОНБ_2021|КК_ВК|ББ_РЕГ|ГЭП|РЭП)\]\s*",
+    r"^\[(?:O2\+NEW|О2\+NEW|ОНБ_2021|КК|КК_ВК|ББ_РЕГ|ГЭП|РЭП)\]\s*",
     re.IGNORECASE)
+# Префикс страницы-копии Confluence («Копия [КК] X», «Копия Функция …») —
+# след копирования, не часть наименования; снимается ДО маркера контура.
+# Только в начале title и с заглавной, как ставит Confluence: «Получение
+# копии справки», «[DRAFT] Копия …» — не префикс.
+_COPY_PREFIX_RE = re.compile(r"^Копия\s+")
 
 
 _AGG_PIDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]\n]*)\]", re.M)
@@ -602,7 +642,8 @@ def check_title(card_text: str, source_text: str,
     шумного отказа. Источник без title сверке не подлежит.
 
     Исключение — базовый контракт внешней АС (type: external-integration):
-    ведущий маркер контура-потребителя из закрытого списка не переносится.
+    ведущий маркер контура-потребителя из закрытого списка и префикс
+    страницы-копии «Копия » не переносятся.
 
     Карточка-агрегатор (решение владельца канона 2026-10-30): больше одной
     страницы в confluence_page_ids или файл `dictionaries.md` (шаблон
@@ -623,7 +664,7 @@ def check_title(card_text: str, source_text: str,
         return [f"title: дословно перенесён ({src!r}) ✓"], True
     is_base = re.search(r"^type:\s*external-integration\s*$",
                         card_text[:600], re.M) is not None
-    stripped = _CONTOUR_PREFIX_RE.sub("", src)
+    stripped = _CONTOUR_PREFIX_RE.sub("", _COPY_PREFIX_RE.sub("", src))
     if is_base and card is not None and card == stripped and stripped != src:
         marker = src[:len(src) - len(stripped)].strip()
         return [f"title: перенесён без маркера контура {marker!r} — "
@@ -1194,6 +1235,6 @@ def check_outside_template_section(card_text: str) -> Tuple[List[str], bool]:
     k = hits[0]
     start = h2[k][0] + 1
     end = h2[k + 1][0] if k + 1 < len(h2) else len(lines)
-    body = re.sub(r"<!--.*?-->", " ", "\n".join(lines[start:end]), flags=re.S)
+    body = strip_html_comments("\n".join(lines[start:end]))
     n = sum(1 for ln in body.splitlines() if ln.strip())
     return [f"i подраздел вне шаблона: {n} строк"], True

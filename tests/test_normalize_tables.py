@@ -1002,6 +1002,52 @@ class TestTitleTransfer:
         _report, ok = check_title(card, self.SRC)
         assert not ok
 
+    @staticmethod
+    def _base(title: str) -> str:
+        return (f"---\nid: EXTINT-ESK-003\ntitle: '{title}'\n"
+                "type: external-integration\nkind: operation\n---\n# док\n")
+
+    @staticmethod
+    def _src(title: str) -> str:
+        return f"---\ntitle: '{title}'\nconfluence_page_id: '2464250512'\n---\n# стр\n"
+
+    def test_copy_prefix_and_kk_marker_stripped_in_base(self):
+        # страница-копия КК (EXTINT этап 2, 2026-11-02): базовому контракту —
+        # имя метода без следов копии и маркера контура
+        rep, ok = check_title(self._base("ЕСК_ОА_Проверка полномочий"),
+                              self._src("Копия [КК] ЕСК_ОА_Проверка полномочий"))
+        assert ok and "без маркера контура 'Копия [КК]'" in rep[0], rep
+        _rep, ok = check_title(self._base("ЕСК_СУВ_Запрос 115"),
+                               self._src("Копия [КК]ЕСК_СУВ_Запрос 115"))
+        assert ok
+
+    def test_contour_marker_still_stripped(self):
+        _rep, ok = check_title(self._base("Метод X"), self._src("[КК_ВК] Метод X"))
+        assert ok
+
+    def test_copy_prefix_keeps_system_name(self):
+        # имя системы в скобках после маркера — часть наименования
+        src = self._src("Копия [КК] [Адаптер Эко-ЕФР] Изменение статуса")
+        _rep, ok = check_title(self._base("[Адаптер Эко-ЕФР] Изменение статуса"), src)
+        assert ok
+        _rep, ok = check_title(self._base("Изменение статуса"), src)
+        assert not ok
+
+    def test_copy_word_inside_title_not_prefix(self):
+        # тест на НЕсрабатывание: «копия» внутри наименования — не префикс
+        _rep, ok = check_title(self._base("Получение справки"),
+                               self._src("Получение копии справки"))
+        assert not ok
+        _rep, ok = check_title(self._base("Копия 18.13"),
+                               self._src("[DRAFT] Копия 18.13"))
+        assert not ok
+
+    def test_copy_prefix_not_stripped_outside_base_contract(self):
+        # тест на НЕсрабатывание: исключение — только у базового контракта
+        card = "---\nid: CALL-EXT-011\ntitle: 'ЕСК_ОА_X'\ntype: contract-call\n---\n# док\n"
+        _rep, ok = check_title(card, self._src("Копия [КК] ЕСК_ОА_X"))
+        assert not ok
+
 
 class TestLogicalCardinality:
     """Логическая кратность связей МД («1 : N») — расширение словаря роли
@@ -3883,6 +3929,41 @@ class TestK14AnchorQuotesNotLiterals:
         rep, ok = check_quoted_literals(card, src)
         assert not ok and any("отсутствуют" in r for r in rep)
 
+    def test_quote_in_page_link_label_not_required(self):
+        # intc-007 КК (2026-11-02): титул чужой страницы в ярлыке ссылки —
+        # адрес, не литерал (HTML view и markdown-выгрузка)
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<p>Статусы определяются по <a href="ЭКО_Список/Маппинг-статусов.md">'
+               'Маппинг статусов карт в ПЦ на статусы карт в сервисе "Корпоративные карты"'
+               '</a></p>\n\n'
+               '* статус — согласно [Маппинг в сервисе "Корпоративные карты"]'
+               '(ЭКО_Список/Маппинг-статусов.md#id-Таблица1)\n'
+               '* см. [страницу "Справочник ПЦ"](https://wiki.example/pages/viewpage.action?pageId=1)\n')
+        card = "статусы — по DM-001\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert ok, rep
+
+    def test_same_quote_outside_page_link_label_required(self):
+        # тест на НЕсрабатывание: литерал в тексте рядом со ссылкой обязателен
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<p>Сервис "Корпоративные карты" — по <a href="Маппинг.md">'
+               'Маппинг в сервисе "Корпоративные карты"</a></p>\n')
+        card = "статусы — по DM-001\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert not ok and any("Корпоративные карты" in r for r in rep), rep
+
+    def test_quote_in_external_link_label_still_required(self):
+        # тест на НЕсрабатывание: ярлык ссылки НЕ на страницу выгрузки/
+        # Confluence (внешний ресурс) — литерал по-прежнему обязателен
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = ('---\ntitle: X\n---\n\n'
+               '<p><a href="https://bank.example/help">Нажмите "Отправить"</a></p>\n')
+        card = "кнопка без текста\n"
+        rep, ok = check_quoted_literals(card, src)
+        assert not ok and any("Отправить" in r for r in rep), rep
+
 
 class TestK13HtmlCommentGuard:
     """К-13 (анти-маскировка): HTML-коммент в чистовике = брак; значения
@@ -3927,6 +4008,60 @@ class TestK13HtmlCommentGuard:
         rep, ok = run_check([card], src)
         assert not ok
         assert any("отсутствуют" in r for r in rep), rep
+
+    def test_comment_inside_code_block_not_flagged(self, tmp_path):
+        # proc-033 КК (2026-11-02): комменты в XML-примере payload — содержимое
+        # примера, не служебная пометка чистовика
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: PRC-033\ntitle: 'П'\ntype: process\n---\n\n"
+            "Пример сообщения:\n\n```xml\n<msg>\n"
+            "  <!-- Мнемо-код компоненты-получателя -->\n  <to>ESK</to>\n"
+            "</msg>\n```\n\n~~~\n<!-- GUID процесса -->\n~~~\n",
+            encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not any("HTML-коммент" in r for r in rep), rep
+
+    def test_comment_outside_code_block_still_flagged(self, tmp_path):
+        # тест на НЕсрабатывание ослабления: коммент вне блока — ✗, комменты
+        # внутри блока в счёт не идут
+        from app.scripts.CI.kitcheck.checks.card_run import check_file
+        p = tmp_path / "f.md"
+        p.write_text(
+            "---\nid: PRC-033\ntitle: 'П'\ntype: process\n---\n\n"
+            "```xml\n<!-- в примере -->\n```\n\n"
+            "<!-- selfcheck-coverage: Назад -->\n", encoding="utf-8")
+        rep, ok = check_file(p)
+        assert not ok and any("HTML-коммент в чистовике ×1" in r for r in rep), rep
+
+    def test_comment_in_code_block_counts_for_values(self, tmp_path):
+        # значение источника в комменте ВНУТРИ блока кода — перенесено
+        # дословно (пример payload), сверка значений его находит
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        src = tmp_path / "src.md"
+        src.write_text(
+            "---\ntitle: 'Э'\nconfluence_page_id: '111'\n---\n\n"
+            "| Код | Значение |\n|---|---|\n"
+            "| A1 | Боевой код |\n| B2 | Второй код |\n",
+            encoding="utf-8")
+        card = tmp_path / "card.md"
+        card.write_text(
+            "---\nid: X-01\ntitle: 'Э'\ntype: screen-form\n---\n\n"
+            "A1 Боевой код упомянут честно\n\n"
+            "```xml\n<!-- B2 Второй код -->\n```\n", encoding="utf-8")
+        rep, ok = run_check([card], src)
+        assert not any("отсутствуют" in r for r in rep), rep
+
+    def test_strip_html_comments_keeps_code_and_bytes(self):
+        from app.scripts.CI.kitcheck.md import html_comments, strip_html_comments
+        text = ("a <!-- x --> b\r\n```\r\n<!-- y -->\r\n```\r\n"
+                "~~~\n<!-- z -->\n~~~\nc <!-- w\nдве строки --> d")
+        assert html_comments(text) == ["<!-- x -->", "<!-- w\nдве строки -->"]
+        out = strip_html_comments(text)
+        assert out == ("a   b\r\n```\r\n<!-- y -->\r\n```\r\n"
+                       "~~~\n<!-- z -->\n~~~\nc   d")
+        assert strip_html_comments("без комментов\r\n") == "без комментов\r\n"
 
 
 class TestK12SurrogateParamCode:
