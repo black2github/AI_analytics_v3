@@ -434,6 +434,19 @@ def _step_form_only(src_body: List[str], card_body: List[str]) -> bool:
             and _max_list_depth(card_body) >= _max_list_depth(src_body))
 
 
+# Таблица шага, вынесенная в карточки вызова (решение владельца канона 2026-11-02, КК FUN-SYS-10
+# шаг 1 → CALL-EXT-011/036/037/038): в источнике тело шага несёт таблицу, в карточке — ссылки на
+# карточки вызова; расхождение профиля — не брак, а перенос факта в его дом. Ограничитель: в
+# теле шага карточки есть ссылка на карточку вызова И в теле шага источника есть таблица.
+_CALL_LINK_RE = re.compile(r"\[(CALL-(?:EXT|INT|MOD)-\d{3})\b")
+_SRC_TABLE_RE = re.compile(r"^\s*(?:\||<table\b)", re.M | re.I)
+
+
+def _table_moved_to_calls(src_body: List[str], card_body: List[str]) -> bool:
+    return (_SRC_TABLE_RE.search("\n".join(src_body)) is not None
+            and _CALL_LINK_RE.search("\n".join(card_body)) is not None)
+
+
 def check_step_body_structure(card_text: str,
                               source_text: str) -> Tuple[List[str], bool]:
     """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
@@ -447,6 +460,7 @@ def check_step_body_structure(card_text: str,
     bad: List[str] = []
     levels_only: List[str] = []
     form_only: List[str] = []
+    moved: Dict[str, List[str]] = {}
     for num, body in src_bodies.items():
         prof_src = _ranked_profile(body)
         if num not in card_bodies or not prof_src:
@@ -463,9 +477,16 @@ def check_step_body_structure(card_text: str,
                 levels_only.append(num)
             elif _step_form_only(body, card_bodies[num]):
                 form_only.append(num)
+            elif _table_moved_to_calls(body, card_bodies[num]):
+                moved[num] = sorted(set(_CALL_LINK_RE.findall("\n".join(card_bodies[num]))))
             else:
                 bad.append(num)
     report: List[str] = []
+    for num, calls in moved.items():
+        report.append(
+            f"предупреждение: структура тела шага №{num} расходится с источником — таблица шага "
+            f"вынесена в карточки вызова: {', '.join(calls)} (один дом у факта: правила "
+            "заполнения — в карточке вызова; полноту правил проверить приёмкой)")
     if form_only:
         report.append(
             f"предупреждение: структура тел шагов расходится с источником при том же "

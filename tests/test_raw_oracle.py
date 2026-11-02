@@ -496,3 +496,65 @@ def test_ins_cli_report_two_sections_three_tables(tmp_path, capsys):
     assert f"| srs/function/fun-01.md | Поведение | 1001 | {OTHER} |" in text
     assert "unapproved: нет; матрица: —" in text
     assert "вставки невведённых: основной список 1" in capsys.readouterr().out
+
+
+# ---------------- строки таблиц невведённых задач (замечание аналитиков КК 02.11, GBO-145866)
+
+_ROW_RAW = ('# Формат запроса\n\n<table><tr><th>Параметр</th><th>Описание</th></tr>'
+            f'<tr><td>ProcessName</td><td>имя процесса</td></tr>'
+            f'<tr class="critic-row-ins" data-task="{OTHER}"><td></td>'
+            '<td colspan="2">PRODOFF_CREDENTIALS_LIST</td><td>Перечень полномочий</td></tr></table>')
+_ROW_APPLIED = ('<table><tr><th>Параметр</th><th>Описание</th></tr>'
+                '<tr><td>ProcessName</td><td>имя процесса</td></tr></table>')
+# вид таблицы — по заголовку раздела: в raw «Формат запроса», в карточке — исходящее сообщение
+_ROW_CARD = ("### Правила заполнения исходящего сообщения\n\n"
+             "| Параметр контракта | Правило |\n|---|---|\n| `…/ProcessName` | имя |\n"
+             "| `…/QueryItem/Params/PRODOFF_CREDENTIALS_LIST` | в постановке не задано |")
+
+
+def test_ins_row_reworded_found_by_parameter_name(tmp_path):
+    # строка переложена своей строкой: дословного совпадения нет, имя параметра — в колонке
+    rows, st = _ins(tmp_path, _ROW_RAW, _ROW_CARD, applied_body=_ROW_APPLIED)
+    assert len(rows) == 1 and rows[0].row_key and rows[0].task == OTHER, rows
+    assert rows[0].fragment == "prodoff_credentials_list" and st["rows"] == 1 and st["main"] == 0
+
+
+def test_ins_row_other_table_kind_silent(tmp_path):
+    # НЕсрабатывание (intc-003 КК, GBO-127395): вставка в таблицу ЗАПРОСА, имя — в таблице
+    # карточки другого вида (ответ) — разные строки, находки нет
+    card = _ROW_CARD.replace("Правила заполнения исходящего сообщения",
+                             "Сопоставление входящего сообщения")
+    rows, st = _ins(tmp_path, _ROW_RAW, card, applied_body=_ROW_APPLIED)
+    assert rows == [] and st["rows"] == 0
+
+
+def test_ins_row_unknown_table_kind_goes_to_check(tmp_path):
+    # вид таблицы источника не определён (нет заголовка «запрос»/«ответ») — «проверить»
+    raw = _ROW_RAW.replace("# Формат запроса\n\n", "")
+    rows, st = _ins(tmp_path, raw, _ROW_CARD, applied_body=_ROW_APPLIED)
+    assert len(rows) == 1 and not rows[0].row_key and rows[0].check, rows
+    assert st["rows"] == 0 and st["check"] == 1
+
+
+def test_ins_row_absent_in_card_silent(tmp_path):
+    # НЕсрабатывание: в карточке строки нет
+    card = "| Параметр контракта | Правило |\n|---|---|\n| `…/ProcessName` | имя |"
+    rows, st = _ins(tmp_path, _ROW_RAW, card, applied_body=_ROW_APPLIED)
+    assert rows == [] and st["rows"] == 0
+
+
+def test_ins_row_name_legit_in_applied_copy_silent(tmp_path):
+    # НЕсрабатывание: имя параметра есть и в применённой копии — законно
+    card = "| Параметр | Правило |\n|---|---|\n| PRODOFF_CREDENTIALS_LIST | x |"
+    applied = _ROW_APPLIED.replace("</table>", "<tr><td>PRODOFF_CREDENTIALS_LIST</td><td>x</td></tr></table>")
+    rows, _st = _ins(tmp_path, _ROW_RAW, card, applied_body=applied)
+    assert rows == []
+
+
+def test_ins_row_numeric_key_not_a_parameter(tmp_path):
+    # НЕсрабатывание: первая ячейка — номер/код статуса, не имя параметра
+    raw_body = (f'<table><tr><th>Код</th><th>Статус</th></tr><tr class="critic-row-ins" '
+                f'data-task="{OTHER}"><td>11</td><td>Закрыта</td></tr></table>')
+    card = "| Код | Статус |\n|---|---|\n| 11 | Закрыта по-своему |"
+    rows, _st = _ins(tmp_path, raw_body, card, applied_body="<table><tr><th>Код</th></tr></table>")
+    assert rows == []

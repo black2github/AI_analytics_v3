@@ -275,3 +275,51 @@ def test_single_page_card_unchanged(tmp_path):
     report, text = _kit(tmp_path, "Сообщение «Заявка отклонена».\n", "текст", pids=("111222",))
     assert "доп. страниц" not in text, text
     assert any(ln.startswith("✓ srs") and "proc-001.md" in ln for ln in report), text
+
+
+# ------------- карточка вызова: доп. страница вне подсервиса — по ссылке (решение 2026-11-02)
+
+def _call_kit(tmp_path, inv_target: str, other_main: bool = False):
+    from app.scripts.CI.kitcheck.checks.card_run import run_check
+    root = tmp_path / "kit"
+    docs = root / "docs"
+    call = docs / "srs/bc-issue/contract-call/external/call-ext-011.md"
+    call.parent.mkdir(parents=True)
+    call.write_text("---\nid: CALL-EXT-011\ntitle: '[КК_ВК] ЭФ Подтверждение'\ntype: contract-call\n"
+                    "confluence_page_ids: ['111222', '333444']\n---\n\n# CALL-EXT-011. Вызов\n\n"
+                    "Привязка данных.\n", encoding="utf-8")
+    if other_main:
+        fun = docs / "srs/bc-component/function/system/fun-sys-10.md"
+        fun.parent.mkdir(parents=True)
+        fun.write_text("---\nid: FUN-SYS-10\ntitle: 'Функция'\ntype: function\n"
+                       "confluence_page_ids: ['333444']\n---\n\n# FUN-SYS-10. Ф\n", encoding="utf-8")
+    (root / "inventory.md").write_text(
+        "| page_id | title | родитель | req_type | строк | целевой тип (гипотеза) | основание |\n"
+        "|---|---|---|---|---|---|---|\n"
+        f"| 333444 | Метод | [КК]-ЕСК | integration | 10 | {inv_target} | x |\n", encoding="utf-8")
+    srcs = tmp_path / "conf"
+    srcs.mkdir()
+    main = srcs / "main.md"
+    main.write_text(src("[КК_ВК] ЭФ Подтверждение", "111222"), encoding="utf-8")
+    extra = srcs / "extra.md"
+    extra.write_text(src("Копия [КК] ЕСК_ОА_Проверка полномочий", "333444"), encoding="utf-8")
+    rep, _ok = run_check([call], main, docs_root=docs, amnesty_sources=[extra])
+    return "\n".join(rep)
+
+
+def test_call_card_extra_page_of_common_part_by_link(tmp_path):
+    text = _call_kit(tmp_path, "srs/bc-component/contract-call/external")
+    assert "i title доп. страниц по ссылке (метод / общая функция вне подсервиса): 333444" in text, text
+    assert "ПОТЕРЯ НАИМЕНОВАНИЯ" not in text, text
+
+
+def test_call_card_extra_page_main_of_other_card_by_link(tmp_path):
+    text = _call_kit(tmp_path, "вне SRS", other_main=True)
+    assert "по ссылке (метод / общая функция вне подсервиса): 333444" in text, text
+
+
+def test_call_card_extra_page_same_subservice_still_checked(tmp_path):
+    # НЕсрабатывание: доп. страница того же подсервиса — титул разделом обязателен, ✗ как (25)
+    text = _call_kit(tmp_path, "srs/bc-issue/contract-call/external")
+    assert "нет заголовков разделов по страницам: 333444" in text, text
+    assert "по ссылке" not in text, text

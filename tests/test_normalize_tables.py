@@ -6001,3 +6001,114 @@ class TestAttrNotationEquivalence:
                 "Иначе функция завершается без изменения данных заявки.\n")
         rep, ok = check_heavy_pair_structure(card, src)
         assert ok, rep
+
+
+class TestCallCardStepsAndFunctionPages:
+    """Карточка вызова несёт только привязку данных (шаблон contract-call; решения владельца
+    канона 2026-11-02, КК CALL-EXT-011/036/037/038, FUN-CL-21, FUN-SYS-10): шаги главной
+    страницы-функции сверяются по держателю шагов группы (С-4); таблица шага, вынесенная в
+    карточки вызова по ссылке, — ⚠ и имена найдены (С-5); тексты шагов доп. страницы-функции
+    у карточки вызова не требуются (С-6)."""
+
+    SRC_FUN = ("---\ntitle: '[КК_ЛК] Клиент: Функция подписи'\nconfluence_page_id: '1111'\n---\n\n"
+               "<table><tr><th>Что делает функция</th><td>"
+               "<p><strong>1)</strong> Проверить полномочия</p>"
+               "<p><strong>2)</strong> Подписать заявку</p></td></tr></table>\n")
+
+    def _group(self, tmp_path, with_holder: bool):
+        from app.scripts.CI.kitcheck.checks.card_run import run_check
+        docs = tmp_path / "docs"
+        call = docs / "srs" / "contract-call" / "call-ext-038.md"
+        fun = docs / "srs" / "function" / "fun-cl-21.md"
+        call.parent.mkdir(parents=True)
+        fun.parent.mkdir(parents=True)
+        call.write_text("---\nid: CALL-EXT-038\ntitle: '[КК_ЛК] Клиент: Функция подписи'\n"
+                        "type: contract-call\nconfluence_page_ids: ['1111']\n---\n\n"
+                        "# CALL-EXT-038. Вызов\n\nПривязка данных.\n", encoding="utf-8")
+        fun.write_text("---\nid: FUN-CL-21\ntitle: '[КК_ЛК] Клиент: Функция подписи'\n"
+                       "type: function\nconfluence_page_ids: ['1111']\n---\n\n# FUN-CL-21. Ф\n\n"
+                       "## Поведение\n\n1. Проверить полномочия\n2. Подписать заявку\n",
+                       encoding="utf-8")
+        src = tmp_path / "src.md"
+        src.write_text(self.SRC_FUN, encoding="utf-8")
+        files = [call, fun] if with_holder else [call]
+        return run_check(files, src, docs_root=docs)
+
+    # --- С-4 ---
+
+    def test_call_card_steps_checked_by_holder(self, tmp_path):
+        rep, _ok = self._group(tmp_path, with_holder=True)
+        assert not any("ПОТЕРЯ ШАГА" in r for r in rep), rep
+        assert any("[fun-cl-21.md] поведение: профиль вложенности совпадает" in r for r in rep), rep
+
+    def test_call_card_alone_steps_lost(self, tmp_path):
+        # НЕсрабатывание: держателя шагов в группе нет — реальная потеря, ✗ как прежде
+        rep, ok = self._group(tmp_path, with_holder=False)
+        assert not ok and any("ПОТЕРЯ ШАГА" in r for r in rep), rep
+
+    # --- С-5 ---
+
+    SRC_STEPS = ("---\ntitle: X\n---\n\n"
+                 "**Шаг 1.** Запрос в ЕСК, заполнение тегов:\n\n"
+                 "- вариант 10.1\n  - тег ProcessName\n\n"
+                 "| № | ProcessName |\n|---|---|\n| 10.1 | GPB_X |\n\n"
+                 "**Шаг 2.** Конец.\n")
+
+    def test_step_table_moved_to_call_card_is_warning(self):
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
+        card = ("# Ф\n\n**Шаг 1.** Запрос в ЕСК, заполнение тегов:\n\n- вариант 10.1\n"
+                "- тег ProcessName — по карточке вызова [CALL-EXT-011](../cc/call-ext-011.md)\n\n"
+                "**Шаг 2.** Конец.\n")
+        rep, ok = check_step_body_structure(card, self.SRC_STEPS)
+        assert ok, rep
+        assert any("шага №1" in r and "вынесена в карточки вызова: CALL-EXT-011" in r
+                   for r in rep), rep
+
+    def test_step_flattened_without_call_link_still_defect(self):
+        # НЕсрабатывание: без ссылки на карточку вызова — ✗ как прежде
+        from app.scripts.CI.kitcheck.checks.card_steps import check_step_body_structure
+        card = ("# Ф\n\n**Шаг 1.** Запрос в ЕСК:\n\n- вариант 10.1\n- тег ProcessName\n\n"
+                "**Шаг 2.** Конец.\n")
+        rep, ok = check_step_body_structure(card, self.SRC_STEPS)
+        assert not ok, rep
+
+    def test_html_param_names_found_in_linked_call_card(self):
+        src = ("<table><tr><th>Параметр</th><th>Описание</th></tr>"
+               "<tr><td>GPB_CorpCardIssue_Auth_Check</td><td>вариант 10.1</td></tr>"
+               "<tr><td>GPB_ProdCredentialsComb_Auth_Check</td><td>вариант 10.2</td></tr></table>\n")
+        card = "Шаг 1: правила заполнения — в [CALL-EXT-011](x.md).\n"
+        linked = [("CALL-EXT-011", "| ProcessName | GPB_CorpCardIssue_Auth_Check |\n"
+                                   "| ProcessName | GPB_ProdCredentialsComb_Auth_Check |\n")]
+        rep, ok = check_source_tables(card, src, linked_calls=linked)
+        assert ok, rep
+        assert any("найдено в карточках вызова по ссылке (CALL-EXT-011)" in r for r in rep), rep
+        rep, ok = check_source_tables(card, src)
+        assert not ok and any("отсутствуют 2 имён параметров" in r for r in rep), rep
+        # НЕсрабатывание: в карточке вызова имени нет — ✗
+        rep, ok = check_source_tables(card, src, linked_calls=[("CALL-EXT-011", "другое")])
+        assert not ok, rep
+
+    # --- С-6 ---
+
+    SRC_FUN_PAGE = ("---\ntitle: 'Копия Функция проверки'\nconfluence_page_id: '2222'\n---\n\n"
+                    "<table><tr><th>Что делает функция</th><td>см. ниже</td></tr></table>\n\n"
+                    "<table><tr><th>ProcessName</th></tr><tr><td>Значение \"PROD_EXEC\"</td></tr>"
+                    "</table>\n\n"
+                    "**Шаг 6.** Выходной параметр \"Должность пользователя подписавшего заявку\" = тег.\n")
+
+    def test_function_page_step_text_literals_free(self):
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        card = "Процесс PROD_EXEC; должность — «Должность пользователя».\n"
+        rep, ok = check_quoted_literals(card, self.SRC_FUN_PAGE, steps_text_free=True)
+        assert ok, rep
+        assert any("литералов текста шагов не сверялось: 1" in r for r in rep), rep
+        # без освобождения — литерал шага требуется, как прежде
+        rep, ok = check_quoted_literals(card, self.SRC_FUN_PAGE)
+        assert not ok and any("Должность пользователя подписавшего заявку" in r for r in rep), rep
+
+    def test_function_page_table_literal_still_required(self):
+        # НЕсрабатывание: литерал таблицы правил (GPB_…) отсутствует — ✗
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        rep, ok = check_quoted_literals("Должность — «Должность пользователя».\n",
+                                        self.SRC_FUN_PAGE, steps_text_free=True)
+        assert not ok and any("PROD_EXEC" in r for r in rep), rep

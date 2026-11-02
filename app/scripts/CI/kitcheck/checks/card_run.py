@@ -116,6 +116,10 @@ _NO_LITERALS_TYPES = {"glossary": "глоссарию", "domain-vision": "вид
                       # сводка видения сервиса по нескольким страницам, в том числе черновикам
                       # (решение владельца канона 2026-11-01, КК service-vision.md)
                       "vision": "видению сервиса"}
+# держатели шагов страницы: у группы с главной карточкой вызова поведение сверяется по ним
+_STEP_HOLDER_TYPES = frozenset({"function", "process", "screen-form"})
+# страница-функция выгрузки: паспорт функции с ячейкой «Что делает функция»
+_FUNCTION_PAGE_RE = re.compile(r"Что делает функция", re.I)
 
 
 FILE_CHECKS: List[Check] = [
@@ -420,6 +424,52 @@ def _rc_notification_structure(fx: "_SourceCtx") -> Tuple[List[str], bool]:
 
 
 @_fs.memoize(copy=dict)
+def _main_page_index(docs_root: Path) -> Dict[str, List[Path]]:
+    """page_id → карточки комплекта, у которых он стоит ПЕРВЫМ в confluence_page_ids
+    (главная страница карточки). Кэш сессии, как у _page_artifact_index."""
+    out: Dict[str, List[Path]] = {}
+    for p in _kit_md(docs_root, zone=True):
+        pids = page_ids(read_frontmatter(p) or {})
+        if pids:
+            out.setdefault(pids[0], []).append(p)
+    return out
+
+
+_INV_ROW_RE = re.compile(r"^\|\s*(\d{4,})\s*\|(?:[^|\n]*\|){4}\s*(srs/[^|\s]+)", re.M)
+
+
+@_fs.memoize(copy=dict)
+def _inventory_targets(inventory: Path) -> Dict[str, str]:
+    """page_id → целевой каталог страницы по описи выгрузки (inventory.md в корне комплекта,
+    колонка «целевой тип (гипотеза)», только значения вида srs/…)."""
+    if not inventory.is_file():
+        return {}
+    text = _fs.read_text(inventory, encoding="utf-8", errors="replace")
+    return {m.group(1): m.group(2) for m in _INV_ROW_RE.finditer(text)}
+
+
+def _subservice(rel_parts: Tuple[str, ...]) -> str:
+    """Подсервис по пути «srs/<подсервис>/…»; иначе пусто."""
+    return rel_parts[1] if len(rel_parts) > 2 and rel_parts[0] == "srs" else ""
+
+
+def _page_outside_subservice(pid: str, main_file: Path, files: List[Path], docs_root: Path) -> bool:
+    """Доп. страница карточки вызова не принадлежит её подсервису: главная у другой карточки
+    комплекта вне группы, либо по описи её целевой каталог — в другом подсервисе (в том числе
+    в общей части srs/bc-component/…)."""
+    group = {f.resolve() for f in files}
+    if any(p.resolve() not in group for p in _main_page_index(docs_root).get(pid, [])):
+        return True
+    try:
+        own = _subservice(main_file.resolve().relative_to(docs_root.resolve()).parts)
+    except ValueError:
+        return False
+    target = _inventory_targets(docs_root.parent / "inventory.md").get(pid, "")
+    tsub = _subservice(tuple(target.split("/")))
+    return bool(own and tsub and tsub != own)
+
+
+@_fs.memoize(copy=dict)
 def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
     """page_id → карточки комплекта, у которых он стоит в confluence_page_ids в любой
     позиции (группы selfcheck строятся по первой). Строится один раз за прогон: кэш
@@ -428,6 +478,23 @@ def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
     for p in _kit_md(docs_root, zone=True):
         for pid in page_ids(read_frontmatter(p) or {}):
             out.setdefault(pid, []).append(p)
+    return out
+
+
+_CALL_CARD_LINK_RE = re.compile(r"\[(CALL-(?:EXT|INT|MOD)-\d{3})[^\]]*\]\(([^)\s#]+\.md)")
+
+
+def _linked_call_cards(card_text: str, main_file: Path) -> List[Tuple[str, str]]:
+    """[(ID, текст)] карточек вызова, на которые ссылается карточка (по относительной ссылке
+    «[CALL-…](…md)»); несуществующая цель пропускается (её ловит сторож ссылок)."""
+    out: List[Tuple[str, str]] = []
+    seen: set = set()
+    for m in _CALL_CARD_LINK_RE.finditer(card_text):
+        p = (main_file.parent / m.group(2)).resolve()
+        if p in seen or not p.is_file():
+            continue
+        seen.add(p)
+        out.append((m.group(1), _fs.read_text(p, encoding="utf-8", errors="replace")))
     return out
 
 
@@ -472,7 +539,13 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         thin_call = (thin_call_home(card_text, debts_text)
                      if m_type is not None and m_type.group(1) == "contract-call"
                      else None)
-        src_report, src_ok = check_source_tables(combined, src_text, thin_call=thin_call)
+        # карточки вызова, на которые ссылается держатель шагов: таблица шага вынесена в них
+        # (решение владельца канона 2026-11-02) — имена параметров ищутся и там
+        linked_calls = (_linked_call_cards(card_text, main_file)
+                        if m_type is not None and m_type.group(1) in _STEP_HOLDER_TYPES
+                        and main_file is not None else None)
+        src_report, src_ok = check_source_tables(combined, src_text, thin_call=thin_call,
+                                                 linked_calls=linked_calls)
         # волна 9 ОНБ-В (ЗК-04): таблицы без дословных значений, изображения без
         # следа, перечень таблиц источника — только ⚠ / i
         readme = main_file.parent / "README.md" if main_file is not None else None
@@ -512,16 +585,44 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 p_title = _frontmatter_title(p_text)
                 if p_title:
                     extra_pages.append((_page_id_of(p_text), p_title))
+        # карточка вызова: доп. страница вне её подсервиса — страница метода или общая функция,
+        # используется по ссылке, титул разделом не обязателен (решение владельца канона
+        # 2026-11-02, уточнение правила 01.11; КК CALL-EXT-011/036/037/038 ← 2464250512/2464250492)
+        by_link: List[str] = []
+        if (m_type is not None and m_type.group(1) == "contract-call" and docs_root is not None
+                and main_file is not None):
+            by_link = [i for i, _t in extra_pages
+                       if i and _page_outside_subservice(i, main_file, files, Path(docs_root))]
+            extra_pages = [(i, t) for i, t in extra_pages if i not in by_link]
         ttl_report, ttl_ok = check_title(
             ttl_text, src_text, extra_titles=[t for _i, t in extra_pages],
             corpus=combined, file_name=(ttl_holder or main_file).name,
             extra_ids=[i for i, _t in extra_pages])
+        if by_link:
+            ttl_report = ttl_report + [
+                f"i title доп. страниц по ссылке (метод / общая функция вне подсервиса): "
+                f"{', '.join(by_link)} — разделом карточки вызова не обязательны"]
         if ttl_holder is not None:
             ttl_report = [
                 ln.replace("title:", f"title (часть partOf без title, "
                            f"держатель — {ttl_holder.name}):", 1)
                 for ln in ttl_report]
-        bh_report, bh_ok = check_behavior_nesting(card_text, src_text)
+        # карточка вызова шаги не несёт (шаблон contract-call: только привязка данных; алгоритм —
+        # у функции-держателя, решение владельца канона 2026-11-02, КК CALL-EXT-038 +
+        # FUN-CL-21): у группы, где главная — contract-call, поведение сверяется по держателю
+        # шагов той же группы (function / process / screen-form); держателя нет — по главной,
+        # как прежде (реальная потеря)
+        bh_text, bh_holder = card_text, None
+        if m_type is not None and m_type.group(1) == "contract-call":
+            for f in files[1:]:
+                t = _fs.read_text(f, encoding="utf-8", errors="replace")
+                ft = re.search(r"^type:\s*([\w-]+)", _fm_head(t), re.M)
+                if ft and ft.group(1) in _STEP_HOLDER_TYPES:
+                    bh_text, bh_holder = t, f
+                    break
+        bh_report, bh_ok = check_behavior_nesting(bh_text, src_text)
+        if bh_holder is not None:
+            bh_report = [f"[{bh_holder.name}] {ln}" for ln in bh_report]
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
         # К-34: лейбл-секции паспорта — только функции (у data-model
@@ -611,12 +712,20 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             # 3 парах из 60): литералы сверяются как у главной — та же группа, sidecar, соседи,
             # артефакты страницы и освобождения; строки — с page_id и title страницы. Страница
             # вне выгрузки сюда не попадает (selfcheck передаёт только найденные файлы)
+            # доп. страница-функция у карточки вызова / экрана группы с карточкой вызова (решение
+            # владельца канона 2026-11-02): тексты шагов функции сверяет карточка функции
+            call_group = m_type is not None and m_type.group(1) in ("contract-call", "screen-form") \
+                and any(re.search(r"^type:\s*contract-call\s*$",
+                                  _fm_head(_fs.read_text(f, encoding="utf-8", errors="replace")),
+                                  re.M) for f in files)
             for p in (fx.amnesty_sources or []):
                 if not p.is_file():
                     continue
                 p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
-                p_rep, p_ok = check_quoted_literals(combined, p_text, sibling_text=sib_txt,
-                                                    page_artifacts=page_art, thin_call=thin_call)
+                p_rep, p_ok = check_quoted_literals(
+                    combined, p_text, sibling_text=sib_txt, page_artifacts=page_art,
+                    thin_call=thin_call,
+                    steps_text_free=call_group and _FUNCTION_PAGE_RE.search(p_text) is not None)
                 tag = (f"доп. страницы {_page_id_of(p_text)} "
                        f"«{_frontmatter_title(p_text) or p.stem}»")
                 ql_report += [_extra_page_line(ln, tag) for ln in p_rep]

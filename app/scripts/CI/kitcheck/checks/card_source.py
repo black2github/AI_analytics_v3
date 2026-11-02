@@ -452,10 +452,37 @@ def _source_prose(body: str, tables: bool = True) -> str:
     return _PRE_BLOCK_RE.sub(lambda m: "\n" * max(1, m.group(0).count("\n")), text)
 
 
+def _source_structured(body: str) -> str:
+    """Дополнение _source_prose: только таблицы (верхнеуровневые HTML-таблицы, строки
+    pipe-таблиц) и закрытые блоки кода / <pre> источника, частями через пустую строку.
+    Литерал, который есть здесь, стоит в таблице или примере, а не только в тексте."""
+    parts: List[str] = []
+    depth, start = 0, 0
+    for m in _TABLE_TAG_RE.finditer(body):
+        if not m.group(1):
+            if depth == 0:
+                start = m.start()
+            depth += 1
+        elif depth:
+            depth -= 1
+            if depth == 0:
+                parts.append(body[start:m.end()])
+    lines = body.split("\n")
+    code = [False] * len(lines)
+    for b in _fence.blocks(lines):
+        if b.closed:
+            code[b.start:b.end + 1] = [True] * (b.end + 1 - b.start)
+    parts.append("\n".join(ln for i, ln in enumerate(lines)
+                           if code[i] or ln.strip().startswith("|")))
+    parts.extend(m.group(0) for m in _PRE_BLOCK_RE.finditer(body))
+    return "\n\n".join(parts)
+
+
 def quoted_literals(source_text: str,
                     skip_page_link_labels: bool = False,
                     prose_only: bool = False,
-                    no_code: bool = False) -> List[str]:
+                    no_code: bool = False,
+                    structured_only: bool = False) -> List[str]:
     """Кавычечные литералы источника. skip_page_link_labels — не брать
     литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
     источник → карточка); сторож вариантов написания по чистовику (selfcheck)
@@ -472,6 +499,8 @@ def quoted_literals(source_text: str,
         body = _source_prose(body)
     elif no_code:
         body = _source_prose(body, tables=False)
+    elif structured_only:
+        body = _source_structured(body)
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
     # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
     # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
@@ -547,7 +576,8 @@ def check_quoted_literals(card_text: str,
                           source_text: str,
                           sibling_text: Optional[str] = None,
                           page_artifacts: Optional[List[Tuple[str, str]]] = None,
-                          thin_call: Optional[str] = None
+                          thin_call: Optional[str] = None,
+                          steps_text_free: bool = False
                           ) -> Tuple[List[str], bool]:
     """Каждый кавычечный литерал источника обязан присутствовать в карточке
     (сравнение нормализованное, кавычки не требуются).
@@ -571,9 +601,23 @@ def check_quoted_literals(card_text: str,
     thin_call — дом состава параметров тонкой карточки вызова (thin_call_home):
     литералы, стоящие в источнике только в таблицах и блоках кода (значения
     формата и примеров), не требуются — i-строка с числом; литерал прозы — как
-    прежде."""
+    прежде.
+
+    steps_text_free — доп. страница-функция у карточки вызова или экрана (решение
+    владельца канона 2026-11-02, КК FUN-SYS-10 ← 2464250492): литералы, стоящие на
+    странице только в тексте (шаги функции), не требуются — их сверяет карточка самой
+    функции; литералы таблиц и примеров — по прежним правилам. i-строка с числом."""
     lits = quoted_literals(source_text, skip_page_link_labels=True)
     report: List[str] = []
+    if steps_text_free and lits:
+        structured = {_norm_cell(v) for v in quoted_literals(
+            source_text, skip_page_link_labels=True, structured_only=True)}
+        text_only = [v for v in lits if _norm_cell(v) not in structured]
+        if text_only:
+            lits = [v for v in lits if v not in text_only]
+            report.append(
+                f"i доп. страница-функция: литералов текста шагов не сверялось: "
+                f"{len(text_only)} — их сверяет карточка функции")
     if thin_call and lits:
         prose = {_norm_cell(v) for v in quoted_literals(
             source_text, skip_page_link_labels=True, prose_only=True)}
@@ -919,7 +963,9 @@ def thin_call_home(card_text: str, debts_text: str = "") -> Optional[str]:
 
 
 def check_source_tables(card_text: str, source_text: str,
-                        thin_call: Optional[str] = None) -> Tuple[List[str], bool]:
+                        thin_call: Optional[str] = None,
+                        linked_calls: Optional[List[Tuple[str, str]]] = None
+                        ) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
     в карточке значениями ВСЕХ колонок.
@@ -1093,6 +1139,17 @@ def check_source_tables(card_text: str, source_text: str,
     html_names = html_param_names(source_text)
     lost = sorted(n for n in html_names
                   if _cmp_text(n) not in card_norm)
+    # имена из таблицы шага, вынесенной в карточки вызова по ссылке (решение владельца канона
+    # 2026-11-02, КК FUN-SYS-10 → CALL-EXT-011/036/037/038): найденные там — на месте
+    if lost and linked_calls:
+        linked_norm = _cmp_text("\n".join(t for _n, t in linked_calls))
+        moved = [n for n in lost if _cmp_text(n) in linked_norm]
+        if moved:
+            lost = [n for n in lost if n not in moved]
+            report.append(
+                f"i HTML-таблицы источника: имён параметров ×{len(moved)} найдено в карточках "
+                f"вызова по ссылке ({', '.join(n for n, _t in linked_calls)}): "
+                + ", ".join(repr(n) for n in moved[:4]))
     if thin_call and html_names:
         report.append(
             f"i тонкая карточка вызова: состав параметров — {thin_call}; "
