@@ -244,14 +244,10 @@ def _under_modules(path: Path, output: Path) -> bool:
     return False
 
 
-def find_kit_file(output: Path, name: str) -> Optional[Path]:
-    """Файл комплекта (inventory.md, migration-plan.md): в корне --output или
-    в его родителе (для docs/ — рядом с docs/)."""
-    for d in (output, output.parent):
-        p = d / name
-        if p.is_file():
-            return p
-    return None
+# Файл комплекта (inventory.md, migration-plan.md): в корне --output или в его родителе.
+# Дом адреса — kitcheck.fs (тот же локатор у самопроверки и гейта переноса); имя здесь
+# оставлено для прежних импортов (link_debts).
+find_kit_file = _fs.find_kit_file
 
 
 def read_inventory(path: Path) -> Dict[str, Dict[str, str]]:

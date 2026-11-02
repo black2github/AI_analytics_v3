@@ -208,14 +208,16 @@ def _run(files: List[Path], src: Optional[Path],
          pardon_src: Optional[Path] = None,
          amnesty: Optional[List[Path]] = None,
          allow_sibling_docs: bool = False,
-         without_sources: bool = False) -> Tuple[List[str], bool]:
+         without_sources: bool = False,
+         inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
     return _safe(lambda: run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
                                       amnesty_sources=amnesty,
                                       kit_summary=True,
                                       allow_sibling_docs=allow_sibling_docs,
-                                      without_sources=without_sources))
+                                      without_sources=without_sources,
+                                      inventory=inventory))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -225,15 +227,18 @@ def run(docs: Path, sources: Optional[Path],
         introduced: Optional[Path] = None,
         include_nested: bool = False,
         bundle: Optional[Path] = None,
-        allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
+        allow_sibling_docs: bool = False,
+        inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
     """Прогон самопроверки комплекта: (строки отчёта, вердикт OK).
 
     Файлы комплекта и выгрузки читаются с диска один раз за прогон — через
     кэш `kitcheck.fs` (сессия на время прогона). raw — архив sources/raw
-    для raw-оракула снятий (FB-32, по умолчанию выключен)."""
+    для raw-оракула снятий (FB-32, по умолчанию выключен). inventory — опись
+    выгрузки явно (гейт переноса гоняет прибор на временной копии docs/, описи
+    рядом нет); без него опись ищется в docs, затем рядом с docs."""
     with _fs.session():
         return _run_impl(docs, sources, strict, catalog, raw, introduced, include_nested, bundle,
-                         allow_sibling_docs=allow_sibling_docs)
+                         allow_sibling_docs=allow_sibling_docs, inventory=inventory)
 
 
 def _load_raw_oracle(bundle: Optional[Path]):
@@ -300,7 +305,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
               introduced: Optional[Path] = None,
               include_nested: bool = False,
               bundle: Optional[Path] = None,
-              allow_sibling_docs: bool = False) -> Tuple[List[str], bool]:
+              allow_sibling_docs: bool = False,
+              inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -326,6 +332,15 @@ def _run_impl(docs: Path, sources: Optional[Path],
         ro_rep, _ = _safe(lambda: (raw_oracle_lines(docs, sources, raw, introduced,
                                                     include_nested, bundle), True))
         report.extend(ro_rep)
+    # опись выгрузки явно (гейт переноса, ключ --inventory): путь, которого нет, — брак с
+    # причиной, а не тихий откат к поиску рядом с docs (доводы по описи молча не сработали бы)
+    if inventory is not None:
+        if inventory.is_file():
+            report.append(f"i опись выгрузки (--inventory): {inventory}")
+        else:
+            all_ok = False
+            report.append(f"✗ опись выгрузки (--inventory) не найдена: {inventory} — доводы по "
+                          "описи (копия страницы метода, страница вне подсервиса) не применены")
 
     # перепись файлов комплекта (правило 2: каждый — ровно одна категория)
     groups: Dict[str, List[Path]] = {}
@@ -482,7 +497,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     for p, note in solo:
         rep, ok = _run([p], None, docs, soft_markers=not strict,
                        allow_sibling_docs=allow_sibling_docs,
-                       without_sources=sources is None)
+                       without_sources=sources is None, inventory=inventory)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         if any(is_examples_signal(ln) for ln in rep):
@@ -534,7 +549,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
                    if x in idx and idx[x] != src]
         rep, ok = _run(files, src, docs, soft_markers=not strict,
                        amnesty=amnesty or None,
-                       allow_sibling_docs=allow_sibling_docs)
+                       allow_sibling_docs=allow_sibling_docs, inventory=inventory)
         if any(is_examples_signal(ln) for ln in rep):
             ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
@@ -560,7 +575,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
         for extra in files[1:]:
             rep2, ok2 = _run([extra], None, docs, soft_markers=not strict,
                              pardon_src=src,
-                             allow_sibling_docs=allow_sibling_docs)
+                             allow_sibling_docs=allow_sibling_docs, inventory=inventory)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
             if any(is_examples_signal(ln) for ln in rep2):
@@ -1713,11 +1728,14 @@ def main() -> int:
     ap.add_argument("--bundle", type=Path, default=None,
                     help="каталог бандла экспортёра (confluence-tree-exporter): модуль сверки по архиву raw берётся "
                          "оттуда, рядом с critic.py; путь не угадывается")
+    ap.add_argument("--inventory", type=Path, default=None,
+                    help="опись выгрузки inventory.md явно; по умолчанию — в --docs, затем рядом с ним "
+                         "(гейт переноса передаёт опись источника: прибор гоняется на копии docs/)")
     args = ap.parse_args()
     report, ok = run(args.docs, args.sources, strict=args.strict,
                      catalog=args.catalog, raw=args.raw, introduced=args.introduced,
                      include_nested=args.include_nested_cells, bundle=args.bundle,
-                     allow_sibling_docs=args.allow_sibling_docs)
+                     allow_sibling_docs=args.allow_sibling_docs, inventory=args.inventory)
     if args.journal is not None and args.sources is not None:
         jwarn = check_journal_name(args.journal, args.sources)
         if jwarn:

@@ -175,6 +175,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
+from kitcheck.fs import find_kit_file  # noqa: E402
 from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_entries, oq_status_class  # noqa: E402
 
 _HERE = Path(__file__).resolve().parent
@@ -778,9 +779,13 @@ def find_sources(src_root: Path) -> Optional[Path]:
 
 
 def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
-                  strict: bool) -> None:
+                  strict: bool, inventory: Optional[Path] = None) -> None:
+    """selfcheck на собранной копии комплекта. inventory — опись выгрузки источника
+    (inventory.md рядом с docs/ или в корне репозитория документации): в копию она не
+    переносится, а доводы прибора по описи (копия страницы метода, страница вне подсервиса)
+    без неё не срабатывают — гейт расходился бы с прямым прогоном того же дерева."""
     try:
-        report, ok = sc.run(staged, sources, strict=strict)
+        report, ok = sc.run(staged, sources, strict=strict, inventory=inventory)
     except Exception as e:  # noqa: BLE001
         gate.add("✗", "ПРИБОР", f"selfcheck упал: {e!r} — комплект не проверен")
         return
@@ -1198,7 +1203,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      "(sources/confluence, confluence) — прибор идёт без сверки "
                      "с источником; задайте --sources")
         if not after_step:
-            run_selfcheck(gate, staged, sources, strict)
+            run_selfcheck(gate, staged, sources, strict, find_kit_file(docs, "inventory.md"))
         check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
                                   sources, questions)
         if after_step:

@@ -202,7 +202,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               amnesty_sources: Optional[List[Path]] = None,
               kit_summary: bool = False,
               allow_sibling_docs: bool = False,
-              without_sources: bool = False) -> Tuple[List[str], bool]:
+              without_sources: bool = False,
+              inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -216,7 +217,11 @@ def run_check(files: List[Path], source_path: Optional[Path],
     не её) — но дословные помилования check_file (К-30 гомоглифы,
     source_literals колонных ролей) наследуются от той же страницы.
     Действует лишь при source_path is None; сверочные блоки run_check
-    (`src_text is not None`) от него не включаются."""
+    (`src_text is not None`) от него не включаются.
+
+    inventory — опись выгрузки (inventory.md) явно: гейт переноса гоняет прибор на
+    временной копии docs/, где описи нет; без параметра опись ищется от docs_root
+    (kitcheck.fs.find_kit_file)."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -282,7 +287,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                 continue
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -310,6 +315,7 @@ class _SourceCtx:
     main_file: object
     src_text: object
     allow_sibling_docs: object
+    inventory: object = None
 
 
 
@@ -467,17 +473,27 @@ _COPY_TITLE_RE = re.compile(r"^Копия\s+")
 _COPY_TITLE_MARK_RE = re.compile(r"^Копия\s+\[([^\[\]\n]{1,30})\]")
 
 
-def _copy_method_page_contour(src_text: str, docs_root) -> str:
+def _inventory_path(docs_root, inventory=None) -> Optional[Path]:
+    """Опись выгрузки для сверки: явная (параметр inventory прогона — гейт переноса на
+    временной копии docs/), иначе inventory.md в корне комплекта или рядом с ним
+    (kitcheck.fs.find_kit_file). Не найдена — None: доводы по описи не срабатывают."""
+    if inventory is not None:
+        return Path(inventory)
+    return _fs.find_kit_file(docs_root, "inventory.md") if docs_root is not None else None
+
+
+def _copy_method_page_contour(src_text: str, docs_root, inventory=None) -> str:
     """Основа маркера сервиса («КК») у страницы-копии метода — по описи req_type integration и
     титул «Копия [<маркер>] …»; иначе пусто (чужие пункты не снимаются)."""
-    if docs_root is None:
+    inv = _inventory_path(docs_root, inventory)
+    if inv is None:
         return ""
     title = _frontmatter_title(src_text) or ""
     m = _COPY_TITLE_MARK_RE.match(title)
     pid = _page_id_of(src_text)
     if not m or not pid:
         return ""
-    _t, req_type = _inventory_req_types(Path(docs_root).parent / "inventory.md").get(pid, ("", ""))
+    _t, req_type = _inventory_req_types(inv).get(pid, ("", ""))
     return m.group(1).split("_")[0].strip() if req_type.startswith("integration") else ""
 
 
@@ -486,7 +502,8 @@ def _subservice(rel_parts: Tuple[str, ...]) -> str:
     return rel_parts[1] if len(rel_parts) > 2 and rel_parts[0] == "srs" else ""
 
 
-def _page_outside_subservice(pid: str, main_file: Path, files: List[Path], docs_root: Path) -> bool:
+def _page_outside_subservice(pid: str, main_file: Path, files: List[Path], docs_root: Path,
+                             inventory: Optional[Path] = None) -> bool:
     """Доп. страница карточки вызова используется по ссылке: главная у другой карточки комплекта
     вне группы; по описи — копия страницы метода владельца (req_type integration и титул
     «Копия …»: копия в папке подсервиса, КК CALL-EXT-030 ← 2464250463, решение владельца канона
@@ -496,15 +513,17 @@ def _page_outside_subservice(pid: str, main_file: Path, files: List[Path], docs_
     group = {f.resolve() for f in files}
     if any(p.resolve() not in group for p in _main_page_index(docs_root).get(pid, [])):
         return True
-    inventory = docs_root.parent / "inventory.md"
-    title, req_type = _inventory_req_types(inventory).get(pid, ("", ""))
+    inv = _inventory_path(docs_root, inventory)
+    if inv is None:
+        return False
+    title, req_type = _inventory_req_types(inv).get(pid, ("", ""))
     if req_type.startswith("integration") and _COPY_TITLE_RE.match(title):
         return True
     try:
         own = _subservice(main_file.resolve().relative_to(docs_root.resolve()).parts)
     except ValueError:
         return False
-    target = _inventory_targets(inventory).get(pid, "")
+    target = _inventory_targets(inv).get(pid, "")
     tsub = _subservice(tuple(target.split("/")))
     return bool(own and tsub and tsub != own)
 
@@ -632,7 +651,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         if (m_type is not None and m_type.group(1) == "contract-call" and docs_root is not None
                 and main_file is not None):
             by_link = [i for i, _t in extra_pages
-                       if i and _page_outside_subservice(i, main_file, files, Path(docs_root))]
+                       if i and _page_outside_subservice(i, main_file, files, Path(docs_root),
+                                                       fx.inventory)]
             extra_pages = [(i, t) for i, t in extra_pages if i not in by_link]
         ttl_report, ttl_ok = check_title(
             ttl_text, src_text, extra_titles=[t for _i, t in extra_pages],
@@ -683,7 +703,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         ok = ok and hc_ok
         # К-25d: профили вынесенных лейбл-секций против эталона
         hp_report, hp_ok = check_heavy_pair_structure(
-            combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root))
+            combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root, fx.inventory))
         report.extend(hp_report)
         ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)

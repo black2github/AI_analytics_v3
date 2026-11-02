@@ -80,6 +80,19 @@ def _default_encoding() -> str:
     return locale.getpreferredencoding(False)
 
 
+def find_kit_file(root: PathLike, name: str) -> Optional[Path]:
+    """Файл комплекта (inventory.md, migration-plan.md): в корне комплекта или в его
+    родителе — для `<repo>/docs` файл лежит рядом с `docs/`, в репозитории документации
+    (комплект в корне) — в самом корне. Не найден — None. Единственный дом адреса файлов
+    комплекта: прибор самопроверки, сверка покрытия описи и гейт переноса ищут здесь."""
+    root = Path(root)
+    for d in (root, root.parent):
+        p = d / name
+        if p.is_file():
+            return p
+    return None
+
+
 def memoize(copy: Optional[Callable[[Any], Any]] = None):
     """Кэш результатов чистой функции на время прогона (сессии).
 
