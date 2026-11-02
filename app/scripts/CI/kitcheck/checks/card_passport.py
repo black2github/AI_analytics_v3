@@ -123,15 +123,50 @@ def check_heavy_cells(card_text: str,
     return [], True
 
 
+# маркер контура в тексте пункта: «[O2+NEW]», «[КК_ВК]», «[ОНБ_2021]»
+_CONTOUR_MARK_RE = re.compile(r"\[([^\[\]\n]{1,30})\]")
+_LI_RE = re.compile(r"<li\b[^>]*>(?:(?!<li\b|</li>).)*</li>", re.S | re.I)
+
+
+def _drop_foreign_items(cell: str, own: str) -> Tuple[str, int]:
+    """Пункты списка ячейки страницы-копии метода, у которых первый маркер контура — не
+    этого сервиса (основа маркера до «_» ≠ own), снимаются: чужие точки вызова (Р-1,
+    решение владельца канона 2026-11-02; КК CALL-EXT-024/025). Пункт без маркера и со своим
+    маркером остаётся. Вложенный пункт снимается вместе с родителем, сам по себе — нет."""
+    n = 0
+
+    def repl(m: "re.Match[str]") -> str:
+        nonlocal n
+        mark = _CONTOUR_MARK_RE.search(re.sub(r"<[^>]+>", "", m.group(0)))
+        if mark and mark.group(1).split("_")[0].strip().upper() != own:
+            n += 1
+            return ""
+        return m.group(0)
+
+    return _LI_RE.sub(repl, cell), n
+
+
 def check_heavy_pair_structure(card_text: str,
-                               src_text: str) -> Tuple[List[str], bool]:
+                               src_text: str,
+                               own_contour: str = "") -> Tuple[List[str], bool]:
     """К-25d (обобщение): профиль КАЖДОЙ лейбл-секции тяжёлой пары
     (найденной по началу содержимого, лейбл безразличен) обязан
     начинаться профилем эталона конвертера — склейка абзацев в
-    простыню видна как усечение профиля."""
+    простыню видна как усечение профиля.
+
+    own_contour — основа маркера сервиса (например «КК») у страницы-копии метода: пункты
+    списков с чужим маркером контура из эталона снимаются (i-строка с числом)."""
     heavy = heavy_source_cells(src_text)
     if not heavy:
         return [], True
+    dropped = 0
+    if own_contour:
+        cleaned = []
+        for cell in heavy:
+            c, k = _drop_foreign_items(cell, own_contour.upper())
+            dropped += k
+            cleaned.append(c)
+        heavy = cleaned
     lines = card_text.splitlines()
     # пробы режутся по СХЛОПНУТОМУ содержимому ячейки и могут пересекать
     # границы абзацев эталона («Функция вызывается:» + список — проба
@@ -157,6 +192,9 @@ def check_heavy_pair_structure(card_text: str,
     bad = 0
     sample = ""
     report_notes: List[str] = []
+    if dropped:
+        report_notes.append(f"i чужие точки вызова страницы-копии: {dropped} снято (Р-1) — пункты "
+                            "с маркером контура не этого сервиса в карточке не требуются")
     for cell in heavy:
         md = html_fragment_to_markdown(cell)
         expected = _md_profile(md.splitlines())

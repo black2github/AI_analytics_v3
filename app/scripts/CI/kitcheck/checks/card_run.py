@@ -464,6 +464,23 @@ def _inventory_req_types(inventory: Path) -> Dict[str, Tuple[str, str]]:
 _COPY_TITLE_RE = re.compile(r"^Копия\s+")
 
 
+_COPY_TITLE_MARK_RE = re.compile(r"^Копия\s+\[([^\[\]\n]{1,30})\]")
+
+
+def _copy_method_page_contour(src_text: str, docs_root) -> str:
+    """Основа маркера сервиса («КК») у страницы-копии метода — по описи req_type integration и
+    титул «Копия [<маркер>] …»; иначе пусто (чужие пункты не снимаются)."""
+    if docs_root is None:
+        return ""
+    title = _frontmatter_title(src_text) or ""
+    m = _COPY_TITLE_MARK_RE.match(title)
+    pid = _page_id_of(src_text)
+    if not m or not pid:
+        return ""
+    _t, req_type = _inventory_req_types(Path(docs_root).parent / "inventory.md").get(pid, ("", ""))
+    return m.group(1).split("_")[0].strip() if req_type.startswith("integration") else ""
+
+
 def _subservice(rel_parts: Tuple[str, ...]) -> str:
     """Подсервис по пути «srs/<подсервис>/…»; иначе пусто."""
     return rel_parts[1] if len(rel_parts) > 2 and rel_parts[0] == "srs" else ""
@@ -665,7 +682,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         report.extend(hc_report)
         ok = ok and hc_ok
         # К-25d: профили вынесенных лейбл-секций против эталона
-        hp_report, hp_ok = check_heavy_pair_structure(combined, src_text)
+        hp_report, hp_ok = check_heavy_pair_structure(
+            combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root))
         report.extend(hp_report)
         ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)

@@ -6112,3 +6112,51 @@ class TestCallCardStepsAndFunctionPages:
         rep, ok = check_quoted_literals("Должность — «Должность пользователя».\n",
                                         self.SRC_FUN_PAGE, steps_text_free=True)
         assert not ok and any("PROD_EXEC" in r for r in rep), rep
+
+
+class TestCopyPageForeignCallPoints:
+    """Страница-копия метода: пункты «Где используется» с маркером контура не этого сервиса —
+    чужие точки вызова, в карточке не требуются (Р-1, решение владельца канона 2026-11-02;
+    КК CALL-EXT-024/025). Свой маркер и пункт без маркера — как прежде."""
+
+    CELL = ("<p>Интеграционное взаимодействие используется в процессах сервиса:</p><ul>"
+            "<li>Процесс \"[O2+NEW] Получить выписку по клиенту в КНОСИС\" (Шаг №3)</li>"
+            "<li>Процесс [КК_ВК] Получить выписку по клиенту в КНОСИС (Шаг №3)</li>"
+            "<li>Процесс [ГЭП] Создать заявку подписать и отправить в банк (Шаг №2)</li>"
+            "<li>Процесс выгрузки документов по заявке без маркера контура (Шаг №4)</li></ul>"
+            "<p>Иначе взаимодействие не выполняется и заявка не меняется.</p>")
+    SRC = "<table><tr><td><strong>Где используется:</strong></td><td>" + CELL + "</td></tr></table>\n"
+    OWN = ("Интеграционное взаимодействие используется в процессах сервиса:\n\n"
+           "- Процесс [КК_ВК] Получить выписку по клиенту в КНОСИС (Шаг №3)\n")
+    NOMARK = "- Процесс выгрузки документов по заявке без маркера контура (Шаг №4)\n"
+    TAIL = "\nИначе взаимодействие не выполняется и заявка не меняется.\n"
+
+    def test_drop_foreign_items_unit(self):
+        from app.scripts.CI.kitcheck.checks.card_passport import _drop_foreign_items
+        cell, n = _drop_foreign_items(self.CELL, "КК")
+        assert n == 2 and "O2+NEW" not in cell and "[ГЭП]" not in cell
+        assert "[КК_ВК]" in cell and "без маркера контура" in cell
+
+    def test_foreign_items_removed_in_card_ok(self):
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        card = self.OWN + self.NOMARK + self.TAIL
+        rep, ok = check_heavy_pair_structure(card, self.SRC, own_contour="КК")
+        assert ok, rep
+        assert any("чужие точки вызова страницы-копии: 2 снято" in r for r in rep), rep
+        # без признака страницы-копии — как прежде, ✗
+        rep, ok = check_heavy_pair_structure(card, self.SRC)
+        assert not ok, rep
+
+    def test_own_marker_item_removed_still_defect(self):
+        # НЕсрабатывание: снят пункт со своим маркером [КК_ВК] — ✗
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        card = ("Интеграционное взаимодействие используется в процессах сервиса:\n\n"
+                + self.NOMARK + self.TAIL)
+        rep, ok = check_heavy_pair_structure(card, self.SRC, own_contour="КК")
+        assert not ok, rep
+
+    def test_unmarked_item_removed_still_defect(self):
+        # НЕсрабатывание: снят пункт без маркера — ✗
+        from app.scripts.CI.kitcheck.checks.card_passport import check_heavy_pair_structure
+        rep, ok = check_heavy_pair_structure(self.OWN + self.TAIL, self.SRC, own_contour="КК")
+        assert not ok, rep
