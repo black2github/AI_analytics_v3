@@ -2,7 +2,8 @@
 """Сторожа по разбору замечаний к миграции КК (план П1, 2026-10-22): только ⚠ и i,
 вердикт не меняют. Каждый ловит класс недочёта, который прошёл при зелёном приборе:
 страница-копия как своя, способ показа в тексте контроля, вызыватель без ссылки при
-существующей карточке, строка паспорта вне таблицы, счётчик открытых вопросов."""
+существующей карточке, строка паспорта вне таблицы, счётчик открытых вопросов, запись OQ
+закрыта без коммита, тега или «без изменений»."""
 import sys
 from pathlib import Path as _P
 sys.path.insert(0, str(_P(__file__).resolve().parents[2]))  # каталог утилит прибора
@@ -208,7 +209,9 @@ _CLOSED = ("закрыт", "решен", "решён", "реализован", "
 
 def _oq_class(status: str) -> str:
     w = re.split(r"[\s,.;:(—–-]+", status.strip().lower())[0].replace("ё", "е")
-    if w.startswith("открыт"):
+    # «ответ получен, разбор» / «ответ получен, канал: …» — промежуточные статусы нормы
+    # закрытия (2026-11-03): ответ запись не закрывает, закрывает коммит канала изменения
+    if w.startswith("открыт") or w.startswith("ответ"):
         return "открыт"
     if w.startswith("частично"):
         return "частично"
@@ -316,6 +319,81 @@ def oq_class_counter(oq: Path, today: Optional[date] = None) -> List[str]:
                    f"{len(bad)} — "
                    + ", ".join(shown))
     return out
+
+
+# --- B10: запись OQ закрыта без канала изменения ---
+# норма закрытия (решение владельца 2026-11-03): после приёмки среза ответ на вопрос запись
+# не закрывает — закрывает коммит канала изменения. Строка статуса закрытой записи:
+# «закрыт: <дата>, <коммит или тег src/…>, затронуто: …» либо «закрыт: <дата>, без изменений: …».
+# Дата нормы — дата её вливания в канон; записи, закрытые раньше в прежних формах, не трогаются.
+# Один дом константы — здесь, link_debts импортирует
+OQ_CLOSE_FORM_SINCE = date(2026, 11, 3)
+_STATUS_DATE_RE = re.compile(
+    r"(?<![\d.-])(?:(\d{4})-(\d{2})-(\d{2})|(\d{2})\.(\d{2})\.(\d{4}))(?![\d])")
+_HEX_RE = re.compile(r"(?<![0-9A-Za-z])[0-9a-f]{7,40}(?![0-9A-Za-z])")
+_CLOSE_TAG_RE = re.compile(r"\bsrc/[A-Za-z0-9_.-]+|\b[a-z][\w-]*-[0-9a-f]{7,40}-accepted\b")
+_UNCHANGED_RE = re.compile(r"без\s+изменений", re.I)
+
+
+def oq_status_date(status: str) -> Optional[date]:
+    """Первая дата строки статуса (ГГГГ-ММ-ДД или ДД.ММ.ГГГГ) или None."""
+    for m in _STATUS_DATE_RE.finditer(status):
+        y, mo, d = m.group(1, 2, 3) if m.group(1) else m.group(6, 5, 4)
+        try:
+            return date(int(y), int(mo), int(d))
+        except ValueError:
+            continue
+    return None
+
+
+def _commit_like(tok: str) -> bool:
+    # хеш несёт цифру; одни цифры — только 7–8 знаков: 9–10 цифр — page_id Confluence, не коммит
+    return any(c.isdigit() for c in tok) and (not tok.isdigit() or len(tok) <= 8)
+
+
+def oq_close_ref(status: str) -> Optional[str]:
+    """Канал закрытия в строке статуса: тег, коммит или «без изменений»; None — нет ни одного."""
+    m = _CLOSE_TAG_RE.search(status)
+    if m:
+        return m.group(0)
+    for h in _HEX_RE.findall(status):
+        if _commit_like(h):
+            return h
+    m = _UNCHANGED_RE.search(status)
+    return "без изменений" if m else None
+
+
+def oq_closed_new_form(status: str, since: date = OQ_CLOSE_FORM_SINCE) -> Optional[date]:
+    """Дата закрытия, если запись закрыта по норме закрытия (класс «закрыт», дата в строке
+    статуса не раньше нормы); None — не закрыта или закрыта в прежней форме."""
+    if _oq_class(status) != "закрыт":
+        return None
+    d = oq_status_date(status)
+    return d if d is not None and d >= since else None
+
+
+def oq_statuses(text: str) -> Dict[str, str]:
+    """Номер записи журнала → строка статуса (без строки статуса — пустая)."""
+    out: Dict[str, str] = {}
+    for num, _rest, body in oq_entries(text):
+        sm = _OQ_STATUS_RE.search(body)
+        out.setdefault(num, sm.group(1).strip() if sm else "")
+    return out
+
+
+def check_oq_close_form(oq: Path, since: date = OQ_CLOSE_FORM_SINCE) -> List[str]:
+    """⚠ записи журнала, закрытые с даты нормы без коммита, тега или «без изменений».
+    Без даты в строке статуса или с датой раньше нормы — прежняя форма, не трогается."""
+    if not oq.is_file():
+        return []
+    bad = [f"OQ-{num}" for num, st in oq_statuses(_text(oq)).items()
+           if oq_closed_new_form(st, since) and not oq_close_ref(st)]
+    if not bad:
+        return []
+    shown = bad[:_LIMIT] + ([f"… и ещё {len(bad) - _LIMIT}"] if len(bad) > _LIMIT else [])
+    # ⚠, не ✗: формальное закрытие без канала — сигнал приёмке, вердикт не меняет
+    return [f"⚠ OQ закрыт без коммита, тега или «без изменений» (норма закрытия с "
+            f"{since.isoformat()}): {len(bad)} — " + ", ".join(shown)]
 
 
 # ================================================================ срез 2

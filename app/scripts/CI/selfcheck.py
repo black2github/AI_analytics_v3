@@ -95,7 +95,7 @@ try:
     from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
-        check_thick_calls, check_unnormalized_sources, oq_class_counter)
+        check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
     from kitcheck.checks.zone import check_module_zone  # noqa: E402 — зона docs/modules/
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
@@ -123,7 +123,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
-        check_thick_calls, check_unnormalized_sources, oq_class_counter)
+        check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
     from .kitcheck.checks.zone import check_module_zone  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
@@ -1013,12 +1013,14 @@ def _kc_unsourced_cards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 
 
 def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
-    """Счётчик журнала открытых вопросов по классам статуса (i)."""
+    """Счётчик журнала открытых вопросов по классам статуса (i) и закрытие без канала (⚠, B10)."""
     oq = ctx.docs / "open-questions.md"
     if not oq.is_file():
         oq = ctx.docs.parent / "open-questions.md"
     rep, _ = _safe(lambda: (oq_class_counter(oq), True))
-    return rep, True
+    # B10: запись закрыта с даты нормы закрытия без коммита, тега или «без изменений»
+    crep, _ = _safe(lambda: (check_oq_close_form(oq), True))
+    return rep + crep, True
 
 
 def _kc_task_tags(ctx: "_KitCtx") -> Tuple[List[str], bool]:

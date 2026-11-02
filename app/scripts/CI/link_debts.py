@@ -39,6 +39,14 @@
 # видом нельзя спрятать исполнимый долг — слаг из причины сверяется с
 # подсервисами migration-plan.md комплекта (только ⚠).
 #
+# Закрытие долга без цели (норма закрытия OQ, решение владельца 2026-11-03):
+# строка не удаляется, в конец дописывается «; закрыт: <ГГГГ-ММ-ДД>, <коммит или
+# тег>» (или «…, без изменений»). Закрытый долг в счёт открытых не входит —
+# отдельная строка i. Долг вида «открытый вопрос» сверяется с записью журнала
+# open-questions.md (адрес — find_kit_file): долг открыт, а запись закрыта по
+# норме, или наоборот — ⚠. Записи, закрытые до нормы в прежних формах, не
+# сверяются; журнала нет (docs-репозиторий) — строка i.
+#
 # Стадии запуска (одна утилита, три рубежа): самопроверка агента в заходе →
 # приёмка эксперта → CI docs-репо (после переезда комплекта).
 #
@@ -53,14 +61,18 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells  # noqa: E402
-    from kitcheck.checks.review_guards import OQ_ENTRY_RE  # noqa: E402
+    from kitcheck.checks.review_guards import (  # noqa: E402
+        OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
+        oq_statuses)
     from source_coverage import (  # noqa: E402
         artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
-    from .kitcheck.checks.review_guards import OQ_ENTRY_RE  # type: ignore  # noqa: E402
+    from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
+        OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
+        oq_statuses)
     from .source_coverage import (  # type: ignore  # noqa: E402
         artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
 
@@ -92,6 +104,16 @@ _ISSUE_FIELD_RES = {
 }
 ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
                   "closure": "закрытие"}
+# приписка закрытия долга без цели: «; закрыт: <дата>, <коммит/тег>» — «закрыт» с
+# двоеточием сразу после слова, поле «закрытие:» под неё не подходит
+_ISSUE_CLOSED_RE = re.compile(
+    r"(?:^|[;|])\s*закрыт:\s*(\d{4}-\d{2}-\d{2}|\d{2}\.\d{2}\.\d{4})([^;|]*)", re.IGNORECASE)
+
+
+def issue_closed(row: str) -> Optional[str]:
+    """Приписка закрытия долга без цели («закрыт: <дата>, …») или None — долг открыт."""
+    m = _ISSUE_CLOSED_RE.search(row)
+    return (m.group(1) + m.group(2)).strip().rstrip(",") if m else None
 
 # Третий формат — пробел НФТ (шаблон nfr.md, скилл create-nfr): это не
 # отсутствующий артефакт, а ячейка/пункт с «не выявлено» / «требует
@@ -462,6 +484,26 @@ def parse_matrix_full(matrix_text: str):
     return registry, debts, unrecognized
 
 
+def _oq_close_mismatch(who: str, src: str, closed: Optional[str],
+                       statuses: Dict[str, str]) -> List[str]:
+    """Долг «открытый вопрос» против записи журнала: долг открыт, а запись закрыта по норме
+    закрытия, или долг закрыт, а запись открыта — ⚠. Запись закрыта в прежней форме (до
+    нормы) или её нет в журнале — не эта проверка."""
+    by_num = {int(n): st for n, st in statuses.items()}
+    st = by_num.get(int(src.split("-", 1)[1]))
+    if st is None:
+        return []
+    d = oq_closed_new_form(st, OQ_CLOSE_FORM_SINCE)
+    if closed is None and d is not None:
+        ref = oq_close_ref(st) or "без коммита и тега"
+        return [f"⚠ долг {who} по {src} открыт, а запись закрыта {d.isoformat()} ({ref}) — "
+                "допишите закрытие долга или снимите статус"]
+    if closed is not None and (not st or oq_status_class(st) in ("открыт", "частично")):
+        return [f"⚠ долг {who} по {src} закрыт ({closed}), а запись журнала открыта "
+                f"(«{st[:60]}») — закройте запись по норме или снимите приписку долга"]
+    return []
+
+
 def check(matrix_path: Path, docs_root: Path,
           catalog_codes: Optional[set] = None,
           catalog: Optional[List[dict]] = None):
@@ -524,12 +566,29 @@ def check(matrix_path: Path, docs_root: Path,
                         zone_files.setdefault(zpid, zp)
     zone_pid_by_title = {r["title"]: pid for pid, r in zone_rows.items()}
     zone_warn: List[str] = []
+    # норма закрытия OQ: журнал — по адресу файлов комплекта (как опись); нет — не сверяется
+    oq_file = find_kit_file(docs_root, "open-questions.md")
+    oq_status = (oq_statuses(_fs.read_text(oq_file, encoding="utf-8", errors="replace"))
+                 if oq_file is not None else None)
+    n_issue_closed = 0
+    n_oq_sourced = 0
+    close_warn: List[str] = []
     for from_ids, typ, name, owner, raw in debts:
         if typ.startswith("долг:"):
             # долг без цели: полнота полей и FROM-ID в реестре; просрочка
             # и исполнимость не применяются — цели нет
-            n_issue += 1
             fields = issue_fields(raw) or {"missing": []}
+            closed = issue_closed(raw)
+            if closed:
+                n_issue_closed += 1
+            else:
+                n_issue += 1
+            src = fields.get("source") or ""
+            if fields.get("kind") == "открытый вопрос" and src.upper().startswith("OQ-"):
+                n_oq_sourced += 1
+                if oq_status is not None:
+                    close_warn.extend(_oq_close_mismatch(", ".join(from_ids), src, closed,
+                                                         oq_status))
             if fields["missing"]:
                 report.append(f"долг без цели НЕПОЛОН: нет полей "
                               f"{', '.join(fields['missing'])} ✗ — {raw[:100]}")
@@ -656,6 +715,12 @@ def check(matrix_path: Path, docs_root: Path,
                       "вопросы, противоречия, правила на изображении, "
                       "недоступные источники, вне плана) — сторожится полнота полей"
                       + (f"; из них «вне плана» {n_out_of_plan}" if n_out_of_plan else ""))
+    if n_issue_closed:
+        report.append(f"i закрытых долгов без цели: {n_issue_closed}")
+    report.extend(close_warn)
+    if n_oq_sourced and oq_status is None:
+        report.append("i журнал open-questions.md не найден — закрытие долгов «открытый вопрос» "
+                      "с записями OQ не сверяется")
     report.extend(out_of_plan_warn)
     report.extend(zone_warn)
     if n_gap:
@@ -688,7 +753,7 @@ def check(matrix_path: Path, docs_root: Path,
             "просрочка не проверяется, дозакрытие при появлении "
             "комплекта владельца ✓")
     if ok:
-        report.append(f"OK: долгов {len(debts)}, просроченных нет, "
+        report.append(f"OK: долгов {len(debts) - n_issue_closed}, просроченных нет, "
                       "все имена находятся в документах-ожидателях ✓")
     return report, ok
 
