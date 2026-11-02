@@ -436,6 +436,8 @@ def _main_page_index(docs_root: Path) -> Dict[str, List[Path]]:
 
 
 _INV_ROW_RE = re.compile(r"^\|\s*(\d{4,})\s*\|(?:[^|\n]*\|){4}\s*(srs/[^|\s]+)", re.M)
+# колонки описи: page_id | title | родитель | req_type | строк | целевой тип | основание
+_INV_TYPE_RE = re.compile(r"^\|\s*(\d{4,})\s*\|\s*([^|\n]*?)\s*\|[^|\n]*\|\s*([^|\n]*?)\s*\|", re.M)
 
 
 @_fs.memoize(copy=dict)
@@ -448,23 +450,44 @@ def _inventory_targets(inventory: Path) -> Dict[str, str]:
     return {m.group(1): m.group(2) for m in _INV_ROW_RE.finditer(text)}
 
 
+@_fs.memoize(copy=dict)
+def _inventory_req_types(inventory: Path) -> Dict[str, Tuple[str, str]]:
+    """page_id → (title, req_type) страницы по описи (req_type: integration, function,
+    screenItemForm…; с пометкой «+frozen:…» как есть)."""
+    if not inventory.is_file():
+        return {}
+    text = _fs.read_text(inventory, encoding="utf-8", errors="replace")
+    return {m.group(1): (m.group(2), m.group(3)) for m in _INV_TYPE_RE.finditer(text)}
+
+
+# страница-копия Confluence («Копия [КК] ЕСК_ОА_…»): префикс в начале титула, с заглавной
+_COPY_TITLE_RE = re.compile(r"^Копия\s+")
+
+
 def _subservice(rel_parts: Tuple[str, ...]) -> str:
     """Подсервис по пути «srs/<подсервис>/…»; иначе пусто."""
     return rel_parts[1] if len(rel_parts) > 2 and rel_parts[0] == "srs" else ""
 
 
 def _page_outside_subservice(pid: str, main_file: Path, files: List[Path], docs_root: Path) -> bool:
-    """Доп. страница карточки вызова не принадлежит её подсервису: главная у другой карточки
-    комплекта вне группы, либо по описи её целевой каталог — в другом подсервисе (в том числе
-    в общей части srs/bc-component/…)."""
+    """Доп. страница карточки вызова используется по ссылке: главная у другой карточки комплекта
+    вне группы; по описи — копия страницы метода владельца (req_type integration и титул
+    «Копия …»: копия в папке подсервиса, КК CALL-EXT-030 ← 2464250463, решение владельца канона
+    2026-11-02); либо её целевой каталог — в другом подсервисе (в том числе в общей части
+    srs/bc-component/…). Страницы того же подсервиса — ЭФ, процесс, собственная интеграционная
+    страница прошлой редакции «(Этап 1)» (integration без «Копия») — нет."""
     group = {f.resolve() for f in files}
     if any(p.resolve() not in group for p in _main_page_index(docs_root).get(pid, [])):
+        return True
+    inventory = docs_root.parent / "inventory.md"
+    title, req_type = _inventory_req_types(inventory).get(pid, ("", ""))
+    if req_type.startswith("integration") and _COPY_TITLE_RE.match(title):
         return True
     try:
         own = _subservice(main_file.resolve().relative_to(docs_root.resolve()).parts)
     except ValueError:
         return False
-    target = _inventory_targets(docs_root.parent / "inventory.md").get(pid, "")
+    target = _inventory_targets(inventory).get(pid, "")
     tsub = _subservice(tuple(target.split("/")))
     return bool(own and tsub and tsub != own)
 

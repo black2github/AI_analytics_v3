@@ -279,7 +279,8 @@ def test_single_page_card_unchanged(tmp_path):
 
 # ------------- карточка вызова: доп. страница вне подсервиса — по ссылке (решение 2026-11-02)
 
-def _call_kit(tmp_path, inv_target: str, other_main: bool = False):
+def _call_kit(tmp_path, inv_target: str, other_main: bool = False, req_type: str = "function",
+              inv_title: str = "Метод"):
     from app.scripts.CI.kitcheck.checks.card_run import run_check
     root = tmp_path / "kit"
     docs = root / "docs"
@@ -296,7 +297,7 @@ def _call_kit(tmp_path, inv_target: str, other_main: bool = False):
     (root / "inventory.md").write_text(
         "| page_id | title | родитель | req_type | строк | целевой тип (гипотеза) | основание |\n"
         "|---|---|---|---|---|---|---|\n"
-        f"| 333444 | Метод | [КК]-ЕСК | integration | 10 | {inv_target} | x |\n", encoding="utf-8")
+        f"| 333444 | {inv_title} | [КК]-ЕСК | {req_type} | 10 | {inv_target} | x |\n", encoding="utf-8")
     srcs = tmp_path / "conf"
     srcs.mkdir()
     main = srcs / "main.md"
@@ -318,8 +319,57 @@ def test_call_card_extra_page_main_of_other_card_by_link(tmp_path):
     assert "по ссылке (метод / общая функция вне подсервиса): 333444" in text, text
 
 
-def test_call_card_extra_page_same_subservice_still_checked(tmp_path):
-    # НЕсрабатывание: доп. страница того же подсервиса — титул разделом обязателен, ✗ как (25)
-    text = _call_kit(tmp_path, "srs/bc-issue/contract-call/external")
+@pytest.mark.parametrize("req_type", ["screenItemForm", "process"])
+def test_call_card_extra_page_same_subservice_still_checked(tmp_path, req_type):
+    # НЕсрабатывание: доп. страница того же подсервиса (ЭФ, процесс) — титул разделом
+    # обязателен, ✗ как (25)
+    text = _call_kit(tmp_path, "srs/bc-issue/contract-call/external", req_type=req_type)
     assert "нет заголовков разделов по страницам: 333444" in text, text
     assert "по ссылке" not in text, text
+
+
+def test_call_card_method_page_same_subservice_by_link(tmp_path):
+    # страница метода (integration по описи), копия в папке подсервиса — по ссылке
+    # (КК CALL-EXT-030 ← 2464250463, решение владельца 2026-11-02)
+    text = _call_kit(tmp_path, "srs/bc-issue/contract-call/external", req_type="integration",
+                     inv_title="Копия [КК] ЕСК_ОА_Запрос проверки актуальности данных")
+    assert "по ссылке (метод / общая функция вне подсервиса): 333444" in text, text
+    assert "ПОТЕРЯ НАИМЕНОВАНИЯ" not in text, text
+
+
+def test_call_card_own_integration_page_same_subservice_checked(tmp_path):
+    # НЕсрабатывание (КК CALL-EXT-017 ← 2166860148): собственная интеграционная страница
+    # подсервиса прошлой редакции «(Этап 1)» — integration без «Копия», под (25)
+    text = _call_kit(tmp_path, "srs/bc-issue/contract-call/external", req_type="integration",
+                     inv_title="[КК_ВК] Параметры вызова процесса загрузки документов (Этап 1)")
+    assert "нет заголовков разделов по страницам: 333444" in text, text
+    assert "по ссылке" not in text, text
+
+
+# ------------- пара слияния: доп. страница — близнец главной «(Этап N)» (решение 2026-11-02)
+
+def test_merge_twin_stage_page_not_heading():
+    c = card("[КК_ВК] Создать заявку", "'1', '2'", "## Шаги\n", type_="process")
+    rep, ok = check_title(c, src("[КК_ВК] Создать заявку"),
+                          extra_titles=["[КК_ВК] Создать заявку (Этап 1)"], extra_ids=["2"])
+    assert ok, rep
+    assert any("пара слияния — 2 '[КК_ВК] Создать заявку (Этап 1)'" in r for r in rep), rep
+    assert not any("объявлено" in r for r in rep), rep
+
+
+def test_merge_twin_declared_mentioned():
+    c = card("[КК_ВК] Создать заявку", "'1', '2'",
+             "## Шаги\n\nСлияние двух страниц — целевой и её близнеца «Этап 1».\n", type_="process")
+    rep, ok = check_title(c, src("[КК_ВК] Создать заявку"),
+                          extra_titles=["[КК_ВК] Создать заявку (Этап 1)"], extra_ids=["2"])
+    assert ok and any("слияние объявлено в карточке" in r for r in rep), rep
+
+
+def test_other_suffix_or_title_still_checked():
+    # НЕсрабатывание: другой суффикс в скобках и другой title — ✗ (25)
+    c = card("[КК_ВК] Создать заявку", "'1', '2', '3'", "## Шаги\n", type_="process")
+    rep, ok = check_title(c, src("[КК_ВК] Создать заявку"),
+                          extra_titles=["[КК_ВК] Создать заявку (архив)", "Другая страница"],
+                          extra_ids=["2", "3"])
+    assert not ok and "нет заголовков разделов по страницам: 2 '[КК_ВК] Создать заявку (архив)'" \
+        in rep[-1] and "3 'Другая страница'" in rep[-1], rep

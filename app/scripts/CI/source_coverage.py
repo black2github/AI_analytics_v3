@@ -176,10 +176,12 @@ def empty_dirs(sources: Path) -> List[Path]:
 GAP, NOT_IN_INV = "пробелы миграции", "не в описи"
 FROZEN, CONTAINER, REFERENCE = "заморожено", "контейнеры", "справочные"
 WITHDRAWN = "снято с миграции"
+BASE_CONTRACT = "базовый контракт"
 OUT_OF_PLAN, BINARY = "вне плана", "бинарные"
 # порядок перечней отчёта: пробелы первыми, затем отставание описи, затем
 # структурные классы
-CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, WITHDRAWN, OUT_OF_PLAN, BINARY)
+CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, WITHDRAWN, BASE_CONTRACT,
+               OUT_OF_PLAN, BINARY)
 # отрицание признака («НЕ frozen, GBO-… снят», «не TOC») признаком не считается —
 # иначе карточка, которую опись прямо называет живой, ушла бы из брака
 _NOT = r"(?<!не )(?<!не-)"
@@ -199,6 +201,14 @@ _REFERENCE_RE = re.compile(rf"(?i){_NOT}\b(?:reference-only|baseline|instruction
 # заморозки и контейнеров («(черновик)» в title замороженной — заморожено).
 _WITHDRAWN_RE = re.compile(rf"(?i){_NOT}(?:снят[оаы]?\s+с\s+миграции|(?<![\w-])черновик)")
 _WITHDRAWN_MARK_RE = re.compile(rf"(?i){_NOT}(?:(?-i:\bDELETE\b)|\[DRAFT\])")
+# Базовый контракт (решение владельца канона 2026-11-02, КК CALL-EXT-010 ← страницы-копии
+# метода ТЕССА): страница метода внешней АС — копия страницы владельца с составом метода и
+# процессом на стороне АС; дом — базовый контракт в docs-external-contracts, page_id — в строке
+# долга «базовый контракт — сводка» карточки-потребителя. Признак узкий: в целевом типе или
+# основании — «базовый контракт EXTINT-<AS>-NNN» с реальным ID (форма целевого типа —
+# «вне SRS: базовый контракт EXTINT-TESSA-001»); без ID — пробел.
+_BASE_CONTRACT_RE = re.compile(
+    rf"(?i){_NOT}базов(?:ый|ого)\s+контракт[а]?\s+(EXTINT-[A-Z0-9]+-\d{{3}})")
 _PLAN_SLUG_RE = re.compile(r"(?i)\b(?:подсервис|core)\s+`?([a-z0-9][a-z0-9-]*)")
 _TARGET_SLUG_RE = re.compile(r"^srs/([a-z0-9][a-z0-9-]*)(?:/|$)")
 # страница-вложение: тело — только изображения / ссылки на файлы, без текста
@@ -298,6 +308,12 @@ def _attachment_only(path: Path) -> bool:
     return not re.search(r"\w", rest)
 
 
+def base_contract_id(row: Dict[str, str]) -> str:
+    """ID базового контракта из целевого типа или основания строки описи; иначе пусто."""
+    m = _BASE_CONTRACT_RE.search(f"{row.get('target', '')} {row.get('basis', '')}")
+    return m.group(1).upper() if m else ""
+
+
 def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
              slugs: Set[str], plan_text: str) -> str:
     """Класс непокрытой страницы (закрытый перечень CLASS_ORDER)."""
@@ -314,6 +330,8 @@ def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
         if (_WITHDRAWN_RE.search(f"{target} {basis}")
                 or _WITHDRAWN_MARK_RE.search(f"{row.get('title', '')} {basis}")):
             return WITHDRAWN
+        if base_contract_id(row):
+            return BASE_CONTRACT
         if _REFERENCE_TARGET_RE.search(target) or _REFERENCE_RE.search(f"{target} {basis}"):
             return REFERENCE
     if _attachment_only(path):
@@ -357,6 +375,7 @@ def coverage_report(sources: Path, output: Path,
         lines.append(f"{head} = пробелы миграции {n[GAP]}; структурно: заморожено "
                      f"{n[FROZEN]}, контейнеры {n[CONTAINER]}, справочные {n[REFERENCE]}, "
                      + (f"снято с миграции {n[WITHDRAWN]}, " if n[WITHDRAWN] else "")
+                     + (f"базовый контракт {n[BASE_CONTRACT]}, " if n[BASE_CONTRACT] else "")
                      + f"вне плана {n[OUT_OF_PLAN]}, бинарные {n[BINARY]}; не в описи "
                      f"{n[NOT_IN_INV]}"
                      + (f"; вне Экосистемы {len(zone)} (покрыто мини-комплектом "
@@ -386,6 +405,8 @@ def coverage_report(sources: Path, output: Path,
                      + (" (покрыта карточкой комплекта — не дом зоны)" if pid in covered else ""))
         ttl = source_title(p)
         name = ttl if ttl else p.stem
+        if classes.get(pid) == BASE_CONTRACT:
+            mark += f" → {base_contract_id(inv.get(pid, {}))}"
         return f"  - {name} — {p.relative_to(sources)}{mark}"
 
     ordered = sorted(uncovered.items(), key=lambda kv: str(kv[1]))

@@ -759,6 +759,9 @@ _COPY_PREFIX_RE = re.compile(r"^Копия\s+")
 
 
 _AGG_PIDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]\n]*)\]", re.M)
+# пара слияния: хвостовой суффикс активного контура «(Этап N)» в title доп. страницы
+_STAGE_SUFFIX_RE = re.compile(r"\s*\(Этап\s+\d+\)\s*$")
+_MERGE_DECL_RE = re.compile(r"Отличия активного источника|Слияние двух страниц", re.I)
 # типы-сводки: титулы их доп. страниц заголовками разделов быть не обязаны (тип → для i-строки)
 _TITLE_SUMMARY_TYPES = {"glossary": "глоссария", "vision": "видения сервиса",
                         "domain-vision": "видения домена"}
@@ -820,8 +823,22 @@ def check_title(card_text: str, source_text: str,
         ids = list(extra_ids or [])
         extra = [(ids[k] if k < len(ids) else "", t)
                  for k, t in enumerate(extra_titles or []) if t and t != src]
+        # пара слияния: доп. страница — близнец главной из активного контура, title = title
+        # главной + хвостовой суффикс «(Этап N)» (решение владельца канона 2026-11-02, КК PROC-024,
+        # CALL-EXT-017/020): случай «совпадение title с главной», раздел не требуется. Другой
+        # суффикс в скобках — не пара. Объявление слияния в карточке упоминается, не требуется
+        twins = [(i, t) for i, t in extra if _STAGE_SUFFIX_RE.sub("", t) == src]
+        extra = [(i, t) for i, t in extra if (i, t) not in twins]
+        twin_lines: List[str] = []
+        if twins:
+            declared = _MERGE_DECL_RE.search(corpus if corpus is not None else card_text)
+            twin_lines = [f"i title доп. страниц: пара слияния — "
+                          + "; ".join(f"{i} {t!r}".strip() for i, t in twins)
+                          + " — близнец главной (суффикс «(Этап N)»), раздел не требуется"
+                          + ("; слияние объявлено в карточке" if declared else "")]
         if not extra:
-            return [main_line], True
+            return [main_line] + twin_lines, True
+        main_line_twins = twin_lines
         # оглавление (README.md каталога) и сводки (glossary, vision, domain-vision): доп.
         # страницы у них — дочерние, разложенные по своим карточкам, или пересказанные; титулы
         # заголовками разделов быть не обязаны (решение владельца канона 2026-11-01, КК: 8
@@ -830,16 +847,18 @@ def check_title(card_text: str, source_text: str,
         kind = ("оглавления" if (file_name or "").lower() == "readme.md"
                 else _TITLE_SUMMARY_TYPES.get(m_type.group(1)) if m_type else None)
         if kind:
-            return [main_line, f"i title доп. страниц ({len(extra)}) не сверяется у {kind} — "
-                               "титулы страниц заголовками разделов быть не обязаны"], True
+            return [main_line] + main_line_twins + [
+                f"i title доп. страниц ({len(extra)}) не сверяется у {kind} — "
+                "титулы страниц заголовками разделов быть не обязаны"], True
         heads = heads_of()
         lost = [(i, t) for i, t in extra if t.strip() not in heads]
         if not lost:
-            return [main_line, f"title доп. страниц ({len(extra)}): наименования заголовками "
-                               "разделов ✓"], True
-        return [main_line, "title доп. страниц: нет заголовков разделов по страницам: "
-                + "; ".join(f"{i} {t!r}".strip() for i, t in lost)
-                + " ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
+            return [main_line] + main_line_twins + [
+                f"title доп. страниц ({len(extra)}): наименования заголовками разделов ✓"], True
+        return [main_line] + main_line_twins + [
+            "title доп. страниц: нет заголовков разделов по страницам: "
+            + "; ".join(f"{i} {t!r}".strip() for i, t in lost)
+            + " ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
     m_pids = _AGG_PIDS_RE.search(_fm_head(card_text))
     n_pages = len(re.findall(r"\d+", m_pids.group(1))) if m_pids else 0
     if card is not None and (n_pages > 1 or (file_name or "").lower() == "dictionaries.md"):
