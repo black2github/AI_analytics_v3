@@ -97,7 +97,7 @@ try:
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
-    from kitcheck.checks.zone import check_module_zone  # noqa: E402 — зона docs/modules/
+    from kitcheck.checks.zone import check_module_zone, check_zone_card  # noqa: E402 — зона docs/modules/
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
@@ -125,7 +125,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
-    from .kitcheck.checks.zone import check_module_zone  # type: ignore  # noqa: E402
+    from .kitcheck.checks.zone import check_module_zone, check_zone_card  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
 
 
@@ -354,16 +354,24 @@ def _run_impl(docs: Path, sources: Optional[Path],
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
     zone_cards: Dict[str, Path] = {}   # page_id -> файл мини-комплекта зоны docs/modules/
+    zone_card_lines: List[str] = []    # сверка карточек зоны с выгрузкой (⚠ и i), _kc_module_zone
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
             continue
         if in_module_zone(p, docs):
             # мини-комплект зоны «вне Экосистемы» (Д-49 п. 4): не карточка комплекта —
-            # перепись, схема типов, реестр ID, сверка с выгрузкой его не касаются; page_id
-            # нужен сторожу разметки подсервисов, сводная строка — _kc_module_zone
-            for _pid in page_ids(read_frontmatter(p) or {}):
+            # перепись, схема типов, реестр ID его не касаются; page_id нужен сторожу
+            # разметки подсервисов, сводная строка — _kc_module_zone
+            _zpids = page_ids(read_frontmatter(p) or {})
+            for _pid in _zpids:
                 zone_cards.setdefault(_pid, p)
+            # сверка с выгрузкой по первой странице (2026-11-04, шаблоны module-interface и
+            # module-kit-readme): title — ⚠ при расхождении, доп. страницы — строка i; в
+            # счётчики ИТОГО не входит, вердикт не меняет. Спецификации spec/ — вне сверки
+            if _zpids and sources is not None and "spec" not in rel.parts[2:-1]:
+                zone_card_lines.extend(_safe(lambda: (check_zone_card(
+                    p, str(rel), _zpids, idx), True))[0])
             continue
         if is_task_file(p, docs):
             # строка-сигнал без счётчика: постановка — источник правок,
@@ -612,7 +620,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
-                    zone_cards=zone_cards, unsourced=unsourced)
+                    zone_cards=zone_cards, unsourced=unsourced,
+                    zone_card_lines=zone_card_lines)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
@@ -646,6 +655,7 @@ class _KitCtx:
     idx: Dict[str, Path]
     zone_cards: Dict[str, Path] = field(default_factory=dict)
     unsourced: List[Tuple[Path, str]] = field(default_factory=list)  # без --sources: карточка, page_id
+    zone_card_lines: List[str] = field(default_factory=list)  # сверка карточек зоны (⚠ и i)
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -1032,8 +1042,9 @@ def _kc_task_tags(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 
 def _kc_module_zone(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Зона «вне Экосистемы» docs/modules/<имя>/ (Д-49 п. 4): сводная i-строка, мини-комплект
-    без README, переходный сторож старого места modules/ рядом с docs/. Только ⚠ и i."""
-    rep, _ = _safe(lambda: (check_module_zone(ctx.docs), True))
+    без README, переходный сторож старого места modules/ рядом с docs/, сверка карточек зоны
+    с выгрузкой по первой странице (2026-11-04). Только ⚠ и i."""
+    rep, _ = _safe(lambda: (check_module_zone(ctx.docs, ctx.zone_card_lines), True))
     return rep, True
 
 

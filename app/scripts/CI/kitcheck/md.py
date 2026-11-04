@@ -275,6 +275,18 @@ def in_module_zone(p: Path, docs: Path) -> bool:
     return len(rel.parts) >= 3 and rel.parts[0] == "modules"
 
 
+def is_module_zone_file(p: Path, docs: Optional[Path] = None) -> bool:
+    """Карточка мини-комплекта зоны для сверки карточки с источником (card_source,
+    2026-11-04): с корнем docs/ — как in_module_zone; без корня (CLI --check без
+    --docs-root) — по пути: «…/docs/modules/<имя>/…/файл». Не распознана — False: прежнее
+    поведение карточки комплекта (лишняя строка ✗ лучше молчаливого пропуска)."""
+    if docs is not None:
+        return in_module_zone(Path(p).resolve(), Path(docs).resolve())
+    parts = Path(p).resolve().parts
+    return any(parts[i] == "docs" and parts[i + 1] == "modules" and len(parts) - i - 1 >= 3
+               for i in range(len(parts) - 1))
+
+
 def _kit_md(docs: Path, zone: bool = False):
     """Документы комплекта для обходов сторожей — без постановок `tasks/`; мини-комплекты
     зоны `docs/modules/<имя>/` — только при zone=True (ссылки и нотация, Д-49)."""

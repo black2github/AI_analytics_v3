@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..core import Check, run_checks
 from ..html import _fm_head
-from ..md import _kit_md, page_ids, read_frontmatter, strip_html_comments
+from ..md import _kit_md, is_module_zone_file, page_ids, read_frontmatter, strip_html_comments
 from .card_common import _norm_ws
 from .card_form import (
     _fc_blank_line_table_breaks, _fc_blockquote_indented_code, _fc_confluence_ui_artifacts,
@@ -51,7 +51,8 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                soft_markers: bool = False,
                amnesty_text: Optional[str] = None,
                kit_summary: bool = False,
-               without_sources: bool = False) -> Tuple[List[str], bool]:
+               without_sources: bool = False,
+               zone: bool = False) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -71,7 +72,10 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     комплект сводит в одну строку (форма ветвления), строки на файл не дают.
 
     without_sources — самопроверка комплекта без выгрузки (selfcheck без --sources):
-    формулировки, отсылающие к источнику, заменяются нейтральными (маркер сокращения)."""
+    формулировки, отсылающие к источнику, заменяются нейтральными (маркер сокращения).
+
+    zone — карточка мини-комплекта зоны docs/modules/ (2026-11-04): таблица раздела
+    «Происхождение» вне сторожа отсылок к страницам источника."""
     text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
@@ -80,7 +84,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     lines = text.splitlines()
     # проверки карточки — реестр FILE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary, without_sources=without_sources)
+    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary, without_sources=without_sources, zone=zone)
     f_lines, f_ok = run_checks(FILE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -107,6 +111,7 @@ class _FileCtx:
     src_literals: Optional[object]
     kit_summary: bool = False  # в составе selfcheck комплекта: сводные проверки — строкой комплекта
     without_sources: bool = False  # selfcheck без --sources: без отсылок к источнику в формулировках
+    zone: bool = False  # карточка зоны docs/modules/: «Происхождение» вне сторожа отсылок (2026-11-04)
 # Документы определений, к которым не применяется сторож полноты кавычечных
 # литералов источника (решение владельца канона 2026-10-30): глоссарий — не
 # дословный перенос страницы, шаблон требует атомарных определений и
@@ -240,7 +245,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             soft_markers=soft_markers,
                             amnesty_text=amnesty_text,
                             kit_summary=kit_summary,
-                            without_sources=without_sources)
+                            without_sources=without_sources,
+                            zone=is_module_zone_file(main_file, docs_root))
     card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
@@ -657,7 +663,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         ttl_report, ttl_ok = check_title(
             ttl_text, src_text, extra_titles=[t for _i, t in extra_pages],
             corpus=combined, file_name=(ttl_holder or main_file).name,
-            extra_ids=[i for i, _t in extra_pages])
+            extra_ids=[i for i, _t in extra_pages],
+            zone=main_file is not None and is_module_zone_file(main_file, docs_root))
         if by_link:
             ttl_report = ttl_report + [
                 f"i title доп. страниц по ссылке (метод / общая функция вне подсервиса): "
