@@ -13,12 +13,14 @@ import json
 import re
 try:
     from kitcheck import fs as _fs
+    from kitcheck.md import SILENT_FORMULA as _SILENT_FORMULA
     from kitcheck.md import _kit_md
     from kitcheck.md import code_line_flags
     from kitcheck.md import frontmatter_end
     from kitcheck.md import read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
+    from ..md import SILENT_FORMULA as _SILENT_FORMULA  # type: ignore
     from ..md import _kit_md  # type: ignore
     from ..md import code_line_flags  # type: ignore
     from ..md import frontmatter_end  # type: ignore
@@ -112,9 +114,6 @@ def check_title_uniqueness(docs: Path,
         out.append(f"{typ}: {ids} — «{items[0][1].strip().strip(chr(39) + chr(34))}» "
                    f"×{len(items)} ({files})")
     return out
-
-
-_SILENT_FORMULA = "в постановке не задано"
 
 
 _GAP_MARK_RE = re.compile(r"не задано|вне выгрузки|в срезе|уточняется|\bTBD\b", re.I)

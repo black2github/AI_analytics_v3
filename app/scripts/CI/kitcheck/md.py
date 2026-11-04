@@ -29,6 +29,10 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 FENCE_BOTH: Tuple[str, ...] = ("```", "~~~")
 FENCE_BACKTICK: Tuple[str, ...] = ("```",)
 
+# формула пробела источника: единственная допустимая пометка в чистовике (conventions §6 п.5);
+# один дом — здесь, её импортируют перечень формулы (checks/content.py) и сторож колонок (columns.py)
+SILENT_FORMULA = "в постановке не задано"
+
 
 def is_fence(stripped_line: str, markers: Tuple[str, ...] = FENCE_BOTH) -> bool:
     """Строка — ограждение блока кода (правило `fence.fence_of`). Открывает

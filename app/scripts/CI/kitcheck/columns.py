@@ -7,6 +7,7 @@
 import re
 from typing import Dict, List, Optional
 from .html import _BR_RE, _norm_cell, _plain, _title_key
+from .md import SILENT_FORMULA
 
 
 # Валидаторы колонок: подпись — (имя_роли, распознаватель заголовка, проверка значения).
@@ -25,6 +26,13 @@ _TYPE_TOKENS = {
     "varchar", "text", "blob", "clob", "base64", "xml", "json",
     "строка", "число", "дата", "логический", "контейнер", "блок",
 }
+
+
+def _is_silent_formula(v: str) -> bool:
+    """Ячейка — ровно формула пробела источника «в постановке не задано» (регистр первой
+    буквы и разметка жирным/курсивом не важны). Хвост «…, см. п. 3» формулой не считается."""
+    v = _plain(v).strip()
+    return v[:1].lower() + v[1:] == SILENT_FORMULA
 
 
 def _looks_like_obligation(v: str) -> bool:
@@ -223,6 +231,10 @@ def _is_section_row(row: List[str]) -> bool:
         return False
     if _looks_like_obligation(val) or not re.search(r"[а-яёa-z]", val):
         return False
+    # формула, повторённая в ячейках строки параметра, — данные, не заголовок группы:
+    # иначе строка выпала бы из подсчёта, а таблица из таких строк дала бы 0% [0/0]
+    if _is_silent_formula(val):
+        return False
     return True
 
 
@@ -293,8 +305,12 @@ def validate_columns(headers: List[str], rows: List[List[str]],
                 role, check = "название", _no_xml_path
         if check is None:
             continue
-        bad = [r[i] for r in data_rows if i < len(r) and not check(r[i])]
-        wl = (source_literals or {}).get(role) or set()
+        # формула пробела источника в карточке валидна в любой роли: шаблоны канона
+        # заполняют ею пробел (module-interface, 2026-11-04); при нормализации ИСТОЧНИКА
+        # послабления нет — там формулы быть не должно
+        bad = [r[i] for r in data_rows if i < len(r) and not check(r[i])
+               and (source_mode or not _is_silent_formula(r[i]))]
+        wl =(source_literals or {}).get(role) or set()
 
         def _in_wl(v: str, _wl=wl) -> bool:
             # ярлык ссылки чистовика «[ENT-010 Название](…)» несёт ID, которого
