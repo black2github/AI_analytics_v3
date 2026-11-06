@@ -429,7 +429,9 @@ def _source_prose(body: str, tables: bool = True) -> str:
     запроса и ответа) и закрытые HTML-блоки <pre>…</pre> заменены пустыми строками.
     Незакрытая таблица, незакрытый блок кода и незакрытый <pre> остаются прозой — их
     литералы требуются (асимметрия ошибок); инлайн-код — тоже проза. tables=False —
-    вырезаются только блоки кода, таблицы остаются."""
+    вырезаются только блоки кода, таблицы остаются; <pre> в ячейке pipe-таблицы — значение
+    ячейки, а не блок: ``` внутри ячейки прежней выгрузки блоком тоже не был, и один и тот же
+    источник не должен менять класс литерала со сменой экспортёра."""
     out, pos, depth, start = [], 0, 0, 0
     for m in (_TABLE_TAG_RE.finditer(body) if tables else ()):
         if not m.group(1):
@@ -449,7 +451,14 @@ def _source_prose(body: str, tables: bool = True) -> str:
             code[b.start:b.end + 1] = [True] * (b.end + 1 - b.start)
     text = "\n".join("" if code[i] or (tables and ln.strip().startswith("|")) else ln
                      for i, ln in enumerate(lines))
-    return _PRE_BLOCK_RE.sub(lambda m: "\n" * max(1, m.group(0).count("\n")), text)
+
+    def blank_pre(m: "re.Match[str]") -> str:
+        line_start = text.rfind("\n", 0, m.start()) + 1
+        if "\n" not in m.group(0) and text[line_start:m.start()].lstrip().startswith("|"):
+            return m.group(0)
+        return "\n" * max(1, m.group(0).count("\n"))
+
+    return _PRE_BLOCK_RE.sub(blank_pre, text)
 
 
 def _source_structured(body: str) -> str:
