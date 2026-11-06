@@ -149,6 +149,11 @@
 #                       по критерию, проверке и результату без отдельно стоящих
 #                       чисел; под итогом — «новых блокеров M: …» и «ушло K».
 #                       Работает в обоих режимах; без ключа — «(новых —)»
+#   --own-debts {warn,block}  долги «нет целевого артефакта» при источнике в выгрузке
+#                       (строка CORE-20 «долги на собственный заход», check_own_debts):
+#                       warn (по умолчанию) — ⚠ в полном режиме, вердикт не меняет;
+#                       block — в полном режиме строки без записи переноса дают ✗;
+#                       в режиме --after-step — i при любом значении
 #
 # ПРИМЕР.
 #   python _meta/tools/transfer_gate.py --src C:\doc-as-code\EAS\src-business-cards
@@ -174,6 +179,7 @@ from typing import Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as sc  # noqa: E402
 import link_debts as ld  # noqa: E402
+import source_coverage as cov  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.fs import find_kit_file  # noqa: E402
 from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_entries, oq_status_class  # noqa: E402
@@ -769,6 +775,114 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                      check="перенесённые долги")
 
 
+# --- долги на собственный заход -------------------------------------------------
+#
+# Слой проверки: конвейер (таблица «Слои прибора» README канона): опись и план миграции есть,
+# пока идёт перенос из выгрузки; без описи признак А не проверяется, об этом говорит строка.
+#
+# Долг «нет целевого артефакта» объективен, когда источника цели нет в выгрузке. Два признака
+# обратного, оба по форме строки и по описи (create-artifact, «Недостающая цель ссылки»):
+# Б — цель карточка вызова: её источник — страница потребителя, то есть сам FROM-ID;
+# А — имя цели совпадает с титулом страницы описи вне структурных классов. Формы «у владельца»
+# и «нет базового контракта» — долг за описанием на стороне владельца, в признаки не входят.
+# Сопоставление имени с титулом — правило link_debts._zone_target; страница с дословно тем же
+# титулом решает первой, иначе замороженная «[КК_БК] X» считалась бы живой «[КК_ЛК] X». Не
+# сопоставлено — долг объективный: признак сигналит приёмке и требований не снимает.
+_OWN_DEBT_OTHER_TYPES = ("nfr-gap", "параметр", "base-contract")
+_CALL_TYPE = "contract-call"
+_CALL_SKILL_RE = re.compile(r"требуется\s+заход\s+create-contract-call", re.IGNORECASE)
+# запись о переносе в хвосте строки долга: «; перенос: решение владельца <дата>, срок: <…>»
+_TRANSFER_MARK_RE = re.compile(r";\s*перенос:", re.IGNORECASE)
+_TRANSFER_RECORD_RE = re.compile(
+    r";\s*перенос:\s*решение\s+владельца\s+(?:\d{4}-\d{2}-\d{2}|\d{2}\.\d{2}\.\d{4})\s*,"
+    r"\s*срок:\s*[^;|\s]", re.IGNORECASE)
+# класс страницы здесь — по строке описи; файл выгрузки нужен classify только для «бинарных»
+_NO_PAGE_FILE = Path("__файл_страницы_не_читается__")
+
+
+def _inventory_titles(inventory: Path, plan: Optional[Path]
+                      ) -> Tuple[List[Tuple[str, str, str]], Dict[str, str]]:
+    """Страницы описи с титулом: ([(титул, page_id, класс)], {титул страницы вне структурных
+    классов: page_id})."""
+    inv = cov.read_inventory(inventory)
+    slugs, plan_text = cov.plan_slugs(plan) if plan is not None else (set(), "")
+    pages = [(r["title"], pid, cov.classify(pid, _NO_PAGE_FILE, inv, slugs, plan_text))
+             for pid, r in inv.items() if r.get("title")]
+    return pages, {t: pid for t, pid, cl in pages if cl == cov.GAP}
+
+
+def _source_page(name: str, pages: List[Tuple[str, str, str]], live: Dict[str, str]) -> str:
+    """page_id страницы описи вне структурных классов, с которой совпадает имя цели; иначе «»."""
+    nn = ld._norm(name)
+    exact = [(pid, cl) for t, pid, cl in pages if ld._norm(t) == nn]
+    if exact:
+        return next((pid for pid, cl in exact if cl == cov.GAP), "")
+    hit = ld._zone_target(name, list(live))
+    return live[hit] if hit else ""
+
+
+def own_target_debts(matrix_text: str, inventory: Optional[Path],
+                     plan: Optional[Path]) -> dict:
+    """Строки долга на собственный заход: сводка (a, b, k, partial, total) и rows — строки с
+    признаком или с записью переноса. Строка с полной записью считается в k, не в a и b."""
+    pages, live = _inventory_titles(inventory, plan) if inventory is not None else ([], {})
+    out = {"a": 0, "b": 0, "k": 0, "partial": 0, "total": 0, "rows": [],
+           "inventory": inventory is not None}
+    for from_ids, typ, name, owner, raw in ld.parse_matrix(matrix_text)[1]:
+        if typ.startswith("долг:") or typ in _OWN_DEBT_OTHER_TYPES or owner is not None:
+            continue
+        out["total"] += 1
+        is_call = typ.lower() == _CALL_TYPE or bool(_CALL_SKILL_RE.search(raw))
+        page = "" if is_call or not name else _source_page(name, pages, live)
+        sign = "Б" if is_call else "А" if page else ""
+        recorded = bool(_TRANSFER_RECORD_RE.search(raw))
+        partial = not recorded and bool(_TRANSFER_MARK_RE.search(raw))
+        if recorded:
+            out["k"] += 1
+        elif sign:
+            out["a" if sign == "А" else "b"] += 1
+        if partial:
+            out["partial"] += 1
+        if sign or recorded:
+            out["rows"].append({"from": ", ".join(from_ids) or "—", "type": typ,
+                                "name": name or "—", "sign": sign or "—", "page_id": page or "—",
+                                "transfer": "запись" if recorded else "неполная" if partial else "—"})
+    return out
+
+
+def check_own_debts(gate: Gate, staged: Path, docs: Path, after_step: bool,
+                    mode: str = "warn") -> Optional[dict]:
+    """Строка CORE-20 «долги на собственный заход». Режим --after-step — i: в ходе миграции цель
+    следующего захода норма. Полный режим — ⚠, вердикт не меняет; при mode="block" строки А и Б
+    без записи переноса — ✗."""
+    matrix = staged / "traceability-matrix.md"
+    if not matrix.is_file():
+        return None
+    res = own_target_debts(matrix.read_text(encoding="utf-8", errors="replace"),
+                           find_kit_file(docs, "inventory.md"),
+                           find_kit_file(docs, "migration-plan.md"))
+    n_signed = res["a"] + res["b"]
+    text = (f"долги «требуется заход» при источнике в выгрузке: А — {res['a']}, "
+            f"Б (карточки вызова) — {res['b']}; с записью переноса — {res['k']}")
+    if res["partial"]:
+        text += (f"; запись переноса без даты или срока — {res['partial']} "
+                 "(такие строки считаются без записи)")
+    if not res["inventory"] and res["total"]:
+        text += "; описи нет — признак А не проверялся"
+    if n_signed:
+        text += (" — цель с источником в выгрузке создаётся в этом заходе, иначе перенос "
+                 "записывается в строке долга решением владельца (create-artifact, «Недостающая "
+                 "цель ссылки»); перечень — в реестре долгов отчёта (--report)")
+    if not res["total"] or not (n_signed or res["k"] or not res["inventory"]):
+        mark = "✓"
+    elif after_step or not n_signed:
+        mark = "i"
+    else:
+        mark = "✗" if mode == "block" else "⚠"
+    gate.add(mark, "CORE-20", text, check="долги на собственный заход")
+    return res
+
+
 # --- шаг 2: прибор миграции -----------------------------------------------------
 
 def find_sources(src_root: Path) -> Optional[Path]:
@@ -1120,7 +1234,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
              sources: Optional[Path] = None, strict: bool = False,
              fmt: str = "log",
              questions: Optional[Path] = None, after_step: bool = False,
-             baseline: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
+             baseline: Optional[Path] = None,
+             own_debts: str = "warn") -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
     тестов); "table" — markdown-таблица с группировкой и легендой меток.
 
@@ -1208,6 +1323,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                                   sources, questions)
         if after_step:
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
+        own = check_own_debts(gate, staged, docs, after_step, own_debts)
         check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
@@ -1282,7 +1398,8 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
-                              "strict": strict, "debts": debts_rows, "docs_repo": docs_repo,
+                              "strict": strict, "debts": debts_rows, "own_debts": own,
+                              "docs_repo": docs_repo,
                               "src_git": src_git_state(src_root),
                               "validator": validator_origin(validator or _DEFAULT_VALIDATOR,
                                                             layout, no_validator)}
@@ -1455,6 +1572,17 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
             aff_txt = (f"{len(aff)}: " + ", ".join(aff[:6]) + ("…" if len(aff) > 6 else "")) if aff else "—"
             body.append(f"| {esc(d['from'])} | {esc(kind_txt)} | {esc(d['name'])} | {esc(d['owner'])} | "
                         f"{esc(aff_txt)} | {esc(d.get('closure', ''))} | {esc(d['oq'])} |")
+        own_rows = (data.get("own_debts") or {}).get("rows") or []
+        if own_rows:
+            body += ["", "### Долги «требуется заход» при источнике в выгрузке", "",
+                     "Признак А — имя цели совпало с титулом страницы описи вне структурных классов; "
+                     "Б — цель карточка вызова, её источник — страница потребителя. Цель с источником "
+                     "в выгрузке создаётся в этом заходе, иначе перенос записывается в строке долга "
+                     "решением владельца.", "",
+                     "| FROM-ID | Признак | Тип цели | Цель | page_id страницы описи | Перенос |",
+                     "|---|---|---|---|---|---|"]
+            body += [f"| {esc(r['from'])} | {r['sign']} | {esc(r['type'])} | {esc(r['name'])} | "
+                     f"{r['page_id']} | {r['transfer']} |" for r in own_rows]
     else:
         body.append("Долгов в матрице нет.")
     body += ["", "## Ручная часть протокола до подключения", "",
@@ -1505,6 +1633,10 @@ def main() -> int:
                          "миграции понижены, вердикт «ФОРМА ПЕРЕНОСИМА / НЕ ПЕРЕНОСИМА», --out отклоняется")
     ap.add_argument("--baseline", type=Path, default=None,
                     help="прошлый отчёт гейта (--report): под итогом новые и ушедшие блокеры")
+    ap.add_argument("--own-debts", choices=("warn", "block"), default="warn",
+                    help="долги «нет целевого артефакта» при источнике в выгрузке: warn — ⚠ в полном "
+                         "режиме (по умолчанию), block — ✗ в полном режиме для строк без записи "
+                         "переноса; в режиме --after-step — i при любом значении")
     a = ap.parse_args()
     fmt = "log" if a.log else "table"
     try:
@@ -1513,7 +1645,7 @@ def main() -> int:
                                       a.sources.resolve() if a.sources else None,
                                       a.strict, fmt,
                                       a.questions.resolve() if a.questions else None,
-                                      a.after_step, a.baseline)
+                                      a.after_step, a.baseline, a.own_debts)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2

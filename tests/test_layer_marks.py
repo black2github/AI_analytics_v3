@@ -47,3 +47,11 @@ def test_core_modules_not_marked():
 
 def test_migration_list_points_to_existing_files():
     assert [rel for rel in MIGRATION if not (CI / rel).is_file()] == []
+
+
+def test_own_debts_check_marked_pipeline_layer():
+    # проверка внутри смешанного модуля: пометка у раздела проверки, не второй строкой файла;
+    # строка таблицы «Слои прибора» — в README канона
+    text = (CI / "transfer_gate.py").read_text(encoding="utf-8")
+    mark = text.index("# Слой проверки: конвейер")
+    assert text.rindex("# --- долги на собственный заход", 0, mark) < mark < text.index("def check_own_debts")
