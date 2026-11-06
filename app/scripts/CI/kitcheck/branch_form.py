@@ -5,17 +5,19 @@
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена."""
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
 from .md import code_line_flags
 
 
-# ПР-15 ОНБ-В (волна 5; стандарт notation.md §1 «Форма ветвления — одна»):
-# условие и каждый исход со своей строки — **то** / **иначе** / **иначе если**
-# открывают строку (в ячейке таблицы — после `<br>`, вне таблиц — строкой
-# списка). Слово-исход посреди строки после **Если** (или после другого
-# исхода той же строки) — предупреждение, вердикт не меняет. Сосед —
-# сторожа сплющивания «≥2 если в строке» (✗, только зоны ЭФ).
+# ПР-15 ОНБ-В (волна 5; стандарт notation.md §1 «Форма ветвления — одна»), норма
+# от 2026-11-06: **то** стоит на строке условия, **иначе** / **иначе если** открывают
+# строку (в ячейке таблицы — после `<br>`, вне таблиц — строкой списка); прежняя
+# запись `,<br>**то**` допустима. **Иначе** посреди строки после **Если** (или после
+# другого исхода той же строки) — предупреждение, вердикт не меняет; вложенное условие
+# в одном отрезке — тоже предупреждение, его правит человек. Сосед — сторожа
+# сплющивания «≥2 если в строке» (✗, только зоны ЭФ).
 _BRANCH_OUT_RE = re.compile(r"\*\*(?:то|иначе(?:\s+если)?)[:,]?\*\*", re.I)
+_BRANCH_ELSE_RE = re.compile(r"\*\*иначе(?:\s+если)?[:,]?\*\*", re.I)
 _BRANCH_IF_RE = re.compile(r"\*\*(?:иначе\s+)?если[:,]?\*\*", re.I)
 
 
@@ -29,20 +31,34 @@ def _branch_mention(body: str, pos: int) -> bool:
     return bool(prev) and not re.search(r"\w", body[max(prev):pos])
 
 
-# Нормализация формы ветвления (решения владельца 2026-10-19; правило — стандарт
-# notation.md §1 «Форма ветвления — одна»; FB-24 КК, решение А — одна механика везде):
-# «**Если** X, **то** Y, **иначе** Z» одной строкой → «**Если** X,<br>**то** Y,<br>**иначе** Z»
+# Нормализация формы ветвления (решения владельца 2026-10-19 и 2026-11-06; правило —
+# стандарт notation.md §1 «Форма ветвления — одна»; FB-24 КК, решение А — одна механика везде):
+# «**Если** X, **то** Y, **иначе** Z» одной строкой → «**Если** X, **то** Y,<br>**иначе** Z»
 # в ячейке таблицы, в элементе списка и в абзаце тела (образец канона — controls.md,
 # «Логика проверки» элементом списка с <br>). Только отрезки, где сторож branch_form даёт ⚠.
+# Перед **то** перенос не вставляется, уже стоящий `<br>**то**` не убирается.
 # Не трогаются: заголовки, шапка документа, блоки кода, HTML-комментарии, текст в «ёлочках»
 # и "кавычках" (литералы сообщений), инлайн-код, отрезок с вложенным условием (два **Если**
 # или **Если** после исхода — вложенность человеку). Маркер списка, отступ и ярлык перед
-# **Если** («- **Логика проверки:** **Если** …») остаются; строка с «то» в конце и исходами
-# подпунктами — перенос перед «то», подпункты не сдвигаются. Отступ &nbsp; отрезка
+# **Если** («- **Логика проверки:** **Если** …») остаются. Отступ &nbsp; отрезка
 # переносится на новые строки. Идемпотентно.
 _BRANCH_INDENT_RE = re.compile(r"^(?:\s|&nbsp;|&emsp;|&ensp;)*")
 _BRANCH_MARKER_RE = re.compile(r"^(?:>|[-*+•](?=\s)|\d+[.)](?=\s))\s*")
 _BRANCH_PLAIN_IF_RE = re.compile(r"(?<!иначе )\*\*если[:,]?\*\*", re.I)
+
+
+def _branch_nested(body: str, free: Callable[[int], bool]) -> bool:
+    """Вложенное условие в отрезке: два простых **Если** или **Если** после исхода
+    («**то** **Если** …»). Цепочка «**иначе если**», «**иначе**, **если** …» и
+    «**Иначе** (**если** …» — не вложенность. Одно определение у сторожа и нормализатора."""
+    plain_ifs = [m.start() for m in _BRANCH_PLAIN_IF_RE.finditer(body) if free(m.start())
+                 and not re.search(r"(?i)иначе\*\*[\s,(]*$", body[:m.start()])]
+    if len(plain_ifs) > 1:
+        return True
+    if not plain_ifs:
+        return False
+    return (bool(_BRANCH_OUT_RE.match(body))
+            or any(free(m.start()) and m.start() < plain_ifs[0] for m in _BRANCH_OUT_RE.finditer(body)))
 
 
 def _guillemet_spans(body: str) -> List[Tuple[int, int]]:
@@ -81,26 +97,23 @@ def _branch_fix_segment(seg: str, seen_if: bool) -> Tuple[str, int, str]:
     prot = _branch_protected(body)
     free = lambda pos: not any(a <= pos < b for a, b in prot)  # noqa: E731
     ifs = [m.start() for m in _BRANCH_IF_RE.finditer(body) if free(m.start())]
-    # «**иначе**, **если** …» и «**Иначе** (**если** …» — та же цепочка, что «**иначе если**»
-    plain_ifs = [m.start() for m in _BRANCH_PLAIN_IF_RE.finditer(body) if free(m.start())
-                 and not re.search(r"(?i)иначе\*\*[\s,(]*$", body[:m.start()])]
     opened = bool(_BRANCH_OUT_RE.match(body))
     outs = [m.start() for m in _BRANCH_OUT_RE.finditer(body) if free(m.start())]
-    cut = [p for p in outs if p > 0 and (seen_if or opened or any(i < p for i in ifs))
-           and not _branch_mention(body, p)]
-    if not cut:
+    late = [p for p in outs if p > 0 and (seen_if or opened or any(i < p for i in ifs))
+            and not _branch_mention(body, p)]
+    if not late:
         return seg, 0, ""
-    # вложенность: два простых **Если** или **Если** после исхода («**то** **Если** …»);
-    # цепочка «**иначе если**» — не вложенность
-    if len(plain_ifs) > 1 or (plain_ifs and (opened or any(o < plain_ifs[0] for o in outs))):
+    if _branch_nested(body, free):
         return seg, 0, "вложенное условие"
+    # **то** остаётся на строке условия: перенос только перед **иначе** / **иначе если**
+    cut = [p for p in late if _BRANCH_ELSE_RE.match(body, p)]
     for pos in reversed(cut):
         body = body[:pos].rstrip() + "<br>" + cont + body[pos:]
     return indent + marker + body, len(cut), ""
 
 
 def _branch_fix_line(text: str, kind: str, skipped: Dict[str, int]) -> Tuple[str, int]:
-    """Отрезки строки (или ячейки) между <br>: перенос перед словом-исходом."""
+    """Отрезки строки (или ячейки) между <br>: перенос перед **иначе** / **иначе если**."""
     segs = re.split(r"(<br\s*/?>)", text, flags=re.I)
     seen_if = False
     total = 0

@@ -21,7 +21,7 @@ def card(cid: str, body: str) -> str:
 
 CELLS = ("| Поле | Логика |\n|---|---|\n"
          "| A | **Если** X, **то** Y, **иначе** Z |\n"
-         "| B | **Если** P, **то** Q |\n")
+         "| B | **Если** P, **то** Q, **иначе** R |\n")
 NESTED = "- **Если** A, **то** **Если** B, **то** C\n"
 
 
@@ -66,7 +66,7 @@ def test_no_offenders_no_line(tmp_path):
 def test_tail_and_listing_only_in_out(tmp_path, monkeypatch, capsys):
     docs = kit(tmp_path)
     for i in range(4, 7):
-        make(docs / f"srs/functions/f{i}.md", card(f"X-0{i}", "**Если** K, **то** L\n"))
+        make(docs / f"srs/functions/f{i}.md", card(f"X-0{i}", "**Если** K, **то** L, **иначе** M\n"))
     out = tmp_path / "report.txt"
     monkeypatch.setattr(sys, "argv", ["selfcheck.py", "--docs", str(docs), "--out", str(out)])
     selfcheck.main()

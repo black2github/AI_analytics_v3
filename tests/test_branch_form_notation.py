@@ -1,8 +1,8 @@
 # tests/test_branch_form_notation.py
-"""ПР-15 ОНБ-В (волна 5, стандарт notation.md §1 «Форма ветвления — одна»):
-**то** / **иначе** открывают строку — в ячейке после `<br>`, вне таблиц строкой
-списка; слово-исход посреди строки после **Если** — предупреждение, вердикт не
-меняется."""
+"""ПР-15 ОНБ-В (волна 5, стандарт notation.md §1 «Форма ветвления — одна»), норма от
+2026-11-06: **то** на строке условия, **иначе** открывает строку — в ячейке после `<br>`,
+вне таблиц строкой списка; **иначе** посреди строки после **Если** — предупреждение,
+вердикт не меняется."""
 from pathlib import Path
 
 from app.scripts.CI.kitcheck.checks.card_branch_form import branch_form_offenders
@@ -41,8 +41,8 @@ def test_bullet_after_br_and_else_if_silent():
 
 
 def test_code_block_and_inline_code_silent():
-    assert off("```text\n**Если** X, **то** Y\n```") == []
-    assert off("Образец: `**Если** X, **то** Y` — не по норме.") == []
+    assert off("```text\n**Если** X, **то** Y, **иначе** Z\n```") == []
+    assert off("Образец: `**Если** X, **то** Y, **иначе** Z` — не по норме.") == []
 
 
 def test_bold_to_without_if_silent():
@@ -51,8 +51,8 @@ def test_bold_to_without_if_silent():
 
 # ---------------------------------------------------------------- срабатывание
 
-def test_if_then_one_line_in_cell():
-    assert off("| FLD-1 | **Если** X, **то** Y |") == ["**Если** X, **то** Y"]
+def test_if_then_else_one_line_in_cell():
+    assert off("| FLD-1 | **Если** X, **то** Y, **иначе** Z |") == ["**Если** X, **то** Y, **иначе** Z"]
 
 
 def test_list_item_if_then_else_one_line_counted_once():
@@ -66,8 +66,8 @@ def test_else_inside_then_segment_after_br():
 def test_check_file_reports_warning_without_verdict(tmp_path: Path):
     p = tmp_path / "fun-cl-01.md"
     p.write_text("---\nid: FUN-CL-01\ntype: function\nservice: x\n---\n\n# Ф\n\n"
-                 "- **Если** X, **то** Y\n", encoding="utf-8")
+                 "- **Если** X, **то** Y, **иначе** Z\n", encoding="utf-8")
     rep, ok = check_file(p)
     line = next((ln for ln in rep if ln.startswith("предупреждение: форма ветвления")), "")
-    assert "×1" in line and "notation §1" in line, rep
+    assert "×1" in line and "нотация §1" in line and "«**иначе**»" in line, rep
     assert ok

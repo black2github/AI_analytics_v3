@@ -40,14 +40,14 @@ try:  # проверки карточки — kitcheck/checks/card_*.py (Д-50; 
     from kitcheck.checks.card_run import run_check  # noqa: E402
     from kitcheck.checks.card_source import quoted_literals  # noqa: E402
     from kitcheck.checks.card_clean import check_oq_page_refs, check_service_table_integrity  # noqa: E402
-    from kitcheck.checks.card_branch_form import branch_form_counts  # noqa: E402
+    from kitcheck.checks.card_branch_form import branch_form_counts, branch_no_outcome  # noqa: E402
     from kitcheck.checks.card_controls import is_control_cards_file, message_rows  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.card_run import run_check  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_source import quoted_literals  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_clean import (  # type: ignore  # noqa: E402
         check_oq_page_refs, check_service_table_integrity)
-    from .kitcheck.checks.card_branch_form import branch_form_counts  # type: ignore  # noqa: E402
+    from .kitcheck.checks.card_branch_form import branch_form_counts, branch_no_outcome  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_controls import (  # type: ignore  # noqa: E402
         is_control_cards_file, message_rows)
 import source_coverage as sc  # noqa: E402
@@ -940,22 +940,31 @@ def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     на файл (решение владельца пилота 2026-10-20): у комплекта, мигрированного до
     нормализации, сотни файлов с одним и тем же ⚠ заслоняют прочие предупреждения.
     Сколько закроет нормализатор — сухим прогоном по тексту файла; остаток —
-    вложенные условия, человеку. Перечень по файлам — только в --out."""
+    вложенные условия, человеку. Перечень по файлам — только в --out. «То»/«иначе» без
+    исхода — отдельной строкой: нормализатор их не закрывает, примеры до двух, перечень мест в --out."""
     per: List[Tuple[str, int, int]] = []
+    lost: List[Tuple[str, int, str]] = []
     for p in _kit_md(ctx.docs, zone=True):  # нотация применяется и к зоне docs/modules/ (Д-49)
-        n, rest = branch_form_counts(_fs.read_text(p, encoding="utf-8", errors="replace"))
+        text = _fs.read_text(p, encoding="utf-8", errors="replace")
+        n, rest = branch_form_counts(text)
+        rel = p.relative_to(ctx.docs).as_posix()
         if n:
-            per.append((p.relative_to(ctx.docs).as_posix(), n, rest))
-    if not per:
-        return [], True
-    per.sort(key=lambda x: (-x[1], x[0]))
-    total, manual = sum(n for _f, n, _r in per), sum(r for _f, _n, r in per)
-    top = ", ".join(f"{f} ×{n}" for f, n, _r in per[:3])
-    more = f", и ещё {len(per) - 3} файлов" if len(per) > 3 else ""
-    rep = [f"⚠ форма ветвления (notation §1): {total} мест в {len(per)} файлах; "
-           f"normalize_tables.py --branch-form --write закроет {total - manual}, "
-           f"вложенных условий вручную {manual} ({top}{more})"]
-    rep += [f"{OUT_ONLY}{f} ×{n}" + (f" (вручную {r})" if r else "") for f, n, r in per]
+            per.append((rel, n, rest))
+        lost += [(rel, ln, b) for ln, b in branch_no_outcome(text.splitlines())]
+    rep: List[str] = []
+    if per:
+        per.sort(key=lambda x: (-x[1], x[0]))
+        total, manual = sum(n for _f, n, _r in per), sum(r for _f, _n, r in per)
+        top = ", ".join(f"{f} ×{n}" for f, n, _r in per[:3])
+        more = f", и ещё {len(per) - 3} файлов" if len(per) > 3 else ""
+        rep = [f"⚠ форма ветвления (notation §1): {total} мест в {len(per)} файлах; "
+               f"normalize_tables.py --branch-form --write закроет {total - manual}, "
+               f"вложенных условий вручную {manual} ({top}{more})"]
+        rep += [f"{OUT_ONLY}{f} ×{n}" + (f" (вручную {r})" if r else "") for f, n, r in per]
+    if lost:
+        rep.append(f"⚠ форма ветвления: «то»/«иначе» без исхода — следующий пункт на уровне условия ×{len(lost)}")
+        rep += [f"      пример: {f}:{ln}: {b!r}" for f, ln, b in lost[:2]]
+        rep += [f"{OUT_ONLY}{f}:{ln}: {b}" for f, ln, b in lost]
     return rep, True
 
 
