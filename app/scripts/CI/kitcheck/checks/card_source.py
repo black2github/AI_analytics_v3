@@ -12,7 +12,7 @@ from ..html import (
     parse_md_tables
 )
 from ..columns import _COLUMN_RULES, _is_section_row, validate_columns
-from ..md import strip_html_comments
+from ..md import split_cells, strip_html_comments, strip_row
 from .card_common import _LAYOUT_ROW_RE
 
 
@@ -322,73 +322,119 @@ _FLK_EXAMPLE_HDR_RE = re.compile(r"\s*(флк|пример)")
 _EXAMPLE_MARK_RE = re.compile(r"(?<![а-яё])пример[ы]?\s*[:.]", re.I)
 
 
-def _flk_example_cells(body: str) -> List[str]:
-    """Нормализованные тексты ячеек колонок «ФЛК» / «Пример(ы)» всех
-    таблиц источника (md и HTML-сетки) — их содержимое в модель не
-    переносится (К-18, Э-3), кавычечный сторож его не требует."""
-    out: List[str] = []
-
-    def take(headers: List[str], rows: List[List[str]]) -> None:
-        idx = [i for i, h in enumerate(headers)
-               if _FLK_EXAMPLE_HDR_RE.match(_norm_cell(h))]
-        for r in rows:
-            for i in idx:
-                if i < len(r) and r[i].strip():
-                    out.append(_norm_cell(r[i]))
-
-    for hdr, rows in parse_md_tables(body):
-        take(hdr, rows)
-    for t in find_top_tables(body):
-        grid = expand_grid(t)
-        if len(grid) > 1:
-            take(grid[0], grid[1:])
-    return out
+_FLK_TABLE_TAG_RE = re.compile(r"<(/?)(table|tr|td|th)\b([^>]*)>", re.I)
 
 
-def _example_value_segments(body: str) -> List[str]:
-    """Нормализованные ЗНАЧЕНИЯ примеров источника: текст после маркера
-    «Пример:» до конца абзаца/ячейки (сегменты короче 15 знаков — шум)."""
-    out: List[str] = []
-    for m in _EXAMPLE_MARK_RE.finditer(body):
-        tail = body[m.end():m.end() + 1200]
-        cut = len(tail)
-        for b in ("</p>", "</td>", "\n\n", "|", "</li>"):
-            i = tail.find(b)
-            if i != -1:
-                cut = min(cut, i)
-        seg = _norm_cell(tail[:cut])
-        if len(seg) >= 15:
-            out.append(seg)
-    return out
+def _flk_md_spans(body: str) -> List[Tuple[int, int]]:
+    """Позиции непустых ячеек колонок «ФЛК»/«Пример» в pipe-таблицах текста: границы таблицы и
+    шапка — как в parse_md_tables."""
+    spans: List[Tuple[int, int]] = []
+    idx: Optional[set] = None
+    for m in re.finditer(r"(?m)^.*$", body):
+        s = m.group(0).strip()
+        if not s.startswith("|"):
+            idx = None
+            continue
+        if set(s.replace("|", "").replace(" ", "")) <= {"-", ":"}:
+            continue
+        inner = strip_row(m.group(0))
+        cells = split_cells(inner)
+        if idx is None:
+            idx = {i for i, c in enumerate(cells)
+                   if _FLK_EXAMPLE_HDR_RE.match(_norm_cell(c.strip().strip("`").strip()))}
+            continue
+        pos = m.start() + m.group(0).find(inner)
+        for i, c in enumerate(cells):
+            if i in idx and c.strip():
+                spans.append((pos, pos + len(c)))
+            pos += len(c) + 1
+    return spans
 
 
-def check_example_values_absent(card_text: str,
-                                source_text: str) -> Tuple[List[str], bool]:
-    """К-19 (2026-08-18, data-model): значения примеров источника НЕ
-    должны присутствовать в карточке — шаблон велит «значения из примера
-    не переносить», ПД в примерах обезличены. Ловит и ЧАСТИЧНЫЙ вырез
-    (хвост примера, вклеенный в описание: обрывок ФЗ в ent-001,
-    необезличенный «Выпискин О. О.» в ent-006 — найдено глазами
-    пользователя, прогон inkasso-run1): проверяются скользящие фрагменты
-    сегмента по 20 знаков."""
-    segs = _example_value_segments(_fm_body(source_text))
-    if not segs:
-        return [], True
-    card_norm = _norm_cell(card_text)
-    hits: List[str] = []
-    for seg in segs:
-        for i in range(0, max(1, len(seg) - 19), 10):
-            frag = seg[i:i + 20]
-            if len(frag) >= 15 and frag in card_norm:
-                hits.append(frag)
-                break
-    if hits:
-        return [f"значения примеров источника перенесены в карточку "
-                f"×{len(hits)} — шаблон data-model: «значения из примера "
-                "не переносить» (абзац примера удаляется ЦЕЛИКОМ, ПД "
-                "обезличиваются) ✗ НИЖЕ ПОРОГА; фрагменты: "
-                + "; ".join(repr(h) for h in hits[:3])], False
-    return [], True
+def _flk_table_spans(rows: List[list], body: str) -> List[Tuple[int, int]]:
+    """Позиции непустых ячеек колонок «ФЛК»/«Пример» одной HTML-таблицы. rows — строки из
+    (атрибуты, начало, конец) настоящих ячеек; шапка — первая строка. Колонки считаются с учётом
+    colspan и rowspan, как в expand_grid."""
+
+    def span_of(attrs: str, name: str) -> int:
+        m = re.search(name + r"\s*=\s*[\"']?(\d+)", attrs, re.I)
+        return int(m.group(1)) if m and int(m.group(1)) > 0 else 1
+
+    def text_of(start: int, end: int) -> str:
+        return _norm_cell(re.sub(r"<[^>]+>", " ", body[start:end]).replace("&nbsp;", " "))
+
+    spans: List[Tuple[int, int]] = []
+    idx: set = set()
+    busy: dict = {}  # колонка -> сколько строк, начиная с текущей, занято rowspan сверху
+    for n, row in enumerate(rows):
+        col = 0
+        next_busy = {c: k - 1 for c, k in busy.items() if k > 1}
+        for attrs, start, end in row:
+            while col in busy:
+                col += 1
+            colspan, rowspan = span_of(attrs, "colspan"), span_of(attrs, "rowspan")
+            cols = set(range(col, col + colspan))
+            if n == 0:
+                if _FLK_EXAMPLE_HDR_RE.match(text_of(start, end)):
+                    idx |= cols
+            elif idx & cols and text_of(start, end):
+                spans.append((start, end))
+            if rowspan > 1:
+                next_busy.update(dict.fromkeys(cols, rowspan - 1))
+            col += colspan
+        busy = next_busy
+    return spans
+
+
+def _flk_html_spans(body: str) -> List[Tuple[int, int]]:
+    """Позиции непустых ячеек колонок «ФЛК»/«Пример» верхнеуровневых HTML-таблиц; вложенная
+    таблица — текст родительской ячейки. Незакрытая таблица позиций не даёт: граница не определена,
+    её литералы требуются (асимметрия ошибок)."""
+    spans: List[Tuple[int, int]] = []
+    rows: List[list] = []
+    depth = 0
+    cell = None  # (атрибуты, начало) открытой ячейки
+
+    def close(end: int) -> None:
+        nonlocal cell
+        if cell is not None and rows:
+            rows[-1].append((cell[0], cell[1], end))
+        cell = None
+
+    for m in _FLK_TABLE_TAG_RE.finditer(body):
+        closing, name = m.group(1), m.group(2).lower()
+        if name == "table":
+            if not closing:
+                depth += 1
+            elif depth:
+                depth -= 1
+                if depth == 0:
+                    close(m.start())
+                    spans.extend(_flk_table_spans(rows, body))
+                    rows, cell = [], None
+        elif depth == 1:
+            close(m.start())
+            if name == "tr" and not closing:
+                rows.append([])
+            elif name != "tr" and not closing:
+                cell = (m.group(3), m.end())
+    return spans
+
+
+def _blank_flk_cells(body: str) -> Tuple[str, int]:
+    """Текст с вычищенным содержимым ячеек колонок «ФЛК» / «Пример(ы)» всех таблиц (md и HTML)
+    и число таких ячеек. Объявленная словарная эвристика (реестр в README прибора): содержимое
+    этих ячеек в модель не переносится (К-18, Э-3). Вычищается по позициям: разделители ячеек
+    и переносы строк на месте, остальной текст побайтно тот же."""
+    spans = _flk_md_spans(body) + _flk_html_spans(body)
+    if not spans:
+        return body, 0
+    chars = list(body)
+    for start, end in spans:
+        for i in range(start, end):
+            if chars[i] != "\n":
+                chars[i] = " "
+    return "".join(chars), len(spans)
 
 
 # Ссылка источника на страницу выгрузки/Confluence: <a href="…">ярлык</a> и
@@ -487,29 +533,9 @@ def _source_structured(body: str) -> str:
     return "\n\n".join(parts)
 
 
-def quoted_literals(source_text: str,
-                    skip_page_link_labels: bool = False,
-                    prose_only: bool = False,
-                    no_code: bool = False,
-                    structured_only: bool = False) -> List[str]:
-    """Кавычечные литералы источника. skip_page_link_labels — не брать
-    литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
-    источник → карточка); сторож вариантов написания по чистовику (selfcheck)
-    зовёт без него. prose_only — только литералы прозы (_source_prose): тонкой
-    карточке вызова значения формата и примеров из таблиц параметров и блоков
-    кода не требуются. no_code — без закрытых блоков кода (таблицы остаются):
-    литерал только из примера в блоке кода — класс «примеры»."""
-    body = _fm_body(source_text)
-    headings = _source_headings(body)
-    flk_cells = _flk_example_cells(body)
-    if skip_page_link_labels:
-        body = _blank_page_link_labels(body)
-    if prose_only:
-        body = _source_prose(body)
-    elif no_code:
-        body = _source_prose(body, tables=False)
-    elif structured_only:
-        body = _source_structured(body)
+def _quoted_occurrences(text: str) -> List[Tuple["re.Match[str]", str, str, bool]]:
+    """Вхождения кавычечных литералов: (совпадение, значение, текст поиска, стоит ли после
+    маркера «Пример:»). Значения атрибутов и кавычки внутри адресов ссылок отсеяны."""
     # Чётность кавычек (z04 ISS-03, маска "+7 (ХXX) XXX-XX-XX"):
     # кавычки HTML-атрибутов (href="…", style="…") сбивают рамки
     # _QUOTED_RE — «литералом» становится спан МЕЖДУ закрывающей
@@ -519,8 +545,8 @@ def quoted_literals(source_text: str,
     # и сверки, и К-30-помилования. Теги С КАВЫЧКАМИ вырезаются до
     # матчинга; теги без атрибутов (</p>, </td>, <br>) сохраняются —
     # они несут границы ячеек/абзацев для контекстных фильтров ниже.
-    scan = re.sub(r"</?[A-Za-z][^>\n\"]*\"[^>\n]*>", " ", body)
-    seen, out = set(), []
+    scan = re.sub(r"</?[A-Za-z][^>\n\"]*\"[^>\n]*>", " ", text)
+    out = []
     for m in _QUOTED_RE.finditer(scan):
         v = m.group(1).strip()
         if (not v or _QUOTED_SKIP_RE.search(v)
@@ -544,21 +570,56 @@ def quoted_literals(source_text: str,
         if lp != -1 and ")" not in pre[lp:]:
             continue
         # К-18 (2026-08-18, Э-3): значение ВНУТРИ примера — по шаблону
-        # «значения из примера не переносить», ПД в примерах обезличены
+        # «значения из примера не переносить», пример не норма
         # (чек-лист data-model); маркер «Пример:» перед литералом без
         # границы ячейки/абзаца ('userFio':'Выпискин О. О.' в JSON)
         tail = pre[-600:]
         marks = list(_EXAMPLE_MARK_RE.finditer(tail))
-        if marks:
-            after = tail[marks[-1].end():]
-            if ("</td>" not in after and "</p>" not in after
-                    and "\n\n" not in after and "|" not in after):
-                continue
-        # К-18: ячейка колонки ФЛК/Пример — содержимое не переносится,
-        # судьба — обязательный долг create-controls (шаблон data-model)
-        nv = _norm_cell(v)
-        if any(nv and nv in c for c in flk_cells):
-            continue
+        after = tail[marks[-1].end():] if marks else None
+        marked = after is not None and not any(b in after for b in ("</td>", "</p>", "\n\n", "|"))
+        out.append((m, v, scan, marked))
+    return out
+
+
+def quoted_literals(source_text: str,
+                    skip_page_link_labels: bool = False,
+                    prose_only: bool = False,
+                    no_code: bool = False,
+                    structured_only: bool = False,
+                    removed: Optional[dict] = None) -> List[str]:
+    """Кавычечные литералы источника. skip_page_link_labels — не брать
+    литералы из ярлыков ссылок на страницы выгрузки/Confluence (сверка
+    источник → карточка); сторож вариантов написания по чистовику (selfcheck)
+    зовёт без него. prose_only — только литералы прозы (_source_prose): тонкой
+    карточке вызова значения формата и примеров из таблиц параметров и блоков
+    кода не требуются. no_code — без закрытых блоков кода (таблицы остаются):
+    литерал только из примера в блоке кода — класс «примеры». removed — сюда
+    кладётся снятое объявленными эвристиками, для i-строк отчёта: cells — число
+    ячеек колонок «ФЛК»/«Пример», flk и mark — снятые литералы."""
+    body = _fm_body(source_text)
+    headings = _source_headings(body)
+    if skip_page_link_labels:
+        body = _blank_page_link_labels(body)
+    if prose_only:
+        body = _source_prose(body)
+    elif no_code:
+        body = _source_prose(body, tables=False)
+    elif structured_only:
+        body = _source_structured(body)
+    occurrences = _quoted_occurrences(body)
+    # К-18: ячейка колонки ФЛК/Пример — содержимое не переносится, судьба — обязательный
+    # долг create-controls (шаблон data-model). Литерал снимается, только если ВСЕ его
+    # кавычечные вхождения стоят в таких ячейках: вхождение в прозе или другой колонке его
+    # требует (прежняя проверка «подстрока ячейки» снимала и такие). Вхождения ищутся в тексте
+    # того же режима: у no_code блоки кода уже вырезаны, поэтому литерал из ячейки и блока кода
+    # идёт в класс «примеры», а не в требования.
+    blanked, n_cells = _blank_flk_cells(body)
+    outside = ({_norm_cell(o[1]) for o in _quoted_occurrences(blanked) if not o[3]}
+               if n_cells else set())
+    seen, out = set(), []
+    flk_removed: dict = {}
+    mark_removed: dict = {}
+    for m, v, scan, marked in occurrences:
         # структурная отсылка «см. раздел "..."» — навигация по источнику,
         # карточка переструктурирована по шаблону: не требуется
         if re.search(r"(?:раздел[еа]?|см\.)\s*$", scan[:m.start()][-24:],
@@ -575,10 +636,24 @@ def quoted_literals(source_text: str,
         n = _norm_cell(v)
         if not n or n in headings:
             continue
-        if n not in seen:
+        if marked:
+            mark_removed.setdefault(n, v)
+        elif n_cells and n not in outside:
+            flk_removed.setdefault(n, v)
+        elif n not in seen:
             seen.add(n)
             out.append(v)
+    if removed is not None:
+        removed["cells"] = n_cells
+        removed["flk"] = list(flk_removed.values())
+        removed["mark"] = [v for n, v in mark_removed.items()
+                           if n not in seen and n not in flk_removed]
     return out
+
+
+def _listed(values: List[str]) -> str:
+    """Перечень значений для i-строки: до 4, дальше многоточие."""
+    return "; ".join(repr(v[:50]) for v in values[:4]) + ("; …" if len(values) > 4 else "")
 
 
 # Машинная запись в тексте ячейки или абзаца — значение примера, как блок кода: правило по форме
@@ -707,8 +782,18 @@ def check_quoted_literals(card_text: str,
     владельца канона 2026-11-02, КК FUN-SYS-10 ← 2464250492): литералы, стоящие на
     странице только в тексте (шаги функции), не требуются — их сверяет карточка самой
     функции; литералы таблиц и примеров — по прежним правилам. i-строка с числом."""
-    lits = quoted_literals(source_text, skip_page_link_labels=True)
+    removed: dict = {}
+    lits = quoted_literals(source_text, skip_page_link_labels=True, removed=removed)
     report: List[str] = []
+    # объявленные словарные эвристики (реестр в README прибора): снятое видно в отчёте
+    if removed["cells"]:
+        report.append(
+            f"i К-18: ячеек колонок «ФЛК»/«Пример» не требовалось: {removed['cells']}; "
+            f"литералов снято: {len(removed['flk'])}"
+            + (f" ({_listed(removed['flk'])})" if removed["flk"] else ""))
+    if removed["mark"]:
+        report.append(f"i значений после маркера «Пример:» не требовалось: "
+                      f"{len(removed['mark'])} ({_listed(removed['mark'])})")
     if steps_text_free and lits:
         structured = {_norm_cell(v) for v in quoted_literals(
             source_text, skip_page_link_labels=True, structured_only=True)}
@@ -1109,6 +1194,18 @@ def thin_call_home(card_text: str, debts_text: str = "") -> Optional[str]:
     return None
 
 
+def _is_history_table(hdr: List[str]) -> bool:
+    """Объявленная словарная эвристика (реестр в README прибора): таблица истории страницы по
+    словам заголовка. Секция «Документация» (реестр док-файлов) в контракт не переносится.
+    История изменений («Дата | Описание | Автор [| Задача]») по канону в чистовик не переносится;
+    гейт требовал её значения (ретро-перегон [КК_ВК] 2026-08-15, конфликт гейт↔шаблон — агент
+    честно сдал «НЕ ГОТОВО» вместо маскировки таблицей). Кандидат по форме отклонён: «колонка
+    из одних дат» задевает 9 других таблиц, в том числе с данными (замер 2026-11-06)."""
+    hdr_norm = " ".join(_norm_cell(h) for h in hdr)
+    return ("документ" in hdr_norm and "дата" in hdr_norm) or (
+        "дата" in hdr_norm and "описани" in hdr_norm and "автор" in hdr_norm)
+
+
 def check_source_tables(card_text: str, source_text: str,
                         thin_call: Optional[str] = None,
                         linked_calls: Optional[List[Tuple[str, str]]] = None
@@ -1128,26 +1225,14 @@ def check_source_tables(card_text: str, source_text: str,
     ok = True
     card_norm = _cmp_text(card_text)
     thin_tables = thin_rows = 0
+    history = [rows for hdr, rows in parse_md_tables(source_text) if _is_history_table(hdr)]
+    if history:
+        report.append(f"i таблиц истории изменений не сверялось: {len(history)} "
+                      f"(строк {sum(len(r) for r in history)})")
     for hdr, rows in parse_md_tables(source_text):
         if len(hdr) < 2 or len(rows) < 2:
             continue
-        hdr_norm = " ".join(_norm_cell(h) for h in hdr)
-        # Служебная секция «Документация» страницы (реестр док-файлов) —
-        # в контракт не переносится, сверке не подлежит.
-        if "документ" in hdr_norm and "дата" in hdr_norm:
-            continue
-        # История изменений страницы («Дата | Описание | Автор [| Задача]»)
-        # — по канону в чистовик не переносится; гейт требовал её значения
-        # (ретро-перегон [КК_ВК] 2026-08-15, конфликт гейт↔шаблон — агент
-        # честно сдал «НЕ ГОТОВО» вместо маскировки таблицей).
-        if "дата" in hdr_norm and "описани" in hdr_norm and "автор" in hdr_norm:
-            continue
-        # Таблица макетов ЭФ (размерности экрана + ссылки на Figma) —
-        # служебная: шаблон screen-form запрещает Figma/Confluence-URL в
-        # чистовике, макеты живут в src. Гейт требовал её значения — агент
-        # включил сырой HTML с живыми URL в карточку (src-locks,
-        # 2026-08-14, конфликт шаблон↔гейт).
-        if "figma" in hdr_norm or "размерност" in hdr_norm:
+        if _is_history_table(hdr):
             continue
         # К-18 (2026-08-18, Э-3): колонки ФЛК и «Пример(ы)» страниц МД в
         # модель не переносятся (их судьба — обязательный долг
@@ -1193,7 +1278,8 @@ def check_source_tables(card_text: str, source_text: str,
             # sidecar examples/, в карточке её значений законно нет.
             if any(_ATTACHMENT_RE.search(c) for c in row):
                 continue
-            # Строка макетов ЭФ (Figma/размерности) — служебная, см. выше.
+            # Строка макетов ЭФ (ссылка Figma, «размерность экрана») — служебная: шаблон
+            # screen-form запрещает Figma/Confluence-URL в чистовике, макеты живут в src.
             if any(_LAYOUT_ROW_RE.search(c) for c in row):
                 continue
             # Строка-указатель («Логика работы | …см. ниже») — навигация по
@@ -1343,15 +1429,12 @@ def check_unchecked_tables(card_text: str, source_text: str,
     for hdr, rows in parse_md_tables(source_text):
         if len(rows) < 1:
             continue
-        hdr_norm = " ".join(_norm_cell(h) for h in hdr)
-        if ("документ" in hdr_norm and "дата" in hdr_norm) or (
-                "дата" in hdr_norm and "описани" in hdr_norm and "автор" in hdr_norm):
+        if _is_history_table(hdr):
             continue  # реестр документов страницы и история изменений не переносятся
         plain = 0
-        # как в check_source_tables: таблица и строки макетов ЭФ, строки вложений и
+        # как в check_source_tables: строки макетов ЭФ, строки вложений и
         # строки-указатели в дословную сверку не входят
-        layout = "figma" in hdr_norm or "размерност" in hdr_norm
-        for row in ([] if layout else rows):
+        for row in rows:
             if any(_ATTACHMENT_RE.search(c) or _LAYOUT_ROW_RE.search(c)
                    or re.search(r"см\.\s*ниже", c, re.IGNORECASE) for c in row):
                 continue

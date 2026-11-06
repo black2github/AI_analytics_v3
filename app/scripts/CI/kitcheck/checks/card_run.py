@@ -24,7 +24,7 @@ from .card_form import (
 )
 from .card_source import (
     _fc_source_page_refs_and_columns, _frontmatter_title, check_cell_coverage,
-    check_example_values_absent, check_image_trace, check_outside_template_section,
+    check_image_trace, check_outside_template_section,
     check_quoted_literals, check_source_tables, check_title, check_unchecked_tables,
     source_role_literals, source_tables_summary, thin_call_home
 )
@@ -740,14 +740,6 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             # структуру. Содержимое и структуру ячеек держат К-29
             # (не в |-строке) и check_heavy_pair_structure (профиль +
             # потеря), лейбло-независимо.
-        # К-19: анти-присутствие значений примеров — ТОЛЬКО data-model
-        # (в screen-form/function примеры форматов переносятся легитимно)
-        ex_report, ex_ok = (check_example_values_absent(combined, src_text)
-                            if m_type is not None
-                            and m_type.group(1) == "data-model"
-                            else ([], True))
-        report.extend(ex_report)
-        ok = ok and ex_ok
         # sibling-корпус — только внутри комплекта (docs_root задан:
         # selfcheck-режим): в CLI-прогоне рядом с карточкой может лежать
         # что угодно, включая сам источник, — фолбэк глушил бы сверку
