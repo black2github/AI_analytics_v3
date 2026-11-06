@@ -68,16 +68,16 @@ class TestStrikethroughDeletion:
         assert ext._critic_report == []  # обычное удаление в отчёт не пишется
 
     def test_5_nested_flatten_keeps_struck_black_prom_text(self):
-        # Устранение over-drop: во вложенной конструкции зачёркнутый ЦВЕТНОЙ черновик
-        # отбрасывается, а зачёркнутый ЧЁРНЫЙ (реальное удаление с ПРОМ) НЕ теряется.
+        # Устранение over-drop: зачёркнутый ЧЁРНЫЙ (реальное удаление с ПРОМ) НЕ теряется и
+        # идёт без маркера; зачёркнутый ЦВЕТНОЙ — удаление задачи своего цвета (1.9.18).
         html = ('<p><span style="color: rgb(255,153,204)">Осталось '
                 '<s><span style="color: rgb(0,0,0)">чёрное удаление</span></s> '
                 '<span style="color: rgb(153,204,0)"><s>зелёный черновик</s>новое</span>'
                 '</span></p>')
         ext = create_critic_extractor({"#ff99cc": "GBO-1", "#99cc00": "GBO-2"})
         out = ext.extract(html)
-        assert "чёрное удаление" in out          # ПРОМ-текст не потерян (over-drop устранён)
-        assert "зелёный черновик" not in out     # цветной черновик отброшен
+        assert ("{++GBO-1: Осталось ++}чёрное удаление {--GBO-2: зелёный черновик--}"
+                "{++GBO-2: новое++}") in out
         assert ext._critic_report[0]["confidence"] == "high"
 
 
@@ -219,18 +219,19 @@ class TestRoundTripOracle:
 
 
 class TestNesting:
-    """5. Вложенность двух цветов (пример ТЗ п. 4.5): уплощение под внутреннюю задачу + отчёт."""
+    """5. Вложенность двух цветов (пример ТЗ п. 4.5): маркеры по прогонам цвета + отчёт."""
 
-    def test_nested_colors_flattened_under_inner_task(self):
+    def test_nested_colors_flattened_by_runs(self):
         cmap = {"#ff99cc": "GBO-12345", "#99cc00": "GBO-67890"}  # розовый, зелёный
         html = ('<p><span style="color: rgb(255,153,204)">Организация должна быть '
                 '<span style="color: rgb(153,204,0)"><s>головной</s>'
                 'действующей и головной</span></span>.</p>')
         ext = create_critic_extractor(cmap)
         out = ext.extract(html)
-        # Уплощено под внутреннюю (позднюю) задачу; зачёркнутый черновик отброшен.
-        assert "{++GBO-67890: Организация должна быть действующей и головной++}" in out
-        assert "головной++}" in out and "<s>" not in out
+        # Текст внешней задачи — под ней, зачёркнутое — удаление задачи своего цвета.
+        assert ("{++GBO-12345: Организация должна быть ++}{--GBO-67890: головной--}"
+                "{++GBO-67890: действующей и головной++}.") in out
+        assert "<s>" not in out
 
     def test_nesting_recorded_in_report(self):
         cmap = {"#ff99cc": "GBO-12345", "#99cc00": "GBO-67890"}

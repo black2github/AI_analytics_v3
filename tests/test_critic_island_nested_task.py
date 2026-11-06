@@ -5,9 +5,10 @@
 #   <span cc99ff>[<span ff00ff>0..</span>1]</span>
 # Было: внешний элемент получал critic-ins своей задачи, рекурсия шла с непустым стеком, и
 # внутренний цвет маркера не получал — черновик поздней задачи уходил в ПРОМ с внешней, в
-# отчёт конструкция не попадала. Уплощение ТЗ п. 4.5 (один маркер под ВНУТРЕННЕЙ задачей,
-# зачёркнутый черновик отброшен, запись confidence=high) было только в прозе.
+# отчёт конструкция не попадала. Уплощение ТЗ п. 4.5 (запись confidence=high) было только
+# в прозе.
 # Стало: то же в островах — ячейка, цветной потомок пункта и пункт, цветной целиком.
+# С 1.9.18 уплощение идёт по прогонам цвета (tests/test_critic_flatten_runs.py).
 # Тесты парами: срабатывание / НЕсрабатывание; проза — без изменений.
 
 from app.content_extractor import create_critic_extractor
@@ -33,16 +34,22 @@ def _ins(task, text):
     return f'<span class="critic-ins" data-task="{task}">{text}</span>'
 
 
-# (а) вложенный цвет другой задачи в ячейке острова → один маркер внутренней, запись в отчёт
+def _del(task, text):
+    return f'<span class="critic-del" data-task="{task}">{text}</span>'
+
+
+RUNS = f'{_ins(OUTER, "[")}{_ins(INNER, "0..")}{_ins(OUTER, "1]")}'
+
+
+# (а) вложенный цвет другой задачи в ячейке острова → маркеры по прогонам, запись в отчёт
 
 def test_a_island_cell_nested_task_flattened():
     md, report = _run(_island(NESTED))
-    assert _ins(INNER, "[0..1]") in md
-    assert f'data-task="{OUTER}"' not in md
+    assert RUNS in md
     assert report and report[0]["confidence"] == "high"
     assert set(report[0]["tasks"]) == {OUTER, INNER}
-    # ввод внутренней задачи без внешней — текст в ПРОМ; reject-all — ничего от обеих
-    assert "[0..1]" in process_text_until_stable(md, "apply", INNER)[0]
+    # ввод всех задач — текст целиком; reject-all — ничего от обеих
+    assert "[0..1]" in process_text_until_stable(md, "apply", None)[0]
     assert "0.." not in process_text_until_stable(md, "reject", None)[0]
 
 
@@ -64,13 +71,12 @@ def test_c_black_inside_partial_override_unchanged():
     assert report == []
 
 
-# (г) внутренний цвет другой задачи зачёркнут → черновик отброшен, выживший текст — под внутренней
+# (г) внутренний цвет другой задачи зачёркнут → удаление этой задачи, текст внешней — под внешней
 
-def test_d_struck_inner_draft_dropped():
+def test_d_struck_inner_is_deletion_of_its_task():
     struck = (f'<span style="color: {VIOLET};">[<span style="color: {MAGENTA};"><s>0..</s></span>1]</span>')
     md, report = _run(_island(struck))
-    assert _ins(INNER, "[1]") in md
-    assert "0.." not in md
+    assert f'{_ins(OUTER, "[")}{_del(INNER, "0..")}{_ins(OUTER, "1]")}' in md
     assert report and report[0]["confidence"] == "high"
 
 
@@ -86,14 +92,14 @@ def test_d_struck_black_prom_text_kept():
 
 def test_e_island_li_child_nested_task_flattened():
     md, report = _run(_island(f"<ul><li>кратность {NESTED}</li></ul>"))
-    assert f"<li>кратность {_ins(INNER, '[0..1]')}</li>" in md
+    assert f"<li>кратность {RUNS}</li>" in md
     assert report
 
 
 def test_e_island_li_whole_colored_nested_task_flattened():
     li = f'<ul><li style="color: {VIOLET};">[<span style="color: {MAGENTA};">0..</span>1]</li></ul>'
     md, report = _run(_island(li))
-    assert f"<li>{_ins(INNER, '[0..1]')}</li>" in md
+    assert f"<li>{RUNS}</li>" in md
     assert report
 
 
@@ -103,11 +109,11 @@ def test_e_island_li_single_color_not_flattened():
     assert report == []
 
 
-# (е) проза — без изменений: та же конструкция даёт текстовый маркер внутренней задачи
+# (е) проза: та же конструкция даёт те же прогоны текстовыми маркерами
 
 def test_f_prose_unchanged():
     md, report = _run(f"<p>{NESTED}</p>")
-    assert f"{{++{INNER}: [0..1]++}}" in md
+    assert f"{{++{OUTER}: [++}}{{++{INNER}: 0..++}}{{++{OUTER}: 1]++}}" in md
     assert report and report[0]["confidence"] == "high"
 
 
