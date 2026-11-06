@@ -581,6 +581,97 @@ def quoted_literals(source_text: str,
     return out
 
 
+# Машинная запись в тексте ячейки или абзаца — значение примера, как блок кода: правило по форме
+# значения (решение владельца канона 2026-11-06). Запись — {…} или […] с парой «ключ: значение»
+# или перечнем кавычечных значений, целиком внутри одного фрагмента (ячейка, абзац, пункт списка,
+# ячейка pipe-таблицы). Присваивание «ключ="…"» и запись вида тега «<имя атрибут="…">» записью не
+# считаются: замер по выгрузкам показал их в колонках логики (ErrorCode = "BSN003"), это условия.
+# То же значение справа от «=» в виде массива или объекта (status = ["ACTIVE", "LIQUIDATING"]) —
+# присваивание, а не запись: тип значения этого не меняет (решение владельца канона 2026-11-06).
+# Границы строгие (асимметрия ошибок): ключ — латиница или строка в кавычках, в начале скобок или
+# после запятой, поэтому «{Если статус: "Новый"}» и «[Примечание: "Текст"]» — проза; любой
+# дисбаланс скобок во фрагменте — записи нет; ссылка [текст](url) — не запись.
+_MACHINE_BOUNDARY_RE = re.compile(
+    r"</?(?:td|th|tr|p|li|ul|ol|table|tbody|thead)\b[^>]*>|\n[ \t]*\n", re.I)
+_MACHINE_MAX_LEN = 2000
+# «=» перед скобкой (и «==», «!=»): между ними допустимы пробелы, экранирование и разметка
+_MACHINE_ASSIGN_RE = re.compile(r"=(?:\s|\\|\*|_|`|</?[A-Za-z][^>]*>)*$")
+_MACHINE_KEY_RE = re.compile(r"(?:^|,)\s*(?:[A-Za-z_][\w.\-]*|\"[^\"\n]*\"|'[^'\n]*')\s*:")
+_MACHINE_LIST_RE = re.compile(r"^\s*\"[^\"\n]*\"(?:\s*,\s*\"[^\"\n]*\")+\s*$")
+_MACHINE_CLOSERS = {"}": "{", "]": "["}
+
+
+def _balanced_brackets(seg: str) -> List[Tuple[int, int]]:
+    """Пары {…} и […] фрагмента; скобки внутри строк в кавычках не считаются. При любом
+    дисбалансе — пусто: граница записи не определена."""
+    pairs: List[Tuple[int, int]] = []
+    stack: List[Tuple[str, int]] = []
+    in_str = False
+    for i, ch in enumerate(seg):
+        if ch == '"':
+            in_str = not in_str
+        elif in_str:
+            continue
+        elif ch in "{[":
+            stack.append((ch, i))
+        elif ch in _MACHINE_CLOSERS:
+            if not stack or stack[-1][0] != _MACHINE_CLOSERS[ch]:
+                return []
+            pairs.append((stack.pop()[1], i + 1))
+    return [] if stack or in_str else pairs
+
+
+def _machine_spans(seg: str) -> List[Tuple[int, int]]:
+    """Участки машинной записи внутри одного фрагмента. Фрагмент с незакрытым <pre> записи не
+    содержит: граница блока не определена, литералы требуются, как прежде. Значение присваивания
+    вместе со всем вложенным записью не считается."""
+    if len(re.findall(r"<pre\b", seg, re.I)) > len(re.findall(r"</pre\s*>", seg, re.I)):
+        return []
+    pairs = _balanced_brackets(seg)
+    assigned = [(a, b) for a, b in pairs if _MACHINE_ASSIGN_RE.search(seg, 0, a)]
+    spans = []
+    for a, b in pairs:
+        if b - a > _MACHINE_MAX_LEN or seg[b:b + 1] == "(":
+            continue
+        if any(x <= a and b <= y for x, y in assigned):
+            continue
+        inner = seg[a + 1:b - 1].replace("\\", "")
+        if _MACHINE_KEY_RE.search(inner) or _MACHINE_LIST_RE.match(inner):
+            spans.append((a, b))
+    return spans
+
+
+def machine_notation_literals(source_text: str) -> set:
+    """Нормы кавычечных литералов страницы, у которых ВСЕ вхождения — внутри машинной записи
+    (или блока кода): хотя бы одно вхождение в обычном тексте, в кавычках или без, литерал
+    оставляет обязательным."""
+    body = _source_prose(_blank_page_link_labels(_fm_body(source_text)), tables=False)
+    scan = re.sub(r"</?[A-Za-z][^>\n\"]*\"[^>\n]*>", " ", body)
+    cuts = [m.span() for m in _MACHINE_BOUNDARY_RE.finditer(scan)]
+    for line in re.finditer(r"(?m)^[ \t]*\|.*$", scan):
+        cuts.extend((line.start() + m.start(), line.start() + m.end())
+                    for m in re.finditer(r"(?<!\\)\|", line.group(0)))
+    spans: List[Tuple[int, int]] = []
+    pos = 0
+    for start, end in sorted(cuts) + [(len(scan), len(scan))]:
+        if start < pos:
+            continue
+        spans.extend((pos + a, pos + b) for a, b in _machine_spans(scan[pos:start]))
+        pos = end
+    if not spans:
+        return set()
+    found = set()
+    for m in _QUOTED_RE.finditer(scan):
+        if any(a <= m.start() and m.end() <= b for a, b in spans):
+            found.add(_norm_cell(m.group(1).strip()))
+    chars = list(scan)
+    for a, b in spans:
+        chars[a:b] = " " * (b - a)
+    rest = _norm_cell("".join(chars))
+    return {n for n in found
+            if n and not re.search(r"(?<!\w)" + re.escape(n) + r"(?!\w)", rest)}
+
+
 def check_quoted_literals(card_text: str,
                           source_text: str,
                           sibling_text: Optional[str] = None,
@@ -683,6 +774,19 @@ def check_quoted_literals(card_text: str,
                 f"{len(ex_lost)} из {len(code_only)} — пример не норма, проверить "
                 "приёмкой" + (_EXTINT_EXAMPLE_NOTE if _is_extint(card_text) else "")
                 + "; примеры: " + "; ".join(repr(v[:50]) for v in ex_lost[:4]))
+    # тот же класс для машинной записи в тексте ячейки или абзаца (см. machine_notation_literals):
+    # снятие не молчаливое — в строке ⚠ перечислен каждый литерал
+    if lost:
+        machine = machine_notation_literals(source_text)
+        m_lost = [v for v in lost if _norm_cell(v) in machine]
+        if m_lost:
+            lost = [v for v in lost if v not in m_lost]
+            report.append(
+                f"⚠ примеры: машинная запись источника (объект или массив): "
+                f"значения отсутствуют {len(m_lost)} — пример не норма, проверить приёмкой"
+                + (_EXTINT_EXAMPLE_NOTE if _is_extint(card_text) else "")
+                + "; литералы: " + "; ".join(repr(v[:50]) for v in m_lost))
+            report.append(f"i кавычечные литералы: по правилу машинной записи снято {len(m_lost)}")
     if lost:
         report.append(
             f"кавычечные литералы источника: в карточке отсутствуют "

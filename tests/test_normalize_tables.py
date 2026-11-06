@@ -5885,11 +5885,20 @@ class TestExamplesClass:
     def test_inline_code_in_paragraph_is_prose(self):
         # НЕсрабатывание: инлайн-код в обратных кавычках внутри <p> — не блок, литерал ✗
         from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
-        src = self.HTML.replace('<pre>{ "clientIds"', '<p>`{ "clientIds"').replace(
-            '} }</pre>', '} }`</p>')
+        src = self.HTML.replace('<pre>{ "clientIds": { "eqin": "2ba504e0-aaaa" } }</pre>',
+                                '<p>Идентификатор `"2ba504e0-aaaa"`</p>')
         rep, ok = check_quoted_literals(self._card(), src)
         assert not ok and any("✗" in r and "2ba504e0-aaaa" in r for r in rep), rep
         assert not any(r.startswith("⚠ примеры:") for r in rep), rep
+
+    def test_inline_machine_notation_in_paragraph_is_example(self):
+        # машинная запись в инлайн-коде — класс «примеры», как блок кода (решение 2026-11-06)
+        from app.scripts.CI.kitcheck.checks.card_source import check_quoted_literals
+        src = self.HTML.replace('<pre>{ "clientIds"', '<p>`{ "clientIds"').replace(
+            '} }</pre>', '} }`</p>')
+        rep, ok = check_quoted_literals(self._card(), src)
+        assert ok, rep
+        assert any(r.startswith("⚠ примеры: машинная запись") and "2ba504e0-aaaa" in r for r in rep), rep
 
     def test_unclosed_pre_is_prose(self):
         # асимметрия ошибок: незакрытый <pre> — проза, литерал требуется

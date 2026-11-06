@@ -77,11 +77,20 @@ def test_table_code_tag():
 
 
 def test_literal_in_cell_pre_is_value_not_example():
-    # литерал ячейки — значение и при <pre>, и при ```: потеря ✗, а не ⚠ класса «примеры»
+    # текстовый литерал ячейки — значение и при <pre>, и при ```: потеря ✗, а не ⚠ класса «примеры»
+    text = 'Текст "Значение ячейки" обычный'
+    for src in (source(f"**DateFrom** <pre>{text}</pre>"), source(f"**DateFrom** ``` {text} ```")):
+        rep, ok = check_quoted_literals(CARD_WITHOUT, src)
+        assert not ok and any("✗" in r and "'Значение ячейки'" in r for r in rep), rep
+        assert not any(r.startswith("⚠ примеры:") for r in rep), rep
+
+
+def test_machine_notation_in_cell_same_class_for_both_exports():
+    # машинная запись в ячейке — класс «примеры» и при <pre>, и при ``` (правило 2026-11-06)
     for src in (SRC_PRE, SRC_FENCE):
         rep, ok = check_quoted_literals(CARD_WITHOUT, src)
-        assert not ok and any("✗" in r and "'filter'" in r for r in rep), rep
-        assert not any(r.startswith("⚠ примеры:") for r in rep), rep
+        assert ok, rep
+        assert any(r.startswith("⚠ примеры: машинная запись") and "'filter'" in r for r in rep), rep
 
 
 def test_literal_in_cell_pre_found():
