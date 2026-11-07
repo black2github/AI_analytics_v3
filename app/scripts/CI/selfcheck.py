@@ -193,6 +193,12 @@ def _empty_source_note(src: Path) -> Tuple[Optional[str], bool]:
             "открытый вопрос акцептующему"), False
 
 
+# держатели страницы-источника: в группе карточек одной страницы главной идёт держатель,
+# а не карточка вызова (замечание ОНБ-В 66, 2026-11-07)
+_PAGE_HOLDER_TYPES = frozenset({"process", "function", "screen-form", "notification",
+                                "print-form", "control"})
+
+
 def _safe(fn, *args) -> Tuple[List[str], bool]:
     """Изоляция краша (правило 1): исключение = брак проверяемой
     единицы, прогон продолжается."""
@@ -209,7 +215,8 @@ def _run(files: List[Path], src: Optional[Path],
          amnesty: Optional[List[Path]] = None,
          allow_sibling_docs: bool = False,
          without_sources: bool = False,
-         inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
+         inventory: Optional[Path] = None,
+         group_extra: Optional[List[Tuple[Path, Path]]] = None) -> Tuple[List[str], bool]:
     return _safe(lambda: run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
@@ -217,7 +224,8 @@ def _run(files: List[Path], src: Optional[Path],
                                       kit_summary=True,
                                       allow_sibling_docs=allow_sibling_docs,
                                       without_sources=without_sources,
-                                      inventory=inventory))
+                                      inventory=inventory,
+                                      group_extra_sources=group_extra))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -350,6 +358,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     unsourced: List[Tuple[Path, str]] = []  # без --sources: карточка -> page_id
     extra_pids: Dict[Path, int] = {}   # карточка -> число доп. page_ids
     extra_page_ids: Dict[Path, List[str]] = {}  # карточка -> доп. page_ids
+    card_types: Dict[Path, str] = {}  # карточка группы -> type шапки
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
@@ -475,6 +484,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
                           "в выгрузке — reverse-карточка без сверки, брак" + hint)
         else:
             groups.setdefault(pids[0], []).append(p)
+            card_types[p] = str(fm.get("type") or "")
             extra_pids[p] = len(pids) - 1
             extra_page_ids[p] = list(pids[1:])
             if len(pids) > 1:
@@ -552,13 +562,33 @@ def _run_impl(docs: Path, sources: Optional[Path],
             files = [f for f in files if f not in misordered]
             if not files:
                 continue
+        # главная карточка группы — держатель страницы, не карточка вызова (замечание ОНБ-В 66,
+        # 2026-11-07): по алфавиту путей contract-call/… шла раньше process/…, function/…, и
+        # сторожа держателя (маркеры и тела шагов) на группе молча не выполнялись. Порядок меняется
+        # только когда первой стоит карточка вызова, а в группе есть держатель; среди держателей
+        # и среди прочих — прежний порядок путей; README-реестр (К-20 выше) не затрагивается
+        path_first = files[0]
+        if card_types.get(files[0]) == "contract-call" and any(
+                card_types.get(f) in _PAGE_HOLDER_TYPES for f in files):
+            files = ([f for f in files if card_types.get(f) in _PAGE_HOLDER_TYPES]
+                     + [f for f in files if card_types.get(f) not in _PAGE_HOLDER_TYPES])
         # FB-19 КК: дословные абзацы дочерних страниц карточки — амнистия
         # длинных строк по всем её page_ids (файлы выгрузки доп. страниц)
         amnesty = [idx[x] for x in extra_page_ids.get(files[0], [])
                    if x in idx and idx[x] != src]
+        # доп. страницы НЕглавных файлов группы (замечание ОНБ-В 72, 2026-11-07): раньше не
+        # сверялись вовсе; теперь — таблицы и кавычечные литералы, как у главной. Сторож title
+        # и амнистия длинных строк — только по доп. страницам главной
+        group_extra: List[Tuple[Path, Path]] = []  # (страница, карточка-владелец)
+        for f in files[1:]:
+            for x in extra_page_ids.get(f, []):
+                if x in idx and idx[x] != src and idx[x] not in amnesty \
+                        and all(idx[x] != g for g, _ in group_extra):
+                    group_extra.append((idx[x], f))
         rep, ok = _run(files, src, docs, soft_markers=not strict,
                        amnesty=amnesty or None,
-                       allow_sibling_docs=allow_sibling_docs, inventory=inventory)
+                       allow_sibling_docs=allow_sibling_docs, inventory=inventory,
+                       group_extra=group_extra or None)
         if any(is_examples_signal(ln) for ln in rep):
             ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
@@ -609,6 +639,10 @@ def _run_impl(docs: Path, sources: Optional[Path],
         all_ok = all_ok and ok
         names = ", ".join(str(f.relative_to(docs)) for f in files)
         report.append(f"{mark} {names} ← {src.name}")
+        if files[0] != path_first:
+            report.append(f"   i главная карточка группы: {files[0].relative_to(docs)} "
+                          f"(тип {card_types.get(files[0])}; по порядку путей была бы "
+                          f"{path_first.relative_to(docs)})")
         if empty_note:
             report.append(f"   {empty_note}")
         if not ok:

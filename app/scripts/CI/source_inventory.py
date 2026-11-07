@@ -157,6 +157,57 @@ def scan_attachments(sources: Path):
     return rows, n_img
 
 
+# ссылки на изображения в теле страницы (замечание ОНБ-В 63, 2026-11-07): выгрузка без файлов
+# картинок давала «изображений 0» при шести картинках на странице — планировщик не закладывал
+# долги «правило на изображении». Признак — разметка: ![…](адрес), <img src=…>, <ac:image> с
+# ri:filename / ri:value. Ссылка с файлом — адрес разрешается от каталога страницы или имя
+# найдено в её img/; внешний адрес (http/data) файла в выгрузке не имеет
+_IMG_MD_RE = re.compile(r"!\[[^\]]*\]\(\s*<?([^)\s>]+)")
+_IMG_HTML_RE = re.compile(r"<img\b[^>]*?\bsrc\s*=\s*[\"']([^\"']+)[\"']", re.I)
+_IMG_AC_RE = re.compile(
+    r"<ac:image\b.*?(?:ri:filename\s*=\s*[\"']([^\"']+)[\"']"
+    r"|ri:value\s*=\s*[\"']([^\"']+)[\"']).*?</ac:image>", re.I | re.S)
+
+
+def page_images(page: Path, text: str) -> Tuple[int, int, int]:
+    """(ссылок на изображения в теле, найдено файлов, ссылок без файла) одной страницы."""
+    from urllib.parse import unquote
+    targets = (_IMG_MD_RE.findall(text) + _IMG_HTML_RE.findall(text)
+               + [a or b for a, b in _IMG_AC_RE.findall(text)])
+    found: set = set()
+    missing = 0
+    for t in targets:
+        t = unquote(t.split("?", 1)[0].split("#", 1)[0]).strip()
+        if not t or re.match(r"(?i)^(?:https?:|data:)", t):
+            missing += 1
+            continue
+        hit = next((c for c in (page.parent / t, page.parent / "img" / Path(t).name)
+                    if c.is_file()), None)
+        if hit is None:
+            missing += 1
+        else:
+            found.add(hit.resolve())
+    return len(targets), len(found), missing
+
+
+def scan_page_images(sources: Path) -> List[Dict[str, object]]:
+    """Страницы со ссылками на изображения: [{page_id, title, ссылок, файлов, без файла}]."""
+    out: List[Dict[str, object]] = []
+    for p in sorted(sources.rglob("*.md")):
+        if p.name.lower() == "index.md":
+            continue
+        text = p.read_text(encoding="utf-8", errors="replace")
+        refs, files, missing = page_images(p, text)
+        if not refs:
+            continue
+        head = text[:4000]
+        pid = _PID_RE.search(head)
+        title, _ = _full_title(head)
+        out.append({"page_id": pid.group(1) if pid else "—", "title": title or p.stem,
+                    "refs": refs, "files": files, "missing": missing})
+    return out
+
+
 def _dupes(rows: List[Dict[str, str]], col: str) -> List[str]:
     seen: Dict[str, int] = {}
     for r in rows:
@@ -216,6 +267,21 @@ def build(sources: Path) -> List[str]:
                "таблицу не входят)"
                + (f"; без страницы-владельца {no_owner}"
                   if no_owner else ""))
+    # изображения в теле страниц — три числа; страницы со ссылками без файла — перечнем:
+    # норма для них уже есть (описание словами по подтверждению, долг «правило на
+    # изображении»), опись только делает пробел видимым планировщику
+    imgs = scan_page_images(sources)
+    n_refs = sum(int(r["refs"]) for r in imgs)
+    n_files = sum(int(r["files"]) for r in imgs)
+    no_file = [r for r in imgs if int(r["missing"])]
+    out.append(f"ИЗОБРАЖЕНИЯ В ТЕЛЕ СТРАНИЦ: ссылок {n_refs}, файлов {n_files}, ссылок без "
+               f"файла {sum(int(r['missing']) for r in no_file)}; страниц со ссылками "
+               f"{len(imgs)}, из них со ссылками без файла {len(no_file)}")
+    for r in no_file:
+        out.append(f"i ссылки на изображения без файла: {r['page_id']} «{_cell(r['title'])}» — "
+                   f"ссылок {r['refs']}, файлов {r['files']}, без файла {r['missing']} "
+                   "(картинка без файла: описание словами по подтверждению, долг «правило на "
+                   "изображении»)")
     return out
 
 
@@ -414,8 +480,9 @@ def main() -> int:
         lines = build(args.sources)
         args.out.parent.mkdir(parents=True, exist_ok=True)
         args.out.write_text("\n".join(lines) + "\n", encoding="utf-8")
-        print(lines[-1] if not lines[-1].startswith("⚠") else
-              [l for l in lines if l.startswith("ИТОГО")][0])
+        for ln in lines:
+            if ln.startswith(("ИТОГО ПРИЛОЖЕНИЙ", "ИЗОБРАЖЕНИЯ В ТЕЛЕ СТРАНИЦ")):
+                print(ln)
         print(f"скелет: {args.out}")
     if args.check is not None:
         report, ok = check(args.sources, args.check)

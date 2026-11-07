@@ -540,6 +540,16 @@ def normalize_file(md_path: Path, profile: Optional[Profile],
                 ok = False
                 for s in col["samples"]:
                     report.append(f"      пример брака: {s[:80]!r}")
+            # объединённая ячейка вне словаря в колонке обязательности — не данные и не
+            # ярлык блока: в подсчёт не вошла, строка в выходе сохранена (замечание ОНБ-В 69)
+            for s in col.get("out_of_profile") or []:
+                report.append(f"   ⚠ строка вне профиля таблицы: «{_plain(s).strip()[:80]}»")
+            labels = col.get("struct_labels") or []
+            if labels:
+                report.append(
+                    f"   i строк-блоков (ярлык ряда, не значение обязательности): {len(labels)} — "
+                    + "; ".join(f"«{_plain(s).strip()[:50]}»" for s in labels[:4])
+                    + ("; …" if len(labels) > 4 else ""))
             if col.get("suspicious_count"):
                 # Не отказ нормализации: содержимое лежит так У АВТОРА источника.
                 # Разнесение (название дословно / пояснения в правила) — работа

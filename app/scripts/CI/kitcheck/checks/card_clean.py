@@ -564,6 +564,19 @@ def _md_link_texts(text: str) -> str:
 _SRC_FRONTMATTER_RE = re.compile(
     r"\A﻿?---[ \t]*\r?\n.*?^---[ \t]*\r?$\n?", re.S | re.M)
 
+# границы ячеек и блоков HTML источника (замечание ОНБ-В 67, 2026-11-07): закрывающие
+# </td> </th> </tr> </li> </p> и <br> в любой записи — перевод строки, прочие теги —
+# пробел. Иначе тег в конце ячейки брал ядро имени из следующей ячейки и игла не
+# находилась в карточке при дословном переносе (ложный ✗ дефейса). Признак — разметка.
+_SRC_BLOCK_END_RE = re.compile(r"</(?:td|th|tr|li|p)\s*>|<br\s*/?>", re.I)
+# тег упоминания в источнике: между тегом и именем — пробелы без перевода строки, чтобы
+# граница ячейки/блока не склеивала тег с текстом следующей. Замер 2026-11-07 по шести
+# выгрузкам: в markdown без HTML перевод строки между тегом и именем не встречается
+# ни разу, кроме четырёх склеек через ячейки HTML-таблиц ЦР. Карточный сторож упоминаний
+# (check_target_mentions) остаётся на _MENTION_TAG_RE.
+_SRC_MENTION_TAG_RE = re.compile(
+    r"\[(?=[^\]\n]*[А-ЯЁA-Z])[А-ЯЁA-Z0-9_]{2,20}\][^\S\n]+(?=[«\"(А-ЯЁA-Z])")
+
 
 def check_source_tag_mentions(card_text: str, src_text: str,
                               docs_root: Optional[Path] = None
@@ -584,9 +597,10 @@ def check_source_tag_mentions(card_text: str, src_text: str,
     упоминание с хвостом «}}'» — у имён до трёх слов игла несла мусор
     и предупреждение было неустранимым. Собственное имя страницы
     сторожит check_title (дословный title)."""
-    plain = re.sub(r"<[^>]+>", " ", _SRC_FRONTMATTER_RE.sub("", src_text, 1))
+    plain = re.sub(r"<[^>]+>", " ", _SRC_BLOCK_END_RE.sub(
+        "\n", _SRC_FRONTMATTER_RE.sub("", src_text, 1)))
     mentions: Dict[str, str] = {}  # игла (норм.) -> «[ТЕГ] ядро» для отчёта
-    for m in _MENTION_TAG_RE.finditer(plain):
+    for m in _SRC_MENTION_TAG_RE.finditer(plain):
         tail = plain[m.end():m.end() + 120]
         core = _mention_core(tail)
         if not core:

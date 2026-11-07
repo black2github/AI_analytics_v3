@@ -1023,9 +1023,19 @@ def check_title(card_text: str, source_text: str,
     is_base = re.search(r"^type:\s*external-integration\s*$",
                         card_text[:600], re.M) is not None
     stripped = _CONTOUR_PREFIX_RE.sub("", _COPY_PREFIX_RE.sub("", src))
+    # карточка вызова (решение владельца 2026-11-07, замечание ОНБ-В 65): несколько вызовов с
+    # одной страницы — title = дословный title страницы + « — <имя вызова>». Признак по
+    # форме: title карточки начинается с «<title страницы> — » и дальше непустой хвост; хвост
+    # не сверяется, но виден в строке отчёта. Резать по первому « — » нельзя: тире бывает в
+    # самом title страницы
+    is_call = re.search(r"^type:\s*contract-call\s*$", _fm_head(card_text), re.M) is not None
+    call_tail = (card[len(src) + 3:].strip()
+                 if is_call and card is not None and card.startswith(src + " — ") else "")
     main_line = None
     if card == src:
         main_line = f"title: дословно перенесён ({src!r}) ✓"
+    elif call_tail:
+        main_line = f"title: дословно перенесён ({src!r}) ✓, имя вызова: {call_tail!r}"
     elif is_base and card is not None and card == stripped and stripped != src:
         marker = src[:len(src) - len(stripped)].strip()
         main_line = (f"title: перенесён без маркера контура {marker!r} — "

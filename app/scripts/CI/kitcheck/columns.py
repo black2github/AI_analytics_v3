@@ -55,6 +55,12 @@ def _looks_like_obligation(v: str) -> bool:
         # условная обязательность авторским текстом («Да, если не
         # заполнен Адрес пребывания» — КК_ВК, ISS-01 2026-08-27)
         return True
+    # словарь колонки «Обяз.» — шаблон screen-form, раздел «Реестр полей»: `Да` / `Нет` /
+    # «условно — <ссылка [CTL-NNN …](…)>» (замечание ОНБ-В 68, 2026-11-07). Принимается
+    # «условно» (регистр первой буквы не важен) без хвоста или с хвостом « — <что угодно>»;
+    # наличие и форму ссылки в хвосте сторож колонок не проверяет — это содержание
+    if re.match(r"^УСЛОВНО(?:\s+—\s+\S.*)?$", u, re.S):
+        return True
     return bool(re.match(r"^(ДА|НЕТ)\s*\((ВХОД|ИСХОД)\)$", u))
 
 
@@ -110,6 +116,30 @@ _STRUCT_LABEL_RE = re.compile(
 _STRUCT_LABEL_BARE_RE = re.compile(
     r'^(раздел|блок|вкладка|секция)\s+[\w«»"-]+(?:\s+[\w«»"-]+)?\s*$',
     re.I)
+# Ярлык строки-блока любой длины (замечание ОНБ-В 69, 2026-11-07: «Блок выбора типа
+# счёта» — четыре слова — не признавался, таблица целиком уходила в отказ). Признак по
+# форме, без счёта слов: первое слово из ключевых, в значении нет знаков препинания
+# (, . : ; ! ?) — фраза «Блок отображается, если…» остаётся данными; сама ячейка
+# объединена (значение протянуто в ≥2 ячейки строки) или единственная непустая в строке.
+_STRUCT_KW_RE = re.compile(r"^(раздел|блок|вкладка|секция)\s+\S", re.I)
+_STRUCT_PUNCT_RE = re.compile(r"[,.:;!?]")
+
+
+def _merged_cell(row: List[str], i: int) -> bool:
+    """Ячейка i — объединённая: её значение протянуто ещё хотя бы в одну ячейку строки
+    (след colspan), либо остальные ячейки строки пусты."""
+    v = _norm_cell(row[i])
+    if not v:
+        return False
+    same = sum(1 for c in row if _norm_cell(c) == v)
+    return same >= 2 or all(not _norm_cell(c) for j, c in enumerate(row) if j != i)
+
+
+def _struct_label_row(row: List[str], i: int) -> bool:
+    """Строка-блок таблицы полей источника: ярлык по форме в объединённой ячейке."""
+    v = _plain(row[i]).strip()
+    return (bool(_STRUCT_KW_RE.match(v)) and not _STRUCT_PUNCT_RE.search(v)
+            and _merged_cell(row, i))
 
 
 def _is_cardinality_title(low: str) -> bool:
@@ -308,8 +338,35 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         # формула пробела источника в карточке валидна в любой роли: шаблоны канона
         # заполняют ею пробел (module-interface, 2026-11-04); при нормализации ИСТОЧНИКА
         # послабления нет — там формулы быть не должно
-        bad = [r[i] for r in data_rows if i < len(r) and not check(r[i])
-               and (source_mode or not _is_silent_formula(r[i]))]
+        col_rows = data_rows
+        out_of_profile: List[str] = []
+        struct_labels: List[str] = []
+        if role == "обязат" and source_mode:
+            # ярлыки рядов, принятые по словам «раздел/блок/вкладка/секция/…» (объявленная
+            # словарная эвристика, реестр в README прибора) — видны отчёту нормализатора числом
+            # и перечнем, а не снимаются молча
+            base_dict = (_looks_like_obligation_pair if "уник" in low
+                         else _looks_like_obligation)
+            struct_labels = [
+                r[i] for r in data_rows if i < len(r) and not base_dict(r[i])
+                and (_STRUCT_LABEL_RE.match(_plain(r[i]).strip())
+                     or _STRUCT_LABEL_BARE_RE.match(_plain(r[i]).strip())
+                     or _struct_label_row(r, i))]
+            # строка-блок любой длины — ярлык ряда (валидна); прочая объединённая ячейка
+            # вне словаря — «строка вне профиля таблицы»: в подсчёт не входит, видна
+            # строкой ⚠, сверка таблицы продолжается (замечание ОНБ-В 69): объединённая
+            # через колонки ячейка не может свидетельствовать о съехавшем профиле, а отказ
+            # по таблице целиком — молчаливая потеря копии
+            col_rows = []
+            for r in data_rows:
+                if i < len(r) and not check(r[i]) and not _struct_label_row(r, i) \
+                        and _merged_cell(r, i):
+                    out_of_profile.append(r[i])
+                    continue
+                col_rows.append(r)
+        bad = [r[i] for r in col_rows if i < len(r) and not check(r[i])
+               and (source_mode or not _is_silent_formula(r[i]))
+               and not (role == "обязат" and source_mode and _struct_label_row(r, i))]
         wl =(source_literals or {}).get(role) or set()
 
         def _in_wl(v: str, _wl=wl) -> bool:
@@ -321,7 +378,7 @@ def validate_columns(headers: List[str], rows: List[List[str]],
 
         pardoned = [v for v in bad if _in_wl(v)]
         bad = [v for v in bad if not _in_wl(v)]
-        total = len(data_rows) or 1
+        total = len(col_rows) or 1
         suspicious = ([r[i] for r in data_rows if i < len(r) and r[i].strip()
                        and _title_suspicious(r[i])]
                       if role == "название" else [])
@@ -339,8 +396,10 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         suspicious = [v for v in suspicious if v not in susp_pardoned]
         report.append({
             "column": title, "role": role, "index": i,
-            "bad": len(bad), "total": len(data_rows),
-            "valid_pct": round(100 * (len(data_rows) - len(bad)) / total, 1),
+            "bad": len(bad), "total": len(col_rows),
+            "valid_pct": round(100 * (len(col_rows) - len(bad)) / total, 1),
+            "out_of_profile": out_of_profile,
+            "struct_labels": struct_labels,
             "suspicious": suspicious[:5], "suspicious_count": len(suspicious),
             "suspicious_pardoned": susp_pardoned[:3],
             "suspicious_pardoned_count": len(susp_pardoned),

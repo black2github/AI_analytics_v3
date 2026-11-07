@@ -208,7 +208,9 @@ def run_check(files: List[Path], source_path: Optional[Path],
               kit_summary: bool = False,
               allow_sibling_docs: bool = False,
               without_sources: bool = False,
-              inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
+              inventory: Optional[Path] = None,
+              group_extra_sources: Optional[List[Tuple[Path, Path]]] = None
+              ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
     монтаж проверок расходится). Первая карточка — основная (title,
@@ -226,7 +228,12 @@ def run_check(files: List[Path], source_path: Optional[Path],
 
     inventory — опись выгрузки (inventory.md) явно: гейт переноса гоняет прибор на
     временной копии docs/, где описи нет; без параметра опись ищется от docs_root
-    (kitcheck.fs.find_kit_file)."""
+    (kitcheck.fs.find_kit_file).
+
+    group_extra_sources — [(доп. страница, файл-владелец)] НЕглавных файлов группы (замечание
+    ОНБ-В 72, 2026-11-07): по ним сверяются только таблицы и кавычечные литералы, как по доп.
+    страницам главной; освобождение тонкой карточки вызова — по шапке владельца; сторож title
+    и амнистия длинных строк их не видят (title неглавной карточки — не наименование группы)."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -293,7 +300,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                 continue
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -322,6 +329,7 @@ class _SourceCtx:
     src_text: object
     allow_sibling_docs: object
     inventory: object = None
+    group_extra_sources: object = None
 
 
 
@@ -595,6 +603,21 @@ def _extra_page_line(line: str, tag: str) -> str:
     return f"{line} ({tag})"
 
 
+def _table_literal_extras(fx: "_SourceCtx") -> List[Tuple[Path, Optional[Path]]]:
+    """Доп. страницы для сверки таблиц и кавычечных литералов: [(страница, карточка-владелец)].
+    У доп. страниц главной владелец — None (главная), у доп. страниц неглавных файлов группы —
+    их файл. Без повторов, только найденные файлы выгрузки."""
+    out: List[Tuple[Path, Optional[Path]]] = []
+    seen: set = set()
+    items = ([(p, None) for p in (fx.amnesty_sources or [])]
+             + [(p, o) for p, o in (fx.group_extra_sources or [])])
+    for p, owner in items:
+        if p not in seen and p.is_file():
+            seen.add(p)
+            out.append((p, owner))
+    return out
+
+
 def _page_id_of(source_text: str) -> str:
     """page_id страницы выгрузки (confluence_page_id шапки) или пусто."""
     m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)", _fm_head(source_text), re.M)
@@ -626,6 +649,21 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         thin_call = (thin_call_home(card_text, debts_text)
                      if m_type is not None and m_type.group(1) == "contract-call"
                      else None)
+
+        def _owner_thin(owner: Optional[Path]):
+            # освобождение тонкой карточки вызова — свойство карточки-владельца доп. страницы:
+            # у доп. страниц неглавного файла группы — по его шапке, не по главной (замечание
+            # ОНБ-В 66/72: карточка вызова, ставшая неглавной, не теряет освобождения)
+            if owner is None:
+                return thin_call
+            o_text = _fs.read_text(owner, encoding="utf-8", errors="replace")
+            if re.search(r"^type:\s*contract-call\s*$", _fm_head(o_text), re.M):
+                return thin_call_home(o_text, debts_text)
+            return None
+
+        def _owner_tag(p: Path, p_text: str, owner: Optional[Path]) -> str:
+            tag = _extra_page_tag(p, p_text)
+            return tag if owner is None else f"{tag} карточки {owner.name}"
         # карточки вызова, на которые ссылается держатель шагов: таблица шага вынесена в них
         # (решение владельца канона 2026-11-02) — имена параметров ищутся и там
         linked_calls = (_linked_call_cards(card_text, main_file)
@@ -638,21 +676,20 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             page_artifacts=_page_cards(docs_root, _page_id_of(src_text), files) or None)
         # сводные типы (глоссарий, видения) — как у литералов: доп. страницы они обобщают, а не
         # переносят; число несверенных страниц видно приёмке
-        extra_sources = [p for p in (fx.amnesty_sources or []) if p.is_file()]
+        extra_sources = _table_literal_extras(fx)
         if m_type is not None and m_type.group(1) in _NO_LITERALS_TYPES and extra_sources:
             src_report = src_report + [
                 f"i таблицы источника: доп. страниц ×{len(extra_sources)} не сверялось: сверка "
                 f"доп. страниц не применяется к {_NO_LITERALS_TYPES[m_type.group(1)]}"]
             extra_sources = []
-        for p in extra_sources:
-            if p.is_file():
-                p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
-                p_rep, p_ok = check_source_tables(
-                    combined, p_text, thin_call=thin_call, linked_calls=linked_calls,
-                    page_artifacts=_page_cards(docs_root, _page_id_of(p_text), files) or None)
-                tag = _extra_page_tag(p, p_text)
-                src_report = src_report + [_extra_table_line(ln, tag) for ln in p_rep]
-                src_ok = src_ok and p_ok
+        for p, owner in extra_sources:
+            p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
+            p_rep, p_ok = check_source_tables(
+                combined, p_text, thin_call=_owner_thin(owner), linked_calls=linked_calls,
+                page_artifacts=_page_cards(docs_root, _page_id_of(p_text), files) or None)
+            tag = _owner_tag(p, p_text, owner)
+            src_report = src_report + [_extra_table_line(ln, tag) for ln in p_rep]
+            src_ok = src_ok and p_ok
         # волна 9 ОНБ-В (ЗК-04): таблицы без дословных значений, изображения без
         # следа, перечень таблиц источника — только ⚠ / i
         readme = main_file.parent / "README.md" if main_file is not None else None
@@ -817,9 +854,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 and any(re.search(r"^type:\s*contract-call\s*$",
                                   _fm_head(_fs.read_text(f, encoding="utf-8", errors="replace")),
                                   re.M) for f in files)
-            for p in (fx.amnesty_sources or []):
-                if not p.is_file():
-                    continue
+            # доп. страницы неглавных файлов группы — так же (замечание ОНБ-В 72, 2026-11-07)
+            for p, owner in _table_literal_extras(fx):
                 p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
                 # карточки самой доп. страницы — к карточкам главной, как было
                 p_art = list(page_art or [])
@@ -827,9 +863,9 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                                                  skip_dir=main_file.parent) if a not in p_art]
                 p_rep, p_ok = check_quoted_literals(
                     combined, p_text, sibling_text=sib_txt, page_artifacts=p_art or None,
-                    thin_call=thin_call,
+                    thin_call=_owner_thin(owner),
                     steps_text_free=call_group and _FUNCTION_PAGE_RE.search(p_text) is not None)
-                tag = _extra_page_tag(p, p_text)
+                tag = _owner_tag(p, p_text, owner)
                 ql_report += [_extra_page_line(ln, tag) for ln in p_rep]
                 ql_ok = ql_ok and p_ok
         report.extend(src_report)
