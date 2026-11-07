@@ -79,7 +79,7 @@ try:
     from kitcheck.checks.catalog_api import (  # noqa: E402,F401 — этап 3
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from kitcheck.checks.content import (  # noqa: E402,F401 — этап 3
-        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
+        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_outside_refs, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
     from kitcheck.checks.controls import (  # noqa: E402,F401 — этап 3
         _GRP_ROW_C_RE, _GRP_ROW_RE, _OP_MARK_RE, _QUOTE_TOKEN_RE, _ST_MARK_RE, _UI_MARK_RE, check_group_contours, check_similar_group_points)
     from kitcheck.checks.ids_domain import (  # noqa: E402,F401 — этап 3
@@ -107,7 +107,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.catalog_api import (  # type: ignore  # noqa: E402,F401
         _API_SECTION_RE, _API_SPEC_RULE, _DEFAULT_BRANCHES, _LINK_REF_RE, _REPO_HOST, _REPO_TREE_RE, _repo_format_issue, _service_codes, check_api_matrix_refs, check_no_api_in_bundle, check_service_catalog)
     from .kitcheck.checks.content import (  # type: ignore  # noqa: E402,F401
-        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
+        _FM_BY_TYPE, _FM_COMMON, _GAP_MARK_RE, _GAP_QUOTED_RE, _H1_QUOTED_RE, _KNOWN_SECTIONS, _REQ_SECTIONS, _SECTION_ID_RE, _SILENT_FORMULA, _STUB_MARK, _h2_keys, _has_section, _norm_title, _section_key, _service_names, check_h1_service, check_outside_refs, check_required_sections, check_source_silent, check_title_uniqueness, format_frontmatter_schema, frontmatter_schema_issues)
     from .kitcheck.checks.controls import (  # type: ignore  # noqa: E402,F401
         _GRP_ROW_C_RE, _GRP_ROW_RE, _OP_MARK_RE, _QUOTE_TOKEN_RE, _ST_MARK_RE, _UI_MARK_RE, check_group_contours, check_similar_group_points)
     from .kitcheck.checks.ids_domain import (  # type: ignore  # noqa: E402,F401
@@ -319,7 +319,9 @@ def _run_impl(docs: Path, sources: Optional[Path],
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
     report: List[str] = []
-    counts = {"✓": 0, "✗": 0, "⚠": 0}
+    # «i» — файлы переписи, где отсутствие сверки — норма (навигационный README без
+    # frontmatter); в ИТОГО отдельным числом, только когда такие есть
+    counts = {"✓": 0, "✗": 0, "⚠": 0, "i": 0}
     # класс «примеры» (решение 2026-11-01): файлы с предупреждением о содержимом примера —
     # отдельный счётчик ИТОГО, вердикт не меняет
     ex_files: set = set()
@@ -417,15 +419,17 @@ def _run_impl(docs: Path, sources: Optional[Path],
                           "закрыт или файл нечитаем) — брак")
             continue
         if not fm:
-            counts["⚠"] += 1
-            # Р-9 (2026-08-22): навигационные README освобождены от
-            # требования frontmatter — в эталоне их 5, техдолг осознан
-            # и будет закрыт по всем сервисам одной волной. Файл остаётся
-            # в переписи (правило 2: молчаливых пропусков нет).
+            # README группы экрана и навигационные README без frontmatter —
+            # норма (conventions §5: ID у главной карточки). Уровень i, не ⚠:
+            # норма не должна шуметь (замечание ОНБ-В 71,
+            # 2026-11-07). Файл остаётся в переписи и в «файлов» ИТОГО
+            # отдельным счётчиком i (правило 2: молчаливых пропусков нет).
             if p.name.lower() == "readme.md":
-                report.append(f"⚠ {rel}: навигационный README без "
-                              "frontmatter — вне сверки (освобождён, Р-9)")
+                counts["i"] += 1
+                report.append(f"i {rel}: навигационный README без "
+                              "frontmatter — норма (conventions §5), вне сверки")
             else:
+                counts["⚠"] += 1
                 report.append(f"⚠ {rel}: без frontmatter — вне сверки "
                               "(для документов комплекта frontmatter "
                               "обязателен)")
@@ -665,7 +669,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
     total = sum(counts.values())
     report.append(f"ИТОГО: файлов {total} — ✓ {counts['✓']}, "
                   f"✗ {counts['✗']}, ⚠ {counts['⚠']}, "
-                  f"⚠ примеры: {len(ex_files) + n_ex_kit}; вердикт: "
+                  + (f"i {counts['i']}, " if counts["i"] else "")
+                  + f"⚠ примеры: {len(ex_files) + n_ex_kit}; вердикт: "
                   + ("OK" if all_ok else "БРАК"))
     return report, all_ok
 
@@ -1102,6 +1107,12 @@ def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return report, all_ok
 
 
+def _kc_outside_refs(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»): ⚠
+    rep, _ = _safe(lambda: (check_outside_refs(ctx.docs), True))
+    return rep, True
+
+
 def _kc_required_sections(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1369,6 +1380,7 @@ KIT_CHECKS: List[Check] = [
     Check("frontmatter_schema", _kc_frontmatter_schema, affects_verdict=False),
     Check("title_uniqueness", _kc_title_uniqueness, affects_verdict=False),
     Check("source_silent", _kc_source_silent, affects_verdict=False),
+    Check("outside_refs", _kc_outside_refs, affects_verdict=False),
     Check("required_sections", _kc_required_sections, affects_verdict=False),
     Check("process_call", _kc_process_call, affects_verdict=False),
     Check("readme_legend", _kc_readme_legend, affects_verdict=False),

@@ -544,6 +544,10 @@ def normalize_file(md_path: Path, profile: Optional[Profile],
             # ярлык блока: в подсчёт не вошла, строка в выходе сохранена (замечание ОНБ-В 69)
             for s in col.get("out_of_profile") or []:
                 report.append(f"   ⚠ строка вне профиля таблицы: «{_plain(s).strip()[:80]}»")
+            # отсылка «см. …» вместо значения обязательности (объявленная эвристика, реестр
+            # в README прибора): не брак колонки, строка сохранена в выходе
+            for n, s in col.get("see_refs") or []:
+                report.append(f"   ⚠ обязательность отсылкой: «{_plain(s).strip()[:80]}» (строка {n})")
             labels = col.get("struct_labels") or []
             if labels:
                 report.append(

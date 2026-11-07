@@ -182,7 +182,8 @@ import link_debts as ld  # noqa: E402
 import source_coverage as cov  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.fs import find_kit_file  # noqa: E402
-from kitcheck.checks.review_guards import OQ_STATUS_RE, oq_entries, oq_status_class  # noqa: E402
+from kitcheck.checks.review_guards import (  # noqa: E402
+    OQ_STATUS_RE, check_oq_close_form, oq_entries, oq_status_class)
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_VALIDATOR = _HERE / "platform" / "scripts" / "validate_analytics_docs.py"
@@ -606,6 +607,13 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                      f"({', '.join(moved[:8])}{'…' if len(moved) > 8 else ''}) — вопрос не решён, "
                      "но виден платформе целиком, с ответственным и ограничением",
                      check="открытые вопросы")
+        # запись, закрытая словами без канала (коммит, тег или «без изменений»; норма закрытия
+        # с 2026-11-03), проходит выше как закрытая — сигнал приёмке переноса, вердикт не
+        # меняет (замечание ОНБ-В 77, 2026-11-07). Признак — сторож формы закрытия review_guards:
+        # один дом, второго регэкспа нет; подъём до ✗ — решением владельца по замеру
+        for ln in check_oq_close_form(oq_file):
+            gate.add("⚠", "CORE-20", ln[2:] if ln.startswith("⚠ ") else ln,
+                     check="форма закрытия вопросов")
     if matrix.is_file():
         am = sc._API_SECTION_RE.search(mtext)
         if am:
@@ -1094,6 +1102,73 @@ def _co_covers(pat: str, rel: str) -> bool:
     return any(fnmatch.fnmatchcase(c, parts[0]) for c in comps)
 
 
+# Плейсхолдер вместо владельца (замечание ОНБ-В 62, 2026-11-07): строка CODEOWNERS с
+# «@REPLACE_…» среди владельцев — заготовка не заполнена, владелец не назначен. Дефект по
+# форме, ложных срабатываний нет — ✗
+_CO_PLACEHOLDER_RE = re.compile(r"(?<!\S)@REPLACE_\S*")
+
+
+def _co_placeholders(text: str) -> List[str]:
+    """Строки CODEOWNERS (без комментариев) с плейсхолдером «@REPLACE_…»."""
+    return [ln.strip() for ln in text.splitlines()
+            if ln.strip() and not ln.strip().startswith("#") and _CO_PLACEHOLDER_RE.search(ln)]
+
+
+def _add_co_placeholders(gate: Gate, place: str, text: str) -> None:
+    bad = _co_placeholders(text)
+    if bad:
+        gate.add("✗", "CORE-04", f"CODEOWNERS ({place}): плейсхолдер вместо владельца в строках "
+                 f"×{len(bad)} — " + "; ".join(f"«{b[:60]}»" for b in bad[:4])
+                 + ("; …" if len(bad) > 4 else "")
+                 + " — владелец не назначен, заготовку заполнить", check="владельцы документации")
+
+
+# Паспорт gpb-manifest.json: обязательные поля секции teamInfo и словарь projectType —
+# из копии схемы техбука cookbook/devops/assets/gpb-manifest-setup/teamInfo_section_schema.json
+# (eco-techbook 85b7caa, 2026-10-21; definitions.teamInfo: required, properties.projectType.enum).
+# Правка схемы техбука — правка этих значений. Валидатор jsonschema не вводится (закрытый
+# контур, новой зависимости нет). null в контактных полях — норма стандарта («нет
+# контакта — null»), не сигнал; плейсхолдер «REPLACE_…» в строковом поле — ⚠ по форме
+_TEAMINFO_REQUIRED = ("team", "projectType", "platform")
+_PROJECT_TYPES = frozenset({"ECO_BE", "ECO_FE", "ECO_QA", "ECO_AN"})
+
+
+def _manifest_placeholders(data, path: str = "") -> List[str]:
+    """Пути строковых полей манифеста со значением-плейсхолдером «REPLACE_…»."""
+    out: List[str] = []
+    if isinstance(data, dict):
+        for k, v in data.items():
+            out.extend(_manifest_placeholders(v, f"{path}.{k}" if path else str(k)))
+    elif isinstance(data, list):
+        for i, v in enumerate(data):
+            out.extend(_manifest_placeholders(v, f"{path}[{i}]"))
+    elif isinstance(data, str) and "REPLACE_" in data:
+        out.append(f"{path}={data[:40]}")
+    return out
+
+
+def _manifest_issues(data: dict) -> List[str]:
+    """⚠-находки паспорта: плейсхолдеры, пустые обязательные поля teamInfo, тип вне словаря."""
+    issues: List[str] = []
+    ph = _manifest_placeholders(data)
+    if ph:
+        issues.append(f"плейсхолдер в полях ×{len(ph)}: " + ", ".join(ph[:6])
+                      + (" …" if len(ph) > 6 else ""))
+    ti = data.get("teamInfo")
+    if not isinstance(ti, dict):
+        issues.append("секции teamInfo нет — обязательна по схеме паспорта (поля "
+                      + ", ".join(_TEAMINFO_REQUIRED) + ")")
+        return issues
+    empty = [k for k in _TEAMINFO_REQUIRED if ti.get(k) is None or ti.get(k) == ""]
+    if empty:
+        issues.append("teamInfo: нет или пусто обязательных полей — " + ", ".join(empty))
+    pt = ti.get("projectType")
+    if pt not in (None, "") and pt not in _PROJECT_TYPES:
+        issues.append(f"teamInfo.projectType «{pt}» вне словаря схемы ("
+                      + ", ".join(sorted(_PROJECT_TYPES)) + ")")
+    return issues
+
+
 def _check_codeowners(gate: Gate, kit: Path, root: Path, where: str) -> None:
     """CORE-04: CODEOWNERS по правилам GitLab (корень, docs/, .gitlab/ корня)"""
     found: Optional[Tuple[str, str]] = None
@@ -1115,6 +1190,7 @@ def _check_codeowners(gate: Gate, kit: Path, root: Path, where: str) -> None:
                  f"подключения){tail}", check="владельцы документации")
         return
     place, text = found
+    _add_co_placeholders(gate, place, text)
     rules = _co_rules(text)
     specific = [(p, o) for p, o, _s in rules
                 if p not in _CO_DEFAULT_PATTERNS and _co_covers(p, rel)]
@@ -1180,11 +1256,11 @@ def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -
             out = root
     if kit is out:
         co = out / "CODEOWNERS"
-        if co.is_file() and any(ln.strip() and not ln.strip().startswith("#")
-                                for ln in co.read_text(encoding="utf-8",
-                                                       errors="replace").splitlines()):
+        co_text = co.read_text(encoding="utf-8", errors="replace") if co.is_file() else ""
+        if any(ln.strip() and not ln.strip().startswith("#") for ln in co_text.splitlines()):
             gate.add("✓", "CORE-04", f"CODEOWNERS {where} есть и непустой",
                      check="владельцы документации")
+            _add_co_placeholders(gate, "CODEOWNERS", co_text)
         else:
             gate.add("✗", "CORE-04", f"CODEOWNERS в {out} отсутствует или пуст — владелец "
                      "документации не назначен (чек-лист: обязательно до подключения)",
@@ -1209,6 +1285,12 @@ def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -
                  "состав сверить вручную по требованиям платформы", check="манифест")
     except (OSError, ValueError) as e:
         gate.add("✗", "SDLC-07", f"gpb-manifest.json не разбирается как JSON: {e}", check="манифест")
+        return
+    # поля паспорта по схеме техбука — ⚠ (замечание ОНБ-В 62); подъём до ✗ —
+    # решением владельца по замеру на переносе КК
+    if isinstance(data, dict):
+        for issue in _manifest_issues(data):
+            gate.add("⚠", "SDLC-07", f"gpb-manifest.json: {issue}", check="манифест")
 
 
 # --- оркестровка ----------------------------------------------------------------

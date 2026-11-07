@@ -16,6 +16,7 @@ try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
     from kitcheck.md import blank_code
+    from kitcheck.md import nav_list_blocks
     from kitcheck.md import code_line_flags
     from kitcheck.md import read_frontmatter
     from kitcheck.md import table_cells
@@ -25,6 +26,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
     from ..md import blank_code  # type: ignore
+    from ..md import nav_list_blocks  # type: ignore
     from ..md import code_line_flags  # type: ignore
     from ..md import read_frontmatter  # type: ignore
     from ..md import table_cells  # type: ignore
@@ -178,7 +180,13 @@ def check_process_call_consistency(docs: Path) -> List[str]:
 
 
 _CARD_ID_HEAD_RE = re.compile(
-    r"^\s*\\?\[?(?:CTL-GRP-[\w-]*\d+|CTL-[\w-]*\d+|CALL-[\w-]*\d+|PLT-[\w-]*\d+)\b")
+    r"^\s*\\?\[?(?:CTL-GRP-[\w-]*\d+|CTL-[\w-]*\d+|CALL-[\w-]*\d+|PLT-[\w-]*\d+"
+    r"|SCR-[\w-]*\d+)\b")
+# Подпись ссылки на ЭФ, начинающаяся с тега источника в квадратных скобках — `[ТЕГ] …`,
+# `\[ТЕГ\] …` или в кавычках `«[ТЕГ] …»`, — дословное наименование источника: полноценное
+# упоминание, ID не дописывается (техбук conventions §4 — дословность, оговорка §5 о
+# наименовании источника с тегом сервиса). Признак по форме — скобки в начале подписи
+_SRC_TAG_LABEL_RE = re.compile(r"^\s*«?\s*\\?\[[^\]\\\n]+\\?\]")
 
 
 def check_link_anchors_and_ids(docs: Path) -> List[str]:
@@ -188,7 +196,14 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
     или платформенной функции без ID в тексте ссылки (conventions §5:
     «всегда ID + название»). Навигационные ссылки на файл целиком
     (README, матрица, `platform-functions.md` без якоря) — не упоминание
-    карточки."""
+    карточки.
+
+    Экранная форма (остаток замечания ОНБ-В 22, 2026-11-07): ссылка на файл
+    `screen-form/**/scr-*.md` без якоря, не на сам документ. Не упоминание
+    формы: ссылка с якорем на элемент части (`[FLD-17](scr-cl-13-main.md#…)`),
+    ссылка на README группы экрана, ссылка внутри навигационного списка
+    (тот же признак, что у сверки с источником, — `nav_list_blocks`) и
+    подпись с тегом источника в начале (`_SRC_TAG_LABEL_RE`)."""
     cache: Dict[Path, set] = {}
     bad_anchor: List[Tuple[str, str]] = []
     no_id: List[Tuple[str, str]] = []
@@ -199,6 +214,7 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
             continue
         text = blank_code(text)
         src_nav = md.name.lower() in ("readme.md", "traceability-matrix.md")
+        nav_lines = {k for s, e in nav_list_blocks(text) for k in range(s, e)}
         for m in _MD_LINK_RE.finditer(text):
             label, raw_t = m.group(1), m.group(2).strip()
             if "://" in raw_t or raw_t.startswith(("mailto:", "<")):
@@ -221,6 +237,14 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
                             and anchor.lower().startswith("ctl-"))
                         or (anchor and name == "platform-functions.md"
                             and anchor.lower().startswith("plt-")))
+            if not card_ref and not anchor and name.startswith("scr-") \
+                    and name.endswith(".md") and tgt != md.resolve() \
+                    and not _SRC_TAG_LABEL_RE.match(label) \
+                    and text.count("\n", 0, m.start()) not in nav_lines:
+                try:
+                    card_ref = "screen-form" in tgt.relative_to(docs.resolve()).parts
+                except ValueError:
+                    card_ref = False
             if card_ref and not _CARD_ID_HEAD_RE.match(label):
                 no_id.append((md.relative_to(docs).as_posix(), label[:50]))
     out: List[str] = []
@@ -232,8 +256,9 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
         if len(bad_anchor) > 15:
             out.append(f"   … ещё {len(bad_anchor) - 15}")
     if no_id:
-        out.append(f"⚠ ссылки на карточку вызова, контроля или платформенной функции "
-                   f"без ID в тексте: {len(no_id)} (conventions §5: всегда «ID + название»):")
+        out.append(f"⚠ ссылки на карточку вызова, контроля, платформенной функции или "
+                   f"экранной формы без ID в тексте: {len(no_id)} (conventions §5: всегда "
+                   f"«ID + название»):")
         out.extend(f"   {rel}: [{lab}]" for rel, lab in no_id[:15])
         if len(no_id) > 15:
             out.append(f"   … ещё {len(no_id) - 15}")

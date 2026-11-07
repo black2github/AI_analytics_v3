@@ -115,7 +115,8 @@ def test_service_files_and_census_complete(tmp_path):
     make(docs / "srs/functions/f1.md", card("[X] Ф1"))
     report, ok = selfcheck.run(docs, None)
     assert ok
-    assert any("ИТОГО: файлов 4 — ✓ 1, ✗ 0, ⚠ 3" in ln for ln in report)
+    # README без frontmatter — норма, счётчик i (пакет П2 ОНБ-В, замечание 71): в переписи остаётся
+    assert any("ИТОГО: файлов 4 — ✓ 1, ✗ 0, ⚠ 2, i 1" in ln for ln in report)
 
 
 def test_crash_isolated_per_card(tmp_path, monkeypatch):
@@ -583,7 +584,7 @@ def test_profiles_markers_soft_vs_strict(tmp_path):
 
 
 def test_nav_readme_exempt_from_frontmatter_warning(tmp_path):
-    # Р-9: README без frontmatter — освобождён (нейтральная строка),
+    # Р-9: README без frontmatter — норма (строка уровня i с П2 ОНБ-В, замечание 71),
     # прочие файлы без frontmatter — прежнее предупреждение
     from app.scripts.CI import selfcheck as sc
     docs = tmp_path / "docs"
@@ -592,7 +593,7 @@ def test_nav_readme_exempt_from_frontmatter_warning(tmp_path):
     make(docs / "srs/notes.md", "# Заметки без frontmatter\n")
     make_matrix(docs)
     report, ok = sc.run(docs, None)
-    assert any("README" in ln and "освобождён" in ln for ln in report)
+    assert any(ln.startswith("i ") and "README" in ln and "норма" in ln for ln in report)
     assert not any("README" in ln and "обязателен" in ln for ln in report)
     assert any("notes.md" in ln and "обязателен" in ln for ln in report)
 

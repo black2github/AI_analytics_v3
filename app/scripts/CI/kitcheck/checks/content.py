@@ -17,6 +17,7 @@ try:
     from kitcheck.md import _kit_md
     from kitcheck.md import code_line_flags
     from kitcheck.md import frontmatter_end
+    from kitcheck.md import in_module_zone
     from kitcheck.md import read_frontmatter
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
@@ -24,6 +25,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from ..md import _kit_md  # type: ignore
     from ..md import code_line_flags  # type: ignore
     from ..md import frontmatter_end  # type: ignore
+    from ..md import in_module_zone  # type: ignore
     from ..md import read_frontmatter  # type: ignore
 
 
@@ -42,7 +44,11 @@ _FM_BY_TYPE = {
     "domain": {"domain-vision", "glossary", "vision"},
     "nfr_type": {"nfr"},
     "ingress": {"nfr"},
+    # тип task — техбук standards/analytics/conventions.md §5, блок схемы frontmatter
+    # («created: … # только task», «task: <JIRA-ID> # только task»); правка схемы
+    # техбука — правка этого словаря (замечание ОНБ-В 44, 2026-11-07)
     "created": {"task"},
+    "task": {"task"},
 }
 
 
@@ -165,6 +171,46 @@ def check_source_silent(docs: Path) -> List[str]:
     return out
 
 
+# Текстовые отсылки за пределы комплекта (остаток замечания ОНБ-В 14, 2026-11-07). Норма —
+# техбук standards/analytics/conventions.md §5, «комплект переносим»: отсылки «на
+# eco-techbook / eco-kb / toolkit, конвенции проекта, src-репо, README рабочего
+# репозитория, другой docs-репо» не допускаются. Перечень — из строки нормы, это текст
+# агента, а не слово источника. «src-репо» не взят: замер 2026-11-07 — единственное
+# вхождение «Вне охвата: … src-репозитории» (docs-common-dictionary) — упоминание, а не
+# отсылка к документу; «README рабочего репозитория» и «другой docs-репо» формы не имеют.
+# Вне шапки, кода и кавычечных литералов (дословная цитата — данные). Только ⚠.
+_OUTSIDE_REF_RE = re.compile(
+    r"конвенци\w*\s+проекта|(?<![\w-])(?:eco-techbook|eco-kb|toolkit)(?![\w-])", re.I)
+
+
+def check_outside_refs(docs: Path) -> List[str]:
+    """⚠ текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»)."""
+    found: List[str] = []
+    for md in _kit_md(docs):
+        try:
+            lines = _fs.read_text(md, encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        rel = md.relative_to(docs).as_posix()
+        body_from = frontmatter_end(lines)
+        code = [False] * body_from + code_line_flags(lines[body_from:])
+        for i, ln in enumerate(lines, 1):
+            if i <= body_from or code[i - 1]:
+                continue
+            m = _OUTSIDE_REF_RE.search(_GAP_QUOTED_RE.sub(" ", ln))
+            if m:
+                found.append(f"{rel}:{i}: «{m.group(0)}» — {ln.strip()[:80]}")
+    if not found:
+        return []
+    out = [f"⚠ отсылки за пределы комплекта ×{len(found)} (conventions §5: комплект переносим, "
+           "отсылки на eco-techbook, eco-kb, toolkit, конвенции проекта не допускаются; "
+           "общее для комплекта — самодостаточно в README корня):"]
+    out.extend(f"   {x}" for x in found[:30])
+    if len(found) > 30:
+        out.append(f"   … и ещё {len(found) - 30}")
+    return out
+
+
 # Обязательные разделы по шаблонам канона (пакет 2, задача 7, ПР-05, ЗК-23; решения
 # владельца канона 2026-10-16). Только шаблоны с явной пометкой «(обязательный)»;
 # H2 образцов карточек обязательными не считаются. Сравнение — без номеров,
@@ -181,7 +227,24 @@ _REQ_SECTIONS: Dict[str, Tuple[str, ...]] = {
     "function": ("назначение", "доступность", "вызов функции", "поведение"),
     "notification": ("каналы и адреса доставки", "сообщения нотификации"),
     "screen-form": ("назначение", "реестр полей", "правила полей"),
+    # замечание ОНБ-В 47 (2026-11-07): печатная форма, интерфейс модуля и
+    # паспорт мини-комплекта модуля (шаблоны print-form, module-interface,
+    # module-kit-readme; ключ — `type` из их схем шапки). Условные разделы
+    # («обязательный, если …»: коды ошибок, эндпоинты чужого контура, долги) не требуются.
+    # Словарь равен пометкам шаблонов — страж tests/test_required_sections_templates.py
+    "print-form": ("назначение и использование", "файл печатной формы", "макет",
+                   "правила заполнения"),
+    "module-interface": ("краткое описание", "входные параметры", "исходящие параметры",
+                         "потребители", "происхождение"),
+    "module-kit": ("назначение", "контур исполнения и участники",
+                   "граница: что не проходит через экосистему", "точки пересечения границы",
+                   "границы ответственности", "что не применяется из правил комплекта",
+                   "состав мини-комплекта", "происхождение"),
 }
+
+# Документы мини-комплекта модуля живут в зоне docs/modules/<имя>/; паспорт
+# модуля — сам README.md зоны (тип module-kit), а не README-реестр каталога
+_ZONE_REQ_TYPES = frozenset({"module-interface", "module-kit"})
 
 
 # Все разделы шаблона (для строки «вне шаблона», i). Функция — None: шаблон
@@ -198,6 +261,13 @@ _KNOWN_SECTIONS: Dict[str, Optional[Tuple[str, ...]]] = {
                     "функции формы", "боковая часть", "части", "макеты",
                     "как перейти", "структура экрана", "дополнительные действия",
                     "группы контролей", "определения"),
+    # разделы карточки шаблона (раздел 5 — штамп подписываемых форм; блок приложений —
+    # attachments-block.md), разделы README-реестра PRN-000 сюда не входят
+    "print-form": _REQ_SECTIONS["print-form"] + ("штамп эп клиента", "приложенные артефакты"),
+    "module-interface": _REQ_SECTIONS["module-interface"] + (
+        "коды ошибок", "чужие эндпоинты, которые вызывает метод"),
+    "module-kit": _REQ_SECTIONS["module-kit"] + (
+        "эндпоинты чужого контура", "долги и открытые вопросы"),
 }
 
 
@@ -234,16 +304,22 @@ def _has_section(keys: List[str], name: str) -> bool:
 
 def check_required_sections(docs: Path) -> List[str]:
     """⚠ «нет обязательного раздела» и i «раздел вне шаблона» для типов agent,
-    control, function, notification, screen-form. Единица проверки: файл;
+    control, function, notification, screen-form, print-form, module-interface и
+    module-kit (последние два — в зоне docs/modules/, паспорт модуля — README зоны).
+    Единица проверки: файл;
     документ контролей — каталог (README CTL-000 и файлы карточек); экранная
     форма — группа по ID без суб-номера (README группы без шапки, главная
     карточка, части), частям отдельного сигнала нет. README-реестры каталогов
     (README функций, ID ЭФ на «-00»/«-000») не проверяются."""
     units: Dict[Tuple[str, str], List[Path]] = {}
-    for md in _kit_md(docs):
+    for md in _kit_md(docs, zone=True):
         fm = read_frontmatter(md) or {}
         typ = str(fm.get("type", "")).strip("'\"")
         fid = str(fm.get("id", "")).strip("'\"")
+        # зона модулей — только документы мини-комплекта; прочие типы зоны сторож
+        # разделов не проверял и не проверяет
+        if in_module_zone(md, docs) != (typ in _ZONE_REQ_TYPES):
+            continue
         if not typ and md.name.lower() == "readme.md":
             mains = sorted(md.parent.glob("*-main.md"))
             if mains:
@@ -259,7 +335,7 @@ def check_required_sections(docs: Path) -> List[str]:
         elif typ == "control":
             key = md.parent.relative_to(docs).as_posix() + "/"
         else:
-            if md.name.lower() == "readme.md":
+            if md.name.lower() == "readme.md" and typ != "module-kit":
                 continue
             key = md.relative_to(docs).as_posix()
         units.setdefault((typ, key), []).append(md)

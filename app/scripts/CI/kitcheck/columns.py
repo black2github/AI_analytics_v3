@@ -5,7 +5,7 @@
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена."""
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 from .html import _BR_RE, _norm_cell, _plain, _title_key
 from .md import SILENT_FORMULA
 
@@ -133,6 +133,16 @@ def _merged_cell(row: List[str], i: int) -> bool:
         return False
     same = sum(1 for c in row if _norm_cell(c) == v)
     return same >= 2 or all(not _norm_cell(c) for j, c in enumerate(row) if j != i)
+
+
+# Отсылка вместо значения обязательности: ячейка начинается с «см.» («см. описание поля»,
+# «См. описание поля 2.8 …») — автор отсылает к другому месту страницы. Объявленная
+# словарная эвристика (реестр в README прибора): нормализация ИСТОЧНИКА, колонка роли
+# «обязат»; ячейка не значение словаря и не брак колонки — строка ⚠ «обязательность
+# отсылкой», в подсчёт валидности не входит, таблица сверяется дальше (ОНБ-В,
+# 2026-11-07: ЭФ организации/ИП 94.1 % при пороге 95 % из-за одной такой ячейки).
+# «Да, см. п. 3» отсылкой не считается — начинается со значения, остаётся браком словаря
+_SEE_REF_RE = re.compile(r"^см\.", re.I)
 
 
 def _struct_label_row(row: List[str], i: int) -> bool:
@@ -341,6 +351,7 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         col_rows = data_rows
         out_of_profile: List[str] = []
         struct_labels: List[str] = []
+        see_refs: List[Tuple[int, str]] = []
         if role == "обязат" and source_mode:
             # ярлыки рядов, принятые по словам «раздел/блок/вкладка/секция/…» (объявленная
             # словарная эвристика, реестр в README прибора) — видны отчёту нормализатора числом
@@ -358,11 +369,17 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             # через колонки ячейка не может свидетельствовать о съехавшем профиле, а отказ
             # по таблице целиком — молчаливая потеря копии
             col_rows = []
-            for r in data_rows:
-                if i < len(r) and not check(r[i]) and not _struct_label_row(r, i) \
-                        and _merged_cell(r, i):
-                    out_of_profile.append(r[i])
+            # номер строки — по строкам таблицы (строки-разделы в счёте), как в выходе
+            for n, r in enumerate(rows, 1):
+                if _is_section_row(r):
                     continue
+                if i < len(r) and not check(r[i]) and not _struct_label_row(r, i):
+                    if _merged_cell(r, i):
+                        out_of_profile.append(r[i])
+                        continue
+                    if _SEE_REF_RE.match(_plain(r[i]).strip()):
+                        see_refs.append((n, r[i]))
+                        continue
                 col_rows.append(r)
         bad = [r[i] for r in col_rows if i < len(r) and not check(r[i])
                and (source_mode or not _is_silent_formula(r[i]))
@@ -400,6 +417,7 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             "valid_pct": round(100 * (len(col_rows) - len(bad)) / total, 1),
             "out_of_profile": out_of_profile,
             "struct_labels": struct_labels,
+            "see_refs": see_refs,
             "suspicious": suspicious[:5], "suspicious_count": len(suspicious),
             "suspicious_pardoned": susp_pardoned[:3],
             "suspicious_pardoned_count": len(susp_pardoned),
