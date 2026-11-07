@@ -7,6 +7,7 @@ import re
 from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..html import _fm_body, _norm_cell, _plain, expand_grid, find_top_tables, protect_token_tags
+from ..md import blank_nav_lists
 from bs4 import BeautifulSoup
 
 
@@ -99,9 +100,13 @@ def behavior_steps_from_source(source_text: str,
     return _rank_levels(steps)
 
 
+# заголовок раздела: шаблон function.md нумерует разделы, номер необязателен
+_BEHAVIOR_HEAD = r"^##\s+(?:\d+\.\s*)?Поведение\s*$"
+
+
 def behavior_steps_from_card(card_text: str) -> List[Tuple[str, int]]:
     """(маркер, уровень) из раздела «## Поведение» карточки."""
-    m = re.search(r"^##\s+Поведение\s*$(.*?)(?=^##\s|\Z)", card_text,
+    m = re.search(_BEHAVIOR_HEAD + r"(.*?)(?=^##\s|\Z)", card_text,
                   re.M | re.S)
     if not m:
         return []
@@ -126,8 +131,7 @@ def check_behavior_nesting(card_text: str,
         # (функция метода); карточка без раздела (контракт INTC) — не её
         src = behavior_steps_from_source(source_text,
                                          _BEHAVIOR_CELL_METHOD_RE)
-        if len(src) < 2 or not re.search(r"^##\s+Поведение\s*$",
-                                         card_text, re.M):
+        if len(src) < 2 or not re.search(_BEHAVIOR_HEAD, card_text, re.M):
             return [], True
     card = behavior_steps_from_card(card_text)
     report: List[str] = []
@@ -524,8 +528,9 @@ def _list_indent_widths(lines: List[str]) -> set:
 
 def check_nesting_depth(card_text: str,
                         source_text: str) -> Tuple[List[str], bool]:
-    src_w = _list_indent_widths(_fm_body(source_text).splitlines())
-    card_w = _list_indent_widths(card_text.splitlines())
+    # навигационный список — не шаги: его уровни не считаются ни в источнике, ни в карточке
+    src_w = _list_indent_widths(blank_nav_lists(_fm_body(source_text))[0].splitlines())
+    card_w = _list_indent_widths(blank_nav_lists(card_text)[0].splitlines())
     if len(src_w) >= 4 and len(card_w) <= 2:
         return [f"вложенность шагов уплощена: источник ведёт "
                 f"{len(src_w)} уровней списков, карточка — {len(card_w)} "
@@ -541,7 +546,7 @@ def check_behavior_numbering(card_text: str) -> Tuple[List[str], bool]:
     markdown-списка — иначе рендер склеит шаги в плоский абзац;
     (2) у точечной нумерации глубина номера (1.1.1 → 3) обязана
     совпадать с уровнем вложенности."""
-    m = re.search(r"^##\s+Поведение\s*$(.*?)(?=^##\s|\Z)", card_text,
+    m = re.search(_BEHAVIOR_HEAD + r"(.*?)(?=^##\s|\Z)", card_text,
                   re.M | re.S)
     report: List[str] = []
     ok = True

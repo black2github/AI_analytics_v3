@@ -563,6 +563,28 @@ def _linked_call_cards(card_text: str, main_file: Path) -> List[Tuple[str, str]]
     return out
 
 
+def _page_cards(docs_root: Optional[Path], pid: str, files: List[Path],
+                skip_dir: Optional[Path] = None) -> List[Tuple[str, str]]:
+    """[(путь, текст)] карточек комплекта с этой страницей в confluence_page_ids в любой позиции,
+    кроме группы сверки; skip_dir — каталог, уже прочитанный вызывающим как соседи."""
+    if docs_root is None or not pid:
+        return []
+    return [(f.relative_to(docs_root).as_posix(),
+             strip_html_comments(_fs.read_text(f, encoding="utf-8", errors="replace")))
+            for f in _page_artifact_index(docs_root).get(pid, [])
+            if f not in files and f.parent != skip_dir]
+
+
+def _extra_table_line(line: str, tag: str) -> str:
+    """Строка сверки таблиц для доп. страницы: начало сохраняется (видимость при ✓), метка — в
+    конце; строки примеров потери — как есть, они идут под строкой с меткой."""
+    return line if line.startswith(" ") else f"{line} ({tag})"
+
+
+def _extra_page_tag(p: Path, p_text: str) -> str:
+    return f"доп. страницы {_page_id_of(p_text)} «{_frontmatter_title(p_text) or p.stem}»"
+
+
 def _extra_page_line(line: str, tag: str) -> str:
     """Строка сторожа литералов для доп. страницы: «… источника» → «… <tag>»; строки класса
     «⚠ примеры:» и i-строки сохраняют начало (класс и видимость при ✓) и получают метку."""
@@ -609,8 +631,28 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         linked_calls = (_linked_call_cards(card_text, main_file)
                         if m_type is not None and m_type.group(1) in _STEP_HOLDER_TYPES
                         and main_file is not None else None)
-        src_report, src_ok = check_source_tables(combined, src_text, thin_call=thin_call,
-                                                 linked_calls=linked_calls)
+        # значение страницы перенесено, если оно есть в любой карточке с этой страницей в
+        # confluence_page_ids (главной или дополнительной): вердикт — по объединению таких карточек
+        src_report, src_ok = check_source_tables(
+            combined, src_text, thin_call=thin_call, linked_calls=linked_calls,
+            page_artifacts=_page_cards(docs_root, _page_id_of(src_text), files) or None)
+        # сводные типы (глоссарий, видения) — как у литералов: доп. страницы они обобщают, а не
+        # переносят; число несверенных страниц видно приёмке
+        extra_sources = [p for p in (fx.amnesty_sources or []) if p.is_file()]
+        if m_type is not None and m_type.group(1) in _NO_LITERALS_TYPES and extra_sources:
+            src_report = src_report + [
+                f"i таблицы источника: доп. страниц ×{len(extra_sources)} не сверялось: сверка "
+                f"доп. страниц не применяется к {_NO_LITERALS_TYPES[m_type.group(1)]}"]
+            extra_sources = []
+        for p in extra_sources:
+            if p.is_file():
+                p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
+                p_rep, p_ok = check_source_tables(
+                    combined, p_text, thin_call=thin_call, linked_calls=linked_calls,
+                    page_artifacts=_page_cards(docs_root, _page_id_of(p_text), files) or None)
+                tag = _extra_page_tag(p, p_text)
+                src_report = src_report + [_extra_table_line(ln, tag) for ln in p_rep]
+                src_ok = src_ok and p_ok
         # волна 9 ОНБ-В (ЗК-04): таблицы без дословных значений, изображения без
         # следа, перечень таблиц источника — только ⚠ / i
         readme = main_file.parent / "README.md" if main_file is not None else None
@@ -759,11 +801,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             page_art = None
             if docs_root is not None:
                 _pids = page_ids(read_frontmatter(main_file) or {})
-                page_art = [
-                    (f.relative_to(docs_root).as_posix(),
-                     strip_html_comments(_fs.read_text(f, encoding="utf-8", errors="replace")))
-                    for f in (_page_artifact_index(docs_root).get(_pids[0], []) if _pids else [])
-                    if f not in files and f.parent != main_file.parent] or None
+                page_art = _page_cards(docs_root, _pids[0] if _pids else "", files,
+                                       skip_dir=main_file.parent) or None
             ql_report, ql_ok = check_quoted_literals(combined, src_text,
                                                      sibling_text=sib_txt,
                                                      page_artifacts=page_art,
@@ -782,12 +821,15 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 if not p.is_file():
                     continue
                 p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
+                # карточки самой доп. страницы — к карточкам главной, как было
+                p_art = list(page_art or [])
+                p_art += [a for a in _page_cards(docs_root, _page_id_of(p_text), files,
+                                                 skip_dir=main_file.parent) if a not in p_art]
                 p_rep, p_ok = check_quoted_literals(
-                    combined, p_text, sibling_text=sib_txt, page_artifacts=page_art,
+                    combined, p_text, sibling_text=sib_txt, page_artifacts=p_art or None,
                     thin_call=thin_call,
                     steps_text_free=call_group and _FUNCTION_PAGE_RE.search(p_text) is not None)
-                tag = (f"доп. страницы {_page_id_of(p_text)} "
-                       f"«{_frontmatter_title(p_text) or p.stem}»")
+                tag = _extra_page_tag(p, p_text)
                 ql_report += [_extra_page_line(ln, tag) for ln in p_rep]
                 ql_ok = ql_ok and p_ok
         report.extend(src_report)

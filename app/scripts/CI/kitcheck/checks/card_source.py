@@ -12,7 +12,7 @@ from ..html import (
     parse_md_tables
 )
 from ..columns import _COLUMN_RULES, _is_section_row, validate_columns
-from ..md import split_cells, strip_html_comments, strip_row
+from ..md import blank_nav_lists, split_cells, strip_html_comments, strip_row
 from .card_common import _LAYOUT_ROW_RE
 
 
@@ -595,10 +595,14 @@ def quoted_literals(source_text: str,
     кода не требуются. no_code — без закрытых блоков кода (таблицы остаются):
     литерал только из примера в блоке кода — класс «примеры». removed — сюда
     кладётся снятое объявленными эвристиками, для i-строк отчёта: cells — число
-    ячеек колонок «ФЛК»/«Пример», flk и mark — снятые литералы."""
+    ячеек колонок «ФЛК»/«Пример», flk и mark — снятые литералы; nav — пара
+    (блоков, пунктов) навигационных списков. Навигационный список снимается там же,
+    где ярлыки ссылок: это перечень адресов; тот же литерал вне списка обязателен."""
     body = _fm_body(source_text)
     headings = _source_headings(body)
+    nav = (0, 0)
     if skip_page_link_labels:
+        body, *nav = blank_nav_lists(body)
         body = _blank_page_link_labels(body)
     if prose_only:
         body = _source_prose(body)
@@ -645,6 +649,7 @@ def quoted_literals(source_text: str,
             out.append(v)
     if removed is not None:
         removed["cells"] = n_cells
+        removed["nav"] = tuple(nav)
         removed["flk"] = list(flk_removed.values())
         removed["mark"] = [v for n, v in mark_removed.items()
                            if n not in seen and n not in flk_removed]
@@ -785,6 +790,9 @@ def check_quoted_literals(card_text: str,
     removed: dict = {}
     lits = quoted_literals(source_text, skip_page_link_labels=True, removed=removed)
     report: List[str] = []
+    if removed["nav"][0]:
+        report.append(f"i навигационных списков не сверялось: {removed['nav'][0]} "
+                      f"(пунктов {removed['nav'][1]})")
     # объявленные словарные эвристики (реестр в README прибора): снятое видно в отчёте
     if removed["cells"]:
         report.append(
@@ -1208,7 +1216,8 @@ def _is_history_table(hdr: List[str]) -> bool:
 
 def check_source_tables(card_text: str, source_text: str,
                         thin_call: Optional[str] = None,
-                        linked_calls: Optional[List[Tuple[str, str]]] = None
+                        linked_calls: Optional[List[Tuple[str, str]]] = None,
+                        page_artifacts: Optional[List[Tuple[str, str]]] = None
                         ) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -1220,10 +1229,23 @@ def check_source_tables(card_text: str, source_text: str,
 
     thin_call — дом состава параметров тонкой карточки вызова (thin_call_home):
     готовые markdown-таблицы (коды ошибок, справочники) и имена параметров
-    HTML-сеток не требуются — i-строки с числами."""
+    HTML-сеток не требуются — i-строки с числами.
+
+    page_artifacts — [(путь, текст)] других карточек комплекта, у которых эта страница стоит в
+    confluence_page_ids: вердикт по странице — по объединению таких карточек, значение,
+    найденное там, не потеря, а разложение — i-строка с числом и файлами."""
     report: List[str] = []
     ok = True
     card_norm = _cmp_text(card_text)
+    page_norm = [(rel, _cmp_text(text)) for rel, text in page_artifacts or []]
+    on_page: List[str] = []
+    on_page_where: List[str] = []
+
+    def _in_page_cards(key: str) -> bool:
+        hits = [rel for rel, norm in page_norm if key in norm]
+        on_page_where.extend(rel for rel in hits if rel not in on_page_where)
+        return bool(hits)
+
     thin_tables = thin_rows = 0
     history = [rows for hdr, rows in parse_md_tables(source_text) if _is_history_table(hdr)]
     if history:
@@ -1334,6 +1356,9 @@ def check_source_tables(card_text: str, source_text: str,
                         url_cells.append(cell.strip()[:50])
                         continue
                 if cv and _cmp_text(cell) not in card_norm:
+                    if _in_page_cards(_cmp_text(cell)):
+                        on_page.append(cell.strip()[:60])
+                        continue
                     missing.append(cell.strip()[:60])
         if plain_passport:
             title = " | ".join(h.strip() for h in hdr[:3])[:80]
@@ -1383,6 +1408,15 @@ def check_source_tables(card_text: str, source_text: str,
                 f"i HTML-таблицы источника: имён параметров ×{len(moved)} найдено в карточках "
                 f"вызова по ссылке ({', '.join(n for n, _t in linked_calls)}): "
                 + ", ".join(repr(n) for n in moved[:4]))
+    if lost and page_norm and not thin_call:
+        moved = [n for n in lost if _in_page_cards(_cmp_text(n))]
+        lost = [n for n in lost if n not in moved]
+        on_page.extend(moved)
+    if on_page:
+        report.append(
+            f"i таблицы источника: значений ×{len(on_page)} найдено в других карточках той же "
+            f"страницы ({', '.join(on_page_where)}), не в группе сверки: "
+            + ", ".join(repr(v[:40]) for v in on_page[:3]))
     if thin_call and html_names:
         report.append(
             f"i тонкая карточка вызова: состав параметров — {thin_call}; "

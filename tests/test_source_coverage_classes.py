@@ -59,7 +59,7 @@ def test_classes_and_summary_line(tmp_path):
                         "миграции 1; структурно: заморожено 3, контейнеры 1, справочные 1, вне плана 1, "
                         "бинарные 1; не в описи 1"), lines[0]
     assert blocking == 2  # пробел + не в описи
-    heads = [ln for ln in lines if not ln.startswith("  ")]
+    heads = [ln for ln in lines if not ln.startswith(("  ", "⚠"))]
     assert heads[1:] == ["пробелы миграции: 1", "не в описи: 1", "заморожено: 3", "контейнеры: 1",
                          "справочные: 1", "вне плана: 1", "бинарные: 1"], heads
     gap = lines.index("пробелы миграции: 1")

@@ -162,7 +162,7 @@ def test_kit_card_two_pids_unchanged(tmp_path):
     docs = kit(tmp_path, zone=False)
     make(docs / "srs/function/a.md", card("FUN-01", "Сводная", pids="2000000111, 2000000901"))
     report, ok = run(docs)
-    assert (f"i {rel('srs/function/a.md')}: доп. страницы-источники (1): кавычечные литералы "
+    assert (f"i {rel('srs/function/a.md')}: доп. страницы-источники (1): таблицы и кавычечные литералы "
             "сверяются по каждой, прочие сторожа — по главной (первой в списке); вне выгрузки, "
             "без сверки: 2000000901") in report
     assert not ok

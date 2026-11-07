@@ -48,6 +48,64 @@ def code_line_flags(lines: List[str]) -> List[bool]:
     return _fence.code_flags(lines)
 
 
+# Навигационный список: оглавление страницы, дом такого перечня в комплекте — README каталога.
+# Признаки только по разметке. Блок — связный список, включая вложенные уровни. Пункт — одна
+# ссылка целиком либо название: текст без ссылок, жирных слов нотации, тегов, запятых, «=», цифр и
+# знаков конца предложения. Один пункт иного вида (условие, присваивание, число с единицей, текст
+# после ссылки) — блок не навигация и сверяется как прежде.
+# Порог доли ссылок — замер 2026-11-07: в выгрузках всех сервисов у 422 блоков из 422 доля 1,0, в
+# карточках у оглавлений от 0,75 (PROC-048 КК: часть ссылок заменена названиями без адреса),
+# у списков из двух пунктов встречается 0,5 — они навигацией не считаются.
+NAV_LINK_SHARE = 0.7
+_NAV_ITEM_RE = re.compile(r"^ *(?:[-+*]|\d+[.)])\s+(.*\S)\s*$")
+_NAV_LINK_RE = re.compile(r"^\[(?:\\.|[^\]\\\[]|\[[^\]]*\])*\]\((?:[^()]|\([^()]*\))*\)$")
+_NAV_NOT_TITLE_RE = re.compile(r"\]\(|\*\*|__|<|=|,|\d|[.!?;:]\s*$|[.!?;]\s")
+
+
+def nav_list_blocks(text: str) -> List[Tuple[int, int]]:
+    """Навигационные списки текста: (первая строка, строка за последней), нумерация от нуля.
+    Строки блоков кода списком не считаются."""
+    lines = text.split("\n")
+    code = code_line_flags(lines)
+    out: List[Tuple[int, int]] = []
+
+    def close(start: Optional[int], end: int, links: int, titles: int, other: bool) -> None:
+        if start is not None and links and not other and links / (links + titles) >= NAV_LINK_SHARE:
+            out.append((start, end))
+
+    start: Optional[int] = None
+    links = titles = 0
+    other = False
+    for i, ln in enumerate(lines):
+        m = None if code[i] else _NAV_ITEM_RE.match(ln.rstrip("\r"))
+        if m is None:
+            close(start, i, links, titles, other)
+            start, links, titles, other = None, 0, 0, False
+            continue
+        if start is None:
+            start = i
+        item = m.group(1)
+        if _NAV_LINK_RE.match(item):
+            links += 1
+        elif _NAV_NOT_TITLE_RE.search(item):
+            other = True
+        else:
+            titles += 1
+    close(start, len(lines), links, titles, other)
+    return out
+
+
+def blank_nav_lists(text: str) -> Tuple[str, int, int]:
+    """(текст без навигационных списков, блоков, пунктов). Число строк сохраняется."""
+    blocks = nav_list_blocks(text)
+    if not blocks:
+        return text, 0, 0
+    lines = text.split("\n")
+    for start, end in blocks:
+        lines[start:end] = [""] * (end - start)
+    return "\n".join(lines), len(blocks), sum(end - start for start, end in blocks)
+
+
 _INLINE_TRIPLE_RE = re.compile(r"```.*?```")
 
 

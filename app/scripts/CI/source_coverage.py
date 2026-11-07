@@ -34,6 +34,11 @@
 # него. Обход корня комплекта (output/<service>) их уже видит. Если
 # передан корень docs/, дополнительно читается соседний каталог nfr/.
 # То же для мини-комплектов зоны «вне Экосистемы» modules/<имя>/ (Д-46).
+#
+# Сверка метки описи с формой страницы: опись составлена по прошлой выгрузке, а
+# метка снимает страницу с брака --strict. Для непокрытых страниц классов
+# «заморожено» и «контейнеры» форма сверяется с текущей выгрузкой, расхождение — ⚠
+# с перечнем. Класс страницы прибор не меняет, число бракующих — тоже.
 
 import argparse
 import re
@@ -42,8 +47,10 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
+    from source_inventory import _UNAPPROVED_RE  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
+    from .source_inventory import _UNAPPROVED_RE  # type: ignore  # noqa: E402
 
 _FM_BOUND = re.compile(r"^---\s*$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
@@ -341,6 +348,116 @@ def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
     return GAP
 
 
+# --- сверка метки описи с формой страницы ---
+#
+# Признаки только по разметке страницы. «Заморожено» подтверждает поле экспортёра
+# `unapproved_jira` в шапке либо отсутствие собственного содержания. «Контейнер» — страница из
+# ссылок: таблица со строкой данных не из ссылок или собственный текст сверх порога ему не
+# соответствуют. Первая строка таблицы считается шапкой, заголовки разделов — текстом не считаются.
+#
+# Порог — знаки слов вне таблиц, без ссылок и заголовков. Замер на всех описях с контейнерами
+# (КК, ЛК МП, access-rules): на страницах-оглавлениях подводка до 157 знаков, на страницах с
+# требованиями от 543; порог взят у нижней границы разрыва, спорное лучше показать.
+CONTAINER_TEXT_LIMIT = 200
+_IMAGE_RE = re.compile(r"!\[[^\]]*\]\([^)]*\)")
+_HTML_LINK_RE = re.compile(r"<a\b[^>]*>.*?</a\s*>", re.S | re.I)
+# ссылка целиком: экранированные и вложенные скобки в тексте, скобки в адресе
+_MD_LINK_RE = re.compile(r"\[(?:\\.|[^\]\\\[]|\[[^\]]*\])*\]\((?:[^()]|\([^()]*\))*\)")
+_TAG_RE = re.compile(r"<[^>]+>")
+_TABLE_RE = re.compile(r"<table\b.*?</table\s*>", re.S | re.I)
+_HEADING_RE = re.compile(r"^\s{0,3}#{1,6}\s")
+_LIST_MARK_RE = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
+_MD_RULE_RE = re.compile(r"^[|\s:-]+$")
+
+
+def _own_chars(fragment: str) -> int:
+    """Знаков в словах фрагмента без ссылок, картинок и тегов."""
+    text = _IMAGE_RE.sub(" ", fragment)
+    text = _MD_LINK_RE.sub(" ", _HTML_LINK_RE.sub(" ", text))
+    return sum(len(w) for w in re.findall(r"\w+", _TAG_RE.sub(" ", text)))
+
+
+def page_form(path: Path) -> Dict[str, int]:
+    """Форма страницы выгрузки: unapproved (поле экспортёра в шапке), tables и rows — таблицы и
+    строки данных не из ссылок, chars — собственный текст вне таблиц, html_tables — всего
+    HTML-таблиц. kitcheck.html требует bs4, поэтому импорт здесь: link_debts его не тянет."""
+    try:
+        from kitcheck.html import _fm_body, find_top_tables
+        from kitcheck.md import strip_html_comments
+    except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+        from .kitcheck.html import _fm_body, find_top_tables  # type: ignore
+        from .kitcheck.md import strip_html_comments  # type: ignore
+    text = _fs.read_text(path, encoding="utf-8", errors="replace")
+    body = strip_html_comments(_fm_body(text))
+    tops = find_top_tables(body)
+    tables = rows = 0
+    for table in tops:
+        data = sum(1 for i, tr in enumerate(r for r in table.find_all("tr")
+                                            if r.find_parent("table") is table)
+                   if i and any(_own_chars(td.decode_contents())
+                                for td in tr.find_all("td", recursive=False)))
+        tables += 1 if data else 0
+        rows += data
+    chars = 0
+    in_table = header = False
+    md_data = False
+    for ln in _TABLE_RE.sub(" ", body).splitlines():
+        st = ln.strip()
+        if st.startswith("|"):
+            if _MD_RULE_RE.match(st):
+                continue
+            if not in_table:
+                in_table, header, md_data = True, True, False
+            if header:
+                header = False
+            elif _own_chars(st):
+                rows += 1
+                if not md_data:
+                    tables, md_data = tables + 1, True
+            continue
+        in_table = False
+        if not _HEADING_RE.match(ln):
+            chars += _own_chars(_LIST_MARK_RE.sub("", ln))
+    head = "\n".join(read_frontmatter_lines(path))
+    return {"unapproved": 1 if _UNAPPROVED_RE.search(head) else 0, "tables": tables, "rows": rows,
+            "chars": chars, "html_tables": len(tops)}
+
+
+def label_form_lines(classes: Dict[str, str], pages: Dict[str, Path],
+                     inv: Dict[str, Dict[str, str]],
+                     text_limit: int = CONTAINER_TEXT_LIMIT) -> List[str]:
+    """Строки ⚠ о расхождении метки описи с формой непокрытых страниц."""
+    frozen: List[str] = []
+    containers: List[Tuple[str, Dict[str, int]]] = []
+    for pid, cls in sorted(classes.items()):
+        if cls not in (FROZEN, CONTAINER):
+            continue
+        form = page_form(pages[pid])
+        title = inv.get(pid, {}).get("title", "")
+        if cls == FROZEN:
+            if not (form["unapproved"] or form["rows"] or form["chars"] or form["html_tables"]):
+                continue  # тело пусто
+            if not form["unapproved"]:
+                frozen.append(f"  - {pid} «{title}» — строк данных {form['rows']}, знаков {form['chars']}")
+        elif form["rows"] or form["chars"] > text_limit:
+            containers.append((f"  - {pid} «{title}» — таблиц {form['tables']}, строк данных "
+                               f"{form['rows']}, знаков {form['chars']}", form))
+    lines: List[str] = []
+    if frozen:
+        lines.append(f"⚠ метка «заморожено» без признака на странице: {len(frozen)} — на странице "
+                     "текущей выгрузки нет поля unapproved_jira, а тело не пусто; проверьте метку "
+                     "описи, класс страницы прибор не менял")
+        lines.extend(frozen)
+    if containers:
+        lines.append(f"⚠ контейнер с собственным текстом: страниц {len(containers)} (таблиц "
+                     f"{sum(f['tables'] for _, f in containers)}, знаков "
+                     f"{sum(f['chars'] for _, f in containers)}) — страница описи названа "
+                     "контейнером, но несёт таблицы данных или текст сверх "
+                     f"{text_limit} знаков; проверьте метку описи, класс страницы прибор не менял")
+        lines.extend(ln for ln, _ in containers)
+    return lines
+
+
 def coverage_report(sources: Path, output: Path,
                     inventory: Optional[Path] = None):
     """(строки отчёта, число бракующих) — единая точка формата для CLI
@@ -412,6 +529,7 @@ def coverage_report(sources: Path, output: Path,
             if group:
                 lines.append(f"{c}: {len(group)}")
                 lines.extend(item(pid, p) for pid, p in group)
+        lines.extend(label_form_lines(classes, uncovered, inv))
     else:
         lines.extend(item(pid, p) for pid, p in ordered)
     if no_id:

@@ -48,7 +48,7 @@ def test_exemption_line_visible_in_selfcheck_when_green():
     from app.scripts.CI.kitcheck.core import is_soft_signal
     assert is_soft_signal("i glossary.md: сторож литералов не применяется к глоссарию")
     assert is_soft_signal("[part.md] i glossary.md: сторож литералов не применяется к глоссарию")
-    assert not is_soft_signal("i glossary.md: доп. страницы-источники (2): кавычечные литералы "
+    assert not is_soft_signal("i glossary.md: доп. страницы-источники (2): таблицы и кавычечные литералы "
                               "сверяются по каждой, прочие сторожа — по главной (первой в списке)")
 
 

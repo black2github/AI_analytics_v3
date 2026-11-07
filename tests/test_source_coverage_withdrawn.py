@@ -37,7 +37,7 @@ def kit(tmp_path: Path, rows):
 
 
 def classes(lines):
-    return [ln for ln in lines if not ln.startswith("  ")][1:]
+    return [ln for ln in lines if not ln.startswith(("  ", "⚠"))][1:]
 
 
 def test_delete_in_title_with_reference_only_is_withdrawn(tmp_path):
