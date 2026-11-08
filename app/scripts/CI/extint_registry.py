@@ -32,7 +32,15 @@ README папки АС (EXTINT-<AS>-000), корневой реестр сист
   Карточек`) ↔ папки АС;
 - «Потребители» карточки: раздел есть, три колонки, адреса абсолютные и на
   `/-/blob/HEAD/` (не `master`, `trunk`, рабочая ветка);
-- маркеры конфликта (`<<<<<<<`, `>>>>>>>` вне блоков кода) в любом `.md` — ✗.
+- маркеры конфликта (`<<<<<<<`, `>>>>>>>` вне блоков кода) в любом `.md` — ✗;
+- содержимое потребителя в базовом контракте (шаблон, раздел A, «Что содержит базовый
+  контракт»; решение владельца 2026-11-08): §1 «Где используется» не указатель шаблона,
+  §1 «Документация» без ссылки на файл в `files/` папки АС и без внешнего URL вне Confluence,
+  подраздел `###` с этими лейблами
+  в §1, шаги потребителя в §4 (нотация `**Шаг N.**`), прежний заголовок §4 — ⚠; ячейки
+  «Правил заполнения» §2/§3 с «=» в начале или ID/адресом артефакта сервиса — i-строка
+  (константу владельца от присвоения потребителя по форме не отличить);
+- ID карточек `EXTINT-<AS>-NNN` в ручном разделе «О системе» README папки АС и README канала — ⚠.
 
 Режим `--write` пересобирает выводимые таблицы «Операции», «Сообщения и файлы»,
 «Общие форматы и коды» README по шаблону (два последних раздела — только при
@@ -112,6 +120,8 @@ class Card:
         raw = path.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n")
         fm_text, self.body = frontmatter_split(raw)
         self.broken = fm_text is None
+        # номер строки файла = номер строки тела + смещение (шапка и разделители)
+        self.body_offset = raw.count("\n") - self.body.count("\n")
         self.fm: Dict[str, str] = {}
         for ln in (fm_text or "").split("\n"):
             m = re.match(r"^([\w-]+):\s*(.*?)\s*$", ln)
@@ -143,8 +153,36 @@ def _num(card_id: str) -> int:
     return int(m.group(1)) if m else 10 ** 6
 
 
+_REGISTRY_TYPE_RE = re.compile(r"^type:\s*['\"]?external-integration-registry['\"]?\s*$", re.M)
+
+
+def _is_as_dir(d: Path) -> bool:
+    """Папка АС — по форме: в ней есть карточки `extint-*.md` (вне examples/ и files/) или README
+    с `type: external-integration-registry`. Прочие каталоги верхнего уровня (рабочий sandbox/
+    исполнителя и подобные) — не АС (замечание 2026-11-08: «АС 33» при sandbox/ в worktree)."""
+    if any(not (SKIP_DIRS & set(p.relative_to(d).parts[:-1])) for p in d.rglob("extint-*.md")):
+        return True
+    readme = d / "README.md"
+    if readme.is_file():
+        fm, _body = frontmatter_split(readme.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n"))
+        return bool(fm and _REGISTRY_TYPE_RE.search(fm))
+    return False
+
+
 def as_dirs(repo: Path) -> List[Path]:
-    return sorted(p for p in repo.iterdir() if p.is_dir() and not p.name.startswith("."))
+    return sorted(p for p in repo.iterdir() if p.is_dir() and not p.name.startswith(".") and _is_as_dir(p))
+
+
+def skipped_dirs(repo: Path) -> List[str]:
+    """Каталоги верхнего уровня, не признанные папками АС (скрытые .git, .claude — молча, как прежде)."""
+    return sorted(p.name for p in repo.iterdir() if p.is_dir() and not p.name.startswith(".")
+                  and not _is_as_dir(p))
+
+
+def _skipped_note(repo: Path) -> str:
+    names = skipped_dirs(repo)
+    return (f"i каталогов пропущено: {len(names)} ({', '.join(names)}) — не папки АС: нет карточек extint-*.md "
+            "и README с type: external-integration-registry") if names else ""
 
 
 def find_cards(repo: Path) -> List[Card]:
@@ -450,15 +488,204 @@ def check_conflicts(repo: Path, rep: Report) -> None:
     rep.emit("✗", "маркер конфликта слияния", hits)
 
 
+# ---------------------------------------------------------------- содержимое потребителя в base
+#
+# Шаблон канона contract-call.md, раздел A (решение владельца 2026-11-08): базовый контракт
+# содержит то, что задаёт владелец АС; кто вызывает метод, чем потребитель заполняет параметры и
+# что делает с ответом — в карточке вызова и функции потребителя. Признаки — по форме карточки:
+# положение (§1 таблица паспорта, §4), нотация шагов канона (`**Шаг N.**`, notation.md техбука),
+# наличие ссылки на файл. Словарная часть — лейблы двух строк паспорта («Где используется»,
+# «Документация») и текст-указатель шаблона: основание — шаблон, видимость — i-строка с числом
+# проверенных строк, строка в реестре словарных эвристик README прибора.
+# указатель шаблона и его короткая прежняя форма (без хвоста «и в docs сервисов») — содержимого
+# потребителя в обеих нет (решение 2026-11-08); любой другой текст в ячейке — сигнал
+BASE_POINTERS = ("Потребители — в разделе «Потребители» и в docs сервисов",
+                 "Потребители — в разделе «Потребители»")
+BASE_MARK = "⚠"           # уровень признаков содержимого потребителя (решение владельца по замеру trunk)
+_LABEL_USED = "где используется"
+_LABEL_DOC = "документация"
+_OLD_S4_TITLE = "обработка ошибок и повторные вызовы"
+_STEP_NOTATION_RE = re.compile(r"\*\*Шаг\s*№?\s*\d+(?:\.\d+)*\.?\*\*")
+_SUBHEAD_RE = re.compile(r"^#{3,6}\s+(.+?)\s*$")
+_ASSIGN_RE = re.compile(r"^\s*(?:\*\*|__)?\s*=")
+# ID артефакта сервиса (PROC-004, CALL-EXT-049, FUN-CL-12) и адрес в чужом репозитории
+_FOREIGN_ID_RE = re.compile(r"\b(?!EXTINT-)(?:[A-Z]{2,6}-)+\d{2,3}(?:\.\d+)?\b")
+_FOREIGN_LINK_RE = re.compile(r"\]\([^)\s]*/-/blob/|\]\(\.\./\.\./")
+_ABOUT_ID_RE = re.compile(r"\bEXTINT-[A-Z0-9]+(?:-[A-Z0-9]+)*?-\d{3}\b")
+
+
+def _plain_cell(cell: str) -> str:
+    """Ячейка для сравнения: без жирного/кода, кавычки одного вида, пробелы схлопнуты, без точки в конце."""
+    s = re.sub(r"\*\*|__|`", "", cell)
+    s = re.sub(r"[«»“”„\"]", '"', s)
+    return re.sub(r"\s+", " ", s).strip().rstrip(".").casefold()
+
+
+def _numbered_sections(card: Card) -> Dict[str, Tuple[str, List[Tuple[int, str]]]]:
+    """Разделы «## N. …» тела карточки: номер → (заголовок, [(номер строки файла, строка)]) вне кода."""
+    lines = card.body.split("\n")
+    flags = code_line_flags(lines)
+    out: Dict[str, Tuple[str, List[Tuple[int, str]]]] = {}
+    cur: Optional[str] = None
+    for n, (ln, f) in enumerate(zip(lines, flags), card.body_offset + 1):
+        if f:
+            continue
+        if ln.startswith("## "):
+            m = re.match(r"^## (\d+)\.", ln)
+            cur = m.group(1) if m else None
+            if cur is not None and cur not in out:
+                out[cur] = (ln[3:].strip(), [])
+            continue
+        if cur is not None:
+            out[cur][1].append((n, ln))
+    return out
+
+
+_DOC_TARGET_RE = re.compile(r"\]\(<?([^)>]+?)>?\)")   # адрес с пробелами: «files/Интеграция с ЕПР.txt»
+
+
+_EXT_URL_RE = re.compile(r"https?://([^/\s)|>\]]+)", re.I)
+
+
+def _doc_file_state(card: Card, cell: str) -> str:
+    """«file» — в ячейке ссылка на существующий файл в files/ папки АС карточки или внешний URL вне
+    Confluence (внешняя документация владельца переносится дословно — шаблон, раздел A); «missing» —
+    ссылка в files/ есть, файла по ней нет; «» — ни того, ни другого. Confluence — по имени хоста."""
+    if any("confluence" not in h.casefold() for h in _EXT_URL_RE.findall(cell)):
+        return "file"
+    files_dir = (card.as_dir / "files").resolve()
+    state = ""
+    for target in _DOC_TARGET_RE.findall(cell):
+        t = target.split("#", 1)[0].strip()
+        if not t or re.match(r"[a-z]+://", t):
+            continue
+        p = (card.path.parent / t).resolve()
+        try:
+            p.relative_to(files_dir)
+        except ValueError:
+            continue
+        if p.is_file():
+            return "file"
+        state = "missing"
+    return state
+
+
+def check_base_content(cards: List[Card], rep: Report) -> None:
+    """Содержимое потребителя в базовом контракте (шаблон contract-call.md, раздел A)."""
+    pointers = {_plain_cell(p) for p in BASE_POINTERS}
+    used, doc, sub, steps, old4, assigns = [], [], [], [], [], []
+    n_used = n_doc = 0
+    for c in cards:
+        if c.get("type") not in ("", "external-integration"):
+            continue
+        secs = _numbered_sections(c)
+        _h1, s1 = secs.get("1", ("", []))
+        for n, ln in s1:
+            st = ln.strip()
+            mh = _SUBHEAD_RE.match(st)
+            if mh and _plain_cell(mh.group(1)).rstrip(":") in (_LABEL_USED, _LABEL_DOC):
+                sub.append(f"{c.rel}:{n}: {st[:70]}")
+                continue
+            if not st.startswith("|"):
+                continue
+            cells = table_cells(st)
+            if len(cells) < 2:
+                continue
+            label = _plain_cell(cells[0]).rstrip(":")
+            if label == _LABEL_USED:
+                n_used += 1
+                if _plain_cell(cells[1]) not in pointers:
+                    used.append(f"{c.rel}:{n}: {cells[1][:70] or NO_VALUE}")
+            elif label == _LABEL_DOC:
+                n_doc += 1
+                state = _doc_file_state(c, cells[1])
+                if state != "file":
+                    doc.append(f"{c.rel}:{n}: {cells[1][:70] or NO_VALUE}"
+                               + (" (файла по ссылке в files/ нет)" if state == "missing" else ""))
+        h4, s4 = secs.get("4", ("", []))
+        if _OLD_S4_TITLE in h4.casefold():
+            old4.append(c.rel)
+        for n, ln in s4:
+            if _STEP_NOTATION_RE.search(ln):
+                steps.append(f"{c.rel}:{n}: {ln.strip()[:70]}")
+        for key in ("2", "3"):
+            col = None
+            for n, ln in secs.get(key, ("", []))[1]:
+                st = ln.strip()
+                if not st.startswith("|"):
+                    col = None
+                    continue
+                cells = table_cells(st)
+                if col is None:
+                    col = next((i for i, h in enumerate(cells)
+                                if _plain_cell(h).startswith("правила заполнения")), -1)
+                    continue
+                if col < 0 or col >= len(cells) or all(_SEP_CELL_RE.fullmatch(x) for x in cells if x):
+                    continue
+                v = cells[col]
+                if _ASSIGN_RE.match(v) or _FOREIGN_LINK_RE.search(v) or _FOREIGN_ID_RE.search(v):
+                    assigns.append(f"{c.rel}:{n}: {cells[0][:40]} — {v[:60]}")
+    rep.info(f"содержимое потребителя в base (шаблон contract-call, раздел A): строк «Где используется» "
+             f"{n_used}, «Документация» {n_doc} — сверены с указателем шаблона и ссылкой на files/")
+    rep.emit(BASE_MARK, "§1 «Где используется» — не указатель шаблона «" + BASE_POINTERS[0]
+             + "»: содержимое — в «Процессы» карточки вызова потребителя", used)
+    rep.emit(BASE_MARK, "§1 «Документация» без ссылки на файл в files/ папки АС или внешний URL вне "
+                        "Confluence — строка не создаётся; страница владельца — в «Документация АС» README папки",
+             doc)
+    rep.emit(BASE_MARK, "§1 подраздел с лейблом паспорта «Где используется» / «Документация» — ячейки §1 "
+                        "в подразделы не выводятся", sub)
+    rep.emit(BASE_MARK, "§4 шаги потребителя (нотация **Шаг N.**) — в функцию или процесс потребителя, "
+                        "в §4 только коды результата и отказов владельца", steps)
+    rep.emit("⚠", "§4 прежний заголовок «Обработка ошибок и повторные вызовы» — «Коды результата и "
+                  "отказов» при переделке карточки", old4)
+    if assigns:
+        shown = assigns if rep.limit <= 0 else assigns[:rep.limit]
+        rep.info(f"правил-присвоений в base: {len(assigns)} — «=» в начале «Правил заполнения» или ID/адрес "
+                 "артефакта сервиса; константа владельца и присвоение потребителя по форме не различаются, "
+                 "вынос — по правилу границы шаблона:")
+        rep.lines.extend(f"   {x}" for x in shown)
+        if len(shown) < len(assigns):
+            rep.lines.append(f"   … ещё {len(assigns) - len(shown)} (полный перечень: --limit 0)")
+
+
+def check_readme_about(repo: Path, cards: List[Card], rep: Report) -> None:
+    """ID карточек в ручной части README («## О системе») — их дом выводимые таблицы
+    (шаблон contract-call.md, раздел A, README папки АС; решение владельца 2026-11-08)."""
+    dirs = sorted({c.reg_dir for c in cards} | {c.as_dir for c in cards})
+    hits = []
+    for d in dirs:
+        readme = d / "README.md"
+        if not readme.is_file():
+            continue
+        lines = readme.read_bytes().decode("utf-8", errors="replace").replace("\r\n", "\n").split("\n")
+        on = False
+        for n, (ln, f) in enumerate(zip(lines, code_line_flags(lines)), 1):
+            if f:
+                continue
+            if ln.startswith("## "):
+                on = ln.strip() == "## О системе"
+                continue
+            if on:
+                ids = list(dict.fromkeys(_ABOUT_ID_RE.findall(ln)))
+                if ids:
+                    hits.append(f"{readme.relative_to(repo).as_posix()}:{n}: {', '.join(ids)}")
+    rep.emit("⚠", "ID карточек в ручной части README («О системе») — их дом выводимые таблицы ниже", hits)
+
+
 def check(repo: Path, limit: int = 12) -> Tuple[List[str], bool]:
     """(отчёт, есть ⚠ или ✗)."""
     cards = find_cards(repo)
     rep = Report(limit)
     check_cards(cards, rep)
     check_readmes(repo, cards, rep)
+    check_readme_about(repo, cards, rep)
     check_root(repo, cards, rep)
     check_consumers(cards, rep)
+    check_base_content(cards, rep)
     check_conflicts(repo, rep)
+    note = _skipped_note(repo)
+    if note:
+        rep.lines.append(note)
     n_as = len(as_dirs(repo))
     total = f"ИТОГО: АС {n_as}, карточек {len(cards)}; ✗ {rep.fail}, ⚠ {rep.warn}"
     if not rep.fail and not rep.warn:
@@ -718,6 +945,9 @@ def write(repo: Path) -> Tuple[List[str], int]:
         report += [f"   {x}" for x in written]
     if root_note:
         report.append(root_note)
+    skipped = _skipped_note(repo)
+    if skipped:
+        report.append(skipped)
     if not (refused or created or written):
         report.append("✓ реестры совпадают с карточками — файлы не перезаписаны")
     return report, 2 if refused else 0

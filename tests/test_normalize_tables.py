@@ -5559,12 +5559,22 @@ class TestThinCallCardTableLiterals:
         assert "отсутствуют 2 имён параметров" in txt and "отсутствуют 2 из 3" in txt, txt
         assert "тонкая карточка" not in txt, txt
 
-    def test_run_process_type_unchanged(self, tmp_path):
+    def test_run_process_with_base_line_freed(self, tmp_path):
+        # процесс — держатель шагов со строкой «Базовый контракт:» (решение владельца 2026-11-08,
+        # КК FUN-SYS-41): состав страницы метода — в базовом контракте, как у тонкой карточки
         rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="process"))
+        txt = "\n".join(rep)
+        assert "i паспорт и состав страницы метода — в базовом контракте EXTINT-F1-901" in txt, txt
+        assert "отсутствуют 2 имён параметров" not in txt, txt
+        assert "тонкая карточка" not in txt, txt
+
+    def test_run_screen_form_type_unchanged(self, tmp_path):
+        # НЕсрабатывание: экранная форма со строкой базового контракта — сверка как прежде
+        rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="screen-form"))
         txt = "\n".join(rep)
         assert not ok
         assert "отсутствуют 2 имён параметров" in txt and "отсутствуют 2 из 3" in txt, txt
-        assert "тонкая карточка" not in txt, txt
+        assert "тонкая карточка" not in txt and "состав страницы метода" not in txt, txt
 
     # --- готовые md-таблицы источника (коды ошибок, справочники) ---
 
@@ -5592,8 +5602,9 @@ class TestThinCallCardTableLiterals:
         assert "тонкая карточка" not in txt, txt
 
     def test_run_md_tables_other_type(self, tmp_path):
-        # НЕсрабатывание: тип process со строкой базового контракта
-        rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="process"),
+        # НЕсрабатывание: тип вне держателей функции/процесса (экранная форма) со строкой
+        # базового контракта; процесс со строкой освобождён (решение владельца 2026-11-08)
+        rep, ok = self._run(tmp_path, self._card(self.BASE, ctype="screen-form"),
                             src_text=self.SRC + self.CODES)
         txt = "\n".join(rep)
         assert not ok and "таблица источника «№ п/п | Код | Описание» (2 строк): в карточке отсутствуют" in txt, txt

@@ -7,6 +7,7 @@ import html
 import re
 from typing import List, Tuple
 from ..html import _norm_cell, html_fragment_to_markdown, passport_cell_html
+from ..md import table_cells
 from .card_common import _LAYOUT_ROW_RE
 
 
@@ -84,43 +85,101 @@ def heavy_source_cells(src_text: str) -> List[str]:
     return out
 
 
+def _table_widths(lines: List[str]) -> List[int]:
+    """Для каждой |-строки — число колонок её таблицы (по первой строке блока |-строк)."""
+    widths: List[int] = []
+    cur = 0
+    prev_table = False
+    for ln in lines:
+        is_table = ln.lstrip().startswith("|")
+        if is_table:
+            if not prev_table:
+                cur = len(table_cells(ln.strip()))
+            widths.append(cur)
+        prev_table = is_table
+    return widths
+
+
 def check_heavy_cells(card_text: str,
-                      src_text: str) -> Tuple[List[str], bool]:
+                      src_text: str,
+                      passport_rows_ok: bool = False) -> Tuple[List[str], bool]:
     """К-29: начало/середина содержимого тяжёлой ячейки не должны жить
     внутри одной |-строки карточки (пробы по трём смещениям — замена
-    текста ссылки в одной из зон не прячет коллапс)."""
+    текста ссылки в одной из зон не прячет коллапс).
+
+    Расплющивание — когда в ОДНОЙ |-строке найдены две пробы и больше, либо
+    проба найдена в |-строке, а вне таблиц содержимого ячейки нет (ни одной
+    пробы). Одна проба в строке при содержимом вне таблиц — совпадение
+    фрагмента (имя метода в правиле заполнения, строка «Потребители»), а не
+    коллапс: i-строка. Ложный ✗ на базовом контракте EXTINT-SVFE-002 (проба —
+    имя метода из правила §2), замечание 2026-11-08.
+
+    passport_rows_ok — карточка, у которой тяжёлая ячейка паспорта законно
+    остаётся строкой двухколоночной таблицы «лейбл | значение» (базовый контракт
+    внешней АС: шаблон contract-call.md, раздел A — «ячейки §1 в подразделы ради
+    прибора не выводятся»). Тогда расплющивание в строке таблицы из двух колонок —
+    i-строка; в таблицах параметров и справочников (три колонки и больше) — ✗."""
     heavy = heavy_source_cells(src_text)
     if not heavy:
         return [], True
-    table_lines = [_norm_cell(ln) for ln in card_text.splitlines()
+    lines = card_text.splitlines()
+    table_lines = [_norm_cell(ln) for ln in lines
                    if ln.lstrip().startswith("|")]
     if not table_lines:
         return [], True
+    widths = _table_widths(lines)
+    # текст вне таблиц одной строкой: пробы режутся по схлопнутому
+    # содержимому и пересекают границы абзацев (как в check_heavy_pair_structure)
+    flat_body = " ".join(
+        t for t in (_norm_cell(re.sub(r"^[ \t]*[-+*] ", "", ln))
+                    for ln in lines if not ln.lstrip().startswith("|"))
+        if t)
     bad = 0
     sample = ""
+    single = 0
+    single_sample = ""
+    passport = 0
+    passport_sample = ""
     for cell in heavy:
         plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "",
                                   html_fragment_to_markdown(cell),
                                   flags=re.M))
         if len(plain) < 120:
             continue
-        probes = [plain[0:40], plain[40:80],
-                  plain[len(plain) // 2:len(plain) // 2 + 40]]
-        for probe in probes:
-            if len(probe) < 30:
-                continue
-            if any(probe in tl for tl in table_lines):
-                bad += 1
-                sample = probe
-                break
+        probes = [p for p in (plain[0:40], plain[40:80],
+                              plain[len(plain) // 2:len(plain) // 2 + 40])
+                  if len(p) >= 30]
+        in_rows = [sum(1 for p in probes if p in tl) for tl in table_lines]
+        hits = [p for p in probes if any(p in tl for tl in table_lines)]
+        if not hits:
+            continue
+        multi = [k for k, cnt in enumerate(in_rows) if cnt >= 2]
+        if multi and passport_rows_ok and all(widths[k] == 2 for k in multi):
+            passport += 1
+            passport_sample = hits[0]
+        elif multi or not any(p in flat_body for p in probes):
+            bad += 1
+            sample = hits[0]
+        else:
+            single += 1
+            single_sample = hits[0]
+    notes: List[str] = []
+    if passport:
+        notes.append(f"i тяжёлая ячейка паспорта перенесена строкой: {passport} (фрагмент: "
+                     f"…{passport_sample[:50]!r}…) — строка таблицы «лейбл | значение» по шаблону "
+                     "базового контракта, ячейки §1 в подразделы не выводятся")
+    if single:
+        notes.append(f"i К-29: фрагмент тяжёлой ячейки источника в строке md-таблицы ×{single} "
+                     f"(фрагмент: …{single_sample[:50]!r}…) — одна проба из трёх, содержимое "
+                     "ячейки есть вне таблиц: совпадение, не расплющивание")
     if bad:
-        return ([f"тяжёлая ячейка источника расплющена строкой md-таблицы "
-                 f"×{bad} (фрагмент: …{sample[:50]!r}…) — содержимое "
-                 "разворачивается в соответствующий РАЗДЕЛ ШАБЛОНА по "
-                 "эталону конвертера (--cell-to-md «<лейбл ячейки>»), не "
-                 "строкой таблицы ✗ НИЖЕ ПОРОГА"],
+        return (notes + [f"тяжёлая ячейка источника расплющена строкой md-таблицы "
+                         f"×{bad} (фрагмент: …{sample[:50]!r}…) — содержимое "
+                         "разворачивается в соответствующий РАЗДЕЛ ШАБЛОНА по "
+                         "эталону конвертера (--cell-to-md «<лейбл ячейки>»), не "
+                         "строкой таблицы ✗ НИЖЕ ПОРОГА"],
                 False)
-    return [], True
+    return notes, True
 
 
 # маркер контура в тексте пункта: «[O2+NEW]», «[КК_ВК]», «[ОНБ_2021]»

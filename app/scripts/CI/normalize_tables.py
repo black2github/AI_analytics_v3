@@ -645,6 +645,10 @@ def main() -> int:
                     help="для --check: файл-источник — markdown-таблицы "
                          "источника сверяются с карточкой по значениям "
                          "(потеря справочника = брак)")
+    ap.add_argument("--call", type=Path, action="append", default=None, metavar="ФАЙЛ",
+                    help="для --check базового контракта (type: external-integration): карточка "
+                         "вызова потребителя; литерал источника, которого нет в контракте, но который "
+                         "дословно есть в ней, — i «вынесено в карточку вызова»; ключ повторяется")
     ap.add_argument("--cell-to-md", metavar="ЛЕЙБЛ", default=None,
                     help="напечатать эталонную markdown-конвертацию "
                          "содержимого ячейки паспорта с данным лейблом "
@@ -699,7 +703,8 @@ def main() -> int:
         report, ok = run_check(list(args.file), args.source,
                                min_valid_pct=args.min_valid,
                                docs_root=args.docs_root,
-                               allow_sibling_docs=args.allow_sibling_docs)
+                               allow_sibling_docs=args.allow_sibling_docs,
+                               call_cards=args.call)
         for line in report:
             print(f"# {line}", file=sys.stderr)
         if not ok:

@@ -757,7 +757,9 @@ def check_quoted_literals(card_text: str,
                           sibling_text: Optional[str] = None,
                           page_artifacts: Optional[List[Tuple[str, str]]] = None,
                           thin_call: Optional[str] = None,
-                          steps_text_free: bool = False
+                          steps_text_free: bool = False,
+                          thin_label: str = "тонкая карточка вызова",
+                          call_texts: Optional[List[Tuple[str, str]]] = None
                           ) -> Tuple[List[str], bool]:
     """Каждый кавычечный литерал источника обязан присутствовать в карточке
     (сравнение нормализованное, кавычки не требуются).
@@ -782,6 +784,10 @@ def check_quoted_literals(card_text: str,
     литералы, стоящие в источнике только в таблицах и блоках кода (значения
     формата и примеров), не требуются — i-строка с числом; литерал прозы — как
     прежде.
+
+    call_texts — карточки вызова потребителей [(имя, текст)], переданные явно
+    (normalize_tables.py --check --call): у базового контракта литерал, найденный дословно в
+    такой карточке, — i-строка «вынесено в карточку вызова», не потеря.
 
     steps_text_free — доп. страница-функция у карточки вызова или экрана (решение
     владельца канона 2026-11-02, КК FUN-SYS-10 ← 2464250492): литералы, стоящие на
@@ -818,7 +824,7 @@ def check_quoted_literals(card_text: str,
         if not_prose:
             lits = [v for v in lits if v not in not_prose]
             report.append(
-                f"i тонкая карточка вызова: состав параметров и примеры — {thin_call}; "
+                f"i {thin_label}: состав параметров и примеры — {thin_call}; "
                 f"литералов из таблиц и блоков кода источника не сверялось: "
                 f"{len(not_prose)}")
     if not lits:
@@ -852,6 +858,22 @@ def check_quoted_literals(card_text: str,
                 f"i кавычечные литералы ×{len(found)} найдены в артефактах той же "
                 f"страницы ({', '.join(where)}), не в группе сверки "
                 f"({'; '.join(repr(v[:40]) for v in found[:3])})")
+    # базовый контракт и карточки вызова потребителей, переданные явно (--call): литерал
+    # потребителя, вынесенный из базового контракта по правилу границы (шаблон contract-call.md,
+    # раздел A), найден дословно в карточке вызова — не потеря; без переданной карточки — ✗
+    if lost and call_texts:
+        moved, where = [], []
+        for name, text in call_texts:
+            c_norm = _fold_homoglyphs(_norm_cell(text))
+            hit = [v for v in lost if v not in moved and _fold_homoglyphs(_norm_cell(v)) in c_norm]
+            if hit:
+                moved += hit
+                where.append(name)
+        if moved:
+            lost = [v for v in lost if v not in moved]
+            report.append(
+                f"i кавычечные литералы: вынесено в карточку вызова: {len(moved)} ({', '.join(where)}): "
+                + "; ".join(repr(v[:40]) for v in moved[:4]))
     # класс «примеры» (решение владельца канона 2026-11-01: пример не норма): литерал,
     # который в источнике стоит только в закрытом блоке кода, — значение примера; его
     # отсутствие в карточке и sidecar — предупреждение приёмке, не брак
@@ -1194,22 +1216,40 @@ _BASE_CONTRACT_LINK_RE = re.compile(
 _CARD_ID_RE = re.compile(r"^id:\s*['\"]?([\w.-]+)", re.M)
 
 
-def thin_call_home(card_text: str, debts_text: str = "") -> Optional[str]:
-    """Дом состава параметров тонкой карточки вызова («в базовом контракте <ID>» /
-    «на странице среза (долг класса)») или None — карточка не тонкая. Тип карточки
-    (contract-call) проверяет вызывающий."""
+def base_contract_ref(card_text: str) -> Optional[str]:
+    """ID базового контракта из строки «**Базовый контракт:** [EXTINT|INTC|LIBC|MOD-…](…)» вне
+    блоков кода или None. Признак — форма строки шапки карточки, слов источника нет."""
     lines = card_text.split("\n")
     code = _fence.code_flags(lines)
     m = _BASE_CONTRACT_LINK_RE.search(
         "\n".join(ln for i, ln in enumerate(lines) if not code[i]))
-    if m:
-        return f"в базовом контракте {m.group(1)}"
+    return m.group(1) if m else None
+
+
+def thin_call_home(card_text: str, debts_text: str = "") -> Optional[str]:
+    """Дом состава параметров тонкой карточки вызова («в базовом контракте <ID>» /
+    «на странице среза (долг класса)») или None — карточка не тонкая. Тип карточки
+    (contract-call) проверяет вызывающий."""
+    ref = base_contract_ref(card_text)
+    if ref:
+        return f"в базовом контракте {ref}"
     cid = _CARD_ID_RE.search(_fm_head(card_text))
     if cid and debts_text and re.search(
             rf"^\|\s*{re.escape(cid.group(1))}\s*\|[^\n]*класс карточки",
             debts_text, re.M | re.I):
         return "на странице среза (долг класса)"
     return None
+
+
+# Объявленная словарная эвристика (реестр в README прибора, норма — шаблон contract-call.md,
+# раздел A): лейблы двух строк паспорта страницы метода, содержимое которых в базовый контракт
+# дословно не переносится; тот же перечень сторожит extint_registry.py (BASE_POINTERS, лейблы).
+_BASE_PASSPORT_LABELS = frozenset({"где используется", "документация"})
+
+
+def _plain_label(cell: str) -> str:
+    """Лейбл строки паспорта для сравнения: без жирного, двоеточия, регистра и лишних пробелов."""
+    return re.sub(r"\s+", " ", re.sub(r"\*\*|__", "", cell)).strip().rstrip(":").strip().casefold()
 
 
 def _is_history_table(hdr: List[str]) -> bool:
@@ -1227,7 +1267,9 @@ def _is_history_table(hdr: List[str]) -> bool:
 def check_source_tables(card_text: str, source_text: str,
                         thin_call: Optional[str] = None,
                         linked_calls: Optional[List[Tuple[str, str]]] = None,
-                        page_artifacts: Optional[List[Tuple[str, str]]] = None
+                        page_artifacts: Optional[List[Tuple[str, str]]] = None,
+                        thin_label: str = "тонкая карточка вызова",
+                        base_contract: bool = False
                         ) -> Tuple[List[str], bool]:
     """Сверка с источником: каждая ГОТОВАЯ markdown-таблица источника (вне
     сырого HTML — например «Коды банковских продуктов») обязана присутствовать
@@ -1243,7 +1285,13 @@ def check_source_tables(card_text: str, source_text: str,
 
     page_artifacts — [(путь, текст)] других карточек комплекта, у которых эта страница стоит в
     confluence_page_ids: вердикт по странице — по объединению таких карточек, значение,
-    найденное там, не потеря, а разложение — i-строка с числом и файлами."""
+    найденное там, не потеря, а разложение — i-строка с числом и файлами.
+
+    base_contract — карточка базового контракта внешней АС: строки таблицы-паспорта источника с
+    лейблами «Где используется» и «Документация» не требуются (шаблон contract-call.md, раздел A:
+    содержимое потребителя — в «Процессы» его карточки вызова, документ — файлом в files/ или
+    строкой «Документация АС» README папки) — i-строка с числом; строку карточки сторожит
+    extint_registry.py --check."""
     report: List[str] = []
     ok = True
     card_norm = _cmp_text(card_text)
@@ -1257,6 +1305,7 @@ def check_source_tables(card_text: str, source_text: str,
         return bool(hits)
 
     thin_tables = thin_rows = 0
+    base_rows = 0
     history = [rows for hdr, rows in parse_md_tables(source_text) if _is_history_table(hdr)]
     if history:
         report.append(f"i таблиц истории изменений не сверялось: {len(history)} "
@@ -1302,6 +1351,12 @@ def check_source_tables(card_text: str, source_text: str,
             thin_tables += 1
             thin_rows += len(check_rows)
             continue
+        # двухколоночная таблица «лейбл | значение» (паспорт страницы метода; лейблы бывают
+        # смешанные — жирные и обычным текстом, f1 «Документация»)
+        if base_contract and len(hdr) == 2:
+            kept = [r for r in check_rows if _plain_label(r[0]) not in _BASE_PASSPORT_LABELS]
+            base_rows += len(check_rows) - len(kept)
+            check_rows = kept
         missing: List[str] = []
         img_mixed: List[str] = []
         url_cells: List[str] = []
@@ -1397,9 +1452,14 @@ def check_source_tables(card_text: str, source_text: str,
                 f"×{len(url_cells)} полнотой не считаются (живые URL не "
                 "переносятся); содержимое по ссылке — отдельная страница "
                 "или долг")
+    if base_rows:
+        report.append(
+            f"i строки паспорта источника «Где используется» / «Документация» в базовом контракте не "
+            f"требуются: {base_rows} — содержимое потребителя в его карточке вызова, документ — в files/ "
+            "или README папки АС (шаблон contract-call, раздел A)")
     if thin_tables:
         report.append(
-            f"i тонкая карточка вызова: состав параметров и примеры — {thin_call}; "
+            f"i {thin_label}: состав параметров и примеры — {thin_call}; "
             f"таблиц источника не сверялось: {thin_tables} (строк {thin_rows})")
     # Полнота HTML-таблиц источника: каждое имя параметра из раскрытых
     # сеток обязано присутствовать в карточке (инцидент 2026-08-12:
@@ -1429,7 +1489,7 @@ def check_source_tables(card_text: str, source_text: str,
             + ", ".join(repr(v[:40]) for v in on_page[:3]))
     if thin_call and html_names:
         report.append(
-            f"i тонкая карточка вызова: состав параметров — {thin_call}; "
+            f"i {thin_label}: состав параметров — {thin_call}; "
             f"имён параметров HTML-таблиц не сверялось: {len(html_names)}")
     elif lost:
         ok = False

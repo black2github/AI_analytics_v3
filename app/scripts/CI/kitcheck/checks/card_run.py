@@ -26,7 +26,7 @@ from .card_source import (
     _fc_source_page_refs_and_columns, _frontmatter_title, check_cell_coverage,
     check_image_trace, check_outside_template_section,
     check_quoted_literals, check_source_tables, check_title, check_unchecked_tables,
-    source_role_literals, source_tables_summary, thin_call_home
+    source_role_literals, source_tables_summary, thin_call_home, base_contract_ref
 )
 from .card_steps import (
     check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
@@ -123,6 +123,8 @@ _NO_LITERALS_TYPES = {"glossary": "глоссарию", "domain-vision": "вид
                       "vision": "видению сервиса"}
 # держатели шагов страницы: у группы с главной карточкой вызова поведение сверяется по ним
 _STEP_HOLDER_TYPES = frozenset({"function", "process", "screen-form"})
+# держатели шагов, у которых строка «**Базовый контракт:**» освобождает состав страницы метода
+_BASE_HOLDER_TYPES = frozenset({"function", "process"})
 # страница-функция выгрузки: паспорт функции с ячейкой «Что делает функция»
 _FUNCTION_PAGE_RE = re.compile(r"Что делает функция", re.I)
 
@@ -209,7 +211,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               allow_sibling_docs: bool = False,
               without_sources: bool = False,
               inventory: Optional[Path] = None,
-              group_extra_sources: Optional[List[Tuple[Path, Path]]] = None
+              group_extra_sources: Optional[List[Tuple[Path, Path]]] = None,
+              call_cards: Optional[List[Path]] = None
               ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
@@ -300,7 +303,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                 continue
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -330,6 +333,7 @@ class _SourceCtx:
     allow_sibling_docs: object
     inventory: object = None
     group_extra_sources: object = None
+    call_cards: object = None
 
 
 
@@ -649,6 +653,27 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         thin_call = (thin_call_home(card_text, debts_text)
                      if m_type is not None and m_type.group(1) == "contract-call"
                      else None)
+        thin_label = "тонкая карточка вызова"
+        is_base = m_type is not None and m_type.group(1) == "external-integration"
+        # карточки вызова потребителей, переданные явно (--call): только у базового контракта
+        call_texts = ([(Path(p).name, _fs.read_text(Path(p), encoding="utf-8", errors="replace"))
+                       for p in (fx.call_cards or [])] if is_base and fx.call_cards else None)
+        if fx.call_cards and not is_base:
+            report.append("i --call: карточки вызова учитываются только у базового контракта "
+                          "(type: external-integration) — не применено")
+        # держатель шагов со строкой «**Базовый контракт:** [EXTINT|INTC|LIBC|MOD-…]» (функция или
+        # процесс от страницы метода — дом шагов потребителя, решение владельца 2026-11-08, КК
+        # FUN-SYS-41 ← SVFE 2184432769): состав страницы метода — в базовом контракте, освобождение
+        # то же, что у тонкой карточки вызова; литералы прозы и шаги — как прежде. Признак — форма
+        # строки шапки карточки
+        holder_base = (base_contract_ref(card_text)
+                       if m_type is not None and m_type.group(1) in _BASE_HOLDER_TYPES else None)
+        if holder_base:
+            thin_call = f"в базовом контракте {holder_base}"
+            thin_label = "состав страницы метода"
+            report.append(f"i паспорт и состав страницы метода — в базовом контракте {holder_base}: "
+                          "лейбл-секции паспорта (К-34, К-25d), таблицы и имена параметров страницы не "
+                          "сверяются, литералы прозы и шаги — как прежде")
 
         def _owner_thin(owner: Optional[Path]):
             # освобождение тонкой карточки вызова — свойство карточки-владельца доп. страницы:
@@ -661,6 +686,9 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                 return thin_call_home(o_text, debts_text)
             return None
 
+        def _owner_label(owner: Optional[Path]) -> str:
+            return thin_label if owner is None else "тонкая карточка вызова"
+
         def _owner_tag(p: Path, p_text: str, owner: Optional[Path]) -> str:
             tag = _extra_page_tag(p, p_text)
             return tag if owner is None else f"{tag} карточки {owner.name}"
@@ -672,7 +700,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         # значение страницы перенесено, если оно есть в любой карточке с этой страницей в
         # confluence_page_ids (главной или дополнительной): вердикт — по объединению таких карточек
         src_report, src_ok = check_source_tables(
-            combined, src_text, thin_call=thin_call, linked_calls=linked_calls,
+            combined, src_text, thin_call=thin_call, linked_calls=linked_calls, thin_label=thin_label,
+            base_contract=is_base,
             page_artifacts=_page_cards(docs_root, _page_id_of(src_text), files) or None)
         # сводные типы (глоссарий, видения) — как у литералов: доп. страницы они обобщают, а не
         # переносят; число несверенных страниц видно приёмке
@@ -686,6 +715,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             p_text = _fs.read_text(p, encoding="utf-8", errors="replace")
             p_rep, p_ok = check_source_tables(
                 combined, p_text, thin_call=_owner_thin(owner), linked_calls=linked_calls,
+                thin_label=_owner_label(owner), base_contract=is_base,
                 page_artifacts=_page_cards(docs_root, _page_id_of(p_text), files) or None)
             tag = _owner_tag(p, p_text, owner)
             src_report = src_report + [_extra_table_line(ln, tag) for ln in p_rep]
@@ -772,8 +802,10 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         st_report, st_ok = (check_step_markers(combined, src_text)
                             if steps_apply else ([], True))
         # К-34: лейбл-секции паспорта — только функции (у data-model
-        # паспорт-таблица — легитимный слот шаблона)
-        if m_type is not None and m_type.group(1) == "function":
+        # паспорт-таблица — легитимный слот шаблона). Держатель шагов со строкой
+        # «Базовый контракт:» — паспорт метода живёт в базовом контракте, К-34 и
+        # К-25d к нему (и к группе, где он главный) не применяются
+        if m_type is not None and m_type.group(1) == "function" and not holder_base:
             ls_report, ls_ok = check_label_sections(combined, src_text)
             report.extend(ls_report)
             ok = ok and ls_ok
@@ -783,15 +815,20 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                                                      docs_root)
         report.extend(sm_report)
         ok = ok and sm_ok
-        # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый
-        hc_report, hc_ok = check_heavy_cells(combined, src_text)
+        # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый; у базового
+        # контракта внешней АС тяжёлая ячейка паспорта законно остаётся строкой
+        # таблицы §1 (шаблон contract-call.md, раздел A) — там это i-строка
+        hc_report, hc_ok = check_heavy_cells(
+            combined, src_text,
+            passport_rows_ok=m_type is not None and m_type.group(1) == "external-integration")
         report.extend(hc_report)
         ok = ok and hc_ok
         # К-25d: профили вынесенных лейбл-секций против эталона
-        hp_report, hp_ok = check_heavy_pair_structure(
-            combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root, fx.inventory))
-        report.extend(hp_report)
-        ok = ok and hp_ok
+        if not holder_base:
+            hp_report, hp_ok = check_heavy_pair_structure(
+                combined, src_text, own_contour=_copy_method_page_contour(src_text, docs_root, fx.inventory))
+            report.extend(hp_report)
+            ok = ok and hp_ok
         # К-26: по-шаговая структура тел (типы с поведением)
         if steps_apply:
             # FB-16 КК (fun-sys-16): вторая карточка группы (intc) несёт
@@ -843,7 +880,8 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             ql_report, ql_ok = check_quoted_literals(combined, src_text,
                                                      sibling_text=sib_txt,
                                                      page_artifacts=page_art,
-                                                     thin_call=thin_call)
+                                                     thin_call=thin_call, thin_label=thin_label,
+                                                     call_texts=call_texts)
             # доп. страницы карточки (решение владельца канона 2026-11-01, замер КК: 59 потерь в
             # 3 парах из 60): литералы сверяются как у главной — та же группа, sidecar, соседи,
             # артефакты страницы и освобождения; строки — с page_id и title страницы. Страница
@@ -863,7 +901,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                                                  skip_dir=main_file.parent) if a not in p_art]
                 p_rep, p_ok = check_quoted_literals(
                     combined, p_text, sibling_text=sib_txt, page_artifacts=p_art or None,
-                    thin_call=_owner_thin(owner),
+                    thin_call=_owner_thin(owner), thin_label=_owner_label(owner),
                     steps_text_free=call_group and _FUNCTION_PAGE_RE.search(p_text) is not None)
                 tag = _owner_tag(p, p_text, owner)
                 ql_report += [_extra_page_line(ln, tag) for ln in p_rep]
