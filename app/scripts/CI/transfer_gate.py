@@ -154,6 +154,19 @@
 #                       warn (по умолчанию) — ⚠ в полном режиме, вердикт не меняет;
 #                       block — в полном режиме строки без записи переноса дают ✗;
 #                       в режиме --after-step — i при любом значении
+#   --inventory <файл>  опись выгрузки (inventory.md) явно; без ключа ищется рядом с
+#                       комплектом (в корне комплекта, затем в его родителе). В
+#                       репозиторий документации опись не переносится, поэтому на
+#                       переходный период гейт целевого запускается с описью src:
+#                       --sources <src>/sources/confluence --inventory <src>/inventory.md.
+#                       Явный путь сильнее найденного; план миграции для строки долгов
+#                       на собственный заход берётся рядом с этой описью. Строка отчёта
+#                       «опись: …» называет, какая опись действовала; файла по ключу
+#                       нет — ✗ (без тихого отката к описи рядом с комплектом)
+#   --raw <каталог>     архив выгрузки sources/raw — передаётся прибору (сверка по
+#                       архиву raw, как ключ selfcheck --raw); по умолчанию выключен
+#   --bundle <каталог>  каталог бандла экспортёра для сверки по архиву raw (как ключ
+#                       selfcheck --bundle)
 #
 # ПРИМЕР.
 #   python _meta/tools/transfer_gate.py --src C:\doc-as-code\EAS\src-business-cards
@@ -859,16 +872,19 @@ def own_target_debts(matrix_text: str, inventory: Optional[Path],
 
 
 def check_own_debts(gate: Gate, staged: Path, docs: Path, after_step: bool,
-                    mode: str = "warn") -> Optional[dict]:
+                    mode: str = "warn",
+                    kit_files: Optional[Tuple[Optional[Path], Optional[Path]]] = None
+                    ) -> Optional[dict]:
     """Строка CORE-20 «долги на собственный заход». Режим --after-step — i: в ходе миграции цель
     следующего захода норма. Полный режим — ⚠, вердикт не меняет; при mode="block" строки А и Б
-    без записи переноса — ✗."""
+    без записи переноса — ✗. kit_files — (опись, план миграции), выбранные run_gate (явный
+    --inventory сильнее локатора); без параметра — локатор рядом с комплектом."""
     matrix = staged / "traceability-matrix.md"
     if not matrix.is_file():
         return None
-    res = own_target_debts(matrix.read_text(encoding="utf-8", errors="replace"),
-                           find_kit_file(docs, "inventory.md"),
-                           find_kit_file(docs, "migration-plan.md"))
+    inv, plan = kit_files if kit_files is not None else (
+        find_kit_file(docs, "inventory.md"), find_kit_file(docs, "migration-plan.md"))
+    res = own_target_debts(matrix.read_text(encoding="utf-8", errors="replace"), inv, plan)
     n_signed = res["a"] + res["b"]
     text = (f"долги «требуется заход» при источнике в выгрузке: А — {res['a']}, "
             f"Б (карточки вызова) — {res['b']}; с записью переноса — {res['k']}")
@@ -893,6 +909,35 @@ def check_own_debts(gate: Gate, staged: Path, docs: Path, after_step: bool,
 
 # --- шаг 2: прибор миграции -----------------------------------------------------
 
+def kit_inventory(gate: Gate, docs: Path, inventory: Optional[Path] = None
+                  ) -> Tuple[Optional[Path], Optional[Path]]:
+    """(опись, план миграции) для прибора и строки долгов на собственный заход + строка отчёта
+    «опись: …». Явный --inventory сильнее локатора: в репозиторий документации опись не
+    переносится (stage_kit копирует только комплект), на переходный период её дают из src;
+    план тогда берётся рядом с этой описью. Файла по ключу нет — ✗, без тихого отката к описи
+    рядом с комплектом (асимметрия: «нашлась не та опись» хуже явного отказа)."""
+    if inventory is not None:
+        if not inventory.is_file():
+            gate.add("✗", "ПРИБОР", f"опись (--inventory) не найдена: {inventory.as_posix()} — "
+                     "помилования по описи не действуют", check="опись выгрузки")
+            return None, None
+        plan = inventory.parent / "migration-plan.md"
+        plan = plan if plan.is_file() else None
+        gate.add("i", "ПРИБОР", f"опись: {inventory.as_posix()} (внешняя, --inventory); план "
+                 f"миграции: {plan.as_posix() if plan else 'рядом с описью не найден'}",
+                 check="опись выгрузки")
+        return inventory, plan
+    inv = find_kit_file(docs, "inventory.md")
+    if inv is None:
+        gate.add("i", "ПРИБОР", "опись: не найдена — помилования по описи не действуют (доводы "
+                 "прибора по описи, признак А долгов на собственный заход); репозиторий "
+                 "документации на переходный период — --inventory <src>/inventory.md",
+                 check="опись выгрузки")
+        return None, find_kit_file(docs, "migration-plan.md")
+    gate.add("i", "ПРИБОР", f"опись: {inv.as_posix()}", check="опись выгрузки")
+    return inv, find_kit_file(docs, "migration-plan.md")
+
+
 def find_sources(src_root: Path) -> Optional[Path]:
     for rel in ("sources/confluence", "confluence"):
         if (src_root / rel).is_dir():
@@ -901,13 +946,16 @@ def find_sources(src_root: Path) -> Optional[Path]:
 
 
 def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
-                  strict: bool, inventory: Optional[Path] = None) -> None:
+                  strict: bool, inventory: Optional[Path] = None,
+                  raw: Optional[Path] = None, bundle: Optional[Path] = None) -> None:
     """selfcheck на собранной копии комплекта. inventory — опись выгрузки источника
-    (inventory.md рядом с docs/ или в корне репозитория документации): в копию она не
-    переносится, а доводы прибора по описи (копия страницы метода, страница вне подсервиса)
-    без неё не срабатывают — гейт расходился бы с прямым прогоном того же дерева."""
+    (inventory.md рядом с docs/ или в корне репозитория документации, либо явный --inventory):
+    в копию она не переносится, а доводы прибора по описи (копия страницы метода, страница вне
+    подсервиса) без неё не срабатывают — гейт расходился бы с прямым прогоном того же дерева.
+    raw, bundle — ключи selfcheck --raw / --bundle как есть."""
     try:
-        report, ok = sc.run(staged, sources, strict=strict, inventory=inventory)
+        report, ok = sc.run(staged, sources, strict=strict, inventory=inventory,
+                            raw=raw, bundle=bundle)
     except Exception as e:  # noqa: BLE001
         gate.add("✗", "ПРИБОР", f"selfcheck упал: {e!r} — комплект не проверен")
         return
@@ -1317,7 +1365,9 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
              fmt: str = "log",
              questions: Optional[Path] = None, after_step: bool = False,
              baseline: Optional[Path] = None,
-             own_debts: str = "warn") -> Tuple[List[str], bool, dict]:
+             own_debts: str = "warn",
+             inventory: Optional[Path] = None, raw: Optional[Path] = None,
+             bundle: Optional[Path] = None) -> Tuple[List[str], bool, dict]:
     """fmt: "log" — журнал в порядке проверок (по умолчанию для вызова из кода и
     тестов); "table" — markdown-таблица с группировкой и легендой меток.
 
@@ -1399,13 +1449,14 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
             gate.add("⚠", "ПРИБОР", "каталог выгрузки источников не найден "
                      "(sources/confluence, confluence) — прибор идёт без сверки "
                      "с источником; задайте --sources")
+        kit_files = kit_inventory(gate, docs, inventory)
         if not after_step:
-            run_selfcheck(gate, staged, sources, strict, find_kit_file(docs, "inventory.md"))
+            run_selfcheck(gate, staged, sources, strict, kit_files[0], raw, bundle)
         check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
                                   sources, questions)
         if after_step:
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
-        own = check_own_debts(gate, staged, docs, after_step, own_debts)
+        own = check_own_debts(gate, staged, docs, after_step, own_debts, kit_files)
         check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
@@ -1480,6 +1531,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                               "blockers": gate.blockers, "warnings": n_warn,
                               "lines": gate.as_dicts(),
                               "src": str(src_root), "sources": str(sources) if sources else None,
+                              "inventory": str(kit_files[0]) if kit_files[0] else None,
                               "strict": strict, "debts": debts_rows, "own_debts": own,
                               "docs_repo": docs_repo,
                               "src_git": src_git_state(src_root),
@@ -1624,7 +1676,8 @@ def write_report(path: Path, src_root: Path, table_lines: List[str], data: dict)
                if git.get("dirty") else "") + ". "
             f"Автор проверки: {git.get('author', 'не указан')}. "
             f"Срез канона по профилю: `{canon_cut_of(src_root)}`. "
-            f"Источники: `{data.get('sources') or 'не найдены'}`; профиль прибора: "
+            f"Источники: `{data.get('sources') or 'не найдены'}`; опись: "
+            f"`{data.get('inventory') or 'не найдена'}`; профиль прибора: "
             f"{'полный' if data.get('strict') else 'командный'}. Валидатор платформы: "
             f"{data.get('validator') or 'не запускался'}. Инструмент — `transfer_gate.py`; "
             "таблица — приложение к протоколу самопроверки чек-листа DoR (раздел «Технологическая "
@@ -1719,6 +1772,13 @@ def main() -> int:
                     help="долги «нет целевого артефакта» при источнике в выгрузке: warn — ⚠ в полном "
                          "режиме (по умолчанию), block — ✗ в полном режиме для строк без записи "
                          "переноса; в режиме --after-step — i при любом значении")
+    ap.add_argument("--inventory", type=Path, default=None,
+                    help="опись выгрузки inventory.md явно (сильнее найденной рядом с комплектом); "
+                         "репозиторий документации на переходный период — опись src")
+    ap.add_argument("--raw", type=Path, default=None,
+                    help="архив выгрузки sources/raw для прибора (как selfcheck --raw)")
+    ap.add_argument("--bundle", type=Path, default=None,
+                    help="каталог бандла экспортёра для сверки по архиву raw (как selfcheck --bundle)")
     a = ap.parse_args()
     fmt = "log" if a.log else "table"
     try:
@@ -1727,7 +1787,10 @@ def main() -> int:
                                       a.sources.resolve() if a.sources else None,
                                       a.strict, fmt,
                                       a.questions.resolve() if a.questions else None,
-                                      a.after_step, a.baseline, a.own_debts)
+                                      a.after_step, a.baseline, a.own_debts,
+                                      a.inventory.resolve() if a.inventory else None,
+                                      a.raw.resolve() if a.raw else None,
+                                      a.bundle.resolve() if a.bundle else None)
     except Exception as e:  # noqa: BLE001
         print(f"✗ гейт не отработал: {e!r}")
         return 2
