@@ -575,6 +575,28 @@ def _linked_call_cards(card_text: str, main_file: Path) -> List[Tuple[str, str]]
     return out
 
 
+def _group_linked_calls(fx: "_SourceCtx", main_type: Optional[str]) -> Optional[List[Tuple[str, str]]]:
+    """Карточки вызова по ссылке для сторожа имён параметров — от группы, а не от главного файла
+    (КК FUN-SYS-10 + карточка вызова той же страницы, 2026-11-09): ссылки главной карточки, если
+    она держатель шагов или карточка вызова, и каждого неглавного держателя шагов группы
+    (function / process / screen-form). Одиночная карточка — как прежде: только держатель шагов.
+    Найденное в связанных карточках идёт i-строкой с их перечнем; не найденное нигде — ✗."""
+    main_file = fx.main_file
+    if main_file is None:
+        return None
+    out: List[Tuple[str, str]] = []
+    if main_type in _STEP_HOLDER_TYPES or (main_type == "contract-call" and len(fx.files) > 1):
+        out.extend(_linked_call_cards(fx.card_text, main_file))
+    for f in fx.files[1:]:
+        t = _fs.read_text(f, encoding="utf-8", errors="replace")
+        ft = re.search(r"^type:\s*([\w-]+)", _fm_head(t), re.M)
+        if ft and ft.group(1) in _STEP_HOLDER_TYPES:
+            out.extend(c for c in _linked_call_cards(t, f) if c[0] not in {i for i, _ in out})
+    if main_type in _STEP_HOLDER_TYPES or out:
+        return out
+    return None
+
+
 def _page_cards(docs_root: Optional[Path], pid: str, files: List[Path],
                 skip_dir: Optional[Path] = None) -> List[Tuple[str, str]]:
     """[(путь, текст)] карточек комплекта с этой страницей в confluence_page_ids в любой позиции,
@@ -694,9 +716,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             return tag if owner is None else f"{tag} карточки {owner.name}"
         # карточки вызова, на которые ссылается держатель шагов: таблица шага вынесена в них
         # (решение владельца канона 2026-11-02) — имена параметров ищутся и там
-        linked_calls = (_linked_call_cards(card_text, main_file)
-                        if m_type is not None and m_type.group(1) in _STEP_HOLDER_TYPES
-                        and main_file is not None else None)
+        linked_calls = _group_linked_calls(fx, m_type.group(1) if m_type is not None else None)
         # значение страницы перенесено, если оно есть в любой карточке с этой страницей в
         # confluence_page_ids (главной или дополнительной): вердикт — по объединению таких карточек
         src_report, src_ok = check_source_tables(
