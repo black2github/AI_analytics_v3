@@ -58,13 +58,13 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 try:
     from kitcheck.md import (  # noqa: E402,F401 — примитивы markdown (этап 1б); имена
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,  # сохраняются в selfcheck для
-        gitlab_slug, in_dot_dir, is_task_file,  # утилит и тестов, которые зовут их
+        gitlab_slug, in_dot_dir, in_sources_dir, is_task_file, set_source_dirs,  # утилит и тестов, которые зовут их
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,  # как selfcheck.*
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402,F401
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,
-        gitlab_slug, in_dot_dir, is_task_file,
+        gitlab_slug, in_dot_dir, in_sources_dir, is_task_file, set_source_dirs,
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 try:
@@ -375,9 +375,23 @@ def _run_impl(docs: Path, sources: Optional[Path],
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
+    # каталоги выгрузки внутри комплекта в корне репозитория (П3 ОНБ-В п. 1): вне обхода по пути,
+    # число снятых файлов — строкой i (молчаливых пропусков нет)
+    set_source_dirs([sources] if sources is not None else [])
+    src_skipped: Dict[str, int] = {}
+    for p in sorted(docs.rglob("*.md")):
+        if in_sources_dir(p, docs) and not in_dot_dir(p, docs):
+            top = p.relative_to(docs).parts[0]
+            src_skipped[top] = src_skipped.get(top, 0) + 1
+    if src_skipped:
+        report.append("i каталоги выгрузки внутри комплекта — вне сверки (страницы выгрузки и "
+                      "профиль источников не документы комплекта): "
+                      + ", ".join(f"{k}/ ({v})" for k, v in sorted(src_skipped.items())))
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
+            continue
+        if in_sources_dir(p, docs):
             continue
         if is_task_file(p, docs):
             # строка-сигнал без счётчика: постановка — источник правок,
@@ -901,13 +915,38 @@ def _kc_title_uniqueness(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     # файлов групп; группы, уже названные по шапкам, не повторяются
     seen = [set(re.findall(r"[A-ZА-Я]{2,}[-\w.]*\d", ln.split(" — ")[0])) for ln in tu_rep]
     rn_rep = check_registry_name_duplicates(docs / "traceability-matrix.md", seen)
-    if rn_rep:
-        report.append(f"⚠ одинаковые названия разных ID одного типа (реестр матрицы): "
-                      f"групп {len(rn_rep)}")
-        report.extend(f"   {ln}" for ln in rn_rep[:30])
-        if len(rn_rep) > 30:
-            report.append(f"   … и ещё {len(rn_rep) - 30}")
+    # пакет П3 ОНБ-В, п. 3 (решение владельца 09.11, замер волны Д: на КК 8 из 10 групп — форма
+    # источника, однотипные проверки полей в разных блоках): строка понижена до i, перечень
+    # печатается — он нужен заходу для поиска дублей проверок. Истинный класс выделен по форме в
+    # ⚠: название — метка вместо названия (латинский код без слов, «BE»; или значение `type`
+    # документов комплекта, «internal-contract»)
+    kit_types = {typ for typ, _t, _i in card_titles.values() if typ}
+    label_rep = [ln for ln in rn_rep if registry_label_name(ln, kit_types)]
+    rest_rep = [ln for ln in rn_rep if ln not in label_rep]
+    if label_rep:
+        report.append(f"⚠ название-метка вместо названия у разных ID одного типа (реестр "
+                      f"матрицы — код контура или тип документа): групп {len(label_rep)}")
+        report.extend(f"   {ln}" for ln in label_rep[:30])
+    if rest_rep:
+        report.append(f"i одинаковые названия разных ID одного типа (реестр матрицы): "
+                      f"групп {len(rest_rep)}")
+        report.extend(f"   {ln}" for ln in rest_rep[:30])
+        if len(rest_rep) > 30:
+            report.append(f"   … и ещё {len(rest_rep) - 30}")
     return report, all_ok
+
+
+_LABEL_CODE_RE = re.compile(r"^[A-Z]{2,4}$")
+
+
+def registry_label_name(line: str, kit_types: set) -> bool:
+    """Строка группы дублей реестра («ID, ID — «название»»): название — метка вместо
+    названия: латинский код без слов (`BE`, `FE`) или значение `type` документов комплекта."""
+    m = re.search(r" — «(.*)»$", line)
+    if not m:
+        return False
+    name = m.group(1).strip()
+    return bool(_LABEL_CODE_RE.match(name)) or name.lower() in {t.lower() for t in kit_types}
 
 
 # Волна 9 ОНБ-В (ЗК-05, ПР-09): два написания одного значения переносились без вопроса
@@ -1070,9 +1109,10 @@ def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     if not oq.is_file():
         oq = ctx.docs.parent / "open-questions.md"
     rep, _ = _safe(lambda: (oq_class_counter(oq), True))
-    # B10: запись закрыта с даты нормы закрытия без коммита, тега или «без изменений»
+    # B10: запись закрыта с даты нормы закрытия без коммита, тега или «без изменений» — ✗
+    # (пакет П3 ОНБ-В, решение владельца 2026-11-09)
     crep, _ = _safe(lambda: (check_oq_close_form(oq), True))
-    return rep + crep, True
+    return rep + crep, not crep
 
 
 def _kc_outside_eco_by_passport(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -1109,9 +1149,10 @@ def _kc_source_silent(ctx: "_KitCtx") -> Tuple[List[str], bool]:
 
 
 def _kc_outside_refs(ctx: "_KitCtx") -> Tuple[List[str], bool]:
-    # текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»): ⚠
+    # текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»): ✗ (пакет П3
+    # ОНБ-В, решение владельца 2026-11-09)
     rep, _ = _safe(lambda: (check_outside_refs(ctx.docs), True))
-    return rep, True
+    return rep, not rep
 
 
 def _kc_page_ids_in_kit(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -1311,7 +1352,7 @@ def _kc_file_artifacts(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     all_ok = True
     # сторож не-markdown артефактов files/ (сироты и битые ссылки —
     # брак: потеря приложения молчаливая)
-    fa_rep, fa_ok = _safe(check_file_artifacts, docs)
+    fa_rep, fa_ok = _safe(check_file_artifacts, docs, ctx.sources)
     all_ok = all_ok and fa_ok
     report.extend(fa_rep)
     return report, all_ok
@@ -1388,7 +1429,7 @@ KIT_CHECKS: List[Check] = [
     Check("frontmatter_schema", _kc_frontmatter_schema, affects_verdict=False),
     Check("title_uniqueness", _kc_title_uniqueness, affects_verdict=False),
     Check("source_silent", _kc_source_silent, affects_verdict=False),
-    Check("outside_refs", _kc_outside_refs, affects_verdict=False),
+    Check("outside_refs", _kc_outside_refs, affects_verdict=True),
     Check("page_ids_in_kit", _kc_page_ids_in_kit, affects_verdict=True),
     Check("required_sections", _kc_required_sections, affects_verdict=False),
     Check("process_call", _kc_process_call, affects_verdict=False),
@@ -1416,7 +1457,7 @@ KIT_CHECKS: List[Check] = [
     Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
           affects_verdict=False),
     Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),
-    Check("oq_classes", _kc_oq_classes, affects_verdict=False),
+    Check("oq_classes", _kc_oq_classes, affects_verdict=True),
     Check("task_tags", _kc_task_tags, affects_verdict=False),
     Check("outside_eco_by_passport", _kc_outside_eco_by_passport, affects_verdict=False),
 ]

@@ -23,8 +23,9 @@ def _titles(docs: Path):
 
 def test_same_title_same_type_flagged(tmp_path):
     docs = tmp_path / "docs"
-    _card(docs / "srs/a/data-model/dictionaries.md", "DM-A-001", "data-model", "Справочники и параметры")
-    _card(docs / "srs/b/data-model/dictionaries.md", "DM-B-001", "data-model", "справочники  и параметры")
+    # не dictionaries.md: группа из одних справочников подсервисов — не дубль (пакет П3 ОНБ-В, п. 4)
+    _card(docs / "srs/a/data-model/ent-001-x.md", "DM-A-001", "data-model", "Справочники и параметры")
+    _card(docs / "srs/b/data-model/ent-002-y.md", "DM-B-001", "data-model", "справочники  и параметры")
     rep = selfcheck.check_title_uniqueness(docs, _titles(docs))
     assert len(rep) == 1 and rep[0].startswith("data-model: DM-A-001, DM-B-001 — «Справочники и параметры» ×2"), rep
 

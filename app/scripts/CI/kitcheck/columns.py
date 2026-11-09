@@ -158,6 +158,49 @@ def _is_cardinality_title(low: str) -> bool:
     return "кратн" in low or ("крат" in low and "кратк" not in low)
 
 
+# Роль «обязательность» — по совпадению нормализованного заголовка с закрытым перечнем, не по
+# подстроке «обяз» (волна Д ОНБ-В, срез 2, 2026-11-09): подстрока отдавала роль колонке
+# «Сообщение об ошибке» групп контролей ОНБ-В — в её шапке пример текста «"обязательное поле"»,
+# и колонкам-условиям таблиц решений («Обязателен скан контракта»).
+# Перечень — заголовки шаблонов канона (_meta/templates): «Обяз.» — contract-call, function,
+# internal-contracts, lib-contract, data-model, screen-form; «Обязательность» — process,
+# data-model (таблица атрибутов источника «… | Обязательность | Уникальность»). Формы
+# источников сверх шаблонов — только строкой реестра словарных эвристик README прибора
+# (основание + числа замера); новая форма вносится туда же, не молча.
+_OBL_TEMPLATE_TITLES = frozenset({"обяз", "обязательность"})
+_OBL_SOURCE_TITLES = frozenset({
+    "обязательность заполнения",       # ОНБ-В, ЭФ «Подтверждение номера телефона»
+    "обязательность поля в реестре",   # КК_ВК, маппинг импорта реестра (источник и FUN-CL-55)
+    "обязательность в блоке",          # эталон open-add-account, FUN-CL-03 (параметры URL)
+    "обязательный",                    # стенд, черновик функции (шапка параметров)
+    "обяз-ть",                         # УЛ, ЭФ Банка «Добавление шаблона ролей»
+    "обязатель-ность",                 # КК_ЛК, модель данных (перенос слова в шапке)
+})
+# комбинированная шапка «Обязательность / Уникальность» (обе стороны пары — свои значения)
+_OBL_PAIR_TITLES = frozenset({"обязательность/уникальность", "уникальность/обязательность"})
+
+
+def obligation_title_key(title: str) -> str:
+    """Заголовок → ключ сверки с перечнем обязательности: `_title_key` (снят <br>, пробелы,
+    регистр), снята разметка `*`/`_`, скобочное пояснение, пробелы вокруг «/», конечные
+    «.»/«:»."""
+    k = re.sub(r"[*_]+", "", _title_key(title))
+    k = re.sub(r"\([^()]*\)", " ", k)
+    k = re.sub(r"\s*/\s*", "/", k)
+    return re.sub(r"\s+", " ", k).strip().rstrip(".:").strip()
+
+
+def obligation_title(title: str) -> Optional[str]:
+    """Роль заголовка по перечню обязательности: «pair» — комбинированная шапка с
+    уникальностью, «obl» — колонка обязательности, None — не колонка обязательности."""
+    k = obligation_title_key(title)
+    if k in _OBL_PAIR_TITLES:
+        return "pair"
+    if k in _OBL_TEMPLATE_TITLES or k in _OBL_SOURCE_TITLES:
+        return "obl"
+    return None
+
+
 def _looks_like_path(v: str) -> bool:
     v = v.strip()
     # внутренний сегмент «*» («BSDocument/*/DOCUMENTDATE») — оформление
@@ -308,13 +351,13 @@ def validate_columns(headers: List[str], rows: List[List[str]],
         role = None
         if path_index is not None and i == path_index:
             role, check = "путь", _looks_like_path
-        elif "обяз" in low and "уник" in low:
+        elif obligation_title(title) == "pair":
             # комбинированная шапка «Обязательность / Уникальность»
             role, check = "обязат", _looks_like_obligation_pair
         else:
-            # сокращённые заголовки карточек («Обяз.», «Крат.») — по
-            # префиксу; «Краткое описание» кратностью НЕ является
-            if "обяз" in low:
+            # обязательность — по перечню заголовков (obligation_title), кратность — по
+            # префиксу («Крат.»); «Краткое описание» кратностью НЕ является
+            if obligation_title(title) == "obl":
                 role, check = "обязат", _looks_like_obligation
             elif _is_cardinality_title(low):
                 role, check = "кратн", _looks_like_cardinality
@@ -356,7 +399,7 @@ def validate_columns(headers: List[str], rows: List[List[str]],
             # ярлыки рядов, принятые по словам «раздел/блок/вкладка/секция/…» (объявленная
             # словарная эвристика, реестр в README прибора) — видны отчёту нормализатора числом
             # и перечнем, а не снимаются молча
-            base_dict = (_looks_like_obligation_pair if "уник" in low
+            base_dict = (_looks_like_obligation_pair if obligation_title(title) == "pair"
                          else _looks_like_obligation)
             struct_labels = [
                 r[i] for r in data_rows if i < len(r) and not base_dict(r[i])

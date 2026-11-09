@@ -34,7 +34,8 @@ def test_screen_form_group_union_parts_registry_and_stub_silent(tmp_path):
       + "## 1. Назначение\n\nт\n\n## 2. Как перейти на ЭФ\n\nт\n\n## 3. Структура экрана\n\nт\n")
     w(g / "scr-cl-02.1-data.md", fm("SCR-CL-02.1", "screen-form")
       + "## 1. Реестр полей\n\nт\n\n## 2. Правила полей\n\nт\n")
-    w(docs / "srs/screen-form/client/README.md", fm("SCR-CL-00", "screen-form") + "| ID | Форма |\n")
+    # README каталога ЭФ — без шапки (ПР-26, вариант А, 09.11): навигационный, разделы не проверяются
+    w(docs / "srs/screen-form/client/README.md", "# Экранные формы Клиента\n\n| ID | Форма |\n")
     w(docs / "srs/screen-form/client/scr-cl-03-stub.md", fm("SCR-CL-03", "screen-form")
       + "## Назначение\n\nДокумент-заглушка: форма будет описана позже.\n")
     assert sc.check_required_sections(docs) == []

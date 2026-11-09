@@ -357,12 +357,43 @@ def in_dot_dir(p: Path, docs: Path) -> bool:
         return False
     return any(part.startswith(".") for part in rel.parts[:-1])
 
+# Каталоги выгрузки внутри комплекта (пакет П3 ОНБ-В, п. 1, 2026-11-09): у комплекта в корне
+# репозитория (`--docs .`) рядом с `srs/` лежат каталог выгрузки (`--sources`, у ОНБ-В —
+# `confluence/`) и `sources/` (профиль источников, внешние источники). Страницы выгрузки и
+# профиль — не документы комплекта: обход их не включает, признак — путь, не содержимое.
+# Каталоги `--sources` прогона задаёт точка входа (`set_source_dirs`); `sources/` под корнем
+# комплекта исключается всегда. Число снятых файлов печатает selfcheck строкой i.
+_SOURCE_DIRS: List[Path] = []
+
+
+def set_source_dirs(paths) -> None:
+    """Каталоги выгрузки прогона (`--sources`), исключаемые из обхода комплекта."""
+    _SOURCE_DIRS[:] = [Path(p).resolve() for p in paths if p]
+
+
+def in_sources_dir(p: Path, docs: Path, sources: Optional[Path] = None) -> bool:
+    """Файл в каталоге выгрузки внутри комплекта: `sources/` под корнем `docs` или каталог,
+    переданный прогону как `--sources` (через `set_source_dirs` или явно — `sources`)."""
+    try:
+        rel = p.relative_to(docs)
+    except ValueError:
+        return False
+    if len(rel.parts) >= 2 and rel.parts[0] == "sources":
+        return True
+    dirs = list(_SOURCE_DIRS) + ([Path(sources).resolve()] if sources is not None else [])
+    if not dirs:
+        return False
+    rp = p.resolve()
+    return any(rp.is_relative_to(s) for s in dirs)
+
 def _kit_md(docs: Path):
-    """Документы комплекта для обходов сторожей — без постановок `tasks/` и точечных
-    каталогов. Часть вне контура Экосистемы — обычная часть `docs/srs/<слаг>/`: путь её не
-    выделяет, признак читается из разметки профиля источников (source_profile)."""
+    """Документы комплекта для обходов сторожей — без постановок `tasks/`, точечных
+    каталогов и каталогов выгрузки внутри комплекта (`in_sources_dir`). Часть вне контура
+    Экосистемы — обычная часть `docs/srs/<слаг>/`: путь её не выделяет, признак читается из
+    разметки профиля источников (source_profile)."""
     return [p for p in sorted(docs.rglob("*.md"))
-            if not is_task_file(p, docs) and not in_dot_dir(p, docs)]
+            if not is_task_file(p, docs) and not in_dot_dir(p, docs)
+            and not in_sources_dir(p, docs)]
 
 def gitlab_slug(heading: str) -> str:
     """Якорь заголовка, как его строит GitLab: нижний регистр, без

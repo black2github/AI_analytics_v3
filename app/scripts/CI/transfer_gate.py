@@ -621,11 +621,11 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                      "но виден платформе целиком, с ответственным и ограничением",
                      check="открытые вопросы")
         # запись, закрытая словами без канала (коммит, тег или «без изменений»; норма закрытия
-        # с 2026-11-03), проходит выше как закрытая — сигнал приёмке переноса, вердикт не
-        # меняет (замечание ОНБ-В 77, 2026-11-07). Признак — сторож формы закрытия review_guards:
-        # один дом, второго регэкспа нет; подъём до ✗ — решением владельца по замеру
+        # с 2026-11-03), проходит выше как закрытая — блокер переноса (замечание ОНБ-В 77;
+        # ⚠ с 2026-11-07, ✗ — пакет П3, решение владельца 2026-11-09 по замеру: КК 39 закрытий,
+        # ложных 0). Признак — сторож формы закрытия review_guards: один дом, второго регэкспа нет
         for ln in check_oq_close_form(oq_file):
-            gate.add("⚠", "CORE-20", ln[2:] if ln.startswith("⚠ ") else ln,
+            gate.add("✗", "CORE-20", ln[2:] if ln.startswith(("✗ ", "⚠ ")) else ln,
                      check="форма закрытия вопросов")
     if matrix.is_file():
         am = sc._API_SECTION_RE.search(mtext)
@@ -1209,10 +1209,11 @@ def _manifest_placeholders(data, path: str = "") -> List[str]:
     return out
 
 
-def _manifest_issues(data: dict) -> List[str]:
-    """⚠-находки паспорта: плейсхолдеры, пустые обязательные поля teamInfo, тип вне словаря."""
+def _manifest_issues(data: dict, placeholders: bool = True) -> List[str]:
+    """Находки паспорта: плейсхолдеры (без `placeholders` — не перечисляются: гейт печатает их
+    отдельной строкой ✗), пустые обязательные поля teamInfo, тип вне словаря."""
     issues: List[str] = []
-    ph = _manifest_placeholders(data)
+    ph = _manifest_placeholders(data) if placeholders else []
     if ph:
         issues.append(f"плейсхолдер в полях ×{len(ph)}: " + ", ".join(ph[:6])
                       + (" …" if len(ph) > 6 else ""))
@@ -1348,10 +1349,16 @@ def check_target_repo(gate: Gate, out: Optional[Path], in_place: bool = False) -
     except (OSError, ValueError) as e:
         gate.add("✗", "SDLC-07", f"gpb-manifest.json не разбирается как JSON: {e}", check="манифест")
         return
-    # поля паспорта по схеме техбука — ⚠ (замечание ОНБ-В 62); подъём до ✗ —
-    # решением владельца по замеру на переносе КК
+    # поля паспорта по схеме техбука (замечание ОНБ-В 62): плейсхолдер «REPLACE_…» — ✗ (дефект
+    # по форме, как «@REPLACE_» в CODEOWNERS; пакет П3, решение владельца 2026-11-09, замер:
+    # docs-business-cards 93bfe66 — 1, emailItLeader); пустые обязательные поля teamInfo и тип
+    # вне словаря — ⚠
     if isinstance(data, dict):
-        for issue in _manifest_issues(data):
+        ph = _manifest_placeholders(data)
+        if ph:
+            gate.add("✗", "SDLC-07", f"gpb-manifest.json: плейсхолдер в полях ×{len(ph)}: "
+                     + ", ".join(ph[:6]) + (" …" if len(ph) > 6 else ""), check="манифест")
+        for issue in _manifest_issues(data, placeholders=False):
             gate.add("⚠", "SDLC-07", f"gpb-manifest.json: {issue}", check="манифест")
 
 

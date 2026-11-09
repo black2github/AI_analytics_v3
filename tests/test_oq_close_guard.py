@@ -74,7 +74,7 @@ def test_b10_flags_close_without_channel(tmp_path):
         "ответ получен, разбор",
     ))
     out = rg.check_oq_close_form(oq)
-    assert out == [f"⚠ OQ закрыт без коммита, тега или «без изменений» (норма закрытия с "
+    assert out == [f"✗ OQ закрыт без коммита, тега или «без изменений» (норма закрытия с "
                    f"{SINCE.isoformat()}): 1 — OQ-005"]
 
 
@@ -96,9 +96,19 @@ def test_b10_in_selfcheck_report(tmp_path):
     docs = tmp_path / "docs"
     make(docs / "README.md", "# К\n")
     make(tmp_path / "open-questions.md", journal(f"закрыт: {AFTER}"))
-    rep, _ = selfcheck._kc_oq_classes(type("C", (), {"docs": docs})())
+    rep, ok = selfcheck._kc_oq_classes(type("C", (), {"docs": docs})())
     assert any(r.startswith("i OQ: всего 1") for r in rep)
-    assert any(r.startswith("⚠ OQ закрыт без коммита") and "OQ-001" in r for r in rep)
+    assert any(r.startswith("✗ OQ закрыт без коммита") and "OQ-001" in r for r in rep)
+    assert not ok  # ✗ меняет вердикт (пакет П3 ОНБ-В, решение владельца 2026-11-09)
+
+
+def test_b10_closed_before_norm_without_channel_clean(tmp_path):
+    """НЕсрабатывание (П3 п. 2): запись, закрытая 2026-11-02 (до нормы) без канала, — чисто."""
+    docs = tmp_path / "docs"
+    make(docs / "README.md", "# К\n")
+    make(tmp_path / "open-questions.md", journal("закрыт: 2026-11-02"))
+    rep, ok = selfcheck._kc_oq_classes(type("C", (), {"docs": docs})())
+    assert ok and not any("OQ закрыт без коммита" in r for r in rep)
 
 
 # ---------------------------------------------------------------- link_debts

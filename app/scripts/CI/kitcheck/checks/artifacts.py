@@ -15,6 +15,7 @@ import re
 try:
     from kitcheck import fs as _fs
     from kitcheck.md import _kit_md
+    from kitcheck.md import in_sources_dir
     from kitcheck.md import code_blocks
     from kitcheck.md import page_ids
     from kitcheck.md import read_frontmatter
@@ -23,6 +24,7 @@ try:
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import _kit_md  # type: ignore
+    from ..md import in_sources_dir  # type: ignore
     from ..md import code_blocks  # type: ignore
     from ..md import page_ids  # type: ignore
     from ..md import read_frontmatter  # type: ignore
@@ -217,17 +219,20 @@ def check_structured_examples(docs: Path, idx: Dict[str, Path]
 _ART_LINK_RE = re.compile(r"\]\(([^)\s]+?)(?:\s+\"[^\"]*\")?\)")
 
 
-def check_file_artifacts(docs: Path) -> Tuple[List[str], bool]:
+def check_file_artifacts(docs: Path, sources: Optional[Path] = None) -> Tuple[List[str], bool]:
     """Сторож не-markdown артефактов комплекта (files/): приложение
     источника (XSD/JSON-схема и т.п.) живёт в подкаталоге files/ рядом
     с карточкой-владельцем, и карточка ОБЯЗАНА на него ссылаться.
     Файл в files/ без входящей ссылки — «сирота» (✗): артефакт, о
     котором комплект молчит. Ссылка карточки в files/ на несуществующий
     файл — тоже ✗ (потеря артефакта). Каталоги img/ — вне сторожа:
-    перенос картинок — отдельная существующая конвенция."""
+    перенос картинок — отдельная существующая конвенция. Каталоги выгрузки внутри
+    комплекта (`sources/`, `--sources`) — не документы комплекта, их files/ вне сторожа
+    (пакет П3 ОНБ-В, срез 1, 2026-11-09: вложения страниц выгрузки ОНБ-В шли сиротами)."""
     arts = {p.resolve() for p in docs.rglob("*")
             if p.is_file() and "files" in p.relative_to(docs).parts
-            and "img" not in p.relative_to(docs).parts}
+            and "img" not in p.relative_to(docs).parts
+            and not in_sources_dir(p, docs, sources)}
     linked: set = set()
     broken: List[Tuple[str, str]] = []
     for md in _kit_md(docs):

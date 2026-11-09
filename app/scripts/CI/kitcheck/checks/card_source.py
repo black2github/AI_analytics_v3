@@ -11,7 +11,7 @@ from ..html import (
     _BR_RE, _fm_body, _fm_head, _norm_cell, _plain, _title_key, expand_grid, find_top_tables,
     parse_md_tables
 )
-from ..columns import _COLUMN_RULES, _is_section_row, validate_columns
+from ..columns import _COLUMN_RULES, _is_section_row, obligation_title, validate_columns
 from ..md import blank_nav_lists, split_cells, strip_html_comments, strip_row
 from .card_common import _LAYOUT_ROW_RE
 
@@ -1602,6 +1602,18 @@ def source_tables_summary(source_text: str) -> List[str]:
     return [f"i таблицы источника: {len(items)} — {shown}{rest}"]
 
 
+# Головной сегмент заголовка колонки источника: текст до первого <br>, за которым начинается
+# новое предложение (заглавная буква, кавычка, скобка, разметка), или до перевода строки.
+# Ниже — пояснение автора в ячейке шапки, не название колонки (пакет П3 ОНБ-В, срез 5а,
+# 2026-11-09: шапка ОНБ-В «Сообщение об ошибке<br>На ЭФ … <название реквизита> …» получала
+# роль «название» по слову из пояснения). <br> внутри слова («Крат<br>ность») сегмент не режет.
+_HEAD_SEGMENT_SPLIT_RE = re.compile(r"<[bB][rR]\s*/?>\s*(?=[A-ZА-ЯЁ«\"*\[(])|\n")
+
+
+def _head_segment(title: str) -> str:
+    return _HEAD_SEGMENT_SPLIT_RE.split(title, 1)[0]
+
+
 def source_role_literals(source_text: str) -> Dict[str, set]:
     """Дословные значения якорных колонок ИСТОЧНИКА, сгруппированные по роли
     («обязат», «кратн»): из готовых markdown-таблиц и из сырых HTML-таблиц
@@ -1617,15 +1629,22 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
         for i, h in enumerate(headers):
             low = _title_key(h)
             key = None
+            # обязательность — по перечню заголовков, как роль в validate_columns (пакет П3
+            # ОНБ-В, срез 5а, 2026-11-09: прежде подстрока «обяз» отдавала роль колонке
+            # «Сообщение об ошибке» ОНБ-В); кратность — прежним распознаванием
+            if obligation_title(h):
+                key = "обязат"
             for k, _fn in _COLUMN_RULES:
-                if k in low or k[:4] in low:
+                if key is None and k != "обязат" and (k in low or k[:4] in low):
                     key = k
                     break
             # колонка названий — по тому же распознаванию, что роль
             # «название» в validate_columns (OQ-128: имя «Дата» из
-            # источника); колонки физимён БД/DEV — не названия
-            if key is None and ("назван" in low or "наимен" in low
-                                or "параметр" in low) \
+            # источника); колонки физимён БД/DEV — не названия. Слова ищутся
+            # в головном сегменте заголовка, не в пояснении под ним (срез 5а П3)
+            head = _title_key(_head_segment(h))
+            if key is None and ("назван" in head or "наимен" in head
+                                or "параметр" in head) \
                     and "бд" not in low and "dev" not in low:
                 key = "название"
             if key is None:

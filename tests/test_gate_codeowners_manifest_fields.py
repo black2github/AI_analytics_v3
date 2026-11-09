@@ -61,13 +61,24 @@ def test_manifest_without_team_warned(tmp_path):
     assert g.blockers == 0
 
 
-def test_manifest_placeholder_and_project_type_warned(tmp_path):
+def test_manifest_placeholder_blocks_project_type_warned(tmp_path):
+    """Пакет П3 ОНБ-В (решение владельца 2026-11-09): плейсхолдер «REPLACE_…» — ✗ SDLC-07; тип
+    вне словаря — ⚠ как прежде."""
     mf = dict(_MF, emailItLeader="REPLACE_ME", teamInfo={"team": "REPLACE_TEAM",
                                                           "projectType": "EAN", "platform": False})
-    warn = [ln for ln in _gate(_out(tmp_path, mf=mf)).render() if ln.startswith("⚠ [SDLC-07]")]
-    assert len(warn) == 2, warn
-    assert "плейсхолдер в полях ×2: emailItLeader=REPLACE_ME, teamInfo.team=REPLACE_TEAM" in warn[0]
-    assert "teamInfo.projectType «EAN» вне словаря схемы" in warn[1]
+    lines = _gate(_out(tmp_path, mf=mf)).render()
+    err = [ln for ln in lines if ln.startswith("✗ [SDLC-07]")]
+    warn = [ln for ln in lines if ln.startswith("⚠ [SDLC-07]")]
+    assert len(err) == 1 and len(warn) == 1, lines
+    assert "плейсхолдер в полях ×2: emailItLeader=REPLACE_ME, teamInfo.team=REPLACE_TEAM" in err[0]
+    assert "teamInfo.projectType «EAN» вне словаря схемы" in warn[0]
+
+
+def test_manifest_null_contact_not_blocking(tmp_path):
+    """НЕсрабатывание (П3 п. 2): null в контактном поле — норма стандарта, ни ✗, ни ⚠."""
+    mf = dict(_MF, emailItLeader=None)
+    lines = _gate(_out(tmp_path, mf=mf)).render()
+    assert not [ln for ln in lines if ln.startswith(("✗ [SDLC-07]", "⚠ [SDLC-07]"))], lines
 
 
 def test_manifest_without_teaminfo_warned(tmp_path):

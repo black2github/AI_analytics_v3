@@ -189,6 +189,35 @@ _CARD_ID_HEAD_RE = re.compile(
 _SRC_TAG_LABEL_RE = re.compile(r"^\s*«?\s*\\?\[[^\]\\\n]+\\?\]")
 
 
+# Строка таблицы с ID в соседней ячейке (пакет П3 ОНБ-В, п. 5, 2026-11-09): в оглавлении
+# `| SCR-CL-01 | [scr-cl-01-main.md](…) | название |` связка «ID + название» есть в строке —
+# ID стоит в другой ячейке, подпись ссылки — имя файла. Признак по форме: строка таблицы и ID
+# того же типа, что цель ссылки, вне подписи этой ссылки. Строка таблицы без такого ID —
+# по-прежнему сигнал.
+_ROW_ID_RES = {
+    "call": re.compile(r"(?<![\w-])CALL-[\w-]*\d+"),
+    "ctl": re.compile(r"(?<![\w-])CTL-[\w-]*\d+"),
+    "plt": re.compile(r"(?<![\w-])PLT-[\w-]*\d+"),
+    "scr": re.compile(r"(?<![\w-])SCR-[\w-]*\d+"),
+}
+
+
+def _row_has_same_type_id(text: str, start: int, end: int, kind: str) -> bool:
+    """Ссылка `text[start:end]` стоит в ячейке строки таблицы, а в ДРУГОЙ ячейке той же строки
+    есть ID типа `kind` («| SCR-CL-01 | [файл](…) | название |» — ID + название). ID в той же
+    ячейке не в счёт: ячейка шага с текстом и ссылкой — не строка оглавления."""
+    ls = text.rfind("\n", 0, start) + 1
+    le = text.find("\n", end)
+    line = text[ls:len(text) if le < 0 else le]
+    if not line.lstrip().startswith("|"):
+        return False
+    bounds = [m.start() for m in re.finditer(r"(?<!\\)\|", line)]
+    cell_lo = max((x for x in bounds if x < start - ls), default=0)
+    cell_hi = min((x for x in bounds if x >= end - ls), default=len(line))
+    rest = line[:cell_lo] + " " + line[cell_hi:]
+    return bool(_ROW_ID_RES[kind].search(rest))
+
+
 def check_link_anchors_and_ids(docs: Path) -> List[str]:
     """Предупреждения (ПР-06 разбора замечаний ОНБ-В): (1) якорь ссылки
     на md-файл комплекта не совпадает ни с одним заголовком цели по
@@ -232,11 +261,13 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
                 continue
             low = path_part.lower()
             name = low.rsplit("/", 1)[-1]
-            card_ref = (("/contract-call/" in "/" + low and name.startswith("call-"))
-                        or (anchor and "/control/" in "/" + low
-                            and anchor.lower().startswith("ctl-"))
-                        or (anchor and name == "platform-functions.md"
-                            and anchor.lower().startswith("plt-")))
+            kind = ("call" if ("/contract-call/" in "/" + low and name.startswith("call-"))
+                    else "ctl" if (anchor and "/control/" in "/" + low
+                                   and anchor.lower().startswith("ctl-"))
+                    else "plt" if (anchor and name == "platform-functions.md"
+                                   and anchor.lower().startswith("plt-"))
+                    else "")
+            card_ref = bool(kind)
             if not card_ref and not anchor and name.startswith("scr-") \
                     and name.endswith(".md") and tgt != md.resolve() \
                     and not _SRC_TAG_LABEL_RE.match(label) \
@@ -245,7 +276,9 @@ def check_link_anchors_and_ids(docs: Path) -> List[str]:
                     card_ref = "screen-form" in tgt.relative_to(docs.resolve()).parts
                 except ValueError:
                     card_ref = False
-            if card_ref and not _CARD_ID_HEAD_RE.match(label):
+                kind = "scr"
+            if card_ref and not _CARD_ID_HEAD_RE.match(label) \
+                    and not _row_has_same_type_id(text, m.start(), m.end(), kind):
                 no_id.append((md.relative_to(docs).as_posix(), label[:50]))
     out: List[str] = []
     if bad_anchor:

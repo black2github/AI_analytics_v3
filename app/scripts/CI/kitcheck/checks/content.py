@@ -100,8 +100,12 @@ def check_title_uniqueness(docs: Path,
                            card_titles: Dict[Path, Tuple[str, str, str]]) -> List[str]:
     """Строки отчёта (пусто — дублей нет). Ключ — тип + нормализованный
     title (регистр и пробелы не различаются, тег «[…]» входит в название).
-    Не дубль: README-реестры (навигация) и части одной группы с общим
-    базовым ID (`SCR-CL-01.1…01.5` законно несут название экрана)."""
+    Не дубль: README-реестры (навигация), части одной группы с общим
+    базовым ID (`SCR-CL-01.1…01.5` законно несут название экрана) и группа
+    из одних файлов `dictionaries.md` — справочники подсервисов с заголовком
+    шаблона `data-model.md` «Справочники и параметры модели данных» (пакет П3
+    ОНБ-В, п. 4, 2026-11-09). Файл `dictionaries.md` в группе с карточкой
+    другого имени по-прежнему даёт строку (стенд: DM-001 / ENT-005)."""
     groups: Dict[Tuple[str, str], List[Tuple[Path, str, str]]] = {}
     for p, (typ, title, cid) in card_titles.items():
         if p.name.lower() == "readme.md":
@@ -112,6 +116,8 @@ def check_title_uniqueness(docs: Path,
     for (typ, _t), items in sorted(groups.items()):
         bases = {re.sub(r"\.\d+$", "", cid) for _p, _ti, cid in items}
         if len(bases) < 2:
+            continue
+        if all(p.name.lower() == "dictionaries.md" for p, _ti, _c in items):
             continue
         ids = ", ".join(sorted(cid for _p, _ti, cid in items))
         files = ", ".join(sorted(p.relative_to(docs).as_posix() for p, _ti, _c in items))
@@ -182,7 +188,9 @@ _OUTSIDE_REF_RE = re.compile(
 
 
 def check_outside_refs(docs: Path) -> List[str]:
-    """⚠ текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»)."""
+    """✗ текстовые отсылки за пределы комплекта (conventions §5, «комплект переносим»); ⚠ с
+    07.11, ✗ — пакет П3 ОНБ-В, решение владельца 2026-11-09 (после исключения каталогов выгрузки
+    из обхода ложных нет)."""
     found: List[str] = []
     for md in _kit_md(docs):
         try:
@@ -200,7 +208,7 @@ def check_outside_refs(docs: Path) -> List[str]:
                 found.append(f"{rel}:{i}: «{m.group(0)}» — {ln.strip()[:80]}")
     if not found:
         return []
-    out = [f"⚠ отсылки за пределы комплекта ×{len(found)} (conventions §5: комплект переносим, "
+    out = [f"✗ отсылки за пределы комплекта ×{len(found)} (conventions §5: комплект переносим, "
            "отсылки на eco-techbook, eco-kb, toolkit, конвенции проекта не допускаются; "
            "общее для комплекта — самодостаточно в README корня):"]
     out.extend(f"   {x}" for x in found[:30])
@@ -296,13 +304,18 @@ def check_required_sections(docs: Path) -> List[str]:
     Единица проверки: файл;
     документ контролей — каталог (README CTL-000 и файлы карточек); экранная
     форма — группа по ID без суб-номера (README группы без шапки, главная
-    карточка, части), частям отдельного сигнала нет. README-реестры каталогов
-    (README функций, ID ЭФ на «-00»/«-000») не проверяются."""
+    карточка, части), частям отдельного сигнала нет. README каталогов ЭФ и функций по
+    шаблону шапки не несут (навигационный README, i); README с шапкой `type: screen-form` или
+    `function` — обычный документ своего типа и проверяется (пакет П3 ОНБ-В, срез 6, решение
+    владельца 09.11 по ПР-26: исключение «ID ЭФ на -00/-000 и README функций не проверяются»
+    снято). README-реестры прочих каталогов (CTL-000, PRN-000 и т. п.) не проверяются, как
+    прежде."""
     units: Dict[Tuple[str, str], List[Path]] = {}
     for md in _kit_md(docs):
         fm = read_frontmatter(md) or {}
         typ = str(fm.get("type", "")).strip("'\"")
         fid = str(fm.get("id", "")).strip("'\"")
+        own_header = bool(typ)
         if not typ and md.name.lower() == "readme.md":
             mains = sorted(md.parent.glob("*-main.md"))
             if mains:
@@ -312,13 +325,13 @@ def check_required_sections(docs: Path) -> List[str]:
         if typ not in _REQ_SECTIONS or md.name == "status-model.md":
             continue
         if typ == "screen-form":
-            if not fid or re.search(r"-0+$", fid):
+            if not fid:
                 continue
             key = re.sub(r"(?:\.\d+)+$", "", fid)
         elif typ == "control":
             key = md.parent.relative_to(docs).as_posix() + "/"
         else:
-            if md.name.lower() == "readme.md":
+            if md.name.lower() == "readme.md" and not (typ == "function" and own_header):
                 continue
             key = md.relative_to(docs).as_posix()
         units.setdefault((typ, key), []).append(md)

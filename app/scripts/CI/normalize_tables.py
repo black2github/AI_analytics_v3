@@ -66,7 +66,7 @@ try:
         _XML_PATHISH_RE, _bare_type_name, _is_cardinality_title, _is_section_row,
         _looks_like_cardinality, _looks_like_cardinality_logical, _looks_like_obligation,
         _looks_like_obligation_pair, _looks_like_path, _no_xml_path, _title_suspicious,
-        validate_columns
+        obligation_title, validate_columns
     )
     from kitcheck.branch_form import (  # noqa: E402,F401 — Д-50: механизмы ядра, имена сохранены
         _BRANCH_IF_RE, _BRANCH_INDENT_RE, _BRANCH_MARKER_RE, _BRANCH_OUT_RE, _BRANCH_PLAIN_IF_RE,
@@ -85,7 +85,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         _XML_PATHISH_RE, _bare_type_name, _is_cardinality_title, _is_section_row,
         _looks_like_cardinality, _looks_like_cardinality_logical, _looks_like_obligation,
         _looks_like_obligation_pair, _looks_like_path, _no_xml_path, _title_suspicious,
-        validate_columns
+        obligation_title, validate_columns
     )
     from .kitcheck.branch_form import (  # type: ignore  # noqa: E402,F401
         _BRANCH_IF_RE, _BRANCH_INDENT_RE, _BRANCH_MARKER_RE, _BRANCH_OUT_RE, _BRANCH_PLAIN_IF_RE,
@@ -184,7 +184,7 @@ def _block_roles(blocks: List[Tuple[int, int, str]], path_index: int) -> List[st
             roles.append("path")
         elif "кратн" in low:
             roles.append("card")
-        elif "обязат" in low:
+        elif obligation_title(title):  # по перечню заголовков, не подстрокой (волна Д, срез 2)
             roles.append("obl")
         elif "тип" in low:
             roles.append("type")
@@ -521,7 +521,7 @@ def normalize_file(md_path: Path, profile: Optional[Profile],
         # применяются: их защита — от съехавшего профиля атрибутных таблиц,
         # а сетку и здесь держит инвариант строк (ISS-01 КК_ВК, 2026-08-27)
         _hdr_low = [_title_key(h) for h in headers]
-        if not any("обяз" in h or _is_cardinality_title(h)
+        if not any(obligation_title(h) or _is_cardinality_title(h)
                    for h in _hdr_low):
             report.append("   таблица без якорных ролей (обязательность/"
                           "кратность) — колонные валидаторы не "
