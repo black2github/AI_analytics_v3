@@ -47,9 +47,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
+    from kitcheck.md import stray_table_lines  # noqa: E402
     from source_inventory import _UNAPPROVED_RE  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
+    from .kitcheck.md import stray_table_lines  # type: ignore  # noqa: E402
     from .source_inventory import _UNAPPROVED_RE  # type: ignore  # noqa: E402
 
 _FM_BOUND = re.compile(r"^---\s*$")
@@ -323,7 +325,13 @@ def classify(pid: str, path: Path, inv: Dict[str, Dict[str, str]],
     row = inv.get(pid)
     if row is not None:
         target, basis = row.get("target", ""), row.get("basis", "")
-        if (_FROZEN_RE.search(target) or _FROZEN_RE.search(basis)
+        # явный идентификатор сильнее слова в рассказе (постановка 2026-11-09, П-5; КК
+        # SVFE-002/003: основание «метка «заморожено GBO-70412» — наследие 05.10» при
+        # base_contract_id уводило строку в «заморожено»). «Заморожено» в целевом типе, типе
+        # требований и родителе — классификация, действует всегда; в основании — только когда
+        # идентификатора базового контракта нет
+        bc_id = base_contract_id(row)
+        if (_FROZEN_RE.search(target) or (not bc_id and _FROZEN_RE.search(basis))
                 or _FROZEN_RE.search(row.get("req_type", ""))
                 or _FROZEN_PARENT_RE.search(row.get("parent", ""))):
             return FROZEN
@@ -496,6 +504,11 @@ def coverage_report(sources: Path, output: Path,
         if not slugs:
             lines.append("i вне плана: подсервисы в migration-plan.md не найдены — "
                          "класс не выдаётся")
+        # строки таблицы описи, которых разбор не видит (П-6): ⚠ с номером строки
+        for n_ln, ln_ in stray_table_lines(_fs.read_text(inv_path, encoding="utf-8",
+                                                         errors="replace")):
+            lines.append(f"⚠ строка вне таблицы: {inv_path.name}:{n_ln} — без ведущего «|» или с "
+                         f"BOM, разбор описи её не видит: {ln_.lstrip(chr(0xFEFF))[:100]}")
         blocking = n[GAP] + n[NOT_IN_INV]
     else:
         lines.append(head)

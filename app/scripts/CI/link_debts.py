@@ -60,7 +60,7 @@ from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.fence import issues as fence_issues  # noqa: E402
-    from kitcheck.md import blank_code, split_cells  # noqa: E402
+    from kitcheck.md import blank_code, split_cells, stray_table_lines  # noqa: E402
     from kitcheck.checks.review_guards import (  # noqa: E402
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
         oq_statuses)
@@ -69,7 +69,7 @@ try:
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
-    from .kitcheck.md import blank_code, split_cells  # type: ignore  # noqa: E402
+    from .kitcheck.md import blank_code, split_cells, stray_table_lines  # type: ignore  # noqa: E402
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
         oq_statuses)
@@ -100,7 +100,12 @@ _ISSUE_FIELD_RES = {
     "closure": re.compile(r"закрытие:\s*([^;|]+)", re.IGNORECASE),
     # OQ-NNN — журнал рабочего репозитория; T-<JIRA-ID>[-NN] — постановка
     # tasks/<JIRA-ID>.md режима C (в docs-репозитории журнала нет; полигон 15.10)
-    "source": re.compile(r"источник:\s*(OQ-\d+|T-[A-Z][A-Z0-9]*-\d+(?:-\d+)?)", re.IGNORECASE),
+    # ссылка на карточку комплекта («[RBAC-001](srs/rbac.md#2)» или «rbac.md#2») — вопрос решён
+    # содержимым карточки (постановка 2026-11-09, П-4: такая ссылка не распознавалась, строка
+    # получала ✗ «нет полей источник»); признак — путь .md, свободный текст источником не считается
+    "source": re.compile(r"источник:\s*(OQ-\d+|T-[A-Z][A-Z0-9]*-\d+(?:-\d+)?"
+                         r"|\[[^\]]+\]\([^)\s]+\.md(?:#[^)\s]*)?\)|[\w./-]+\.md(?:#[\w.-]+)?)",
+                         re.IGNORECASE),
 }
 ISSUE_REQUIRED = {"responsible": "ответственный", "constraint": "ограничение",
                   "closure": "закрытие"}
@@ -258,6 +263,88 @@ def foreign_target_sign(name: str, skill: str, signs, own_tags=frozenset()) -> O
     return None
 
 
+# Вид долга формы 1 на замороженную цель (постановка 2026-11-09, П-9; прецедент КК PRN-15):
+# «нет целевого артефакта <тип> «<имя>» — frozen (<задача>)[, вне SRS по профилю …]» — цель не
+# создаётся до разморозки страницы задачей, заход не ставится. Строка остаётся формой 1 (просрочка
+# и исполнимость — как прежде), отдельно считается; «frozen» без задачи и «frozen» вместе с
+# «требуется заход» — ⚠.
+_FROZEN_ANY_RE = re.compile(r"—\s*frozen\b", re.IGNORECASE)
+_FROZEN_DEBT_RE = re.compile(r"—\s*frozen\s*\(([A-Z][A-Z0-9]*-\d+)\)", re.IGNORECASE)
+_VISIT_RE = re.compile(r"требуется\s+(?:до)?заход", re.IGNORECASE)
+
+
+# Ожидатель долга в карточке без строки долга в матрице (постановка 2026-11-09, П-3; КК 09.11:
+# 12 карточек FUN-CL-10…21 несли формулу «нет целевого артефакта platform-function «[ЦРМ] Ролевая
+# модель клиента» — требуется заход …», а FROM строки долга при регистрации собран неполно —
+# нашлось глазами). Признак — по форме, объявленный перечень: формулы самих строк долга этой
+# утилиты (форма 1 «нет целевого артефакта <тип>», базовый контракт «нет базового контракта «…»»,
+# хвост «требуется контур base»), стоящие в теле карточки. Карточка с такой формулой и без строки
+# раздела долгов, в FROM которой есть её ID (открытой, закрытой или нераспознанной), — ⚠: связь
+# «карточка ждёт цель» матрица не видит, просрочку и исполнимость никто не проверит. Не ✗: долг
+# может быть оформлен иначе (общей строкой от реестра, межсервисной формулой). README-реестры не
+# читаются: их строки говорят о чужих карточках. HTML-комментарии и блоки кода не читаются.
+AWAITER_FORMS = (
+    ("нет целевого артефакта", re.compile(r"нет\s+целевого\s+артефакта\s+[\w./-]+", re.IGNORECASE)),
+    ("нет базового контракта", _BASE_DEBT_RE),
+    ("требуется контур base", re.compile(r"требуется\s+контур\s+base\b", re.IGNORECASE)),
+)
+
+
+def debt_section_from_ids(matrix_text: str) -> set:
+    """ID из первой колонки всех строк раздела долгов (кроме шапки и разделителя), включая
+    закрытые и нераспознанные: «строка долга с этим файлом в FROM» — любая такая строка."""
+    out: set = set()
+    in_debts = header_seen = False
+    for ln in matrix_text.splitlines():
+        if ln.startswith("#"):
+            in_debts = bool(_DEBTS_HEADING_RE.search(ln))
+            header_seen = False
+            continue
+        row = _ROW_RE.match(ln)
+        if not (in_debts and row):
+            continue
+        cells = [c.strip() for c in split_cells(row.group(1))]
+        if all(_SEP_CELL_RE.match(c) for c in cells if c):
+            continue
+        if not header_seen:
+            header_seen = True
+            continue
+        out.update(_expand_from(cells[0]))
+    return out
+
+
+def awaiters_without_debt(matrix_text: str, docs_root: Path,
+                          registry: Dict[str, Tuple[str, str]]) -> List[str]:
+    """⚠-строки: карточки реестра матрицы с формулой-ожидателем долга в теле, ни один ID которых
+    не стоит в FROM строки раздела долгов. Раздела долгов нет — проверка не выполняется."""
+    if debts_heading(matrix_text) is None:
+        return []
+    from_ids = debt_section_from_ids(matrix_text)
+    by_file: Dict[str, List[str]] = {}
+    for cid, (_typ, fpath) in registry.items():
+        by_file.setdefault(fpath.replace("\\", "/").lstrip("./"), []).append(cid)
+    out: List[str] = []
+    for fpath, ids in sorted(by_file.items()):
+        p = docs_root / fpath
+        if p.name.lower() in ("readme.md", "traceability-matrix.md") or not p.is_file():
+            continue
+        if any(i in from_ids for i in ids):
+            continue
+        text = blank_code(re.sub(r"<!--.*?-->", " ",
+                                 _fs.read_text(p, encoding="utf-8", errors="replace"), flags=re.S))
+        found = [(label, len(rx.findall(text))) for label, rx in AWAITER_FORMS if rx.search(text)]
+        if found:
+            forms = ", ".join(f"«{label}» ×{n}" for label, n in found)
+            out.append(f"⚠ ожидатель долга без строки долга: {fpath} ({', '.join(ids[:3])}"
+                       f"{'…' if len(ids) > 3 else ''}) — {forms} в теле, а FROM строк раздела "
+                       f"«{_DEBTS_HEADING}» карточку не называет: дописать ID в FROM строки долга "
+                       "или заменить формулу ссылкой на цель")
+    if out:
+        out.append(f"карточек с ожидателем долга без строки долга {len(out)} — ⚠, не брак: долг "
+                   "мог быть оформлен иначе; проверить приёмкой")
+    return out
+
+
 def debts_heading(matrix_text: str) -> Optional[str]:
     """Фактический заголовок раздела долгов (текст без «#» и номера) или None."""
     for ln in matrix_text.splitlines():
@@ -293,7 +380,7 @@ def issue_fields(row: str) -> Optional[dict]:
         out[key] = fm.group(1).strip() if fm else None
     missing = [name for key, name in ISSUE_REQUIRED.items() if not out[key]]
     if out["kind"] == "открытый вопрос" and not out["source"]:
-        missing.append("источник OQ-NNN или T-<JIRA-ID>")
+        missing.append("источник OQ-NNN, T-<JIRA-ID> или ссылка на карточку")
     # «вне плана»: решение владельца комплекта записано в журнале — OQ-NNN в
     # строке обязателен (в причине «(OQ-NNN)» или полем «источник:»)
     if out["kind"] == OUT_OF_PLAN_KIND and not _OQ_ANY_RE.search(row):
@@ -547,6 +634,8 @@ def check(matrix_path: Path, docs_root: Path,
     n_param = 0
     unknown_owners: Dict[str, int] = {}
     n_out_of_plan = 0
+    frozen_tasks: List[str] = []
+    frozen_warn: List[str] = []
     out_of_plan_warn: List[str] = []
     plan = find_kit_file(docs_root, "migration-plan.md")
     slugs = plan_slugs(plan)[0] if plan is not None else set()
@@ -636,6 +725,19 @@ def check(matrix_path: Path, docs_root: Path,
                     and typ != "base-contract"):
                 unknown_owners[owner] = unknown_owners.get(owner, 0) + 1
         else:
+            if _FROZEN_ANY_RE.search(raw):
+                who = ", ".join(from_ids)
+                fz = _FROZEN_DEBT_RE.search(raw)
+                if fz:
+                    frozen_tasks.append(fz.group(1))
+                else:
+                    frozen_warn.append(f"⚠ долг {who} «{name or typ}»: «frozen» без задачи в скобках — "
+                                       "форма «— frozen (<задача>)», по ней долг снимается при "
+                                       "разморозке")
+                if _VISIT_RE.search(raw):
+                    frozen_warn.append(f"⚠ долг {who} «{name or typ}»: «frozen» и «требуется заход» "
+                                       "в одной строке — заход по замороженной цели не ставится; "
+                                       "оставить одно")
             zt = _zone_target(name, zone_titles) if name else None
             zf = zone_files.get(zone_pid_by_title.get(zt, "")) if zt else None
             if zt and zf is not None:
@@ -726,6 +828,11 @@ def check(matrix_path: Path, docs_root: Path,
     if n_gap:
         report.append(f"пробелов НФТ {n_gap} («не выявлено» / скелет на страницах типов) "
                       "— просрочка не применяется, цитата сторожится")
+    if frozen_tasks:
+        report.append(f"долгов на замороженную цель {len(frozen_tasks)} («— frozen (<задача>)»: "
+                      f"{', '.join(sorted(set(frozen_tasks)))}) — заход не требуется, цель появится "
+                      "с разморозкой; просрочка и исполнимость — как у формы 1")
+    report.extend(frozen_warn)
     if n_param:
         report.append(f"долгов параметров {n_param} («параметр … не зафиксирован») "
                       "— просрочка по dictionaries.md")
@@ -735,6 +842,13 @@ def check(matrix_path: Path, docs_root: Path,
         # shortLinkDirectory → short-link) оставляет долги на несуществующий код
         report.append(f"⚠ владелец «{owner_code}» ×{n}: кода нет в каталоге сервисов "
                       "(переименован или опечатка) — долг не адресуется")
+    report.extend(awaiters_without_debt(
+        _fs.read_text(matrix_path, encoding="utf-8", errors="replace"), docs_root, registry))
+    # строки таблиц матрицы, которых разбор не видит (П-6): ⚠ с номером строки
+    for n_ln, ln_ in stray_table_lines(_fs.read_text(matrix_path, encoding="utf-8",
+                                                     errors="replace")):
+        report.append(f"⚠ строка вне таблицы: {matrix_path.name}:{n_ln} — без ведущего «|» или с "
+                      f"BOM, разбор матрицы её не видит: {ln_.lstrip(chr(0xFEFF))[:100]}")
     heading = debts_heading(_fs.read_text(matrix_path, encoding="utf-8", errors="replace"))
     if heading is not None and heading.lower() != _DEBTS_HEADING.lower():
         report.append(f"⚠ раздел долгов назван «{heading}» — норма «{_DEBTS_HEADING}» "
@@ -908,6 +1022,94 @@ def check_coordination_log(log_path: Path,
     return out + warns, True
 
 
+# Закрытие долга без цели (постановка 2026-11-09, П-4): норма «строка не удаляется, в конец
+# дописывается «; закрыт: <дата>, <коммит или тег>»» была, утилиты не было — закрывали руками или
+# разовым скриптом. Режим --close находит строку раздела долгов по FROM-ID (и, если переданы,
+# дословной формулировке и номеру строки), дописывает приписку и не трогает остальные байты файла
+# (переводы строк, BOM, кодировка). Повторный запуск по закрытой строке ничего не меняет. Долг
+# формы 1 («нет целевого артефакта …») так не закрывается: его норма — ID цели во второй колонке.
+def close_debt(matrix_path: Path, from_id: str, by: str, statement: Optional[str] = None,
+               line_no: Optional[int] = None, targets: Optional[List[str]] = None,
+               note: Optional[str] = None, day: Optional[str] = None) -> Tuple[List[str], bool]:
+    """(строки отчёта, успех). Успех — строка закрыта сейчас или уже была закрыта; отказ — строки
+    нет, кандидатов несколько, формулировка расходится, форма строки не та или значения ломают
+    таблицу. Файл перезаписывается только при изменении."""
+    import datetime as _dt
+    for label, val in (("--by", by), ("--note", note or ""), ("--target", ",".join(targets or []))):
+        if "|" in val or "\n" in val:
+            return [f"✗ {label}: символ «|» или перевод строки ломает строку таблицы — отказ"], False
+    if not by.strip():
+        return ["✗ --by пуст: нужен коммит, тег или «без изменений» — отказ"], False
+    raw = matrix_path.read_bytes()
+    bom = raw.startswith(b"\xef\xbb\xbf")
+    text = raw[3:].decode("utf-8") if bom else raw.decode("utf-8")
+    lines = text.splitlines(keepends=True)
+    want = statement.strip().strip("«»").strip() if statement else None
+    issue_rows: List[Tuple[int, str, dict]] = []
+    other_rows: List[Tuple[int, str]] = []
+    in_debts = header_seen = False
+    for i, full in enumerate(lines, 1):
+        ln = full.rstrip("\r\n")
+        if ln.startswith("#"):
+            in_debts = bool(_DEBTS_HEADING_RE.search(ln))
+            header_seen = False
+            continue
+        row = _ROW_RE.match(ln)
+        if not (in_debts and row):
+            continue
+        cells = [c.strip() for c in split_cells(row.group(1))]
+        if all(_SEP_CELL_RE.match(c) for c in cells if c):
+            continue
+        if not header_seen:
+            header_seen = True
+            continue
+        if from_id not in _expand_from(cells[0]):
+            continue
+        fields = issue_fields(" ".join(cells))
+        if fields:
+            issue_rows.append((i, ln, fields))
+        else:
+            other_rows.append((i, ln))
+    if line_no is not None:
+        issue_rows = [r for r in issue_rows if r[0] == line_no]
+        other_rows = [r for r in other_rows if r[0] == line_no]
+    if not issue_rows:
+        if other_rows:
+            return ([f"✗ строка долга от {from_id} не вида «долг <вид>: «…»» — закрытие дописыванием "
+                     "к ней не применяется (долг формы 1 закрывается ID цели во второй колонке):"]
+                    + [f"   строка {n}: {r[:140]}" for n, r in other_rows]), False
+        where = f" в строке {line_no}" if line_no is not None else ""
+        return [f"✗ строки долга без цели от {from_id}{where} в разделе «{_DEBTS_HEADING}» нет"], False
+    if want is not None:
+        # формулировка с вложенными «…» разбором обрезается на первой «»» — дословность сверяется
+        # и по вхождению «<формулировка>» в строку целиком
+        same = [r for r in issue_rows if r[2]["statement"] == want or f"«{want}»" in r[1]]
+        if not same:
+            return ([f"✗ формулировка не совпадает дословно — отказ; передано: «{want}»"]
+                    + [f"   строка {n}: «{f['statement']}»" for n, _r, f in issue_rows]), False
+        issue_rows = same
+    if len(issue_rows) > 1:
+        return ([f"✗ строк долга от {from_id} несколько ({len(issue_rows)}) — уточните --statement "
+                 "или --line:"]
+                + [f"   строка {n}: «{f['statement'][:100]}»" for n, _r, f in issue_rows]), False
+    n, ln, _f = issue_rows[0]
+    done = issue_closed(ln)
+    if done:
+        return [f"i строка {n}: долг от {from_id} уже закрыт ({done}) — файл не изменён"], True
+    suffix = f"; закрыт: {day or _dt.date.today().isoformat()}, {by.strip()}"
+    if targets:
+        suffix += f", затронуто: {', '.join(t.strip() for t in targets if t.strip())}"
+    if note and note.strip():
+        suffix += f", {note.strip()}"
+    body = ln.rstrip()
+    new_ln = body[:-1].rstrip() + suffix + " |"
+    eol = lines[n - 1][len(ln):]
+    lines[n - 1] = new_ln + eol
+    out = "".join(lines).encode("utf-8")
+    matrix_path.write_bytes((b"\xef\xbb\xbf" if bom else b"") + out)
+    return [f"✓ строка {n}: долг от {from_id} закрыт — дописано «{suffix[2:]}»"], True
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description="Сторож долгов ссылок: просрочка (цель существует, "
@@ -917,7 +1119,27 @@ def main() -> int:
     ap.add_argument("--docs", type=Path, required=True,
                     help="корень docs/ комплекта")
     ap.add_argument("--strict", action="store_true")
+    ap.add_argument("--close", metavar="FROM-ID",
+                    help="закрыть долг без цели от этого ID: дописать «; закрыт: <дата>, <--by>» в "
+                         "конец строки раздела долгов; остальные байты файла не меняются")
+    ap.add_argument("--by", help="коммит, тег или «без изменений» для --close")
+    ap.add_argument("--statement", help="дословная формулировка долга (между «»): сверяется, "
+                                        "при расхождении — отказ")
+    ap.add_argument("--line", type=int, help="номер строки матрицы с долгом (уточнение для --close)")
+    ap.add_argument("--target", help="ID карточек через запятую: «затронуто: <ID>» в приписке")
+    ap.add_argument("--note", help="пояснение в конец приписки закрытия")
+    ap.add_argument("--date", help="дата закрытия ГГГГ-ММ-ДД (по умолчанию — сегодня)")
     args = ap.parse_args()
+    if args.close:
+        if not args.by:
+            ap.error("--close требует --by")
+        rep, ok = close_debt(args.matrix, args.close, args.by, statement=args.statement,
+                             line_no=args.line,
+                             targets=args.target.split(",") if args.target else None,
+                             note=args.note, day=args.date)
+        for ln in rep:
+            print(f"# {ln}")
+        return 0 if ok else 2
     report, ok = check(args.matrix, args.docs)
     oq = args.docs / "open-questions.md"
     if not oq.is_file():

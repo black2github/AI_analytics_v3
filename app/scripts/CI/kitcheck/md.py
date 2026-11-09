@@ -243,6 +243,37 @@ def table_cells(line: str) -> List[str]:
 _PID_RE = re.compile(r"\d{4,}")
 
 
+def stray_table_lines(text: str) -> List[Tuple[int, str]]:
+    """[(номер строки с 1, строка)] — строки, которые разбор таблиц не видит, хотя они стоят в
+    таблице (постановка 2026-11-09, П-6; КК 7d6781c9: строка долга разорвана переводом строки,
+    обрубок с BOM без ведущего «|» шёл сразу за строками таблицы — matrix_sync и link_debts его
+    не видели, прибор молчал). Признаки по форме: непустая строка без ведущего «|» сразу после
+    строки таблицы (не заголовок «#»), и строка с BOM в начале, кроме первой строки файла.
+    Абзац после пустой строки и блоки кода — не таблица."""
+    lines = text.split("\n")
+    flags = code_line_flags(lines)
+    out: List[Tuple[int, str]] = []
+    in_table = False
+    for i, raw in enumerate(lines):
+        s = raw.rstrip("\r")
+        if flags[i]:
+            in_table = False
+            continue
+        if i > 0 and s.startswith("﻿"):
+            out.append((i + 1, s))
+            in_table = s.lstrip("﻿").startswith("|")
+            continue
+        if not s.strip():
+            in_table = False
+        elif s.startswith("|"):
+            in_table = True
+        elif in_table and not s.lstrip().startswith("#"):
+            out.append((i + 1, s))
+        else:
+            in_table = False
+    return out
+
+
 def frontmatter_end(lines: List[str]) -> int:
     """Индекс первой строки тела после шапки; 0 — шапки нет или она не
     закрыта. Граница — правило `read_frontmatter`, одно для всех мест

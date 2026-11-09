@@ -74,7 +74,7 @@ CALL = _debt("нет целевого артефакта contract-call «Мет�
 
 # ---------------------------------------------------------------- признак А
 
-@pytest.mark.parametrize("name", ["[КК] Живая страница", "Живая страница", "[Другой] Живая страница"])
+@pytest.mark.parametrize("name", ["[КК] Живая страница", "Живая страница"])
 def test_a_fires_on_title_by_existing_rule(tmp_path, name):
     res = _own(_debt(f"нет целевого артефакта function «{name}» — требуется заход create-function"))(tmp_path)
     assert _counts(res) == (1, 0, 0)
@@ -104,9 +104,30 @@ def test_exact_frozen_title_wins_over_live_title_of_other_tag(tmp_path):
     assert _counts(res) == (0, 0, 0)
 
 
-def test_live_title_of_other_tag_matches_without_exact_title(tmp_path):
-    res = _own(_debt("нет целевого артефакта control «[КК_ВК] Двойник» — требуется заход create-controls"))(tmp_path)
+@pytest.mark.parametrize("name", ["[КК_ВК] Двойник", "[Другой] Живая страница"])
+def test_live_title_of_other_tag_is_not_a_match(tmp_path, name):
+    # постановка 2026-11-09, П-7: «[КК_ЗК] X» вне выгрузки ложно сопоставлялось с «[КК_Заявки] X»
+    # описи — у разных тегов разные страницы, признак А не ставится
+    res = _own(_debt(f"нет целевого артефакта control «{name}» — требуется заход create-controls"))(tmp_path)
+    assert _counts(res) == (0, 0, 0) and res["rows"] == []
+
+
+def test_untagged_name_still_matches_tagged_title(tmp_path):
+    # НЕсрабатывание ограничения: имя без тега сопоставляется с титулом с тегом, как прежде
+    res = _own(_debt("нет целевого артефакта control «Двойник» — требуется заход create-controls"))(tmp_path)
     assert _counts(res) == (1, 0, 0) and res["rows"][0]["page_id"] == "108"
+
+
+def test_out_of_export_row_excluded_from_count(tmp_path):
+    row = _debt("нет целевого артефакта function «[КК] Живая страница» — страница 2166860928 вне выгрузки")
+    res = _own(row, FUNC_LIVE)(tmp_path)
+    assert res["out_of_export"] == 1 and res["total"] == 1 and _counts(res) == (1, 0, 0)
+
+
+def test_out_of_export_in_gate_line(tmp_path):
+    row = _debt("нет целевого артефакта function «[КК] Нет такой» — страница 1 вне выгрузки")
+    lines, _ready, _data = tg.run_gate(_src(tmp_path, row), no_validator=True)
+    assert "строк «вне выгрузки» — 1 (вне счёта)" in _gate_line(lines)
 
 
 def test_a_not_checked_without_inventory(tmp_path):

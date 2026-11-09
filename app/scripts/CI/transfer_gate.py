@@ -817,6 +817,10 @@ _TRANSFER_MARK_RE = re.compile(r";\s*перенос:", re.IGNORECASE)
 _TRANSFER_RECORD_RE = re.compile(
     r";\s*перенос:\s*решение\s+владельца\s+(?:\d{4}-\d{2}-\d{2}|\d{2}\.\d{2}\.\d{4})\s*,"
     r"\s*срок:\s*[^;|\s]", re.IGNORECASE)
+# тег в начале имени «[КК_ЛК] …»: у разных тегов — разные страницы
+_TAG_RE = re.compile(r"^\[[^\]]+\]")
+# строка долга сообщает, что страницы цели нет в выгрузке: «— страница NNN вне выгрузки»
+_OUT_OF_EXPORT_RE = re.compile(r"вне\s+выгрузки", re.IGNORECASE)
 # класс страницы здесь — по строке описи; файл выгрузки нужен classify только для «бинарных»
 _NO_PAGE_FILE = Path("__файл_страницы_не_читается__")
 
@@ -838,7 +842,14 @@ def _source_page(name: str, pages: List[Tuple[str, str, str]], live: Dict[str, s
     exact = [(pid, cl) for t, pid, cl in pages if ld._norm(t) == nn]
     if exact:
         return next((pid for pid, cl in exact if cl == cov.GAP), "")
-    hit = ld._zone_target(name, list(live))
+    # имя и титул с разными тегами — разные страницы, совпадение хвоста не основание (постановка
+    # 2026-11-09, П-7: «[КК_ЗК] X» вне выгрузки сопоставлялось с «[КК_Заявки] X» описи); имя
+    # без тега сопоставляется, как прежде
+    tag = _TAG_RE.match(nn)
+    cand = [t for t in live
+            if not (tag and _TAG_RE.match(ld._norm(t))
+                    and _TAG_RE.match(ld._norm(t)).group(0) != tag.group(0))]
+    hit = ld._zone_target(name, cand)
     return live[hit] if hit else ""
 
 
@@ -847,10 +858,15 @@ def own_target_debts(matrix_text: str, inventory: Optional[Path],
     """Строки долга на собственный заход: сводка (a, b, k, partial, total) и rows — строки с
     признаком или с записью переноса. Строка с полной записью считается в k, не в a и b."""
     pages, live = _inventory_titles(inventory, plan) if inventory is not None else ([], {})
-    out = {"a": 0, "b": 0, "k": 0, "partial": 0, "total": 0, "rows": [],
+    out = {"a": 0, "b": 0, "k": 0, "partial": 0, "total": 0, "out_of_export": 0, "rows": [],
            "inventory": inventory is not None}
     for from_ids, typ, name, owner, raw in ld.parse_matrix(matrix_text)[1]:
         if typ.startswith("долг:") or typ in _OWN_DEBT_OTHER_TYPES or owner is not None:
+            continue
+        # строка сама говорит, что страницы цели в выгрузке нет, — не долг на собственный заход
+        # (постановка 2026-11-09, П-7), из счёта исключается
+        if _OUT_OF_EXPORT_RE.search(raw):
+            out["out_of_export"] += 1
             continue
         out["total"] += 1
         is_call = typ.lower() == _CALL_TYPE or bool(_CALL_SKILL_RE.search(raw))
@@ -888,6 +904,8 @@ def check_own_debts(gate: Gate, staged: Path, docs: Path, after_step: bool,
     n_signed = res["a"] + res["b"]
     text = (f"долги «требуется заход» при источнике в выгрузке: А — {res['a']}, "
             f"Б (карточки вызова) — {res['b']}; с записью переноса — {res['k']}")
+    if res.get("out_of_export"):
+        text += f"; строк «вне выгрузки» — {res['out_of_export']} (вне счёта)"
     if res["partial"]:
         text += (f"; запись переноса без даты или срока — {res['partial']} "
                  "(такие строки считаются без записи)")
