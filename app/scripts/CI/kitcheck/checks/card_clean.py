@@ -37,6 +37,117 @@ def check_oq_page_refs(md_path: Path) -> Tuple[List[str], bool]:
     return warns[:20], True
 
 
+# --- К-17 на все файлы комплекта (2026-11-09) ---------------------------
+# Норма: идентификатор страницы Confluence живёт только во frontmatter карточки
+# (`confluence_page_ids`) и в матрице трассировки (раздел «Источники миграции»); в
+# теле любого документа комплекта (карточка, README-реестр, README комплекта, видение
+# сервиса) его нет — комплект переносим без выгрузки. Признак — по форме, без слов
+# источника: число из 9–10 цифр без буквенно-цифрового окружения (`_K17_NUM_RE`)
+# ✗ — только когда это число есть в множестве страниц комплекта (шапки документов,
+# матрица, при `--sources` — шапки страниц выгрузки), иначе суммы, ИНН и номера из
+# примеров давали бы ложный брак; прочие такие числа видны i-строкой с перечнем. Адрес
+# страницы (`pageId=`, `viewpage.action`, адрес с «confluence» в имени хоста) — ✗ по форме. Вне сверки:
+# шапка любого файла, блоки кода (инлайн-код — нет: идентификаторы в README стоят в
+# обратных кавычках), матрица целиком (законный дом, в «Долгах по ссылках» — FROM-
+# page_id), `open-questions.md` (своё правило К-17 выше), штатные каталоги репозитория
+# отдачи `sources/` и `sandbox/` (выгрузка и рабочий каталог исполнителя) и каталог
+# `--sources`.
+# число страницы: как `_OQ_PAGE_NUM_RE`, но точка после числа — конец предложения, не дробь
+# («… страница 2166860243.»); дробь и версия («2166860243.5») по-прежнему не число страницы
+_K17_NUM_RE = re.compile(r"(?<![-\w.])\d{9,10}(?![-\w]|\.\w)")
+_K17_URL_RE = re.compile(r"pageId=\d*|viewpage\.action|https?://[^\s/)\]>`|]*confluence[^\s)\]>`|]*", re.I)
+_K17_WORK_DIRS = ("sources", "sandbox")
+_K17_SKIP_ROOT = ("traceability-matrix.md", "open-questions.md")
+_K17_HOME = "дом — `confluence_page_ids` карточки и матрица «Источники миграции»"
+
+
+def _k17_files(docs: Path, sources: Optional[Path] = None) -> List[Path]:
+    from ..md import _kit_md
+    src = sources.resolve() if sources is not None else None
+    out: List[Path] = []
+    for p in _kit_md(docs):
+        rel = p.relative_to(docs)
+        if rel.parts[0] in _K17_WORK_DIRS or (len(rel.parts) == 1 and rel.name in _K17_SKIP_ROOT):
+            continue
+        if src is not None:
+            try:
+                p.resolve().relative_to(src)
+                continue
+            except ValueError:
+                pass
+        out.append(p)
+    return out
+
+
+def kit_page_ids(docs: Path, sources: Optional[Path] = None) -> Dict[str, str]:
+    """Множество страниц комплекта: page_id → откуда он известен (первое вхождение):
+    «frontmatter <ID документа>», «матрица», «выгрузка»."""
+    from ..md import page_ids, read_frontmatter
+    known: Dict[str, str] = {}
+    for p in _k17_files(docs, sources):
+        fm = read_frontmatter(p) or {}
+        for pid in page_ids(fm):
+            if _K17_NUM_RE.fullmatch(pid):
+                known.setdefault(pid, f"frontmatter {fm.get('id') or p.relative_to(docs).as_posix()}")
+    matrix = docs / "traceability-matrix.md"
+    if matrix.is_file():
+        for pid in _K17_NUM_RE.findall(_fs.read_text(matrix, encoding="utf-8", errors="replace")):
+            known.setdefault(pid, "матрица")
+    if sources is not None and sources.is_dir():
+        for p in sorted(sources.rglob("*.md")):
+            for pid in page_ids(read_frontmatter(p) or {}):
+                if _K17_NUM_RE.fullmatch(pid):
+                    known.setdefault(pid, "выгрузка")
+    return known
+
+
+def check_page_ids_in_kit(docs: Path, sources: Optional[Path] = None) -> Tuple[List[str], bool]:
+    """К-17 по всем файлам комплекта вне шапки (см. комментарий выше): ✗ — page_id страницы
+    комплекта или адрес страницы Confluence в теле; i — прочие числа вида page_id."""
+    from ..md import code_line_flags, frontmatter_end
+    known = kit_page_ids(docs, sources)
+    found: List[str] = []
+    other: List[str] = []
+    files = set()
+    for p in _k17_files(docs, sources):
+        try:
+            lines = _fs.read_text(p, encoding="utf-8", errors="replace").splitlines()
+        except OSError:
+            continue
+        rel = p.relative_to(docs).as_posix()
+        body_from = frontmatter_end(lines)
+        code = [False] * body_from + code_line_flags(lines[body_from:])
+        for i, ln in enumerate(lines, 1):
+            if i <= body_from or code[i - 1]:
+                continue
+            nums = _K17_NUM_RE.findall(ln)
+            kn = [n for n in nums if n in known]
+            url = _K17_URL_RE.search(ln)
+            if kn:
+                shown, where = kn[0], f"страница комплекта: {known[kn[0]]}"
+                extra = f" и ещё {len(set(kn)) - 1}" if len(set(kn)) > 1 else ""
+            elif url:
+                shown, extra = url.group(0)[:90], ""
+                pid = next((n for n in _K17_NUM_RE.findall(url.group(0))), None)
+                where = (f"страница комплекта: {known[pid]}" if pid in known
+                         else "адрес страницы Confluence")
+            else:
+                other.extend(f"{rel}:{i} `{n}`" for n in nums)
+                continue
+            files.add(rel)
+            found.append(f"{rel}: строка {i} — идентификатор страницы Confluence вне "
+                         f"frontmatter: `{shown}`{extra} ({where})")
+    out: List[str] = []
+    if found:
+        out.append(f"✗ К-17: идентификатор страницы Confluence вне frontmatter — строк "
+                   f"{len(found)} в файлах {len(files)}; {_K17_HOME}:")
+        out.extend(f"   {x}" for x in found)
+    if other:
+        out.append(f"i К-17: числа вида page_id вне множества страниц комплекта: {len(other)}"
+                   + (", перечень до 10" if len(other) > 10 else "") + ": " + "; ".join(other[:10]))
+    return out, not found
+
+
 def check_service_table_integrity(md_path: Path) -> Tuple[List[str], bool]:
     """Структурная целостность таблиц СЛУЖЕБНОГО реестра (матрица,
     open-questions): только К-16 (разрывы пустой строкой) — колонные

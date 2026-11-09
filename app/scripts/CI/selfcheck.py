@@ -39,14 +39,14 @@ import link_debts as ld  # noqa: E402
 try:  # проверки карточки — kitcheck/checks/card_*.py (Д-50; прежде normalize_tables)
     from kitcheck.checks.card_run import run_check  # noqa: E402
     from kitcheck.checks.card_source import quoted_literals  # noqa: E402
-    from kitcheck.checks.card_clean import check_oq_page_refs, check_service_table_integrity  # noqa: E402
+    from kitcheck.checks.card_clean import check_oq_page_refs, check_page_ids_in_kit, check_service_table_integrity  # noqa: E402
     from kitcheck.checks.card_branch_form import branch_form_counts, branch_no_outcome  # noqa: E402
     from kitcheck.checks.card_controls import is_control_cards_file, message_rows  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.card_run import run_check  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_source import quoted_literals  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_clean import (  # type: ignore  # noqa: E402
-        check_oq_page_refs, check_service_table_integrity)
+        check_oq_page_refs, check_page_ids_in_kit, check_service_table_integrity)
     from .kitcheck.checks.card_branch_form import branch_form_counts, branch_no_outcome  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_controls import (  # type: ignore  # noqa: E402
         is_control_cards_file, message_rows)
@@ -1114,6 +1114,13 @@ def _kc_outside_refs(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep, True
 
 
+def _kc_page_ids_in_kit(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    # К-17 на все файлы комплекта (2026-11-09): page_id страницы комплекта или адрес страницы
+    # Confluence в теле документа — ✗; open-questions — прежнее правило (`_kc_open_questions`)
+    rep, ok = _safe(check_page_ids_in_kit, ctx.docs, ctx.sources)
+    return rep, ok
+
+
 def _kc_required_sections(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     docs, = ctx.docs,
     report: List[str] = []
@@ -1382,6 +1389,7 @@ KIT_CHECKS: List[Check] = [
     Check("title_uniqueness", _kc_title_uniqueness, affects_verdict=False),
     Check("source_silent", _kc_source_silent, affects_verdict=False),
     Check("outside_refs", _kc_outside_refs, affects_verdict=False),
+    Check("page_ids_in_kit", _kc_page_ids_in_kit, affects_verdict=True),
     Check("required_sections", _kc_required_sections, affects_verdict=False),
     Check("process_call", _kc_process_call, affects_verdict=False),
     Check("readme_legend", _kc_readme_legend, affects_verdict=False),
