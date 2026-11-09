@@ -12,10 +12,10 @@ from typing import Tuple
 import re
 try:
     from kitcheck import fs as _fs
-    from kitcheck.md import table_cells
+    from kitcheck.md import read_frontmatter, table_cells
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
-    from ..md import table_cells  # type: ignore
+    from ..md import read_frontmatter, table_cells  # type: ignore
 
 
 _KNOWN_TYPES = {
@@ -98,3 +98,35 @@ def domain_context(docs: Path):
 
 
 _PART_CODE_RE = re.compile(r"^[A-Z]{2,4}$")
+
+
+# часть вне контура Экосистемы (решение владельца канона 2026-11-08): признак по паспорту
+# границы в комплекте и проверка пути по карте частей — ядро (работают и без выгрузки);
+# признак по профилю источников — source_profile.outside_eco_slugs (слой миграции)
+def passport_slugs(docs: Path) -> frozenset:
+    """Слаги частей вне контура Экосистемы по комплекту: файл `srs/<слаг>/boundary-passport.md`
+    с типом шапки `module-passport` (паспорт границы обязателен и уезжает переносом, поэтому
+    признак виден и в репозитории документации без профиля источников). Файл с другим типом
+    или на другой глубине — не признак."""
+    out = set()
+    srs = Path(docs) / "srs"
+    if not srs.is_dir():
+        return frozenset()
+    for p in sorted(srs.glob("*/boundary-passport.md")):
+        fm = read_frontmatter(p) or {}
+        if str(fm.get("type", "")).strip().strip("'\"") == "module-passport":
+            out.add(p.parent.name)
+    return frozenset(out)
+
+
+def in_outside_eco_part(path: Path, docs: Path, slugs: frozenset) -> bool:
+    """Файл лежит в каталоге части вне контура Экосистемы: docs/srs/<слаг>/…, слаг — из
+    outside_eco_slugs (разметка профиля) или passport_slugs (паспорт границы). Без слагов —
+    False для любого пути."""
+    if not slugs:
+        return False
+    try:
+        parts = Path(path).resolve().relative_to(Path(docs).resolve()).parts
+    except ValueError:
+        return False
+    return len(parts) > 2 and parts[0] == "srs" and parts[1] in slugs

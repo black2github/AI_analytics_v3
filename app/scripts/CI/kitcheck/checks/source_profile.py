@@ -18,11 +18,14 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .. import fs as _fs  # type: ignore
     from ..md import table_cells  # type: ignore
 from ._common import (  # noqa: F401
-    _KNOWN_TYPES, domain_context)
+    _KNOWN_TYPES, domain_context, in_outside_eco_part, passport_slugs)
 
 
+# зона части: «вне Экосистемы <слаг>» — часть сервиса вне контура Экосистемы в штатном
+# каталоге docs/srs/<слаг>/ (решение владельца канона 2026-11-08); строка без слага —
+# переходная форма (⚠, каталог части не задан)
 _ZONE_RE = re.compile(
-    r"^(?:(подсервис|core)\s+([\w-]+)|общая часть|вне Экосистемы.*)$",
+    r"^(?:(подсервис|core)\s+([\w-]+)|общая часть|вне Экосистемы(?:\s+([\w-]+))?.*)$",
     re.I)
 
 
@@ -66,7 +69,7 @@ def _load_subservice_map(profile: Path):
         if not zm:
             continue
         zone = zone_text.lower()
-        slug = zm.group(2)
+        slug = zm.group(2) or zm.group(3)
         kind = ("slug" if zm.group(1) else
                 "common" if zone.startswith("общая") else "external")
         rows.append((cells[0], slug, kind, service))
@@ -110,15 +113,17 @@ def check_subservice_mapping(docs: Path, sources: Path,
                              card_files: Dict[str, Path]):
     """(отчёт, ok). card_files: page_id -> карточка docs. Зона источника
     определяется по титулу/ветви его файла выгрузки; путь карточки
-    обязан начинаться srs/<слаг>/ (подсервис/core), не иметь слага
-    (общая часть) или карточки не должно быть вовсе (вне Экосистемы)."""
+    обязан начинаться srs/<слаг>/ (подсервис/core и вне Экосистемы <слаг>) или не иметь
+    слага (общая часть); зона «вне Экосистемы» без слага путь не задаёт (⚠)."""
     _, profile = _profile_path(sources)
     smap = _load_subservice_map(profile)
     if not smap:
-        return [], True
+        # без таблицы разметки сторож молчит; паспорт границы части в комплекте без строки
+        # профиля — ⚠ (признак части взят по паспорту)
+        return outside_eco_lines(docs, [], passport_slugs(docs)), True
     report: List[str] = []
     ok = True
-    slugs = {row[1] for row in smap if row[2] == "slug"}
+    slugs = {row[1] for row in smap if row[2] in ("slug", "external") and row[1]}
     dom = domain_context(docs)
     my_service = docs.resolve().name if dom is not None else None
     for src_file in sorted(sources.rglob("*.md")):
@@ -158,22 +163,14 @@ def check_subservice_mapping(docs: Path, sources: Path,
         parts = rel.split("/")
         seg = (parts[1] if len(parts) > 2 and parts[0] == "srs"
                and parts[1] not in _KNOWN_TYPES else None)
-        # мини-комплект зоны «вне Экосистемы» живёт в docs/modules/<имя>/ (Д-49 п. 4)
-        in_zone = rel.startswith("modules/")
-        if kind == "external":
-            if in_zone:
-                continue
+        if kind == "external" and not slug:
+            continue            # зона без слага: каталог части не задан (⚠ строкой ниже)
+        if kind == "external" and seg != slug:
             ok = False
             report.append(
                 f"✗ разметка: {rel} — источник «{title[:50]}» размечен "
-                "«вне Экосистемы», карточке комплекта не место — дом "
-                "мини-комплект docs/modules/<имя>/ (conventions §3.1)")
-        elif in_zone:
-            ok = False
-            report.append(
-                f"✗ разметка: {rel} — источник «{title[:50]}» не размечен "
-                "«вне Экосистемы», а файл лежит в мини-комплекте зоны "
-                "docs/modules/ — зона только для страниц вне Экосистемы")
+                f"«вне Экосистемы {slug}», ожидался путь srs/{slug}/… "
+                f"(фактический сегмент: {seg or 'нет — корень srs'})")
         elif kind == "slug" and seg != slug:
             ok = False
             report.append(
@@ -193,7 +190,55 @@ def check_subservice_mapping(docs: Path, sources: Path,
     if not report:
         report.append("разметка подсервисов: соответствие "
                       "«источник → путь» выдержано ✓")
+    report.extend(outside_eco_lines(docs, smap, passport_slugs(docs)))
     return report, ok
+
+
+def outside_eco_slugs(sources: Optional[Path]) -> frozenset:
+    """Слаги частей вне контура Экосистемы по профилю источников — строки `вне Экосистемы
+    <слаг>` таблицы «Разметка подсервисов» (решение владельца канона 2026-11-08). Путь каталога
+    признака не несёт. Нет выгрузки, профиля или таблицы — пусто. Второй источник признака —
+    паспорт границы в комплекте (passport_slugs); карта частей — объединение."""
+    if sources is None:
+        return frozenset()
+    smap = _load_subservice_map(_profile_path(sources)[1]) or []
+    return frozenset(row[1] for row in smap if row[2] == "external" and row[1])
+
+
+def outside_eco_lines(docs: Path, smap, passports: frozenset = frozenset()) -> List[str]:
+    """Строки о частях вне контура Экосистемы по разметке и паспортам: ⚠ на зону без слага
+    (переходный период — каталог части не задан), i по каждой части (карточек, паспорт границы
+    BND), ⚠ без паспорта границы boundary-passport.md, ⚠ паспорт без строки разметки профиля
+    (passports — passport_slugs комплекта). Только ⚠ и i, вердикт не меняют."""
+    out: List[str] = []
+    bare = [row[0] for row in smap if row[2] == "external" and not row[1]]
+    for matcher in bare:
+        out.append(f"⚠ разметка: зона «вне Экосистемы» без слага каталога части (матчер "
+                   f"{matcher}) — часть вне контура Экосистемы описывается в docs/srs/<слаг>/, "
+                   "строка разметки — «вне Экосистемы <слаг>»; до правки строки путь её "
+                   "карточек не сверяется")
+    seen = set()
+    for row in smap:
+        slug = row[1]
+        if row[2] != "external" or not slug or slug in seen:
+            continue
+        seen.add(slug)
+        part = docs / "srs" / slug
+        n = sum(1 for _ in part.rglob("*.md")) if part.is_dir() else 0
+        has_passport = (part / "boundary-passport.md").is_file()
+        out.append(f"i часть вне Экосистемы {slug}: карточек {n}, паспорт BND "
+                   + ("есть" if has_passport else "нет"))
+        if not has_passport:
+            out.append(f"⚠ у части вне Экосистемы нет boundary-passport.md: srs/{slug}/ — "
+                       "паспорт границы обязателен (шаблон module-passport.md)")
+    for slug in sorted(set(passports) - seen):
+        part = docs / "srs" / slug
+        n = sum(1 for _ in part.rglob("*.md")) if part.is_dir() else 0
+        out.append(f"i часть вне Экосистемы {slug}: карточек {n}, паспорт BND есть")
+        out.append(f"⚠ паспорт границы srs/{slug}/boundary-passport.md без строки разметки "
+                   f"«вне Экосистемы {slug}» в профиле источников — признак части взят по "
+                   "паспорту; строку разметки добавить (шаблон sources-readme.md)")
+    return out
 
 
 _CANON_CUT_RE = re.compile(r"срез\s+канона\D{0,40}?([0-9a-f]{7,40})",

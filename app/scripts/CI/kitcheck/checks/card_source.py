@@ -1003,8 +1003,7 @@ def check_title(card_text: str, source_text: str,
                 extra_titles: Optional[List[str]] = None,
                 corpus: Optional[str] = None,
                 file_name: Optional[str] = None,
-                extra_ids: Optional[List[str]] = None,
-                zone: bool = False) -> Tuple[List[str], bool]:
+                extra_ids: Optional[List[str]] = None) -> Tuple[List[str], bool]:
     """Дословный перенос title источника во frontmatter карточки.
 
     title — постоянный атрибут (наименование в языке предметной области;
@@ -1031,13 +1030,7 @@ def check_title(card_text: str, source_text: str,
     выгрузки; страница вне выгрузки сюда не попадает; CLI с одним источником —
     только главная), extra_ids — их page_id в том же порядке (для отчёта), corpus —
     текст группы, где ищутся заголовки (по умолчанию — сама карточка), file_name —
-    имя файла.
-
-    zone — карточка мини-комплекта зоны docs/modules/ (2026-11-04): источник сверки —
-    только первая страница, вторая и далее — спецификации чужого контура из
-    sources/external, не источники тела; правило агрегатора к ней не применяется, title
-    доп. страниц не сверяются (строка i). title — дословно с title первой страницы, ведущий
-    маркер модуля не снимается и не добавляется (решение владельца канона 2026-11-04)."""
+    имя файла."""
     src = _frontmatter_title(source_text)
     if src is None:
         return [], True
@@ -1066,12 +1059,6 @@ def check_title(card_text: str, source_text: str,
         corpus if corpus is not None else card_text)}
     m_pids = _AGG_PIDS_RE.search(_fm_head(card_text))
     n_pages = len(re.findall(r"\d+", m_pids.group(1))) if m_pids else 0
-    if zone and main_line is not None:
-        # карточка зоны: доп. страницы — спецификации чужого контура, не источники тела
-        return [main_line] + ([
-            f"i title доп. страниц ({n_pages - 1}) не сверяется у карточки зоны "
-            "docs/modules/ — спецификации чужого контура, источник сверки — первая страница"]
-            if n_pages > 1 else []), True
     if main_line is not None:
         ids = list(extra_ids or [])
         extra = [(ids[k] if k < len(ids) else "", t)
@@ -1113,7 +1100,7 @@ def check_title(card_text: str, source_text: str,
             + "; ".join(f"{i} {t!r}".strip() for i, t in lost)
             + " ✗ ПОТЕРЯ НАИМЕНОВАНИЯ"], False
     # правило агрегатора — не к карточке зоны: её доп. страницы не источники тела (2026-11-04)
-    if card is not None and not zone and (
+    if card is not None and (
             n_pages > 1 or (file_name or "").lower() == "dictionaries.md"):
         heads = heads_of()
         titles = [src] + [t for t in (extra_titles or []) if t and t != src]
@@ -1657,33 +1644,6 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
     return lits
 
 
-# раздел «Происхождение» карточки зоны: заголовок любого уровня от ##, с номером шаблона
-_ORIGIN_HEAD_RE = re.compile(r"^#{2,6}[ \t]+(?:\d+(?:\.\d+)*\.?[ \t]+)?Происхождение\b")
-_ORIGIN_TABLE_HDR = ["Источник", "Путь в репозитории", "Срез / дата выгрузки"]
-
-
-def _strip_origin_table(body: str) -> str:
-    """Тело без таблицы `Источник | Путь в репозитории | Срез / дата выгрузки` раздела
-    «Происхождение» (до следующего заголовка). Прочий текст раздела и таблицы с другой
-    шапкой остаются — сторож отсылок их видит."""
-    out: List[str] = []
-    in_origin = in_table = False
-    for ln in body.split("\n"):
-        s = ln.strip()
-        if s.startswith("#"):
-            in_origin, in_table = bool(_ORIGIN_HEAD_RE.match(s)), False
-        elif in_table and s.startswith("|"):
-            continue
-        else:
-            in_table = False
-            if (in_origin and s.startswith("|")
-                    and [c.strip() for c in s.strip("|").split("|")] == _ORIGIN_TABLE_HDR):
-                in_table = True
-                continue
-        out.append(ln)
-    return "\n".join(out)
-
-
 def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
     min_valid_pct, column_roles, text, src_literals = fx.min_valid_pct, fx.column_roles, fx.text, fx.src_literals
     report: List[str] = []
@@ -1702,12 +1662,6 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # переноса, а ключ, по которому скрипт регистрации заменит заготовку
     # настоящей строкой; формат с двоеточием без пробела — только он.
     body_scan = re.sub(r"page_id:\d{4,}", "", body_wo_fm)
-    # Исключение (2026-11-04): у карточки зоны docs/modules/ таблица раздела «Происхождение»
-    # (`Источник | Путь в репозитории | Срез / дата выгрузки`) по шаблону называет выгрузку
-    # Confluence сервиса и её путь — это след источника, а не отсылка вместо переноса. Вне
-    # этой таблицы сторож работает как прежде
-    if getattr(fx, "zone", False):
-        body_scan = _strip_origin_table(body_scan)
     page_refs = re.findall(r"(?i)confluence|page[ _]?id|page\s+\d{6,}",
                            body_scan)
     if page_refs:

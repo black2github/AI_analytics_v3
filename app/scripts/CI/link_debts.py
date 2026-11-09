@@ -65,7 +65,7 @@ try:
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
         oq_statuses)
     from source_coverage import (  # noqa: E402
-        artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
+        artifact_page_ids, find_kit_file, plan_slugs, read_inventory)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
@@ -74,7 +74,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
         oq_statuses)
     from .source_coverage import (  # type: ignore  # noqa: E402
-        artifact_page_ids, find_kit_file, is_zone_row, plan_slugs, read_inventory)
+        artifact_page_ids, find_kit_file, plan_slugs, read_inventory)
 
 _DEBT_RE = re.compile(
     r"нет целевого артефакта\s+([\w./-]+)(?:\s+«([^»]+)»)?", re.IGNORECASE)
@@ -353,14 +353,13 @@ def debts_heading(matrix_text: str) -> Optional[str]:
     return None
 
 
-def _zone_target(name: str, zone_titles: List[str]) -> Optional[str]:
-    """Титул страницы зоны «вне Экосистемы» (дословно по описи), с которым совпадает
-    имя цели долга: дословно, без тега «[…]» или как хвост «…: <имя>» (ЭФ виджета
-    «ЭФ Клиента: X» у долга названа «[тег] X»). Только для ⚠ — широта совпадения
-    допустима."""
+def _title_match(name: str, titles: List[str]) -> Optional[str]:
+    """Титул страницы описи (дословно), с которым совпадает имя цели долга: дословно, без
+    тега «[…]» или как хвост «…: <имя>» («ЭФ Клиента: X» у долга названа «[тег] X»).
+    Только для ⚠ и признаков приёмки — широта совпадения допустима."""
     untag = lambda s: re.sub(r"^\[[^\]]+\]\s*", "", s)  # noqa: E731
     nn = _norm(name)
-    for title in zone_titles:
+    for title in titles:
         t = _norm(title)
         if nn == t or untag(nn) == untag(t) or untag(t).endswith(": " + untag(nn)):
             return title
@@ -639,22 +638,6 @@ def check(matrix_path: Path, docs_root: Path,
     out_of_plan_warn: List[str] = []
     plan = find_kit_file(docs_root, "migration-plan.md")
     slugs = plan_slugs(plan)[0] if plan is not None else set()
-    # Д-46: титулы страниц зоны «вне Экосистемы» по описи — цель долга формы 1 в зоне
-    inv_file = find_kit_file(docs_root, "inventory.md")
-    zone_rows = ({pid: r for pid, r in read_inventory(inv_file).items()
-                  if r.get("title") and is_zone_row(r)} if inv_file is not None else {})
-    zone_titles = [r["title"] for r in zone_rows.values()]
-    # Д-49: мини-комплект зоны — docs/modules/<имя>/ (старое место modules/ рядом с docs/ —
-    # переходный период); страница зоны покрыта файлом мини-комплекта с её page_id
-    zone_files: Dict[str, Path] = {}
-    if zone_rows:
-        for base in (docs_root / "modules", docs_root.parent / "modules"):
-            if base.is_dir():
-                for zp in sorted(base.rglob("*.md")):
-                    for zpid in artifact_page_ids(zp):
-                        zone_files.setdefault(zpid, zp)
-    zone_pid_by_title = {r["title"]: pid for pid, r in zone_rows.items()}
-    zone_warn: List[str] = []
     # норма закрытия OQ: журнал — по адресу файлов комплекта (как опись); нет — не сверяется
     oq_file = find_kit_file(docs_root, "open-questions.md")
     oq_status = (oq_statuses(_fs.read_text(oq_file, encoding="utf-8", errors="replace"))
@@ -738,22 +721,6 @@ def check(matrix_path: Path, docs_root: Path,
                     frozen_warn.append(f"⚠ долг {who} «{name or typ}»: «frozen» и «требуется заход» "
                                        "в одной строке — заход по замороженной цели не ставится; "
                                        "оставить одно")
-            zt = _zone_target(name, zone_titles) if name else None
-            zf = zone_files.get(zone_pid_by_title.get(zt, "")) if zt else None
-            if zt and zf is not None:
-                try:
-                    zrel = zf.relative_to(docs_root.parent).as_posix()
-                except ValueError:
-                    zrel = zf.as_posix()
-                zone_warn.append(
-                    f"⚠ долг {', '.join(from_ids)} «{name}» — цель в зоне «вне Экосистемы» "
-                    f"покрыта мини-комплектом ({zrel}): долг формы 1 не заводится — снять "
-                    "строку, в карточке — ссылка на файл мини-комплекта (Д-49)")
-            elif zt:
-                zone_warn.append(
-                    f"⚠ долг {', '.join(from_ids)} «{name}» — цель в зоне «вне Экосистемы» "
-                    f"(опись: «{zt}»): долг формы 1 не заводится, цель — мини-комплект "
-                    "docs/modules/<имя>/ (Д-49)")
             fm = _FOREIGN_SKILL_RE.search(raw)
             sign = foreign_target_sign(name, fm.group(1), foreign_signs, own_tags) if (fm and name) else None
             if sign:
@@ -824,7 +791,6 @@ def check(matrix_path: Path, docs_root: Path,
         report.append("i журнал open-questions.md не найден — закрытие долгов «открытый вопрос» "
                       "с записями OQ не сверяется")
     report.extend(out_of_plan_warn)
-    report.extend(zone_warn)
     if n_gap:
         report.append(f"пробелов НФТ {n_gap} («не выявлено» / скелет на страницах типов) "
                       "— просрочка не применяется, цитата сторожится")

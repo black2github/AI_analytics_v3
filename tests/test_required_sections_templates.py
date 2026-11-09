@@ -1,7 +1,8 @@
 # tests/test_required_sections_templates.py
-"""Пакет П2 ОНБ-В, п. 2 (замечание 47): обязательные разделы печатной формы,
-интерфейса модуля и паспорта модуля; страж «словарь прибора равен пометкам
-«(обязательный)» шаблонов канона».
+"""Пакет П2 ОНБ-В, п. 2 (замечание 47): обязательные разделы печатной формы и паспорта
+границы части вне контура Экосистемы (module-passport; тесты паспорта — в
+test_outside_eco_part.py); страж «словарь прибора равен пометкам «(обязательный)» шаблонов
+канона».
 
 Страж на живом каноне читает шаблоны через git из `origin/master` клона канона
 (`CANON_ROOT`, по умолчанию C:\\doc-as-code\\EAN\\docs-o2new); без клона — skip с
@@ -124,34 +125,3 @@ def test_print_form_missing_layout_warned_registry_readme_skipped(tmp_path):
     assert rep and "единиц 1" in rep[0], rep
     assert "prn-01-report.md [print-form]: «Макет»" in rep[1], rep
     assert not any("вне шаблона" in x for x in rep), rep
-
-
-def test_module_kit_readme_and_interface_in_zone(tmp_path):
-    docs = tmp_path / "docs"
-    z = docs / "modules/widgets"
-    kit_ok = "".join(f"## {i}. {n}\n\nт\n\n" for i, n in enumerate([
-        "Назначение", "Контур исполнения и участники", "Граница: что не проходит через Экосистему",
-        "Точки пересечения границы", "Границы ответственности",
-        "Что не применяется из правил комплекта", "Состав мини-комплекта"], 1))
-    w(z / "README.md", fm("MOD-WIDGETS", "module-kit") + kit_ok)  # нет «Происхождение»
-    # условный раздел «Коды ошибок» отсутствует — законно
-    w(z / "interface/get-list.md", fm("MOD-WIDGETS-01", "module-interface")
-      + "## 1. Краткое описание\n\nт\n\n## 2. Входные параметры\n\nт\n\n"
-      "## 3. Исходящие параметры\n\nт\n\n## Потребители\n\nт\n\n## Происхождение\n\nт\n")
-    rep = sc.check_required_sections(docs)
-    assert rep and "единиц 1" in rep[0], rep
-    assert "modules/widgets/README.md [module-kit]: «Происхождение»" in rep[1], rep
-
-
-def test_zone_card_of_other_type_not_checked(tmp_path):
-    # НЕсрабатывание: функция в зоне модулей сторожем разделов не проверялась и не проверяется
-    docs = tmp_path / "docs"
-    w(docs / "modules/widgets/function/fun-01.md", fm("FUN-01", "function") + "## Назначение\n\nт\n")
-    assert sc.check_required_sections(docs) == []
-
-
-def test_module_types_outside_zone_not_checked(tmp_path):
-    # НЕсрабатывание: тип модуля вне зоны — не документ мини-комплекта
-    docs = tmp_path / "docs"
-    w(docs / "srs/x/README.md", fm("MOD-X", "module-kit") + "## Назначение\n\nт\n")
-    assert sc.check_required_sections(docs) == []

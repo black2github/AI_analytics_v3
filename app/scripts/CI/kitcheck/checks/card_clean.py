@@ -188,7 +188,6 @@ def check_clean_document(md_path: Path,
              if docs_root is not None else [])
     scope_label = ("комплекта и sibling-пакетов (srs|brd)" if allow_sibling_docs
                    else "docs/")
-    root = roots[0] if roots else None
     for pos, target in _md_link_targets(text):
         if not target or target == "#":
             ok = False
@@ -221,27 +220,12 @@ def check_clean_document(md_path: Path,
                 "существует ✗ НИЖЕ ПОРОГА")
             continue
         if roots:
-            if _under_any_kit_root(resolved, roots):
-                pass
-            else:
-                # мини-комплект зоны «вне Экосистемы» рядом с docs/ — законная
-                # цель карточки вызова (Д-46: контракт интерфейса модуля); это старое
-                # место, переходный период — по Д-49 зона в docs/modules/<имя>/, и
-                # ссылка туда — цель внутри комплекта, сюда не доходит
-                allowed_modules = False
-                if root is not None:
-                    try:
-                        resolved.relative_to((root.parent / "modules").resolve())
-                        allowed_modules = True
-                    except ValueError:
-                        pass
-                if allowed_modules:
-                    continue
+            if not _under_any_kit_root(resolved, roots):
                 ok = False
                 report.append(
                     f"ссылка ведёт ВНЕ {scope_label}: {target[:80]} — карточки "
-                    "ссылаются только внутрь комплекта и в мини-комплекты "
-                    "modules/ (выгрузка/sources — источник, не цель) ✗ НИЖЕ ПОРОГА")
+                    "ссылаются только внутрь комплекта (выгрузка/sources — источник, "
+                    "не цель) ✗ НИЖЕ ПОРОГА")
     return report + warns, ok
 
 

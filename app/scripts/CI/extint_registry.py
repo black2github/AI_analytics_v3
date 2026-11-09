@@ -31,7 +31,8 @@ README папки АС (EXTINT-<AS>-000), корневой реестр сист
 - корневой README: раздел «## Реестр систем» (`Система | Папка | README |
   Карточек`) ↔ папки АС;
 - «Потребители» карточки: раздел есть, три колонки, адреса абсолютные и на
-  `/-/blob/HEAD/` (не `master`, `trunk`, рабочая ветка);
+  `/-/blob/HEAD/` (не `master`, `trunk`, рабочая ветка); локальный ID — карточка вызова
+  `CALL-…` (иной ID артефакта сервиса — ⚠; заготовка `page_id:<ID>` законна);
 - маркеры конфликта (`<<<<<<<`, `>>>>>>>` вне блоков кода) в любом `.md` — ✗;
 - содержимое потребителя в базовом контракте (шаблон, раздел A, «Что содержит базовый
   контракт»; решение владельца 2026-11-08): §1 «Где используется» не указатель шаблона,
@@ -324,8 +325,14 @@ def _name_key(name: str) -> str:
     return re.sub(r"\s+", " ", _NAME_QUOTES_RE.sub('"', name)).strip().rstrip(".").casefold()
 
 
+# локальный ID строки «Потребители» — ID в начале ячейки: законна только карточка вызова CALL-…
+# (вызов принадлежит потребителю); «—» с пояснением (карточки вызова нет) и заготовка
+# регистрации «page_id:<ID>» — не ID, сторож их не читает
+_LOCAL_ID_RE = re.compile(r"\s*\[?\s*((?:[A-Z][A-Z0-9]*-)+\d{2,3})\b")
+
+
 def check_consumers(cards: List[Card], rep: Report) -> None:
-    missing, cols, refs, relative = [], [], [], []
+    missing, cols, refs, relative, not_call = [], [], [], [], []
     for c in cards:
         # и у карточки со сломанной шапкой: тело читается целиком, адреса проверяются
         lines = c.body.split("\n")
@@ -343,6 +350,11 @@ def check_consumers(cards: List[Card], rep: Report) -> None:
             cols.append(f"{c.rel}: колонок {len(table_cells(rows[0]))}")
         bad_refs: Dict[str, int] = defaultdict(int)
         for ln in rows[2:]:
+            cells = table_cells(ln)
+            if len(cells) >= 2 and not cells[1].strip().startswith("page_id:"):
+                lid = _LOCAL_ID_RE.match(re.sub(r"\*\*|__|`", "", cells[1]))
+                if lid and not lid.group(1).startswith("CALL-"):
+                    not_call.append(f"{c.rel}: {lid.group(1)}")
             for target in _TARGET_RE.findall(ln):
                 if not re.match(r"https?://", target):
                     relative.append(f"{c.rel}: {target}")
@@ -357,6 +369,8 @@ def check_consumers(cards: List[Card], rep: Report) -> None:
     rep.emit("⚠", "таблица «Потребители» не в три колонки (Сервис | Локальный ID | Карточка вызова)", cols)
     rep.emit("⚠", "адрес карточки вызова не абсолютный", relative)
     rep.emit("⚠", "адрес карточки вызова не на /-/blob/HEAD/ (не master, не trunk, не рабочая ветка)", refs)
+    rep.emit("⚠", "локальный ID потребителя — не карточка вызова CALL-… (вызов контракта принадлежит "
+             "потребителю: карточка CALL-EXT в комплекте сервиса)", not_call)
 
 
 def h1_name(card: Card) -> str:

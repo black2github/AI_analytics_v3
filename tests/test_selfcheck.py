@@ -431,8 +431,9 @@ def test_subservice_mapping_wrong_path_flagged(tmp_path):
                for ln in report), report
 
 
-def test_subservice_external_zone_in_docs_flagged(tmp_path):
-    # источник «вне Экосистемы» получил карточку в docs — брак
+def test_subservice_external_zone_without_slug_warns_path_unchecked(tmp_path):
+    # зона «вне Экосистемы» без слага (переходная форма, решение 2026-11-08): ⚠ о строке
+    # разметки, путь карточки не сверяется — карточка остаётся в сверке как любая
     from app.scripts.CI import selfcheck as sc
     docs, srcs = _sub_fixture(tmp_path, "srs/limits/function/f1.md")
     make(srcs / "Ветка-Виджеты" / "в1.md",
@@ -440,8 +441,26 @@ def test_subservice_external_zone_in_docs_flagged(tmp_path):
     make(docs / "srs" / "function" / "w1.md",
          card("[Т_Виджет] Скрипт ПИН", "333444"))
     report, ok = sc.run(docs, srcs)
+    assert not any("✗ разметка" in ln for ln in report), report
+    assert any(ln.startswith("⚠ разметка: зона «вне Экосистемы» без слага") and "[Т_Виджет]" in ln
+               for ln in report), report
+    assert any("srs" in ln and "w1.md" in ln and ln[:1] in "✓✗⚠" for ln in report), report
+
+
+def test_subservice_external_zone_with_slug_path_checked(tmp_path):
+    # «вне Экосистемы <слаг>»: карточка обязана лежать в srs/<слаг>/, как у подсервиса
+    from app.scripts.CI import selfcheck as sc
+    docs, srcs = _sub_fixture(tmp_path, "srs/limits/function/f1.md")
+    prof = tmp_path / "README.md"
+    prof.write_text(prof.read_text(encoding="utf-8").replace(
+        "| вне Экосистемы |", "| вне Экосистемы widgets |"), encoding="utf-8")
+    make(srcs / "Ветка-Виджеты" / "в1.md",
+         source("[Т_Виджет] Скрипт ПИН", "333444"))
+    make(docs / "srs" / "function" / "w1.md",
+         card("[Т_Виджет] Скрипт ПИН", "333444"))
+    report, ok = sc.run(docs, srcs)
     assert not ok
-    assert any("вне Экосистемы" in ln and "не место" in ln
+    assert any("✗ разметка" in ln and "«вне Экосистемы widgets»" in ln and "srs/widgets/" in ln
                for ln in report), report
 
 

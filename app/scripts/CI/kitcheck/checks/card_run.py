@@ -11,13 +11,15 @@ from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..core import Check, run_checks
 from ..html import _fm_head
-from ..md import _kit_md, is_module_zone_file, page_ids, read_frontmatter, strip_html_comments
+from ..md import _kit_md, page_ids, read_frontmatter, strip_html_comments
 from .card_common import _norm_ws
 from .card_form import (
     _fc_blank_line_table_breaks, _fc_blockquote_indented_code, _fc_confluence_ui_artifacts,
     _fc_duplicate_headers, _fc_empty_tables, _fc_figma_mockups, _fc_flattened_attributes,
     _fc_fun_call_token, _fc_homoglyphs, _fc_html_comments, _fc_invisible_chars,
-    _fc_invisible_html_tags, _fc_long_lines, _fc_notation_hints, _fc_param_code_row_numbers,
+    _fc_invisible_html_tags, _fc_long_lines, _fc_notation_hints, _fc_outside_eco_intc,
+    _fc_removed_module_type,
+    _fc_param_code_row_numbers,
     _fc_pseudo_screen_form, _fc_readme_main_roles, _fc_screen_form_condition_notation,
     _fc_separator_columns, _fc_shortening_markers, _fc_strikethrough_marker, _fc_stub_card,
     _fc_torn_table_cells, _fc_unclosed_code_blocks, _fc_undecomposed_lines
@@ -52,7 +54,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
                amnesty_text: Optional[str] = None,
                kit_summary: bool = False,
                without_sources: bool = False,
-               zone: bool = False) -> Tuple[List[str], bool]:
+               outside_eco: bool = False) -> Tuple[List[str], bool]:
     """Режим --check: колонные валидаторы поверх ГОТОВОЙ карточки.
 
     Ловит класс «якорная колонка переписана при перекладке» (регресс
@@ -74,8 +76,10 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     without_sources — самопроверка комплекта без выгрузки (selfcheck без --sources):
     формулировки, отсылающие к источнику, заменяются нейтральными (маркер сокращения).
 
-    zone — карточка мини-комплекта зоны docs/modules/ (2026-11-04): таблица раздела
-    «Происхождение» вне сторожа отсылок к страницам источника."""
+    outside_eco — карточка части вне контура Экосистемы: каталог `srs/<слаг>/` с зоной
+    `вне Экосистемы <слаг>` в разметке профиля источников (решение владельца канона
+    2026-11-08). Признак выключает сторож привилегий FUN-CL/BNK и требует у карточки
+    внутреннего контракта строк «Канал» и «Контур исполнения»; прочее — как у любой карточки."""
     text = _fs.read_text(md_path, encoding="utf-8")
     report: List[str] = [f"проверка карточки: {md_path.name}"]
     ok = True
@@ -84,7 +88,7 @@ def check_file(md_path: Path, min_valid_pct: float = 95.0,
     lines = text.splitlines()
     # проверки карточки — реестр FILE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary, without_sources=without_sources, zone=zone)
+    fx = _FileCtx(md_path=md_path, min_valid_pct=min_valid_pct, source_text=source_text, column_roles=column_roles, soft_markers=soft_markers, amnesty_text=amnesty_text, text=text, lines=lines, src_literals=src_literals, kit_summary=kit_summary, without_sources=without_sources, outside_eco=outside_eco)
     f_lines, f_ok = run_checks(FILE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -111,7 +115,7 @@ class _FileCtx:
     src_literals: Optional[object]
     kit_summary: bool = False  # в составе selfcheck комплекта: сводные проверки — строкой комплекта
     without_sources: bool = False  # selfcheck без --sources: без отсылок к источнику в формулировках
-    zone: bool = False  # карточка зоны docs/modules/: «Происхождение» вне сторожа отсылок (2026-11-04)
+    outside_eco: bool = False  # карточка части вне контура Экосистемы (по разметке профиля)
 # Документы определений, к которым не применяется сторож полноты кавычечных
 # литералов источника (решение владельца канона 2026-10-30): глоссарий — не
 # дословный перенос страницы, шаблон требует атомарных определений и
@@ -161,6 +165,8 @@ FILE_CHECKS: List[Check] = [
     Check("strikethrough_marker", _fc_strikethrough_marker, scope="file"),
     Check("duplicate_headers", _fc_duplicate_headers, scope="file"),
     Check("fun_call_token", _fc_fun_call_token, scope="file"),
+    Check("outside_eco_intc", _fc_outside_eco_intc, scope="file"),
+    Check("removed_module_type", _fc_removed_module_type, scope="file"),
     Check("source_page_refs_and_columns", _fc_source_page_refs_and_columns, scope="file"),
 ]
 
@@ -212,7 +218,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
               without_sources: bool = False,
               inventory: Optional[Path] = None,
               group_extra_sources: Optional[List[Tuple[Path, Path]]] = None,
-              call_cards: Optional[List[Path]] = None
+              call_cards: Optional[List[Path]] = None,
+              outside_eco: bool = False
               ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
@@ -236,7 +243,11 @@ def run_check(files: List[Path], source_path: Optional[Path],
     group_extra_sources — [(доп. страница, файл-владелец)] НЕглавных файлов группы (замечание
     ОНБ-В 72, 2026-11-07): по ним сверяются только таблицы и кавычечные литералы, как по доп.
     страницам главной; освобождение тонкой карточки вызова — по шапке владельца; сторож title
-    и амнистия длинных строк их не видят (title неглавной карточки — не наименование группы)."""
+    и амнистия длинных строк их не видят (title неглавной карточки — не наименование группы).
+
+    outside_eco — главная карточка лежит в части вне контура Экосистемы (каталог `srs/<слаг>/`
+    с зоной `вне Экосистемы <слаг>` в разметке профиля; вычисляет вызывающий — selfcheck
+    по профилю источников): передаётся в check_file."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -256,7 +267,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             amnesty_text=amnesty_text,
                             kit_summary=kit_summary,
                             without_sources=without_sources,
-                            zone=is_module_zone_file(main_file, docs_root))
+                            outside_eco=outside_eco)
     card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
@@ -452,7 +463,7 @@ def _main_page_index(docs_root: Path) -> Dict[str, List[Path]]:
     """page_id → карточки комплекта, у которых он стоит ПЕРВЫМ в confluence_page_ids
     (главная страница карточки). Кэш сессии, как у _page_artifact_index."""
     out: Dict[str, List[Path]] = {}
-    for p in _kit_md(docs_root, zone=True):
+    for p in _kit_md(docs_root):
         pids = page_ids(read_frontmatter(p) or {})
         if pids:
             out.setdefault(pids[0], []).append(p)
@@ -552,7 +563,7 @@ def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
     позиции (группы selfcheck строятся по первой). Строится один раз за прогон: кэш
     сессии selfcheck, а не чтение всего комплекта на каждую карточку."""
     out: Dict[str, List[Path]] = {}
-    for p in _kit_md(docs_root, zone=True):
+    for p in _kit_md(docs_root):
         for pid in page_ids(read_frontmatter(p) or {}):
             out.setdefault(pid, []).append(p)
     return out
@@ -792,8 +803,7 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
         ttl_report, ttl_ok = check_title(
             ttl_text, src_text, extra_titles=[t for _i, t in extra_pages],
             corpus=combined, file_name=(ttl_holder or main_file).name,
-            extra_ids=[i for i, _t in extra_pages],
-            zone=main_file is not None and is_module_zone_file(main_file, docs_root))
+            extra_ids=[i for i, _t in extra_pages])
         if by_link:
             ttl_report = ttl_report + [
                 f"i title доп. страниц по ссылке (метод / общая функция вне подсервиса): "

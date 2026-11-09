@@ -1,6 +1,6 @@
 # tests/test_transfer_gate_after_step.py
 """Д-49 (2026-10-23): гейт переноса в лёгком режиме --after-step и дельта --baseline; строка
-статуса OQ в двух формах; мини-комплект зоны modules/ в целевой раскладке. Каждое понижение —
+статуса OQ в двух формах; часть вне контура Экосистемы и каталог modules/ в целевой раскладке. Каждое понижение —
 пара тестов (полный режим — прежний знак, --after-step — пониженный); НЕ понижаемый критерий —
 ✗ в обоих режимах."""
 import sys
@@ -204,49 +204,50 @@ def test_oq_regex_single_home():
     assert tg._OQ_STATUS_RE is rg.OQ_STATUS_RE is rg._OQ_STATUS_RE
 
 
-# ---------------------------------------------------------------- зона modules/ (C7)
+# ---------------------------------------------------------------- часть вне контура Экосистемы
 
-def _zone(src: Path) -> None:
-    z = src / "docs/modules/widgets-rtl"
-    _w(z / "README.md", "---\nid: MOD-WIDGETS-RTL-000\ntitle: 'Паспорт'\ntype: module-kit\n---\n# П\n")
-    _w(z / "interface/mod-widgets-rtl-001.md",
-       "---\nid: MOD-WIDGETS-RTL-001\ntitle: 'Скрипт'\ntype: module-interface\n---\n# С\n")
-    _w(z / "spec/scr-01.md", "---\nid: MOD-WIDGETS-RTL-SCR-01\ntitle: 'ЭФ'\ntype: screen-form\n---\n# Э\n")
+def _part(src: Path) -> None:
+    # часть вне контура Экосистемы — штатная часть docs/srs/<слаг>/ (решение 2026-11-08)
+    z = src / "docs/srs/widgets-rtl"
+    _w(z / "boundary-passport.md", "---\nid: BND-000\ntitle: 'Паспорт'\ntype: module-passport\n---\n# П\n")
+    _w(z / "internal-contract/client/intc-014.md",
+       "---\nid: INTC-014\ntitle: 'Скрипт'\ntype: internal-contract\n---\n# С\n")
 
 
-def test_zone_spec_without_readme_not_flagged_sdlc08(tmp_path):
+def test_part_dirs_follow_sdlc08_and_passport_type_listed(tmp_path):
+    # каталоги части — каталоги карточек комплекта: README-реестр по SDLC-08, как у любой части;
+    # module-passport — тип вне набора платформы (i TRF-04)
     src = make_src(tmp_path)
-    _zone(src)
+    _part(src)
     lines, _r, _d = _run(src, after_step=True)
     ln = _line(lines, "⚠ [SDLC-08] каталоги с карточками без README-реестра")
-    # в перечне только каталог комплекта srs/function (у базового комплекта нет README), не зона
-    assert ln and "modules" not in ln and ": 1 (srs/function)" in ln, "\n".join(lines)
+    assert ln and "srs/widgets-rtl/internal-contract/client" in ln, "\n".join(lines)
     ln = _line(lines, "i [TRF-04] типы вне закрытого набора платформы")
-    assert ln and "module-interface ×1" in ln and "module-kit ×1" in ln
+    assert ln and "module-passport ×1" in ln and "internal-contract ×1" in ln, ln
 
 
-def test_card_dir_without_readme_outside_zone_still_flagged(tmp_path):
-    # НЕсрабатывание исключения: каталог карточек комплекта без README — ⚠ как прежде
+def test_passport_type_declared_by_bnd_prefix(tmp_path):
+    # тип module-passport объявлен в README комплекта префиксом **BND**, как INTC/SM
     src = make_src(tmp_path)
-    _zone(src)
-    _w(src / "docs/srs/control/ctl-1.md", "---\nid: CTL-001\ntitle: 'К'\ntype: control\n---\n# К\n")
+    _part(src)
+    readme = src / "docs/README.md"
+    readme.write_text(readme.read_text(encoding="utf-8")
+                      + "\n| **BND** | паспорт границы |\n| **INTC** | контракт |\n", encoding="utf-8")
     lines, _r, _d = _run(src, after_step=True)
-    ln = _line(lines, "⚠ [SDLC-08] каталоги с карточками без README-реестра: 2 (srs/control, srs/function)")
-    assert ln, "\n".join(lines)
+    ln = _line(lines, "i [TRF-04] типы вне закрытого набора платформы")
+    assert ln and "объявлены в README комплекта" in ln, ln
 
 
-def test_docs_repo_modules_dir_is_standard(tmp_path):
-    # режим репозитория документации: modules/ рядом с srs/ — штатный каталог (полный режим с
-    # прибором: сторож корня не считает его посторонним); README-реестр spec/ не требуется
+def test_docs_repo_modules_dir_not_standard(tmp_path):
+    # каталог modules/ больше не штатный: путь части не выделяет, мини-комплекта нет
     from tests.test_transfer_gate import make_docs_repo
     repo = make_docs_repo(tmp_path)
     z = repo / "modules/widgets-rtl"
     _w(z / "README.md", "---\nid: MOD-WIDGETS-RTL-000\ntitle: 'Паспорт'\ntype: module-kit\n---\n# П\n")
-    _w(z / "spec/scr-01.md", "---\nid: MOD-WIDGETS-RTL-SCR-01\ntitle: 'ЭФ'\ntype: screen-form\n---\n# Э\n")
     lines, ready, data = _run(repo)
     assert data["docs_repo"] is True
-    assert not any("посторонние" in l for l in lines), "\n".join(lines)
-    assert not any("каталоги с карточками без README-реестра" in l and "modules" in l for l in lines)
+    assert not ready
+    assert any("посторонн" in l and "modules" in l for l in lines), "\n".join(lines)
 
 
 # ---------------------------------------------------------------- корень сборки (лёгкий режим)
@@ -263,14 +264,24 @@ def test_after_step_root_junk_dir_blocks(tmp_path):
 
 
 def test_after_step_root_standard_dirs_pass(tmp_path):
-    # НЕсрабатывание: разделы комплекта, зона, постановки, вложения, markdown — штатно
+    # НЕсрабатывание: разделы комплекта, часть вне Экосистемы, постановки, вложения, markdown
     src = make_src(tmp_path)
-    _zone(src)
+    _part(src)
     for d in ("brd", "nfr", "tasks", "files"):
         _w(src / f"docs/{d}/x.md", "# x\n")
     lines, ready, _ = _run(src, after_step=True)
     assert ready, "\n".join(lines)
     assert _line(lines, "✓ [TRF-01] в корне целевой раскладки только разделы комплекта и markdown")
+
+
+def test_after_step_root_modules_dir_blocks(tmp_path):
+    # docs/modules/ — не раздел комплекта (каталог мини-комплекта снят): ✗ TRF-01
+    src = make_src(tmp_path)
+    _w(src / "docs/modules/widgets-rtl/README.md", "# П\n")
+    lines, ready, _ = _run(src, after_step=True)
+    assert not ready
+    assert _line(lines, "✗ [TRF-01] в корне целевой раскладки посторонние каталоги и файлы: modules/"), \
+        "\n".join(lines)
 
 
 def test_after_step_root_api_not_doubled(tmp_path):

@@ -369,7 +369,7 @@ _AFTER_STEP_DOWNGRADE = (
 # корень целевой раскладки (лёгкий режим, Д-49): штатные каталоги комплекта в корне
 # репозитория документации. api/ — отдельный блокер TRF-03, здесь не дублируется; служебные
 # каталоги вложений (files/, img/ …) — как у карточек корня
-_TARGET_ROOT_DIRS = {"brd", "srs", "nfr", "tasks", "modules", "api"} | _SERVICE_DIRS
+_TARGET_ROOT_DIRS = {"brd", "srs", "nfr", "tasks", "api"} | _SERVICE_DIRS
 
 
 def check_staged_root(gate: "Gate", staged: Path) -> None:
@@ -385,7 +385,7 @@ def check_staged_root(gate: "Gate", staged: Path) -> None:
     if junk:
         gate.add("✗", "TRF-01", f"в корне целевой раскладки посторонние каталоги и файлы: "
                  f"{', '.join(junk[:8])}{'…' if len(junk) > 8 else ''} — в корне репозитория "
-                 "документации только разделы комплекта (brd/, srs/, nfr/, tasks/, modules/) и "
+                 "документации только разделы комплекта (brd/, srs/, nfr/, tasks/) и "
                  "markdown; перенести внутрь раздела или удалить", check="корень целевой раскладки")
     else:
         gate.add("✓", "TRF-01", "в корне целевой раскладки только разделы комплекта и markdown",
@@ -715,7 +715,7 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     if outside:
         prefix_of = {"internal-contract": "INTC", "lib-contract": "LIBC", "agent": "CHD",
                      "platform-function": "PLT", "status-model": "SM", "instruction": "INS",
-                     "script": "SCRP"}
+                     "script": "SCRP", "module-passport": "BND"}
         declared = bool(rtext) and all(
             t in rtext or f"**{prefix_of.get(t, '')}**" in rtext for t in outside)
         gate.add("i", "TRF-04", "типы вне закрытого набора платформы: "
@@ -731,10 +731,6 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
     no_readme: List[str] = []
     for d in sorted({f.parent for f in staged.rglob("*.md") if _fm(f).get("id")}):
         if d == staged or d.name in _SERVICE_DIRS:
-            continue
-        # мини-комплект зоны modules/<имя>/ (Д-49 п. 4): не каталог карточек комплекта —
-        # состав ведёт его README (паспорт границы), у spec/ и interface/ реестра нет по шаблону
-        if d.relative_to(staged).parts[0] == "modules":
             continue
         if not (d / "README.md").is_file():
             no_readme.append(d.relative_to(staged).as_posix())
@@ -806,7 +802,7 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
 # Б — цель карточка вызова: её источник — страница потребителя, то есть сам FROM-ID;
 # А — имя цели совпадает с титулом страницы описи вне структурных классов. Формы «у владельца»
 # и «нет базового контракта» — долг за описанием на стороне владельца, в признаки не входят.
-# Сопоставление имени с титулом — правило link_debts._zone_target; страница с дословно тем же
+# Сопоставление имени с титулом — правило link_debts._title_match; страница с дословно тем же
 # титулом решает первой, иначе замороженная «[КК_БК] X» считалась бы живой «[КК_ЛК] X». Не
 # сопоставлено — долг объективный: признак сигналит приёмке и требований не снимает.
 _OWN_DEBT_OTHER_TYPES = ("nfr-gap", "параметр", "base-contract")
@@ -849,7 +845,7 @@ def _source_page(name: str, pages: List[Tuple[str, str, str]], live: Dict[str, s
     cand = [t for t in live
             if not (tag and _TAG_RE.match(ld._norm(t))
                     and _TAG_RE.match(ld._norm(t)).group(0) != tag.group(0))]
-    hit = ld._zone_target(name, cand)
+    hit = ld._title_match(name, cand)
     return live[hit] if hit else ""
 
 

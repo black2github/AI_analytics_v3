@@ -58,13 +58,13 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 try:
     from kitcheck.md import (  # noqa: E402,F401 — примитивы markdown (этап 1б); имена
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,  # сохраняются в selfcheck для
-        gitlab_slug, in_dot_dir, in_module_zone, is_task_file,  # утилит и тестов, которые зовут их
+        gitlab_slug, in_dot_dir, is_task_file,  # утилит и тестов, которые зовут их
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,  # как selfcheck.*
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import (  # type: ignore  # noqa: E402,F401
         _MD_LINK_RE, _PID_RE, _anchors_of, _kit_md,
-        gitlab_slug, in_dot_dir, in_module_zone, is_task_file,
+        gitlab_slug, in_dot_dir, is_task_file,
         page_ids, read_frontmatter, table_cells, is_fence, FENCE_BOTH,
         FENCE_BACKTICK, frontmatter_end, frontmatter_split)
 try:
@@ -73,7 +73,8 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.core import Check, is_examples_signal, is_soft_signal, run_checks  # type: ignore  # noqa: E402
 try:
     from kitcheck.checks._common import (  # noqa: E402,F401 — этап 3
-        _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
+        _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context,
+        in_outside_eco_part, passport_slugs)
     from kitcheck.checks.artifacts import (  # noqa: E402,F401 — этап 3
         _ART_LINK_RE, _BOM, _PRE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
     from kitcheck.checks.catalog_api import (  # noqa: E402,F401 — этап 3
@@ -91,17 +92,18 @@ try:
     from kitcheck.checks.nfr import (  # noqa: E402,F401 — этап 3
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
-        _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping)
+        _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
+        outside_eco_slugs)
     from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
-    from kitcheck.checks.zone import check_module_zone, check_zone_card  # noqa: E402 — зона docs/modules/
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks._common import (  # type: ignore  # noqa: E402,F401
-        _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context)
+        _KNOWN_TYPES, _PART_CODE_RE, _cell_plain, _load_service_table, domain_context,
+        in_outside_eco_part, passport_slugs)
     from .kitcheck.checks.artifacts import (  # type: ignore  # noqa: E402,F401
         _ART_LINK_RE, _BOM, _PRE_RE, _STRUCT_EXT, _TOKEN_RE, _parse_structured, _source_candidates, _struct_tokens, check_file_artifacts, check_structured_examples)
     from .kitcheck.checks.catalog_api import (  # type: ignore  # noqa: E402,F401
@@ -119,13 +121,13 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.checks.nfr import (  # type: ignore  # noqa: E402,F401
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
-        _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping)
+        _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
+        outside_eco_slugs)
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
-    from .kitcheck.checks.zone import check_module_zone, check_zone_card  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
 
 
@@ -216,7 +218,12 @@ def _run(files: List[Path], src: Optional[Path],
          allow_sibling_docs: bool = False,
          without_sources: bool = False,
          inventory: Optional[Path] = None,
-         group_extra: Optional[List[Tuple[Path, Path]]] = None) -> Tuple[List[str], bool]:
+         group_extra: Optional[List[Tuple[Path, Path]]] = None,
+         outside_eco: frozenset = frozenset()) -> Tuple[List[str], bool]:
+    """outside_eco — слаги частей вне контура Экосистемы по разметке профиля и паспортам
+    границы (outside_eco_slugs | passport_slugs): главная карточка в docs/srs/<слаг>/ получает
+    признак части."""
+    eco = docs_root is not None and in_outside_eco_part(files[0], docs_root, outside_eco)
     return _safe(lambda: run_check(files, src, docs_root=docs_root,
                                       soft_markers=soft_markers,
                                       pardon_source=pardon_src,
@@ -225,7 +232,8 @@ def _run(files: List[Path], src: Optional[Path],
                                       allow_sibling_docs=allow_sibling_docs,
                                       without_sources=without_sources,
                                       inventory=inventory,
-                                      group_extra_sources=group_extra))
+                                      group_extra_sources=group_extra,
+                                      outside_eco=eco))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -328,6 +336,9 @@ def _run_impl(docs: Path, sources: Optional[Path],
     all_ok = True
 
     idx: Dict[str, Path] = {}
+    # части вне контура Экосистемы — по разметке профиля источников и по паспорту границы
+    # srs/<слаг>/boundary-passport.md в комплекте (объединение), не по пути
+    eco_out = outside_eco_slugs(sources) | passport_slugs(docs)
     if sources is not None:
         idx, dups = index_sources(sources)
         if any(d.is_dir() for d in sources.rglob("raw")):
@@ -364,25 +375,9 @@ def _run_impl(docs: Path, sources: Optional[Path],
     card_ids: Dict[Path, str] = {}     # карточка -> id из frontmatter
     card_titles: Dict[Path, Tuple[str, str, str]] = {}  # карточка -> (type, title, id)
     fm_schema_issues: List[Tuple[str, List[str], bool]] = []  # (файл, поля вне схемы, version)
-    zone_cards: Dict[str, Path] = {}   # page_id -> файл мини-комплекта зоны docs/modules/
-    zone_card_lines: List[str] = []    # сверка карточек зоны с выгрузкой (⚠ и i), _kc_module_zone
     for p in sorted(docs.rglob("*.md")):
         rel = p.relative_to(docs)
         if in_dot_dir(p, docs):
-            continue
-        if in_module_zone(p, docs):
-            # мини-комплект зоны «вне Экосистемы» (Д-49 п. 4): не карточка комплекта —
-            # перепись, схема типов, реестр ID его не касаются; page_id нужен сторожу
-            # разметки подсервисов, сводная строка — _kc_module_zone
-            _zpids = page_ids(read_frontmatter(p) or {})
-            for _pid in _zpids:
-                zone_cards.setdefault(_pid, p)
-            # сверка с выгрузкой по первой странице (2026-11-04, шаблоны module-interface и
-            # module-kit-readme): title — ⚠ при расхождении, доп. страницы — строка i; в
-            # счётчики ИТОГО не входит, вердикт не меняет. Спецификации spec/ — вне сверки
-            if _zpids and sources is not None and "spec" not in rel.parts[2:-1]:
-                zone_card_lines.extend(_safe(lambda: (check_zone_card(
-                    p, str(rel), _zpids, idx), True))[0])
             continue
         if is_task_file(p, docs):
             # строка-сигнал без счётчика: постановка — источник правок,
@@ -520,7 +515,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
     for p, note in solo:
         rep, ok = _run([p], None, docs, soft_markers=not strict,
                        allow_sibling_docs=allow_sibling_docs,
-                       without_sources=sources is None, inventory=inventory)
+                       without_sources=sources is None, inventory=inventory,
+                       outside_eco=eco_out)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         if any(is_examples_signal(ln) for ln in rep):
@@ -592,7 +588,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
         rep, ok = _run(files, src, docs, soft_markers=not strict,
                        amnesty=amnesty or None,
                        allow_sibling_docs=allow_sibling_docs, inventory=inventory,
-                       group_extra=group_extra or None)
+                       group_extra=group_extra or None, outside_eco=eco_out)
         if any(is_examples_signal(ln) for ln in rep):
             ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
@@ -618,7 +614,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         for extra in files[1:]:
             rep2, ok2 = _run([extra], None, docs, soft_markers=not strict,
                              pardon_src=src,
-                             allow_sibling_docs=allow_sibling_docs, inventory=inventory)
+                             allow_sibling_docs=allow_sibling_docs, inventory=inventory,
+                             outside_eco=eco_out)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
             if any(is_examples_signal(ln) for ln in rep2):
@@ -659,8 +656,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
-                    zone_cards=zone_cards, unsourced=unsourced,
-                    zone_card_lines=zone_card_lines)
+                    unsourced=unsourced)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
@@ -693,9 +689,7 @@ class _KitCtx:
     fm_schema_issues: List[Tuple[str, List[str], bool]]
     groups: Dict[str, List[Path]]
     idx: Dict[str, Path]
-    zone_cards: Dict[str, Path] = field(default_factory=dict)
     unsourced: List[Tuple[Path, str]] = field(default_factory=list)  # без --sources: карточка, page_id
-    zone_card_lines: List[str] = field(default_factory=list)  # сверка карточек зоны (⚠ и i)
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -736,9 +730,8 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     # каталог НФТ читается как посторонний.
     # tasks/ — постановки задач forward-режима «изменение по постановке»
     # (решение 2026-10-15): штатный каталог целевого docs-репозитория
-    # modules/ — мини-комплекты зоны «вне Экосистемы» modules/<имя>/ (Д-46)
     _ok_dirs = {"docs", "sources", "sandbox", "prompts", ".git", "brd", "srs",
-                "nfr", "tasks", "modules", _docs_r.name}
+                "nfr", "tasks", _docs_r.name}
     # корень домена: каталоги сервисов из таблицы корневого README законны
     # (решение владельца 2026-10-11); domain-vision.md и glossary.md —
     # markdown, он разрешён и так
@@ -778,7 +771,7 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         report.append(
             f"✗ корень репозитория: посторонние файлы ×{len(junk)} "
             f"({', '.join(junk[:8])}) — в корне только штатные каталоги "
-            "(docs/sources/sandbox/prompts/nfr/tasks/modules) и markdown; рабочие скрипты и кэши "
+            "(docs/sources/sandbox/prompts/nfr/tasks) и markdown; рабочие скрипты и кэши "
             "недопустимы (скрипты, изменяющие файлы комплекта, запрещены "
             "вовсе; read-only анализ — в sandbox)")
     return report, all_ok
@@ -984,7 +977,7 @@ def _kc_branch_form(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     исхода — отдельной строкой: нормализатор их не закрывает, примеры до двух, перечень мест в --out."""
     per: List[Tuple[str, int, int]] = []
     lost: List[Tuple[str, int, str]] = []
-    for p in _kit_md(ctx.docs, zone=True):  # нотация применяется и к зоне docs/modules/ (Д-49)
+    for p in _kit_md(ctx.docs):
         text = _fs.read_text(p, encoding="utf-8", errors="replace")
         n, rest = branch_form_counts(text)
         rel = p.relative_to(ctx.docs).as_posix()
@@ -1082,18 +1075,26 @@ def _kc_oq_classes(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep + crep, True
 
 
+def _kc_outside_eco_by_passport(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Без выгрузки (профиль источников не читается) часть вне контура Экосистемы узнаётся по
+    паспорту границы srs/<слаг>/boundary-passport.md: i-строка по каждой — признак включён,
+    сторож привилегий у её карточек молчит. С выгрузкой строки части даёт сторож разметки
+    (source_profile). Только i."""
+    if ctx.sources is not None:
+        return [], True
+    rep: List[str] = []
+    for slug in sorted(passport_slugs(ctx.docs)):
+        part = ctx.docs / "srs" / slug
+        n = sum(1 for _ in part.rglob("*.md"))
+        rep.append(f"i часть вне Экосистемы {slug}: карточек {n}, признак — по паспорту границы "
+                   "(профиль источников не читался)")
+    return rep, True
+
+
 def _kc_task_tags(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Задача объявлена введённой в журнале/состоянии координации, а тега src/<ID> нет;
     страница числится замороженной по задаче, введённой тегом (2026-10-24). Только ⚠ и i."""
     rep, _ = _safe(lambda: (check_task_tags(ctx.docs), True))
-    return rep, True
-
-
-def _kc_module_zone(ctx: "_KitCtx") -> Tuple[List[str], bool]:
-    """Зона «вне Экосистемы» docs/modules/<имя>/ (Д-49 п. 4): сводная i-строка, мини-комплект
-    без README, переходный сторож старого места modules/ рядом с docs/, сверка карточек зоны
-    с выгрузкой по первой странице (2026-11-04). Только ⚠ и i."""
-    rep, _ = _safe(lambda: (check_module_zone(ctx.docs, ctx.zone_card_lines), True))
     return rep, True
 
 
@@ -1196,7 +1197,7 @@ def _kc_sources_protocol(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         # сторож разметки подсервисов (П-4): без таблицы в профиле
         # возвращает пусто и молчит
         sm_rep, sm_ok = _safe(check_subservice_mapping, docs, sources,
-                              {**ctx.zone_cards, **{pid: fs[0] for pid, fs in groups.items()}})
+                              {pid: fs[0] for pid, fs in groups.items()})
         all_ok = all_ok and sm_ok
         report.extend(sm_rep)
         # сторож среза канона (П-5b): без строки в профиле молчит
@@ -1409,7 +1410,7 @@ KIT_CHECKS: List[Check] = [
     Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),
     Check("oq_classes", _kc_oq_classes, affects_verdict=False),
     Check("task_tags", _kc_task_tags, affects_verdict=False),
-    Check("module_zone", _kc_module_zone, affects_verdict=False),
+    Check("outside_eco_by_passport", _kc_outside_eco_by_passport, affects_verdict=False),
 ]
 
 
