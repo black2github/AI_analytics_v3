@@ -34,7 +34,8 @@ from .card_steps import (
     check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
     check_step_body_structure, check_step_markers
 )
-from .card_passport import check_heavy_cells, check_heavy_pair_structure, check_label_sections
+from .card_passport import (check_heavy_cells, check_heavy_pair_structure, check_label_sections,
+                            passport_row_keys)
 from .card_notification import check_notification_structure
 from .card_branch_form import _fc_branch_form
 from .card_controls import (
@@ -205,6 +206,11 @@ def strip_history(text: str) -> str:
     требовались в карточках (К-9 экзамена inkasso, страница контролей).
     Md-таблицы истории режет фильтр check_source_tables."""
     return _HISTORY_TABLE_RE.sub("", text)
+
+
+# типы шапки, у которых тяжёлая ячейка паспорта остаётся строкой двухколоночной таблицы
+# «лейбл | значение» (К-29, шаблон contract-call.md, раздел A)
+_PASSPORT_ROW_TYPES = ("external-integration", "internal-contract", "contract-call")
 
 
 def run_check(files: List[Path], source_path: Optional[Path],
@@ -845,12 +851,22 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
                                                      docs_root)
         report.extend(sm_report)
         ok = ok and sm_ok
-        # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый; у базового
-        # контракта внешней АС тяжёлая ячейка паспорта законно остаётся строкой
-        # таблицы §1 (шаблон contract-call.md, раздел A) — там это i-строка
+        # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый; у карточек
+        # контрактов (базовый контракт внешней АС, внутренний контракт, карточка вызова)
+        # тяжёлая ячейка паспорта законно остаётся строкой таблицы §1 (шаблон
+        # contract-call.md, раздел A; решение владельца 2026-11-08, на INTC и CALL —
+        # 2026-11-09) — там это i-строка
+        card_type = m_type.group(1) if m_type is not None else ""
+        contract_cards = []
+        for f in files:
+            t = _fs.read_text(f, encoding="utf-8", errors="replace")
+            ft = re.search(r"^type:\s*([\w-]+)", _fm_head(t), re.M)
+            if ft and ft.group(1) in _PASSPORT_ROW_TYPES:
+                contract_cards.append((ft.group(1), strip_html_comments(t)))
         hc_report, hc_ok = check_heavy_cells(
             combined, src_text,
-            passport_rows_ok=m_type is not None and m_type.group(1) == "external-integration")
+            passport_rows_ok=card_type in _PASSPORT_ROW_TYPES, card_type=card_type,
+            passport_rows=passport_row_keys(contract_cards))
         report.extend(hc_report)
         ok = ok and hc_ok
         # К-25d: профили вынесенных лейбл-секций против эталона

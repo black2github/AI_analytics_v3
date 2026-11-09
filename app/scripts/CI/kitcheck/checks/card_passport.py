@@ -5,7 +5,7 @@
 сохраняет прежние имена (переходный реэкспорт на один релиз)."""
 import html
 import re
-from typing import List, Tuple
+from typing import Dict, List, Optional, Tuple
 from ..html import _norm_cell, html_fragment_to_markdown, passport_cell_html
 from ..md import table_cells
 from .card_common import _LAYOUT_ROW_RE
@@ -100,9 +100,24 @@ def _table_widths(lines: List[str]) -> List[int]:
     return widths
 
 
+def passport_row_keys(cards: List[Tuple[str, str]]) -> Dict[str, str]:
+    """Строки двухколоночных таблиц карточек (тип, текст) → тип карточки, которой строка
+    принадлежит (К-29: строка паспорта законна по типу своей карточки, не главной в группе)."""
+    keys: Dict[str, str] = {}
+    for ctype, text in cards:
+        lines = text.splitlines()
+        rows = [ln for ln in lines if ln.lstrip().startswith("|")]
+        for ln, w in zip(rows, _table_widths(lines)):
+            if w == 2:
+                keys.setdefault(_norm_cell(ln), ctype)
+    return keys
+
+
 def check_heavy_cells(card_text: str,
                       src_text: str,
-                      passport_rows_ok: bool = False) -> Tuple[List[str], bool]:
+                      passport_rows_ok: bool = False,
+                      card_type: str = "",
+                      passport_rows: Optional[Dict[str, str]] = None) -> Tuple[List[str], bool]:
     """К-29: начало/середина содержимого тяжёлой ячейки не должны жить
     внутри одной |-строки карточки (пробы по трём смещениям — замена
     текста ссылки в одной из зон не прячет коллапс).
@@ -115,10 +130,14 @@ def check_heavy_cells(card_text: str,
     имя метода из правила §2), замечание 2026-11-08.
 
     passport_rows_ok — карточка, у которой тяжёлая ячейка паспорта законно
-    остаётся строкой двухколоночной таблицы «лейбл | значение» (базовый контракт
-    внешней АС: шаблон contract-call.md, раздел A — «ячейки §1 в подразделы ради
-    прибора не выводятся»). Тогда расплющивание в строке таблицы из двух колонок —
-    i-строка; в таблицах параметров и справочников (три колонки и больше) — ✗."""
+    остаётся строкой двухколоночной таблицы «лейбл | значение» (карточки контрактов —
+    базовый контракт внешней АС, внутренний контракт, карточка вызова: шаблон
+    contract-call.md, раздел A — «ячейки §1 в подразделы ради прибора не выводятся»).
+    Тогда расплющивание в строке таблицы из двух колонок — i-строка с типом карточки
+    (card_type); в таблицах параметров и справочников (три колонки и больше) — ✗.
+    passport_rows — строки двухколоночных таблиц карточек этих типов внутри группы сверки
+    (`passport_row_keys`) → тип: строка законна и тогда, когда главная карточка группы —
+    другого типа (функция), а строка стоит в паспорте контракта той же группы."""
     heavy = heavy_source_cells(src_text)
     if not heavy:
         return [], True
@@ -140,6 +159,7 @@ def check_heavy_cells(card_text: str,
     single_sample = ""
     passport = 0
     passport_sample = ""
+    passport_types: set = set()
     for cell in heavy:
         plain = _norm_cell(re.sub(r"^[ \t]*[-+*] ", "",
                                   html_fragment_to_markdown(cell),
@@ -154,9 +174,13 @@ def check_heavy_cells(card_text: str,
         if not hits:
             continue
         multi = [k for k, cnt in enumerate(in_rows) if cnt >= 2]
-        if multi and passport_rows_ok and all(widths[k] == 2 for k in multi):
+        own = passport_rows or {}
+        if multi and all(widths[k] == 2 and (passport_rows_ok or table_lines[k] in own)
+                         for k in multi):
             passport += 1
             passport_sample = hits[0]
+            if not passport_rows_ok:
+                passport_types.add(own[table_lines[multi[0]]])
         elif multi or not any(p in flat_body for p in probes):
             bad += 1
             sample = hits[0]
@@ -165,9 +189,11 @@ def check_heavy_cells(card_text: str,
             single_sample = hits[0]
     notes: List[str] = []
     if passport:
-        notes.append(f"i тяжёлая ячейка паспорта перенесена строкой: {passport} (фрагмент: "
-                     f"…{passport_sample[:50]!r}…) — строка таблицы «лейбл | значение» по шаблону "
-                     "базового контракта, ячейки §1 в подразделы не выводятся")
+        kinds = sorted(passport_types | ({card_type} if passport_rows_ok and card_type else set()))
+        kind = f"; тип {', '.join(kinds)}" if kinds else ""
+        notes.append(f"i тяжёлая ячейка паспорта остаётся строкой двухколоночной таблицы: {passport} "
+                     f"(фрагмент: …{passport_sample[:50]!r}…) — решение 2026-11-08, контур A шаблона "
+                     f"contract-call{kind}")
     if single:
         notes.append(f"i К-29: фрагмент тяжёлой ячейки источника в строке md-таблицы ×{single} "
                      f"(фрагмент: …{single_sample[:50]!r}…) — одна проба из трёх, содержимое "

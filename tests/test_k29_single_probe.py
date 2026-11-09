@@ -81,7 +81,7 @@ def test_passport_row_of_base_contract_is_info():
     """Базовый контракт: тяжёлая ячейка паспорта законно остаётся строкой таблицы «лейбл | значение»."""
     rep, ok = check_heavy_cells(_PASSPORT, _SRC, passport_rows_ok=True)
     assert ok, rep
-    assert any(r.startswith("i тяжёлая ячейка паспорта перенесена строкой: 1") for r in rep), rep
+    assert any(r.startswith("i тяжёлая ячейка паспорта остаётся строкой двухколоночной таблицы: 1") for r in rep), rep
 
 
 def test_passport_row_other_types_still_flagged():
@@ -137,5 +137,5 @@ def test_live_svfe_002_redone_no_k29_through_cli(tmp_path):
                         "--source", str(s)], capture_output=True, cwd=str(root),
                        env={**os.environ, "PYTHONIOENCODING": "utf-8"})
     out = (r.stdout + r.stderr).decode("utf-8")   # отчёт --check идёт в stderr
-    assert "i тяжёлая ячейка паспорта перенесена строкой" in out, out
+    assert "i тяжёлая ячейка паспорта остаётся строкой двухколоночной таблицы" in out, out
     assert "расплющена" not in out, out
