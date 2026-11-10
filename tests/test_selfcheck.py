@@ -1466,12 +1466,16 @@ def test_named_link_before_full_link_flagged(tmp_path):
     assert len(rep) == 1 and "стоит раньше полной ссылки" in rep[0]
 
 
-def test_named_links_guard_silent_on_old_form(tmp_path):
-    # тест на НЕсрабатывание: старая форма (одни короткие ссылки, даже без
-    # полной) сторожем не затрагивается — остаётся допустимой
+def test_named_links_guard_short_form_without_full_link(tmp_path):
+    # до 2026-11-10 старая форма (одни короткие ссылки без полной) была тихой;
+    # норма владельца 10.11: короткая [ENT-NNN] требует более ранней полной
+    # ссылки с ID — одна строка ⚠ на пару «документ, сущность», ссылки-названия
+    # без ID при этом нет
     docs = _card_with_body(tmp_path,
         f"Значение = [ENT-016]({_ENT16}).«Фамилия» + [ENT-016]({_ENT16}).«Имя».")
-    assert selfcheck.check_named_entity_links(docs) == []
+    rep = selfcheck.check_named_entity_links(docs)
+    assert len(rep) == 1 and "короткая ссылка на ENT-016 раньше полной" in rep[0]
+    assert "×2" in rep[0] and "названием без ID" not in rep[0]
 
 
 def test_named_links_guard_nested_brackets_tag_and_part_slot(tmp_path):

@@ -403,7 +403,17 @@ _TAGGED_NAME_RE = re.compile(r"^\\?\[[^\[\]\\\n]{2,14}\\?\]\s*\S")
 def check_named_entity_links(docs: Path) -> List[str]:
     """Ссылки на сущности ENT названием без ID: в документе должна быть
     более ранняя полная ссылка `[ENT-NNN <название>]` на ту же цель либо
-    ссылка с дословным наименованием источника с тегом сервиса."""
+    ссылка с дословным наименованием источника с тегом сервиса.
+
+    Абсолютный адрес (цель с «://») вне проверки: карточка другого
+    сервиса, номер ENT — из чужого пространства ID (постановка 2026-11-10,
+    п. 1; так же, как в `check_relative_links`).
+
+    Короткая ссылка `[ENT-NNN]` (подпись — ID без названия, в том числе в
+    записи атрибута `[ENT-NNN](…).«Атрибут»`) требует более ранней полной
+    ссылки `[ENT-NNN <название>]` с ID; дословное имя с тегом её не
+    заменяет (норма владельца 2026-11-10, п. 4). Для ссылки-названия без
+    ID имя с тегом по-прежнему засчитывается."""
     report: List[str] = []
     for p in _kit_md(docs):
         if p.name.lower() in _NAMED_LINK_SKIP:
@@ -411,9 +421,13 @@ def check_named_entity_links(docs: Path) -> List[str]:
         body = _fs.read_text(p, encoding="utf-8", errors="replace")
         body = blank_code(body)   # примеры кода
         first_full: Dict[str, int] = {}
+        first_full_id: Dict[str, int] = {}
         named: Dict[str, List[int]] = {}
+        short: Dict[str, List[int]] = {}
         for m in _MD_LINK_RE.finditer(body):
             text, target = m.group(1).strip(), m.group(2)
+            if "://" in target:                    # карточка чужого репозитория
+                continue
             fname = unquote(target.split("#", 1)[0]).replace("\\", "/")
             fname = fname.rsplit("/", 1)[-1]
             fm = _ENT_FILE_RE.match(fname)
@@ -426,6 +440,9 @@ def check_named_entity_links(docs: Path) -> List[str]:
                 rest = re.sub(re.escape(ent_id), "", text)
                 if len(re.sub(r"[\W_]+", "", rest)) >= 3:
                     first_full.setdefault(ent_id, m.start())
+                    first_full_id.setdefault(ent_id, m.start())
+                else:
+                    short.setdefault(ent_id, []).append(m.start())
             elif _TAGGED_NAME_RE.match(text):
                 # дословное имя источника с тегом — полноценное упоминание
                 first_full.setdefault(ent_id, m.start())
@@ -445,4 +462,14 @@ def check_named_entity_links(docs: Path) -> List[str]:
                     f"⚠ {rel}: ссылка на {ent_id} названием без ID стоит "
                     f"раньше полной ссылки `[{ent_id} <название>]` — "
                     "полная ссылка с ID ставится при первом упоминании")
+        for ent_id, poss in sorted(short.items()):
+            full_at = first_full_id.get(ent_id)
+            early = [x for x in poss if full_at is None or x < full_at]
+            if early:
+                report.append(
+                    f"⚠ {rel}: короткая ссылка на {ent_id} раньше полной "
+                    f"`[{ent_id} <название>]` ×{len(early)}"
+                    + ("" if full_at is None else ", полная ссылка стоит ниже")
+                    + " — дословное имя с тегом полную ссылку с ID не заменяет; "
+                    "короткая `[ENT-NNN]` допустима после полной")
     return report
