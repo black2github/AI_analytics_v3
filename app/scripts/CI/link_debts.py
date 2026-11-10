@@ -59,7 +59,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 try:
     from kitcheck import fs as _fs  # noqa: E402
-    from kitcheck.fence import issues as fence_issues  # noqa: E402
+    from kitcheck.fence import code_flags as fence_code_flags, issues as fence_issues  # noqa: E402
     from kitcheck.md import blank_code, split_cells, stray_table_lines  # noqa: E402
     from kitcheck.checks.review_guards import (  # noqa: E402
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
@@ -68,7 +68,7 @@ try:
         artifact_page_ids, find_kit_file, plan_slugs, read_inventory)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
-    from .kitcheck.fence import issues as fence_issues  # type: ignore  # noqa: E402
+    from .kitcheck.fence import code_flags as fence_code_flags, issues as fence_issues  # type: ignore  # noqa: E402
     from .kitcheck.md import blank_code, split_cells, stray_table_lines  # type: ignore  # noqa: E402
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         OQ_CLOSE_FORM_SINCE, OQ_ENTRY_RE, oq_close_ref, oq_closed_new_form, oq_status_class,
@@ -294,6 +294,14 @@ def debt_section_from_ids(matrix_text: str) -> set:
     """ID из первой колонки всех строк раздела долгов (кроме шапки и разделителя), включая
     закрытые и нераспознанные: «строка долга с этим файлом в FROM» — любая такая строка."""
     out: set = set()
+    for cells in _debt_section_rows(matrix_text):
+        out.update(_expand_from(cells[0]))
+    return out
+
+
+def _debt_section_rows(matrix_text: str) -> List[List[str]]:
+    """Ячейки строк раздела долгов (без шапки и разделителя), в порядке матрицы."""
+    rows: List[List[str]] = []
     in_debts = header_seen = False
     for ln in matrix_text.splitlines():
         if ln.startswith("#"):
@@ -309,8 +317,8 @@ def debt_section_from_ids(matrix_text: str) -> set:
         if not header_seen:
             header_seen = True
             continue
-        out.update(_expand_from(cells[0]))
-    return out
+        rows.append(cells)
+    return rows
 
 
 def awaiters_without_debt(matrix_text: str, docs_root: Path,
@@ -342,6 +350,122 @@ def awaiters_without_debt(matrix_text: str, docs_root: Path,
     if out:
         out.append(f"карточек с ожидателем долга без строки долга {len(out)} — ⚠, не брак: долг "
                    "мог быть оформлен иначе; проверить приёмкой")
+    return out
+
+
+# Ожидатель по паре «карточка, цель» (постановка 2026-11-10, п. 2; решение владельца 10.11 по трём
+# развилкам). Прежний сторож видит карточку: если её ID стоит в FROM любой строки долга, формула по
+# другой цели проходит молча (КК: пять карточек с формулой по «[ЦРМ] Ролевая модель клиента» при
+# строке долга по иной цели). Здесь — каждая формула `AWAITER_FORMS` в строке карточки: пара есть,
+# если в той же строке стоит дословное имя открытой строки долга с этой карточкой в FROM. Окно —
+# строка карточки целиком (развилка 1). Имя строки долга — по форме: «…» в ячейках строки (и
+# вложенные «…»), а также текст ячейки долга целиком; словаря имён нет. Пары нет — одна ⚠ на формулу
+# с классом лечения:
+#   - имя открытой строки долга, где карточки нет в FROM, — дописать карточку в FROM;
+#   - имя закрытой строки долга (вторая колонка — цель) — долг закрыт, формула осталась (развилка 2);
+#   - формула с именем цели («…» в строке перед формулой или сразу после неё, имя в скобках или
+#     кавычках вплотную перед формулой), которого нет ни в одной строке долга, — завести строку;
+#   - формула без дословного имени цели в строке — ⚠ отдельного вида (развилка 3).
+# Карточки, которых прежний сторож уже назвал (ID нет ни в одном FROM), здесь не повторяются.
+# README-реестры, HTML-комментарии и блоки кода не читаются; уровень ⚠, вердикт не меняется.
+# Известное ограничение (приёмка 2026-11-10): именами строки долга считаются все «…» её ячеек,
+# включая цитаты в пояснениях. Если такая цитата стоит в строке карточки из FROM рядом с формулой
+# по другой цели, пара засчитывается и формула проходит молча. Смещение — в сторону молчания,
+# не шума; на КК при сверке 28 строк с ручным разбором пропусков не найдено.
+_AWAIT_NAME_RE = re.compile(r"«((?:[^«»]|«[^«»]*»)+)»")
+_AWAIT_INNER_NAME_RE = re.compile(r"«([^«»]+)»")
+_AWAIT_MD_LINK_RE = re.compile(r"\[([^\]]*)\]\([^)]*\)")
+_AWAIT_NAMED_BEFORE_RE = re.compile(r"[»\]\"”]\s*[(—–-]?\s*$")
+_AWAIT_MIN_NAME = 6
+
+
+def _await_norm(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+
+def _await_row_names(cells: List[str]) -> List[str]:
+    """Имена цели строки долга по форме: «…» в ячейках после FROM (внешние и вложенные) и
+    текст ячейки долга целиком (закрытая строка вида `| FROM | ID | <имя> |` кавычек не несёт)."""
+    names: List[str] = []
+    for c in cells[1:]:
+        names += [_await_norm(n) for n in _AWAIT_NAME_RE.findall(c)]
+        names += [_await_norm(n) for n in _AWAIT_INNER_NAME_RE.findall(c)]
+    if len(cells) > 2:
+        names.append(_await_norm(_AWAIT_MD_LINK_RE.sub(r"\1", cells[2])))
+    return [n for n in dict.fromkeys(names) if n]
+
+
+def awaiters_by_pair(matrix_text: str, docs_root: Path,
+                     registry: Dict[str, Tuple[str, str]]) -> List[str]:
+    """⚠-строки: формула-ожидатель в строке карточки без пары «карточка, цель» в разделе долгов,
+    с классом лечения. Раздела долгов нет — проверка не выполняется."""
+    if debts_heading(matrix_text) is None:
+        return []
+    rows = []
+    for cells in _debt_section_rows(matrix_text):
+        closed = len(cells) > 1 and cells[1] not in ("", "—", "-")
+        rows.append((set(_expand_from(cells[0])), closed, cells[1] if closed else "",
+                     _await_row_names(cells)))
+    from_ids = {i for frm, _c, _t, _n in rows for i in frm}
+    by_file: Dict[str, List[str]] = {}
+    for cid, (_typ, fpath) in registry.items():
+        by_file.setdefault(fpath.replace("\\", "/").lstrip("./"), []).append(cid)
+    out: List[str] = []
+    counts = {"from": 0, "closed": 0, "none": 0, "noname": 0}
+    cards = set()
+    for fpath, ids in sorted(by_file.items()):
+        p = docs_root / fpath
+        if p.name.lower() in ("readme.md", "traceability-matrix.md") or not p.is_file():
+            continue
+        own = set(ids)
+        if not own & from_ids:
+            continue                      # частный случай — строка прежнего сторожа
+        text = re.sub(r"<!--.*?-->", lambda m: re.sub(r"[^\n]", " ", m.group(0)),
+                      _fs.read_text(p, encoding="utf-8", errors="replace"), flags=re.S)
+        lines = text.split("\n")
+        flags = fence_code_flags(lines)
+        for n_ln, (ln, in_code) in enumerate(zip(lines, flags), 1):
+            if in_code:
+                continue
+            nline = _await_norm(ln)
+            for label, rx in AWAITER_FORMS:
+                for fm in rx.finditer(ln):
+                    # имя строки с этой карточкой в FROM — любой длины («ОТАР»); имя чужой
+                    # строки — не короче _AWAIT_MIN_NAME, иначе короткое слово даёт ложную пару
+                    hits = [(frm, closed, target) for frm, closed, target, names in rows
+                            if any(n in nline for n in names
+                                   if frm & own or len(n) >= _AWAIT_MIN_NAME)]
+                    if any(frm & own and not closed for frm, closed, _t in hits):
+                        continue          # пара есть
+                    closed_t = [t for frm, closed, t in hits if closed]
+                    if any(frm & own and closed for frm, closed, _t in hits) or \
+                            (closed_t and not any(not c for _f, c, _t in hits)):
+                        kind, cls = "closed", ("долг закрыт, формула осталась — заменить "
+                                               f"ссылкой на цель ({closed_t[0]})")
+                    elif hits:
+                        kind, cls = "from", ("цель в открытой строке долга, карточки нет в её "
+                                             "FROM — дописать карточку в FROM строки долга")
+                    else:
+                        pre = ln[max(0, fm.start() - 200):fm.start()]
+                        named = ("«" in pre or "«" in fm.group(0)
+                                 or "«" in ln[fm.end():fm.end() + 3]
+                                 or bool(_AWAIT_NAMED_BEFORE_RE.search(pre.rstrip(" ("))))
+                        if named:
+                            kind, cls = "none", ("строки долга по цели нет — завести строку "
+                                                 "долга или поставить ссылку на цель")
+                        else:
+                            kind, cls = "noname", ("формула без дословного имени цели — "
+                                                   "дописать имя «…» или заменить ссылкой")
+                    counts[kind] += 1
+                    cards.add(fpath)
+                    out.append(f"⚠ формула-ожидатель без пары «карточка, цель»: {fpath}:{n_ln} "
+                               f"({', '.join(ids[:3])}{'…' if len(ids) > 3 else ''}) — "
+                               f"«{label}»: {cls}")
+    if out:
+        out.append(f"формул-ожидателей без пары «карточка, цель» {len(out)} в {len(cards)} "
+                   f"карточках: дописать в FROM {counts['from']}, долг закрыт {counts['closed']}, "
+                   f"строки долга нет {counts['none']}, без имени цели {counts['noname']} — ⚠, "
+                   "не брак; проверить приёмкой")
     return out
 
 
@@ -809,6 +933,8 @@ def check(matrix_path: Path, docs_root: Path,
         report.append(f"⚠ владелец «{owner_code}» ×{n}: кода нет в каталоге сервисов "
                       "(переименован или опечатка) — долг не адресуется")
     report.extend(awaiters_without_debt(
+        _fs.read_text(matrix_path, encoding="utf-8", errors="replace"), docs_root, registry))
+    report.extend(awaiters_by_pair(
         _fs.read_text(matrix_path, encoding="utf-8", errors="replace"), docs_root, registry))
     # строки таблиц матрицы, которых разбор не видит (П-6): ⚠ с номером строки
     for n_ln, ln_ in stray_table_lines(_fs.read_text(matrix_path, encoding="utf-8",
