@@ -2048,6 +2048,97 @@ def test_domain_service_without_slot(tmp_path):
     assert len(bad) == 1 and "FUN-REG-CL-02" in bad[0] and "«Слот: нет»" in bad[0], bad
 
 
+# Позиция слота у карточки вызова (решение владельца 2026-11-11): слот сервиса и части стоит после
+# подтипа (CALL-EXT-REG-001, CALL-EXT-REG-DS-001); корневой реестр — CALL-REG-000; прежняя форма
+# CALL-REG-EXT-001 — ⚠ одной строкой на комплект, её слоты сверяются с таблицами.
+_OLD_CALL = "⚠ прежняя позиция слота у карточки вызова"
+
+
+def _calls(kit, ids):
+    rows = ""
+    for i, (cid, rel) in enumerate(ids):
+        make(kit / rel, _slot_card(cid, "contract-call"))
+        rows += f"| {cid} | contract-call | Вызов {i} | {Path(rel).name} |\n"
+    make_matrix(kit, rows)
+
+
+def test_call_slot_after_subtype_domain_service(tmp_path):
+    shared = _domain(tmp_path) / "shared"
+    _calls(shared, [("CALL-EXT-SHR-001", "srs/contract-call/external/c1.md"),
+                    ("CALL-INT-SHR-002", "srs/contract-call/internal/c2.md"),
+                    ("CALL-SHR-000", "srs/contract-call/README.md"),
+                    ("CALL-EXT-SHR-000", "srs/contract-call/external/README.md")])
+    report, _ = selfcheck.run(shared, None)
+    assert not any(ln.strip().startswith("✗ слот") for ln in report), report
+    assert not any(ln.startswith(_OLD_CALL) for ln in report), report
+
+
+def test_call_slot_after_subtype_parts(tmp_path):
+    docs = tmp_path / "docs"
+    make(docs / "README.md", _PART_TABLE)
+    _calls(docs, [("CALL-EXT-DS-001", "srs/document-signing/contract-call/external/c1.md"),
+                  ("CALL-MOD-DS-002", "srs/document-signing/contract-call/module/c2.md")])
+    report, _ = selfcheck.run(docs, None)
+    assert not any(ln.strip().startswith("✗ слот части") for ln in report), report
+    assert any("слоты частей: 2 кодов" in ln for ln in report), report
+
+
+def test_call_slot_after_subtype_domain_with_parts(tmp_path):
+    reg = _domain(tmp_path) / "reg"
+    make(reg / "README.md", _PART_TABLE)
+    _calls(reg, [("CALL-EXT-REG-DS-001", "srs/document-signing/contract-call/external/c1.md"),
+                 ("CALL-REG-000", "srs/contract-call/README.md")])
+    report, _ = selfcheck.run(reg, None)
+    assert not any(ln.strip().startswith("✗ слот") for ln in report), report
+    assert any("слот сервиса «REG» ✓" in ln for ln in report), report
+
+
+def test_call_old_slot_position_warns_once(tmp_path):
+    reg = _domain(tmp_path) / "reg"
+    make(reg / "README.md", _PART_TABLE)
+    _calls(reg, [("CALL-REG-DS-EXT-001", "srs/document-signing/contract-call/external/c1.md"),
+                 ("CALL-REG-DS-INT-002", "srs/document-signing/contract-call/internal/c2.md"),
+                 ("CALL-EXT-REG-DS-003", "srs/document-signing/contract-call/external/c3.md")])
+    report, _ = selfcheck.run(reg, None)
+    assert not any(ln.strip().startswith("✗ слот") for ln in report), report
+    warn = [ln for ln in report if ln.startswith(_OLD_CALL)]
+    assert len(warn) == 1 and "карточек 2" in warn[0] and "CALL-REG-DS-EXT-001" in warn[0], warn
+    assert "CALL-EXT-REG-DS-003" not in warn[0]
+
+
+def test_call_old_slot_position_foreign_slot_still_fails(tmp_path):
+    reg = _domain(tmp_path) / "reg"
+    make(reg / "README.md", _PART_TABLE)
+    _calls(reg, [("CALL-SHR-DS-EXT-001", "srs/document-signing/contract-call/external/c1.md"),  # чужой сервис
+                 ("CALL-REG-SHR-EXT-002", "srs/document-signing/contract-call/external/c2.md")])  # чужая часть
+    report, ok = selfcheck.run(reg, None)
+    assert not ok
+    assert any(ln.strip().startswith("✗ слот сервиса") and "CALL-SHR-DS-EXT-001" in ln
+               and "несёт слот «SHR»" in ln for ln in report), report
+    assert any(ln.strip().startswith("✗ слот части") and "CALL-REG-SHR-EXT-002" in ln
+               and "«DS»" in ln for ln in report), report
+    assert sum(ln.startswith(_OLD_CALL) for ln in report) == 1, report
+
+
+def test_call_slot_misplaced_names_right_form(tmp_path):
+    # слот сервиса не на месте: ✗ называет форму CALL-EXT-<слот>-…
+    reg = _domain(tmp_path) / "reg"
+    _calls(reg, [("CALL-EXT-DS-REG-001", "srs/contract-call/external/c1.md")])
+    report, ok = selfcheck.run(reg, None)
+    assert not ok
+    bad = [ln for ln in report if ln.strip().startswith("✗ слот сервиса")]
+    assert len(bad) == 1 and "не на месте" in bad[0] and "CALL-EXT-REG-…" in bad[0], bad
+
+
+def test_call_without_slots_unchanged(tmp_path):
+    # сервис без слотов: CALL-EXT-001 — сторож молчит, как прежде
+    docs = tmp_path / "docs"
+    _calls(docs, [("CALL-EXT-001", "srs/contract-call/external/c1.md"),
+                  ("CALL-MOD-002", "srs/contract-call/module/c2.md")])
+    report, _ = selfcheck.run(docs, None)
+    assert not any("слот" in ln and ("✗" in ln or "⚠" in ln) for ln in report), report
+
+
 def test_domain_zone_service_in_profile(tmp_path):
     # разметка «ветвь → сервис»: страница чужого сервиса в этом комплекте — ✗
     root = _domain(tmp_path)

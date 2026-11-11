@@ -910,9 +910,13 @@ def _kc_id_slots(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     # слот части сервиса в ID (2026-09-28): таблица кодов в README комплекта
     rep, ok = _safe(check_id_slots, docs, card_ids)
     all_ok = all_ok and ok
+    # ⚠ сторожа (прежняя позиция слота у карточки вызова, 2026-11-11) — строкой верхнего уровня
+    warn = [ln for ln in rep if ln.startswith("⚠")]
+    rep = [ln for ln in rep if not ln.startswith("⚠")]
     if rep:
         report.append(("✓" if ok else "✗") + " слот части сервиса в ID:")
         report.extend(f"   {ln}" for ln in rep)
+    report.extend(warn)
     return report, all_ok
 
 

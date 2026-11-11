@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..html import _fm_body, _norm_cell, _plain, expand_grid, find_top_tables, protect_token_tags
 from ..md import blank_nav_lists
+from .call_algorithms import assignment_parts
 from bs4 import BeautifulSoup
 
 
@@ -444,7 +445,12 @@ def _step_form_only(src_body: List[str], card_body: List[str]) -> bool:
 # шаг 1 → CALL-EXT-011/036/037/038): в источнике тело шага несёт таблицу, в карточке — ссылки на
 # карточки вызова; расхождение профиля — не брак, а перенос факта в его дом. Ограничитель: в
 # теле шага карточки есть ссылка на карточку вызова И в теле шага источника есть таблица.
-_CALL_LINK_RE = re.compile(r"\[(CALL-(?:EXT|INT|MOD)-\d{3})\b")
+# ID карточки вызова: CALL-EXT-NNN / CALL-INT-NNN / CALL-MOD-NNN; со слотами (сервис, часть) из
+# 2–4 заглавных латинских букв — один или два — сразу после CALL- (CALL-BC-EXT-001, шаблон) или
+# после EXT|INT|MOD- (CALL-EXT-BC-001, домен «Цифровой рубль»): позиция слота на решении
+# владельца (2026-11-11), узнаются обе; правило позиции — check_id_slots, не здесь
+CALL_ID_PATTERN = r"CALL-(?:[A-Z]{2,4}-){0,2}(?:EXT|INT|MOD)-(?:[A-Z]{2,4}-){0,2}\d{3}"
+_CALL_LINK_RE = re.compile(r"\[(" + CALL_ID_PATTERN + r")\b")
 _SRC_TABLE_RE = re.compile(r"^\s*(?:\||<table\b)", re.M | re.I)
 
 
@@ -453,12 +459,73 @@ def _table_moved_to_calls(src_body: List[str], card_body: List[str]) -> bool:
             and _CALL_LINK_RE.search("\n".join(card_body)) is not None)
 
 
-def check_step_body_structure(card_text: str,
-                              source_text: str) -> Tuple[List[str], bool]:
+# Присваивания шага, вынесенные в карточки вызова (постановка прибору 2026-11-11, КК 2.17,
+# FUN-SYS-13 шаг 4 → CALL-INT-020; решение владельца 11.11: список присваиваний равноценен
+# таблице привязки). Присваивание — по определению сторожа карточек вызова (call_algorithms:
+# «<имя> = <значение>» строкой или пунктом; ярлык шага и переход на шаг — не присваивание).
+# Ограничители: (1) извиняются только сами присваивания — они снимаются из тел шага источника
+# и карточки, остаток сверяется прежней цепочкой (пропажа условия, обработки ошибки, вводной
+# фразы — брак); (2) строка со словом условия извиняется только в форме условия значения
+# «**Если** …, **то** = …» — «Если сумма = 0, то ошибка» остаётся в сверке; (3) в теле шага
+# карточки есть ссылка на карточку вызова; (4) имя каждого вынесенного параметра есть в тексте
+# группы сверки или карточек вызова по ссылкам — иначе брак с перечнем. Значения не сверяются.
+_ASSIGN_MARKUP_RE = re.compile(r"\*\*|__|`|[«»\"]")
+_VALUE_COND_RE = re.compile(r"(?i)^(?:если|иначе)(?![\w-]).*(?<![\w-])то$")
+
+
+def _excused_assignment(line: str) -> Optional[str]:
+    """Имя параметра строки-присваивания, которую исключение вправе снять; "" — условие значения
+    (имени нет, оно у присваивания выше); None — строка не снимается."""
+    parts = assignment_parts(line)
+    if parts is None:
+        return None
+    left = re.sub(r"\s+", " ", _ASSIGN_MARKUP_RE.sub("", parts[0])).strip().rstrip(":,").strip()
+    if _COND_WORD_RE.search(left):
+        return "" if _VALUE_COND_RE.match(left) else None
+    # знак «=» в адресе ссылки (…?pageId=…) или длинная фраза слева — не имя параметра: строка
+    # остаётся в сверке
+    if "[" in left or "](" in left or "://" in left or len(left) > 80:
+        return None
+    return left or None
+
+
+def _name_in(name: str, text: str) -> bool:
+    return re.search(r"(?<![\w-])" + re.escape(name.casefold()) + r"(?![\w-])", text) is not None
+
+
+def _assignments_moved_to_calls(src_body: List[str], card_body: List[str],
+                                group_text: str) -> Optional[Tuple[int, List[str], bool]]:
+    """(число вынесенных присваиваний, [имена, которых нет в группе], остаток сошёлся только по
+    форме экспорта) — когда тело шага источника без присваиваний сходится с телом шага карточки
+    без присваиваний и в шаге карточки есть ссылка на карточку вызова; иначе None. Остаток,
+    сошедшийся только по форме (_step_form_only: литералы, условия, глубина), идёт и в строку
+    формы экспорта — как шаг без присваиваний."""
+    if _CALL_LINK_RE.search("\n".join(card_body)) is None:
+        return None
+    src_names = [(ln, _excused_assignment(ln)) for ln in src_body]
+    card_names = {n.casefold() for n in (_excused_assignment(ln) for ln in card_body) if n}
+    moved = [n for _ln, n in src_names if n is not None and (not n or n.casefold() not in card_names)]
+    if not any(moved):
+        return None
+    src_rest = [ln for ln, n in src_names if n is None]
+    card_rest = [ln for ln in card_body if _excused_assignment(ln) is None]
+    prof_src, prof_card = _ranked_profile(src_rest), _ranked_profile(card_rest)
+    same = prof_src == prof_card or _shift_profile(prof_src) == _shift_profile(prof_card)
+    if not same and not _step_form_only(src_rest, card_rest):
+        return None
+    text = _ASSIGN_MARKUP_RE.sub("", group_text).casefold()
+    lost = sorted({n for n in moved if n and not _name_in(n, text)})
+    return len(moved), lost, not same
+
+
+def check_step_body_structure(card_text: str, source_text: str,
+                              group_text: Optional[str] = None) -> Tuple[List[str], bool]:
     """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
     совпадать с телом того же шага источника (md-источники; HTML-тела
     без md-разметки дают пустые профили — честный skip). Замены текстов
-    ссылок профиль не меняют."""
+    ссылок профиль не меняют. group_text — текст группы сверки и карточек
+    вызова по ссылкам: там ищутся имена присваиваний, вынесенных из шага
+    в карточку вызова (без него — только в card_text)."""
     src_bodies = _step_bodies(_fm_body(source_text).splitlines())
     if len(src_bodies) < 2:
         return [], True
@@ -467,6 +534,9 @@ def check_step_body_structure(card_text: str,
     levels_only: List[str] = []
     form_only: List[str] = []
     moved: Dict[str, List[str]] = {}
+    moved_asg: Dict[str, Tuple[int, List[str]]] = {}
+    lost_asg: Dict[str, List[str]] = {}
+    names_text = card_text + "\n" + (group_text or "")
     for num, body in src_bodies.items():
         prof_src = _ranked_profile(body)
         if num not in card_bodies or not prof_src:
@@ -485,6 +555,15 @@ def check_step_body_structure(card_text: str,
                 form_only.append(num)
             elif _table_moved_to_calls(body, card_bodies[num]):
                 moved[num] = sorted(set(_CALL_LINK_RE.findall("\n".join(card_bodies[num]))))
+            elif (asg := _assignments_moved_to_calls(body, card_bodies[num], names_text)) is not None:
+                if asg[1]:
+                    lost_asg[num] = asg[1]
+                    bad.append(num)
+                else:
+                    moved_asg[num] = (asg[0], sorted(set(
+                        _CALL_LINK_RE.findall("\n".join(card_bodies[num])))))
+                    if asg[2]:
+                        form_only.append(num)
             else:
                 bad.append(num)
     report: List[str] = []
@@ -493,6 +572,17 @@ def check_step_body_structure(card_text: str,
             f"предупреждение: структура тела шага №{num} расходится с источником — таблица шага "
             f"вынесена в карточки вызова: {', '.join(calls)} (один дом у факта: правила "
             "заполнения — в карточке вызова; полноту правил проверить приёмкой)")
+    for num, (cnt, calls) in moved_asg.items():
+        report.append(
+            f"предупреждение: структура тела шага №{num} расходится с источником — присваивания "
+            f"шага ({cnt}) вынесены в карточки вызова: {', '.join(calls)} (один дом у факта: "
+            "правила заполнения — в карточке вызова; имена параметров есть в группе сверки, "
+            "значения — проверить приёмкой)")
+    for num, names in lost_asg.items():
+        report.append(
+            f"шаг №{num}: присваивания шага вынесены в карточку вызова, но параметров нет ни в "
+            f"группе сверки, ни в карточках вызова по ссылкам: {', '.join(names[:8])}"
+            + ("…" if len(names) > 8 else "") + " ✗ НИЖЕ ПОРОГА")
     if form_only:
         report.append(
             f"предупреждение: структура тел шагов расходится с источником при том же "

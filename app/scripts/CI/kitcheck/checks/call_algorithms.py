@@ -123,6 +123,18 @@ def is_assignment(line: str) -> bool:
     return bool(_ASSIGN_RE.match(_LIST_MARK_RE.sub("", line).strip()))
 
 
+_ASSIGN_SPLIT_RE = re.compile(r"^(.*?)(?<![=!<>])=(?![=>])\s*(.*)$")
+
+
+def assignment_parts(line: str) -> Optional[Tuple[str, str]]:
+    """(левая часть, значение) строки-присваивания по тому же определению, что is_assignment;
+    не присваивание — None. Левая часть — как в тексте (разметку не снимает)."""
+    if not is_assignment(line):
+        return None
+    m = _ASSIGN_SPLIT_RE.match(_LIST_MARK_RE.sub("", line).strip())
+    return (m.group(1).strip(), m.group(2).strip()) if m else None
+
+
 # формула канона «данных в источнике нет» (conventions §6 п. 5) — допустимая строка привязки
 _NOT_SET_RE = re.compile(r"^\s*в постановке не задано\.?\s*$", re.I)
 

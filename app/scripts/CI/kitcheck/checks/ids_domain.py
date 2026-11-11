@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Dict
 from typing import List
 from typing import Optional
+from typing import Tuple
 import re
 try:
     from kitcheck import fs as _fs
@@ -28,6 +29,31 @@ _PART_TABLE_HEAD_RE = re.compile(
 # контуры и служебные сегменты ID — не слоты частей (MOD — подтип CALL-MOD вызова
 # собственного модуля вне контура Экосистемы; FB-30 КК, 2026-10-22)
 _NOT_SLOT = {"CL", "BNK", "SYS", "GRP", "EXT", "INT", "MOD"}
+
+
+# Карточка вызова (решение владельца 2026-11-11): префикс — идентификатор вместе с подтипом
+# (CALL-EXT, CALL-INT, CALL-MOD; закрытый перечень схемы ID конвенций), слоты сервиса и части идут
+# после подтипа: CALL-EXT-BC-001, CALL-EXT-REG-CLS-001. Корневой реестр вызовов подтипа не несёт:
+# CALL-BC-000 — слот сразу после CALL, как у прочих префиксов. Прежняя форма
+# CALL-<слот>[-<слот>]-EXT|INT|MOD-NNN — предупреждение на комплект; её слоты сверяются с таблицами
+# так же, чтобы чужой слот не прошёл под видом прежней формы.
+_CALL_SUBTYPES = ("EXT", "INT", "MOD")
+_CALL_OLD_FORM_RE = re.compile(r"^CALL-((?:[A-Z][A-Z0-9]*-){1,2})(EXT|INT|MOD)-(.+)$")
+
+
+def _id_tokens(cid: str) -> Tuple[List[str], bool]:
+    """(сегменты ID для разбора слотов, прежняя форма карточки вызова). Первый сегмент — префикс:
+    у карточки вызова — с подтипом («CALL-EXT»), дальше слоты и номер; прежняя форма
+    CALL-<слот>-EXT-NNN приводится к тем же сегментам."""
+    tokens = cid.split("-")
+    if len(tokens) >= 3 and tokens[0] == "CALL":
+        if tokens[1] in _CALL_SUBTYPES:
+            return ["CALL-" + tokens[1]] + tokens[2:], False
+        m = _CALL_OLD_FORM_RE.match(cid)
+        if m:
+            return (["CALL-" + m.group(2)] + m.group(1).rstrip("-").split("-")
+                    + m.group(3).split("-")), True
+    return tokens, False
 
 
 # каталоги типов в старой (множественной) раскладке — не подсервисы
@@ -92,11 +118,17 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         return None
 
     def slot_like(cid: str) -> Optional[str]:
-        tokens = cid.split("-")
+        tokens = _id_tokens(cid)[0]
         if len(tokens) >= 3 and _PART_CODE_RE.fullmatch(tokens[1])                 and tokens[1] not in _NOT_SLOT:
             return tokens[1]
         return None
 
+    # прежняя позиция слота у карточки вызова — одной строкой на комплект (не брак)
+    old_form = sorted(cid for cid in card_ids.values() if _id_tokens(cid)[1])
+    old_warn = ([f"⚠ прежняя позиция слота у карточки вызова — переименовать при ближайшем заходе "
+                 f"(слот стоит после подтипа: CALL-EXT-<слот>-…): карточек {len(old_form)} — "
+                 + ", ".join(old_form[:3]) + (" …" if len(old_form) > 3 else "")]
+                if old_form else [])
     # слот сервиса (домен): срезается с идентификатора ДО проверки слота
     # части; у сервиса со «Слот: нет» слота сервиса в ID быть не должно
     dom = domain_context(docs)
@@ -108,7 +140,7 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         stripped: Dict[Path, str] = {}
         for p, cid in sorted(card_ids.items()):
             rel = p.relative_to(docs).as_posix()
-            tokens = cid.split("-")
+            tokens = _id_tokens(cid)[0]
             if svc_code:
                 if len(tokens) >= 3 and tokens[1] == svc_code:
                     stripped[p] = "-".join([tokens[0]] + tokens[2:])
@@ -157,19 +189,19 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
                 "«Каталог»; conventions §3.1): "
                 + ", ".join(f"{rel} ({orig_ids.get(docs / rel, cid)})" for rel, cid in hits[:5])
                 + (" …" if len(hits) > 5 else ""))
-        return report, ok
+        return report + old_warn, ok
     if not codes:
         ok = False
         report.append(
             "✗ слот части: в таблице кодов частей README нет колонки "
             "«Каталог» — соответствие «слот ↔ каталог» непроверяемо "
             "(conventions §3.1)")
-        return report, ok
+        return report + old_warn, ok
     dir2code = {folder: code for code, folder in codes.items()}
     for p, cid in sorted(card_ids.items()):
         rel = p.relative_to(docs).as_posix()
         seg = seg_of(p)
-        tokens = cid.split("-")
+        tokens = _id_tokens(cid)[0]
         shown = orig_ids.get(p, cid)
         slot = tokens[1] if len(tokens) >= 3 and tokens[1] in codes else None
         if seg is None:
@@ -196,7 +228,7 @@ def check_id_slots(docs: Path, card_ids: Dict[Path, str]):
         report.append(f"слоты частей: {len(codes)} кодов по таблице README, "
                       "соответствие «слот ↔ каталог» выдержано ✓"
                       + (f"; слот сервиса «{svc_code}» ✓" if svc_code else ""))
-    return report, ok
+    return report + old_warn, ok
 
 
 _LEGEND_HEAD_RE = re.compile(r"^(#+)\s*Условные обозначения.*$", re.M)

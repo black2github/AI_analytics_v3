@@ -31,7 +31,7 @@ from .card_source import (
     source_role_literals, source_tables_summary, thin_call_home, base_contract_ref
 )
 from .card_steps import (
-    check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
+    CALL_ID_PATTERN, check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
     check_step_body_structure, check_step_markers
 )
 from .card_passport import (check_heavy_cells, check_heavy_pair_structure, check_label_sections,
@@ -575,7 +575,8 @@ def _page_artifact_index(docs_root: Path) -> Dict[str, List[Path]]:
     return out
 
 
-_CALL_CARD_LINK_RE = re.compile(r"\[(CALL-(?:EXT|INT|MOD)-\d{3})[^\]]*\]\(([^)\s#]+\.md)")
+# ID — общий шаблон card_steps (слоты в обеих позициях: CALL-BC-EXT-001, CALL-EXT-BC-001; 2026-11-11)
+_CALL_CARD_LINK_RE = re.compile(r"\[(" + CALL_ID_PATTERN + r")[^\]]*\]\(([^)\s#]+\.md)")
 
 
 def _linked_call_cards(card_text: str, main_file: Path) -> List[Tuple[str, str]]:
@@ -882,10 +883,13 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             # ложно расходится с источником; сначала главная карточка,
             # объединение — только если главная не прошла (шаги могли
             # быть разложены по карточкам группы)
+            # имена присваиваний, вынесенных из шага в карточку вызова, ищутся в группе сверки и
+            # в карточках вызова по ссылкам (постановка 2026-11-11)
+            sb_group = combined + "".join("\n" + t for _i, t in (linked_calls or []))
             sb_report, sb_ok = check_step_body_structure(
-                strip_html_comments(card_text), src_text)
+                strip_html_comments(card_text), src_text, group_text=sb_group)
             if not sb_ok:
-                sb_report, sb_ok = check_step_body_structure(combined, src_text)
+                sb_report, sb_ok = check_step_body_structure(combined, src_text, group_text=sb_group)
             report.extend(sb_report)
             ok = ok and sb_ok
         # К-24: уплощение вложенности + потеря паспортного слоя «Что
