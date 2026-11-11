@@ -673,6 +673,23 @@ _SRC_MENTION_TAG_RE = re.compile(
     r"\[(?=[^\]\n]*[А-ЯЁA-Z])[А-ЯЁA-Z0-9_]{2,20}\][^\S\n]+(?=[«\"(А-ЯЁA-Z])")
 
 
+def source_tag_mentions(src_text: str) -> Dict[str, str]:
+    """Теговые упоминания источника К-32: {игла (норм.): «[ТЕГ] ядро» для отчёта}. Общий
+    разбор сторожа и подсчёта снятого заметкой об отклонении (card_deviation)."""
+    plain = re.sub(r"<[^>]+>", " ", _SRC_BLOCK_END_RE.sub(
+        "\n", _SRC_FRONTMATTER_RE.sub("", src_text, 1)))
+    mentions: Dict[str, str] = {}  # игла (норм.) -> «[ТЕГ] ядро» для отчёта
+    for m in _SRC_MENTION_TAG_RE.finditer(plain):
+        tail = plain[m.end():m.end() + 120]
+        core = _mention_core(tail)
+        if not core:
+            continue
+        needle = _norm_ws(" ".join(core.split()[:3]))
+        tag = plain[m.start():m.end()].strip()
+        mentions.setdefault(needle, re.sub(r"\s+", " ", f"{tag} {core}")[:70])
+    return mentions
+
+
 def check_source_tag_mentions(card_text: str, src_text: str,
                               docs_root: Optional[Path] = None
                               ) -> Tuple[List[str], bool]:
@@ -692,17 +709,7 @@ def check_source_tag_mentions(card_text: str, src_text: str,
     упоминание с хвостом «}}'» — у имён до трёх слов игла несла мусор
     и предупреждение было неустранимым. Собственное имя страницы
     сторожит check_title (дословный title)."""
-    plain = re.sub(r"<[^>]+>", " ", _SRC_BLOCK_END_RE.sub(
-        "\n", _SRC_FRONTMATTER_RE.sub("", src_text, 1)))
-    mentions: Dict[str, str] = {}  # игла (норм.) -> «[ТЕГ] ядро» для отчёта
-    for m in _SRC_MENTION_TAG_RE.finditer(plain):
-        tail = plain[m.end():m.end() + 120]
-        core = _mention_core(tail)
-        if not core:
-            continue
-        needle = _norm_ws(" ".join(core.split()[:3]))
-        tag = plain[m.start():m.end()].strip()
-        mentions.setdefault(needle, re.sub(r"\s+", " ", f"{tag} {core}")[:70])
+    mentions = source_tag_mentions(src_text)
     if not mentions:
         return [], True
     card_nolinks = _norm_ws(_blank_md_links(card_text))

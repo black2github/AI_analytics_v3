@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Tuple
 from .. import fs as _fs
 from ..html import _fm_body, _norm_cell, _plain, expand_grid, find_top_tables, protect_token_tags
 from ..md import blank_nav_lists
-from .call_algorithms import assignment_parts
+from .call_algorithms import _STEP_JUMP_RE, _STEP_LABEL_RE, assignment_parts
 from bs4 import BeautifulSoup
 
 
@@ -493,22 +493,159 @@ def _name_in(name: str, text: str) -> bool:
     return re.search(r"(?<![\w-])" + re.escape(name.casefold()) + r"(?![\w-])", text) is not None
 
 
-def _assignments_moved_to_calls(src_body: List[str], card_body: List[str],
-                                group_text: str) -> Optional[Tuple[int, List[str], bool]]:
-    """(число вынесенных присваиваний, [имена, которых нет в группе], остаток сошёлся только по
-    форме экспорта) — когда тело шага источника без присваиваний сходится с телом шага карточки
-    без присваиваний и в шаге карточки есть ссылка на карточку вызова; иначе None. Остаток,
-    сошедшийся только по форме (_step_form_only: литералы, условия, глубина), идёт и в строку
-    формы экспорта — как шаг без присваиваний."""
-    if _CALL_LINK_RE.search("\n".join(card_body)) is None:
+# Правило параметра вызова, вынесенное из шага (постановка прибору 2026-11-11, КК 2.17: FUN-SYS-15
+# шаг 3, FUN-SYS-35 шаг №4 → CALL-INT-023). Перечень параметров в шаге источника записан разными
+# формами («имя == …», «имя заполняется согласно …», имя без «=», блок условия значения); признак —
+# не слова источника, а отношение шага к карточке вызова по ссылке из шага карточки:
+# (б) строка начинается с имени параметра из раздела «Правила заполнения исходящего сообщения»
+#     этой карточки (последний сегмент пути левой колонки или путь целиком, первое слово ячейки
+#     правила, первое слово пункта списка; имя — латинский идентификатор) И её текст после
+#     нормализации сверки значений таблиц есть в этом разделе дословно (недоперенесённая строка остаётся
+#     в сверке; ограничитель — замечание постановщика 11.11);
+# блок условия значения — пункт списка «Если …» / «Иначе» с вложенными строками глубже по отступу —
+# снимается целиком, только если все вложенные строки снимаемы (присваивание или строка (б), либо
+# вложенный такой же блок) и в нём есть хотя бы одна строка параметра. Условие-абзац блоком не
+# считается (у абзаца нет надёжной границы вложенности). Ярлык шага и переход на шаг не снимаются.
+_RULES_HEAD_RE = re.compile(
+    r"^(#{2,6})\s+(?:\d+(?:\.\d+)*\.?\s+)?Правила заполнения исходящего сообщения\s*$", re.I)
+_HEAD_LVL_RE = re.compile(r"^(#{1,6})\s")
+_PARAM_NAME_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*")
+_LEAD_MARK_RE = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
+_COND_START_RE = re.compile(r"(?i)^(?:\*\*|__)?\s*(?:если|иначе)(?![\w-])")
+_BLOCK_COND = "\0"   # метка снятой строки условия блока (в счётчик не идёт)
+
+
+def _name_forms(token: str) -> set:
+    t = token.strip(".").casefold()
+    return {t, t.rsplit(".", 1)[-1]} if t else set()
+
+
+def _first_word(text: str) -> str:
+    t = _ASSIGN_MARKUP_RE.sub("", _LEAD_MARK_RE.sub("", text)).strip()
+    m = _PARAM_NAME_RE.match(t)
+    return m.group(0) if m and (len(t) == m.end() or not t[m.end()].isalnum()) else ""
+
+
+def _rule_norm(text: str) -> str:
+    """Нормализация сверки значений таблиц источника (card_source._cmp_text: разметка, ссылка —
+    текстом без ID карточки в начале, кавычки, пробелы и <br>, буквы-двойники) + угловые скобки:
+    строка шага ищется в разделе привязки дословно с этой точностью (решение постановщика 11.11)."""
+    from .card_source import _cmp_text
+    t = _cmp_text(text.replace("|", " ")).replace("<", "").replace(">", "")
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def _call_rules(text: str) -> Tuple[set, str]:
+    """(имена параметров, нормализованный текст) раздела «Правила заполнения исходящего
+    сообщения» карточки вызова; раздела нет — (пусто, "")."""
+    names: set = set()
+    body: List[str] = []
+    level = 0
+    for ln in text.splitlines():
+        mh = _HEAD_LVL_RE.match(ln)
+        if level:
+            if mh and len(mh.group(1)) <= level:
+                level = 0
+                continue
+            body.append(ln)
+            st = ln.strip()
+            if st.startswith("|"):
+                cells = [c.strip() for c in st.strip("|").split("|")]
+                if all(re.fullmatch(r":?-{1,}:?", c) for c in cells if c):
+                    continue
+                left = _ASSIGN_MARKUP_RE.sub("", cells[0]).strip()
+                if _PARAM_NAME_RE.fullmatch(left):
+                    names |= _name_forms(left)
+                if len(cells) > 1 and (w := _first_word(cells[1])):
+                    names |= _name_forms(w)
+            elif _LEAD_MARK_RE.match(ln) and (w := _first_word(ln)):
+                names |= _name_forms(w)
+            continue
+        m = _RULES_HEAD_RE.match(ln)
+        if m:
+            level = len(m.group(1))
+    return names, (_rule_norm("\n".join(body)) if body else "")
+
+
+def _param_line(line: str, rules: List[Tuple[set, str]]) -> Optional[str]:
+    """Имя параметра строки (б) или None."""
+    if _STEP_LABEL_RE.search(line) or _STEP_JUMP_RE.search(line):
         return None
-    src_names = [(ln, _excused_assignment(ln)) for ln in src_body]
-    card_names = {n.casefold() for n in (_excused_assignment(ln) for ln in card_body) if n}
-    moved = [n for _ln, n in src_names if n is not None and (not n or n.casefold() not in card_names)]
+    w = _first_word(line)
+    if not w:
+        return None
+    forms = _name_forms(w)
+    norm = _rule_norm(_LEAD_MARK_RE.sub("", line))
+    for names, text in rules:
+        if forms & names and norm and norm in text:
+            return w
+    return None
+
+
+def _indent(ln: str) -> int:
+    return len(ln) - len(ln.lstrip(" "))
+
+
+def _mark_lines(lines: List[str], rules: List[Tuple[set, str]]) -> List[Optional[str]]:
+    """Отметка каждой строки тела шага: имя параметра (снимается, в счётчик), "" — условие значения
+    в форме присваивания (снимается, в счётчик), _BLOCK_COND — строка условия снятого блока,
+    None — строка остаётся в сверке."""
+    def one(ln: str) -> Optional[str]:
+        n = _excused_assignment(ln)
+        return n if n is not None else (_param_line(ln, rules) if rules else None)
+
+    marks: List[Optional[str]] = [None] * len(lines)
+    i = 0
+    while i < len(lines):
+        ln = lines[i]
+        m = re.match(r"^( *)[-+*]\s+(.*)$", ln)
+        if (rules and m and _COND_START_RE.match(m.group(2))
+                and not (_STEP_LABEL_RE.search(ln) or _STEP_JUMP_RE.search(ln))):
+            ind, j = len(m.group(1)), i + 1
+            while j < len(lines):
+                if lines[j].strip():
+                    if _indent(lines[j]) <= ind:
+                        break
+                else:
+                    k = next((x for x in range(j, len(lines)) if lines[x].strip()), None)
+                    if k is None or _indent(lines[k]) <= ind:
+                        break
+                j += 1
+            if j > i + 1:
+                sub = _mark_lines(lines[i + 1:j], rules)
+                kept = [s for s, c in zip(sub, lines[i + 1:j]) if c.strip() and s is None]
+                if not kept and any(s not in (None, _BLOCK_COND) for s in sub):
+                    marks[i] = _BLOCK_COND
+                    marks[i + 1:j] = sub
+                i = j   # блок, не снятый целиком, остаётся в сверке целиком
+                continue
+        marks[i] = one(ln)
+        i += 1
+    return marks
+
+
+def _assignments_moved_to_calls(src_body: List[str], card_body: List[str], group_text: str,
+                                call_cards: Optional[Dict[str, str]] = None
+                                ) -> Optional[Tuple[int, List[str], bool]]:
+    """(число вынесенных строк параметров, [имена, которых нет в группе], остаток сошёлся только
+    по форме экспорта) — когда тело шага источника без строк параметров сходится с телом шага
+    карточки без них и в шаге карточки есть ссылка на карточку вызова; иначе None. Остаток,
+    сошедшийся только по форме (_step_form_only: литералы, условия, глубина), идёт и в строку
+    формы экспорта — как шаг без присваиваний. call_cards — {ID: текст} карточек вызова группы:
+    по ним узнаются строки (б); без них — только присваивания."""
+    ids = set(_CALL_LINK_RE.findall("\n".join(card_body)))
+    if not ids:
+        return None
+    rules = [r for r in (_call_rules(t) for i, t in (call_cards or {}).items() if i in ids) if r[0]]
+    src_marks = _mark_lines(src_body, rules)
+    card_marks = _mark_lines(card_body, rules)
+    card_names = {n.casefold() for n in card_marks if n and n != _BLOCK_COND}
+    moved = [n for n in src_marks
+             if n is not None and n != _BLOCK_COND and (not n or n.casefold() not in card_names)]
     if not any(moved):
         return None
-    src_rest = [ln for ln, n in src_names if n is None]
-    card_rest = [ln for ln in card_body if _excused_assignment(ln) is None]
+    src_rest = [ln for ln, n in zip(src_body, src_marks) if n is None]
+    card_rest = [ln for ln, n in zip(card_body, card_marks) if n is None]
     prof_src, prof_card = _ranked_profile(src_rest), _ranked_profile(card_rest)
     same = prof_src == prof_card or _shift_profile(prof_src) == _shift_profile(prof_card)
     if not same and not _step_form_only(src_rest, card_rest):
@@ -519,13 +656,16 @@ def _assignments_moved_to_calls(src_body: List[str], card_body: List[str],
 
 
 def check_step_body_structure(card_text: str, source_text: str,
-                              group_text: Optional[str] = None) -> Tuple[List[str], bool]:
+                              group_text: Optional[str] = None,
+                              call_cards: Optional[Dict[str, str]] = None) -> Tuple[List[str], bool]:
     """К-26: ранговый профиль тела КАЖДОГО шага карточки обязан
     совпадать с телом того же шага источника (md-источники; HTML-тела
     без md-разметки дают пустые профили — честный skip). Замены текстов
     ссылок профиль не меняют. group_text — текст группы сверки и карточек
     вызова по ссылкам: там ищутся имена присваиваний, вынесенных из шага
-    в карточку вызова (без него — только в card_text)."""
+    в карточку вызова (без него — только в card_text). call_cards — {ID: текст} карточек
+    вызова группы: строки правил параметров (б) и блоки условий значения узнаются по разделу
+    привязки карточки вызова, на которую ссылается шаг (без них — только присваивания)."""
     src_bodies = _step_bodies(_fm_body(source_text).splitlines())
     if len(src_bodies) < 2:
         return [], True
@@ -555,7 +695,8 @@ def check_step_body_structure(card_text: str, source_text: str,
                 form_only.append(num)
             elif _table_moved_to_calls(body, card_bodies[num]):
                 moved[num] = sorted(set(_CALL_LINK_RE.findall("\n".join(card_bodies[num]))))
-            elif (asg := _assignments_moved_to_calls(body, card_bodies[num], names_text)) is not None:
+            elif (asg := _assignments_moved_to_calls(body, card_bodies[num], names_text,
+                                                              call_cards)) is not None:
                 if asg[1]:
                     lost_asg[num] = asg[1]
                     bad.append(num)

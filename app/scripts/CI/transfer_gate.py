@@ -1060,6 +1060,11 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
         if not st or st.startswith("ИТОГО") or st.startswith("i "):
             block = None
             continue
+        if s.startswith("   ") and st.startswith("предупреждение: санкционированное отклонение"):
+            # снятое заметкой о санкционированном отклонении (2026-11-11, card_deviation): строка
+            # группы — предупреждение гейта и при ✗, и при ⚠ группы; вердикт не меняет
+            gate.add("⚠", "ПРИБОР", st, check="санкционированное отклонение")
+            continue
         if block is not None and s.startswith("   "):
             gate.add(block[0], block[1], st, check=block[2])  # подстроки — причины
             continue

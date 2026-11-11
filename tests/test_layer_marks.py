@@ -19,6 +19,7 @@ MIGRATION = (
     "normalize_tables.py",
     "raw_oracle.py",
     "kitcheck/checks/source_profile.py",
+    "kitcheck/checks/card_deviation.py",
 )
 
 

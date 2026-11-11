@@ -31,9 +31,13 @@ from .card_source import (
     source_role_literals, source_tables_summary, thin_call_home, base_contract_ref
 )
 from .card_steps import (
-    CALL_ID_PATTERN, check_behavior_nesting, check_behavior_numbering, check_nesting_depth,
-    check_step_body_structure, check_step_markers
+    CALL_ID_PATTERN, _step_bodies, check_behavior_nesting, check_behavior_numbering,
+    check_nesting_depth, check_step_body_structure, check_step_markers
 )
+from .card_deviation import apply_notes as apply_deviation_notes, blank_notes
+
+# предфильтр заметки об отклонении: без этих слов в карточках группы разбор не вызывается
+_DEVIATION_HINT_RE = re.compile(r"санкционированн\w*\s+отклонени", re.I)
 from .card_passport import (check_heavy_cells, check_heavy_pair_structure, check_label_sections,
                             passport_row_keys)
 from .card_notification import check_notification_structure
@@ -258,6 +262,19 @@ def run_check(files: List[Path], source_path: Optional[Path],
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
                 if source_path is not None else None)
+    # заметка о санкционированном отклонении с перечнем (решение владельца 2026-11-11,
+    # card_deviation): названные шаг, раздел и строка таблицы вырезаются из источника группы ДО
+    # всех сверок, абзац заметки — из текстов карточек; без заметки ничего не вызывается
+    dev_report: List[str] = []
+    dev_notes = False
+    if src_text is not None:
+        dev_cards = [(f.name, _fs.read_text(f, encoding="utf-8")) for f in files]
+        if any(_DEVIATION_HINT_RE.search(t) for _n, t in dev_cards):
+            dev_notes = True
+            dev_steps = set()
+            for _n, t in dev_cards:
+                dev_steps |= set(_step_bodies(blank_notes(t).splitlines()))
+            src_text, dev_report, _cut = apply_deviation_notes(src_text, dev_cards, dev_steps)
     pardon_text = (apply_critic(strip_history(
         _fs.read_text(pardon_source, encoding="utf-8")))
                    if src_text is None and pardon_source is not None
@@ -274,6 +291,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
                             kit_summary=kit_summary,
                             without_sources=without_sources,
                             outside_eco=outside_eco)
+    report.extend(dev_report)
     card_text = _fs.read_text(main_file, encoding="utf-8")
     # межтиповая страница-источник: значения ищутся в ОБЪЕДИНЕНИИ
     # карточек (пример: каталог статусов в dictionaries + переходы в
@@ -318,6 +336,8 @@ def run_check(files: List[Path], source_path: Optional[Path],
                     combined += "\n\n" + _fs.read_text(side, encoding="utf-8", errors="replace")
             except OSError:
                 continue
+    if dev_notes:
+        card_text, combined = blank_notes(card_text), blank_notes(combined)
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
     fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards)
@@ -886,10 +906,12 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             # имена присваиваний, вынесенных из шага в карточку вызова, ищутся в группе сверки и
             # в карточках вызова по ссылкам (постановка 2026-11-11)
             sb_group = combined + "".join("\n" + t for _i, t in (linked_calls or []))
+            sb_calls = dict(linked_calls or [])
             sb_report, sb_ok = check_step_body_structure(
-                strip_html_comments(card_text), src_text, group_text=sb_group)
+                strip_html_comments(card_text), src_text, group_text=sb_group, call_cards=sb_calls)
             if not sb_ok:
-                sb_report, sb_ok = check_step_body_structure(combined, src_text, group_text=sb_group)
+                sb_report, sb_ok = check_step_body_structure(combined, src_text, group_text=sb_group,
+                                                             call_cards=sb_calls)
             report.extend(sb_report)
             ok = ok and sb_ok
         # К-24: уплощение вложенности + потеря паспортного слоя «Что

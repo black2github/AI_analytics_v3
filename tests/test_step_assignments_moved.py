@@ -179,3 +179,135 @@ def test_linked_call_card_with_slot_is_pulled(tmp_path: Path, cid):
     got = _linked_call_cards(f"Вызов [{cid} Вызов](../contract-call/call.md).\n", fun)
     assert [i for i, _t in got] == [cid]
     assert "absClientId" in got[0][1]
+
+
+# ---------------------------------------------------------------- правила параметров (б): признак по
+# карточке вызова (постановка 2026-11-11, FUN-SYS-15 шаг 3 / FUN-SYS-35 шаг №4 → CALL-INT-023)
+
+P_SRC_LINES = [
+    "    * clientId == [Клиент Банка](https://conf/x?pageId=1).<РНК клиента>, для записи == Вход.<Ид>",
+    "    * accountId = Вход.<Ид счёта>",
+    "    * **Если** секция Вход.cardVirtualNums присутствует, **то**",
+    "        + Если Вход.<Внешние ид карт> заполнен, то",
+    "            - cardIds = Вход.<Внешние ид карт>",
+    "            - isNotIds = false",
+    "        + **Иначе**",
+    "            - cardIds = Вход.<Кроме номеров>",
+    "            - isNotIds = true",
+    "    * page.limit = Вход.<Количество>",
+    "    * stateAnsStatus заполняется согласно [Таблицы 2](https://conf/t2) — маппинг «всех» статусов",
+]
+P_RULES = ("## Использование\n\n### Правила заполнения исходящего сообщения\n\n"
+           "| Параметр контракта | Правило сервиса |\n|---|---|\n"
+           "| `data.clientId` | clientId == [Клиент Банка](../ext/c.md).«РНК клиента», для записи == Вход.«Ид» |\n"
+           "| `data.accountId` | accountId = Вход.«Ид счёта» |\n"
+           "| `data.cardIds` | **Если** секция присутствует: cardIds = … |\n"
+           "| `data.isNotIds` | isNotIds = true / false |\n"
+           "| `paging.limit` | page.limit = Вход.«Количество» |\n"
+           "| `data.stateAndStatus` | stateAnsStatus заполняется согласно Таблицы 2 — маппинг «всех» статусов |\n"
+           "\n### Сопоставление входящего сообщения\n\n| a | b |\n|---|---|\n| x | y |\n")
+P_CALL = "[CALL-INT-023 Список карт](../contract-call/internal/call-int-023.md)"
+P_TAIL = "Происходит переход на шаг 4\n\n"
+
+
+def p_src(lines):
+    return ("---\ntitle: X\n---\n\n**Шаг 3:** (Формирование параметров)\n\n" + "\n".join(lines) + "\n\n"
+            + P_TAIL + "**Шаг 4:** (Выбор)\n\nВыбор варианта.\n")
+
+
+def p_card(extra=""):
+    return ("- **Шаг 3:** (Формирование параметров)\n\n"
+            f"  Формируются параметры вызова {P_CALL} по карточке вызова.\n\n" + extra + "  " + P_TAIL
+            + "- **Шаг 4:** (Выбор)\n\n  Выбор варианта.\n")
+
+
+def p_check(src_lines, card=None, rules=P_RULES, cid="CALL-INT-023"):
+    calls = {cid: "---\nid: " + cid + "\ntype: contract-call\n---\n\n" + rules}
+    return check_step_body_structure(card or p_card(), p_src(src_lines), group_text=rules, call_cards=calls)
+
+
+def test_param_rules_all_forms_warn():
+    rep, ok = p_check(P_SRC_LINES)
+    assert ok, rep
+    # clientId(==), accountId, cardIds×2, isNotIds×2, page.limit, stateAnsStatus — 8 строк параметров
+    assert any("присваивания шага (8) вынесены в карточки вызова: CALL-INT-023" in r for r in rep), rep
+
+
+def test_param_line_without_equals_and_typo_name():
+    rep, ok = p_check(["    * stateAnsStatus заполняется согласно [Таблицы 2](https://conf/t2) — маппинг «всех» статусов"])
+    assert ok and any("присваивания шага (1)" in r for r in rep), rep
+
+
+def test_param_line_text_not_in_rules_stays():
+    # имя есть в карточке, текста строки в разделе нет — строка в сверке (ограничитель постановщика)
+    rep, ok = p_check(["    * clientId пустой — формируется ошибка «Нет клиента»"])
+    assert not ok, rep
+
+
+def test_param_name_not_in_call_card_fails():
+    rep, ok = p_check(P_SRC_LINES + ["    * extraParam == Вход.<Нечто>"])
+    assert not ok, rep
+    assert not any("присваивания шага (" in r for r in rep), rep
+
+
+def test_name_mid_line_not_removed():
+    rep, ok = p_check(P_SRC_LINES + ["    * Значение clientId == Вход.<Нечто> «пример»"])
+    assert not ok, rep
+
+
+def test_condition_block_with_jump_stays():
+    lines = P_SRC_LINES[:2] + ["    * **Если** секция Вход.cardVirtualNums присутствует, **то**",
+                               "        + cardIds = Вход.<Внешние ид карт>",
+                               "        + переход на шаг 6"]
+    rep, ok = p_check(lines)
+    assert not ok, rep
+
+
+def test_condition_block_with_error_stays():
+    lines = P_SRC_LINES[:2] + ["    * **Если** секция Вход.cardVirtualNums присутствует, **то**",
+                               "        + **Если** Вход.<Внешние ид карт> пуст, **то**",
+                               "            - формируется ошибка «-3»",
+                               "        + **Иначе**",
+                               "            - cardIds = Вход.<Внешние ид карт>"]
+    rep, ok = p_check(lines)
+    assert not ok, rep
+
+
+def test_no_call_cards_previous_behaviour():
+    # без call_cards — только присваивания: строка «clientId == …» остаётся, ✗ как прежде
+    rep, ok = check_step_body_structure(p_card(), p_src(P_SRC_LINES), group_text=P_RULES)
+    assert not ok, rep
+
+
+def test_step_without_call_link_fails():
+    card = p_card().replace(P_CALL, "метода")
+    rep, ok = p_check(P_SRC_LINES, card=card)
+    assert not ok, rep
+
+
+def test_call_card_not_linked_from_step_ignored():
+    # карточка вызова группы, на которую шаг не ссылается, имён не даёт
+    rep, ok = p_check(P_SRC_LINES, cid="CALL-INT-099")
+    assert not ok, rep
+
+
+def test_rules_as_list():
+    rules = ("### Правила заполнения исходящего сообщения\n\n"
+             "- clientId == [Клиент Банка](../ext/c.md).«РНК клиента», для записи == Вход.«Ид»\n"
+             "- stateAnsStatus заполняется согласно Таблицы 2 — маппинг «всех» статусов\n")
+    rep, ok = p_check([P_SRC_LINES[0], P_SRC_LINES[-1]], rules=rules)
+    assert ok and any("присваивания шага (2)" in r for r in rep), rep
+
+
+def test_param_rules_kept_in_card_no_line():
+    # параметры остались и в шаге карточки — выноса нет
+    extra = "".join("  " + ln.strip().replace("* ", "- ", 1) + "\n" for ln in (P_SRC_LINES[0], P_SRC_LINES[-1]))
+    rep, _ok = p_check([P_SRC_LINES[0], P_SRC_LINES[-1]], card=p_card(extra + "\n"))
+    assert not any("присваивания шага (" in r for r in rep), rep
+
+
+def test_param_line_link_text_with_card_id_prefix():
+    # карточка пишет ссылку «ID + дословный текст источника»: префикс ID — не различие (_cmp_text)
+    rules = P_RULES.replace("[Клиент Банка](../ext/c.md)", "[EXT-002 Клиент Банка](../ext/c.md)")
+    rep, ok = p_check([P_SRC_LINES[0]], rules=rules)
+    assert ok and any("присваивания шага (1)" in r for r in rep), rep

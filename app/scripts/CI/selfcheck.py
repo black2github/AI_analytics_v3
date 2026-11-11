@@ -99,6 +99,7 @@ try:
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.call_algorithms import check_call_algorithms  # noqa: E402 — 11.11
+    from kitcheck.checks.card_deviation import DEVIATION_PREFIX  # noqa: E402 — 11.11
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -129,6 +130,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.call_algorithms import check_call_algorithms  # type: ignore  # noqa: E402
+    from .kitcheck.checks.card_deviation import DEVIATION_PREFIX  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
 
@@ -658,6 +660,10 @@ def _run_impl(docs: Path, sources: Optional[Path],
             ok = False
             mark = "✗"
         elif ok and empty_note:
+            mark = "⚠"
+        elif ok and any(ln.startswith(DEVIATION_PREFIX) for ln in rep):
+            # снятое заметкой о санкционированном отклонении (2026-11-11): группа без ✗ — ⚠,
+            # вердикт не меняется; строка о снятом видна и при ⚠ (_warns), гейт её переносит
             mark = "⚠"
         for f in files:
             counts[mark] += 1
