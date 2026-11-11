@@ -7,6 +7,13 @@ from unittest.mock import Mock, patch, MagicMock
 from fastapi.testclient import TestClient
 from langchain_core.documents import Document
 
+def pytest_configure(config):
+    # метки уровней прогона (tests/README.md): pytest.ini начинается с [tool:pytest] и pytest
+    # его секцию не читает — регистрация здесь
+    config.addinivalue_line("markers", "chain: тесты утилиты цепочки src-репо (git-репозитории); "
+                            "быстрый уровень: -m \"not chain\"")
+
+
 # Мокаем внешние зависимости до импорта приложения
 @pytest.fixture(autouse=True)
 def mock_external_dependencies():

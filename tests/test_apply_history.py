@@ -11,6 +11,10 @@ import pytest
 
 from app.scripts.apply_history import main, read_task_list
 
+# уровень «полный»: тесты утилиты цепочки создают git-репозитории (≈половина времени набора,
+# замер 11.11.2026) — быстрый уровень их пропускает: -m "not chain" (tests/README.md)
+pytestmark = pytest.mark.chain
+
 
 def _git(repo: Path, *args):
     return subprocess.run(["git", *args], cwd=str(repo), capture_output=True,
