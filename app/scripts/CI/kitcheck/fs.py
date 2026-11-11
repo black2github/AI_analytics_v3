@@ -84,13 +84,37 @@ def find_kit_file(root: PathLike, name: str) -> Optional[Path]:
     """Файл комплекта (inventory.md, migration-plan.md): в корне комплекта или в его
     родителе — для `<repo>/docs` файл лежит рядом с `docs/`, в репозитории документации
     (комплект в корне) — в самом корне. Не найден — None. Единственный дом адреса файлов
-    комплекта: прибор самопроверки, сверка покрытия описи и гейт переноса ищут здесь."""
+    комплекта: прибор самопроверки, сверка покрытия описи и гейт переноса ищут здесь.
+    Третье место — корень исходного репозитория, если комплект объявлен в его профиле
+    источников строкой «комплект <путь>» (второй корень рядом с docs/: опись, план и журнал
+    одни на репозиторий); без объявления поиск прежний."""
     root = Path(root)
     for d in (root, root.parent):
         p = d / name
         if p.is_file():
             return p
+    decl = _declared_kit(root)
+    if decl is not None:
+        p = decl[0] / name
+        if p.is_file():
+            return p
     return None
+
+
+def _declared_kit(root: Path):
+    """(корень репозитория, путь комплекта) по профилю источников предка — разбор профиля живёт
+    в kitcheck.checks.source_profile (импорт по месту: модуль сам опирается на этот)."""
+    try:
+        from .checks.source_profile import kit_of_root
+    except ImportError:  # модуль загружен вне пакета kitcheck
+        try:
+            from kitcheck.checks.source_profile import kit_of_root  # type: ignore
+        except ImportError:
+            return None
+    try:
+        return kit_of_root(root)
+    except OSError:
+        return None
 
 
 def memoize(copy: Optional[Callable[[Any], Any]] = None):

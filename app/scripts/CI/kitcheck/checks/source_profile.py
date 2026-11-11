@@ -34,8 +34,18 @@ _ZONE_RE = re.compile(
 _SERVICE_ZONE_RE = re.compile(r"^сервис\s+([\w-]+)\s*(?:,\s*(.+))?$", re.I)
 
 
-def _load_subservice_map(profile: Path):
-    """[(матчер, слаг|None, зона)]; None — таблицы/файла нет."""
+# комплект репозитория: «комплект <путь>» — корень второго комплекта от корня исходного
+# репозитория, прямые косые (сервис нескольких команд ведётся доменным репозиторием с комплектом
+# на команду; команда держит свой комплект такого сервиса вторым корнем рядом с docs/). Страница
+# под строкой принадлежит этому комплекту; не попавшая ни под одну строку «комплект …» — основному
+# (docs/). Необязательная зона части через запятую — как у формы «сервис <id>».
+_KIT_ZONE_RE = re.compile(r"^комплект\s+`?([^\s,`]+)`?\s*(?:,\s*(.+))?$", re.I)
+
+
+def _profile_rows(profile: Path) -> Optional[List[Tuple[str, str]]]:
+    """Строки таблицы «Разметка подсервисов» профиля источников: [(матчер, зона)] как в файле;
+    None — файла или таблицы нет. Единственный разбор таблицы: зоны частей
+    (_load_subservice_map) и объявленные комплекты (kit_rows) — представления этих строк."""
     try:
         text = _fs.read_text(profile, encoding="utf-8", errors="replace")
     except OSError:
@@ -43,7 +53,7 @@ def _load_subservice_map(profile: Path):
     m = re.search(r"^#+\s*Разметка подсервисов.*$", text, re.M)
     if not m:
         return None
-    rows = []
+    rows: List[Tuple[str, str]] = []
     for ln in text[m.end():].splitlines():
         s = ln.strip()
         if s.startswith("#"):
@@ -56,24 +66,123 @@ def _load_subservice_map(profile: Path):
             continue
         if all(re.fullmatch(r":?-+:?", c) for c in cells if c):
             continue
-        service = None
-        zone_text = cells[1]
-        sm = _SERVICE_ZONE_RE.match(zone_text)
-        if sm:
-            service = sm.group(1)
-            zone_text = sm.group(2) or ""
-            if not zone_text:
-                rows.append((cells[0], None, "service", service))
-                continue
-        zm = _ZONE_RE.match(zone_text)
-        if not zm:
-            continue
-        zone = zone_text.lower()
-        slug = zm.group(2) or zm.group(3)
-        kind = ("slug" if zm.group(1) else
-                "common" if zone.startswith("общая") else "external")
-        rows.append((cells[0], slug, kind, service))
+        rows.append((cells[0], cells[1]))
+    return rows
+
+
+def _zone_row(matcher: str, zone_text: str):
+    """Строка зоны части (матчер, слаг|None, вид, сервис|None); None — форма зоны не распознана."""
+    service = None
+    sm = _SERVICE_ZONE_RE.match(zone_text)
+    if sm:
+        service = sm.group(1)
+        zone_text = sm.group(2) or ""
+        if not zone_text:
+            return (matcher, None, "service", service)
+    zm = _ZONE_RE.match(zone_text)
+    if not zm:
+        return None
+    zone = zone_text.lower()
+    slug = zm.group(2) or zm.group(3)
+    kind = ("slug" if zm.group(1) else
+            "common" if zone.startswith("общая") else "external")
+    return (matcher, slug, kind, service)
+
+
+def _kit_row(matcher: str, zone_text: str):
+    """(матчер, путь комплекта, строка зоны части|None) для строки «комплект <путь>[, <зона>]»;
+    None — не строка комплекта. Путь — относительный, без «.»/«..»; зона через запятую — только
+    зона части (как у формы «сервис <id>»), иначе строка не распознана целиком."""
+    km = _KIT_ZONE_RE.match(zone_text.strip())
+    if not km:
+        return None
+    path = km.group(1).replace("\\", "/").strip("/")
+    if not path or ":" in path or any(p in ("", ".", "..") for p in path.split("/")):
+        return None
+    zone = None
+    if km.group(2):
+        zone = _zone_row(matcher, km.group(2).strip())
+        if zone is None or zone[2] == "service" or zone[3] is not None:
+            return None
+    return (matcher, path, zone)
+
+
+def _load_subservice_map(profile: Path):
+    """[(матчер, слаг|None, зона)]; None — таблицы/файла нет. Строка «комплект …» зону части не
+    задаёт (принадлежность комплекту — отдельное измерение, kit_rows); её зона через запятую —
+    обычная строка зоны с тем же матчером."""
+    raw = _profile_rows(profile)
+    if raw is None:
+        return None
+    rows = []
+    for matcher, zone_text in raw:
+        kr = _kit_row(matcher, zone_text)
+        row = kr[2] if kr is not None else _zone_row(matcher, zone_text)
+        if row is not None:
+            rows.append(row)
     return rows or None
+
+
+def kit_rows(profile: Path) -> List[Tuple[str, str]]:
+    """Строки «комплект <путь>» профиля по порядку таблицы: [(матчер, путь комплекта)]."""
+    out: List[Tuple[str, str]] = []
+    for matcher, zone_text in _profile_rows(profile) or []:
+        kr = _kit_row(matcher, zone_text)
+        if kr is not None:
+            out.append((kr[0], kr[1]))
+    return out
+
+
+def declared_kits(profile: Path) -> List[str]:
+    """Объявленные корни комплектов (пути от корня репозитория) без повторов, по порядку."""
+    out: List[str] = []
+    for _m, path in kit_rows(profile):
+        if path not in out:
+            out.append(path)
+    return out
+
+
+def row_matches(matcher: str, title: str, branch: str, pid: Optional[str]) -> bool:
+    """Страница под строкой разметки. Матчер из одних цифр — page_id: ровно эта страница, без
+    потомков; иначе — тег-префикс титула или имя верхней ветви выгрузки, как прежде."""
+    if matcher.isdigit():
+        return pid == matcher
+    return title.startswith(matcher) or matcher.strip("[]") == branch or matcher == branch
+
+
+def kit_of_page(krows: List[Tuple[str, str]], title: str, branch: str,
+                pid: Optional[str]) -> Optional[str]:
+    """Комплект страницы: путь первой подошедшей строки «комплект …»; None — основной комплект.
+    Порядок строк зон частей на комплект не влияет: у комплекта и зоны части свои строки,
+    в каждом измерении выигрывает первая подошедшая строка своего вида."""
+    return next((path for matcher, path in krows
+                 if row_matches(matcher, title, branch, pid)), None)
+
+
+@_fs.memoize()
+def kit_of_root(docs: Path) -> Optional[Tuple[Path, str]]:
+    """(корень исходного репозитория, путь комплекта), если каталог комплекта объявлен строкой
+    «комплект <путь>» в профиле источников (README.md) одного из предков, — до четырёх уровней
+    вверх; иначе None (основной комплект или репозиторий без объявления)."""
+    d = Path(docs).resolve()
+    for root in list(d.parents)[:4]:
+        rel = d.relative_to(root).as_posix()
+        if rel in declared_kits(root / "README.md"):
+            return root, rel
+    return None
+
+
+def _page_head(src_file: Path, sources: Path) -> Tuple[Optional[str], str, str]:
+    """(page_id, титул, верхняя ветвь) файла выгрузки — по шапке первых 2000 знаков."""
+    head = _fs.read_text(src_file, encoding="utf-8", errors="replace")[:2000]
+    pid_m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)", head, re.M)
+    title_m = re.search(r"^title:\s*(.+)$", head, re.M)
+    title = title_m.group(1).strip().strip("'\"") if title_m else ""
+    try:
+        branch = src_file.relative_to(sources).parts[0]
+    except ValueError:
+        branch = ""
+    return (pid_m.group(1) if pid_m else None), title, branch
 
 
 def _stand_root(sources: Path) -> Path:
@@ -110,17 +219,20 @@ def _profile_path(sources: Path) -> Tuple[Path, Path]:
 
 
 def check_subservice_mapping(docs: Path, sources: Path,
-                             card_files: Dict[str, Path]):
+                             card_files: Dict[str, Path], kit: Optional[str] = None):
     """(отчёт, ok). card_files: page_id -> карточка docs. Зона источника
     определяется по титулу/ветви его файла выгрузки; путь карточки
     обязан начинаться srs/<слаг>/ (подсервис/core и вне Экосистемы <слаг>) или не иметь
-    слага (общая часть); зона «вне Экосистемы» без слага путь не задаёт (⚠)."""
+    слага (общая часть); зона «вне Экосистемы» без слага путь не задаёт (⚠).
+    kit — комплект прогона (путь строки «комплект …»; None — основной): страницы другого
+    комплекта здесь не судятся — их ловит check_kit_mapping."""
     _, profile = _profile_path(sources)
     smap = _load_subservice_map(profile)
     if not smap:
         # без таблицы разметки сторож молчит; паспорт границы части в комплекте без строки
         # профиля — ⚠ (признак части взят по паспорту)
         return outside_eco_lines(docs, [], passport_slugs(docs)), True
+    krows = kit_rows(profile)
     report: List[str] = []
     ok = True
     slugs = {row[1] for row in smap if row[2] in ("slug", "external") and row[1]}
@@ -129,26 +241,17 @@ def check_subservice_mapping(docs: Path, sources: Path,
     for src_file in sorted(sources.rglob("*.md")):
         if src_file.name.lower() == "index.md":
             continue
-        head = _fs.read_text(src_file, encoding="utf-8",
-                                  errors="replace")[:2000]
-        pid_m = re.search(r"^confluence_page_id:\s*['\"]?(\d+)",
-                          head, re.M)
-        if not pid_m or pid_m.group(1) not in card_files:
+        pid, title, branch = _page_head(src_file, sources)
+        if pid is None or pid not in card_files:
             continue
-        title_m = re.search(r"^title:\s*(.+)$", head, re.M)
-        title = title_m.group(1).strip().strip("'\"") if title_m else ""
-        try:
-            branch = src_file.relative_to(sources).parts[0]
-        except ValueError:
-            branch = ""
+        if krows and kit_of_page(krows, title, branch, pid) != (kit or None):
+            continue            # страница другого комплекта — сторож «страница → свой комплект»
         zone = next(((row[1], row[2], row[3]) for row in smap
-                     if title.startswith(row[0])
-                     or row[0].strip("[]") == branch
-                     or row[0] == branch), None)
+                     if row_matches(row[0], title, branch, pid)), None)
         if zone is None:
             continue
         slug, kind, service = zone
-        card = card_files[pid_m.group(1)]
+        card = card_files[pid]
         rel = card.relative_to(docs).as_posix()
         if service is not None and my_service is not None \
                 and service != my_service:
@@ -191,6 +294,56 @@ def check_subservice_mapping(docs: Path, sources: Path,
         report.append("разметка подсервисов: соответствие "
                       "«источник → путь» выдержано ✓")
     report.extend(outside_eco_lines(docs, smap, passport_slugs(docs)))
+    return report, ok
+
+
+def _kit_label(kit: Optional[str]) -> str:
+    return f"{kit}/" if kit else "основной docs/"
+
+
+def check_kit_mapping(docs: Path, sources: Path, card_files: Dict[str, Path],
+                      kit: Optional[str] = None) -> Tuple[List[str], bool]:
+    """Сторож «страница → свой комплект» (по образцу «страница → свой сервис»): карточка,
+    главный источник которой (page_id шапки — первый в confluence_page_ids) размечен строкой
+    «комплект …» в комплект X, лежит в комплекте прогона Y — ✗ с обоими путями. Работает в обе
+    стороны: kit — комплект прогона (None — основной). Доп. источники карточки не судятся:
+    карточка вызова основного комплекта вправе назвать страницу метода другого комплекта.
+    Строка с матчером page_id, которого в выгрузке нет, — ⚠ (строка ничего не размечает).
+    Без строк «комплект …» в профиле — пусто."""
+    _, profile = _profile_path(sources)
+    krows = kit_rows(profile)
+    if not krows:
+        return [], True
+    here = kit or None
+    report: List[str] = []
+    ok = True
+    seen: set = set()
+    for src_file in sorted(sources.rglob("*.md")):
+        if src_file.name.lower() == "index.md":
+            continue
+        pid, title, branch = _page_head(src_file, sources)
+        if pid is None or pid in seen:
+            continue            # повтор page_id (архив raw/ под --sources) — судится раз
+        seen.add(pid)
+        if pid not in card_files:
+            continue
+        there = kit_of_page(krows, title, branch, pid)
+        if there == here:
+            continue
+        ok = False
+        rel = card_files[pid].relative_to(docs).as_posix()
+        report.append(
+            f"✗ разметка комплекта: {_kit_label(here)}{rel} — источник «{title[:50]}» размечен "
+            f"в комплект {_kit_label(there)}, карточка лежит в комплекте {_kit_label(here)} "
+            "(профиль источников: страница → свой комплект; карточку перенести в свой комплект)")
+    for matcher, path in krows:
+        if matcher.isdigit() and matcher not in seen:
+            report.append(f"⚠ разметка комплекта: строка «комплект {path}» с матчером page_id "
+                          f"{matcher} — страницы в выгрузке нет, строка ничего не размечает")
+    if ok:
+        report.insert(0, f"разметка комплектов: соответствие «источник → комплект» выдержано ✓ "
+                         f"(прогон: {_kit_label(here)}; объявлено комплектов: "
+                         f"{len(declared_kits(profile))})")
     return report, ok
 
 

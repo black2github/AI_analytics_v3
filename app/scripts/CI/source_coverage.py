@@ -48,10 +48,14 @@ try:
     from kitcheck import fs as _fs  # noqa: E402
     from kitcheck.md import stray_table_lines  # noqa: E402
     from source_inventory import _UNAPPROVED_RE  # noqa: E402
+    from kitcheck.checks.source_profile import (  # noqa: E402
+        _profile_path, kit_of_page, kit_of_root, kit_rows)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.md import stray_table_lines  # type: ignore  # noqa: E402
     from .source_inventory import _UNAPPROVED_RE  # type: ignore  # noqa: E402
+    from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402
+        _profile_path, kit_of_page, kit_of_root, kit_rows)
 
 _FM_BOUND = re.compile(r"^---\s*$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
@@ -186,10 +190,15 @@ FROZEN, CONTAINER, REFERENCE = "заморожено", "контейнеры", "
 WITHDRAWN = "снято с миграции"
 BASE_CONTRACT = "базовый контракт"
 OUT_OF_PLAN, BINARY = "вне плана", "бинарные"
+# страница другого комплекта того же исходного репозитория (строка «комплект <путь>» профиля
+# источников): покрывается в прогоне своего комплекта, здесь не пробел. Признак — только строка
+# профиля, определяется первым, до описи и без неё (classify_kits); в перечне последним: класс
+# не о судьбе страницы в этом комплекте, перечня страниц отчёт не печатает — одна строка i
+OTHER_KIT = "другой комплект"
 # порядок перечней отчёта: пробелы первыми, затем отставание описи, затем
 # структурные классы
 CLASS_ORDER = (GAP, NOT_IN_INV, FROZEN, CONTAINER, REFERENCE, WITHDRAWN, BASE_CONTRACT,
-               OUT_OF_PLAN, BINARY)
+               OUT_OF_PLAN, BINARY, OTHER_KIT)
 # отрицание признака («НЕ frozen, GBO-… снят», «не TOC») признаком не считается —
 # иначе карточка, которую опись прямо называет живой, ушла бы из брака
 _NOT = r"(?<!не )(?<!не-)"
@@ -438,19 +447,58 @@ def label_form_lines(classes: Dict[str, str], pages: Dict[str, Path],
     return lines
 
 
+def classify_kits(pages: Dict[str, Path], sources: Path, kit: Optional[str]
+                  ) -> Tuple[Dict[str, str], List[Tuple[str, str]], Dict[str, int]]:
+    """({page_id: путь комплекта} страниц ДРУГИХ комплектов, строки «комплект …» профиля,
+    {путь: страниц} объявленных комплектов без каталога). kit — измеряемый комплект ("" или
+    None — основной). Класс «другой комплект» — только для комплекта, каталог которого есть в
+    корне репозитория: прогона комплекта без каталога не существует, и его страницы остаются в
+    измерении текущего прогона по прежним правилам (молчаливой потери нет). Основной docs/ есть
+    всегда. Без строк «комплект …» — пусто."""
+    root, profile = _profile_path(sources)
+    krows = kit_rows(profile)
+    if not krows:
+        return {}, krows, {}
+    here = kit or None
+    other: Dict[str, str] = {}
+    absent: Dict[str, int] = {}
+    for pid, p in pages.items():
+        try:
+            branch = p.relative_to(sources).parts[0]
+        except ValueError:
+            branch = ""
+        there = kit_of_page(krows, source_title(p) or "", branch, pid)
+        if there is not None and not (root / there).is_dir():
+            absent[there] = absent.get(there, 0) + 1
+            continue
+        if there != here:
+            other[pid] = there or ""
+    return other, krows, absent
+
+
 def coverage_report(sources: Path, output: Path,
-                    inventory: Optional[Path] = None):
+                    inventory: Optional[Path] = None, kit: Optional[str] = None):
     """(строки отчёта, число бракующих) — единая точка формата для CLI
     и selfcheck-диспетчера. Бракующие: с описью — пробелы миграции и
-    страницы вне описи; без описи — все непокрытые (прежнее поведение)."""
+    страницы вне описи; без описи — все непокрытые (прежнее поведение).
+    kit — измеряемый комплект исходного репозитория с несколькими комплектами (путь строки
+    «комплект <путь>» профиля; "" — основной; None — по месту --output): непокрытая страница
+    другого комплекта — класс «другой комплект», в пробелы и бракующие не входит."""
     pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
     inv_path = inventory if inventory is not None else find_kit_file(output, "inventory.md")
     inv = (read_inventory(inv_path)
            if inv_path is not None and inv_path.is_file() else None)
-    uncovered = {pid: p for pid, p in pages.items() if pid not in covered}
+    if kit is None:
+        _k = kit_of_root(output)
+        kit = _k[1] if _k is not None else ""
+    other_kit, krows, absent_kits = classify_kits(pages, sources, kit)
+    uncovered = {pid: p for pid, p in pages.items()
+                 if pid not in covered and pid not in other_kit}
+    n_other = sum(1 for pid in other_kit if pid not in covered)
     head = (f"страниц выгрузки: {len(pages)}; "
-            f"покрыто артефактами: {len(pages) - len(uncovered)}; "
-            f"НЕ покрыто: {len(uncovered)}")
+            f"покрыто артефактами: {len(pages) - len(uncovered) - n_other}; "
+            + (f"другой комплект: {n_other}; " if krows else "")
+            + f"НЕ покрыто: {len(uncovered)}")
     lines: List[str] = []
     classes: Dict[str, str] = {}
     if inv is not None:
@@ -479,6 +527,19 @@ def coverage_report(sources: Path, output: Path,
         if uncovered:
             lines.append("опись не найдена — классы непокрытия не определены")
         blocking = len(uncovered)
+    if krows:
+        per_kit: Dict[str, int] = {}
+        for pid, there in other_kit.items():
+            if pid not in covered:
+                per_kit[there] = per_kit.get(there, 0) + 1
+        here = f"{kit}/" if kit else "основной docs/"
+        lines[1:1] = [f"i {OTHER_KIT} {there + '/' if there else 'основной docs/'}: "
+                      f"страниц {cnt} — по строкам «комплект …» профиля источников, "
+                      f"покрытие — в прогоне того комплекта (измеряется {here})"
+                      for there, cnt in sorted(per_kit.items())]
+        n_i = 1 + len(per_kit)
+        lines[n_i:n_i] = [f"⚠ комплект {there}/ объявлен, каталога нет — его страницы ({cnt}) "
+                          "считаются в этом комплекте" for there, cnt in sorted(absent_kits.items())]
 
     # К-17 (2026-08-17): блок непокрытых печатается БЕЗ page_id — в
     # формате, пригодном для прямого копирования в open-questions

@@ -45,6 +45,21 @@ def test_core_modules_not_marked():
     assert marked == []
 
 
+# проверки ядра, слой которых записан явно строкой таблицы «Слои прибора» README канона: пометки
+# не несут, без выгрузки работают полностью
+CORE_EXPLICIT = (
+    "kitcheck/checks/call_algorithms.py",  # сторож «в карточке вызова нет алгоритмов», 11.11
+)
+
+
+@pytest.mark.parametrize("rel", CORE_EXPLICIT)
+def test_core_check_explicit_not_marked(rel):
+    assert (CI / rel).is_file() and rel not in MIGRATION
+    lines = _lines(rel)
+    assert lines[0] == f"# app/scripts/CI/{rel}"
+    assert not any("Слой: миграция" in ln for ln in lines)
+
+
 def test_migration_list_points_to_existing_files():
     assert [rel for rel in MIGRATION if not (CI / rel).is_file()] == []
 

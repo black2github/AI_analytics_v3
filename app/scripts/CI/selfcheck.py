@@ -93,11 +93,12 @@ try:
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root)
     from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
+    from kitcheck.checks.call_algorithms import check_call_algorithms  # noqa: E402 — 11.11
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
@@ -122,11 +123,12 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root)
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
+    from .kitcheck.checks.call_algorithms import check_call_algorithms  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
 
@@ -244,17 +246,24 @@ def run(docs: Path, sources: Optional[Path],
         include_nested: bool = False,
         bundle: Optional[Path] = None,
         allow_sibling_docs: bool = False,
-        inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
+        inventory: Optional[Path] = None,
+        kit: Optional[str] = None) -> Tuple[List[str], bool]:
     """Прогон самопроверки комплекта: (строки отчёта, вердикт OK).
 
     Файлы комплекта и выгрузки читаются с диска один раз за прогон — через
     кэш `kitcheck.fs` (сессия на время прогона). raw — архив sources/raw
     для raw-оракула снятий (FB-32, по умолчанию выключен). inventory — опись
     выгрузки явно (гейт переноса гоняет прибор на временной копии docs/, описи
-    рядом нет); без него опись ищется в docs, затем рядом с docs."""
+    рядом нет); без него опись ищется в docs, затем рядом с docs. kit — комплект прогона
+    в исходном репозитории с несколькими комплектами (путь строки «комплект <путь>» профиля
+    источников; "" — основной docs/): гейт передаёт его явно — он гоняет прибор на временной
+    копии; None — определить по месту --docs (kit_of_root)."""
     with _fs.session():
+        if kit is None:
+            _k = kit_of_root(docs)
+            kit = _k[1] if _k is not None else ""
         return _run_impl(docs, sources, strict, catalog, raw, introduced, include_nested, bundle,
-                         allow_sibling_docs=allow_sibling_docs, inventory=inventory)
+                         allow_sibling_docs=allow_sibling_docs, inventory=inventory, kit=kit)
 
 
 def _load_raw_oracle(bundle: Optional[Path]):
@@ -322,7 +331,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
               include_nested: bool = False,
               bundle: Optional[Path] = None,
               allow_sibling_docs: bool = False,
-              inventory: Optional[Path] = None) -> Tuple[List[str], bool]:
+              inventory: Optional[Path] = None,
+              kit: str = "") -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -670,7 +680,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
-                    unsourced=unsourced)
+                    unsourced=unsourced, kit=kit)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
@@ -704,6 +714,7 @@ class _KitCtx:
     groups: Dict[str, List[Path]]
     idx: Dict[str, Path]
     unsourced: List[Tuple[Path, str]] = field(default_factory=list)  # без --sources: карточка, page_id
+    kit: str = ""  # комплект прогона: путь строки «комплект …» профиля источников; "" — основной
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -727,7 +738,12 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     # ✗ на prompts/ у первого исполнителя v2.x (2026-09-11).
     # С «--docs .» docs.parent == docs («.».parent == «.») — тот же случай.
     _docs_r = docs.resolve()
-    if (_docs_r / ".git").exists() or _docs_r.parent == _docs_r:
+    # второй комплект исходного репозитория (строка «комплект <путь>» профиля источников в
+    # README предка): корень проверки — корень репозитория, та же проверка, что в прогоне docs/
+    _decl = kit_of_root(docs)
+    if _decl is not None:
+        root = _decl[0]
+    elif (_docs_r / ".git").exists() or _docs_r.parent == _docs_r:
         root = _docs_r                      # комплект = корень репозитория
     elif (_docs_r.parent / ".git").exists():
         root = _docs_r.parent               # стендовая: <root>/docs
@@ -759,6 +775,15 @@ def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
                       + ("; глоссарий доменный" if _gm == "domain" else
                          "; глоссарий доменный + указатели" if _gm == "pointers"
                          else ""))
+    # объявленные комплекты репозитория: верхний каталог каждого корня штатный; объявленный
+    # корень без каталога — ⚠ (комплект может быть ещё не заведён), вердикт не меняет.
+    # Необъявленный каталог остаётся посторонним
+    for _kit in declared_kits(root / "README.md"):
+        _ok_dirs.add(_kit.split("/")[0])
+        if not (root / _kit).is_dir():
+            report.append(f"⚠ корень репозитория: комплект {_kit}/ объявлен в профиле источников "
+                          "(строка «комплект …» таблицы «Разметка подсервисов»), каталога нет — "
+                          "объявление без комплекта")
     # штатные не-markdown файлы GitLab-репозитория комплекта
     _ok_files = {"CODEOWNERS", "gpb-manifest.json"}
     if sources is not None:
@@ -1057,6 +1082,14 @@ def _kc_review_guards(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return report, True
 
 
+def _kc_call_algorithms(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторож «в карточке вызова нет алгоритмов» (шаблон contract-call.md, раздел B, 11.11.2026):
+    раздел вне состава, «Процессы» не указатель, шаги вне таблиц привязки — по строке ⚠ на признак
+    с числом карточек, перечень — в --out. Только ⚠, вердикт не меняет."""
+    rep, _ = _safe(lambda: (check_call_algorithms(ctx.docs), True))
+    return rep, True
+
+
 def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Сторож приписки сообщения (FB-12 КК, kitcheck.checks.card_controls._fc_message_attribution) не
     выполнен: у карточного файла контролей страница не указана или на ней нет таблицы с
@@ -1244,10 +1277,14 @@ def _kc_sources_protocol(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     if sources is not None:
         # сторож разметки подсервисов (П-4): без таблицы в профиле
         # возвращает пусто и молчит
-        sm_rep, sm_ok = _safe(check_subservice_mapping, docs, sources,
-                              {pid: fs[0] for pid, fs in groups.items()})
+        _cards = {pid: fs[0] for pid, fs in groups.items()}
+        sm_rep, sm_ok = _safe(check_subservice_mapping, docs, sources, _cards, ctx.kit or None)
         all_ok = all_ok and sm_ok
         report.extend(sm_rep)
+        # сторож «страница → свой комплект»: без строк «комплект …» в профиле молчит
+        km_rep, km_ok = _safe(check_kit_mapping, docs, sources, _cards, ctx.kit or None)
+        all_ok = all_ok and km_ok
+        report.extend(km_rep)
         # сторож среза канона (П-5b): без строки в профиле молчит
         cut_rep, cut_ok = _safe(check_canon_cut, sources, canon_head())
         all_ok = all_ok and cut_ok
@@ -1411,7 +1448,7 @@ def _kc_source_coverage(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         # остаток конвейера (судьба фиксируется долгами), не дефект
         # проверяемых карточек; на вердикт не влияет
         try:
-            cov_lines, _n_unc = sc.coverage_report(sources, docs)
+            cov_lines, _n_unc = sc.coverage_report(sources, docs, kit=ctx.kit)
         except Exception as e:
             cov_lines = [f"КРАШ проверки: {e!r} — покрытие не оценено"]
         report.append("i покрытие выгрузки (миграционный гейт, "
@@ -1454,6 +1491,7 @@ KIT_CHECKS: List[Check] = [
     Check("spellings", _kc_spellings, affects_verdict=False),
     Check("branch_form", _kc_branch_form, affects_verdict=False),
     Check("review_guards", _kc_review_guards, affects_verdict=False),
+    Check("call_algorithms", _kc_call_algorithms, affects_verdict=False),
     Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
           affects_verdict=False),
     Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),

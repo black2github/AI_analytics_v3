@@ -195,6 +195,8 @@ import link_debts as ld  # noqa: E402
 import source_coverage as cov  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.fs import find_kit_file  # noqa: E402
+from kitcheck.checks.source_profile import (  # noqa: E402
+    _profile_path, declared_kits, kit_of_root, kit_rows)
 from kitcheck.checks.review_guards import (  # noqa: E402
     OQ_STATUS_RE, check_oq_close_form, oq_entries, oq_status_class)
 
@@ -510,9 +512,66 @@ def question_candidates(src_root: Path, docs: Path,
     return out
 
 
+# поле записи журнала «Комплект: <путь корня комплекта от корня репозитория>» — журнал один на
+# исходный репозиторий с несколькими комплектами (строки «комплект …» профиля источников); та же
+# терпимость к оформлению, что у строки «Статус» (с жирным и без)
+_OQ_KIT_RE = re.compile(r"^\s*-\s*(?:\*\*Комплект:?\*\*:?|Комплект:)\s*([^\n]+)$", re.M)
+_OQ_PID_RE = re.compile(r"(?<!\d)(\d{6,})(?!\d)")
+
+
+def _oq_kit_scope(src_root: Path, sources: Optional[Path]):
+    """(объявленные комплекты, {page_id: комплект} строк с матчером page_id) по профилю
+    источников; None — строк «комплект …» нет, поле записи не читается (прежнее поведение)."""
+    profile = _profile_path(sources)[1] if sources is not None else src_root / "README.md"
+    krows = kit_rows(profile)
+    if not krows:
+        return None
+    pids: Dict[str, str] = {}
+    for matcher, path in krows:
+        if matcher.isdigit():
+            pids.setdefault(matcher, path)
+    return declared_kits(profile), pids
+
+
+def _oq_entry_kit(num: str, head: str, body: str, scope, here: Optional[str],
+                  warns: List[str], opened: bool) -> Optional[str]:
+    """Комплект записи журнала: путь из поля «Комплект»; без поля и «docs» — основной (None).
+    Значение вне объявленных — ⚠ с номером, запись за основным (в сторону сохранения). Запись без
+    поля, открытая и называющая страницу второго комплекта (page_id в заголовке или теле), — ⚠ в
+    прогоне основного комплекта; запись остаётся за основным."""
+    kits, pids = scope
+    m = _OQ_KIT_RE.search(body)
+    if m:
+        val = m.group(1).strip().strip("`*").strip().strip("/")
+        if val in kits:
+            return val
+        if val != "docs":
+            warns.append(f"OQ-{num}: поле «Комплект: {val}» не совпало ни с одним комплектом "
+                         "профиля источников (строки «комплект …») и не «docs» — запись считается "
+                         "за основным комплектом; поправить значение поля")
+        return None
+    if opened and here is None:
+        hit = next(((pid, pids[pid]) for pid in _OQ_PID_RE.findall(head + "\n" + body)
+                    if pid in pids), None)
+        if hit is not None:
+            warns.append(f"OQ-{num}: открытая запись без поля «Комплект» называет страницу "
+                         f"{hit[0]}, объявленную в комплект {hit[1]}/ — запись считается за "
+                         f"основным комплектом; если вопрос того комплекта — поле «Комплект: "
+                         f"{hit[1]}»")
+    return None
+
+
 def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
-                   explicit: Optional[Path] = None) -> Tuple[Optional[Path], List[str]]:
-    """Файл журнала и список открытых OQ (пусто — открытых нет)."""
+                   explicit: Optional[Path] = None, kit: Optional[str] = None,
+                   kit_info: Optional[dict] = None) -> Tuple[Optional[Path], List[str]]:
+    """Файл журнала и список открытых OQ (пусто — открытых нет). kit — комплект прогона
+    (путь строки «комплект …»; "" — основной; None — журнал целиком, как прежде): при строках
+    «комплект …» в профиле считаются только записи своего комплекта по полю «Комплект».
+    kit_info — сюда пишутся «warns» (строки ⚠) и «other» (открытых записей других комплектов)."""
+    scope = _oq_kit_scope(src_root, sources) if kit is not None else None
+    here = kit or None
+    warns: List[str] = []
+    other = 0
     for cand in question_candidates(src_root, docs, sources, explicit):
         if cand.is_file():
             text = cand.read_text(encoding="utf-8", errors="replace")
@@ -524,9 +583,16 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
                 # при …)» — закрыт, подстрока «открыт» внутри пояснения не открывает вопрос (КК,
                 # 7 записей); «частично» — открыт (асимметрия ошибок)
                 cls = oq_status_class(status) if st else ""
-                if not st or cls in ("открыт", "частично") or (
-                        cls == "прочие" and any(w in status for w in _OPEN_WORDS)):
+                is_open = not st or cls in ("открыт", "частично") or (
+                    cls == "прочие" and any(w in status for w in _OPEN_WORDS))
+                if scope is not None and _oq_entry_kit(num, _head, body, scope, here, warns,
+                                                       is_open) != here:
+                    other += 1 if is_open else 0
+                    continue
+                if is_open:
                     opened.append(f"OQ-{num}" + ("" if st else " (без строки «Статус»)"))
+            if kit_info is not None and scope is not None:
+                kit_info.update(warns=warns, other=other)
             return cand, opened
     return None, []
 
@@ -534,7 +600,8 @@ def open_questions(src_root: Path, docs: Path, sources: Optional[Path] = None,
 def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                               staged: Path, docs_repo: bool = False,
                               sources: Optional[Path] = None,
-                              questions: Optional[Path] = None) -> None:
+                              questions: Optional[Path] = None,
+                              kit: Optional[str] = None) -> None:
     matrix = staged / "traceability-matrix.md"
     mtext = matrix.read_text(encoding="utf-8", errors="replace") if matrix.is_file() else ""
     # правило переноса (решение владельца 2026-10-13): открытый вопрос либо
@@ -574,7 +641,17 @@ def check_transfer_conditions(gate: Gate, src_root: Path, docs: Path,
                  "каждая строка раздела обязана быть одного из форматов долга "
                  "(см. link_debts); первая: " + unrecognized[0][:100],
                  check="нераспознанные долги")
-    oq_file, opened = open_questions(src_root, docs, sources, questions)
+    kit_info: dict = {}
+    oq_file, opened = open_questions(src_root, docs, sources, questions, kit, kit_info)
+    if kit_info:
+        # журнал общий для исходного репозитория с несколькими комплектами: считаются записи
+        # своего комплекта (поле «Комплект»), чужие — числом, без молчаливого пропуска
+        gate.add("i", "CORE-20", f"журнал вопросов общий для репозитория: считаются записи "
+                 f"комплекта {kit + '/' if kit else 'основной docs/'} (поле «Комплект»; без поля — "
+                 f"основной); открытых записей других комплектов: {kit_info['other']}",
+                 check="открытые вопросы")
+        for w in kit_info["warns"]:
+            gate.add("⚠", "CORE-20", w, check="поле «Комплект» журнала вопросов")
     if oq_file is None and docs_repo:
         gate.add("i", "CORE-20", "режим репозитория документации: журнал open-questions.md "
                  "сюда не переезжает (TRF-02), открытые вопросы комплекта — строки долга вида "
@@ -961,15 +1038,18 @@ def find_sources(src_root: Path) -> Optional[Path]:
 
 def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
                   strict: bool, inventory: Optional[Path] = None,
-                  raw: Optional[Path] = None, bundle: Optional[Path] = None) -> None:
+                  raw: Optional[Path] = None, bundle: Optional[Path] = None,
+                  kit: str = "") -> None:
     """selfcheck на собранной копии комплекта. inventory — опись выгрузки источника
     (inventory.md рядом с docs/ или в корне репозитория документации, либо явный --inventory):
     в копию она не переносится, а доводы прибора по описи (копия страницы метода, страница вне
     подсервиса) без неё не срабатывают — гейт расходился бы с прямым прогоном того же дерева.
-    raw, bundle — ключи selfcheck --raw / --bundle как есть."""
+    raw, bundle — ключи selfcheck --raw / --bundle как есть. kit — комплект прогона в исходном
+    репозитории с несколькими комплектами (строка «комплект <путь>» профиля; "" — основной):
+    копия лежит во временном каталоге, по её месту комплект не определить — передаётся явно."""
     try:
         report, ok = sc.run(staged, sources, strict=strict, inventory=inventory,
-                            raw=raw, bundle=bundle)
+                            raw=raw, bundle=bundle, kit=kit)
     except Exception as e:  # noqa: BLE001
         gate.add("✗", "ПРИБОР", f"selfcheck упал: {e!r} — комплект не проверен")
         return
@@ -998,6 +1078,11 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
                 # (структурный файл не разбирается) — ⚠ того же критерия, текст как в selfcheck;
                 # строки карточек (с отступом) — в счётчике «⚠ примеры» строки ИТОГО
                 gate.add("⚠", crit, st[1:].strip(), check="примеры")
+            elif not s.startswith(" ") and st.startswith("⚠ карточка вызова — "):
+                # сторож «в карточке вызова нет алгоритмов» (шаблон contract-call.md, 11.11.2026):
+                # строка с числом карточек на признак, без блокировки; перечень — в --out selfcheck;
+                # i-строки сторожа гейт не переносит
+                gate.add("⚠", crit, st[1:].strip(), check="карточка вызова без алгоритмов")
     total = next((ln for ln in report if ln.startswith("ИТОГО")), "")
     mode = ("полный профиль" if strict else "командный профиль") + (
         f", источники {sources.as_posix()}" if sources else ", БЕЗ источников")
@@ -1458,6 +1543,15 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      check="служебные файлы миграции")
         if sources is None:
             sources = find_sources(src_root)
+        # второй комплект исходного репозитория (строка «комплект <путь>» профиля источников):
+        # опись, план миграции и журнал вопросов — общие для репозитория, в его корне
+        _decl = None if docs_repo else kit_of_root(docs)
+        kit = _decl[1] if _decl is not None else ""
+        if kit:
+            gate.add("i", "РЕЖИМ", f"комплект {kit}/ объявлен в профиле источников (строка "
+                     "«комплект …»): прибор и покрытие считают страницы других комплектов "
+                     "репозитория классом «другой комплект»; опись, план и журнал вопросов — "
+                     "общие для репозитория", check="раскладка")
         if after_step:
             gate.add("i", "ПРИБОР", "selfcheck не гонялся (режим --after-step), вердикт "
                      "прибора — в сдаче", check="прибор selfcheck")
@@ -1472,9 +1566,9 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
                      "с источником; задайте --sources")
         kit_files = kit_inventory(gate, docs, inventory)
         if not after_step:
-            run_selfcheck(gate, staged, sources, strict, kit_files[0], raw, bundle)
+            run_selfcheck(gate, staged, sources, strict, kit_files[0], raw, bundle, kit)
         check_transfer_conditions(gate, src_root, docs, staged, docs_repo,
-                                  sources, questions)
+                                  sources, questions, kit)
         if after_step:
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
         own = check_own_debts(gate, staged, docs, after_step, own_debts, kit_files)
