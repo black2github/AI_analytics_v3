@@ -99,6 +99,7 @@ try:
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.call_algorithms import check_call_algorithms  # noqa: E402 — 11.11
+    from kitcheck.checks.call_contract_props import check_call_contract_props  # noqa: E402 — 13.11
     from kitcheck.checks.card_deviation import DEVIATION_PREFIX  # noqa: E402 — 11.11
     from kitcheck.checks.task_tags import check_task_tags  # noqa: E402 — введена = тег
     from kitcheck.checks.task_tags import task_tags  # noqa: E402 — raw-оракул: введена = тег
@@ -130,6 +131,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.call_algorithms import check_call_algorithms  # type: ignore  # noqa: E402
+    from .kitcheck.checks.call_contract_props import check_call_contract_props  # type: ignore  # noqa: E402
     from .kitcheck.checks.card_deviation import DEVIATION_PREFIX  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import check_task_tags  # type: ignore  # noqa: E402
     from .kitcheck.checks.task_tags import task_tags  # type: ignore  # noqa: E402
@@ -1100,6 +1102,14 @@ def _kc_call_algorithms(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return rep, True
 
 
+def _kc_call_contract_props(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторож свойств контракта и кодов параметров в карточке вызова (шаблон contract-call.md, раздел B,
+    решения владельца канона 13.11.2026): колонки типа, обязательности, кратности у карточки с базовым
+    контрактом — ✗ строкой на карточку; без базового контракта — ⚠ строкой комплекта; строки таблиц
+    привязки без кода у карточек с базовым контрактом — ⚠, вердикт не меняют. Перечни — в --out."""
+    return _safe(lambda: check_call_contract_props(ctx.docs))
+
+
 def _kc_message_attribution_unchecked(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Сторож приписки сообщения (FB-12 КК, kitcheck.checks.card_controls._fc_message_attribution) не
     выполнен: у карточного файла контролей страница не указана или на ней нет таблицы с
@@ -1502,6 +1512,7 @@ KIT_CHECKS: List[Check] = [
     Check("branch_form", _kc_branch_form, affects_verdict=False),
     Check("review_guards", _kc_review_guards, affects_verdict=False),
     Check("call_algorithms", _kc_call_algorithms, affects_verdict=False),
+    Check("call_contract_props", _kc_call_contract_props, affects_verdict=True),
     Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
           affects_verdict=False),
     Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),

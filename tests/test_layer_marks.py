@@ -50,6 +50,7 @@ def test_core_modules_not_marked():
 # не несут, без выгрузки работают полностью
 CORE_EXPLICIT = (
     "kitcheck/checks/call_algorithms.py",  # сторож «в карточке вызова нет алгоритмов», 11.11
+    "kitcheck/checks/call_contract_props.py",  # сторож свойств контракта и кодов параметров, 13.11
 )
 
 
