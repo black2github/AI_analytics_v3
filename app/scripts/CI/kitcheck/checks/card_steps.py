@@ -31,7 +31,7 @@ _STEP_MARKER_RE = re.compile(
 _MARGIN_RE = re.compile(r"margin-left:\s*([\d.]+)\s*px", re.IGNORECASE)
 _BEHAVIOR_CELL_RE = re.compile(r"что\s+делает\s+функци", re.IGNORECASE)
 # алгоритм МЕТОДА: сверяется только когда карточка несёт раздел
-# «Поведение» (функция метода, FUN-SYS); карточка контракта INTC
+# «Поведение» (функция метода; её контур — по контракту); карточка контракта INTC
 # алгоритм законно не несёт — сверка не её (перенос — заходом
 # create-function, потеря без долга сторожится правилом скилла)
 _BEHAVIOR_CELL_METHOD_RE = re.compile(r"что\s+делает\s+метод", re.IGNORECASE)

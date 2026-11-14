@@ -1093,6 +1093,11 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
                 # internal-contracts.md, 13.11.2026) — так же, как сторож карточек вызова: строка
                 # с числом карточек на признак, без блокировки; перечень — в --out selfcheck
                 gate.add("⚠", crit, st[1:].strip(), check="карточка контракта без алгоритма")
+            elif not s.startswith(" ") and st.startswith("⚠ функция метода — "):
+                # сторож «контур функции метода не совпадает с контуром контракта» (шаблоны
+                # internal-contracts.md, function.md, 14.11.2026): строка с числом пар, без
+                # блокировки; перечень — в --out selfcheck
+                gate.add("⚠", crit, st[1:].strip(), check="контур функции метода")
     total = next((ln for ln in report if ln.startswith("ИТОГО")), "")
     mode = ("полный профиль" if strict else "командный профиль") + (
         f", источники {sources.as_posix()}" if sources else ", БЕЗ источников")
