@@ -1088,6 +1088,11 @@ def run_selfcheck(gate: Gate, staged: Path, sources: Optional[Path],
                 # строка с числом карточек на признак, без блокировки; перечень — в --out selfcheck;
                 # i-строки сторожа гейт не переносит
                 gate.add("⚠", crit, st[1:].strip(), check="карточка вызова без алгоритмов")
+            elif not s.startswith(" ") and st.startswith("⚠ карточка внутреннего контракта — "):
+                # сторож «в карточке внутреннего контракта нет алгоритма» (шаблон
+                # internal-contracts.md, 13.11.2026) — так же, как сторож карточек вызова: строка
+                # с числом карточек на признак, без блокировки; перечень — в --out selfcheck
+                gate.add("⚠", crit, st[1:].strip(), check="карточка контракта без алгоритма")
     total = next((ln for ln in report if ln.startswith("ИТОГО")), "")
     mode = ("полный профиль" if strict else "командный профиль") + (
         f", источники {sources.as_posix()}" if sources else ", БЕЗ источников")
