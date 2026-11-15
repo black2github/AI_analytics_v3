@@ -187,3 +187,32 @@ def test_selfcheck_registry_affects_verdict(tmp_path):
     _w(docs / "srs/contract-call/external/call-ext-001-x.md", card(base=NO_BASE, body=PROPS))
     rep, ok = chk[0].run(type("Ctx", (), {"docs": docs})())
     assert ok is True and rep[0].startswith("⚠ свойства контракта временно живут")
+
+
+# --- текст ✗: два выхода у голого «Тип» (замечание 15.11) ---
+
+def test_bare_type_only_message_names_both_exits(tmp_path):
+    # в шапке только «Тип», без обязательности и кратности (пример CALL-EXT-003 — виды квитанций):
+    # ✗ называет оба выхода, чтобы колонку другого смысла не убрали вместе с содержанием
+    body = ("### Обработка входящих ответов\n\n| № | Тип | Процесс O2+ (шаг) | Действие |\n"
+            "|---|---|---|---|\n| 1 | НОК | [PROC-005](p.md) | x |\n")
+    rep, ok = _run(tmp_path, {"srs/contract-call/external/call-ext-001-x.md": card(body=body)})
+    assert ok is False
+    assert rep == [
+        "✗ карточка вызова CALL-EXT-001 (srs/contract-call/external/call-ext-001-x.md): свойства "
+        "контракта записаны второй раз — у карточки есть базовый контракт (EXTINT-X-001. Метод X); "
+        "«Обработка входящих ответов» — «Тип» — тип, обязательность и кратность живут в базовом "
+        "контракте, колонки убрать; колонка «Тип»: если это тип параметра — убрать, если она другого "
+        "смысла (вид сообщения, вид документа) — назвать полностью, например «Тип сообщения», "
+        "содержание сохранить (шаблон contract-call.md)"]
+
+
+def test_no_bare_type_message_unchanged(tmp_path):
+    # несрабатывание оговорки: «Тип данных», «Обяз.», «Кратность» — голого «Тип» нет, текст прежний
+    body = ("### Формат запроса\n\n| Параметр | Тип данных | Обяз. | Кратность |\n"
+            "|---|---|---|---|\n| a | Строка | Да | [1] |\n")
+    rep, ok = _run(tmp_path, {"srs/contract-call/external/call-ext-001-x.md": card(body=body)})
+    assert ok is False and len(rep) == 1
+    assert rep[0].endswith("«Формат запроса» — «Тип данных», «Обяз.», «Кратность» — тип, обязательность "
+                           "и кратность живут в базовом контракте, колонки убрать (шаблон contract-call.md)")
+    assert "Тип сообщения" not in rep[0]
