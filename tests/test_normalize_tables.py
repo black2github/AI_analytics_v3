@@ -2775,6 +2775,24 @@ class TestTuzFormulaAndTargetMentions:
             "не применяются.\n")
         assert ok and rep == []
 
+    def test_system_formula_without_tuz_bold_flagged(self):
+        # вторая форма (функция без вызова бэка, библиотечная процедура; решение 15.11) — в жирном
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
+        for text in ("- **Системная функция; роли и привилегии не применяются.**\n",
+                     "- **Системная функция;** роли и привилегии не применяются.\n",
+                     "Системная функция; **роли и привилегии не применяются**.\n"):
+            rep, ok = check_tuz_formula(text)
+            assert not ok and "без ТУЗ обёрнута в жирный ×1" in rep[0], text
+
+    def test_system_formula_without_tuz_plain_ok(self):
+        # НЕсрабатывание: обе формы обычным шрифтом; жирный ярлык рядом с формулой — не формула
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
+        rep, ok = check_tuz_formula(
+            "## 2. Доступность\n\n- Системная функция; роли и привилегии не применяются.\n"
+            "- Системная функция; вызов с ТУЗ; роли и привилегии не применяются.\n"
+            "- **Код привилегии:** —\n- **Системная функция** вызывается процессом.\n")
+        assert ok and rep == []
+
     def test_existing_title_without_link_warned(self, tmp_path):
         from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
