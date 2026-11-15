@@ -229,7 +229,9 @@ def run_check(files: List[Path], source_path: Optional[Path],
               inventory: Optional[Path] = None,
               group_extra_sources: Optional[List[Tuple[Path, Path]]] = None,
               call_cards: Optional[List[Path]] = None,
-              outside_eco: bool = False
+              outside_eco: bool = False,
+              mention_tags: frozenset = frozenset(),
+              mention_labels: Optional[list] = None
               ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
@@ -257,7 +259,11 @@ def run_check(files: List[Path], source_path: Optional[Path],
 
     outside_eco — главная карточка лежит в части вне контура Экосистемы (каталог `srs/<слаг>/`
     с зоной `вне Экосистемы <слаг>` в разметке профиля; вычисляет вызывающий — selfcheck
-    по профилю источников): передаётся в check_file."""
+    по профилю источников): передаётся в check_file.
+
+    mention_tags — теги титулов страниц выгрузки (при --sources), mention_labels — сборщик ярлыков
+    строк таблиц, которые сторож упоминаний целей не судит: (отн. путь, строка, тег, ярлык);
+    по нему selfcheck печатает строку i на комплект (check_target_mentions)."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -340,7 +346,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
         card_text, combined = blank_notes(card_text), blank_notes(combined)
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards, mention_tags=mention_tags, mention_labels=mention_labels)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -371,6 +377,8 @@ class _SourceCtx:
     inventory: object = None
     group_extra_sources: object = None
     call_cards: object = None
+    mention_tags: object = frozenset()
+    mention_labels: object = None
 
 
 
@@ -454,9 +462,16 @@ def _rc_tagged_mentions(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     ok = True
     # теговые упоминания целей: ссылка или долг (софт, вердикт не трогает)
     if docs_root is not None:
+        found: List[Tuple[str, int, str]] = []
         tm_report, _ = check_target_mentions(card_text, main_file,
-                                             docs_root)
+                                             docs_root, fx.mention_tags or frozenset(), found)
         report.extend(tm_report)
+        if found and fx.mention_labels is not None:
+            try:
+                rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()
+            except (OSError, ValueError):
+                rel = main_file.name
+            fx.mention_labels.extend((rel, n, tag, text) for tag, n, text in found)
     return report, ok
 
 

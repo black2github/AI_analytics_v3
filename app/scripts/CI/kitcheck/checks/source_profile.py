@@ -248,6 +248,23 @@ def _page_head(src_file: Path, sources: Path) -> Tuple[Optional[str], str, str]:
     return (pid_m.group(1) if pid_m else None), title, branch
 
 
+_TITLE_TAG_RE = re.compile(r"^\[[^\]\n]+\]")
+
+
+@_fs.memoize()
+def source_title_tags(sources: Path) -> frozenset:
+    """Теги, которые открывают титулы страниц выгрузки (шапка файла, поле title). Сторож
+    упоминаний целей: тег страницы источника остаётся маркером цели, даже если карточки с таким
+    титулом в комплекте нет."""
+    out = set()
+    for f in Path(sources).rglob("*.md"):
+        _pid, title, _branch = _page_head(f, sources)
+        m = _TITLE_TAG_RE.match(title)
+        if m:
+            out.add(m.group(0))
+    return frozenset(out)
+
+
 def _stand_root(sources: Path) -> Path:
     """Корень стенда/репозитория источника по каталогу выгрузки.
 

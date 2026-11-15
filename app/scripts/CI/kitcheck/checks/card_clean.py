@@ -470,11 +470,48 @@ def _docs_card_titles(docs_root: Path) -> List[Tuple[str, str]]:
     return out
 
 
+_TITLE_TAG_RE = re.compile(r"^\[[^\]]+\]")
+
+
+def kit_title_tags(docs_root: Path) -> frozenset:
+    """Теги, которые открывают титулы карточек комплекта (указатель _docs_card_titles)."""
+    return frozenset(m.group(0) for title, _rel in _docs_card_titles(docs_root)
+                     for m in [_TITLE_TAG_RE.match(title)] if m)
+
+
+def _in_first_cell(text: str, pos: int) -> bool:
+    """Позиция стоит в первой ячейке строки markdown-таблицы (строка начинается с «|», до второй
+    вертикальной черты)."""
+    ls = text.rfind("\n", 0, pos) + 1
+    line = text[ls:pos]
+    st = line.lstrip()
+    return st.startswith("|") and "|" not in st[1:]
+
+
+def _label_line(card_text: str, tag: str, core: str) -> int:
+    """Номер строки файла карточки с ярлыком «тег имя» в первой ячейке; 0 — не найдена."""
+    words = core.split()[:3]
+    for n, ln in enumerate(card_text.splitlines(), 1):
+        st = ln.lstrip()
+        if st.startswith("|") and tag in st and all(w in st for w in words):
+            return n
+    return 0
+
+
 def check_target_mentions(card_text: str, md_path: Path,
-                          docs_root: Path) -> Tuple[List[str], bool]:
+                          docs_root: Path, source_tags: frozenset = frozenset(),
+                          labels: Optional[List[Tuple[str, int, str]]] = None
+                          ) -> Tuple[List[str], bool]:
     """Софт-сторож: теговые упоминания целей вне markdown-ссылок.
     Существующая карточка → «оформить ссылкой»; неизвестная цель без
-    следа в матрице → «ссылка или долг». Вердикт не меняет (⚠)."""
+    следа в матрице → «ссылка или долг». Вердикт не меняет (⚠).
+
+    Ярлык строки таблицы — не упоминание (постановка 15.11, решение постановщика): тег стоит в
+    первой ячейке строки таблицы И не открывает ни одного титула — ни карточек комплекта, ни
+    (source_tags, при выгрузке) страниц выгрузки. Инвариант сторожа — тег маркирует титул
+    страницы; тег, которым не открывается ни один титул, цели не называет («[DEV] Метод API» в
+    паспорте). Такие вхождения не судятся, а складываются в labels — (тег, строка, ярлык): по ним
+    selfcheck печатает одну строку i на комплект, чтобы исключение не было молчаливым."""
     body = _fm_body(card_text)
     body = re.sub(r"<!--.*?-->", " ", body, flags=re.S)
     body = _blank_md_links(body)
@@ -520,10 +557,17 @@ def check_target_mentions(card_text: str, md_path: Path,
     except OSError:
         mtext = ""
     seen: Dict[str, Tuple[str, int]] = {}
+    known_tags = kit_title_tags(docs_root) | frozenset(source_tags)
     for m in _MENTION_TAG_RE.finditer(flat):
         tail = flat[m.end():m.end() + 120]
         core = _mention_core(tail)
         if not core:
+            continue
+        tag = flat[m.start():m.end()].strip()
+        if tag not in known_tags and _in_first_cell(flat, m.start()):
+            if labels is not None:
+                labels.append((tag, _label_line(card_text, tag, core),
+                               re.sub(r"\s+", " ", f"{tag} {core}")[:70]))
             continue
         # игла — БЕЗ тега, первые ≤3 слова: реестр ID и долги матрицы
         # пишут имена без тегов; свободные формулировки длиннее иглы
