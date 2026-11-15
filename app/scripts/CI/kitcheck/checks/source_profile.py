@@ -10,6 +10,7 @@ from typing import Dict
 from typing import List
 from typing import Optional
 from typing import Tuple
+import json
 import re
 try:
     from kitcheck import fs as _fs
@@ -170,6 +171,68 @@ def kit_of_root(docs: Path) -> Optional[Tuple[Path, str]]:
         if rel in declared_kits(root / "README.md"):
             return root, rel
     return None
+
+
+_MANIFEST = "gpb-manifest.json"
+
+
+def _manifest_name(root: Path) -> Tuple[Optional[str], str]:
+    """(поле name манифеста корня домена | None, что не так — для строки ⚠)."""
+    p = Path(root) / _MANIFEST
+    try:
+        data = json.loads(_fs.read_text(p, encoding="utf-8", errors="replace"))
+    except OSError:
+        return None, f"{_MANIFEST} в корне домена нет"
+    except ValueError:
+        return None, f"{_MANIFEST} корня домена не разбирается"
+    name = data.get("name") if isinstance(data, dict) else None
+    if not isinstance(name, str) or not name.strip():
+        return None, f"в {_MANIFEST} корня домена нет поля name"
+    return name.strip(), ""
+
+
+def kit_by_declaration(docs: Path, sources: Optional[Path]) -> Tuple[str, Optional[str]]:
+    """Комплект прогона в целевом репозитории домена — по объявлениям, без имён папок клона
+    (решение постановщика 15.11, вариант Б′): путь строки «комплект <путь>» профиля источников —
+    `<имя целевого репозитория>/<каталог комплекта команды>` (шаблон sources-readme.md); в
+    целевом обе половины объявлены: имя — поле name манифеста корня домена, каталог — строка
+    таблицы «Комплекты команд» README домена (domain_context).
+
+    (путь комплекта, строка отчёта | None); "" — основной. Строка: «i» — комплект определён;
+    «⚠» — профиль объявляет комплекты, комплект прогона лежит в домене, а пара не нашлась
+    (прогон считается основным, сторож «страница → свой комплект» судит как прежде). Нет
+    выгрузки, нет строк «комплект …» или комплект не в домене — ("", None): прежнее поведение."""
+    if sources is None:
+        return "", None
+    kits = declared_kits(_profile_path(sources)[1])
+    if not kits:
+        return "", None
+    dom = domain_context(docs)
+    if dom is None:
+        return "", None
+    folder = Path(docs).resolve().name
+    name, why = _manifest_name(dom[0])
+    if name is not None and f"{name}/{folder}" in kits:
+        return f"{name}/{folder}", (
+            f"i комплект прогона {name}/{folder}/ — по объявлениям целевого: name «{name}» "
+            f"манифеста корня домена + каталог «{folder}» таблицы «Комплекты команд» = строка "
+            "«комплект …» профиля источников")
+    half = (f"имя репозитория — {why}" if name is None else
+            f"путь «{name}/{folder}» (name «{name}» манифеста корня домена + каталог «{folder}» "
+            "таблицы «Комплекты команд») не объявлен строкой «комплект …» профиля источников")
+    return "", (f"⚠ комплект прогона по объявлению не определён: каталог «{folder}» есть в таблице "
+                f"«Комплекты команд», {half}; объявлены: {', '.join(kits)}; прогон считается "
+                "основным")
+
+
+def kit_of_run(docs: Path, sources: Optional[Path]) -> Tuple[str, Optional[str]]:
+    """Комплект прогона: в исходном репозитории — по строке «комплект …» профиля предка
+    (kit_of_root, поведение прежнее); иначе — по объявлениям целевого (kit_by_declaration).
+    (путь комплекта, строка отчёта | None); "" — основной."""
+    k = kit_of_root(docs)
+    if k is not None:
+        return k[1], None
+    return kit_by_declaration(docs, sources)
 
 
 def _page_head(src_file: Path, sources: Path) -> Tuple[Optional[str], str, str]:

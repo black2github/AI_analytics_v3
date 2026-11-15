@@ -93,7 +93,7 @@ try:
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run)
     from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
@@ -128,7 +128,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run)
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
@@ -267,13 +267,16 @@ def run(docs: Path, sources: Optional[Path],
     рядом нет); без него опись ищется в docs, затем рядом с docs. kit — комплект прогона
     в исходном репозитории с несколькими комплектами (путь строки «комплект <путь>» профиля
     источников; "" — основной docs/): гейт передаёт его явно — он гоняет прибор на временной
-    копии; None — определить по месту --docs (kit_of_root)."""
+    копии; None — определить по месту --docs и объявлениям (kit_of_run: в исходном репозитории —
+    строка профиля предка, в целевом репозитории домена — name манифеста + каталог таблицы
+    «Комплекты команд»)."""
     with _fs.session():
+        kit_note = None
         if kit is None:
-            _k = kit_of_root(docs)
-            kit = _k[1] if _k is not None else ""
+            kit, kit_note = kit_of_run(docs, sources)
         return _run_impl(docs, sources, strict, catalog, raw, introduced, include_nested, bundle,
-                         allow_sibling_docs=allow_sibling_docs, inventory=inventory, kit=kit)
+                         allow_sibling_docs=allow_sibling_docs, inventory=inventory, kit=kit,
+                         kit_note=kit_note)
 
 
 def _load_raw_oracle(bundle: Optional[Path]):
@@ -342,7 +345,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
               bundle: Optional[Path] = None,
               allow_sibling_docs: bool = False,
               inventory: Optional[Path] = None,
-              kit: str = "") -> Tuple[List[str], bool]:
+              kit: str = "", kit_note: Optional[str] = None) -> Tuple[List[str], bool]:
     # Два профиля (Р-8, 2026-08-22): командный (по умолчанию) — маркеры
     # сокращения предупреждением (3/3 ложняков на эталоне); полный
     # (--strict, прогоны держателей канона) — маркеры браком, как раньше.
@@ -694,7 +697,7 @@ def _run_impl(docs: Path, sources: Optional[Path],
     _kctx = _KitCtx(docs=docs, sources=sources, strict=strict, catalog=catalog,
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
-                    unsourced=unsourced, kit=kit)
+                    unsourced=unsourced, kit=kit, kit_note=kit_note, inventory=inventory)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
@@ -729,6 +732,8 @@ class _KitCtx:
     idx: Dict[str, Path]
     unsourced: List[Tuple[Path, str]] = field(default_factory=list)  # без --sources: карточка, page_id
     kit: str = ""  # комплект прогона: путь строки «комплект …» профиля источников; "" — основной
+    kit_note: Optional[str] = None  # строка i/⚠ определения комплекта по объявлениям целевого
+    inventory: Optional[Path] = None  # опись выгрузки явно (--inventory)
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -1335,6 +1340,8 @@ def _kc_sources_protocol(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         all_ok = all_ok and sm_ok
         report.extend(sm_rep)
         # сторож «страница → свой комплект»: без строк «комплект …» в профиле молчит
+        if ctx.kit_note:
+            report.append(ctx.kit_note)
         km_rep, km_ok = _safe(check_kit_mapping, docs, sources, _cards, ctx.kit or None)
         all_ok = all_ok and km_ok
         report.extend(km_rep)
@@ -1501,7 +1508,8 @@ def _kc_source_coverage(ctx: "_KitCtx") -> Tuple[List[str], bool]:
         # остаток конвейера (судьба фиксируется долгами), не дефект
         # проверяемых карточек; на вердикт не влияет
         try:
-            cov_lines, _n_unc = sc.coverage_report(sources, docs, kit=ctx.kit)
+            cov_lines, _n_unc = sc.coverage_report(sources, docs, inventory=ctx.inventory,
+                                                   kit=ctx.kit)
         except Exception as e:
             cov_lines = [f"КРАШ проверки: {e!r} — покрытие не оценено"]
         report.append("i покрытие выгрузки (миграционный гейт, "

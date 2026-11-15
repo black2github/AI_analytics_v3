@@ -196,7 +196,7 @@ import source_coverage as cov  # noqa: E402
 from kitcheck.checks._common import domain_context  # noqa: E402
 from kitcheck.fs import find_kit_file  # noqa: E402
 from kitcheck.checks.source_profile import (  # noqa: E402
-    _profile_path, declared_kits, kit_of_root, kit_rows)
+    _profile_path, declared_kits, kit_by_declaration, kit_of_root, kit_rows)
 from kitcheck.checks.review_guards import (  # noqa: E402
     OQ_STATUS_RE, check_oq_close_form, oq_entries, oq_status_class)
 
@@ -1468,11 +1468,16 @@ def detect_layout(src_root: Path, docs_name: str) -> Tuple[Optional[Path], bool]
     """(каталог комплекта, режим репозитория документации). Рабочий репозиторий
     миграции несёт комплект в `docs/`; репозиторий документации (целевой,
     `docs-<service-id>`) — в корне: там есть матрица трассировки, а `docs/` нет.
-    Ключ --docs . включает режим явно."""
+    Ключ --docs . включает режим явно. Комплект команды в репозитории домена
+    (`--src <клон> --docs <каталог>`, каталог — строка таблицы «Комплекты команд»
+    README домена, матрица трассировки в нём) — тоже репозиторий документации: режим
+    определяется по объявлению домена, а не по форме ключей (решение постановщика 15.11)."""
     docs = src_root / docs_name
     if docs_name in (".", "") or docs.resolve() == src_root.resolve():
         return src_root, True
     if docs.is_dir():
+        if (docs / "traceability-matrix.md").is_file() and domain_context(docs) is not None:
+            return docs, True
         return docs, False
     if (src_root / "traceability-matrix.md").is_file():
         return src_root, True
@@ -1559,10 +1564,17 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         if sources is None:
             sources = find_sources(src_root)
         # второй комплект исходного репозитория (строка «комплект <путь>» профиля источников):
-        # опись, план миграции и журнал вопросов — общие для репозитория, в его корне
-        _decl = None if docs_repo else kit_of_root(docs)
-        kit = _decl[1] if _decl is not None else ""
-        if kit:
+        # опись, план миграции и журнал вопросов — общие для репозитория, в его корне.
+        # В репозитории документации комплект прогона — по объявлениям целевого (name манифеста
+        # корня домена + каталог таблицы «Комплекты команд»), если задана выгрузка
+        if docs_repo:
+            kit, kit_note = kit_by_declaration(docs, sources)
+            if kit_note:
+                gate.add(kit_note[0], "РЕЖИМ", kit_note[2:], check="раскладка")
+        else:
+            _decl = kit_of_root(docs)
+            kit = _decl[1] if _decl is not None else ""
+        if kit and not docs_repo:
             gate.add("i", "РЕЖИМ", f"комплект {kit}/ объявлен в профиле источников (строка "
                      "«комплект …»): прибор и покрытие считают страницы других комплектов "
                      "репозитория классом «другой комплект»; опись, план и журнал вопросов — "
@@ -1587,7 +1599,7 @@ def run_gate(src_root: Path, docs_name: str = "docs", out: Optional[Path] = None
         if after_step:
             gate.downgrade(_AFTER_STEP_DOWNGRADE, _AFTER_STEP_NOTE)
         own = check_own_debts(gate, staged, docs, after_step, own_debts, kit_files)
-        check_target_repo(gate, src_root if docs_repo else out, in_place=docs_repo)
+        check_target_repo(gate, docs if docs_repo else out, in_place=docs_repo)
         if no_validator:
             gate.add("⚠", "ВАЛИДАТОР", "валидатор платформы отключён ключом "
                      "--no-validator — структурная половина гейта не выполнена")

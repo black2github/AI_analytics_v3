@@ -49,13 +49,13 @@ try:
     from kitcheck.md import stray_table_lines  # noqa: E402
     from source_inventory import _UNAPPROVED_RE  # noqa: E402
     from kitcheck.checks.source_profile import (  # noqa: E402
-        _profile_path, kit_of_page, kit_of_root, kit_rows)
+        _profile_path, kit_of_page, kit_of_root, kit_of_run, kit_rows)
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck import fs as _fs  # type: ignore  # noqa: E402
     from .kitcheck.md import stray_table_lines  # type: ignore  # noqa: E402
     from .source_inventory import _UNAPPROVED_RE  # type: ignore  # noqa: E402
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402
-        _profile_path, kit_of_page, kit_of_root, kit_rows)
+        _profile_path, kit_of_page, kit_of_root, kit_of_run, kit_rows)
 
 _FM_BOUND = re.compile(r"^---\s*$")
 _TITLE_RE = re.compile(r"^title:\s*(.+?)\s*$")
@@ -482,15 +482,15 @@ def coverage_report(sources: Path, output: Path,
     и selfcheck-диспетчера. Бракующие: с описью — пробелы миграции и
     страницы вне описи; без описи — все непокрытые (прежнее поведение).
     kit — измеряемый комплект исходного репозитория с несколькими комплектами (путь строки
-    «комплект <путь>» профиля; "" — основной; None — по месту --output): непокрытая страница
+    «комплект <путь>» профиля; "" — основной; None — по месту --output и объявлениям целевого,
+    kit_of_run): непокрытая страница
     другого комплекта — класс «другой комплект», в пробелы и бракующие не входит."""
     pages, parents, covered, no_id, orphan_dirs = collect(sources, output)
     inv_path = inventory if inventory is not None else find_kit_file(output, "inventory.md")
     inv = (read_inventory(inv_path)
            if inv_path is not None and inv_path.is_file() else None)
     if kit is None:
-        _k = kit_of_root(output)
-        kit = _k[1] if _k is not None else ""
+        kit = kit_of_run(output, sources)[0]
     other_kit, krows, absent_kits = classify_kits(pages, sources, kit)
     uncovered = {pid: p for pid, p in pages.items()
                  if pid not in covered and pid not in other_kit}
