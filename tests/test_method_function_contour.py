@@ -69,6 +69,16 @@ def test_contract_contours_subdir_then_auth():
     assert auth_contours(["Код авторизации в тексте"]) is None
 
 
+def test_auth_line_with_label_before_word():
+    # метка в квадратных скобках перед словом (КК: «[DEV] Авторизация», 15.11)
+    assert auth_contours(["| [DEV] Авторизация | Bearer Token (OAuth 2.0) |"]) == {"CL", "BNK"}
+    assert auth_contours(["| [DEV] Авторизация: | Bearer Token (OAuth 2.0) |"]) == {"CL", "BNK"}
+    assert auth_contours(["| **[DEV] Авторизация** | ТУЗ |"]) == {"SYS"}
+    # шапка таблицы README и слово не в первой ячейке — не строка паспорта
+    assert auth_contours(["| Подкаталог | Назначение | Авторизация |"]) is None
+    assert auth_contours(["| [DEV] Код | Авторизация |"]) is None
+
+
 # --- срабатывание ---
 
 def test_system_function_for_client_contract_by_link(tmp_path):

@@ -507,10 +507,10 @@ def test_root_markdown_and_std_dirs_ok(tmp_path):
 def test_warning_visible_on_ok_file(tmp_path):
     # предупреждения печатаются и при ✓ (софт-сигнал Э-12)
     docs = tmp_path / "docs"
-    make(docs / "srs/functions/bank/f1.md",
+    make(docs / "srs/functions/bank/fun-bnk-01-f1.md",
          "---\nid: FUN-BNK-01\ntitle: 'Ф1'\ntype: function\n---\n\n"
          "## Доступность\n\nДоступна всегда.\n")
-    make_matrix(docs, "| FUN-BNK-01 | function | Ф1 | f1.md |\n")
+    make_matrix(docs, "| FUN-BNK-01 | function | Ф1 | fun-bnk-01-f1.md |\n")
     report, ok = selfcheck.run(docs, None)
     assert ok
     assert any("предупреждение" in ln for ln in report)
@@ -1737,10 +1737,12 @@ class TestReadmeLegend:
         docs = tmp_path / "docs"
         if readme is not None:
             make(docs / "README.md", readme)
-        make(docs / "srs/function/f1.md", _typed("FUN-CL-01", "function", "confluence_page_ids: [1234]\n"))
+        make(docs / "srs/function/client/fun-cl-01-f1.md",
+             _typed("FUN-CL-01", "function", "confluence_page_ids: [1234]\n"))
         make(docs / "srs/internal-contract/i1.md", _typed("INTC-001", "internal-contract"))
         make(docs / "srs/process/status-model.md", _typed("SM-000", "process"))
-        make_matrix(docs, "| FUN-CL-01 | function | Ф | f1.md |\n| INTC-001 | internal-contract | К | i1.md |\n"
+        make_matrix(docs, "| FUN-CL-01 | function | Ф | fun-cl-01-f1.md |\n"
+                          "| INTC-001 | internal-contract | К | i1.md |\n"
                           "| SM-000 | process | С | status-model.md |\n")
         report, ok = selfcheck.run(docs, None)
         legend = [ln.strip() for ln in report if "условные обозначения" in ln.lower()

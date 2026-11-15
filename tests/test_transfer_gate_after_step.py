@@ -65,7 +65,7 @@ def test_core20_debt_reading_rule_not_downgraded(tmp_path):
            "| FUN-CL-01 | — | нет целевого артефакта data-model «Карта» у владельца cards — "
            "требуется заход create-data-model |\n")
     src = make_src(tmp_path, matrix=_MATRIX + row)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта»; см."))
     lines, ready, _ = _run(src, after_step=True)
     assert not ready and _line(lines, "✗ [CORE-20] перенесённые долги: 1")
 

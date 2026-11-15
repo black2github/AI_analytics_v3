@@ -57,7 +57,7 @@ def _src(tmp_path: Path, *rows: str, inventory: bool = True) -> Path:
     src = make_src(tmp_path, matrix=_matrix(*rows))
     # прежние сторожа долгов довольны: README объясняет раздел, имена целей есть в карточке
     _w(src / "docs/README.md", _README + "\n### Долги по ссылкам\n\nПравило чтения.\n")
-    _w(src / "docs/srs/function/f1.md", _CARD + "\n[КК] Живая страница, Метод, [КК] Нет такой\n")
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD + "\n[КК] Живая страница, Метод, [КК] Нет такой\n")
     if inventory:
         _w(src / "inventory.md", INVENTORY)
         _w(src / "migration-plan.md", PLAN)

@@ -13,9 +13,9 @@ _README = ("# К\n\n## Условные обозначения\n\n| Префик
            "### Поля frontmatter\n\n| Поле | Назначение |\n|---|---|\n| `title` | наименование |\n\n"
            "## Разделы\n")
 _CARD = ("---\nid: FUN-CL-01\ntitle: 'Ф'\ntype: function\nservice: X\n---\n\n"
-         "# Ф\n\nсм. [матрицу](../../traceability-matrix.md)\n")
+         "# Ф\n\nсм. [матрицу](../../../traceability-matrix.md)\n")
 _MATRIX = ("# Матрица\n\n## 1. Реестр ID\n\n| ID | Тип | Наименование | Файл |\n"
-           "|---|---|---|---|\n| FUN-CL-01 | function | Ф | srs/function/f1.md |\n"
+           "|---|---|---|---|\n| FUN-CL-01 | function | Ф | srs/function/client/fun-cl-01-f1.md |\n"
            "| VIS-001 | vision | В | service-vision.md |\n| GLO-001 | glossary | Г | glossary.md |\n\n"
            "## 3. Покрытие: API ↔ SRS\n\n| Операция | Артефакты SRS |\n| --- | --- |\n")
 _OQ_CLOSED = "# Открытые вопросы\n\n## OQ-001. Вопрос\n- **Статус:** закрыт\n- **Решение:** да\n"
@@ -33,7 +33,7 @@ def make_src(tmp_path: Path, oq: str = _OQ_CLOSED, matrix: str = _MATRIX) -> Pat
     _w(src / "docs/service-vision.md", "---\nid: VIS-001\ntype: vision\n---\n# В\n")
     _w(src / "docs/glossary.md", "---\nid: GLO-001\ntype: glossary\n---\n# Г\n")
     _w(src / "docs/traceability-matrix.md", matrix)
-    _w(src / "docs/srs/function/f1.md", _CARD)
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD)
     _w(src / "open-questions.md", oq)
     _w(src / "prompts/p1.md", "промпт")
     _w(src / "sandbox/x.txt", "x")
@@ -81,15 +81,15 @@ def test_api_dir_blocks(tmp_path):
 def test_service_files_not_staged(tmp_path):
     src = make_src(tmp_path)
     _w(src / "docs/open-questions.md", _OQ_CLOSED)
-    _w(src / "docs/srs/function/f1.filled.md", "x")
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.filled.md", "x")
     keep = tmp_path / "staged"
     lines, ready, _ = _run(src, keep=keep)
     assert ready, "\n".join(lines)
     assert not (keep / "open-questions.md").exists()
     assert not (keep / "feedback.md").exists()
-    assert not (keep / "srs/function/f1.filled.md").exists()
+    assert not (keep / "srs/function/client/fun-cl-01-f1.filled.md").exists()
     assert not (keep / "prompts").exists()
-    assert (keep / "srs/function/f1.md").is_file() and (keep / "README.md").is_file()
+    assert (keep / "srs/function/client/fun-cl-01-f1.md").is_file() and (keep / "README.md").is_file()
     assert any("служебных файлов миграции не перенесено: 3" in l for l in lines)
 
 
@@ -128,7 +128,7 @@ def test_missing_readme_blocks_and_legend_warns(tmp_path):
 
 def test_selfcheck_defect_blocks_with_criterion(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("../../traceability-matrix.md", "../none.md"))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("../../../traceability-matrix.md", "../none.md"))
     lines, ready, _ = _run(src)
     assert not ready
     assert any(l.startswith("✗ [CORE-06] битые относительные ссылки") for l in lines)
@@ -149,9 +149,9 @@ def test_validator_clean_kit_and_bom_example(tmp_path):
     assert ready, "\n".join(lines)
     assert any("[ВАЛИДАТОР] ошибок нет" in l for l in lines)
     src = make_src(tmp_path / "b")
-    _w(src / "docs/srs/function/f1.md",
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md",
        _CARD.replace("см.", "пример [r](examples/r.json); см."))
-    p = src / "docs/srs/function/examples/r.json"
+    p = src / "docs/srs/function/client/examples/r.json"
     p.parent.mkdir(parents=True)
     p.write_bytes(b"\xef\xbb\xbf{}")
     lines, ready, data = _run(src, no_validator=False)
@@ -171,7 +171,7 @@ _DEBT_RULE = ("### Долги по ссылкам\n\n| Поле поручени
 def test_debts_require_reading_rule_in_readme(tmp_path):
     src = make_src(tmp_path, matrix=_MATRIX + _DEBT_ROW)
     # имена целей долгов упомянуты в карточке дословно — иначе долг неисполним (✗ прибора)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     lines, ready, _ = _run(src)
     assert not ready
     assert any(l.startswith("✗ [CORE-20] перенесённые долги: 2, из них межсервисных 1")
@@ -228,7 +228,7 @@ def test_oq_translated_to_debt_not_blocker(tmp_path):
     matrix = _MATRIX + ("\n## 5. Долги по ссылкам\n\n| От | — | Долг |\n|---|---|---|\n"
                         "| FUN-CL-01 | — | нет целевого артефакта process «Выпуск» — требуется заход create-process; вопрос OQ-002 |\n")
     src = make_src(tmp_path, oq=_OQ_OPEN, matrix=matrix)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Выпуск»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Выпуск»; см."))
     _w(src / "docs/README.md", _README.replace("## Разделы\n", "### Долги по ссылкам\n\nправило\n\n## Разделы\n"))
     lines, ready, data = _run(src)
     assert ready, "\n".join(lines)
@@ -272,10 +272,10 @@ def test_oq_issue_debt_incomplete_blocks(tmp_path):
 def test_debt_register_affected_and_closure(tmp_path):
     # «Затронуто»: карточка, ссылающаяся на FROM-ID, попадает в реестр; условие закрытия по виду
     src = make_src(tmp_path, matrix=_MATRIX.replace(
-        "| VIS-001 |", "| FUN-CL-02 | function | Ф2 | srs/function/f2.md |\n| VIS-001 |") + _DEBT_ROW)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
-    _w(src / "docs/srs/function/f2.md",
-       "---\nid: FUN-CL-02\ntitle: 'Ф2'\ntype: function\nservice: X\n---\n\n# Ф2\n\nсм. [Ф](f1.md)\n")
+        "| VIS-001 |", "| FUN-CL-02 | function | Ф2 | srs/function/client/fun-cl-02-f2.md |\n| VIS-001 |") + _DEBT_ROW)
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-02-f2.md",
+       "---\nid: FUN-CL-02\ntitle: 'Ф2'\ntype: function\nservice: X\n---\n\n# Ф2\n\nсм. [Ф](fun-cl-01-f1.md)\n")
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, data = _run(src, fmt="table")
     assert ready, "\n".join(lines)
@@ -296,7 +296,7 @@ def make_docs_repo(tmp_path: Path, codeowners: bool = True) -> Path:
     _w(repo / "service-vision.md", "---\nid: VIS-001\ntype: vision\n---\n# В\n")
     _w(repo / "glossary.md", "---\nid: GLO-001\ntype: glossary\n---\n# Г\n")
     _w(repo / "traceability-matrix.md", _MATRIX)
-    _w(repo / "srs/function/f1.md", _CARD)
+    _w(repo / "srs/function/client/fun-cl-01-f1.md", _CARD)
     if codeowners:
         _w(repo / "CODEOWNERS", "* @team-x\n")
     _w(repo / "gpb-manifest.json", '{"name": "docs-x", "owner": "team-x"}\n')
@@ -400,8 +400,8 @@ def test_types_outside_platform_set_listed(tmp_path):
 
 def test_txt_example_that_parses_is_warned(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/examples/r.txt", '{"a": 1}')
-    _w(src / "docs/srs/function/examples/frag.txt", '{"a": 1,')
+    _w(src / "docs/srs/function/client/examples/r.txt", '{"a": 1}')
+    _w(src / "docs/srs/function/client/examples/frag.txt", '{"a": 1,')
     lines, _, _ = _run(src)
     hits = [l for l in lines if l.startswith("⚠ [FMT-01] пример помечен фрагментом")]
     assert len(hits) == 1 and "examples/r.txt" in hits[0] and "frag.txt" not in hits[0]
@@ -417,9 +417,9 @@ def test_txt_json_with_trailing_comma_not_warned(tmp_path):
     # пометка шаблона «фрагмент, в источнике не разбирается»: JSON с висячей запятой строгим
     # разбором невалиден — .txt по норме, предупреждения нет (раньше YAML принимал его)
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md",
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md",
        _CARD.replace("см.", "пример [r](examples/r.txt) — фрагмент, в источнике не разбирается; см."))
-    _w(src / "docs/srs/function/examples/r.txt", '{"a": 1, "b": [1, 2,],}')
+    _w(src / "docs/srs/function/client/examples/r.txt", '{"a": 1, "b": [1, 2,],}')
     lines, ready, _ = _run(src)
     assert ready, "\n".join(lines)
     assert not _fmt(lines), "\n".join(lines)
@@ -427,8 +427,8 @@ def test_txt_json_with_trailing_comma_not_warned(tmp_path):
 
 def test_txt_valid_xml_warned_prose_not(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/examples/r.txt", "<a><b/></a>")
-    _w(src / "docs/srs/function/examples/note.txt", "Обычный текст: значение, ещё значение")
+    _w(src / "docs/srs/function/client/examples/r.txt", "<a><b/></a>")
+    _w(src / "docs/srs/function/client/examples/note.txt", "Обычный текст: значение, ещё значение")
     lines, _, _ = _run(src)
     hits = [l for l in lines if l.startswith("⚠ [FMT-01] пример помечен фрагментом")]
     assert len(hits) == 1 and "examples/r.txt" in hits[0] and "note.txt" not in hits[0], hits
@@ -436,31 +436,31 @@ def test_txt_valid_xml_warned_prose_not(tmp_path):
 
 def test_json_with_trailing_comma_is_examples_warning(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
-    _w(src / "docs/srs/function/examples/r.json", '{"a": 1,}')
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
+    _w(src / "docs/srs/function/client/examples/r.json", '{"a": 1,}')
     lines, ready, _ = _run(src)
     assert ready, "\n".join(lines)
     fmt = _fmt(lines)
     # один вердикт на файл: строка selfcheck класса «примеры», сторож .txt молчит
     assert len(fmt) == 1 and fmt[0].startswith("⚠ [FMT-01] примеры: структурный файл "
-                                               "srs/function/examples/r.json не разбирается"), fmt
+                                               "srs/function/client/examples/r.json не разбирается"), fmt
 
 
 def test_valid_json_clean(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
-    _w(src / "docs/srs/function/examples/r.json", '{"a": 1}')
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "пример [r](examples/r.json); см."))
+    _w(src / "docs/srs/function/client/examples/r.json", '{"a": 1}')
     lines, ready, _ = _run(src)
     assert ready and not [l for l in _fmt(lines) if l.startswith(("⚠", "✗"))], "\n".join(lines)
 
 
 def test_empty_sidecar_is_fmt01_defect(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "пример [r](examples/r.txt); см."))
-    _w(src / "docs/srs/function/examples/r.txt", "  \n")
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "пример [r](examples/r.txt); см."))
+    _w(src / "docs/srs/function/client/examples/r.txt", "  \n")
     lines, ready, _ = _run(src)
     assert not ready
-    assert any(l.startswith("✗ [FMT-01] sidecar srs/function/examples/r.txt пуст") for l in lines), \
+    assert any(l.startswith("✗ [FMT-01] sidecar srs/function/client/examples/r.txt пуст") for l in lines), \
         "\n".join(lines)
 
 
@@ -469,12 +469,12 @@ def test_catalog_without_readme_warned(tmp_path):
     _w(src / "docs/srs/data-model/e1.md", "---\nid: ENT-001\ntype: data-model\nservice: X\n---\n# С\n")
     _w(src / "docs/traceability-matrix.md", _MATRIX.replace("| VIS-001 |", "| ENT-001 | data-model | С | srs/data-model/e1.md |\n| VIS-001 |"))
     lines, _, _ = _run(src)
-    assert any(l.startswith("⚠ [SDLC-08] каталоги с карточками без README-реестра: 2 (srs/data-model, srs/function)") for l in lines), "\n".join(lines)
+    assert any(l.startswith("⚠ [SDLC-08] каталоги с карточками без README-реестра: 2 (srs/data-model, srs/function/client)") for l in lines), "\n".join(lines)
 
 
 def test_external_links_listed(tmp_path):
     src = make_src(tmp_path)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "[рег](https://cbr.ru/x) [рег2](https://cbr.ru/y) см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "[рег](https://cbr.ru/x) [рег2](https://cbr.ru/y) см."))
     lines, _, _ = _run(src)
     assert any(l.startswith("i [CORE-09] внешних ссылок 2: cbr.ru ×2") for l in lines)
 
@@ -551,7 +551,7 @@ def _make_shared_src(tmp_path: Path, oq: str) -> Path:
                       ("output/svc/glossary.md",
                        "---\nid: GLO-001\ntype: glossary\n---\n# Г\n"),
                       ("output/svc/traceability-matrix.md", _MATRIX),
-                      ("output/svc/srs/function/f1.md", _CARD),
+                      ("output/svc/srs/function/client/fun-cl-01-f1.md", _CARD),
                       ("sources/svc/confluence/p1.md", "---\ntitle: 'Ф'\n---\nтекст\n")):
         _w(src / rel, text)
     if oq:
@@ -604,7 +604,7 @@ def test_unrecognized_debt_row_blocks_transfer(tmp_path):
     rows = (_DEBT_ROW.rstrip("\n")
             + "\n| FUN-CL-01 | — | уточнить у владельца формат (свободный текст) |\n")
     src = make_src(tmp_path, matrix=_MATRIX + rows)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, _ = _run(src)
     assert not ready
@@ -615,7 +615,7 @@ def test_unrecognized_debt_row_blocks_transfer(tmp_path):
 def test_nonstandard_debts_heading_blocks_transfer(tmp_path):
     rows = _DEBT_ROW.replace("## 5. Долги по ссылкам", "## Долги ссылок")
     src = make_src(tmp_path, matrix=_MATRIX + rows)
-    _w(src / "docs/srs/function/f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
+    _w(src / "docs/srs/function/client/fun-cl-01-f1.md", _CARD.replace("см.", "использует «Карта» и «Выпуск»; см."))
     _w(src / "docs/README.md", _README.replace("## Разделы\n", _DEBT_RULE + "## Разделы\n"))
     lines, ready, _ = _run(src)
     assert not ready
