@@ -100,6 +100,7 @@ try:
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from kitcheck.checks.call_algorithms import check_call_algorithms  # noqa: E402 — 11.11
     from kitcheck.checks.call_contract_props import check_call_contract_props  # noqa: E402 — 13.11
+    from kitcheck.checks.call_one_caller import check_call_one_caller  # noqa: E402 — 16.11
     from kitcheck.checks.intc_algorithms import check_intc_algorithms  # noqa: E402 — 13.11
     from kitcheck.checks.method_function_contour import check_method_function_contour  # noqa: E402 — 14.11
     from kitcheck.checks.function_placement import check_function_placement  # noqa: E402 — 15.11
@@ -135,6 +136,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         check_thick_calls, check_unnormalized_sources, check_oq_close_form, oq_class_counter)
     from .kitcheck.checks.call_algorithms import check_call_algorithms  # type: ignore  # noqa: E402
     from .kitcheck.checks.call_contract_props import check_call_contract_props  # type: ignore  # noqa: E402
+    from .kitcheck.checks.call_one_caller import check_call_one_caller  # type: ignore  # noqa: E402
     from .kitcheck.checks.intc_algorithms import check_intc_algorithms  # type: ignore  # noqa: E402
     from .kitcheck.checks.method_function_contour import check_method_function_contour  # type: ignore  # noqa: E402
     from .kitcheck.checks.function_placement import check_function_placement  # type: ignore  # noqa: E402
@@ -1134,6 +1136,13 @@ def _kc_call_contract_props(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     return _safe(lambda: check_call_contract_props(ctx.docs))
 
 
+def _kc_call_one_caller(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Сторож «карточка вызова — одна вызывающая функция» (шаблон contract-call.md, раздел B, решение
+    владельца канона 16.11.2026): в одном разделе карточки две и более таблицы с подписями-ссылками на
+    разные функции (процессы, экранные формы, контроли) — ✗ строкой на карточку."""
+    return _safe(lambda: check_call_one_caller(ctx.docs))
+
+
 def _kc_table_labels(ctx: "_KitCtx") -> Tuple[List[str], bool]:
     """Ярлыки строк таблиц с тегом вне титулов (постановка 15.11): сторож упоминаний целей их не
     судит — тег в первой ячейке строки таблицы, который не открывает ни одного титула карточек
@@ -1589,6 +1598,7 @@ KIT_CHECKS: List[Check] = [
     Check("review_guards", _kc_review_guards, affects_verdict=False),
     Check("call_algorithms", _kc_call_algorithms, affects_verdict=False),
     Check("call_contract_props", _kc_call_contract_props, affects_verdict=True),
+    Check("call_one_caller", _kc_call_one_caller, affects_verdict=True),
     Check("intc_algorithms", _kc_intc_algorithms, affects_verdict=False),
     Check("method_function_contour", _kc_method_function_contour, affects_verdict=False),
     Check("function_placement", _kc_function_placement, affects_verdict=True),
