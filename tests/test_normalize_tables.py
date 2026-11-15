@@ -2793,6 +2793,25 @@ class TestTuzFormulaAndTargetMentions:
             "- **Код привилегии:** —\n- **Системная функция** вызывается процессом.\n")
         assert ok and rep == []
 
+    def test_system_formula_plain_between_bold_labels_ok(self):
+        # НЕсрабатывание: формула обычным шрифтом между жирными ярлыками на одной строке (обе формы),
+        # жирный ярлык только до и только после — жирные фрагменты разбираются парами
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
+        for formula in ("Системная функция; роли и привилегии не применяются.",
+                        "Системная функция; вызов с ТУЗ; роли и привилегии не применяются."):
+            for text in (f"**Доступность:** {formula} **Примечание:** нет.\n",
+                         f"- **Доступность:** {formula}\n",
+                         f"- {formula} **Примечание:** нет.\n"):
+                rep, ok = check_tuz_formula(text)
+                assert ok and rep == [], text
+
+    def test_system_formula_bold_next_to_bold_label_flagged(self):
+        # срабатывание сохраняется рядом с жирными ярлыками: формула сама в жирном фрагменте
+        from app.scripts.CI.kitcheck.checks.card_clean import check_tuz_formula
+        rep, ok = check_tuz_formula(
+            "**Доступность:** **Системная функция; роли и привилегии не применяются.** **Примечание:** нет.\n")
+        assert not ok and "×1" in rep[0]
+
     def test_existing_title_without_link_warned(self, tmp_path):
         from app.scripts.CI.kitcheck.checks.card_clean import check_target_mentions
         docs = self._docs(tmp_path)
