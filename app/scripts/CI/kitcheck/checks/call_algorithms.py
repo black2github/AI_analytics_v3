@@ -94,6 +94,11 @@ _STEP_LABEL_RE = re.compile(
     r"(?:^|\||<br\s*/?>)\s*(?:[-*+]\s+|\d+[.)]\s+)?(?:\*\*)?\s*Шаг\s*№?\s*\d", re.I)
 _STEP_JUMP_RE = re.compile(
     r"(?:переход\w*|перейти|возврат\w*|вернуться)\s+(?:к|на)\s+шаг\w*\s*№?\s*\d", re.I)
+# ячейка места вызова в «Процессах»: ведущий ярлык «Шаг <код>.» с именем шага следом — место, а не
+# граница предложения; код шага — номер с буквенным префиксом или хвостом («C4», «2.3», «4а»):
+# «Шаг C4. Проверка статуса карты» (КК CALL-EXT-049, ложное срабатывание 16.11; решение «Точек»)
+_PLACE_STEP_RE = re.compile(
+    r"^\s*(?:\*\*)?\s*Шаг\s*№?\s*[A-Za-zА-Яа-яЁё]{0,3}\d+(?:\.\d+)*[A-Za-zА-Яа-яЁё]?\s*\.(?:\*\*)?\s+", re.I)
 
 
 def _norm(title: str) -> str:
@@ -300,7 +305,9 @@ def _processes(lines: List[str], region: List[str]) -> List[Tuple[int, str]]:
             kinds.append("ветвление в ячейке")
         # текст в ячейке — у таблицы любой ширины: перенос строки или больше одного предложения;
         # в колонках после места вызова — ещё ярлык шага и переход на шаг (эвристика признака 3)
-        if any(re.search(r"<br\s*/?>", c) or _SENTENCE_RE.search(_LINK_RE.sub(" ", c)) for c in cells) \
+        if any(re.search(r"<br\s*/?>", c)
+               or _SENTENCE_RE.search(_LINK_RE.sub(" ", _PLACE_STEP_RE.sub("", c, 1) if n == 1 else c))
+               for n, c in enumerate(cells)) \
                 or any(_STEP_LABEL_RE.search("|" + c) or _STEP_JUMP_RE.search(c) for c in cells[2:]):
             kinds.append("текст сверх ссылки и места вызова")
         if kinds:

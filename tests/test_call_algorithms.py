@@ -118,6 +118,22 @@ def test_sentence_boundary_ignores_step_number_and_abbreviation():
         assert s(card(procs=procs), "s2") == [], place
 
 
+def test_place_step_label_with_code_not_sentence_boundary():
+    # КК CALL-EXT-049 (16.11): «Шаг C4. Проверка статуса карты» — номер шага с буквой и имя шага, место
+    # вызова; заглавная аббревиатура «C4.» в начале ячейки места границей предложения не считается
+    for place in ("Шаг C4. Проверка статуса карты", "Шаг 2.3. Скачивание файла", "**Шаг C4.** Проверка статуса",
+                  "Шаг №4а. Отправка запроса"):
+        procs = PROC_OK.replace("Шаг 4. Формирование запроса", place)
+        assert s(card(procs=procs), "s2") == [], place
+
+
+def test_place_step_label_does_not_hide_text():
+    # срабатывание сохраняется: после ярлыка шага — два предложения; ярлык не в начале ячейки
+    for place in ("Шаг C4. Проверка статуса карты. Далее запрос в АС", "Проверка статуса, шаг C4. Далее запрос"):
+        procs = PROC_OK.replace("Шаг 4. Формирование запроса", place)
+        assert [w for _n, w in s(card(procs=procs), "s2")] == ["текст сверх ссылки и места вызова"], place
+
+
 def test_processes_retelling_in_cell():
     procs = PROC_OK.replace("Шаг 4. Формирование запроса",
                             "Шаг 4. Выполняется запрос в АС. Ответ сохраняется в заявку")
