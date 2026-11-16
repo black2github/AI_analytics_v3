@@ -33,8 +33,9 @@ REGISTRY = """| ID | Название | Файл |
 def kit(tmp_path: Path, fun_extra: str = "", registry: str = REGISTRY,
         fun_row: str = "| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — |",
         legacy: bool = False) -> Path:
-    """legacy — матрица по шаблону до колонки «Уведомления» (2026-10-19); иначе строка
-    функции в прежнем виде (6 ячеек) получает «—» в «Уведомлениях»."""
+    """legacy — матрица по шаблону до колонок «Уведомления» (2026-10-19) и «Вызовы» у функций
+    (2026-11-16); иначе строка функции в прежнем виде (6 ячеек) получает «—» в «Уведомлениях»,
+    строка без «Вызовов» (7 ячеек) — «—» третьей ячейкой."""
     docs = tmp_path / "docs"
     if legacy:
         fun_hdr = "| Функция | Название | Экраны | Данные | Контроли | Печатные формы |\n| --- | --- | --- | --- | --- | --- |\n"
@@ -45,9 +46,11 @@ def kit(tmp_path: Path, fun_extra: str = "", registry: str = REGISTRY,
         cells = [c.strip() for c in fun_row.strip().strip("|").split("|")]
         if len(cells) == 6:
             cells.insert(5, "—")
-            fun_row = "| " + " | ".join(cells) + " |"
-        fun_hdr = ("| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |\n"
-                   "| --- | --- | --- | --- | --- | --- | --- |\n")
+        if len(cells) == 7:
+            cells.insert(2, "—")
+        fun_row = "| " + " | ".join(cells) + " |"
+        fun_hdr = ("| Функция | Название | Вызовы | Экраны | Данные | Контроли | Уведомления | Печатные формы |\n"
+                   "| --- | --- | --- | --- | --- | --- | --- | --- |\n")
         proc_hdr = ("| Процесс | Название | Вызывает | Функции | Вызовы | Уведомления | Экраны | Контроли | Данные | Печатные формы |\n"
                     "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n")
         proc_row = "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — | — |\n"
@@ -133,7 +136,7 @@ def test_write_rebuilds_derived_keeps_manual_bytes_bom_crlf(tmp_path):
     assert "Вводный текст раздела — ручной." in _section(t1, "Реестр ID")
     assert "| SCR-CL-05 | снят 2026-08-30: тип изменён, преемник FUN-CL-01 | — |" in t1
     assert "| SCR-CL-02 | Список | `srs/screen-form/scr-cl-02.md` |" in t1
-    assert "| FUN-CL-01 | Сохранение | SCR-CL-01, SCR-CL-02 | ENT-001 | CTL-GRP-1 | — |" in t1
+    assert "| FUN-CL-01 | Сохранение | — | SCR-CL-01, SCR-CL-02 | ENT-001 | CTL-GRP-1 | — | — |" in t1
     assert not ms.check(docs)[1], ms.check(docs)[0]
 
 
@@ -369,8 +372,9 @@ def test_write_adds_ntf_column_and_keeps_other_cells(tmp_path):
     rep_, code = ms.write(docs)
     assert code == 0, rep_
     after = m.read_text(encoding="utf-8")
-    assert ("| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |" in after)
-    assert "| FUN-CL-01 | Сохранение | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — | — |" in after, after
+    assert ("| Функция | Название | Вызовы | Экраны | Данные | Контроли | Уведомления | Печатные формы |"
+            in after)
+    assert "| FUN-CL-01 | Сохранение | — | SCR-CL-01 | ENT-001 | CTL-GRP-1 | — | — |" in after, after
     assert "| PROC-001 | Обработка | — | FUN-CL-01 | — | — | — | — | — | — |" in after, after
     # вне таблиц покрытия — байт в байт
     assert before.split("## Покрытие: функции")[0] == after.split("## Покрытие: функции")[0]
@@ -400,8 +404,9 @@ def test_column_order_deviation_is_still_structure(tmp_path):
     docs = kit(tmp_path)
     m = docs / "traceability-matrix.md"
     m.write_text(m.read_text(encoding="utf-8").replace(
-        "| Функция | Название | Экраны | Данные | Контроли | Уведомления | Печатные формы |",
-        "| Функция | Название | Данные | Экраны | Контроли | Уведомления | Печатные формы |"), encoding="utf-8")
+        "| Функция | Название | Вызовы | Экраны | Данные | Контроли | Уведомления | Печатные формы |",
+        "| Функция | Название | Вызовы | Данные | Экраны | Контроли | Уведомления | Печатные формы |"),
+        encoding="utf-8")
     report, warn = ms.check(docs)
     assert "структура матрицы не по шаблону" in "\n".join(report), report
     _r, code = ms.write(docs)

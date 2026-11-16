@@ -48,7 +48,13 @@
   иначе ID файла; голая ссылка на документ-контейнер (справочник, документ
   контролей) учитывается, только если конкретных ссылок в него нет; ссылки
   на README-реестры связей не дают; колонка — по префиксу ID; «Вызывает» —
-  только по ссылке из тела процесса;
+  только по ссылке из тела процесса; в «Вызовы» функции не входит контракт её
+  пары «функция метода ↔ внутренний контракт» (пара — определение сторожа
+  контура функции метода, `method_function_contour.find_pairs`: строка
+  «по контракту …», иначе общая страница): функция этот метод реализует, а не
+  вызывает; нет пары — связь с INTC остаётся вызовом (решение владельца
+  канона 16.11.2026); такой контракт, вписанный в ячейку вручную, — строка ⚠
+  «--write снимет», не отказ;
 - источники: page_id из `confluence_page_ids` → ID документа; ID,
   определённые в файле, — когда файл — часть документа или у него одна
   страница; ID в матрице, определённый внутри документа этой страницы, —
@@ -69,8 +75,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import selfcheck as scx  # noqa: E402
 try:
     from kitcheck.md import code_line_flags, table_cells  # noqa: E402
+    from kitcheck.checks.method_function_contour import find_pairs  # noqa: E402
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from .kitcheck.md import code_line_flags, table_cells  # type: ignore  # noqa: E402
+    from .kitcheck.checks.method_function_contour import find_pairs  # type: ignore  # noqa: E402
 
 MATRIX = "traceability-matrix.md"
 
@@ -78,7 +86,8 @@ MATRIX = "traceability-matrix.md"
 TEMPLATE: List[Tuple[str, str, Optional[List[str]]]] = [
     ("registry", "Реестр ID", ["ID", "Название", "Файл"]),
     ("fun", "Покрытие: функции → артефакты",
-     ["Функция", "Название", "Экраны", "Данные", "Контроли", "Уведомления", "Печатные формы"]),
+     ["Функция", "Название", "Вызовы", "Экраны", "Данные", "Контроли", "Уведомления",
+      "Печатные формы"]),
     ("proc", "Покрытие: процессы → артефакты",
      ["Процесс", "Название", "Вызывает", "Функции", "Вызовы", "Уведомления", "Экраны",
       "Контроли", "Данные", "Печатные формы"]),
@@ -99,7 +108,7 @@ COL_PREFIXES = {
 COL_TITLE = {"scr": "Экраны", "data": "Данные", "ctl": "Контроли",
              "prn": "Печатные формы", "fun": "Функции", "ext": "Вызовы",
              "callproc": "Вызывает", "ntf": "Уведомления"}
-FUN_COLS = ["scr", "data", "ctl", "ntf", "prn"]
+FUN_COLS = ["ext", "scr", "data", "ctl", "ntf", "prn"]  # «Вызовы» — 16.11.2026
 PROC_COLS = ["callproc", "fun", "ext", "ntf", "scr", "ctl", "data", "prn"]
 
 LOCAL_PREFIXES = {"FLD", "B", "EV", "FF", "M", "MSG", "US", "E"}
@@ -368,6 +377,10 @@ class Kit:
         self.out: Dict[str, Set[str]] = {}                 # id → ID по ссылкам из тела
         self.inc: Dict[str, Set[str]] = {}                 # id → ID, ссылающиеся на него
         self.pages: Dict[str, Set[str]] = {}               # page_id → ID
+        # функция метода → контракты её пары (реализует, а не вызывает): не в «Вызовы»
+        self.own_contracts: Dict[str, Set[str]] = {}
+        for _f, fid, _c, cid, _how in find_pairs(docs):
+            self.own_contracts.setdefault(fid, set()).add(cid)
         files = [p for p in scx._kit_md(docs) if p.resolve() != matrix.resolve()]
         texts: Dict[Path, str] = {}
         fms: Dict[Path, Dict[str, str]] = {}
@@ -606,7 +619,7 @@ def check_coverage(sec: Section, kit: Kit, row_types: Set[str], cols: List[str],
     colmap = [column_key(h) for h in sec.header]
     seen: Set[str] = set()
     missing_cells, only_matrix, misplaced, foreign_rows = [], [], [], []
-    unknown, nocol = [], []
+    unknown, nocol, own_listed = [], [], []
     all_prefixes = set().union(*(COL_PREFIXES[c] for c in cols))
     for r in sec.rows:
         rid = _first_id(r[0]) if r else ""
@@ -617,6 +630,7 @@ def check_coverage(sec: Section, kit: Kit, row_types: Set[str], cols: List[str],
             foreign_rows.append(rid)
             continue
         rel_all = kit.related(rid)
+        own = kit.own_contracts.get(rid, set()) if "function" in row_types else set()
         for n, cell in enumerate(r[1:], 1):
             ck = colmap[n] if n < len(colmap) else "other"
             if ck not in cols:
@@ -633,11 +647,15 @@ def check_coverage(sec: Section, kit: Kit, row_types: Set[str], cols: List[str],
                          if id_prefix(i) in COL_PREFIXES[ck]}
             else:
                 d_ids = {i for i in rel_all if id_prefix(i) in COL_PREFIXES[ck]}
+            if ck == "ext":
+                d_ids -= own
             for i in sorted(d_ids - m_ids):
                 missing_cells.append(f"{rid} «{COL_TITLE[ck]}»: нет {i}")
             for i in sorted(m_ids - d_ids):
                 tag = f"{rid} «{COL_TITLE[ck]}»: {i}"
-                if not kit.known(i):
+                if i in own:
+                    own_listed.append(tag)
+                elif not kit.known(i):
                     unknown.append(tag)
                 elif id_prefix(i) not in all_prefixes:
                     nocol.append(tag)
@@ -649,6 +667,8 @@ def check_coverage(sec: Section, kit: Kit, row_types: Set[str], cols: List[str],
     _emit(lines, "строка не для документа этого типа", foreign_rows, 8)
     _emit(lines, "нет связи из документов", missing_cells, 8)
     _emit(lines, "связь есть, но ID не по префиксу колонки (--write перенесёт)", misplaced, 6)
+    _emit(lines, "свой контракт функции метода в «Вызовах» — функция его реализует, а не "
+                 "вызывает (--write снимет)", own_listed, 6)
     _emit(lines, "связь только в матрице — в документах ссылки нет "
                  "(--write не работает, пока перечень не пуст)", only_matrix, 8)
     _emit(lines, "ID не найден в комплекте (--write не работает, пока перечень не пуст)",
@@ -877,6 +897,7 @@ def build_coverage(sec: Section, lines: List[str], kit: Kit, key: str) -> List[s
     out = []
     for rid in sorted(kit.rows_of_type(types), key=id_sort_key):
         rel_all = kit.related(rid)
+        own = kit.own_contracts.get(rid, set()) if key == "fun" else set()
         # старая строка — по имени колонки: недостающая колонка шаблона вставляется
         o = (dict(zip(sec.header, old[rid]))
              if rid in old and len(old[rid]) == len(sec.header) else None)
@@ -885,6 +906,8 @@ def build_coverage(sec: Section, lines: List[str], kit: Kit, key: str) -> List[s
         for n, ck in enumerate(cols, 2):
             src = kit.related(rid, with_incoming=False) if ck == "callproc" else rel_all
             ids = {i for i in src if id_prefix(i) in COL_PREFIXES[ck]}
+            if ck == "ext":
+                ids -= own
             oc = o.get(names[n]) if o else None
             if oc is not None and {scr_base(i) for i in cell_ids(oc)} == ids:
                 cells.append(oc)
