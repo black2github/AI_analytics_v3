@@ -281,6 +281,18 @@ def analyse(text: str) -> Dict[str, List[Tuple[int, str]]]:
     return out
 
 
+def pointer_item(line: str) -> Optional[Tuple[List[str], str]]:
+    """Указатель раздела «Процессы» вне таблицы — строка со ссылкой (одна фраза или пункт списка;
+    эту форму признак 2 принимает как указатель): (ссылки строки, место — остаток строки без ссылок,
+    маркера списка и тире). None — строка без ссылки. Общая форма для признака 2 и сторожа
+    «шаг процесса ↔ карточка вызова» (links.py)."""
+    found = [m.group(0) for m in _LINK_RE.finditer(line) if not m.group(0).startswith("!")]
+    if not found:
+        return None
+    place = re.sub(r"^\s*(?:[-*+]|\d+[.)])\s+", "", _LINK_RE.sub(" ", line))
+    return found, re.sub(r"\s+", " ", place).strip(" \t—–-.,;:")
+
+
 def _processes(lines: List[str], region: List[str]) -> List[Tuple[int, str]]:
     """Признак 2: раздел «Процессы» — не указатель."""
     found: List[Tuple[int, str]] = []
@@ -317,7 +329,7 @@ def _processes(lines: List[str], region: List[str]) -> List[Tuple[int, str]]:
     if prose:
         # проза: строка без ссылки и не присваивание. Без таблицы допустимы строки-указатели
         # со ссылкой (одна фраза или список ссылок); при таблице текст рядом — сверх указателя
-        bare = [i for i in prose if not _LINK_RE.search(lines[i]) and not is_assignment(lines[i])]
+        bare = [i for i in prose if pointer_item(lines[i]) is None and not is_assignment(lines[i])]
         if not table_rows and bare:
             found.append((bare[0] + 1, "проза вместо таблицы-указателя"))
         elif table_rows and bare:

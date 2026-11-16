@@ -20,6 +20,7 @@ try:
     from kitcheck.md import code_line_flags
     from kitcheck.md import read_frontmatter
     from kitcheck.md import table_cells
+    from kitcheck.checks.call_algorithms import pointer_item
 except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from ..md import _MD_LINK_RE  # type: ignore
     from ..md import _anchors_of  # type: ignore
@@ -30,6 +31,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
     from ..md import code_line_flags  # type: ignore
     from ..md import read_frontmatter  # type: ignore
     from ..md import table_cells  # type: ignore
+    from .call_algorithms import pointer_item  # type: ignore
 
 
 # служебные реестры комплекта — сверке нормализатора не подлежат
@@ -37,11 +39,11 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
 _SERVICE_FILES = {"traceability-matrix.md", "open-questions.md"}
 
 
-# Шаг процесса ↔ карточка вызова (пакет 2, задача 8, ЗК-13). Норма: шаг через
-# вызов чужого контракта ссылается на карточку CALL-* (шаблон process, «Таблица
-# шагов»); карточка вызова в разделе «Использование в сервисе» ссылается на
-# процессы и шаги (шаблон contract-call). Номер шага — литерал; диапазон
-# «1.4–1.5» / «3–7» с общим префиксом раскрывается в перечень номеров.
+# Шаг процесса ↔ карточка вызова (пакет 2, задача 8, ЗК-13; норма канона aebd488, 16.11.2026).
+# Норма: шаг, который сам выполняет вызов чужого контракта, ссылается на карточку CALL-*
+# (шаблон process, «Таблица шагов»), а карточка вызова в разделе «Процессы» называет этот
+# процесс и шаг — точку вызова (шаблон contract-call, «Раздел „Процессы“ — точка вызова»).
+# Номер шага — литерал; диапазон «1.4–1.5» / «3–7» с общим префиксом раскрывается в перечень.
 _STEP_NUM_RE = re.compile(r"\d+(?:\.\d+)*")
 
 
@@ -56,6 +58,14 @@ _STEP_RANGE_RE = re.compile(r"(\d+(?:\.\d+)*)\s*[–—-]\s*(\d+(?:\.\d+)*)")
 
 _CALL_USAGE_RE = re.compile(r"^##\s+(?:\d+\.\s*)?(?:Использование в сервисе|Где используется)",
                             re.I)
+
+
+# разделы шагов шаблона process.md: «## Шаги процесса» (таблица «№ | Шаг | Содержание») и
+# «## Детали шагов»; есть «Шаги процесса» — прямая пара считается только из них (ссылка на данные
+# вызова в таблице заполнения атрибутов пары не образует); нет — весь документ (наследие с другой
+# раскладкой шагов)
+_PROC_STEPS_H2_RE = re.compile(r"^##\s+(?:\d+\.\s*)?Шаги процесса\b", re.I)
+_PROC_STEP_SECS_RE = re.compile(r"^##\s+(?:\d+\.\s*)?(?:Шаги процесса|Детали шагов)\b", re.I)
 
 
 def _step_literals(cell: str) -> set:
@@ -87,8 +97,16 @@ def _link_targets(md: Path, text: str):
 def check_process_call_consistency(docs: Path) -> List[str]:
     """⚠ при расхождении прямой и обратной ссылок «PROC шаг N → CALL» /
     «CALL → PROC, шаг N»: нет обратной, нет прямой, номер шага расходится.
-    Строки карточки вызова, ведущие на FUN/SCR, не сверяются (норма — процессы);
-    ячейка места без номера («Отображение») номер не сверяет."""
+    Прямая — ссылка на CALL из шага процесса: строка таблицы с номером в первой ячейке или
+    текст под заголовком «### Шаг N»; если в процессе есть раздел «Шаги процесса» — только из
+    разделов шагов («Шаги процесса», «Детали шагов»): процесс, который ссылается на данные
+    вызова в таблице заполнения атрибутов, пары не образует. Обратная — строка таблицы или
+    указатель вне таблицы (фраза или пункт списка со ссылкой — форма `call_algorithms.pointer_item`)
+    со ссылкой на PROC в разделе использования карточки; номер шага — из места указателя.
+    Строки карточки вызова, ведущие на FUN/SCR, не сверяются; ячейка места без номера
+    («Отображение») номер не сверяет. Известный класс, остающийся предупреждением: шаг процесса
+    ссылается на CALL, а точка вызова в карточке — другой документ (функция) — вопрос комплекта
+    о точке вызова."""
     ids: Dict[Path, str] = {}
     meta: Dict[Path, Tuple[str, str, str]] = {}
     for md in _kit_md(docs):
@@ -108,11 +126,16 @@ def check_process_call_consistency(docs: Path) -> List[str]:
             except OSError:
                 continue
             head_step = ""
-            for ln, in_code in zip(lines, code_line_flags(lines)):
+            flags = code_line_flags(lines)
+            by_secs = any(_PROC_STEPS_H2_RE.match(ln.strip()) for ln, c in zip(lines, flags) if not c)
+            in_steps = not by_secs
+            for ln, in_code in zip(lines, flags):
                 st = ln.strip()
                 if in_code:
                     continue
                 if st.startswith("#"):
+                    if by_secs and re.match(r"^##\s", st):
+                        in_steps = bool(_PROC_STEP_SECS_RE.match(st))
                     hm = _STEP_HEAD_RE.match(st)
                     head_step = hm.group(1) if hm else ""
                     continue
@@ -123,7 +146,7 @@ def check_process_call_consistency(docs: Path) -> List[str]:
                         step = _STEP_NUM_RE.search(cells[0]).group(0)
                 elif head_step:
                     step = head_step
-                if not step:
+                if not step or not in_steps:
                     continue
                 for t in _link_targets(md, ln):
                     tid = ids.get(t, "")
@@ -134,20 +157,31 @@ def check_process_call_consistency(docs: Path) -> List[str]:
                 text = _fs.read_text(md, encoding="utf-8", errors="replace")
             except OSError:
                 continue
-            sec, on = [], False
+            sec, on, h3 = [], False, ""
             for ln in text.splitlines():
                 if ln.startswith("## "):
-                    on = bool(_CALL_USAGE_RE.match(ln))
+                    on, h3 = bool(_CALL_USAGE_RE.match(ln)), ""
+                    continue
+                if on and ln.startswith("### "):
+                    h3 = ln[4:].strip().lower()
                     continue
                 if on:
-                    sec.append(ln)
-            for ln in sec:
-                if not ln.strip().startswith("|"):
-                    continue
-                cells = table_cells(ln)
-                if len(cells) < 2:
-                    continue
-                for t in _link_targets(md, cells[0]):
+                    sec.append((ln, h3))
+            for ln, h3 in sec:
+                if ln.strip().startswith("|"):
+                    cells = table_cells(ln)
+                    if len(cells) < 2:
+                        continue
+                    head, place = cells[0], cells[1]
+                else:
+                    # указатель вне таблицы — только в «Процессах» (или в разделе использования
+                    # без подразделов): проза других подразделов называет процесс не как точку
+                    ptr = pointer_item(ln) if h3 in ("", "процессы") else None
+                    if ptr is None:
+                        continue
+                    head, place = " ".join(ptr[0]), ptr[1]
+                    cells = [head, place]
+                for t in _link_targets(md, head):
                     pid = ids.get(t, "")
                     if pid.startswith("PROC"):
                         steps, cell = back.get((pid, cid), (set(), ""))
@@ -167,12 +201,16 @@ def check_process_call_consistency(docs: Path) -> List[str]:
                               f"в карточке {cid} — «{cell[:40]}»")
     for (pid, cid), (_bs, cell) in sorted(back.items()):
         if (pid, cid) not in fwd:
-            issues.append(f"нет прямой: {cid} → {pid} «{cell[:40]}»; в шагах {pid} "
-                          f"({rel_of.get(pid, '?')}) нет ссылки на {cid}")
+            place = f" «{cell[:40]}»" if cell.strip() else " (место без номера шага)"
+            issues.append(f"нет прямой: {cid} → {pid}{place}: строка «Процессов» карточки называет "
+                          f"процесс, а шаги {pid} ({rel_of.get(pid, '?')}) на {cid} не ссылаются — "
+                          "если строка не точка вызова, убрать её из «Процессов»; если шаг процесса "
+                          "выполняет вызов, добавить в шаг ссылку на карточку")
     if not issues:
         return []
-    out = [f"⚠ шаг процесса ↔ карточка вызова (шаблоны process и contract-call: шаг "
-           f"ссылается на CALL, карточка — на процесс и шаг): расхождений {len(issues)}"]
+    out = [f"⚠ шаг процесса ↔ карточка вызова (шаблоны process и contract-call: шаг, который "
+           f"выполняет вызов, ссылается на CALL, «Процессы» карточки — на этот процесс и шаг): "
+           f"расхождений {len(issues)}"]
     out.extend(f"   {x}" for x in issues[:30])
     if len(issues) > 30:
         out.append(f"   … и ещё {len(issues) - 30}")
