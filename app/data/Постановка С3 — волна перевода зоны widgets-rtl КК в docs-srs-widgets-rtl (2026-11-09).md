@@ -25,7 +25,7 @@
 
 `docs/srs/widgets-rtl/contract-call/external/`: README `CALL-EXT-000` части и шесть карточек CALL-EXT-056…061 по шаблону `contract-call.md` (контур B): RTL-001 запрос части номера карты (из FUN PAN), RTL-002 запрос cvv2 (из FUN cvv), RTL-003 инициализация ПИН (из скрипта ввода ПИН), RTL-004 установка ПИН (из скрипта отправки ПИН), EPAA-002 confirm_ip и EPAA-003 tokenExchange (из метода обмена токенов). Источник — страницы скриптов (`confluence_page_ids` — своя страница первой); «Правила заполнения исходящего сообщения» — из шагов методов дословно (там они уже есть: `GPB-requestId`, `meta.channel`, `data.externalCardId`…); базовый контракт — абсолютная ссылка на EXTINT. Функции части ссылаются на CALL-EXT в шаге вызова.
 
-`docs-external-contracts` (MR владельца, отдельно): «Потребители» в `rtl/extint-rtl-001…004`, `epaa/extint-epaa-002`, `epaa/extint-epaa-003` — строка `business-cards | CALL-EXT-0NN | <абсолютная ссылка на карточку вызова в src>` вместо нынешних `MOD-WIDGETS-RTL-NNN`.
+`docs-external-contracts` (MR владельца, отдельно): «Потребители» в `rtl/extint-rtl-001…004`, `epaa/extint-epaa-002`, `epaa/extint-epaa-003` — строка `business-cards | CALL-EXT-0NN | <абсолютная ссылка на карточку вызова в целевом docs-business-cards, blob/HEAD/srs/widgets-rtl/contract-call/external/…>` вместо нынешних `MOD-WIDGETS-RTL-NNN` (адрес — целевой репозиторий, как у svfe-002/003 после !89; «в src» в первой редакции — ошибка, уточнено 10.11).
 
 ## Г. Ссылки из других частей и матрица
 
