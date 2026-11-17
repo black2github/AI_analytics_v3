@@ -510,13 +510,20 @@ def _debt_prefix(tag: str, core: str, mtext: str) -> str:
     return ""
 
 
-_WHERE_USED_RE = re.compile(r"Где\s+используется", re.I)
+# подпись зоны — «Где используется» с заглавной (регистр первой буквы точный); зону открывает
+# только подпись: начало ячейки HTML-таблицы (после <td>/<th> и оформления), начало ячейки
+# pipe-таблицы или заголовок. Вхождение в прозе («в функциях, где используется параметр …»)
+# зону не открывает (приёмка «Точек» 18.11)
+_WHERE_USED_RE = re.compile(r"Где\s+используется")
+_WU_HEAD_RE = re.compile(r"^\s*#{1,6}\s+(?:\d+(?:\.\d+)*\.?\s*)?(?:\*\*|__)?\s*$")
+_WU_PIPE_RE = re.compile(r"\|\s*(?:\*\*|__)?\s*$")
+_WU_HTML_RE = re.compile(r"<t[dh]\b[^>]*>\s*(?:<(?:strong|b|em|i|p|span)\b[^>]*>\s*)*$", re.I)
 
 
 def _cut_where_used(src: str) -> str:
-    """Текст выгрузки без зоны «Где используется» (класс 7): строка HTML-таблицы с такой
-    подписью — от подписи до </tr>; строка pipe-таблицы; раздел под таким заголовком — до
-    следующего заголовка."""
+    """Текст выгрузки без зоны «Где используется» (класс 7): подпись в начале ячейки HTML-таблицы
+    — от подписи до </tr>; в начале ячейки pipe-таблицы — строка; заголовок — раздел до
+    следующего заголовка. Вхождение вне подписи зону не открывает."""
     out, pos = [], 0
     for m in _WHERE_USED_RE.finditer(src):
         if m.start() < pos:
@@ -524,16 +531,18 @@ def _cut_where_used(src: str) -> str:
         ls = src.rfind("\n", 0, m.start()) + 1
         le = src.find("\n", m.end())
         le = len(src) if le == -1 else le
-        line = src[ls:le].lstrip()
-        if line.startswith("#"):
+        prefix = src[ls:m.start()]
+        if _WU_HEAD_RE.match(prefix):
             nxt = re.search(r"^#", src[le:], re.M)
             end = le + nxt.start() if nxt else len(src)
             start = ls
-        elif line.startswith("|"):
+        elif prefix.lstrip().startswith("|") and _WU_PIPE_RE.search(prefix):
             end, start = le, ls
-        else:
+        elif _WU_HTML_RE.search(prefix):
             tr = src.find("</tr>", m.end())
             end, start = (tr if tr != -1 else le), m.start()
+        else:
+            continue
         out.append(src[pos:start])
         pos = end
     out.append(src[pos:])

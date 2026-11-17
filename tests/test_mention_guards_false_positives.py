@@ -307,6 +307,43 @@ def test_c7_not_contract_call_still_required(tmp_path):
     assert len(warns) == 2 and waived == []
 
 
+def test_c7_prose_phrase_does_not_open_zone(tmp_path):
+    # «где используется» в прозе — не подпись: чужое упоминание после неё требуется
+    docs = kit(tmp_path)
+    body = card("CALL-EXT-025", "Копия", "нет", typ="contract-call")
+    src = ("<p>Параметр передаётся в функциях, где используется метод: см. "
+           "[РЭП] Зарегистрировать КЭП/НЭП.</p>\n<table><tr><td>a</td></tr></table>\n")
+    warns, _ok, waived = sources(body, src, docs)
+    assert len(warns) == 1 and "[РЭП]" in warns[0] and waived == []
+
+
+def test_c7_capitalised_phrase_in_prose_does_not_open_zone(tmp_path):
+    docs = kit(tmp_path)
+    body = card("CALL-EXT-025", "Копия", "нет", typ="contract-call")
+    src = "<p>Где используется метод, см. [РЭП] Зарегистрировать КЭП/НЭП.</p>\n"
+    warns, _ok, waived = sources(body, src, docs)
+    assert len(warns) == 1 and waived == []
+
+
+def test_c7_own_place_in_zone_still_required(tmp_path):
+    # своё место зоны (тег открывает титул карточки комплекта) требуется по-прежнему
+    docs = kit(tmp_path)
+    body = card("CALL-EXT-025", "Копия", "нет", typ="contract-call")
+    src = ('<table><tr><td><strong>Где используется:</strong></td><td>Процесс '
+           '<a href="p.md">[КК_ВК] Получить выписку по клиенту</a></td></tr></table>\n')
+    warns, _ok, waived = sources(body, src, docs)
+    assert len(warns) == 1 and "[КК_ВК] Получить выписку" in warns[0] and waived == []
+
+
+def test_c7_zone_by_pipe_cell_and_heading(tmp_path):
+    docs = kit(tmp_path)
+    body = card("CALL-EXT-025", "Копия", "нет", typ="contract-call")
+    for src in ("| **Где используется:** | Процесс [РЭП] Зарегистрировать КЭП/НЭП |\n",
+                "## Где используется\n\nПроцесс [РЭП] Зарегистрировать КЭП/НЭП\n\n## Далее\n"):
+        warns, _ok, waived = sources(body, src, docs)
+        assert warns == [] and [k for k, _t in waived] == ["foreign-place"], src
+
+
 # --- строки i снятого ---
 
 def test_waived_i_lines(tmp_path):
