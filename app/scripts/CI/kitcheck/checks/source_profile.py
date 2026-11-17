@@ -265,6 +265,41 @@ def source_title_tags(sources: Path) -> frozenset:
     return frozenset(out)
 
 
+class MentionExport:
+    """Указатель выгрузки для сторожей упоминаний (постановка 2026-11-17): теги титулов, теги
+    текстов ссылок, все теги текста выгрузки, титулы страниц по page_id."""
+
+    def __init__(self, title_tags: frozenset, link_tags: frozenset, seen_tags: frozenset,
+                 page_titles: Dict[str, str]):
+        self.title_tags = title_tags
+        self.link_tags = link_tags
+        self.seen_tags = seen_tags
+        self.page_titles = page_titles
+
+
+# тег в начале текста ссылки: markdown «[[ТЕГ] …](…)» и HTML «<a …>[ТЕГ] …</a>»
+_LINK_TAG_MD_RE = re.compile(r"\[(\[[^\]\n]{2,20}\])[^\]\n]*\]\(")
+_LINK_TAG_HTML_RE = re.compile(r"<a\b[^>]*>\s*(?:<[^>]+>\s*)*(\[[^\]<\n]{2,20}\])", re.I)
+_ANY_TAG_RE = re.compile(r"\[(?=[^\]\n]*[А-ЯЁA-Z])[А-ЯЁA-Z0-9_]{2,20}\]")
+
+
+@_fs.memoize()
+def source_mention_index(sources: Path) -> MentionExport:
+    """Указатель выгрузки для сторожей упоминаний: тег-подпись — тег, который встречается в
+    выгрузке, но не открывает ни титула, ни текста ссылки; собственные страницы карточки —
+    титулы по page_id."""
+    link, seen, titles = set(), set(), {}
+    for f in Path(sources).rglob("*.md"):
+        pid, title, _branch = _page_head(f, sources)
+        if pid and title:
+            titles[pid] = title
+        t = _fs.read_text(f, encoding="utf-8", errors="replace")
+        link.update(m.group(1) for m in _LINK_TAG_MD_RE.finditer(t))
+        link.update(m.group(1) for m in _LINK_TAG_HTML_RE.finditer(t))
+        seen.update(m.group(0) for m in _ANY_TAG_RE.finditer(t))
+    return MentionExport(source_title_tags(sources), frozenset(link), frozenset(seen), titles)
+
+
 def _stand_root(sources: Path) -> Path:
     """Корень стенда/репозитория источника по каталогу выгрузки.
 

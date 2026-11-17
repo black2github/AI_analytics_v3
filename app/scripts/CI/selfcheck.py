@@ -93,7 +93,7 @@ try:
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from kitcheck.checks.source_profile import (  # noqa: E402,F401 — этап 3
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run, source_title_tags)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run, source_mention_index, source_title_tags)
     from kitcheck.checks.review_guards import (  # noqa: E402 — П1 разбора КК
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
@@ -129,7 +129,7 @@ except ImportError:  # импорт пакетом app.scripts.CI (тесты)
         _NFR_CODES, _NFR_INGRESS, _NFR_ROW_RE, _NFR_TYPE_BY_CODE, _nfr_repo_root, check_nfr_catalog)
     from .kitcheck.checks.source_profile import (  # type: ignore  # noqa: E402,F401
         _CANON_CUT_RE, _PLAN_LINE_RE, _RETRY_RE, _SCRIPT_EXT, _SERVICE_ZONE_RE, _STAGE_ROW_RE, _ZONE_RE, _load_subservice_map, _profile_path, _stand_root, check_canon_cut, check_protocol_discipline, check_stage_prompts, check_subservice_mapping,
-        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run, source_title_tags)
+        outside_eco_slugs, check_kit_mapping, declared_kits, kit_of_root, kit_of_run, source_mention_index, source_title_tags)
     from .kitcheck.checks.review_guards import (  # type: ignore  # noqa: E402
         check_button_fields, check_caller_links, check_cell_glue, check_control_display_mode,
         check_copy_titles, check_function_kind_suspect, check_passport_after_table,
@@ -235,7 +235,9 @@ def _run(files: List[Path], src: Optional[Path],
          group_extra: Optional[List[Tuple[Path, Path]]] = None,
          outside_eco: frozenset = frozenset(),
          mention_tags: frozenset = frozenset(),
-         mention_labels: Optional[list] = None) -> Tuple[List[str], bool]:
+         mention_labels: Optional[list] = None,
+         mention_export=None,
+         mention_waived: Optional[list] = None) -> Tuple[List[str], bool]:
     """outside_eco — слаги частей вне контура Экосистемы по разметке профиля и паспортам
     границы (outside_eco_slugs | passport_slugs): главная карточка в docs/srs/<слаг>/ получает
     признак части."""
@@ -251,7 +253,9 @@ def _run(files: List[Path], src: Optional[Path],
                                       group_extra_sources=group_extra,
                                       outside_eco=eco,
                                       mention_tags=mention_tags,
-                                      mention_labels=mention_labels))
+                                      mention_labels=mention_labels,
+                                      mention_export=mention_export,
+                                      mention_waived=mention_waived))
 
 
 def run(docs: Path, sources: Optional[Path],
@@ -372,6 +376,10 @@ def _run_impl(docs: Path, sources: Optional[Path],
     # сборщик ярлыков строк таблиц, которые сторож не судит, — строка i на комплект
     m_tags = source_title_tags(sources) if sources is not None else frozenset()
     m_labels: List[Tuple[str, int, str, str]] = []
+    # указатель выгрузки и сборщик снятого сторожами упоминаний (постановка 2026-11-17): теги-
+    # подписи, собственные страницы, долги по префиксу, чужие места «Где используется» — строки i
+    m_export = source_mention_index(sources) if sources is not None else None
+    m_waived: List[Tuple[str, str, str]] = []
     if sources is not None:
         idx, dups = index_sources(sources)
         if any(d.is_dir() for d in sources.rglob("raw")):
@@ -563,7 +571,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
         rep, ok = _run([p], None, docs, soft_markers=not strict,
                        allow_sibling_docs=allow_sibling_docs,
                        without_sources=sources is None, inventory=inventory,
-                       outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels)
+                       outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels,
+                       mention_export=m_export, mention_waived=m_waived)
         mark = "✓" if ok else "✗"
         counts[mark] += 1
         if any(is_examples_signal(ln) for ln in rep):
@@ -636,7 +645,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                        amnesty=amnesty or None,
                        allow_sibling_docs=allow_sibling_docs, inventory=inventory,
                        group_extra=group_extra or None, outside_eco=eco_out,
-                       mention_tags=m_tags, mention_labels=m_labels)
+                       mention_tags=m_tags, mention_labels=m_labels,
+                       mention_export=m_export, mention_waived=m_waived)
         if any(is_examples_signal(ln) for ln in rep):
             ex_files.add(files[0])
         # макеты Figma группы (решение 2026-08-31, модель README/main):
@@ -663,7 +673,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
             rep2, ok2 = _run([extra], None, docs, soft_markers=not strict,
                              pardon_src=src,
                              allow_sibling_docs=allow_sibling_docs, inventory=inventory,
-                             outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels)
+                             outside_eco=eco_out, mention_tags=m_tags, mention_labels=m_labels,
+                       mention_export=m_export, mention_waived=m_waived)
             rep = rep + [f"[{extra.name}] {ln}" for ln in rep2]
             ok = ok and ok2
             if any(is_examples_signal(ln) for ln in rep2):
@@ -709,7 +720,8 @@ def _run_impl(docs: Path, sources: Optional[Path],
                     card_ids=card_ids, card_titles=card_titles,
                     fm_schema_issues=fm_schema_issues, groups=groups, idx=idx,
                     unsourced=unsourced, kit=kit, kit_note=kit_note, inventory=inventory,
-                    mention_labels=m_labels, mention_with_sources=sources is not None)
+                    mention_labels=m_labels, mention_with_sources=sources is not None,
+                    mention_waived=m_waived)
     _k_lines, _k_ok = run_checks(KIT_CHECKS, _kctx)
     report.extend(_k_lines)
     n_ex_kit = sum(1 for ln in _k_lines if is_examples_signal(ln.strip()))
@@ -749,6 +761,8 @@ class _KitCtx:
     # ярлыки строк таблиц, которые сторож упоминаний целей не судит: (путь, строка, тег, ярлык)
     mention_labels: List[Tuple[str, int, str, str]] = field(default_factory=list)
     mention_with_sources: bool = False
+    # снятое сторожами упоминаний: (вид, путь, текст) — строки i (_kc_mention_waived)
+    mention_waived: List[Tuple[str, str, str]] = field(default_factory=list)
 
 
 def _kc_repo_root(ctx: "_KitCtx") -> Tuple[List[str], bool]:
@@ -1158,10 +1172,42 @@ def _kc_table_labels(ctx: "_KitCtx") -> Tuple[List[str], bool]:
              else "карточек комплекта")
     rep = ["i ярлыки строк таблиц с тегом вне титулов — не упоминания: "
            + ", ".join(f"{t} ×{c}" for t, c in sorted(cnt.items(), key=lambda kv: (-kv[1], kv[0])))
-           + f" (тег в первой ячейке строки таблицы не открывает ни одного титула {where}; "
-           "сторож упоминаний целей такие ярлыки не судит, перечень — в --out)"]
+           + f" (тег в первой ячейке строки таблицы не открывает ни одного титула {where}"
+           + ("; при выгрузке — и тег-подпись в любой позиции: встречается в выгрузке, но не "
+              "открывает ни титула, ни текста ссылки" if ctx.mention_with_sources else "")
+           + "; сторож упоминаний целей такие ярлыки не судит, перечень — в --out)"]
     rep += [f"{OUT_ONLY}{rel}" + (f":{n}" if n else "") + f" — {text}"
             for rel, n, _tag, text in sorted(labels)]
+    return rep, True
+
+
+_WAIVED_KINDS = (
+    ("own", "упоминания собственных страниц карточки — не цели (титул страницы из "
+            "confluence_page_ids шапки карточки)"),
+    ("debt-prefix", "упоминания целей, засчитанные долгом матрицы по префиксу имени («[тег] "
+                    "имя» в «…», имя не короче двух слов; сторож не отделяет имя от следующего "
+                    "текста — сверить, что долг о той же странице)"),
+    ("src-label", "теговые упоминания источника с тегом-подписью в карточке не требуются (тег "
+                  "встречается в выгрузке, но не открывает ни титула, ни текста ссылки)"),
+    ("foreign-place", "чужие места зоны «Где используется» источника карточки вызова в карточке "
+                      "не требуются (тег не открывает ни одного титула карточек комплекта; "
+                      "шаблон contract-call)"),
+)
+
+
+def _kc_mention_waived(ctx: "_KitCtx") -> Tuple[List[str], bool]:
+    """Снятое сторожами упоминаний не исчезает молча (постановка 2026-11-17, ответ «Точек»
+    18.11): по строке i на вид с числом и первыми примерами, перечень «файл — упоминание» — в
+    --out."""
+    rep: List[str] = []
+    for kind, what in _WAIVED_KINDS:
+        rows = sorted((rel, text) for k, rel, text in ctx.mention_waived if k == kind)
+        if not rows:
+            continue
+        first = "; ".join(f"{rel}: «{text}»" for rel, text in rows[:3])
+        rep.append(f"i {what}: {len(rows)}; первые: {first}"
+                   + ("; перечень — в --out" if len(rows) > 3 else ""))
+        rep += [f"{OUT_ONLY}{rel} — {text}" for rel, text in rows]
     return rep, True
 
 
@@ -1603,6 +1649,7 @@ KIT_CHECKS: List[Check] = [
     Check("method_function_contour", _kc_method_function_contour, affects_verdict=False),
     Check("function_placement", _kc_function_placement, affects_verdict=True),
     Check("table_labels", _kc_table_labels, affects_verdict=False),
+    Check("mention_waived", _kc_mention_waived, affects_verdict=False),
     Check("message_attribution_unchecked", _kc_message_attribution_unchecked,
           affects_verdict=False),
     Check("unsourced_cards", _kc_unsourced_cards, affects_verdict=False),

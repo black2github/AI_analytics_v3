@@ -383,10 +383,16 @@ _MENTION_TAG_RE = re.compile(
 # границы хвоста упоминания: конец строки/ячейки, жирный, кавычки,
 # точка с пробелом, запятая, точка с запятой (внутренние скобки —
 # часть титулов: «…(стейт-машина)» — НЕ граница)
-_MENTION_END_RE = re.compile(r"\n|\||\*\*|[»\"”;,]|\.\s|&[a-z]+;?")
+_MENTION_END_RE = re.compile(
+    r"\n|\||\*\*|[»\"”;,`]|\.\s|&[a-z]+;?|</?[A-Za-z][A-Za-z0-9]*\s*/?>|\.(?=<)")
 # &[a-z]+;? — HTML-сущность выгрузки (&lt;атрибут&gt; после имени):
 # без границы игла несла хвост «.&lt» и упоминание не находилось
 # (отчёт КК 2026-10-05: «[КК] ТЕССА_Входящие параметры &lt» ×5)
+# Тег HTML (`<br>` в ячейке карточки), путь атрибута «Имя.<Атрибут>» и обратный апостроф —
+# тоже границы имени (постановка 2026-11-17, классы 3 и 4): прежде ядро несло хвост ячейки
+# («[КК_ВК] Функции Банка.<br>»), путь атрибута («[ОТР] Метод отправки ОТР-кода.<Исходящие
+# параметры>…») или хвост ремарки за апострофом, и след в матрице не находился. Текст в
+# апострофах остаётся упоминанием: имена сущностей в коде — настоящие ссылки.
 
 
 def _mention_core(tail: str) -> str:
@@ -400,6 +406,139 @@ def _mention_core(tail: str) -> str:
     if p != -1 and "(" not in core[:p]:
         core = core[:p].strip().rstrip(".,;:")
     return core
+
+# Граница ссылки в выгрузке (постановка 2026-11-17, класс 3): при чтении страницы между
+# подписью ссылки и следующим знаком ставится пробел («карта :», «подписей .», «карта >»), а
+# в карточке знак идёт сразу за ссылкой. Разметка ячейки карточки (`<br>`, `&nbsp;`, маркер «•»)
+# — пробел. Сравнение упоминания с карточкой идёт без этих различий.
+_PUNCT_SPACE_RE = re.compile(r"\s+([:.,;>)»])")
+_CELL_SPACE_RE = re.compile(r"<br\s*/?>|&nbsp;|•", re.I)
+
+
+def _np(s: str) -> str:
+    """Текст для сравнения упоминания: разметка ячейки — пробел, пробел перед знаком снят."""
+    return _PUNCT_SPACE_RE.sub(r"\1", _CELL_SPACE_RE.sub(" ", s))
+
+
+def _mention_needle(core: str) -> str:
+    """Игла упоминания источника: первые три слова ядра без пробела перед знаком и без знака
+    в конце («Адрес держателя карты >» → «адрес держателя карты»)."""
+    return _norm_ws(" ".join(_np(core).split()[:3])).rstrip(":.,;>»")
+
+
+# тег в любой позиции текста (без требования имени следом) — для тегов названия ссылки
+_ANY_TAG_RE = re.compile(r"\[(?=[^\]\n]*[А-ЯЁA-Z])[А-ЯЁA-Z0-9_]{2,20}\]")
+
+
+def _link_tails(text: str) -> List[Tuple[str, int, frozenset]]:
+    """Для каждой ссылки [текст](адрес): (текст-название + остаток строки — для сравнения,
+    длина названия, теги названия). Упоминание, начатое в названии ссылки, продолжается за её
+    границей: «[ENT-010 [КК_ВК] Выпускаемая карта](…) выполняется» (класс 3)."""
+    out: List[Tuple[str, int, frozenset]] = []
+    for _start, end, disp in _link_spans(text):
+        nl = text.find("\n", end)
+        rest = text[end + 1: nl if nl != -1 else len(text)]
+        rest = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", rest)
+        disp = disp.replace("\\[", "[").replace("\\]", "]")
+        tags = frozenset(_norm_ws(m.group(0)) for m in _ANY_TAG_RE.finditer(disp))
+        out.append((_norm_ws(_np(disp + rest)), len(_norm_ws(_np(disp))), tags))
+    return out
+
+
+def _starts_in_link(s: str, tails: List[Tuple[str, int, frozenset]], tag: str = "") -> bool:
+    """Вхождение s начинается в названии ссылки. tag задан — в названии нет другого тега: тег в
+    ссылке легитимно заменяется на ID карточки, но чужой тег — другая страница."""
+    t = _norm_ws(tag)
+    for c, dl, tags in tails:
+        if t and tags - {t}:
+            continue
+        i = c.find(s)
+        while i != -1:
+            if i < dl:
+                return True
+            i = c.find(s, i + 1)
+    return False
+
+
+def _label_tag(tag: str, known_tags: frozenset, export) -> bool:
+    """Тег-подпись (постановка 2026-11-17, класс 1): тег встречается в выгрузке, но не открывает
+    ни титула (карточек комплекта и страниц выгрузки — known_tags), ни текста ссылки выгрузки —
+    подпись колонки или строки, а не страница. Тега в выгрузке нет или выгрузки нет — решить
+    нельзя, тег остаётся маркером цели."""
+    return (export is not None and tag not in known_tags
+            and tag in export.seen_tags and tag not in export.link_tags)
+
+
+_CONFLUENCE_IDS_RE = re.compile(r"^confluence_page_ids:\s*\[([^\]]*)\]", re.M)
+
+
+def _own_titles(card_text: str, export) -> List[str]:
+    """Титулы собственных страниц карточки: номера из confluence_page_ids её шапки → титулы
+    страниц выгрузки (класс 2). Без выгрузки — пусто."""
+    if export is None:
+        return []
+    m = _CONFLUENCE_IDS_RE.search(_fm_head(card_text) or "")
+    if not m:
+        return []
+    return [export.page_titles[i] for i in re.findall(r"\d{5,}", m.group(1))
+            if i in export.page_titles]
+
+
+def _own_page(tag: str, core: str, titles: List[str]) -> str:
+    """Титул собственной страницы, который называет упоминание: совпадает, продолжается словами
+    упоминания или (ядро не короче двух слов) обрывается границей внутри титула
+    («[КК_СК] Первичное наполнение сущности» при титуле «… "Карты клиентов"»); иначе «»."""
+    mn = _norm_ws(f"{tag} {core}")
+    for t in titles:
+        tn = _norm_ws(t)
+        if (mn == tn or mn.startswith(tn + " ")
+                or (len(core.split()) >= 2 and tn.startswith(mn + " "))):
+            return t
+    return ""
+
+
+def _debt_prefix(tag: str, core: str, mtext: str) -> str:
+    """Долг матрицы, названный «[тег] имя» в кавычках-ёлочках, где имя — префикс ядра упоминания
+    не короче двух слов (класс 3): «[ДПП] Классификатор продуктов» при упоминании «[ДПП]
+    Классификатор продуктов в столбце…». Сторож не отделяет имя от следующего текста, поэтому
+    засчёт идёт в строку i. Возвращает засчитанное имя или «»."""
+    words = core.split()
+    for k in range(len(words), 1, -1):
+        cand = f"{tag} {' '.join(words[:k])}"
+        if re.search(r"«\s*" + re.escape(_norm_ws(cand)) + r"\s*»", mtext):
+            return cand
+    return ""
+
+
+_WHERE_USED_RE = re.compile(r"Где\s+используется", re.I)
+
+
+def _cut_where_used(src: str) -> str:
+    """Текст выгрузки без зоны «Где используется» (класс 7): строка HTML-таблицы с такой
+    подписью — от подписи до </tr>; строка pipe-таблицы; раздел под таким заголовком — до
+    следующего заголовка."""
+    out, pos = [], 0
+    for m in _WHERE_USED_RE.finditer(src):
+        if m.start() < pos:
+            continue
+        ls = src.rfind("\n", 0, m.start()) + 1
+        le = src.find("\n", m.end())
+        le = len(src) if le == -1 else le
+        line = src[ls:le].lstrip()
+        if line.startswith("#"):
+            nxt = re.search(r"^#", src[le:], re.M)
+            end = le + nxt.start() if nxt else len(src)
+            start = ls
+        elif line.startswith("|"):
+            end, start = le, ls
+        else:
+            tr = src.find("</tr>", m.end())
+            end, start = (tr if tr != -1 else le), m.start()
+        out.append(src[pos:start])
+        pos = end
+    out.append(src[pos:])
+    return "".join(out)
+
 
 _TARGET_INDEX_CACHE: Dict[str, List[Tuple[str, str]]] = {}
 
@@ -489,18 +628,23 @@ def _in_first_cell(text: str, pos: int) -> bool:
 
 
 def _label_line(card_text: str, tag: str, core: str) -> int:
-    """Номер строки файла карточки с ярлыком «тег имя» в первой ячейке; 0 — не найдена."""
+    """Номер строки файла карточки с ярлыком «тег имя»: сначала строка таблицы, затем любая;
+    0 — не найдена."""
     words = core.split()[:3]
-    for n, ln in enumerate(card_text.splitlines(), 1):
-        st = ln.lstrip()
-        if st.startswith("|") and tag in st and all(w in st for w in words):
-            return n
+    lines = card_text.splitlines()
+    for table_only in (True, False):
+        for n, ln in enumerate(lines, 1):
+            st = ln.lstrip()
+            if (st.startswith("|") or not table_only) and tag in st and all(w in st for w in words):
+                return n
     return 0
 
 
 def check_target_mentions(card_text: str, md_path: Path,
                           docs_root: Path, source_tags: frozenset = frozenset(),
-                          labels: Optional[List[Tuple[str, int, str]]] = None
+                          labels: Optional[List[Tuple[str, int, str]]] = None,
+                          export=None,
+                          waived: Optional[List[Tuple[str, str]]] = None
                           ) -> Tuple[List[str], bool]:
     """Софт-сторож: теговые упоминания целей вне markdown-ссылок.
     Существующая карточка → «оформить ссылкой»; неизвестная цель без
@@ -511,7 +655,16 @@ def check_target_mentions(card_text: str, md_path: Path,
     (source_tags, при выгрузке) страниц выгрузки. Инвариант сторожа — тег маркирует титул
     страницы; тег, которым не открывается ни один титул, цели не называет («[DEV] Метод API» в
     паспорте). Такие вхождения не судятся, а складываются в labels — (тег, строка, ярлык): по ним
-    selfcheck печатает одну строку i на комплект, чтобы исключение не было молчаливым."""
+    selfcheck печатает одну строку i на комплект, чтобы исключение не было молчаливым.
+
+    Постановка 2026-11-17 (ответ «Точек» 18.11). export — указатель выгрузки
+    (source_profile.source_mention_index), waived — сборщик (вид, текст) снятого для строк i:
+    - тег-подпись (класс 1): тег выгрузки, который не открывает ни титула, ни текста ссылки, —
+      ярлык в любой позиции, не только в первой ячейке (labels);
+    - собственная страница (класс 2): упоминание называет титул страницы из confluence_page_ids
+      шапки карточки — не цель (waived «own»);
+    - долг по префиксу (класс 3): матрица несёт «[тег] имя» в «…», где имя — префикс ядра не
+      короче двух слов, — след засчитан (waived «debt-prefix»)."""
     body = _fm_body(card_text)
     body = re.sub(r"<!--.*?-->", " ", body, flags=re.S)
     body = _blank_md_links(body)
@@ -558,13 +711,15 @@ def check_target_mentions(card_text: str, md_path: Path,
         mtext = ""
     seen: Dict[str, Tuple[str, int]] = {}
     known_tags = kit_title_tags(docs_root) | frozenset(source_tags)
+    own_titles = _own_titles(card_text, export)
     for m in _MENTION_TAG_RE.finditer(flat):
         tail = flat[m.end():m.end() + 120]
         core = _mention_core(tail)
         if not core:
             continue
         tag = flat[m.start():m.end()].strip()
-        if tag not in known_tags and _in_first_cell(flat, m.start()):
+        if tag not in known_tags and (_in_first_cell(flat, m.start())
+                                      or _label_tag(tag, known_tags, export)):
             if labels is not None:
                 labels.append((tag, _label_line(card_text, tag, core),
                                re.sub(r"\s+", " ", f"{tag} {core}")[:70]))
@@ -576,6 +731,15 @@ def check_target_mentions(card_text: str, md_path: Path,
         mention = re.sub(r"\s+", " ",
                          flat[m.start():m.end()] + core)[:70]
         if needle in mtext:
+            continue
+        if own_titles and _own_page(tag, core, own_titles):
+            if waived is not None:
+                waived.append(("own", mention))
+            continue
+        pref = _debt_prefix(tag, core, mtext)
+        if pref:
+            if waived is not None:
+                waived.append(("debt-prefix", f"{mention} ← долг «{pref[:70]}»"))
             continue
         key, (mm, cnt) = needle, seen.get(needle, (mention, 0))
         seen[key] = (mm, cnt + 1)
@@ -702,7 +866,10 @@ def _md_link_texts(text: str) -> str:
                 parts.append(text[i + 1:j])
                 i = k + 1
                 continue
-        i = j + 1
+        # не ссылка — разбор со следующего символа (как _link_spans): непарная «[» дословного
+        # текста («атрибуты сущности [, **кроме** …», КК FUN-CL-54) прежде переносила разбор в
+        # конец файла и гасила все подписи после неё (постановка 2026-11-17, класс 5)
+        i += 1
     return "\n".join(parts)
 
 
@@ -736,14 +903,16 @@ def source_tag_mentions(src_text: str) -> Dict[str, str]:
         core = _mention_core(tail)
         if not core:
             continue
-        needle = _norm_ws(" ".join(core.split()[:3]))
+        needle = _mention_needle(core)
         tag = plain[m.start():m.end()].strip()
         mentions.setdefault(needle, re.sub(r"\s+", " ", f"{tag} {core}")[:70])
     return mentions
 
 
 def check_source_tag_mentions(card_text: str, src_text: str,
-                              docs_root: Optional[Path] = None
+                              docs_root: Optional[Path] = None,
+                              export=None,
+                              waived: Optional[List[Tuple[str, str]]] = None
                               ) -> Tuple[List[str], bool]:
     """К-32: каждое теговое упоминание источника — в карточке с тегом
     или ссылкой; слова без тега вне ссылки = дефейс (✗), отсутствие —
@@ -760,12 +929,29 @@ def check_source_tag_mentions(card_text: str, src_text: str,
     страницы. Строка «doc_id: '{{код: [ТЕГ] Имя страницы}}'» давала
     упоминание с хвостом «}}'» — у имён до трёх слов игла несла мусор
     и предупреждение было неустранимым. Собственное имя страницы
-    сторожит check_title (дословный title)."""
+    сторожит check_title (дословный title).
+
+    Постановка 2026-11-17 (ответ «Точек» 18.11):
+    - граница ссылки (класс 3): упоминание найдено, если «[тег] игла» или игла начинается в
+      названии ссылки и продолжается за ней; в названии нет другого тега; пробел перед знаком и
+      разметка ячейки не различаются;
+    - тег-подпись (класс 1): упоминание с тегом, который не открывает ни титула, ни текста
+      ссылки выгрузки (export), в карточке не требуется — waived «src-label»;
+    - копия общей страницы метода (класс 7): у карточки вызова упоминание из зоны «Где
+      используется» источника с тегом, который не открывает ни одного титула карточек
+      комплекта (чужой сервис), не требуется — waived «foreign-place». Свои места зоны и чужие
+      упоминания вне зоны требуются по-прежнему.
+    Дефейс (✗) судится как прежде."""
     mentions = source_tag_mentions(src_text)
     if not mentions:
         return [], True
-    card_nolinks = _norm_ws(_blank_md_links(card_text))
-    card_links = _norm_ws(_md_link_texts(card_text))
+    card_nolinks = _norm_ws(_np(_blank_md_links(card_text)))
+    card_links = _norm_ws(_np(_md_link_texts(card_text)))
+    tails = _link_tails(card_text)
+    kit_tags = kit_title_tags(docs_root) if docs_root is not None else frozenset()
+    foreign_zone: set = set()
+    if re.search(r"^type:\s*contract-call\s*$", _fm_head(card_text) or "", re.M):
+        foreign_zone = set(mentions) - set(source_tag_mentions(_cut_where_used(src_text)))
     # реестровое исключение: базовые имена файлов, на которые ссылается
     # карточка, и титулы существующих карточек без тега
     linked_names = {t.split("#", 1)[0].replace("\\", "/").rsplit("/", 1)[-1]
@@ -785,6 +971,9 @@ def check_source_tag_mentions(card_text: str, src_text: str,
             continue
         if needle in card_links:
             continue  # оформлено ссылкой (тег в ссылке легитимно → ID)
+        stag = shown.split("]")[0] + "]"
+        if _starts_in_link(tagged, tails) or _starts_in_link(needle, tails, stag):
+            continue  # имя в ссылке, продолжение — за её границей
         if needle in card_nolinks:
             ok = False
             report.append(
@@ -792,6 +981,12 @@ def check_source_tag_mentions(card_text: str, src_text: str,
                 "в карточке те же слова БЕЗ тега вне ссылки: тег — часть "
                 "дословного текста и трассировка; возврат тега + ссылка "
                 "на карточку или долг в матрице ✗ НИЖЕ ПОРОГА")
+        elif needle in foreign_zone and stag not in kit_tags:
+            if waived is not None:
+                waived.append(("foreign-place", shown))
+        elif export is not None and _label_tag(stag, kit_tags | export.title_tags, export):
+            if waived is not None:
+                waived.append(("src-label", shown))
         else:
             report.append(
                 f"предупреждение: теговое упоминание источника «{shown}» "

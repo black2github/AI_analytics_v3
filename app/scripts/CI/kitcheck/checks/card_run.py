@@ -231,7 +231,9 @@ def run_check(files: List[Path], source_path: Optional[Path],
               call_cards: Optional[List[Path]] = None,
               outside_eco: bool = False,
               mention_tags: frozenset = frozenset(),
-              mention_labels: Optional[list] = None
+              mention_labels: Optional[list] = None,
+              mention_export=None,
+              mention_waived: Optional[list] = None
               ) -> Tuple[List[str], bool]:
     """Полная связка режима --check одной функцией — ЕДИНАЯ точка
     подключения проверок для CLI и selfcheck-диспетчера (двойной
@@ -263,7 +265,9 @@ def run_check(files: List[Path], source_path: Optional[Path],
 
     mention_tags — теги титулов страниц выгрузки (при --sources), mention_labels — сборщик ярлыков
     строк таблиц, которые сторож упоминаний целей не судит: (отн. путь, строка, тег, ярлык);
-    по нему selfcheck печатает строку i на комплект (check_target_mentions)."""
+    по нему selfcheck печатает строку i на комплект (check_target_mentions).
+    mention_export — указатель выгрузки (source_profile.source_mention_index), mention_waived —
+    сборщик снятого сторожами упоминаний: (вид, отн. путь, текст); строки i на комплект."""
     main_file = files[0]
     src_text = (apply_critic(strip_history(
         _fs.read_text(source_path, encoding="utf-8")))
@@ -346,7 +350,7 @@ def run_check(files: List[Path], source_path: Optional[Path],
         card_text, combined = blank_notes(card_text), blank_notes(combined)
     # проверки — реестр SOURCE_CHECKS (ядро kitcheck.core): порядок реестра —
     # порядок строк отчёта, вердикт — в run_checks
-    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards, mention_tags=mention_tags, mention_labels=mention_labels)
+    fx = _SourceCtx(files=files, source_path=source_path, min_valid_pct=min_valid_pct, docs_root=docs_root, soft_markers=soft_markers, pardon_source=pardon_source, amnesty_sources=amnesty_sources, card_text=card_text, combined=combined, main_file=main_file, src_text=src_text, allow_sibling_docs=allow_sibling_docs, inventory=inventory, group_extra_sources=group_extra_sources, call_cards=call_cards, mention_tags=mention_tags, mention_labels=mention_labels, mention_export=mention_export, mention_waived=mention_waived)
     f_lines, f_ok = run_checks(SOURCE_CHECKS, fx)
     report.extend(f_lines)
     ok = ok and f_ok
@@ -379,6 +383,8 @@ class _SourceCtx:
     call_cards: object = None
     mention_tags: object = frozenset()
     mention_labels: object = None
+    mention_export: object = None
+    mention_waived: object = None
 
 
 
@@ -463,15 +469,19 @@ def _rc_tagged_mentions(fx: "_SourceCtx") -> Tuple[List[str], bool]:
     # теговые упоминания целей: ссылка или долг (софт, вердикт не трогает)
     if docs_root is not None:
         found: List[Tuple[str, int, str]] = []
+        waived: List[Tuple[str, str]] = []
         tm_report, _ = check_target_mentions(card_text, main_file,
-                                             docs_root, fx.mention_tags or frozenset(), found)
+                                             docs_root, fx.mention_tags or frozenset(), found,
+                                             fx.mention_export, waived)
         report.extend(tm_report)
+        try:
+            rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()
+        except (OSError, ValueError):
+            rel = main_file.name
         if found and fx.mention_labels is not None:
-            try:
-                rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()
-            except (OSError, ValueError):
-                rel = main_file.name
             fx.mention_labels.extend((rel, n, tag, text) for tag, n, text in found)
+        if waived and fx.mention_waived is not None:
+            fx.mention_waived.extend((kind, rel, text) for kind, text in waived)
     return report, ok
 
 
@@ -883,8 +893,15 @@ def _rc_source_comparison(fx: "_SourceCtx") -> Tuple[List[str], bool]:
             ok = ok and ls_ok
         # К-32: анти-дефейс теговых упоминаний источника (пилот-2:
         # теги удалялись, чтобы увести упоминания от сторожа)
+        sm_waived: List[Tuple[str, str]] = []
         sm_report, sm_ok = check_source_tag_mentions(combined, src_text,
-                                                     docs_root)
+                                                     docs_root, fx.mention_export, sm_waived)
+        if sm_waived and fx.mention_waived is not None:
+            try:
+                sm_rel = main_file.resolve().relative_to(docs_root.resolve()).as_posix()
+            except (OSError, ValueError, AttributeError):
+                sm_rel = main_file.name
+            fx.mention_waived.extend((kind, sm_rel, text) for kind, text in sm_waived)
         report.extend(sm_report)
         ok = ok and sm_ok
         # К-29: инвариант тяжёлых ячеек — лейбло- и макето-независимый; у карточек

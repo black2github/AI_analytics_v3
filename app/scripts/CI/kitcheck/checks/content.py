@@ -132,6 +132,26 @@ _GAP_MARK_RE = re.compile(r"не задано|вне выгрузки|в сре�
 _GAP_QUOTED_RE = re.compile(r'«[^»\n]*»|"[^"\n]*"|`[^`\n]*`')
 
 
+def _debt_rows(lines: List[str]) -> set:
+    """Номера строк (с 1) раздела «Долги по ссылкам» матрицы, которые link_debts разбирает как
+    долг допустимого вида (постановка 2026-11-17, класс 6; ответ «Точек» 18.11): строка долга —
+    формальная запись пробела, сторож неформальных пометок её не читает. Нераспознанные строки
+    раздела проверяются как прежде."""
+    try:
+        import link_debts as _ld
+    except ImportError:  # импорт пакетом app.scripts.CI (тесты)
+        from ... import link_debts as _ld  # type: ignore
+    raws = {raw for *_x, raw in _ld.parse_matrix("\n".join(lines))[1]}
+    out, in_debts = set(), False
+    for n, ln in enumerate(lines, 1):
+        if ln.startswith("#"):
+            in_debts = bool(_ld._DEBTS_HEADING_RE.search(ln))
+            continue
+        if in_debts and ln.strip() in raws:
+            out.add(n)
+    return out
+
+
 def check_source_silent(docs: Path) -> List[str]:
     """Перечень пробелов постановки (conventions §6 п.5, ПР-12 разбора
     замечаний ОНБ-В): вхождения формулы «в постановке не задано» с адресами
@@ -146,6 +166,7 @@ def check_source_silent(docs: Path) -> List[str]:
         except OSError:
             continue
         rel = md.relative_to(docs).as_posix()
+        debt_rows = _debt_rows(lines) if rel == "traceability-matrix.md" else set()
         # шапка — общая граница (BOM снимается; незакрытая шапка не прячет
         # файл: прежде его строки молча пропускались до конца)
         body_from = frontmatter_end(lines)
@@ -158,6 +179,8 @@ def check_source_silent(docs: Path) -> List[str]:
             if _SILENT_FORMULA in low:
                 found.append(f"{rel}:{i}: {st[:80]}")
             rest = _GAP_QUOTED_RE.sub(" ", low.replace(_SILENT_FORMULA, " "))
+            if i in debt_rows:
+                continue  # строка долга — формальная запись пробела (класс 6)
             if _GAP_MARK_RE.search(rest):
                 other.append(f"{rel}:{i}: {st[:80]}")
     out: List[str] = []
