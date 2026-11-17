@@ -4,6 +4,7 @@
 
 Перенесено из `normalize_tables.py` дословно (Д-50, 2026-10-30); `normalize_tables`
 сохраняет прежние имена (переходный реэкспорт на один релиз)."""
+import html as _html
 import re
 from typing import Dict, List, Optional, Tuple
 from .. import fence as _fence
@@ -1663,6 +1664,38 @@ def source_role_literals(source_text: str) -> Dict[str, set]:
     return lits
 
 
+# Слово «Confluence» в дословном тексте источника (постановка 2026-11-17, класс 8; решение «Точек»
+# 18.11; КК FUN-SYS-50: «…перед выводом пользователю (включая ввод текста в Confluence) …»).
+# Сторож ловит отсылку, которую добавила миграция; вхождение слова, предложение которого целиком и
+# дословно стоит в тексте страниц-источников карточки (тот же текст, что получает check_file:
+# главная страница группы и её доп. страницы), — содержимое источника, а не отсылка; предложение
+# короче трёх слов дословным не считается. Номера
+# страниц (page_id, «page N») — брак всегда. Без выгрузки — как прежде.
+_SOURCE_REF_RE = re.compile(r"(?i)confluence|page[ _]?id|page\s+\d{6,}")
+_SENT_BOUND_RE = re.compile(r"(?<=[.!?;])\s+|\n|<br\s*/?>|\|", re.I)
+
+
+def _verbatim_norm(s: str) -> str:
+    """Текст для сравнения предложения карточки с источником: ссылки — текстом, теги HTML —
+    пробелом, оформление снято, кавычки — одним знаком, пробелы схлопнуты, регистр снят."""
+    s = _html.unescape(s)
+    s = re.sub(r"!?\[([^\]]*)\]\([^)]*\)", r"\1", s)
+    s = re.sub(r"<[^>]+>", " ", s)
+    s = re.sub(r"[*_`]+", "", s)
+    s = re.sub(r"[«»\"“”]", '"', s)
+    return re.sub(r"\s+", " ", s).strip().casefold()
+
+
+def _sentence_at(text: str, pos: int) -> str:
+    """Предложение текста вокруг позиции: от границы . ! ? ; (с пробелом следом), перевода строки,
+    <br> или | до следующей такой границы."""
+    st = 0
+    for m in _SENT_BOUND_RE.finditer(text, 0, pos):
+        st = m.end()
+    m = _SENT_BOUND_RE.search(text, pos)
+    return text[st:m.start() if m else len(text)]
+
+
 def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
     min_valid_pct, column_roles, text, src_literals = fx.min_valid_pct, fx.column_roles, fx.text, fx.src_literals
     report: List[str] = []
@@ -1681,8 +1714,25 @@ def _fc_source_page_refs_and_columns(fx: "_FileCtx") -> Tuple[List[str], bool]:
     # переноса, а ключ, по которому скрипт регистрации заменит заготовку
     # настоящей строкой; формат с двоеточием без пробела — только он.
     body_scan = re.sub(r"page_id:\d{4,}", "", body_wo_fm)
-    page_refs = re.findall(r"(?i)confluence|page[ _]?id|page\s+\d{6,}",
-                           body_scan)
+    page_refs: List[str] = []
+    verbatim: List[str] = []
+    src_norm: Optional[str] = None
+    for m in _SOURCE_REF_RE.finditer(body_scan):
+        word = m.group(0)
+        if word.lower() == "confluence" and (fx.source_text or fx.amnesty_text):
+            if src_norm is None:
+                src_norm = _verbatim_norm((fx.source_text or "") + "\n" + (fx.amnesty_text or ""))
+            sent = _verbatim_norm(_sentence_at(body_scan, m.start()))
+            # не короче трёх слов: «Confluence», «см. Confluence» совпали бы с любым источником,
+            # где слово есть (приёмка «Точек» 18.11) — короткое предложение судится как прежде
+            if len(sent.split()) >= 3 and sent in src_norm:
+                verbatim.append(sent)
+                continue
+        page_refs.append(word)
+    if verbatim:
+        report.append(
+            f"i слово «Confluence» в дословном предложении источника — не отсылка ×{len(verbatim)}: "
+            + "; ".join(f"«{s[:100]}»" for s in verbatim[:3]))
     if page_refs:
         ok = False
         report.append(

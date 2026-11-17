@@ -344,6 +344,70 @@ def test_c7_zone_by_pipe_cell_and_heading(tmp_path):
         assert warns == [] and [k for k, _t in waived] == ["foreign-place"], src
 
 
+# --- класс 8: слово «Confluence» в дословном предложении источника ---
+
+C8_SRC = ("---\nconfluence_page_id: 2166861161\ntitle: '[КК] Правила'\n---\n"
+          "<p>Иногда требуется красиво отформатировать текст перед выводом пользователю "
+          "(включая ввод текста в Confluence) и где-то в аналитике.</p>\n")
+
+
+def c8_card(tmp_path: Path, body: str) -> Path:
+    return make(tmp_path / "fun-sys-50.md", card("FUN-SYS-50", "[КК] Правила", body,
+                                                 typ="function", ids="'2166861161'"))
+
+
+def c8_run(p: Path, src=None, amnesty=None):
+    from app.scripts.CI.kitcheck.checks.card_run import check_file
+    rep, ok = check_file(p, source_text=src, amnesty_text=amnesty)
+    return rep, ok, [r for r in rep if "отсылки к страницам источника" in r]
+
+
+C8_BODY = ("## Назначение\n\nИногда требуется красиво отформатировать текст перед выводом "
+           "пользователю (включая ввод текста в **Confluence**) и где-то в аналитике.\n")
+
+
+def test_c8_verbatim_source_sentence_not_reference(tmp_path):
+    rep, _ok, refs = c8_run(c8_card(tmp_path, C8_BODY), C8_SRC)
+    assert refs == [], rep
+    assert any(r.startswith("i слово «Confluence» в дословном предложении источника — не отсылка ×1")
+               for r in rep), rep
+
+
+def test_c8_verbatim_in_additional_page(tmp_path):
+    rep, _ok, refs = c8_run(c8_card(tmp_path, C8_BODY), "<p>другая страница</p>", C8_SRC)
+    assert refs == [], rep
+
+
+def test_c8_card_remark_with_word_still_flagged(tmp_path):
+    body = C8_BODY + "\n- Статус vs Confluence: страница помечена к удалению.\n"
+    rep, ok, refs = c8_run(c8_card(tmp_path, body), C8_SRC)
+    assert not ok and refs and "×1" in refs[0], rep
+
+
+def test_c8_short_remark_with_word_flagged_even_if_word_in_source(tmp_path):
+    # предложение короче трёх слов дословным не считается: «см. Confluence» — брак
+    for remark in ("| Где | Confluence |", "- См. Confluence."):
+        rep, ok, refs = c8_run(c8_card(tmp_path, C8_BODY + "\n" + remark + "\n"), C8_SRC)
+        assert not ok and refs and "×1" in refs[0], (remark, rep)
+
+
+def test_c8_page_id_flagged_even_if_in_source(tmp_path):
+    src = C8_SRC + "<p>Страница page 2169849859 описывает поля.</p>\n"
+    body = C8_BODY + "\nСтраница page 2169849859 описывает поля.\n"
+    rep, ok, refs = c8_run(c8_card(tmp_path, body), src)
+    assert not ok and refs and "page 2169849859" in refs[0], rep
+
+
+def test_c8_without_source_as_before(tmp_path):
+    rep, ok, refs = c8_run(c8_card(tmp_path, C8_BODY))
+    assert not ok and refs and "Confluence" in refs[0], rep
+
+
+def test_c8_i_line_visible_as_soft_signal():
+    from app.scripts.CI.kitcheck.core import is_soft_signal
+    assert is_soft_signal("i слово «Confluence» в дословном предложении источника — не отсылка ×1: «x»")
+
+
 # --- строки i снятого ---
 
 def test_waived_i_lines(tmp_path):
